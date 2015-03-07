@@ -53,7 +53,6 @@ class CacheCommand extends Command
             {
                 foreach ($this->file->getFiles($directory, array(substr(View::EXTENSION, 1))) as $filename)
                 {
-
                     //View name (removing extension and ./)
                     $view = substr($this->file->relativePath($filename, $directory), 2, -1 * strlen(View::EXTENSION));
 
@@ -69,7 +68,12 @@ class CacheCommand extends Command
                     }
                     elseif ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
                     {
+                        $this->view->getFilename($namespace, $view, true, true);
                         $this->writeln($formatter->formatSection($namespace, $view, 'fg=cyan'));
+                    }
+                    else
+                    {
+                        $this->view->getFilename($namespace, $view, true, true);
                     }
                 }
             }
