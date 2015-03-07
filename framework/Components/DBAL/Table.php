@@ -118,7 +118,7 @@ class Table extends Component
      */
     public function schema()
     {
-        return $this->database->getDriver()->tableSchema($this->name, $this->database->getPrefix());
+        return $this->database->getDriver()->tableSchema($this->database->getPrefix() . $this->name, $this->database->getPrefix());
     }
 
     /**

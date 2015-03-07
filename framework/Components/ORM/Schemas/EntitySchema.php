@@ -300,7 +300,7 @@ class EntitySchema extends Component
         }
 
         //No need to force NOT NULL as this is default column state
-        !empty($matches['null']) && $column->nullable(true);
+        !empty($matches['nullable']) && $column->nullable(true);
 
         $type = $matches['type'];
 
