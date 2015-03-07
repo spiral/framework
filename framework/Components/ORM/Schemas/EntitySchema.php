@@ -11,6 +11,7 @@ namespace Spiral\Components\ORM\Schemas;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
 use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaReader;
 use Spiral\Core\Component;
 
@@ -263,9 +264,19 @@ class EntitySchema extends Component
      * Clarify column schema based on provided column definition and default value. If default value is not clarified and
      * target table is already created, "null" flag will be automatically forced to prevent potential problems.
      *
+     * Column definition examples (by default all columns has flag NOT NULL):
+     * id           => primary
+     * name         => string       [default 255 symbols]
+     * email        => string(255), nullable
+     * status       => enum(active, pending, disabled)
+     * balance      => decimal(10, 2)
+     * message      => text, null[able]
+     * time_expired => timestamp
+     *
      * @param BaseColumnSchema $column
      * @param string           $definition
      * @param mixed            $default Declared default value or null.
+     * @throws ORMException
      */
     protected function populateColumn(BaseColumnSchema $column, $definition, $default = null)
     {
@@ -282,6 +293,12 @@ class EntitySchema extends Component
             $column->defaultValue($default);
         }
 
-        //$column->defaultValue();
+        //Parsing definition
+        if (!preg_match('/(?P<type>[a-z]+)(?: *\((?P<options>[^\)]+)\))?(?: *, *(?P<nullable>null(?:able)?))?/i', $definition, $matches))
+        {
+            throw new ORMException("Unable to parse column definition of {$this->getClass()}.'{$column->getName()}'.");
+        }
+
+        dump($matches);
     }
 }
