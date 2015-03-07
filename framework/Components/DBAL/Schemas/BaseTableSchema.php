@@ -786,6 +786,16 @@ abstract class BaseTableSchema extends Component
     }
 
     /**
+     * Check if table has any updates.
+     *
+     * @return bool
+     */
+    public function isAltered()
+    {
+        return $this->alteredColumns() || $this->alteredIndexes() || $this->alteredReferences();
+    }
+
+    /**
      * Rename table. Operation will be applied immediately. Attention, this method receives new table name without prefix.
      * Appropriate prefix will be assigned automatically.
      *

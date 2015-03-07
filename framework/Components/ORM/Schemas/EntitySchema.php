@@ -296,9 +296,21 @@ class EntitySchema extends Component
         //Parsing definition
         if (!preg_match('/(?P<type>[a-z]+)(?: *\((?P<options>[^\)]+)\))?(?: *, *(?P<nullable>null(?:able)?))?/i', $definition, $matches))
         {
-            throw new ORMException("Unable to parse column definition of {$this->getClass()}.'{$column->getName()}'.");
+            throw new ORMException("Unable to parse definition of  column {$this->getClass()}.'{$column->getName()}'.");
         }
 
-        dump($matches);
+        //No need to force NOT NULL as this is default column state
+        !empty($matches['null']) && $column->nullable(true);
+
+        $type = $matches['type'];
+
+        $options = array();
+        if (!empty($matches['options']))
+        {
+            $options = array_map('trim', explode(',', $matches['options']));
+        }
+
+        //DBAL will handle the rest of declaration
+        call_user_func_array(array($column, $type), $options);
     }
 }
