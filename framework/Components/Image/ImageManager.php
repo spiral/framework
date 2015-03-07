@@ -1,0 +1,85 @@
+<?php
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ * @copyright ©2009-2015
+ */
+namespace Spiral\Components\Image;
+
+use Spiral\Core\Component;
+use Spiral\Core\Container;
+use Spiral\Core\Core;
+
+class ImageManager extends Component
+{
+    use Component\SingletonTrait, Component\ConfigurableTrait;
+
+    /**
+     * Declares to IoC that component instance should be treated as singleton.
+     */
+    const SINGLETON = 'image';
+
+    /**
+     * New image component instance.
+     *
+     * @param Core $core
+     */
+    public function __construct(Core $core)
+    {
+        $this->config = $core->loadConfig('image');
+    }
+
+    /**
+     * Current component configuration.
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Update config with new values, new configuration will be merged with old one.
+     *
+     * @param array $config
+     * @return array
+     */
+    public function setConfig(array $config)
+    {
+        return $this->config = $config + $this->config;
+    }
+
+    /**
+     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method can be used to verify
+     * that file is supported and can be processed. ImageObject preferred to be used for processing existed images, rather
+     * that creating new.
+     *
+     * @param string $filename Local image filename.
+     * @return ImageObject
+     */
+    public function open($filename)
+    {
+        return ImageObject::make(compact('filename'));
+    }
+
+    /**
+     * Image processor represents operations associated with one specific image file, all processing operation (resize,
+     * crop and etc) described via operations sequence and perform on image save, every ImageObject will have it's own processor.
+     *
+     * Every processor will implement set of pre-defined operations, however additional operations can be supported by
+     * processor and extend default set of image manipulations.
+     *
+     * @param string $filename Local image filename.
+     * @param string $type     Forced processor id.
+     * @return ProcessorInterface
+     */
+    public function imageProcessor($filename, $type = '')
+    {
+        $type = $type ?: $this->config['processor'];
+
+        return Container::get($this->config['processors'][$type]['class'], compact('filename') + array('options' => $this->config['processors'][$type]));
+    }
+}

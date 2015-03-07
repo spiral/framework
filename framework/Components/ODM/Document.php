@@ -1,0 +1,1067 @@
+<?php
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ * @copyright ©2009-2015
+ */
+namespace Spiral\Components\ODM;
+
+use Carbon\Carbon;
+use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\ODM\Schemas\DocumentSchema;
+use Spiral\Core\Events\EventDispatcher;
+use Spiral\Support\Models\AccessorInterface;
+use Spiral\Support\Models\DatabaseEntityInterface;
+use Spiral\Support\Models\DataEntity;
+use Spiral\Support\Validation\Validator;
+
+abstract class Document extends DataEntity implements CompositableInterface, DatabaseEntityInterface
+{
+    /**
+     * ODM requested schema analysis.
+     */
+    const SCHEMA_ANALYSIS = 788;
+
+    /**
+     * Helper constant to identify atomic SET operations.
+     */
+    const ATOMIC_SET = '$set';
+
+    /**
+     * System will define which class should be used for document representation based on unique class fields.
+     *
+     * Example:
+     * class A: _id, name, address
+     * class B extends A: _id, name, address, email
+     *
+     * class B will be used to represent all documents with existed email field.
+     */
+    const DEFINITION_FIELDS = 1;
+
+    /**
+     * System will define which class should be used for document representation based on static method result.
+     * Document::defineClass(items)
+     *
+     * Example:
+     * class A: _id, name, type (a)
+     * class B extends A: _id, name, type (b)
+     * class C extends B: _id, name, type (c)
+     *
+     * Static method in class A should return A, B or C based on some field values.
+     */
+    const DEFINITION_LOGICAL = 2;
+
+    /**
+     * How to define valid class declaration based on set of fields fetched from collection, default way is "FIELDS",
+     * this method will define set of unique fields existed in every class. Second option is to define method to resolve
+     * class declaration "LOGICAL".
+     */
+    const DEFINITION = self::DEFINITION_FIELDS;
+
+    /**
+     * Aggregation types. Use appropriate type to declare reference to one or to many.
+     *
+     * Example:
+     * 'items' => array(self::MANY => 'Models\Database\Item', array('parentID' => 'key::_id'))
+     */
+    const MANY = 778;
+    const ONE  = 899;
+
+    /**
+     * Model specific constant to indicate that model has to be validated while saving. You still can change this behaviour
+     * manually by providing argument to save method.
+     */
+    const FORCE_VALIDATION = true;
+
+    /**
+     * Automatically convert "_id" to "id".
+     */
+    const REMOVE_ID_UNDERSCORE = true;
+
+    /**
+     * Already fetched schemas from ODM.
+     *
+     * @var array
+     */
+    protected static $schemaCache = array();
+
+    /**
+     * Parent object (composition owner).
+     *
+     * @invisible
+     * @var CompositableInterface|Document
+     */
+    protected $parent = null;
+
+    /**
+     * Collection name where document should be stored into. Collection will be automatically created on first document
+     * save.
+     *
+     * @var string
+     */
+    protected $collection = null;
+
+    /**
+     * Database name/id where document related collection located in. By default default database will be used.
+     *
+     * @var string
+     */
+    protected $database = 'default';
+
+    /**
+     * List of secured fields, such fields can not be set using setFields() method (only directly).
+     *
+     * @var array
+     */
+    protected $secured = array('_id');
+
+    /**
+     * Object fields, sub objects and relationships.
+     *
+     * Example:
+     *
+     * _id          => MongoId       //Column, expected type MongoId
+     * value        => string        //Column, expected type string
+     * values       => array(string) //Column, array of strings, will be represented using ScalarArray
+     *
+     * Compositions:
+     * subDocument  => DocumentClass        //Structure represented by document type DocumentClass
+     * subDocuments => array(DocumentClass) //Array of documents type DocumentClass
+     *
+     * Aggregations:
+     * relationship => array(self::MANY => DocumentClass, array(someID => key::_id, key => value...)) //Reference to many
+     *                                                                                                  DocumentClass
+     * relationship => array(self::ONE => DocumentClass, array(someID => key::_id, key => value...))  //Reference to one
+     *                                                                                                  DocumentClass
+     *
+     * Schema will be extended in child document classes, additionally ODM will set some default filters based on values
+     * in ODM configuration and field type.
+     *
+     * @var array
+     */
+    protected $schema = array();
+
+    /**
+     * Default values associated with document fields. Every default value will be passed thought appropriate filter to
+     * ensure that value type is strictly set.
+     *
+     * @var array
+     */
+    protected $defaults = array();
+
+    /**
+     * Documents marked with solid state flag will be saved entirely without generating separate atomic operations for each
+     * field, instead one big set operation will be created. Your atomic() calls with be applied to document data but will not
+     * be forwarded to collection.
+     *
+     * @var bool
+     */
+    protected $solidState = false;
+
+    /**
+     * List of updated fields associated with their original values.
+     *
+     * @var array
+     */
+    protected $updates = array();
+
+    /**
+     * Set of atomic operation has to be performed to save document into database. Atomic operation can not be generated
+     * if document in solid state. Some atomic operation (set) will be created automatically while changing document
+     * fields.
+     *
+     * @var array
+     */
+    protected $atomics = array();
+
+    /**
+     * Create new Document instance, schema will be automatically loaded and cached. Note that fields provided in constructor
+     * will not be filtered, you have to use create() method for it, however input fields will be merged with default
+     * values to ensure that model is always in correct shape.
+     *
+     * @param array                 $data   Document fields, filters will not be applied for this fields.
+     * @param CompositableInterface $parent Parent document or compositor.
+     * @param mixed                 $options
+     */
+    public function __construct($data = array(), $parent = null, $options = null)
+    {
+        $this->parent = $parent;
+
+        if (!isset(self::$schemaCache[$class = get_class($this)]))
+        {
+            static::initialize();
+            self::$schemaCache[$class] = ODM::getInstance()->getSchema(get_class($this));
+        }
+
+        //Prepared document schema
+        $this->schema = self::$schemaCache[$class];
+
+        //Forcing default values
+        if ($this->schema[ODM::D_DEFAULTS])
+        {
+            $this->fields = $data
+                ? array_replace_recursive($this->schema[ODM::D_DEFAULTS], is_array($data) ? $data : array())
+                : $this->schema[ODM::D_DEFAULTS];
+        }
+
+        if ((!$this->primaryKey() && !$this->parent) || !is_array($data))
+        {
+            $this->solidState(true)->validationRequired = true;
+        }
+    }
+
+    /**
+     * Prepare document property before caching it ODM schema. This method fire event "property" and sends SCHEMA_ANALYSIS
+     * option to trait initializers. Method and even can be used to create custom filters, schema values and etc.
+     *
+     * @param DocumentSchema $schema
+     * @param string         $property Model property name.
+     * @param mixed          $value    Model property value, will be provided in an inherited form.
+     * @return mixed
+     */
+    public static function describeProperty(DocumentSchema $schema, $property, $value)
+    {
+        static::initialize(self::SCHEMA_ANALYSIS);
+
+        return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
+    }
+
+    /**
+     * Define class name should be used to represent fields fetched from Mongo collection. This method will be called if
+     * Document::DEFINITION constant equal to Document::DEFINITION_LOGICAL.
+     *
+     * @param array $fields
+     * @return string
+     */
+    public static function defineClass(array $fields)
+    {
+        //Nothing
+    }
+
+    /**
+     * Change document solid state flag value. Documents marked with solid state flag will be saved entirely without generating
+     * separate atomic operations for each field, instead one big set operation will be called. Atomic operations functionality
+     * will be disabled.
+     *
+     * @param bool $solidState  Solid state flag value.
+     * @param bool $forceUpdate Mark all fields as changed to force update later.
+     * @return static
+     */
+    public function solidState($solidState, $forceUpdate = false)
+    {
+        $this->solidState = $solidState;
+
+        if ($forceUpdate)
+        {
+            $this->updates = $this->defaults;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get document primary key (_id) value. This value can be used to identify if model loaded from databases or just created.
+     *
+     * @return \MongoId
+     */
+    public function primaryKey()
+    {
+        return isset($this->fields['_id']) ? $this->fields['_id'] : null;
+    }
+
+    /**
+     * Is model were fetched from databases or recently created? Usually checks primary key value.
+     *
+     * @return bool
+     */
+    public function isLoaded()
+    {
+        return (bool)$this->primaryKey();
+    }
+
+    /**
+     * True is document embedded to other document or part of composition.
+     *
+     * @return bool
+     */
+    public function isEmbedded()
+    {
+        return (bool)$this->parent;
+    }
+
+    /**
+     * Collection name associated with document.
+     *
+     * @return string
+     */
+    public function getCollection()
+    {
+        return $this->collection;
+    }
+
+    /**
+     * Database name/id associated with document.
+     *
+     * @return string
+     */
+    public function getDatabase()
+    {
+        return $this->database;
+    }
+
+    /**
+     * Get mutator for specified field. Setters, getters and accessors can be retrieved using this method.
+     *
+     * @param string $field   Field name.
+     * @param string $mutator Mutator type (setters, getters, accessors).
+     * @return mixed|null
+     */
+    protected function getMutator($field, $mutator)
+    {
+        if (isset($this->schema[ODM::D_MUTATORS][$mutator][$field]))
+        {
+            $mutator = $this->schema[ODM::D_MUTATORS][$mutator][$field];
+
+            if (is_string($mutator) && isset(self::$mutatorAliases[$mutator]))
+            {
+                return self::$mutatorAliases[$mutator];
+            }
+
+            return $mutator;
+        }
+
+        return null;
+    }
+
+    /**
+     * Copy Compositable to embed into specified parent. Documents with already set parent will return copy of themselves,
+     * in other scenario document will return itself.
+     *
+     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared for.
+     * @return static
+     */
+    public function embed($parent)
+    {
+        if (!$this->parent)
+        {
+            $this->parent = $parent;
+
+            return $this->solidState(true, true);
+        }
+
+        if ($parent == $this->parent)
+        {
+            return $this;
+        }
+
+        return (new static($this->serializeData(), $parent))->solidState(true, true);
+    }
+
+    /**
+     * Get accessor instance.
+     *
+     * @param mixed  $value    Value to mock up.
+     * @param string $accessor Accessor definition (can be array).
+     * @return AccessorInterface
+     */
+    protected function defineAccessor($value, $accessor)
+    {
+        $options = null;
+        if (is_array($accessor))
+        {
+            list($accessor, $options) = $accessor;
+        }
+
+        if ($accessor == ODM::CMP_ONE)
+        {
+            //Not an accessor by composited class
+            $accessor = ODM::defineClass($value, $options);
+        }
+
+        return new $accessor($value, $this, $options);
+    }
+
+    /**
+     * Serialize object data for saving into database. This is common method for documents and compositors.
+     *
+     * @return mixed
+     */
+    final public function serializeData()
+    {
+        $result = $this->fields;
+        foreach ($result as $field => $value)
+        {
+            if ($value instanceof AccessorInterface)
+            {
+                $result[$field] = $value->serializeData();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Update accessor mocked data.
+     *
+     * @param mixed $data
+     * @return static
+     */
+    public function setData($data)
+    {
+        return $this->setFields($data);
+    }
+
+    /**
+     * Check if field assignable.
+     *
+     * @param string $field
+     * @return bool
+     */
+    protected function isAssignable($field)
+    {
+        //Better replace it with isset later
+        return !in_array($field, $this->schema[ODM::D_SECURED]) &&
+        !($this->schema[ODM::D_ASSIGNABLE] && !in_array($field, $this->schema[ODM::D_ASSIGNABLE]));
+    }
+
+    /**
+     * Get all non secured model fields. ODM will automatically convert "_id" to "id" and convert all MongoId and MongoDates
+     * to scalar representations.
+     *
+     * @return array
+     */
+    public function publicFields()
+    {
+        $result = array();
+
+        foreach ($this->fields as $field => $value)
+        {
+            //Better replace it with isset later
+            if (in_array($field, $this->schema[ODM::D_HIDDEN]))
+            {
+                continue;
+            }
+
+            //Better replace it with isset later
+            if (in_array($field, $this->schema[ODM::D_COMPOSITIONS]))
+            {
+                //Letting document to do the rest (expecting to be document or compositor)
+                $result[$field] = $this->getField($field)->publicFields();
+                continue;
+            }
+
+            if ($value instanceof ODMAccessor)
+            {
+                $value = $value->serializeData();
+            }
+
+            if ($mutator = $this->getMutator($field, 'getter'))
+            {
+                try
+                {
+                    $field = call_user_func($mutator, $value);
+                }
+                catch (\ErrorException $exception)
+                {
+                    $this->logger()->warning("Failed to apply filter to '{field}' field.", compact('field'));
+                    $value = null;
+                }
+            }
+
+            if ($value instanceof \MongoId)
+            {
+                $value = (string)$value;
+            }
+
+            if ($value instanceof \MongoDate)
+            {
+                dump((new Carbon())->setTimestamp($value->sec));
+
+                $value = (string)(new Carbon())->setTimestamp($value->sec);
+            }
+
+            if (is_array($value))
+            {
+                array_walk_recursive($value, function (&$value)
+                {
+                    if ($value instanceof \MongoId)
+                    {
+                        $value = (string)$value;
+                    }
+
+                    if ($value instanceof \MongoDate)
+                    {
+                        $value = (string)(new Carbon())->setTimestamp($value->sec);
+                    }
+                });
+            }
+
+            if (static::REMOVE_ID_UNDERSCORE && $field == '_id')
+            {
+                $field = 'id';
+            }
+
+            $result[$field] = $value;
+        }
+
+        return $this->event('publicFields', $result);
+    }
+
+    /**
+     * Get related document/documents.
+     *
+     * @param string $offset
+     * @param array  $arguments Additional query can be provided as first argument.
+     * @return Collection|Document|Document[]
+     * @throws ODMException
+     */
+    public function __call($offset, array $arguments)
+    {
+        if (!isset($this->schema[ODM::D_AGGREGATIONS][$offset]))
+        {
+            throw new ODMException("Unable to call " . get_class($this) . "->{$offset}(), no such function.");
+        }
+
+        $aggregation = $this->schema[ODM::D_AGGREGATIONS][$offset];
+
+        //Query preparations
+        $query = $aggregation[ODM::AGR_QUERY];
+
+        $fields = $this->fields;
+        array_walk_recursive($query, function (&$value) use ($fields)
+        {
+            if (strpos($value, 'key::') === 0)
+            {
+                $value = $fields[substr($value, 5)];
+                if ($value instanceof CompositableInterface)
+                {
+                    $value = $value->serializeData();
+                }
+            }
+        });
+
+        if (isset($arguments[0]) && is_array($arguments[0]))
+        {
+            $query = array_merge($query, $arguments[0]);
+        }
+
+        $collection = self::odmCollection($aggregation)->query($query);
+        if ($aggregation[ODM::AGR_TYPE] == self::ONE)
+        {
+            return $collection->findOne();
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Set value to one of field. Setter filter can be disabled by providing last argument.
+     *
+     * @param string $name   Field name.
+     * @param mixed  $value  Value to set.
+     * @param bool   $filter If false no filter will be applied.
+     */
+    public function setField($name, $value, $filter = true)
+    {
+        $original = isset($this->fields[$name]) ? $this->fields[$name] : null;
+        parent::setField($name, $value, $filter);
+
+        if (!array_key_exists($name, $this->updates))
+        {
+            $this->updates[$name] = $original instanceof AccessorInterface ? $original->serializeData() : $original;
+        }
+    }
+
+    /**
+     * Offset to unset.
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @param mixed $offset The offset to unset.
+     */
+    public function __unset($offset)
+    {
+        if (!array_key_exists($offset, $this->updates))
+        {
+            //Letting document know that field value changed, but without overwriting previous change
+            $this->updates[$offset] = isset($this->schema[ODM::D_DEFAULTS][$offset])
+                ? $this->schema[ODM::D_DEFAULTS][$offset]
+                : null;
+        }
+
+        $this->fields[$offset] = null;
+        if (isset($this->schema[ODM::D_DEFAULTS][$offset]))
+        {
+            $this->fields[$offset] = $this->schema[ODM::D_DEFAULTS][$offset];
+        }
+    }
+
+    /**
+     * Alias for atomic operation $set. Attention, this operation is not identical to setField() method, it performs low level
+     * operation and can be used only for simple fields.
+     *
+     * @param string $field
+     * @param mixed  $value
+     * @return static
+     * @throws ODMException
+     */
+    public function set($field, $value)
+    {
+        if ($this->hasUpdates($field, true))
+        {
+            throw new ODMException("Unable to apply multiple atomic operation to field '{$field}'.");
+        }
+
+        $this->atomics['$set'][$field] = $value;
+        $this->fields[$field] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Alias for atomic operation $inc.
+     *
+     * @param string $field
+     * @param string $value
+     * @return static
+     * @throws ODMException
+     */
+    public function inc($field, $value)
+    {
+        if ($this->hasUpdates($field, true) && !isset($this->atomics['$inc'][$field]))
+        {
+            throw new ODMException("Unable to apply multiple atomic operation to field '{$field}'.");
+        }
+
+        if (!isset($this->atomics['$inc'][$field]))
+        {
+            $this->atomics['$inc'][$field] = 0;
+        }
+
+        $this->atomics['$inc'][$field] += $value;
+        $this->fields[$field] += $value;
+
+        return $this;
+    }
+
+    /**
+     * Get generated and manually set document/object atomic updates.
+     *
+     * @param string $container Name of field or index where document stored into.
+     * @return array
+     */
+    public function buildAtomics($container = '')
+    {
+        if (!$this->hasUpdates())
+        {
+            return array();
+        }
+
+        if ($this->solidState)
+        {
+            if ($container)
+            {
+                return array(self::ATOMIC_SET => array($container => $this->getFields()));
+            }
+
+            $atomics = array(self::ATOMIC_SET => $this->getFields());
+            unset($atomics[self::ATOMIC_SET]['_id']);
+
+            return $atomics;
+        }
+
+        if (!$container)
+        {
+            $atomics = $this->atomics;
+        }
+        else
+        {
+            $atomics = array();
+
+            foreach ($this->atomics as $atomic => $fields)
+            {
+                foreach ($fields as $field => $value)
+                {
+                    $atomics[$atomic][$container . '.' . $field] = $value;
+                }
+            }
+        }
+
+        foreach ($this->fields as $field => $value)
+        {
+            if ($field == '_id')
+            {
+                continue;
+            }
+
+            if ($value instanceof CompositableInterface)
+            {
+                $atomics = array_merge_recursive($atomics, $value->buildAtomics(($container ? $container . '.' : '') . $field));
+                continue;
+            }
+
+            foreach ($atomics as $atomic => $operations)
+            {
+                if (array_key_exists($field, $operations) && $atomic != self::ATOMIC_SET)
+                {
+                    //Property already changed by atomic operation
+                    continue;
+                }
+            }
+
+            if (array_key_exists($field, $this->updates))
+            {
+                //Generating set operation
+                $atomics[self::ATOMIC_SET][($container ? $container . '.' : '') . $field] = $value;
+            }
+        }
+
+        return $atomics;
+    }
+
+    /**
+     * Check if document or specific field is updated.
+     *
+     * @param string $field
+     * @param bool   $atomicsOnly Only atomic updates will be checked.
+     * @return bool
+     */
+    public function hasUpdates($field = null, $atomicsOnly = false)
+    {
+        if (!$field)
+        {
+            if ($this->updates || $this->atomics)
+            {
+                return true;
+            }
+
+            foreach ($this->fields as $field => $value)
+            {
+                if ($value instanceof CompositableInterface && $value->hasUpdates())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        foreach ($this->atomics as $operations)
+        {
+            if (array_key_exists($field, $operations))
+            {
+                //Property already changed by atomic operation
+                return true;
+            }
+        }
+
+        if ($atomicsOnly)
+        {
+            return false;
+        }
+
+        if (array_key_exists($field, $this->updates))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Mark object as successfully updated and flush all existed atomic operations and updates.
+     */
+    public function flushUpdates()
+    {
+        $this->updates = $this->atomics = array();
+
+        foreach ($this->fields as $value)
+        {
+            if ($value instanceof CompositableInterface)
+            {
+                $value->flushUpdates();
+            }
+        }
+    }
+
+    /**
+     * Validator instance associated with model, will be response for validations of validation errors. Model related error
+     * localization should happen in model itself.
+     *
+     * @return Validator
+     */
+    public function getValidator()
+    {
+        if ($this->validator)
+        {
+            //Refreshing data
+            return $this->validator->setData($this->fields);
+        }
+
+        return $this->validator = Validator::make(array(
+            'data'      => $this->fields,
+            'validates' => $this->schema[ODM::D_VALIDATES]
+        ));
+    }
+
+
+    /**
+     * Validating model data using validation rules, all errors will be stored in model errors array. Errors will not be
+     * erased between function calls.
+     */
+    protected function validate()
+    {
+        $validationRequired = $this->validationRequired;
+        parent::validate();
+
+        //Validating all compositions
+        foreach ($this->schema[ODM::D_COMPOSITIONS] as $field)
+        {
+            $compositor = $this->getField($field);
+
+            //Forcing validation (we expecting compositors to be only Documents and Compositors)
+            $validationRequired && $compositor->requestValidation();
+            if (!$compositor->isValid())
+            {
+                $this->errors[$field] = $compositor->getErrors();
+            }
+        }
+    }
+
+    /**
+     * Get all validation errors with applied localization using i18n component (if specified), any error message can be
+     * localized by using [[ ]] around it. Data will be automatically validated while calling this method (if not validated
+     * before).
+     *
+     * @param bool $reset Remove all model messages and reset validation, false by default.
+     * @return array
+     */
+    public function getErrors($reset = false)
+    {
+        $this->validate();
+        $errors = array();
+        foreach ($this->errors as $field => $error)
+        {
+            if (is_string($error) && substr($error, 0, 2) == I18nManager::I18N_PREFIX && substr($error, -2) == I18nManager::I18N_POSTFIX)
+            {
+                if (isset($this->schema[ODM::D_MESSAGES][$error]))
+                {
+                    //Parent message
+                    $error = I18nManager::getInstance()->get($this->schema[ODM::D_MESSAGES][$error], substr($error, 2, -2));
+                }
+                else
+                {
+                    $error = $this->i18nMessage($error);
+                }
+            }
+
+            $errors[$field] = $error;
+        }
+
+        if ($reset)
+        {
+            $this->errors = array();
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Get ODM collection associated with specified document.
+     *
+     * @param array $schema Forced document schema.
+     * @return Collection
+     */
+    public static function odmCollection(array $schema = array())
+    {
+        $odm = ODM::getInstance();
+        $schema = $schema ?: $odm->getSchema(get_called_class());
+
+        static::initialize();
+        $odmCollection = Collection::make(array(
+            'name'     => $schema[ODM::D_COLLECTION],
+            'database' => $schema[ODM::D_DB],
+            'odm'      => $odm
+        ));
+
+        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        {
+            return self::dispatcher()->fire('odmCollection', $odmCollection);
+        }
+
+        return $odmCollection;
+    }
+
+    /**
+     * Save document and all nested data to ODM collection. Document has to be valid to be saved, in other scenario method
+     * will return false, model errors can be found in getErrors() method.
+     *
+     * Events: saving, saved, updating, updated will be fired.
+     *
+     * @param bool $validate Validate document fields and all children before saving, enabled by default. Turning this
+     *                       option off will increase performance but will make saving less secure. You can use it when
+     *                       model data was not modified directly by user. By default value is null which will force
+     *                       document to select behaviour from FORCE_VALIDATION constant.
+     * @return bool
+     * @throws ODMException
+     */
+    public function save($validate = null)
+    {
+        if (is_null($validate))
+        {
+            $validate = static::FORCE_VALIDATION;
+        }
+
+        if ($validate && !$this->isValid())
+        {
+            return false;
+        }
+
+        if (!$this->collection || $this->isEmbedded())
+        {
+            throw new ODMException("Unable to save " . get_class($this) . ", no direct access to collection.");
+        }
+
+        if (!$this->primaryKey())
+        {
+            $this->event('saving');
+            unset($this->fields['_id']);
+
+            static::odmCollection($this->schema)->insert($this->fields = $this->serializeData());
+            $this->event('saved');
+        }
+        elseif ($this->hasUpdates())
+        {
+            $this->event('updating');
+            static::odmCollection($this->schema)->update(array('_id' => $this->primaryKey()), $this->buildAtomics());
+            $this->event('updated');
+        }
+
+        //$this->flushUpdates();
+
+        return true;
+    }
+
+    /**
+     * Delete document and all nested data from MongoCollection, document will be removed by primary key (_id).
+     *
+     * Events: deleting, deleted will be raised.
+     */
+    public function delete()
+    {
+        if (!$this->collection)
+        {
+            throw new ODMException("Unable to delete " . get_class($this) . ", no collection assigned.");
+        }
+
+        $this->event('deleting');
+        $this->primaryKey() && static::odmCollection($this->schema)->remove(array('_id' => $this->primaryKey()));
+        $this->fields = $this->defaults;
+        $this->event('deleted');
+    }
+
+    /**
+     * Create new model and set it's fields, all field values will be passed thought model filters to ensure their type.
+     * Events: created
+     *
+     * @param array $fields Model fields to set, will be passed thought filters.
+     * @return static
+     */
+    public static function create($fields = array())
+    {
+        $class = new static();
+
+        //Forcing validation (empty set of fields is not valid set of fields)
+        $class->validationRequired = true;
+        $class->setFields($fields)->event('created');
+
+        return $class;
+    }
+
+    /**
+     * Get default search scope.
+     *
+     * @param array $scope
+     * @return array
+     */
+    protected static function getScope($scope = array())
+    {
+        static::initialize();
+        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        {
+            $scope = self::dispatcher()->fire('scope', array(
+                'scope' => $scope,
+                'model' => get_called_class()
+            ))['scope'];
+        }
+
+        return $scope;
+    }
+
+    /**
+     * Select multiple documents from associated collection. Attention, due ODM architecture, find method can return any
+     * of Document types stored in collection, even if find called from specified class. You have to solve it manually
+     * by overwrite this method in your class.
+     *
+     * @param mixed $query Fields and conditions to filter by.
+     * @return Collection|static[]
+     */
+    public static function find(array $query = array())
+    {
+        return static::odmCollection()->query(self::getScope($query));
+    }
+
+    /**
+     * Select one document from collection.
+     *
+     * @param array $query Fields and conditions to filter by.
+     * @return static
+     */
+    public static function findOne(array $query = array())
+    {
+        return static::find($query)->findOne();
+    }
+
+    /**
+     * Select one document from collection by it's primary key, string key will be automatically converted to MongoId object.
+     * Null will be returned if provided string is not valid mongo id.
+     *
+     * @param mixed $mongoID Valid MongoId, string value will be automatically converted to MongoId object.
+     * @return static
+     * @throws ODMException
+     */
+    public static function findByID($mongoID = null)
+    {
+        if (!$mongoID = ODM::mongoID($mongoID))
+        {
+            return null;
+        }
+
+        return static::findOne(array('_id' => $mongoID));
+    }
+
+    /**
+     * Simplified way to dump information.
+     *
+     * @return Object
+     */
+    public function __debugInfo()
+    {
+        if (!$this->collection)
+        {
+            return (object)array(
+                'fields'  => $this->getFields(),
+                'atomics' => $this->buildAtomics(),
+                'errors'  => $this->getErrors()
+            );
+        }
+
+        return (object)array(
+            'collection' => $this->database . '/' . $this->collection,
+            'fields'     => $this->getFields(),
+            'atomics'    => $this->buildAtomics(),
+            'errors'     => $this->getErrors()
+        );
+    }
+}

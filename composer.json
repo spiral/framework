@@ -1,0 +1,34 @@
+{
+  "name": "spiral/framework",
+  "type": "framework",
+  "description": "Spiral PHP Framework",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Anton Titov / Wolfy-J",
+      "email": "wolfy.jd@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "ext-mbstring": "*",
+    "ext-mcrypt": "*",
+    "psr/log": "*",
+    "psr/http-message": "0.9.*",
+    "predis/predis": "~1.0",
+    "symfony/console": "2.6.4",
+    "symfony/process": "~2.6",
+    "nesbot/carbon": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "files": [
+      "framework/functions.php"
+    ],
+    "psr-4": {
+      "Spiral\\": "framework/"
+    }
+  }
+}
