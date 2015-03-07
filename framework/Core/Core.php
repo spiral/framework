@@ -236,7 +236,7 @@ class Core extends Container
         $this->environment = $environment;
         iF ($regenerateID)
         {
-            $this->applicationID = crc32(dirname(self::directory('root')) . $this->environment);
+            $this->applicationID = abs(crc32(dirname(self::directory('root')) . $this->environment));
         }
     }
 
