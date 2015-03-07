@@ -84,6 +84,11 @@ class DatabasesCommand extends Command
                     "<comment>---</comment>",
                     "<comment>---</comment>"
                 )));
+
+                if ($database->getName() != end($databases))
+                {
+                    $grid->addRow(new TableSeparator());
+                }
                 continue;
             }
 
