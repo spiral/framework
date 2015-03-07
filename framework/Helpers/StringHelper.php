@@ -173,7 +173,7 @@ class StringHelper
      * @param string $tabulationCost How to treat \t symbols relatively to spaces. By default, this is set to 4 spaces.
      * @return string
      */
-    public static function normalizeIndent($string, $tabulationCost = "   ")
+    public static function normalizeIndents($string, $tabulationCost = "   ")
     {
         $string = self::normalizeEndings($string, false);
         $lines = explode("\n", $string);
