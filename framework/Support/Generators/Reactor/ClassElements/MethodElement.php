@@ -172,7 +172,7 @@ class MethodElement extends BaseElement
         }
         else
         {
-            $source = StringHelper::normalizeIndents($source);
+            $source = StringHelper::normalizeIndent($source);
             $sourceLines = explode("\n", $source);
             $indentLevel = 0;
 
