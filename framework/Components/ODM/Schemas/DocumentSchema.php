@@ -136,7 +136,12 @@ class DocumentSchema extends Component
             $value = array_merge($this->odmSchema->getDocument($parentClass)->property($property, true), $value);
         }
 
-        return $this->propertiesCache[$property] = call_user_func(array($this->getClass(), 'describeProperty'), $this, $property, $value);
+        return $this->propertiesCache[$property] = call_user_func(
+            array($this->getClass(), 'describeProperty'),
+            $this,
+            $property,
+            $value
+        );
     }
 
     /**

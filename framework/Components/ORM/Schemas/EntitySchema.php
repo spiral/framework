@@ -202,7 +202,7 @@ class EntitySchema extends Component
      *
      * @return BaseTableSchema
      */
-    public function getTableSchema()
+    public function tableSchema()
     {
         return $this->tableSchema;
     }
@@ -280,7 +280,7 @@ class EntitySchema extends Component
      */
     protected function populateColumn(BaseColumnSchema $column, $definition, $default = null)
     {
-        if (is_null($default) && $this->tableSchema->isExists())
+        if (!$column->getType() && is_null($default) && $this->tableSchema->isExists())
         {
             $this->logger()->warning("Column '{table}'.'{column}' does not have default value but table is exists. Nullable flag is forced.", array(
                 'table'  => $this->getTable(),
