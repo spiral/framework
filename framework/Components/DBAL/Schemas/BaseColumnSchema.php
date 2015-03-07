@@ -580,7 +580,7 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
             throw new \InvalidArgumentException("Invalid string length value.");
         }
 
-        $this->size = $size;
+        $this->size = (int)$size;
 
         return $this;
     }
@@ -601,8 +601,8 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
             throw new \InvalidArgumentException("Invalid precision value.");
         }
 
-        $this->precision = $precision;
-        $this->scale = $scale;
+        $this->precision = (int)$precision;
+        $this->scale = (int)$scale;
 
         return $this;
     }
