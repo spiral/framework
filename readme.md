@@ -14,7 +14,7 @@ Here is a list of features, which were successfully moved to the new core. At th
 
 DBAL (+ migrations)
 -------------
-Currently, you can use the DBAL level with 4 different databases (MySQL, PostgresSQL, SQLite, SQLServer). The database schema has building
+Currently, you can use the DBAL with 4 different databases (MySQL, PostgresSQL, SQLite, SQLServer). The database schema has building
 and reading abilities, query builders, etc. 
 
 The DBAL builder is built on the principals of a two directional database schema reading, which allows you to not only create database migrations, 
