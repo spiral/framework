@@ -65,15 +65,15 @@ class ImageAnalyzer extends Component
     /**
      * Color mixing mode.
      */
-    const mixAverage  = 1;
-    const mixAdaptive = 2;
+    const MIX_AVERAGE  = 1;
+    const MIX_ADAPTIVE = 2;
 
     /**
      * Current mixing mode. Mix mode specifies how to detect dominant color in tile, adaptive will select most notable color.
      *
      * @var int
      */
-    protected $mixMode = self::mixAdaptive;
+    protected $mixMode = self::MIX_ADAPTIVE;
 
     /**
      * Create new image colors analyzer. Can be used to fetch dominant image colors or create image colors map.
@@ -84,7 +84,7 @@ class ImageAnalyzer extends Component
      *                          color.
      * @throws ImageException
      */
-    public function __construct($filename, $dimension = 15, $mixMode = self::mixAdaptive)
+    public function __construct($filename, $dimension = 15, $mixMode = self::MIX_ADAPTIVE)
     {
         if (!function_exists('getimagesize'))
         {
@@ -300,7 +300,7 @@ class ImageAnalyzer extends Component
         $countColors = count($colors);
         $average = array(0, 0, 0);
 
-        if ($mixMode == self::mixAverage)
+        if ($mixMode == self::MIX_AVERAGE)
         {
             foreach ($colors as $color)
             {
@@ -314,7 +314,7 @@ class ImageAnalyzer extends Component
             $average[2] = floor($average[2] / $countColors);
         }
 
-        if ($mixMode == self::mixAdaptive)
+        if ($mixMode == self::MIX_ADAPTIVE)
         {
             //Getting average lightness and saturation
             $saturation = 0;

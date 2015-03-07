@@ -297,7 +297,7 @@ class ImageObject extends Component
      *                           color.
      * @return array
      */
-    public function getColors($countColors = 10, $dimension = 15, $step = 0.005, $mixMode = ImageAnalyzer::mixAdaptive)
+    public function getColors($countColors = 10, $dimension = 15, $step = 0.005, $mixMode = ImageAnalyzer::MIX_ADAPTIVE)
     {
         if (!$this->isSupported())
         {
