@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\ORM\Schemas\EntitySchema;
 use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 
@@ -24,11 +25,14 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      */
     const FORCE_VALIDATION = true;
 
-    const HAS_ONE = 1;
-    const HAS_MANY = 2;
-    const BELONGS_TO = 3;
+    const HAS_ONE      = 1;
+    const HAS_MANY     = 2;
+    const BELONGS_TO   = 3;
     const MANY_TO_MANY = 4;
     const MANY_THOUGHT = 5;
+
+    const INDEXES        = 'indexes';
+    const UNIQUE_INDEXES = 'unique-indexes';
 
     /**
      * Already fetched schemas from ORM. Yes, ORM entity is really similar to ODM. Original ORM was written long time ago
@@ -54,8 +58,14 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      */
     protected $database = 'default';
 
-
     protected $schema = array();
+
+    protected $defaults=array();
+
+    protected $indexes = array(
+        self::INDEXES        => array(),
+        self::UNIQUE_INDEXES => array()
+    );
 
     //    /**
     //     * Already loaded children.
@@ -70,6 +80,7 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      * @var array
      */
     protected $updates = array();
+
     //
     //    /**
     //     * Cached list of objects.
@@ -87,14 +98,42 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
     //     */
     //    protected $solidState = false;
 
-    public function __construct($fields = array(), $options = null)
+    public function __construct($fields = array())
     {
-        static::initialize($options);
+        if (!isset(self::$schemaCache[$class = get_class($this)]))
+        {
+            static::initialize();
+            //self::$schemaCache[$class] = ORM::getInstance()->getSchema(get_class($this));
+        }
+
+        //Prepared document schema
+        //$this->schema = self::$schemaCache[$class];
+
+        //        if ($this->schema[ODM::D_DEFAULTS])
+        //        {
+        //            $this->fields = $data
+        //                ? array_replace_recursive($this->schema[ODM::D_DEFAULTS], is_array($data) ? $data : array())
+        //                : $this->schema[ODM::D_DEFAULTS];
+        //        }
+    }
+
+    /**
+     * Prepare entity property before caching it ORM schema. This method fire event "property" and sends SCHEMA_ANALYSIS
+     * option to trait initializers. Method and even can be used to create custom columns, indexes and ect.
+     *
+     * @param EntitySchema $schema
+     * @param string       $property Model property name.
+     * @param mixed        $value    Model property value, will be provided in an inherited form.
+     * @return mixed
+     */
+    public static function describeProperty(EntitySchema $schema, $property, $value)
+    {
+        static::initialize(self::SCHEMA_ANALYSIS);
+
+        return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
     }
 }
 
-
-////TODO: mount short SQL syntax
 //class ORMObject extends Model implements \ArrayAccess
 //{
 //

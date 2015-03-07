@@ -9,6 +9,8 @@
 namespace Spiral\Components\ORM;
 
 use Spiral\Core\Component;
+use Spiral\Core\Core;
+use Spiral\Core\CoreException;
 
 class ORM extends Component
 {
@@ -21,6 +23,18 @@ class ORM extends Component
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = 'orm';
+
+    /**
+     * ODM component instance.
+     *
+     * @param Core $core
+     * @throws CoreException
+     */
+    public function __construct(Core $core)
+    {
+        $this->core = $core;
+        $this->config = $core->loadConfig('orm');
+    }
 
     /**
      * WORK IN FUCKING PROGRESS :) BUT DBAL IS READY SO NOTHING HARD IS EXPECTED
@@ -43,6 +57,16 @@ class ORM extends Component
      * 3) with() method is queries?
      * 4) managing map tables as before or new way?
      * 5-low) chunk based interaction, has to be done ON DBAL\SelectQuery level
-     *
      */
+
+    /**
+     * Get ORM schema reader. Schema will detect all declared entities, their tables, columns, relationships and etc.
+     *
+     * @return SchemaReader
+     */
+    public function schemaReader()
+    {
+        //ORM component configuration
+        return SchemaReader::make(array('config' => $this->config));
+    }
 }

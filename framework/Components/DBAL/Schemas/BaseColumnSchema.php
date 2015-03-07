@@ -676,6 +676,13 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
 
             foreach ($columnVars as $name => $value)
             {
+                //Default values has to compared via type-casted value
+                if ($name == 'defaultValue' && $this->getDefaultValue() != $dbColumn->getDefaultValue())
+                {
+                    $difference[] = $name;
+                    continue;
+                }
+
                 if ($value != $dbColumnVars[$name])
                 {
                     $difference[] = $name;

@@ -43,7 +43,7 @@ class UmlCommand extends Command
      */
     public function perform()
     {
-        $umlExporter = UmlExporter::make(array('schema' => $this->odm->readSchema()));
+        $umlExporter = UmlExporter::make(array('schema' => $this->odm->schemaReader()));
         $umlExporter->render($this->argument('filename'));
 
         $this->writeln("<info>UML schema successfully created:</info> {$this->argument('filename')}");

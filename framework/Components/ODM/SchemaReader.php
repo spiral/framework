@@ -32,7 +32,7 @@ class SchemaReader extends Component
     protected $config = array();
 
     /**
-     * Generated document schemas.
+     * Found document schemas.
      *
      * @var DocumentSchema[]
      */
@@ -46,7 +46,7 @@ class SchemaReader extends Component
     protected $collections = array();
 
     /**
-     * New ODM Schema builder instance.
+     * New ODM Schema reader instance.
      *
      * @param array     $config
      * @param Tokenizer $tokenizer
