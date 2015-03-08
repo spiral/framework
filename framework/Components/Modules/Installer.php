@@ -227,7 +227,7 @@ class Installer extends Component
 
         if ($directory)
         {
-            if ($this->file->exists($this->moduleDirectory . $directory . '/'))
+            if ($this->file->exists($this->moduleDirectory . $directory))
             {
                 $directory = $this->file->normalizePath($this->moduleDirectory . $directory, true);
 
@@ -444,7 +444,7 @@ class Installer extends Component
             $source = $this->file->normalizePath($this->moduleDirectory . $definition['source']);
 
             //Copying with write() method to ensure directories and permissions, slower by easier
-            $this->file->write($filename, $this->file->read($source), false, $definition['mode'], true);
+            $this->file->write($filename, $this->file->read($source), $definition['mode'], true);
         }
     }
 
