@@ -13,7 +13,7 @@ use Spiral\Core\CoreException;
 trait ConfigCacheTrait
 {
     /**
-     * Preloaded configs configuration. Using common memory cache for all configs will speed up application, but every
+     * Preloaded configs cache. Using common memory cache for all configs will speed up application, but every
      * config change has to manually reset this cache. Attention, average memory consumption will increase.
      *
      * This plugin is unnecessary to use on small applications with low amount of used components.
