@@ -24,6 +24,8 @@ class ORM extends Component
      */
     const SINGLETON = 'orm';
 
+    const DYNAMIC_TYPE_LENGTH = 32;
+
     /**
      * ODM component instance.
      *
@@ -42,17 +44,16 @@ class ORM extends Component
 
     /**
      * flow:
-     * 1) index all models, exclude abstract ones
-     * 2) collect declared columns and indexes
-     * 3) collect all declared relationships (do we need to support new relationships?)
+     * 1) index all models, exclude abstract ones - CHECK
+     * 2) collect declared columns and indexes - CHECK
+     * 3) collect all declared relationships (do we need to support new relationships?) - DO NOW
      * 4) send classes to SchemaReflector to build necessary table schemas (including map tables and foreign keys)
      *      4.1) find way to clearly resolve map tables and their columns?
-     * 5) reflect schema to database
+     * 5) reflect schema to database - PARTIALLY CHECK
      * 6) normalize and export schema, build virtual documentation (this is the same thing as before)
      *
-     *
      * Challenges:
-     * 1) do i need new relationship types?
+     * 1) do i need new relationship types? - ONLY FEW
      * 2) load() with parents and child? any other relationships
      * 3) with() method is queries?
      * 4) managing map tables as before or new way?
@@ -69,4 +70,11 @@ class ORM extends Component
         //ORM component configuration
         return SchemaReader::make(array('config' => $this->config));
     }
+
+    /**
+     * Normalized entity constants.
+     */
+    const E_TABLE    = 0;
+    const E_DB       = 1;
+    const E_DEFAULTS = 2;
 }

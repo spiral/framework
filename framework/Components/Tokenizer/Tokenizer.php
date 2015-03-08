@@ -99,12 +99,6 @@ class Tokenizer extends Component
             $directory = $file->normalizePath($directory, true);
             unset($directory);
         }
-
-        foreach ($this->config['exclude'] as &$directory)
-        {
-            $directory = $file->normalizePath($directory, true);
-            unset($directory);
-        }
     }
 
     /**

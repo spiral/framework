@@ -11,6 +11,8 @@ namespace Spiral\Components\ORM\Schemas;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
 use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\DBAL\SqlFragment;
+use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaReader;
 use Spiral\Core\Component;
@@ -72,10 +74,10 @@ class EntitySchema extends Component
         $this->ormSchema = $ormSchema;
         $this->reflection = new \ReflectionClass($class);
 
-        if (!$this->isAbstract())
+        if (!$this->isAbstract() && $this->getTable() && $this->getSchema())
         {
             $this->tableSchema = $dbal->db($this->getDatabase())->table($this->getTable())->schema();
-            $this->populateTable();
+            $this->castTable();
         }
     }
 
@@ -90,7 +92,7 @@ class EntitySchema extends Component
     }
 
     /**
-     * Document full class name.
+     * Entity full class name.
      *
      * @return string
      */
@@ -100,7 +102,7 @@ class EntitySchema extends Component
     }
 
     /**
-     * Document namespace. Both start and end namespace separators will be removed, to add start separator (absolute)
+     * Entity namespace. Both start and end namespace separators will be removed, to add start separator (absolute)
      * namespace use method parameter "absolute".
      *
      * @param bool $absolute \\ will be prepended to namespace if true, disabled by default.
@@ -112,7 +114,7 @@ class EntitySchema extends Component
     }
 
     /**
-     * Document class name without included namespace.
+     * Entity class name without included namespace.
      *
      * @return string
      */
@@ -121,6 +123,21 @@ class EntitySchema extends Component
         $names = explode('\\', $this->class);
 
         return end($names);
+    }
+
+    /**
+     * Getting name should be used to represent entity relationship in foreign classes. If foreign table exists and no
+     * foreign key name provided - spiral will try to fetch foreign key name using table references as they will be created
+     * automatically while defining relationship. Same name will used in polymorphic relationships.
+     *
+     * Example:
+     * Models\Post => HAS_ONE => post_id
+     *
+     * @return string
+     */
+    public function roleName()
+    {
+        return lcfirst($this->shortName());
     }
 
     /**
@@ -240,29 +257,34 @@ class EntitySchema extends Component
     /**
      * Fill table schema with declared columns, their default values and etc.
      */
-    protected function populateTable()
+    protected function castTable()
     {
         $defaults = $this->getDefaults();
         foreach ($this->getSchema() as $name => $definition)
         {
-            if (!is_string($definition))
+            //Column definition
+            if (is_string($definition) && $definition != Entity::POLYMORPHIC)
             {
-                //Columns are declared only in string forms
-                continue;
+                //Filling column values
+                $defaults[$name] = $this->castColumn(
+                    $column = $this->tableSchema->column($name),
+                    $definition,
+                    isset($defaults[$name]) ? $defaults[$name] : null
+                );
             }
 
-            //Filling column values
-            $this->populateColumn(
-                $this->tableSchema->column($name),
-                $definition,
-                isset($defaults[$name]) ? $defaults[$name] : null
-            );
+            //Relation definition
+            $this->castRelation($name, $definition);
         }
+
+        //Indexes
+
     }
 
     /**
      * Clarify column schema based on provided column definition and default value. If default value is not clarified and
      * target table is already created, "null" flag will be automatically forced to prevent potential problems.
+     * Method will return default value as result.
      *
      * Column definition examples (by default all columns has flag NOT NULL):
      * id           => primary
@@ -276,9 +298,10 @@ class EntitySchema extends Component
      * @param BaseColumnSchema $column
      * @param string           $definition
      * @param mixed            $default Declared default value or null.
+     * @return mixed
      * @throws ORMException
      */
-    protected function populateColumn(BaseColumnSchema $column, $definition, $default = null)
+    protected function castColumn(BaseColumnSchema $column, $definition, $default = null)
     {
         if (!$column->getType() && is_null($default) && $this->tableSchema->isExists())
         {
@@ -312,5 +335,50 @@ class EntitySchema extends Component
 
         //DBAL will handle the rest of declaration
         call_user_func_array(array($column, $type), $options);
+
+        $default = $column->getDefaultValue();
+        if ($default instanceof SqlFragment)
+        {
+            //Potentially
+            $default = null;
+        }
+
+        if (!$default && !$column->isNullable())
+        {
+            //As no default value provided and column can not be null we can cast value by ourselves
+            if ($column->abstractType() == 'timestamp' || $column->abstractType() == 'datetime')
+            {
+                $driver = $this->tableSchema->getDriver();
+
+                $default = strtr(
+                    $driver::DATETIME,
+                    array('Y' => '0000', 'm' => '00', 'd' => '00', 'H' => '00', 'i' => '00', 's' => '00')
+                );
+            }
+            else
+            {
+                switch ($column->phpType())
+                {
+                    case 'int':
+                        $default = 0;
+                        break;
+                    case 'float':
+                        $default = 0.0;
+                        break;
+                    case 'bool':
+                        $default = false;
+                        break;
+                    case 'string':
+                        $default = '';
+                        break;
+                }
+            }
+        }
+
+        return $default;
+    }
+
+    protected function castRelation($name, $definition)
+    {
     }
 }

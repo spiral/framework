@@ -35,6 +35,13 @@ class SchemaReader extends Component
     protected $entities = array();
 
     /**
+     * Map (pivot) tables has to be created.
+     *
+     * @var array
+     */
+    protected $mapTables = array();
+
+    /**
      * New ORM Schema reader instance.
      *
      * @param array     $config

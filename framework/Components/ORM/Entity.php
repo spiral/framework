@@ -28,9 +28,20 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
     const HAS_ONE      = 1;
     const HAS_MANY     = 2;
     const BELONGS_TO   = 3;
-    const MANY_TO_MANY = 4;
+    const MANY_TO_MANY = 4; //table to create
     const MANY_THOUGHT = 5;
 
+    /**
+     * find good definition tactics
+     */
+    const POLYMORPHIC = 6;
+
+    const MANY_TO_POLYMORPHIC = 9;
+    const POLYMORPHIC_TO_MANY = 10;
+
+    /**
+     * index constants
+     */
     const INDEXES        = 'indexes';
     const UNIQUE_INDEXES = 'unique-indexes';
 
@@ -60,8 +71,9 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
 
     protected $schema = array();
 
-    protected $defaults=array();
+    protected $defaults = array();
 
+    //todo: how to merge indexes
     protected $indexes = array(
         self::INDEXES        => array(),
         self::UNIQUE_INDEXES => array()
@@ -109,12 +121,8 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
         //Prepared document schema
         //$this->schema = self::$schemaCache[$class];
 
-        //        if ($this->schema[ODM::D_DEFAULTS])
-        //        {
-        //            $this->fields = $data
-        //                ? array_replace_recursive($this->schema[ODM::D_DEFAULTS], is_array($data) ? $data : array())
-        //                : $this->schema[ODM::D_DEFAULTS];
-        //        }
+        //Merging with default values
+        $this->fields = $fields + $this->schema[ORM::E_DEFAULTS];
     }
 
     /**

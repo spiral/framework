@@ -265,7 +265,7 @@ class ODM extends Component
     const C_DEFINITION = 2;
 
     /**
-     * Normalized document schema.
+     * Normalized document constants.
      */
     const D_COLLECTION   = 0;
     const D_DB           = 1;
