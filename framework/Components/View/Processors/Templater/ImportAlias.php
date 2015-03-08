@@ -85,6 +85,8 @@ class ImportAlias
 
         if (!isset($options['prefix']))
         {
+            //Prefix wasn't required and used to be in a free form, but Andrew Kirkovski and Andrew Logunov insist
+            //to have it this way. At least we can generate DTD in future.
             throw new ViewException("Import prefix is required.");
         }
 
