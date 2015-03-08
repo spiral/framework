@@ -21,7 +21,7 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
      * InjectionFactory will receive requested class or interface reflection and reflection linked to parameter in
      * constructor or method used to declare injection.
      */
-    const INJECTION_MANAGER = 'Spiral\Components\ODM\ODMManager';
+    const INJECTION_MANAGER = 'Spiral\Components\ODM\ODM';
 
     /**
      * ODM database instance name/id.

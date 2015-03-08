@@ -274,12 +274,15 @@ class EntitySchema extends Component
             //Relation definition
             $this->castRelation($name, $definition);
         }
-        //Indexes
 
+        //Indexes
+        foreach ($this->property('indexes', true) as $index)
+        {
+        }
     }
 
     /**
-     * Clarify column schema based on provided column definition and default value. If default value is not clarified and
+     * Cast column schema based on provided column definition and default value. If default value is not clarified and
      * target table is already created, "null" flag will be automatically forced to prevent potential problems.
      * Method will return default value as result.
      *
@@ -365,6 +368,24 @@ class EntitySchema extends Component
         }
 
         return $default;
+    }
+
+    /**
+     * Create index in associated table based on index definition provided in model or model parent. Attentions, this
+     * method is not support to work with primary indexes (for now). Additionally, some relationships will create
+     * indexes automatically while defining foreign key.
+     *
+     * Example:
+     * protected $indexes = array(
+     *      [self::UNIQUE, 'email'],
+     *      [self::INDEX, 'status', 'balance'],
+     *      [self::INDEX, 'public_id']
+     * );
+     *
+     * @param array $definition
+     */
+    protected function castIndex(array $definition)
+    {
     }
 
     protected function castRelation($name, $definition)
