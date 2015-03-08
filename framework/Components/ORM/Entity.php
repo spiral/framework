@@ -20,30 +20,32 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
     const SCHEMA_ANALYSIS = 788;
 
     /**
+     * Set this constant to false to disable automatic column and foreign keys creation. Using this flag is useful while
+     * using Spiral ORM with already existed databases (you don't need to list columns which are already exists in table).
+     */
+    const ACTIVE_SCHEMA = true;
+
+    /**
      * Model specific constant to indicate that model has to be validated while saving. You still can change this behaviour
      * manually by providing argument to save method.
      */
     const FORCE_VALIDATION = true;
 
-    const HAS_ONE      = 1;
-    const HAS_MANY     = 2;
-    const BELONGS_TO   = 3;
-    const MANY_TO_MANY = 4; //table to create
-    const MANY_THOUGHT = 5;
 
-    /**
-     * find good definition tactics
-     */
-    const POLYMORPHIC = 6;
-
-    const MANY_TO_POLYMORPHIC = 9;
-    const POLYMORPHIC_TO_MANY = 10;
+    const HAS_ONE             = 1098;
+    const HAS_MANY            = 2098;
+    const BELONGS_TO          = 3323;
+    const MANY_TO_MANY        = 4342;
+    const MANY_THOUGHT        = 5344;
+    const POLYMORPHIC         = 6342;
+    const MANY_TO_POLYMORPHIC = 9234;
+    const POLYMORPHIC_TO_MANY = 1430;
 
     /**
      * index constants
      */
-    const INDEXES        = 'indexes';
-    const UNIQUE_INDEXES = 'unique-indexes';
+    const INDEXES        = 0;
+    const UNIQUE_INDEXES = 1;
 
     /**
      * Already fetched schemas from ORM. Yes, ORM entity is really similar to ODM. Original ORM was written long time ago
@@ -69,11 +71,97 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      */
     protected $database = 'default';
 
+    /**
+     * Entity schema includes declaration of table columns (not required as you can link object to existed table) and
+     * object relationships. Column definitions should be provided in soft form.  You can use DBAL abstract types to
+     * declare your columns. Some types will be automatically associated with mutators while schema parsing.
+     *
+     * Example:
+     * protected $schema = array(
+     *      'id'           => 'primary',
+     *      'status'       => 'enum(pending, active, disabled)',
+     *      'name'         => 'string,nullable',
+     *      'email'        => 'string(255)',
+     *      'balance'      => 'decimal(10,2),nullable',
+     *      'time_created' => 'timestamp',
+     *      'description'  => 'text'
+     * );
+     *
+     * Attention, schema is soft form of declaring table structure, this means you can create new columns, change their
+     * types and etc, however renaming and removal are not possible using this form of declaration, you should to use
+     * migrations for it. Make sure ACTIVE_SCHEMA is set to true.
+     *
+     * Schema can include relationships declaration, it's done using one of predefined constants, foreign model name
+     * and other options. Check documentation near constants to see how they works.
+     *
+     * Example:
+     * protected $schema = array(
+     *      //Associated posts
+     *      'posts'     => [self::MANY_TO_MANY => 'Models\Post'],
+     *
+     *      //Author
+     *      'author'    => [self::BELONGS_TO => 'Models\User', 'author_id'],
+     *
+     *      //Attached comments
+     *      'comments'  => [self::HAS_MANY => 'Model\Comment', self::POLYMORPHIC => 'target'],
+     *
+     *      //Photo tags
+     *      'tags'      => [self::POLYMORPHIC_TO_MANY => 'Model\Tag', 'tagging']
+     * );
+     *
+     * //Comment model schema
+     *  protected $schema = array(
+     *      //Author
+     *      'author'    => [self::BELONGS_TO => 'Models\User', 'author_id'],
+     *
+     *      //Comment target (post, photo, user and etc...)
+     *      'target'    => self::POLYMORPHIC
+     * );
+     *
+     * //Tag model schema
+     * protected $schema = array(
+     *      'posts'  => [self::MANY_TO_POLYMORPHIC => 'Models\Post', 'tagging'],
+     *      'photos' => [self::MANY_TO_POLYMORPHIC => 'Models\Photo', 'tagging'],
+     *      'users'  => [self::MANY_TO_POLYMORPHIC => 'Models\User', 'tagging']
+     * );
+     *
+     * @var array
+     */
     protected $schema = array();
 
+    /**
+     * Default values to associated with newly created columns. Value should be automatically typecasted.
+     *
+     * Example:
+     * protected $defaults = array(
+     *      'status'  => 'pending',
+     *      'balance' => 0
+     * );
+     *
+     * Note: spiral will force default values for EVERY column, this means no SQL exception expected when inserting
+     * partial content, however you have to write validation rules "in house".
+     *
+     * @var array
+     */
     protected $defaults = array();
 
-    //todo: how to merge indexes
+    /**
+     * Set of indexes has to be created for associated table. You don't need to list primary key indexes here.
+     *
+     * Example:
+     * protected $indexes = array(
+     *      self::INDEXES        => array(
+     *          ['status'], ['status', 'balance']
+     *      ),
+     *      self::UNIQUE_INDEXES => array(
+     *          ['email']
+     *      )
+     * );
+     *
+     * Indexes will be inherited from parent model and merged together.
+     *
+     * @var array
+     */
     protected $indexes = array(
         self::INDEXES        => array(),
         self::UNIQUE_INDEXES => array()

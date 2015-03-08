@@ -126,9 +126,7 @@ class EntitySchema extends Component
     }
 
     /**
-     * Getting name should be used to represent entity relationship in foreign classes. If foreign table exists and no
-     * foreign key name provided - spiral will try to fetch foreign key name using table references as they will be created
-     * automatically while defining relationship. Same name will used in polymorphic relationships.
+     * Getting name should be used to represent entity relationship in foreign classes (default behaviour).
      *
      * Example:
      * Models\Post => HAS_ONE => post_id
@@ -276,7 +274,6 @@ class EntitySchema extends Component
             //Relation definition
             $this->castRelation($name, $definition);
         }
-
         //Indexes
 
     }
@@ -303,14 +300,6 @@ class EntitySchema extends Component
      */
     protected function castColumn(BaseColumnSchema $column, $definition, $default = null)
     {
-        if (!$column->getType() && is_null($default) && $this->tableSchema->isExists())
-        {
-            $this->logger()->warning("Column '{table}'.'{column}' does not have default value but table is exists. Nullable flag is forced.", array(
-                'table'  => $this->getTable(),
-                'column' => $column->getName()
-            ));
-        }
-
         if (!is_null($default))
         {
             $column->defaultValue($default);
