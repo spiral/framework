@@ -13,7 +13,7 @@ use Spiral\Core\Core;
 trait MethodTrait
 {
     /**
-     * Helper method used to call object method with automatic parameters resolution using Container.
+     * Helper method used to call object function with automatic parameters resolution using Container.
      *
      * @param string $method     Method name.
      * @param array  $parameters Set of parameters to populate.
