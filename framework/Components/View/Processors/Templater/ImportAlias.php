@@ -83,11 +83,13 @@ class ImportAlias
             $this->namespace = View::getInstance()->defaultNamespace();
         }
 
-        if (isset($options['prefix']))
+        if (!isset($options['prefix']))
         {
-            //Will work with directory imports, concat prefix with original view name
-            $this->outputPattern = $options['prefix'] . '%s';
+            throw new ViewException("Import prefix is required.");
         }
+
+        //Will work with directory imports, concat prefix with original view name
+        $this->outputPattern = $options['prefix'] . ':%s';
 
         if (isset($options['alias']))
         {
