@@ -13,11 +13,6 @@ use Spiral\Components\DBAL\DBALException;
 trait HavingTrait
 {
     /**
-     * Where builders.
-     */
-    use WhereTrait;
-
-    /**
      * Array of having tokens declaring where conditions for HAVING statement. Structure and format of this tokens are
      * identical to whereTokens in WhereTrait.
      *
