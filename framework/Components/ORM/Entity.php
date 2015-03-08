@@ -23,7 +23,7 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      * Set this constant to false to disable automatic column and foreign keys creation. Using this flag is useful while
      * using Spiral ORM with already existed databases (you don't need to list columns which are already exists in table).
      */
-    const ACTIVE_SCHEMA = true;
+    const ACTIVE_SCHEMA = false;
 
     /**
      * Model specific constant to indicate that model has to be validated while saving. You still can change this behaviour
@@ -31,7 +31,9 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      */
     const FORCE_VALIDATION = true;
 
-
+    /**
+     * do relationships first?
+     */
     const HAS_ONE             = 1098;
     const HAS_MANY            = 2098;
     const BELONGS_TO          = 3323;
@@ -42,10 +44,11 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
     const POLYMORPHIC_TO_MANY = 1430;
 
     /**
-     * index constants
+     * Constants used to declare index type. See documentation for indexes property.
      */
-    const INDEXES        = 0;
-    const UNIQUE_INDEXES = 1;
+    const INDEX  = 1000;
+    const NORMAL = 1000;
+    const UNIQUE = 2000;
 
     /**
      * Already fetched schemas from ORM. Yes, ORM entity is really similar to ODM. Original ORM was written long time ago
@@ -150,22 +153,17 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      *
      * Example:
      * protected $indexes = array(
-     *      self::INDEXES        => array(
-     *          ['status'], ['status', 'balance']
-     *      ),
-     *      self::UNIQUE_INDEXES => array(
-     *          ['email']
-     *      )
+     *      [self::UNIQUE, 'email'],
+     *      [self::INDEX, 'status', 'balance'],
+     *      [self::INDEX, 'public_id']
      * );
      *
-     * Indexes will be inherited from parent model and merged together.
+     * Indexes will be inherited from parent model and merged together. You can also use NORMAL constant instead of
+     * "INDEX", if you love your code look aligned. :)
      *
      * @var array
      */
-    protected $indexes = array(
-        self::INDEXES        => array(),
-        self::UNIQUE_INDEXES => array()
-    );
+    protected $indexes = array();
 
     //    /**
     //     * Already loaded children.
