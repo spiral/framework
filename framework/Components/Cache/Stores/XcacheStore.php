@@ -118,7 +118,7 @@ class XcacheStore extends CacheStore
      * Increment numeric value stored in cache.
      *
      * @param string $name  Stored value name.
-     * @param int    $delta How much to increment by. 1 by default.  SAME ISSUE HERE AND ALL BELOW??? CHANGE ALL BELOW TOO.
+     * @param int    $delta How much to increment by. 1 by default.
      * @return mixed
      */
     public function increment($name, $delta = 1)

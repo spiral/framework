@@ -146,7 +146,7 @@ class FileStore extends CacheStore
      * Increment numeric value stored in cache.
      *
      * @param string $name  Stored value name.
-     * @param int    $delta How much to increment by. 1 by default.   SAME HERE? ?
+     * @param int    $delta How much to increment by. 1 by default.
      * @return mixed
      */
     public function increment($name, $delta = 1)

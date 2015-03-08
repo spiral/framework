@@ -10,35 +10,29 @@ namespace Spiral\Components\Cache\Stores;
 
 use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\Cache\CacheStore;
-use Spiral\Components\Redis\RedisClient;
-use Spiral\Components\Redis\RedisManager;
 
-class RedisStore extends CacheStore
+class ApcStore extends CacheStore
 {
     /**
      * Internal store name.
      */
-    const STORE = 'redis';
+    const STORE = 'apc';
 
     /**
-     * Default store options.
-     *
-     * @var array
+     * Functions to use.
      */
-    protected $options = array(
-        'client' => 'default',
-        'prefix' => 'spiral'
-    );
+    const APC  = 0;
+    const APCU = 1;
 
     /**
-     * Redis client used for cache operations.
+     * Cache type.
      *
-     * @var RedisClient
+     * @var int
      */
-    protected $client = null;
+    protected $type = self::APC;
 
     /**
-     * Prefix to be used for every key created in redis database using the cache store.
+     * Cache prefix.
      *
      * @var string
      */
@@ -49,69 +43,73 @@ class RedisStore extends CacheStore
      * exist at the same time and be used in different parts of the application.
      *
      * @param CacheManager $cache CacheManager component.
-     * @param RedisManager $redis RedisManager component.
      */
-    public function __construct(CacheManager $cache, RedisManager $redis = null)
+    public function __construct(CacheManager $cache)
     {
         parent::__construct($cache);
-
-        $this->client = $redis->client($this->options['client']);
         $this->prefix = !empty($this->options['prefix']) ? $this->options['prefix'] . ':' : '';
+
+        $this->type = function_exists('apcu_store') ? self::APCU : self::APC;
     }
 
     /**
-     * Check if store is working properly. Should check if the store drives still exists, files are writable, etc.
+     * Get APC cache type (APC or APCU).
+     *
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Check if store is working properly. Should check if the store drives does exist, files are writable, etc.
      *
      * @return bool
      */
     public function isAvailable()
     {
-        return $this->options['enabled'];
+        return function_exists('apcu_store') || function_exists('apc_store');
     }
 
     /**
-     * Check if a value is presented in cache.
+     * Check if a value is present in cache.
      *
      * @param string $name Stored value name.
      * @return bool
      */
     public function has($name)
     {
-        return $this->client->exists($this->prefix . $name);
+        return (bool)($this->type ? apcu_exists($this->prefix . $name) : apc_exists($this->prefix . $name));
     }
 
     /**
-     * Get value stored in cache. Name will be prefixed with applicationID to prevent run ins.
+     * Get value stored in cache. Name will be attached to applicationID to prevent run ins.
      *
      * @param string $name Stored value name.
      * @return mixed
      */
     public function get($name)
     {
-        if (is_null($data = $this->client->get($this->prefix . $name)))
-        {
-            return null;
-        }
-
-        return is_numeric($data) ? $data : unserialize($data);
+        return $this->type ? apcu_fetch($this->prefix . $name) : apc_fetch($this->prefix . $name);
     }
 
     /**
-     * Set data in cache. Should automatically create a record if it wasn't created before or replace an existing record.
-     * Name will be prefixed with applicationID to prevent run ins.
+     * Set data in cache, should automatically create record if it wasn't created before or replace already existed record.
+     * Name will be prefixed with applicationID to prevent collisions.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.
-     * @param int    $lifetime Duration in seconds until value will expire.
+     * @param int    $lifetime Duration in seconds till value will expire.
      * @return mixed
      */
     public function set($name, $data, $lifetime)
     {
-        $this->client->setex($this->prefix . $name, $lifetime, is_numeric($data) ? $data : serialize($data));
+        return $this->type ? apcu_store($this->prefix . $name, $data, $lifetime) : apc_store($this->prefix . $name, $data, $lifetime);
     }
 
     /**
-     * Store value in cache with an infinite lifetime. Value should expire only when cache is flushed.
+     * Store value in cache with infinite lifetime. Value will expire only when cache is flushed.
      *
      * @param string $name Stored value name.
      * @param mixed  $data Data in string or binary format.
@@ -119,7 +117,7 @@ class RedisStore extends CacheStore
      */
     public function forever($name, $data)
     {
-        $this->client->set($this->prefix . $name, is_numeric($data) ? $data : serialize($data));
+        return $this->type ? apcu_store($this->prefix . $name, $data) : apc_store($this->prefix . $name, $data);
     }
 
     /**
@@ -129,7 +127,7 @@ class RedisStore extends CacheStore
      */
     public function delete($name)
     {
-        $this->client->del($this->prefix . $name);
+        $this->type ? apcu_delete($this->prefix . $name) : apc_delete($this->prefix . $name);
     }
 
     /**
@@ -141,7 +139,7 @@ class RedisStore extends CacheStore
      */
     public function increment($name, $delta = 1)
     {
-        return $this->client->incrby($this->prefix . $name, $delta);
+        return $this->type ? apcu_inc($this->prefix . $name, $delta) : apc_inc($this->prefix . $name, $delta);
     }
 
     /**
@@ -153,7 +151,7 @@ class RedisStore extends CacheStore
      */
     public function decrement($name, $delta = 1)
     {
-        return $this->client->decrby($this->prefix . $name, $delta);
+        return $this->type ? apcu_dec($name, $delta) : apc_dec($name, $delta);
     }
 
     /**
@@ -163,6 +161,6 @@ class RedisStore extends CacheStore
      */
     public function flush()
     {
-        $this->client->flushDB();
+        $this->type ? apcu_clear_cache() : apc_clear_cache('user');
     }
 }

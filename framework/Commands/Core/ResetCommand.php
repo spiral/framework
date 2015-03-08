@@ -9,7 +9,6 @@
 namespace Spiral\Commands\Core;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\Files\FileManager;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,7 +26,7 @@ class ResetCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Reset application runtime cache.';
+    protected $description = 'Reset application runtime cache and invalidate configs.';
 
     /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.

@@ -218,8 +218,6 @@ class MemcacheStore extends CacheStore
 
         try
         {
-            //Since warnings are converted to errors by our error handler use try catch to deal with possible udf_flags
-            //will be limited warnings   THIS SENTENCE IS STRANGE. THE LAST PART. USER TRY CATCH TO DEAL???
             if ($this->driver == self::DRIVER_MEMCACHE)
             {
                 return $this->service->set($this->prefix . $name, $data, 0, $lifetime);

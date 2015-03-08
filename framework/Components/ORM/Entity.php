@@ -54,7 +54,6 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
      */
     protected $database = 'default';
 
-
     protected $schema = array();
 
     //    /**

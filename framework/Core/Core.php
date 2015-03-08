@@ -452,7 +452,8 @@ class Core extends Container
     }
 
     /**
-     * Load data previously saved to application cache, if file is not exists null will be returned.
+     * Load data previously saved to application cache, if file is not exists null will be returned. This method can be
+     * replaced by Core Traits to use different ways to store data like APC (this was already done as experiment).
      *
      * @param string $filename  Filename without .php
      * @param string $directory Application cache directory will be used by default.
@@ -477,7 +478,8 @@ class Core extends Container
 
     /**
      * Save runtime data to application cache, previously saved file can be removed or rewritten at any moment. Cache is
-     * determined by current applicationID and different for different environments.
+     * determined by current applicationID and different for different environments. This method can be replaced by Core
+     * Traits to use different ways to store data like APC (this was already done as experiment).
      *
      * All data stored using var_export() function, be aware of having to many write requests, however read will be optimized
      * by PHP using OPCache.
@@ -557,6 +559,28 @@ class Core extends Container
         }
 
         return $data;
+    }
+
+    /**
+     * Invalidate stored runtime data or configuration cache. Default runtime directory is used.
+     *
+     * @param string $filename Filename without .php
+     * @param bool   $config   Indication that provided filename is config name.
+     */
+    public function invalidateData($filename, $config = false)
+    {
+        if ($config)
+        {
+            $filename = str_replace(array('/', '\\'), '-', 'config-' . $filename);
+        }
+
+        //Cached filename
+        $filename = $this->makeFilename($filename);
+
+        if (file_exists($filename))
+        {
+            unlink($filename);
+        }
     }
 
     /**
