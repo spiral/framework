@@ -346,11 +346,7 @@ class EntitySchema extends Component
             if ($column->abstractType() == 'timestamp' || $column->abstractType() == 'datetime')
             {
                 $driver = $this->tableSchema->getDriver();
-
-                $default = strtr(
-                    $driver::DATETIME,
-                    array('Y' => '0000', 'm' => '00', 'd' => '00', 'H' => '00', 'i' => '00', 's' => '00')
-                );
+                $default = preg_replace('/[a-z]/', '0', $driver::DATETIME);
             }
             else
             {
