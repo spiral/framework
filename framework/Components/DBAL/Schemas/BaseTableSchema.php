@@ -796,6 +796,25 @@ abstract class BaseTableSchema extends Component
     }
 
     /**
+     * Get list of table names should be existed before saving current table schema. This list includes all tables schema
+     * references to. Method can be used to sort multiple table schemas in order they has to be created without violating
+     * constraints. Attention, resulted table list will include table prefixes.
+     *
+     * @return array
+     */
+    public function getDependencies()
+    {
+        $tables = array();
+
+        foreach ($this->getForeigns() as $foreign)
+        {
+            $tables[] = $foreign->getForeignTable();
+        }
+
+        return $tables;
+    }
+
+    /**
      * Rename table. Operation will be applied immediately. Attention, this method receives new table name without prefix.
      * Appropriate prefix will be assigned automatically.
      *
