@@ -285,7 +285,7 @@ class Tokenizer extends Component
                     {
                         $reflection = new ReflectionClass($class);
 
-                        if ($parent->isTrait())
+                        if ($parent && $parent->isTrait())
                         {
                             if (!in_array($parent->getName(), $this->getTraits($class)))
                             {
