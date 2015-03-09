@@ -16,9 +16,7 @@ class RandomTest extends TestCase
 {
     public function testRandom()
     {
-        $encrypter = $this->createEncrypter(array(
-            'key' => 'abc'
-        ));
+        $encrypter = $this->createEncrypter();
 
         $previousRandoms = array();
         for ($try = 0; $try < 100; $try++)
