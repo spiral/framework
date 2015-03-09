@@ -9,6 +9,7 @@
 namespace Spiral\Tests\Cases\Tokenizer;
 
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Tokenizer\Reflection\FunctionUsage\Argument;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Loader;
 use Spiral\Support\Tests\TestCase;
