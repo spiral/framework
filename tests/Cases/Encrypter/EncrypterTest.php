@@ -67,7 +67,7 @@ class EncryptionTest extends TestCase
         $encrypter->decrypt($encrypted);
     }
 
-    protected function createEncrypter($config = array('key' => PHP_VERSION))
+    protected function createEncrypter($config = array('key' => '1234567890123456'))
     {
         return new Encrypter(MemoryCore::getInstance()->setConfig('encrypter', $config));
     }
