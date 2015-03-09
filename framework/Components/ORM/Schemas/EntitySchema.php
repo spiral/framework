@@ -42,6 +42,7 @@ class EntitySchema extends Component
     /**
      * Entity model reflection.
      *
+     * @invisible
      * @var null|\ReflectionClass
      */
     protected $reflection = null;
@@ -49,6 +50,7 @@ class EntitySchema extends Component
     /**
      * Cache to speed up schema building.
      *
+     * @invisible
      * @var array
      */
     protected $propertiesCache = array();
@@ -258,7 +260,7 @@ class EntitySchema extends Component
     protected function castTable()
     {
         $defaults = $this->getDefaults();
-        foreach ($this->getSchema() as $name => $definition)
+        foreach ($this->property('schema', true) as $name => $definition)
         {
             //Column definition
             if (is_string($definition) && $definition != Entity::POLYMORPHIC)
@@ -278,6 +280,7 @@ class EntitySchema extends Component
         //Indexes
         foreach ($this->property('indexes', true) as $index)
         {
+            $this->castIndex($index);
         }
     }
 
@@ -383,9 +386,36 @@ class EntitySchema extends Component
      * );
      *
      * @param array $definition
+     * @throws ORMException
      */
     protected function castIndex(array $definition)
     {
+        $type = null;
+        $columns = array();
+
+        foreach ($definition as $chunk)
+        {
+            if ($chunk == Entity::INDEX || $chunk == Entity::UNIQUE)
+            {
+                $type = $chunk;
+                continue;
+            }
+
+            if (!$this->tableSchema->hasColumn($chunk))
+            {
+                throw new ORMException("Model {$this->getClass()} has index with undefined column.");
+            }
+
+            $columns[] = $chunk;
+        }
+
+        if (!$type)
+        {
+            throw new ORMException("Model {$this->getClass()} has index with unspecified type.");
+        }
+
+        //Defining index
+        $this->tableSchema->index($columns)->unique($type == Entity::UNIQUE);
     }
 
     protected function castRelation($name, $definition)
