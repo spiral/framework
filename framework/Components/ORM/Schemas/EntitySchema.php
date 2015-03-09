@@ -194,16 +194,6 @@ class EntitySchema extends Component
     }
 
     /**
-     * Get entity declared schema (merged with parent model(s) values).
-     *
-     * @return array
-     */
-    public function getSchema()
-    {
-        return $this->property('schema', true);
-    }
-
-    /**
      * Entity default values. No typecast here as it will be resolved on TableSchema level.
      *
      * @return array
@@ -219,7 +209,7 @@ class EntitySchema extends Component
      *
      * @return BaseTableSchema
      */
-    public function tableSchema()
+    public function getSchema()
     {
         return $this->tableSchema;
     }
