@@ -16,6 +16,7 @@ use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Helpers\StringHelper;
+
 //use Psr\Http\Message\ResponseInterface as PsrResponse;
 //use Psr\Http\Message\RequestInterface as PsrRequest;
 
@@ -123,6 +124,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
     //
     //        exit();
     //    }
+
+    /**
+     * Generate response to represent specified error code. Response can include pure headers or can have attached view
+     * file (based on HttpDispatcher configuration).
+     *
+     * @param int $code
+     * @return null
+     */
+    protected function errorResponse($code)
+    {
+    }
 
     /**
      * Every dispatcher should know how to handle exception snapshot provided by Debugger.

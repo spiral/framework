@@ -15,6 +15,7 @@ use Spiral\Components\DBAL\SqlFragment;
 use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaReader;
+use Spiral\Components\ORM\Schemas\Relationships\Polymorphic;
 use Spiral\Core\Component;
 
 class EntitySchema extends Component
@@ -61,6 +62,13 @@ class EntitySchema extends Component
      * @var BaseTableSchema
      */
     protected $tableSchema = null;
+
+    /**
+     * Model relationships.
+     *
+     * @var array
+     */
+    protected $relationships = array();
 
     /**
      * New EntitySchema instance, schema responsible for detecting relationships, columns and indexes. This class is really
@@ -263,7 +271,7 @@ class EntitySchema extends Component
         foreach ($this->property('schema', true) as $name => $definition)
         {
             //Column definition
-            if (is_string($definition) && $definition != Entity::POLYMORPHIC)
+            if (is_string($definition) && $definition != Entity::MORPHS_TO)
             {
                 //Filling column values
                 $defaults[$name] = $this->castColumn(
@@ -416,8 +424,35 @@ class EntitySchema extends Component
         $this->tableSchema->index($columns)->unique($type == Entity::UNIQUE);
     }
 
+    /**
+     * Registering new model relationship based on it's definition.
+     *
+     * @param string $name
+     * @param mixed  $definition
+     * @throws ORMException
+     */
     protected function castRelation($name, $definition)
     {
-        dump($definition);
+        // if ($definition == Entity::POLYMORPHIC_TO)
+        //  {
+        //     //  $this->relationships = new Polymorphic($this->ormSchema, $this, $name, array());
+        //     //            //        return;
+        //  }
+
+        $type = key($definition);
+
+        //Foreign model
+        $foreign = $definition[$type];
+
+        unset($definition[$type]);
+        $options = $definition;
+
+        dumP($type);
+        dump($foreign);
+        dump($options);
+
+        //Getting relationship type (has to be encoded as first key)
+
+        //throw new ORMException("Model {$this->getClass()} has invalid relationship.");
     }
 }

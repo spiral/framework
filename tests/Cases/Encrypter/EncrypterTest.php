@@ -22,7 +22,7 @@ class EncryptionTest extends TestCase
         $this->assertNotEquals('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));
 
-        $encrypter->setKey('new key');
+        $encrypter->setKey('0987654321123456');
         $encrypted = $encrypter->encrypt('test string');
         $this->assertNotEquals('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));

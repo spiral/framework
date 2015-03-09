@@ -376,7 +376,7 @@ class Database extends Component implements InjectableInterface
      * @return mixed
      * @throws \Exception
      */
-    public function transaction($callback, $isolationLevel = null)
+    public function transaction(callable $callback, $isolationLevel = null)
     {
         $this->beginTransaction($isolationLevel);
 

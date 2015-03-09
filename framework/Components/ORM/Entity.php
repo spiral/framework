@@ -34,14 +34,19 @@ abstract class Entity extends DataEntity// implements DatabaseEntityInterface
     /**
      * do relationships first?
      */
-    const HAS_ONE             = 1098;
-    const HAS_MANY            = 2098;
-    const BELONGS_TO          = 3323;
-    const MANY_TO_MANY        = 4342;
-    const MANY_THOUGHT        = 5344;
-    const POLYMORPHIC         = 6342;
-    const MANY_TO_POLYMORPHIC = 9234;
-    const POLYMORPHIC_TO_MANY = 1430;
+    const HAS_ONE      = 1098;
+    const HAS_MANY     = 2098;
+    const ONE_MORPHED  = 1231;
+    const MANY_MORPHED = 2223;
+
+    const BELONGS_TO = 3323;
+    const MORPHS_TO  = 6342;
+
+    const MANY_TO_MANY = 4342;
+    const MANY_THOUGHT = 5344;
+
+    const MANY_TO_MORPHED = 9234;
+    const MORPHED_TO_MANY = 1430;
 
     /**
      * Constants used to declare index type. See documentation for indexes property.
