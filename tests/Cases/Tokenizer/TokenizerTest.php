@@ -17,6 +17,11 @@ use Spiral\Tests\MemoryCore;
 
 class TokenizerTest extends TestCase
 {
+    /**
+     * @var Loader
+     */
+    protected $loader = null;
+
     protected $config = array(
         'directories' => array(__DIR__),
         'exclude'     => array('XX')
@@ -77,6 +82,8 @@ class TokenizerTest extends TestCase
         $this->assertArrayHasKey('Spiral\Tests\Cases\Tokenizer\Classes\ClassB', $classes);
         $this->assertArrayHasKey('Spiral\Tests\Cases\Tokenizer\Classes\ClassC', $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Tokenizer\Classes\Inner\ClassD', $classes);
+
+        $this->loader->disable();
     }
 
     public function testFileReflection()
@@ -131,14 +138,21 @@ class TokenizerTest extends TestCase
             test_function_a($this, $a + $b);
             test_function_b("string", 123);
         }
+
+        $this->loader->disable();
     }
 
     protected function createTokenizer($config = null)
     {
+        if (!$this->loader)
+        {
+            $this->loader = new Loader(MemoryCore::getInstance());
+        }
+
         return new Tokenizer(
             MemoryCore::getInstance()->setConfig('tokenizer', $config ?: $this->config),
             new FileManager(),
-            new Loader(MemoryCore::getInstance())
+            $this->loader
         );
     }
 }
