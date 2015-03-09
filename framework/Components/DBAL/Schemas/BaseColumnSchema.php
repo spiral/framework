@@ -565,7 +565,6 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
      * @link http://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
      * @param int $size Max string length. Maximum value is 255.
      * @return static
-     * @throws SchemaBuilderException
      */
     public function string($size = 255)
     {
@@ -573,10 +572,15 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
 
         if ($size > 255)
         {
-            throw new SchemaBuilderException("String size can't exceed 255 characters. Use text instead.");
+            throw new \InvalidArgumentException("String size can't exceed 255 characters. Use text instead.");
         }
 
-        $this->size = $size;
+        if ($size < 0)
+        {
+            throw new \InvalidArgumentException("Invalid string length value.");
+        }
+
+        $this->size = (int)$size;
 
         return $this;
     }
@@ -592,8 +596,13 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
     {
         $this->type('decimal');
 
-        $this->precision = $precision;
-        $this->scale = $scale;
+        if (!$precision)
+        {
+            throw new \InvalidArgumentException("Invalid precision value.");
+        }
+
+        $this->precision = (int)$precision;
+        $this->scale = (int)$scale;
 
         return $this;
     }
@@ -676,6 +685,13 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
 
             foreach ($columnVars as $name => $value)
             {
+                //Default values has to compared via type-casted value
+                if ($name == 'defaultValue' && $this->getDefaultValue() != $dbColumn->getDefaultValue())
+                {
+                    $difference[] = $name;
+                    continue;
+                }
+
                 if ($value != $dbColumnVars[$name])
                 {
                     $difference[] = $name;

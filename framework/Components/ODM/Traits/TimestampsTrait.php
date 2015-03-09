@@ -32,6 +32,7 @@ trait TimestampsTrait
                 }
             };
 
+            //This check is required as Document::SCHEMA_ANALYSIS will be provided multiple times
             if (!static::dispatcher()->hasListener('describe', $listener))
             {
                 static::dispatcher()->addListener('describe', $listener);

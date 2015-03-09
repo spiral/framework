@@ -8,9 +8,13 @@
  */
 namespace Spiral\Components\ORM;
 
-use Spiral\Components\DBAL\Builders\SelectQuery as BaseSelectQuery;
+use Spiral\Core\Component;
 
-class SelectQuery extends BaseSelectQuery
+class Selector extends Component
 {
+    public function __construct($schema, ORM $orm)
+    {
+    }
+
 
 }

@@ -54,7 +54,7 @@ class ODM extends Component
     protected $databases = array();
 
     /**
-     * ODMManager component instance.
+     * ODM component instance.
      *
      * @param Core $core
      * @throws CoreException
@@ -146,12 +146,12 @@ class ODM extends Component
     }
 
     /**
-     * Get ODM schema builder. Schema will detect all existed documents, collections, relationships between them and will
+     * Get ODM schema reader. Schema will detect all existed documents, collections, relationships between them and will
      * generate virtual documentation.
      *
      * @return SchemaReader
      */
-    public function readSchema()
+    public function schemaReader()
     {
         return SchemaReader::make(array('config' => $this->config['schema']));
     }
@@ -162,7 +162,7 @@ class ODM extends Component
      */
     public function updateSchema()
     {
-        $schema = $this->readSchema();
+        $schema = $this->schemaReader();
 
         if ($this->config['schema']['documentation'])
         {
@@ -265,7 +265,7 @@ class ODM extends Component
     const C_DEFINITION = 2;
 
     /**
-     * Normalized document schema.
+     * Normalized document constants.
      */
     const D_COLLECTION   = 0;
     const D_DB           = 1;
