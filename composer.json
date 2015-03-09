@@ -28,7 +28,8 @@
       "framework/functions.php"
     ],
     "psr-4": {
-      "Spiral\\": "framework/"
+      "Spiral\\": "framework/",
+      "Spiral\\Tests\\": "tests/"
     }
   }
 }
