@@ -28,7 +28,7 @@ class ServerCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Run spiral application on specified host and port configuration.';
+    protected $description = 'Run Spiral Development server on specified host and port.';
 
     /**
      * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
