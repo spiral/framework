@@ -11,6 +11,7 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Message\MessageTrait;
+use Spiral\Components\Http\Request\PropertyCollectionInterface;
 
 class Request implements ServerRequestInterface
 {
@@ -18,6 +19,18 @@ class Request implements ServerRequestInterface
      * Common http message methods.
      */
     use MessageTrait;
+
+
+//    public function __construct(
+//        $method,
+//        UriInterface $uri,
+////        PropertyCollectionInterface $query,
+////        PropertyCollectionInterface $files,
+////        PropertyCollectionInterface $query,
+////        PropertyCollectionInterface $query
+//    )
+//    {
+//    }
 
     /**
      * Retrieves the message's request target.

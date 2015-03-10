@@ -19,6 +19,10 @@ class Response implements ResponseInterface
      */
     use MessageTrait;
 
+    public function __construct($content, $status = 200, array $headers)
+    {
+    }
+
     /**
      * Gets the response Status-Code.
      *
@@ -78,6 +82,11 @@ class Response implements ResponseInterface
 
     public function withCookie(CookieInterface $cookie)
     {
+    }
+
+    public function withCookies(array $cookies)
+    {
+
     }
 
     /**

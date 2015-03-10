@@ -11,6 +11,9 @@ namespace Spiral\Components\Encrypter;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 
+/**
+ * DO NOT USE ENCRYPTER! IT HAS TO BE REWRITTEN TO WORK USING OPENSSL FIRST.
+ */
 class Encrypter extends Component
 {
     /**
@@ -81,11 +84,6 @@ class Encrypter extends Component
         if (isset($this->config['mode']))
         {
             $this->mode = $this->config['mode'];
-        }
-
-        if (!function_exists('openssl_random_pseudo_bytes'))
-        {
-            throw new EncrypterException('OpenSSL extension is required to work securely.');
         }
 
         $this->setKey($this->config['key']);

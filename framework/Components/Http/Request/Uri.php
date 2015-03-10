@@ -64,6 +64,7 @@ class Uri implements UriInterface
     /**
      * Set of supported Uri schemes and their ports.
      *
+     * @invisible
      * @var array
      */
     private $defaultSchemes = array(
