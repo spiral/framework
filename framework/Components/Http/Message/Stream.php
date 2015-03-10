@@ -13,12 +13,6 @@ use Psr\Http\Message\StreamableInterface;
 class Stream implements StreamableInterface
 {
     /**
-     * Stream read/write modes.
-     */
-    const READ  = 'r';
-    const WRITE = 'w';
-
-    /**
      * Associated stream resource.
      *
      * @var resource
@@ -39,7 +33,7 @@ class Stream implements StreamableInterface
      * @param string|resource $stream Stream resource or URI.
      * @param string          $mode   Read/write mode.
      */
-    function __construct($stream, $mode = self::READ)
+    public function __construct($stream, $mode = 'r')
     {
         $this->resource = $stream;
         if (is_string($stream))

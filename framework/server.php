@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 }
 else
 {
-    $logMessage = '[' . date('M d, Y H:i:s') . '] <fg=comment>' . $_SERVER['REQUEST_METHOD'] . '</fg=comment>';
+    $logMessage = '[' . date('M d, Y H:i:s') . '] <fg=cyan>' . $_SERVER['REQUEST_METHOD'] . '</fg=cyan>';
 }
 
 if ($requestURI !== '/' && file_exists(getcwd() . $requestURI))
