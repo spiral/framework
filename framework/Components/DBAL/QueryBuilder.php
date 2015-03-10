@@ -155,10 +155,9 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     /**
      * Simplified way to dump information.
      *
-     * @param bool $array Return debugInfo as array, used to overwrite method in child QueryBuilders.
      * @return object
      */
-    public function __debugInfo($array = false)
+    public function __debugInfo()
     {
         try
         {
@@ -175,6 +174,6 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
             'database'  => $this->database
         );
 
-        return $array ? $debugInfo : (object)$debugInfo;
+        return (object)$debugInfo;
     }
 }
