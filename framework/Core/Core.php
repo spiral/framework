@@ -160,10 +160,6 @@ class Core extends Container
             'orm'                                    => 'Spiral\Components\ORM\ORM',
             'odm'                                    => 'Spiral\Components\ODM\ODM',
 
-            //Other components
-            //            'session'                 => 'spiral\\core\\Session',
-            //            'cookies'                 => 'spiral\\core\\Cookies',
-
             //Additional interfaces
             'Spiral\Core\Events\DispatcherInterface' => 'events',
             'Psr\Log\LoggerInterface'                => 'logger'

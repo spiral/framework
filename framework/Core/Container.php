@@ -48,13 +48,10 @@ class Container extends Component
         if (!isset(self::$bindings[$alias]))
         {
             $reflector = new \ReflectionClass($alias);
-            if (!$ignoreII && $reflector->implementsInterface('Spiral\\Core\\Container\\InjectableInterface'))
+            if (!$ignoreII && $injectionManager = $reflector->getConstant('INJECTION_MANAGER'))
             {
-                return call_user_func(
-                    array($reflector->getConstant('INJECTION_MANAGER'), 'resolveInjection'),
-                    $reflector,
-                    $contextParameter
-                );
+                //Apparently checking constant is faster than checking interface
+                return call_user_func(array($injectionManager, 'resolveInjection'), $reflector, $contextParameter);
             }
             elseif ($reflector->isInstantiable())
             {
@@ -85,16 +82,11 @@ class Container extends Component
 
         if (is_string($binding))
         {
-            if ($binding == $requester)
-            {
-                throw new CoreException("Recursive injection detected while resolving '{$requester}'.");
-            }
-
             $instance = self::get($binding, $parameters, $contextParameter, $ignoreII);
             if ($instance instanceof Component && $instance::SINGLETON)
             {
                 //To prevent double binding
-                self::$bindings[$binding] = $instance;
+                self::$bindings[$binding] = self::$bindings[get_class($instance)] = $instance;
             }
 
             return $instance;

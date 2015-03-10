@@ -15,7 +15,6 @@ use Spiral\Core\Component;
 use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
-use Spiral\Helpers\StringHelper;
 
 class HttpDispatcher extends Component implements DispatcherInterface
 {
@@ -55,7 +54,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $core->callAction('Controllers\HomeController');
 
-        echo(StringHelper::formatBytes(memory_get_peak_usage()));
+        //echo(StringHelper::formatBytes(memory_get_peak_usage()));
 
         //Cast request
         //pass to middleware(s) - this is where cookies processed, tokens checked and session handled, like big boys
