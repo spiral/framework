@@ -185,11 +185,11 @@ class Debugger extends Component
      *
      * @param Exception $exception
      * @param bool      $logException If true (default), message to error container will be added.
-     * @return ExceptionSnapshot
+     * @return Snapshot
      */
     public function handleException(Exception $exception, $logException = true)
     {
-        $response = ExceptionSnapshot::make(compact('exception') + array(
+        $response = Snapshot::make(compact('exception') + array(
                 'view'      => $this->config['backtrace']['view'],
                 'snapshots' => $this->config['backtrace']['snapshots']
             ));

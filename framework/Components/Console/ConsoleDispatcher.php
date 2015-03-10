@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\Console;
 
-use Spiral\Components\Debug\ExceptionSnapshot;
+use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
@@ -185,10 +185,10 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     /**
      * Every dispatcher should know how to handle exception snapshot provided by Debugger.
      *
-     * @param ExceptionSnapshot $snapshot
+     * @param Snapshot $snapshot
      * @return mixed
      */
-    public function handleException(ExceptionSnapshot $snapshot)
+    public function handleException(Snapshot $snapshot)
     {
         $this->getApplication()->renderException($snapshot->getException(), new ConsoleOutput());
     }

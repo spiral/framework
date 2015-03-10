@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Spiral\Components\Debug\ExceptionSnapshot $exception
+ * @var \Spiral\Components\Debug\Snapshot $exception
  */
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Components\Debug\Debugger;

@@ -15,7 +15,7 @@ use Spiral\Core\Container\ContainerException;
 use Exception;
 use Spiral\Core\Dispatcher\ClientException;
 
-class ExceptionSnapshot extends Component
+class Snapshot extends Component
 {
     /**
      * Exception response content is always Exception object handled in Debugger::handleException method.
@@ -43,6 +43,7 @@ class ExceptionSnapshot extends Component
      * Create new ExceptionResponse object. Object usually generated in Debug::handleException() method and used to show
      * or to store (if specified) backtrace and environment dump or occurred error.
      *
+     * @todo include DI for View and FileManager
      * @param Exception $exception
      * @param string    $view      View should be used to render backtrace.
      * @param array     $snapshots Options to render and store error snapshots.

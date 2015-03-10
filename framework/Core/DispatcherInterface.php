@@ -8,7 +8,7 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Components\Debug\ExceptionSnapshot;
+use Spiral\Components\Debug\Snapshot;
 
 interface DispatcherInterface
 {
@@ -22,8 +22,8 @@ interface DispatcherInterface
     /**
      * Every dispatcher should know how to handle exception snapshot provided by Debugger.
      *
-     * @param ExceptionSnapshot $snapshot
+     * @param Snapshot $snapshot
      * @return mixed
      */
-    public function handleException(ExceptionSnapshot $snapshot);
+    public function handleException(Snapshot $snapshot);
 }

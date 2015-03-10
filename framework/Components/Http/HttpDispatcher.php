@@ -9,7 +9,7 @@
 namespace Spiral\Components\Http;
 
 //use Psr\Http\Message\StreamableInterface;
-use Spiral\Components\Debug\ExceptionSnapshot;
+use Spiral\Components\Debug\Snapshot;
 //use Spiral\Components\Http\Response\JsonResponse;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
@@ -139,10 +139,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
     /**
      * Every dispatcher should know how to handle exception snapshot provided by Debugger.
      *
-     * @param ExceptionSnapshot $snapshot
+     * @param Snapshot $snapshot
      * @return mixed
      */
-    public function handleException(ExceptionSnapshot $snapshot)
+    public function handleException(Snapshot $snapshot)
     {
         if ($snapshot->getException() instanceof ClientException)
         {
