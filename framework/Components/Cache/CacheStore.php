@@ -34,7 +34,7 @@ abstract class CacheStore extends Component implements StoreInterface, Injectabl
      *
      * @var array
      */
-    private $options = array();
+    protected $options = array();
 
     /**
      * Create a new cache store instance. Every instance should represent a single cache method. Multiple stores can

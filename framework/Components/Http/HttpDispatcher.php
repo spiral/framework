@@ -11,7 +11,7 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
-use Spiral\Components\Encrypter\Encrypter;
+use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\Uri;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
@@ -55,6 +55,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function start(Core $core)
     {
         $uri = Uri::castUri($_SERVER);
+        $input = new InputStream();
 
         $core->callAction('Controllers\HomeController', 'index', array(
             'uri'     => $uri,

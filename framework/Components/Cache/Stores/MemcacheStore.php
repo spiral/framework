@@ -110,7 +110,7 @@ class MemcacheStore extends CacheStore
             throw new CacheException('Unable to create Memcache cache store. A server must be specified.');
         }
 
-        $this->service = $this->driver == self::DRIVER_MEMCACHE ? new MemcacheDriver() : new MemcacheDriver();
+        $this->service = ($this->driver == self::DRIVER_MEMCACHE ? new MemcacheDriver() : new MemcacheDriver());
         $this->connect();
     }
 
@@ -306,7 +306,7 @@ class MemcacheStore extends CacheStore
     {
         if ($this->options['defaultServer']['persistent'] && $this->driver == self::DRIVER_MEMCACHE)
         {
-            $this->service->close();
+            $this->service && $this->service->close();
         }
 
         $this->service = null;
