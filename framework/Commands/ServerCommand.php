@@ -56,7 +56,7 @@ class ServerCommand extends Command
     {
         $host = $this->argument('host') . ':' . $this->option('port');
 
-        $this->writeln("<info>Starting Spiral Development server at <comment>{$host}</comment>.</info>");
+        $this->writeln("<info>Starting Spiral Development server at <comment>{$host}</comment></info>");
         $this->writeln("Press <comment>Ctrl-C</comment> to quit.");
 
         $process = new Process(
