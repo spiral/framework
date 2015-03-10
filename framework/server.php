@@ -1,7 +1,12 @@
 <?php
 /**
- * CLI-Server will handle resources by itself.
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ * @copyright ©2009-2015
  */
+
 $requestURI = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $out = fopen('php://stdout', 'w');
 
@@ -19,7 +24,10 @@ if ($requestURI !== '/' && file_exists(getcwd() . $requestURI))
     //Letting process know about resource
     fwrite($out, 'R ' . $logMessage . ' ' . $requestURI);
 
-    //Serving resources
+    /**
+     * CLI-Server will handle resources by itself.
+     */
+
     return false;
 }
 
