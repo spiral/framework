@@ -273,6 +273,12 @@ class ServerRequest extends Request
      */
     public function withoutAttribute($name)
     {
+        if (!array_key_exists($name, $this->attributes))
+        {
+            //Untouched
+            return $this;
+        }
+
         $request = clone $this;
         unset($request->attributes[$name]);
 

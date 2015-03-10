@@ -27,11 +27,35 @@ class Request implements RequestInterface
     private $method = '';
 
     /**
+     * The message's request target.
+     *
+     * @var null|string
+     */
+    private $requestTarget = null;
+
+    /**
      * UriInterface instance representing the URI of the request.
      *
      * @var UriInterface
      */
     private $uri = null;
+
+    /**
+     * Allowed (supported) HTTP methods.
+     *
+     * @var array
+     */
+    private $allowedMethods = array(
+        'CONNECT',
+        'DELETE',
+        'GET',
+        'HEAD',
+        'OPTIONS',
+        'PATCH',
+        'POST',
+        'PUT',
+        'TRACE'
+    );
 
     /**
      * Retrieves the message's request target.
@@ -103,7 +127,15 @@ class Request implements RequestInterface
      */
     public function withMethod($method)
     {
-        // TODO: Implement withMethod() method.
+        if (!is_null($method) && !in_array(strtoupper($method), $this->allowedMethods))
+        {
+            throw new \InvalidArgumentException("Unsupported HTTP method value provided.");
+        }
+
+        $request = clone $this;
+        $request->method = $method;
+
+        return $request;
     }
 
     /**

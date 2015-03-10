@@ -56,7 +56,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $uri = Uri::castUri($_SERVER);
 
-        $core->callAction('Controllers\HomeController', 'index', array('uri' => $uri));
+        $core->callAction('Controllers\HomeController', 'index', array(
+            'uri'     => $uri,
+            'headers' => $this->castHeaders($_SERVER)
+        ));
 
         //    dump($this->castHeaders($_SERVER));
 

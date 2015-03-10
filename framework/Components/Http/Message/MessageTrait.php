@@ -13,6 +13,27 @@ use Psr\Http\Message\StreamableInterface;
 trait MessageTrait
 {
     /**
+     * HTTP protocol version.
+     *
+     * @var string
+     */
+    private $protocolVersion = '1.1';
+
+    /**
+     * Message headers
+     *
+     * @var array
+     */
+    private $headers = array();
+
+    /**
+     * Message body.
+     *
+     * @var StreamableInterface
+     */
+    private $body = null;
+
+    /**
      * Retrieves the HTTP protocol version as a string.
      *
      * The string MUST contain only the HTTP version number (e.g., "1.1", "1.0").
@@ -21,6 +42,7 @@ trait MessageTrait
      */
     public function getProtocolVersion()
     {
+        return $this->protocolVersion;
     }
 
     /**
@@ -38,6 +60,10 @@ trait MessageTrait
      */
     public function withProtocolVersion($version)
     {
+        $message = clone $this;
+        $message->protocolVersion = $version;
+
+        return $message;
     }
 
     /**
@@ -66,18 +92,21 @@ trait MessageTrait
      */
     public function getHeaders()
     {
+        return $this->headers;
     }
 
     /**
      * Checks if a header exists by the given case-insensitive name.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param string $name      Case-insensitive header field name.
+     * @param bool   $normalize Normalize header name.
      * @return bool Returns true if any header names match the given header
-     *                     name using a case-insensitive string comparison. Returns false if
-     *                     no matching header name is found in the message.
+     *                          name using a case-insensitive string comparison. Returns false if
+     *                          no matching header name is found in the message.
      */
-    public function hasHeader($name)
+    public function hasHeader($name, $normalize = true)
     {
+        return array_key_exists($this->normalizeHeader($name, $normalize), $this->headers);
     }
 
     /**
@@ -119,12 +148,13 @@ trait MessageTrait
      * immutability of the message, and MUST return a new instance that has the
      * new and/or updated header and value.
      *
-     * @param string          $name  Case-insensitive header field name.
-     * @param string|string[] $value Header value(s).
-     * @return self
+     * @param string          $name      Case-insensitive header field name.
+     * @param string|string[] $value     Header value(s).
+     * @param bool            $normalize Normalize header name.
+     * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader($name, $value)
+    public function withHeader($name, $value, $normalize = true)
     {
     }
 
@@ -140,12 +170,13 @@ trait MessageTrait
      * immutability of the message, and MUST return a new instance that has the
      * new header and/or value.
      *
-     * @param string          $name  Case-insensitive header field name to add.
-     * @param string|string[] $value Header value(s).
+     * @param string          $name      Case-insensitive header field name to add.
+     * @param string|string[] $value     Header value(s).
+     * @param bool            $normalize Normalize header name.
      * @return self
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value, $normalize = true)
     {
     }
 
@@ -158,10 +189,11 @@ trait MessageTrait
      * immutability of the message, and MUST return a new instance that removes
      * the named header.
      *
-     * @param string $name Case-insensitive header field name to remove.
+     * @param string $name      Case-insensitive header field name to remove.
+     * @param bool   $normalize Normalize header name.
      * @return self
      */
-    public function withoutHeader($name)
+    public function withoutHeader($name, $normalize = true)
     {
     }
 
@@ -172,6 +204,7 @@ trait MessageTrait
      */
     public function getBody()
     {
+        return $this->body;
     }
 
     /**
@@ -189,5 +222,26 @@ trait MessageTrait
      */
     public function withBody(StreamableInterface $body)
     {
+        $message = clone $this;
+        $message->body = $body;
+
+        return $message;
+    }
+
+    /**
+     * Ensure that header is in valid format.
+     *
+     * @param string $header
+     * @param bool   $normalize Apply normalization.
+     * @return string
+     */
+    private function normalizeHeader($header, $normalize = true)
+    {
+        if (!$normalize)
+        {
+            return $header;
+        }
+
+        return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
     }
 }
