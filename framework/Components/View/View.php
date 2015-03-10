@@ -26,12 +26,6 @@ class View extends Component
     const SINGLETON = 'view';
 
     /**
-     * Default view namespace. View component can support as many namespaces and user want, to specify names
-     * use render(namespace:view) syntax.
-     */
-    protected $defaultNamespace = 'default';
-
-    /**
      * Following extension will be used for all view files.
      */
     const EXTENSION = '.php';
@@ -45,6 +39,12 @@ class View extends Component
      * Use spiral.cli spiral:core viewCache --generate
      */
     const HARD_CACHE = 2;
+
+    /**
+     * Default view namespace. View component can support as many namespaces and user want, to specify names
+     * use render(namespace:view) syntax.
+     */
+    protected $defaultNamespace = 'default';
 
     /**
      * Registered view namespaces. Every namespace can include multiple search directories. Search directory may have
@@ -73,6 +73,7 @@ class View extends Component
     /**
      * FileManager component.
      *
+     * @invisible
      * @var FileManager
      */
     protected $file = null;

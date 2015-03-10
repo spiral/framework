@@ -12,12 +12,177 @@ use Psr\Http\Message\UriInterface;
 
 class Uri implements UriInterface
 {
+    /**
+     * The scheme of the URI.
+     *
+     * @var string
+     */
+    private $scheme = '';
+
+    /**
+     * Authority portion of the URI, in "[user-info@]host[:port]" format.
+     *
+     * @var string
+     */
+    private $userInfo = '';
+
+    /**
+     * Host segment of the URI.
+     *
+     * @var string
+     */
+    private $host = '';
+
+    /**
+     * Host segment of the URI.
+     *
+     * @var int
+     */
+    private $port = 80;
+
+    /**
+     * The path segment of the URI.
+     *
+     * @var string
+     */
+    private $path = '';
+
+    /**
+     * The URI query string.
+     *
+     * @var string
+     */
+    private $query = '';
+
+    /**
+     * The URI fragment.
+     *
+     * @var string
+     */
+    private $fragment = '';
+
+    /**
+     * Set of supported Uri schemes and their ports.
+     *
+     * @var array
+     */
+    private $defaultSchemes = array(
+        'http'  => 80,
+        'https' => 443
+    );
+
+    /**
+     * Create new Uri instance based on provided Uri string. All Uri object properties declared as private to respect
+     * immutability or Uri.
+     *
+     * @param string $uri
+     */
     public function __construct($uri = '')
     {
+        $uri && $this->parseUri($uri);
     }
 
-    public static function serverUri($server)
+    /**
+     * Parse income uri and populate instance values.
+     *
+     * @param string $uri
+     */
+    private function parseUri($uri)
     {
+        $components = parse_url($uri);
+
+        $this->scheme = isset($components['scheme']) ? $components['scheme'] : '';
+        if (isset($components['pass']))
+        {
+            $this->userInfo = $components['user'] . ':' . $components['pass'];
+        }
+        elseif (isset($components['user']))
+        {
+            $this->userInfo = $components['user'];
+        }
+
+        $this->host = isset($components['host']) ? $components['host'] : '';
+        $this->port = isset($components['port']) ? $components['port'] : null;
+        $this->path = isset($components['path']) ? $components['path'] : '/';
+        $this->query = isset($components['query']) ? $components['query'] : '';
+        $this->fragment = isset($components['fragment']) ? $components['fragment'] : '';
+    }
+
+    /**
+     * Cast Uri object properties based on values provided in server array ($_SERVER).
+     *
+     * @param array $server
+     * @return static
+     */
+    public static function castUri(array $server)
+    {
+        $uri = new static;
+
+        $uri->scheme = 'http';
+        if (isset($server['HTTPS']) && $server['HTTPS'] == 'on')
+        {
+            $uri->scheme = 'https';
+        }
+        elseif (isset($server['HTTP_X_FORWARDED_PROTO']) && $server['HTTP_X_FORWARDED_PROTO'] == 'https')
+        {
+            $uri->scheme = 'https';
+        }
+        elseif (isset($server['HTTP_X_FORWARDED_SSL']) && $server['HTTP_X_FORWARDED_SSL'] == 'on')
+        {
+            $uri->scheme = 'https';
+        }
+
+        if (isset($server['SERVER_PORT']))
+        {
+            $uri->port = (int)$server['SERVER_PORT'];
+        }
+
+        if (isset($server['HTTP_HOST']))
+        {
+            $uri->host = $server['HTTP_HOST'];
+            if ($delimiter = strpos($server['HTTP_HOST'], ':'))
+            {
+                $uri->port = (int)substr($uri->host, $delimiter + 1);
+                $uri->host = substr($uri->host, 0, $delimiter);
+            }
+        }
+        elseif (isset($server['HTTP_NAME']))
+        {
+            $uri->host = $server['HTTP_NAME'];
+        }
+
+        if (isset($server['UNENCODED_URL']))
+        {
+            $uri->path = $server['UNENCODED_URL'];
+        }
+
+        if (isset($server['REQUEST_URI']))
+        {
+            $uri->path = $server['REQUEST_URI'];
+        }
+
+        if (isset($server['HTTP_X_REWRITE_URL']))
+        {
+            $uri->path = $server['HTTP_X_REWRITE_URL'];
+        }
+
+        if (isset($server['HTTP_X_ORIGINAL_URL']))
+        {
+            $uri->path = $server['HTTP_X_ORIGINAL_URL'];
+        }
+
+        if (($query = strpos($uri->path, '?')) !== false)
+        {
+            $uri->path = substr($uri->path, 0, $query);
+        }
+
+        $uri->path = $uri->path ?: '/';
+        if (isset($server['QUERY_STRING']))
+        {
+            $uri->query = ltrim($server['QUERY_STRING'], '?');
+        }
+
+        return $uri;
     }
 
     /**
@@ -34,7 +199,7 @@ class Uri implements UriInterface
      */
     public function getScheme()
     {
-        // TODO: Implement getScheme() method.
+        return $this->scheme;
     }
 
     /**
@@ -57,7 +222,19 @@ class Uri implements UriInterface
      */
     public function getAuthority()
     {
-        // TODO: Implement getAuthority() method.
+        if (empty($this->host))
+        {
+            return '';
+        }
+
+        $result = ($this->userInfo ? $this->userInfo . '@' : '') . $this->host;
+
+        if ($this->port && !$this->isDefaultPort())
+        {
+            $result .= ':' . $this->port;
+        }
+
+        return $result;
     }
 
     /**
@@ -74,7 +251,7 @@ class Uri implements UriInterface
      */
     public function getUserInfo()
     {
-        // TODO: Implement getUserInfo() method.
+        return $this->userInfo;
     }
 
     /**
@@ -87,7 +264,7 @@ class Uri implements UriInterface
      */
     public function getHost()
     {
-        // TODO: Implement getHost() method.
+        return $this->host;
     }
 
     /**
@@ -103,11 +280,21 @@ class Uri implements UriInterface
      * If no port is present, but a scheme is present, this method MAY return
      * the standard port for that scheme, but SHOULD return null.
      *
-     * @return null|int The port for the URI.
+     * @return null|int Host segment of the URI.
      */
     public function getPort()
     {
-        // TODO: Implement getPort() method.
+        return $this->port;
+    }
+
+    /**
+     * Check if current port default for current scheme.
+     *
+     * @return bool
+     */
+    private function isDefaultPort()
+    {
+        return !$this->scheme || $this->defaultSchemes[$this->scheme] == $this->port;
     }
 
     /**
@@ -120,7 +307,7 @@ class Uri implements UriInterface
      */
     public function getPath()
     {
-        // TODO: Implement getPath() method.
+        return $this->path;
     }
 
     /**
@@ -135,7 +322,7 @@ class Uri implements UriInterface
      */
     public function getQuery()
     {
-        // TODO: Implement getQuery() method.
+        return $this->query;
     }
 
     /**
@@ -150,7 +337,7 @@ class Uri implements UriInterface
      */
     public function getFragment()
     {
-        // TODO: Implement getFragment() method.
+        return $this->fragment;
     }
 
     /**
@@ -171,7 +358,20 @@ class Uri implements UriInterface
      */
     public function withScheme($scheme)
     {
-        // TODO: Implement withScheme() method.
+        if (strpos($scheme, '://'))
+        {
+            $scheme = substr($scheme, 0, -3);
+        }
+
+        if ($scheme && !isset($this->defaultSchemes[$scheme]))
+        {
+            throw new \InvalidArgumentException('Invalid scheme value, only "http" and "allowed".');
+        }
+
+        $uri = clone $this;
+        $uri->scheme = $scheme;
+
+        return $uri;
     }
 
     /**
@@ -190,7 +390,10 @@ class Uri implements UriInterface
      */
     public function withUserInfo($user, $password = null)
     {
-        // TODO: Implement withUserInfo() method.
+        $uri = clone $this;
+        $uri->userInfo = $user . ($password ? ':' . $password : '');
+
+        return $uri;
     }
 
     /**
@@ -207,7 +410,10 @@ class Uri implements UriInterface
      */
     public function withHost($host)
     {
-        // TODO: Implement withHost() method.
+        $uri = clone $this;
+        $uri->host = $host;
+
+        return $uri;
     }
 
     /**
@@ -229,7 +435,16 @@ class Uri implements UriInterface
      */
     public function withPort($port)
     {
-        // TODO: Implement withPort() method.
+        $port = (int)$port;
+        if ($port && ($port < 1 || $port > 65535))
+        {
+            throw new \InvalidArgumentException('Invalid port value, use only TCP and UDP range.');
+        }
+
+        $uri = clone $this;
+        $uri->port = $port;
+
+        return $uri;
     }
 
     /**
@@ -249,7 +464,22 @@ class Uri implements UriInterface
      */
     public function withPath($path)
     {
-        // TODO: Implement withPath() method.
+        if (strpos($path, '?') !== false || strpos($path, '#') !== false)
+        {
+            throw new \InvalidArgumentException(
+                'Invalid path value, path must not include URI query of URI fragment.'
+            );
+        }
+
+        if (empty($path) || $path[0] !== '/')
+        {
+            $path = '/' . $path;
+        }
+
+        $new = clone $this;
+        $new->path = $path;
+
+        return $new;
     }
 
     /**
@@ -270,7 +500,22 @@ class Uri implements UriInterface
      */
     public function withQuery($query)
     {
-        // TODO: Implement withQuery() method.
+        if (strpos($query, '#') !== false)
+        {
+            throw new \InvalidArgumentException(
+                'Invalid query value, query must not URI fragment.'
+            );
+        }
+
+        if (!empty($query) && $query[0] == '?')
+        {
+            $query = substr($query, 1);
+        }
+
+        $uri = clone $this;
+        $uri->query = $query;
+
+        return $uri;
     }
 
     /**
@@ -288,7 +533,50 @@ class Uri implements UriInterface
      */
     public function withFragment($fragment)
     {
-        // TODO: Implement withFragment() method.
+        if (!empty($fragment) && $fragment[0] == '#')
+        {
+            $fragment = substr($fragment, 1);
+        }
+
+        $uri = clone $this;
+        $uri->fragment = $fragment;
+
+        return $uri;
+    }
+
+    /**
+     * Return the string representation of the URI.
+     *
+     * Concatenates the various segments of the URI, using the appropriate
+     * delimiters:
+     *
+     * - If a scheme is present, "://" MUST append the value.
+     * - If the authority information is present, that value will be
+     *   concatenated.
+     * - If a path is present, it MUST be prefixed by a "/" character.
+     * - If a query string is present, it MUST be prefixed by a "?" character.
+     * - If a URI fragment is present, it MUST be prefixed by a "#" character.
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        $result = ($this->scheme ? $this->scheme . '://' : '');
+
+        //UserInfo + host + port + path
+        $result .= $this->getAuthority() . $this->path;
+
+        if (!empty($this->query))
+        {
+            $result .= '?' . $this->query;
+        }
+
+        if (!empty($this->fragment))
+        {
+            $result .= '#' . $this->fragment;
+        }
+
+        return $result;
     }
 
     /**
@@ -308,6 +596,6 @@ class Uri implements UriInterface
      */
     public function __toString()
     {
-        // TODO: Implement __toString() method.
+        return $this->toString();
     }
 }

@@ -37,6 +37,7 @@ class Tokenizer extends Component
     /**
      * Core to check bindings and store classes cache.
      *
+     * @invisible
      * @var Core
      */
     protected $core = null;
@@ -44,6 +45,7 @@ class Tokenizer extends Component
     /**
      * FileManager component to load files.
      *
+     * @invisible
      * @var FileManager
      */
     protected $file = null;

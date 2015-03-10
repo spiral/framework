@@ -39,7 +39,7 @@ class Debugger extends Component
      *
      * @var array
      */
-    protected static $dumping = array(
+    private static $dumping = array(
         'maxLevel'  => 10,
         'container' => 'background-color: white; font-family: monospace;',
         'indent'    => '&middot;    ',
@@ -73,7 +73,7 @@ class Debugger extends Component
      *
      * @var bool
      */
-    protected static $benchmarking = false;
+    private static $benchmarking = false;
 
     /**
      * Benchmarking. You can use Debugger::benchmark('record') to start and stop profiling for some operations. Multiple spiral
@@ -82,7 +82,7 @@ class Debugger extends Component
      *
      * @var array
      */
-    protected static $benchmarks = array();
+    private static $benchmarks = array();
 
     /**
      * Constructing debug component. Debug is one of primary spiral component and will be available for use in any environment

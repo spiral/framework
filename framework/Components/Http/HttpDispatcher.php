@@ -12,6 +12,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Encrypter\Encrypter;
+use Spiral\Components\Http\Request\Uri;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
@@ -53,9 +54,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function start(Core $core)
     {
-        $core->callAction('Controllers\HomeController');
+        $uri = Uri::castUri($_SERVER);
 
-        dump($this->castHeaders($_SERVER));
+        $core->callAction('Controllers\HomeController', 'index', array('uri' => $uri));
+
+        //    dump($this->castHeaders($_SERVER));
 
         //echo(StringHelper::formatBytes(memory_get_peak_usage()));
 
@@ -91,22 +94,24 @@ class HttpDispatcher extends Component implements DispatcherInterface
         //        return $this->wrapResponse($response);
     }
 
-    //    protected function wrapResponse($response)
-    //    {
-    //        if ($response instanceof PsrResponse)
-    //        {
-    //            return $response;
-    //        }
-    //
-    //        if (is_array($response) || $response instanceof \JsonSerializable)
-    //        {
-    //            //Making json response
-    //            return new JsonResponse($response); //something like this
-    //        }
-    //
-    //        //Making base response (string)
-    //        return $response;
-    //    }
+    protected function wrapResponse($response)
+    {
+        if ($response instanceof ResponseInterface)
+        {
+            return $response;
+        }
+
+        if (is_array($response) || $response instanceof \JsonSerializable)
+        {
+            //Making json response
+            //return new JsonResponse($response); //something like this
+        }
+
+        return $response;
+        //TODO: MAKE IT WORK
+        //Making base response (string)
+        //return $response;
+    }
 
     /**
      * Dispatch provided request to client. Application will stop after this method call.

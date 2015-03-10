@@ -86,7 +86,7 @@ class Core extends Container
      *
      * @var array
      */
-    protected static $directories = array(
+    private static $directories = array(
         'libraries'   => null,
         'framework'   => null,
         'application' => null,
@@ -109,14 +109,14 @@ class Core extends Container
      *
      * @var string
      */
-    protected $applicationID = '';
+    private $applicationID = '';
 
     /**
      * Current dispatcher instance response for application flow processing.
      *
      * @var DispatcherInterface
      */
-    protected $dispatcher = null;
+    private $dispatcher = null;
 
     /**
      * Initial application timezone. Can be redefined in child core realization. You can change timezones in runtime by
