@@ -11,6 +11,7 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
+use Spiral\Components\Encrypter\Encrypter;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
@@ -53,6 +54,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function start(Core $core)
     {
         $core->callAction('Controllers\HomeController');
+
+        dump($this->castHeaders($_SERVER));
 
         //echo(StringHelper::formatBytes(memory_get_peak_usage()));
 
@@ -191,5 +194,40 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         echo $snapshot->renderSnapshot();
         //500 error OR snapshot, based on options
+    }
+
+    /**
+     * Generate list of incoming headers. getallheaders() function will be used with fallback to _SERVER array parsing.
+     *
+     * @param array $server
+     * @return array
+     */
+    protected function castHeaders(array $server)
+    {
+        if (function_exists('getallheaders'))
+        {
+            $headers = getallheaders();
+        }
+        else
+        {
+            $headers = array();
+            foreach ($server as $name => $value)
+            {
+                if ($name == 'HTTP_COOKIE')
+                {
+                    continue;
+                }
+
+                if (strpos($name, 'HTTP_') === 0)
+                {
+                    $name = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($name, 5)))));
+                    $headers[$name] = $value;
+                }
+            }
+        }
+
+        unset($headers['Cookie']);
+
+        return $headers;
     }
 }
