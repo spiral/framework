@@ -1,6 +1,7 @@
 Spiral PHP Framework, Current Status
 =======================
 [![Build Status](https://travis-ci.org/wolfy-j/spiral.svg?branch=master)](https://travis-ci.org/wolfy-j/spiral)
+
 The Spiral framework provides a Rapid Application Development (RAD) platform to develop software applications using an MVC architecture, using a 
 simple but strong syntax similar to other popular frameworks.
 
