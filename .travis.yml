@@ -7,5 +7,5 @@ php:
   - 7.0
   - hhvm
 
-install: composer install --no-interaction
+install: composer install --no-interaction --prefer-source
 script: phpunit
