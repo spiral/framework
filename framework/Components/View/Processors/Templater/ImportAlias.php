@@ -63,24 +63,35 @@ class ImportAlias
 
         if (!isset($options['pattern']))
         {
-            throw new ViewException("Unable to register import, no patter for view or directory specified.");
+            if (empty($options['namespace']))
+            {
+                throw new ViewException(
+                    "Unable to register import, no patter for view or directory specified."
+                );
+            }
         }
 
         if (isset($options['namespace']))
         {
             $this->namespace = $options['namespace'];
         }
+        else
+        {
+            $this->namespace = View::getInstance()->defaultNamespace();
+        }
 
-        $this->pattern = $options['pattern'];
+        if (!empty($options['pattern']))
+        {
+            $this->pattern = $options['pattern'];
+        }
+        else
+        {
+            $this->pattern = $this->namespace . ':*';
+        }
 
         if (strpos($this->pattern, ':'))
         {
             list($this->namespace, $this->pattern) = explode(':', $this->pattern);
-        }
-
-        if (!$this->namespace)
-        {
-            $this->namespace = View::getInstance()->defaultNamespace();
         }
 
         if (!isset($options['prefix']))

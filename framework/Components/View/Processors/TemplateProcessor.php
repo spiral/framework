@@ -255,8 +255,12 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             return false;
         }
 
+        /**
+         * Do not allow automatic namespace import?
+         */
+
         $includeContext = null;
-        if (strpos($tokenName, $this->options['separator']) !== false || strpos($tokenName, ':') !== false)
+        if (strpos($tokenName, $this->options['separator']) !== false && strpos($tokenName, ':') === false)
         {
             $includeContext = $this->fetchContext($tokenName, $attributes, $node->options);
         }
