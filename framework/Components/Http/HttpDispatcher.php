@@ -133,7 +133,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         //Routing is happening here
         $response = $this->core->callAction('Controllers\HomeController', 'index');
-
         $plainOutput = ob_get_clean();
 
         if ($request)
@@ -150,26 +149,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             Container::bind(get_class($parentRequest), $parentRequest);
         }
 
-        // $parentRequest ? Container::bind('request', $parentRequest) : Container::removeBinding('request');
-        //        return $this->wrapResponse($response);
-
-        //        //Create request scope ? or no?
-        //        //if so, scope for what request type, only our? i think yes.
-        //
-        //        if ($request instanceof RequestInterface)
-        //        {
-        //            //making scope, maybe make scope INSIDE route with route attached to request AS data chunk?
-        //        }
-        //
-        //        //perform, INNER MIDDLEWARE INSIDE ROUTE! i need RouterTrait! :)
-        //        $response = null;
-        //
-        //        //End request scope ? or no?
-        //        if ($request instanceof RequestInterface)
-        //        {
-        //            //ending scope
-        //        }
-        //
+        return $this->wrapResponse($response, $plainOutput);
     }
 
     protected function wrapResponse($response, $plainOutput = '')
@@ -229,8 +209,12 @@ class HttpDispatcher extends Component implements DispatcherInterface
             }
         }
 
+        if ($response->getStatusCode() == 204)
+        {
+            exit();
+        }
+
         $stream = $response->getBody();
-        header('Content-Size', $stream->getSize());
 
         // I need self sending requests in future.
         if (!$stream->isSeekable())

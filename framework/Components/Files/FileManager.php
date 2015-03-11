@@ -34,7 +34,7 @@ class FileManager extends Component
      * environments. Usually this files stored under application/data folder, however they can be in some other public
      * locations.
      */
-    const RUNTIME = 0666;
+    const RUNTIME = 0766;
 
     /**
      * Work files are files which created by or for framework, like controllers, configs and config directories.
