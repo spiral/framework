@@ -386,7 +386,7 @@ class Debugger extends Component
      *
      * @param array $styles
      */
-    static public function dumpingStyles(array $styles)
+    public static function dumpingStyles(array $styles)
     {
         self::$dumping = $styles;
     }
