@@ -347,7 +347,9 @@ class Core extends Container
      */
     protected function getDispatcher()
     {
-        return self::get($this->isConsole() ? 'console' : 'http');
+        return self::get($this->isConsole() ? 'console' : 'http', array(
+            'core' => $this
+        ));
     }
 
     /**

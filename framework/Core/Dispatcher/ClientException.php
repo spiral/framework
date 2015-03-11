@@ -23,11 +23,11 @@ class ClientException extends CoreException
     const SERVER_ERROR = 500;
 
     /**
-     * Due response code stored in exception message, httpCode() method can be used to retrieve it via more recognizable way.
+     * Due response code stored in exception message, errorCode() method can be used to retrieve it via more recognizable way.
      *
      * @return int
      */
-    public function httpCode()
+    public function errorCode()
     {
         if (!is_numeric($this->getMessage()))
         {

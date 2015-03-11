@@ -106,7 +106,7 @@ class ImportAlias
 
         if (isset($options['alias']))
         {
-            //Will work only with single views, strictly defined pattern, prefix is still required, yeah...
+            //Will work only with single views, strictly defined pattern.
             $this->outputPattern = str_replace('%', '', $options['alias']);
         }
     }

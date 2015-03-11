@@ -11,8 +11,9 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Http\Message\MessageTrait;
 use Spiral\Components\Http\Response\CookieInterface;
+use Spiral\Core\Component;
 
-class Response implements ResponseInterface
+class Response extends Component implements ResponseInterface
 {
     /**
      * Common http message methods.
@@ -95,4 +96,5 @@ class Response implements ResponseInterface
     public function getCookies()
     {
     }
+
 }

@@ -231,6 +231,17 @@ class Container extends Component
     }
 
     /**
+     * Return binding resolver in original form (without processing it to instance).
+     *
+     * @param string $alias
+     * @return mixed
+     */
+    public static function getBinding($alias)
+    {
+        return isset(self::$bindings[$alias]) ? self::$bindings[$alias] : null;
+    }
+
+    /**
      * Removed existed binding.
      *
      * @param string $alias

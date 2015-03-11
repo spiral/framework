@@ -58,7 +58,8 @@ class Loader extends Component
     protected $enabled = false;
 
     /**
-     * Loader will automatically handle SPL autoload functions to start caching loadmap.
+     * Loader will automatically handle SPL autoload functions to start caching loadmap. In future loadmap can be used
+     * to pre-load all classes via one single file.
      *
      * @param Core $core
      */
@@ -72,7 +73,7 @@ class Loader extends Component
      * Performs auto-loading and core components initializations. All found classes will be saved into loadmap and fetched
      * directly from it next call load request (without performing file lookup).
      *
-     * @return Loader
+     * @return static
      * @throws CoreException
      */
     public function enable()
@@ -94,11 +95,11 @@ class Loader extends Component
     /**
      * Disable autoloading classes via \spiral\Loader.
      *
-     * @return Loader
+     * @return static
      */
     public function disable()
     {
-        ($this->enabled) && spl_autoload_unregister(array($this, 'loadClass'));
+        $this->enabled && spl_autoload_unregister(array($this, 'loadClass'));
         $this->enabled = false;
 
         return $this;
