@@ -109,6 +109,17 @@ class Response extends Component implements ResponseInterface
         599 => "Network connect timeout error"
     );
 
+    /**
+     * @var int
+     */
+    private $statusCode = 200;
+
+    /**
+     * @var null|string
+     */
+    private $reasonPhrase = null;
+
+
     public function __construct($content, $status = 200, array $headers)
     {
     }

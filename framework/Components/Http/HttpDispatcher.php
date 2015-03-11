@@ -229,8 +229,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
                 echo $stream->read(1024);
             }
         }
-
-        exit();
     }
 
     /**
@@ -292,7 +290,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
                 }
             }
         }
-
         unset($headers['Cookie']);
 
         return $headers;

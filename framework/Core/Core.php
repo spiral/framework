@@ -512,7 +512,7 @@ class Core extends Container
      * environment. All config files with merged environment stored under cache directory.
      *
      * @param string $config Config filename (no .php)
-     * @return mixed|array
+     * @return array
      * @throws CoreException
      */
     public function loadConfig($config)
