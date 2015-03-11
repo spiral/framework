@@ -8,8 +8,8 @@
  */
 namespace Spiral\Support\Pagination;
 
+use Spiral\Components\Http\Request;
 use Spiral\Core\Component;
-use Spiral\Core\Dispatcher\RequestInterface;
 
 class Paginator extends Component
 {
@@ -60,7 +60,7 @@ class Paginator extends Component
      * Request instance.
      *
      * @invisible
-     * @var RequestInterface
+     * @var Request
      */
     protected $request = null;
 
@@ -69,12 +69,12 @@ class Paginator extends Component
      * a limited amount of records. By default, it can support ODM and ORM object, DBAL queries and arrays. To add support
      * for Pagination, simply implement pagination interface.
      *
-     * @param string           $pageParameter Name of parameter in request query used to store current page number. By default,
-     *                                        "page" is used.
-     * @param RequestInterface $request       Request object created by HTTP dispatcher (page number will be fetched from query,
-     *                                        if not HTTP request - from options).
+     * @param string  $pageParameter        Name of parameter in request query used to store current page number. By default,
+     *                                      "page" is used.
+     * @param Request $request              Request object created by HTTP dispatcher (page number will be fetched from query,
+     *                                      if not HTTP request - from options).
      */
-    public function __construct($pageParameter = 'page', RequestInterface $request = null)
+    public function __construct($pageParameter = 'page', Request $request = null)
     {
         $this->request = $request;
         $this->setParameter($pageParameter);
@@ -104,17 +104,10 @@ class Paginator extends Component
         //Updating page number
         if ($this->request)
         {
-
         }
 
-        //        if ($this->request instanceof \spiral\core\http\Request)
-        //        {
-        //            $this->setPage($this->request->query($this->pageParameter));
-        //        }
-        //        else
-        //        {
-        //            $this->setPage($this->request->option($this->pageParameter));
-        //        }
+        //TODO: Implement with data reader
+        //$this->setPage($this->request->);
 
         return $this;
     }
@@ -353,12 +346,7 @@ class Paginator extends Component
      */
     public function buildURL($number = null)
     {
-        $publicURL = "invalid-request";
-        //        if ($this->request instanceof \spiral\core\http\Request)
-        //        {
-        //            $publicURL = $this->request->publicURL();
-        //        }
-
+        $publicURL = $this->request->getUri()->getPath();
         if (!$number)
         {
             return $publicURL;
