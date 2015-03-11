@@ -120,21 +120,31 @@ trait MessageTrait
      * comma concatenation. For such headers, use getHeaderLines() instead
      * and supply your own delimiter when concatenating.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param string $name      Case-insensitive header field name.
+     * @param bool   $normalize Normalize header name.
      * @return string
      */
-    public function getHeader($name)
+    public function getHeader($name, $normalize = true)
     {
+        return join(',', $this->getHeaderLines($name, $normalize));
     }
 
     /**
      * Retrieves a header by the given case-insensitive name as an array of strings.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param string $name      Case-insensitive header field name.
+     * @param bool   $normalize Normalize header name.
      * @return string[]
      */
-    public function getHeaderLines($name)
+    public function getHeaderLines($name, $normalize = true)
     {
+        $name = $this->normalizeHeader($name, $normalize);
+        if (!$this->hasHeader($name, false))
+        {
+            return array();
+        }
+
+        return $this->headers[$name];
     }
 
     /**
@@ -156,6 +166,24 @@ trait MessageTrait
      */
     public function withHeader($name, $value, $normalize = true)
     {
+        $name = $this->normalizeHeader($name, $normalize);
+
+        if (!is_array($value) && !is_string($value))
+        {
+            throw new \InvalidArgumentException(
+                'Invalid header value provided, only strings and arrays allowed.'
+            );
+        }
+
+        if (is_string($value))
+        {
+            $value = array($value);
+        }
+
+        $message = clone $this;
+        $message->headers[$name] = $value;
+
+        return $message;
     }
 
     /**
@@ -178,6 +206,29 @@ trait MessageTrait
      */
     public function withAddedHeader($name, $value, $normalize = true)
     {
+        $name = $this->normalizeHeader($name, $name);
+
+        if (!$this->hasHeader($name, false))
+        {
+            return $this->withHeader($name, $value, false);
+        }
+
+        if (!is_array($value) && !is_string($value))
+        {
+            throw new \InvalidArgumentException(
+                'Invalid header value provided, only strings and arrays allowed.'
+            );
+        }
+
+        if (is_string($value))
+        {
+            $value = array($value);
+        }
+
+        $message = clone $this;
+        $message->headers[$name] = array_merge($message->headers[$name], $value);
+
+        return $message;
     }
 
     /**
@@ -195,12 +246,8 @@ trait MessageTrait
      */
     public function withoutHeader($name, $normalize = true)
     {
-        if ($normalize)
-        {
-            $name = $this->normalizeHeader($name);
-        }
-
-        if (!$this->hasHeader($name))
+        $name = $this->normalizeHeader($name, $normalize);
+        if (!$this->hasHeader($name, false))
         {
             return $this;
         }
@@ -272,12 +319,12 @@ trait MessageTrait
         $result = [];
         foreach ($headers as $header => $value)
         {
-            if (!is_string($header) || (!is_array($value) && !is_string($value)))
+            if (!is_string($header) || (!is_string($value) && !is_array($value)))
             {
                 continue;
             }
 
-            if (!is_array($value))
+            if (is_string($value))
             {
                 $value = array($value);
             }
