@@ -17,21 +17,21 @@ trait MessageTrait
      *
      * @var string
      */
-    private $protocolVersion = '1.1';
+    protected $protocolVersion = '1.1';
 
     /**
      * Message headers
      *
      * @var array
      */
-    private $headers = array();
+    protected $headers = array();
 
     /**
      * Message body.
      *
      * @var StreamableInterface
      */
-    private $body = null;
+    protected $body = null;
 
     /**
      * Retrieves the HTTP protocol version as a string.
@@ -195,6 +195,20 @@ trait MessageTrait
      */
     public function withoutHeader($name, $normalize = true)
     {
+        if ($normalize)
+        {
+            $name = $this->normalizeHeader($name);
+        }
+
+        if (!$this->hasHeader($name))
+        {
+            return $this;
+        }
+
+        $message = clone $this;
+        unset($message->headers[$name]);
+
+        return $message;
     }
 
     /**
@@ -235,7 +249,7 @@ trait MessageTrait
      * @param bool   $normalize Apply normalization.
      * @return string
      */
-    private function normalizeHeader($header, $normalize = true)
+    protected function normalizeHeader($header, $normalize = true)
     {
         if (!$normalize)
         {
@@ -243,5 +257,41 @@ trait MessageTrait
         }
 
         return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
+    }
+
+    /**
+     * Store header values in array form as requested by PSR7. Additionally this method can normalize
+     * header names.
+     *
+     * @param array $headers
+     * @param bool  $normalize Apply normalization to header names.
+     * @return array
+     */
+    protected function prepareHeaders(array $headers, $normalize = true)
+    {
+        $result = [];
+        foreach ($headers as $header => $value)
+        {
+            if (!is_string($header) || (!is_array($value) && !is_string($value)))
+            {
+                continue;
+            }
+
+            if (!is_array($value))
+            {
+                $value = array($value);
+            }
+
+            if ($normalize)
+            {
+                $result[$this->normalizeHeader($header)] = $value;
+            }
+            else
+            {
+                $result[$header] = $value;
+            }
+        }
+
+        return $result;
     }
 }

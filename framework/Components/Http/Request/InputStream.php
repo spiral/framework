@@ -15,6 +15,7 @@ class InputStream extends Stream
     /**
      * Cached stream content, required to correctly resolve behaviour when php://input can't be read twice.
      *
+     * @invisible
      * @var string
      */
     protected $cached = '';
@@ -22,6 +23,7 @@ class InputStream extends Stream
     /**
      * Indication that steam ended and can't be re-read (cache will be used).
      *
+     * @invisible
      * @var bool
      */
     protected $ended = false;

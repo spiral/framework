@@ -31,6 +31,8 @@ use Spiral\Components;
  * @property Components\DBAL\DatabaseManager      $dbal
  * @property Components\ORM\ORM                   $orm
  * @property Components\ODM\ODM                   $odm
+ *
+ * @property Components\Http\Request              $request
  */
 class Core extends Container
 {

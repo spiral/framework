@@ -41,15 +41,26 @@ class Request extends BaseRequest implements ServerRequestInterface
      * @param array                      $headers   Request headers.
      * @param bool                       $normalize Normalize headers case (disabled by default).
      */
+
     public function __construct(
         $uri = null,
         $method = null,
         $body = 'php://memory',
         array $headers = array(),
-        $normalize = false
+        $normalize = false,
+        $serverParams = array(),
+        $cookieParams = array(),
+        $queryParams = array(),
+        $fileParams = array(),
+        $parsedBody = array()
     )
     {
         parent::__construct($uri, $method, $body, $headers, $normalize);
+        $this->serverParams = $serverParams;
+        $this->cookieParams = $cookieParams;
+        $this->queryParams = $queryParams;
+        $this->fileParams = $fileParams;
+        $this->parsedBody = $parsedBody;
     }
 
     /**
@@ -298,24 +309,5 @@ class Request extends BaseRequest implements ServerRequestInterface
         unset($request->attributes[$name]);
 
         return $request;
-    }
-
-    /**
-     * Nice debugging information.
-     *
-     * @return object
-     */
-    public function __debugInfo()
-    {
-        return (object)array(
-            'method'     => $this->method,
-            'uri'        => $this->uri,
-            'attributes' => $this->attributes,
-            'server'     => $this->serverParams,
-            'query'      => $this->queryParams,
-            'cookies'    => $this->cookieParams,
-            'files'      => $this->fileParams,
-            'data'       => $this->parsedBody
-        );
     }
 }

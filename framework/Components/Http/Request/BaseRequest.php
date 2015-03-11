@@ -46,6 +46,7 @@ class BaseRequest extends Component implements RequestInterface
     /**
      * Allowed (supported) HTTP methods.
      *
+     * @invisible
      * @var array
      */
     protected $allowedMethods = array(
@@ -89,15 +90,7 @@ class BaseRequest extends Component implements RequestInterface
 
         $this->method = $method;
         $this->body = ($body instanceof StreamableInterface) ? $body : new Stream($body);
-
-        //        if ($normalize)
-        //        {
-        //        }
-        //        else
-        //        {
-        //        }
-
-        //headers
+        $this->headers = $this->prepareHeaders($headers, $normalize);
     }
 
     /**

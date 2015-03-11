@@ -91,11 +91,16 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         //CASTING
         return Request::make(array(
-            'uri'       => Uri::castUri($_SERVER),
-            'method'    => $_SERVER['REQUEST_METHOD'],
-            'body'      => new InputStream(),
-            'headers'   => $this->castHeaders($_SERVER),
-            'normalize' => false
+            'uri'          => Uri::castUri($_SERVER),
+            'method'       => $_SERVER['REQUEST_METHOD'],
+            'body'         => new InputStream(),
+            'headers'      => $this->castHeaders($_SERVER),
+            'serverParams' => $_SERVER,
+            'cookieParams' => $_COOKIE,
+            'queryParams'  => $_GET,
+            'fileParams'   => $_FILES,
+            'parsedBody'   => $_POST,
+            'normalize'    => false
         ));
     }
 
