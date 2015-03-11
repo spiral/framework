@@ -85,7 +85,7 @@ class ListCommand extends Command
             return 'undefined';
         }
 
-        if (!$this->composer)
+        if (empty($this->composer))
         {
             $this->composer = json_decode($this->file->read('composer.lock'), true);
         }

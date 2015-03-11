@@ -52,7 +52,7 @@ class DatabasesCommand extends Command
             $databases = array_keys($this->dbal->getConfig()['databases']);
         }
 
-        if (!$databases)
+        if (empty($databases))
         {
             $this->writeln("No databases found");
 

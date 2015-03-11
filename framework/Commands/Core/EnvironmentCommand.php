@@ -70,7 +70,7 @@ class EnvironmentCommand extends Command
                 }
             }
 
-            if ($alteredFilenames)
+            if (!empty($alteredFilenames))
             {
                 $this->writeln("<info>Following configuration files will be altered by this environment:</info>");
                 foreach ($alteredFilenames as $filename)

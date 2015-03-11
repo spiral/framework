@@ -56,7 +56,12 @@ class ImportCommand extends Command
 
         $importer = Importer::make();
         $importer->openFile($this->argument('filename'));
-        ($this->option('language') != 'auto') && $importer->setLanguage($this->option('language'));
+
+        if ($this->option('language') != 'auto')
+        {
+            $importer->setLanguage($this->option('language'));
+        }
+
         $importer->importBundles();
 
         $this->writeln("<info>Import completed, target language '<comment>{$importer->getLanguage()}</comment>'.</info>");

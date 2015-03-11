@@ -32,7 +32,7 @@ trait LoggerTrait
      *
      * If no "logger" binding presented, default logger will be used (performance reasons).
      *
-     * @return LoggerInterface
+     * @return LoggerInterface|Logger
      */
     public static function logger()
     {
