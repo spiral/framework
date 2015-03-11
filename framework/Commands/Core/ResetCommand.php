@@ -39,7 +39,6 @@ class ResetCommand extends Command
 
     /**
      * Flushing application runtime cache.
-
      */
     public function perform()
     {

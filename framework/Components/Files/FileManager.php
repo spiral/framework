@@ -314,11 +314,6 @@ class FileManager extends Component
      */
     public function getFiles($directory, $extensions = null, &$result = array())
     {
-        if (!$result)
-        {
-            $result = array();
-        }
-
         $directory = $this->normalizePath($directory, true);
         $list = glob($directory . '*');
         foreach ($list as $item)

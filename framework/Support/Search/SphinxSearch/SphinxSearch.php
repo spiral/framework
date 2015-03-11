@@ -876,7 +876,7 @@ class SphinxSearch extends Component
         $this->requests = array();
 
         // parse and return response
-        return $this->parseResponse($response, $count, !$includeAttributes);
+        return $this->parseResponse((string)$response, $count, !$includeAttributes);
     }
 
     /**

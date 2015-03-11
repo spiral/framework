@@ -458,7 +458,7 @@ class Core extends Container
      * @param string $filename  Filename without .php
      * @param string $directory Application cache directory will be used by default.
      * @param string $realPath  Generated file location will be stored in this variable.
-     * @return mixed
+     * @return mixed|array
      */
     public function loadData($filename, $directory = null, &$realPath = null)
     {
