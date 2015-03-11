@@ -89,7 +89,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     protected function castRequest()
     {
-        //CASTING
         return Request::make(array(
             'uri'          => Uri::castUri($_SERVER),
             'method'       => $_SERVER['REQUEST_METHOD'],

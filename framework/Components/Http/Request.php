@@ -26,22 +26,61 @@ class Request extends BaseRequest implements ServerRequestInterface
      */
     protected $attributes = array();
 
+    /**
+     * Data related to the incoming request environment, typically derived
+     * from PHP's $_SERVER superglobal.
+     *
+     * @var array
+     */
     protected $serverParams = array();
+
+    /**
+     * Cookies sent by the client to the server.
+     *
+     * @var array
+     */
     protected $cookieParams = array();
+
+    /**
+     * The deserialized query string arguments, if any.
+     *
+     * @var array
+     */
     protected $queryParams = array();
+
+    /**
+     * File upload metadata in the same structure as PHP's $_FILES superglobal.
+     *
+     * @var array
+     */
     protected $fileParams = array();
+
+    /**
+     * Parameters provided in the request body. In most cases equals to _POST.
+     *
+     * @var array
+     */
     protected $parsedBody = array();
 
     /**
      * New Server Request instance.
      *
-     * @param string|UriInterface        $uri       Requested URI.
-     * @param string                     $method    Request method.
-     * @param string|StreamableInterface $body      Request body or body stream.
-     * @param array                      $headers   Request headers.
-     * @param bool                       $normalize Normalize headers case (disabled by default).
-     */
+     * @param string|UriInterface        $uri          Requested URI.
+     * @param string                     $method       Request method.
+     * @param string|StreamableInterface $body         Request body or body stream.
+     * @param array                      $headers      Request headers.
+     * @param bool                       $normalize    Normalize headers case (disabled by default).
+     * @param array                      $serverParams Data related to the incoming request
+     *                                                 environment, typically derived from PHP's
+     *                                                 $_SERVER superglobal.
+     * @param array                      $cookieParams Cookies sent by the client to the server.
+     * @param array                      $queryParams  The deserialized query string arguments, if any.
+     * @param array                      $fileParams   File upload metadata in the same structure
+     *                                                 as PHP's $_FILES superglobal.
+     * @param array                      $parsedBody   Parameters provided in the request body. In most
+     *                                                 cases equals to _POST.
 
+     */
     public function __construct(
         $uri = null,
         $method = null,
@@ -56,6 +95,7 @@ class Request extends BaseRequest implements ServerRequestInterface
     )
     {
         parent::__construct($uri, $method, $body, $headers, $normalize);
+
         $this->serverParams = $serverParams;
         $this->cookieParams = $cookieParams;
         $this->queryParams = $queryParams;
