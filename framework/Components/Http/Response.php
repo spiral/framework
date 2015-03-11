@@ -9,7 +9,9 @@
 namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamableInterface;
 use Spiral\Components\Http\Message\MessageTrait;
+use Spiral\Components\Http\Message\Stream;
 use Spiral\Components\Http\Response\CookieInterface;
 use Spiral\Core\Component;
 
@@ -25,7 +27,7 @@ class Response extends Component implements ResponseInterface
      *
      * @var array
      */
-    protected static $statues = array(
+    protected static $phrases = array(
         //Technical
         100 => "Continue",
         101 => "Switching Protocols",
@@ -110,18 +112,83 @@ class Response extends Component implements ResponseInterface
     );
 
     /**
+     * The response Status-Code.
+     *
      * @var int
      */
-    private $statusCode = 200;
+    protected $statusCode = 200;
 
     /**
+     * The response Reason-Phrase, a short textual description of the Status-Code.
+     *
      * @var null|string
      */
-    private $reasonPhrase = null;
+    protected $reasonPhrase = null;
 
+    /**
+     * Cookies has to be send to client.
+     *
+     * @var CookieInterface[]
+     */
+    protected $cookies = array();
 
-    public function __construct($content, $status = 200, array $headers)
+    /**
+     * New immutable response instance. Content can be provided
+     *
+     * @param string|StreamableInterface $content   String content or string.
+     * @param int                        $statusCode
+     * @param array                      $headers
+     * @param bool                       $normalize Normalize headers case (disabled by default).
+     */
+    public function __construct(
+        $content = '',
+        $statusCode = 200,
+        array $headers = array(),
+        $normalize = true
+    )
     {
+        if (is_string($content))
+        {
+            $this->body = new Stream('php://memory', 'w');
+            $this->body->write($content);
+        }
+        elseif ($content instanceof StreamableInterface)
+        {
+            $this->body = $content;
+        }
+        else
+        {
+            throw new \InvalidArgumentException(
+                "Invalid content value, only strings and StreamableInterface allowed."
+            );
+        }
+
+        $this->setStatusCode($statusCode);
+        $this->headers = $this->prepareHeaders($headers, $normalize);
+    }
+
+    /**
+     * Helper method to set status code and validate it's value.
+     *
+     * @param int $code
+     */
+    protected function setStatusCode($code)
+    {
+        $code = (int)$code;
+        if ($code < 200 || $code > 600)
+        {
+            throw new \InvalidArgumentException(
+                "Invalid status code value, expected integer 200-599."
+            );
+        }
+
+        $this->statusCode = $code;
+        $this->reasonPhrase = null;
+
+        if (isset(self::$phrases[$this->statusCode]))
+        {
+            $this->reasonPhrase = self::$phrases[$this->statusCode];
+        }
     }
 
     /**
@@ -134,7 +201,7 @@ class Response extends Component implements ResponseInterface
      */
     public function getStatusCode()
     {
-        // TODO: Implement getStatusCode() method.
+        return $this->statusCode;
     }
 
     /**
@@ -160,7 +227,11 @@ class Response extends Component implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = null)
     {
-        // TODO: Implement withStatus() method.
+        $response = clone $this;
+        $response->setStatusCode($code);
+        $reasonPhrase && $response->reasonPhrase = $reasonPhrase;
+
+        return $response;
     }
 
     /**
@@ -178,21 +249,93 @@ class Response extends Component implements ResponseInterface
      */
     public function getReasonPhrase()
     {
-        // TODO: Implement getReasonPhrase() method.
-    }
-
-    public function withCookie(CookieInterface $cookie)
-    {
-    }
-
-    public function withCookies(array $cookies)
-    {
+        return $this->reasonPhrase;
     }
 
     /**
+     * Create a new instance with the scheduled cookie instance, cookie will be
+     * sent to client in HttpDispatcher->dispatch() method.
+     *
+     * This method MUST be implemented in such a way as to retain the
+     * immutability of the message, and MUST return a new instance that has the
+     * updated status and reason phrase.
+     *
+     * @see setcookie()
+     * @param CookieInterface $cookie Cookie instance.
+     * @return self
+     */
+    public function withCookie(CookieInterface $cookie)
+    {
+        $response = clone $this;
+        $response->cookies[$cookie->getName()] = $cookie;
+
+        return $response;
+    }
+
+    /**
+     * Create a new instance without the scheduled cookie instance, cookie will be
+     * sent to client in HttpDispatcher->dispatch() method.
+     *
+     * This method MUST be implemented in such a way as to retain the
+     * immutability of the message, and MUST return a new instance that has the
+     * updated status and reason phrase.
+     *
+     * @see setcookie()
+     * @param string $name Cookie name.
+     * @return self
+     */
+    public function withoutCookie($name)
+    {
+        if (!isset($this->cookies[$name]))
+        {
+            return $this;
+        }
+
+        $response = clone $this;
+        unset($response->cookies[$name]);
+
+        return $response;
+    }
+
+    /**
+     * Create a new instance with replaced array of scheduled cookie instances,
+     * cookies will be sent to client in HttpDispatcher->dispatch() method.
+     *
+     * This method MUST be implemented in such a way as to retain the
+     * immutability of the message, and MUST return a new instance that has the
+     * updated status and reason phrase.
+     *
+     * @see setcookie()
+     * @param CookieInterface[] $cookies
+     * @return self
+     * @throws \InvalidArgumentException For invalid cookie item.
+     */
+    public function withCookies(array $cookies)
+    {
+        $response = clone $this;
+        $response->cookies = array();
+        foreach ($cookies as $cookie)
+        {
+            if (!$cookie instanceof CookieInterface)
+            {
+                throw new \InvalidArgumentException(
+                    "Cookies array should contain only CookieInterface instanced."
+                );
+            }
+
+            $response->cookies[$cookie->getName()] = $cookie;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Get all cookies associated with response. Cookies will be send in HttpDispatcher->dispatch() method.
+     *
      * @return CookieInterface[]
      */
     public function getCookies()
     {
+        return $this->cookies;
     }
 }
