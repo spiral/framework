@@ -59,15 +59,15 @@ class BaseRequest extends BaseMessage implements RequestInterface
     /**
      * New Request instance.
      *
+     * @param string|null                     $method    Request method.
      * @param string|UriInterface        $uri       Requested URI.
-     * @param string                     $method    Request method.
      * @param string|StreamableInterface $body      Request body or body stream.
      * @param array                      $headers   Request headers.
      * @param bool                       $normalize Normalize headers case (disabled by default).
      */
     public function __construct(
-        $uri = null,
         $method = null,
+        $uri = null,
         $body = 'php://memory',
         array $headers = array(),
         $normalize = true

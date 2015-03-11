@@ -128,7 +128,9 @@ class AskHelper extends Component
      */
     public function confirm($question, $defaultValue = null)
     {
-        return $this->dispatch(new ConfirmationQuestion("<question>{$question}</question> ", $defaultValue));
+        return $this->dispatch(
+            new ConfirmationQuestion("<question>{$question}</question> ", $defaultValue)
+        );
     }
 
     /**

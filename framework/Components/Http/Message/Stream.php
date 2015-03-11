@@ -231,10 +231,13 @@ class Stream implements StreamableInterface
     /**
      * Returns the remaining contents in a string
      *
+     * @param bool $rewind Rewind stream position (if possible).
      * @return string
      */
-    public function getContents()
+    public function getContents($rewind = false)
     {
+        $rewind && $this->rewind();
+
         return $this->isReadable() ? stream_get_contents($this->resource) : '';
     }
 

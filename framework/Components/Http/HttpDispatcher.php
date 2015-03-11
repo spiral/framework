@@ -65,12 +65,12 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function start(Core $core)
     {
         //Initial server request
-        $this->baseRequest = $this->castRequest();
+        $this->baseRequest = $this->event('request', $this->castRequest());
 
         //Middleware(s)
         $response = $this->perform($this->baseRequest);
 
-        $this->dispatch($response);
+        $this->dispatch($this->event('dispatch', $response));
     }
 
     /**
@@ -173,8 +173,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
             ob_get_clean();
         }
 
-        //$statusHeader = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()}";
-        //header(rtrim("{$statusHeader} {$response->getReasonPhrase()}"));
+        $statusHeader = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()}";
+        header(rtrim("{$statusHeader} {$response->getReasonPhrase()}"));
 
         //Receive all headers but not cookies
         foreach ($response->getHeaders() as $header => $values)
@@ -219,6 +219,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         }
         else
         {
+            //Use stream_copy_to_stream() somehow
             ob_implicit_flush(true);
             $stream->rewind();
             while (!$stream->eof())

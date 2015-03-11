@@ -65,8 +65,8 @@ class Request extends BaseRequest implements ServerRequestInterface
     /**
      * New Server Request instance.
      *
-     * @param string|UriInterface        $uri          Requested URI.
      * @param string                     $method       Request method.
+     * @param string|UriInterface        $uri          Requested URI.
      * @param string|StreamableInterface $body         Request body or body stream.
      * @param array                      $headers      Request headers.
      * @param bool                       $normalize    Normalize headers case (disabled by default).
@@ -79,11 +79,10 @@ class Request extends BaseRequest implements ServerRequestInterface
      *                                                 as PHP's $_FILES superglobal.
      * @param array                      $parsedBody   Parameters provided in the request body. In most
      *                                                 cases equals to _POST.
-
      */
     public function __construct(
-        $uri = null,
         $method = null,
+        $uri = null,
         $body = 'php://memory',
         array $headers = array(),
         $normalize = false,
@@ -94,7 +93,7 @@ class Request extends BaseRequest implements ServerRequestInterface
         $parsedBody = array()
     )
     {
-        parent::__construct($uri, $method, $body, $headers, $normalize);
+        parent::__construct($method, $uri, $body, $headers, $normalize);
 
         $this->serverParams = $serverParams;
         $this->cookieParams = $cookieParams;
