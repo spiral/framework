@@ -10,18 +10,13 @@ namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamableInterface;
-use Spiral\Components\Http\Message\MessageTrait;
+use Spiral\Components\Http\Message\BaseMessage;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Components\Http\Response\CookieInterface;
 use Spiral\Core\Component;
 
-class Response extends Component implements ResponseInterface
+class Response extends BaseMessage implements ResponseInterface
 {
-    /**
-     * Common http message methods.
-     */
-    use MessageTrait;
-
     /**
      * Status code headers.
      *

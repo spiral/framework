@@ -11,17 +11,12 @@ namespace Spiral\Components\Http\Request;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Message\MessageTrait;
+use Spiral\Components\Http\Message\BaseMessage;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Core\Component;
 
-class BaseRequest extends Component implements RequestInterface
+class BaseRequest extends BaseMessage implements RequestInterface
 {
-    /**
-     * Common http message methods.
-     */
-    use MessageTrait;
-
     /**
      * The message's request target.
      *

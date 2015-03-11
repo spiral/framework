@@ -8,9 +8,11 @@
  */
 namespace Spiral\Components\Http\Message;
 
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamableInterface;
+use Spiral\Core\Component;
 
-trait MessageTrait
+abstract class BaseMessage extends Component implements MessageInterface
 {
     /**
      * HTTP protocol version.
