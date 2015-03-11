@@ -92,9 +92,6 @@ class TokenizerTest extends TestCase
 
         $this->assertContains(__CLASS__, $reflection->getClasses());
 
-        //Self analysis
-        $this->assertContains(__CLASS__, $reflection->getConflicts()['classes']);
-
         $functionUsages = $reflection->functionUsages();
 
         $functionA = null;
