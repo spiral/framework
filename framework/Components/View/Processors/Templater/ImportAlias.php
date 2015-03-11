@@ -87,16 +87,16 @@ class ImportAlias
         {
             //Prefix wasn't required and used to be in a free form, but Andrew Kirkovski and Andrew Logunov insist
             //to have it this way. At least we can generate DTD in future.
-            throw new ViewException("Import prefix is required.");
+            $options['prefix'] = $this->namespace;
         }
 
         //Will work with directory imports, concat prefix with original view name
         $this->outputPattern = $options['prefix'] . ':%s';
 
-        if (isset($options['alias']))
+        if (isset($options['name']))
         {
-            //Will work only with single views, strictly defined pattern
-            $this->outputPattern = str_replace('%', '', $options['alias']);
+            //Will work only with single views, strictly defined pattern, prefix is still required, yeah...
+            $this->outputPattern = $options['prefix'] . ':' . str_replace('%', '', $options['name']);
         }
     }
 
