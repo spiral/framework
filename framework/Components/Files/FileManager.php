@@ -312,7 +312,7 @@ class FileManager extends Component
      * @param array      $result
      * @return array
      */
-    public function getFiles($directory, $extensions = null, &$result = null)
+    public function getFiles($directory, $extensions = null, &$result = array())
     {
         if (!$result)
         {
