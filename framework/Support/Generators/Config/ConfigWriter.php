@@ -13,6 +13,7 @@ use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 use Spiral\Helpers\StringHelper;
+use Symfony\Component\Process\Exception\RuntimeException;
 
 class ConfigWriter extends Component
 {
@@ -74,8 +75,8 @@ class ConfigWriter extends Component
     protected $content = array();
 
     /**
-     * Config file header should include php tag declaration and may contain doc comment describing config sections.
-     * Doc comment will be automatically fetched from application config if it
+     * Config file header should include php tag declaration and may contain doc comment describing
+     * config sections. Doc comment will be automatically fetched from application config if it
      * already exists.
      *
      * @var string
@@ -83,10 +84,12 @@ class ConfigWriter extends Component
     protected $configHeader = "<?php\n";
 
     /**
-     * Config class used to update application configuration files with new sections, data and presets, it can resolve new
-     * config data by merging already exists presets with requested setting by one of specified merge methods.
+     * Config class used to update application configuration files with new sections, data and presets,
+     * it can resolve new config data by merging already exists presets with requested setting by one
+     * of specified merge methods.
      *
-     * @param string      $name      Config filename, should not include extensions, may include directory name.
+     * @param string      $name      Config filename, should not include extensions, may include
+     *                               directory name.
      * @param FileManager $file      FileManager component.
      * @param Tokenizer   $tokenizer Tokenizer component.
      * @param int         $method    How system should merge existed and requested config contents.
@@ -120,7 +123,9 @@ class ConfigWriter extends Component
         $filename = $this->file->normalizePath($directory . '/' . $this->name . Core::CONFIGS);
         if (!file_exists($filename))
         {
-            throw new ConfigWriterException("Unable to load '{$this->name}' configuration, file not found.");
+            throw new ConfigWriterException(
+                "Unable to load '{$this->name}' configuration, file not found."
+            );
         }
 
         $this->setConfig(require $filename)->readHeader($filename);
@@ -164,8 +169,8 @@ class ConfigWriter extends Component
     }
 
     /**
-     * Methods will be applied to merge existed and custom configuration data in merge method is specified as Config::mergeCustom.
-     * This method usually used to perform logical merge.
+     * Methods will be applied to merge existed and custom configuration data in merge method is
+     * specified as Config::mergeCustom. This method usually used to perform logical merge.
      *
      * @param mixed $internal Requested configuration data.
      * @param mixed $existed  Existed configuration data.
@@ -178,7 +183,8 @@ class ConfigWriter extends Component
     }
 
     /**
-     * Merge requested config data with already existed one. Merge method can be defined during Config class created.
+     * Merge requested config data with already existed one. Merge method can be defined during Config
+     * class created.
      *
      * @param mixed $internal Requested configuration data.
      * @param mixed $existed  Existed configuration data.
@@ -219,8 +225,9 @@ class ConfigWriter extends Component
     }
 
     /**
-     * Render configuration file content with it's header and data (can be automatically merged with existed config).
-     * Config content will be exported using $config->serializeConfig() method, which will format data in more clear way.
+     * Render configuration file content with it's header and data (can be automatically merged with
+     * existed config). Config content will be exported using $config->serializeConfig() method, which
+     * will format data in more clear way.
      *
      * @param mixed $existed
      * @return string
@@ -292,94 +299,118 @@ class ConfigWriter extends Component
 
         $result = array();
         $keyLength = 0;
-        foreach ($data as $key => $value)
+        foreach ($data as $name => $value)
         {
-            $keyLength = max(strlen(var_export($key, true)), $keyLength);
+            $keyLength = max(strlen(var_export($name, true)), $keyLength);
         }
 
-        foreach ($data as $key => $value)
+        foreach ($data as $name => $value)
         {
             if ($associated)
             {
-                $key = str_pad(var_export($key, true), $keyLength, ' ', STR_PAD_RIGHT) . $assign;
+                $name = str_pad(var_export($name, true), $keyLength, ' ', STR_PAD_RIGHT) . $assign;
             }
             else
             {
-                $key = "";
+                $name = "";
             }
 
             if (!is_array($value))
             {
-                if (is_null($value))
-                {
-                    $value = "null";
-                }
-                elseif (is_bool($value))
-                {
-                    $value = ($value ? "true" : "false");
-                }
-                elseif (!is_numeric($value))
-                {
-                    if (!is_string($value))
-                    {
-                        //Exception
-                    }
-
-                    $alias = $directory = $hasAlias = false;
-                    $directories = Core::getDirectories();
-
-                    foreach ($directories as &$directory)
-                    {
-                        $directory = $this->file->normalizePath($directory);
-                        unset($directory);
-                    }
-
-                    //Sorting to get longest first
-                    uasort($directories, function ($valueA, $valueB)
-                    {
-                        return strlen($valueA) < strlen($valueB);
-                    });
-
-                    foreach ($directories as $alias => $directory)
-                    {
-                        if (strpos($this->file->normalizePath($value), $directory) === 0)
-                        {
-                            $hasAlias = true;
-                            break;
-                        }
-                    }
-
-                    if (!$hasAlias)
-                    {
-                        $value = var_export($value, true);
-                    }
-                    elseif (isset($directory))
-                    {
-                        $value = 'directory("' . $alias . '") . ' . var_export(substr($value, strlen($directory)), true);
-                    }
-                }
-
-                $result[] = $key . $value;
+                $result[] = $this->packValue($name, $value);
                 continue;
             }
 
             if ($value == array())
             {
-                $result[] = $key . "array()";
+                $result[] = $name . "array()";
                 continue;
             }
 
             //Sub-array
-            $result[] = $key . "array($subIndent" . $this->serializeConfig($value, $indent, $level + 1) . "$keyIndent)";
+            $result[] = $name . "array({$subIndent}" . $this->serializeConfig(
+                    $value,
+                    $indent,
+                    $level + 1
+                ) . "{$keyIndent})";
         }
 
-        if ($level)
+        if ($level !== 0)
         {
             return $result ? join(",$keyIndent", $result) : "";
         }
         else
         {
-            return $result ? "array(" . ($indent ? "\n\t" : "") . join(",$keyIndent", $result) . ($indent ? "\n" : "") . ")" : "array()";
+            if (!empty($indent))
+            {
+                return "array({$indent}\n" . join(",{$keyIndent}", $result) . "\n)";
+            }
+
+            return "array(" . join(",{$keyIndent}", $result) . ")";
         }
+    }
+
+    /**
+     * Pack scalar value to config.
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @return string
+     */
+    protected function packValue($name, $value)
+    {
+        if (is_null($value))
+        {
+            $value = "null";
+        }
+        elseif (is_bool($value))
+        {
+            $value = ($value ? "true" : "false");
+        }
+        elseif (!is_numeric($value))
+        {
+            if (!is_string($value))
+            {
+                throw new RuntimeException("Unable to pack non scalar value.");
+            }
+
+            $alias = $directory = $hasAlias = false;
+            $directories = Core::getDirectories();
+
+            foreach ($directories as &$directory)
+            {
+                $directory = $this->file->normalizePath($directory);
+                unset($directory);
+            }
+
+            //Sorting to get longest first
+            uasort($directories, function ($valueA, $valueB)
+            {
+                return strlen($valueA) < strlen($valueB);
+            });
+
+            foreach ($directories as $alias => $directory)
+            {
+                if (strpos($this->file->normalizePath($value), $directory) === 0)
+                {
+                    $hasAlias = true;
+                    break;
+                }
+            }
+
+            if (!$hasAlias)
+            {
+                $value = var_export($value, true);
+            }
+            elseif (isset($directory))
+            {
+                $value = 'directory("' . $alias . '") . ' . var_export(
+                        substr($value, strlen($directory)),
+                        true
+                    );
+            }
+        }
+
+        return $name . $value;
     }
 }
