@@ -93,10 +93,10 @@ class ImportAlias
         //Will work with directory imports, concat prefix with original view name
         $this->outputPattern = $options['prefix'] . ':%s';
 
-        if (isset($options['name']))
+        if (isset($options['alias']))
         {
             //Will work only with single views, strictly defined pattern, prefix is still required, yeah...
-            $this->outputPattern = $options['prefix'] . ':' . str_replace('%', '', $options['name']);
+            $this->outputPattern = str_replace('%', '', $options['alias']);
         }
     }
 
@@ -198,7 +198,9 @@ class ImportAlias
 
         if (!$aliases)
         {
-            throw new ViewException("No views were found under directory '{$directory}' in namespace '{$this->namespace}'.");
+            throw new ViewException(
+                "No views were found under directory '{$directory}' in namespace '{$this->namespace}'."
+            );
         }
 
         return self::$aliases[$this->aliasID()] = $aliases;

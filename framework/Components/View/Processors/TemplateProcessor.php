@@ -48,7 +48,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             'namespace'   => array('templater:namespace', 'view:namespace'),
             self::ALIASES => array(
                 'name'      => array('import', 'use', 'alias'),
-                'pattern'   => array('view', 'views', 'folder', 'directory'),
+                'pattern'   => array('view', 'tag', 'views', 'folder', 'directory'),
                 'namespace' => array('namespace'),
                 'prefix'    => array('prefix'),
                 'alias'     => array('as')
@@ -187,11 +187,17 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
                             if ($tokenType == Tokenizer::TAG_OPEN || $tokenType == Tokenizer::TAG_SHORT)
                             {
-                                $token[Tokenizer::TOKEN_CONTENT] = '<' . substr($token[Tokenizer::TOKEN_CONTENT], strlen($prefix) + 1);
+                                $token[Tokenizer::TOKEN_CONTENT] = '<' . substr(
+                                        $token[Tokenizer::TOKEN_CONTENT],
+                                        strlen($prefix) + 1
+                                    );
                             }
                             else
                             {
-                                $token[Tokenizer::TOKEN_CONTENT] = '</' . substr($token[Tokenizer::TOKEN_CONTENT], strlen($prefix) + 2);
+                                $token[Tokenizer::TOKEN_CONTENT] = '</' . substr(
+                                        $token[Tokenizer::TOKEN_CONTENT],
+                                        strlen($prefix) + 2
+                                    );
                             }
 
                             return true;
