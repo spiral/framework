@@ -149,7 +149,7 @@ class Response extends Component implements ResponseInterface
     {
         if (is_string($content))
         {
-            $this->body = new Stream('php://memory', 'w');
+            $this->body = new Stream('php://memory', 'wr');
             $this->body->write($content);
         }
         elseif ($content instanceof StreamableInterface)

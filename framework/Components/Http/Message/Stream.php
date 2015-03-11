@@ -165,7 +165,14 @@ class Stream implements StreamableInterface
      */
     public function isWritable()
     {
-        return $this->resource && is_writable($this->metadata['uri']);
+        if (!$this->resource)
+        {
+            return false;
+        }
+
+        $mode = $this->metadata['mode'];
+
+        return $this->resource && (strstr($mode, 'w') || strstr($mode, '+'));
     }
 
     /**
@@ -177,7 +184,12 @@ class Stream implements StreamableInterface
      */
     public function write($string)
     {
-        return $this->isWritable() && fwrite($this->resource, $string);
+        if ($this->isWritable())
+        {
+            return fwrite($this->resource, $string);
+        }
+
+        return false;
     }
 
     /**

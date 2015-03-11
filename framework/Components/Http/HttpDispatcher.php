@@ -70,16 +70,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         //Middleware(s)
         $response = $this->perform($this->baseRequest);
 
-        //$this->dispatch($response);
-
-        //Cast request - DONE
-        //pass to middleware(s) - this is where cookies processed, tokens checked and session handled, like big boys
-        //MiddlewareRunner is required
-        //perform
-        //  route
-        //  route specific dispatchers
-        //  target controller/closure
-        //dispatch
+        $this->dispatch($response);
     }
 
     /**
@@ -88,7 +79,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * @return Request|null
      */
-    public function getBaseRequest()
+    public function getRequest()
     {
         return $this->baseRequest;
     }
@@ -154,20 +145,20 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
     protected function wrapResponse($response, $plainOutput = '')
     {
-        //        if ($response instanceof ResponseInterface)
-        //        {
-        //            return $response;
-        //        }
-        //
+        if ($response instanceof ResponseInterface)
+        {
+            $plainOutput && $response->getBody()->write($plainOutput);
+
+            return $response;
+        }
+
         //        if (is_array($response) || $response instanceof \JsonSerializable)
         //        {
         //            //Making json response
         //            //return new JsonResponse($response); //something like this
         //        }
 
-        return $response . $plainOutput;
-        //Making base response (string)
-        //return $response;
+        return new Response($response . $plainOutput);
     }
 
     /**
@@ -177,8 +168,13 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function dispatch(ResponseInterface $response)
     {
-        $statusHeader = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()}";
-        header(rtrim("{$statusHeader} {$response->getReasonPhrase()}"));
+        while (ob_get_level())
+        {
+            ob_get_clean();
+        }
+
+        //$statusHeader = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()}";
+        //header(rtrim("{$statusHeader} {$response->getReasonPhrase()}"));
 
         //Receive all headers but not cookies
         foreach ($response->getHeaders() as $header => $values)
@@ -211,7 +207,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         if ($response->getStatusCode() == 204)
         {
-            exit();
+            return;
         }
 
         $stream = $response->getBody();
@@ -219,11 +215,12 @@ class HttpDispatcher extends Component implements DispatcherInterface
         // I need self sending requests in future.
         if (!$stream->isSeekable())
         {
-            echo $stream->getContents();
+            echo (string)$stream;
         }
         else
         {
             ob_implicit_flush(true);
+            $stream->rewind();
             while (!$stream->eof())
             {
                 echo $stream->read(1024);
@@ -231,17 +228,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
         }
     }
 
-    /**
-     * Generate response to represent specified error code. Response can include pure headers or may have attached view
-     * file (based on HttpDispatcher configuration).
-     *
-     * @param int $code
-     * @return ResponseInterface|Response
-     */
-    protected function errorResponse($code)
-    {
-        //todo: implement
-    }
+    //    /**
+    //     * Generate response to represent specified error code. Response can include pure headers or may have attached view
+    //     * file (based on HttpDispatcher configuration).
+    //     *
+    //     * @param int $code
+    //     * @return ResponseInterface|Response
+    //     */
+    //    protected function errorResponse($code)
+    //    {
+    //        //todo: implement
+    //    }
 
     /**
      * Every dispatcher should know how to handle exception snapshot provided by Debugger.
@@ -257,8 +254,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
             //$this->dispatch(new Response('ERROR VIEW LAYOUT IF PRESENTED', $snapshot->getException()->getCode()));
         }
 
-        echo $snapshot->renderSnapshot();
-        //500 error OR snapshot, based on options
+        //TODO: hide snapshot based on config
+        $this->dispatch(new Response($snapshot->renderSnapshot(), 500));
     }
 
     /**
