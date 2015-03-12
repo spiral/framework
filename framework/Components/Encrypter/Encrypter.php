@@ -11,9 +11,6 @@ namespace Spiral\Components\Encrypter;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 
-/**
- * DO NOT USE ENCRYPTER! IT HAS TO BE REWRITTEN TO WORK USING OPENSSL FIRST.
- */
 class Encrypter extends Component
 {
     /**
@@ -219,6 +216,11 @@ class Encrypter extends Component
         try
         {
             $packed = json_decode(base64_decode($packed), true);
+
+            if (empty($packed))
+            {
+                throw new \RuntimeException("Invalid dataset.");
+            }
 
             assert(is_array($packed));
             assert(!empty($packed[self::IV]));
