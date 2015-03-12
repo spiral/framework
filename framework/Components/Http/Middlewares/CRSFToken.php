@@ -6,11 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http;
+namespace Spiral\Components\Http\Middlewares;
 
 use Psr\Http\Message\RequestInterface;
+use Spiral\Components\Http\MiddlewareInterface;
+use Spiral\Components\Http\Response;
+use Spiral\Core\Component;
 
-interface MiddlewareInterface
+class CRSFToken extends Component implements MiddlewareInterface
 {
     /**
      * Handle request generate response. Middleware used to alter incoming Request and/or Response
@@ -21,5 +24,8 @@ interface MiddlewareInterface
      * @param object|null      $context Pipeline context, can be HttpDispatcher, Route or module.
      * @return Response
      */
-    public function handle(RequestInterface $request, \Closure $next, $context = null);
+    public function handle(RequestInterface $request, \Closure $next, $context = null)
+    {
+        return $next();
+    }
 }
