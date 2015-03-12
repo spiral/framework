@@ -13,9 +13,9 @@ use Spiral\Core\Component;
 class StorageObject extends Component
 {
     /**
-     * Full object address. Address used to identify associated container using container prefix, address can be either
-     * meaningless string or be valid URL, in this case object address can be used as to detect container, as to show on
-     * web page.
+     * Full object address. Address used to identify associated container using container prefix,
+     * address can be either meaningless string or be valid URL, in this case object address can be
+     * used as to detect container, as to show on web page.
      *
      * @var string
      */
@@ -30,25 +30,27 @@ class StorageObject extends Component
     protected $storage = null;
 
     /**
-     * Associated storage container. Every container represent one "virtual" folder which can be located on local machine,
-     * another server (ftp) or in cloud (amazon, rackspace). Container provides basic unified functionality to manage files
-     * inside, all low level operations perform by servers (adapters), this technique allows you to create application and
-     * code which does not require to specify storage requirements at time of development.
+     * Associated storage container. Every container represent one "virtual" folder which can be
+     * located on local machine, another server (ftp) or in cloud (amazon, rackspace). Container
+     * provides basic unified functionality to manage files inside, all low level operations perform
+     * by servers (adapters), this technique allows you to create application and code which does not
+     * require to specify storage requirements at time of development.
      *
      * @var StorageContainer
      */
     protected $container = null;
 
     /**
-     * Object name is relative name inside one specific container, can include filename and directory name.
+     * Object name is relative name inside one specific container, can include filename and directory
+     * name.
      *
      * @var string
      */
     protected $name = false;
 
     /**
-     * Storage objects used to represent one single file located at remote, local or cloud server, such object provides
-     * basic set of API required to manager it location or retrieve file content.
+     * Storage objects used to represent one single file located at remote, local or cloud server,
+     * such object provides basic set of API required to manager it location or retrieve file content.
      *
      * @param string           $address   Full object address.
      * @param string           $name      Relative object name.
@@ -60,7 +62,7 @@ class StorageObject extends Component
     {
         $this->storage = $storage;
 
-        if ($container)
+        if (empty($container))
         {
             //We already know address and name
             $this->address = $address;
@@ -71,9 +73,9 @@ class StorageObject extends Component
         }
 
         //Trying to find container using address
-        if (!$address)
+        if (empty($address))
         {
-            throw new StorageException("Unable to create storage\\Object with empty address.");
+            throw new StorageException("Unable to create StorageObject with empty address.");
         }
 
         $this->address = $address;
@@ -81,7 +83,8 @@ class StorageObject extends Component
     }
 
     /**
-     * Object name is relative name inside one specific container, can include filename and directory name.
+     * Object name is relative name inside one specific container, can include filename and directory
+     * name.
      *
      * @return string
      */
@@ -91,9 +94,9 @@ class StorageObject extends Component
     }
 
     /**
-     * Full object address. Address used to identify associated container using container prefix, address can be either
-     * meaningless string or be valid URL, in this case object address can be used as to detect container, as to show on
-     * web page.
+     * Full object address. Address used to identify associated container using container prefix,
+     * address can be either meaningless string or be valid URL, in this case object address can be
+     * used as to detect container, as to show on web page.
      *
      * @return string
      */
@@ -103,10 +106,11 @@ class StorageObject extends Component
     }
 
     /**
-     * Associated storage container. Every container represent one "virtual" folder which can be located on local machine,
-     * another server (ftp) or in cloud (amazon, rackspace). Container provides basic unified functionality to manage files
-     * inside, all low level operations perform by servers (adapters), this technique allows you to create application and
-     * code which does not require to specify storage requirements at time of development.
+     * Associated storage container. Every container represent one "virtual" folder which can be
+     * located on local machine, another server (ftp) or in cloud (amazon, rackspace). Container
+     * provides basic unified functionality to manage files inside, all low level operations perform
+     * by servers (adapters), this technique allows you to create application and code which does not
+     * require to specify storage requirements at time of development.
      *
      * @return StorageContainer
      */
@@ -122,7 +126,7 @@ class StorageObject extends Component
      */
     public function isExists()
     {
-        if (!$this->name)
+        if (empty($this->name))
         {
             return false;
         }
@@ -137,7 +141,7 @@ class StorageObject extends Component
      */
     public function getFilesize()
     {
-        if (!$this->name)
+        if (empty($this->name))
         {
             return false;
         }
@@ -146,14 +150,14 @@ class StorageObject extends Component
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location, adapter should download
-     * file to temporary file and return it's filename.
+     * Allocate local filename for remove storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename.
      *
      * @return string
      */
     public function getFilename()
     {
-        if (!$this->name)
+        if (empty($this->name))
         {
             return '';
         }
@@ -162,20 +166,21 @@ class StorageObject extends Component
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require object recreation or
-     * download and can be performed on remote server.
+     * Remove storage object without changing it's own container. This operation does not require
+     * object recreation or download and can be performed on remote server.
      *
      * @param string $newName
      * @return bool|StorageObject
      */
     public function rename($newName)
     {
-        if (!$this->name)
+        if (empty($this->name))
         {
             return false;
         }
 
-        if ($this->address = $this->container->rename($this->name, $newName))
+        $this->address = $this->container->rename($this->name, $newName);
+        if (!empty($this->address))
         {
             $this->name = $newName;
 
@@ -190,7 +195,7 @@ class StorageObject extends Component
      */
     public function delete()
     {
-        if (!$this->name)
+        if (empty($this->name))
         {
             return;
         }
@@ -203,8 +208,8 @@ class StorageObject extends Component
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Copy object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $destination Destination container (under same server).
      * @return StorageObject
@@ -212,7 +217,7 @@ class StorageObject extends Component
      */
     public function copy($destination)
     {
-        if (!$this->name)
+        if (empty($this->name))
         {
             return false;
         }
@@ -226,8 +231,8 @@ class StorageObject extends Component
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Move object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * Will return replaced object address if success.
      *
@@ -237,7 +242,7 @@ class StorageObject extends Component
      */
     public function replace($destination)
     {
-        if (!$this->name)
+        if (empty($this->name))
         {
             return false;
         }
@@ -247,7 +252,8 @@ class StorageObject extends Component
             $destination = $this->storage->container($destination);
         }
 
-        if ($this->address = $this->container->replace($destination, $this->name))
+        $this->address = $this->container->replace($destination, $this->name);
+        if (!empty($this->address))
         {
             $this->container = $destination;
 
@@ -268,8 +274,8 @@ class StorageObject extends Component
     }
 
     /**
-     * Create StorageObject based on provided address, object name and container will be detected automatically using prefix
-     * encoded in address.
+     * Create StorageObject based on provided address, object name and container will be detected
+     * automatically using prefix encoded in address.
      *
      * @param string $address Object address with name and container prefix.
      * @return StorageObject
