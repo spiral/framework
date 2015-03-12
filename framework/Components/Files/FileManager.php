@@ -30,15 +30,16 @@ class FileManager extends Component
     const GB = 1073741824;
 
     /**
-     * Default file permissions is 666 (directories 777), this files are fully writable and readable by all application
-     * environments. Usually this files stored under application/data folder, however they can be in some other public
-     * locations.
+     * Default file permissions is 666 (directories 777), this files are fully writable and readable
+     * by all application environments. Usually this files stored under application/data folder,
+     * however they can be in some other public locations.
      */
     const RUNTIME = 0766;
 
     /**
-     * Work files are files which created by or for framework, like controllers, configs and config directories.
-     * This means that only CLI mode application can modify them. You should not create work files from web application.
+     * Work files are files which created by or for framework, like controllers, configs and config
+     * directories. This means that only CLI mode application can modify them. You should not create
+     * work files from web application.
      */
     const READONLY = 0644;
 
@@ -69,30 +70,37 @@ class FileManager extends Component
     }
 
     /**
-     * Write file to specified directory, and update file permissions if necessary. Function can additionally ensure that
-     * target file directory exists.
+     * Write file to specified directory, and update file permissions if necessary. Function can
+     * additionally ensure that target file directory exists.
      *
      * @param string $filename
      * @param string $data            String data to write, can contain binary data.
-     * @param int    $mode            Use File::RUNTIME for 666
-     * @param bool   $ensureDirectory If true, helper will ensure that destination directory exists and have right
-     *                                permissions.
+     * @param int    $mode            Use File::RUNTIME for 766
+     * @param bool   $ensureDirectory If true, helper will ensure that destination directory exists
+     *                                and have right permissions.
      * @param bool   $append          Will append file content.
      * @return bool
      */
     public function write($filename, $data, $mode = null, $ensureDirectory = false, $append = false)
     {
         $ensureDirectory && $this->ensureDirectory(dirname($filename), $mode);
-        if ($mode && $this->exists($filename))
+        if (!empty($mode) && $this->exists($filename))
         {
             //Forcing mode for existed file
             $this->setPermissions($filename, $mode);
         }
 
-        $result = (file_put_contents($filename, $data, $append ? FILE_APPEND | LOCK_EX : LOCK_EX) !== false);
+        $result = (file_put_contents(
+                $filename,
+                $data,
+                $append ? FILE_APPEND | LOCK_EX : LOCK_EX
+            ) !== false);
 
-        //Forcing mode after file creation
-        $result && $mode && $this->setPermissions($filename, $mode);
+        if ($result && !empty($mode))
+        {
+            //Forcing mode after file creation
+            $this->setPermissions($filename, $mode);
+        }
 
         return $result;
     }
@@ -103,7 +111,8 @@ class FileManager extends Component
      * @param string $filename
      * @param string $data            String data to write, can contain binary data.
      * @param int    $mode            Use File::RUNTIME for 666
-     * @param bool   $ensureDirectory If true, helper will ensure that destination directory exists and have right
+     * @param bool   $ensureDirectory If true, helper will ensure that destination directory exists
+     *                                and have right
      *                                permissions.
      * @return bool
      */
@@ -216,8 +225,8 @@ class FileManager extends Component
     }
 
     /**
-     * This function returns the time when the data blocks of a file were being written to, that is, the time when the
-     * content of the file was changed.
+     * This function returns the time when the data blocks of a file were being written to, that is,
+     * the time when the content of the file was changed.
      *
      * @link http://php.net/manual/en/function.filemtime.php
      * @param string $filename
@@ -234,9 +243,9 @@ class FileManager extends Component
     }
 
     /**
-     * Check if provided file were uploaded, is_uploaded_file() function will be used to check it. Methods can accept both
-     * as filename, as file upload array. In second case, addition flag "local" will be checked if allowed to pass validation.
-     * This flag widely used if FileUpload class.
+     * Check if provided file were uploaded, is_uploaded_file() function will be used to check it.
+     * Methods can accept both as filename, as file upload array. In second case, addition flag "local"
+     * will be checked if allowed to pass validation. This flag widely used if FileUpload class.
      *
      * @param mixed $file  Filename or file array.
      * @param bool  $local True to pass file arrays generated locally.
@@ -253,12 +262,13 @@ class FileManager extends Component
     }
 
     /**
-     * When you use stat(), lstat(), or any of the other functions listed in the affected functions list (below), PHP caches
-     * the information those functions return in order to provide faster performance. However, in certain cases, you may
-     * want to clear the cached information. For instance, if the same file is being checked multiple times within a single
-     * script, and that file is in danger of being removed or changed during that script's operation, you may elect to clear
-     * the status cache. In these cases, you can use the clearstatcache() function to clear the information that PHP caches
-     * about a file.
+     * When you use stat(), lstat(), or any of the other functions listed in the affected functions
+     * list (below), PHP caches the information those functions return in order to provide faster
+     * performance. However, in certain cases, you may want to clear the cached information. For
+     * instance, if the same file is being checked multiple times within a single script, and that
+     * file is in danger of being removed or changed during that script's operation, you may elect
+     * to clear the status cache. In these cases, you can use the clearstatcache() function to clear
+     * the information that PHP caches about a file.
      *
      * @link http://php.net/manual/en/function.clearstatcache.php
      * @param string $filename All files by default.
@@ -304,19 +314,27 @@ class FileManager extends Component
 
 
     /**
-     * Will read all available files from specified directory, including nested directories and files. Will not include empty
-     * directories to list. You can specify to exclude some files by their extension, for example to find only php files.
+     * Will read all available files from specified directory, including nested directories and files.
+     * Will not include empty directories to list. You can specify to exclude some files by their
+     * extension, for example to find only php files.
      *
      * @param string     $directory  Root directory to index.
-     * @param null|array $extensions Array of extensions to include to indexation. Any other extension will be ignored.
+     * @param null|array $extensions Array of extensions to include to indexation. Any other extension
+     *                               will be ignored.
      * @param array      $result
      * @return array
      */
     public function getFiles($directory, $extensions = null, &$result = array())
     {
+        if (is_string($extensions))
+        {
+            $extensions = array($extensions);
+        }
+
         $directory = $this->normalizePath($directory, true);
-        $list = glob($directory . '*');
-        foreach ($list as $item)
+
+        $glob = glob($directory . '*');
+        foreach ($glob as $item)
         {
             if (is_dir($item))
             {
@@ -324,7 +342,7 @@ class FileManager extends Component
                 continue;
             }
 
-            if ($extensions && !in_array($this->extension($item), $extensions))
+            if (!empty($extensions) && !in_array($this->extension($item), $extensions))
             {
                 continue;
             }
@@ -336,27 +354,33 @@ class FileManager extends Component
     }
 
     /**
-     * Will create temporary unique file with desired extension, by default no extension will be used and default tempnam()
-     * function will be used. You can specify temp directory where file should be created, by default /tmp will be used.
-     * Make sure this directory is available for writing for php process.
+     * Will create temporary unique file with desired extension, by default no extension will be used
+     * and default tempnam() function will be used. You can specify temp directory where file should
+     * be created, by default /tmp will be used. Make sure this directory is available for writing
+     * for php process.
      *
-     * File prefix can be used to identify files created under multiple applications, make sure that prefix should follow
-     * same rules as for tempnam() function.
+     * File prefix can be used to identify files created under multiple applications, make sure that
+     * prefix should follow same rules as for tempnam() function.
      *
      * @param string $extension Desired file extension, empty (no extension) by default.
-     * @param string $directory Directory where file should be created, false (system temp dir) by default.
+     * @param string $directory Directory where file should be created, false (system temp dir) by
+     *                          default.
      * @param string $prefix    File prefix, "sp" by default.
      * @return string
      */
     public function tempFilename($extension = '', $directory = null, $prefix = 'sp')
     {
-        if (!$directory)
+        if (!empty($directory))
         {
             $directory = sys_get_temp_dir();
         }
 
         $tempFilename = tempnam($directory, $prefix);
-        $extension && rename($tempFilename, $tempFilename = $tempFilename . '.' . $extension);
+        if ($extension)
+        {
+            //We probably should find more optimal way of doing that
+            rename($tempFilename, $tempFilename = $tempFilename . '.' . $extension);
+        }
 
         return $tempFilename;
     }
@@ -366,8 +390,8 @@ class FileManager extends Component
      *
      * @link http://stackoverflow.com/questions/2637945/getting-relative-path-from-absolute-path-in-php
      * @param string $location   Original file or directory location.
-     * @param string $relativeTo Path will be converted to be relative to this directory. By default application root
-     *                           directory will be used.
+     * @param string $relativeTo Path will be converted to be relative to this directory. By default
+     *                           application root directory will be used.
      * @return string
      */
     public function relativePath($location, $relativeTo = null)
@@ -417,9 +441,9 @@ class FileManager extends Component
     }
 
     /**
-     * Will normalize directory of file path to unify it (using UNIX directory separator /), windows symbol "\" requires
-     * escaping and not very "visual" for identifying files. This function will always remove end slash for path (even
-     * for directories).
+     * Will normalize directory of file path to unify it (using UNIX directory separator /), windows
+     * symbol "\" requires escaping and not very "visual" for identifying files. This function will
+     * always remove end slash for path (even for directories).
      *
      * @param string $path      File or directory path.
      * @param bool   $directory Force end slash for directory path.
@@ -437,11 +461,12 @@ class FileManager extends Component
      * Make sure directory exists and has right permissions, works recursively.
      *
      * @param string $directory            Target directory.
-     * @param mixed  $mode                 Use File::RUNTIME for 666
-     * @param bool   $recursivePermissions Use this flag to apply permissions to all *created* directories. This flag used by
-     *                                     system to ensure that all files and folders in runtime directory has right permissions,
-     *                                     and by local storage server due it can create sub folders. This is slower by safer
-     *                                     than using umask().
+     * @param mixed  $mode                 Use File::RUNTIME for 766
+     * @param bool   $recursivePermissions Use this flag to apply permissions to all *created*
+     *                                     directories. This flag used by system to ensure that all
+     *                                     files and folders in runtime directory has right permissions,
+     *                                     and by local storage server due it can create sub folders.
+     *                                     This is slower by safer than using umask().
      * @return bool
      */
     public function ensureDirectory($directory, $mode = self::RUNTIME, $recursivePermissions = true)
@@ -457,6 +482,7 @@ class FileManager extends Component
             $directories = array(basename($directory));
 
             $baseDirectory = $directory;
+
             while (!is_dir($baseDirectory = dirname($baseDirectory)))
             {
                 $directories[] = basename($baseDirectory);
@@ -479,8 +505,8 @@ class FileManager extends Component
     }
 
     /**
-     * Mark filename to be removed after application stops, this method widely used by remove storage server to erase
-     * temporary fetcher files.
+     * Mark filename to be removed after application stops, this method widely used by remove storage
+     * server to erase temporary fetcher files.
      *
      * @param string $filename
      * @return static
@@ -493,7 +519,8 @@ class FileManager extends Component
     }
 
     /**
-     * Clean all registered temporary files. This method can be called manually in any script, or automatically while file
+     * Clean all registered temporary files. This method can be called manually in any script, or
+     * automatically while file
      * component destruction.
      */
     public function removeFiles()
