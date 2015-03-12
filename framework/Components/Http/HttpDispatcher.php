@@ -11,10 +11,7 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
-use Spiral\Components\Http\Request\InputStream;
-use Spiral\Components\Http\Request\Uri;
 use Spiral\Core\Component;
-use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
@@ -24,7 +21,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
     /**
      * Required traits.
      */
-    use Component\SingletonTrait, Component\LoggerTrait, Component\EventsTrait, Component\ConfigurableTrait;
+    use Component\SingletonTrait,
+        Component\LoggerTrait,
+        Component\EventsTrait,
+        Component\ConfigurableTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -69,17 +69,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         $pipeline = new MiddlewarePipe($this->config['middlewares']);
 
-//        $pipeline->add(function (RequestInterface $request, $next)
-//        {
-//            /**
-//             * @var Response $response
-//             */
-//            $response = $next();
-//
-//            $response->getBody()->write('THIS IS BODY!');
-//
-//            return $response;
-//        });
+        //        $pipeline->add(function (RequestInterface $request, $next)
+        //        {
+        //            /**
+        //             * @var Response $response
+        //             */
+        //            $response = $next();
+        //
+        //            $response->getBody()->write('THIS IS BODY!');
+        //
+        //            return $response;
+        //        });
 
         $response = $pipeline->target(array($this, 'perform'))->run($this->baseRequest);
         $this->dispatch($this->event('dispatch', $response));
@@ -98,17 +98,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
     public function perform(RequestInterface $request = null)
     {
-        $parentRequest = Container::getBinding('request');
+        $parentRequest = $this->core->getBinding('request');
         if (!empty($request))
         {
             //Creating scope
-            Container::bind('request', $request);
-            Container::bind(get_class($request), $request);
+            $this->core->bind('request', $request);
+            $this->core->bind(get_class($request), $request);
         }
         else
         {
-            Container::removeBinding('request');
-            !empty($parentRequest) && Container::removeBinding(get_class($parentRequest));
+            $this->core->removeBinding('request');
+            !empty($parentRequest) && $this->core->removeBinding(get_class($parentRequest));
         }
 
         ob_start();
@@ -120,15 +120,15 @@ class HttpDispatcher extends Component implements DispatcherInterface
         if (!empty($request))
         {
             //Ending scope
-            Container::removeBinding('request');
-            Container::removeBinding(get_class($request));
+            $this->core->removeBinding('request');
+            $this->core->removeBinding(get_class($request));
         }
 
         if (!empty($parentRequest))
         {
             //Restoring scope
-            Container::bind('request', $parentRequest);
-            Container::bind(get_class($parentRequest), $parentRequest);
+            $this->core->bind('request', $parentRequest);
+            $this->core->bind(get_class($parentRequest), $parentRequest);
         }
 
         return $this->wrapResponse($response, $plainOutput);
