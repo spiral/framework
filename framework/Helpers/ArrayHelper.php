@@ -68,4 +68,60 @@ class ArrayHelper
 
         return true;
     }
+
+    /**
+     * Sort an array with a user-defined comparison function and maintain index association. This is
+     * stable sort which will keep order or elements if their compare result is equal.
+     *
+     * @link http://php.net/manual/en/function.uasort.php
+     * @param array    $array    The input array.
+     * @param callable $function User-defined comparison functions.
+     */
+    public static function stableSort(&$array, $function)
+    {
+        if (count($array) < 2)
+        {
+            return;
+        }
+        $halfway = count($array) / 2;
+        $array1 = array_slice($array, 0, $halfway, true);
+        $array2 = array_slice($array, $halfway, null, true);
+
+        self::stableSort($array1, $function);
+        self::stableSort($array2, $function);
+        if (call_user_func($function, end($array1), reset($array2)) < 1)
+        {
+            $array = $array1 + $array2;
+
+            return;
+        }
+        $array = array();
+        reset($array1);
+        reset($array2);
+        while (current($array1) && current($array2))
+        {
+            if (call_user_func($function, current($array1), current($array2)) < 1)
+            {
+                $array[key($array1)] = current($array1);
+                next($array1);
+            }
+            else
+            {
+                $array[key($array2)] = current($array2);
+                next($array2);
+            }
+        }
+        while (current($array1))
+        {
+            $array[key($array1)] = current($array1);
+            next($array1);
+        }
+        while (current($array2))
+        {
+            $array[key($array2)] = current($array2);
+            next($array2);
+        }
+
+        return;
+    }
 }

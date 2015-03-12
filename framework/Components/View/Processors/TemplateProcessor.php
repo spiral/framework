@@ -15,6 +15,7 @@ use Spiral\Components\View\View;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\Processors\Templater\Node;
 use Spiral\Core\Component;
+use Spiral\Helpers\ArrayHelper;
 use Spiral\Support\Html\Tokenizer;
 use Spiral\Components\View\Processors\Templater\Behaviour;
 use Spiral\Components\View\Processors\Templater\SupervisorInterface;
@@ -260,12 +261,10 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             }
 
             $node->options[self::ALIASES][] = $alias;
-            uasort($node->options[self::ALIASES], function (ImportAlias $optionA, ImportAlias $optionB)
+            ArrayHelper::stableSort($node->options[self::ALIASES], function (ImportAlias $optionA, ImportAlias $optionB)
             {
-                return $optionA->level > $optionB->level;
+                return $optionA->level <= $optionB->level;
             });
-
-            array_reverse($node->options[self::ALIASES]);
 
             //Nothing to render
             return false;
