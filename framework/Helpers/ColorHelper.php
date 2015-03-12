@@ -40,7 +40,8 @@ class ColorHelper
     }
 
     /**
-     * Get HSV color representation based on R,G,B channels. hue = (0,360), saturation = (0,1), value = (0,1)
+     * Get HSV color representation based on R,G,B channels. hue = (0,360), saturation = (0,1),
+     * value = (0,1)
      *
      * @param array $rgb
      * @return array
@@ -117,6 +118,10 @@ class ColorHelper
      */
     public static function colorsDistance(array $colorA, array $colorB)
     {
-        return sqrt(pow($colorA[0] - $colorB[0], 2) * pow($colorA[1] - $colorB[1], 2) + pow($colorA[2] - $colorB[2], 2)) / 255;
+        return sqrt(
+            pow($colorA[0] - $colorB[0], 2)
+            + pow($colorA[1] - $colorB[1], 2)
+            + pow($colorA[2] - $colorB[2], 2)
+        ) / 255;
     }
 }

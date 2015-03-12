@@ -11,15 +11,16 @@ namespace Spiral\Helpers;
 class UrlHelper
 {
     /**
-     * Normalize URL to always include http or https protocols. Other protocols are not supported and url will be corrupted
-     * which will cause it to fail upon validation. Empty URL will be returned as an empty strings.
+     * Normalize URL to always include http or https protocols. Other protocols are not supported
+     * and url will be corrupted which will cause it to fail upon validation. Empty URL will be
+     * returned as an empty strings.
      *
      * @param string $URL URL to be normalized.
      * @return string
      */
     public static function normalizeURL($URL)
     {
-        if (!$URL)
+        if (empty($URL))
         {
             return '';
         }
@@ -33,9 +34,9 @@ class UrlHelper
     }
 
     /**
-     * Convert string to a URL supported identifier. Will erase every bad symbol, beginning and end characters and double
-     * delimiters. This function will use StringHelper::$replaces array to support non English strings still valid for URLs.
-     * Alias for StringHelper::url.
+     * Convert string to a URL supported identifier. Will erase every bad symbol, beginning and end
+     * characters and double delimiters. This function will use StringHelper::$replaces array to
+     * support non English strings still valid for URLs. Alias for StringHelper::url.
      *
      * @param string $string    String to be converted.
      * @param string $delimiter Segments delimiter, "-" by default.

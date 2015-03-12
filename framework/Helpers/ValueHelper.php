@@ -11,8 +11,8 @@ namespace Spiral\Helpers;
 class ValueHelper
 {
     /**
-     * Will convert the input variable in any format into a string. This function bypasses the problem of applying strval()
-     * to arrays.
+     * Will convert the input variable in any format into a string. This function bypasses the
+     * problem of applying strval() to arrays.
      *
      * @param mixed $variable Input variable. Any format is allowed.
      * @return string
@@ -38,8 +38,8 @@ class ValueHelper
     }
 
     /**
-     * Will filter and return only the scalar values of input haystack. Sub arrays are counted as non scalar values and
-     * will be removed.
+     * Will filter and return only the scalar values of input haystack. Sub arrays are counted as
+     * non scalar values and will be removed.
      *
      * @param mixed $haystack Filtered array
      * @return array
@@ -55,8 +55,8 @@ class ValueHelper
     }
 
     /**
-     * Will return a real boolean representation for variable (important for MongoDB). This is the alias for boolval()
-     * function. However it's only available in PHP 5.5.
+     * Will return a real boolean representation for variable (important for MongoDB). This is the
+     * alias for boolval() function. However it's only available in PHP 5.5.
      *
      * @param mixed $variable
      * @return bool

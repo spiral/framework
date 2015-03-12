@@ -11,8 +11,13 @@ namespace Spiral\Helpers;
 class StringHelper
 {
     /**
-     * This describes character exceptions and aliases for StringHelper::url function. More characters will be added based
-     * on user's request.
+     * Default set of random characters.
+     */
+    const DEFAULT_RANDOM = 'abcdefghijklmnopqrstuxyvwzABCDEFGHIJKLMNOPQRSTUXYVWZ01234567890';
+
+    /**
+     * This describes character exceptions and aliases for StringHelper::url function. More
+     * characters will be added based on user's request.
      *
      * @var array
      */
@@ -46,7 +51,7 @@ class StringHelper
      * @param string $characters Characters should be randomized.
      * @return string
      */
-    public static function random($length = 32, $characters = 'abcdefghijklmnopqrstuxyvwzABCDEFGHIJKLMNOPQRSTUXYVWZ01234567890')
+    public static function random($length = 32, $characters = self::DEFAULT_RANDOM)
     {
         $result = '';
         $countCharacters = strlen($characters);
@@ -59,8 +64,8 @@ class StringHelper
     }
 
     /**
-     * Applies htmlspecialchars() and strip_tags() to string (if enabled). Can be used to clean up data before rendering
-     * it in HTML.
+     * Applies htmlspecialchars() and strip_tags() to string (if enabled). Can be used to clean up
+     * data before rendering it in HTML.
      *
      * @param string $string    String to be escaped.
      * @param bool   $stripTags Will remove all tags using strip_tags(). Disabled by default.
@@ -82,8 +87,9 @@ class StringHelper
     }
 
     /**
-     * Convert string to URL supported identifier. Will erase any bad symbols, beginning and ending characters and double
-     * delimiters. This function will use StringHelper::$replaces array to support non English strings valid for URLs.
+     * Convert string to URL supported identifier. Will erase any bad symbols, beginning and ending
+     * characters and double delimiters. This function will use StringHelper::$replaces array to
+     * support non English strings valid for URLs.
      *
      * @param string $string    String that will be converted.
      * @param string $delimiter Segments delimiter, "-" by default.
@@ -138,7 +144,8 @@ class StringHelper
     }
 
     /**
-     * Normalize string endings to avoid EOL problem. Replace \n\r and multiply new lines with single \n.
+     * Normalize string endings to avoid EOL problem. Replace \n\r and multiply new lines with
+     * single \n.
      *
      * @param string $string       String to be normalized.
      * @param bool   $joinMultiple Join multiple new lines into one.
@@ -170,7 +177,8 @@ class StringHelper
      * |--d
      *
      * @param string $string         Input string with multiple lines.
-     * @param string $tabulationCost How to treat \t symbols relatively to spaces. By default, this is set to 4 spaces.
+     * @param string $tabulationCost How to treat \t symbols relatively to spaces. By default, this
+     *                               is set to 4 spaces.
      * @return string
      */
     public static function normalizeIndents($string, $tabulationCost = "   ")
@@ -181,7 +189,7 @@ class StringHelper
         $minIndent = null;
         foreach ($lines as $line)
         {
-            if (!$line)
+            if (empty($line))
             {
                 continue;
             }
@@ -203,7 +211,7 @@ class StringHelper
             $minIndent = min($minIndent, strlen($matches[1]));
         }
 
-        if (!$minIndent)
+        if (is_null($minIndent) || $minIndent === 0)
         {
             return $string;
         }
@@ -211,7 +219,7 @@ class StringHelper
         //Fixing indent
         foreach ($lines as &$line)
         {
-            if (!$line)
+            if (empty($line))
             {
                 continue;
             }
@@ -221,7 +229,11 @@ class StringHelper
             $indent = $matches[1];
 
             //Getting new indent
-            $useIndent = str_repeat(" ", strlen(str_replace("\t", $tabulationCost, $indent)) - $minIndent);
+            $useIndent = str_repeat(
+                " ",
+                strlen(str_replace("\t", $tabulationCost, $indent)) - $minIndent
+            );
+
             $line = $useIndent . substr($line, strlen($indent));
             unset($line);
         }
@@ -230,8 +242,8 @@ class StringHelper
     }
 
     /**
-     * Format string using previously named arguments from values array. Arguments that are not found will be skipped without
-     * any notification. Extra arguments will be skipped as well.
+     * Format string using previously named arguments from values array. Arguments that are not
+     * found will be skipped without any notification. Extra arguments will be skipped as well.
      *
      * Example:
      * Hello [:name]! Good [:time]!
@@ -248,7 +260,7 @@ class StringHelper
      */
     public static function interpolate($format, array $values, $prefix = '{', $postfix = '}')
     {
-        if (!$values)
+        if (empty($values))
         {
             return $format;
         }
@@ -269,6 +281,7 @@ class StringHelper
             {
                 $value = '';
             }
+
             $replace[$prefix . $key . $postfix] = $value;
         }
 

@@ -11,6 +11,7 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
+use Spiral\Components\Http\Middlewares\CrsfMiddleware;
 use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\Uri;
 use Spiral\Core\Component;
@@ -67,9 +68,21 @@ class HttpDispatcher extends Component implements DispatcherInterface
         //Initial server request
         $this->baseRequest = $this->castRequest();
 
-        //Middleware(s)
-        $response = $this->perform($this->baseRequest);
+        $pipeline = new MiddlewarePipe($this->config['middlewares']);
 
+        $pipeline->add(function (RequestInterface $request, $next)
+        {
+            /**
+             * @var Response $response
+             */
+            $response = $next();
+
+            $response->getBody()->write('THIS IS BODY!');
+
+            return $response;
+        });
+
+        $response = $pipeline->target(array($this, 'perform'))->run($this->baseRequest);
         $this->dispatch($this->event('dispatch', $response));
     }
 

@@ -11,7 +11,8 @@ namespace Spiral\Helpers;
 class ArrayHelper
 {
     /**
-     * Fetches the desired array keys. Usually used while filtering requests or for non limited data sets.
+     * Fetches the desired array keys. Usually used while filtering requests or for non limited data
+     * sets.
      *
      * @param array $haystack Source array.
      * @param array $keys     Desired keys to fetch.
@@ -23,8 +24,8 @@ class ArrayHelper
     }
 
     /**
-     * This will remove the element from haystack array by it's value. Value is searched using an array_search method which
-     * can cause behaviors described in function documentation.
+     * This will remove the element from haystack array by it's value. Value is searched using an
+     * array_search method which can cause behaviors described in function documentation.
      *
      * @link http://php.net/manual/en/function.array-search.php
      * @param array $haystack Source array.
@@ -43,7 +44,8 @@ class ArrayHelper
     }
 
     /**
-     * Will check that all haystack values are present in the allowed array. If one is not present, this will return false.
+     * Will check that all haystack values are present in the allowed array. If one is not present,
+     * this will return false.
      *
      * @param array $haystack Source array.
      * @param array $allowed  Filtering array.
