@@ -219,7 +219,7 @@ class Debugger extends Component
     {
         if (Core::isConsole() && $output != self::DUMP_LOG)
         {
-            var_dump($value);
+            print_r($value);
 
             return null;
         }
