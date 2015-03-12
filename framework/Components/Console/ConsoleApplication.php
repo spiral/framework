@@ -18,8 +18,6 @@ class ConsoleApplication extends Application
      *
      * @param string $name    The name of the application
      * @param string $version The version of the application
-     *
-     * @api
      */
     public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
     {

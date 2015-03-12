@@ -60,14 +60,16 @@ abstract class Command extends BaseCommand
     protected $description = '';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine
+     * getOptions() method.
      *
      * @var array
      */
     protected $options = array();
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine
+     * getArguments() method.
      *
      * @var array
      */
@@ -114,7 +116,8 @@ abstract class Command extends BaseCommand
     }
 
     /**
-     * Should indicate if command available for console application, method can return false if parent modules not installed
+     * Should indicate if command available for console application, method can return false if
+     * parent modules not installed
      * and etc.
      *
      * @return bool
@@ -190,9 +193,8 @@ abstract class Command extends BaseCommand
     }
 
     /**
-     * Runs the command.
-     * The code to execute is either defined directly with the setCode() method or by overriding the execute() method
-     * in a sub-class.
+     * Runs the command. The code to execute is either defined directly with the setCode() method
+     * or by overriding the execute() method in a sub-class.
      *
      * @see setCode()
      * @see execute()
@@ -221,8 +223,9 @@ abstract class Command extends BaseCommand
 
     /**
      * Executes the current command.
-     * This method is not abstract because you can use this class as a concrete class. In this case, instead of defining the
-     * execute() method, you set the code to execute by passing a Closure to the setCode() method.
+     * This method is not abstract because you can use this class as a concrete class. In this case,
+     * instead of defining the execute() method, you set the code to execute by passing a Closure to
+     * the setCode() method.
      *
      * Method will pass call to perform() method with DI.
      *

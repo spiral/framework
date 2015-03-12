@@ -92,7 +92,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
 
         $this->application = new ConsoleApplication();
 
-        if (!$this->commands)
+        if (empty($this->commands))
         {
             $this->findCommands();
         }
@@ -119,14 +119,20 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     }
 
     /**
-     * Use tokenizer to find all available command classes, result will be stored in runtime cache to speed up next console
-     * call. Command can be called manually to reindex commands.
+     * Use tokenizer to find all available command classes, result will be stored in runtime cache
+     * to speed up next console call. Command can be called manually to reindex commands.
      */
     public function findCommands()
     {
         $this->commands = array();
 
-        foreach ($this->tokenizer->getClasses('Symfony\Component\Console\Command\Command', null, 'Command') as $class)
+        $classes = $this->tokenizer->getClasses(
+            'Symfony\Component\Console\Command\Command',
+            null,
+            'Command'
+        );
+
+        foreach ($classes as $class)
         {
             if ($class['abstract'])
             {
@@ -165,7 +171,8 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      *
      * @param string               $command    Command name, for example "core:configure".
      * @param array|InputInterface $parameters Command parameters or input interface.
-     * @param OutputInterface      $output     Output interface, buffer one will be used if nothing else specified.
+     * @param OutputInterface      $output     Output interface, buffer one will be used if nothing
+     *                                         else specified.
      * @return CommandOutput
      * @throws \Exception
      */
@@ -173,7 +180,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     {
         $code = $this->getApplication()->find($command)->run(
             is_object($parameters) ? $parameters : new ArrayInput(compact('command') + $parameters),
-            $output = $output ?: new BufferedOutput()
+            $output = ($output ?: new BufferedOutput())
         );
 
         return CommandOutput::make(array(
