@@ -84,45 +84,49 @@ class ArrayHelper
         {
             return;
         }
-        $halfway = count($array) / 2;
-        $array1 = array_slice($array, 0, $halfway, true);
-        $array2 = array_slice($array, $halfway, null, true);
 
-        self::stableSort($array1, $function);
-        self::stableSort($array2, $function);
-        if (call_user_func($function, end($array1), reset($array2)) < 1)
+        $halfway = count($array) / 2;
+        $arrayA = array_slice($array, 0, $halfway, true);
+        $arrayB = array_slice($array, $halfway, null, true);
+
+        self::stableSort($arrayA, $function);
+        self::stableSort($arrayB, $function);
+
+        if (call_user_func($function, end($arrayA), reset($arrayB)) < 1)
         {
-            $array = $array1 + $array2;
+            $array = $arrayA + $arrayB;
 
             return;
         }
         $array = array();
 
-        reset($array1);
-        reset($array2);
+        reset($arrayA);
+        reset($arrayB);
 
-        while (current($array1) && current($array2))
+        while (current($arrayA) && current($arrayB))
         {
-            if (call_user_func($function, current($array1), current($array2)) < 1)
+            if (call_user_func($function, current($arrayA), current($arrayB)) < 1)
             {
-                $array[key($array1)] = current($array1);
-                next($array1);
+                $array[key($arrayA)] = current($arrayA);
+                next($arrayA);
             }
             else
             {
-                $array[key($array2)] = current($array2);
-                next($array2);
+                $array[key($arrayB)] = current($arrayB);
+                next($arrayB);
             }
         }
-        while (current($array1))
+
+        while (current($arrayA))
         {
-            $array[key($array1)] = current($array1);
-            next($array1);
+            $array[key($arrayA)] = current($arrayA);
+            next($arrayA);
         }
-        while (current($array2))
+
+        while (current($arrayB))
         {
-            $array[key($array2)] = current($array2);
-            next($array2);
+            $array[key($arrayB)] = current($arrayB);
+            next($arrayB);
         }
 
         return;
