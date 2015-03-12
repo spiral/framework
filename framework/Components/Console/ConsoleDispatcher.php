@@ -85,7 +85,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      */
     public function getApplication()
     {
-        if ($this->application)
+        if (!empty($this->application))
         {
             return $this->application;
         }

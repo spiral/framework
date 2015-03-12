@@ -251,9 +251,8 @@ class Response extends BaseMessage implements ResponseInterface
      * Create a new instance with the scheduled cookie instance, cookie will be
      * sent to client in HttpDispatcher->dispatch() method.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated status and reason phrase.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @see setcookie()
      * @param CookieInterface $cookie Cookie instance.
@@ -271,9 +270,8 @@ class Response extends BaseMessage implements ResponseInterface
      * Create a new instance without the scheduled cookie instance, cookie will be
      * sent to client in HttpDispatcher->dispatch() method.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated status and reason phrase.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @see setcookie()
      * @param string $name Cookie name.
@@ -296,9 +294,8 @@ class Response extends BaseMessage implements ResponseInterface
      * Create a new instance with replaced array of scheduled cookie instances,
      * cookies will be sent to client in HttpDispatcher->dispatch() method.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated status and reason phrase.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @see setcookie()
      * @param CookieInterface[] $cookies

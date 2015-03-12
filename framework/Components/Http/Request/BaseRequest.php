@@ -129,9 +129,8 @@ class BaseRequest extends BaseMessage implements RequestInterface
      * this method may be used to create an instance with the specified
      * request-target, verbatim.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * changed request target.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @link http://tools.ietf.org/html/rfc7230#section-2.7 (for the various
      *     request-target forms allowed in request messages)
@@ -170,9 +169,8 @@ class BaseRequest extends BaseMessage implements RequestInterface
      * method names are case-sensitive and thus implementations SHOULD NOT
      * modify the given string.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * changed request method.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @param string $method Case-insensitive method.
      * @return self
@@ -208,9 +206,8 @@ class BaseRequest extends BaseMessage implements RequestInterface
     /**
      * Create a new instance with the provided URI.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * new UriInterface instance.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
      * @param UriInterface $uri New request URI to use.

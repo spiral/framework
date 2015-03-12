@@ -217,12 +217,11 @@ class Encrypter extends Component
         {
             $packed = json_decode(base64_decode($packed), true);
 
-            if (empty($packed))
+            if (empty($packed) || !is_array($packed))
             {
                 throw new DecryptionException("Invalid dataset.");
             }
 
-            assert(is_array($packed));
             assert(!empty($packed[self::IV]));
             assert(!empty($packed[self::DATA]));
             assert(!empty($packed[self::SIGNATURE]));

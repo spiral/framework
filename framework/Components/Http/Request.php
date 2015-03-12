@@ -200,9 +200,8 @@ class Request extends BaseRequest implements ServerRequestInterface
      * be compatible with the structure of $_COOKIE. Typically, this data will
      * be injected at instantiation.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated cookie values.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @param array $cookies Array of key/value pairs representing cookies.
      * @return self
@@ -243,9 +242,8 @@ class Request extends BaseRequest implements ServerRequestInterface
      * Setting query string arguments MUST NOT change the URL stored by the
      * request, nor the values in the server params.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated query string arguments.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @param array $query Array of query string arguments, typically from
      *                     $_GET.
@@ -311,9 +309,8 @@ class Request extends BaseRequest implements ServerRequestInterface
      * is a JSON payload, this method could be used to create a request
      * instance with the deserialized parameters.
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated body parameters.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @param null|array|object $data The deserialized body data. This will
      *                                typically be in an array or object.
@@ -366,9 +363,8 @@ class Request extends BaseRequest implements ServerRequestInterface
      * This method allows setting a single derived request attribute as
      * described in getAttributes().
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated attribute.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @see getAttributes()
      * @param string $name  The attribute name.
@@ -390,9 +386,8 @@ class Request extends BaseRequest implements ServerRequestInterface
      * This method allows removing a single derived request attribute as
      * described in getAttributes().
      *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that removes
-     * the attribute.
+     * This method MUST be implemented in such a way as to retain the immutability of the message,
+     * and MUST return a new instance that has the new header and/or value.
      *
      * @see getAttributes()
      * @param string $name The attribute name.
