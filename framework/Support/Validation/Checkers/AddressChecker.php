@@ -13,8 +13,9 @@ use Spiral\Support\Validation\Checker;
 class AddressChecker extends Checker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -37,8 +38,8 @@ class AddressChecker extends Checker
     }
 
     /**
-     * Will validate email with included recipient name in <> braces. Do not use this validation function outside of the
-     * admin panels.
+     * Will validate email with included recipient name in <> braces. Do not use this validation
+     * function outside of the admin panels.
      *
      * @param string $email Full email address which will be validated.
      * @return bool
@@ -54,9 +55,8 @@ class AddressChecker extends Checker
     }
 
     /**
-     * Validating HTTP or HTTPS web URLs using PHP filter_var() function, RCF 2396 compliant. If the second argument is
-     * false, the system will
-     * force http:// protocol to address before any validation.
+     * Validating HTTP or HTTPS web URLs using PHP filter_var() function, RCF 2396 compliant. If the
+     * second argument is false, the system will force http:// protocol to address before any validation.
      *
      * @link http://www.faqs.org/rfcs/rfc2396.html
      * @param string $url             URL which will be validated.

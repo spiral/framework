@@ -18,8 +18,9 @@ abstract class Checker
     use LocalizableTrait;
 
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -33,8 +34,8 @@ abstract class Checker
     protected $validator = null;
 
     /**
-     * Perform value check using specified checker method, value and arguments. Validator instance can be provided to
-     * create appropriate context for complex and composite validations.
+     * Perform value check using specified checker method, value and arguments. Validator instance
+     * can be provided to create appropriate context for complex and composite validations.
      *
      * @param string    $method    Checker method name.
      * @param mixed     $value     Value to be validated.
@@ -54,7 +55,8 @@ abstract class Checker
     }
 
     /**
-     * Return custom error message associated with checker methods. Return empty string if no methods associated.
+     * Return custom error message associated with checker methods. Return empty string if no methods
+     * associated.
      *
      * @param string           $method     Checker method name.
      * @param \ReflectionClass $reflection Source to fetch messages from.
@@ -67,7 +69,10 @@ abstract class Checker
             $messages = $reflection->getDefaultProperties()['messages'];
             if (isset($messages[$method]))
             {
-                return call_user_func(array($reflection->getName(), 'i18nMessage'), $messages[$method]);
+                return call_user_func(
+                    array($reflection->getName(), 'i18nMessage'),
+                    $messages[$method]
+                );
             }
         }
         elseif (isset($this->messages[$method]))
@@ -86,11 +91,19 @@ abstract class Checker
     }
 
     /**
-     * Models and other classes which inherits LocalizableInterface interface allowed to be automatically parsed and analyzed
-     * for messages stored in default property values (static and non static), such values can be prepended and appended
-     * with i18n prefixes ([[ and ]] by default) and will be localized on output. Class should implement i18nNamespace
-     * method (static) which will define required i18n namespace. Namespace will be used to translate default messages
-     * and by i18n component to index this messages to localization bundles.
+     * Models and other classes which uses LocalizableTrait interface allowed to be automatically
+     * parsed and analyzed for messages stored in default property values (static and non static),
+     * such values can be prepended and appended with i18n prefixes ([[ and ]] by default) and will
+     * be localized on output. Class should implement i18nNamespace method (static) which will define
+     * required i18n namespace. Namespace will be used to translate default messages and by i18n
+     * component to index this messages to localization bundles.
+     *
+     * Class should will be responsible by itself to localize such messages. Use "@do-not-index" doc
+     * comment to prevent field from indexation.
+     *
+     * Additionally method i18nMessage() introduced, this method can be used to localize default
+     * model messages from attributes ([[ and ]] will be cut) or be called directly in one of model
+     * method. Both usages will be indexed and captured to bundles.
      *
      * @return string
      */

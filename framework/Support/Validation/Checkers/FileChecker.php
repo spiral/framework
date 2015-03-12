@@ -14,8 +14,9 @@ use Spiral\Support\Validation\Checker;
 class FileChecker extends Checker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -43,9 +44,10 @@ class FileChecker extends Checker
     }
 
     /**
-     * Helper function that retrieves the real filename. Can accept both local filename or an uploaded file array. To
-     * validate the file array as a local file (without checking for is_uploaded_file()), array must have the field "local"
-     * filled in. This trick can be used with some more complex validators or file processors.
+     * Helper function that retrieves the real filename. Can accept both local filename or an uploaded
+     * file array. To validate the file array as a local file (without checking for is_uploaded_file()),
+     * array must have the field "local" filled in. This trick can be used with some more complex
+     * validators or file processors.
      *
      * @param string|array $file         Local filename or uploaded file array.
      * @param bool         $onlyUploaded Pass only uploaded files.
@@ -89,7 +91,8 @@ class FileChecker extends Checker
     }
 
     /**
-     * Checks to see if the filesize is smaller than the minimum size required. The size is set in kBytes.
+     * Checks to see if the filesize is smaller than the minimum size required. The size is set in
+     * KBytes.
      *
      * @param array|string $file Local file or uploaded file array.
      * @param int          $size Max filesize in kBytes.

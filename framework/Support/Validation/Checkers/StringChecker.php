@@ -13,8 +13,9 @@ use Spiral\Support\Validation\Checker;
 class StringChecker extends Checker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -39,8 +40,8 @@ class StringChecker extends Checker
     }
 
     /**
-     * Check if provided string length is less or equal than required value. String length will be retrieved using mb_strlen()
-     * function, so aware of results with multi-byte strings.
+     * Check if provided string length is less or equal than required value. String length will be
+     * retrieved using mb_strlen() function, so aware of results with multi-byte strings.
      *
      * @param string $string Value to be validated.
      * @param int    $length Maximum string length.
@@ -52,8 +53,8 @@ class StringChecker extends Checker
     }
 
     /**
-     * Check if provided string length is equal or higher than required value. String length will be retrieved using mb_strlen()
-     * function, so aware of results with multi-byte strings.
+     * Check if provided string length is equal or higher than required value. String length will be
+     * retrieved using mb_strlen() function, so aware of results with multi-byte strings.
      *
      * @param string $string Value to be validated.
      * @param int    $length Maximum string length.
@@ -65,8 +66,8 @@ class StringChecker extends Checker
     }
 
     /**
-     * Check if provided string length is equal to required value. String length will be retrieved using mb_strlen() function,
-     * so aware of results with multi-byte strings.
+     * Check if provided string length is equal to required value. String length will be retrieved
+     * using mb_strlen() function, so aware of results with multi-byte strings.
      *
      * @param string $string Value to be validated.
      * @param int    $length Desired string length.
@@ -78,8 +79,8 @@ class StringChecker extends Checker
     }
 
     /**
-     * Check if provided string length is equal or higher than required value. String length will be retrieved using mb_strlen()
-     * function, so aware of results with multi-byte strings.
+     * Check if provided string length is equal or higher than required value. String length will be
+     * retrieved using mb_strlen() function, so aware of results with multi-byte strings.
      *
      * @param string $string  Value to be validated.
      * @param int    $lengthA Minimum string length.

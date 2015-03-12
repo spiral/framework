@@ -11,7 +11,6 @@ namespace Spiral\Support\Validation;
 use Spiral\Components\Localization\LocalizableTrait;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Helpers\StringHelper;
 
 class Validator extends Component
 {
@@ -59,21 +58,24 @@ class Validator extends Component
     protected $defaultMessage = "Condition '{condition}' does not meet for field '{field}'.";
 
     /**
-     * Validator can automatically interpolate all output messages with field name if this property is set to true, however
-     * this is not optimal if you want to pass messages to models for future internalization.
+     * Validator can automatically interpolate all output messages with field name if this property
+     * is set to true, however this is not optimal if you want to pass messages to models for future
+     * internalization.
      *
      * @var bool
      */
     protected $interpolateNames = true;
 
     /**
-     * List of custom validator checkers. Checker can be registered using registerChecker() method, or received via getChecker().
+     * List of custom validator checkers. Checker can be registered using registerChecker() method,
+     * or received via getChecker().
      *
-     * Every checker can provide set of validation methods (conditions), which can be called by using expression "checker::condition"
-     * where checker is alias class or object binded to. As any other function used to check field, checker conditions can
-     * accept additional arguments collected from rule. Checker classes resolved using IoC container and can depend on other
-     * tools. Additionally checker will receive validator instance, so they can be used for complex and composite data checks
-     * (validator->getField()).
+     * Every checker can provide set of validation methods (conditions), which can be called by using
+     * expression "checker::condition" where checker is alias class or object binded to. As any other
+     * function used to check field, checker conditions can accept additional arguments collected
+     * from rule. Checker classes resolved using IoC container and can depend on other tools.
+     * Additionally checker will receive validator instance, so they can be used for complex and
+     * composite data checks (use validator->getField()).
      *
      * @var array
      */
@@ -89,8 +91,8 @@ class Validator extends Component
     );
 
     /**
-     * Short aliases between validation condition and checker method or external class, or external function. Used to
-     * simplify development.
+     * Short aliases between validation condition and checker method or external class, or external
+     * function. Used to simplify development.
      *
      * @var array
      */
@@ -133,19 +135,21 @@ class Validator extends Component
     protected $validated = false;
 
     /**
-     * Set of validation rules associated with their field. Every field can have one or multiple rules assigned, however
-     * after first fail system will stop checking that field. This used to prevent cascade validation failing. You can
-     * redefine property singleError and addMessage function to specify different behaviour.
+     * Set of validation rules associated with their field. Every field can have one or multiple
+     * rules assigned, however after first fail system will stop checking that field. This used to
+     * prevent cascade validation failing. You can redefine property singleError and addMessage
+     * function to specify different behaviour.
      *
-     * Every rule should include condition (callback, function name or checker condition). Additionally spiral validator
-     * supports custom validation messages which can be associated with one condition by defining key "message" or "error",
-     * and additional argument which will be passed to validation function AFTER field value.
+     * Every rule should include condition (callback, function name or checker condition).
+     * Additionally spiral validator supports custom validation messages which can be associated
+     * with one condition by defining key "message" or "error", and additional argument which will
+     * be passed to validation function AFTER field value.
      *
-     * Default message provided by validator OR by checker (has higher priority that validation message) will be used if
-     * you did not specify any custom rule.
+     * Default message provided by validator OR by checker (has higher priority that validation
+     * message) will be used if you did not specify any custom rule.
      *
-     * Validator will skip all empty or not defined values, to force it's validation use specially designed rules like
-     * "notEmpty", "required", "requiredWith" and etc.
+     * Validator will skip all empty or not defined values, to force it's validation use specially
+     * designed rules like "notEmpty", "required", "requiredWith" and etc.
      *
      * Examples:
      * "status" => array(
@@ -158,7 +162,8 @@ class Validator extends Component
      *      ["email", "error" => "Email is not valid."]
      * ),
      * "pin" => array(
-     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your pin, please skip this field."]
+     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your
+     *                                                   pin, please skip this field."]
      * ),
      * "flag" => array(
      *      ["notEmpty"], ["boolean"]
@@ -178,16 +183,16 @@ class Validator extends Component
     protected $data = array();
 
     /**
-     * Error messages collected during validating input data, by default one field associated with first fail message,
-     * this behaviour can be changed by rewriting validator.
+     * Error messages collected during validating input data, by default one field associated with
+     * first fail message, this behaviour can be changed by rewriting validator.
      *
      * @var array
      */
     protected $errors = array();
 
     /**
-     * If true (set by default), validator will stop checking field rules after first fail. This is default behaviour used
-     * to render model errors and spiral frontend.
+     * If true (set by default), validator will stop checking field rules after first fail. This is
+     * default behaviour used to render model errors and spiral frontend.
      *
      * @var bool
      */
@@ -196,19 +201,21 @@ class Validator extends Component
     /**
      * Validator instance with specified input data and validation rules.
      *
-     * Set of validation rules associated with their field. Every field can have one or multiple rules assigned, however
-     * after first fail system will stop checking that field. This used to prevent cascade validation failing. You can
-     * redefine property singleError and addMessage function to specify different behaviour.
+     * Set of validation rules associated with their field. Every field can have one or multiple
+     * rules assigned, however after first fail system will stop checking that field. This used to
+     * prevent cascade validation failing. You can redefine property singleError and addMessage
+     * function to specify different behaviour.
      *
-     * Every rule should include condition (callback, function name or checker condition). Additionally spiral validator
-     * supports custom validation messages which can be associated with one condition by defining key "message" or "error",
-     * and additional argument which will be passed to validation function AFTER field value.
+     * Every rule should include condition (callback, function name or checker condition).
+     * Additionally spiral validator supports custom validation messages which can be associated
+     * with one condition by defining key "message" or "error", and additional argument which will
+     * be passed to validation function AFTER field value.
      *
-     * Default message provided by validator OR by checker (has higher priority that validation message) will be used if
-     * you did not specify any custom rule.
+     * Default message provided by validator OR by checker (has higher priority that validation
+     * message) will be used if you did not specify any custom rule.
      *
-     * Validator will skip all empty or not defined values, to force it's validation use specially designed rules like
-     * "notEmpty", "required", "requiredWith" and etc.
+     * Validator will skip all empty or not defined values, to force it's validation use specially
+     * designed rules like "notEmpty", "required", "requiredWith" and etc.
      *
      * Examples:
      * "status" => array(
@@ -221,7 +228,8 @@ class Validator extends Component
      *      ["email", "error" => "Email is not valid."]
      * ),
      * "pin" => array(
-     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your pin, please skip this field."]
+     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your
+     *                                                   pin, please skip this field."]
      * ),
      * "flag" => array(
      *      ["notEmpty"], ["boolean"]
@@ -229,8 +237,10 @@ class Validator extends Component
      *
      * @param array $data                Data to be validated.
      * @param array $validates           Validation rules.
-     * @param bool  $interpolateNames    If true all messages will be interpolated with field name included, in other scenario
-     *                                   only method parameters will be embedded, this option can be disabled by model or outside
+     * @param bool  $interpolateNames    If true all messages will be interpolated with field name
+     *                                   included, in other scenario
+     *                                   only method parameters will be embedded, this option can be
+     *                                   disabled by model or outside
      *                                   to mount custom field labels.
      */
     public function __construct(array $data, array $validates, $interpolateNames = true)
@@ -241,8 +251,8 @@ class Validator extends Component
     }
 
     /**
-     * Update validation data (context), this method will automatically clean all existed error messages and set validated
-     * flag to false.
+     * Update validation data (context), this method will automatically clean all existed error
+     * messages and set validated flag to false.
      *
      * @param array $data Data to be validated.
      * @return Validator
@@ -258,8 +268,8 @@ class Validator extends Component
     }
 
     /**
-     * Retrieve field value from data array. Can be used in validator Checker classes as they are receiving validator
-     * instance during condition check.
+     * Retrieve field value from data array. Can be used in validator Checker classes as they are
+     * receiving validator instance during condition check.
      *
      * @param string $field   Data field to retrieve.
      * @param mixed  $default Default value to return.
@@ -273,8 +283,8 @@ class Validator extends Component
     }
 
     /**
-     * Registering short alias between validation condition and checker method or external class, or external function.
-     * Used to simplify development.
+     * Registering short alias between validation condition and checker method or external class, or
+     * external function. Used to simplify development.
      *
      * @param string $name     Alias name.
      * @param mixed  $callback Callback or closure or string.
@@ -285,15 +295,17 @@ class Validator extends Component
     }
 
     /**
-     * Register new checker instance or class (or replace existed one), Checker can extend validation functionality by
-     * defining their own methods and default error messages. Every checker will receive validator instance during processing,
-     * which allows to create complex and composite validations.
+     * Register new checker instance or class (or replace existed one), Checker can extend validation
+     * functionality by defining their own methods and default error messages. Every checker will
+     * receive validator instance during processing, which allows to create complex and composite
+     * validations.
      *
-     * Every checker can provide set of validation methods (conditions), which can be called by using expression "checker::condition"
-     * where checker is alias class or object binded to. As any other function used to check field, checker conditions can
-     * accept additional arguments collected from rule. Checker classes resolved using IoC container and can depend on other
-     * tools. Additionally checker will receive validator instance, so they can be used for complex and composite data checks
-     * (validator->getField()).
+     * Every checker can provide set of validation methods (conditions), which can be called by using
+     * expression "checker::condition" where checker is alias class or object binded to. As any other
+     * function used to check field, checker conditions can accept additional arguments collected
+     * from rule. Checker classes resolved using IoC container and can depend on other tools.
+     * Additionally checker will receive validator instance, so they can be used for complex and
+     * composite data checks (use validator->getField()).
      *
      * @param string $name    Checker alias to be used as prefix for all checker methods.
      * @param mixed  $checker Checker instance or class name (to create on demand).
@@ -304,13 +316,15 @@ class Validator extends Component
     }
 
     /**
-     * Receive checker instance previously registered by registerChecker() or defined in default spiral checkers set.
+     * Receive checker instance previously registered by registerChecker() or defined in default
+     * spiral checkers set.
      *
-     * Every checker can provide set of validation methods (conditions), which can be called by using expression "checker::condition"
-     * where checker is alias class or object binded to. As any other function used to check field, checker conditions can
-     * accept additional arguments collected from rule. Checker classes resolved using IoC container and can depend on other
-     * tools. Additionally checker will receive validator instance, so they can be used for complex and composite data checks
-     * (validator->getField()).
+     * Every checker can provide set of validation methods (conditions), which can be called by using
+     * expression "checker::condition" where checker is alias class or object binded to. As any other
+     * function used to check field, checker conditions can accept additional arguments collected
+     * from rule. Checker classes resolved using IoC container and can depend on other tools.
+     * Additionally checker will receive validator instance, so they can be used for complex and
+     * composite data checks (use validator->getField()).
      *
      * @param string $name Checker name.
      * @return Checker
@@ -320,7 +334,9 @@ class Validator extends Component
     {
         if (!isset(self::$checkers[$name]))
         {
-            throw new ValidationException("Unable to create validation checker defined by '{$name}' name.");
+            throw new ValidationException(
+                "Unable to create validation checker defined by '{$name}' name."
+            );
         }
 
         if (is_object(self::$checkers[$name]))
@@ -332,8 +348,8 @@ class Validator extends Component
     }
 
     /**
-     * Helper methods, apply validation rules to existed data fields and collect validation error messages. Can be redefined
-     * by custom behaviour.
+     * Helper methods, apply validation rules to existed data fields and collect validation error
+     * messages. Can be redefined by custom behaviour.
      */
     protected function validate()
     {
@@ -355,20 +371,32 @@ class Validator extends Component
                     break;
                 }
 
-                $result = $this->check($field, $condition, $this->getField($field), $arguments = $this->fetchArguments($rule));
+                $result = $this->check(
+                    $field,
+                    $condition,
+                    $this->getField($field),
+                    $arguments = $this->fetchArguments($rule)
+                );
+
                 if ($result instanceof Checker)
                 {
                     //Custom message handling
                     if ($message = $result->getMessage($condition[1]))
                     {
-                        $this->addMessage($field, $this->fetchMessage($rule, $message), $condition, $arguments);
+                        $this->addMessage(
+                            $field,
+                            $this->fetchMessage($rule, $message),
+                            $condition,
+                            $arguments
+                        );
+
                         continue;
                     }
 
                     $result = false;
                 }
 
-                if ($result)
+                if ((bool)$result)
                 {
                     //Success
                     continue;
@@ -380,19 +408,25 @@ class Validator extends Component
                 }
 
                 //Recording error message
-                $this->addMessage($field, $this->fetchMessage($rule, $this->i18nMessage($this->defaultMessage)), $rule[0], $arguments);
+                $this->addMessage(
+                    $field,
+                    $this->fetchMessage($rule, $this->i18nMessage($this->defaultMessage)),
+                    $rule[0],
+                    $arguments
+                );
             }
         }
     }
 
     /**
-     * Helper method to apply validation condition to field value, will automatically detect condition type (function name,
-     * callback or checker condition).
+     * Helper method to apply validation condition to field value, will automatically detect
+     * condition type (function name, callback or checker condition).
      *
      * @param string $field     Field name.
      * @param mixed  $condition Condition definition (see rules).
      * @param mixed  $value     Value to be checked.
-     * @param array  $arguments Additional arguments will be provided to check function or method AFTER value.
+     * @param array  $arguments Additional arguments will be provided to check function or method
+     *                          AFTER value.
      * @return bool
      * @throws ValidationException
      */
@@ -442,7 +476,7 @@ class Validator extends Component
                 $condition = join('::', $condition);
             }
 
-            $this->logger()->error(
+            self::logger()->error(
                 "Condition '{condition}' failed with '{exception}' while checking '{field}' field.",
                 compact('condition', 'field') + array('exception' => $exception->getMessage())
             );
@@ -467,7 +501,8 @@ class Validator extends Component
     }
 
     /**
-     * Fetch message from validation rule or use default message defined by validator or checker instances.
+     * Fetch message from validation rule or use default message defined by validator or checker
+     * instances.
      *
      * @param array  $rule    Rule definition.
      * @param string $message Default message to use.
@@ -482,8 +517,8 @@ class Validator extends Component
     }
 
     /**
-     * Helper method used to register error message to error array. If interpolateMessages property set to true message
-     * will be automatically interpolated with field and condition names.
+     * Helper method used to register error message to error array. If interpolateMessages property
+     * set to true message will be automatically interpolated with field and condition names.
      *
      * @param string $field     Field name.
      * @param string $message   Error message to be added.
@@ -504,17 +539,18 @@ class Validator extends Component
 
         if ($this->interpolateNames)
         {
-            $this->errors[$field] = StringHelper::interpolate($message, compact('field', 'condition') + $arguments);
+            $this->errors[$field] = interpolate($message, compact('field', 'condition') + $arguments);
         }
         else
         {
-            $this->errors[$field] = StringHelper::interpolate($message, compact('condition') + $arguments);
+            $this->errors[$field] = interpolate($message, compact('condition') + $arguments);
         }
     }
 
     /**
-     * Validate data (if not already validated) and return validation status, true if all fields passed validation and
-     * false is some error messages collected (error messages can be forced manually using addError() method).
+     * Validate data (if not already validated) and return validation status, true if all fields
+     * passed validation and false is some error messages collected (error messages can be forced
+     * manually using addError() method).
      *
      * @return bool
      */
@@ -526,8 +562,8 @@ class Validator extends Component
     }
 
     /**
-     * Evil tween of isValid() method: validate data (if not already validated) and return true if any validation error
-     * occurred including errors added using addError() method.
+     * Evil tween of isValid() method: validate data (if not already validated) and return true if
+     * any validation error occurred including errors added using addError() method.
      *
      * @return bool
      */
@@ -540,7 +576,8 @@ class Validator extends Component
      * Manually force error for some field ("forced" condition will be used).
      *
      * @param string $field
-     * @param string $message Custom error message, will be interpolated if interpolateMessages property set to true.
+     * @param string $message Custom error message, will be interpolated if interpolateMessages
+     *                        property set to true.
      */
     public function addError($field, $message)
     {
@@ -548,8 +585,8 @@ class Validator extends Component
     }
 
     /**
-     * Validate data (if not already) and return all error messages associated with their field names. Output format can
-     * vary based on validator implementation.
+     * Validate data (if not already) and return all error messages associated with their field names.
+     * Output format can vary based on validator implementation.
      *
      * @return array
      */
@@ -561,23 +598,25 @@ class Validator extends Component
     }
 
     /**
-     * Creates validator with specified input data and validation rules, use return argument to return validator itself
-     * or only validation status.
+     * Creates validator with specified input data and validation rules, use return argument to
+     * return validator itself or only validation status.
      *
      * Validation rules explanation:
-     * Set of validation rules associated with their field. Every field can have one or multiple rules assigned, however
-     * after first fail system will stop checking that field. This used to prevent cascade validation failing. You can
-     * redefine property singleError and addMessage function to specify different behaviour.
+     * Set of validation rules associated with their field. Every field can have one or multiple
+     * rules assigned, however after first fail system will stop checking that field. This used to
+     * prevent cascade validation failing. You can redefine property singleError and addMessage
+     * function to specify different behaviour.
      *
-     * Every rule should include condition (callback, function name or checker condition). Additionally spiral validator
-     * supports custom validation messages which can be associated with one condition by defining key "message" or "error",
-     * and additional argument which will be passed to validation function AFTER field value.
+     * Every rule should include condition (callback, function name or checker condition).
+     * Additionally spiral validator supports custom validation messages which can be associated
+     * with one condition by defining key "message" or "error", and additional argument which will
+     * be passed to validation function AFTER field value.
      *
-     * Default message provided by validator OR by checker (has higher priority that validation message) will be used if
-     * you did not specify any custom rule.
+     * Default message provided by validator OR by checker (has higher priority that validation
+     * message) will be used if you did not specify any custom rule.
      *
-     * Validator will skip all empty or not defined values, to force it's validation use specially designed rules like
-     * "notEmpty", "required", "requiredWith" and etc.
+     * Validator will skip all empty or not defined values, to force it's validation use specially
+     * designed rules like "notEmpty", "required", "requiredWith" and etc.
      *
      * Examples:
      * "status" => array(
@@ -590,7 +629,8 @@ class Validator extends Component
      *      ["email", "error" => "Email is not valid."]
      * ),
      * "pin" => array(
-     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your pin, please skip this field."]
+     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your
+     *                                                   pin, please skip this field."]
      * ),
      * "flag" => array(
      *      ["notEmpty"], ["boolean"]
@@ -599,7 +639,8 @@ class Validator extends Component
      * @param array $data      Data to be validated.
      * @param array $validates Validation rules.
      * @param bool  $return    True to return created validator, false to return validation status.
-     * @param array $errors    Collected error messages if validation failed and return argument set to false.
+     * @param array $errors    Collected error messages if validation failed and return argument set
+     *                         to false.
      * @return bool|Validator
      */
     public static function validateData(array $data, array $validates, $return = true, array &$errors = null)
@@ -627,7 +668,8 @@ class Validator extends Component
      * @param array $data      Data to be validated.
      * @param array $validates Validation rules.
      * @param bool  $return    True to return created validator, false to return validation status.
-     * @param array $errors    Collected error messages if validation failed and return argument set to false.
+     * @param array $errors    Collected error messages if validation failed and return argument set
+     *                         to false.
      * @return bool|Validator
      */
     public static function create(array $data, array $validates, $return = true, array &$errors = null)

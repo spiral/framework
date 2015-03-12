@@ -14,8 +14,9 @@ use Spiral\Support\Validation\Validator;
 class RequiredChecker extends Checker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */

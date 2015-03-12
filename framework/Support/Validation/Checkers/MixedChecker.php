@@ -13,8 +13,9 @@ use Spiral\Support\Validation\Checker;
 class MixedChecker extends Checker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -42,7 +43,10 @@ class MixedChecker extends Checker
 
         for ($i = 0; $i < strlen($cardNumber); $i++)
         {
-            $result += $odd ? $cardNumber[$i] : (($cardNumber[$i] * 2 > 9) ? $cardNumber[$i] * 2 - 9 : $cardNumber[$i] * 2);
+            $result += $odd
+                ? $cardNumber[$i]
+                : (($cardNumber[$i] * 2 > 9) ? $cardNumber[$i] * 2 - 9 : $cardNumber[$i] * 2);
+
             $odd = !$odd;
         }
 

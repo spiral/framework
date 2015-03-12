@@ -13,8 +13,9 @@ use Spiral\Support\Validation\Checker;
 class NumberChecker extends Checker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -25,7 +26,8 @@ class NumberChecker extends Checker
     );
 
     /**
-     * Checks value in range including borders. Both borders included into range. Can accept both decimal and real numbers.
+     * Checks value in range including borders. Both borders included into range. Can accept both
+     * decimal and real numbers.
      *
      * @param float $value Value to be validated.
      * @param float $begin Beginning or range (included).

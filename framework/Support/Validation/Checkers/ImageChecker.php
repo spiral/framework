@@ -15,8 +15,9 @@ use Spiral\Components\Image\ImageObject;
 class ImageChecker extends FileChecker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -47,19 +48,21 @@ class ImageChecker extends FileChecker
     }
 
     /**
-     * Previously opened ImageObjects. This is used to speed up the script while applying multiple rules to one image.
+     * Previously opened ImageObjects. This is used to speed up the script while applying multiple
+     * rules to one image.
      *
      * @var ImageObject[]
      */
     static protected $imageObjects = array();
 
     /**
-     * Helper function to get ImageObject from a non specified input. Can accept both local filename or uploaded file array.
-     * To validate the file array as a local file (without checking for is_uploaded_file()), array must have the field "local"
-     * filled in. This trick can be used with some of the more complex validators or file processors.
+     * Helper function to get ImageObject from a non specified input. Can accept both local filename
+     * or uploaded file array. To validate the file array as a local file (without checking for
+     * is_uploaded_file()), array must have the field "local" filled in. This trick can be used with
+     * some of the more complex validators or file processors.
      *
      * @param string|array $file Local filename or file array.
-     * @return ImageObject
+     * @return ImageObject|bool
      */
     protected function getImage($file)
     {
@@ -84,8 +87,8 @@ class ImageChecker extends FileChecker
     }
 
     /**
-     * Check image type by parsing it's header. This image type can be different than file extension and driven by image
-     * component. GD library is required.
+     * Check image type by parsing it's header. This image type can be different than file extension
+     * and driven by image component. GD library is required.
      *
      * @param array|string $file  Local file or uploaded file array.
      * @param array|mixed  $types Image types (can be different than file extension).

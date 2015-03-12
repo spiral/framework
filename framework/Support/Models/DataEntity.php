@@ -94,19 +94,21 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     protected $validationRequired = false;
 
     /**
-     * Set of validation rules associated with their field. Every field can have one or multiple rules assigned, however
-     * after first fail system will stop checking that field. This used to prevent cascade validation failing. You can
-     * redefine property singleError and addMessage function to specify different behaviour.
+     * Set of validation rules associated with their field. Every field can have one or multiple
+     * rules assigned, however after first fail system will stop checking that field. This used to
+     * prevent cascade validation failing. You can redefine property singleError and addMessage
+     * function to specify different behaviour.
      *
-     * Every rule should include condition (callback, function name or checker condition). Additionally spiral validator
-     * supports custom validation messages which can be associated with one condition by defining key "message" or "error",
-     * and additional argument which will be passed to validation function AFTER field value.
+     * Every rule should include condition (callback, function name or checker condition).
+     * Additionally spiral validator supports custom validation messages which can be associated
+     * with one condition by defining key "message" or "error", and additional argument which will
+     * be passed to validation function AFTER field value.
      *
-     * Default message provided by validator OR by checker (has higher priority that validation message) will be used if
-     * you did not specify any custom rule.
+     * Default message provided by validator OR by checker (has higher priority that validation
+     * message) will be used if you did not specify any custom rule.
      *
-     * Validator will skip all empty or not defined values, to force it's validation use specially designed rules like
-     * "notEmpty", "required", "requiredWith" and etc.
+     * Validator will skip all empty or not defined values, to force it's validation use specially
+     * designed rules like "notEmpty", "required", "requiredWith" and etc.
      *
      * Examples:
      * "status" => array(
@@ -119,7 +121,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      *      ["email", "error" => "Email is not valid."]
      * ),
      * "pin" => array(
-     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your pin, please skip this field."]
+     *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your
+     *                                                   pin, please skip this field."]
      * ),
      * "flag" => array(
      *      ["notEmpty"], ["boolean"]

@@ -8,14 +8,15 @@
  */
 namespace Spiral\Support\Validation\Checkers;
 
-use Spiral\Helpers\TimeHelper;
+use Spiral\Support\Models\Accessors\Timestamp;
 use Spiral\Support\Validation\Checker;
 
 class TypeChecker extends Checker
 {
     /**
-     * Set of default error messages associated with their check methods organized by method name. Will be returned by
-     * the checker to replace the default validator message. Can have placeholders for interpolation.
+     * Set of default error messages associated with their check methods organized by method name.
+     * Will be returned by the checker to replace the default validator message. Can have placeholders
+     * for interpolation.
      *
      * @var array
      */
@@ -38,7 +39,8 @@ class TypeChecker extends Checker
     }
 
     /**
-     * Will ensure that value is true boolean, meaning it's either boolean type, or int in a range or 0-1.
+     * Will ensure that value is true boolean, meaning it's either boolean type, or int in a range
+     * or 0-1.
      *
      * @param mixed $value Value to be validated.
      * @return bool
@@ -49,14 +51,15 @@ class TypeChecker extends Checker
     }
 
     /**
-     * Checks is provided string valid datetime or timestamp. TimeHelper::getTimestamp will be used to process value.
+     * Checks is provided string valid datetime or timestamp. TimeHelper::getTimestamp will be used
+     * to process value.
      *
      * @param mixed $value Datetime string or timestamp to be validated.
      * @return bool
      */
     public function datetime($value)
     {
-        return is_scalar($value) && TimeHelper::getTimestamp($value);
+        return is_scalar($value) && (Timestamp::castTimestamp($value) != 0);
     }
 
     /**
