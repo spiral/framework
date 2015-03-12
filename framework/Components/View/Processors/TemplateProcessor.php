@@ -145,7 +145,13 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                             }
 
                             //Token describes single block (passing context to child)
-                            $behaviour = new Behaviour($name, Node::TYPE_BLOCK, $attributes, $node->options);
+                            $behaviour = new Behaviour(
+                                $name,
+                                Node::TYPE_BLOCK,
+                                $attributes,
+                                $node->options
+                            );
+
                             break;
 
                         case Node::TYPE_EXTEND:
@@ -153,7 +159,12 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                             $nodeContext = $this->fetchContext($name, $attributes, $node->options);
 
                             //Token describes extended syntax
-                            $behaviour = new Behaviour($name, Node::TYPE_EXTEND, $attributes, array());
+                            $behaviour = new Behaviour(
+                                $name,
+                                Node::TYPE_EXTEND,
+                                $attributes,
+                                array()
+                            );
 
                             //Loading parent node content (namespace either forced, or same as in original node)
                             $content = $this->loadContent(
@@ -170,8 +181,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                                 'options' => $nodeContext + array(self::ALIASES => array())
                             ));
 
-                            //Import options has to be merged before parent will be extended, make sure extend is first
-                            //construction in file/block
+                            //Import options has to be merged before parent will be extended, make
+                            //sure extend is first construction in file/block
                             if (!empty($behaviour->contextNode->options[self::ALIASES]))
                             {
                                 /**
@@ -251,8 +262,10 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             $node->options[self::ALIASES][] = $alias;
             uasort($node->options[self::ALIASES], function (ImportAlias $optionA, ImportAlias $optionB)
             {
-                return $optionA->level < $optionB->level;
+                return $optionA->level > $optionB->level;
             });
+
+            array_reverse($node->options[self::ALIASES]);
 
             //Nothing to render
             return false;
@@ -291,10 +304,19 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         if ($includeContext)
         {
-            $behaviour = new Behaviour($tokenName, Node::TYPE_INCLUDE, $attributes, $node->options);
+            $behaviour = new Behaviour(
+                $tokenName,
+                Node::TYPE_INCLUDE,
+                $attributes,
+                $node->options
+            );
 
             //Include node, all blocks inside current import namespace
-            $behaviour->contextNode = Node::make(array('name' => null, 'source' => false, 'options' => $node->options));
+            $behaviour->contextNode = Node::make(array(
+                'name'    => null,
+                'source'  => false,
+                'options' => $node->options
+            ));
 
             //Include parent (what we including) has it's own context
             try
@@ -315,15 +337,22 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             }
             catch (ViewException $exception)
             {
-                $exception = $this->clarifyException($exception, $token[Tokenizer::TOKEN_CONTENT], $node->options);
+                $exception = $this->clarifyException(
+                    $exception,
+                    $token[Tokenizer::TOKEN_CONTENT],
+                    $node->options
+                );
 
                 //There is no need to force exception if import not loaded, but we can log it
-                $this->view->logger()->error("{message} in {file} at line {line} defined by '{tokenName}'", array(
-                    'message'   => $exception->getMessage(),
-                    'file'      => $exception->getFile(),
-                    'line'      => $exception->getLine(),
-                    'tokenName' => $tokenName
-                ));
+                View::logger()->error(
+                    "{message} in {file} at line {line} defined by '{tokenName}'",
+                    array(
+                        'message'   => $exception->getMessage(),
+                        'file'      => $exception->getFile(),
+                        'line'      => $exception->getLine(),
+                        'tokenName' => $tokenName
+                    )
+                );
 
                 return $token;
             }
