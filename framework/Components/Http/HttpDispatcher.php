@@ -11,7 +11,6 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
-use Spiral\Components\Http\Middlewares\CrsfMiddleware;
 use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\Uri;
 use Spiral\Core\Component;
@@ -66,21 +65,21 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function start(Core $core)
     {
         //Initial server request
-        $this->baseRequest = $this->castRequest();
+        $this->baseRequest = Request::castServerRequest();
 
         $pipeline = new MiddlewarePipe($this->config['middlewares']);
 
-        $pipeline->add(function (RequestInterface $request, $next)
-        {
-            /**
-             * @var Response $response
-             */
-            $response = $next();
-
-            $response->getBody()->write('THIS IS BODY!');
-
-            return $response;
-        });
+//        $pipeline->add(function (RequestInterface $request, $next)
+//        {
+//            /**
+//             * @var Response $response
+//             */
+//            $response = $next();
+//
+//            $response->getBody()->write('THIS IS BODY!');
+//
+//            return $response;
+//        });
 
         $response = $pipeline->target(array($this, 'perform'))->run($this->baseRequest);
         $this->dispatch($this->event('dispatch', $response));
@@ -95,26 +94,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function getRequest()
     {
         return $this->baseRequest;
-    }
-
-    /**
-     * Cast Server side requested based on global variables.
-     *
-     * @return Request
-     */
-    protected function castRequest()
-    {
-        return new Request(
-            $_SERVER['REQUEST_METHOD'],
-            Uri::castUri($_SERVER),
-            new InputStream(),
-            $this->castHeaders($_SERVER),
-            $_SERVER,
-            $_COOKIE,
-            $_GET,
-            $_FILES,
-            $_POST
-        );
     }
 
     public function perform(RequestInterface $request = null)
@@ -269,39 +248,5 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         //TODO: hide snapshot based on config
         $this->dispatch(new Response($snapshot->renderSnapshot(), 500));
-    }
-
-    /**
-     * Generate list of incoming headers. getallheaders() function will be used with fallback to _SERVER array parsing.
-     *
-     * @param array $server
-     * @return array
-     */
-    protected function castHeaders(array $server)
-    {
-        if (function_exists('getallheaders'))
-        {
-            $headers = getallheaders();
-        }
-        else
-        {
-            $headers = array();
-            foreach ($server as $name => $value)
-            {
-                if ($name == 'HTTP_COOKIE')
-                {
-                    continue;
-                }
-
-                if (strpos($name, 'HTTP_') === 0)
-                {
-                    $name = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($name, 5)))));
-                    $headers[$name] = $value;
-                }
-            }
-        }
-        unset($headers['Cookie']);
-
-        return $headers;
     }
 }

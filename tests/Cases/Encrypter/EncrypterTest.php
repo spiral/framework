@@ -44,7 +44,7 @@ class EncryptionTest extends TestCase
         $encrypted = $encrypter->encrypt('test string');
         $this->assertNotEquals('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));
-        $encrypter->decrypt('abc' . $encrypted);
+        $encrypter->decrypt('badData.' . $encrypted);
     }
 
     /**

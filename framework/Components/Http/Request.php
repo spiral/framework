@@ -12,6 +12,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Request\BaseRequest;
+use Spiral\Components\Http\Request\InputStream;
+use Spiral\Components\Http\Request\Uri;
 
 class Request extends BaseRequest implements ServerRequestInterface
 {
@@ -98,6 +100,68 @@ class Request extends BaseRequest implements ServerRequestInterface
         $this->queryParams = $queryParams;
         $this->fileParams = $fileParams;
         $this->parsedBody = $parsedBody;
+    }
+
+    /**
+     * Cast Server side requested based on global variables. $_SERVER and other global
+     * variables will be used.
+     *
+     * @return static
+     */
+    public static function castServerRequest()
+    {
+        return new static(
+            $_SERVER['REQUEST_METHOD'],
+            Uri::castUri($_SERVER),
+            new InputStream(),
+            self::castHeaders($_SERVER),
+            $_SERVER,
+            $_COOKIE,
+            $_GET,
+            $_FILES,
+            $_POST
+        );
+    }
+
+    /**
+     * Generate list of incoming headers. getallheaders() function will be used with fallback to
+     * _SERVER array parsing.
+     *
+     * @param array $server
+     * @return array
+     */
+    protected static function castHeaders(array $server)
+    {
+        if (function_exists('getallheaders'))
+        {
+            $headers = getallheaders();
+        }
+        else
+        {
+            $headers = array();
+            foreach ($server as $name => $value)
+            {
+                if ($name === 'HTTP_COOKIE')
+                {
+                    continue;
+                }
+
+                if (strpos($name, 'HTTP_') === 0)
+                {
+                    $name = str_replace(
+                        " ",
+                        "-",
+                        ucwords(strtolower(str_replace("_", " ", substr($name, 5))))
+                    );
+
+                    $headers[$name] = $value;
+                }
+            }
+        }
+
+        unset($headers['Cookie']);
+
+        return $headers;
     }
 
     /**
