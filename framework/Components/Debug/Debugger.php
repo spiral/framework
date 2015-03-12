@@ -234,7 +234,7 @@ class Debugger extends Component
             case self::DUMP_RETURN:
                 return $result;
             case self::DUMP_LOG:
-                self::getInstance()->logger()->debug(print_r($value, true));
+                self::logger()->debug(print_r($value, true));
         }
 
         return null;

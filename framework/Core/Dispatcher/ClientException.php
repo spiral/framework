@@ -13,9 +13,10 @@ use Spiral\Core\CoreException;
 class ClientException extends CoreException
 {
     /**
-     * Client exception codes will be handled by dispatcher according to working environment, such exception should be used
-     * only when error caused by "soft" used error like wrong controller, action or missed parameters. It can also be used
-     * to notify frontend about failed model validation or invalid external API behaviour (500).
+     * Client exception codes will be handled by dispatcher according to working environment, such
+     * exception should be used only when error caused by "soft" used error like wrong controller,
+     * action or missed parameters. It can also be used to notify frontend about failed model
+     * validation or invalid external API behaviour (500).
      */
     const BAD_REQUEST  = 400;
     const NOT_FOUND    = 404;
@@ -23,7 +24,8 @@ class ClientException extends CoreException
     const SERVER_ERROR = 500;
 
     /**
-     * Due response code stored in exception message, errorCode() method can be used to retrieve it via more recognizable way.
+     * Due response code stored in exception message, errorCode() method can be used to retrieve
+     * it via more recognizable way.
      *
      * @return int
      */

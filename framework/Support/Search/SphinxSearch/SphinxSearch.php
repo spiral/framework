@@ -59,8 +59,10 @@ class SphinxSearch extends Component
      *
      * proximityBM25 - default mode, phrase proximity major factor and BM25 minor one.
      * BM25          - statistical mode, BM25 ranking only (faster but worse quality).
-     * None          - no ranking, all matches get a weight of 1 (Use it you want simply fetch results).
-     * WordCount     - simple word-count weighting, rank is a weighted sum of per-field keyword occurrence counts.
+     * None          - no ranking, all matches get a weight of 1 (Use it you want simply fetch
+     *                 results).
+     * WordCount     - simple word-count weighting, rank is a weighted sum of per-field keyword
+     *                 occurrence counts.
      *
      * @link http://sphinxsearch.com/docs/current.html#weighting
      */
@@ -296,7 +298,8 @@ class SphinxSearch extends Component
     protected $requests = array();
 
     /**
-     * Create sphinx client with specified server. Based on original client implementation from official SDK.
+     * Create sphinx client with specified server. Based on original client implementation from
+     * official SDK.
      *
      * @param string   $host    Sphinx host, localhost by default.
      * @param int      $port    Sphinx port, 3312 by default.

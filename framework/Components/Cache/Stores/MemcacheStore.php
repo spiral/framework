@@ -91,18 +91,9 @@ class MemcacheStore extends CacheStore
     {
         parent::__construct($cache);
 
-        if ($driver)
+        if (is_object($driver))
         {
-            $this->service = $driver;
-
-            $this->driver = $driver instanceof \Memcache
-                ? self::DRIVER_MEMCACHE
-                : self::DRIVER_MEMCACHED;
-
-            if ($connect)
-            {
-                $this->connect();
-            }
+            $this->setDriver($driver, $connect);
 
             return;
         }
@@ -131,6 +122,26 @@ class MemcacheStore extends CacheStore
         }
 
         $this->connect();
+    }
+
+    /**
+     * Set pre-created Memcache driver.
+     *
+     * @param MemcacheDriver|MemcacheDriver $driver  Pre-created driver instance.
+     * @param bool                          $connect If true, custom driver will be connected.
+     */
+    protected function setDriver($driver, $connect)
+    {
+        $this->service = $driver;
+
+        $this->driver = $driver instanceof \Memcache
+            ? self::DRIVER_MEMCACHE
+            : self::DRIVER_MEMCACHED;
+
+        if ($connect)
+        {
+            $this->connect();
+        }
     }
 
     /**
