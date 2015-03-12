@@ -465,7 +465,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
                 }
                 catch (\ErrorException $exception)
                 {
-                    $this->logger()->warning("Failed to apply filter to '{field}' field.", compact('field'));
+                    self::logger()->warning("Failed to apply filter to '{field}' field.", compact('field'));
                     $value = null;
                 }
             }
@@ -477,8 +477,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
             if ($value instanceof \MongoDate)
             {
-                dump((new Carbon())->setTimestamp($value->sec));
-
                 $value = (string)(new Carbon())->setTimestamp($value->sec);
             }
 

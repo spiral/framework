@@ -8,7 +8,6 @@
  */
 namespace Spiral\Components\Http;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Core\Component;
@@ -47,6 +46,16 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected $request = null;
 
     /**
+     * Set of middleware layers builded to handle incoming Request and return Response. Middleware
+     * can be represented as class, string (DI) or array (callable method). HttpDispatcher layer
+     * middlewares will be called in start() method. Use add() method to register more middlewares
+     * while bootstrapping application.
+     *
+     * @var array|MiddlewareInterface[]
+     */
+    protected $middleware = array();
+
+    /**
      * New HttpDispatcher instance.
      *
      * @param Core $core
@@ -55,6 +64,21 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $this->core = $core;
         $this->config = $core->loadConfig('http');
+        $this->middleware = $this->config['middleware'];
+    }
+
+    /**
+     * Register new HttpDispatcher level middleware. Calling this method will have effect only
+     * before HttpDispatcher->start() method executed.
+     *
+     * @param string|callable|MiddlewareInterface $middleware
+     * @return static
+     */
+    public function add($middleware)
+    {
+        $this->middleware[] = $middleware;
+
+        return $this;
     }
 
     /**
@@ -66,9 +90,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $this->request = Request::castServerRequest();
 
-        $pipeline = new MiddlewarePipe($this->config['middleware']);
+        $pipeline = new MiddlewarePipe($this->middleware);
         $response = $pipeline->target(array($this, 'perform'))->run($this->request, $this);
 
+        //Use $event->object->getRequest() to access original request
         $this->dispatch($this->event('dispatch', $response));
     }
 
@@ -83,37 +108,29 @@ class HttpDispatcher extends Component implements DispatcherInterface
         return $this->request;
     }
 
-    public function perform(RequestInterface $request = null)
+    public function perform(Request $request)
     {
         $parentRequest = $this->core->getBinding('request');
-        if (!empty($request))
-        {
-            //Creating scope
-            $this->core->bind('request', $request);
-            $this->core->bind(get_class($request), $request);
-        }
-        else
-        {
-            $this->core->removeBinding('request');
-            !empty($parentRequest) && $this->core->removeBinding(get_class($parentRequest));
-        }
+
+        //Creating scope
+        $this->core->bind('request', $request);
+        $this->core->bind(get_class($request), $request);
 
         ob_start();
         $response = $this->core->callAction('Controllers\HomeController', 'index');
         $plainOutput = ob_get_clean();
-
-        if (!empty($request))
-        {
-            //Ending scope
-            $this->core->removeBinding('request');
-            $this->core->removeBinding(get_class($request));
-        }
 
         if (!empty($parentRequest))
         {
             //Restoring scope
             $this->core->bind('request', $parentRequest);
             $this->core->bind(get_class($parentRequest), $parentRequest);
+        }
+        else
+        {
+            //Ending scope
+            $this->core->removeBinding('request');
+            $this->core->removeBinding(get_class($request));
         }
 
         return $this->wrapResponse($response, $plainOutput);
@@ -128,11 +145,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
             return $response;
         }
 
-        //        if (is_array($response) || $response instanceof \JsonSerializable)
-        //        {
-        //            //Making json response
-        //            //return new JsonResponse($response); //something like this
-        //        }
+        if (is_array($response) || $response instanceof \JsonSerializable)
+        {
+            if (is_array($response) && $plainOutput)
+            {
+                $response['plainOutput'] = $plainOutput;
+            }
+
+            return new Response(json_encode($response), 200, array(
+                'Content-Type' => 'application/json'
+            ));
+        }
 
         return new Response($response . $plainOutput);
     }

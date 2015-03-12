@@ -18,19 +18,17 @@ use Spiral\Components\Http\Request\Uri;
 class Request extends BaseRequest implements ServerRequestInterface
 {
     /**
-     * The request "attributes" may be used to allow injection of any
-     * parameters derived from the request: e.g., the results of path
-     * match operations; the results of decrypting cookies; the results of
-     * deserializing non-form-encoded message bodies; etc. Attributes
-     * will be application and request specific, and CAN be mutable.
+     * The request "attributes" may be used to allow injection of any parameters derived from the
+     * request: e.g., the results of path match operations; the results of decrypting cookies; the
+     * results of deserializing non-form-encoded message bodies; etc. Attributes will be application
+     * and request specific, and CAN be mutable.
      *
      * @var array
      */
     protected $attributes = array();
 
     /**
-     * Data related to the incoming request environment, typically derived
-     * from PHP's $_SERVER superglobal.
+     * Data related to the incoming request environment, typically derived from PHP's $_SERVER superglobal.
      *
      * @var array
      */
@@ -103,8 +101,8 @@ class Request extends BaseRequest implements ServerRequestInterface
     }
 
     /**
-     * Cast Server side requested based on global variables. $_SERVER and other global
-     * variables will be used.
+     * Cast Server side requested based on global variables. $_SERVER and other global variables will
+     * be used.
      *
      * @return static
      */
@@ -167,9 +165,8 @@ class Request extends BaseRequest implements ServerRequestInterface
     /**
      * Retrieve server parameters.
      *
-     * Retrieves data related to the incoming request environment,
-     * typically derived from PHP's $_SERVER superglobal. The data IS NOT
-     * REQUIRED to originate from $_SERVER.
+     * Retrieves data related to the incoming request environment, typically derived from PHP's
+     * $_SERVER superglobal. The data IS NOT REQUIRED to originate from $_SERVER.
      *
      * @return array
      */
@@ -183,8 +180,7 @@ class Request extends BaseRequest implements ServerRequestInterface
      *
      * Retrieves cookies sent by the client to the server.
      *
-     * The data MUST be compatible with the structure of the $_COOKIE
-     * superglobal.
+     * The data MUST be compatible with the structure of the $_COOKIE superglobal.
      *
      * @return array
      */
@@ -196,9 +192,8 @@ class Request extends BaseRequest implements ServerRequestInterface
     /**
      * Create a new instance with the specified cookies.
      *
-     * The data IS NOT REQUIRED to come from the $_COOKIE superglobal, but MUST
-     * be compatible with the structure of $_COOKIE. Typically, this data will
-     * be injected at instantiation.
+     * The data IS NOT REQUIRED to come from the $_COOKIE superglobal, but MUST be compatible with
+     * the structure of $_COOKIE. Typically, this data will be injected at instantiation.
      *
      * This method MUST be implemented in such a way as to retain the immutability of the message,
      * and MUST return a new instance that has the new header and/or value.
@@ -216,9 +211,8 @@ class Request extends BaseRequest implements ServerRequestInterface
      *
      * Retrieves the deserialized query string arguments, if any.
      *
-     * Note: the query params might not be in sync with the URL or server
-     * params. If you need to ensure you are only getting the original
-     * values, you may need to parse the composed URL or the `QUERY_STRING`
+     * Note: the query params might not be in sync with the URL or server params. If you need to ensure
+     * you are only getting the original values, you may need to parse the composed URL or the `QUERY_STRING`
      * composed in the server params.
      *
      * @return array
@@ -231,16 +225,14 @@ class Request extends BaseRequest implements ServerRequestInterface
     /**
      * Create a new instance with the specified query string arguments.
      *
-     * These values SHOULD remain immutable over the course of the incoming
-     * request. They MAY be injected during instantiation, such as from PHP's
-     * $_GET superglobal, or MAY be derived from some other value such as the
-     * URI. In cases where the arguments are parsed from the URI, the data
-     * MUST be compatible with what PHP's parse_str() would return for
-     * purposes of how duplicate query parameters are handled, and how nested
-     * sets are handled.
+     * These values SHOULD remain immutable over the course of the incoming request. They MAY be
+     * injected during instantiation, such as from PHP's $_GET superglobal, or MAY be derived from
+     * some other value such as the URI. In cases where the arguments are parsed from the URI, the
+     * data MUST be compatible with what PHP's parse_str() would return for  purposes of how duplicate
+     * query parameters are handled, and how nested sets are handled.
      *
-     * Setting query string arguments MUST NOT change the URL stored by the
-     * request, nor the values in the server params.
+     * Setting query string arguments MUST NOT change the URL stored by the request, nor the values
+     * in the server params.
      *
      * This method MUST be implemented in such a way as to retain the immutability of the message,
      * and MUST return a new instance that has the new header and/or value.
@@ -252,17 +244,17 @@ class Request extends BaseRequest implements ServerRequestInterface
     public function withQueryParams(array $query)
     {
         // TODO: Implement withQueryParams() method.
+
     }
 
     /**
      * Retrieve the upload file metadata.
      *
-     * This method MUST return file upload metadata in the same structure
-     * as PHP's $_FILES superglobal.
+     * This method MUST return file upload metadata in the same structure as PHP's $_FILES superglobal.
      *
-     * These values MUST remain immutable over the course of the incoming
-     * request. They SHOULD be injected during instantiation, such as from PHP's
-     * $_FILES superglobal, but MAY be derived from other sources.
+     * These values MUST remain immutable over the course of the incoming request. They SHOULD be
+     * injected during instantiation, such as from PHP's $_FILES superglobal, but MAY be derived from
+     * other sources.
      *
      * @return array Upload file(s) metadata, if any.
      */
@@ -274,17 +266,15 @@ class Request extends BaseRequest implements ServerRequestInterface
     /**
      * Retrieve any parameters provided in the request body.
      *
-     * If the request Content-Type is either application/x-www-form-urlencoded
-     * or multipart/form-data, and the request method is POST, this method MUST
-     * return the contents of $_POST.
+     * If the request Content-Type is either application/x-www-form-urlencoded or multipart/form-data,
+     * and the request method is POST, this method MUST return the contents of $_POST.
      *
-     * Otherwise, this method may return any results of deserializing
-     * the request body content; as parsing returns structured content, the
-     * potential types MUST be arrays or objects only. A null value indicates
-     * the absence of body content.
+     * Otherwise, this method may return any results of deserializing the request body content; as
+     * parsing returns structured content, the potential types MUST be arrays or objects only. A null
+     * value indicates the absence of body content.
      *
-     * @return null|array|object The deserialized body parameters, if any.
-     *     These will typically be an array or object.
+     * @return null|array|object The deserialized body parameters, if any. These will typically be an
+     *                           array or object.
      */
     public function getParsedBody()
     {

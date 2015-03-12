@@ -33,7 +33,7 @@ class Stream implements StreamableInterface
      * @param string|resource $stream Stream resource or URI.
      * @param string          $mode   Read/write mode.
      */
-    public function __construct($stream, $mode = 'r')
+    public function __construct($stream = 'php://memory', $mode = 'r')
     {
         $this->resource = $stream;
         if (is_string($stream))

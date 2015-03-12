@@ -311,7 +311,7 @@ class Response extends BaseMessage implements ResponseInterface
             if (!$cookie instanceof CookieInterface)
             {
                 throw new \InvalidArgumentException(
-                    "Cookies array should contain only CookieInterface instanced."
+                    "Cookies array should contain only CookieInterface instances."
                 );
             }
 
@@ -322,7 +322,8 @@ class Response extends BaseMessage implements ResponseInterface
     }
 
     /**
-     * Get all cookies associated with response. Cookies will be send in HttpDispatcher->dispatch() method.
+     * Get all cookies associated with response. Cookies will be send in HttpDispatcher->dispatch()
+     * method.
      *
      * @return CookieInterface[]
      */
