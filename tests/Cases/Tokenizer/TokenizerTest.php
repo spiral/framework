@@ -29,7 +29,7 @@ class TokenizerTest extends TestCase
 
     public function testClasses()
     {
-        $tokenizer = $this->createTokenizer();
+        $tokenizer = $this->tokenizerComponent();
 
         //Direct loading
         $classes = $tokenizer->getClasses();
@@ -88,7 +88,7 @@ class TokenizerTest extends TestCase
 
     public function testFileReflection()
     {
-        $reflection = $this->createTokenizer()->fileReflection(__FILE__);
+        $reflection = $this->tokenizerComponent()->fileReflection(__FILE__);
 
         $this->assertContains(__CLASS__, $reflection->getClasses());
 
@@ -139,7 +139,7 @@ class TokenizerTest extends TestCase
         $this->loader->disable();
     }
 
-    protected function createTokenizer($config = null)
+    protected function tokenizerComponent($config = null)
     {
         if (!$this->loader)
         {

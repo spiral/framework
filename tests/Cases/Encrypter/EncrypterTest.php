@@ -16,7 +16,7 @@ class EncryptionTest extends TestCase
 {
     public function testEncryption()
     {
-        $encrypter = $this->createEncrypter();
+        $encrypter = $this->encrypterComponent();
 
         $encrypted = $encrypter->encrypt('test string');
         $this->assertNotEquals('test string', $encrypted);
@@ -39,7 +39,7 @@ class EncryptionTest extends TestCase
      */
     public function testBadData()
     {
-        $encrypter = $this->createEncrypter();
+        $encrypter = $this->encrypterComponent();
 
         $encrypted = $encrypter->encrypt('test string');
         $this->assertNotEquals('test string', $encrypted);
@@ -53,7 +53,7 @@ class EncryptionTest extends TestCase
      */
     public function testBadSignature()
     {
-        $encrypter = $this->createEncrypter();
+        $encrypter = $this->encrypterComponent();
 
         $encrypted = $encrypter->encrypt('test string');
         $this->assertNotEquals('test string', $encrypted);
@@ -68,7 +68,7 @@ class EncryptionTest extends TestCase
         $encrypter->decrypt($encrypted);
     }
 
-    protected function createEncrypter($config = array('key' => '1234567890123456'))
+    protected function encrypterComponent($config = array('key' => '1234567890123456'))
     {
         return new Encrypter(MemoryCore::getInstance()->setConfig('encrypter', $config));
     }

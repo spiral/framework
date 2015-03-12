@@ -15,8 +15,9 @@ use Spiral\Core\Component;
 class Tokenizer extends Component
 {
     /**
-     * Current tokenizer position. Tokenizer is a linear processor (no regular expression is involved). This slows it down,
-     * but the results are much more reliable. Please don't forget that this is tokenizer, not parser.
+     * Current tokenizer position. Tokenizer is a linear processor (no regular expression is involved).
+     * This slows it down, but the results are much more reliable. Please don't forget that this is
+     * tokenizer, not parser.
      */
     const POSITION_PLAIN_TEXT = 0x001;
     const POSITION_IN_TAG     = 0x002;
@@ -31,8 +32,8 @@ class Tokenizer extends Component
     const TAG_SHORT  = 'short';
 
     /**
-     * Token fields. There are a lot of tokens in HTML (up to 10,000 different ones). It is better to use numeric keys for
-     * array than any text fields or even objects.
+     * Token fields. There are a lot of tokens in HTML (up to 10,000 different ones). It is better to
+     * use numeric keys for array than any text fields or even objects.
      */
     const TOKEN_NAME       = 0;
     const TOKEN_TYPE       = 1;
@@ -54,11 +55,12 @@ class Tokenizer extends Component
     protected $isolator = null;
 
     /**
-     * New HTML tokenizer object. Tokenizer is linear processor (no regular expression is involved), This can slow it down
-     * but the results are much more reliable. Please don't forget this is tokenizer, not parser.
+     * New HTML tokenizer object. Tokenizer is linear processor (no regular expression is involved),
+     * This can slow it down but the results are much more reliable. Please don't forget this is
+     * tokenizer, not parser.
      *
-     * @param bool $isolatePHP PHP block should be isolated and enabled by default
-     * @param bool $aspTags    ASP like PHP blocks should be isolated and enabled by default.
+     * @param bool     $isolatePHP PHP block should be isolated and enabled by default
+     * @param bool     $aspTags    ASP like PHP blocks should be isolated and enabled by default.
      */
     public function __construct($isolatePHP = true, $aspTags = true)
     {
@@ -77,7 +79,7 @@ class Tokenizer extends Component
      */
     protected function repairPHP($source)
     {
-        if (!$this->isolator)
+        if (empty($this->isolator))
         {
             return $source;
         }
@@ -110,7 +112,7 @@ class Tokenizer extends Component
         //Cleaning list of already parsed tokens
         $this->tokens = array();
 
-        if ($this->isolator)
+        if (!empty($this->isolator))
         {
             $source = $this->isolator->isolatePHP($source);
         }

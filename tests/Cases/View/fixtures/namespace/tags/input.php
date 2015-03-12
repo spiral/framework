@@ -1,0 +1,1 @@
+<input type="${type|text}" name="${name}" value="${value}" node:attributes/>
