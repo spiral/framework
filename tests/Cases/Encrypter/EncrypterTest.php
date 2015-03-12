@@ -34,7 +34,7 @@ class EncryptionTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Spiral\Components\Encrypter\DecryptionException
      * @expectedExceptionMessage Invalid dataset.
      */
     public function testBadData()

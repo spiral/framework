@@ -11,15 +11,16 @@ namespace Spiral\Components\Cache;
 interface StoreInterface
 {
     /**
-     * Create a new cache store instance. Every instance should represent a single cache method. Multiple stores can
-     * exist at the same time and be used in different parts of the application.
+     * Create a new cache store instance. Every instance should represent a single cache method.
+     * Multiple stores can exist at the same time and be used in different parts of the application.
      *
      * @param CacheManager $cache CacheManager component.
      */
     public function __construct(CacheManager $cache);
 
     /**
-     * Check if store is working properly. Should check if the store drives exists, files are writable, etc.
+     * Check if store is working properly. Should check if the store drives exists, files are
+     * writable, etc.
      *
      * @return bool
      */
@@ -42,7 +43,8 @@ interface StoreInterface
     public function get($name);
 
     /**
-     * Set data in cache. This should automatically create a record if it wasn't created before or replace an existing record.
+     * Set data in cache. This should automatically create a record if it wasn't created before or
+     * replace an existing record.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.
@@ -52,7 +54,8 @@ interface StoreInterface
     public function set($name, $data, $lifetime);
 
     /**
-     * Store value in cache with infinite lifetime. Value will only expire when the cache is flushed.
+     * Store value in cache with infinite lifetime. Value will only expire when the cache is
+     * flushed.
      *
      * @param string $name Stored value name.
      * @param mixed  $data Data in string or binary format.

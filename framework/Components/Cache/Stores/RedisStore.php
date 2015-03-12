@@ -45,8 +45,8 @@ class RedisStore extends CacheStore
     protected $prefix = '';
 
     /**
-     * Create a new cache store instance. Every instance should represent a single cache method. Multiple stores can
-     * exist at the same time and be used in different parts of the application.
+     * Create a new cache store instance. Every instance should represent a single cache method.
+     * Multiple stores can exist at the same time and be used in different parts of the application.
      *
      * @param CacheManager $cache CacheManager component.
      * @param RedisManager $redis RedisManager component.
@@ -81,7 +81,7 @@ class RedisStore extends CacheStore
     }
 
     /**
-     * Get value stored in cache. Name will be prefixed with applicationID to prevent run ins.
+     * Get value stored in cache.
      *
      * @param string $name Stored value name.
      * @return mixed
@@ -97,8 +97,8 @@ class RedisStore extends CacheStore
     }
 
     /**
-     * Set data in cache. Should automatically create a record if it wasn't created before or replace an existing record.
-     * Name will be prefixed with applicationID to prevent run ins.
+     * Set data in cache. Should automatically create a record if it wasn't created before or
+     * replace an existing record.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.
@@ -107,11 +107,16 @@ class RedisStore extends CacheStore
      */
     public function set($name, $data, $lifetime)
     {
-        $this->client->setex($this->prefix . $name, $lifetime, is_numeric($data) ? $data : serialize($data));
+        $this->client->setex(
+            $this->prefix . $name,
+            $lifetime,
+            is_numeric($data) ? $data : serialize($data)
+        );
     }
 
     /**
-     * Store value in cache with an infinite lifetime. Value should expire only when cache is flushed.
+     * Store value in cache with an infinite lifetime. Value should expire only when cache is
+     * flushed.
      *
      * @param string $name Stored value name.
      * @param mixed  $data Data in string or binary format.
@@ -119,7 +124,10 @@ class RedisStore extends CacheStore
      */
     public function forever($name, $data)
     {
-        $this->client->set($this->prefix . $name, is_numeric($data) ? $data : serialize($data));
+        $this->client->set(
+            $this->prefix . $name,
+            is_numeric($data) ? $data : serialize($data)
+        );
     }
 
     /**

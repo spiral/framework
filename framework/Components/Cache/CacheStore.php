@@ -14,13 +14,13 @@ use Spiral\Core\Container\InjectableInterface;
 abstract class CacheStore extends Component implements StoreInterface, InjectableInterface
 {
     /**
-     * InjectableInterface declares to spiral Container that requested interface or class should not be resolved using
-     * default mechanism. Following interface does not require any methods, however class or other interface which inherits
-     * ControllableInjection should declare constant named "INJECTION_MANAGER" with name of class responsible for resolving that
-     * injection.
+     * InjectableInterface declares to spiral Container that requested interface or class should
+     * not be resolved using default mechanism. Following interface does not require any methods,
+     * however class or other interface which inherits InjectableInterface should declare constant
+     * named "INJECTION_MANAGER" with name of class responsible for resolving that injection.
      *
-     * InjectionFactory will receive requested class or interface reflection and reflection linked to parameter in
-     * constructor or method used to declare injection.
+     * InjectionFactory will receive requested class or interface reflection and reflection linked
+     * to parameter in constructor or method used to declare injection.
      */
     const INJECTION_MANAGER = 'Spiral\Components\Cache\CacheManager';
 
@@ -37,8 +37,8 @@ abstract class CacheStore extends Component implements StoreInterface, Injectabl
     protected $options = array();
 
     /**
-     * Create a new cache store instance. Every instance should represent a single cache method. Multiple stores can
-     * exist at the same time and be used in different parts of the application.
+     * Create a new cache store instance. Every instance should represent a single cache method.
+     * Multiple stores can exist at the same time and be used in different parts of the application.
      *
      * @param CacheManager $cache CacheManager component.
      */
@@ -48,7 +48,8 @@ abstract class CacheStore extends Component implements StoreInterface, Injectabl
     }
 
     /**
-     * Check if store is working properly. Should check if the store drives exists, files are writable, etc.
+     * Check if store is working properly. Should check if the store drives exists, files are
+     * writable, etc.
      *
      * @return bool
      */
@@ -71,7 +72,8 @@ abstract class CacheStore extends Component implements StoreInterface, Injectabl
     abstract public function get($name);
 
     /**
-     * Set data in cache. This should automatically create a record if it wasn't created before or replace an existing record.
+     * Set data in cache. This should automatically create a record if it wasn't created before or
+     * replace an existing record.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.

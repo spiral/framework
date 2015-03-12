@@ -43,7 +43,8 @@ class MemcacheStore extends CacheStore
     const MAX_EXPIRATION = 2592000;
 
     /**
-     * Driver type. Adapter will automatically select what driver should be used. However, Memcache is preferred.
+     * Driver type. Adapter will automatically select what driver should be used. However, Memcache
+     * is preferred.
      */
     const DRIVER_MEMCACHE  = 1;
     const DRIVER_MEMCACHED = 2;
@@ -77,8 +78,9 @@ class MemcacheStore extends CacheStore
     protected $prefix = '';
 
     /**
-     * Create new cache store instance. Every instance should represent a single cache method. Multiple stores can
-     * exist at the same time and can be used in different parts of the application.
+     * Create new cache store instance. Every instance should represent a single cache method.
+     * Multiple stores can exist at the same time and can be used in different parts of the
+     * application.
      *
      * @param CacheManager                  $cache   CacheManager component.
      * @param MemcacheDriver|MemcacheDriver $driver  Pre-created driver instance.
@@ -91,9 +93,16 @@ class MemcacheStore extends CacheStore
 
         if ($driver)
         {
-            $this->driver = $driver instanceof \Memcache ? self::DRIVER_MEMCACHE : self::DRIVER_MEMCACHED;
             $this->service = $driver;
-            $connect && $this->connect();
+
+            $this->driver = $driver instanceof \Memcache
+                ? self::DRIVER_MEMCACHE
+                : self::DRIVER_MEMCACHED;
+
+            if ($connect)
+            {
+                $this->connect();
+            }
 
             return;
         }
@@ -107,10 +116,20 @@ class MemcacheStore extends CacheStore
 
         if (empty($this->options['servers']))
         {
-            throw new CacheException('Unable to create Memcache cache store. A server must be specified.');
+            throw new CacheException(
+                'Unable to create Memcache cache store. A server must be specified.'
+            );
         }
 
-        $this->service = ($this->driver == self::DRIVER_MEMCACHE ? new MemcacheDriver() : new MemcacheDriver());
+        if ($this->driver == self::DRIVER_MEMCACHE)
+        {
+            $this->service = new MemcacheDriver();
+        }
+        else
+        {
+            $this->service = new MemcacheDriver();
+        }
+
         $this->connect();
     }
 
@@ -125,7 +144,12 @@ class MemcacheStore extends CacheStore
             {
                 //Fill some parameters with default values
                 $server = array_merge($this->options['defaultServer'], $server);
-                $this->service->addServer($server['host'], $server['port'], $server['persistent'], $server['weight']);
+                $this->service->addServer(
+                    $server['host'],
+                    $server['port'],
+                    $server['persistent'],
+                    $server['weight']
+                );
             }
         }
         else
@@ -139,13 +163,18 @@ class MemcacheStore extends CacheStore
             {
                 //Fill some parameters with default values
                 $server = array_merge($this->options['defaultServer'], $server);
-                $this->service->addServer($server['host'], $server['port'], $server['weight']);
+                $this->service->addServer(
+                    $server['host'],
+                    $server['port'],
+                    $server['weight']
+                );
             }
         }
     }
 
     /**
-     * Check if store is working properly. Should check to see if the store drives does exists, the files are writable, etc.
+     * Check if store is working properly. Should check to see if the store drives does exists,
+     * the files are writable, etc.
      *
      * @return bool
      */
@@ -201,7 +230,8 @@ class MemcacheStore extends CacheStore
     }
 
     /**
-     * Set data in cache. Should automatically create a record if it wasn't created previously or replace an existing record.
+     * Set data in cache. Should automatically create a record if it wasn't created previously or
+     * replace an existing record.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.
@@ -234,7 +264,8 @@ class MemcacheStore extends CacheStore
     }
 
     /**
-     * Store value in cache with an infinite lifetime. Value should expire only after cache is flushed.
+     * Store value in cache with an infinite lifetime. Value should expire only after cache is
+     * flushed.
      *
      * @param string $name Stored value name.
      * @param mixed  $data Data in string or binary format.
@@ -300,13 +331,19 @@ class MemcacheStore extends CacheStore
     }
 
     /**
-     * The connection to the memcache server will be closed, if the connection wasn't specified as persistent.
+     * The connection to the memcache server will be closed, if the connection wasn't specified as
+     * persistent.
      */
     public function __destruct()
     {
+        if (!$this->service)
+        {
+            return;
+        }
+
         if ($this->options['defaultServer']['persistent'] && $this->driver == self::DRIVER_MEMCACHE)
         {
-            $this->service && $this->service->close();
+            $this->service->close();
         }
 
         $this->service = null;

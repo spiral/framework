@@ -37,8 +37,8 @@ class FileStore extends CacheStore
     protected $file = null;
 
     /**
-     * Create a new cache store instance. Every instance represents a single cache method. Multiple stores can
-     * exist at the same time and can be used in different areas of the application.
+     * Create a new cache store instance. Every instance represents a single cache method. Multiple
+     * stores can exist at the same time and can be used in different areas of the application.
      *
      * @param CacheManager $cache CacheManager component.
      * @param FileManager  $file
@@ -50,7 +50,8 @@ class FileStore extends CacheStore
     }
 
     /**
-     * Check if store works properly. Should make sure the store drives are there, the files are writable and etc.
+     * Check if store works properly. Should make sure the store drives are there, the files are
+     * writable and etc.
      *
      * @return bool
      */
@@ -97,7 +98,7 @@ class FileStore extends CacheStore
         }
 
         $cacheData = unserialize($this->file->read($filename));
-        if ($cacheData[0] && $cacheData[0] < time())
+        if (!empty($cacheData[0]) && $cacheData[0] < time())
         {
             $this->delete($name);
 
@@ -108,7 +109,8 @@ class FileStore extends CacheStore
     }
 
     /**
-     * Set data in cache. Should automatically create a record if one wasn't created before or replace an existing record.
+     * Set data in cache. Should automatically create a record if one wasn't created before or
+     * replace an existing record.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.
@@ -117,11 +119,15 @@ class FileStore extends CacheStore
      */
     public function set($name, $data, $lifetime)
     {
-        return $this->file->write($this->buildFilename($name), serialize(array(time() + $lifetime, $data)));
+        return $this->file->write(
+            $this->buildFilename($name),
+            serialize(array(time() + $lifetime, $data))
+        );
     }
 
     /**
-     * Store value in cache with infinite lifetime. Value should expire only when the cache is flushed.
+     * Store value in cache with infinite lifetime. Value should expire only when the cache is
+     * flushed.
      *
      * @param string $name Stored value name.
      * @param mixed  $data Data in string or binary format.
@@ -129,7 +135,10 @@ class FileStore extends CacheStore
      */
     public function forever($name, $data)
     {
-        return $this->file->write($this->buildFilename($name), serialize(array(0, $data)));
+        return $this->file->write(
+            $this->buildFilename($name),
+            serialize(array(0, $data))
+        );
     }
 
     /**
@@ -179,13 +188,16 @@ class FileStore extends CacheStore
      */
     public function flush()
     {
-        $countFiles = 0;
-        foreach ($this->file->getFiles($this->options['directory'], array($this->options['extension'])) as $filename)
+        $files = $this->file->getFiles(
+            $this->options['directory'],
+            array($this->options['extension'])
+        );
+
+        foreach ($files as $filename)
         {
-            $countFiles++;
             $this->file->remove($filename);
         }
 
-        return $countFiles;
+        return count($files);
     }
 }

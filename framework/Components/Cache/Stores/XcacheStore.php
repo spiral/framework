@@ -35,8 +35,8 @@ class XcacheStore extends CacheStore
     protected $prefix = '';
 
     /**
-     * Create a new cache store instance. Every instance should represent a single cache method. Multiple stores can
-     * exist at the same time and be used in different parts of the application.
+     * Create a new cache store instance. Every instance should represent a single cache method.
+     * Multiple stores can exist at the same time and be used in different parts of the application.
      *
      * @param CacheManager $cache CacheManager component.
      */
@@ -47,7 +47,8 @@ class XcacheStore extends CacheStore
     }
 
     /**
-     * Check if store is working properly. Should check if the store drives does exist, files are writable, etc.
+     * Check if store is working properly. Should check if the store drives does exist, files are
+     * writable, etc.
      *
      * @return bool
      */
@@ -68,7 +69,7 @@ class XcacheStore extends CacheStore
     }
 
     /**
-     * Get value stored in cache. Name will be attached to applicationID to prevent run ins.
+     * Get value stored in cache.
      *
      * @param string $name Stored value name.
      * @return mixed
@@ -79,8 +80,8 @@ class XcacheStore extends CacheStore
     }
 
     /**
-     * Set data in cache, should automatically create record if it wasn't created before or replace already existed record.
-     * Name will be prefixed with applicationID to prevent collisions.
+     * Set data in cache, should automatically create record if it wasn't created before or replace
+     * already existed record.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.
@@ -105,7 +106,7 @@ class XcacheStore extends CacheStore
     }
 
     /**
-     * Delete data from cache. Name will be attached to applicationID to prevent run ins.
+     * Delete data from cache.
      *
      * @param string $name Stored value name.
      */

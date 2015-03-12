@@ -33,7 +33,7 @@ class MiddlewarePipe extends Component
         return $this;
     }
 
-    public function run($input)
+    public function run($input, $context = null)
     {
         return $this->next(0, $input);
     }

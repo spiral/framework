@@ -53,8 +53,8 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
     }
 
     /**
-     * Will return specified or default cache adapter. This function will load cache adapter if it wasn't initiated, or
-     * fetch it from memory.
+     * Will return specified or default cache adapter. This function will load cache adapter if it
+     * wasn't initiated, or fetch it from memory.
      *
      * @param string $store   Keep null, empty or not specified to get default cache adapter.
      * @param array  $options Custom store options to set or replace.
@@ -70,30 +70,37 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
             return $this->stores[$store];
         }
 
-        if ($options)
+        if (empty($options))
         {
             $this->config['stores'][$store] = $options;
         }
 
         benchmark('cache::store', $store);
-        $this->stores[$store] = Container::get($this->config['stores'][$store]['class'], array('cache' => $this), null, true);
+        $this->stores[$store] = Container::get(
+            $this->config['stores'][$store]['class'],
+            array('cache' => $this),
+            null,
+            true
+        );
         benchmark('cache::store', $store);
 
         if ($store == $this->config['store'] && !$this->stores[$store]->isAvailable())
         {
-            throw new CacheException("Unable to use default store '{$store}', driver is unavailable.");
+            throw new CacheException(
+                "Unable to use default store '{$store}', driver is unavailable."
+            );
         }
 
         return $this->stores[$store];
     }
 
     /**
-     * InjectionManager will receive requested class or interface reflection and reflection linked to parameter in constructor
-     * or method used to declare dependency.
+     * InjectionManager will receive requested class or interface reflection and reflection linked
+     * to parameter in constructor or method used to declare dependency.
      *
-     * This method can return pre-defined instance or create new one based on requested class, parameter reflection can be
-     * used to dynamic class constructing, for example it can define database name or config section should be used to
-     * construct requested instance.
+     * This method can return pre-defined instance or create new one based on requested class,
+     * parameter reflection can be used to dynamic class constructing, for example it can define
+     * database name or config section should be used to construct requested instance.
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
@@ -101,7 +108,12 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
      */
     public static function resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
     {
-        return !$class->isInstantiable() ? self::getInstance()->store() : Container::get($class->getName(), array(
+        if (!$class->isInstantiable())
+        {
+            return self::getInstance()->store();
+        }
+
+        return Container::get($class->getName(), array(
             'cache' => self::getInstance()
         ), null, true);
     }
@@ -129,7 +141,8 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
     }
 
     /**
-     * Set data in cache, should automatically create record if it wasn't created before or replace already existed record.
+     * Set data in cache, should automatically create record if it wasn't created before or replace
+     * already existed record.
      *
      * @param string $name     Stored value name.
      * @param mixed  $data     Data in string or binary format.
