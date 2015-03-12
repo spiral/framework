@@ -269,7 +269,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 $node->options[self::ALIASES],
                 function (ImportAlias $optionA, ImportAlias $optionB)
                 {
-                    return $optionA->level <= $optionB->level;
+                    return $optionA->level >= $optionB->level;
                 }
             );
 
