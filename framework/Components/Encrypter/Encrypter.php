@@ -127,7 +127,9 @@ class Encrypter extends Component
 
         if (!$result = openssl_random_pseudo_bytes($length, $cryptoStrong))
         {
-            throw new EncrypterException("Unable to generate pseudo-random string with {$length} length.");
+            throw new EncrypterException(
+                "Unable to generate pseudo-random string with {$length} length."
+            );
         }
 
         if (!$passWeak && !$cryptoStrong)

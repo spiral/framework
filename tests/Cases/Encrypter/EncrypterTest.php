@@ -49,7 +49,7 @@ class EncryptionTest extends TestCase
 
     /**
      * @expectedException \Spiral\Components\Encrypter\DecryptionException
-     * @expectedExceptionMessage Encrypted data does not have valid signature.
+     * @expectedExceptionMessage Unable to unpack provided data.
      */
     public function testBadSignature()
     {
@@ -59,11 +59,12 @@ class EncryptionTest extends TestCase
         $this->assertNotEquals('test string', $encrypted);
         $this->assertEquals('test string', $encrypter->decrypt($encrypted));
 
-        $encrypted = base64_decode(str_replace(array('-', '_', '~'), array('+', '/', '='), $encrypted));
+        $encrypted = base64_decode($encrypted);
+
         $encrypted = json_decode($encrypted, true);
         $encrypted[Encrypter::SIGNATURE] = 'BADONE';
 
-        $encrypted = str_replace(array('+', '/', '='), array('-', '_', '~'), base64_encode(json_encode($encrypted)));
+        $encrypted = base64_encode(json_encode($encrypted));
         $encrypter->decrypt($encrypted);
     }
 
