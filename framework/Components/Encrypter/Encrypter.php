@@ -219,20 +219,13 @@ class Encrypter extends Component
             $packed = json_decode(base64_decode($packed), true);
 
             assert(is_array($packed));
+            assert(!empty($packed[self::IV]));
+            assert(!empty($packed[self::DATA]));
+            assert(!empty($packed[self::SIGNATURE]));
         }
         catch (\ErrorException $exception)
         {
             throw new DecryptionException("Unable to unpack provided data.");
-        }
-
-        if (!isset($packed[self::IV]) || !isset($packed[self::DATA]) || !isset($packed[self::SIGNATURE]))
-        {
-            throw new DecryptionException("Unable to unpack provided data.");
-        }
-
-        if (!$packed[self::SIGNATURE])
-        {
-            throw new DecryptionException("Encrypted data does not have valid signature.");
         }
 
         //Verifying signature

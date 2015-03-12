@@ -70,7 +70,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
         //Middleware(s)
         $response = $this->perform($this->baseRequest);
 
-
         $this->dispatch($this->event('dispatch', $response));
     }
 
@@ -109,7 +108,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function perform(RequestInterface $request = null)
     {
         $parentRequest = Container::getBinding('request');
-        if ($request)
+        if (!empty($request))
         {
             //Creating scope
             Container::bind('request', $request);
@@ -118,7 +117,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         else
         {
             Container::removeBinding('request');
-            $parentRequest && Container::removeBinding(get_class($parentRequest));
+            !empty($parentRequest) && Container::removeBinding(get_class($parentRequest));
         }
 
         ob_start();
@@ -127,14 +126,14 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $response = $this->core->callAction('Controllers\HomeController', 'index');
         $plainOutput = ob_get_clean();
 
-        if ($request)
+        if (!empty($request))
         {
             //Ending scope
             Container::removeBinding('request');
             Container::removeBinding(get_class($request));
         }
 
-        if ($parentRequest)
+        if (!empty($parentRequest))
         {
             //Restoring scope
             Container::bind('request', $parentRequest);
