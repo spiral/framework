@@ -164,8 +164,8 @@ use Spiral\Core\Facade;
 class Redis extends Facade
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class name should be defined
-     * in bindedComponent constant.
+     * Facade can statically represent methods of one binded component, such component alias or class
+     * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'redis';
 

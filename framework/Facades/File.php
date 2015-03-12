@@ -17,7 +17,7 @@ use Spiral\Core\Facade;
  * @method static FileManager getInstance()
  *
  * @method static bool read(string $filename)
- * @method static bool write(string $filename, string $data, int $mode = null, bool $ensureDirectory = false, bool $append = false)
+ * @method static bool write(string $filename, string $data, int $mode = null, bool $ensureDirectory = false)
  * @method static bool append(string $filename, string $data, int $mode = null, bool $ensureDirectory = false)
  * @method static bool replace(string $filename, string $destination)
  * @method static bool copy(string $filename, string $destination)
@@ -45,8 +45,8 @@ use Spiral\Core\Facade;
 class File extends Facade
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class name should be defined
-     * in bindedComponent constant.
+     * Facade can statically represent methods of one binded component, such component alias or class
+     * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'file';
 
@@ -58,15 +58,16 @@ class File extends Facade
     const GB = 1073741824;
 
     /**
-     * Default file permissions is 666 (directories 777), this files are fully writable and readable by all application
-     * environments. Usually this files stored under application/data folder, however they can be in some other public
-     * locations.
+     * Default file permissions is 766 (directories 777), this files are fully writable and readable
+     * by all application environments. Usually this files stored under application/data folder,
+     * however they can be in some other public locations.
      */
-    const RUNTIME = 0666;
+    const RUNTIME = 0766;
 
     /**
-     * Work files are files which create by or for framework, like controllers, configs and config directories.
-     * This means that only CLI mode application can modify them. You should not create work files from web application.
+     * Work files are files which create by or for framework, like controllers, configs and config
+     * directories. This means that only CLI mode application can modify them. You should not create
+     * work files from web application.
      */
     const READONLY = 0644;
 }
