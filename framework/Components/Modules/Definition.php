@@ -30,8 +30,8 @@ class Definition extends Component
     protected $modules = null;
 
     /**
-     * Module name, can contain version or other short description, like "Spiral Profiler v1.2.0" Can be fetched from
-     * composer.json, "name" field.
+     * Module name, can contain version or other short description, like "Spiral Profiler v1.2.0"
+     * Can be fetched from composer.json, "name" field.
      *
      * @var string
      */
@@ -52,8 +52,9 @@ class Definition extends Component
     protected $class = '';
 
     /**
-     * Module installer class, installer contains set of operation to copy, update or merge files, also installer declared
-     * if any view namespaces, bindings or component bootstrap function should be registered.
+     * Module installer class, installer contains set of operation to copy, update or merge files,
+     * also installer declared if any view namespaces, bindings or component bootstrap function should
+     * be registered.
      *
      * @invisible
      * @var Installer
@@ -68,8 +69,8 @@ class Definition extends Component
     protected $dependencies = array();
 
     /**
-     * Module definition should explain where module located, name, description and other meta information about package,
-     * by default Definition can be created based on composer.json file.
+     * Module definition should explain where module located, name, description and other meta
+     * information about package, by default Definition can be created based on composer.json file.
      *
      * @param FileManager   $file
      * @param ModuleManager $modules
@@ -78,7 +79,14 @@ class Definition extends Component
      * @param string        $description
      * @param array         $dependencies
      */
-    public function __construct(FileManager $file, ModuleManager $modules, $class, $name, $description = '', $dependencies = array())
+    public function __construct(
+        FileManager $file,
+        ModuleManager $modules,
+        $class,
+        $name,
+        $description = '',
+        $dependencies = array()
+    )
     {
         $this->file = $file;
         $this->modules = $modules;
@@ -90,8 +98,8 @@ class Definition extends Component
     }
 
     /**
-     * Module name, can contain version or other short description, like "Spiral Profiler v1.2.0" Can be fetched from
-     * composer.json, "name" field.
+     * Module name, can contain version or other short description, like "Spiral Profiler v1.2.0"
+     * Can be fetched from composer.json, "name" field.
      *
      * @return string
      */
@@ -131,7 +139,8 @@ class Definition extends Component
     }
 
     /**
-     * Total module size in bytes (will calculate all module files including resources, views and module class itself).
+     * Total module size in bytes (will calculate all module files including resources, views and
+     * module class itself).
      *
      * @return int
      */
@@ -167,14 +176,15 @@ class Definition extends Component
     }
 
     /**
-     * Module installer responsible for operations like copying resources, registering configs, view namespaces and declaring
-     * that bootstrap() call is required. Installer declaration should be located in Module::getInstaller() method.
+     * Module installer responsible for operations like copying resources, registering configs, view
+     * namespaces and declaring that bootstrap() call is required. Installer declaration should be
+     * located in Module::getInstaller() method.
      *
      * @return Installer
      */
     public function getInstaller()
     {
-        if ($this->installer)
+        if (!empty($this->installer))
         {
             return $this->installer;
         }

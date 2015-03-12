@@ -35,8 +35,9 @@ class ModuleManager extends Component
     protected $modules = array();
 
     /**
-     * Modules component is always initiated and used to support external packages. Constructing modules will ensure all
-     * requested bindings mounted and packages initiated via calling module bootstrap() method.
+     * Modules component is always initiated and used to support external packages. Constructing
+     * modules will ensure all requested bindings mounted and packages initiated via calling module
+     * bootstrap() method.
      *
      * @param Core $core Core instance.
      * @throws CoreException
@@ -45,7 +46,8 @@ class ModuleManager extends Component
     {
         try
         {
-            if ($this->modules = $core->loadConfig('modules'))
+            $this->modules = $core->loadConfig('modules');
+            if (!empty($this->modules))
             {
                 foreach ($this->modules as $module)
                 {
@@ -54,7 +56,10 @@ class ModuleManager extends Component
                         $core->bind($alias, $resolver);
                     }
 
-                    $module['bootstrap'] && $core->get($module['class'], compact('core'))->bootstrap();
+                    if ($module['bootstrap'])
+                    {
+                        $core->get($module['class'], compact('core'))->bootstrap();
+                    }
                 }
             }
         }
@@ -85,8 +90,8 @@ class ModuleManager extends Component
     }
 
     /**
-     * Find all available modules classes and return their definitions. Definitions will be sorted in order of required
-     * dependencies.
+     * Find all available modules classes and return their definitions. Definitions will be sorted
+     * in order of required dependencies.
      *
      * @return Definition[]
      */
@@ -94,14 +99,16 @@ class ModuleManager extends Component
     {
         $definitions = array();
 
-        foreach (Tokenizer::getInstance()->getClasses('Spiral\Components\Modules\ModuleInterface') as $module)
+        $classes = Tokenizer::getInstance()->getClasses('Spiral\Components\Modules\ModuleInterface');
+        foreach ($classes as $module)
         {
-            if ($module['name'] == 'Spiral\Components\Modules\Module')
+            if ($module['abstract'])
             {
                 continue;
             }
 
             $definition = call_user_func(array($module['name'], 'getDefinition'));
+
             $definitions[$definition->getName()] = $definition;
         }
 
@@ -115,8 +122,8 @@ class ModuleManager extends Component
     }
 
     /**
-     * Registering module definition, all module start up requirements will be copied into modules configuration and will
-     * be performed during modules component initialization.
+     * Registering module definition, all module start up requirements will be copied into modules
+     * configuration and will be performed during modules component initialization.
      *
      * @param Definition $definition
      */
@@ -133,8 +140,8 @@ class ModuleManager extends Component
     }
 
     /**
-     * Refresh modules configuration file with only existed modules and their configurations. Should be called every time
-     * new module gets registered or removed.
+     * Refresh modules configuration file with only existed modules and their configurations. Should
+     * be called every time new module gets registered or removed.
      */
     protected function updateConfig()
     {

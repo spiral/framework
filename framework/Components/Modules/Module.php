@@ -21,8 +21,8 @@ abstract class Module extends Component implements ModuleInterface
     }
 
     /**
-     * Module definition should explain where module located, name, description and other meta information about package,
-     * by default Definition can be created based on composer.json file.
+     * Module definition should explain where module located, name, description and other meta
+     * information about package, by default Definition can be created based on composer.json file.
      *
      * This method is static as it should be called without constructing module object.
      *
@@ -30,7 +30,9 @@ abstract class Module extends Component implements ModuleInterface
      */
     public static function getDefinition()
     {
-        $composer = dirname((new \ReflectionClass(get_called_class()))->getFileName()) . '/composer.json';
+        $moduleDirectory = dirname((new \ReflectionClass(get_called_class()))->getFileName());
+        $composer = $moduleDirectory . '/composer.json';
+
         $composer = json_decode(FileManager::getInstance()->read($composer), true);
 
         return Definition::make(array(
@@ -42,9 +44,8 @@ abstract class Module extends Component implements ModuleInterface
     }
 
     /**
-     * Module installer responsible for operations like copying resources, registering configs, view namespaces and declaring
-     * that bootstrap() call is required.
-     *
+     * Module installer responsible for operations like copying resources, registering configs, view
+     * namespaces and declaring that bootstrap() call is required.
      * This method is static as it should be called without constructing module object.
      *
      * @param Definition $definition Module definition fetched or generated of composer file.

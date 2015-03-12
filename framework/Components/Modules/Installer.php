@@ -21,9 +21,9 @@ class Installer extends Component
     use Component\LoggerTrait;
 
     /**
-     * Methods to resolve file conflicts happen during moving public module files to application root directory, conflict
-     * may happen only if target file was altered or just different than module declaration (can actually happen if module
-     * got updated, should be fixed in future somehow).
+     * Methods to resolve file conflicts happen during moving public module files to application root
+     * directory, conflict may happen only if target file was altered or just different than module
+     * declaration (can actually happen if module got updated, should be fixed in future somehow).
      */
     const CONFLICTS_NONE      = 0;
     const CONFLICTS_OVERWRITE = 1;
@@ -51,22 +51,24 @@ class Installer extends Component
     protected $dbal = null;
 
     /**
-     * Directory where module located in, all public files, configs and views should be defined relative to this directory.
+     * Directory where module located in, all public files, configs and views should be defined
+     * relative to this directory.
      *
      * @var string
      */
     protected $moduleDirectory = '';
 
     /**
-     * Directory where module configuration files located, configurations will be merged with already existed files by one
-     * selected merge methods.
+     * Directory where module configuration files located, configurations will be merged with already
+     * existed files by one selected merge methods.
      *
      * @var string
      */
     protected $configDirectory = '';
 
     /**
-     * Flag to indicate that following module requires bootstrap() method call on application initialization.
+     * Flag to indicate that following module requires bootstrap() method call on application
+     * initialization.
      *
      * @var bool
      */
@@ -80,8 +82,8 @@ class Installer extends Component
     protected $files = array();
 
     /**
-     * Bindings defined by module and should be mounted during application initialization. This is alternative and lighter
-     * way to extend core by module without actually loading module class.
+     * Bindings defined by module and should be mounted during application initialization. This is
+     * alternative and lighter way to extend core by module without actually loading module class.
      *
      * @var array
      */
@@ -102,21 +104,31 @@ class Installer extends Component
     protected $migrations = array();
 
     /**
-     * Module installer responsible for operations like copying resources, registering configs, view namespaces and declaring
-     * that bootstrap() call is required. Installer declaration should be located in Module::getInstaller() method.
+     * Module installer responsible for operations like copying resources, registering configs, view
+     * namespaces and declaring that bootstrap() call is required. Installer declaration should be
+     * located in Module::getInstaller() method.
      *
      * Example:
      * $installer = Installer::make(array(
      *      'moduleDirectory' => __DIR__
      * ));
      *
-     * @param string          $moduleDirectory Primary module directory.
-     * @param string          $configDirectory Module config directory, by default moduleDirectory/config.
+     * Due organization of constructor parameters it's recommended to create Installer using make()
+     * method.
+     *
      * @param FileManager     $file            FileManager component.
      * @param ModuleManager   $modules         ModuleManager component.
      * @param DatabaseManager $dbal            DatabaseManager component.
+     * @param string          $moduleDirectory Primary module directory.
+     * @param string          $configDirectory Module config directory, by default moduleDirectory/config.
      */
-    public function __construct($moduleDirectory, $configDirectory = '', FileManager $file, ModuleManager $modules, DatabaseManager $dbal)
+    public function __construct(
+        FileManager $file,
+        ModuleManager $modules,
+        DatabaseManager $dbal,
+        $moduleDirectory,
+        $configDirectory = ''
+    )
     {
         $this->file = $file;
         $this->modules = $modules;
@@ -124,7 +136,7 @@ class Installer extends Component
 
         $this->moduleDirectory = $this->file->normalizePath($moduleDirectory, true);
 
-        if ($configDirectory)
+        if (!empty($configDirectory))
         {
             $this->configDirectory = $this->file->normalizePath($configDirectory, true);
         }
@@ -156,8 +168,8 @@ class Installer extends Component
     }
 
     /**
-     * Set flag to let modules component known that following module requires bootstrap() method call on application
-     * initialization.
+     * Set flag to let modules component known that following module requires bootstrap() method call
+     * on application initialization.
      *
      * @param bool $required
      * @return static
@@ -172,12 +184,16 @@ class Installer extends Component
     /**
      * Register new file to be moved to public application directory ("root" directory alias).
      *
-     * File should be located in module directory and defined by relative name. Destination location can be different that
-     * original filename or have specified file permissions. All missing directories will be created automatically with same
-     * file permissions.
+     * File should be located in module directory and defined by relative name. Destination location
+     * can be different that original filename or have specified file permissions. All missing
+     * directories will be created automatically with same file permissions.
      *
      * Examples:
-     * $installer->registerFile('/resources/scripts/plugin/script.js', 'resources/script.js', File::RUNTIME);
+     * $installer->registerFile(
+     *      '/resources/scripts/plugin/script.js',
+     *      'resources/script.js',
+     *      File::RUNTIME
+     * );
      *
      * @param string $destination Destination filename relative to "root" directory.
      * @param string $filename    Source filename relative to modules directory.
@@ -190,7 +206,9 @@ class Installer extends Component
         $filename = $this->file->normalizePath($filename);
         if (!$this->file->exists($this->moduleDirectory . $filename))
         {
-            throw new ModuleException("Unable to register file '{$filename}'', file not found in module directory.");
+            throw new ModuleException(
+                "Unable to register file '{$filename}'', file not found in module directory."
+            );
         }
 
         $this->files[$this->file->normalizePath($destination)] = array(
@@ -204,34 +222,38 @@ class Installer extends Component
     }
 
     /**
-     * Register directory (destination parameter) name to be created in public application directory ("root" directory).
-     * If "directory" parameter specified, all files located in that folder will be additionally moved to destination
-     * directory with specified file permissions.
+     * Register directory (destination parameter) name to be created in public application directory
+     * ("root" directory). If "directory" parameter specified, all files located in that folder will
+     * be additionally moved to destination directory with specified file permissions.
      *
      * Examples:
      * $installer->registerDirectory("/tempFiles/", null, File::RUNTIME);
      * $installer->registerDirectory("/resources/scripts/plugin/", "resources/", File::RUNTIME);
      *
-     * @param string $destination Destination directory name relative to root directory.
-     * @param string $directory   Source directory name relative to modules directory.
-     * @param int    $mode        File mode, use File::RUNTIME for publicly accessible files.
+     * @param string      $destination Destination directory name relative to root directory.
+     * @param string|null $directory   Source directory name relative to modules directory.
+     * @param int         $mode        File mode, use File::RUNTIME for publicly accessible files.
      * @return static
      */
     public function registerDirectory($destination = null, $directory = null, $mode = FileManager::READONLY)
     {
-        $directory = $directory ? $this->file->normalizePath($directory, true) : null;
+        if (!empty($directory))
+        {
+            $directory = $this->file->normalizePath($directory, true);
+        }
+
         if ($destination != '' && $destination != '/')
         {
             $this->files[$destination] = array('source' => null, 'md5' => null, 'size' => null, 'mode' => $mode);
         }
 
-        if ($directory)
+        if (!empty($directory))
         {
             if ($this->file->exists($this->moduleDirectory . $directory))
             {
                 $directory = $this->file->normalizePath($this->moduleDirectory . $directory, true);
+                $innerDirectory = substr($directory, strlen($this->moduleDirectory));
 
-                $moduleDirectory = substr($directory, strlen($this->moduleDirectory));
                 foreach ($this->file->getFiles($directory) as $filename)
                 {
                     $filename = $this->file->normalizePath($filename);
@@ -240,7 +262,7 @@ class Installer extends Component
                     $filename = substr($filename, strlen($directory));
                     $this->registerFile(
                         $destination . '/' . $filename,
-                        $this->file->normalizePath($moduleDirectory . '/' . $filename),
+                        $this->file->normalizePath($innerDirectory . '/' . $filename),
                         $mode
                     );
                 }
@@ -251,8 +273,8 @@ class Installer extends Component
     }
 
     /**
-     * Bind alias resolver, this method can be used to extend core files by module classes, method is identical
-     * to Core::bind() however no closures supported (you still can use callbacks).
+     * Bind alias resolver, this method can be used to extend core files by module classes, method
+     * is identical to Core::bind() however no closures supported (you still can use callbacks).
      *
      * Bindings will be mounted during initiating modules component.
      *
@@ -268,8 +290,8 @@ class Installer extends Component
     }
 
     /**
-     * Register new module config, config will be merged with already existed file by one of selected merge methods
-     * or using custom function.
+     * Register new module config, config will be merged with already existed file by one of selected
+     * merge methods or using custom function.
      *
      * @param ConfigWriter $config
      * @param bool         $readConfig Automatically read config data from modules config directory.
@@ -278,7 +300,6 @@ class Installer extends Component
      */
     public function registerConfig(ConfigWriter $config, $readConfig = true)
     {
-        //Reading config directory
         $readConfig && $config->readConfig($this->configDirectory);
         $this->configs[] = $config;
 
@@ -286,8 +307,9 @@ class Installer extends Component
     }
 
     /**
-     * Register new module migration, migration will be automatically copied to migrations directly. Make sure class is
-     * reachable. In some cases better skip this function and declare special command to register config.
+     * Register new module migration, migration will be automatically copied to migrations directly.
+     * Make sure class is reachable. In some cases better skip this function and declare special
+     * command to register config.
      *
      * Example:
      * $installer->registerMigration('blog_posts', 'Vendor\Blog\Migrations\BlogPostsMigration');
@@ -334,9 +356,10 @@ class Installer extends Component
     }
 
     /**
-     * List of files which already exists in application public directory and conflicted with modules files by size or
-     * content, this method should be called before module installation to make sure that no user files will be removed
-     * or overwritten without notification. File conflicts can be resolved by picking one of resolution methods.
+     * List of files which already exists in application public directory and conflicted with modules
+     * files by size or content, this method should be called before module installation to make sure
+     * that no user files will be removed or overwritten without notification. File conflicts can be
+     * resolved by picking one of resolution methods.
      *
      * @return array
      */
@@ -345,7 +368,7 @@ class Installer extends Component
         $conflicts = array();
         foreach ($this->files as $filename => $definition)
         {
-            if (!$definition['source'])
+            if (empty($definition['source']))
             {
                 //Directory
                 continue;
@@ -378,15 +401,17 @@ class Installer extends Component
     /**
      * Copy all registered files to their public location, create directories and set-up permissions.
      *
-     * @param int $conflicts Default tactic to resolve file conflicts, for right now spiral will assume that we can simple
-     *                       overwrite all conflicted files.
+     * @param int $conflicts Default tactic to resolve file conflicts, for right now spiral will
+     *                       assume that we can simple overwrite all conflicted files.
      * @throws ModuleException
      */
     protected function mountFiles($conflicts = self::CONFLICTS_OVERWRITE)
     {
         if ($this->getConflicts() && !$conflicts)
         {
-            throw new ModuleException("Unable to process registered files, unresolved conflicts presented (no conflict tactic).");
+            throw new ModuleException(
+                "Unable to process registered files, unresolved conflicts presented (no conflict tactic)."
+            );
         }
 
         foreach ($this->files as $filename => $definition)
@@ -395,8 +420,8 @@ class Installer extends Component
 
             if (!$definition['source'])
             {
-                $this->logger()->debug("Ensuring directory '{directory}' with mode '{mode}'.", array(
-                    'directory' => substr($this->file->relativePath($filename, directory('root')), 2),
+                self::logger()->debug("Ensuring directory '{directory}' with mode '{mode}'.", array(
+                    'directory' => substr($this->file->relativePath($filename), 2),
                     'mode'      => decoct($definition['mode'])
                 ));
 
@@ -409,9 +434,9 @@ class Installer extends Component
             {
                 if ($this->file->md5($filename) == $definition['md5Hash'])
                 {
-                    $this->logger()->debug("Module file '[module]/{source}' already mounted.", array(
+                    self::logger()->debug("Module file '[module]/{source}' already mounted.", array(
                         'source'      => $definition['source'],
-                        'destination' => substr($this->file->relativePath($filename, directory('root')), 2)
+                        'destination' => substr($this->file->relativePath($filename), 2)
                     ));
 
                     continue;
@@ -419,26 +444,35 @@ class Installer extends Component
 
                 if ($conflicts == self::CONFLICTS_IGNORE)
                 {
-                    $this->logger()->warning("Module file '[module]/{source}' already mounted and different version, ignoring.", array(
-                        'source'      => $definition['source'],
-                        'destination' => substr($this->file->relativePath($filename, directory('root')), 2)
-                    ));
+                    self::logger()->warning(
+                        "Module file '[module]/{source}' already mounted and different version, ignoring.",
+                        array(
+                            'source'      => $definition['source'],
+                            'destination' => substr($this->file->relativePath($filename), 2)
+                        )
+                    );
                     continue;
                 }
                 else
                 {
-                    $this->logger()->warning("Module file '[module]/{source}' already mounted and different version, replacing.", array(
-                        'source'      => $definition['source'],
-                        'destination' => substr($this->file->relativePath($filename, directory('root')), 2)
-                    ));
+                    self::logger()->warning(
+                        "Module file '[module]/{source}' already mounted and different version, replacing.",
+                        array(
+                            'source'      => $definition['source'],
+                            'destination' => substr($this->file->relativePath($filename), 2)
+                        )
+                    );
                 }
             }
             else
             {
-                $this->logger()->debug("Mounting module file '[module]/{source}' into '{destination}'.", array(
-                    'source'      => $definition['source'],
-                    'destination' => substr($this->file->relativePath($filename, directory('root')), 2)
-                ));
+                self::logger()->debug(
+                    "Mounting module file '[module]/{source}' into '{destination}'.",
+                    array(
+                        'source'      => $definition['source'],
+                        'destination' => substr($this->file->relativePath($filename), 2)
+                    )
+                );
             }
 
             $source = $this->file->normalizePath($this->moduleDirectory . $definition['source']);
@@ -458,7 +492,8 @@ class Installer extends Component
         foreach ($this->configs as $config)
         {
             $config->writeConfig(directory('config'), $mode, $this);
-            $this->logger()->debug("Updating configuration file '{config}'.", array(
+
+            self::logger()->debug("Updating configuration file '{config}'.", array(
                 'config' => $config->getName()
             ));
         }
@@ -474,7 +509,8 @@ class Installer extends Component
         foreach ($this->migrations as $name => $migration)
         {
             $repository->registerMigration($name, $migration);
-            $this->logger()->debug("Mounting migration '{$name}'.", compact('name', 'migration'));
+
+            self::logger()->debug("Mounting migration '{$name}'.", compact('name', 'migration'));
         }
     }
 
@@ -486,13 +522,13 @@ class Installer extends Component
      */
     public function install($conflicts = self::CONFLICTS_OVERWRITE)
     {
-        $this->logger()->info("Mounting files.");
+        self::logger()->info("Mounting files.");
         $this->mountFiles($conflicts);
 
-        $this->logger()->info("Mounting configurations.");
+        self::logger()->info("Mounting configurations.");
         $this->mountConfigs();
 
-        $this->logger()->info("Mounting migrations.");
+        self::logger()->info("Mounting migrations.");
         $this->mountMigrations();
     }
 }
