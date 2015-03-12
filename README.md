@@ -35,7 +35,7 @@ and redis clients.
 
 Example:
 ```php
-public function action(Database $default, Database $postgres, ..., MemcacheStore $memcache, ...)
+public function action(Database $default, Database $postgres, ..., MemcacheStore $memcache)
 {
     dump($default);
 }
