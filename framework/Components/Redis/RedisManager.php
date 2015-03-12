@@ -192,8 +192,9 @@ class RedisManager extends Component implements InjectionManagerInterface
     const SCAN_RETRY          = 1;
 
     /**
-     * Redis clients list. Every client build based on provided list of servers and options, component can have multiple
-     * clients created, for example one for cache and one for database purposes. Client instance will be created on demand.
+     * Redis clients list. Every client build based on provided list of servers and options, component
+     * can have multiple clients created, for example one for cache and one for database purposes.
+     * Client instance will be created on demand.
      *
      * @var RedisClient[]
      */
@@ -210,9 +211,9 @@ class RedisManager extends Component implements InjectionManagerInterface
     }
 
     /**
-     * Get active and connected redis client. Every client build based on provided list of servers and options, component
-     * can have multiple clients created, for example one for cache and one for database purposes. Client instance will be
-     * created on demand.
+     * Get active and connected redis client. Every client build based on provided list of servers
+     * and options, component can have multiple clients created, for example one for cache and one
+     * for database purposes. Client instance will be created on demand.
      *
      * @param string $client Client ID.
      * @param array  $config Client options, required only for new connections (not defined in config).
@@ -231,11 +232,13 @@ class RedisManager extends Component implements InjectionManagerInterface
             return $this->clients[$client];
         }
 
-        if (!$config)
+        if (empty($config))
         {
             if (!isset($this->config['clients'][$client]))
             {
-                throw new RedisException("Unable to initiate redis client, no presets for '{$client}' found.");
+                throw new RedisException(
+                    "Unable to initiate redis client, no presets for '{$client}' found."
+                );
             }
 
             $config = $this->config['clients'][$client];
@@ -243,22 +246,24 @@ class RedisManager extends Component implements InjectionManagerInterface
 
         //Creating client
         benchmark('redis::client', $client);
+
         $this->clients[$client] = Core::get(self::CLIENT, array(
             'parameters' => $config['servers'],
             'options'    => isset($config['options']) ? $config['options'] : array(),
         ), null, true);
+
         benchmark('redis::client', $client);
 
         return $this->clients[$client];
     }
 
     /**
-     * InjectionManager will receive requested class or interface reflection and reflection linked to parameter in constructor
-     * or method used to declare dependency.
+     * InjectionManager will receive requested class or interface reflection and reflection linked
+     * to parameter in constructor or method used to declare dependency.
      *
-     * This method can return pre-defined instance or create new one based on requested class, parameter reflection can be
-     * used to dynamic class constructing, for example it can define database name or config section should be used to
-     * construct requested instance.
+     * This method can return pre-defined instance or create new one based on requested class, parameter
+     * reflection can be used to dynamic class constructing, for example it can define database name
+     * or config section should be used to construct requested instance.
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter

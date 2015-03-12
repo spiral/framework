@@ -32,10 +32,11 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     const CONTAINER = 'Spiral\Components\Storage\StorageContainer';
 
     /**
-     * List of initiated storage containers, every container represent one "virtual" folder which can be located on local
-     * machine, another server (ftp) or in cloud (amazon, rackspace). Container provides basic unified functionality to
-     * manage files inside, all low level operations perform by servers (adapters), this technique allows you to create
-     * application and code which does not require to specify storage requirements at time of
+     * List of initiated storage containers, every container represent one "virtual" folder which
+     * can be located on local machine, another server (ftp) or in cloud (amazon, rackspace). Container
+     * provides basic unified functionality to manage files inside, all low level operations perform
+     * by servers (adapters), this technique allows you to create application and code which does not
+     * require to specify storage requirements at time of
      * development.
      *
      * @var StorageContainer[]
@@ -43,19 +44,19 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     protected $containers = array();
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based. Every adapter should
-     * support basic set of low-level operations (create, move, copy and etc). Adapter instance called server, one adapter
-     * can be used for multiple servers.
+     * Every server represent one virtual storage which can be either local, remove or cloud based.
+     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Adapter instance called server, one adapter can be used for multiple servers.
      *
      * @var ServerInterface[]
      */
     protected $servers = array();
 
     /**
-     * Initiate storage component to load all container and adapters. Storage component commonly used to manage files using
-     * "virtual folders" (container) while such "folder" can represent local, remove or cloud file storage. This allows to
-     * write more universal scripts, support multiple environments with different container settings and simplify application
-     * testing.
+     * Initiate storage component to load all container and adapters. Storage component commonly used
+     * to manage files using "virtual folders" (container) while such "folder" can represent local,
+     * remove or cloud file storage. This allows to write more universal scripts, support multiple
+     * environments with different container settings and simplify application testing.
      *
      * Storage component is of component which almost did not changed for last 4 years.
      *
@@ -69,14 +70,19 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         foreach ($this->config['containers'] as $name => $container)
         {
             //Controllable injection implemented
-            $this->containers[$name] = Core::get(self::CONTAINER, $container + array('storage' => $this), null, true);
+            $this->containers[$name] = Core::get(
+                self::CONTAINER,
+                $container + array('storage' => $this),
+                null,
+                true
+            );
         }
     }
 
     /**
-     * Create new real-time storage container with specified prefix, server and options. Container prefix will be automatically
-     * attached to every object name inside that container to create object address which has to be unique over every other
-     * container.
+     * Create new real-time storage container with specified prefix, server and options. Container
+     * prefix will be automatically attached to every object name inside that container to create
+     * object address which has to be unique over every other container.
      *
      * @param string $name    Container name used to create or replace objects.
      * @param string $prefix  Prefix will be attached to object name to create unique address.
@@ -92,7 +98,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
             throw new StorageException("Unable to create container '{$name}', name already taken.");
         }
 
-        $this->logger()->info(
+        self::logger()->info(
             "New container '{name}' for server '{server}' registered using '{prefix}' prefix.",
             compact('name', 'prefix', 'server', 'options')
         );
@@ -115,9 +121,9 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      */
     public function container($container)
     {
-        if (!$container)
+        if (empty($container))
         {
-            throw new StorageException("Unable to fetch container, name can not be empty.");
+            throw new \InvalidArgumentException("Unable to fetch container, name can not be empty.");
         }
 
         if (isset($this->containers[$container]))
@@ -129,12 +135,12 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     }
 
     /**
-     * InjectionManager will receive requested class or interface reflection and reflection linked to parameter in constructor
-     * or method used to declare dependency.
+     * InjectionManager will receive requested class or interface reflection and reflection linked
+     * to parameter in constructor or method used to declare dependency.
      *
-     * This method can return pre-defined instance or create new one based on requested class, parameter reflection can be
-     * used to dynamic class constructing, for example it can define database name or config section should be used to
-     * construct requested instance.
+     * This method can return pre-defined instance or create new one based on requested class, parameter
+     * reflection can be used to dynamic class constructing, for example it can define database name
+     * or config section should be used to construct requested instance.
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
@@ -146,9 +152,9 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     }
 
     /**
-     * Resolve container instance using object address, container will be detected by reading it's own prefix from object
-     * address. Container with longest detected prefix will be used to represent such object. Make sure you don't have
-     * prefix collisions.
+     * Resolve container instance using object address, container will be detected by reading it's
+     * own prefix from object address. Container with longest detected prefix will be used to represent
+     * such object. Make sure you don't have prefix collisions.
      *
      * @param string $address Object address with prefix and name.
      * @param string $name    Object name fetched from address.
@@ -165,7 +171,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         {
             if ($prefixLength = $container->checkPrefix($address))
             {
-                if (!$bestContainer || strlen($bestContainer->prefix) < $prefixLength)
+                if (empty($bestContainer) || strlen($bestContainer->prefix) < $prefixLength)
                 {
                     $bestContainer = $container;
                     $name = substr($address, $prefixLength);
@@ -191,7 +197,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
             return $this->servers[$server];
         }
 
-        if ($options)
+        if (!empty($options))
         {
             $this->config['servers'][$server] = $options;
         }
@@ -207,11 +213,12 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     }
 
     /**
-     * Create new storage object with specified container, object can be created as empty (not supported by some adapters)
-     * or using local filename - in this case file WILL BE REPLACED or uploaded by container to it's new location.
+     * Create new storage object with specified container, object can be created as empty (not
+     * supported by some adapters) or using local filename - in this case file WILL BE REPLACED or
+     * uploaded by container to it's new location.
      *
-     * While object creation original filename, name (no extension) or extension can be embedded to new object name using
-     * string interpolation ({name}.{ext}}
+     * While object creation original filename, name (no extension) or extension can be embedded to
+     * new object name using string interpolation ({name}.{ext}}
      *
      * Example:
      * Storage::create('cloud', $id . '-{name}.{ext}', $filename);
@@ -229,7 +236,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
             $container = $this->container($container);
         }
 
-        if ($filename)
+        if (!empty($filename))
         {
             $extension = FileManager::getInstance()->extension($filename);
             $name = StringHelper::interpolate($name, array(
@@ -244,14 +251,18 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     }
 
     /**
-     * Create StorageObject based on provided address, object name and container will be detected automatically using prefix
-     * encoded in address.
+     * Create StorageObject based on provided address, object name and container will be detected
+     * automatically using prefix encoded in address.
      *
      * @param string $address Object address with name and container prefix.
      * @return StorageObject
      */
     public function open($address)
     {
-        return StorageObject::make(compact('address') + array('storage' => $this, 'container' => null));
+        return StorageObject::make(array(
+            'address'   => $address,
+            'storage'   => $this,
+            'container' => null
+        ));
     }
 }

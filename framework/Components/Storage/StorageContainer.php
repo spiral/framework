@@ -116,8 +116,8 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Build object address using object name and container prefix. While using URL like prefixes address can appear valid
-     * URl which can be used directly at frontend.
+     * Build object address using object name and container prefix. While using URL like prefixes
+     * address can appear valid URI which can be used directly at frontend.
      *
      * @param string $name
      * @return string

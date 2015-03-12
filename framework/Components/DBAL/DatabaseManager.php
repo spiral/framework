@@ -124,12 +124,12 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     }
 
     /**
-     * InjectionManager will receive requested class or interface reflection and reflection linked to parameter in constructor
-     * or method used to declare dependency.
+     * InjectionManager will receive requested class or interface reflection and reflection linked
+     * to parameter in constructor or method used to declare dependency.
      *
-     * This method can return pre-defined instance or create new one based on requested class, parameter reflection can be
-     * used to dynamic class constructing, for example it can define database name or config section should be used to
-     * construct requested instance.
+     * This method can return pre-defined instance or create new one based on requested class, parameter
+     * reflection can be used to dynamic class constructing, for example it can define database name
+     * or config section should be used to construct requested instance.
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
