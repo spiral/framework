@@ -65,7 +65,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function start(Core $core)
     {
         //Initial server request
-        $this->baseRequest = $this->event('request', $this->castRequest());
+        $this->baseRequest = $this->castRequest();
 
         //Middleware(s)
         $response = $this->perform($this->baseRequest);
@@ -91,18 +91,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     protected function castRequest()
     {
-        return Request::make(array(
-            'uri'          => Uri::castUri($_SERVER),
-            'method'       => $_SERVER['REQUEST_METHOD'],
-            'body'         => new InputStream(),
-            'headers'      => $this->castHeaders($_SERVER),
-            'serverParams' => $_SERVER,
-            'cookieParams' => $_COOKIE,
-            'queryParams'  => $_GET,
-            'fileParams'   => $_FILES,
-            'parsedBody'   => $_POST,
-            'normalize'    => false
-        ));
+        return new Request(
+            $_SERVER['REQUEST_METHOD'],
+            Uri::castUri($_SERVER),
+            new InputStream(),
+            $this->castHeaders($_SERVER),
+            $_SERVER,
+            $_COOKIE,
+            $_GET,
+            $_FILES,
+            $_POST
+        );
     }
 
     public function perform(RequestInterface $request = null)
