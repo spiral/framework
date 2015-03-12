@@ -29,8 +29,9 @@ if (!function_exists('directory'))
 if (!function_exists('e'))
 {
     /**
-     * Short alias for htmlentities(). This function is identical to htmlspecialchars() in all ways, except with htmlentities(),
-     * all characters which have HTML character entity equivalents are translated into these entities.
+     * Short alias for htmlentities(). This function is identical to htmlspecialchars() in all ways,
+     * except with htmlentities(), all characters which have HTML character entity equivalents are
+     * translated into these entities.
      *
      * @param string $string
      * @return string
@@ -44,8 +45,8 @@ if (!function_exists('e'))
 if (!function_exists('interpolate'))
 {
     /**
-     * Format string using previously named arguments from values array. Arguments that are not found will be skipped without
-     * any notification. Extra arguments will be skipped as well.
+     * Format string using previously named arguments from values array. Arguments that are not found
+     * will be skipped without any notification. Extra arguments will be skipped as well.
      *
      * Example:
      * Hello [:name]! Good [:time]!
@@ -69,9 +70,10 @@ if (!function_exists('interpolate'))
 if (!function_exists('dump'))
 {
     /**
-     * Helper function to dump variable into specified destination (output, log or return) using pre-defined dumping styles.
-     * This method is fairly slow and should not be used in productions environment. Only use it during development, error
-     * handling and other not high loaded application parts. Method is an alias for Debug::dump() method.
+     * Helper function to dump variable into specified destination (output, log or return) using
+     * pre-defined dumping styles. This method is fairly slow and should not be used in productions
+     * environment. Only use it during development, error handling and other not high loaded
+     * application parts. Method is an alias for Debug::dump() method.
      *
      * @param mixed $value      Value to be dumped.
      * @param int   $output     Output method, can print, return or log value dump.
@@ -87,10 +89,11 @@ if (!function_exists('dump'))
 if (!function_exists('benchmark'))
 {
     /**
-     * Benchmark method used to determinate how long time and how much memory was used to perform some specified piece of
-     * code. Method should be used twice, before and after code needs to be profile, first call will return true, second
-     * one will return time in seconds took to perform code between benchmark method calls. If Debug::$benchmarking enabled
-     * - result will be additionally logged in Debug::$benchmarks array and can be retrieved using Debug::getBenchmarks()
+     * Benchmark method used to determinate how long time and how much memory was used to perform
+     * some specified piece of code. Method should be used twice, before and after code needs to be
+     * profile, first call will return true, second one will return time in seconds took to perform
+     * code between benchmark method calls. If Debug::$benchmarking enabled - result will be
+     * additionally logged in Debug::$benchmarks array and can be retrieved using Debug::getBenchmarks()
      * for future analysis.
      *
      * Example:
@@ -100,11 +103,10 @@ if (!function_exists('benchmark'))
      *
      * Function is alias for Debug::benchmark() method.
      *
-     * @param string $record  Record name.
-     * @param string $context Record context (query, file and etc).
+     * @param string $record Record name.
      * @return bool|float
      */
-    function benchmark($record, $context = null)
+    function benchmark($record)
     {
         return call_user_func_array(array('Spiral\Components\Debug\Debugger', 'benchmark'), func_get_args());
     }
@@ -113,16 +115,18 @@ if (!function_exists('benchmark'))
 if (!function_exists('l'))
 {
     /**
-     * Translate and format string fetched from bundle, new strings will be automatically registered in bundle with key
-     * identical to string itself. Function support embedded formatting, to enable it provide arguments to insert after
-     * string. This method is indexable and will be automatically collected to bundles. This function is short alias for
-     * I18n::get() method with forced default bundle id.
+     * Translate and format string fetched from bundle, new strings will be automatically registered
+     * in bundle with key identical to string itself. Function support embedded formatting, to
+     * enable it provide arguments to insert after string. This method is indexable and will be
+     * automatically collected to bundles. This function is short alias for I18n::get() method with
+     * forced default bundle id.
      *
      * Examples:
      * l('Some Message');
      * l('Hello %s', $name);
      *
-     * @param string $string String to be localized, should be sprintf compatible if formatting required.
+     * @param string $string String to be localized, should be sprintf compatible if formatting
+     *                       required.
      * @return string
      */
     function l($string)
@@ -137,9 +141,10 @@ if (!function_exists('l'))
 if (!function_exists('p'))
 {
     /**
-     * Format phase according to formula defined in selected language. Phase should include "%s" which will be replaced
-     * with number provided as second argument. This method is indexable and will be automatically collected to bundles.
-     * This function is short alias for I18n::pluralize() method.
+     * Format phase according to formula defined in selected language. Phase should include "%s"
+     * which will be replaced with number provided as second argument. This method is indexable
+     * and will be automatically collected to bundles. This function is short alias for
+     * I18n::pluralize() method.
      *
      * Examples:
      * p("%s user", $users);
@@ -160,8 +165,8 @@ if (!function_exists('p'))
 if (!function_exists('mongoID'))
 {
     /**
-     * Create valid MongoId object based on string or id provided from client side, this function can be used as model filter
-     * as it will pass MongoId objects without any change.
+     * Create valid MongoId object based on string or id provided from client side, this function
+     * can be used as model filter as it will pass MongoId objects without any change.
      *
      * @param mixed $mongoID String or MongoId object.
      * @return \MongoId|null

@@ -106,7 +106,8 @@ class ApcStore extends CacheStore
     }
 
     /**
-     * Set data in cache, should automatically create record if it wasn't created before or replace already existed record.
+     * Set data in cache, should automatically create record if it wasn't created before or replace
+     * already existed record.
      *
      *
      * @param string $name     Stored value name.
@@ -133,12 +134,7 @@ class ApcStore extends CacheStore
      */
     public function forever($name, $data)
     {
-        if ($this->type == self::APCU)
-        {
-            return apcu_store($this->prefix . $name, $data);
-        }
-
-        return apc_store($this->prefix . $name, $data);
+        return $this->set($name, $data, 0);
     }
 
     /**

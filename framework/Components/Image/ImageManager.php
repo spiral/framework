@@ -53,9 +53,9 @@ class ImageManager extends Component
     }
 
     /**
-     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method can be used to verify
-     * that file is supported and can be processed. ImageObject preferred to be used for processing existed images, rather
-     * that creating new.
+     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method
+     * can be used to verify that file is supported and can be processed. ImageObject preferred to
+     * be used for processing existed images, rather that creating new.
      *
      * @param string $filename Local image filename.
      * @return ImageObject
@@ -66,11 +66,12 @@ class ImageManager extends Component
     }
 
     /**
-     * Image processor represents operations associated with one specific image file, all processing operation (resize,
-     * crop and etc) described via operations sequence and perform on image save, every ImageObject will have it's own processor.
+     * Image processor represents operations associated with one specific image file, all processing
+     * operation (resize, crop and etc) described via operations sequence and perform on image save,
+     * every ImageObject will have it's own processor.
      *
-     * Every processor will implement set of pre-defined operations, however additional operations can be supported by
-     * processor and extend default set of image manipulations.
+     * Every processor will implement set of pre-defined operations, however additional operations
+     * can be supported by processor and extend default set of image manipulations.
      *
      * @param string $filename Local image filename.
      * @param string $type     Forced processor id.
@@ -79,7 +80,8 @@ class ImageManager extends Component
     public function imageProcessor($filename, $type = '')
     {
         $type = $type ?: $this->config['processor'];
+        $config = $this->config['processors'][$type];
 
-        return Container::get($this->config['processors'][$type]['class'], compact('filename') + array('options' => $this->config['processors'][$type]));
+        return Container::get($config['class'], compact('filename', 'config'));
     }
 }

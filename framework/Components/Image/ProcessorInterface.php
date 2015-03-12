@@ -11,9 +11,9 @@ namespace Spiral\Components\Image;
 interface ProcessorInterface
 {
     /**
-     * New image processor instance. Image processor represents operations associated with one specific image file, all
-     * processing operation (resize, crop and etc) described via operations sequence and
-     * perform on image save, every ImageObject will have it's own processor.
+     * New image processor instance. Image processor represents operations associated with one
+     * specific image file, all processing operation (resize, crop and etc) described via operations
+     * sequence and perform on image save, every ImageObject will have it's own processor.
      *
      * Every processor will implement set of pre-defined operations, however additional
      * operations can be supported by processor and extend default set of image manipulations.
@@ -42,11 +42,12 @@ interface ProcessorInterface
     public function crop($x, $y, $width, $height);
 
     /**
-     * Combine two images together, image file provided in first argument will be placed at top of currently
-     * open file, position, width and heights can be specified in arguments.
+     * Combine two images together, image file provided in first argument will be placed at top of
+     * currently open file, position, width and heights can be specified in arguments.
      *
      * @param string $filename Overlay filename.
-     * @param int    $opacity  Opacity (0 - overlay absolutely transparent, 100 - watermark is not transparent).
+     * @param int    $opacity  Opacity (0 - overlay absolutely transparent, 100 - watermark is not
+     *                         transparent).
      * @param int    $x        Composited image left top X coordinate.
      * @param int    $y        Composited image left top Y coordinate.
      * @param int    $width    Composited image width.
@@ -68,7 +69,8 @@ interface ProcessorInterface
     public function line($x1, $y1, $x2, $y2, $color, $width = 1, $style = ImageObject::LINE_SOLID);
 
     /**
-     * Draw rectangle width specified stroke style, stoke color, background fill colors and coordinates.
+     * Draw rectangle width specified stroke style, stoke color, background fill colors and
+     * coordinates.
      *
      * @param int    $x1        Left top X coordinate.
      * @param int    $y1        Left top Y coordinate.
@@ -95,32 +97,37 @@ interface ProcessorInterface
     public function annotation($x, $y, $string, $color, $font, $size = 12, $angle = 0);
 
     /**
-     * Blurring images so they become fuzzy may not seem like a useful operation, but actually is very useful for generating
-     * background effects and shadows. It is also very useful for smoothing the effects of the 'jaggies' to anti-alias
-     * the edges of images, and to round out features to produce highlighting effects.
+     * Blurring images so they become fuzzy may not seem like a useful operation, but actually is
+     * very useful for generating background effects and shadows. It is also very useful for
+     * smoothing the effects of the 'jaggies' to anti-alias the edges of images, and to round out
+     * features to produce highlighting effects.
      *
-     * The important setting in the above is the sigma value. It can be thought of as an approximation of just how much
-     * your want the image to 'spread' or blur, in pixels. Think of it as the size of the brush used to blur the image.
-     * The numbers are floating point values, so you can use a very small value like '0.5'.
+     * The important setting in the above is the sigma value. It can be thought of as an
+     * approximation of just how much your want the image to 'spread' or blur, in pixels. Think of
+     * it as the size of the brush used to blur the image. The numbers are floating point values,
+     * so you can use a very small value like '0.5'.
      *
-     * @param float $sigma  It can be thought of as an approximation of just how much your want the image to 'spread' or
-     *                      blur, in pixels.
+     * @param float $sigma  It can be thought of as an approximation of just how much your want the
+     *                      image to 'spread' or blur, in pixels.
      * @param int   $radius Blur radius (0 to detect automatically).
      */
     public function blur($sigma, $radius = 0);
 
     /**
-     * Sharpens an image. We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma).
+     * Sharpens an image. We convolve the image with a Gaussian operator of the given radius and
+     * standard deviation (sigma).
      *
      * @param float $sigma  The standard deviation of the Gaussian, in pixels.
-     * @param int   $radius The radius of the Gaussian, in pixels, not counting the center pixel. Use 0 for auto-select.
+     * @param int   $radius The radius of the Gaussian, in pixels, not counting the center pixel.
+     *                      Use 0 for auto-select.
      */
     public function sharpen($sigma, $radius = 0);
 
     /**
-     * Convert image colorspace to gray scale, will convert all existed colors to black and white representation.
+     * Convert image color space to gray scale, will convert all existed colors to black and white
+     * representation.
      */
-    public function grayscale();
+    public function grayScale();
 
     /**
      * Process all image commands and save result to specified file, JPEG images can
@@ -130,5 +137,5 @@ interface ProcessorInterface
      * @param int    $quality    JPEG quality.
      * @param bool   $removeIPTC Remove IPTC and other metadata.
      */
-    public function process($output, $quality, $removeIPTC);
+    public function process($output, $quality, $removeIPTC = true);
 }

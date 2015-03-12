@@ -14,15 +14,16 @@ use Spiral\Components\Image\ImageObject;
 use Spiral\Components\Image\ProcessorInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Component\LoggerTrait;
-use Spiral\Helpers\StringHelper;
 use Symfony\Component\Process\Process;
 
 /**
  * Some properties can be accessed via magic methods.
  *
  * @property int    $bitDepth        Bits per pixel, default 8.
- * @property bool   $progressiveJPEG Use interpolate mode during converting JPEGs, disabled by default.
- * @property string $commandPrefix   Command(s) prefix, empty by default. Use "nice" to make converting more polite for CPU.
+ * @property bool   $progressiveJPEG Use interpolate mode during converting JPEGs, disabled by
+ *                                   default.
+ * @property string $commandPrefix   Command(s) prefix, empty by default. Use "nice" to make
+ *                                   converting more polite for CPU.
  * @property bool   $openMP          Multi-thread support, disabled by default.
  */
 class ConsoleIMProcessor extends Component implements ProcessorInterface
@@ -60,12 +61,12 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     protected $commands = array();
 
     /**
-     * New image processor instance. Image processor represents operations associated with one specific image file, all
-     * processing operation (resize, crop and etc) described via operations sequence and perform on image save, every
-     * ImageObject will have it's own processor.
+     * New image processor instance. Image processor represents operations associated with one
+     * specific image file, all processing operation (resize, crop and etc) described via operations
+     * sequence and perform on image save, every ImageObject will have it's own processor.
      *
-     * Every processor will implement set of pre-defined operations, however additional operations can be supported by
-     * processor and extend default set of image manipulations.
+     * Every processor will implement set of pre-defined operations, however additional operations
+     * can be supported by processor and extend default set of image manipulations.
      *
      * @param string $filename Local filename.
      * @param array  $options  Processor specific options.
@@ -137,8 +138,8 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     }
 
     /**
-     * Add new imageMagic command to stack, commands will be performed in sequence, every command can be additionally
-     * merged with drawing.
+     * Add new imageMagic command to stack, commands will be performed in sequence, every command
+     * can be additionally merged with drawing.
      *
      * @param string $command     Image Magic command to perform.
      * @param string $application What ImageMagic application should be used, convert by default.
@@ -146,7 +147,11 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
      */
     public function command($command, $application = 'convert')
     {
-        $this->commands[] = array('command' => "{$application} {options} {input} {$command} {drawing} {quality} {depth} {removeIPTC} {output}", 'drawing' => array());
+        $this->commands[] = array(
+            'command' => "{$application} {options} {input} {$command}"
+                . " {drawing} {quality} {depth} {removeIPTC} {output}",
+            'drawing' => array()
+        );
 
         return $this;
     }
@@ -181,11 +186,12 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     }
 
     /**
-     * Combine two images together, image file provided in first argument will be placed at top of currently open file,
-     * position, width and heights can be specified in arguments.
+     * Combine two images together, image file provided in first argument will be placed at top of
+     * currently open file, position, width and heights can be specified in arguments.
      *
      * @param string $filename Overlay filename.
-     * @param int    $opacity  Opacity (0 - overlay absolutely transparent, 100 - watermark is not transparent).
+     * @param int    $opacity  Opacity (0 - overlay absolutely transparent, 100 - watermark is not
+     *                         transparent).
      * @param int    $x        Composited image left top X coordinate.
      * @param int    $y        Composited image left top Y coordinate.
      * @param int    $width    Composited image width.
@@ -198,7 +204,10 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
         $y = $y >= 0 ? '+' . (int)$y : (int)$y;
 
         //Little bit different order
-        return $this->command("", "composite $filename -geometry {$width}x{$height}{$x}{$y} -dissolve $opacity");
+        return $this->command(
+            "",
+            "composite $filename -geometry {$width}x{$height}{$x}{$y} -dissolve $opacity"
+        );
     }
 
     /**
@@ -215,13 +224,21 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
      */
     public function line($x1, $y1, $x2, $y2, $color, $width = 1, $style = ImageObject::LINE_SOLID)
     {
-        $lineStyle = $style == ImageObject::LINE_DOTTED ? "stroke-dasharray $width $width" : '';
+        $lineStyle = '';
+        if ($style == ImageObject::LINE_DOTTED)
+        {
+            $lineStyle = "stroke-dasharray $width $width";
+        }
 
-        return $this->drawCommand("-fill \"transparent\" -stroke \"$color\" -strokewidth $width -draw \"$lineStyle line $x1,$y1,$x2,$y2\"");
+        return $this->drawCommand(
+            "-fill \"transparent\" -stroke \"$color\" -strokewidth $width"
+            . " -draw \"$lineStyle line $x1,$y1,$x2,$y2\""
+        );
     }
 
     /**
-     * Draw rectangle width specified stroke style, stoke color, background fill colors and coordinates.
+     * Draw rectangle width specified stroke style, stoke color, background fill colors and
+     * coordinates.
      *
      * @param int    $x1        Left top X coordinate.
      * @param int    $y1        Left top Y coordinate.
@@ -235,9 +252,16 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
      */
     public function rectangle($x1, $y1, $x2, $y2, $fillColor, $color, $width = 1, $style = ImageObject::LINE_SOLID)
     {
-        $lineStyle = $style == ImageObject::LINE_DOTTED ? "stroke-dasharray $width $width" : '';
+        $lineStyle = '';
+        if ($style == ImageObject::LINE_DOTTED)
+        {
+            $lineStyle = "stroke-dasharray $width $width";
+        }
 
-        return $this->drawCommand("-fill \"$fillColor\" -stroke \"$color\" -strokewidth $width -draw \"$lineStyle rectangle $x1,$y1,$x2,$y2\"");
+        return $this->drawCommand(
+            "-fill \"$fillColor\" -stroke \"$color\" -strokewidth $width"
+            . " -draw \"$lineStyle rectangle $x1,$y1,$x2,$y2\""
+        );
     }
 
     /**
@@ -258,21 +282,27 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
         $y = $y >= 0 ? '+' . (int)$y : (int)$y;
         $font = $font ? "-font \"$font\"" : '';
 
-        return $this->drawCommand("-fill \"$color\" -stroke \"transparent\" -pointsize $size $font -draw \"rotate $angle text {$x}{$y} '"
-            . addcslashes($string, "'\"") . "'\"");
+        $string = addcslashes($string, "'\"");
+
+        return $this->drawCommand(
+            "-fill \"$color\" -stroke \"transparent\" -pointsize $size $font"
+            . " -draw \"rotate $angle text {$x}{$y} '{$string}'\""
+        );
     }
 
     /**
-     * Blurring images so they become fuzzy may not seem like a useful operation, but actually is very useful for generating
-     * background effects and shadows. It is also very useful for smoothing the effects of the 'jaggies' to anti-alias
-     * the edges of images, and to round out features to produce highlighting effects.
+     * Blurring images so they become fuzzy may not seem like a useful operation, but actually is
+     * very useful for generating background effects and shadows. It is also very useful for
+     * smoothing the effects of the 'jaggies' to anti-alias the edges of images, and to round out
+     * features to produce highlighting effects.
      *
-     * The important setting in the above is the sigma value. It can be thought of as an approximation of just how much
-     * your want the image to 'spread' or blur, in pixels. Think of it as the size of the brush used to blur the image.
-     * The numbers are floating point values, so you can use a very small value like '0.5'.
+     * The important setting in the above is the sigma value. It can be thought of as an
+     * approximation of just how much your want the image to 'spread' or blur, in pixels. Think of
+     * it as the size of the brush used to blur the image. The numbers are floating point values,
+     * so you can use a very small value like '0.5'.
      *
-     * @param float $sigma  It can be thought of as an approximation of just how much your want the image to 'spread' or
-     *                      blur, in pixels.
+     * @param float $sigma  It can be thought of as an approximation of just how much your want the
+     *                      image to 'spread' or blur, in pixels.
      * @param int   $radius Blur radius (0 to detect automatically).
      * @return static
      */
@@ -282,10 +312,12 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     }
 
     /**
-     * Sharpens an image. We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma).
+     * Sharpens an image. We convolve the image with a Gaussian operator of the given radius and
+     * standard deviation (sigma).
      *
      * @param float $sigma  The standard deviation of the Gaussian, in pixels.
-     * @param int   $radius The radius of the Gaussian, in pixels, not counting the center pixel. Use 0 for auto-select.
+     * @param int   $radius The radius of the Gaussian, in pixels, not counting the center pixel.
+     *                      Use 0 for auto-select.
      * @return static
      */
     public function sharpen($sigma, $radius = 0)
@@ -294,11 +326,12 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     }
 
     /**
-     * Convert image colorspace to gray scale, will convert all existed colors to black and white representation.
+     * Convert image colorspace to gray scale, will convert all existed colors to black and white
+     * representation.
      *
      * @return static
      */
-    public function grayscale()
+    public function grayScale()
     {
         return $this->command("-colorspace gray");
     }
@@ -312,27 +345,34 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     public function drawCommand($command)
     {
         //Empty command for drawing
-        $this->commands || $this->command("");
+        if (empty($this->commands))
+        {
+            $this->command("");
+        }
+
         $this->commands[count($this->commands) - 1]['drawing'][] = $command;
 
         return $this;
     }
 
     /**
-     * Process all image commands and save result to specified file, JPEG images can also be saved with specified quality.
+     * Process all image commands and save result to specified file, JPEG images can also be saved
+     * with specified quality.
      *
      * @param string $output     Output filename, can be identical to input one.
      * @param int    $quality    JPEG quality.
      * @param bool   $removeIPTC Remove IPTC and other metadata.
      * @throws ImageException
      */
-    public function process($output, $quality, $removeIPTC)
+    public function process($output, $quality, $removeIPTC = true)
     {
         //Empty command to transcode file
-        $this->commands || $this->command("");
+        if (empty($this->commands))
+        {
+            $this->command("");
+        }
 
         $processOptions = array();
-
         if ($this->options['progressiveJPEG'])
         {
             $processOptions[] = '-interlace Plane';
@@ -362,20 +402,19 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
                 $removeIPTC = false;
             }
 
-            if ($this->filename)
+            if (!empty($this->filename))
             {
                 $options['input'] = escapeshellarg($this->filename);
                 $this->filename = '';
             }
 
-            if (!next($this->commands) && $quality)
+            if (!next($this->commands) && !empty($quality))
             {
                 //Last command needs to be done with output quality
                 $options['quality'] = "-quality $quality";
             }
 
-            $command = StringHelper::interpolate($this->options['commandPrefix'] . $command['command'], $options);
-
+            $command = interpolate($this->options['commandPrefix'] . $command['command'], $options);
             $this->logger()->info($command);
 
             benchmark('image::imageMagic', $command);

@@ -34,7 +34,8 @@ class ImageObject extends Component
     const PANORAMIC = 'panoramic';
 
     /**
-     * Line types used for drawing commands. Used in ImageObject->drawLine(), drawRectangle() and other methods.
+     * Line types used for drawing commands. Used in ImageObject->drawLine(), drawRectangle() and
+     * other methods.
      */
     const LINE_SOLID  = 0;
     const LINE_DOTTED = 1;
@@ -46,8 +47,8 @@ class ImageObject extends Component
     const GRAY_SCALE = 'grayScale';
 
     /**
-     * All known image types. This type will be associated with value from getimagesize() and can be retrieved via
-     * ImageObject->type()
+     * All known image types. This type will be associated with value from getimagesize() and can be
+     * retrieved via ImageObject->type()
      *
      * @var array
      */
@@ -68,63 +69,71 @@ class ImageObject extends Component
      *
      * Index 0 and 1 contains respectively the width and the height of the image.
      *
-     * Some formats may contain no image or may contain multiple images. In these cases, getimagesize() might not be able
-     * to properly determine the image size. getimagesize() will return zero for width and height in these cases.
+     * Some formats may contain no image or may contain multiple images. In these cases, getimagesize()
+     * might not be able to properly determine the image size. getimagesize() will return zero for
+     * width and height in these cases.
      *
      * Index 2 is one of the IMAGETYPE_XXX constants indicating the type of the image.
      *
-     * Index 3 is a text string with the correct height="yyy" width="xxx" string that can be used directly in an IMG tag.
+     * Index 3 is a text string with the correct height="yyy" width="xxx" string that can be used
+     * directly in an IMG tag.
      *
-     * Index 4 - mime is the correspondant MIME type of the image. This information can be used to deliver images with
-     * correct the HTTP Content-type header.
+     * Index 4 - mime is the correspondant MIME type of the image. This information can be used to
+     * deliver images with correct the HTTP Content-type header.
      *
-     * Index 5 - channels will be 3 for RGB pictures and 4 for CMYK pictures (bits is the number of bits for each color).
-     * For some image types, the presence of channels and bits values can be a bit confusing. As an example, GIF always
-     * uses 3 channels per pixel, but the number of bits per pixel cannot be calculated for an animated GIF with a global
-     * color table.
+     * Index 5 - channels will be 3 for RGB pictures and 4 for CMYK pictures (bits is the number of
+     * bits for each color). For some image types, the presence of channels and bits values can be
+     * a bit confusing. As an example, GIF always uses 3 channels per pixel, but the number of bits
+     * per pixel cannot be calculated for an animated GIF with a global color table.
      *
      * @var array
      */
     protected $properties = array();
 
     /**
-     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily encoded and decoded by
-     * most popular photo editing software. Usually contains software identified, picture title, keywords and etc.
+     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily
+     * encoded and decoded by most popular photo editing software. Usually contains software
+     * identified, picture title, keywords and etc.
      *
      * @var IptcData
      */
     protected $iptc = null;
 
     /**
-     * Image processor represents operations associated with one specific image file, all processing operation (resize, crop
-     * and etc) described via operations sequence and perform on image save, every ImageObject will have it's own processor.
+     * Image processor represents operations associated with one specific image file, all processing
+     * operation (resize, crop and etc) described via operations sequence and perform on image save,
+     * every ImageObject will have it's own processor.
      *
-     * Every processor will implement set of pre-defined operations, however additional operations can be supported by processor
-     * and extend default set of image manipulations.
+     * Every processor will implement set of pre-defined operations, however additional operations
+     * can be supported by processor and extend default set of image manipulations.
      *
-     * Use ImageObject->processor() to get currently associated image processor, or named method to force processor selection.
-     * Changing processor while using ImageObject will erase all unsaved (not performed) commands.
+     * Use ImageObject->processor() to get currently associated image processor, or named method to
+     * force processor selection. Changing processor while using ImageObject will erase all unsaved
+     * (not performed) commands.
      *
      * @var ProcessorInterface
      */
     protected $processor = null;
 
     /**
-     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method can be used to verify
-     * that file is supported and can be processed. ImageObject preferred to be used for processing existed images, rather
-     * that creating new.
+     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method
+     * can be used to verify that file is supported and can be processed. ImageObject preferred to
+     * be used for processing existed images, rather that creating new.
      *
-     * @param string $filename Local image filename.
+     * @param string      $filename Local image filename.
+     * @param FileManager $file     FileManager component.
      * @throws ImageException
      */
-    public function __construct($filename)
+    public function __construct($filename, FileManager $file)
     {
         if (!function_exists('getimagesize'))
         {
-            throw new ImageException("Unable to find required function 'getimagesize', GD2 extension required.");
+            throw new ImageException(
+                "Unable to find required function 'getimagesize', GD2 extension required."
+            );
         }
 
-        if (!FileManager::getInstance()->exists($filename))
+        if (!$file->exists($filename))
         {
             return;
         }
@@ -147,9 +156,9 @@ class ImageObject extends Component
     }
 
     /**
-     * True if image was opened successfully and image type supported by processors. Currently will return true if file is
-     * valid image from perspective of getimagesize() function, without checking for processors support (assuming every
-     * processor support known image types).
+     * True if image was opened successfully and image type supported by processors. Currently will
+     * return true if file is valid image from perspective of getimagesize() function, without
+     * checking for processors support (assuming every processor support known image types).
      *
      * @return bool
      */
@@ -213,20 +222,22 @@ class ImageObject extends Component
      *
      * Index 0 and 1 contains respectively the width and the height of the image.
      *
-     * Some formats may contain no image or may contain multiple images. In these cases, getimagesize() might not be able
-     * to properly determine the image size. getimagesize() will return zero for width and height in these cases.
+     * Some formats may contain no image or may contain multiple images. In these cases, getimagesize()
+     * might not be able to properly determine the image size. getimagesize() will return zero for
+     * width and height in these cases.
      *
      * Index 2 is one of the IMAGETYPE_XXX constants indicating the type of the image.
      *
-     * Index 3 is a text string with the correct height="yyy" width="xxx" string that can be used directly in an IMG tag.
+     * Index 3 is a text string with the correct height="yyy" width="xxx" string that can be used
+     * directly in an IMG tag.
      *
-     * Index 4 - mime is the correspondant MIME type of the image. This information can be used to deliver images with
-     * correct the HTTP Content-type header.
+     * Index 4 - mime is the correspondant MIME type of the image. This information can be used to
+     * deliver images with correct the HTTP Content-type header.
      *
-     * Index 5 - channels will be 3 for RGB pictures and 4 for CMYK pictures (bits is the number of bits for each color).
-     * For some image types, the presence of channels and bits values can be a bit confusing. As an example, GIF always
-     * uses 3 channels per pixel, but the number of bits per pixel cannot be calculated for an animated GIF with a global
-     * color table.
+     * Index 5 - channels will be 3 for RGB pictures and 4 for CMYK pictures (bits is the number of
+     * bits for each color). For some image types, the presence of channels and bits values can be
+     * a bit confusing. As an example, GIF always uses 3 channels per pixel, but the number of bits
+     * per pixel cannot be calculated for an animated GIF with a global color table.
      *
      * @return array
      */
@@ -236,12 +247,13 @@ class ImageObject extends Component
     }
 
     /**
-     * Detected image orientation (landscape, portrait, panoramic). Result can be represented as string or compared using
-     * Image orientation constants. This method will detect square images with definer error* value and panoramic images
-     * where aspect ratio is higher that specified value.
+     * Detected image orientation (landscape, portrait, panoramic). Result can be represented as
+     * string or compared using Image orientation constants. This method will detect square images
+     * with definer error* value and panoramic images where aspect ratio is higher that specified value.
      *
      * @param float $squareError    Error in ratio (around 1) to be treated as square.
-     * @param float $panoramicRatio Image with ratio higher than specified value (2 by default) will be treated as panoramic.
+     * @param float $panoramicRatio Image with ratio higher than specified value (2 by default) will
+     *                              be treated as panoramic.
      * @return bool|string
      */
     public function orientation($squareError = 0.05, $panoramicRatio = 2.0)
@@ -271,10 +283,12 @@ class ImageObject extends Component
     }
 
     /**
-     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily encoded and decoded by
-     * most popular photo editing software. Usually contains software identified, picture title, keywords and etc.
-     * For more complex image metadata manipulations consider using: http://www.sno.phy.queensu.ca/~phil/exiftool/
+     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily
+     * encoded and decoded by most popular photo editing software. Usually contains software
+     * identified, picture title, keywords and etc. For more complex image metadata manipulations
+     * consider using: http://www.sno.phy.queensu.ca/~phil/exiftool/
      *
+     * @link http://www.sno.phy.queensu.ca/~phil/exiftool/
      * @return IptcData
      */
     public function iptc()
@@ -283,18 +297,20 @@ class ImageObject extends Component
     }
 
     /**
-     * Fetch image dominant colors using ImageColors class, colors will be based on image pixelization representation with
-     * specified mixing mode. This is slow function, do not use it in non background operations. Colors will be returned
-     * as assosicated array where color is key and percent is value, colors will be sorted from most common to least common
-     * color.
+     * Fetch image dominant colors using ImageColors class, colors will be based on image pixelization
+     * representation with specified mixing mode. This is slow function, do not use it in non
+     * background operations. Colors will be returned as assosicated array where color is key and
+     * percent is value, colors will be sorted from most common to least common color.
      *
      * Use with small images!
      *
      * @param int   $countColors Maximum amount of colors to be fetched.
-     * @param int   $dimension   Amount of tiles image should be chunked to, more tiles - more colors, more time.
-     * @param float $step        Smaller step - more accurate colors will be detected, but more time will be required.
-     * @param int   $mixMode     Mix mode specifies how to detect dominant color in tile, adaptive will select most notable
-     *                           color.
+     * @param int   $dimension   Amount of tiles image should be chunked to, more tiles - more
+     *                           colors, more time.
+     * @param float $step        Smaller step - more accurate colors will be detected, but more time
+     *                           will be required.
+     * @param int   $mixMode     Mix mode specifies how to detect dominant color in tile, adaptive
+     *                           will select most notable color.
      * @return array
      */
     public function getColors($countColors = 10, $dimension = 15, $step = 0.005, $mixMode = ImageAnalyzer::MIX_ADAPTIVE)
@@ -304,10 +320,11 @@ class ImageObject extends Component
             return array();
         }
 
-        $analysis = ImageAnalyzer::make(array('filename' => $this->filename) + compact('dimension', 'mixMode'));
-        $analysis->analyzeImage();
+        $analysis = ImageAnalyzer::make(array(
+                'filename' => $this->filename
+            ) + compact('dimension', 'mixMode'));
 
-        return $analysis->fetchColors($countColors, $step);
+        return $analysis->analyzeImage()->fetchColors($countColors, $step);
     }
 
     /**
@@ -370,11 +387,13 @@ class ImageObject extends Component
     }
 
     /**
-     * Combine two images together, ImageObject provided in first argument has to be supported and will be placed at top
-     * of currently open image, position, width and heights can be specified in arguments.
+     * Combine two images together, ImageObject provided in first argument has to be supported and
+     * will be placed at top of currently open image, position, width and heights can be specified
+     * in arguments.
      *
      * @param ImageObject $image   Overlay image.
-     * @param int         $opacity Opacity (0 - overlay absolutely transparent, 100 - watermark is not transparent).
+     * @param int         $opacity Opacity (0 - overlay absolutely transparent, 100 - watermark is
+     *                             not transparent).
      * @param int         $x       Composited image X coordinate.
      * @param int         $y       Composited image Y coordinate.
      * @param int|bool    $width   Composited image width. Original overlay image width by default.
@@ -387,8 +406,8 @@ class ImageObject extends Component
             realpath($image->filename),
             $x,
             $y,
-            $width === false ? $image->width : $width,
-            $height === false ? $image->height : $height,
+            ($width === false) ? $image->width : $width,
+            ($height === false) ? $image->height : $height,
             $opacity
         );
 
@@ -415,7 +434,8 @@ class ImageObject extends Component
     }
 
     /**
-     * Draw rectangle width specified stroke style, stoke color, background fill colors and coordinates.
+     * Draw rectangle width specified stroke style, stoke color, background fill colors and
+     * coordinates.
      *
      * @param int    $x1        Left top X coordinate.
      * @param int    $y1        Left top Y coordinate.
@@ -454,16 +474,18 @@ class ImageObject extends Component
     }
 
     /**
-     * Blurring images so they become fuzzy may not seem like a useful operation, but actually is very useful for generating
-     * background effects and shadows. It is also very useful for smoothing the effects of the 'jaggies' to anti-alias
-     * the edges of images, and to round out features to produce highlighting effects.
+     * Blurring images so they become fuzzy may not seem like a useful operation, but actually is
+     * very useful for generating background effects and shadows. It is also very useful for
+     * smoothing the effects of the 'jaggies' to anti-alias the edges of images, and to round out
+     * features to produce highlighting effects.
      *
-     * The important setting in the above is the sigma value. It can be thought of as an approximation of just how much
-     * your want the image to 'spread' or blur, in pixels. Think of it as the size of the brush used to blur the image.
-     * The numbers are floating point values, so you can use a very small value like '0.5'.
+     * The important setting in the above is the sigma value. It can be thought of as an
+     * approximation of just how much your want the image to 'spread' or blur, in pixels. Think of
+     * it as the size of the brush used to blur the image. The numbers are floating point values,
+     * so you can use a very small value like '0.5'.
      *
-     * @param float $sigma  It can be thought of as an approximation of just how much your want the image to 'spread' or
-     *                      blur, in pixels.
+     * @param float $sigma  It can be thought of as an approximation of just how much your want the
+     *                      image to 'spread' or blur, in pixels.
      * @param int   $radius Blur radius (0 to detect automatically).
      * @return static
      */
@@ -475,11 +497,12 @@ class ImageObject extends Component
     }
 
     /**
-     * Sharpens an image. We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma).
-     * Radius not specified, so processor have to detect it automatically.
+     * Sharpens an image. We convolve the image with a Gaussian operator of the given radius and
+     * standard deviation (sigma).
      *
      * @param float $sigma  The standard deviation of the Gaussian, in pixels.
-     * @param int   $radius The radius of the Gaussian, in pixels, not counting the center pixel. Use 0 for auto-select.
+     * @param int   $radius The radius of the Gaussian, in pixels, not counting the center pixel.
+     *                      Use 0 for auto-select.
      * @return static
      */
     public function sharpen($sigma, $radius = 0)
@@ -490,22 +513,22 @@ class ImageObject extends Component
     }
 
     /**
-     * Convert image colorspace to gray scale, will convert all existed colors to black and white
+     * Convert image color space to gray scale, will convert all existed colors to black and white
      * representation.
      *
      * @return static
      */
-    public function grayscale()
+    public function grayScale()
     {
-        $this->processor()->grayscale();
+        $this->processor()->grayScale();
 
         return $this;
     }
 
     /**
-     * Crop part of image defined by dimensions, instead of providing crop area coordinates as in crop() method, cup will
-     * accept string position identifier for horizontal and vertical axis. Possible values: center-top, center-center,
-     * left-top, right-center and etc.
+     * Crop part of image defined by dimensions, instead of providing crop area coordinates as in
+     * crop() method, cup will accept string position identifier for horizontal and vertical axis.
+     * Possible values: center-top, center-center, left-top, right-center and etc.
      *
      * @param int    $width    Crop area width dimension.
      * @param int    $height   Crop area height dimension.
@@ -531,7 +554,8 @@ class ImageObject extends Component
     }
 
     /**
-     * Helper function to calculate axis offset while string identified used to describe crop area position.
+     * Helper function to calculate axis offset while string identified used to describe crop area
+     * position.
      *
      * @param string $position Possible values: center, left/right, top/bottom
      * @param int    $size     Crop area size in this axis.
@@ -570,16 +594,23 @@ class ImageObject extends Component
      * @param int    $width       Fit area width dimension.
      * @param int    $height      Fit area height dimension.
      * @param bool   $crop        Cut all image parts outside fit area.
-     * @param string $position    Position definition (see cut() method description), center-center by default.
+     * @param string $position    Position definition (see cut() method description), center-center
+     *                            by default.
      * @param bool   $allowRotate Allow rotate of fit area for better results. Not allowed by default.
      * @return static
      */
     public function fit($width, $height, $crop = true, $position = 'center-center', $allowRotate = false)
     {
-        if ($allowRotate && (($this->width < $this->height && $width < $height) || ($this->width > $this->height && $width > $height)))
+        if ($allowRotate)
         {
-            //Rotate fit dimensions for better results
-            list($width, $height) = array($height, $width);
+            $scale = $this->width / $this->height;
+            $newScale = $width / $height;
+
+            if (($scale < 1 && $newScale < 1) && ($scale > 1 && $newScale > 1))
+            {
+                //Rotate fit dimensions for better results
+                list($width, $height) = array($height, $width);
+            }
         }
 
         $ratio = $this->width / $this->height;
@@ -607,7 +638,8 @@ class ImageObject extends Component
      *
      * @param int    $side     Box side size in pixels.
      * @param bool   $crop     Cut all image parts outside fit area.
-     * @param string $position Position definition (see cut() method description), center-center by default.
+     * @param string $position Position definition (see cut() method description), center-center by
+     *                         default.
      * @return static
      */
     public function box($side, $crop = true, $position = 'center-center')
@@ -616,8 +648,8 @@ class ImageObject extends Component
     }
 
     /**
-     * Process all image commands and save result to save file which was used for input, JPEG images can also be saved
-     * with specified quality.
+     * Process all image commands and save result to save file which was used for input, JPEG images
+     * can also be saved with specified quality.
      *
      * @param int|bool $quality    JPEG quality.
      * @param bool     $removeIPTC Remove IPTC and other metadata.
@@ -629,7 +661,8 @@ class ImageObject extends Component
 
         try
         {
-            $this->properties = getimagesize($this->filename, $this->iptc);
+            $this->properties = getimagesize($this->filename, $imageinfo);
+            $this->iptc = IptcData::make(compact('filename', 'imageinfo'));
         }
         catch (\Exception $exception)
         {
@@ -640,8 +673,9 @@ class ImageObject extends Component
     }
 
     /**
-     * Process all image commands and save result to specified file, JPEG images can also be saved with specified quality.
-     * New ImageObject associated with destination file will be returned, original object will be left untouched.
+     * Process all image commands and save result to specified file, JPEG images can also be saved
+     * with specified quality. New ImageObject associated with destination file will be returned,
+     * original object will be left untouched.
      *
      * @param string   $filename   Destination filename.
      * @param int|bool $quality    JPEG quality.
@@ -656,12 +690,12 @@ class ImageObject extends Component
     }
 
     /**
-     * Image processor represents operations associated with one specific image file, all processing operation (resize,
-     * crop and etc) described via operations sequence and perform on image save, every ImageObject will have it's own
-     * processor.
+     * Image processor represents operations associated with one specific image file, all processing
+     * operation (resize, crop and etc) described via operations sequence and perform on image save,
+     * every ImageObject will have it's own processor.
      *
-     * Every processor will implement set of pre-defined operations, however additional operations can be supported by
-     * processor and extend default set of image manipulations.
+     * Every processor will implement set of pre-defined operations, however additional operations
+     * can be supported by processor and extend default set of image manipulations.
      *
      * Changing processor to another type will erase all registered and not performed image commands.
      *
@@ -675,13 +709,16 @@ class ImageObject extends Component
             return $this->processor;
         }
 
-        return $this->processor = ImageManager::getInstance()->imageProcessor(realpath($this->filename), $type);
+        return $this->processor = ImageManager::getInstance()->imageProcessor(
+            realpath($this->filename),
+            $type
+        );
     }
 
     /**
-     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method can be used to verify
-     * that file is supported and can be processed. ImageObject preferred to be used for processing existed images, rather
-     * that creating new.
+     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method
+     * can be used to verify that file is supported and can be processed. ImageObject preferred to
+     * be used for processing existed images, rather that creating new.
      *
      * @param string $filename Local image filename.
      * @return static

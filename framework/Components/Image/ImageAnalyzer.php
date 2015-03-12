@@ -69,26 +69,31 @@ class ImageAnalyzer extends Component
     const MIX_ADAPTIVE = 2;
 
     /**
-     * Current mixing mode. Mix mode specifies how to detect dominant color in tile, adaptive will select most notable color.
+     * Current mixing mode. Mix mode specifies how to detect dominant color in tile, adaptive will
+     * select most notable color.
      *
      * @var int
      */
     protected $mixMode = self::MIX_ADAPTIVE;
 
     /**
-     * Create new image colors analyzer. Can be used to fetch dominant image colors or create image colors map.
+     * Create new image colors analyzer. Can be used to fetch dominant image colors or create image
+     * colors map.
      *
      * @param string $filename  Local image filename.
-     * @param int    $dimension Amount of tiles (chunks) image should be chunked to, more tiles - more colors, more time.
-     * @param int    $mixMode   Mix mode specifies how to detect dominant color in tile, adaptive will select most notable
-     *                          color.
+     * @param int    $dimension Amount of tiles (chunks) image should be chunked to, more tiles - more
+     *                          colors, more time.
+     * @param int    $mixMode   Mix mode specifies how to detect dominant color in tile, adaptive
+     *                          will select most notable color.
      * @throws ImageException
      */
     public function __construct($filename, $dimension = 15, $mixMode = self::MIX_ADAPTIVE)
     {
         if (!function_exists('getimagesize'))
         {
-            throw new ImageException("Unable to find required function 'getimagesize', GD2 extension required.");
+            throw new ImageException(
+                "Unable to find required function 'getimagesize', GD2 extension required."
+            );
         }
 
         $this->filename = $filename;
@@ -130,6 +135,8 @@ class ImageAnalyzer extends Component
 
     /**
      * Collect colors in every image chunk.
+     *
+     * @return static
      */
     public function analyzeImage()
     {
@@ -142,6 +149,8 @@ class ImageAnalyzer extends Component
             }
         }
         benchmark("image::analyzeImage", $this->filename);
+
+        return $this;
     }
 
     /**
@@ -168,7 +177,9 @@ class ImageAnalyzer extends Component
                 if ($this->type == 'gif')
                 {
                     //Just for pictures with fixed pallete
-                    $color = array_values(imagecolorsforindex($this->image, imagecolorat($this->image, $x, $y)));
+                    $color = array_values(
+                        imagecolorsforindex($this->image, imagecolorat($this->image, $x, $y))
+                    );
                 }
                 else
                 {
@@ -181,7 +192,7 @@ class ImageAnalyzer extends Component
             }
         }
 
-        if ($colors)
+        if (!empty($colors))
         {
             $averageColor = $this->mixColors($colors, $this->mixMode);
             $this->colorMatrix[] = ColorHelper::hex($averageColor);
@@ -189,14 +200,16 @@ class ImageAnalyzer extends Component
     }
 
     /**
-     * Fetch image dominant colors using ImageColors class, colors will be based on image pixelization representation with
-     * specified mixing mode. This is slow function, do not use it in non background operations. Colors will be returned as
-     * assosicated array where color is key and percent is value, colors will be sorted from most common to least common color.
+     * Fetch image dominant colors using ImageColors class, colors will be based on image
+     * pixelization representation with specified mixing mode. This is slow function, do not use it
+     * in non background operations. Colors will be returned as assosicated array where color is key
+     * and percent is value, colors will be sorted from most common to least common color.
      *
      * Use with small images!
      *
      * @param int   $countColors Maximum amount of colors to be fetched.
-     * @param float $step        Smaller step - more accurate colors will be detected, but more time will be required.
+     * @param float $step        Smaller step - more accurate colors will be detected, but more time
+     *                           will be required.
      * @param int   $maxSteps    Maximum amount of steps, to prevent infinite loops.
      * @return array
      */
@@ -246,7 +259,6 @@ class ImageAnalyzer extends Component
     protected function groupColors(array $colors, $delta = 0.0)
     {
         $result = array();
-
         foreach ($colors as $color => $count)
         {
             $colorA = ColorHelper::rgb($color);
@@ -265,7 +277,7 @@ class ImageAnalyzer extends Component
                 }
             }
 
-            if ($matchID && $minDelta <= $delta)
+            if (!empty($matchID) && $minDelta <= $delta)
             {
                 if ($count < $result[$matchID])
 
@@ -288,8 +300,9 @@ class ImageAnalyzer extends Component
     }
 
     /**
-     * Calculate average color in chunk. Average mix mode will simply generate colors using summarized value of other colors,
-     * this is fast but not great results, adaptive will use colors most noticeable for human eye.
+     * Calculate average color in chunk. Average mix mode will simply generate colors using
+     * summarized value of other colors, this is fast but not great results, adaptive will use
+     * colors most noticeable for human eye.
      *
      * @param array $colors  Array of RGB colors collected from chunk.
      * @param int   $mixMode Mix mode, adaptive and average supported.
@@ -350,9 +363,9 @@ class ImageAnalyzer extends Component
                 }
             }
 
-            if (!$countColors)
+            if ($countColors == 0)
             {
-                //By avearage counter
+                //By average counter
                 foreach ($colors as $color)
                 {
                     $average[0] += $color[0];
