@@ -13,7 +13,8 @@ use Spiral\Components\Http\Message\Stream;
 class InputStream extends Stream
 {
     /**
-     * Cached stream content, required to correctly resolve behaviour when php://input can't be read twice.
+     * Cached stream content, required to correctly resolve behaviour when php://input can't be read
+     * twice.
      *
      * @invisible
      * @var string
@@ -29,8 +30,8 @@ class InputStream extends Stream
     protected $ended = false;
 
     /**
-     * Create new Stream instance based on provided stream resource or uri (including filenames). Php input has to be
-     * cached as it can be read only once.
+     * Create new Stream instance based on provided stream resource or uri (including filenames). Php
+     * input has to be cached as it can be read only once.
      *
      * @link https://github.com/phly/http/blob/master/src/PhpInputStream.php
      * @link http://php.net/manual/en/wrappers.php.php
@@ -81,11 +82,10 @@ class InputStream extends Stream
     /**
      * Read data from the stream.
      *
-     * @param int $length Read up to $length bytes from the object and return
-     *                    them. Fewer than $length bytes may be returned if underlying stream
-     *                    call returns fewer bytes.
-     * @return string|false Returns the data read from the stream, false if
-     *                    unable to read or if an error occurs.
+     * @param int $length   Read up to $length bytes from the object and return them. Fewer than $length
+     *                      bytes may be returned if underlying stream call returns fewer bytes.
+     * @return string|false Returns the data read from the stream, false if unable to read or if an
+     *                      error occurs.
      */
     public function read($length)
     {
@@ -100,7 +100,7 @@ class InputStream extends Stream
     }
 
     /**
-     * Returns the remaining contents in a string
+     * Returns the remaining contents in a string.
      *
      * @param int $maxLength
      * @return string
@@ -126,14 +126,13 @@ class InputStream extends Stream
     /**
      * Get stream metadata as an associative array or retrieve a specific key.
      *
-     * The keys returned are identical to the keys returned from PHP's
-     * stream_get_meta_data() function.
+     * The keys returned are identical to the keys returned from PHP's stream_get_meta_data() function.
      *
      * @link http://php.net/manual/en/function.stream-get-meta-data.php
-     * @param string $key Specific metadata to retrieve.
-     * @return array|mixed|null Returns an associative array if no key is
-     *                    provided. Returns a specific key value if a key is provided and the
-     *                    value is found, or null if the key is not found.
+     * @param string $key       Specific metadata to retrieve.
+     * @return array|mixed|null Returns an associative array if no key is provided. Returns a specific
+     *                          key value if a key is provided and the value is found, or null if the
+     *                          key is not found.
      */
     public function getMetadata($key = null)
     {
@@ -148,8 +147,8 @@ class InputStream extends Stream
     /**
      * Reads all data from the stream into a string, from the beginning to end.
      *
-     * This method MUST attempt to seek to the beginning of the stream before
-     * reading data and read the stream until the end is reached.
+     * This method MUST attempt to seek to the beginning of the stream before reading data and read
+     * the stream until the end is reached.
      *
      * Warning: This could attempt to load a large amount of data into memory.
      *
