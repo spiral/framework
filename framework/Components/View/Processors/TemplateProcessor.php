@@ -233,8 +233,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         }
 
         /**
-         * Processing aliases and imports. Aliases should be used before any block defined and be at 1st level,
-         * in other scenario alias will be applied for block and it's content only.
+         * Processing aliases and imports. Aliases should be used before any block defined and be at
+         * 1st level, in other scenario alias will be applied for block and it's content only.
          */
         if (in_array($token[Tokenizer::TOKEN_NAME], $this->options['keywords'][self::ALIASES]['name']))
         {
@@ -257,14 +257,21 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             }
             catch (ViewException $exception)
             {
-                throw $this->clarifyException($exception, $token[Tokenizer::TOKEN_CONTENT], $node->options);
+                throw $this->clarifyException(
+                    $exception,
+                    $token[Tokenizer::TOKEN_CONTENT],
+                    $node->options
+                );
             }
 
             $node->options[self::ALIASES][] = $alias;
-            ArrayHelper::stableSort($node->options[self::ALIASES], function (ImportAlias $optionA, ImportAlias $optionB)
-            {
-                return $optionA->level <= $optionB->level;
-            });
+            ArrayHelper::stableSort(
+                $node->options[self::ALIASES],
+                function (ImportAlias $optionA, ImportAlias $optionB)
+                {
+                    return $optionA->level <= $optionB->level;
+                }
+            );
 
             //Nothing to render
             return false;
@@ -273,7 +280,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         /**
          * Do not allow automatic namespace import?
          */
-
         $includeContext = null;
         if (strpos($tokenName, $this->options['separator']) !== false && strpos($tokenName, ':') === false)
         {
@@ -296,12 +302,13 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                         'namespace' => $alias->getNamespace(),
                         'view'      => $aliases[$tokenName]
                     );
+
                     break;
                 }
             }
         }
 
-        if ($includeContext)
+        if (!empty($includeContext))
         {
             $behaviour = new Behaviour(
                 $tokenName,
@@ -332,7 +339,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                     'source'  => $content,
                     'options' => $includeContext
                 ));
-                //$behaviour->contextNode->options = $node->options;
             }
             catch (ViewException $exception)
             {
@@ -367,7 +373,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      *
      * @return mixed
      */
-    public function getShortTagsExpression()
+    public function getShortExpression()
     {
         return $this->options['shortTags'];
     }
@@ -375,8 +381,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * Fetch imported or extended node context (view name and namespace).
      *
-     * @param string $name        Token name, can include namespaces separated with :, view path should be separated
-     *                            using $this->options['separator']
+     * @param string $name        Token name, can include namespaces separated with :, view path
+     *                            should be separated using $this->options['separator']
      * @param array  $attributes  Token attributes, can include namespace declaration.
      * @param array  $viewContext Context (location) where this token were called from.
      * @return array
@@ -409,8 +415,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     }
 
     /**
-     * Load node content based on provided name, type and attributes. Content will be pre-processed with processors declared
-     * before templater in processors chain.
+     * Load node content based on provided name, type and attributes. Content will be pre-processed
+     * with processors declared before templater in processors chain.
      *
      * @param string $namespace
      * @param string $view

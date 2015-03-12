@@ -31,5 +31,5 @@ interface SupervisorInterface
      *
      * @return mixed
      */
-    public function getShortTagsExpression();
+    public function getShortExpression();
 }

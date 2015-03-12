@@ -185,10 +185,10 @@ class Node extends Component
                     self::describeToken($token, $this);
                 }
 
-                if (self::$supervisor && self::$supervisor->getShortTagsExpression())
+                if (self::$supervisor && self::$supervisor->getShortExpression())
                 {
                     //Looking for short tag definitions
-                    if (preg_match_all(self::$supervisor->getShortTagsExpression(), $token[Tokenizer::TOKEN_CONTENT], $matches))
+                    if (preg_match_all(self::$supervisor->getShortExpression(), $token[Tokenizer::TOKEN_CONTENT], $matches))
                     {
                         foreach ($matches['name'] as $index => $name)
                         {
