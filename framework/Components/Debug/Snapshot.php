@@ -18,14 +18,16 @@ use Spiral\Core\Dispatcher\ClientException;
 class Snapshot extends Component
 {
     /**
-     * Exception response content is always Exception object handled in Debugger::handleException method.
+     * Exception response content is always Exception object handled in Debugger::handleException
+     * method.
      *
      * @var \Exception|null
      */
     protected $exception = null;
 
     /**
-     * View name which going to be used to render exception backtrace, backtrace can be either saved to specified file or
+     * View name which going to be used to render exception backtrace, backtrace can be either saved
+     * to specified file or
      * send to client.
      *
      * @var string
@@ -40,26 +42,45 @@ class Snapshot extends Component
     protected $snapshot = '';
 
     /**
-     * Create new ExceptionResponse object. Object usually generated in Debug::handleException() method and used to show
-     * or to store (if specified) backtrace and environment dump or occurred error.
+     * Create new ExceptionResponse object. Object usually generated in Debug::handleException()
+     * method and used to show or to store (if specified) backtrace and environment dump or occurred
+     * error.
      *
-     * @todo include DI for View and FileManager
      * @param Exception $exception
-     * @param string    $view      View should be used to render backtrace.
-     * @param array     $snapshots Options to render and store error snapshots.
+     * @param string    $view   View should be used to render backtrace.
+     * @param array     $config Options to render and store error snapshots.
      */
-    public function __construct(Exception $exception, $view = '', array $snapshots = array())
+    public function __construct(Exception $exception, $view = '', array $config = array())
     {
         $this->exception = $exception;
         $this->view = $view;
 
-        if (!empty($snapshots['enabled']) && !($exception instanceof ClientException))
+        if (!empty($config['enabled']) && !($exception instanceof ClientException))
         {
-            $class = explode('\\', get_class($exception));
-            $filename = $snapshots['directory'] . end($class) . '-' . date($snapshots['timeFormat'], time()) . '.html';
+            $reflection = new \ReflectionObject($exception);
+            $filename = $this->getFilename($config, $reflection->getShortName());
 
-            FileManager::getInstance()->write($filename, $this->renderSnapshot(), FileManager::RUNTIME, true);
+            FileManager::getInstance()->write(
+                $filename,
+                $this->renderSnapshot(),
+                FileManager::RUNTIME,
+                true
+            );
         }
+    }
+
+    /**
+     * Create snapshot filename based on provided config.
+     *
+     * @param array  $config
+     * @param string $shortName Exception short name.
+     * @return string
+     */
+    protected function getFilename(array $config = array(), $shortName)
+    {
+        $name = date($config['timeFormat'], time()) . '-' . $shortName . '.html';
+
+        return $config['directory'] . '/' . $name;
     }
 
     /**
@@ -125,13 +146,15 @@ class Snapshot extends Component
     }
 
     /**
-     * Formatted exception message, will include exception class name, original error message and location with fine and line.
+     * Formatted exception message, will include exception class name, original error message and
+     * location with fine and line.
      *
      * @return string
      */
     public function getMessage()
     {
-        return $this->getClass() . ': ' . $this->exception->getMessage() . ' in ' . $this->getFile() . ' at line ' . $this->getLine();
+        return $this->getClass() . ': ' . $this->exception->getMessage()
+        . ' in ' . $this->getFile() . ' at line ' . $this->getLine();
     }
 
     /**
@@ -146,6 +169,8 @@ class Snapshot extends Component
             return $this->snapshot;
         }
 
-        return $this->snapshot = View::getInstance()->render($this->view, array('exception' => $this));
+        return $this->snapshot = View::getInstance()->render($this->view, array(
+            'exception' => $this
+        ));
     }
 }

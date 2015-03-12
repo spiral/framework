@@ -188,10 +188,11 @@ class Debugger extends Component
      */
     public function handleException(Exception $exception, $logException = true)
     {
-        $response = Snapshot::make(compact('exception') + array(
-                'view'      => $this->config['backtrace']['view'],
-                'snapshots' => $this->config['backtrace']['snapshots']
-            ));
+        $response = Snapshot::make(array(
+            'exception' => $exception,
+            'view'      => $this->config['backtrace']['view'],
+            'config'    => $this->config['backtrace']['snapshots']
+        ));
 
         if ($exception instanceof ClientException)
         {
