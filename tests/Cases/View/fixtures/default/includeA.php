@@ -1,3 +1,4 @@
+<use view="extendA" as="extendA"/>
 <block:blockA>Block A defined in file include A(default).</block:blockA>
-<default:extendA/>
+<extendA/>
 <block:blockB>Block B defined in file include A(default).</block:blockB>

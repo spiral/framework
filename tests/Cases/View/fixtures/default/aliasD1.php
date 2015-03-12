@@ -4,8 +4,8 @@
 <block:blockA>
     Block A defined in file alias D1(default).
     <aliasA/>
-    <i.blockB>
+    <i:blockB>
         Block B context provided from alias D1(default).
         <aliasA/>
-    </i.blockB>
+    </i:blockB>
 </block:blockA>

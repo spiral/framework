@@ -68,6 +68,13 @@ class EncryptionTest extends TestCase
         $encrypter->decrypt($encrypted);
     }
 
+    /**
+     * Configured encrypter component.
+     *
+     * @param array $config
+     * @return Encrypter
+     * @throws \Spiral\Core\CoreException
+     */
     protected function encrypterComponent($config = array('key' => '1234567890123456'))
     {
         return new Encrypter(MemoryCore::getInstance()->setConfig('encrypter', $config));

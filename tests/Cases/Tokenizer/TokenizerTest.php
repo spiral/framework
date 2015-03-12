@@ -139,9 +139,16 @@ class TokenizerTest extends TestCase
         $this->loader->disable();
     }
 
-    protected function tokenizerComponent($config = null)
+    /**
+     * Configured tokenizer component.
+     *
+     * @param array $config
+     * @return Tokenizer
+     * @throws \Spiral\Core\CoreException
+     */
+    protected function tokenizerComponent(array $config = array())
     {
-        if (!$this->loader)
+        if (empty($this->loader))
         {
             $this->loader = new Loader(MemoryCore::getInstance());
         }

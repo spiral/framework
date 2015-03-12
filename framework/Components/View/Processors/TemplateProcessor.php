@@ -52,6 +52,9 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 'namespace' => array('namespace'),
                 'prefix'    => array('prefix'),
                 'alias'     => array('as')
+            ),
+            'include'     => array(
+                'include'
             )
         )
     );

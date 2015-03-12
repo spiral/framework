@@ -6,6 +6,6 @@
     Block B defined in file alias E(default).
     <aliasA>
         Context provided by alias E(default).
-        <i.blockB/>
+        <i:blockB/>
     </aliasA>
 </block:blockB>

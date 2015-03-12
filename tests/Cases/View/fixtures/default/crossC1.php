@@ -1,3 +1,4 @@
+<use namespace="namespace"/>
 <block:blockA>Block A defined in file cross C1(default).</block:blockA>
 
 <namespace:crossA>

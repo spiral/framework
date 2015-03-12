@@ -16,7 +16,7 @@ class RandomTest extends TestCase
 {
     public function testRandom()
     {
-        $encrypter = $this->createEncrypter();
+        $encrypter = $this->encrypterComponent();
 
         $previousRandoms = array();
         for ($try = 0; $try < 100; $try++)
@@ -27,8 +27,14 @@ class RandomTest extends TestCase
             $previousRandoms[] = $random;
         }
     }
-
-    protected function createEncrypter($config = array('key' => '1234567890123456'))
+    /**
+     * Configured encrypter component.
+     *
+     * @param array $config
+     * @return Encrypter
+     * @throws \Spiral\Core\CoreException
+     */
+    protected function encrypterComponent($config = array('key' => '1234567890123456'))
     {
         return new Encrypter(MemoryCore::getInstance()->setConfig('encrypter', $config));
     }

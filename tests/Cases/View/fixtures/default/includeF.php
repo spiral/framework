@@ -1,3 +1,5 @@
+<use namespace="default"/>
+<use namespace="namespace"/>
 <block:blockA>Block A defined in file include F(default).</block:blockA>
 <default:extendC>
     <block:blockB>
