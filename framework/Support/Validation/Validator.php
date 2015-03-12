@@ -26,25 +26,33 @@ class Validator extends Component
     const FORCED_ERROR = "forced";
 
     /**
-     * Rules declared in empty conditions should return this value to let system know that future field validation can be
-     * skipped.
+     * Rules declared in empty conditions should return this value to let system know that future
+     * field validation can be skipped.
      */
     const STOP_VALIDATION = -99;
 
     /**
-     * Rules with that condition should be treated as not empty stop flag, this means, that all other conditions attached
-     * to same field name will be skipped if not empty rule will fail. Use it to define required and non required fields
-     * with optional conditions to perform only when field has value.
+     * Rules with that condition should be treated as not empty stop flag, this means, that all
+     * other conditions attached to same field name will be skipped if not empty rule will fail. Use
+     * it to define required and non required fields with optional conditions to perform only when
+     * field has value.
      *
      * @var array
      */
     protected $emptyConditions = array(
-        "notEmpty", "required", "type::notEmpty", "required::with", "required::without", "required::withAll", "required::withoutAll"
+        "notEmpty",
+        "required",
+        "type::notEmpty",
+        "required::with",
+        "required::without",
+        "required::withAll",
+        "required::withoutAll"
     );
 
     /**
-     * Default message to apply as error when rule validation failed, has lowest priority and will be replaced by custom
-     * checker or user defined message. Can be automatically interpolated with condition and field names.
+     * Default message to apply as error when rule validation failed, has lowest priority and will
+     * be replaced by custom checker or user defined message. Can be automatically interpolated
+     * with condition and field names.
      *
      * @var string
      */

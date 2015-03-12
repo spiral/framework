@@ -44,7 +44,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * @var Request
      */
-    protected $baseRequest = null;
+    protected $request = null;
 
     /**
      * New HttpDispatcher instance.
@@ -64,10 +64,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function start(Core $core)
     {
-        $this->baseRequest = Request::castServerRequest();
+        $this->request = Request::castServerRequest();
 
         $pipeline = new MiddlewarePipe($this->config['middleware']);
-        $response = $pipeline->target(array($this, 'perform'))->run($this->baseRequest, $this);
+        $response = $pipeline->target(array($this, 'perform'))->run($this->request, $this);
 
         $this->dispatch($this->event('dispatch', $response));
     }
@@ -80,7 +80,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function getRequest()
     {
-        return $this->baseRequest;
+        return $this->request;
     }
 
     public function perform(RequestInterface $request = null)
