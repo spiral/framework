@@ -134,11 +134,10 @@ class Debugger extends Component
      * ...
      * echo Debugger::benchmark('parseURL', 'google.com');
      *
-     * @param string $record  Record name.
-     * @param string $context Record context (query, file and etc).
+     * @param string $record Record name.
      * @return bool|float
      */
-    public static function benchmark($record, $context = null)
+    public static function benchmark($record)
     {
         if (func_num_args() > 1)
         {
