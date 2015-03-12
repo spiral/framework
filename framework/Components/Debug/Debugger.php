@@ -27,15 +27,17 @@ class Debugger extends Component
     const SINGLETON = 'debug';
 
     /**
-     * Options for Debugger::dump() function to specify dump destination, default options are: return, echo dump into log
-     * container "dumps".
+     * Options for Debugger::dump() function to specify dump destination, default options are: return,
+     * echo dump into log container "dumps".
      */
-    const DUMP_PRINT  = 0;
-    const DUMP_RETURN = 1;
-    const DUMP_LOG    = 2;
+    const DUMP_ECHO     = 0;
+    const DUMP_RETURN   = 1;
+    const DUMP_LOG      = 2;
+    const DUMP_LOG_NICE = 3;
 
     /**
-     * Dump styles used to colorize and format variable dump performed using Debugger::dump or dump() functions.
+     * Dump styles used to colorize and format variable dump performed using Debugger::dump or dump()
+     * functions.
      *
      * @var array
      */
@@ -67,26 +69,29 @@ class Debugger extends Component
     );
 
     /**
-     * If enabled Debugger::benchmark() method will collect all benchmarks into Debugger::$benchmarks property. Benchmarks can
-     * retrieved using Debugger::getBenchmarks() method. Only records from current script session and recorded after option
-     * got enabled will be collection in benchmarks array.
+     * If enabled Debugger::benchmark() method will collect all benchmarks into Debugger::$benchmarks
+     * property. Benchmarks can retrieved using Debugger::getBenchmarks() method. Only records from
+     * current script session and recorded after option got enabled will be collection in benchmarks
+     * array.
      *
      * @var bool
      */
-    private static $benchmarking = false;
+    protected static $benchmarking = false;
 
     /**
-     * Benchmarking. You can use Debugger::benchmark('record') to start and stop profiling for some operations. Multiple spiral
-     * components already have benchmarking mounted, however benchmarking is disabled by default and be enabled by Debugger::benchmarking()
-     * method. Benchmarks can retrieved using Debugger::getBenchmarks() method.
+     * Benchmarking. You can use Debugger::benchmark('record') to start and stop profiling for some
+     * operations. Multiple spiral components already have benchmarking mounted, however benchmarking
+     * is disabled by default and be enabled by Debugger::benchmarking() method. Benchmarks can
+     * retrieved using Debugger::getBenchmarks() method.
      *
      * @var array
      */
-    private static $benchmarks = array();
+    protected static $benchmarks = array();
 
     /**
-     * Constructing debug component. Debug is one of primary spiral component and will be available for use in any environment
-     * and any application point. This is first initiated component in application.
+     * Constructing debug component. Debug is one of primary spiral component and will be available
+     * for use in any environment and any application point. This is first initiated component in
+     * application.
      *
      * @param Core $core
      */
@@ -103,13 +108,16 @@ class Debugger extends Component
      */
     public function getFileHandlers($container)
     {
-        return isset($this->config['loggers']['containers'][$container]) ? $this->config['loggers']['containers'][$container] : array();
+        return isset($this->config['loggers']['containers'][$container])
+            ? $this->config['loggers']['containers'][$container]
+            : array();
     }
 
     /**
-     * If enabled Debugger::benchmark() method will collect all benchmarks into Debugger::$benchmarks property. Benchmarks can
-     * retrieved using Debugger::getBenchmarks() method. Only records from current script session and recorded after option
-     * got enabled will be collection in benchmarks array.
+     * If enabled Debugger::benchmark() method will collect all benchmarks into Debugger::$benchmarks
+     * property. Benchmarks can retrieved using Debugger::getBenchmarks() method. Only records from
+     * current script session and recorded after option got enabled will be collection in benchmarks
+     * array.
      *
      * @param bool $enabled
      * @return bool
@@ -123,11 +131,12 @@ class Debugger extends Component
     }
 
     /**
-     * Benchmark method used to determinate how long time and how much memory was used to perform some specified piece of
-     * code. Method should be used twice, before and after code needs to be profile, first call will return true, second
-     * one will return time in seconds took to perform code between benchmark method calls. If Debugger::$benchmarking enabled
-     * - result will be additionally logged in Debugger::$benchmarks array and can be retrieved using Debugger::getBenchmarks()
-     * for future analysis.
+     * Benchmark method used to determinate how long time and how much memory was used to perform
+     * some specified piece of code. Method should be used twice, before and after code needs to be
+     * profile, first call will return true, second one will return time in seconds took to perform
+     * code between benchmark method calls. If Debugger::$benchmarking enabled - result will be
+     * additionally logged in Debugger::$benchmarks array and can be retrieved using
+     * Debugger::getBenchmarks() for future analysis.
      *
      * Example:
      * Debugger::benchmark('parseURL', 'google.com');
@@ -146,7 +155,10 @@ class Debugger extends Component
 
         if (!isset(self::$benchmarks[$record]))
         {
-            self::$benchmarks[$record] = array(microtime(true), memory_get_usage());
+            self::$benchmarks[$record] = array(
+                microtime(true),
+                memory_get_usage()
+            );
 
             return true;
         }
@@ -165,8 +177,9 @@ class Debugger extends Component
     }
 
     /**
-     * Retrieve all active and finished benchmark records, this method will return finished records only if Debugger::$benchmarking
-     * is true, in opposite case all finished records will be erased right after completion.
+     * Retrieve all active and finished benchmark records, this method will return finished records
+     * only if Debugger::$benchmarking is true, in opposite case all finished records will be erased
+     * right after completion.
      *
      * @return array|null
      */
@@ -176,11 +189,12 @@ class Debugger extends Component
     }
 
     /**
-     * Will convert Exception to ExceptionResponse object which can be passed further to dispatcher and handled by environment
-     * logic. Additionally error message will be recorded in "error" debug container.
+     * Will convert Exception to ExceptionResponse object which can be passed further to dispatcher
+     * and handled by environment logic. Additionally error message will be recorded in "error" debug
+     * container.
      *
-     * ExceptionResponse will contain full exception explanation and rendered snapshot which can be recorded as html file
-     * for future usage.
+     * ExceptionResponse will contain full exception explanation and rendered snapshot which can be
+     * recorded as html file for future usage.
      *
      * @param Exception $exception
      * @param bool      $logException If true (default), message to error container will be added.
@@ -196,19 +210,24 @@ class Debugger extends Component
 
         if ($exception instanceof ClientException)
         {
+            //No logging for ClientExceptions
             return $response;
         }
 
         //Error message should be added to log only for non http exceptions
-        $logException && $this->logger()->error($response->getMessage());
+        if ($logException)
+        {
+            $this->logger()->error($response->getMessage());
+        }
 
         return $response;
     }
 
     /**
-     * Helper function to dump variable into specified destination (output, log or return) using pre-defined dumping styles.
-     * This method is fairly slow and should not be used in productions environment. Only use it during development, error
-     * handling and other not high loaded application parts.
+     * Helper function to dump variable into specified destination (output, log or return) using
+     * pre-defined dumping styles. This method is fairly slow and should not be used in productions
+     * environment. Only use it during development, error handling and other not high loaded
+     * application parts.
      *
      * Method has alias with short function dump() which is always defined.
      *
@@ -216,7 +235,7 @@ class Debugger extends Component
      * @param int   $output Output method, can print, return or log value dump.
      * @return null|string
      */
-    public static function dump($value, $output = self::DUMP_PRINT)
+    public static function dump($value, $output = self::DUMP_ECHO)
     {
         if (Core::isConsole() && $output != self::DUMP_LOG)
         {
@@ -225,26 +244,36 @@ class Debugger extends Component
             return null;
         }
 
-        $result = "<pre style='" . self::$dumping['container'] . "'>" . self::dumpHelper($value, '', 0) . "</pre>";
+        $result = "<pre style='" . self::$dumping['container'] . "'>"
+            . self::dumpVariable($value, '', 0)
+            . "</pre>";
 
         switch ($output)
         {
-            case self::DUMP_PRINT:
-                print($result);
+            case self::DUMP_ECHO:
+                echo $result;
                 break;
+
             case self::DUMP_RETURN:
                 return $result;
+
             case self::DUMP_LOG:
                 self::logger()->debug(print_r($value, true));
+                break;
+
+            case self::DUMP_LOG_NICE:
+                self::logger()->debug(self::dump($value, self::DUMP_RETURN));
+                break;
         }
 
         return null;
     }
 
     /**
-     * Variable dumping method, can be called recursively, maximum nested level specified in Debugger::$dumping['maxLevel'].
-     * Dumper values, braces and other parts will be styled using rules defined in Debugger::$dumping. Styles can be redefined
-     * any moment. You can hide class fields from dumping by using @invisible doc comment option.
+     * Variable dumping method, can be called recursively, maximum nested level specified in
+     * Debugger::$dumping['maxLevel']. Dumper values, braces and other parts will be styled using
+     * rules defined in Debugger::$dumping. Styles can be redefined any moment. You can hide class
+     * fields from dumping by using @invisible doc comment option.
      *
      * This is the oldest spiral function, it was originally written in 2008. :)
      *
@@ -254,120 +283,55 @@ class Debugger extends Component
      * @param bool   $hideType True to hide object/array type declaration, used by __debugInfo.
      * @return string
      */
-    protected static function dumpHelper($variable, $name = '', $level = 0, $hideType = false)
+    private static function dumpVariable($variable, $name = '', $level = 0, $hideType = false)
     {
-        $indent = $level ? self::style(str_repeat(self::$dumping["indent"], $level), "indent") : '';
-        $result = '';
-        if (!$hideType)
+        $result = $indent = self::getIndent($level);
+        if (!$hideType && $name)
         {
-            $result = $name ? $indent . (self::style($name, "name") . self::style(" = ", "indent", "equal")) : $indent;
+            $result .= self::getStyle($name, "name") . self::getStyle(" = ", "indent", "equal");
         }
 
         if ($level > self::$dumping['maxLevel'])
         {
-            return $indent . self::style('-possible recursion-', 'recursion') . "\n";
+            return $indent . self::getStyle('-possible recursion-', 'recursion') . "\n";
         }
 
         $type = strtolower(gettype($variable));
 
         if ($type == 'array')
         {
-            if (!$hideType)
-            {
-                $count = count($variable);
-                $result .= self::style("array($count)", "type", "array") . "\n" . $indent . self::style("(", "indent", "(") . "\n";
-            }
-
-            foreach ($variable as $name => $value)
-            {
-                if (!is_numeric($name))
-                {
-                    if (is_string($name))
-                    {
-                        $name = htmlspecialchars($name);
-                    }
-                    $name = "'" . $name . "'";
-                }
-
-                $result .= self::dumpHelper($value, "[$name]", $level + 1);
-            }
-
-            if (!$hideType)
-            {
-                $result .= $indent . self::style(")", "indent", ")") . "\n";
-            }
-
-            return $result;
+            return $result . self::dumpArray($variable, $level, $hideType);
         }
 
         if ($type == 'object')
         {
-            if (!$hideType)
-            {
-                $result .= self::style(get_class($variable) . " object ", "type", "object") . "\n" . $indent . self::style("(", "indent", "(") . "\n";
-            }
-
-            if (method_exists($variable, '__debugInfo'))
-            {
-                $result .= self::dumpHelper($variable = $variable->__debugInfo(), '', $level + (is_scalar($variable)), true);
-
-                return $result . ($hideType ? ($indent . self::style(")", "parentheses") . "\n") : '');
-            }
-
-            $refection = new \ReflectionObject($variable);
-            foreach ($refection->getProperties() as $property)
-            {
-                if ($property->isStatic())
-                {
-                    continue;
-                }
-
-                //Memory loop while reading doc comment for stdClass variables?
-                if (!($variable instanceof \stdClass) && strpos($property->getDocComment(), '@invisible'))
-                {
-                    continue;
-                }
-
-                $access = "public";
-                if ($property->isPrivate())
-                {
-                    $access = "private";
-                }
-                elseif ($property->isProtected())
-                {
-                    $access = "protected";
-                }
-                $property->setAccessible(true);
-
-                if ($variable instanceof \stdClass)
-                {
-                    $access = 'dynamic';
-                }
-
-                $value = $property->getValue($variable);
-                $result .= self::dumpHelper($value, $property->getName() . self::style(":" . $access, "access", $access), $level + 1);
-            }
-
-            return $result . $indent . self::style(")", "parentheses") . "\n";
+            return $result . self::dumpObject($variable, $level, $hideType);
         }
 
         if ($type == 'resource')
         {
-            $result .= self::style(get_resource_type($variable) . " resource ", "type", "resource") . "\n";
+            $result .= self::getStyle(
+                    get_resource_type($variable) . " resource ",
+                    "type",
+                    "resource"
+                ) . "\n";
 
             return $result;
         }
 
-        $result .= self::style($type . "(" . strlen($variable) . ")", "type", $type);
+        $result .= self::getStyle($type . "(" . strlen($variable) . ")", "type", $type);
+
         $value = null;
         switch ($type)
         {
             case "string":
                 $value = htmlspecialchars($variable);
                 break;
+
             case "boolean":
                 $value = ($variable ? "true" : "false");
                 break;
+
             default:
                 if ($variable !== null)
                 {
@@ -376,9 +340,148 @@ class Debugger extends Component
                 }
         }
 
-        $result .= " " . self::style($value, "value", $type) . "\n";
+        return $result . " " . self::getStyle($value, "value", $type) . "\n";
+    }
+
+    /**
+     * Helper method used to arrays.
+     *
+     * @param mixed $variable Value to be dumped.
+     * @param int   $level
+     * @param bool  $hideType True to hide object/array type declaration, used by __debugInfo.
+     * @return string
+     */
+    private static function dumpArray($variable, $level, $hideType)
+    {
+        $result = '';
+        $indent = self::getIndent($level);
+        if (!$hideType)
+        {
+            $count = count($variable);
+            $result .= self::getStyle(
+                    "array({$count})",
+                    "type",
+                    "array"
+                ) . "\n" . $indent . self::getStyle("(", "indent", "(") . "\n";
+        }
+
+        foreach ($variable as $name => $value)
+        {
+            if (!is_numeric($name))
+            {
+                if (is_string($name))
+                {
+                    $name = htmlspecialchars($name);
+                }
+                $name = "'" . $name . "'";
+            }
+
+            $result .= self::dumpVariable(
+                $value,
+                "[{$name}]",
+                $level + 1
+            );
+        }
+
+        if (!$hideType)
+        {
+            $result .= $indent . self::getStyle(")", "indent", ")") . "\n";
+        }
 
         return $result;
+    }
+
+    /**
+     * Helper method used to dump objects.
+     *
+     * @param mixed $variable Value to be dumped.
+     * @param int   $level
+     * @param bool  $hideType True to hide object/array type declaration, used by __debugInfo.
+     * @return string
+     */
+    private static function dumpObject($variable, $level, $hideType)
+    {
+        $result = '';
+        $indent = self::getIndent($level);
+        if (!$hideType)
+        {
+            $type = get_class($variable) . " object ";
+            $result .= self::getStyle($type, "type", "object") .
+                "\n" . $indent . self::getStyle("(", "indent", "(") . "\n";
+        }
+
+        if (method_exists($variable, '__debugInfo'))
+        {
+            $result .= self::dumpVariable(
+                $variable = $variable->__debugInfo(),
+                '',
+                $level + (is_scalar($variable)),
+                true
+            );
+
+            if ($hideType)
+            {
+                return $result;
+            }
+
+            return $result . $indent . self::getStyle(")", "parentheses") . "\n";
+        }
+
+        $refection = new \ReflectionObject($variable);
+        foreach ($refection->getProperties() as $property)
+        {
+            if ($property->isStatic())
+            {
+                continue;
+            }
+
+            //Memory loop while reading doc comment for stdClass variables?
+            if (!($variable instanceof \stdClass) && strpos($property->getDocComment(), '@invisible'))
+            {
+                continue;
+            }
+
+            $access = "public";
+            if ($property->isPrivate())
+            {
+                $access = "private";
+            }
+            elseif ($property->isProtected())
+            {
+                $access = "protected";
+            }
+            $property->setAccessible(true);
+
+            if ($variable instanceof \stdClass)
+            {
+                $access = 'dynamic';
+            }
+
+            $value = $property->getValue($variable);
+            $result .= self::dumpVariable(
+                $value,
+                $property->getName() . self::getStyle(":" . $access, "access", $access),
+                $level + 1
+            );
+        }
+
+        return $result . $indent . self::getStyle(")", "parentheses") . "\n";
+    }
+
+    /**
+     * Indent based on variable level.
+     *
+     * @param int $level
+     * @return string
+     */
+    private static function getIndent($level)
+    {
+        if (!$level)
+        {
+            return '';
+        }
+
+        return self::getStyle(str_repeat(self::$dumping["indent"], $level), "indent");
     }
 
     /**
@@ -392,14 +495,15 @@ class Debugger extends Component
     }
 
     /**
-     * Stylize content using pre-defined style. Dump styles defined in Debugger::$dumping and can be redefined at any moment.
+     * Stylize content using pre-defined style. Dump styles defined in Debugger::$dumping and can be
+     * redefined at any moment.
      *
      * @param string $content Content to apply style to.
      * @param string $type    Content type (value, indent, name and etc)
      * @param string $subType Content sub type (int, string and etc...)
      * @return string
      */
-    public static function style($content, $type, $subType = '')
+    public static function getStyle($content, $type, $subType = '')
     {
         if (isset(self::$dumping['styles'][$type . '-' . $subType]))
         {
@@ -414,7 +518,7 @@ class Debugger extends Component
             $style = self::$dumping['styles']['common'];
         }
 
-        if ($style)
+        if (!empty($style))
         {
             $content = "<span style='color: {$style};'>$content</span>";
         }

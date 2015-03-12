@@ -377,7 +377,7 @@ Debugger::dumpingStyles(array(
                                     $display = get_class($argument) . ' object';
                                 }
 
-                                $display = Debugger::style($display, 'value', $type);
+                                $display = Debugger::getStyle($display, 'value', $type);
                                 $display = '<span class="argument" onclick="showDump(' . $argumentID . ')">' . $display
                                     . '<div id="dump-argument-' . $argumentID . '" class="dump">' .
                                     $argument = Debugger::dump($argument, true) . '</div></span>';

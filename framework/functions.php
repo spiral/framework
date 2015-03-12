@@ -80,7 +80,7 @@ if (!function_exists('dump'))
      * @param bool  $showStatic Set true to dump all static object properties.
      * @return null|string
      */
-    function dump($value, $output = Debugger::DUMP_PRINT, $showStatic = false)
+    function dump($value, $output = Debugger::DUMP_ECHO, $showStatic = false)
     {
         return Debugger::dump($value, $output, $showStatic);
     }
