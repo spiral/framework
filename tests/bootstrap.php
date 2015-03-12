@@ -21,6 +21,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 \Spiral\Tests\MemoryCore::init(array(
     'root'        => __DIR__,
+    'runtime'     => __DIR__ . '/runtime',
     'libraries'   => dirname(__DIR__) . '/vendor',
     'application' => __DIR__
 ))->setEnvironment('testing');

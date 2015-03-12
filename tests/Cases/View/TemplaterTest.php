@@ -612,7 +612,7 @@ class TemplaterTest extends TestCase
                 ),
                 'caching'           => array(
                     'enabled'   => false,
-                    'directory' => sys_get_temp_dir()
+                    'directory' => directory('runtime') . '/'
                 ),
                 'variableProviders' => array(),
                 'processors'        => array(

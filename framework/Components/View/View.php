@@ -206,7 +206,7 @@ class View extends Component
         $this->staticVariables = $this->event('staticVariables', $this->staticVariables);
         $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . static::EXTENSION;
 
-        return $this->cacheDirectory() . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-') . $postfix;
+        return $this->cacheDirectory() . '/' . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-') . $postfix;
     }
 
     /**
