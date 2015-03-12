@@ -27,8 +27,8 @@ class Indexer extends Component
     const LOCALIZABLE_TRAIT = 'Spiral\Components\Localization\LocalizableTrait';
 
     /**
-     * List of found function or message usages grouped by bundle id. Every found usage will be automatically registered
-     * in i18n component, this array generated only for reference.
+     * List of found function or message usages grouped by bundle id. Every found usage will be
+     * automatically registered in i18n component, this array generated only for reference.
      *
      * @var array
      */
@@ -70,11 +70,11 @@ class Indexer extends Component
     }
 
     /**
-     * Parse all files in specified directory to find i18n functions and register them with i18n component. Supported
-     * functions: l, p, I18n::get, I18n::pluralize
+     * Parse all files in specified directory to find i18n functions and register them with i18n
+     * component. Supported functions: l, p, I18n::get, I18n::pluralize
      *
-     * Both bundle id and message should be string constants, otherwise usage will not be recorded. Do not use i18n methods
-     * via non-static call.
+     * Both bundle id and message should be string constants, otherwise usage will not be recorded.
+     * Do not use i18n methods via non-static call.
      *
      * @param string $directory Directory which has to be indexed. Application directory by default.
      * @return Indexer
@@ -82,7 +82,8 @@ class Indexer extends Component
     public function indexDirectory($directory = null)
     {
         $directory = $directory ?: directory('application');
-        foreach ($this->file->getFiles($directory, array('php')) as $filename)
+
+        foreach ($this->file->getFiles($directory, 'php') as $filename)
         {
             $fileReflection = $this->tokenizer->fileReflection($filename);
             $this->registerFunctions($filename, $fileReflection->functionUsages());
@@ -212,7 +213,8 @@ class Indexer extends Component
      */
     public function indexClasses($namespace = '')
     {
-        foreach ($this->tokenizer->getClasses(self::LOCALIZABLE_TRAIT, $namespace) as $class => $location)
+        foreach ($this->tokenizer->getClasses(self::LOCALIZABLE_TRAIT, $namespace) as $class =>
+                 $location)
         {
             //Indexing class
             $reflection = new \ReflectionClass($class);
@@ -279,7 +281,7 @@ class Indexer extends Component
      *
      * @param \ReflectionClass $reflection
      * @param bool             $recursively
-     * @return bool
+     * @return array
      */
     protected function fetchStrings(\ReflectionClass $reflection, $recursively = false)
     {
