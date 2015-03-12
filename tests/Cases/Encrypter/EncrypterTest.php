@@ -49,7 +49,7 @@ class EncryptionTest extends TestCase
 
     /**
      * @expectedException \Spiral\Components\Encrypter\DecryptionException
-     * @expectedExceptionMessage Unable to unpack provided data.
+     * @expectedExceptionMessage Encrypted data does not have valid signature.
      */
     public function testBadSignature()
     {
