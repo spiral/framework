@@ -1,6 +1,6 @@
 <extends:real.realA title="Real B Title."/>
-<use view="namespace:tags/link" as="a"/>
 <use view="namespace:tags/span" as="span"/>
+<use view="namespace:tags/link" as="a"/>
 
 <block:content>
     <block:content/>
