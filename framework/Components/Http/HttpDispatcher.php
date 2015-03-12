@@ -70,6 +70,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         //Middleware(s)
         $response = $this->perform($this->baseRequest);
 
+
         $this->dispatch($this->event('dispatch', $response));
     }
 

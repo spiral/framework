@@ -402,7 +402,7 @@ class ConfigWriter extends Component
             {
                 $value = var_export($value, true);
             }
-            elseif (isset($directory))
+            elseif (!empty($directory))
             {
                 $value = 'directory("' . $alias . '") . ' . var_export(
                         substr($value, strlen($directory)),
