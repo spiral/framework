@@ -46,10 +46,9 @@ class SnapshotTest extends TestCase
         }
     }
 
-    public function testSnapshots()
+    public function testMemorySnapshot()
     {
         $debug = $this->debuggerComponent();
-        Container::bind('view', $this->viewComponent());
 
         $snapshot = $debug->handleException(new \ErrorException('Snapshot Test'), false);
 
@@ -57,8 +56,14 @@ class SnapshotTest extends TestCase
 
         //But we still should be able to render it
         $this->assertNotEmpty($snapshot->renderSnapshot());
+    }
 
-        $debug->setConfig(array(
+    public function testFileSnapshot()
+    {
+        $debug = $this->debuggerComponent(array(
+            'loggers'   => array(
+                'containers' => array()
+            ),
             'backtrace' => array(
                 'view'      => 'spiral:exception',
                 'snapshots' => array(
@@ -72,7 +77,6 @@ class SnapshotTest extends TestCase
         $snapshot = $debug->handleException(new \ErrorException('Snapshot Test'), false);
 
         $this->assertNotEmpty($snapshot->getSnapshotFilename());
-
         $this->assertFileExists($snapshot->getSnapshotFilename());
 
         //But we still should be able to render it
@@ -107,7 +111,7 @@ class SnapshotTest extends TestCase
         }
 
         return new Debugger(
-            MemoryCore::getInstance()->setConfig('tokenizer', $config)
+            MemoryCore::getInstance()->setConfig('debug', $config)
         );
     }
 
