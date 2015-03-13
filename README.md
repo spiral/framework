@@ -93,13 +93,6 @@ This will require some tweaking to fit into HttpDispatcher middleware.
 
 Will be completed by end of this week.
 
-Profiler module
--------------
-Profiler was originally handling the dispatcher::response event. There is no such event at the moment
-and profiler doesn't function well.
-
-Will be completed by end of this week.
-
 ORM
 =================
 Currently in development (will take week or two). 
