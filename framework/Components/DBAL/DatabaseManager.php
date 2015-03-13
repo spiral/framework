@@ -33,14 +33,16 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     const DATABASE = 'Spiral\Components\DBAL\Database';
 
     /**
-     * QueryBuilder constants. This particular constants used in WhereTrait to convert array query to where tokens.
+     * QueryBuilder constants. This particular constants used in WhereTrait to convert array query
+     * to where tokens.
      */
     const TOKEN_AND = "@AND";
     const TOKEN_OR  = "@OR";
 
     /**
-     * By default spiral will force all time conversion into single timezone before storing in database, it will help us
-     * to ensure that we have to problems with switching timezones and save a lot of time while development. :)
+     * By default spiral will force all time conversion into single timezone before storing in
+     * database, it will help us to ensure that we have to problems with switching timezones and
+     * save a lot of time while development. :)
      */
     const DEFAULT_TIMEZONE = 'UTC';
 
@@ -52,8 +54,8 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     protected $databases = array();
 
     /**
-     * DBAL component instance, component is responsible for connections to various SQL
-     * databases and their schema builders/describers.
+     * DBAL component instance, component is responsible for connections to various SQL databases and
+     * their schema builders/describers.
      *
      * @param Core $core
      * @throws CoreException
@@ -64,8 +66,8 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     }
 
     /**
-     * Get global timezone name should be used to convert dates and timestamps. Function is static for performance reasons.
-     * Right now timezone is hardcoded, but in future we can make it changeable.
+     * Get global timezone name should be used to convert dates and timestamps. Function is static
+     * for performance reasons. Right now timezone is hardcoded, but in future we can make it changeable.
      *
      * @return string
      */
@@ -75,8 +77,8 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     }
 
     /**
-     * Get instance of dbal Database. Database class is high level abstraction at top of Driver. Multiple databases can
-     * use same driver and be different by table prefix.
+     * Get instance of dbal Database. Database class is high level abstraction at top of Driver.
+     * Multiple databases can use same driver and be different by table prefix.
      *
      * @param string $database Internal database name or alias, declared in config.
      * @param array  $config   Forced database configuration.
@@ -96,12 +98,15 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
             return $this->databases[$database];
         }
 
-        if (!$config)
+        if (empty($config))
         {
             if (!isset($this->config['databases'][$database]))
             {
-                throw new DBALException("Unable to create database, no presets for '{$database}' found.");
+                throw new DBALException(
+                    "Unable to create database, no presets for '{$database}' found."
+                );
             }
+
             $config = $this->config['databases'][$database];
         }
 
@@ -113,11 +118,13 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
         }
 
         benchmark('dbal::database', $database);
+
         $this->databases[$database] = Container::get(self::DATABASE, array(
             'name'        => $database,
             'driver'      => $driver,
             'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
         ), null, true);
+
         benchmark('dbal::database', $database);
 
         return $this->databases[$database];
@@ -141,14 +148,17 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     }
 
     /**
-     * MigrationRepository instance. Repository responsible for registering and retrieving existed migrations.
+     * MigrationRepository instance. Repository responsible for registering and retrieving existed
+     * migrations.
      *
      * @param string $directory Directory where migrations should be stored in.
      * @return Repository
      */
     public function migrationRepository($directory = null)
     {
-        return Repository::make(array('directory' => $directory ?: $this->config['migrations']['directory']));
+        return Repository::make(array(
+            'directory' => $directory ?: $this->config['migrations']['directory']
+        ));
     }
 
     /**
@@ -169,8 +179,8 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     }
 
     /**
-     * Helper method used to fill query with binded parameters. This method should NEVER be used to generate database
-     * queries and only for debugging.
+     * Helper method used to fill query with binded parameters. This method should NEVER be used to
+     * generate database queries and only for debugging.
      *
      * @param string $query      SQL statement with parameter placeholders.
      * @param array  $parameters Parameters to be binded into query.

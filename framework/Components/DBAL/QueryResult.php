@@ -83,7 +83,8 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
     }
 
     /**
-     * Returns the number of rows selected by SQL statement. Attention, this method will return 0 for SQLite databases.
+     * Returns the number of rows selected by SQL statement. Attention, this method will return 0
+     * for SQLite databases.
      *
      * @link http://php.net/manual/en/pdostatement.rowcount.php
      * @link http://stackoverflow.com/questions/15003232/pdo-returns-wrong-rowcount-after-select-statement
@@ -106,8 +107,9 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
     }
 
     /**
-     * Change PDOStatement fetch mode, use PDO::FETCH_ constants to specify required mode. If you want to keep compatibility
-     * with CachedQuery do not use other modes than PDO::FETCH_ASSOC and PDO::FETCH_NUM.
+     * Change PDOStatement fetch mode, use PDO::FETCH_ constants to specify required mode. If you wan
+     * t to keep compatibility with CachedQuery do not use other modes than PDO::FETCH_ASSOC and
+     * PDO::FETCH_NUM.
      *
      * @link http://php.net/manual/en/pdostatement.setfetchmode.php
      * @param int $mode The fetch mode must be one of the PDO::FETCH_* constants.
@@ -123,12 +125,16 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
     /**
      * Fetch one result row as array.
      *
-     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC by default.
+     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC
+     *                   by default.
      * @return array
      */
     public function fetch($mode = null)
     {
-        $mode && $this->fetchMode($mode);
+        if (!empty($mode))
+        {
+            $this->fetchMode($mode);
+        }
 
         return $this->statement->fetch();
     }
@@ -162,12 +168,16 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
     /**
      * Returns an array containing all of the result set rows, do not use this method on big datasets.
      *
-     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC by default.
+     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC
+     *                   by default.
      * @return array
      */
     public function fetchAll($mode = null)
     {
-        $mode && $this->fetchMode($mode);
+        if (!empty($mode))
+        {
+            $this->fetchMode($mode);
+        }
 
         return $this->statement->fetchAll();
     }
@@ -267,7 +277,9 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
         return (object)array(
             'statement' => $this->queryString(),
             'count'     => $this->count,
-            'rows'      => $this->count > static::DUMP_LIMIT ? '[TOO MANY RECORDS TO DISPLAY]' : $this->fetchAll(\PDO::FETCH_ASSOC)
+            'rows'      => $this->count > static::DUMP_LIMIT
+                ? '[TOO MANY RECORDS TO DISPLAY]'
+                : $this->fetchAll(\PDO::FETCH_ASSOC)
         );
     }
 

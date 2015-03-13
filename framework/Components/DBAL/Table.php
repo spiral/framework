@@ -12,6 +12,7 @@ use Spiral\Components\DBAL\Builders\DeleteQuery;
 use Spiral\Components\DBAL\Builders\SelectQuery;
 use Spiral\Components\DBAL\Builders\UpdateQuery;
 use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\Http\Request;
 use Spiral\Core\Component;
 
 /**
@@ -24,7 +25,7 @@ use Spiral\Core\Component;
  * @method int count()
  * @method SelectQuery limit(int $limit = 0)
  * @method SelectQuery offset(int $offset = 0)
- * @method SelectQuery paginate(int $limit = 50, string $pageParameter = 'page', bool $fetchCount = true, XXX $request = null)
+ * @method SelectQuery paginate(int $limit = 50, string $pageParameter = 'page', bool $fetchCount = true, Request $request = null)
  * @method SelectQuery where(mixed $identifier, mixed $variousA = null, mixed $variousB = null, mixed $variousC = null)
  * @method SelectQuery andWhere(mixed $identifier, mixed $variousA = null, mixed $variousB = null, mixed $variousC = null)
  * @method SelectQuery orWhere(mixed $identifier, mixed $variousA = array(), mixed $variousB = null, mixed $variousC = null)
@@ -54,8 +55,8 @@ class Table extends Component
     protected $database = null;
 
     /**
-     * DBAL Table instance is helper class used to aggregate common table operation together, such as select, update, insert
-     * and delete. Additionally it can be used to request table schema.
+     * DBAL Table instance is helper class used to aggregate common table operation together, such
+     * as select, update, insert and delete. Additionally it can be used to request table schema.
      *
      * @param string   $name     Table name without prefix.
      * @param Database $database Parent DBAL database.
@@ -111,14 +112,17 @@ class Table extends Component
     }
 
     /**
-     * Get schema for specified table. TableSchema contains information about all table columns, indexes and foreign keys.
-     * Schema can be used to manipulate table structure.
+     * Get schema for specified table. TableSchema contains information about all table columns,
+     * indexes and foreign keys. Schema can also be used to manipulate table structure.
      *
      * @return BaseTableSchema
      */
     public function schema()
     {
-        return $this->database->getDriver()->tableSchema($this->database->getPrefix() . $this->name, $this->database->getPrefix());
+        return $this->database->getDriver()->tableSchema(
+            $this->database->getPrefix() . $this->name,
+            $this->database->getPrefix()
+        );
     }
 
     /**
@@ -136,8 +140,8 @@ class Table extends Component
     }
 
     /**
-     * Perform batch insert into table, every rowset should have identical amount of values mathed with column names
-     * provided in first argument. Method will return lastInsertID on success.
+     * Perform batch insert into table, every rowset should have identical amount of values matched
+     * with column names provided in first argument. Method will return lastInsertID on success.
      *
      * Example:
      * $table->insert(["name", "balance"], array(["Bob", 10], ["Jack", 20]))
@@ -163,9 +167,9 @@ class Table extends Component
     }
 
     /**
-     * Get DeleteQuery builder with pre-populated table name. This is NOT table delete method, use schema()->drop() for
-     * this purposes. If you want to remove all records from table use Table->truncate() method. Call ->run() to perform
-     * query.
+     * Get DeleteQuery builder with pre-populated table name. This is NOT table delete method, use
+     * schema()->drop() for this purposes. If you want to remove all records from table use
+     * Table->truncate() method. Call ->run() to perform query.
      *
      * @param array $where Initial set of where rules specified as array.
      * @return DeleteQuery
@@ -176,8 +180,8 @@ class Table extends Component
     }
 
     /**
-     * Get UpdateQuery builder with pre-populated table name and set of columns to update. Columns can be scalar values,
-     * Parameter objects or even SQLFragments. Call ->run() to perform query.
+     * Get UpdateQuery builder with pre-populated table name and set of columns to update. Columns
+     * can be scalar values, Parameter objects or even SQLFragments. Call ->run() to perform query.
      *
      * @param array $values Initial set of columns associated with values.
      * @param array $where  Initial set of where rules specified as array.

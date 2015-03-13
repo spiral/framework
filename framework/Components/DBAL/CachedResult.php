@@ -35,16 +35,16 @@ class CachedResult extends QueryResult
     protected $query = '';
 
     /**
-     * Query data (rowset) automatically fetched from QueryResult and stored as simple array. Bigger queries will "eat"
-     * more memory.
+     * Query data (rowset) automatically fetched from QueryResult and stored as simple array.
+     * Bigger queries will "eat" more memory.
      *
      * @var array
      */
     protected $data = array();
 
     /**
-     * As CachedResult can't interact directly with PDOStatement, fetch mode has to be emulated. Currently only ASSOC and
-     * NUM modes supported.
+     * As CachedResult can't interact directly with PDOStatement, fetch mode has to be emulated.
+     * Currently only ASSOC and NUM modes supported.
      *
      * @var int
      */
@@ -58,8 +58,9 @@ class CachedResult extends QueryResult
     protected $bindings = array();
 
     /**
-     * CacheResult instance used to represent query result fetched from database and stored in CacheStore for desired lifetime.
-     * Due no PDOStatement involved in this class some functionality (like fetch modes) can be limited.
+     * CacheResult instance used to represent query result fetched from database and stored in
+     * CacheStore for desired lifetime. Due no PDOStatement involved in this class some functionality
+     * (like fetch modes) can be limited.
      *
      * @param CacheStore $store      CacheStore class used to store query result.
      * @param array      $cacheID    Unique query cache id.
@@ -67,7 +68,13 @@ class CachedResult extends QueryResult
      * @param array      $parameters Parameters to be binded into query.
      * @param array      $data       Resulted rowset (fetched using ASSOC mode).
      */
-    public function __construct(CacheStore $store, $cacheID, $query, array $parameters = array(), array $data = array())
+    public function __construct(
+        CacheStore $store,
+        $cacheID,
+        $query,
+        array $parameters = array(),
+        array $data = array()
+    )
     {
         $this->store = $store;
         $this->cacheID = $cacheID;
@@ -112,8 +119,9 @@ class CachedResult extends QueryResult
     }
 
     /**
-     * Change PDOStatement fetch mode, use PDO::FETCH_ constants to specify required mode. If you want to keep compatibility
-     * with CachedQuery do not use other modes than PDO::FETCH_ASSOC and PDO::FETCH_NUM.
+     * Change PDOStatement fetch mode, use PDO::FETCH_ constants to specify required mode. If you
+     * want to keep compatibility with CachedQuery do not use other modes than PDO::FETCH_ASSOC
+     * and PDO::FETCH_NUM.
      *
      * @link http://php.net/manual/en/pdostatement.setfetchmode.php
      * @param int $mode The fetch mode must be one of the PDO::FETCH_* constants.
@@ -124,7 +132,9 @@ class CachedResult extends QueryResult
     {
         if ($mode != PDO::FETCH_ASSOC && $mode != PDO::FETCH_NUM)
         {
-            throw new DBALException('Cached query supports only FETCH_ASSOC and FETCH_NUM fetching modes.');
+            throw new DBALException(
+                'Cached query supports only FETCH_ASSOC and FETCH_NUM fetching modes.'
+            );
         }
 
         $this->fetchMode = $mode;
@@ -140,7 +150,11 @@ class CachedResult extends QueryResult
      */
     public function fetch($mode = null)
     {
-        $mode && $this->fetchMode($mode);
+        if (!empty($mode))
+        {
+            $this->fetchMode($mode);
+        }
+
         if ($data = isset($this->data[$this->cursor]) ? $this->data[$this->cursor++] : false)
         {
             foreach ($this->bindings as $columnID => &$variable)
@@ -197,13 +211,17 @@ class CachedResult extends QueryResult
                 }
             }
 
-            throw new DBALException("Did not find index '{$columnID}' in the defined columns, it will not be bound.");
+            throw new DBALException(
+                "Did not find index '{$columnID}' in the defined columns, it will not be bound."
+            );
         }
         else
         {
             if (!isset($this->data[0][$columnID]))
             {
-                throw new DBALException("Did not find column name '{$columnID}' in the defined columns, it will not be bound.");
+                throw new DBALException(
+                    "Did not find column name '{$columnID}' in the defined columns, it will not be bound."
+                );
             }
 
             $this->bindings[$columnID] = &$variable;
@@ -215,7 +233,8 @@ class CachedResult extends QueryResult
     /**
      * Returns an array containing all of the result set rows, do not use this method on big datasets.
      *
-     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC by default.
+     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC
+     *                   by default.
      * @return array
      */
     public function fetchAll($mode = null)
@@ -282,7 +301,9 @@ class CachedResult extends QueryResult
             'cacheID'   => $this->cacheID,
             'statement' => $this->queryString(),
             'count'     => $this->count,
-            'rows'      => $this->count > static::DUMP_LIMIT ? '[TOO MANY RECORDS TO DISPLAY]' : $this->fetchAll(\PDO::FETCH_ASSOC)
+            'rows'      => $this->count > static::DUMP_LIMIT
+                ? '[TOO MANY RECORDS TO DISPLAY]'
+                : $this->fetchAll(\PDO::FETCH_ASSOC)
         );
     }
 }

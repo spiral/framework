@@ -20,8 +20,8 @@ class Parameter extends Component implements ParameterInterface
     protected $value = null;
 
     /**
-     * New instance on dbal query Parameter. Parameter will be automatically constructed to represent complex values, such
-     * as arrays.
+     * New instance on dbal query Parameter. Parameter will be automatically constructed to represent
+     * complex values, such as arrays.
      *
      * @param mixed $value Binded value.
      */
@@ -31,8 +31,9 @@ class Parameter extends Component implements ParameterInterface
     }
 
     /**
-     * Get parameter value, this method will be called by driver at moment of sending parameters to PDO. Method is required
-     * as some parameters contain array value which should be presented as multiple query bindings.
+     * Get parameter value, this method will be called by driver at moment of sending parameters to
+     * PDO. Method is required as some parameters contain array value which should be presented as
+     * multiple query bindings.
      *
      * @return mixed
      */
