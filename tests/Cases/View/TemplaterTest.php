@@ -537,6 +537,31 @@ class TemplaterTest extends TestCase
         $this->assertSame('</html>', $result[12]);
     }
 
+    public function testRealC()
+    {
+        //Little more imports
+        $result = $this->render("real/realC");
+
+
+        $this->assertSame('<html>', $result[0]);
+        $this->assertSame('<head>', $result[1]);
+        $this->assertSame('<title>Real C Title.</title>', $result[2]);
+        $this->assertSame('</head>', $result[3]);
+        $this->assertSame('<body>', $result[4]);
+        $this->assertSame('<span>This is real A body.</span>', $result[5]);
+        $this->assertSame('<input type="text" name="input" value="real value A" class="class"/>', $result[6]);
+        $this->assertSame('<input type="date" name="date-input" value="real value B"/>', $result[7]);
+        $this->assertSame('<input type="password" name="password" value="real value C"/>', $result[8]);
+        $this->assertSame('<span class="custom-span">This is real C content.</span>', $result[9]);
+        $this->assertSame('<a href="/" class="custom-link" target="_blank">This is link in <span class="custom-span">real B</span>.</a>', $result[10]);
+        $this->assertSame('This is block B(default).', $result[11]);
+        $this->assertSame('This is block B(default).', $result[12]);
+        $this->assertSame('This is block C(default). Exists only under default.', $result[13]);
+        $this->assertSame('Inside block C (default)', $result[14]);
+        $this->assertSame('</body>', $result[15]);
+        $this->assertSame('</html>', $result[16]);
+    }
+
     public function testNamespaceNestedA()
     {
         //Nested blocks
