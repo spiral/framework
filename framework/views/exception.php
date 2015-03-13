@@ -378,7 +378,7 @@ Debugger::dumpingStyles(array(
                                     $reflection = new ReflectionClass($argument);
                                     $display = '<span title="' . get_class($argument) . '">'
                                         . $reflection->getShortName()
-                                        . ' object</span>';
+                                        . '</span>';
                                 }
 
                                 $display = Debugger::getStyle($display, 'value', $type);
