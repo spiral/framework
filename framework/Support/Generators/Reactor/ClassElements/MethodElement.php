@@ -152,8 +152,8 @@ class MethodElement extends BaseElement
     }
 
     /**
-     * Mount source code into method. Indents will be modified to follow method and class tabulation. If the source is
-     * provided as array of lines - no indents will be modified.
+     * Mount source code into method. Indents will be modified to follow method and class tabulation.
+     * If the source is provided as array of lines - no indents will be modified.
      *
      * @param string|array $source
      * @param bool         $append
@@ -198,8 +198,9 @@ class MethodElement extends BaseElement
     }
 
     /**
-     * Replace strings in all doc comment lines or other names. This is particularly useful when you want to build
-     * a virtual documentation class based on another declaration. Parameter types will be replaced as well.
+     * Replace strings in all doc comment lines or other names. This is particularly useful when you
+     * want to build a virtual documentation class based on another declaration. Parameter types
+     * will be replaced as well.
      *
      * @param string|array $search  String to find.
      * @param string|array $replace String to replace for.
@@ -218,9 +219,9 @@ class MethodElement extends BaseElement
     }
 
     /**
-     * Render element declaration. The method should be declared in RElement childs classes and then perform the operation for
-     * rendering a specific type of content. Method will be rendered with it's code (optional), static keyword, access
-     * level and it's parameters.
+     * Render element declaration. The method should be declared in RElement childs classes and then
+     * perform the operation for rendering a specific type of content. Method will be rendered with
+     * it's code (optional), static keyword, access level and it's parameters.
      *
      * @param int $indentLevel Tabulation level.
      * @param int $position    Element position.
@@ -228,7 +229,9 @@ class MethodElement extends BaseElement
      */
     public function createDeclaration($indentLevel = 0, $position = 0)
     {
-        $result = array(!$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel));
+        $result = array(
+            !$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel)
+        );
 
         //Parameters
         $parameters = array();
@@ -266,7 +269,8 @@ class MethodElement extends BaseElement
     }
 
     /**
-     * Clone schema from existing method. The method code will not be copied and has to be mounted manually.
+     * Clone schema from existing method. The method code will not be copied and has to be mounted
+     * manually.
      *
      * @param \ReflectionMethod $method
      */

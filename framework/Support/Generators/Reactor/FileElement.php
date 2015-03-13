@@ -73,9 +73,10 @@ class FileElement extends NamespaceElement
      * Render the PHP file's code and deliver it to a given filename.
      *
      * @param string $filename        Filename to render code into.
-     * @param int    $mode            Use File::RUNTIME for 666 and File::READONLY for application files.
-     * @param bool   $ensureDirectory If true, helper will ensure that the destination directory exists and has the correct
-     *                                permissions.
+     * @param int $mode               Use File::RUNTIME for 766 and File::READONLY for application
+     *                                files.
+     * @param bool $ensureDirectory   If true, helper will ensure that the destination directory exists
+     *                                and has the correct permissions.
      * @return bool
      */
     public function renderFile($filename, $mode = FileManager::RUNTIME, $ensureDirectory = false)
@@ -84,9 +85,9 @@ class FileElement extends NamespaceElement
     }
 
     /**
-     * Render element declaration. This method should be declared in RElement child classes and perform an operation for
-     * rendering the specific type of content. RPHPFile will render all nested classes and namespaces into valid (in terms of
-     * syntax) php code.
+     * Render element declaration. This method should be declared in RElement child classes and perform
+     * an operation for rendering the specific type of content. RPHPFile will render all nested classes
+     * and namespaces into valid (in terms of syntax) php code.
      *
      * @param int $indentLevel Tabulation level.
      * @return string

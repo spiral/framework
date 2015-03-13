@@ -540,12 +540,12 @@ class QueryCompiler extends Component
     {
         $statement = '';
 
-        if ($limit)
+        if (!empty($limit))
         {
             $statement = "LIMIT {$limit} ";
         }
 
-        if ($offset)
+        if (!empty($offset))
         {
             $statement .= "OFFSET {$offset}";
         }

@@ -165,8 +165,9 @@ class ParameterElement extends Component
     }
 
     /**
-     * Render element declaration. This method must be declared in RElement child classes and then perform operation for
-     * rendering specific type of content. Method parameter is embedded to method declaration.  THIS SENTENCE NEEDS TO BE REWORKED
+     * Render element declaration. This method must be declared in RElement child classes and then
+     * perform operation for rendering specific type of content. Method parameter is embedded to
+     * method declaration.
      *
      * @return string
      */
@@ -182,7 +183,14 @@ class ParameterElement extends Component
 
         if ($this->options)
         {
-            $result .= " = " . ($this->defaultValue === array() ? 'array()' : var_export($this->defaultValue, true));
+            if ($this->defaultValue === array())
+            {
+                $result .= ' = array()';
+            }
+            else
+            {
+                $result .= ' = ' . var_export($this->defaultValue, true);
+            }
         }
 
         return $result;

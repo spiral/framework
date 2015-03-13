@@ -77,8 +77,9 @@ class NamespaceElement extends BaseElement
     }
 
     /**
-     * Render element declaration. This method should be declared in RElement child classes and perform an operation for
-     * rendering a specific type of content. Renders namespace section with it's classes, uses and comments.
+     * Render element declaration. This method should be declared in RElement child classes and perform
+     * an operation for rendering a specific type of content. Renders namespace section with it's
+     * classes, uses and comments.
      *
      * @param int $indentLevel Tabulation level.
      * @return string

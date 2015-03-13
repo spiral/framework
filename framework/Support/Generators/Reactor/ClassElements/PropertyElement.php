@@ -109,7 +109,8 @@ class PropertyElement extends BaseElement
     /**
      * Set default value to property.
      *
-     * @param bool  $default      Default value flag (if false, property will be designated as non default).
+     * @param bool  $default      Default value flag (if false, property will be designated as non
+     *                            default).
      * @param mixed $defaultValue Property default value (string, array, etc).
      * @return static
      */
@@ -145,7 +146,8 @@ class PropertyElement extends BaseElement
 
         if ($property->isDefault())
         {
-            foreach ($property->getDeclaringClass()->getDefaultProperties() as $propertyName => $propertyValue)
+            foreach ($property->getDeclaringClass()->getDefaultProperties() as $propertyName =>
+                     $propertyValue)
             {
                 if ($propertyName == $property->getName())
                 {
@@ -156,9 +158,9 @@ class PropertyElement extends BaseElement
     }
 
     /**
-     * Render element declaration. That method must be declared in RElement childs classes and then perform the operation for
-     * rendering a specific type of content. Property will be rendered with it's own access level, static flag and default
-     * value (if shown).
+     * Render element declaration. That method must be declared in RElement childs classes and then
+     * perform the operation for rendering a specific type of content. Property will be rendered with
+     * it's own access level, static flag and default value (if shown).
      *
      * @param int $indentLevel Tabulation level.
      * @param int $position    Element position.
@@ -166,12 +168,22 @@ class PropertyElement extends BaseElement
      */
     public function createDeclaration($indentLevel = 0, $position = 0)
     {
-        $result = array(!$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel));
+        $result = array(
+            !$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel)
+        );
+
         $property = $this->access . ' ' . ($this->static ? 'static ' : '') . '$' . $this->name;
 
         if ($this->isDefault())
         {
-            $property .= ' = ' . ($this->defaultValue === array() ? 'array()' : var_export($this->defaultValue, true));
+            if ($this->defaultValue === array())
+            {
+                $property .= ' = array()';
+            }
+            else
+            {
+                $property .= ' = ' . var_export($this->defaultValue, true);
+            }
         }
 
         $result[] = $property . ';';

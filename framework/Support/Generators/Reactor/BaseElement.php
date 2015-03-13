@@ -21,24 +21,25 @@ abstract class BaseElement extends Component
     const ACCESS_PROTECTED = 'protected';
 
     /**
-     * Indent string used to generate the nested constructions (such as the methods in class, parameters, classes in namespace).
-     * This is 4 spaces by default.
+     * Indent string used to generate the nested constructions (such as the methods in class,
+     * parameters, classes in namespace). This is 4 spaces by default.
      *
      * @var string
      */
     public static $indent = "    ";
 
     /**
-     * Element name, which can be used for multiple purposes such as class name, property name, method name or even namespace
-     * name.
+     * Element name, which can be used for multiple purposes such as class name, property name,
+     * method name or even namespace name.
      *
      * @var string
      */
     protected $name = '';
 
     /**
-     * Element docComment. Doc comments can be assigned to any existing element and can be inherited from the parent class
-     * if element is cloned by it's own schema. DocComment content can be replaced or updated using element methods.
+     * Element docComment. Doc comments can be assigned to any existing element and can be inherited
+     * from the parent class if element is cloned by it's own schema. DocComment content can be replaced
+     * or updated using element methods.
      *
      * @var array
      */
@@ -110,8 +111,8 @@ abstract class BaseElement extends Component
     }
 
     /**
-     * Replace strings in all doc comment lines or other names. This is especially  useful when you want to build virtual
-     * documentation class based on another declaration.
+     * Replace strings in all doc comment lines or other names. This is especially  useful when you
+     * want to build virtual documentation class based on another declaration.
      *
      * @param string|array $search  String to find.
      * @param string|array $replace String to replace with.
@@ -169,8 +170,8 @@ abstract class BaseElement extends Component
     }
 
     /**
-     * Render element declaration. The method should be declared in RElement child classes and then perform the operation for
-     * rendering a specific type of content.
+     * Render element declaration. The method should be declared in RElement child classes and then
+     * perform the operation for rendering a specific type of content.
      *
      * @param int $indentLevel Tabulation level.
      * @return string
@@ -178,8 +179,9 @@ abstract class BaseElement extends Component
     abstract public function createDeclaration($indentLevel = 0);
 
     /**
-     * Apply current indent and tabulation level to string. This method will shift string to the right using an indent
-     * string declared in RElement::$indent using $indentLevel argument as a multiplier (0 - no shifts).
+     * Apply current indent and tabulation level to string. This method will shift string to the right
+     * using an indent string declared in RElement::$indent using $indentLevel argument as a multiplier
+     * (0 - no shifts).
      *
      * @param string $string      Indent string.
      * @param int    $indentLevel Tabulation level.
@@ -191,8 +193,9 @@ abstract class BaseElement extends Component
     }
 
     /**
-     * Apply current indent and tabulation to multiple lines stored as array of strings. This method will shift every line
-     * string to the right using an indent declared in RElement::$indent using $indentLevel argument as a multiplier.
+     * Apply current indent and tabulation to multiple lines stored as array of strings. This method
+     * will shift every line string to the right using an indent declared in RElement::$indent using
+     * $indentLevel argument as a multiplier.
      *
      * @param array $lines       Lines array that will be shifted.
      * @param int   $indentLevel Tabulation level.

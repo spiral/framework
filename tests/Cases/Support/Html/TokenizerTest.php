@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Tests\Cases\Html;
+namespace Spiral\Tests\Cases\Support\Html;
 
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Support\Html\Tokenizer;

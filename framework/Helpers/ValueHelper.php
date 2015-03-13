@@ -44,14 +44,14 @@ class ValueHelper
      * @param mixed $haystack Filtered array
      * @return array
      */
-    public static function scalarArray(array $haystack)
+    public static function scalarArray($haystack)
     {
         if (!is_array($haystack))
         {
             return array();
         }
 
-        return array_filter(array_values($haystack), 'is_scalar');
+        return array_values(array_filter($haystack, 'is_scalar'));
     }
 
     /**

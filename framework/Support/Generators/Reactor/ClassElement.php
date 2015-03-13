@@ -42,8 +42,8 @@ class ClassElement extends BaseElement
     protected $constants = array();
 
     /**
-     * Public static and non-static methods declared in this class. Method can include source code which allows you to use
-     * reactor output as real classes.
+     * Public static and non-static methods declared in this class. Method can include source code
+     * which allows you to use reactor output as real classes.
      *
      * @var MethodElement[]
      */
@@ -301,9 +301,9 @@ class ClassElement extends BaseElement
     }
 
     /**
-     * Replace strings in all doc comment lines or other names. This is helpful when you want to build a virtual documentation
-     * class based on another declaration. The string will be replaced in everywhere it occurs (methods, properties, constants and
-     * class docComments).
+     * Replace strings in all doc comment lines or other names. This is helpful when you want to build
+     * a virtual documentation class based on another declaration. The string will be replaced in
+     * everywhere it occurs (methods, properties, constants and class docComments).
      *
      * @param string|array $search  String to find.
      * @param string|array $replace String to replace.
@@ -327,9 +327,9 @@ class ClassElement extends BaseElement
     }
 
     /**
-     * Render element declaration. This method should be declared in the RElement childs classes and perform operation for
-     * rendering specific type of content. This will render class declaration with it's methods, properties, constants and
-     * comments.
+     * Render element declaration. This method should be declared in the RElement childs classes and
+     * perform operation for rendering specific type of content. This will render class declaration
+     * with it's methods, properties, constants and comments.
      *
      * @param int $indentLevel Tabulation level.
      * @return string
@@ -353,7 +353,10 @@ class ClassElement extends BaseElement
         //Constants
         foreach ($this->constants as $constant => $value)
         {
-            $result[] = static::applyIndent('const ' . $constant . ' = ' . var_export($value, true) . ';', $indentLevel + 1);
+            $result[] = static::applyIndent(
+                'const ' . $constant . ' = ' . var_export($value, true) . ';',
+                $indentLevel + 1
+            );
         }
 
         //Properties
@@ -374,8 +377,9 @@ class ClassElement extends BaseElement
     }
 
     /**
-     * Clone declaration including parent constants, interfaces and properties from an external class. Specified class will
-     * be set as a declaration parent (extends). Use the parentMethods argument to additionally clone every parent method.
+     * Clone declaration including parent constants, interfaces and properties from an external class.
+     * Specified class will be set as a declaration parent (extends). Use the parentMethods argument
+     * to additionally clone every parent method.
      *
      * @param string $class         Class to be cloned.
      * @param bool   $parentMethods Set to true to clone methods declared in parent class.
