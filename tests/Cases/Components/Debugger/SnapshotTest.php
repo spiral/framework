@@ -38,6 +38,12 @@ class SnapshotTest extends TestCase
 
         $this->loader->disable();
         $this->loader = null;
+
+        $file = new FileManager();
+        foreach ($file->getFiles(directory('runtime')) as $filename)
+        {
+            $file->remove($filename);
+        }
     }
 
     public function testSnapshots()
@@ -66,6 +72,8 @@ class SnapshotTest extends TestCase
         $snapshot = $debug->handleException(new \ErrorException('Snapshot Test'), false);
 
         $this->assertNotEmpty($snapshot->getSnapshotFilename());
+
+        $this->assertFileExists($snapshot->getSnapshotFilename());
 
         //But we still should be able to render it
         $this->assertNotEmpty($snapshot->renderSnapshot());

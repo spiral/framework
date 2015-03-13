@@ -15,6 +15,15 @@ use Spiral\Tests\MemoryCore;
 
 class NamespacesTest extends TestCase
 {
+    protected function tearDown()
+    {
+        $file = new FileManager();
+        foreach ($file->getFiles(directory('runtime')) as $filename)
+        {
+            $file->remove($filename);
+        }
+    }
+
     public function testNamespaces()
     {
         $view = $this->viewComponent();
