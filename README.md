@@ -67,7 +67,7 @@ modules, perform migrations and update ODM schema (plus UML export) are all read
 Modules
 -------------
 Modules are working well. This includes bindings, installers, and resources. Check sample modules 
-spiral-toolkit and spiral-markdown. Profiler has not been updated.
+spiral-toolkit and spiral-markdown.
 
 Image
 -------------
