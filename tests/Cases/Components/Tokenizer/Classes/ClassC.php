@@ -6,9 +6,8 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Tests\Cases\Tokenizer\Classes;
+namespace Spiral\Tests\Cases\Components\Tokenizer\Classes;
 
-class ClassA
+class ClassC extends ClassB
 {
-
 }

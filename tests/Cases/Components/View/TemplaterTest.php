@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Tests\Cases\View;
+namespace Spiral\Tests\Cases\Components\View;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\View\View;

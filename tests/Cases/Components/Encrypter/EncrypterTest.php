@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Tests\Cases\Encrypter;
+namespace Spiral\Tests\Cases\Components\Encrypter;
 
 use Spiral\Components\Encrypter\Encrypter;
 use Spiral\Support\Tests\TestCase;

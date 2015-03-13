@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Tests\Cases\Tokenizer\Classes\Inner;
+namespace Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner;
 
-use Spiral\Tests\Cases\Tokenizer\Classes\ClassA;
+use Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassA;
 
 class ClassD extends ClassA
 {
