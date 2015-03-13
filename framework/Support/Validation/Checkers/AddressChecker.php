@@ -46,7 +46,7 @@ class AddressChecker extends Checker
      */
     public function fullEmail($email)
     {
-        if (is_string($email) && preg_match('/<([^>]+)>/i', $email, $matches))
+        if (is_string($email) && preg_match('/<([^>]+)>$/i', $email, $matches))
         {
             $email = $matches[1];
         }
