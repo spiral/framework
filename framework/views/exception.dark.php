@@ -357,7 +357,11 @@ Debugger::dumpingStyles(array(
                         $function = '<strong>' . $trace['function'] . '</strong>';
                         if (isset($trace['type']))
                         {
-                            $function = $trace['class'] . $trace['type'] . $function;
+                            $reflection = new ReflectionClass($trace['class']);
+
+                            $function = '<span title="' . $trace['class'] . '">' .
+                                $reflection->getShortName()
+                                . '</span>' . $trace['type'] . $function;
                         }
 
                         $arguments = array();
