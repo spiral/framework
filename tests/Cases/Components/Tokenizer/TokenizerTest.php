@@ -33,7 +33,7 @@ class TokenizerTest extends TestCase
         $this->loader = null;
     }
 
-    public function testClasses()
+    public function testClassesAll()
     {
         $tokenizer = $this->tokenizerComponent();
 
@@ -48,14 +48,11 @@ class TokenizerTest extends TestCase
         //Excluded
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassXX', $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\Bad_Class', $classes);
+    }
 
-        //By class
-        $classes = $tokenizer->getClasses('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassA');
-        $this->assertArrayNotHasKey(__CLASS__, $classes);
-        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassA', $classes);
-        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassB', $classes);
-        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassC', $classes);
-        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner\ClassD', $classes);
+    public function testClassesByNamespace()
+    {
+        $tokenizer = $this->tokenizerComponent();
 
         //By namespace
         $classes = $tokenizer->getClasses(null, 'Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner');
@@ -64,6 +61,11 @@ class TokenizerTest extends TestCase
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassB', $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassC', $classes);
         $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner\ClassD', $classes);
+    }
+
+    public function testClassesByInterface()
+    {
+        $tokenizer = $this->tokenizerComponent();
 
         //By interface
         $classes = $tokenizer->getClasses('Spiral\Tests\Cases\Components\Tokenizer\TestInterface');
@@ -72,6 +74,11 @@ class TokenizerTest extends TestCase
         $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassB', $classes);
         $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassC', $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner\ClassD', $classes);
+    }
+
+    public function testClassesByTrait()
+    {
+        $tokenizer = $this->tokenizerComponent();
 
         //By trait
         $classes = $tokenizer->getClasses('Spiral\Tests\Cases\Components\Tokenizer\TestTrait');
@@ -80,6 +87,24 @@ class TokenizerTest extends TestCase
         $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassB', $classes);
         $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassC', $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner\ClassD', $classes);
+    }
+
+    public function testClassesByClassA()
+    {
+        $tokenizer = $this->tokenizerComponent();
+
+        //By class
+        $classes = $tokenizer->getClasses('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassA');
+        $this->assertArrayNotHasKey(__CLASS__, $classes);
+        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassA', $classes);
+        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassB', $classes);
+        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassC', $classes);
+        $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner\ClassD', $classes);
+    }
+
+    public function testClassesByClassB()
+    {
+        $tokenizer = $this->tokenizerComponent();
 
         //By class
         $classes = $tokenizer->getClasses('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassB');
@@ -88,8 +113,6 @@ class TokenizerTest extends TestCase
         $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassB', $classes);
         $this->assertArrayHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\ClassC', $classes);
         $this->assertArrayNotHasKey('Spiral\Tests\Cases\Components\Tokenizer\Classes\Inner\ClassD', $classes);
-
-        $this->loader->disable();
     }
 
     public function testFileReflection()
