@@ -15,6 +15,9 @@ use Spiral\Components\Http\Request\PsrRequest;
 use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\Uri;
 
+/**
+ * TODO: PROPERTY ACCESSORS, IS AJAX CHECKER
+ */
 class Request extends PsrRequest implements ServerRequestInterface
 {
     /**

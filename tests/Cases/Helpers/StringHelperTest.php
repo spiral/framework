@@ -109,5 +109,18 @@ EOT;
             StringHelper::normalizeEndings($expected),
             StringHelper::normalizeIndents($string)
         );
+
+        $string = <<<EOT
+        a
+            b
+                c
+                d
+                e
+EOT;
+
+        $this->assertSame(
+            StringHelper::normalizeEndings($expected),
+            StringHelper::normalizeIndents($string)
+        );
     }
 }

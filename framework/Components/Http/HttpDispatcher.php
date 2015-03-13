@@ -10,13 +10,15 @@ namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
+use Spiral\Components\View\StaticVariablesInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
+use Spiral\Core\Events\Event;
 
-class HttpDispatcher extends Component implements DispatcherInterface
+class HttpDispatcher extends Component implements DispatcherInterface, StaticVariablesInterface
 {
     /**
      * Required traits.
@@ -81,6 +83,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $this->core = $core;
         $this->config = $core->loadConfig('http');
         $this->filters = $this->config['filters'];
+    }
+
+    /**
+     * Called by event component at time of composing view static variables. Such variables will change cache file name.
+     * Class which implements this method should add new variable to event context.
+     *
+     * @param Event $event
+     */
+    public function viewVariables(Event $event)
+    {
+        $event->context['basePath'] = $this->config['basePath'];
     }
 
     /**

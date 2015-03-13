@@ -84,7 +84,7 @@ class QueryCompiler extends BaseQueryCompiler
     {
         $statement = '';
 
-        if ($limit || $offset)
+        if (!empty($limit) || !empty($offset))
         {
             //When limit is not provided but offset does we can replace limit value with PHP_INT_MAX
             $statement = "LIMIT " . ($limit ?: '18446744073709551615') . ' ';

@@ -189,7 +189,7 @@ class StringHelper
         $minIndent = null;
         foreach ($lines as $line)
         {
-            if (empty($line))
+            if (!trim($line))
             {
                 continue;
             }
@@ -227,6 +227,12 @@ class StringHelper
             //Getting line indent
             preg_match("/^([ \t]+)/", $line, $matches);
             $indent = $matches[1];
+
+            if (!trim($line))
+            {
+                $line = '';
+                continue;
+            }
 
             //Getting new indent
             $useIndent = str_repeat(
