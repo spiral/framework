@@ -9,6 +9,7 @@
 namespace Spiral\Tests\Cases\Support\Validation\Checkers;
 
 use Spiral\Components\Localization\I18nManager;
+use Spiral\Core\Container;
 use Spiral\Support\Tests\TestCase;
 use Spiral\Support\Validation\Validator;
 use Spiral\Tests\MemoryCore;
@@ -31,7 +32,13 @@ class AddressCheckerTest extends TestCase
             )
         ));
 
-        $core->bind('i18n', new I18nManager($core));
+        Container::bind('i18n', new I18nManager($core));
+    }
+
+
+    protected function tearDown()
+    {
+        Container::removeBinding('i18n');
     }
 
     public function testEmail()

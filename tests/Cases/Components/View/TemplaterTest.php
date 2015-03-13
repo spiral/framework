@@ -636,12 +636,12 @@ class TemplaterTest extends TestCase
                 ),
                 'caching'           => array(
                     'enabled'   => false,
-                    'directory' => directory('runtime') . '/'
+                    'directory' => directory('runtime')
                 ),
                 'variableProviders' => array(),
                 'processors'        => array(
                     'templater' => array(
-                        'class' => 'Spiral\\Components\\View\\Processors\\TemplateProcessor'
+                        'class' => 'Spiral\Components\View\Processors\TemplateProcessor'
                     )
                 )
             );

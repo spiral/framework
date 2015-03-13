@@ -42,6 +42,13 @@ class Snapshot extends Component
     protected $snapshot = '';
 
     /**
+     * Filename where snapshot is stored into.
+     *
+     * @var string|null
+     */
+    protected $snapshotFilename = null;
+
+    /**
      * Create new ExceptionResponse object. Object usually generated in Debug::handleException()
      * method and used to show or to store (if specified) backtrace and environment dump or occurred
      * error.
@@ -58,10 +65,10 @@ class Snapshot extends Component
         if (!empty($config['enabled']) && !($exception instanceof ClientException))
         {
             $reflection = new \ReflectionObject($exception);
-            $filename = $this->getFilename($config, $reflection->getShortName());
+            $this->snapshotFilename = $this->getFilename($config, $reflection->getShortName());
 
             FileManager::getInstance()->write(
-                $filename,
+                $this->snapshotFilename,
                 $this->renderSnapshot(),
                 FileManager::RUNTIME,
                 true
@@ -81,6 +88,16 @@ class Snapshot extends Component
         $name = date($config['timeFormat'], time()) . '-' . $shortName . '.html';
 
         return $config['directory'] . '/' . $name;
+    }
+
+    /**
+     * Get location where snapshot is stored into.
+     *
+     * @return string|null
+     */
+    public function getSnapshotFilename()
+    {
+        return $this->snapshotFilename;
     }
 
     /**

@@ -8,8 +8,6 @@
  */
 namespace Spiral\Support\Tests;
 
-use Spiral\Core\Core;
-
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
 }

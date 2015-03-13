@@ -22,10 +22,16 @@ class TokenizerTest extends TestCase
      */
     protected $loader = null;
 
-    protected $config = array(
-        'directories' => array(__DIR__),
-        'exclude'     => array('XX')
-    );
+    protected function setUp()
+    {
+        $this->loader = new Loader(MemoryCore::getInstance());
+    }
+
+    protected function tearDown()
+    {
+        $this->loader->disable();
+        $this->loader = null;
+    }
 
     public function testClasses()
     {
@@ -135,8 +141,6 @@ class TokenizerTest extends TestCase
             test_function_a($this, $a + $b);
             test_function_b("string", 123);
         }
-
-        $this->loader->disable();
     }
 
     /**
@@ -148,13 +152,16 @@ class TokenizerTest extends TestCase
      */
     protected function tokenizerComponent(array $config = array())
     {
-        if (empty($this->loader))
+        if (empty($config))
         {
-            $this->loader = new Loader(MemoryCore::getInstance());
+            $config = array(
+                'directories' => array(__DIR__),
+                'exclude'     => array('XX')
+            );
         }
 
         return new Tokenizer(
-            MemoryCore::getInstance()->setConfig('tokenizer', $config ?: $this->config),
+            MemoryCore::getInstance()->setConfig('tokenizer', $config),
             new FileManager(),
             $this->loader
         );

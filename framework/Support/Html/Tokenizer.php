@@ -286,7 +286,10 @@ class Tokenizer extends Component
                 return;
             }
 
-            $token = array(self::TOKEN_TYPE => self::PLAIN_TEXT, self::TOKEN_CONTENT => $this->repairPHP($content));
+            $token = array(
+                self::TOKEN_TYPE => self::PLAIN_TEXT,
+                self::TOKEN_CONTENT => $this->repairPHP($content)
+            );
         }
         else
         {
