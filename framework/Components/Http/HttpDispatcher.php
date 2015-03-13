@@ -11,6 +11,7 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
@@ -53,7 +54,22 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * @var array|MiddlewareInterface[]
      */
-    protected $middleware = array();
+    protected $filters = array();
+
+    /**
+     * Endpoints is a set of middlewares or callback used to handle some application parts separately
+     * from application controllers and routes. Such Middlewares can perform their own routing,
+     * mapping, render and etc and only have to return ResponseInterface object.
+     *
+     * You can use add() method to create new endpoint. Every endpoint should be specified as path
+     * with / and in lower case.
+     *
+     * Example (in bootstrap):
+     * $this->http->add('/forum', 'Vendor\Forum\Forum');
+     *
+     * @var array|MiddlewareInterface[]
+     */
+    protected $endpoints = array();
 
     /**
      * New HttpDispatcher instance.
@@ -64,19 +80,19 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $this->core = $core;
         $this->config = $core->loadConfig('http');
-        $this->middleware = $this->config['middleware'];
+        $this->filters = $this->config['filters'];
     }
 
     /**
-     * Register new HttpDispatcher level middleware. Calling this method will have effect only
-     * before HttpDispatcher->start() method executed.
+     * Register new endpoint middleware inside HttpDispatcher.
      *
+     * @param string                              $path Http Uri path with / and in lower case.
      * @param string|callable|MiddlewareInterface $middleware
      * @return static
      */
-    public function add($middleware)
+    public function add($path, $middleware)
     {
-        $this->middleware[] = $middleware;
+        $this->endpoints[$path] = $middleware;
 
         return $this;
     }
@@ -92,7 +108,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             'basePath' => $this->config['basePath']
         ));
 
-        $pipeline = new MiddlewarePipe($this->middleware);
+        $pipeline = new MiddlewarePipe($this->filters);
         $response = $pipeline->target(array($this, 'perform'))->run($this->request, $this);
 
         //Use $event->object->getRequest() to access original request
@@ -133,7 +149,28 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $this->core->bind(get_class($request), $request);
 
         ob_start();
-        $response = $this->core->callAction('Controllers\HomeController', 'index');
+
+        $endpoint = null;
+
+        $uriPath = strtolower($request->getUri()->getPath());
+        foreach ($this->endpoints as $path => $middleware)
+        {
+            if (strpos($uriPath, $path) === 0)
+            {
+                $endpoint = $middleware;
+                break;
+            }
+        }
+
+        if (empty($endpoint))
+        {
+            $response = $this->core->callAction('Controllers\HomeController', 'index');
+        }
+        else
+        {
+            $response = $this->performEndpoint($request, $endpoint);
+        }
+
         $plainOutput = ob_get_clean();
 
         $this->core->removeBinding(get_class($request));
@@ -147,6 +184,29 @@ class HttpDispatcher extends Component implements DispatcherInterface
         }
 
         return $this->wrapResponse($response, $plainOutput);
+    }
+
+    /**
+     * Execute endpoint middleware. Right now this method supports only spiral middlewares,
+     * but can be easily changed to support another syntax like handle(request, response).
+     *
+     * @param Request                             $request
+     * @param string|callable|MiddlewareInterface $endpoint
+     * @return mixed
+     * @throws \Spiral\Core\CoreException
+     */
+    protected function performEndpoint(Request $request, $endpoint)
+    {
+        if (is_string($endpoint))
+        {
+            $endpoint = Container::get($endpoint);
+        }
+
+        /**
+         * @var callable $endpoint
+         */
+
+        return $endpoint($request, null, $this);
     }
 
     protected function wrapResponse($response, $plainOutput = '')

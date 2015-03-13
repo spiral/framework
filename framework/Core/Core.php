@@ -323,8 +323,8 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Bootstrapping. Most of code responsible for routes, events and other application preparations should located in this
-     * method.
+     * Bootstrapping. Most of code responsible for routes, endpoints, events and other application
+     * preparations should located in this method.
      */
     public function bootstrap()
     {
