@@ -542,7 +542,6 @@ class TemplaterTest extends TestCase
         //Little more imports
         $result = $this->render("real/realC");
 
-
         $this->assertSame('<html>', $result[0]);
         $this->assertSame('<head>', $result[1]);
         $this->assertSame('<title>Real C Title.</title>', $result[2]);

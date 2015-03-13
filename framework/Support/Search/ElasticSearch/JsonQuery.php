@@ -26,8 +26,8 @@ class JsonQuery extends CurlQuery
     }
 
     /**
-     * Custom method which can be extended by Query children to implement custom CURL response parsing logic. Will be called
-     * after CURL request made, but only if request succeeded.
+     * Custom method which can be extended by Query children to implement custom CURL response parsing
+     * logic. Will be called after CURL request made, but only if request succeeded.
      *
      * @param mixed $result
      * @return mixed

@@ -30,7 +30,8 @@ class SearchResult extends Component implements \Countable, \IteratorAggregate, 
     }
 
     /**
-     * Array of found documents (hits). Use mapData argument to format document source to more convenient format.
+     * Array of found documents (hits). Use mapData argument to format document source to more convenient
+     * format.
      *
      * @param bool $mapData Include document id, index and type to document source.
      * @return array

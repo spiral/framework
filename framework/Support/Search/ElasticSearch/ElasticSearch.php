@@ -49,8 +49,9 @@ class ElasticSearch extends Component
     );
 
     /**
-     * ElasticSearch class represent simple wrapper to send requests to specified elasticSearch backend. This class support
-     * results and requests packing, custom command performing and index creation.
+     * ElasticSearch class represent simple wrapper to send requests to specified elasticSearch
+     * backend. This class support results and requests packing, custom command performing and index
+     * creation.
      *
      * @param string $server
      */
@@ -60,10 +61,11 @@ class ElasticSearch extends Component
     }
 
     /**
-     * Flush and recreate index with specified options and associate mapping after. Options array should include two sections,
-     * "settings" and "types", where types is default elastic search type mapping and index specify base options, such as
-     * analyzers, filters and etc. Default index options includes index and search tokenizers to correctly process requests
-     * and items in english language.
+     * Flush and recreate index with specified options and associate mapping after. Options array
+     * should include two sections, "settings" and "types", where types is default elastic search
+     * type mapping and index specify base options, such as analyzers, filters and etc. Default index
+     * options includes index and search tokenizers to correctly process requests and items in english
+     * language.
      *
      * Existed index and all data will be erased.
      *
@@ -116,7 +118,11 @@ class ElasticSearch extends Component
      */
     public function query($method, $url, array $data = array(), array $queryData = array())
     {
-        $query = JsonQuery::make(array('url' => $this->options['server'] . '/' . $url, 'method' => strtoupper($method)));
+        $query = JsonQuery::make(array(
+            'url'    => $this->options['server'] . '/' . $url,
+            'method' => strtoupper($method)
+        ));
+
         $data && $query->setQuery($data);
 
         foreach ($queryData as $name => $value)
@@ -128,8 +134,8 @@ class ElasticSearch extends Component
     }
 
     /**
-     * Indexing document with specified id, if id already taken new revision will be created and previous document data
-     * will be overwritten.
+     * Indexing document with specified id, if id already taken new revision will be created and
+     * previous document data will be overwritten.
      *
      * @link http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/index-doc.html
      * @param string $index    Index name.
@@ -209,11 +215,25 @@ class ElasticSearch extends Component
      * @param int    $limit   Records per request (page).
      * @return SearchResult
      */
-    public function runSearch(array $query = array(), array $filters = array(), array $sorting = array(), $index = null, $type = null, $offset = 0, $limit = 25)
+    public function runSearch(
+        array $query = array(),
+        array $filters = array(),
+        array $sorting = array(),
+        $index = null,
+        $type = null,
+        $offset = 0,
+        $limit = 25
+    )
     {
         $query = $this->buildQuery($query, $filters, $sorting, $offset, $limit);
 
-        return SearchResult::make(array('result' => $this->query('get', trim($index . '/' . $type, '/') . '/_search', $query)));
+        return SearchResult::make(array(
+            'result' => $this->query(
+                'get',
+                trim($index . '/' . $type, '/') . '/_search',
+                $query
+            )
+        ));
     }
 
     /**
@@ -226,15 +246,21 @@ class ElasticSearch extends Component
      * @param int   $limit   Records per request (page).
      * @return array
      */
-    protected function buildQuery(array $query, array $filters = array(), array $sorting = array(), $offset = 0, $limit = 25)
+    protected function buildQuery(
+        array $query,
+        array $filters = array(),
+        array $sorting = array(),
+        $offset = 0,
+        $limit = 25
+    )
     {
         $request = array('from' => $offset, 'size' => $limit);
 
         //Building request
-        if ($query || $filters || $sorting)
+        if (!empty($query) || !empty($filters) || !empty($sorting))
         {
             $request['query'] = array();
-            if ($filters)
+            if (!empty($filters))
             {
                 //Filtered query
                 $request['query']['filtered'] = array('filter' => $filters);
@@ -247,7 +273,7 @@ class ElasticSearch extends Component
             }
         }
 
-        if ($sorting)
+        if (!empty($sorting))
         {
             $request['sort'] = $sorting;
         }
