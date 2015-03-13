@@ -156,17 +156,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
             return $response;
         }
 
-        if (is_array($response) || $response instanceof \JsonSerializable)
-        {
-            if (is_array($response) && $plainOutput)
-            {
-                $response['plainOutput'] = $plainOutput;
-            }
-
-            return new Response(json_encode($response), 200, array(
-                'Content-Type' => 'application/json'
-            ));
-        }
+//        if (is_array($response) || $response instanceof \JsonSerializable)
+//        {
+//            if (is_array($response) && $plainOutput)
+//            {
+//                $response['plainOutput'] = $plainOutput;
+//            }
+//
+//            return new Response(json_encode($response), 200, array(
+//                'Content-Type' => 'application/json'
+//            ));
+//        }
 
         return new Response($response . $plainOutput);
     }

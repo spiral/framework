@@ -74,4 +74,12 @@ interface CookieInterface
      * @return bool
      */
     public function getHttpOnly();
+
+    /**
+     * Get new cookie with altered value. Original cookie object should not be changed.
+     *
+     * @param string $value
+     * @return Cookie
+     */
+    public function withValue($value);
 }

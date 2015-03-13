@@ -11,11 +11,11 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Request\BaseRequest;
+use Spiral\Components\Http\Request\PsrRequest2;
 use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\Uri;
 
-class Request extends BaseRequest implements ServerRequestInterface
+class Request extends PsrRequest2 implements ServerRequestInterface
 {
     /**
      * The request "attributes" may be used to allow injection of any parameters derived from the
@@ -78,6 +78,7 @@ class Request extends BaseRequest implements ServerRequestInterface
      *                                                 as PHP's $_FILES superglobal.
      * @param array                      $parsedBody   Parameters provided in the request body. In most
      *                                                 cases equals to _POST.
+     * @param array                      $attributes   Initial set of request attributes.
      */
     public function __construct(
         $method = null,
@@ -88,7 +89,8 @@ class Request extends BaseRequest implements ServerRequestInterface
         array $cookieParams = array(),
         array $queryParams = array(),
         array $fileParams = array(),
-        array $parsedBody = array()
+        array $parsedBody = array(),
+        array $attributes = array()
     )
     {
         parent::__construct($method, $uri, $body, $headers, false);
@@ -98,6 +100,7 @@ class Request extends BaseRequest implements ServerRequestInterface
         $this->queryParams = $queryParams;
         $this->fileParams = $fileParams;
         $this->parsedBody = $parsedBody;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -203,7 +206,10 @@ class Request extends BaseRequest implements ServerRequestInterface
      */
     public function withCookieParams(array $cookies)
     {
-        // TODO: Implement withCookieParams() method.
+        $request = clone $this;
+        $request->cookieParams = $cookies;
+
+        return $request;
     }
 
     /**
@@ -243,8 +249,10 @@ class Request extends BaseRequest implements ServerRequestInterface
      */
     public function withQueryParams(array $query)
     {
-        // TODO: Implement withQueryParams() method.
+        $request = clone $this;
+        $request->queryParams = $query;
 
+        return $request;
     }
 
     /**
@@ -308,7 +316,10 @@ class Request extends BaseRequest implements ServerRequestInterface
      */
     public function withParsedBody($data)
     {
-        // TODO: Implement withParsedBody() method.
+        $request = clone $this;
+        $request->parsedBody = $data;
+
+        return $request;
     }
 
     /**

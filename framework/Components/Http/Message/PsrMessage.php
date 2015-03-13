@@ -12,7 +12,7 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamableInterface;
 use Spiral\Core\Component;
 
-abstract class BaseMessage extends Component implements MessageInterface
+abstract class PsrMessage extends Component implements MessageInterface
 {
     /**
      * HTTP protocol version.
@@ -56,7 +56,7 @@ abstract class BaseMessage extends Component implements MessageInterface
      * and MUST return a new instance that has the new protocol version.
      *
      * @param string $version HTTP protocol version
-     * @return self
+     * @return static
      */
     public function withProtocolVersion($version)
     {
@@ -196,7 +196,7 @@ abstract class BaseMessage extends Component implements MessageInterface
      * @param string          $name      Case-insensitive header field name to add.
      * @param string|string[] $value     Header value(s).
      * @param bool            $normalize Normalize header name.
-     * @return self
+     * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
     public function withAddedHeader($name, $value, $normalize = true)
@@ -236,7 +236,7 @@ abstract class BaseMessage extends Component implements MessageInterface
      *
      * @param string $name      Case-insensitive header field name to remove.
      * @param bool   $normalize Normalize header name.
-     * @return self
+     * @return static
      */
     public function withoutHeader($name, $normalize = true)
     {
@@ -271,7 +271,7 @@ abstract class BaseMessage extends Component implements MessageInterface
      * and MUST return a new instance that has the new header and/or value.
      *
      * @param StreamableInterface $body Body.
-     * @return self
+     * @return static
      * @throws \InvalidArgumentException When the body is not valid.
      */
     public function withBody(StreamableInterface $body)

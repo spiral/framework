@@ -6,14 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http\Middlewares;
+namespace Spiral\Components\Http;
 
-use Spiral\Components\Http\MiddlewareInterface;
-use Spiral\Components\Http\Request;
-use Spiral\Components\Http\Response;
 use Spiral\Core\Component;
 
-class CRSFToken implements MiddlewareInterface
+class CRSFValidator implements MiddlewareInterface
 {
     /**
      * Token have to check in cookies and queries.

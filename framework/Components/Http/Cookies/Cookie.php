@@ -214,4 +214,18 @@ class Cookie implements CookieInterface
     {
         return $this->httpOnly;
     }
+
+    /**
+     * Get new cookie with altered value. Original cookie object should not be changed.
+     *
+     * @param string $value
+     * @return Cookie
+     */
+    public function withValue($value)
+    {
+        $cookie = clone $this;
+        $cookie->value = $value;
+
+        return $cookie;
+    }
 }
