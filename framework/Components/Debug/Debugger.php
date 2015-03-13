@@ -358,11 +358,8 @@ class Debugger extends Component
         if (!$hideType)
         {
             $count = count($variable);
-            $result .= self::getStyle(
-                    "array({$count})",
-                    "type",
-                    "array"
-                ) . "\n" . $indent . self::getStyle("(", "indent", "(") . "\n";
+            $result .= self::getStyle("array({$count})", "type", "array")
+                . "\n" . $indent . self::getStyle("(", "indent", "(") . "\n";
         }
 
         foreach ($variable as $name => $value)

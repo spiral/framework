@@ -74,10 +74,6 @@ Image
 ImageObject works well, but currently there is only one image processor (which we have been using for
 4 years) - ImageMagic via console interface.
 
-ORM
-=================
-Currently in development (will take week or two).
-
 What is NOT ready
 =================
 Currently I'm in the middle of planning new HttpDispatcher realization. Even though we already had
@@ -89,11 +85,21 @@ Paginator
 The entire pagination class is ready with its' interfaces and traits. However, it currently can't receive
 a page number from a request as there isn't a request :)
 
+Will be completed by end of this week.
+
 Session, Cookies and CRSF tokens
 -------------
 This will require some tweaking to fit into HttpDispatcher middleware.
+
+Will be completed by end of this week.
 
 Profiler module
 -------------
 Profiler was originally handling the dispatcher::response event. There is no such event at the moment
 and profiler doesn't function well.
+
+Will be completed by end of this week.
+
+ORM
+=================
+Currently in development (will take week or two). 
