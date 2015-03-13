@@ -110,19 +110,18 @@ class Encrypter extends Component
      * @link http://php.net/manual/en/function.openssl-random-pseudo-bytes.php
      * @param int  $length   Required string length (count bytes).
      * @param bool $passWeak Do not throw an exception if result is "weak". Not recommended.
-     * @param bool $base64   If true string will be converted to base64 to prevent unprintable
-     *                       characters.
+     * @param bool $hexForm  Apply bin2hex to result.
      * @return string
      * @throws EncrypterException
      */
-    public function random($length, $passWeak = false, $base64 = true)
+    public function random($length, $passWeak = false, $hexForm = true)
     {
         if ($length < 1)
         {
             throw new EncrypterException("Random string length should be at least 1 byte long.");
         }
 
-        if (!$result = openssl_random_pseudo_bytes($length, $cryptoStrong))
+        if (!$result = openssl_random_pseudo_bytes($hexForm ? $length / 2 : $length, $cryptoStrong))
         {
             throw new EncrypterException(
                 "Unable to generate pseudo-random string with {$length} length."
@@ -134,9 +133,9 @@ class Encrypter extends Component
             throw new EncrypterException("Weak random result received.");
         }
 
-        if ($base64)
+        if ($hexForm)
         {
-            return substr(base64_encode($result), 0, $length);
+            $result = bin2hex($result);
         }
 
         return $result;
@@ -194,7 +193,7 @@ class Encrypter extends Component
         );
 
         $result = json_encode(array(
-            self::IV        => ($vector = base64_encode($vector)),
+            self::IV        => ($vector = bin2hex($vector)),
             self::DATA      => $encrypted,
             self::SIGNATURE => $this->buildSignature($encrypted, $vector)
         ));
@@ -244,7 +243,7 @@ class Encrypter extends Component
                 $this->method,
                 $this->key,
                 true,
-                base64_decode($packed[self::IV])
+                hex2bin($packed[self::IV])
             );
 
             return unserialize($decrypted);

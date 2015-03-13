@@ -88,7 +88,9 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function start(Core $core)
     {
-        $this->request = Request::castServerRequest();
+        $this->request = Request::castRequest(array(
+            'basePath' => $this->config['basePath']
+        ));
 
         $pipeline = new MiddlewarePipe($this->middleware);
         $response = $pipeline->target(array($this, 'perform'))->run($this->request, $this);
@@ -151,22 +153,25 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         if ($response instanceof ResponseInterface)
         {
-            $plainOutput && $response->getBody()->write($plainOutput);
+            if (!empty($plainOutput))
+            {
+                $response->getBody()->write($plainOutput);
+            }
 
             return $response;
         }
 
-//        if (is_array($response) || $response instanceof \JsonSerializable)
-//        {
-//            if (is_array($response) && $plainOutput)
-//            {
-//                $response['plainOutput'] = $plainOutput;
-//            }
-//
-//            return new Response(json_encode($response), 200, array(
-//                'Content-Type' => 'application/json'
-//            ));
-//        }
+        //        if (is_array($response) || $response instanceof \JsonSerializable)
+        //        {
+        //            if (is_array($response) && $plainOutput)
+        //            {
+        //                $response['plainOutput'] = $plainOutput;
+        //            }
+        //
+        //            return new Response(json_encode($response), 200, array(
+        //                'Content-Type' => 'application/json'
+        //            ));
+        //        }
 
         return new Response($response . $plainOutput);
     }

@@ -107,9 +107,10 @@ class Request extends PsrRequest implements ServerRequestInterface
      * Cast Server side requested based on global variables. $_SERVER and other global variables will
      * be used.
      *
+     * @param array $attributes Initial set of attributes.
      * @return static
      */
-    public static function castServerRequest()
+    public static function castRequest(array $attributes = array())
     {
         return new static(
             $_SERVER['REQUEST_METHOD'],
@@ -120,7 +121,8 @@ class Request extends PsrRequest implements ServerRequestInterface
             $_COOKIE,
             $_GET,
             $_FILES,
-            $_POST
+            $_POST,
+            $attributes
         );
     }
 

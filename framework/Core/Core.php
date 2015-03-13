@@ -301,7 +301,10 @@ class Core extends Container implements ConfigLoaderInterface
         /**
          * @var Core $core
          */
-        $core = self::$bindings[__CLASS__] = self::$bindings[get_called_class()] = self::$bindings[self::SINGLETON] = new static();
+        $core = self::$bindings[__CLASS__]
+            = self::$bindings[get_called_class()]
+            = self::$bindings[self::SINGLETON]
+            = new static();
 
         //Error and exception handlers
         set_error_handler(array($core, 'errorHandler'));
