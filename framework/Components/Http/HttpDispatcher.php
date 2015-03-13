@@ -47,10 +47,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected $request = null;
 
     /**
-     * Set of middleware layers builded to handle incoming Request and return Response. Middleware
+     * Set of middleware layers built to handle incoming Request and return Response. Middleware
      * can be represented as class, string (DI) or array (callable method). HttpDispatcher layer
-     * middlewares will be called in start() method. Use add() method to register more middlewares
-     * while bootstrapping application.
+     * middlewares will be called in start() method. This set of middleware(s) used to filter
+     * http request and response on higher layer.
      *
      * @var array|MiddlewareInterface[]
      */
@@ -104,6 +104,15 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function start(Core $core)
     {
+        if (empty($this->endpoints[$this->config['basePath']]))
+        {
+            //Base path wasn't handled, let's attach our router
+            $this->endpoints[$this->config['basePath']] = function ()
+            {
+                return $this->core->callAction('Controllers\HomeController', 'index');
+            };
+        }
+
         $this->request = Request::castRequest(array(
             'basePath' => $this->config['basePath']
         ));
@@ -142,36 +151,20 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function perform(Request $request)
     {
+        if (!$endpoint = $this->findEndpoint(strtolower($request->getUri()->getPath())))
+        {
+            //This should never happen as request should be handled at least by Router middleware
+            throw new ClientException(ClientException::SERVER_ERROR);
+        }
+
         $parentRequest = $this->core->getBinding('request');
 
         //Creating scope
         $this->core->bind('request', $request);
         $this->core->bind(get_class($request), $request);
 
-        ob_start();
-
-        $endpoint = null;
-
-        $uriPath = strtolower($request->getUri()->getPath());
-        foreach ($this->endpoints as $path => $middleware)
-        {
-            if (strpos($uriPath, $path) === 0)
-            {
-                $endpoint = $middleware;
-                break;
-            }
-        }
-
-        if (empty($endpoint))
-        {
-            $response = $this->core->callAction('Controllers\HomeController', 'index');
-        }
-        else
-        {
-            $response = $this->performEndpoint($request, $endpoint);
-        }
-
-        $plainOutput = ob_get_clean();
+        //Yey! Let's go!
+        $response = $this->execute($request, $endpoint);
 
         $this->core->removeBinding(get_class($request));
         $this->core->removeBinding('request');
@@ -183,7 +176,34 @@ class HttpDispatcher extends Component implements DispatcherInterface
             $this->core->bind(get_class($parentRequest), $parentRequest);
         }
 
-        return $this->wrapResponse($response, $plainOutput);
+        return $response;
+    }
+
+    /**
+     * Locate appropriate middleware endpoint based on Uri part.
+     *
+     * @param string $uriPath Lowercased Uri Path.
+     * @return null|MiddlewareInterface
+     */
+    protected function findEndpoint($uriPath)
+    {
+        if (isset($this->endpoints[$uriPath]))
+        {
+            //Quick jump
+            return $this->endpoints[$uriPath];
+        }
+        else
+        {
+            foreach ($this->endpoints as $path => $middleware)
+            {
+                if (strpos($uriPath, $path) === 0)
+                {
+                    return $middleware;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -195,18 +215,18 @@ class HttpDispatcher extends Component implements DispatcherInterface
      * @return mixed
      * @throws \Spiral\Core\CoreException
      */
-    protected function performEndpoint(Request $request, $endpoint)
+    protected function execute(Request $request, $endpoint)
     {
-        if (is_string($endpoint))
-        {
-            $endpoint = Container::get($endpoint);
-        }
-
         /**
          * @var callable $endpoint
          */
+        $endpoint = is_string($endpoint) ? Container::get($endpoint) : $endpoint;
 
-        return $endpoint($request, null, $this);
+        ob_start();
+        $response = $endpoint($request, null, $this);
+        $plainOutput = ob_get_clean();
+
+        return $this->wrapResponse($response, $plainOutput);
     }
 
     protected function wrapResponse($response, $plainOutput = '')
