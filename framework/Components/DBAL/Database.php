@@ -39,13 +39,14 @@ class Database extends Component implements InjectableInterface
     /**
      * Transaction isolation level 'SERIALIZABLE'.
      *
-     * This is the highest isolation level. With a lock-based concurrency control DBMS implementation, serializability
-     * requires read and write locks (acquired on selected data) to be released at the end of the transaction. Also range-locks
-     * must be acquired when a SELECT query uses a ranged WHERE clause, especially to avoid the phantom reads phenomenon (see below).
+     * This is the highest isolation level. With a lock-based concurrency control DBMS implementation,
+     * serializability requires read and write locks (acquired on selected data) to be released at
+     * the end of the transaction. Also range-locks must be acquired when a SELECT query uses a ranged
+     * WHERE clause, especially to avoid the phantom reads phenomenon (see below).
      *
-     * When using non-lock based concurrency control, no locks are acquired; however, if the system detects a write collision
-     * among several concurrent transactions, only one of them is allowed to commit. See snapshot isolation for more details
-     * on this topic.
+     * When using non-lock based concurrency control, no locks are acquired; however, if the system
+     * detects a write collision among several concurrent transactions, only one of them is allowed
+     * to commit. See snapshot isolation for more details on this topic.
      *
      * @link http://en.wikipedia.org/wiki/Isolation_(database_systems)
      */
@@ -54,8 +55,9 @@ class Database extends Component implements InjectableInterface
     /**
      * Transaction isolation level 'REPEATABLE READ'.
      *
-     * In this isolation level, a lock-based concurrency control DBMS implementation keeps read and write locks (acquired
-     * on selected data) until the end of the transaction. However, range-locks are not managed, so phantom reads can occur.
+     * In this isolation level, a lock-based concurrency control DBMS implementation keeps read and
+     * write locks (acquired on selected data) until the end of the transaction. However, range-locks
+     * are not managed, so phantom reads can occur.
      *
      * @link http://en.wikipedia.org/wiki/Isolation_(database_systems)
      */
@@ -64,15 +66,15 @@ class Database extends Component implements InjectableInterface
     /**
      * Transaction isolation level 'READ COMMITTED'.
      *
-     * In this isolation level, a lock-based concurrency control DBMS implementation keeps write locks (acquired on selected
-     * data) until the end of the transaction, but read locks are released as soon as the SELECT operation is performed
-     * (so the non-repeatable reads phenomenon can occur in this isolation level, as discussed below). As in the previous
-     * level, range-locks are not managed.
+     * In this isolation level, a lock-based concurrency control DBMS implementation keeps write locks
+     * (acquired on selected data) until the end of the transaction, but read locks are released as
+     * soon as the SELECT operation is performed (so the non-repeatable reads phenomenon can occur in
+     * this isolation level, as discussed below). As in the previous level, range-locks are not managed.
      *
-     * Putting it in simpler words, read committed is an isolation level that guarantees that any data read is committed
-     * at the moment it is read. It simply restricts the reader from seeing any intermediate, uncommitted, 'dirty' read.
-     * It makes no promise whatsoever that if the transaction re-issues the read, it will find the same data; data is free
-     * to change after it is read.
+     * Putting it in simpler words, read committed is an isolation level that guarantees that any data
+     * read is committed at the moment it is read. It simply restricts the reader from seeing any
+     * intermediate, uncommitted, 'dirty' read. It makes no promise whatsoever that if the transaction
+     * re-issues the read, it will find the same data; data is free to change after it is read.
      *
      * @link http://en.wikipedia.org/wiki/Isolation_(database_systems)
      */
@@ -81,19 +83,21 @@ class Database extends Component implements InjectableInterface
     /**
      * Transaction isolation level 'READ UNCOMMITTED'.
      *
-     * This is the lowest isolation level. In this level, dirty reads are allowed, so one transaction may see not-yet-committed
-     * changes made by other transactions.
+     * This is the lowest isolation level. In this level, dirty reads are allowed, so one transaction
+     * may see not-yet-committed changes made by other transactions.
      *
-     * Since each isolation level is stronger than those below, in that no higher isolation level allows an action forbidden
-     * by a lower one, the standard permits a DBMS to run a transaction at an isolation level stronger than that requested
-     * (e.g., a "Read committed" transaction may actually be performed at a "Repeatable read" isolation level).
+     * Since each isolation level is stronger than those below, in that no higher isolation level
+     * allows an action forbidden by a lower one, the standard permits a DBMS to run a transaction
+     * at an isolation level stronger than that requested (e.g., a "Read committed" transaction may
+     * actually be performed at a "Repeatable read" isolation level).
      *
      * @link http://en.wikipedia.org/wiki/Isolation_(database_systems)
      */
     const ISOLATION_READ_UNCOMMITTED = 'READ UNCOMMITTED';
 
     /**
-     * Statement should be used for ColumnSchema to indicate that default datetime value should be set to current time.
+     * Statement should be used for ColumnSchema to indicate that default datetime value should be
+     * set to current time.
      *
      * @var string
      */
@@ -114,16 +118,16 @@ class Database extends Component implements InjectableInterface
     protected $tablePrefix = '';
 
     /**
-     * Associated driver instance. Driver provides database specific support including correct schema builders, query
-     * builders and quote mechanisms.
+     * Associated driver instance. Driver provides database specific support including correct schema
+     * builders, query builders and quote mechanisms.
      *
      * @var Driver
      */
     protected $driver = null;
 
     /**
-     * New Database instance. Database class is high level abstraction at top of Driver. Multiple databases can use same
-     * driver and be different by table prefix.
+     * New Database instance. Database class is high level abstraction at top of Driver. Multiple
+     * databases can use same driver and be different by table prefix.
      *
      * @param string $name        Internal database name/id.
      * @param Driver $driver      Driver instance responsible for database connection.
@@ -147,8 +151,9 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Associated Driver instance. Driver instances responsible for all database low level operations which can be
-     * DBMS specific - such as connection preparation, custom table/column/index/reference schemas and etc.
+     * Associated Driver instance. Driver instances responsible for all database low level operations
+     * which can be DBMS specific - such as connection preparation, custom table/column/index/reference
+     * schemas and etc.
      *
      * @return Driver
      */
@@ -198,8 +203,8 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Run affect (DELETE, UPDATE) type SQL statement with prepare parameters against connected PDO instance. Count of
-     * affected rows will be returned.
+     * Run affect (DELETE, UPDATE) type SQL statement with prepare parameters against connected PDO
+     * instance. Count of affected rows will be returned.
      *
      * @param string $query      SQL statement with parameter placeholders.
      * @param array  $parameters Parameters to be binded into query.
@@ -212,8 +217,8 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Alias for affect() method. Run affect (DELETE, UPDATE) type SQL statement with prepare parameters against connected
-     * PDO instance. Count of affected rows will be returned.
+     * Alias for affect() method. Run affect (DELETE, UPDATE) type SQL statement with prepare parameters
+     * against connected PDO instance. Count of affected rows will be returned.
      *
      * @param string $query      SQL statement with parameter placeholders.
      * @param array  $parameters Parameters to be binded into query.
@@ -226,8 +231,8 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Run "select" type SQL statement with prepare parameters against connected PDO instance. QueryResult will be returned
-     * and can be used to walk thought resulted dataset.
+     * Run "select" type SQL statement with prepare parameters against connected PDO instance.
+     * QueryResult will be returned and can be used to walk thought resulted dataset.
      *
      * @param string $query      SQL statement with parameter placeholders.
      * @param array  $parameters Parameters to be binded into query.
@@ -245,8 +250,8 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Run select type SQL statement with prepare parameters against connected PDO instance. Result will be cached for
-     * desired lifetime and presented by CachedResult data reader.
+     * Run select type SQL statement with prepare parameters against connected PDO instance. Result
+     * will be cached for desired lifetime and presented by CachedResult data reader.
      *
      * @param int        $lifetime   Cache lifetime in seconds.
      * @param string     $query      SQL statement with parameter placeholders.
@@ -260,6 +265,7 @@ class Database extends Component implements InjectableInterface
         $store = $store ?: CacheManager::getInstance()->store();
 
         $cacheID = md5(serialize(array($query, $parameters, $this->name)));
+
         if (!$store->has($cacheID))
         {
             $data = $this->query($query, $parameters)->fetchAll();
@@ -279,8 +285,9 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Get database specified select query builder, as builder called outside parent table, from() method should be called
-     * to provide tables to select data from. Columns can be provided as array, comma separated string or multiple parameters.
+     * Get database specified select query builder, as builder called outside parent table, from()
+     * method should be called to provide tables to select data from. Columns can be provided as
+     * array, comma separated string or multiple parameters.
      *
      * @param array|string $columns Columns to select.
      * @return SelectQuery
@@ -334,8 +341,8 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Start SQL transaction with specified isolation level, not all database types support it. Nested transactions will
-     * be processed using savepoints.
+     * Start SQL transaction with specified isolation level, not all database types support it.
+     * Nested transactions will be processed using savepoints.
      *
      * @link http://en.wikipedia.org/wiki/Database_transaction
      * @link http://en.wikipedia.org/wiki/Isolation_(database_systems)
@@ -368,10 +375,11 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Simplified way to perform set of SQL commands inside transaction, user callback as closure function which will receive
-     * current database instance as only one argument.
+     * Simplified way to perform set of SQL commands inside transaction, user callback as closure
+     * function which will receive current database instance as only one argument.
      *
-     * @param callable $callback       Closure or callback, function will receive current database instance as only one argument.
+     * @param callable $callback       Closure or callback, function will receive current database
+     *                                 instance as only one argument.
      * @param string   $isolationLevel No value provided by default.
      * @return mixed
      * @throws \Exception
@@ -427,7 +435,8 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Get instance of database table, table can be used as enterpoint to query builders, table schema and other operations.
+     * Get instance of database table, table can be used as enterpoint to query builders, table
+     * schema and other operations.
      *
      * @param string $name Table name without prefix.
      * @return Table
@@ -438,7 +447,8 @@ class Database extends Component implements InjectableInterface
     }
 
     /**
-     * Get instance of database table, table can be used as enterpoint to query builders and table schema and other operations.
+     * Get instance of database table, table can be used as enterpoint to query builders and table
+     * schema and other operations.
      *
      * @param string $name Table name without prefix.
      * @return Table
