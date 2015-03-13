@@ -11,11 +11,11 @@ namespace Spiral\Components\Http\Request;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Message\BaseMessage;
+use Spiral\Components\Http\Message\PsrMessage;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Core\Component;
 
-class BaseRequest extends BaseMessage implements RequestInterface
+class PsrRequest extends PsrMessage implements RequestInterface
 {
     /**
      * The message's request target.
@@ -132,7 +132,7 @@ class BaseRequest extends BaseMessage implements RequestInterface
      * @link http://tools.ietf.org/html/rfc7230#section-2.7 (for the various request-target forms
      *                                                       allowed in request messages)
      * @param mixed $requestTarget
-     * @return self
+     * @return static
      */
     public function withRequestTarget($requestTarget)
     {
@@ -169,7 +169,7 @@ class BaseRequest extends BaseMessage implements RequestInterface
      * and MUST return a new instance that has the new header and/or value.
      *
      * @param string $method Case-insensitive method.
-     * @return self
+     * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
     public function withMethod($method)
@@ -206,7 +206,7 @@ class BaseRequest extends BaseMessage implements RequestInterface
      *
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
      * @param UriInterface $uri New request URI to use.
-     * @return self
+     * @return static
      */
     public function withUri(UriInterface $uri)
     {

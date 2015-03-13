@@ -11,11 +11,11 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Request\PsrRequest2;
+use Spiral\Components\Http\Request\PsrRequest;
 use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\Uri;
 
-class Request extends PsrRequest2 implements ServerRequestInterface
+class Request extends PsrRequest implements ServerRequestInterface
 {
     /**
      * The request "attributes" may be used to allow injection of any parameters derived from the
