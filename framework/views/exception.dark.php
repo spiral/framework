@@ -304,7 +304,8 @@ Debugger::dumpingStyles(array(
     <div class="exception">
         <?php echo $exception->getClass() ?>:
         <span><?php echo $exception->getException()->getMessage() ?></span>
-        in <span><?php echo $exception->getFile() ?></span> at <span>line <?php echo $exception->getLine() ?></span>
+        in <span><?php echo $exception->getFile() ?></span> at
+        <span>line <?php echo $exception->getLine() ?></span>
     </div>
 
     <div class="tracing">
@@ -383,7 +384,10 @@ Debugger::dumpingStyles(array(
 
                                 if (is_object($argument))
                                 {
-                                    $display = get_class($argument) . ' object';
+                                    $reflection = new ReflectionClass($argument);
+                                    $display = '<span title="' . get_class($argument) . '">'
+                                        . $reflection->getShortName()
+                                        . ' object</span>';
                                 }
 
                                 $display = Debugger::getStyle($display, 'value', $type);
@@ -402,7 +406,8 @@ Debugger::dumpingStyles(array(
                                     class="arguments"><?php echo join(', ', $arguments) ?></span>)
                             </div>
                             <div class="location">
-                                <?php echo $trace['file'] ?> at <strong>line <?php echo $trace['line'] ?></strong>
+                                <?php echo $trace['file'] ?> at
+                                <strong>line <?php echo $trace['line'] ?></strong>
                             </div>
                         </div>
                     <?php
@@ -434,15 +439,10 @@ Debugger::dumpingStyles(array(
                     $_SERVER['PATH'] = explode(PATH_SEPARATOR, $_SERVER['PATH']);
                 }
 
-                //                if ($name == 'COOKIES')
-                //                {
-                //                    $GLOBALS[$variable] = \spiral\core\facades\Cookies::getAll();
-                //                }
-
                 ?>
                 <div class="container">
-                    <div class="title" onclick="toggleBlock('dump-<?php echo $name?>')"><?php echo $name?>
-                        (<?php echo count($GLOBALS[$variable]) ?>)
+                    <div class="title" onclick="toggleBlock('dump-<?php echo $name?>')">
+                        <?php echo $name?> (<?php echo count($GLOBALS[$variable]) ?>)
                     </div>
                     <div class="dump" id="dump-<?php echo $name?>" style="display: none;">
                         <?php Debugger::dump($GLOBALS[$variable]) ?>
@@ -454,26 +454,34 @@ Debugger::dumpingStyles(array(
         ?>
     </div>
 
-    <div class="messages">
-        <div class="title">Messages</div>
-        <?php
-        foreach (Logger::logMessages() as $message)
-        {
-            ?>
-            <div class="message <?php echo $message[2]?>">
-                <div class="container"><?php echo $message[0]?></div>
-                <div class="level"><?php echo $message[2]?></div>
-                <div class="content"><?php echo $message[3]?></div>
-            </div>
-        <?php
-        }
+    <?
+    if (Logger::logMessages())
+    {
         ?>
-    </div>
+        <div class="messages">
+            <div class="title">Messages</div>
+            <?php
+            foreach (Logger::logMessages() as $message)
+            {
+                ?>
+                <div class="message <?php echo $message[2]?>">
+                    <div class="container"><?php echo $message[0]?></div>
+                    <div class="level"><?php echo $message[2]?></div>
+                    <div class="content"><?php echo $message[3]?></div>
+                </div>
+            <?php
+            }
+            ?>
+        </div>
+    <?
+    }
+    ?>
 
     <div class="footer">
         <?php echo date('r') ?>
         <br/>
-        Elapsed: <b><?php echo number_format(microtime(true) - SPIRAL_INITIAL_TIME, 4) ?></b> seconds, Memory:
+        Elapsed: <b><?php echo number_format(microtime(true) - SPIRAL_INITIAL_TIME, 4) ?></b>
+        seconds, Memory:
         <b><?php echo number_format(memory_get_peak_usage() / 1024, 1) ?></b> Kb
     </div>
 </div>

@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http\Response;
+namespace Spiral\Components\Http\Cookies;
 
 class Cookie implements CookieInterface
 {
