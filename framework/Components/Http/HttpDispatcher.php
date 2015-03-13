@@ -108,6 +108,20 @@ class HttpDispatcher extends Component implements DispatcherInterface
         return $this->request;
     }
 
+    /**
+     * Execute given request and return response. Request Uri will be passed thought Http routes
+     * to find appropriate endpoint. By default this method will be called at the end of middleware
+     * pipeline inside HttpDispatcher->start() method, however method can be called manually with
+     * custom or altered request instance.
+     *
+     * Every request passed to perform method will be registered in Container scope under "request"
+     * and class name binding.
+     *
+     * @param Request $request
+     * @return array|Response
+     * @throws ClientException
+     * @throws \Spiral\Core\CoreException
+     */
     public function perform(Request $request)
     {
         $parentRequest = $this->core->getBinding('request');
@@ -120,17 +134,14 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $response = $this->core->callAction('Controllers\HomeController', 'index');
         $plainOutput = ob_get_clean();
 
+        $this->core->removeBinding(get_class($request));
+        $this->core->removeBinding('request');
+
         if (!empty($parentRequest))
         {
             //Restoring scope
             $this->core->bind('request', $parentRequest);
             $this->core->bind(get_class($parentRequest), $parentRequest);
-        }
-        else
-        {
-            //Ending scope
-            $this->core->removeBinding('request');
-            $this->core->removeBinding(get_class($request));
         }
 
         return $this->wrapResponse($response, $plainOutput);
