@@ -34,7 +34,6 @@ use Spiral\Components;
  *
  * @property Components\Http\Request               $request
  * @property Components\Http\Cookies\CookieManager $cookies
- *
  */
 class Core extends Container implements ConfigLoaderInterface
 {

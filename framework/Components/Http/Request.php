@@ -11,12 +11,21 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
+use Spiral\Components\Http\Request\FileBag;
+use Spiral\Components\Http\Request\ParameterBag;
 use Spiral\Components\Http\Request\PsrRequest;
 use Spiral\Components\Http\Request\InputStream;
+use Spiral\Components\Http\Request\ServerBag;
 use Spiral\Components\Http\Request\Uri;
 
 /**
- * TODO: PROPERTY ACCESSORS, IS AJAX CHECKER
+ * @property ParameterBag $headers
+ * @property ServerBag    $server
+ * @property ParameterBag $cookies
+ * @property ParameterBag $query
+ * @property ParameterBag $post
+ * @property FileBag      $files
+ * @property ParameterBag $attributes
  */
 class Request extends PsrRequest implements ServerRequestInterface
 {
@@ -64,6 +73,46 @@ class Request extends PsrRequest implements ServerRequestInterface
      * @var array
      */
     protected $parsedBody = array();
+
+    /**
+     * Parameter bags is set of classes designed to simplify access to request parameters, this classes
+     * should implement READ ONLY interfaces and do not alter data. Every bag should be invokable.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $bags = array(
+        'headers'      => 'Spiral\Components\Http\Request\ParameterBag',
+        'serverParams' => 'Spiral\Components\Http\Request\ServerBag',
+        'cookieParams' => 'Spiral\Components\Http\Request\ParameterBag',
+        'queryParams'  => 'Spiral\Components\Http\Request\ParameterBag',
+        'fileParams'   => 'Spiral\Components\Http\Request\FilesBag',
+        'parsedBody'   => 'Spiral\Components\Http\Request\ParameterBag',
+        'attributes'   => 'Spiral\Components\Http\Request\ParameterBag'
+    );
+
+    /**
+     * Associations between real bag instances and simplified property name.
+     *
+     * @var array
+     */
+    protected $bagsMapping = array(
+        'headers'    => 'headers',
+        'server'     => 'serverParams',
+        'cookies'    => 'cookieParams',
+        'query'      => 'queryParams',
+        'files'      => 'fileParams',
+        'post'       => 'parsedBody',
+        'attributes' => 'attributes'
+    );
+
+    /**
+     * Constructed parameter bags.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $bagInstances = array();
 
     /**
      * New Server Request instance.
@@ -414,6 +463,21 @@ class Request extends PsrRequest implements ServerRequestInterface
     }
 
     /**
+     * Check if ajax header presented. Default header to check: X-Requested-With
+     *
+     * @return bool
+     */
+    public function isAjax()
+    {
+        if (empty($this->headers['X-Requested-With']))
+        {
+            return false;
+        }
+
+        return strtolower($this->headers['X-Requested-With']) == 'xmlhttprequest';
+    }
+
+    /**
      * Client connection IP address, this value is identical to value in $_SERVER['REMOTE_ADDR'] and
      * does not have any extra logic to fetch address from proxy headers and etc.
      *
@@ -422,5 +486,33 @@ class Request extends PsrRequest implements ServerRequestInterface
     public function remoteAddr()
     {
         return $this->serverParams['REMOTE_ADDR'];
+    }
+
+    /**
+     * Get instance of parameter bag associated with one of request properties.
+     *
+     * @param string $name Parameter name.
+     * @return ParameterBag
+     */
+    public function __get($name)
+    {
+        $property = $this->bagsMapping[$name];
+
+        if (isset($this->bagInstances[$property]))
+        {
+            return $this->bagInstances[$property];
+        }
+
+        $bagClass = $this->bags[$property];
+
+        return $this->bagInstances[$property] = new $bagClass($this->{$property});
+    }
+
+    /**
+     * Flushing all bag instances on clone.
+     */
+    public function __clone()
+    {
+        $this->bagInstances = array();
     }
 }

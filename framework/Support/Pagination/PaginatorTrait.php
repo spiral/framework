@@ -8,7 +8,7 @@
  */
 namespace Spiral\Support\Pagination;
 
-use Spiral\Components\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 trait PaginatorTrait
 {
@@ -34,7 +34,8 @@ trait PaginatorTrait
     protected $paginator = null;
 
     /**
-     * Forced pagination count. If 0 PaginatorTrait will try to fetch value from associated object (this).
+     * Forced pagination count. If 0 PaginatorTrait will try to fetch value from associated object
+     * (this).
      *
      * @var int
      */
@@ -97,17 +98,18 @@ trait PaginatorTrait
     /**
      * Paginate current selection.
      *
-     * @param int     $limit         Pagination limit.
-     * @param string  $pageParameter Name of parameter in request query which is used to store
-     *                               the current page number. "page" by default.
-     * @param int     $count         Forced count value, if 0 paginator will try to fetch count
-     *                               from associated object.
-     * @param Request $request       Dispatcher request.
+     * @param int                    $limit         Pagination limit.
+     * @param string                 $pageParameter Name of parameter in request query which is used to store
+     *                                              the current page number. "page" by default.
+     * @param int                    $count         Forced count value, if 0 paginator will try to fetch count
+     *                                              from associated object.
+     * @param ServerRequestInterface $request       Source of page number.
      * @return mixed
      */
     public function paginate($limit = 50, $pageParameter = 'page', $count = 0, $request = null)
     {
-        $this->paginator = Paginator::make(compact('pageParameter') + ($request ? compact('request') : array()));
+        $this->paginator = Paginator::make(compact('pageParameter', 'request'));
+
         $this->paginator->setLimit($limit);
         $this->paginationCount = $count;
 
