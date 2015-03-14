@@ -38,7 +38,7 @@ use Spiral\Core\Component;
  * @method int max($identifier) Perform aggregation based on column or expression value.
  * @method int sum($identifier) Perform aggregation based on column or expression value.
  */
-class Table extends Component
+class Table extends Component implements \JsonSerializable
 {
     /**
      * Table name, without prefix.
@@ -211,6 +211,18 @@ class Table extends Component
     public function all()
     {
         return $this->run();
+    }
+
+    /**
+     * (PHP 5 > 5.4.0)
+     * Specify data which should be serialized to JSON.
+     *
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->run()->jsonSerialize();
     }
 
     /**

@@ -18,11 +18,6 @@ class CurlQuery extends Component
     use Component\LoggerTrait;
 
     /**
-     * Log message format.
-     */
-    const LOG_FORMAT = 'URL: {url} ({http_code}), connection: {connect_time} s, start-transfer: {starttransfer_time} s, dns lookup: {namelookup_time} s, total: {total_time} s.';
-
-    /**
      * HTTP method will be used to perform CURL request.
      *
      * @var string
@@ -44,16 +39,16 @@ class CurlQuery extends Component
     protected $headers = array();
 
     /**
-     * Array of GET data will be attached to CURL request, associated array of name=>value. GET will be encoded using
-     * http_build_query().
+     * Array of query data will be attached to CURL request, associated array of name=>value.
+     * Query will be encoded using http_build_query().
      *
      * @var array
      */
-    protected $getData = array();
+    protected $queryData = array();
 
     /**
-     * Array of POST fields, will be sent directly to CURL in array or string form. To set POST as string use setRawPOST()
-     * class method, in this case no data will be additionally encoded.
+     * Array of POST fields, will be sent directly to CURL in array or string form. To set POST as
+     * string use setRawPOST() class method, in this case no data will be additionally encoded.
      *
      * @var array|string
      */
@@ -88,9 +83,10 @@ class CurlQuery extends Component
     public $curlError = null;
 
     /**
-     * New CurlQuery class, can be used to perform various requests to external api and websites, CurlQuery class can be extended
-     * to support additional syntax, response types or define custom behaviour. Https requests can only be made if they are
-     * supported by server environment. All requests will be made using CURL extension.
+     * CurlQuery class, can be used to perform various requests to external api and websites,
+     * CurlQuery class can be extended to support additional syntax, response types or define custom
+     * behaviour. Https requests can only be made if they are supported by server environment. All
+     * requests will be made using CURL extension. This is simple wrapper, don't expect too much.
      *
      * @param string $url    URL has to be requested.
      * @param string $method HTTP method to be used.
@@ -122,15 +118,15 @@ class CurlQuery extends Component
     }
 
     /**
-     * Add or set GET value.
+     * Add or set query value.
      *
-     * @param string $name GET name.
+     * @param string $name
      * @param string $value
      * @return static
      */
-    public function setGET($name, $value)
+    public function setQuery($name, $value)
     {
-        $this->getData[$name] = $value;
+        $this->queryData[$name] = $value;
 
         return $this;
     }
@@ -150,7 +146,8 @@ class CurlQuery extends Component
     }
 
     /**
-     * Write data directly to POST request, can be either in array form (will be encoded) or string (binary).
+     * Write data directly to POST request, can be either in array form (will be encoded) or string
+     * (binary).
      *
      * @param mixed $postData POST in array or string format.
      * @return static
@@ -163,8 +160,8 @@ class CurlQuery extends Component
     }
 
     /**
-     * Generate list of headers to send to CURL request, can be extended to perform additional headers logic, for example
-     * signatures or dynamic timestamps.
+     * Generate list of headers to send to CURL request, can be extended to perform additional headers
+     * logic, for example signatures or dynamic timestamps.
      *
      * @return array
      */
@@ -189,17 +186,18 @@ class CurlQuery extends Component
      */
     protected function buildGET()
     {
-        if (!$this->getData)
+        if (empty($this->queryData))
         {
             return false;
         }
 
-        return '?' . http_build_query($this->getData);
+        return '?' . http_build_query($this->queryData);
     }
 
     /**
-     * Custom method which can be extended by CurlQuery children to implement custom CURL setup logic. This method will
-     * be called before CURL request made, but after POST and GET data were set. Headers will be set after this method.
+     * Custom method which can be extended by CurlQuery children to implement custom CURL setup logic.
+     * This method will be called before CURL request made, but after POST and GET data were set.
+     * Headers will be set after this method.
      *
      * @param mixed $curl
      */
@@ -209,8 +207,8 @@ class CurlQuery extends Component
     }
 
     /**
-     * Custom method which can be extended by CurlQuery children to implement custom CURL response parsing logic. Will
-     * be called after CURL request made, but only if request succeeded.
+     * Custom method which can be extended by CurlQuery children to implement custom CURL response
+     * parsing logic. Will be called after CURL request made, but only if request succeeded.
      *
      * @param mixed $result
      * @return mixed
@@ -221,9 +219,9 @@ class CurlQuery extends Component
     }
 
     /**
-     * Perform CURL query and return response body or parsed data (if processResult() implemented). This method build CURL
-     * query using specified GET, POST and headers data, to specify custom CURL query setup logic redefine prepareCURL()
-     * method.
+     * Perform CURL query and return response body or parsed data (if processResult() implemented).
+     * This method build CURL query using specified GET, POST and headers data, to specify custom CURL
+     * query setup logic redefine prepareCURL() method.
      *
      * @return mixed
      * @throws CurlException
@@ -236,7 +234,7 @@ class CurlQuery extends Component
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADERFUNCTION, array($this, 'parseHeaders'));
 
-        if ($this->postData)
+        if (!empty($this->postData))
         {
             is_array($this->postData) && curl_setopt($curl, CURLOPT_POST, count($this->postData));
             curl_setopt($curl, CURLOPT_POSTFIELDS, $this->postData);
@@ -267,7 +265,11 @@ class CurlQuery extends Component
             if ($this->curlError = curl_errno($curl))
             {
                 $info = curl_getinfo($curl);
-                $this->logger()->error(static::LOG_FORMAT, $info);
+                self::logger()->error(
+                    'URL: {url} ({http_code}), connection: {connect_time} s, '
+                    . 'start-transfer: {starttransfer_time} s, dns lookup: {namelookup_time} s, '
+                    . 'total: {total_time} s.', $info
+                );
 
                 //Connection, protocols or etc errors
                 throw new CurlException(curl_error($curl));
@@ -276,7 +278,11 @@ class CurlQuery extends Component
         benchmark('curl', $this->url);
 
         $info = curl_getinfo($curl);
-        $this->logger()->info(static::LOG_FORMAT, $info);
+        self::logger()->info(
+            'URL: {url} ({http_code}), connection: {connect_time} s, '
+            . 'start-transfer: {starttransfer_time} s, dns lookup: {namelookup_time} s, '
+            . 'total: {total_time} s.', $info
+        );
         curl_close($curl);
 
         switch ($this->getResponseHeader('content-encoding'))
@@ -303,8 +309,9 @@ class CurlQuery extends Component
     }
 
     /**
-     * Get response header value or return null. Header name will be lowercased while fetching from the list, this may create
-     * potential problem when response contain similar headers different only by letter case.
+     * Get response header value or return null. Header name will be lowercased while fetching from
+     * the list, this may create potential problem when response contain similar headers different
+     * only by letter case.
      *
      * @param string $header
      * @return mixed

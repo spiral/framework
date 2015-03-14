@@ -79,6 +79,14 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     protected $endpoints = array();
 
     /**
+     * Currently active path selected to run endpoint. Can be used by endpoint to create it's own
+     * base path or internal routes.
+     *
+     * @var string
+     */
+    protected $activePath = null;
+
+    /**
      * New HttpDispatcher instance.
      *
      * @param Core $core
@@ -177,7 +185,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      */
     public function perform(Request $request)
     {
-        if (!$endpoint = $this->findEndpoint($request->getUri()))
+        if (!$endpoint = $this->findEndpoint($request->getUri(), $this->activePath))
         {
             //This should never happen as request should be handled at least by Router middleware
             throw new ClientException(Response::SERVER_ERROR);
@@ -208,10 +216,11 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     /**
      * Locate appropriate middleware endpoint based on Uri part.
      *
-     * @param UriInterface $uri Request Uri.
+     * @param UriInterface $uri     Request Uri.
+     * @param string       $uriPath Selected path.
      * @return null|MiddlewareInterface
      */
-    protected function findEndpoint(UriInterface $uri)
+    protected function findEndpoint(UriInterface $uri, &$uriPath = null)
     {
         $uriPath = strtolower($uri->getPath());
         if (isset($this->endpoints[$uriPath]))
@@ -230,6 +239,17 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
         }
 
         return null;
+    }
+
+    /**
+     * Get current active path used to select endpoint, can be used to define internal base path or
+     * nested routing.
+     *
+     * @return string
+     */
+    protected function getActivePath()
+    {
+        return $this->activePath;
     }
 
     /**

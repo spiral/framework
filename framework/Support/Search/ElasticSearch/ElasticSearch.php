@@ -127,7 +127,7 @@ class ElasticSearch extends Component
 
         foreach ($queryData as $name => $value)
         {
-            $query->setGET($name, $value);
+            $query->setQuery($name, $value);
         }
 
         return $query->run();
