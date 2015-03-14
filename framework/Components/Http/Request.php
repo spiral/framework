@@ -24,8 +24,7 @@ use Spiral\Components\Http\Request\Uri;
  * @property ParameterBag $cookies
  * @property ParameterBag $query
  * @property ParameterBag $post
- * @property FileBag      $files
- * @property ParameterBag $attributes
+ * @property ParameterBag $files
  */
 class Request extends PsrRequest implements ServerRequestInterface
 {
@@ -82,13 +81,12 @@ class Request extends PsrRequest implements ServerRequestInterface
      * @var array
      */
     protected $bags = array(
-        'headers'      => 'Spiral\Components\Http\Request\ParameterBag',
+        'headers'      => 'Spiral\Components\Http\Request\HeaderBag',
         'serverParams' => 'Spiral\Components\Http\Request\ServerBag',
         'cookieParams' => 'Spiral\Components\Http\Request\ParameterBag',
         'queryParams'  => 'Spiral\Components\Http\Request\ParameterBag',
-        'fileParams'   => 'Spiral\Components\Http\Request\FilesBag',
-        'parsedBody'   => 'Spiral\Components\Http\Request\ParameterBag',
-        'attributes'   => 'Spiral\Components\Http\Request\ParameterBag'
+        'fileParams'   => 'Spiral\Components\Http\Request\ParameterBag',
+        'parsedBody'   => 'Spiral\Components\Http\Request\ParameterBag'
     );
 
     /**
@@ -97,13 +95,12 @@ class Request extends PsrRequest implements ServerRequestInterface
      * @var array
      */
     protected $bagsMapping = array(
-        'headers'    => 'headers',
-        'server'     => 'serverParams',
-        'cookies'    => 'cookieParams',
-        'query'      => 'queryParams',
-        'files'      => 'fileParams',
-        'post'       => 'parsedBody',
-        'attributes' => 'attributes'
+        'headers' => 'headers',
+        'server'  => 'serverParams',
+        'cookies' => 'cookieParams',
+        'query'   => 'queryParams',
+        'files'   => 'fileParams',
+        'post'    => 'parsedBody'
     );
 
     /**
@@ -506,6 +503,18 @@ class Request extends PsrRequest implements ServerRequestInterface
         $bagClass = $this->bags[$property];
 
         return $this->bagInstances[$property] = new $bagClass($this->{$property});
+    }
+
+    /**
+     * Alias for __get.
+     *
+     * @param string $name
+     * @param array  $arguments
+     * @return ParameterBag
+     */
+    public function __call($name, array $arguments)
+    {
+        return $this->__get($name);
     }
 
     /**

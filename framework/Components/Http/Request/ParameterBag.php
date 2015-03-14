@@ -8,6 +8,8 @@
  */
 namespace Spiral\Components\Http\Request;
 
+use Spiral\Helpers\ArrayHelper;
+
 class ParameterBag
 {
     /**
@@ -15,7 +17,7 @@ class ParameterBag
      *
      * @var array
      */
-    protected $parameters;
+    protected $data;
 
     /**
      * Parameter bag used to perform read only operations with request attributes.
@@ -24,7 +26,7 @@ class ParameterBag
      */
     public function __construct(array $parameters)
     {
-        $this->parameters = $parameters;
+        $this->data = $parameters;
     }
 
     /**
@@ -35,7 +37,7 @@ class ParameterBag
      */
     public function has($name)
     {
-        return array_key_exists($name, $this->parameters);
+        return array_key_exists($name, $this->data);
     }
 
     /**
@@ -52,7 +54,7 @@ class ParameterBag
             return $default;
         }
 
-        return $this->parameters[$name];
+        return $this->data[$name];
     }
 
     /**
@@ -62,11 +64,11 @@ class ParameterBag
      */
     public function all()
     {
-        return $this->parameters;
+        return $this->data;
     }
 
     /**
-     * Fetch only specified keys from property values.
+     * Fetch only specified keys from property values. Missed values can be filled with defined filler.
      *
      * @param array $keys Keys to fetch from parameter values.
      * @param bool  $fill Fill missing key with filler value.
@@ -75,5 +77,13 @@ class ParameterBag
      */
     public function fetch(array $keys, $fill = false, $filler = null)
     {
+        $result = ArrayHelper::fetchKeys($this->data, $keys);
+
+        if ($fill)
+        {
+            $result = $result + array_fill_keys($keys, $filler);
+        }
+
+        return $result;
     }
 }
