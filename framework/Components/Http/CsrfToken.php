@@ -11,17 +11,17 @@ namespace Spiral\Components\Http;
 use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Core\Component;
 
-class CsrfChecker implements MiddlewareInterface
+class CsrfToken implements MiddlewareInterface
 {
     /**
      * Token have to check in cookies and queries.
      */
-    const TOKEN_NAME = 'csrf-token';
+    const COOKIE = 'csrf-token';
 
     /**
      * Header to check for token instead of POST/GET data.
      */
-    const CRSF_HEADER = 'X-CSRF-Token';
+    const HEADER = 'X-CSRF-Token';
 
     /**
      * Handle request generate response. Middleware used to alter incoming Request and/or Response
@@ -34,6 +34,8 @@ class CsrfChecker implements MiddlewareInterface
      */
     public function __invoke(Request $request, \Closure $next = null, $context = null)
     {
+        //Fetching token from cookie
+
         if (in_array($request->getMethod(), array('GET', 'HEAD', 'OPTIONS')))
         {
             //unfinished
@@ -42,8 +44,10 @@ class CsrfChecker implements MiddlewareInterface
         /**
          * @var Response $response
          */
-        $response = $next($request->withAttribute('crsfToken', $token = bin2hex(openssl_random_pseudo_bytes(16))));
+        $response = $next($request->withAttribute(
+            'crsfToken', $token = bin2hex(openssl_random_pseudo_bytes(16))
+        ));
 
-        return $response->withCookie(new Cookie(self::TOKEN_NAME, $token, 86400));
+        return $response->withCookie(new Cookie(self::COOKIE, $token, 86400));
     }
 }

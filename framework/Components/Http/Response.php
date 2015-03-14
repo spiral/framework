@@ -18,6 +18,20 @@ use Spiral\Core\Component;
 class Response extends PsrMessage implements ResponseInterface
 {
     /**
+     * Default set of http codes.
+     */
+    const SUCCESS           = 200;
+    const CREATED           = 201;
+    const ACCEPTED          = 202;
+    const BAD_REQUEST       = 400;
+    const UNAUTHORIZED      = 401;
+    const FORBIDDEN         = 403;
+    const NOT_FOUND         = 404;
+    const SERVER_ERROR      = 500;
+    const REDIRECT          = 307;
+    const MOVED_PERMANENTLY = 301;
+
+    /**
      * Status code headers.
      *
      * @var array
@@ -173,7 +187,7 @@ class Response extends PsrMessage implements ResponseInterface
         if ($code < 200 || $code > 600)
         {
             throw new \InvalidArgumentException(
-                "Invalid status code value, expected integer 200-599."
+                "Invalid status code value, expected integer 200-599. Got {$code}."
             );
         }
 

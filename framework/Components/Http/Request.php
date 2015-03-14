@@ -412,4 +412,15 @@ class Request extends PsrRequest implements ServerRequestInterface
 
         return $request;
     }
+
+    /**
+     * Client connection IP address, this value is identical to value in $_SERVER['REMOTE_ADDR'] and
+     * does not have any extra logic to fetch address from proxy headers and etc.
+     *
+     * @return string
+     */
+    public function remoteAddr()
+    {
+        return $this->serverParams['REMOTE_ADDR'];
+    }
 }

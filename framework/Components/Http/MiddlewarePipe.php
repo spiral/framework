@@ -28,7 +28,7 @@ class MiddlewarePipe extends Component
      *
      * @var callable
      */
-    protected $final = null;
+    protected $target = null;
 
     protected $context = null;
 
@@ -37,14 +37,14 @@ class MiddlewarePipe extends Component
         $this->middleware = $m;
     }
 
-    public function add($m)
+    public function add($middleware)
     {
-        $this->middleware[] = $m;
+        $this->middleware[] = $middleware;
     }
 
-    public function target($x)
+    public function target($target)
     {
-        $this->final = $x;
+        $this->target = $target;
 
         return $this;
     }
@@ -65,19 +65,14 @@ class MiddlewarePipe extends Component
 
         if (!isset($this->middleware[$position]))
         {
-            return call_user_func($this->final, $input);
-        }
-
-        $middleware = $this->middleware[$position];
-
-        if (is_string($middleware))
-        {
-            $middleware = Container::get($middleware);
+            return call_user_func($this->target, $input);
         }
 
         /**
          * @var callable $middleware
          */
+        $middleware = $this->middleware[$position];
+        $middleware = is_string($middleware) ? Container::get($middleware) : $middleware;
 
         return $middleware($input, $next, $this->context);
     }

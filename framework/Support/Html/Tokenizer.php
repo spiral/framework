@@ -48,6 +48,13 @@ class Tokenizer extends Component
     protected $tokens = array();
 
     /**
+     * PHP block should be isolated while parsing, Keep enabled.
+     *
+     * @var bool
+     */
+    protected $isolatePHP = false;
+
+    /**
      * PHP Blocks isolator, which holds all existing PHP blocks and restores them in output.
      *
      * @var Isolator|null
@@ -59,16 +66,36 @@ class Tokenizer extends Component
      * This can slow it down but the results are much more reliable. Please don't forget this is
      * tokenizer, not parser.
      *
-     * @param bool     $isolatePHP PHP block should be isolated and enabled by default
-     * @param bool     $aspTags    ASP like PHP blocks should be isolated and enabled by default.
+     * @param bool $isolatePHP PHP block should be isolated and enabled by default
      */
-    public function __construct($isolatePHP = true, $aspTags = true)
+    public function __construct($isolatePHP = true)
     {
-        if ($this->isolatePHP = $isolatePHP)
+        $this->isolatePHP = $isolatePHP;
+    }
+
+    /**
+     * Set custom isolator instance.
+     *
+     * @param Isolator $isolator
+     */
+    public function setIsolator(Isolator $isolator)
+    {
+        $this->isolator = $isolator;
+    }
+
+    /**
+     * Get associated isolator.
+     *
+     * @return Isolator
+     */
+    protected function getIsolator()
+    {
+        if (!empty($this->isolator))
         {
-            $this->isolator = Isolator::make();
-            $this->isolator->aspTags($aspTags);
+            return $this->isolator;
         }
+
+        return $this->isolator = Isolator::make()->aspTags(true);
     }
 
     /**
@@ -79,12 +106,12 @@ class Tokenizer extends Component
      */
     protected function repairPHP($source)
     {
-        if (empty($this->isolator))
+        if (!$this->isolatePHP)
         {
             return $source;
         }
 
-        return $this->isolator->repairPHP($source);
+        return $this->getIsolator()->repairPHP($source);
     }
 
     /**
@@ -112,9 +139,9 @@ class Tokenizer extends Component
         //Cleaning list of already parsed tokens
         $this->tokens = array();
 
-        if (!empty($this->isolator))
+        if ($this->isolatePHP)
         {
-            $source = $this->isolator->isolatePHP($source);
+            $source = $this->getIsolator()->isolatePHP($source);
         }
 
         $quotas = '';
@@ -287,7 +314,7 @@ class Tokenizer extends Component
             }
 
             $token = array(
-                self::TOKEN_TYPE => self::PLAIN_TEXT,
+                self::TOKEN_TYPE    => self::PLAIN_TEXT,
                 self::TOKEN_CONTENT => $this->repairPHP($content)
             );
         }

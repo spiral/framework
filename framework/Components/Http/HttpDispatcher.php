@@ -9,8 +9,11 @@
 namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 use Spiral\Components\Debug\Snapshot;
+use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\View\StaticVariablesInterface;
+use Spiral\Components\View\View;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
@@ -52,11 +55,11 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      * Set of middleware layers built to handle incoming Request and return Response. Middleware
      * can be represented as class, string (DI) or array (callable method). HttpDispatcher layer
      * middlewares will be called in start() method. This set of middleware(s) used to filter
-     * http request and response on higher layer.
+     * http request and response on application layer.
      *
      * @var array|MiddlewareInterface[]
      */
-    protected $filters = array();
+    protected $middlewares = array();
 
     /**
      * Endpoints is a set of middlewares or callback used to handle some application parts separately
@@ -68,6 +71,8 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      *
      * Example (in bootstrap):
      * $this->http->add('/forum', 'Vendor\Forum\Forum');
+     *
+     * P.S. Router is Middleware automatically assigned to base path of application.
      *
      * @var array|MiddlewareInterface[]
      */
@@ -82,12 +87,14 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     {
         $this->core = $core;
         $this->config = $core->loadConfig('http');
-        $this->filters = $this->config['filters'];
+        $this->middlewares = $this->config['middlewares'];
+        $this->endpoints = $this->config['endpoints'];
     }
 
     /**
-     * Called by event component at time of composing view static variables. Such variables will change cache file name.
-     * Class which implements this method should add new variable to event context.
+     * Called by event component at time of composing view static variables. Such variables will
+     * change cache file name. Class which implements this method should add new variable to event
+     * context.
      *
      * @param Event $event
      */
@@ -126,12 +133,11 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
             };
         }
 
-        $this->request = Request::castRequest(array(
-            'basePath' => $this->config['basePath']
-        ));
-
-        $pipeline = new MiddlewarePipe($this->filters);
-        $response = $pipeline->target(array($this, 'perform'))->run($this->request, $this);
+        $pipeline = new MiddlewarePipe($this->middlewares);
+        $response = $pipeline->target(array($this, 'perform'))->run(
+            $this->getRequest(),
+            $this
+        );
 
         //Use $event->object->getRequest() to access original request
         $this->dispatch($this->event('dispatch', $response));
@@ -145,6 +151,13 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      */
     public function getRequest()
     {
+        if (empty($this->request))
+        {
+            $this->request = Request::castRequest(array(
+                'basePath' => $this->config['basePath']
+            ));
+        }
+
         return $this->request;
     }
 
@@ -164,10 +177,10 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      */
     public function perform(Request $request)
     {
-        if (!$endpoint = $this->findEndpoint(strtolower($request->getUri()->getPath())))
+        if (!$endpoint = $this->findEndpoint($request->getUri()))
         {
             //This should never happen as request should be handled at least by Router middleware
-            throw new ClientException(ClientException::SERVER_ERROR);
+            throw new ClientException(Response::SERVER_ERROR);
         }
 
         $parentRequest = $this->core->getBinding('request');
@@ -195,14 +208,14 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     /**
      * Locate appropriate middleware endpoint based on Uri part.
      *
-     * @param string $uriPath Lowercased Uri Path.
+     * @param UriInterface $uri Request Uri.
      * @return null|MiddlewareInterface
      */
-    protected function findEndpoint($uriPath)
+    protected function findEndpoint(UriInterface $uri)
     {
+        $uriPath = strtolower($uri->getPath());
         if (isset($this->endpoints[$uriPath]))
         {
-            //Quick jump
             return $this->endpoints[$uriPath];
         }
         else
@@ -220,8 +233,8 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     }
 
     /**
-     * Execute endpoint middleware. Right now this method supports only spiral middlewares,
-     * but can be easily changed to support another syntax like handle(request, response).
+     * Execute endpoint middleware. Right now this method supports only spiral middlewares, but can
+     * also be easily changed to support another syntax like handle(request, response).
      *
      * @param Request                             $request
      * @param string|callable|MiddlewareInterface $endpoint
@@ -242,6 +255,19 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
         return $this->wrapResponse($response, $plainOutput);
     }
 
+    /**
+     * Helper method used to wrap raw response from middlewares and controllers to correct Response
+     * class. Method support string and JsonSerializable (including arrays) inputs. Default status
+     * will be set as 200. If you want to specify default set of headers for raw responses check
+     * http->config->headers section.
+     *
+     * You can force status for JSON responses by providing response as array with "status" key equals
+     * to desired HTTP code.
+     *
+     * @param mixed  $response
+     * @param string $plainOutput
+     * @return Response
+     */
     protected function wrapResponse($response, $plainOutput = '')
     {
         if ($response instanceof ResponseInterface)
@@ -254,17 +280,23 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
             return $response;
         }
 
-        //        if (is_array($response) || $response instanceof \JsonSerializable)
-        //        {
-        //            if (is_array($response) && $plainOutput)
-        //            {
-        //                $response['plainOutput'] = $plainOutput;
-        //            }
-        //
-        //            return new Response(json_encode($response), 200, array(
-        //                'Content-Type' => 'application/json'
-        //            ));
-        //        }
+        if (is_array($response) || $response instanceof \JsonSerializable)
+        {
+            if (is_array($response) && $plainOutput)
+            {
+                $response['plainOutput'] = $plainOutput;
+            }
+
+            $code = 200;
+            if (is_array($response) && isset($response['status']))
+            {
+                $code = $response['status'];
+            }
+
+            return new Response(json_encode($response), $code, array(
+                'Content-Type' => 'application/json'
+            ));
+        }
 
         return new Response($response . $plainOutput);
     }
@@ -284,9 +316,11 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
         $statusHeader = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()}";
         header(rtrim("{$statusHeader} {$response->getReasonPhrase()}"));
 
-        //Receive all headers but not cookies
+        $defaultHeaders = $this->config['headers'];
         foreach ($response->getHeaders() as $header => $values)
         {
+            unset($defaultHeaders[$header]);
+
             $replace = true;
             foreach ($values as $value)
             {
@@ -295,19 +329,42 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
             }
         }
 
+        if ($defaultHeaders)
+        {
+            //We can force some header values if not replacement specified
+            foreach ($defaultHeaders as $header => $value)
+            {
+                header("{$header}: {$value}");
+            }
+        }
+
         //Spiral request stores cookies separately with headers to make them easier to send
         if ($response instanceof Response)
         {
             foreach ($response->getCookies() as $cookie)
             {
-                //TODO: Default cookie domain!
+                if (($path = $cookie->getPath()) == Cookie::DEPENDS)
+                {
+                    $path = $this->config['basePath'];
+                }
+
+                if (($domain = $cookie->getDomain()) == Cookie::DEPENDS)
+                {
+                    $domain = $this->cookieDomain();
+                }
+
+                if (($secure = $cookie->getSecure()) == Cookie::DEPENDS)
+                {
+                    $secure = $this->request->getMethod() == 'https';
+                }
+
                 setcookie(
                     $cookie->getName(),
                     $cookie->getValue(),
                     $cookie->getExpire(),
-                    $cookie->getPath(),
-                    $cookie->getDomain(),
-                    $cookie->getSecure(),
+                    $path,
+                    $domain,
+                    $secure,
                     $cookie->getHttpOnly()
                 );
             }
@@ -338,20 +395,85 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     }
 
     /**
+     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
+     * to be shared between sub domains.
+     *
+     * @return string
+     */
+    protected function cookieDomain()
+    {
+        $host = $this->request->getUri()->getHost();
+
+        if (filter_var($host, FILTER_VALIDATE_IP))
+        {
+            //We can't use . with IP addresses
+            return $host;
+        }
+
+        if ($this->config['cookies']['subDomains'])
+        {
+            $host = '.' . $host;
+        }
+
+        return $host;
+    }
+
+    /**
      * Every dispatcher should know how to handle exception snapshot provided by Debugger.
      *
      * @param Snapshot $snapshot
-     * @return mixed
+     * @return void
      */
     public function handleException(Snapshot $snapshot)
     {
-        if ($snapshot->getException() instanceof ClientException)
+        $exception = $snapshot->getException();
+        if ($exception instanceof ClientException)
         {
-            //Simply showing something
-            //$this->dispatch(new Response('ERROR VIEW LAYOUT IF PRESENTED', $snapshot->getException()->getCode()));
+            $uri = $this->request->getUri();
+            self::logger()->warning(
+                "{scheme}://{host}{path} caused the error {code} by client {remote}.",
+                array(
+                    'scheme' => $uri->getScheme(),
+                    'host'   => $uri->getHost(),
+                    'path'   => $uri->getPath(),
+                    'code'   => $exception->errorCode(),
+                    'remote' => $this->request->remoteAddr()
+                )
+            );
+
+            $this->dispatch($this->errorResponse($exception->errorCode()));
+
+            return;
         }
 
-        //TODO: hide snapshot based on config
+        if (!$this->config['exposeErrors'])
+        {
+            $this->dispatch($this->errorResponse(500));
+
+            return;
+        }
+
+        //We can expose snapshot to client
         $this->dispatch(new Response($snapshot->renderSnapshot(), 500));
+    }
+
+    /**
+     * Get response dedicated to represent server or client error.
+     *
+     * @param int $code
+     * @return Response
+     */
+    protected function errorResponse($code)
+    {
+        $content = '';
+        if (isset($this->config['httpErrors'][$code]))
+        {
+            //We can render some content
+            $content = View::getInstance()->render($this->config['httpErrors'][$code], array(
+                'request' => $this->request
+            ));
+        }
+
+        return new Response($content, $code);
     }
 }

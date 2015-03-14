@@ -19,7 +19,10 @@ class Debugger extends Component
     /**
      * Will provide us helper method getInstance().
      */
-    use Component\SingletonTrait, Component\ConfigurableTrait, Component\LoggerTrait;
+    use Component\SingletonTrait,
+        Component\ConfigurableTrait,
+        Component\LoggerTrait,
+        Component\EventsTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -202,25 +205,28 @@ class Debugger extends Component
      */
     public function handleException(Exception $exception, $logException = true)
     {
-        $response = Snapshot::make(array(
+        $snapshot = Snapshot::make(array(
             'exception' => $exception,
             'view'      => $this->config['backtrace']['view'],
             'config'    => $this->config['backtrace']['snapshots']
         ));
 
+        //Letting subscribers know...
+        $this->event('snapshot', $snapshot);
+
         if ($exception instanceof ClientException)
         {
             //No logging for ClientExceptions
-            return $response;
+            return $snapshot;
         }
 
         //Error message should be added to log only for non http exceptions
         if ($logException)
         {
-            $this->logger()->error($response->getMessage());
+            self::logger()->error($snapshot->getMessage());
         }
 
-        return $response;
+        return $snapshot;
     }
 
     /**

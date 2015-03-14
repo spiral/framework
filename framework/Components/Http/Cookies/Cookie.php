@@ -14,7 +14,7 @@ class Cookie implements CookieInterface
      * Value should be resolved automatically in HttpDispatcher->dispatch() method. This flag can be
      * used only for secure, path and domain values.
      */
-    const RESOLVE_AUTOMATICALLY = null;
+    const DEPENDS = null;
 
     /**
      * The name of the cookie.
@@ -48,7 +48,7 @@ class Cookie implements CookieInterface
      *
      * @var string|null
      */
-    private $path = self::RESOLVE_AUTOMATICALLY;
+    private $path = self::DEPENDS;
 
     /**
      * The domain that the cookie is available. To make the cookie available on all subdomains of
@@ -58,7 +58,7 @@ class Cookie implements CookieInterface
      *
      * @var string|null
      */
-    private $domain = self::RESOLVE_AUTOMATICALLY;
+    private $domain = self::DEPENDS;
 
     /**
      * Indicates that the cookie should only be transmitted over a secure HTTPS connection from the
@@ -68,7 +68,7 @@ class Cookie implements CookieInterface
      *
      * @var string|null
      */
-    private $secure = self::RESOLVE_AUTOMATICALLY;
+    private $secure = self::DEPENDS;
 
     /**
      * When true the cookie will be made accessible only through the HTTP protocol. This means that
@@ -114,9 +114,9 @@ class Cookie implements CookieInterface
         $name,
         $value = null,
         $lifetime = 0,
-        $path = self::RESOLVE_AUTOMATICALLY,
-        $domain = self::RESOLVE_AUTOMATICALLY,
-        $secure = self::RESOLVE_AUTOMATICALLY,
+        $path = self::DEPENDS,
+        $domain = self::DEPENDS,
+        $secure = self::DEPENDS,
         $httpOnly = true
     )
     {

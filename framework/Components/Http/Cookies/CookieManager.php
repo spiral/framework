@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Spiral\Components\Encrypter\DecryptionException;
 use Spiral\Components\Encrypter\Encrypter;
 use Spiral\Components\Encrypter\EncrypterException;
-use Spiral\Components\Http\CsrfChecker;
+use Spiral\Components\Http\CsrfToken;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\MiddlewareTrait;
 use Spiral\Components\Http\Request;
@@ -24,7 +24,7 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Required traits.
      */
-    use Component\SingletonTrait, MiddlewareTrait;
+    use Component\SingletonTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -37,7 +37,7 @@ class CookieManager extends Component implements MiddlewareInterface
      * @var array
      */
     protected $exclude = array(
-        CsrfChecker::TOKEN_NAME
+        CsrfToken::COOKIE
     );
 
     /**
@@ -55,13 +55,28 @@ class CookieManager extends Component implements MiddlewareInterface
     protected $scheduled = array();
 
     /**
-     * New instance of cookie manager.
+     * Set custom encrypter.
      *
      * @param Encrypter $encrypter
      */
-    public function __construct(Encrypter $encrypter)
+    public function setEncrypter(Encrypter $encrypter)
     {
         $this->encrypter = $encrypter;
+    }
+
+    /**
+     * Get encrypter instance. Lazy loading method.
+     *
+     * @return Encrypter
+     */
+    protected function getEncrypter()
+    {
+        if (!empty($this->encrypter))
+        {
+            return $this->encrypter;
+        }
+
+        return $this->encrypter = Encrypter::make();
     }
 
     /**
@@ -73,7 +88,7 @@ class CookieManager extends Component implements MiddlewareInterface
      * @param object|null $context Pipeline context, can be HttpDispatcher, Route or module.
      * @return Response
      */
-    public function handle(Request $request, \Closure $next = null, $context = null)
+    public function __invoke(Request $request, \Closure $next = null, $context = null)
     {
         $request = $this->decryptCookies($request);
 
@@ -106,7 +121,7 @@ class CookieManager extends Component implements MiddlewareInterface
 
             try
             {
-                $cookies[$name] = $this->encrypter->decrypt($cookie);
+                $cookies[$name] = $this->getEncrypter()->decrypt($cookie);
             }
             catch (DecryptionException $exception)
             {
@@ -137,14 +152,16 @@ class CookieManager extends Component implements MiddlewareInterface
              * @var CookieInterface[] $cookies
              */
             $cookies = array_merge($cookies, $this->scheduled);
-            foreach ($cookies as $name => $cookie)
+            foreach ($cookies as $cookie)
             {
                 if (in_array($cookie->getName(), $this->exclude))
                 {
                     continue;
                 }
 
-                $cookies[$name] = $cookie->withValue($this->encrypter->encrypt($cookie->getValue()));
+                $cookies[$cookie->getName()] = $cookie->withValue(
+                    $this->getEncrypter()->encrypt($cookie->getValue())
+                );
             }
 
             $this->scheduled = array();
@@ -154,5 +171,75 @@ class CookieManager extends Component implements MiddlewareInterface
         }
 
         return $response;
+    }
+
+    /**
+     * Schedule new cookie. Cookie will be send while dispatching request.
+     *
+     * @link http://php.net/manual/en/function.setcookie.php
+     * @param string $name     The name of the cookie.
+     * @param string $value    The value of the cookie. This value is stored on the clients computer;
+     *                         do not store sensitive information.
+     * @param int    $lifetime Cookie lifetime. This value specified in seconds and declares period
+     *                         of time in which cookie will expire relatively to current time() value.
+     * @param string $path     The path on the server in which the cookie will be available on.
+     *                         If set to '/', the cookie will be available within the entire domain.
+     *                         If set to '/foo/', the cookie will only be available within the /foo/
+     *                         directory and all sub-directories such as /foo/bar/ of domain. The
+     *                         default value is the current directory that the cookie is being set in.
+     * @param string $domain   The domain that the cookie is available. To make the cookie available
+     *                         on all subdomains of example.com then you'd set it to '.example.com'.
+     *                         The . is not required but makes it compatible with more browsers.
+     *                         Setting it to www.example.com will make the cookie only available in
+     *                         the www subdomain. Refer to tail matching in the spec for details.
+     * @param bool   $secure   Indicates that the cookie should only be transmitted over a secure HTTPS
+     *                         connection from the client. When set to true, the cookie will only be
+     *                         set if a secure connection exists. On the server-side, it's on the
+     *                         programmer to send this kind of cookie only on secure connection (e.g.
+     *                         with respect to $_SERVER["HTTPS"]).
+     * @param bool   $httpOnly When true the cookie will be made accessible only through the HTTP
+     *                         protocol. This means that the cookie won't be accessible by scripting
+     *                         languages, such as JavaScript. This setting can effectively help to
+     *                         reduce identity theft through XSS attacks (although it is not supported
+     *                         by all browsers).
+     * @return Cookie
+     */
+    public function set(
+        $name,
+        $value = null,
+        $lifetime = 0,
+        $path = Cookie::DEPENDS,
+        $domain = Cookie::DEPENDS,
+        $secure = Cookie::DEPENDS,
+        $httpOnly = true
+    )
+    {
+        $cookie = new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
+        $this->scheduled[] = $cookie;
+
+        return $cookie;
+    }
+
+    /**
+     * Schedule new cookie instance to be send while dispatching request.
+     *
+     * @param CookieInterface $cookie
+     * @return static
+     */
+    public function add(CookieInterface $cookie)
+    {
+        $this->scheduled[] = $cookie;
+
+        return $this;
+    }
+
+    /**
+     * Cookies has to be send (specified via global scope).
+     *
+     * @return CookieInterface[]
+     */
+    public function getScheduled()
+    {
+        return $this->scheduled;
     }
 }
