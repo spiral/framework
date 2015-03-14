@@ -128,8 +128,8 @@ class Tokenizer extends Component
     }
 
     /**
-     * Parser HTML content and return it's tokens. You can use callback function for handling tokens during parsing.
-     * Use $tokenizer->tokenCallback(callback) for this purpose.
+     * Parser HTML content and return it's tokens. You can use callback function for handling tokens
+     * while parsing.
      *
      * @param string $source HTML source.
      * @return array
@@ -203,10 +203,13 @@ class Tokenizer extends Component
                     }
                 default:
                     //Checking for invalid characters in tag name or arguments
-                    if ($position == self::POSITION_IN_TAG && !preg_match('/[a-z0-9 \._\-="\':\/\r\n\t]/i', $char))
+                    if ($position == self::POSITION_IN_TAG)
                     {
-                        $buffer = '<' . $buffer;
-                        $position = self::POSITION_PLAIN_TEXT;
+                        if (!preg_match('/[a-z0-9 \._\-="\':\/\r\n\t]/i', $char))
+                        {
+                            $buffer = '<' . $buffer;
+                            $position = self::POSITION_PLAIN_TEXT;
+                        }
                     }
                     $buffer .= $char;
             }
@@ -308,7 +311,7 @@ class Tokenizer extends Component
     {
         if ($tokenType == self::PLAIN_TEXT)
         {
-            if (!$content)
+            if (empty($content))
             {
                 return;
             }
