@@ -37,6 +37,11 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     const SINGLETON = 'http';
 
     /**
+     * Max block size to use while sending streams to client. Default is 16Kb.
+     */
+    const STREAM_BLOCK_SIZE = 16384;
+
+    /**
      * Core instance.
      *
      * @invisible
@@ -409,7 +414,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
             $stream->rewind();
             while (!$stream->eof())
             {
-                echo $stream->read(1024);
+                echo $stream->read(static::STREAM_BLOCK_SIZE);
             }
         }
     }

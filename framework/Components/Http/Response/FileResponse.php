@@ -42,7 +42,7 @@ class FileResponse extends Response
             'Content-Disposition'       => 'attachment; filename="' . addcslashes($publicName, '"') . '"',
             'Content-Transfer-Encoding' => 'binary',
             'Content-Type'              => 'application/octet-stream',
-            'Content-Length'            => filesize($filename),
+            'Content-Length'            => (string)filesize($filename),
             'Expires'                   => '0',
             'Cache-Control'             => 'no-cache, must-revalidate',
             'Pragma'                    => 'public'
