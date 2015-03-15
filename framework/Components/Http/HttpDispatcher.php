@@ -64,7 +64,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      *
      * @var array|MiddlewareInterface[]
      */
-    protected $middlewares = array();
+    protected $middleware = array();
 
     /**
      * Endpoints is a set of middlewares or callback used to handle some application parts separately
@@ -100,7 +100,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     {
         $this->core = $core;
         $this->config = $core->loadConfig('http');
-        $this->middlewares = $this->config['middlewares'];
+        $this->middleware = $this->config['middleware'];
         $this->endpoints = $this->config['endpoints'];
     }
 
@@ -146,7 +146,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
             };
         }
 
-        $pipeline = new MiddlewarePipe($this->middlewares);
+        $pipeline = new MiddlewarePipe($this->middleware);
         $response = $pipeline->target(array($this, 'perform'))->run(
             $this->getRequest(),
             $this
