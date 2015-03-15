@@ -29,11 +29,12 @@ use Spiral\Components;
  * @property Components\Image\ImageManager         $image
  * @property Components\Storage\StorageManager     $storage
  * @property Components\DBAL\DatabaseManager       $dbal
- * @property Components\ORM\ORM                    $orm
  * @property Components\ODM\ODM                    $odm
+ * @property Components\ORM\ORM                    $orm
  *
  * @property Components\Http\Request               $request
  * @property Components\Http\Cookies\CookieManager $cookies
+ * @property Components\Session\SessionStore       $session
  */
 class Core extends Container implements ConfigLoaderInterface
 {
@@ -163,6 +164,7 @@ class Core extends Container implements ConfigLoaderInterface
             'orm'                                    => 'Spiral\Components\ORM\ORM',
             'odm'                                    => 'Spiral\Components\ODM\ODM',
             'cookies'                                => 'Spiral\Components\Http\Cookies\CookieManager',
+            'session'                                => 'Spiral\Components\Session\SessionStore',
 
             //Additional interfaces
             'Spiral\Core\Events\DispatcherInterface' => 'events',

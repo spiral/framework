@@ -70,7 +70,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
             return $this->stores[$store];
         }
 
-        if (empty($options))
+        if (!empty($options))
         {
             $this->config['stores'][$store] = $options;
         }

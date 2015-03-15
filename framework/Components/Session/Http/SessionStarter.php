@@ -9,8 +9,11 @@
 namespace Spiral\Components\Session\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
+use Spiral\Components\Session\SessionStore;
+use Spiral\Core\Container;
 
 class SessionStarter implements MiddlewareInterface
 {
@@ -18,6 +21,38 @@ class SessionStarter implements MiddlewareInterface
      * Cookie to store session ID in.
      */
     const COOKIE = 'SID';
+
+    /**
+     * Session store instance.
+     *
+     * @var SessionStore
+     */
+    protected $store = null;
+
+    /**
+     * Manually set session store instance.
+     *
+     * @param SessionStore $store
+     */
+    public function setStore(SessionStore $store)
+    {
+        $this->store = $store;
+    }
+
+    /**
+     * Get session store instance.
+     *
+     * @return SessionStore
+     */
+    public function getStore()
+    {
+        if (!empty($this->store))
+        {
+            return $this->store;
+        }
+
+        return $this->store = SessionStore::make();
+    }
 
     /**
      * Handle request generate response. Middleware used to alter incoming Request and/or Response
@@ -30,17 +65,53 @@ class SessionStarter implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
-        $sessionID = null;
-        $requestCookies = $request->getCookieParams();
-        if (isset($requestCookies[self::COOKIE]))
+        $cookies = $request->getCookieParams();
+        if (isset($cookies[self::COOKIE]))
         {
-            $sessionID = $requestCookies[self::COOKIE];
+            //Mounting ID retrieved from cookies
+            $this->getStore()->setID($cookies[self::COOKIE]);
         }
 
-        return $next();
+        $response = $next();
 
+        if (empty($this->store) && is_object(Container::getBinding('session')))
+        {
+            //Store were started by itself
+            $this->setStore(Container::get('session'));
+        }
 
+        if (!empty($this->store) && ($this->store->isStarted() || $this->store->isDestroyed()))
+        {
+            return $this->commitSession($this->store, $response, $cookies);
+        }
 
-        //Commit session if altered
+        return $response;
+    }
+
+    /**
+     * Mount session id or remove session cookie.
+     *
+     * @param SessionStore $store
+     * @param Response     $response
+     * @param array        $cookies
+     * @return Response
+     */
+    protected function commitSession(SessionStore $store, Response $response, array $cookies)
+    {
+        $store->isStarted() && $store->commit();
+
+        if (!isset($cookies[self::COOKIE]) || $cookies[self::COOKIE] != $store->getID())
+        {
+            if ($response instanceof Response)
+            {
+                return $response->withCookie(new Cookie(
+                    self::COOKIE,
+                    $store->getID(),
+                    $store->getConfig()['lifetime']
+                ));
+            }
+        }
+
+        return $response;
     }
 }

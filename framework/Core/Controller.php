@@ -29,11 +29,12 @@ use Spiral\Components;
  * @property Components\Image\ImageManager         $image
  * @property Components\Storage\StorageManager     $storage
  * @property Components\DBAL\DatabaseManager       $dbal
- * @property Components\ORM\ORM                    $orm
  * @property Components\ODM\ODM                    $odm
+ * @property Components\ORM\ORM                    $orm
  *
  * @property Components\Http\Request               $request
  * @property Components\Http\Cookies\CookieManager $cookies
+ * @property Components\Session\SessionStore       $session
  */
 class Controller extends Component implements ControllerInterface
 {

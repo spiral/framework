@@ -13,7 +13,7 @@ use Spiral\Components\Localization\LocalizableTrait;
 use Spiral\Core\Component;
 use Spiral\Support\Validation\Validator;
 
-abstract class DataEntity extends Component implements \JsonSerializable, \IteratorAggregate
+abstract class DataEntity extends Component implements \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * Model events and localization.
@@ -21,8 +21,9 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     use LocalizableTrait, Component\LoggerTrait, Component\EventsTrait;
 
     /**
-     * Mutator aliases. Aliases used to simplify definition of DataEntity setters and getters. New filter alias can be
-     * defined at any moment by application or module. Aliases can also be used for accessors.
+     * Mutator aliases. Aliases used to simplify definition of DataEntity setters and getters. New
+     * filter alias can be defined at any moment by application or module. Aliases can also be used
+     * for accessors.
      *
      * @var array
      */
@@ -49,8 +50,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     protected static $messagesCache = array();
 
     /**
-     * Fields to apply filters and validations, this is primary model data, which can be set using setFields() method and
-     * retrieved using getFields() or publicFields().
+     * Fields to apply filters and validations, this is primary model data, which can be set using
+     * setFields() method and retrieved using getFields() or publicFields().
      *
      * @var array
      */
@@ -71,8 +72,9 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     protected $hidden = array();
 
     /**
-     * Set of fields which can be assigned using setFields() method, if property is empty every field except secured will
-     * be assignable. Fields can still be assigned directly using setField() or __set() methods without any limitations.
+     * Set of fields which can be assigned using setFields() method, if property is empty every field
+     * except secured will be assignable. Fields can still be assigned directly using setField() or
+     * __set() methods without any limitations.
      *
      * @var array
      */
@@ -86,8 +88,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     protected $validator = null;
 
     /**
-     * Indication that validation is required, flag can be set when some field changed or in other conditions when data has
-     * to be revalidated.
+     * Indication that validation is required, flag can be set when some field changed or in other
+     * conditions when data has to be revalidated.
      *
      * @var bool
      */

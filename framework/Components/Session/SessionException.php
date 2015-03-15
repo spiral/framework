@@ -6,9 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Core;
+namespace Spiral\Components\Session;
 
-class CoreException extends \RuntimeException
+use Spiral\Core\CoreException;
+
+class SessionException extends CoreException
 {
 
 }
