@@ -74,23 +74,23 @@ Image
 ImageObject works well, but currently there is only one image processor (which we have been using for
 4 years) - ImageMagic via console interface.
 
+Paginator
+-------------
+Pagination is working based on new HttpDispatcher requests (ServerRequestInterface).
+
+CSRF
+-------------
+Works as middleware.
+
 What is NOT ready
 =================
 Currently I'm in the middle of planning new HttpDispatcher realization. Even though we already had
 Routes, Requests and Responses in a previous generation, I would like to consider implementing PSR7
 and middleware(s). Based on this plan of action, the following pieces are not ready:
 
-Paginator
--------------
-The entire pagination class is ready with its' interfaces and traits. However, it currently can't receive
-a page number from a request as there isn't a request :)
-
-Will be completed by end of this week.
-
-Session, Cookies and CRSF tokens
+Session
 -------------
 This will require some tweaking to fit into HttpDispatcher middleware.
-
 Will be completed by end of this week.
 
 ORM
