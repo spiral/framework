@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\Http;
 
+use Predis\ClientException;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
-use Spiral\Components\Http\Csrf\BadTokenException;
 use Spiral\Core\Component;
 
 class CsrfProtector implements MiddlewareInterface
@@ -38,7 +38,7 @@ class CsrfProtector implements MiddlewareInterface
      * @param \Closure               $next    Next middleware/target.
      * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
      * @return Response
-     * @throws BadTokenException
+     * @throws ClientException
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
@@ -61,7 +61,7 @@ class CsrfProtector implements MiddlewareInterface
         {
             if (!$this->compare($token, $this->fetchToken($request)))
             {
-                throw new BadTokenException();
+                throw new ClientException(Response::BAD_REQUEST);
             }
         }
 
