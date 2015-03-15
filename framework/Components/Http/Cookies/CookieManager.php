@@ -227,7 +227,7 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     public function remove($name)
     {
-        $this->scheduled[] = new Cookie($name, null);
+        $this->scheduled[] = new Cookie($name, null, -86400);
     }
 
     /**
