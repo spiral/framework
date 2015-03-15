@@ -15,15 +15,11 @@ class StringHelperTest extends TestCase
 {
     public function testRandom()
     {
-        $random = StringHelper::random(32, 'abc');
-
-        for ($position = 0; $position < 32; $position++)
-        {
-            $char = $random[$position];
-            $this->assertTrue(in_array($char, array('a', 'b', 'c')));
-        }
-
         $this->assertEquals(32, strlen(StringHelper::random(32)));
+        $this->assertEquals(16, strlen(StringHelper::random(16)));
+        $this->assertEquals(8, strlen(StringHelper::random(8)));
+        $this->assertEquals(3, strlen(StringHelper::random(3)));
+        $this->assertEquals(7, strlen(StringHelper::random(7)));
     }
 
     public function testEscape()

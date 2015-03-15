@@ -12,6 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Core\Component;
 use Spiral\Core\Dispatcher\ClientException;
+use Spiral\Helpers\StringHelper;
 
 class CsrfProtector implements MiddlewareInterface
 {
@@ -53,7 +54,7 @@ class CsrfProtector implements MiddlewareInterface
         else
         {
             //Making new token
-            $token = bin2hex(openssl_random_pseudo_bytes(16));
+            $token = StringHelper::random(16);
             $requestCookie = true;
         }
 

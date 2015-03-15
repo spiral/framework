@@ -11,11 +11,6 @@ namespace Spiral\Helpers;
 class StringHelper
 {
     /**
-     * Default set of random characters.
-     */
-    const DEFAULT_RANDOM = 'abcdefghijklmnopqrstuxyvwzABCDEFGHIJKLMNOPQRSTUXYVWZ01234567890';
-
-    /**
      * This describes character exceptions and aliases for StringHelper::url function. More
      * characters will be added based on user's request.
      *
@@ -47,20 +42,19 @@ class StringHelper
     /**
      * Create a random string with desired length and characters.
      *
-     * @param int    $length     String length. 32 symbols by default.
-     * @param string $characters Characters should be randomized.
+     * @param int $length String length. 32 symbols by default.
      * @return string
      */
-    public static function random($length = 32, $characters = self::DEFAULT_RANDOM)
+    public static function random($length = 32)
     {
-        $result = '';
-        $countCharacters = strlen($characters);
-        for ($character = 0; $character < $length; $character++)
+        $string = openssl_random_pseudo_bytes(1 + $length / 2);
+
+        if (empty($string))
         {
-            $result .= $characters[mt_rand(0, $countCharacters - 1)];
+            throw new \RuntimeException("Unable to generate random string.");
         }
 
-        return $result;
+        return substr(bin2hex($string), 0, $length);
     }
 
     /**

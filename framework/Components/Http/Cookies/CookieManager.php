@@ -142,6 +142,7 @@ class CookieManager extends Component implements MiddlewareInterface
     {
         if (!$response instanceof Response)
         {
+            //We may need to manually set headers in future
             return $response;
         }
 
