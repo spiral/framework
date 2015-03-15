@@ -53,7 +53,8 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
 
     /**
      * SessionStore is singleton object used to manager sessions using default/non default session
-     * handlers.
+     * handlers. Attention, session store based on php sessions, so it's REALLY important to have
+     * only one store at one moment of time.
      *
      * @param Core $core
      */
