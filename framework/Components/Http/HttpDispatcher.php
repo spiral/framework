@@ -113,7 +113,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      */
     public function viewVariables(Event $event)
     {
-        $event->context['basePath'] = $this->config['basePath'];
+        $event->context['basePath'] = $this->activePath;
     }
 
     /**
