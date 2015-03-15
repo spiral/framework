@@ -16,6 +16,7 @@ use Spiral\Components\Encrypter\EncrypterException;
 use Spiral\Components\Http\CsrfProtector;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
+use Spiral\Components\Session\Http\SessionStarter;
 use Spiral\Core\Component;
 
 class CookieManager extends Component implements MiddlewareInterface
@@ -35,9 +36,7 @@ class CookieManager extends Component implements MiddlewareInterface
      *
      * @var array
      */
-    protected $exclude = array(
-        CsrfProtector::COOKIE
-    );
+    protected $exclude = array(CsrfProtector::COOKIE, SessionStarter::COOKIE);
 
     /**
      * Encrypter component.
