@@ -456,17 +456,18 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
         {
             $uri = $this->request->getUri();
             self::logger()->warning(
-                "{scheme}://{host}{path} caused the error {code} by client {remote}.",
+                "{scheme}://{host}{path} caused the error {code} ({message}) by client {remote}.",
                 array(
-                    'scheme' => $uri->getScheme(),
-                    'host'   => $uri->getHost(),
-                    'path'   => $uri->getPath(),
-                    'code'   => $exception->errorCode(),
-                    'remote' => $this->request->remoteAddr()
+                    'scheme'  => $uri->getScheme(),
+                    'host'    => $uri->getHost(),
+                    'path'    => $uri->getPath(),
+                    'code'    => $exception->getCode(),
+                    'message' => $exception->getMessage() ?: '-not specified-',
+                    'remote'  => $this->request->remoteAddr()
                 )
             );
 
-            $this->dispatch($this->errorResponse($exception->errorCode()));
+            $this->dispatch($this->errorResponse($exception->getCode()));
 
             return;
         }
@@ -494,10 +495,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
 
         if ($this->request->isAjax())
         {
-            $content = array(
-                'status'  => $code,
-                'message' => Response::getPhrase($code)
-            );
+            $content = array('status' => $code);
 
             return new Response(json_encode($content), $code, array(
                 'Content-Type' => 'application/json'

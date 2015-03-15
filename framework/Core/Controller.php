@@ -68,9 +68,18 @@ class Controller extends Component implements ControllerInterface
         }
 
         $reflection = new \ReflectionMethod($this, $action);
-        if (!$reflection->isPublic() || $reflection->isStatic() || !$reflection->isUserDefined() || $reflection->getDeclaringClass()->getName() == __CLASS__)
+
+        if (
+            !$reflection->isPublic()
+            || $reflection->isStatic()
+            || !$reflection->isUserDefined()
+            || $reflection->getDeclaringClass()->getName() == __CLASS__
+        )
         {
-            throw new ClientException(ClientException::NOT_FOUND);
+            throw new ClientException(
+                ClientException::NOT_FOUND,
+                "Action is not allowed"
+            );
         }
 
         //Getting set of arguments should be sent to requested method
@@ -79,7 +88,9 @@ class Controller extends Component implements ControllerInterface
         {
             if (!array_key_exists($parameter->getPosition(), $arguments) && !$parameter->isOptional())
             {
-                throw new ClientException("Missing parameter '{$parameter->name}'.");
+                throw new ClientException(
+                    ClientException::BAD_DATA, "Missing parameter '{$parameter->name}'"
+                );
             }
         }
 

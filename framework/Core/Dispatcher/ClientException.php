@@ -14,28 +14,24 @@ use Spiral\Core\CoreException;
 class ClientException extends CoreException
 {
     /**
-     * Default set of error codes.
+     * ClientException exceptions are not handled by Debugger and not logged into error log, this
+     * exception classes used to define exceptions has to be handled by dispatcher itself.
+     *
+     * ClientException can be raised outside Dispatchers by Controllers and Core when method or
+     * requested controller not found.
      */
-    const BAD_REQUEST  = 400;
-    const UNAUTHORIZED = 401;
-    const FORBIDDEN    = 403;
-    const NOT_FOUND    = 404;
-    const SERVER_ERROR = 500;
+    const BAD_DATA  = 400;
+    const NOT_FOUND = 404;
+    const ERROR     = 500;
 
     /**
-     * Due response code stored in exception message, errorCode() method can be used to retrieve
-     * it via more recognizable way. ClientException was used originally for Console and Http
-     * dispatchers, now it used only for Http.
+     * Create ClientException with specified error code and optional message (parameters reverted).
      *
-     * @return int
+     * @param int|string $code
+     * @param string     $message
      */
-    public function errorCode()
+    public function __construct($code = Response::NOT_FOUND, $message = "")
     {
-        if (!is_numeric($this->getMessage()))
-        {
-            return Response::BAD_REQUEST;
-        }
-
-        return $this->getMessage();
+        parent::__construct($message, $code);
     }
 }

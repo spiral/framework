@@ -61,7 +61,7 @@ class CsrfProtector implements MiddlewareInterface
         {
             if (!$this->compare($token, $this->fetchToken($request)))
             {
-                throw new ClientException(412);
+                throw new ClientException(412, 'Bad CSRF Token');
             }
         }
 
