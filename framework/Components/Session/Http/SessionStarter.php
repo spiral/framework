@@ -20,7 +20,7 @@ class SessionStarter implements MiddlewareInterface
     /**
      * Cookie to store session ID in.
      */
-    const COOKIE = 'SID';
+    const COOKIE = 'session';
 
     /**
      * Session store instance.
