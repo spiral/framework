@@ -9,6 +9,7 @@
 namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Http\Cookies\Cookie;
@@ -22,7 +23,7 @@ use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\Events\Event;
 
-class HttpDispatcher extends Component implements DispatcherInterface, StaticVariablesInterface
+class HttpDispatcher extends Component implements DispatcherInterface
 {
     /**
      * Required traits.
@@ -84,15 +85,6 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      */
     protected $endpoints = array();
 
-    /**
-     * Currently active path selected to run endpoint. Can be used by endpoint to create it's own
-     * base path or internal routes.
-     *
-     * @var string
-     */
-    protected $activePath = null;
-
-
     protected $routes = array();
 
     /**
@@ -117,7 +109,8 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      */
     public function viewVariables(Event $event)
     {
-        $event->context['basePath'] = $this->activePath;
+        //Base Application path, use Request Active path to get module specific base path
+        $event->context['basePath'] = $this->config['basePath'];
     }
 
     /**
@@ -206,7 +199,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
      */
     public function perform(Request $request)
     {
-        if (!$endpoint = $this->findEndpoint($request->getUri(), $this->activePath))
+        if (!$endpoint = $this->findEndpoint($request->getUri(), $activePath))
         {
             //This should never happen as request should be handled at least by Router middleware
             throw new ClientException(Response::SERVER_ERROR);
@@ -217,7 +210,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
         /**
          * So all inner middleware and code will known their context URL.
          */
-        $request = $request->withAttribute('activePath', $this->activePath);
+        $request = $request->withAttribute('activePath', $activePath);
 
         //Creating scope
         $this->core->bind('request', $request);
@@ -375,36 +368,9 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
             }
         }
 
-        //Spiral request stores cookies separately with headers to make them easier to send
         if ($response instanceof Response)
         {
-            foreach ($response->getCookies() as $cookie)
-            {
-                if (($path = $cookie->getPath()) == Cookie::DEPENDS)
-                {
-                    $path = $this->config['basePath'];
-                }
-
-                if (($domain = $cookie->getDomain()) == Cookie::DEPENDS)
-                {
-                    $domain = $this->cookieDomain();
-                }
-
-                if (($secure = $cookie->getSecure()) == Cookie::DEPENDS)
-                {
-                    $secure = $this->request->getMethod() == 'https';
-                }
-
-                setcookie(
-                    $cookie->getName(),
-                    $cookie->getValue(),
-                    $cookie->getExpire(),
-                    $path,
-                    $domain,
-                    $secure,
-                    $cookie->getHttpOnly()
-                );
-            }
+            $this->sendCookies($response);
         }
 
         if ($response->getStatusCode() == 204)
@@ -412,18 +378,62 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
             return;
         }
 
-        $stream = $response->getBody();
+        $this->sendStream($response->getBody());
+    }
 
-        // I need self sending requests in future.
+    /**
+     * Send response cookies. Spiral response stores cookies separately with headers to make them
+     * easier to send
+     *
+     * @param Response $response
+     */
+    protected function sendCookies(Response $response)
+    {
+        foreach ($response->getCookies() as $cookie)
+        {
+            if (($path = $cookie->getPath()) == Cookie::DEPENDS)
+            {
+                $path = $this->config['basePath'];
+            }
+
+            if (($domain = $cookie->getDomain()) == Cookie::DEPENDS)
+            {
+                $domain = $this->cookieDomain();
+            }
+
+            if (($secure = $cookie->getSecure()) == Cookie::DEPENDS)
+            {
+                $secure = $this->request->getMethod() == 'https';
+            }
+
+            setcookie(
+                $cookie->getName(),
+                $cookie->getValue(),
+                $cookie->getExpire(),
+                $path,
+                $domain,
+                $secure,
+                $cookie->getHttpOnly()
+            );
+        }
+    }
+
+    /**
+     * Sending stream content to client.
+     *
+     * @param StreamableInterface $stream
+     */
+    protected function sendStream(StreamableInterface $stream)
+    {
         if (!$stream->isSeekable())
         {
             echo (string)$stream;
         }
         else
         {
-            //Use stream_copy_to_stream() somehow
             ob_implicit_flush(true);
             $stream->rewind();
+
             while (!$stream->eof())
             {
                 echo $stream->read(static::STREAM_BLOCK_SIZE);
