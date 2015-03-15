@@ -363,7 +363,9 @@ class Uri implements UriInterface
 
             if (!isset($this->defaultSchemes[$scheme]))
             {
-                throw new \InvalidArgumentException('Invalid scheme value, only "http" and "allowed".');
+                throw new \InvalidArgumentException(
+                    'Invalid scheme value, only "http" and "allowed".'
+                );
             }
         }
 
@@ -435,7 +437,9 @@ class Uri implements UriInterface
             $port = (int)$port;
             if ($port < 1 || $port > 65535)
             {
-                throw new \InvalidArgumentException('Invalid port value, use only TCP and UDP range.');
+                throw new \InvalidArgumentException(
+                    'Invalid port value, use only TCP and UDP range.'
+                );
             }
         }
 

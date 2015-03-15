@@ -30,18 +30,47 @@ class MiddlewarePipe extends Component
      */
     protected $target = null;
 
+    /**
+     * Pipe context, usually includes parent object or options provided from outside. Can be used to
+     * identify basePath, base request or route options.
+     *
+     * @var mixed
+     */
     protected $context = null;
 
-    public function __construct($m = array())
+    /**
+     * Middleware Pipeline used by HttpDispatchers to pass request thought middleware(s) and receive
+     * filtered result. Pipeline can be used outside dispatcher in routes, modules and controllers.
+     *
+     * @param MiddlewareInterface[] $middleware
+     */
+    public function __construct(array $middleware = array())
     {
-        $this->middleware = $m;
+        $this->middleware = $middleware;
     }
 
+    /**
+     * Add new middleware to end of chain. Middleware can be represented as class, string (DI) or
+     * array (callable method). Use can use closures to specify middleware. Every middleware will
+     * receive 3 parameters, Request, next closure and context.
+     *
+     * @param mixed $middleware
+     * @return static
+     */
     public function add($middleware)
     {
         $this->middleware[] = $middleware;
+
+        return $this;
     }
 
+    /**
+     * Every pipeline should have specified target to generate "deepest" response instance or other
+     * response data (depends on context). Target should always be specified.
+     *
+     * @param callable $target
+     * @return static
+     */
     public function target($target)
     {
         $this->target = $target;
@@ -49,13 +78,28 @@ class MiddlewarePipe extends Component
         return $this;
     }
 
-    public function run($input, $context = null)
+    /**
+     * Run pipeline chain with specified input request and context. Response type depends on target
+     * method and middleware logic.
+     *
+     * @param Request $input
+     * @param mixed   $context
+     * @return mixed
+     */
+    public function run(Request $input, $context = null)
     {
         $this->context = $context;
 
         return $this->next(0, $input);
     }
 
+    /**
+     * Internal method used to jump between middleware layers.
+     *
+     * @param int     $position
+     * @param Request $input
+     * @return mixed
+     */
     protected function next($position = 0, $input = null)
     {
         $next = function ($contextInput = null) use ($position, $input)
