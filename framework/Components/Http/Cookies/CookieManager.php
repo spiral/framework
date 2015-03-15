@@ -221,6 +221,16 @@ class CookieManager extends Component implements MiddlewareInterface
     }
 
     /**
+     * Schedule cookie removal.
+     *
+     * @param string $name The name of the cookie.
+     */
+    public function remove($name)
+    {
+        $this->scheduled[] = new Cookie($name, null);
+    }
+
+    /**
      * Schedule new cookie instance to be send while dispatching request.
      *
      * @param CookieInterface $cookie
