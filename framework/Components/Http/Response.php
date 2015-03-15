@@ -177,6 +177,22 @@ class Response extends PsrMessage implements ResponseInterface
     }
 
     /**
+     * Helper method to retrieve status phrase based on status code.
+     *
+     * @param int $code
+     * @return string|null
+     */
+    public static function getPhrase($code)
+    {
+        if (isset(self::$phrases[$code]))
+        {
+            return self::$phrases[$code];
+        }
+
+        return null;
+    }
+
+    /**
      * Helper method to set status code and validate it's value.
      *
      * @param int $code
@@ -192,12 +208,7 @@ class Response extends PsrMessage implements ResponseInterface
         }
 
         $this->statusCode = $code;
-        $this->reasonPhrase = null;
-
-        if (isset(self::$phrases[$this->statusCode]))
-        {
-            $this->reasonPhrase = self::$phrases[$this->statusCode];
-        }
+        $this->reasonPhrase = self::getPhrase($code);
     }
 
     /**

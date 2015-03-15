@@ -491,6 +491,19 @@ class HttpDispatcher extends Component implements DispatcherInterface, StaticVar
     protected function errorResponse($code)
     {
         $content = '';
+
+        if ($this->request->isAjax())
+        {
+            $content = array(
+                'status'  => $code,
+                'message' => Response::getPhrase($code)
+            );
+
+            return new Response(json_encode($content), $code, array(
+                'Content-Type' => 'application/json'
+            ));
+        }
+
         if (isset($this->config['httpErrors'][$code]))
         {
             //We can render some content

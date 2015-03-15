@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\Http;
 
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
@@ -82,11 +82,11 @@ class MiddlewarePipe extends Component
      * Run pipeline chain with specified input request and context. Response type depends on target
      * method and middleware logic.
      *
-     * @param Request $input
-     * @param mixed   $context
+     * @param ServerRequestInterface $input
+     * @param mixed                  $context
      * @return mixed
      */
-    public function run(Request $input, $context = null)
+    public function run(ServerRequestInterface $input, $context = null)
     {
         $this->context = $context;
 
@@ -96,8 +96,8 @@ class MiddlewarePipe extends Component
     /**
      * Internal method used to jump between middleware layers.
      *
-     * @param int     $position
-     * @param Request $input
+     * @param int                    $position
+     * @param ServerRequestInterface $input
      * @return mixed
      */
     protected function next($position = 0, $input = null)
