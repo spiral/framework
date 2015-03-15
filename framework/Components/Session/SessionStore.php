@@ -276,7 +276,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
      *
      * @param string $name Session value name.
      */
-    public function remove($name)
+    public function delete($name)
     {
         $this->start();
         unset($_SESSION[$name]);
@@ -291,7 +291,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     public function pull($name)
     {
         $value = $this->get($name);
-        $this->remove($name);
+        $this->delete($name);
 
         return $value;
     }
