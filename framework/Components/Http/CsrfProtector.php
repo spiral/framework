@@ -13,7 +13,7 @@ use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Csrf\BadTokenException;
 use Spiral\Core\Component;
 
-class CsrfToken implements MiddlewareInterface
+class CsrfProtector implements MiddlewareInterface
 {
     /**
      * Token have to check in cookies and queries.
