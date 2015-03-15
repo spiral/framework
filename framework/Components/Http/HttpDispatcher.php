@@ -114,15 +114,21 @@ class HttpDispatcher extends Component implements DispatcherInterface
     }
 
     /**
-     * Register new endpoint middleware inside HttpDispatcher.
+     * Register new endpoint or middleware inside HttpDispatcher. HttpDispatcher will execute such
+     * enterpoint only with URI path matched to specified value. The rest of http flow will be
+     * given to this enterpoint.
+     *
+     * Example (in bootstrap):
+     * $this->http->add('/forum', 'Vendor\Forum\Forum');
+     * $this->http->add('/blog', new Vendor\Module\Blog());
      *
      * @param string                              $path Http Uri path with / and in lower case.
-     * @param string|callable|MiddlewareInterface $middleware
+     * @param string|callable|MiddlewareInterface $endpoint
      * @return static
      */
-    public function add($path, $middleware)
+    public function add($path, $endpoint)
     {
-        $this->endpoints[$path] = $middleware;
+        $this->endpoints[$path] = $endpoint;
 
         return $this;
     }
@@ -177,7 +183,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         if (empty($this->request))
         {
-            $this->request = Request::castRequest();
+            $this->request = Request::castRequest(array(
+                'basePath'     => $this->config['basePath'],
+                'exposeErrors' => $this->config['exposeErrors']
+            ));
         }
 
         return $this->request;
@@ -216,8 +225,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $this->core->bind('request', $request);
         $this->core->bind(get_class($request), $request);
 
-        //Yey! Let's go!
+        $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
+
+        benchmark('http::endpoint', $name);
         $response = $this->execute($request, $endpoint);
+        benchmark('http::endpoint', $name);
 
         $this->core->removeBinding(get_class($request));
         $this->core->removeBinding('request');
