@@ -8,10 +8,10 @@
  */
 namespace Spiral\Components\Http;
 
-use Predis\ClientException;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Core\Component;
+use Spiral\Core\Dispatcher\ClientException;
 
 class CsrfProtector implements MiddlewareInterface
 {
