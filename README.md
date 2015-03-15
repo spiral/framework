@@ -82,16 +82,19 @@ CSRF
 -------------
 Works as middleware.
 
+Session
+-------------
+Done.
+
 What is NOT ready
 =================
 Currently I'm in the middle of planning new HttpDispatcher realization. Even though we already had
 Routes, Requests and Responses in a previous generation, I would like to consider implementing PSR7
 and middleware(s). Based on this plan of action, the following pieces are not ready:
 
-Session
--------------
-This will require some tweaking to fit into HttpDispatcher middleware.
-Will be completed by end of this week.
+Router
+=================
+In transition.
 
 ORM
 =================
