@@ -86,15 +86,15 @@ Session
 -------------
 Done.
 
+Router
+=================
+Done, works as middleware endpoint.
+
 What is NOT ready
 =================
 Currently I'm in the middle of planning new HttpDispatcher realization. Even though we already had
 Routes, Requests and Responses in a previous generation, I would like to consider implementing PSR7
 and middleware(s). Based on this plan of action, the following pieces are not ready:
-
-Router
-=================
-In transition to become a middleware! Yay!
 
 ORM
 =================
