@@ -221,7 +221,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
         if (!$endpoint = $this->findEndpoint($request->getUri(), $activePath))
         {
             //This should never happen as request should be handled at least by Router middleware
-            throw new ClientException(Response::SERVER_ERROR);
+            throw new ClientException(Response::SERVER_ERROR, 'Unable to select endpoint');
         }
 
         $parentRequest = $this->core->getBinding('request');
