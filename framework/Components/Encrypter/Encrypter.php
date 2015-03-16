@@ -135,6 +135,7 @@ class Encrypter extends Component
 
         if ($hexForm)
         {
+            //todo: check safety
             $result = bin2hex($result);
         }
 
