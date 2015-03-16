@@ -527,6 +527,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $content = '';
 
+        //TODO Check requested Content-Type
         if ($this->request->isAjax())
         {
             $content = array('status' => $code);

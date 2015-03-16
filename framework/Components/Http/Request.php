@@ -92,6 +92,7 @@ class Request extends PsrRequest implements ServerRequestInterface
     /**
      * Associations between real bag instances and simplified property name.
      *
+     * @invisible
      * @var array
      */
     protected $bagsMapping = array(
