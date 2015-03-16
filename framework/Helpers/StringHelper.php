@@ -54,7 +54,7 @@ class StringHelper
             throw new \RuntimeException("Unable to generate random string.");
         }
 
-        return substr(bin2hex($string), 0, $length);
+        return substr(base64_encode($string), 0, $length);
     }
 
     /**
