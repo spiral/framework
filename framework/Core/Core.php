@@ -35,7 +35,6 @@ use Spiral\Components;
  * @property Components\Http\Request               $request
  * @property Components\Http\Cookies\CookieManager $cookies
  * @property Components\Session\SessionStore       $session
- * @property Components\Http\Router\Router         $router
  */
 class Core extends Container implements ConfigLoaderInterface
 {
