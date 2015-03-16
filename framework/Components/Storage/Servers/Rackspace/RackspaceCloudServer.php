@@ -11,7 +11,7 @@ namespace Spiral\Components\Storage\Servers\Rackspace;
 use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Storage\ServerInterface;
-use Spiral\Components\Storage\Servers\Traits\MimetypeDetectionTrait;
+use Spiral\Components\Storage\Servers\Traits\MimetypeTrait;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
 use Spiral\Components\Storage\StorageManager;
@@ -21,7 +21,7 @@ class RackspaceCloudServer implements ServerInterface
     /**
      * Common storage server functionality.
      */
-    use MimetypeDetectionTrait;
+    use MimetypeTrait;
 
     /**
      * Server configuration, connection options, auth keys and certificates.

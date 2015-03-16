@@ -10,7 +10,7 @@ namespace Spiral\Components\Storage\Servers\AmazonS3;
 
 use Spiral\Components\Storage\ServerInterface;
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\Storage\Servers\Traits\MimetypeDetectionTrait;
+use Spiral\Components\Storage\Servers\Traits\MimetypeTrait;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
 use Spiral\Components\Storage\StorageManager;
@@ -20,7 +20,7 @@ class AmazonS3Server implements ServerInterface
     /**
      * Common storage server functionality.
      */
-    use MimetypeDetectionTrait;
+    use MimetypeTrait;
 
     /**
      * Storage component.

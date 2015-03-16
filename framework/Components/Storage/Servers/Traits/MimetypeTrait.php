@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\Storage\Servers\Traits;
 
-trait MimetypeDetectionTrait
+trait MimetypeTrait
 {
     /**
      * List of known file mimetsypes to generate valid file Content-Type header.
