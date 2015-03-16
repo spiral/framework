@@ -135,7 +135,7 @@ class Encrypter extends Component
 
         if ($hexForm)
         {
-            $result = base64_encode($result);
+            $result = bin2hex($result);
         }
 
         return $result;
