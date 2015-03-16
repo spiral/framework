@@ -19,7 +19,7 @@ $tokenizer->setHighlightingStyles(array(
         T_INSTANCEOF, T_INTERFACE, T_THROW, T_ARRAY,
         T_IF, T_ELSE, T_ELSEIF, T_TRY, T_CATCH, T_CLONE,
         T_WHILE, T_FOR, T_DO, T_UNSET, T_FOREACH, T_RETURN,
-        T_EXIT
+        T_EXIT, T_EXTENDS
     ),
     'color: blue'                       => array(
         T_DNUMBER, T_LNUMBER
