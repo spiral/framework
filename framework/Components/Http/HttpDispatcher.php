@@ -66,7 +66,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * @var array|MiddlewareInterface[]
      */
-    protected $middleware = array();
+    protected $middlewares = array();
 
     /**
      * Endpoints is a set of middlewares or callback used to handle some application parts separately
@@ -96,7 +96,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $this->core = $core;
         $this->config = $core->loadConfig('http');
-        $this->middleware = $this->config['middleware'];
+        $this->middlewares = $this->config['middlewares'];
         $this->endpoints = $this->config['endpoints'];
     }
 
@@ -146,7 +146,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             $this->endpoints[$this->config['basePath']] = $this->createRouter();
         }
 
-        $pipeline = new MiddlewarePipe($this->middleware);
+        $pipeline = new MiddlewarePipe($this->middlewares);
         $response = $pipeline->target(array($this, 'perform'))->run(
             $this->getRequest(),
             $this
