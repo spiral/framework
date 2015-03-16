@@ -13,8 +13,9 @@ use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Http\Cookies\Cookie;
+use Spiral\Components\Http\Router\RouterTrait;
 use Spiral\Components\Http\Router\Router;
-use Spiral\Components\View\StaticVariablesInterface;
+use Spiral\Components\View\VariableProviderInterface;
 use Spiral\Components\View\View;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
@@ -23,7 +24,7 @@ use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\Events\Event;
 
-class HttpDispatcher extends Component implements DispatcherInterface
+class HttpDispatcher extends Component implements DispatcherInterface, VariableProviderInterface
 {
     /**
      * Required traits.
@@ -31,7 +32,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
     use Component\SingletonTrait,
         Component\LoggerTrait,
         Component\EventsTrait,
-        Component\ConfigurableTrait;
+        Component\ConfigurableTrait,
+        RouterTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -69,7 +71,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected $middlewares = array();
 
     /**
-     * Endpoints is a set of middlewares or callback used to handle some application parts separately
+     * Endpoints is a set of middleware or callback used to handle some application parts separately
      * from application controllers and routes. Such Middlewares can perform their own routing,
      * mapping, render and etc and only have to return ResponseInterface object.
      *
@@ -85,7 +87,12 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     protected $endpoints = array();
 
-    protected $routes = array();
+    /**
+     * Set of middleware aliases defined to be used in routes for filtering request and altering response.
+     *
+     * @var array
+     */
+    protected $routeMiddlewares = array();
 
     /**
      * New HttpDispatcher instance.
@@ -98,6 +105,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $this->config = $core->loadConfig('http');
         $this->middlewares = $this->config['middlewares'];
         $this->endpoints = $this->config['endpoints'];
+
+        $this->routeMiddlewares = $this->config['routeMiddlewares'];
     }
 
     /**
@@ -166,9 +175,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
         return Core::get(
             $this->config['router']['class'],
             array(
-                'core'    => $this->core,
-                'routes'  => $this->routes,
-                'default' => $this->config['router']['default']
+                'core'             => $this->core,
+                'routes'           => $this->routes,
+                'default'          => $this->config['router']['defaultRoute'],
+                'routeMiddlewares' => $this->routeMiddlewares,
+                'activePath'       => $this->config['basePath']
             )
         );
     }
@@ -202,9 +213,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
      * and class name binding.
      *
      * @param Request $request
-     * @return array|Response
+     * @return array|ResponseInterface
      * @throws ClientException
-     * @throws \Spiral\Core\CoreException
      */
     public function perform(Request $request)
     {
@@ -281,7 +291,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
      * @param Request                             $request
      * @param string|callable|MiddlewareInterface $endpoint
      * @return mixed
-     * @throws \Spiral\Core\CoreException
      */
     protected function execute(Request $request, $endpoint)
     {

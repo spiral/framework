@@ -8,13 +8,13 @@
  */
 namespace Spiral\Components\Localization;
 
-use Spiral\Components\View\StaticVariablesInterface;
+use Spiral\Components\View\VariableProviderInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 use Spiral\Core\Events\Event;
 use Spiral\Helpers\StringHelper;
 
-class I18nManager extends Component implements StaticVariablesInterface
+class I18nManager extends Component implements VariableProviderInterface
 {
     /**
      * Will provide us helper method getInstance().

@@ -55,9 +55,9 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     /**
      * New MongoDatabase instance.
      *
-     * @param string     $name   ODM database instance name/id.
-     * @param array      $config Connection configuration.
-     * @param ODM $odm    ODMManager component.
+     * @param string $name   ODM database instance name/id.
+     * @param array  $config Connection configuration.
+     * @param ODM    $odm    ODMManager component.
      */
     public function __construct($name, array $config, ODM $odm)
     {
@@ -91,18 +91,20 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     }
 
     /**
-     * ODM collection instance for current db. ODMCollection has all the featured from MongoCollection, but it will resolve
-     * results as ODM Document.
+     * ODM collection instance for current db. ODMCollection has all the featured from MongoCollection,
+     * but it will resolve results as ODM Document.
      *
-     * @param string $name Collection name.
+     * @param string $name  Collection name.
+     * @param array  $query Initial collection query.
      * @return Collection
      */
-    public function odmCollection($name)
+    public function odmCollection($name, array $query = array())
     {
         return Collection::make(array(
             'name'     => $name,
             'database' => $this->name,
-            'odm'      => $this->odm
+            'odm'      => $this->odm,
+            'query'    => $query
         ));
     }
 }

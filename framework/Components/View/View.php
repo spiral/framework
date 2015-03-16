@@ -18,7 +18,10 @@ class View extends Component
     /**
      * Will provide us helper method getInstance().
      */
-    use Component\SingletonTrait, Component\ConfigurableTrait, Component\LoggerTrait, Component\EventsTrait;
+    use Component\SingletonTrait,
+        Component\ConfigurableTrait,
+        Component\LoggerTrait,
+        Component\EventsTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -31,8 +34,8 @@ class View extends Component
     const EXTENSION = '.php';
 
     /**
-     * View does not going to check if view file got changed compared to cached view filename. This can applied
-     * to production environment statically build view files.
+     * View does not going to check if view file got changed compared to cached view filename. This
+     * can applied to production environment statically build view files.
      *
      * Attention! You WILL have to generate static view cache if using this option.
      *
@@ -41,23 +44,24 @@ class View extends Component
     const HARD_CACHE = 2;
 
     /**
-     * Default view namespace. View component can support as many namespaces and user want, to specify names
-     * use render(namespace:view) syntax.
+     * Default view namespace. View component can support as many namespaces and user want, to
+     * specify names use render(namespace:view) syntax.
      */
     protected $defaultNamespace = 'default';
 
     /**
-     * Registered view namespaces. Every namespace can include multiple search directories. Search directory may have
-     * key which will be treated as namespace directory origin, this allows user or template to include view from specified
-     * location, even if there is multiple directories under view.
+     * Registered view namespaces. Every namespace can include multiple search directories. Search
+     * directory may have key which will be treated as namespace directory origin, this allows user
+     * or template to include view from specified location, even if there is multiple directories under
+     * view.
      *
      * @var array
      */
     protected $namespaces = array();
 
     /**
-     * View processors. Processors used to pre-process view source and save it to cache, in normal operation mode processors
-     * will be called only once and never during user request.
+     * View processors. Processors used to pre-process view source and save it to cache, in normal
+     * operation mode processors will be called only once and never during user request.
      *
      * @var ProcessorInterface[]
      */
@@ -79,8 +83,8 @@ class View extends Component
     protected $file = null;
 
     /**
-     * Constructing view component and initiating view namespaces, namespaces are used to find view file destination and
-     * switch templates from one module to another.
+     * Constructing view component and initiating view namespaces, namespaces are used to find view
+     * file destination and switch templates from one module to another.
      *
      * @param Core        $core
      * @param FileManager $file
@@ -96,7 +100,10 @@ class View extends Component
         foreach ($this->config['variableProviders'] as $provider)
         {
             //Attaching view static variable provider
-            self::dispatcher()->addListener('staticVariables', array(Container::get($provider), 'viewVariables'));
+            self::dispatcher()->addListener(
+                'staticVariables',
+                array(Container::get($provider), 'viewVariables')
+            );
         }
     }
 
@@ -142,11 +149,13 @@ class View extends Component
     }
 
     /**
-     * Getting view processor by name, processor will be loaded and configured automatically. Processors are created only
-     * for pre-processing view source to create static cache, this means you should't expect too high performance and
-     * optimizations inside, due it's more important to have good functionality and reliable results.
+     * Getting view processor by name, processor will be loaded and configured automatically. Processors
+     * are created only for pre-processing view source to create static cache, this means you should't
+     * expect too high performance and optimizations inside, due it's more important to have good
+     * functionality and reliable results.
      *
-     * You should never user view component in production with disabled cache, this will slow down your website dramatically.
+     * You should never user view component in production with disabled cache, this will slow down
+     * your website dramatically.
      *
      * @param string $name
      * @return ProcessorInterface
@@ -160,7 +169,13 @@ class View extends Component
 
         $config = $this->config['processors'][$name];
 
-        return $this->processors[$name] = Container::get($config['class'], array('options' => $config, 'view' => $this));
+        return $this->processors[$name] = Container::get(
+            $config['class'],
+            array(
+                'options' => $config,
+                'view'    => $this
+            )
+        );
     }
 
     /**
@@ -174,9 +189,9 @@ class View extends Component
     }
 
     /**
-     * Variables which will be applied on view caching and view processing stages, different variable value will create
-     * different cache version. Usage example can be: layout redefinition, user logged state and etc. You should never use
-     * this function for client or dynamic data.
+     * Variables which will be applied on view caching and view processing stages, different variable
+     * value will create different cache version. Usage example can be: layout redefinition, user
+     * logged state and etc. You should never use this function for client or dynamic data.
      *
      * @param string $name
      * @param string $value If skipped current value or null will be returned.
@@ -193,9 +208,10 @@ class View extends Component
     }
 
     /**
-     * Cached filename depends only on view name and provided set of "staticVariables", changing this set system can cache
-     * some view content on file system level. For example view component can set language variable, which will be rendering
-     * another view every time language changed and allow to cache translated texts.
+     * Cached filename depends only on view name and provided set of "staticVariables", changing this
+     * set system can cache some view content on file system level. For example view component can
+     * set language variable, which will be rendering another view every time language changed and
+     * allow to cache translated texts.
      *
      * @param string $namespace View namespace.
      * @param string $view      View filename, without php included.
@@ -206,12 +222,13 @@ class View extends Component
         $this->staticVariables = $this->event('staticVariables', $this->staticVariables);
         $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . static::EXTENSION;
 
-        return $this->cacheDirectory() . '/' . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-') . $postfix;
+        return $this->cacheDirectory() . '/'
+        . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-') . $postfix;
     }
 
     /**
-     * Searching for view in namespaces. Namespace specifies set of view files joined by module or application folder or etc.
-     * View name is relative file name (starting with namespace folder).
+     * Searching for view in namespaces. Namespace specifies set of view files joined by module or
+     * application folder or etc. View name is relative file name (starting with namespace folder).
      *
      * @param string $namespace View namespace.
      * @param string $view      View filename, without .php included.
@@ -237,8 +254,9 @@ class View extends Component
     }
 
     /**
-     * Check if cache view file expired, by default there is soft and hard cache techniques, soft will compare filetimes
-     * and hard will always return true (use on production with static view cache).
+     * Check if cache view file expired, by default there is soft and hard cache techniques, soft
+     * will compare filetimes and hard will always return true (use on production with static view
+     * cache).
      *
      * @param string $filename  View cache filename.
      * @param string $namespace View namespace.
@@ -264,7 +282,9 @@ class View extends Component
             return true;
         }
 
-        return $this->file->timeUpdated($filename) < $this->file->timeUpdated($this->findView($namespace, $view));
+        return $this->file->timeUpdated($filename) < $this->file->timeUpdated(
+            $this->findView($namespace, $view)
+        );
     }
 
     /**
@@ -272,7 +292,8 @@ class View extends Component
      *
      * @param string $namespace  View namespace.
      * @param string $view       View filename, without php included.
-     * @param bool   $process    If true, view source will be processed using view processors before saving to cache.
+     * @param bool   $process    If true, view source will be processed using view processors before
+     *                           saving to cache.
      * @param bool   $resetCache Force cache reset. Cache can be also disabled in view config.
      * @return string
      * @throws ViewException
@@ -292,7 +313,13 @@ class View extends Component
                 foreach (array_keys($this->config['processors']) as $processor)
                 {
                     benchmark('view::' . $processor, $namespace . ':' . $view);
-                    $source = $this->getProcessor($processor)->processSource($source, $view, $namespace);
+
+                    $source = $this->getProcessor($processor)->processSource(
+                        $source,
+                        $view,
+                        $namespace
+                    );
+
                     benchmark('view::' . $processor, $namespace . ':' . $view);
                 }
 
@@ -306,24 +333,26 @@ class View extends Component
     }
 
     /**
-     * Performs view file rendering. View file will can be selected from specified namespace, or default namespace if not
-     * specified. Namespaces are defined in view config, or view event by installed modules and other components, to specify
-     * namespace use syntax "namespace:view", view name should't include .php extensions, however it can include folders
-     * and sub folders.
+     * Performs view file rendering. View file will can be selected from specified namespace, or
+     * default namespace if not specified. Namespaces are defined in view config, or view event by
+     * installed modules and other components, to specify namespace use syntax "namespace:view",
+     * view name should't include .php extensions, however it can include folders and sub folders.
      *
-     * View data has to be associated array and will be exported using extract() function and set of local view variables,
-     * here variable name will be identical to array key.
+     * View data has to be associated array and will be exported using extract() function and set of
+     * local view variables, here variable name will be identical to array key.
      *
-     * Every view file will be pro-processed using view processors (also defined in view config) before rendering, result of
-     * pre-processing will be stored in names cache file to speed-up future renderings.
+     * Every view file will be pro-processed using view processors (also defined in view config)
+     * before rendering, result of pre-processing will be stored in names cache file to speed-up future
+     * renderings.
      *
      * Example or view names:
      * home                     - rendering home view from default namespace
      * namespace:home           - rendering home view from specified namespace
      *
-     * @param string $__view__     View name without .php extension, can include namespace prefix separated by : symbol.
-     * @param array  $__viewData__ Array or view data, will be exported as local view variables, not available in view
-     *                             processors.
+     * @param string $__view__     View name without .php extension, can include namespace prefix
+     *                             separated by : symbol.
+     * @param array  $__viewData__ Array or view data, will be exported as local view variables, not
+     *                             available in view processors.
      * @return mixed
      */
     public function render($__view__, array $__viewData__ = array())

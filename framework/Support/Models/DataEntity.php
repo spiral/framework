@@ -456,12 +456,12 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     /**
      * Update multiple non-secured model fields. Event "setFields" raised here.
      *
-     * @param array $fields
+     * @param array|\Traversable $fields
      * @return static
      */
     public function setFields($fields = array())
     {
-        if (!is_array($fields))
+        if (!is_array($fields) && !$fields instanceof \Traversable)
         {
             return $this;
         }

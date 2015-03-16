@@ -35,6 +35,7 @@ use Spiral\Components;
  * @property Components\Http\Request               $request
  * @property Components\Http\Cookies\CookieManager $cookies
  * @property Components\Session\SessionStore       $session
+ * @property Components\Http\Router\Router         $router
  */
 class Controller extends Component implements ControllerInterface
 {
@@ -50,6 +51,13 @@ class Controller extends Component implements ControllerInterface
      * @var string
      */
     protected $defaultAction = 'index';
+
+    /**
+     * Last set of parameters passed to callAction method,
+     *
+     * @var array
+     */
+    protected $parameters = array();
 
     /**
      * Performing controller action. This method should either return response object or string, or
@@ -82,6 +90,8 @@ class Controller extends Component implements ControllerInterface
                 "Action is not allowed"
             );
         }
+
+        $this->parameters = $parameters;
 
         //Getting set of arguments should be sent to requested method
         $arguments = $this->core->resolveArguments($reflection, $parameters, true);

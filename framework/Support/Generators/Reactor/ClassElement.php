@@ -170,7 +170,7 @@ class ClassElement extends BaseElement
      */
     public function property($name, $docComment = null)
     {
-        if (!isset($this->properties[$name]))
+        if (!$this->hasProperty($name))
         {
             $this->properties[$name] = PropertyElement::make(compact('name'));
         }
@@ -272,7 +272,7 @@ class ClassElement extends BaseElement
      */
     public function method($name, $docType = null, array $parameters = array())
     {
-        if (!isset($this->methods[$name]))
+        if (!$this->hasMethod($name))
         {
             $this->methods[$name] = MethodElement::make(compact('name'));
         }

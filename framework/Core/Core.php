@@ -35,6 +35,7 @@ use Spiral\Components;
  * @property Components\Http\Request               $request
  * @property Components\Http\Cookies\CookieManager $cookies
  * @property Components\Session\SessionStore       $session
+ * @property Components\Http\Router\Router         $router
  */
 class Core extends Container implements ConfigLoaderInterface
 {
@@ -411,8 +412,9 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Handle error message handlers, will convert error to exception which will be automatically handled by active dispatcher.
-     * Can be also used to force ErrorException via static method (if anyone need it).
+     * Handle error message handlers, will convert error to exception which will be automatically
+     * handled by active dispatcher. Can be also used to force ErrorException via static method (if
+     * anyone need it).
      *
      * @param int    $code    Error code.
      * @param string $message Error message.
@@ -427,22 +429,28 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Automatic handler for fatal and syntax error, this error can't be handled via default error handler.
+     * Automatic handler for fatal and syntax error, this error can't be handled via default error
+     * handler.
      */
     public function shutdownHandler()
     {
         if ($error = error_get_last())
         {
-            $this->handleException(new \ErrorException($error['message'], $error['type'], 0, $error['file'], $error['line']));
+            $this->handleException(new \ErrorException(
+                $error['message'],
+                $error['type'],
+                0,
+                $error['file'],
+                $error['line']
+            ));
         }
     }
 
     /**
-     * Exception handling, by default spiral will handle exception using Debug component and pass ExceptionSnapshot to
-     * active dispatcher.
+     * Exception handling, by default spiral will handle exception using Debug component and pass
+     * ExceptionSnapshot to active dispatcher.
      *
      * @param \Exception $exception
-     * @return mixed
      */
     public function handleException(\Exception $exception)
     {
@@ -453,7 +461,15 @@ class Core extends Container implements ConfigLoaderInterface
         {
             if ($snapshot = $this->event('exception', $snapshot))
             {
-                $this->dispatcher->handleException($snapshot);
+                if (!empty($this->dispatcher))
+                {
+                    $this->dispatcher->handleException($snapshot);
+
+                    return;
+                }
+
+                //Direct echoing to client
+                echo $snapshot;
             }
         }
     }

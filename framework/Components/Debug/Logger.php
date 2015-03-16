@@ -303,7 +303,7 @@ class Logger extends Component implements LoggerInterface
         }
         elseif (isset($this->fileHandlers[self::ALL_MESSAGES]))
         {
-            list($filename, $filesize) = $this->fileHandlers[$level];
+            list($filename, $filesize) = $this->fileHandlers[self::ALL_MESSAGES];
             $format = $this->options[self::ALL_MESSAGES];
         }
         else

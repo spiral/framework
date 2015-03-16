@@ -6,15 +6,17 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http;
+namespace Spiral\Components\Http\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
+use Spiral\Components\Http\MiddlewareInterface;
+use Spiral\Components\Http\Response;
 use Spiral\Core\Component;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Helpers\StringHelper;
 
-class CsrfProtector implements MiddlewareInterface
+class CsrfToken implements MiddlewareInterface
 {
     /**
      * Token have to check in cookies and queries.

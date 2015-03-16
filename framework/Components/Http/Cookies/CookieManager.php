@@ -13,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Encrypter\DecryptionException;
 use Spiral\Components\Encrypter\Encrypter;
 use Spiral\Components\Encrypter\EncrypterException;
-use Spiral\Components\Http\CsrfProtector;
+use Spiral\Components\Http\Middlewares\CsrfToken;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
 use Spiral\Components\Session\Http\SessionStarter;
@@ -36,7 +36,7 @@ class CookieManager extends Component implements MiddlewareInterface
      *
      * @var array
      */
-    protected $exclude = array(CsrfProtector::COOKIE, SessionStarter::COOKIE);
+    protected $exclude = array(CsrfToken::COOKIE, SessionStarter::COOKIE);
 
     /**
      * Encrypter component.

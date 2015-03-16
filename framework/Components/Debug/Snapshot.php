@@ -13,6 +13,7 @@ use Spiral\Components\View\View;
 use Spiral\Core\Component;
 use Spiral\Core\Container\ContainerException;
 use Exception;
+use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
 
 class Snapshot extends Component
@@ -189,5 +190,20 @@ class Snapshot extends Component
         return $this->snapshot = View::getInstance()->render($this->view, array(
             'exception' => $this
         ));
+    }
+
+    /**
+     * Render snapshot to client.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        if (Core::isConsole())
+        {
+            return (string)$this->exception;
+        }
+
+        return $this->renderSnapshot();
     }
 }
