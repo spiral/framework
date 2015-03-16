@@ -26,25 +26,28 @@ class StorageContainer extends Component implements InjectableInterface
     const INJECTION_MANAGER = 'Spiral\Components\Storage\StorageManager';
 
     /**
-     * Address prefix will be attached to all container objects to generate unique object address. You can use domain name,
-     * or folder for prefixed which should represent public containers, in this case object address will be valid URL.
+     * Address prefix will be attached to all container objects to generate unique object address.
+     * You can use domain name, or folder for prefixed which should represent public containers, in
+     * this case object address will be valid URL.
      *
      * @var string
      */
     public $prefix = '';
 
     /**
-     * Associated server name or id. Every server represent one virtual storage which can be either local, remove or cloud
-     * based. Every adapter should support basic set of low-level operations (create, move, copy and etc). Adapter instance
-     * called server, one adapter can be used for multiple servers.
+     * Associated server name or id. Every server represent one virtual storage which can be either
+     * local, remove or cloud based. Every adapter should support basic set of low-level operations
+     * (create, move, copy and etc). Adapter instance called server, one adapter can be used for
+     * multiple servers.
      *
      * @var string
      */
     protected $server = '';
 
     /**
-     * Container options vary based on server (adapter) type associated, for local and ftp it usually folder name and file
-     * permissions, for cloud or remove storages - remote bucket name and access mode.
+     * Container options vary based on server (adapter) type associated, for local and ftp it usually
+     * folder name and file permissions, for cloud or remove storages - remote bucket name and access
+     * mode.
      *
      * @var array
      */
@@ -67,10 +70,11 @@ class StorageContainer extends Component implements InjectableInterface
     protected $file = null;
 
     /**
-     * Every container represent one "virtual" folder which can be located on local machine, another server (ftp) or in
-     * cloud (amazon, rackspace). Container provides basic unified functionality to manage files inside, all low level
-     * operations perform by servers (adapters), this technique allows you to create application and code which does not
-     * require to specify storage requirements at time of development.
+     * Every container represent one "virtual" folder which can be located on local machine, another
+     * server (ftp) or in cloud (amazon, rackspace). Container provides basic unified functionality
+     * to manage files inside, all low level operations perform by servers (adapters), this technique
+     * allows you to create application and code which does not require to specify storage requirements
+     * at time of development.
      *
      * @param string         $server  Responsible server id or name.
      * @param string         $prefix  Addresses prefix.
@@ -88,9 +92,10 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Get associated storage server. Every server represent one virtual storage which can be either local, remove or cloud
-     * based. Every adapter should support basic set of low-level operations (create, move, copy and etc). Adapter instance
-     * called server, one adapter can be used for multiple servers.
+     * Get associated storage server. Every server represent one virtual storage which can be either
+     * local, remove or cloud based. Every adapter should support basic set of low-level operations
+     * (create, move, copy and etc). Adapter instance called server, one adapter can be used for
+     * multiple servers.
      *
      * @return ServerInterface
      */
@@ -100,7 +105,8 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Check if object with given address can be potentially located inside this container and return prefix length.
+     * Check if object with given address can be potentially located inside this container and return
+     * prefix length.
      *
      * @param string $address Object address.
      * @return bool|int
@@ -135,7 +141,9 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function exists($name)
     {
-        $this->storage->logger()->info("Check '{$this->buildAddress($name)}' exists at '{$this->server}'.");
+        StorageManager::logger()->info(
+            "Check '{$this->buildAddress($name)}' exists at '{$this->server}'."
+        );
 
         benchmark("storage::exists", $this->prefix . $name);
         $result = $this->getServer()->exists($this, $name);
@@ -152,7 +160,9 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function filesize($name)
     {
-        $this->storage->logger()->info("Get filesize of '{$this->buildAddress($name)}' at '{$this->server}'.");
+        StorageManager::logger()->info(
+            "Get filesize of '{$this->buildAddress($name)}' at '{$this->server}'.
+            ");
 
         benchmark("storage::filesize", $this->prefix . $name);
         $filesize = $this->getServer()->filesize($this, $name);
@@ -162,8 +172,8 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will not available using
-     * old filename.
+     * Create new storage object using given filename. File will be replaced to new location and will
+     * not available using old filename.
      *
      * @param string $filename Local filename to use for creation.
      * @param string $name     Relative object name.
@@ -172,7 +182,9 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function create($filename, $name)
     {
-        $this->storage->logger()->info("Create '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        StorageManager::logger()->info(
+            "Create '{$this->buildAddress($name)}' at '{$this->server}' server."
+        );
 
         benchmark("storage::create", $this->prefix . $name);
         if ($this->getServer()->create($filename, $this, $name))
@@ -194,20 +206,25 @@ class StorageContainer extends Component implements InjectableInterface
         }
         benchmark("storage::create", $this->prefix . $name);
 
-        throw new StorageException("Unable to create '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        throw new StorageException(
+            "Unable to create '{$this->buildAddress($name)}' at '{$this->server}' server."
+        );
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location, adapter should download
-     * file to temporary file and return it's filename. All object stored in temporary files should be registered in
-     * File::$removeFiles, to be removed after script ends to clean used hard drive space.
+     * Allocate local filename for remove storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. All object stored in
+     * temporary files should be registered in FileManager->blackspot(), to be removed after script
+     * ends to clean used hard drive space.
      *
      * @param string $name Relative object name.
      * @return string
      */
     public function localFilename($name)
     {
-        $this->storage->logger()->info("Get local filename of '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        StorageManager::logger()->info(
+            "Get local filename of '{$this->buildAddress($name)}' at '{$this->server}' server."
+        );
 
         benchmark("storage::filename", $this->prefix . $name);
         $filename = $this->getServer()->localFilename($this, $name);
@@ -217,8 +234,9 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require object recreation or download
-     * and can be performed on remote server. Will return renamed object address if success.
+     * Remove storage object without changing it's own container. This operation does not require
+     * object recreation or download and can be performed on remote server. Will return renamed object
+     * address if success.
      *
      * @param string $name    Relative object name.
      * @param string $newName New object name.
@@ -231,13 +249,20 @@ class StorageContainer extends Component implements InjectableInterface
         if ($this->getServer()->rename($this, $name, $newName))
         {
             benchmark("storage::rename", $this->prefix . $name);
-            $this->storage->logger()->info("Rename '{$this->buildAddress($name)}' to '{$this->buildAddress($newName)}' at '{$this->server}' server.");
+            StorageManager::logger()->info(
+                "Rename '{$this->buildAddress($name)}' "
+                . "to '{$this->buildAddress($newName)}' at '{$this->server}' server."
+            );
 
             return $this->buildAddress($newName);
         }
 
         benchmark("storage::rename", $this->prefix . $name);
-        throw new StorageException("Unable to rename '{$this->buildAddress($name)}' to '{$this->buildAddress($newName)}' at '{$this->server}' server.");
+
+        throw new StorageException(
+            "Unable to rename '{$this->buildAddress($name)}' "
+            . "to '{$this->buildAddress($newName)}' at '{$this->server}' server."
+        );
     }
 
     /**
@@ -247,7 +272,9 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function delete($name)
     {
-        $this->storage->logger()->info("Delete '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        StorageManager::logger()->info(
+            "Delete '{$this->buildAddress($name)}' at '{$this->server}' server."
+        );
 
         benchmark("storage::delete", $this->prefix . $name);
         $this->getServer()->delete($this, $name);
@@ -255,8 +282,8 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Copy object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $destination Destination container (under same server).
      * @param string           $name        Relative object name.
@@ -272,7 +299,10 @@ class StorageContainer extends Component implements InjectableInterface
             if ($this->getServer()->copy($this, $destination, $name))
             {
                 benchmark("storage::copy", $this->prefix . $name);
-                $this->storage->logger()->info("Internal copy '{$this->buildAddress($name)}' to '{$destination->buildAddress($name)}' at '{$this->server}' server.");
+                StorageManager::logger()->info(
+                    "Internal copy '{$this->buildAddress($name)}' "
+                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+                );
 
                 return StorageObject::make(array(
                     'address'   => $destination->buildAddress($name),
@@ -283,7 +313,10 @@ class StorageContainer extends Component implements InjectableInterface
             }
 
             benchmark("storage::copy", $this->prefix . $name);
-            throw new StorageException("Unable to copy '{$this->buildAddress($name)}' to '{$destination->buildAddress($name)}' at '{$this->server}' server.");
+            throw new StorageException(
+                "Unable to copy '{$this->buildAddress($name)}' "
+                . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+            );
         }
 
         /**
@@ -294,7 +327,10 @@ class StorageContainer extends Component implements InjectableInterface
         //Uploading
         if ($filename && $destination->create($filename, $name))
         {
-            $this->storage->logger()->info("External copy '{$this->server}'.'{$this->buildAddress($name)}' to '{$destination->server}'.'{$destination->buildAddress($name)}'.");
+            StorageManager::logger()->info(
+                "External copy '{$this->server}'.'{$this->buildAddress($name)}' "
+                . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
+            );
 
             return StorageObject::make(array(
                 'address'   => $destination->buildAddress($name),
@@ -304,12 +340,15 @@ class StorageContainer extends Component implements InjectableInterface
             ));
         }
 
-        throw new StorageException("Unable to copy '{$this->server}'.'{$this->buildAddress($name)}' to '{$destination->server}'.'{$destination->buildAddress($name)}'.");
+        throw new StorageException(
+            "Unable to copy '{$this->server}'.'{$this->buildAddress($name)}' "
+            . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
+        );
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Move object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * Will return replaced object address if success.
      *
@@ -327,13 +366,19 @@ class StorageContainer extends Component implements InjectableInterface
             if ($this->getServer()->replace($this, $destination, $name))
             {
                 benchmark("storage::replace", $this->prefix . $name);
-                $this->storage->logger()->info("Internal move '{$this->buildAddress($name)}' to '{$destination->buildAddress($name)}' at '{$this->server}' server.");
+                StorageManager::logger()->info(
+                    "Internal move '{$this->buildAddress($name)}' "
+                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+                );
 
                 return $destination->buildAddress($name);
             }
 
             benchmark("storage::replace", $this->prefix . $name);
-            throw new StorageException("Unable to move '{$this->buildAddress($name)}' to '{$destination->buildAddress($name)}' at '{$this->server}' server.");
+            throw new StorageException(
+                "Unable to move '{$this->buildAddress($name)}' "
+                . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+            );
         }
 
         /**
@@ -344,12 +389,19 @@ class StorageContainer extends Component implements InjectableInterface
         //Uploading
         if ($filename && $destination->create($filename, $name))
         {
-            $this->storage->logger()->info("External move '{$this->server}'.'{$this->buildAddress($name)}' to '{$destination->server}'.'{$destination->buildAddress($name)}'.");
+            StorageManager::logger()->info(
+                "External move '{$this->server}'.'{$this->buildAddress($name)}'"
+                . " to '{$destination->server}'.'{$destination->buildAddress($name)}'."
+            );
+
             $this->delete($name);
 
             return $destination->buildAddress($name);
         }
 
-        throw new StorageException("Unable to move '{$this->server}'.'{$this->buildAddress($name)}' to '{$destination->server}'.'{$destination->buildAddress($name)}'.");
+        throw new StorageException(
+            "Unable to move '{$this->server}'.'{$this->buildAddress($name)}' "
+            . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
+        );
     }
 }

@@ -13,9 +13,9 @@ use Spiral\Components\Files\FileManager;
 interface ServerInterface
 {
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based. Every adapter should
-     * support basic set of low-level operations (create, move, copy and etc). Adapter instance called server, one adapter
-     * can be used for multiple servers.
+     * Every server represent one virtual storage which can be either local, remove or cloud based.
+     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Adapter instance called server, one adapter can be used for multiple servers.
      *
      * @param array          $options Storage connection options.
      * @param StorageManager $storage Storage Storage component.
@@ -42,8 +42,8 @@ interface ServerInterface
     public function filesize(StorageContainer $container, $name);
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will not available using
-     * old filename.
+     * Create new storage object using given filename. File will be replaced to new location and will
+     * not available using old filename.
      *
      * @param string           $filename  Local filename to use for creation.
      * @param StorageContainer $container Container instance.
@@ -53,9 +53,10 @@ interface ServerInterface
     public function create($filename, StorageContainer $container, $name);
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location, adapter should download
-     * file to temporary file and return it's filename. All object stored in temporary files should be registered in
-     * File::$removeFiles, to be removed after script ends to clean used hard drive space.
+     * Allocate local filename for remove storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. All object stored in
+     * temporary files should be registered in FileManager->blackspot(), to be removed after script
+     * ends to clean used hard drive space.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -64,8 +65,8 @@ interface ServerInterface
     public function localFilename(StorageContainer $container, $name);
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require object recreation or
-     * download and can be performed on remote server.
+     * Remove storage object without changing it's own container. This operation does not require
+     * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -83,8 +84,8 @@ interface ServerInterface
     public function delete(StorageContainer $container, $name);
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Copy object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
@@ -94,8 +95,8 @@ interface ServerInterface
     public function copy(StorageContainer $container, StorageContainer $destination, $name);
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Move object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
