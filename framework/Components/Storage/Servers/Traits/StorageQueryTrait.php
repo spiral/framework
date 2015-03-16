@@ -65,6 +65,9 @@ trait StorageQueryTrait
             $this->fileResource = null;
         }
 
-        return $this->getResponseHeaders() + array('status' => $this->getHTTPStatus(), 'content' => $result);
+        return $this->getResponseHeaders() + array(
+            'status'  => $this->getHTTPStatus(),
+            'content' => $result
+        );
     }
 }
