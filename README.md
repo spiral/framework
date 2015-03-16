@@ -94,7 +94,7 @@ and middleware(s). Based on this plan of action, the following pieces are not re
 
 Router
 =================
-In transition.
+In transition to become a middleware! Yay!
 
 ORM
 =================
