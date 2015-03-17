@@ -40,14 +40,14 @@ class StringHelper
     );
 
     /**
-     * Create a random string with desired length and characters.
+     * Create a random string with desired length.
      *
      * @param int $length String length. 32 symbols by default.
      * @return string
      */
     public static function random($length = 32)
     {
-        $string = openssl_random_pseudo_bytes(1 + $length / 2);
+        $string = openssl_random_pseudo_bytes($length);
 
         if (empty($string))
         {

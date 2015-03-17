@@ -110,11 +110,10 @@ class Encrypter extends Component
      * @link http://php.net/manual/en/function.openssl-random-pseudo-bytes.php
      * @param int  $length   Required string length (count bytes).
      * @param bool $passWeak Do not throw an exception if result is "weak". Not recommended.
-     * @param bool $base64   Apply base64_encode to result.
      * @return string
      * @throws EncrypterException
      */
-    public function random($length, $passWeak = false, $base64 = true)
+    public function random($length, $passWeak = false)
     {
         if ($length < 1)
         {
@@ -131,11 +130,6 @@ class Encrypter extends Component
         if (!$passWeak && !$cryptoStrong)
         {
             throw new EncrypterException("Weak random result received.");
-        }
-
-        if ($base64)
-        {
-            $result = substr(base64_encode($result), 0, $length);
         }
 
         return $result;
