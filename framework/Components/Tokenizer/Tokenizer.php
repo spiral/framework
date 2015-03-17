@@ -289,7 +289,7 @@ class Tokenizer extends Component
 
                         if ($parent && $parent->isTrait())
                         {
-                            if (!in_array($parent->getName(), $this->getTraits($class)))
+                            if (!in_array($parent->getName(), self::getTraits($class)))
                             {
                                 continue;
                             }
@@ -332,7 +332,7 @@ class Tokenizer extends Component
      * @param string $class
      * @return array
      */
-    protected function getTraits($class)
+    public static function getTraits($class)
     {
         $traits = [];
 

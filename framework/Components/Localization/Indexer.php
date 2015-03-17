@@ -159,12 +159,22 @@ class Indexer extends Component
                         continue;
                     }
 
-                    if ($function->getArgument(0)->getType() != Argument::STRING || $function->getArgument(1)->getType() != Argument::STRING)
+                    if ($function->getArgument(0)->getType() != Argument::STRING)
                     {
                         continue;
                     }
 
-                    $this->i18n->get($function->getArgument(0)->stringValue(), $function->getArgument(1)->stringValue());
+                    if ($function->getArgument(1)->getType() != Argument::STRING)
+                    {
+                        continue;
+                    }
+
+                    //Registering string
+                    $this->i18n->get(
+                        $function->getArgument(0)->stringValue(),
+                        $function->getArgument(1)->stringValue()
+                    );
+
                     $this->registerString(
                         $filename,
                         $function->getLine(),
@@ -205,8 +215,8 @@ class Indexer extends Component
 
     /**
      * Will index localization string defined in default values of classes with LocalizableTrait trait.
-     * Strings should have [[ ]]. Method will additionally find all i18nMessage method usages. Only statically used methods
-     * will be indexed!
+     * Strings should have [[ ]]. Method will additionally find all i18nMessage method usages. Only
+     * statically used methods will be indexed!
      *
      * @param string $namespace Namespace to collect models from, core namespace by default.
      * @return Indexer
@@ -223,7 +233,9 @@ class Indexer extends Component
             $strings = $this->fetchStrings($reflection);
 
             //Parent class strings
-            $parentStrings = $reflection->getParentClass() ? $this->fetchStrings($reflection->getParentClass(), true) : array();
+            $parentStrings = $reflection->getParentClass()
+                ? $this->fetchStrings($reflection->getParentClass(), true)
+                : array();
 
             //Only unique
             if ($strings = array_diff($strings, $parentStrings))
@@ -233,21 +245,34 @@ class Indexer extends Component
                 foreach ($strings as $string)
                 {
                     $this->i18n->get($bundle, $string);
-                    $this->registerString($location['filename'], 0, $bundle, $string, $reflection->getName());
+                    $this->registerString(
+                        $location['filename'],
+                        0,
+                        $bundle,
+                        $string,
+                        $reflection->getName()
+                    );
                 }
             }
         }
     }
 
     /**
-     * Perform indexation of i18nMessage() method usage. We have to analyze parent class and fetch it's i18n bundle.
+     * Perform indexation of i18nMessage() method usage. We have to analyze parent class and fetch
+     * it's i18n bundle.
      *
      * @param string        $filename
      * @param FunctionUsage $function
      */
     protected function indexMessageFunction($filename, FunctionUsage $function)
     {
-        if (!in_array(self::LOCALIZABLE_TRAIT, class_uses($function->getClass())) || !$function->getArgument(0))
+
+        if (!in_array(self::LOCALIZABLE_TRAIT, Tokenizer::getTraits($function->getClass())))
+        {
+            return;
+        }
+
+        if (!$function->getArgument(0))
         {
             return;
         }
@@ -258,11 +283,15 @@ class Indexer extends Component
         }
 
         $string = $function->getArgument(0)->stringValue();
-        if (substr($string, 0, 2) == I18nManager::I18N_PREFIX || substr($string, -2) == I18nManager::I18N_POSTFIX)
+        if (
+            substr($string, 0, 2) == I18nManager::I18N_PREFIX
+            || substr($string, -2) == I18nManager::I18N_POSTFIX
+        )
         {
             //This string was defined in class attributes
             $string = substr($string, 2, -2);
         }
+
         $bundle = call_user_func(array($function->getClass(), 'i18nBundle'));
 
         $this->i18n->get($bundle, $string);
@@ -276,7 +305,8 @@ class Indexer extends Component
     }
 
     /**
-     * Fetching strings has to be localized from class default values, values can be fetched recursively and merged
+     * Fetching strings has to be localized from class default values, values can be fetched recursively
+     * and merged
      * with parent data.
      *
      * @param \ReflectionClass $reflection
@@ -298,7 +328,11 @@ class Indexer extends Component
         $strings = array();
         array_walk_recursive($defaultProperties, function ($value) use (&$strings)
         {
-            if (is_string($value) && substr($value, 0, 2) == I18nManager::I18N_PREFIX && substr($value, -2) == I18nManager::I18N_POSTFIX)
+            if (
+                is_string($value)
+                && substr($value, 0, 2) == I18nManager::I18N_PREFIX
+                && substr($value, -2) == I18nManager::I18N_POSTFIX
+            )
             {
                 $strings[] = substr($value, 2, -2);
             }
@@ -325,25 +359,37 @@ class Indexer extends Component
     {
         if ($class)
         {
-            $this->logger()->info("'{string}' found in class '{class}'.", array(
-                'filename' => $this->file->relativePath($filename),
-                'line'     => $line,
-                'bundle'   => $bundle,
-                'string'   => $string,
-                'class'    => $class
-            ));
+            $this->logger()->info(
+                "'{string}' found in class '{class}'.",
+                array(
+                    'filename' => $this->file->relativePath($filename),
+                    'line'     => $line,
+                    'bundle'   => $bundle,
+                    'string'   => $string,
+                    'class'    => $class
+                )
+            );
         }
         else
         {
-            $this->logger()->info("'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.", array(
-                'filename' => $this->file->relativePath($filename),
-                'line'     => $line,
-                'bundle'   => $bundle,
-                'string'   => $string
-            ));
+            $this->logger()->info(
+                "'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.",
+                array(
+                    'filename' => $this->file->relativePath($filename),
+                    'line'     => $line,
+                    'bundle'   => $bundle,
+                    'string'   => $string
+                )
+            );
         }
 
-        $this->foundUsages[$bundle][] = $this->event('string', compact('filename', 'line', 'bundle', 'string', 'class'));
+        $this->foundUsages[$bundle][] = $this->event('string', compact(
+            'filename',
+            'line',
+            'bundle',
+            'string',
+            'class'
+        ));
     }
 
     /**
