@@ -9,6 +9,7 @@
 namespace Spiral\Commands\Core;
 
 use Spiral\Components\Console\Command;
+use Spiral\Helpers\StringHelper;
 use Spiral\Support\Generators\Config\ConfigWriter;
 
 class KeyCommand extends Command
@@ -38,11 +39,12 @@ class KeyCommand extends Command
         ));
 
         //Generating key
-        $key = $this->encrypter->random(32);
+        $key = StringHelper::random(32);
 
         $configWriter->setConfig(compact('key'));
         $configWriter->writeConfig();
 
-        $this->writeln("<info>Encryption key '<comment>{$key}</comment>' set for environment '<comment>{$this->core->getEnvironment()}</comment>'.</info>");
+        $this->writeln("<info>Encryption key '<comment>{$key}</comment>' "
+            . "set for environment '<comment>{$this->core->getEnvironment()}</comment>'.</info>");
     }
 }
