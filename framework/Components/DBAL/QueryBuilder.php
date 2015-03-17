@@ -13,7 +13,8 @@ use Spiral\Core\Component;
 abstract class QueryBuilder extends Component implements SqlFragmentInterface
 {
     /**
-     * Database generated query has to be performed against, output result is depends on specific builder implementation.
+     * Database generated query has to be performed against, output result is depends on specific
+     * builder implementation.
      *
      * @invisible
      * @var Database
@@ -21,9 +22,9 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     protected $database = null;
 
     /**
-     * QueryCompiler is low level SQL compiler which used by different query builders to generate statement based on provided
-     * tokens. Every builder will get it's own QueryCompiler at it has some internal isolation features (such as query
-     * specific table aliases).
+     * QueryCompiler is low level SQL compiler which used by different query builders to generate
+     * statement based on provided tokens. Every builder will get it's own QueryCompiler at it has
+     * some internal isolation features (such as query specific table aliases).
      *
      * @invisible
      * @var QueryCompiler
@@ -38,9 +39,10 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     protected $parameters = array();
 
     /**
-     * QueryBuilder class is parent for all existed DBAL query builders. Every QueryBuilder will have attached QueryGrammar
-     * instance provided by driver and responsible for building queries based on provided tokens. Additionally QueryBuilder
-     * have common mechanism to register query params, which will automatically convert array argument to Parameter instance.
+     * QueryBuilder class is parent for all existed DBAL query builders. Every QueryBuilder will have
+     * attached QueryGrammar instance provided by driver and responsible for building queries based
+     * on provided tokens. Additionally QueryBuilder have common mechanism to register query params,
+     * which will automatically convert array argument to Parameter instance.
      *
      * @param Database      $database Parent database.
      * @param QueryCompiler $compiler Driver specific QueryGrammar instance (one per builder).
@@ -52,8 +54,8 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     }
 
     /**
-     * Registering query parameters. Array parameters will be converted to Parameter object to correctly resolve
-     * placeholders.
+     * Registering query parameters. Array parameters will be converted to Parameter object to correctly
+     * resolve placeholders.
      *
      * @param mixed $parameter
      * @return mixed
@@ -79,9 +81,10 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     }
 
     /**
-     * Helper methods used to correctly fetch and split identifiers provided by function parameters. It support array list,
-     * string or comma separated list. Attention, this method will not work with complex parameters (such as functions)
-     * provided as one comma separated string, please use arrays in this case.
+     * Helper methods used to correctly fetch and split identifiers provided by function parameters.
+     * It support array list, string or comma separated list. Attention, this method will not work
+     * with complex parameters (such as functions) provided as one comma separated string, please use
+     * arrays in this case.
      *
      * @param array $identifiers
      * @return array
@@ -119,7 +122,8 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     abstract public function sqlStatement();
 
     /**
-     * Run QueryBuilder statement against parent database. Method will be overloaded by child builder to return correct value.
+     * Run QueryBuilder statement against parent database. Method will be overloaded by child builder
+     * to return correct value.
      *
      * @return \PDOStatement
      */
@@ -129,8 +133,8 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     }
 
     /**
-     * Get interpolated (populated with parameters) SQL which will be run against database, please use this method for
-     * debugging purposes only.
+     * Get interpolated (populated with parameters) SQL which will be run against database, please
+     * use this method for debugging purposes only.
      *
      * @return string
      */

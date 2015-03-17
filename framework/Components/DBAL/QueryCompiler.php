@@ -20,31 +20,33 @@ class QueryCompiler extends Component
     const VALUE_IDENTIFIERS  = 2;
 
     /**
-     * Parent driver instance, driver used only for identifier() methods but can be required in other cases.
+     * Parent driver instance, driver used only for identifier() methods but can be required in other
+     * cases.
      *
      * @var Driver
      */
     protected $driver = null;
 
     /**
-     * Active table prefix. Table prefix defined on database level is will change every quoted table or column name.
+     * Active table prefix. Table prefix defined on database level is will change every quoted table
+     * or column name.
      *
      * @var string
      */
     protected $tablePrefix = '';
 
     /**
-     * Set of table name aliases, such aliases will not be prefixed by driver. Method will generate set of aliases
-     * automatically every time "AS" condition will be met.
+     * Set of table name aliases, such aliases will not be prefixed by driver. Method will generate
+     * set of aliases automatically every time "AS" condition will be met.
      *
      * @var array
      */
     protected $aliases = array();
 
     /**
-     * QueryCompiler is low level SQL compiler which used by different query builders to generate statement based on provided
-     * tokens. Every builder will get it's own QueryCompiler at it has some internal isolation features (such as query
-     * specific table aliases).
+     * QueryCompiler is low level SQL compiler which used by different query builders to generate
+     * statement based on provided tokens. Every builder will get it's own QueryCompiler at it has
+     * some internal isolation features (such as query specific table aliases).
      *
      * @param Driver $driver      Parent driver instance.
      * @param string $tablePrefix Active table prefix (defined on database level).
@@ -56,12 +58,14 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Quote database table or column keyword according to driver rules, method can automatically detect table names,
-     * SQL functions and used aliases (via keywords AS), last argument can be used to collect such aliases.
+     * Quote database table or column keyword according to driver rules, method can automatically
+     * detect table names, SQL functions and used aliases (via keywords AS), last argument can be used
+     * to collect such aliases.
      *
-     * @param string $identifier Identifier can include simple column operations and functions, having "." in it will
-     *                           automatically force table prefix to first value.
-     * @param bool   $table      Set to true to let quote method know that identified is related to table name.
+     * @param string $identifier Identifier can include simple column operations and functions,
+     *                           having "." in it will automatically force table prefix to first value.
+     * @param bool   $table      Set to true to let quote method know that identified is related to
+     *                           table name.
      * @return mixed|string
      */
     public function quote($identifier, $table = false)
@@ -94,7 +98,7 @@ class QueryCompiler extends Component
                     return $identifier;
                 }
 
-                if ($table)
+                if (!empty($table))
                 {
                     $table = false;
 
@@ -108,7 +112,7 @@ class QueryCompiler extends Component
 
         if (strpos($identifier, '.') === false)
         {
-            if ($table && !isset($this->aliases[$identifier]))
+            if (!empty($table) && !isset($this->aliases[$identifier]))
             {
                 $identifier = $this->tablePrefix . $identifier;
             }
@@ -131,11 +135,13 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile insert query statement. Table name (without prefix), columns and list of rowsets is required.
+     * Compile insert query statement. Table name (without prefix), columns and list of rowsets is
+     * required.
      *
      * @param string $table   Table name without prefix.
      * @param array  $columns Columns name.
-     * @param array  $rowsets List of rowsets, usually presented by Parameter instances as every rowset is array of values.
+     * @param array  $rowsets List of rowsets, usually presented by Parameter instances as every
+     *                        rowset is array of values.
      * @return string
      * @throws DBALException
      */
@@ -155,10 +161,10 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile select query statement. Table names, distinct flag, columns, joins, where tokens, having tokens, group by
-     * tokens (yeah, it's very big list), order by tokens, limit, offset values and unions are required. While compilation
-     * table aliases will be collected from join and table parts, which will allow their usage in every condition even if
-     * tablePrefix not empty.
+     * Compile select query statement. Table names, distinct flag, columns, joins, where tokens,
+     * having tokens, group by tokens (yeah, it's very big list), order by tokens, limit, offset
+     * values and unions are required. While compilation table aliases will be collected from join
+     * and table parts, which will allow their usage in every condition even if tablePrefix not empty.
      *
      * @param array   $from
      * @param boolean $distinct
@@ -174,8 +180,19 @@ class QueryCompiler extends Component
      * @return string
      * @throws DBALException
      */
-    public function select(array $from, $distinct, array $columns, array $joins = array(), array $where = array(), array $having = array(),
-                           array $groupBy = array(), array $orderBy = array(), $limit = 0, $offset = 0, array $unions = array())
+    public function select(
+        array $from,
+        $distinct,
+        array $columns,
+        array $joins = array(),
+        array $where = array(),
+        array $having = array(),
+        array $groupBy = array(),
+        array $orderBy = array(),
+        $limit = 0,
+        $offset = 0,
+        array $unions = array()
+    )
     {
 
         //This statement parts should be processed first to define set of table and column aliases
@@ -219,8 +236,9 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and order are required.
-     * Default query compiler will not compile limit and order by, it has to be done on driver compiler level.
+     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and
+     * order are required. Default query compiler will not compile limit and order by, it has to be
+     * done on driver compiler level.
      *
      * @param string $table
      * @param array  $joins
@@ -229,7 +247,13 @@ class QueryCompiler extends Component
      * @param int    $limit
      * @return string
      */
-    public function delete($table, array $joins = array(), array $where = array(), array $orderBy = array(), $limit = 0)
+    public function delete(
+        $table,
+        array $joins = array(),
+        array $where = array(),
+        array $orderBy = array(),
+        $limit = 0
+    )
     {
         $statement = 'DELETE FROM ' . $this->quote($table, true) . ' ';
 
@@ -247,9 +271,9 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile update query statement. Table name, set of values (associated with column names), joins and where tokens,
-     * order by tokens and limit are required. Default query compiler will not compile limit and order by, it has to be
-     * done on driver compiler level.
+     * Compile update query statement. Table name, set of values (associated with column names), joins
+     * and where tokens, order by tokens and limit are required. Default query compiler will not compile
+     * limit and order by, it has to be done on driver compiler level.
      *
      * @param string $table
      * @param array  $values
@@ -259,7 +283,14 @@ class QueryCompiler extends Component
      * @param int    $limit
      * @return string
      */
-    public function update($table, array $values, array $joins = array(), array $where = array(), array $orderBy = array(), $limit = 0)
+    public function update(
+        $table,
+        array $values,
+        array $joins = array(),
+        array $where = array(),
+        array $orderBy = array(),
+        $limit = 0
+    )
     {
         $statement = 'UPDATE ' . $this->quote($table, true) . ' ';
 
@@ -351,7 +382,7 @@ class QueryCompiler extends Component
         {
             $statement .= $join['type'] . ' JOIN ' . $this->quote($table, true);
 
-            if ($join['on'])
+            if (!empty($join['on']))
             {
                 $statement .= ' ON (' . $this->where($join['on'], self::VALUE_IDENTIFIERS) . ')';
             }
@@ -361,8 +392,8 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile where statement, WHERE keywords will not be included. Methods has an options to replace all values with
-     * placeholder representation (?) or quote values as identifiers (used by joins).
+     * Compile where statement, WHERE keywords will not be included. Methods has an options to replace
+     * all values with placeholder representation (?) or quote values as identifiers (used by joins).
      *
      * @param array $tokens
      * @param int   $mode Replace values with placeholders or quote of identifiers.
@@ -406,7 +437,11 @@ class QueryCompiler extends Component
 
             if (is_string($context))
             {
-                $statement = rtrim($statement . $joiner) . ($joiner && $context == '(' ? ' ' : '') . $context . ($context == ')' ? ' ' : '');
+                $statement = rtrim($statement . $joiner)
+                    . ($joiner && $context == '(' ? ' ' : '')
+                    . $context
+                    . ($context == ')' ? ' ' : '');
+
                 continue;
             }
 
@@ -434,7 +469,8 @@ class QueryCompiler extends Component
                 }
                 else
                 {
-                    $statement .= "{$joiner} {$identifier} {$operator} {$this->quote($value)} AND {$this->quote($context[3])} ";
+                    $statement .= "{$joiner} {$identifier} "
+                        . "{$operator} {$this->quote($value)} AND {$this->quote($context[3])} ";
                 }
 
                 continue;
@@ -445,7 +481,11 @@ class QueryCompiler extends Component
                 $operator = $operator == '=' ? 'IS' : 'IS NOT';
             }
 
-            if ($operator == '=' && (is_array($value) || ($value instanceof ParameterInterface && is_array($value->getValue()))))
+            if (
+                $operator == '='
+                && (is_array($value)
+                    || ($value instanceof ParameterInterface && is_array($value->getValue())))
+            )
             {
                 $operator = 'IN';
             }
@@ -475,8 +515,8 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile union statement chunk. Keywords UNION and ALL will be included, this methods will automatically move every union
-     * on new line.
+     * Compile union statement chunk. Keywords UNION and ALL will be included, this methods will
+     * automatically move every union on new line.
      *
      * @param array $unions
      * @return string
@@ -529,8 +569,9 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Render selection (affection) limit and offset. Keywords for LIMIT and OFFSET will be included, attention, this
-     * method will render limit and offset independently which may not be supported by some databases.
+     * Render selection (affection) limit and offset. Keywords for LIMIT and OFFSET will be included,
+     * attention, this method will render limit and offset independently which may not be supported
+     * by some databases.
      *
      * @param int $limit
      * @param int $offset

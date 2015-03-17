@@ -34,8 +34,8 @@ abstract class Driver extends Component
     const DRIVER_NAME = 'DBALDriver';
 
     /**
-     * Class names should be used to create schema instances to describe specified driver table. Schema realizations are
-     * driver specific and allows both schema reading and writing (migrations).
+     * Class names should be used to create schema instances to describe specified driver table.
+     * Schema realizations are driver specific and allows both schema reading and writing (migrations).
      */
     const SCHEMA_TABLE     = '';
     const SCHEMA_COLUMN    = '';
@@ -60,15 +60,16 @@ abstract class Driver extends Component
     const DATETIME = 'Y-m-d H:i:s';
 
     /**
-     * Statement should be used for ColumnSchema to indicate that default datetime value should be set to current time.
+     * Statement should be used for ColumnSchema to indicate that default datetime value should be
+     * set to current time.
      *
      * @var string
      */
     const TIMESTAMP_NOW = 'DRIVER_SPECIFIC_NOW_EXPRESSION';
 
     /**
-     * Connection configuration described in DBAL config file. Any driver can be used as data source for multiple databases
-     * as table prefix and quotation defined on Database instance level.
+     * Connection configuration described in DBAL config file. Any driver can be used as data source
+     * for multiple databases as table prefix and quotation defined on Database instance level.
      *
      * @var array
      */
@@ -106,15 +107,16 @@ abstract class Driver extends Component
     protected $pdo = null;
 
     /**
-     * Current transaction level (count of nested transactions). Not all drives can support nested transactions.
+     * Current transaction level (count of nested transactions). Not all drives can support nested
+     * transactions.
      *
      * @var int
      */
     protected $transactionLevel = 0;
 
     /**
-     * Driver instances responsible for all database low level operations which can be DBMS specific - such as connection
-     * preparation, custom table/column/index/reference schemas and etc.
+     * Driver instances responsible for all database low level operations which can be DBMS specific
+     * - such as connection preparation, custom table/column/index/reference schemas and etc.
      *
      * @param array $config
      */
@@ -140,7 +142,8 @@ abstract class Driver extends Component
     }
 
     /**
-     * Get database name (fetched from connection string). In some cases can return empty string (SQLite).
+     * Get database name (fetched from connection string). In some cases can return empty string
+     * (SQLite).
      *
      * @return string|null
      */
@@ -150,8 +153,8 @@ abstract class Driver extends Component
     }
 
     /**
-     * While profiling enabled driver will create query logging and benchmarking events. This is recommended option on
-     * development environment.
+     * While profiling enabled driver will create query logging and benchmarking events. This is
+     * recommended option on development environment.
      *
      * @param bool $enabled Enable or disable driver profiling.
      * @return static
@@ -174,7 +177,8 @@ abstract class Driver extends Component
     }
 
     /**
-     * Get associated PDO connection. Driver will automatically connect to PDO if it's not already exists.
+     * Get associated PDO connection. Driver will automatically connect to PDO if it's not already
+     * exists.
      *
      * @return PDO
      */
@@ -193,14 +197,32 @@ abstract class Driver extends Component
     }
 
     /**
-     * Method used to get PDO instance for current driver, it can be overwritten by custom driver realization to perform
-     * DBMS specific operations.
+     * Manually set associated PDO instance.
+     *
+     * @param PDO $pdo
+     * @return static
+     */
+    public function setPDO(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+
+        return $this;
+    }
+
+    /**
+     * Method used to get PDO instance for current driver, it can be overwritten by custom driver
+     * realization to perform DBMS specific operations.
      *
      * @return PDO
      */
     protected function createPDO()
     {
-        return new PDO($this->config['connection'], $this->config['username'], $this->config['password'], $this->options);
+        return new PDO(
+            $this->config['connection'],
+            $this->config['username'],
+            $this->config['password'],
+            $this->options
+        );
     }
 
     /**
@@ -245,7 +267,9 @@ abstract class Driver extends Component
             if ($parameter instanceof \DateTime)
             {
                 //We are going to convert all timestamps to database timezone which is UTC by default
-                $parameter = $parameter->setTimezone(new \DateTimeZone(DatabaseManager::defaultTimezone()))->format(static::DATETIME);
+                $parameter = $parameter->setTimezone(
+                    new \DateTimeZone(DatabaseManager::defaultTimezone())
+                )->format(static::DATETIME);
             }
 
             if (is_array($parameter))
@@ -259,8 +283,11 @@ abstract class Driver extends Component
 
                     if ($value instanceof \DateTime)
                     {
-                        //We are going to convert all timestamps to database timezone which is UTC by default
-                        $value = $value->setTimezone(new \DateTimeZone(DatabaseManager::defaultTimezone()))->format(static::DATETIME);
+                        //We are going to convert all timestamps to database timezone which is UTC
+                        //by default
+                        $value = $value->setTimezone(
+                            new \DateTimeZone(DatabaseManager::defaultTimezone())
+                        )->format(static::DATETIME);
                     }
 
                     unset($value);
@@ -300,7 +327,12 @@ abstract class Driver extends Component
             $pdoStatement = $this->getPDO()->prepare($query);
             $pdoStatement->execute($parameters);
 
-            $this->event('statement', array('statement' => $pdoStatement, 'query' => $query, 'parameters' => $parameters));
+            $this->event('statement', array(
+                'statement'  => $pdoStatement,
+                'query'      => $query,
+                'parameters' => $parameters
+            ));
+
             if ($this->config['profiling'] && isset($explained))
             {
                 benchmark(static::DRIVER_NAME . "::" . $this->databaseName(), $explained);
@@ -309,7 +341,11 @@ abstract class Driver extends Component
         }
         catch (\PDOException $exception)
         {
-            $this->logger()->error(DatabaseManager::interpolateQuery($query, $parameters), compact('query', 'parameters'));
+            $this->logger()->error(
+                DatabaseManager::interpolateQuery($query, $parameters),
+                compact('query', 'parameters')
+            );
+
             throw $exception;
         }
 
@@ -317,8 +353,8 @@ abstract class Driver extends Component
     }
 
     /**
-     * Run select type SQL statement with prepare parameters against connected PDO instance. QueryResult will be returned
-     * and can be used to walk thought resulted dataset.
+     * Run select type SQL statement with prepare parameters against connected PDO instance.
+     * QueryResult will be returned and can be used to walk thought resulted dataset.
      *
      * @param string $query              SQL statement with parameter placeholders.
      * @param array  $parameters         Parameters to be binded into query.
@@ -337,13 +373,16 @@ abstract class Driver extends Component
     /**
      * Get last inserted row id.
      *
-     * @param string|null $sequence Name of the sequence object from which the ID should be returned. Not required
-     *                              for MySQL database, but should be specified for Postgres (ORM will do it automatically).
+     * @param string|null $sequence Name of the sequence object from which the ID should be returned.
+     *                              Not required for MySQL database, but should be specified for Postgres
+     *                              (Postgres Driver will do it automatically).
      * @return mixed
      */
     public function lastInsertID($sequence = null)
     {
-        return $sequence ? (int)$this->getPDO()->lastInsertId($sequence) : (int)$this->getPDO()->lastInsertId();
+        return $sequence
+            ? (int)$this->getPDO()->lastInsertId($sequence)
+            : (int)$this->getPDO()->lastInsertId();
     }
 
     /**
@@ -357,8 +396,8 @@ abstract class Driver extends Component
     }
 
     /**
-     * Start SQL transaction with specified isolation level, not all database types support it. Nested transactions will
-     * be processed using savepoints.
+     * Start SQL transaction with specified isolation level, not all database types support it.
+     * Nested transactions will be processed using savepoints.
      *
      * @link   http://en.wikipedia.org/wiki/Database_transaction
      * @link   http://en.wikipedia.org/wiki/Isolation_(database_systems)
@@ -484,8 +523,8 @@ abstract class Driver extends Component
     abstract public function hasTable($name);
 
     /**
-     * Fetch list of all available table names under linked database, this method is called by Database in getTables()
-     * method, same methods will automatically filter tables by their prefix.
+     * Fetch list of all available table names under linked database, this method is called by Database
+     * in getTables() method, same methods will automatically filter tables by their prefix.
      *
      * @return array
      */
@@ -502,22 +541,28 @@ abstract class Driver extends Component
     }
 
     /**
-     * Get schema for specified table name, name should be provided without database prefix. TableSchema contains information
-     * about all table columns, indexes and foreign keys. Schema can be used to manipulate table structure.
+     * Get schema for specified table name, name should be provided without database prefix.
+     * TableSchema contains information about all table columns, indexes and foreign keys. Schema can
+     * be used to manipulate table structure.
      *
      * @param string $table       Table name without prefix included.
-     * @param string $tablePrefix Database specific table prefix, this parameter is not required, but if provided all
+     * @param string $tablePrefix Database specific table prefix, this parameter is not required,
+     *                            but if provided all
      *                            foreign keys will be created using it.
      * @return BaseTableSchema
      */
     public function tableSchema($table, $tablePrefix = '')
     {
-        return Container::get(static::SCHEMA_TABLE, array('driver' => $this, 'name' => $table, 'tablePrefix' => $tablePrefix));
+        return Container::get(static::SCHEMA_TABLE, array(
+            'driver'      => $this,
+            'name'        => $table,
+            'tablePrefix' => $tablePrefix
+        ));
     }
 
     /**
-     * Get instance of driver specified ColumnSchema. Every schema object should fully represent one table column, it's
-     * type and all possible options.
+     * Get instance of driver specified ColumnSchema. Every schema object should fully represent one
+     * table column, it's type and all possible options.
      *
      * @param BaseTableSchema $table  Parent TableSchema.
      * @param string          $name   Column name.
@@ -530,8 +575,8 @@ abstract class Driver extends Component
     }
 
     /**
-     * Get instance of driver specified IndexSchema. Every index schema should represent single table index including name,
-     * type and columns.
+     * Get instance of driver specified IndexSchema. Every index schema should represent single table
+     * index including name, type and columns.
      *
      * @param BaseTableSchema $table  Parent TableSchema.
      * @param string          $name   Index name.
@@ -544,8 +589,8 @@ abstract class Driver extends Component
     }
 
     /**
-     * Get instance of driver specified ReferenceSchema (foreign key). Every ReferenceSchema should represent one foreign
-     * key with it's referenced table, column and rules.
+     * Get instance of driver specified ReferenceSchema (foreign key). Every ReferenceSchema should
+     * represent one foreign key with it's referenced table, column and rules.
      *
      * @param BaseTableSchema $table  Parent TableSchema.
      * @param string          $name   Constraint name.
@@ -568,16 +613,20 @@ abstract class Driver extends Component
     }
 
     /**
-     * QueryCompiler is low level SQL compiler which used by different query builders to generate statement based on provided
-     * tokens. Every builder will get it's own QueryCompiler at it has some internal isolation features (such as query
-     * specific table aliases).
+     * QueryCompiler is low level SQL compiler which used by different query builders to generate
+     * statement based on provided tokens. Every builder will get it's own QueryCompiler at it has
+     * some internal isolation features (such as query specific table aliases).
      *
-     * @param string $tablePrefix Database specific table prefix, used to correctly quote table names and other identifiers.
+     * @param string $tablePrefix Database specific table prefix, used to correctly quote table names
+     *                            and other identifiers.
      * @return QueryCompiler
      */
     public function queryCompiler($tablePrefix = '')
     {
-        return Container::get(static::QUERY_COMPILER, array('driver' => $this, 'tablePrefix' => $tablePrefix));
+        return Container::get(static::QUERY_COMPILER, array(
+            'driver' => $this,
+            'tablePrefix' => $tablePrefix
+        ));
     }
 
     /**
