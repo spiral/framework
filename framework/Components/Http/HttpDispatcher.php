@@ -62,11 +62,11 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
 
     /**
      * Set of middleware layers built to handle incoming Request and return Response. Middleware
-     * can be represented as class, string (DI) or array (callable method). HttpDispatcher layer
+     * can be represented as class, string (DI), closure or array (callable method). HttpDispatcher layer
      * middlewares will be called in start() method. This set of middleware(s) used to filter
      * http request and response on application layer.
      *
-     * @var array|MiddlewareInterface[]
+     * @var array|MiddlewareInterface[]|callable[]
      */
     protected $middlewares = array();
 
