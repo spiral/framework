@@ -81,7 +81,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
      * Example (in bootstrap):
      * $this->http->add('/forum', 'Vendor\Forum\Forum');
      *
-     * P.S. Router is Middleware automatically assigned to base path of application.
+     * P.S. Router middleware automatically assigned to base path of application.
      *
      * @var array|MiddlewareInterface[]
      */
