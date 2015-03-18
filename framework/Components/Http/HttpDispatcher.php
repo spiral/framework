@@ -382,7 +382,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
 
         if ($defaultHeaders)
         {
-            //We can force some header values if not replacement specified
+            //We can force some header values if no replacement specified
             foreach ($defaultHeaders as $header => $value)
             {
                 header("{$header}: {$value}");
