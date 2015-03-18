@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\DBAL\Drivers\MySql;
 
-use Spiral\Components\DBAL\Schemas\BaseReferenceSchema;
+use Spiral\Components\DBAL\Schemas\AbstractReferenceSchema;
 
-class ReferenceSchema extends BaseReferenceSchema
+class ReferenceSchema extends AbstractReferenceSchema
 {
     /**
      * Parse schema information provided by parent TableSchema and populate foreign key values.

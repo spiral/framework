@@ -8,10 +8,10 @@
  */
 namespace Spiral\Components\DBAL\Drivers\Postgres;
 
-use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\SqlFragment;
 
-class ColumnSchema extends BaseColumnSchema
+class ColumnSchema extends AbstractColumnSchema
 {
     /**
      * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision
@@ -366,10 +366,10 @@ class ColumnSchema extends BaseColumnSchema
     /**
      * Generate set of altering operations should be applied to column to change it's type, size, default value or null flag.
      *
-     * @param BaseColumnSchema $original
+     * @param AbstractColumnSchema $original
      * @return array
      */
-    public function alterOperations(BaseColumnSchema $original)
+    public function alterOperations(AbstractColumnSchema $original)
     {
         $operations = array();
 

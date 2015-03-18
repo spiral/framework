@@ -8,13 +8,13 @@
  */
 namespace Spiral\Components\DBAL\Drivers\Sqlite;
 
-use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
-use Spiral\Components\DBAL\Schemas\BaseReferenceSchema;
-use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
+use Spiral\Components\DBAL\Schemas\AbstractReferenceSchema;
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\DBAL\Schemas\SchemaBuilderException;
 use Spiral\Helpers\StringHelper;
 
-class TableSchema extends BaseTableSchema
+class TableSchema extends AbstractTableSchema
 {
     /**
      * Driver specific method to load table columns schemas.  Method will not be called if table not exists. To create and
@@ -211,9 +211,9 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific column add command.
      *
-     * @param BaseColumnSchema $column
+     * @param AbstractColumnSchema $column
      */
-    protected function doColumnAdd(BaseColumnSchema $column)
+    protected function doColumnAdd(AbstractColumnSchema $column)
     {
         //Not supported
     }
@@ -221,9 +221,9 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific column remove (drop) command.
      *
-     * @param BaseColumnSchema $column
+     * @param AbstractColumnSchema $column
      */
-    protected function doColumnDrop(BaseColumnSchema $column)
+    protected function doColumnDrop(AbstractColumnSchema $column)
     {
         //Not supported
     }
@@ -231,10 +231,10 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific column altering command.
      *
-     * @param BaseColumnSchema $column
-     * @param BaseColumnSchema $dbColumn
+     * @param AbstractColumnSchema $column
+     * @param AbstractColumnSchema $dbColumn
      */
-    protected function doColumnChange(BaseColumnSchema $column, BaseColumnSchema $dbColumn)
+    protected function doColumnChange(AbstractColumnSchema $column, AbstractColumnSchema $dbColumn)
     {
         //Not supported
     }
@@ -242,9 +242,9 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific foreign key adding command.
      *
-     * @param BaseReferenceSchema $foreign
+     * @param AbstractReferenceSchema $foreign
      */
-    protected function doForeignAdd(BaseReferenceSchema $foreign)
+    protected function doForeignAdd(AbstractReferenceSchema $foreign)
     {
         //Not supported
     }
@@ -252,9 +252,9 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific foreign key remove (drop) command.
      *
-     * @param BaseReferenceSchema $foreign
+     * @param AbstractReferenceSchema $foreign
      */
-    protected function doForeignDrop(BaseReferenceSchema $foreign)
+    protected function doForeignDrop(AbstractReferenceSchema $foreign)
     {
         //Not supported
     }
@@ -262,10 +262,10 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific foreign key altering command, by default it will remove and add foreign key.
      *
-     * @param BaseReferenceSchema $foreign
-     * @param BaseReferenceSchema $dbForeign
+     * @param AbstractReferenceSchema $foreign
+     * @param AbstractReferenceSchema $dbForeign
      */
-    protected function doForeignChange(BaseReferenceSchema $foreign, BaseReferenceSchema $dbForeign)
+    protected function doForeignChange(AbstractReferenceSchema $foreign, AbstractReferenceSchema $dbForeign)
     {
         //Not supported
     }

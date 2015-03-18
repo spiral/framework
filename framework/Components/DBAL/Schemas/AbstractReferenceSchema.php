@@ -11,7 +11,7 @@ namespace Spiral\Components\DBAL\Schemas;
 use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Core\Component;
 
-abstract class BaseReferenceSchema extends Component implements SqlFragmentInterface
+abstract class AbstractReferenceSchema extends Component implements SqlFragmentInterface
 {
     /**
      * Delete and update foreign key rules.
@@ -23,7 +23,7 @@ abstract class BaseReferenceSchema extends Component implements SqlFragmentInter
      * Parent table schema.
      *
      * @invisible
-     * @var BaseTableSchema
+     * @var AbstractTableSchema
      */
     protected $table = null;
 
@@ -73,11 +73,11 @@ abstract class BaseReferenceSchema extends Component implements SqlFragmentInter
      * Instance on ConstraintSchema represent table foreign key, it should contain information about referenced table,
      * column name and delete/update rules.
      *
-     * @param BaseTableSchema $table
+     * @param AbstractTableSchema $table
      * @param  string         $name
      * @param mixed           $schema Constraint information fetched from database by TableSchema. Format depends on driver type.
      */
-    public function __construct(BaseTableSchema $table, $name, $schema = null)
+    public function __construct(AbstractTableSchema $table, $name, $schema = null)
     {
         $this->name = $name;
         $this->table = $table;
@@ -228,10 +228,10 @@ abstract class BaseReferenceSchema extends Component implements SqlFragmentInter
     /**
      * Compare two foreign key schemas to check if data were altered.
      *
-     * @param BaseReferenceSchema $original
+     * @param AbstractReferenceSchema $original
      * @return bool
      */
-    public function compare(BaseReferenceSchema $original)
+    public function compare(AbstractReferenceSchema $original)
     {
         return $this == $original;
     }

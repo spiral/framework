@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\DBAL\Drivers\Sqlite;
 
-use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 
-class ColumnSchema extends BaseColumnSchema
+class ColumnSchema extends AbstractColumnSchema
 {
     /**
      * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision

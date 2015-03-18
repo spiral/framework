@@ -145,7 +145,8 @@ class CachedResult extends QueryResult
     /**
      * Fetch one result row as array.
      *
-     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC by default.
+     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC
+     *                   by default.
      * @return array
      */
     public function fetch($mode = null)

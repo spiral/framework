@@ -8,12 +8,12 @@
  */
 namespace Spiral\Components\DBAL\Drivers\SqlServer;
 
-use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
-use Spiral\Components\DBAL\Schemas\BaseIndexSchema;
-use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
+use Spiral\Components\DBAL\Schemas\AbstractIndexSchema;
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use spiral\helpers\StringHelper;
 
-class TableSchema extends BaseTableSchema
+class TableSchema extends AbstractTableSchema
 {
     /**
      * Rename SQL statement is usually the same...
@@ -85,9 +85,9 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific column add command.
      *
-     * @param BaseColumnSchema $column
+     * @param AbstractColumnSchema $column
      */
-    protected function doColumnAdd(BaseColumnSchema $column)
+    protected function doColumnAdd(AbstractColumnSchema $column)
     {
         $this->driver->statement("ALTER TABLE {$this->getName(true)} ADD {$column->sqlStatement()}");
     }
@@ -95,10 +95,10 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific column altering command.
      *
-     * @param BaseColumnSchema $column
-     * @param BaseColumnSchema $dbColumn
+     * @param AbstractColumnSchema $column
+     * @param AbstractColumnSchema $dbColumn
      */
-    protected function doColumnChange(BaseColumnSchema $column, BaseColumnSchema $dbColumn)
+    protected function doColumnChange(AbstractColumnSchema $column, AbstractColumnSchema $dbColumn)
     {
         /**
          * @var ColumnSchema $column
@@ -167,9 +167,9 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific index remove (drop) command.
      *
-     * @param BaseIndexSchema $index
+     * @param AbstractIndexSchema $index
      */
-    protected function doIndexDrop(BaseIndexSchema $index)
+    protected function doIndexDrop(AbstractIndexSchema $index)
     {
         $this->driver->statement("DROP INDEX {$index->getName(true)} ON {$this->getName(true)}");
     }

@@ -11,7 +11,7 @@ namespace Spiral\Components\DBAL\Schemas;
 use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Core\Component;
 
-abstract class BaseIndexSchema extends Component implements SqlFragmentInterface
+abstract class AbstractIndexSchema extends Component implements SqlFragmentInterface
 {
     /**
      * Index types.
@@ -23,7 +23,7 @@ abstract class BaseIndexSchema extends Component implements SqlFragmentInterface
      * Parent table schema.
      *
      * @invisible
-     * @var BaseTableSchema
+     * @var AbstractTableSchema
      */
     protected $table = null;
 
@@ -35,8 +35,8 @@ abstract class BaseIndexSchema extends Component implements SqlFragmentInterface
     protected $name = '';
 
     /**
-     * Index type, by default NORMAL and UNIQUE indexes supported, additional types can be implemented on database driver
-     * level.
+     * Index type, by default NORMAL and UNIQUE indexes supported, additional types can be implemented
+     * on database driver level.
      *
      * @var int
      */
@@ -50,15 +50,16 @@ abstract class BaseIndexSchema extends Component implements SqlFragmentInterface
     protected $columns = array();
 
     /**
-     * Instance on IndexSchema represent one table index - name, type and involved columns. Attention, based on index
-     * mapping and resolving (based on set of column name), there is no simple way to create multiple indexes with same
-     * set of columns, as they will be resolved as one index.
+     * Instance on IndexSchema represent one table index - name, type and involved columns. Attention,
+     * based on index mapping and resolving (based on set of column name), there is no simple way to
+     * create multiple indexes with same set of columns, as they will be resolved as one index.
      *
-     * @param BaseTableSchema $table
-     * @param  string         $name
-     * @param mixed           $schema Index information fetched from database by TableSchema. Format depends on database type.
+     * @param AbstractTableSchema $table
+     * @param  string             $name
+     * @param mixed               $schema Index information fetched from database by TableSchema.
+     *                                    Format depends on database type.
      */
-    public function __construct(BaseTableSchema $table, $name, $schema = null)
+    public function __construct(AbstractTableSchema $table, $name, $schema = null)
     {
         $this->name = $name;
         $this->table = $table;
@@ -174,10 +175,10 @@ abstract class BaseIndexSchema extends Component implements SqlFragmentInterface
     /**
      * Compare two index schemas to check if data were altered.
      *
-     * @param BaseIndexSchema $dbIndex
+     * @param AbstractIndexSchema $dbIndex
      * @return bool
      */
-    public function compare(BaseIndexSchema $dbIndex)
+    public function compare(AbstractIndexSchema $dbIndex)
     {
         return $this == $dbIndex;
     }

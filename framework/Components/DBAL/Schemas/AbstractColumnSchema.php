@@ -14,31 +14,31 @@ use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Core\Component;
 
 /**
- * @method static BaseColumnSchema make(array $parameters = array());
+ * @method static AbstractColumnSchema make(array $parameters = array());
  *
- * @method BaseColumnSchema|$this boolean()
+ * @method AbstractColumnSchema|$this boolean()
  *
- * @method BaseColumnSchema|$this integer()
- * @method BaseColumnSchema|$this tinyInteger()
- * @method BaseColumnSchema|$this bigInteger()
+ * @method AbstractColumnSchema|$this integer()
+ * @method AbstractColumnSchema|$this tinyInteger()
+ * @method AbstractColumnSchema|$this bigInteger()
  *
- * @method BaseColumnSchema|$this text()
- * @method BaseColumnSchema|$this tinyText()
- * @method BaseColumnSchema|$this longText()
+ * @method AbstractColumnSchema|$this text()
+ * @method AbstractColumnSchema|$this tinyText()
+ * @method AbstractColumnSchema|$this longText()
  *
- * @method BaseColumnSchema|$this double()
- * @method BaseColumnSchema|$this float()
+ * @method AbstractColumnSchema|$this double()
+ * @method AbstractColumnSchema|$this float()
  *
- * @method BaseColumnSchema|$this datetime()
- * @method BaseColumnSchema|$this date()
- * @method BaseColumnSchema|$this time()
- * @method BaseColumnSchema|$this timestamp()
+ * @method AbstractColumnSchema|$this datetime()
+ * @method AbstractColumnSchema|$this date()
+ * @method AbstractColumnSchema|$this time()
+ * @method AbstractColumnSchema|$this timestamp()
  *
- * @method BaseColumnSchema|$this binary()
- * @method BaseColumnSchema|$this tinyBinary()
- * @method BaseColumnSchema|$this longBinary()
+ * @method AbstractColumnSchema|$this binary()
+ * @method AbstractColumnSchema|$this tinyBinary()
+ * @method AbstractColumnSchema|$this longBinary()
  */
-abstract class BaseColumnSchema extends Component implements SqlFragmentInterface
+abstract class AbstractColumnSchema extends Component implements SqlFragmentInterface
 {
     /**
      * Logging.
@@ -161,7 +161,7 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
      * Parent table schema.
      *
      * @invisible
-     * @var BaseTableSchema
+     * @var AbstractTableSchema
      */
     protected $table = null;
 
@@ -221,11 +221,11 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
     /**
      * ColumnSchema
      *
-     * @param BaseTableSchema $table  Parent TableSchema.
+     * @param AbstractTableSchema $table  Parent TableSchema.
      * @param string          $name   Column name.
      * @param mixed           $schema Column information fetched from database by TableSchema. Format depends on database type.
      */
-    public function __construct(BaseTableSchema $table, $name, $schema = null)
+    public function __construct(AbstractTableSchema $table, $name, $schema = null)
     {
         $this->name = $name;
         $this->table = $table;
@@ -622,7 +622,7 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
     /**
      * Associate table index with current column.
      *
-     * @return BaseIndexSchema
+     * @return AbstractIndexSchema
      */
     public function index()
     {
@@ -632,7 +632,7 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
     /**
      * Associate unique table index with current column.
      *
-     * @return BaseIndexSchema
+     * @return AbstractIndexSchema
      */
     public function unique()
     {
@@ -646,7 +646,7 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
      *
      * @param string $table  Foreign table name.
      * @param string $column Foreign column name (id by default).
-     * @return BaseReferenceSchema
+     * @return AbstractReferenceSchema
      * @throws SchemaBuilderException
      */
     public function foreign($table, $column = 'id')
@@ -671,10 +671,10 @@ abstract class BaseColumnSchema extends Component implements SqlFragmentInterfac
     /**
      * Compare two column schemas to check if data were altered.
      *
-     * @param BaseColumnSchema $dbColumn
+     * @param AbstractColumnSchema $dbColumn
      * @return bool
      */
-    public function compare(BaseColumnSchema $dbColumn)
+    public function compare(AbstractColumnSchema $dbColumn)
     {
         if ($this != $dbColumn)
         {

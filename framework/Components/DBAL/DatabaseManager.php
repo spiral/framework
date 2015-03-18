@@ -188,7 +188,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      */
     public static function interpolateQuery($query, array $parameters = array())
     {
-        if (!$parameters)
+        if (empty($parameters))
         {
             return $query;
         }

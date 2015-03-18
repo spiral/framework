@@ -9,7 +9,7 @@
 namespace Spiral\Components\DBAL\Migrations;
 
 use Spiral\Components\DBAL\Database;
-use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\DBAL\Table;
 use Spiral\Core\Component;
 
@@ -49,7 +49,7 @@ abstract class Migration extends Component implements MigrationInterface
      * dropping and etc.
      *
      * @param string $table Table name without prefix.
-     * @return BaseTableSchema
+     * @return AbstractTableSchema
      */
     public function schema($table)
     {

@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\DBAL\Drivers\Sqlite;
 
-use Spiral\Components\DBAL\Schemas\BaseIndexSchema;
+use Spiral\Components\DBAL\Schemas\AbstractIndexSchema;
 
-class IndexSchema extends BaseIndexSchema
+class IndexSchema extends AbstractIndexSchema
 {
     /**
      * Parse index information provided by parent TableSchema and populate index values.

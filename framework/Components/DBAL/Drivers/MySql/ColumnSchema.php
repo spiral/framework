@@ -8,10 +8,10 @@
  */
 namespace Spiral\Components\DBAL\Drivers\MySql;
 
-use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\SqlFragment;
 
-class ColumnSchema extends BaseColumnSchema
+class ColumnSchema extends AbstractColumnSchema
 {
     /**
      * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision

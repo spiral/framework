@@ -11,7 +11,7 @@ namespace Spiral\Components\DBAL;
 use Spiral\Components\DBAL\Builders\DeleteQuery;
 use Spiral\Components\DBAL\Builders\SelectQuery;
 use Spiral\Components\DBAL\Builders\UpdateQuery;
-use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\Http\Request;
 use Spiral\Core\Component;
 
@@ -115,7 +115,7 @@ class Table extends Component implements \JsonSerializable
      * Get schema for specified table. TableSchema contains information about all table columns,
      * indexes and foreign keys. Schema can also be used to manipulate table structure.
      *
-     * @return BaseTableSchema
+     * @return AbstractTableSchema
      */
     public function schema()
     {

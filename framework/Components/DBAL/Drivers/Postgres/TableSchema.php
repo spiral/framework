@@ -8,11 +8,11 @@
  */
 namespace Spiral\Components\DBAL\Drivers\Postgres;
 
-use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
-use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Helpers\StringHelper;
 
-class TableSchema extends BaseTableSchema
+class TableSchema extends AbstractTableSchema
 {
 
     /**
@@ -113,10 +113,10 @@ class TableSchema extends BaseTableSchema
     /**
      * Driver specific column altering command.
      *
-     * @param BaseColumnSchema $column
-     * @param BaseColumnSchema $dbColumn
+     * @param AbstractColumnSchema $column
+     * @param AbstractColumnSchema $dbColumn
      */
-    protected function doColumnChange(BaseColumnSchema $column, BaseColumnSchema $dbColumn)
+    protected function doColumnChange(AbstractColumnSchema $column, AbstractColumnSchema $dbColumn)
     {
         /**
          * @var ColumnSchema $column

@@ -12,10 +12,10 @@ use Spiral\Components\DBAL\Builders\DeleteQuery;
 use Spiral\Components\DBAL\Builders\InsertQuery;
 use Spiral\Components\DBAL\Builders\SelectQuery;
 use Spiral\Components\DBAL\Builders\UpdateQuery;
-use Spiral\Components\DBAL\Schemas\BaseColumnSchema;
-use Spiral\Components\DBAL\Schemas\BaseIndexSchema;
-use Spiral\Components\DBAL\Schemas\BaseReferenceSchema;
-use Spiral\Components\DBAL\Schemas\BaseTableSchema;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
+use Spiral\Components\DBAL\Schemas\AbstractIndexSchema;
+use Spiral\Components\DBAL\Schemas\AbstractReferenceSchema;
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Core\Component;
 use PDO;
 use PDOStatement;
@@ -549,7 +549,7 @@ abstract class Driver extends Component
      * @param string $tablePrefix Database specific table prefix, this parameter is not required,
      *                            but if provided all
      *                            foreign keys will be created using it.
-     * @return BaseTableSchema
+     * @return AbstractTableSchema
      */
     public function tableSchema($table, $tablePrefix = '')
     {
@@ -564,12 +564,12 @@ abstract class Driver extends Component
      * Get instance of driver specified ColumnSchema. Every schema object should fully represent one
      * table column, it's type and all possible options.
      *
-     * @param BaseTableSchema $table  Parent TableSchema.
+     * @param AbstractTableSchema $table  Parent TableSchema.
      * @param string          $name   Column name.
      * @param mixed           $schema Driver specific column schema.
-     * @return BaseColumnSchema
+     * @return AbstractColumnSchema
      */
-    public function columnSchema(BaseTableSchema $table, $name, $schema = null)
+    public function columnSchema(AbstractTableSchema $table, $name, $schema = null)
     {
         return Container::get(static::SCHEMA_COLUMN, compact('table', 'name', 'schema'));
     }
@@ -578,12 +578,12 @@ abstract class Driver extends Component
      * Get instance of driver specified IndexSchema. Every index schema should represent single table
      * index including name, type and columns.
      *
-     * @param BaseTableSchema $table  Parent TableSchema.
+     * @param AbstractTableSchema $table  Parent TableSchema.
      * @param string          $name   Index name.
      * @param mixed           $schema Driver specific index schema.
-     * @return BaseIndexSchema
+     * @return AbstractIndexSchema
      */
-    public function indexSchema(BaseTableSchema $table, $name, $schema = null)
+    public function indexSchema(AbstractTableSchema $table, $name, $schema = null)
     {
         return Container::get(static::SCHEMA_INDEX, compact('table', 'name', 'schema'));
     }
@@ -592,12 +592,12 @@ abstract class Driver extends Component
      * Get instance of driver specified ReferenceSchema (foreign key). Every ReferenceSchema should
      * represent one foreign key with it's referenced table, column and rules.
      *
-     * @param BaseTableSchema $table  Parent TableSchema.
+     * @param AbstractTableSchema $table  Parent TableSchema.
      * @param string          $name   Constraint name.
      * @param mixed           $schema Driver specific foreign key schema.
-     * @return BaseReferenceSchema
+     * @return AbstractReferenceSchema
      */
-    public function referenceSchema(BaseTableSchema $table, $name, $schema = null)
+    public function referenceSchema(AbstractTableSchema $table, $name, $schema = null)
     {
         return Container::get(static::SCHEMA_REFERENCE, compact('table', 'name', 'schema'));
     }
