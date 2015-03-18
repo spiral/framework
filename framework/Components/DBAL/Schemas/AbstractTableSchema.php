@@ -80,19 +80,20 @@ abstract class AbstractTableSchema extends Component
     protected $exists = false;
 
     /**
-     * Primary key columns are stored separately from other indexes and can be modified only during table creation. Column
-     * types "primary" and "bigPrimary" will automatically ensure it's column name in that index, however for most database
-     * drivers that types will additionally declare auto-incrementing which can be applied to one column only. To create
-     * compound primary index call primaryKeys() method on table level. Attention, Spiral ORM and ActiveRecord models
-     * can not support compound primary keys.
+     * Primary key columns are stored separately from other indexes and can be modified only during
+     * table creation. Column types "primary" and "bigPrimary" will automatically ensure it's column
+     * name in that index, however for most database drivers that types will additionally declare
+     * auto-incrementing which can be applied to one column only. To create compound primary index
+     * call primaryKeys() method on table level. Attention, Spiral ORM and ActiveRecord models can
+     * not support compound primary keys.
      *
      * @var array
      */
     protected $primaryKeys = array();
 
     /**
-     * Column names fetched from database table and used to build primary index. Primary index can not be modified for already
-     * exists tables.
+     * Column names fetched from database table and used to build primary index. Primary index can
+     * not be modified for already exists tables.
      *
      * @invisible
      * @var array
@@ -100,14 +101,16 @@ abstract class AbstractTableSchema extends Component
     protected $dbPrimaryKeys = array();
 
     /**
-     * ColumnSchema(s) describing table columns, represents desired table structure to be applied on save() method.
+     * ColumnSchema(s) describing table columns, represents desired table structure to be applied
+     * on save() method.
      *
      * @var AbstractColumnSchema[]
      */
     protected $columns = array();
 
     /**
-     * ColumnSchema(s) fetched from database (if table exists), this schemas used as column references to build table diff.
+     * ColumnSchema(s) fetched from database (if table exists), this schemas used as column references
+     * to build table diff.
      *
      * @invisible
      * @var AbstractColumnSchema[]
@@ -115,8 +118,8 @@ abstract class AbstractTableSchema extends Component
     protected $dbColumns = array();
 
     /**
-     * IndexSchema(s) used to described desired table indexes, this schemas will be synced with database on save() method call.
-     * IndexSchemas should not include primary keys.
+     * IndexSchema(s) used to described desired table indexes, this schemas will be synced with
+     * database on save() method call. IndexSchemas should not include primary keys.
      *
      * @var AbstractIndexSchema[]
      */
@@ -131,8 +134,9 @@ abstract class AbstractTableSchema extends Component
     protected $dbIndexes = array();
 
     /**
-     * ReferenceSchema(s) used to define table foreign key references, this schemas will be applied to database on save()
-     * method call. ReferenceSchemas table name depends on tablePrefix, make sure correct value were specified.
+     * ReferenceSchema(s) used to define table foreign key references, this schemas will be applied
+     * to database on save() method call. ReferenceSchemas table name depends on tablePrefix, make
+     * sure correct value were specified.
      *
      * @var AbstractReferenceSchema[]
      */
@@ -147,12 +151,14 @@ abstract class AbstractTableSchema extends Component
     protected $dbReferences = array();
 
     /**
-     * Table schema instance used both for reading and writing table schema in database. TableSchema provides set of abstractions
-     * used to unify database architecting across different DBMS.
+     * Table schema instance used both for reading and writing table schema in database. TableSchema
+     * provides set of abstractions used to unify database architecting across different DBMS.
      *
      * @param string $name        Fully clarified table name (prefix should be included).
-     * @param string $tablePrefix Table prefix is not required, but if provided all foreign keys will be created using it.
-     * @param Driver $driver      Driver instance table schema associated with, all commands will be performed using it).
+     * @param string $tablePrefix Table prefix is not required, but if provided all foreign keys
+     *                            will be created using it.
+     * @param Driver $driver      Driver instance table schema associated with, all commands will
+     *                            be performed using it).
      */
     public function __construct($name, $tablePrefix, Driver $driver)
     {
@@ -172,14 +178,14 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Driver specific method to load table columns schemas.  Method will not be called if table not exists. To create and
-     * register column schema use internal table method "registerColumn()".
+     * Driver specific method to load table columns schemas.  Method will not be called if table not
+     * exists. To create and register column schema use internal table method "registerColumn()".
      **/
     abstract protected function loadColumns();
 
     /**
-     * Create and register ColumnSchema by provided column name and driver specific column information. This method will
-     * automatically create ColumnSchema in both "columns" and "dbColumns" properties.
+     * Create and register ColumnSchema by provided column name and driver specific column information.
+     * This method will automatically create ColumnSchema in both "columns" and "dbColumns" properties.
      *
      * @param string $name   Column name.
      * @param mixed  $schema Driver specific column information schema.
@@ -194,14 +200,14 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Driver specific method to load table indexes schema(s). Method will not be called if table not exists. To create
-     * and register index schema use internal table method "registerIndex()".
+     * Driver specific method to load table indexes schema(s). Method will not be called if table
+     * not exists. To create* and register index schema use internal table method "registerIndex()".
      */
     abstract protected function loadIndexes();
 
     /**
-     * Create and register IndexSchema by provided index name and driver specific information. This method will
-     * automatically create IndexSchema in both "indexes" and "dbIndexes" properties.
+     * Create and register IndexSchema by provided index name and driver specific information. This
+     * method will automatically create IndexSchema in both "indexes" and "dbIndexes" properties.
      *
      * @param string $name   Index name.
      * @param mixed  $schema Driver specific index information schema.
@@ -216,14 +222,16 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Driver specific method to load table foreign key schema(s). Method will not be called if table not exists. To create
-     * and register reference (foreign key) schema use internal table method "registerReference()".
+     * Driver specific method to load table foreign key schema(s). Method will not be called if table
+     * not exists. To create and register reference (foreign key) schema use internal table method
+     * "registerReference()".
      */
     abstract protected function loadReferences();
 
     /**
-     * Create and register ReferenceSchema by provided foreign keyF name and driver specific information. This method will
-     * automatically create ReferenceSchema in both "references" and "dbReferences" properties.
+     * Create and register ReferenceSchema by provided foreign keyF name and driver specific information.
+     * This method will automatically create ReferenceSchema in both "references" and "dbReferences"
+     * properties.
      *
      * @param string $name   Foreign key name.
      * @param mixed  $schema Driver specific foreign key information schema.
@@ -279,8 +287,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Array of columns dedicated to primary index. Attention, this methods will ALWAYS return array, even if there is only
-     * one primary key.
+     * Array of columns dedicated to primary index. Attention, this methods will ALWAYS return array,
+     * even if there is only one primary key.
      *
      * @return array
      */
@@ -290,13 +298,13 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Update table primary keys index. Attention, this change is not possible after table is created, additionally, ColumnSchema
-     * will automatically call this method with it's own name on setting "primary" or "bigPrimary" types. Use this method
-     * only in cases where you have to define compound primary index (beware, spiral ORM/ActiveRecord) does not support
-     * compound primary indexes.
+     * Update table primary keys index. Attention, this change is not possible after table is created,
+     * additionally, ColumnSchema will automatically call this method with it's own name on setting
+     * "primary" or "bigPrimary" types. Use this method only in cases where you have to define compound
+     * primary index (beware, spiral ORM/ActiveRecord) does not support compound primary indexes.
      *
-     * Attention, we recommend you do not use this method as different databases will behave differently on primary indexes
-     * like that.
+     * Attention, we recommend you do not use this method as different databases will behave differently
+     * on primary indexes like that.
      *
      * @param array|mixed $columns Array or comma separated set of column names.
      * @return static
@@ -309,8 +317,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Check if table have specified column. Method will check column existence in "columns" attribute, so it's not necessary
-     * that column exists in database table, it can be simply declared earlier.
+     * Check if table have specified column. Method will check column existence in "columns" attribute,
+     * so it's not necessary that column exists in database table, it can be simply declared earlier.
      *
      * @param string $name Column name.
      * @return bool
@@ -321,7 +329,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get all declared columns. This list can be not identical to dbColumns property as it will represent desired table state.
+     * Get all declared columns. This list can be not identical to dbColumns property as it will
+     * represent desired table state.
      *
      * @return AbstractColumnSchema[]
      */
@@ -331,8 +340,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get column from declared schema or create new one. Newly declared columns will be applied to table structure on
-     * save() method call.
+     * Get column from declared schema or create new one. Newly declared columns will be applied to
+     * table structure on save() method call.
      *
      * @param string $column Column name.
      * @return AbstractColumnSchema

@@ -70,12 +70,13 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     protected $updateRule = self::NO_ACTION;
 
     /**
-     * Instance on ConstraintSchema represent table foreign key, it should contain information about referenced table,
-     * column name and delete/update rules.
+     * Instance on ConstraintSchema represent table foreign key, it should contain information about
+     * referenced table, column name and delete/update rules.
      *
      * @param AbstractTableSchema $table
-     * @param  string         $name
-     * @param mixed           $schema Constraint information fetched from database by TableSchema. Format depends on driver type.
+     * @param  string             $name
+     * @param mixed               $schema Constraint information fetched from database by TableSchema.
+     *                                    Format depends on driver type.
      */
     public function __construct(AbstractTableSchema $table, $name, $schema = null)
     {
@@ -88,13 +89,15 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     /**
      * Parse schema information provided by parent TableSchema and populate foreign key values.
      *
-     * @param mixed $schema Foreign key information fetched from database by TableSchema. Format depends on database type.
+     * @param mixed $schema Foreign key information fetched from database by TableSchema. Format
+     *                      depends on database type.
      * @return mixed
      */
     abstract protected function resolveSchema($schema);
 
     /**
-     * Constraint name. Foreign key name can not be changed manually, while table creation name will be generated automatically.
+     * Constraint name. Foreign key name can not be changed manually, while table creation name will
+     * be generated automatically.
      *
      * @param bool $quoted If true constraint name will be quoted accordingly to driver rules.
      * @return string
@@ -102,7 +105,7 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     public function getName($quoted = false)
     {
         $name = $this->name;
-        if (!$this->name)
+        if (!empty($this->name))
         {
             $name = $this->table->getName() . '_foreign_' . $this->column . '_' . uniqid();
         }
@@ -121,8 +124,8 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     }
 
     /**
-     * Set foreign key column name, make sure column type is the same as foreign column one. Some drivers will automatically
-     * create index while registering foreign key.
+     * Set foreign key column name, make sure column type is the same as foreign column one. Some
+     * drivers will automatically create index while registering foreign key.
      *
      * @param string $column In-table column name.
      * @return static
@@ -135,8 +138,8 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     }
 
     /**
-     * Set references table and key names, make sure that local column type and identical to foreign one. Some drivers will
-     * automatically create index while registering foreign key.
+     * Set references table and key names, make sure that local column type and identical to foreign
+     * one. Some drivers will automatically create index while registering foreign key.
      *
      * @param string $table  Foreign table name without prefix.
      * @param string $column Foreign key name (id by default).
@@ -170,7 +173,6 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
         return $this->foreignKey;
     }
 
-
     /**
      * Get delete rule, possible values: NO ACTION, CASCADE, RESTRICT, SET NULL.
      *
@@ -182,7 +184,8 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     }
 
     /**
-     * Set foreign key delete behaviour. Originally was named "deleteRule", but it created bad associations.
+     * Set foreign key delete behaviour. Originally was named "deleteRule", but it created bad
+     * associations.
      *
      * @param string $rule Possible values: NO ACTION, CASCADE, RESTRICT, SET NULL.
      * @return static

@@ -70,14 +70,15 @@ abstract class AbstractIndexSchema extends Component implements SqlFragmentInter
     /**
      * Parse index information provided by parent TableSchema and populate index values.
      *
-     * @param mixed $schema Index information fetched from database by TableSchema. Format depends on driver type.
+     * @param mixed $schema Index information fetched from database by TableSchema. Format depends
+     *                      on driver type.
      * @return mixed
      */
     abstract protected function resolveSchema($schema);
 
     /**
-     * Index name. Name can be changed by calling name($name) method, by default all indexes will get automatically
-     * generated identifier including table name and index columns.
+     * Index name. Name can be changed by calling name($name) method, by default all indexes will
+     * get automatically generated identifier including table name and index columns.
      *
      * @param bool $quoted If true index name will be quoted accordingly to driver rules.
      * @return string
@@ -94,8 +95,9 @@ abstract class AbstractIndexSchema extends Component implements SqlFragmentInter
     }
 
     /**
-     * Give new name to index. Do not use this method to rename indexes, however it can be used to give initial custom
-     * name for newly created indexes. If you really need to rename existed index, use TableSchema->renameIndex() method.
+     * Give new name to index. Do not use this method to rename indexes, however it can be used to
+     * give initial custom name for newly created indexes. If you really need to rename existed index,
+     * use TableSchema->renameIndex() method.
      *
      * @param string $name New index name.
      * @return static
@@ -164,8 +166,8 @@ abstract class AbstractIndexSchema extends Component implements SqlFragmentInter
     }
 
     /**
-     * Drop index from table schema. This method will also force index erasing from database table schema on TableSchema->save()
-     * method call.
+     * Drop index from table schema. This method will also force index erasing from database table
+     * schema on TableSchema->save() method call.
      */
     public function drop()
     {
@@ -184,7 +186,8 @@ abstract class AbstractIndexSchema extends Component implements SqlFragmentInter
     }
 
     /**
-     * Compile index definition statement, such statement can be used in both create and alter index commands.
+     * Compile index definition statement, such statement can be used in both create and alter index
+     * commands.
      *
      * @param bool $includeTable Include table ON statement (not required for inline index creation).
      * @return string
@@ -200,7 +203,10 @@ abstract class AbstractIndexSchema extends Component implements SqlFragmentInter
             $statement[] = 'ON ' . $this->table->getName(true);
         }
 
-        $statement[] = '(' . join(', ', array_map(array($this->table->getDriver(), 'identifier'), $this->columns)) . ')';
+        $statement[] = '(' . join(', ', array_map(
+                array($this->table->getDriver(), 'identifier'),
+                $this->columns
+            )) . ')';
 
         return join(' ', $statement);
     }
