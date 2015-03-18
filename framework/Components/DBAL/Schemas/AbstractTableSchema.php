@@ -11,7 +11,6 @@ namespace Spiral\Components\DBAL\Schemas;
 use Spiral\Components\DBAL\Driver;
 use Spiral\Core\Component;
 use Spiral\Core\Component\LoggerTrait;
-use Spiral\Helpers\StringHelper;
 
 /**
  * @method AbstractColumnSchema primary($column)
@@ -357,8 +356,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Alias for TableSchema->column(). Get column from declared schema or create new one. Newly declared columns will be
-     * applied to table structure on save() method call.
+     * Alias for TableSchema->column(). Get column from declared schema or create new one. Newly
+     * declared columns will be applied to table structure on save() method call.
      *
      * @param string $column
      * @return AbstractColumnSchema
@@ -369,8 +368,9 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Shorter path for declaring column type. Using this method will emulate TableSchema->column(name)->type(arguments)
-     * call. Newly declared columns will be applied to table structure on save() method call.
+     * Shorter path for declaring column type. Using this method will emulate
+     * TableSchema->column(name)->type(arguments) call. Newly declared columns will be applied to
+     * table structure on save() method call.
      *
      * @param string $type      Desired column type.
      * @param array  $arguments Type specific parameters.
@@ -401,8 +401,9 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Check if table has existed or declared index by it's columns, to additionally check index type use hasUnique() method.
-     * Method support both array column list, and dynamic column arguments (comma separated). Columns order does matter!
+     * Check if table has existed or declared index by it's columns, to additionally check index type
+     * use hasUnique() method. Method support both array column list, and dynamic column arguments
+     * (comma separated). Columns order does matter!
      *
      * Example:
      * $table->hasIndex('userID', 'tokenID');
@@ -419,9 +420,9 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Check if table has existed or declared index by it's columns. Method is alias for hasIndex() with additional check
-     * for unique indexes. Method support both array column list, and dynamic column arguments (comma separated). Columns
-     * order does matter!
+     * Check if table has existed or declared index by it's columns. Method is alias for hasIndex()
+     * with additional check for unique indexes. Method support both array column list, and dynamic
+     * column arguments (comma separated). Columns order does matter!
      *
      * Example:
      * $table->hasUnique('userID', 'tokenID');
@@ -443,7 +444,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get all declared indexes. This list can be not identical to dbIndexes property as it will represent desired table state.
+     * Get all declared indexes. This list can be not identical to dbIndexes property as it will
+     * represent desired table state.
      *
      * @return AbstractIndexSchema[]
      */
@@ -453,10 +455,11 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get index from declared schema or create new one. Every index can be identified by set of column(s), such columns
-     * can be provided as comma separated string arguments or array. Newly declared indexes will be applied to table structure
-     * on save() method call. Attention, this methods can return UNIQUE indexes, however it will declared NOT UNIQUE
-     * indexes upon creation. Use separate method "unique for that", or combination index(columns)->unique(false) to reset
+     * Get index from declared schema or create new one. Every index can be identified by set of
+     * column(s), such columns can be provided as comma separated string arguments or array. Newly
+     * declared indexes will be applied to table structure on save() method call. Attention, this
+     * methods can return UNIQUE indexes, however it will declared NOT UNIQUE indexes upon creation.
+     * Use separate method "unique for that", or combination index(columns)->unique(false) to reset
      * index from unique to non unique.
      *
      * Example:
@@ -485,9 +488,10 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get unique index from declared schema or create new one. Every index can be identified by set of column(s), such columns
-     * can be provided as comma separated string arguments or array. Newly declared indexes will be applied to table structure
-     * on save() method call. All indexes fetched by this method will be automatically forces with UNIQUE type.
+     * Get unique index from declared schema or create new one. Every index can be identified by set
+     * of column(s), such columns can be provided as comma separated string arguments or array. Newly
+     * declared indexes will be applied to table structure on save() method call. All indexes fetched
+     * by this method will be automatically forces with UNIQUE type.
      *
      * Method is alias for: TableSchema->index(columns)->unique();
      *
@@ -537,8 +541,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get all declared foreign keys. This list can be not identical to dbReferences property as it will represent desired
-     * table state.
+     * Get all declared foreign keys. This list can be not identical to dbReferences property as it
+     * will represent desired table state.
      *
      * @return AbstractReferenceSchema[]
      */
@@ -548,8 +552,9 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get foreign key reference by column name or create new one. Newly declared references will be applied to table structure
-     * on save() method call. Attention, make sure that both local and referenced columns has same type.
+     * Get foreign key reference by column name or create new one. Newly declared references will be
+     * applied to table structure on save() method call. Attention, make sure that both local and
+     * referenced columns has same type.
      *
      * @param string $column Column name.
      * @return AbstractReferenceSchema|null
@@ -571,8 +576,9 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Rename existed column or change name of planned column. This operation is safe to use on recurring bases as rename
-     * will be skipped if target column not exists. Rename operation will be performed on save() method call.
+     * Rename existed column or change name of planned column. This operation is safe to use on
+     * recurring bases as rename will be skipped if target column not exists or already named so.
+     * Rename operation will be performed on save() method call.
      *
      * @param string $column Existed or planned column name.
      * @param string $name   New column name.
@@ -593,7 +599,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Drop one or multiple columns from table schema, columns will be finally removed on save() method call.
+     * Drop one or multiple columns from table schema, columns will be finally removed on save()
+     * method call.
      *
      * @param string|array $column
      * @return static
@@ -614,8 +621,9 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Rename existed index or change name of planned index. This operation is safe to use on recurring bases as rename
-     * will be skipped if target index not exists. Rename operation will be performed on save() method call.
+     * Rename existed index or change name of planned index. This operation is safe to use on recurring
+     * bases as rename will be skipped if target index not exists. Rename operation will be performed
+     * on save() method call.
      *
      * @param string $index Existed index name.
      * @param string $name  New index name.
@@ -636,8 +644,9 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Drop one or multiple indexes from table schema, indexes will be finally removed on save() method call. This method
-     * removes indexes by name, you can use TableSchema->index(column)->drop() method to remove index defined by column(s).
+     * Drop one or multiple indexes from table schema, indexes will be finally removed on save()
+     * method call. This method removes indexes by name, you can use TableSchema->index(column)->drop()
+     * method to remove index defined by column(s).
      *
      * @param string|array $index
      * @return static
@@ -658,10 +667,11 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Drop one or multiple foreign keys from table schema, constraints will be finally removed on save() method call.
-     * This method removes constraints by name, you can use TableSchema->foreign(column)->drop() method to remove foreign
-     * key defined by column(s). As some DBMS may not allow to define constraint name (SQLite), it's recommended to use
-     * "longer" path for removal.
+     * Drop one or multiple foreign keys from table schema, constraints will be finally removed on
+     * save() method call. This method removes constraints by name, you can use
+     * TableSchema->foreign(column)->drop() method to remove foreign key defined by column(s). As some
+     * DBMS may not allow to define constraint name (SQLite), it's recommended to use "longer" path
+     * for removal.
      *
      * @param string|array $foreign
      * @return static
@@ -688,11 +698,15 @@ abstract class AbstractTableSchema extends Component
      */
     public function hasChanges()
     {
-        return $this->alteredColumns() || $this->alteredIndexes() || $this->alteredReferences() || $this->primaryKeys != $this->dbPrimaryKeys;
+        return $this->alteredColumns()
+        || $this->alteredIndexes()
+        || $this->alteredReferences()
+        || $this->primaryKeys != $this->dbPrimaryKeys;
     }
 
     /**
-     * List of column were altered by table schema manipulations, will include renamed, removed and created columns.
+     * List of column were altered by table schema manipulations, will include renamed, removed and
+     * created columns.
      *
      * @return array|AbstractColumnSchema[]
      */
@@ -726,7 +740,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * List of indexes were altered by table schema manipulations, will include renamed, removed and newly created indexes.
+     * List of indexes were altered by table schema manipulations, will include renamed, removed and
+     * newly created indexes.
      *
      * @return array|AbstractIndexSchema[]
      */
@@ -760,8 +775,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * List of foreign keys constraints were altered by table schema manipulations, will include renamed, removed and newly
-     * added constraints.
+     * List of foreign keys constraints were altered by table schema manipulations, will include
+     * renamed, removed and newly added constraints.
      *
      * @return array|AbstractReferenceSchema[]
      */
@@ -795,19 +810,10 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Check if table has any updates.
-     *
-     * @return bool
-     */
-    public function isAltered()
-    {
-        return $this->alteredColumns() || $this->alteredIndexes() || $this->alteredReferences();
-    }
-
-    /**
-     * Get list of table names should be existed before saving current table schema. This list includes all tables schema
-     * references to. Method can be used to sort multiple table schemas in order they has to be created without violating
-     * constraints. Attention, resulted table list will include table prefixes.
+     * Get list of table names should be existed before saving current table schema. This list includes
+     * all tables schema references to. Method can be used to sort multiple table schemas in order
+     * they has to be created without violating constraints. Attention, resulted table list will
+     * include table prefixes.
      *
      * @return array
      */
@@ -824,8 +830,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Rename table. Operation will be applied immediately. Attention, this method receives new table name without prefix.
-     * Appropriate prefix will be assigned automatically.
+     * Rename table. Operation will be applied immediately. Attention, this method receives new table
+     * name without prefix. Appropriate prefix will be assigned automatically.
      *
      * @param string $name New table name without prefix.
      */
@@ -833,7 +839,7 @@ abstract class AbstractTableSchema extends Component
     {
         if ($this->isExists())
         {
-            $this->driver->statement(StringHelper::interpolate(static::RENAME_STATEMENT, array(
+            $this->driver->statement(interpolate(static::RENAME_STATEMENT, array(
                 'table' => $this->getName(true),
                 'name'  => $this->driver->identifier($this->tablePrefix . $name)
             )));
@@ -855,7 +861,7 @@ abstract class AbstractTableSchema extends Component
             return;
         }
 
-        $this->driver->statement(StringHelper::interpolate("DROP TABLE {table}", array(
+        $this->driver->statement(interpolate("DROP TABLE {table}", array(
             'table' => $this->getName(true)
         )));
 
@@ -865,8 +871,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Apply all table schema changes to database, this methods either create table or update it's columns, indexes and
-     * foreign keys one by one.
+     * Apply all table schema changes to database, this methods either create table or update it's
+     * columns, indexes and foreign keys one by one.
      */
     public function save()
     {
@@ -911,7 +917,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Generate table creation statement and execute it (if required). Method should return create table sql query.
+     * Generate table creation statement and execute it (if required). Method should return create
+     * table sql query.
      *
      * @param bool $execute If true generated statement will be automatically executed.
      * @return string
@@ -931,7 +938,10 @@ abstract class AbstractTableSchema extends Component
         }
 
         //Primary key
-        $inner[] = 'PRIMARY KEY (' . join(', ', array_map(array($this->driver, 'identifier'), $this->primaryKeys)) . ')';
+        $inner[] = 'PRIMARY KEY (' . join(', ', array_map(
+                array($this->driver, 'identifier'),
+                $this->primaryKeys
+            )) . ')';
 
         //Constraints
         foreach ($this->references as $reference)
@@ -972,10 +982,11 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Perform set of atomic operations required to update table schema, such operations will include column adding, removal,
-     * altering; index adding, removing altering; foreign key constraints adding, removing and altering. All operations will
-     * be performed under common transaction, failing one - will rollback others. Attention, rolling back transaction with
-     * schema modifications can be not implemented in some databases.
+     * Perform set of atomic operations required to update table schema, such operations will include
+     * column adding, removal, altering; index adding, removing altering; foreign key constraints
+     * adding, removing and altering. All operations will be performed under common transaction,
+     * failing one - will rollback others. Attention, rolling back transaction with schema modifications
+     * can be not implemented in some databases.
      *
      * @throws SchemaBuilderException
      * @throws \Exception
@@ -984,7 +995,9 @@ abstract class AbstractTableSchema extends Component
     {
         if ($this->primaryKeys != $this->dbPrimaryKeys)
         {
-            throw new SchemaBuilderException("Primary keys can not be changed for already exists table.");
+            throw new SchemaBuilderException(
+                "Primary keys can not be changed for already exists table."
+            );
         }
 
         $this->driver->beginTransaction();
@@ -994,34 +1007,43 @@ abstract class AbstractTableSchema extends Component
             {
                 $dbColumn = isset($this->dbColumns[$name]) ? $this->dbColumns[$name] : null;
 
-                if (!$schema)
+                if (empty($schema))
                 {
-                    $this->logger()->info("Dropping column [{statement}] from table {table}.", array(
-                        'statement' => $dbColumn->sqlStatement(),
-                        'table'     => $this->getName(true)
-                    ));
+                    static::logger()->info(
+                        "Dropping column [{statement}] from table {table}.",
+                        array(
+                            'statement' => $dbColumn->sqlStatement(),
+                            'table'     => $this->getName(true)
+                        )
+                    );
 
                     $this->doColumnDrop($dbColumn);
                     continue;
                 }
 
-                if (!$dbColumn)
+                if (empty($dbColumn))
                 {
-                    $this->logger()->info("Adding column [{statement}] into table {table}.", array(
-                        'statement' => $schema->sqlStatement(),
-                        'table'     => $this->getName(true)
-                    ));
+                    static::logger()->info(
+                        "Adding column [{statement}] into table {table}.",
+                        array(
+                            'statement' => $schema->sqlStatement(),
+                            'table'     => $this->getName(true)
+                        )
+                    );
 
                     $this->doColumnAdd($schema);
                     continue;
                 }
 
                 //Altering
-                $this->logger()->info("Altering column [{statement}] to [{new}] in table {table}.", array(
-                    'statement' => $dbColumn->sqlStatement(),
-                    'new'       => $schema->sqlStatement(),
-                    'table'     => $this->getName(true)
-                ));
+                static::logger()->info(
+                    "Altering column [{statement}] to [{new}] in table {table}.",
+                    array(
+                        'statement' => $dbColumn->sqlStatement(),
+                        'new'       => $schema->sqlStatement(),
+                        'table'     => $this->getName(true)
+                    )
+                );
 
                 $this->doColumnChange($schema, $dbColumn);
             }
@@ -1030,34 +1052,43 @@ abstract class AbstractTableSchema extends Component
             {
                 $dbIndex = isset($this->dbIndexes[$name]) ? $this->dbIndexes[$name] : null;
 
-                if (!$schema)
+                if (empty($schema))
                 {
-                    $this->logger()->info("Dropping index [{statement}] from table {table}.", array(
-                        'statement' => $dbIndex->sqlStatement(true),
-                        'table'     => $this->getName(true)
-                    ));
+                    static::logger()->info(
+                        "Dropping index [{statement}] from table {table}.",
+                        array(
+                            'statement' => $dbIndex->sqlStatement(true),
+                            'table'     => $this->getName(true)
+                        )
+                    );
 
                     $this->doIndexDrop($dbIndex);
                     continue;
                 }
 
-                if (!$dbIndex)
+                if (empty($dbIndex))
                 {
-                    $this->logger()->info("Adding index [{statement}] into table {table}.", array(
-                        'statement' => $schema->sqlStatement(false),
-                        'table'     => $this->getName(true)
-                    ));
+                    static::logger()->info(
+                        "Adding index [{statement}] into table {table}.",
+                        array(
+                            'statement' => $schema->sqlStatement(false),
+                            'table'     => $this->getName(true)
+                        )
+                    );
 
                     $this->doIndexAdd($schema);
                     continue;
                 }
 
                 //Altering
-                $this->logger()->info("Altering index [{statement}] to [{new}] in table {table}.", array(
-                    'statement' => $dbIndex->sqlStatement(false),
-                    'new'       => $schema->sqlStatement(false),
-                    'table'     => $this->getName(true)
-                ));
+                static::logger()->info(
+                    "Altering index [{statement}] to [{new}] in table {table}.",
+                    array(
+                        'statement' => $dbIndex->sqlStatement(false),
+                        'new'       => $schema->sqlStatement(false),
+                        'table'     => $this->getName(true)
+                    )
+                );
 
                 $this->doIndexChange($schema, $dbIndex);
             }
@@ -1066,34 +1097,43 @@ abstract class AbstractTableSchema extends Component
             {
                 $dbForeign = isset($this->dbReferences[$name]) ? $this->dbReferences[$name] : null;
 
-                if (!$schema)
+                if (empty($schema))
                 {
-                    $this->logger()->info("Dropping foreign key [{statement}] in table {table}.", array(
-                        'statement' => $dbForeign->sqlStatement(),
-                        'table'     => $this->getName(true)
-                    ));
+                    static::logger()->info(
+                        "Dropping foreign key [{statement}] in table {table}.",
+                        array(
+                            'statement' => $dbForeign->sqlStatement(),
+                            'table'     => $this->getName(true)
+                        )
+                    );
 
                     $this->doForeignDrop($this->dbReferences[$name]);
                     continue;
                 }
 
-                if (!$dbForeign)
+                if (empty($dbForeign))
                 {
-                    $this->logger()->info("Adding foreign key [{statement}] into table {table}.", array(
-                        'statement' => $schema->sqlStatement(),
-                        'table'     => $this->getName(true)
-                    ));
+                    static::logger()->info(
+                        "Adding foreign key [{statement}] into table {table}.",
+                        array(
+                            'statement' => $schema->sqlStatement(),
+                            'table'     => $this->getName(true)
+                        )
+                    );
 
                     $this->doForeignAdd($schema);
                     continue;
                 }
 
                 //Altering
-                $this->logger()->info("Altering foreign key [{statement}] to [{new}] in table {table}.", array(
-                    'statement' => $dbForeign->sqlStatement(),
-                    'new'       => $schema->sqlStatement(),
-                    'table'     => $this->getName(true)
-                ));
+                static::logger()->info(
+                    "Altering foreign key [{statement}] to [{new}] in table {table}.",
+                    array(
+                        'statement' => $dbForeign->sqlStatement(),
+                        'new'       => $schema->sqlStatement(),
+                        'table'     => $this->getName(true)
+                    )
+                );
 
                 $this->doForeignChange($schema, $dbForeign);
             }
@@ -1114,7 +1154,8 @@ abstract class AbstractTableSchema extends Component
      */
     protected function doColumnAdd(AbstractColumnSchema $column)
     {
-        $this->driver->statement("ALTER TABLE {$this->getName(true)} ADD COLUMN {$column->sqlStatement()}");
+        $this->driver->statement("ALTER TABLE {$this->getName(true)} "
+            . "ADD COLUMN {$column->sqlStatement()}");
     }
 
     /**
@@ -1135,7 +1176,8 @@ abstract class AbstractTableSchema extends Component
             $this->doForeignDrop($this->foreign($column->getName()));
         }
 
-        $this->driver->statement("ALTER TABLE {$this->getName(true)} DROP COLUMN {$column->getName(true)}");
+        $this->driver->statement("ALTER TABLE {$this->getName(true)} "
+            . "DROP COLUMN {$column->getName(true)}");
     }
 
     /**
@@ -1195,7 +1237,8 @@ abstract class AbstractTableSchema extends Component
      */
     protected function doForeignDrop(AbstractReferenceSchema $foreign)
     {
-        $this->driver->statement("ALTER TABLE {$this->getName(true)} DROP CONSTRAINT {$foreign->getName(true)}");
+        $this->driver->statement("ALTER TABLE {$this->getName(true)} "
+            . "DROP CONSTRAINT {$foreign->getName(true)}");
     }
 
     /**
@@ -1205,7 +1248,8 @@ abstract class AbstractTableSchema extends Component
      */
     protected function doConstraintDrop($constraint)
     {
-        $this->driver->statement("ALTER TABLE {$this->getName(true)} DROP CONSTRAINT " . $this->driver->identifier($constraint));
+        $this->driver->statement("ALTER TABLE {$this->getName(true)} "
+            . "DROP CONSTRAINT " . $this->driver->identifier($constraint));
     }
 
     /**
