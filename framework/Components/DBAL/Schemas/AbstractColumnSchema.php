@@ -46,10 +46,10 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     use Component\LoggerTrait;
 
     /**
-     * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision
-     * scale, unsigned flag and etc. Every declared type can be assigned using ->type() method, however to pass custom
-     * type parameters, methods has to be declared in database specific ColumnSchema. Type identifier not necessary
-     * should be real type name.
+     * Direct mapping from base abstract type to database internal type with specified data options,
+     * such as size, precision scale, unsigned flag and etc. Every declared type can be assigned
+     * using ->type() method, however to pass custom type parameters, methods has to be declared in
+     * database specific ColumnSchema. Type identifier not necessary should be real type name.
      *
      * Example:
      * integer => array('type' => 'int', 'size' => 1),
@@ -69,7 +69,8 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
         //Logical types
         'boolean'     => null,
 
-        //Integer types (size can always be changed with size method), longInteger has method alias bigInteger
+        //Integer types (size can always be changed with size method), longInteger has method alias
+        //bigInteger
         'integer'     => null,
         'tinyInteger' => null,
         'bigInteger'  => null,
@@ -105,8 +106,9 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     );
 
     /**
-     * Driver specific reverse mapping, this mapping should link database type to one of standard internal types. Not
-     * resolved types will be marked as "unknown" which will map them as php type string.
+     * Driver specific reverse mapping, this mapping should link database type to one of standard
+     * internal types. Not resolved types will be marked as "unknown" which will map them as php type
+     * string.
      *
      * @invisible
      * @var array
@@ -137,9 +139,10 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     );
 
     /**
-     * Internal php mapping from abstract types to internal php type. Result of this conversion will be used to process default
-     * values, declare attribute types and filters in ActiveRecords and etc. String type is not listed there as string
-     * will be used as default type if no other matching were found.
+     * Internal php mapping from abstract types to internal php type. Result of this conversion will
+     * be used to process default values, declare attribute types and filters in ActiveRecords and etc.
+     * String type is not listed there as string will be used as default type if no other matching
+     * were found.
      *
      * @invisible
      * @var array
@@ -166,25 +169,26 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     protected $table = null;
 
     /**
-     * Database (driver) specific column type, this value will stay as it is until direct change by one of type methods.
-     * In other words, there is no "forced" type mapping which allows to declare custom columns without touching ones
-     * specified directly in table.
+     * Database (driver) specific column type, this value will stay as it is until direct change by
+     * one of type methods. In other words, there is no "forced" type mapping which allows to declare
+     * custom columns without touching ones specified directly in table.
      *
      * @var string
      */
     protected $type = '';
 
     /**
-     * Defines if column value can be set to null. Attention, this flag is false by default, which means that you can't
-     * alter tables with existed data without providing default value or setting this flag to true.
+     * Defines if column value can be set to null. Attention, this flag is false by default, which
+     * means that you can't alter tables with existed data without providing default value or setting
+     * this flag to true.
      *
      * @var bool
      */
     protected $nullable = false;
 
     /**
-     * Default column value, can not be applied to some datatypes (for example to primary keys), should follow type size
-     * and other options.
+     * Default column value, can not be applied to some datatypes (for example to primary keys), should
+     * follow type size and other options.
      *
      * @var mixed
      */
@@ -212,7 +216,8 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     protected $scale = 0;
 
     /**
-     * Used only for enum types and declared possible enum values. In some DBMS enum type will be emulated as column constrain.
+     * Used only for enum types and declared possible enum values. In some DBMS enum type will be
+     * emulated as column constrain.
      *
      * @var array
      */
@@ -222,20 +227,23 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
      * ColumnSchema
      *
      * @param AbstractTableSchema $table  Parent TableSchema.
-     * @param string          $name   Column name.
-     * @param mixed           $schema Column information fetched from database by TableSchema. Format depends on database type.
+     * @param string              $name   Column name.
+     * @param mixed               $schema Column information fetched from database by TableSchema.
+     *                                    Format depends on database type.
      */
     public function __construct(AbstractTableSchema $table, $name, $schema = null)
     {
         $this->name = $name;
         $this->table = $table;
+
         $schema && $this->resolveSchema($schema);
     }
 
     /**
      * Parse column information provided by parent TableSchema and populate column values.
      *
-     * @param mixed $schema Column information fetched from database by TableSchema. Format depends on driver type.
+     * @param mixed $schema Column information fetched from database by TableSchema. Format depends
+     *                      on driver type.
      * @return mixed
      */
     abstract protected function resolveSchema($schema);
@@ -252,8 +260,8 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Give new name to column. Do not use this method to rename existed columns, use TableSchema->renameColumn(). This
-     * is internal method used to rename column inside schema.
+     * Give new name to column. Do not use this method to rename existed columns, use
+     * TableSchema->renameColumn(). This is internal method used to rename column inside schema.
      *
      * @param string $name New column name.
      * @return static
@@ -306,13 +314,14 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Associate one of abstract schema types with correct database type representation. Some types, like primary, enum,
-     * string and etc will require it's own function with additional parameters. Attention, type changing is not always
-     * possible and strongly depends on database type, even if this is possible in some databases (MySQL, SQLite and PostgresSQL)
-     * try avoiding changing column types without really strong reason.
+     * Associate one of abstract schema types with correct database type representation. Some types,
+     * like primary, enum, string and etc will require it's own function with additional parameters.
+     * Attention, type changing is not always possible and strongly depends on database type, even if
+     * this is possible in some databases (MySQL, SQLite and PostgresSQL) try avoiding changing column
+     * types without really strong reason.
      *
-     * Attention, changing type of existed columns in some databases has a lot of restrictions like cross type conversions
-     * and etc. Try do not change column type without a reason.
+     * Attention, changing type of existed columns in some databases has a lot of restrictions like
+     * cross type conversions and etc. Try do not change column type without a reason.
      *
      * @param string $type Abstract or virtual type declared in mapping.
      * @return static
@@ -347,9 +356,12 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Get abstract type name, this method will map one of database types to limited set of ColumnSchema abstract types.
-     * Attention, this method is not used for schema comparasions (database type used), it's only for decorative purposes.
-     * If schema can't resolve type - "unknown" will be returned (by default mapped to php type string).
+     * Get abstract type name, this method will map one of database types to limited set of ColumnSchema
+     * abstract types.
+     *
+     * Attention, this method is not used for schema comparasions (database type used), it's only for
+     * decorative purposes. If schema can't resolve type - "unknown" will be returned (by default
+     * mapped to php type string).
      *
      * @return string
      */
@@ -395,8 +407,13 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Get one of internal php types to represent column values (including default value): integer (int), boolean (bool),
-     * string, float. Mapping will be performed using phpMapping attribute values.
+     * Get one of internal php types to represent column values (including default value):
+     * integer (int),
+     * boolean (bool),
+     * string,
+     * float.
+     *
+     * Mapping will be performed using phpMapping attribute values.
      *
      * @return string
      */
@@ -481,8 +498,8 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Specify column default value. You can use magic constant Database::TIMESTAMP_NOW to specify that value should gain
-     * current time on row creation, this can be applied only to timestamp fields.
+     * Specify column default value. You can use magic constant Database::TIMESTAMP_NOW to specify
+     * that value should gain current time on row creation, this can be applied only to timestamp fields.
      *
      * @param mixed $value
      * @return static
@@ -490,7 +507,10 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     public function defaultValue($value)
     {
         $this->defaultValue = $value;
-        if ($this->abstractType() == 'timestamp' && strtolower($value) == strtolower(Database::TIMESTAMP_NOW))
+        if (
+            $this->abstractType() == 'timestamp'
+            && strtolower($value) == strtolower(Database::TIMESTAMP_NOW)
+        )
         {
             $this->defaultValue = $this->table->getDriver()->timestampNow();
         }
@@ -499,8 +519,9 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Mark column as primary key (sequence for table), attention, in most of DBMS primary key is integer with auto-increment
-     * flag. If you need compound indexes, use TableSchema->setPrimaryKeys(...) method.
+     * Mark column as primary key (sequence for table), attention, in most of DBMS primary key is
+     * integer with auto-increment flag. If you need compound indexes, use
+     * TableSchema->setPrimaryKeys(...) method.
      *
      * @return static
      */
@@ -512,8 +533,9 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Mark column as primary key (big integer) (sequence for table), attention, in most of DBMS primary key is integer
-     * with auto-increment flag. If you need compound indexes, use TableSchema->setPrimaryKeys(...) method.
+     * Mark column as primary key (big integer) (sequence for table), attention, in most of DBMS
+     * primary key is integer with auto-increment flag. If you need compound indexes, use
+     * TableSchema->setPrimaryKeys(...) method.
      *
      * @return static
      */
@@ -525,9 +547,9 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Give column enum type with specified set of allowed values, values can be provided as array or as multiple comma
-     * separate parameters. Attention, not all databases support enum as type, in this cases enum will be emulated via
-     * column constrain. Enum values are always string type.
+     * Give column enum type with specified set of allowed values, values can be provided as array
+     * or as multiple comma separate parameters. Attention, not all databases support enum as type,
+     * in this cases enum will be emulated via column constrain. Enum values are always string type.
      *
      * Examples:
      * $table->status->enum(array('active', 'disabled'));
@@ -555,12 +577,13 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Define string with limited max length type. Not all databases can support it, in this case type will be emulated
-     * using constraint. Attention, maximum allowed string length is 255 characters, if you need longer strings use text
+     * Define string with limited max length type. Not all databases can support it, in this case
+     * type will be emulated using constraint.
+     * Attention, maximum allowed string length is 255 characters, if you need longer strings use text
      * types.
      *
-     * This is perfect type to store email addresses as it big enough to store valid address and can be covered with
-     * unique index.
+     * This is perfect type to store email addresses as it big enough to store valid address and can
+     * be covered with unique index.
      *
      * @link http://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
      * @param int $size Max string length. Maximum value is 255.
@@ -572,7 +595,9 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
 
         if ($size > 255)
         {
-            throw new \InvalidArgumentException("String size can't exceed 255 characters. Use text instead.");
+            throw new \InvalidArgumentException(
+                "String size can't exceed 255 characters. Use text instead."
+            );
         }
 
         if ($size < 0)
@@ -640,9 +665,9 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Create foreign key constrain linked to current column and defined by foreign table and key names. Attention,
-     * make sure that both columns (local and foreign) has same type (including unsigned flag)
-     *
+     * Create foreign key constrain linked to current column and defined by foreign table and key
+     * names. Attention, make sure that both columns (local and foreign) has same type (including
+     * unsigned flag)
      *
      * @param string $table  Foreign table name.
      * @param string $column Foreign column name (id by default).
@@ -653,15 +678,17 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     {
         if ($this->phpType() != 'int')
         {
-            throw new SchemaBuilderException("Only numeric types can be defined with foreign key constraint.");
+            throw new SchemaBuilderException(
+                "Only numeric types can be defined with foreign key constraint."
+            );
         }
 
         return $this->table->foreign($this->name)->references($table, $column);
     }
 
     /**
-     * Drop column from table schema. This method will also force column erasing from database table schema on TableSchema->save()
-     * method call.
+     * Drop column from table schema. This method will also force column erasing from database table
+     * schema on TableSchema->save() method call.
      */
     public function drop()
     {
@@ -698,7 +725,7 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
                 }
             }
 
-            $this->logger()->debug("Column '{name}' has changed attributes: {difference}.", array(
+            static::logger()->debug("Column '{name}' has changed attributes: {difference}.", array(
                 'name'       => $this->name,
                 'difference' => join(', ', $difference)
             ));
@@ -755,7 +782,7 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
             $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);
         }
 
-        if ($enumValues)
+        if (!empty($enumValues))
         {
             return '(' . join(', ', $enumValues) . ')';
         }
@@ -779,11 +806,11 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
                 $statement[] = $enumDefinition;
             }
         }
-        elseif ($this->precision)
+        elseif (!empty($this->precision))
         {
             $statement[] = "({$this->precision}, {$this->scale})";
         }
-        elseif ($this->size)
+        elseif (!empty($this->size))
         {
             $statement[] = "({$this->size})";
         }
@@ -799,8 +826,8 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     }
 
     /**
-     * Get all associated column constraints, required to perform correct column drop. Foreign keys should not be included
-     * in there.
+     * Get all associated column constraints, required to perform correct column drop. Foreign keys
+     * should not be included in there.
      *
      * @return array
      */
@@ -835,7 +862,7 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
             )
         );
 
-        if ($this->size)
+        if (!empty($this->size))
         {
             $column['size'] = $this->size;
         }
