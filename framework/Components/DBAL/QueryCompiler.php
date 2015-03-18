@@ -154,10 +154,13 @@ class QueryCompiler extends Component
 
         if (!$rowsets)
         {
-            throw new DBALException("Unable to build insert statement, at least one value set must be provided.");
+            throw new DBALException(
+                "Unable to build insert statement, at least one value set must be provided."
+            );
         }
 
-        return "INSERT INTO {$this->quote($table, true)} ({$this->columns($columns)}) VALUES " . join(', ', $rowsets);
+        return "INSERT INTO {$this->quote($table, true)} ({$this->columns($columns)}) "
+        . "VALUES " . join(', ', $rowsets);
     }
 
     /**
@@ -210,7 +213,8 @@ class QueryCompiler extends Component
         $groupBy = $groupBy ? $this->groupBy($groupBy) . ' ' : '';
 
         //Initial statement have predictable order
-        $statement = rtrim("SELECT {$distinct}{$columns} FROM {$from} {$joins}{$where}{$groupBy}{$having}") . ' ';
+        $statement = rtrim("SELECT {$distinct}{$columns} "
+                . "FROM {$from} {$joins}{$where}{$groupBy}{$having}") . ' ';
 
         if (!$unions && $orderBy)
         {
