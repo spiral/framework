@@ -13,8 +13,8 @@ use Spiral\Components\DBAL\DBALException;
 trait JoinTrait
 {
     /**
-     * Array of joined tables with specified JOIN type (LEFT, RIGHT, INNER) and ON conditions. Joined table can define
-     * alias which will be handled in columns and were conditions.
+     * Array of joined tables with specified JOIN type (LEFT, RIGHT, INNER) and ON conditions.
+     * Joined table can define alias which will be handled in columns and were conditions.
      *
      * @var array
      */
@@ -28,7 +28,8 @@ trait JoinTrait
     protected $currentJoin = null;
 
     /**
-     * Register new INNER table join, all future on() method calls will associate conditions to this join.
+     * Register new INNER table join, all future on() method calls will associate conditions to this
+     * join.
      *
      * Examples:
      * $select->join('info', 'userID', 'users.id')->columns('info.balance');
@@ -48,7 +49,8 @@ trait JoinTrait
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
-     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by and aggregations.
+     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by
+     * and aggregations.
      *
      * @link http://www.w3schools.com/sql/sql_join_inner.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
@@ -63,7 +65,8 @@ trait JoinTrait
     }
 
     /**
-     * Register new INNER table join, all future on() method calls will associate conditions to this join.
+     * Register new INNER table join, all future on() method calls will associate conditions to this
+     * join.
      *
      * Examples:
      * $select->join('info', 'userID', 'users.id')->columns('info.balance');
@@ -83,7 +86,8 @@ trait JoinTrait
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
-     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by and aggregations.
+     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by
+     * and aggregations.
      *
      * @link http://www.w3schools.com/sql/sql_join_inner.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
@@ -98,7 +102,8 @@ trait JoinTrait
     }
 
     /**
-     * Register new RIGHT table join, all future on() method calls will associate conditions to this join.
+     * Register new RIGHT table join, all future on() method calls will associate conditions to this
+     * join.
      *
      * Examples:
      * $select->join('info', 'userID', 'users.id')->columns('info.balance');
@@ -118,7 +123,8 @@ trait JoinTrait
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
-     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by and aggregations.
+     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by
+     * and aggregations.
      *
      * @link http://www.w3schools.com/sql/sql_join_right.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
@@ -133,7 +139,8 @@ trait JoinTrait
     }
 
     /**
-     * Register new LEFT table join, all future on() method calls will associate conditions to this join.
+     * Register new LEFT table join, all future on() method calls will associate conditions to this
+     * join.
      *
      * Examples:
      * $select->join('info', 'userID', 'users.id')->columns('info.balance');
@@ -153,7 +160,8 @@ trait JoinTrait
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
-     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by and aggregations.
+     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by
+     * and aggregations.
      *
      * @link http://www.w3schools.com/sql/sql_join_left.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
@@ -168,9 +176,9 @@ trait JoinTrait
     }
 
     /**
-     * Add on condition to last registered join. On condition will be specified with AND boolean joiner. Method supports
-     * nested queries and array based (mongo like) where conditions. Syntax is identical to where methods except no arguments
-     * should be identifiers and not values.
+     * Add on condition to last registered join. On condition will be specified with AND boolean
+     * joiner. Method supports nested queries and array based (mongo like) where conditions. Syntax
+     * is identical to where methods except no arguments should be identifiers and not values.
      *
      * Examples:
      * $select->join('info')->on('userID', 'users.id')->columns('info.balance');
@@ -206,9 +214,10 @@ trait JoinTrait
     }
 
     /**
-     * Add on condition to last registered join. On condition will be specified with AND boolean joiner. Method supports
-     * nested queries and array based (mongo like) where conditions. Syntax is identical to where methods except no arguments
-     * should be identifiers and not values. Alias for on() method.
+     * Add on condition to last registered join. On condition will be specified with AND boolean
+     * joiner. Method supports nested queries and array based (mongo like) where conditions. Syntax
+     * is identical to where methods except no arguments should be identifiers and not values. Alias
+     * for on() method.
      *
      * Examples:
      * $select->join('info')->andOn('userID', 'users.id')->columns('info.balance');
@@ -244,23 +253,45 @@ trait JoinTrait
     }
 
     /**
-     * Add on condition to last registered join. On condition will be specified with OR boolean joiner. Method supports
-     * nested queries and array based (mongo like) where conditions. Syntax is identical to where methods except no arguments
-     * should be identifiers and not values.
+     * Add on condition to last registered join. On condition will be specified with OR boolean
+     * joiner. Method supports nested queries and array based (mongo like) where conditions. Syntax
+     * is identical to where methods except no arguments should be identifiers and not values.
      *
      * Examples:
-     * $select->join('info')->on('i.userID', 'users.masterID')->orOn('userID', 'users.id')->columns('info.balance');
-     * $select->join('info')->on('i.userID', 'users.masterID')->orOn('userID', '=', 'users.id')->columns('info.balance');
-     * $select->join('info')->on('i.userID', 'users.masterID')->orOn(['userID' => 'users.id'])->columns('info.balance');
+     * $select->join('info')
+     *         ->on('i.userID', 'users.masterID')
+     *          ->orOn('userID', 'users.id')
+     *          ->columns('info.balance');
+     *
+     * $select->join('info')
+     *         ->on('i.userID', 'users.masterID')
+     *         ->orOn('userID', '=', 'users.id')
+     *         ->columns('info.balance');
+     *
+     * $select->join('info')
+     *         ->on('i.userID', 'users.masterID')
+     *         ->orOn(['userID' => 'users.id'])
+     *         ->columns('info.balance');
      *
      * $select->join('info')->on('i.userID', 'users.masterID')->orOn(function($select) {
      *      $select->on('userID', 'users.id')->orOn('userID', 'users.masterID');
      * })->columns('info.balance');
      *
      * Aliases can be also used:
-     * $select->join('info as i')->on('i.userID', 'users.masterID')->orOn('i.userID', 'users.id')->columns('i.balance');
-     * $select->join('info as i')->on('i.userID', 'users.masterID')->orOn('i.userID', '=', 'users.id')->columns('i.balance');
-     * $select->join('info as i')->on('i.userID', 'users.masterID')->orOn(['i.userID' => 'users.id'])->columns('i.balance');
+     * $select->join('info as i')
+     *         ->on('i.userID', 'users.masterID')
+     *         ->orOn('i.userID', 'users.id')
+     *         ->columns('i.balance');
+     *
+     * $select->join('info as i')
+     *         ->on('i.userID', 'users.masterID')
+     *         ->orOn('i.userID', '=', 'users.id')
+     *         ->columns('i.balance');
+     *
+     * $select->join('info as i')
+     *         ->on('i.userID', 'users.masterID')
+     *         ->orOn(['i.userID' => 'users.id'])
+     *         ->columns('i.balance');
      *
      * $select->join('info as i')->on('i.userID', 'users.masterID')->orOn(function($select) {
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
@@ -282,8 +313,9 @@ trait JoinTrait
     }
 
     /**
-     * Helper methods used to processed user input in where methods to internal where token, method support all different
-     * combinations, closures and nested queries. Additionally i can be used not only for where but for having and join tokens.
+     * Helper methods used to processed user input in where methods to internal where token, method
+     * support all different combinations, closures and nested queries. Additionally i can be used
+     * not only for where but for having and join tokens.
      *
      * @param string $joiner          Boolean joiner (AND|OR).
      * @param array  $parameters      Set of parameters collected from where functions.

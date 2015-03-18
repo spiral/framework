@@ -15,18 +15,18 @@ use Spiral\Components\DBAL\QueryBuilder;
 trait WhereTrait
 {
     /**
-     * WhereTrait organize where construction using token structure which includes token joiner (OR, AND) and token context,
-     * this set of tokens can be used to represent almost any query string and can be compiled by QueryGrammar->compileWhere()
-     * method. Even if token context will contain original value, this value will be replaced with placeholder in generated
-     * query.
+     * WhereTrait organize where construction using token structure which includes token joiner (OR,
+     * AND) and token context, this set of tokens can be used to represent almost any query string
+     * and can be compiled by QueryGrammar->compileWhere() method. Even if token context will contain
+     * original value, this value will be replaced with placeholder in generated query.
      *
      * @var array
      */
     protected $whereTokens = array();
 
     /**
-     * Registering query parameters. Array parameters will be converted to Parameter object to correctly resolve
-     * placeholders.
+     * Registering query parameters. Array parameters will be converted to Parameter object to
+     * correctly resolve placeholders.
      *
      * @param mixed $parameter
      * @return mixed
@@ -34,9 +34,9 @@ trait WhereTrait
     abstract protected function addParameter($parameter);
 
     /**
-     * Add where condition to statement. Where condition will be specified with AND boolean joiner. Method supports nested
-     * queries and array based (mongo like) where conditions. Every provided parameter will be automatically escaped in
-     * generated query.
+     * Add where condition to statement. Where condition will be specified with AND boolean joiner.
+     * Method supports nested queries and array based (mongo like) where conditions. Every provided
+     * parameter will be automatically escaped in generated query.
      *
      * Examples:
      * 1) Simple token/nested query or expression
@@ -56,7 +56,7 @@ trait WhereTrait
      * 4) Between and not between statements
      * $select->where('column', 'between', 1, 10);
      * $select->where('column', 'not between', 1, 10);
-     * $select->where('column', 'not between', new SQLFragment('MIN(price)'), new SQLFragment('MAX(price)'));
+     * $select->where('column', 'not between', new SQLFragment('MIN(price)'), $maximum);
      *
      * 5) Closure with nested conditions
      * $this->where(function(WhereTrait $select){
@@ -89,7 +89,8 @@ trait WhereTrait
      *      ]
      * ]);
      *
-     * You can read more about complex where statements in official documentation or look mongo queries examples.
+     * You can read more about complex where statements in official documentation or look mongo
+     * queries examples.
      *
      * @see parseWhere()
      * @see whereToken()
@@ -108,9 +109,9 @@ trait WhereTrait
     }
 
     /**
-     * Add where condition to statement. Where condition will be specified with AND boolean joiner. Method supports nested
-     * queries and array based (mongo like) where conditions. Every provided parameter will be automatically escaped in
-     * generated query. Alias for where.
+     * Add where condition to statement. Where condition will be specified with AND boolean joiner.
+     * Method supports nested queries and array based (mongo like) where conditions. Every provided
+     * parameter will be automatically escaped in generated query. Alias for where.
      *
      * Examples:
      * 1) Simple token/nested query or expression
@@ -130,7 +131,7 @@ trait WhereTrait
      * 4) Between and not between statements
      * $select->andWhere('column', 'between', 1, 10);
      * $select->andWhere('column', 'not between', 1, 10);
-     * $select->andWhere('column', 'not between', new SQLFragment('MIN(price)'), new SQLFragment('MAX(price)'));
+     * $select->andWhere('column', 'not between', new SQLFragment('MIN(price)'), $maximum);
      *
      * 5) Closure with nested conditions
      * $this->andWhere(function(WhereTrait $select){
@@ -161,7 +162,8 @@ trait WhereTrait
      *      ]
      * ]);
      *
-     * You can read more about complex where statements in official documentation or look mongo queries examples.
+     * You can read more about complex where statements in official documentation or look mongo
+     * queries examples.
      *
      * @see parseWhere()
      * @see whereToken()
@@ -180,9 +182,9 @@ trait WhereTrait
     }
 
     /**
-     * Add where condition to statement. Where condition will be specified with OR boolean joiner. Method supports nested
-     * queries and array based (mongo like) where conditions. Every provided parameter will be automatically escaped in
-     * generated query.
+     * Add where condition to statement. Where condition will be specified with OR boolean joiner.
+     * Method supports nested queries and array based (mongo like) where conditions. Every provided
+     * parameter will be automatically escaped in generated query.
      *
      * Examples:
      * 1) Simple token/nested query or expression
@@ -202,7 +204,7 @@ trait WhereTrait
      * 4) Between and not between statements
      * $select->orWhere('column', 'between', 1, 10);
      * $select->orWhere('column', 'not between', 1, 10);
-     * $select->orWhere('column', 'not between', new SQLFragment('MIN(price)'), new SQLFragment('MAX(price)'));
+     * $select->orWhere('column', 'not between', new SQLFragment('MIN(price)'), $maximum);
      *
      * 5) Closure with nested conditions
      * $this->orWhere(function(WhereTrait $select){
@@ -233,7 +235,8 @@ trait WhereTrait
      *      ]
      * ]);
      *
-     * You can read more about complex where statements in official documentation or look mongo queries examples.
+     * You can read more about complex where statements in official documentation or look mongo
+     * queries examples.
      *
      * @see parseWhere()
      * @see whereToken()
@@ -252,13 +255,15 @@ trait WhereTrait
     }
 
     /**
-     * Helper methods used to processed user input in where methods to internal where token, method support all different
-     * combinations, closures and nested queries. Additionally i can be used not only for where but for having and join tokens.
+     * Helper methods used to processed user input in where methods to internal where token, method
+     * support all different combinations, closures and nested queries. Additionally i can be used
+     * not only for where but for having and join tokens.
      *
      * @param string $joiner          Boolean joiner (AND|OR).
      * @param array  $parameters      Set of parameters collected from where functions.
      * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $catchParameters If true every found parameter will passed thought addParameter() method.
+     * @param bool   $catchParameters If true every found parameter will passed thought addParameter()
+     *                                method.
      * @return array
      * @throws DBALException
      */
@@ -300,18 +305,28 @@ trait WhereTrait
                 break;
             case 2:
                 //Simple condition
-                $tokens[] = array($joiner, array($identifier, '=', $catchParameters ? $this->addParameter($variousA) : $variousA));
+                $tokens[] = array($joiner, array(
+                    $identifier,
+                    '=',
+                    $catchParameters ? $this->addParameter($variousA) : $variousA
+                ));
                 break;
             case 3:
                 //Operator is specified
-                $tokens[] = array($joiner, array($identifier, strtoupper($variousA), $catchParameters ? $this->addParameter($variousB) : $variousB));
+                $tokens[] = array($joiner, array(
+                    $identifier,
+                    strtoupper($variousA),
+                    $catchParameters ? $this->addParameter($variousB) : $variousB
+                ));
                 break;
             case 4:
                 //BETWEEN or NOT BETWEEN
                 $variousA = strtoupper($variousA);
                 if (!in_array($variousA, array('BETWEEN', 'NOT BETWEEN')))
                 {
-                    throw new DBALException('Only "BETWEEN" or "NOT BETWEEN" can define second comparasions value.');
+                    throw new DBALException(
+                        'Only "BETWEEN" or "NOT BETWEEN" can define second comparasions value.'
+                    );
                 }
 
                 $tokens[] = array($joiner, array(
@@ -326,8 +341,8 @@ trait WhereTrait
     }
 
     /**
-     * Helper method used to convert complex where statement (specified by array, mongo like) to set of where tokens.
-     * Method support simple expressions, nested, or and and groups and etc.
+     * Helper method used to convert complex where statement (specified by array, mongo like) to set
+     * of where tokens. Method support simple expressions, nested, or and and groups and etc.
      *
      * Examples:
      * $select->where(["column" => 1]);
@@ -361,7 +376,8 @@ trait WhereTrait
      * @param array  $where           Array of where conditions.
      * @param string $grouping        Parent grouping token (OR, AND)
      * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $catchParameters If true every found parameter will passed thought addParameter() method.
+     * @param bool   $catchParameters If true every found parameter will passed thought addParameter()
+     *                                method.
      * @return array
      * @throws DBALException
      */
@@ -370,7 +386,10 @@ trait WhereTrait
         foreach ($where as $name => $value)
         {
             //Grouping identifier (@OR, @AND), Mongo like style
-            if (strtoupper($name) == DatabaseManager::TOKEN_AND || strtoupper($name) == DatabaseManager::TOKEN_OR)
+            if (
+                strtoupper($name) == DatabaseManager::TOKEN_AND
+                || strtoupper($name) == DatabaseManager::TOKEN_OR
+            )
             {
                 $tokens[] = array($grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR', '(');
 
@@ -411,7 +430,9 @@ trait WhereTrait
                 {
                     if (!is_array($subValue) || count($subValue) != 2)
                     {
-                        throw new DBALException("Exactly 2 array values required for between statement.");
+                        throw new DBALException(
+                            "Exactly 2 array values required for between statement."
+                        );
                     }
 
                     //One complex operation
@@ -425,7 +446,11 @@ trait WhereTrait
                 else
                 {
                     //One complex operation
-                    $tokens[] = array($innerJoiner, array($name, $key, $catchParameters ? $this->addParameter($subValue) : $subValue));
+                    $tokens[] = array($innerJoiner, array(
+                        $name,
+                        $key,
+                        $catchParameters ? $this->addParameter($subValue) : $subValue
+                    ));
                 }
             }
 

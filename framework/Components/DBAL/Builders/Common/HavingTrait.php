@@ -13,8 +13,8 @@ use Spiral\Components\DBAL\DBALException;
 trait HavingTrait
 {
     /**
-     * Array of having tokens declaring where conditions for HAVING statement. Structure and format of this tokens are
-     * identical to whereTokens in WhereTrait.
+     * Array of having tokens declaring where conditions for HAVING statement. Structure and format
+     * of this tokens are identical to whereTokens in WhereTrait.
      *
      * @see WhereTrait
      * @var array
@@ -22,9 +22,24 @@ trait HavingTrait
     protected $havingTokens = array();
 
     /**
-     * Add having condition to statement. Having condition will be specified with AND boolean joiner. Method supports nested
-     * queries and array based (mongo like) conditions. Every provided parameter will be automatically escaped in
-     * generated query. Syntax is identical to where methods.
+     * Helper methods used to processed user input in where methods to internal where token, method
+     * support all different combinations, closures and nested queries. Additionally i can be used
+     * not only for where but for having and join tokens.
+     *
+     * @param string $joiner          Boolean joiner (AND|OR).
+     * @param array  $parameters      Set of parameters collected from where functions.
+     * @param array  $tokens          Array to aggregate compiled tokens.
+     * @param bool   $catchParameters If true every found parameter will passed thought addParameter()
+     *                                method.
+     * @return array
+     * @throws DBALException
+     */
+    abstract protected function whereToken($joiner, array $parameters, &$tokens = array(), $catchParameters = true);
+
+    /**
+     * Add having condition to statement. Having condition will be specified with AND boolean joiner.
+     * Method supports nested queries and array based (mongo like) conditions. Every provided parameter
+     * will be automatically escaped in generated query. Syntax is identical to where methods.
      *
      * Examples:
      * 1) Simple token/nested query or expression
@@ -44,7 +59,7 @@ trait HavingTrait
      * 4) Between and not between statements
      * $select->having('column', 'between', 1, 10);
      * $select->having('column', 'not between', 1, 10);
-     * $select->having('column', 'not between', new SQLFragment('MIN(price)'), new SQLFragment('MAX(price)'));
+     * $select->having('column', 'not between', new SQLFragment('MIN(price)'), $maximum);
      *
      * 5) Closure with nested conditions
      * $this->having(function(WhereTrait $select){
@@ -77,7 +92,8 @@ trait HavingTrait
      *      ]
      * ]);
      *
-     * You can read more about complex where statements in official documentation or look mongo queries examples.
+     * You can read more about complex where statements in official documentation or look mongo
+     * queries examples.
      *
      * @see WhereTrait
      * @see parseWhere()
@@ -97,9 +113,10 @@ trait HavingTrait
     }
 
     /**
-     * Add having condition to statement. Having condition will be specified with AND boolean joiner. Method supports nested
-     * queries and array based (mongo like) conditions. Every provided parameter will be automatically escaped in
-     * generated query. Alias for having. Syntax is identical to where methods.
+     * Add having condition to statement. Having condition will be specified with AND boolean joiner.
+     * Method supports nested queries and array based (mongo like) conditions. Every provided parameter
+     * will be automatically escaped in generated query. Alias for having. Syntax is identical to where
+     * methods.
      *
      * Examples:
      * 1) Simple token/nested query or expression
@@ -119,7 +136,7 @@ trait HavingTrait
      * 4) Between and not between statements
      * $select->andHaving('column', 'between', 1, 10);
      * $select->andHaving('column', 'not between', 1, 10);
-     * $select->andHaving('column', 'not between', new SQLFragment('MIN(price)'), new SQLFragment('MAX(price)'));
+     * $select->andHaving('column', 'not between', new SQLFragment('MIN(price)'), $maximum);
      *
      * 5) Closure with nested conditions
      * $this->andHaving(function(WhereTrait $select){
@@ -150,7 +167,8 @@ trait HavingTrait
      *      ]
      * ]);
      *
-     * You can read more about complex where statements in official documentation or look mongo queries examples.
+     * You can read more about complex where statements in official documentation or look mongo
+     * queries examples.
      *
      * @see WhereTrait
      * @see parseWhere()
@@ -170,9 +188,9 @@ trait HavingTrait
     }
 
     /**
-     * Add having condition to statement. Having condition will be specified with OR boolean joiner. Method supports nested
-     * queries and array based (mongo like) conditions. Every provided parameter will be automatically escaped in
-     * generated query. Syntax is identical to where methods.
+     * Add having condition to statement. Having condition will be specified with OR boolean joiner.
+     * Method supports nested queries and array based (mongo like) conditions. Every provided parameter
+     * will be automatically escaped in generated query. Syntax is identical to where methods.
      *
      * Examples:
      * 1) Simple token/nested query or expression
@@ -192,7 +210,7 @@ trait HavingTrait
      * 4) Between and not between statements
      * $select->orHaving('column', 'between', 1, 10);
      * $select->orHaving('column', 'not between', 1, 10);
-     * $select->orHaving('column', 'not between', new SQLFragment('MIN(price)'), new SQLFragment('MAX(price)'));
+     * $select->orHaving('column', 'not between', new SQLFragment('MIN(price)'), $maximum);
      *
      * 5) Closure with nested conditions
      * $this->orHaving(function(WhereTrait $select){
@@ -223,7 +241,8 @@ trait HavingTrait
      *      ]
      * ]);
      *
-     * You can read more about complex where statements in official documentation or look mongo queries examples.
+     * You can read more about complex where statements in official documentation or look mongo
+     * queries examples.
      *
      * @see WhereTrait
      * @see parseWhere()
