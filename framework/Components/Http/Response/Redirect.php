@@ -12,7 +12,7 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Components\Http\Response;
 
-class RedirectResponse extends Response
+class Redirect extends Response
 {
     /**
      * Redirect response.

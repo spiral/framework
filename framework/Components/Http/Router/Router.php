@@ -232,10 +232,10 @@ class Router extends Component implements MiddlewareInterface
      *
      * @param string $route      Route name.
      * @param array  $parameters Route parameters including controller name, action and etc.
-     * @return Response\RedirectResponse
+     * @return Response\Redirect
      */
     public function redirect($route, array $parameters = array())
     {
-        return new Response\RedirectResponse($this->url($route, $parameters));
+        return new Response\Redirect($this->url($route, $parameters));
     }
 }
