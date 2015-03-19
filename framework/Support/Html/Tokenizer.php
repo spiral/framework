@@ -221,7 +221,8 @@ class Tokenizer extends Component
     }
 
     /**
-     * Open and parse file using tokenizer. The same output will be returned as the readSource() method.
+     * Open and parse file using tokenizer. The same output will be returned as the readSource()
+     * method.
      *
      * @param string $filename HTML file.
      * @return array
@@ -266,7 +267,9 @@ class Tokenizer extends Component
         $content = $isolator->isolatePHP($content);
 
         //Parsing arguments, due they already checked for open-close quotas we can use regular expression
-        $attribute = '/(?P<name>[a-z0-9_\-\.\:]+)[ \n\t\r]*(?:=[ \n\t\r]*(?P<value>[a-z0-9\-]+|\'[^\']+\'|\"[^\"]+\"))?/si';
+        $attribute = '/(?P<name>[a-z0-9_\-\.\:]+)[ \n\t\r]*(?:=[ \n\t\r]*'
+            . '(?P<value>[a-z0-9\-]+|\'[^\']+\'|\"[^\"]+\"))?/si';
+
         preg_match_all($attribute, $content, $attributes);
 
         foreach ($attributes['value'] as $index => $value)
