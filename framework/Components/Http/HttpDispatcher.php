@@ -62,11 +62,11 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
 
     /**
      * Set of middleware layers built to handle incoming Request and return Response. Middleware
-     * can be represented as class, string (DI) or array (callable method). HttpDispatcher layer
-     * middlewares will be called in start() method. This set of middleware(s) used to filter
+     * can be represented as class, string (DI), closure or array (callable method). HttpDispatcher 
+     * layer middlewares will be called in start() method. This set of middleware(s) used to filter
      * http request and response on application layer.
      *
-     * @var array|MiddlewareInterface[]
+     * @var array|MiddlewareInterface[]|callable[]
      */
     protected $middlewares = array();
 
@@ -81,7 +81,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
      * Example (in bootstrap):
      * $this->http->add('/forum', 'Vendor\Forum\Forum');
      *
-     * P.S. Router is Middleware automatically assigned to base path of application.
+     * P.S. Router middleware automatically assigned to base path of application.
      *
      * @var array|MiddlewareInterface[]
      */
@@ -382,7 +382,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
 
         if ($defaultHeaders)
         {
-            //We can force some header values if not replacement specified
+            //We can force some header values if no replacement specified
             foreach ($defaultHeaders as $header => $value)
             {
                 header("{$header}: {$value}");
