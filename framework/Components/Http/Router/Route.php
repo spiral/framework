@@ -497,7 +497,7 @@ class Route extends Component implements RouteInterface
     }
 
     /**
-     * Execute controller action chain resolved based on provided string target.
+     * Execute controller action resolved via provided string target.
      *
      * @param ServerRequestInterface $request
      * @param Core                   $core
