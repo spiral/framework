@@ -11,7 +11,7 @@ Spiral was originally built in 2009 for internal projects and has been continuou
 
 At the moment, I'm still transitioning some of the old codebase into the new architecture.
 
-Base application with sample modules, views and routing: https://github.com/spiral-php/application
+Base application with modules, views and routing: https://github.com/spiral-php/application
 
 What is ready
 =================
