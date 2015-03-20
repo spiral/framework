@@ -50,7 +50,7 @@ Mongo databases and odm documents are moved without any problems.
 Views
 -------------
 View component and all processors moved without any problems. Html Composer (templater) works without
-any problems. However, tests should be updated.
+any problems.
 
 Storage
 -------------
