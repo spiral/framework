@@ -15,15 +15,16 @@ use Spiral\Core\Core;
 abstract class Exporter extends Component
 {
     /**
-     * Language id to be exported, should be valid language id and have associated section in i18n configuration.
+     * Language id to be exported, should be valid language id and have associated section in i18n
+     * configuration.
      *
      * @var string
      */
     protected $language = '';
 
     /**
-     * Language bundles to be exported, bundle define list of associations between primary and currently selected language.
-     * Bundles can be also used for "internal translating" (en => en).
+     * Language bundles to be exported, bundle define list of associations between primary and currently
+     * selected language. Bundles can be also used for "internal translating" (en => en).
      *
      * @var array
      */
@@ -75,7 +76,9 @@ abstract class Exporter extends Component
     {
         if (!isset($this->i18nConfig['languages'][$language]))
         {
-            throw new LocalizationException("Unable to export language '{$language}', no presets found.");
+            throw new LocalizationException(
+                "Unable to export language '{$language}', no presets found."
+            );
         }
 
         $this->language = $language;
@@ -109,12 +112,16 @@ abstract class Exporter extends Component
     {
         $bundles = array();
 
-        $files = $this->file->getFiles($this->i18nConfig['languages'][$language]['dataFolder'], array(substr(Core::RUNTIME, 1)));
+        $files = $this->file->getFiles(
+            $this->i18nConfig['languages'][$language]['dataFolder'],
+            array(substr(Core::RUNTIME, 1))
+        );
+
         foreach ($files as $filename)
         {
             $bundle = substr(basename($filename), 0, -4);
 
-            if ($prefix && stripos($bundle, $prefix) !== 0)
+            if (!empty($prefix) && stripos($bundle, $prefix) !== 0)
             {
                 continue;
             }

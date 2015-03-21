@@ -15,16 +15,16 @@ use Spiral\Core\Core;
 abstract class Importer extends Component
 {
     /**
-     * Language can be set automatically during parsing import file or data, or manually before importing bundles. Should
-     * be valid language id and have presets section in i18n configuration.
+     * Language can be set automatically during parsing import file or data, or manually before
+     * importing bundles. Should be valid language id and have presets section in i18n configuration.
      *
      * @var string
      */
     protected $language = '';
 
     /**
-     * Collected language bundles, bundle define list of associations between primary and currently selected language.
-     * Bundles can be also used for "internal translating" (en => en).
+     * Collected language bundles, bundle define list of associations between primary and currently
+     * selected language. Bundles can be also used for "internal translating" (en => en).
      *
      * @var array
      */
@@ -73,8 +73,8 @@ abstract class Importer extends Component
     }
 
     /**
-     * Detected or manually defined language. Should be valid language id andhave presets section in i18n configuration.
-     * All bundles will be imported to that language directory.
+     * Detected or manually defined language. Should be valid language id andhave presets section in
+     * i18n configuration. All bundles will be imported to that language directory.
      *
      * @return string
      */
@@ -84,8 +84,8 @@ abstract class Importer extends Component
     }
 
     /**
-     * Manually force import language id. Should be valid language id and have presets section in i18n configuration. All
-     * bundles will be imported to that language directory.
+     * Manually force import language id. Should be valid language id and have presets section in i18n
+     * configuration. All bundles will be imported to that language directory.
      *
      * @param string $language Valid language id.
      * @return string
@@ -96,8 +96,9 @@ abstract class Importer extends Component
     }
 
     /**
-     * Method should read language bundles from specified filename and format them in an appropriate way. Language has to
-     * be automatically detected during parsing, however it can be redefined manually after.
+     * Method should read language bundles from specified filename and format them in an appropriate
+     * way. Language has to be automatically detected during parsing, however it can be redefined
+     * manually after.
      *
      * @param string $filename
      * @return array
@@ -115,7 +116,9 @@ abstract class Importer extends Component
     {
         if (!$this->file->exists($filename))
         {
-            throw new LocalizationException("Unable import i18n bundles from '{$filename}', file not exists.");
+            throw new LocalizationException(
+                "Unable import i18n bundles from '{$filename}', file not exists."
+            );
         }
 
         $this->parseData($filename);
@@ -124,27 +127,32 @@ abstract class Importer extends Component
     }
 
     /**
-     * Upload parsed data to target language bundles, language will be detected during parsing or can be specified manually
-     * after (import destination will be changed accordingly). Import will replace already existed bundles with or without
-     * merging.
+     * Upload parsed data to target language bundles, language will be detected during parsing or can
+     * be specified manually after (import destination will be changed accordingly). Import will replace
+     * already existed bundles with or without merging.
      *
-     * @param bool $mergeBundles If true data from existed bundle will merged with imported one, if false imported will
-     *                           completely replace old values.
+     * @param bool $mergeBundles If true data from existed bundle will merged with imported one, if
+     *                           false imported will completely replace old values.
      * @throws LocalizationException
      */
     public function importBundles($mergeBundles = true)
     {
-        if (!$this->language)
+        if (empty($this->language))
         {
-            throw new LocalizationException("Unable to provide bundles import, no language detected.");
+            throw new LocalizationException(
+                "Unable to provide bundles import, no language detected."
+            );
         }
 
         if (!isset($this->i18nConfig['languages'][$this->language]))
         {
-            throw new LocalizationException("Unable to import language '{$this->language}', no presets found.");
+            throw new LocalizationException(
+                "Unable to import language '{$this->language}', no presets found."
+            );
         }
 
         $bundlesFolder = $this->i18nConfig['languages'][$this->language]['dataFolder'];
+
         foreach ($this->bundles as $bundle => $data)
         {
             if ($mergeBundles && $oldData = $this->core->loadData($bundle, $bundlesFolder))

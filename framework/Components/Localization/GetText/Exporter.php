@@ -25,10 +25,11 @@ class Exporter extends LocalicationExporter
     }
 
     /**
-     * Export collected bundles data to specified file using format described by exporter. Language bundles will be exported
-     * using PO format (same format used for GetText), due spiral uses localization bundles every translation line will be
-     * prepended with comment contains bundle id, while editing PO file, comments should be left untouched otherwise corrupted
-     * bundles will be created. You can use any existed program to edit PO file.
+     * Export collected bundles data to specified file using format described by exporter. Language
+     * bundles will be exported using PO format (same format used for GetText), due spiral uses
+     * localization bundles every translation line will be prepended with comment contains bundle id,
+     * while editing PO file, comments should be left untouched otherwise corrupted bundles will be
+     * created. You can use any existed program to edit PO file.
      *
      * @link http://en.wikipedia.org/wiki/Gettext
      * @param string $filename
@@ -37,7 +38,7 @@ class Exporter extends LocalicationExporter
      */
     public function exportBundles($filename)
     {
-        if (!$this->language)
+        if (empty($this->language))
         {
             throw new LocalizationException("No language specified to be exported.");
         }
@@ -47,7 +48,12 @@ class Exporter extends LocalicationExporter
          */
         $pluralForms = $this->i18nConfig['languages'][$this->language]['pluralizer']['countForms'];
 
-        $formula = preg_replace('/\$form\[([0-9])\]/', '\1', $this->i18nConfig['languages'][$this->language]['pluralizer']['formula']);
+        $formula = preg_replace(
+            '/\$form\[([0-9])\]/',
+            '\1',
+            $this->i18nConfig['languages'][$this->language]['pluralizer']['formula']
+        );
+
         $pluralFormula = str_replace('$number', 'n', $formula);
 
         /**
@@ -67,10 +73,10 @@ class Exporter extends LocalicationExporter
         $output[] = '';
 
         /**
-         * This is not default gettext syntax, but as spiral supports multiple namespaces for identifiers and gettext not.
-         * There is simple hack: if identifier duplicated additional space symbol added at the end of it the string
-         * (4 dups => 3 spaces), translator can see comment to understand where he can find this line. Extra spaces will
-         * be removed during import.
+         * This is not default gettext syntax, but as spiral supports multiple namespaces for identifiers
+         * and gettext not. There is simple hack: if identifier duplicated additional space symbol
+         * added at the end of it the string (4 dups => 3 spaces), translator can see comment to
+         * understand where he can find this line. Extra spaces will be removed during import.
          */
         foreach ($this->bundles as $bundle => $data)
         {

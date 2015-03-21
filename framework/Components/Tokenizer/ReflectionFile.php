@@ -345,8 +345,8 @@ class ReflectionFile extends Component
     }
 
     /**
-     * Handle function declaration (function creation), function name will be added to function array under it's global
-     * name including parent namespace. Class methods will not be treated as functions.
+     * Handle function declaration (function creation), function name will be added to function array
+     * under it's global name including parent namespace. Class methods will not be treated as functions.
      *
      * @param int $firstTID
      */

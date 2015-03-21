@@ -13,11 +13,12 @@ use Spiral\Components\Localization\Importer as LocalizationImporter;
 class Importer extends LocalizationImporter
 {
     /**
-     * Method should read language bundles from specified filename and format them in an appropriate way. Language has
-     * to be automatically detected during parsing, however it can be redefined manually after.
+     * Method should read language bundles from specified filename and format them in an appropriate
+     * way. Language has to be automatically detected during parsing, however it can be redefined
+     * manually after.
      *
-     * GetText PO file will be parsed for language headers, message lines and etc. Spiral expect bundle id's located in
-     * message comments.
+     * GetText PO file will be parsed for language headers, message lines and etc. Spiral expect
+     * bundle id's located in message comments.
      *
      * @param string $filename
      * @return array
@@ -62,8 +63,10 @@ class Importer extends LocalizationImporter
             {
                 if (!empty($token) && !empty($bundle))
                 {
-                    //Previously readed line
-                    $this->bundles[$bundle][$this->i18n->normalize($token)] = is_array($buffer) ? $buffer : str_replace('\n', "\n", $buffer);
+                    //Previously read line
+                    $this->bundles[$bundle][$this->i18n->normalize($token)] = is_array($buffer)
+                        ? $buffer
+                        : str_replace('\n', "\n", $buffer);
 
                     $token = '';
                     $plurals = false;
@@ -116,7 +119,9 @@ class Importer extends LocalizationImporter
         //Last line
         if (!empty($bundle) && !empty($token))
         {
-            $this->bundles[$bundle][$this->i18n->normalize($token)] = is_array($buffer) ? $buffer : str_replace('\n', "\n", $buffer);
+            $this->bundles[$bundle][$this->i18n->normalize($token)] = is_array($buffer)
+                ? $buffer
+                : str_replace('\n', "\n", $buffer);
         }
     }
 

@@ -217,6 +217,7 @@ class I18nManager extends Component implements VariableProviderInterface
     public function get($bundle, $string)
     {
         $this->loadBundle($bundle);
+
         if (!isset($this->bundles[$bundle][$string = $this->normalize($string)]))
         {
             $this->bundles[$bundle][$string] = func_get_arg(1);

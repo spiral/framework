@@ -41,7 +41,6 @@ trait LocalizableTrait
      */
     public static function i18nMessage($string)
     {
-
         if (
             substr($string, 0, 2) === I18nManager::I18N_PREFIX
             && substr($string, -2) === I18nManager::I18N_POSTFIX
