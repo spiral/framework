@@ -8,7 +8,7 @@
  */
 namespace Spiral\Core;
 
-class Component
+abstract class Component
 {
     /**
      * Declares to IoC that component instance should be treated as singleton.

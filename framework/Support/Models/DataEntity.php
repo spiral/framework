@@ -158,9 +158,10 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     protected $setters = array();
 
     /**
-     * Accessors. By using accessor some model value can be mocked up with class "representative" like DateTime for timestamp
-     * field. Accessors will be used only on direct field access and will be "serialized" in getFields(), publicFields() methods.
-     * Do not use accessors in combination with setters/getters, this is standalone way to manipulate value.
+     * Accessors. By using accessor some model value can be mocked up with class "representative"
+     * like DateTime for timestamp field. Accessors will be used only on direct field access and will
+     * be "serialized" in getFields(), publicFields() methods. Do not use accessors in combination
+     * with setters/getters, this is standalone way to manipulate value.
      *
      * @var array
      */
@@ -178,7 +179,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Get mutator for specified field. Setters, getters and accessors can be retrieved using this method.
+     * Get mutator for specified field. Setters, getters and accessors can be retrieved using this
+     * method.
      *
      * @param string $field   Field name.
      * @param string $mutator Mutator type (setters, getters, accessors).
@@ -220,8 +222,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Get one specific field value and apply getter filter to it. You can disable getter filter by providing second
-     * argument.
+     * Get one specific field value and apply getter filter to it. You can disable getter filter by
+     * providing second argument.
      *
      * @param string $name    Field name.
      * @param bool   $filter  If false no filter will be applied.
@@ -250,7 +252,9 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
             }
             catch (\ErrorException $exception)
             {
-                $this->logger()->warning("Failed to apply filter to '{name}' field.", compact('name'));
+                self::logger()->warning(
+                    "Failed to apply filter to '{name}' field.", compact('name')
+                );
 
                 return null;
             }
