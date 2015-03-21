@@ -45,8 +45,8 @@ class IptcData extends Component
     const LENGTH     = 2;
 
     /**
-     * Known IPTC fields associations input and output conversions (most popular fields included). Format: data id, repeatable,
-     * max item length.
+     * Known IPTC fields associations input and output conversions (most popular fields included).
+     * Format: data id, repeatable, max item length.
      *
      * @invisible
      * @link http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf
@@ -78,8 +78,8 @@ class IptcData extends Component
     );
 
     /**
-     * Currently open image filename, all IPTC data will be written to this file, make sure image wasn't moved at moment
-     * of writing IPTC.
+     * Currently open image filename, all IPTC data will be written to this file, make sure image
+     * wasn't moved at moment of writing IPTC.
      *
      * @var string
      */
@@ -122,9 +122,10 @@ class IptcData extends Component
     protected $file = null;
 
     /**
-     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily encoded and decoded by
-     * most popular photo editing software. Usually contains software identified, picture title, keywords and etc.
-     * For more complex image metadata manipulations consider using: http://www.sno.phy.queensu.ca/~phil/exiftool/
+     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily
+     * encoded and decoded by most popular photo editing software. Usually contains software identified,
+     * picture title, keywords and etc. For more complex image metadata manipulations consider
+     * using: http://www.sno.phy.queensu.ca/~phil/exiftool/
      *
      * @link http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf
      * @param string      $filename  Linked image filename.
@@ -230,8 +231,8 @@ class IptcData extends Component
     }
 
     /**
-     * Set IPTC field value, value should match field type (repeatable or not) and be shorter than max length. ImageIPTC
-     * will automatically ensure this both parameters (length and type).
+     * Set IPTC field value, value should match field type (repeatable or not) and be shorter than
+     * max length. ImageIPTC will automatically ensure this both parameters (length and type).
      *
      * @param string $name IPTC field name.
      * @param mixed  $value
@@ -279,8 +280,8 @@ class IptcData extends Component
     }
 
     /**
-     * Set IPTC field value, value should match field type (repeatable or not) and be shorter than max length. ImageIPTC
-     * will automatically ensure this both parameters (length and type).
+     * Set IPTC field value, value should match field type (repeatable or not) and be shorter than
+     * max length. ImageIPTC will automatically ensure this both parameters (length and type).
      *
      * @param string $name IPTC field name.
      * @param mixed  $value
