@@ -14,36 +14,46 @@ use Spiral\Core\Container\ContainerException;
 class Container extends Component
 {
     /**
-     * IoC bindings. Binding can include interface - class aliases, closures, singleton closures and already constructed
-     * components stored as instances. Binding can be added using Core::bind() or Core::bindSingleton() methods, every
-     * existed binding can be defined or redefined at any moment of application flow.
+     * IoC bindings. Binding can include interface - class aliases, closures, singleton closures
+     * and already constructed components stored as instances. Binding can be added using
+     * Container::bind() or Container::bindSingleton() methods, every existed binding can be defined
+     * or redefined at any moment of application flow.
      *
-     * Instance or class name can be also binded to alias, this technique used for all spiral core components and can simplify
-     * development. Spiral additionally provides way to create DI without binding, it can be done by using real class or
-     * model name, or via ControllableInjection interface.
+     * Instance or class name can be also binded to alias, this technique used for all spiral core
+     * components and can simplify development. Spiral additionally provides way to create DI without
+     * binding, it can be done by using real class or model name, or via ControllableInjection interface.
      *
      * @var array
      */
     protected static $bindings = array();
 
     /**
-     * Resolve class instance using IoC container. Class can be requested using it's own name, alias binding,
-     * singleton binding, closure function, closure function with singleton resolution, or via InjectableInterface
-     * interface. To add binding use Core::bind() or Core::bindSingleton()
+     * Resolve class instance using IoC container. Class can be requested using it's own name, alias
+     * binding, singleton binding, closure function, closure function with singleton resolution, or
+     * via InjectableInterface interface. To add binding use Container::bind() or Container::bindSingleton()
      * methods.
      *
      * This method widely used inside spiral core to resolve adapters, handlers and databases.
      *
-     * @param string              $alias            Class/interface name or binded alias should be resolved to instance.
-     * @param array               $parameters       Parameters to be mapped to class constructor or forwarded to closure.
+     * @param string              $alias            Class/interface name or binded alias should be
+     *                                              resolved to instance.
+     * @param array               $parameters       Parameters to be mapped to class constructor or
+     *                                              forwarded to closure.
      * @param ReflectionParameter $contextParameter Parameter were used to declare DI.
-     * @param bool                $ignoreII         If true, core will ignore InjectableInterface and resolve class as usual.
+     * @param bool                $ignoreII         If true, core will ignore InjectableInterface and
+     *                                              resolve class as usual.
      * @param string              $requester        Class name of injection requester.
      * @return mixed|null|object
      * @throws CoreException
      * @throws ContainerException
      */
-    public static function get($alias, $parameters = array(), ReflectionParameter $contextParameter = null, $ignoreII = false, $requester = null)
+    public static function get(
+        $alias,
+        $parameters = array(),
+        ReflectionParameter $contextParameter = null,
+        $ignoreII = false,
+        $requester = null
+    )
     {
         if (!isset(self::$bindings[$alias]))
         {
@@ -115,17 +125,22 @@ class Container extends Component
     }
 
     /**
-     * Helper method to resolve constructor or function arguments, build required DI using IoC container and mix with
-     * pre-defined set of named parameters.
+     * Helper method to resolve constructor or function arguments, build required DI using IoC
+     * container and mix with pre-defined set of named parameters.
      *
      * @param \ReflectionMethod $reflection    Method or constructor should be filled with DI.
      * @param array             $parameters    Outside parameters used in priority to DI. Named list.
-     * @param bool              $userArguments If true no exception will be raised while some argument (not DI) can not
-     *                                         be resolved. This parameter used to pass error to controller.
+     * @param bool              $userArguments If true no exception will be raised while some argument
+     *                                         (not DI) can not be resolved. This parameter used to
+     *                                         pass error to controller.
      * @return array
      * @throws ContainerException
      */
-    public static function resolveArguments(\ReflectionMethod $reflection, array $parameters = array(), $userArguments = false)
+    public static function resolveArguments(
+        \ReflectionMethod $reflection,
+        array $parameters = array(),
+        $userArguments = false
+    )
     {
         try
         {
@@ -174,7 +189,9 @@ class Container extends Component
 
                 if (!$userArguments)
                 {
-                    throw new CoreException("Unable to resolve '{$parameter->getName()}' argument in '{$reflection->class}'.");
+                    throw new CoreException(
+                        "Unable to resolve '{$parameter->getName()}' argument in '{$reflection->class}'."
+                    );
                 }
             }
         }
@@ -187,9 +204,10 @@ class Container extends Component
     }
 
     /**
-     * IoC binding can create a link between specified alias and method to resolve that alias, resolver can be either class
-     * instance (that instance will be resolved as singleton), callback or string alias. String aliases can be used to
-     * rewrite core classes with custom realization, or specify what interface child should be used.
+     * IoC binding can create a link between specified alias and method to resolve that alias, resolver
+     * can be either class instance (that instance will be resolved as singleton), callback or string
+     * alias. String aliases can be used to rewrite core classes with custom realization, or specify
+     * what interface child should be used.
      *
      * @param string                 $alias  Alias where singleton will be attached to.
      * @param string|object|callable Closure to resolve class instance, class instance or class name.
@@ -207,8 +225,8 @@ class Container extends Component
     }
 
     /**
-     * Bind closure or class name which will be performed only once, after first call class instance will be attached to
-     * specified alias and will be returned directly without future invoking.
+     * Bind closure or class name which will be performed only once, after first call class instance
+     * will be attached to specified alias and will be returned directly without future invoking.
      *
      * @param string   $alias    Alias where singleton will be attached to.
      * @param callable $resolver Closure to resolve class instance.
@@ -219,8 +237,8 @@ class Container extends Component
     }
 
     /**
-     * Check if desired alias or class name binded in IoC container. You can bind new alias using Core::bind(),
-     * Core::bindSingleton().
+     * Check if desired alias or class name binded in IoC container. You can bind new alias using
+     * Container::bind(), Container::bindSingleton().
      *
      * @param string $alias
      * @return bool
