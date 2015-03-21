@@ -8,7 +8,7 @@
  */
 namespace Spiral\Core\Container;
 
-use Spiral\Core\Core;
+use Spiral\Core\Container;
 
 trait MethodTrait
 {
@@ -24,6 +24,6 @@ trait MethodTrait
         $reflection = new \ReflectionMethod($this, $method);
         $reflection->setAccessible(true);
 
-        return $reflection->invokeArgs($this, Core::getInstance()->resolveArguments($reflection, $parameters));
+        return $reflection->invokeArgs($this, Container::resolveArguments($reflection, $parameters));
     }
 }
