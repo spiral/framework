@@ -14,8 +14,8 @@ use Spiral\Support\Html\Tokenizer;
 class Node extends Component
 {
     /**
-     * Tagging behaviour types. HTML node templater supports 3 basic behaviours: extend, import, and block definition.
-     * By combining these behaviours, you can build almost any template.
+     * Tagging behaviour types. HTML node templater supports 3 basic behaviours: extend, import, and
+     * block definition. By combining these behaviours, you can build almost any template.
      */
     const TYPE_BLOCK   = 20;
     const TYPE_EXTEND  = 21;
@@ -27,21 +27,23 @@ class Node extends Component
     const CONTEXT_BLOCK = 'context';
 
     /**
-     * Following expression will export nodes that were not used (skipped) as a set of attributes, used for extending
+     * Following expression will export nodes that were not used (skipped) as a set of attributes,
+     * used for extending
      * default HTML tags.
      */
     protected $attributes = '/ node:attributes(=[\'"](?:include:(?P<include>[a-z_\-,]+))?\|?(?:exclude:(?P<exclude>[a-z_\-,]+))?[\'"])?/i';
 
     /**
-     * Content and behaviour supervisor will load and any tag definitions will be passed through it. Generally, Supervisor
-     * is used to perform high level template management.
+     * Content and behaviour supervisor will load and any tag definitions will be passed through it.
+     * Generally, Supervisor is used to perform high level template management.
      *
      * @var SupervisorInterface
      */
     static public $supervisor = null;
 
     /**
-     * Node name is used for rendering and reference purposes. The top node in the chain must be named "root".
+     * Node name is used for rendering and reference purposes. The top node in the chain must be named
+     * "root".
      *
      * @var string
      */
@@ -76,9 +78,9 @@ class Node extends Component
     public $parent = null;
 
     /**
-     * This will create a new HTML Node object. Every node should be named for reference purposes. Call your (top) node
-     * "root". If you provide a list of previously parsed HTML tokens, this can speed up the processing if there are multiple,
-     * identical imports.
+     * This will create a new HTML Node object. Every node should be named for reference purposes.
+     * Call your (top) node "root". If you provide a list of previously parsed HTML tokens, this can
+     * speed up the processing if there are multiple, identical imports.
      *
      * @param string       $name    Node name. Use "root" for top node.
      * @param string|array $source  Node source or array of parsed tokens.
@@ -89,26 +91,33 @@ class Node extends Component
         $this->name = $name;
         $this->options = $options;
 
-        if ($source)
+        if (!empty($source))
         {
-            is_array($source) ? $this->parseTokens($source) : $this->parse($source);
+            if (is_array($source))
+            {
+                $this->parseTokens($source);
+            }
+            else
+            {
+                $this->parseSource($source);
+            }
         }
 
-        if ($this->parent)
+        if (!empty($this->parent))
         {
-            $this->extendParentNode($this->parent);
+            $this->extendParent($this->parent);
             $this->parent = null;
         }
     }
 
     /**
-     * Block nested level.
+     * Block nesting level.
      *
      * @return int
      */
     public function getLevel()
     {
-        if (!$this->parent)
+        if (empty($this->parent))
         {
             return 0;
         }
@@ -117,8 +126,8 @@ class Node extends Component
     }
 
     /**
-     * By setting the parser supervisor, all load and tag definitions will be passed through it. Generally, supervisor is
-     * used to perform high level template management.
+     * By setting the parser supervisor, all load and tag definitions will be passed through it.
+     * Generally, supervisor is used to perform high level template management.
      *
      * @param SupervisorInterface $supervisor
      */
@@ -132,7 +141,7 @@ class Node extends Component
      *
      * @param string $source
      */
-    protected function parse($source)
+    protected function parseSource($source)
     {
         $this->parseTokens(Tokenizer::parseSource($source));
     }
@@ -327,7 +336,7 @@ class Node extends Component
 
                 if ($smartToken->contextNode->parent)
                 {
-                    $smartToken->contextNode->extendParentNode($smartToken->contextNode->parent);
+                    $smartToken->contextNode->extendParent($smartToken->contextNode->parent);
                 }
 
                 break;
@@ -389,7 +398,7 @@ class Node extends Component
      *
      * @param Node $parent
      */
-    public function extendParentNode(Node $parent)
+    public function extendParent(Node $parent)
     {
         foreach ($this->getNodes() as $name => $node)
         {
