@@ -118,7 +118,11 @@ class Indexer extends Component
                         continue;
                     }
 
-                    $this->i18n->get(I18nManager::DEFAULT_BUNDLE, $function->getArgument(0)->stringValue());
+                    $this->i18n->get(
+                        I18nManager::DEFAULT_BUNDLE,
+                        $function->getArgument(0)->stringValue()
+                    );
+
                     $this->registerString(
                         $filename,
                         $function->getLine(),
@@ -223,8 +227,8 @@ class Indexer extends Component
      */
     public function indexClasses($namespace = '')
     {
-        foreach ($this->tokenizer->getClasses(self::LOCALIZABLE_TRAIT, $namespace) as $class =>
-                 $location)
+        $classes = $this->tokenizer->getClasses(self::LOCALIZABLE_TRAIT, $namespace);
+        foreach ($classes as $class => $location)
         {
             //Indexing class
             $reflection = new \ReflectionClass($class);
@@ -266,7 +270,6 @@ class Indexer extends Component
      */
     protected function indexMessageFunction($filename, FunctionUsage $function)
     {
-
         if (!in_array(self::LOCALIZABLE_TRAIT, Tokenizer::getTraits($function->getClass())))
         {
             return;
@@ -359,7 +362,7 @@ class Indexer extends Component
     {
         if ($class)
         {
-            $this->logger()->info(
+            self::logger()->info(
                 "'{string}' found in class '{class}'.",
                 array(
                     'filename' => $this->file->relativePath($filename),
@@ -372,7 +375,7 @@ class Indexer extends Component
         }
         else
         {
-            $this->logger()->info(
+            self::logger()->info(
                 "'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.",
                 array(
                     'filename' => $this->file->relativePath($filename),

@@ -374,8 +374,8 @@ abstract class Driver extends Component
      * Get last inserted row id.
      *
      * @param string|null $sequence Name of the sequence object from which the ID should be returned.
-     *                              Not required for MySQL database, but should be specified for Postgres
-     *                              (Postgres Driver will do it automatically).
+     *                              Not required for MySQL database, but should be specified for
+     *                              Postgres (Postgres Driver will do it automatically).
      * @return mixed
      */
     public function lastInsertID($sequence = null)
@@ -565,8 +565,8 @@ abstract class Driver extends Component
      * table column, it's type and all possible options.
      *
      * @param AbstractTableSchema $table  Parent TableSchema.
-     * @param string          $name   Column name.
-     * @param mixed           $schema Driver specific column schema.
+     * @param string              $name   Column name.
+     * @param mixed               $schema Driver specific column schema.
      * @return AbstractColumnSchema
      */
     public function columnSchema(AbstractTableSchema $table, $name, $schema = null)
@@ -579,8 +579,8 @@ abstract class Driver extends Component
      * index including name, type and columns.
      *
      * @param AbstractTableSchema $table  Parent TableSchema.
-     * @param string          $name   Index name.
-     * @param mixed           $schema Driver specific index schema.
+     * @param string              $name   Index name.
+     * @param mixed               $schema Driver specific index schema.
      * @return AbstractIndexSchema
      */
     public function indexSchema(AbstractTableSchema $table, $name, $schema = null)
@@ -593,8 +593,8 @@ abstract class Driver extends Component
      * represent one foreign key with it's referenced table, column and rules.
      *
      * @param AbstractTableSchema $table  Parent TableSchema.
-     * @param string          $name   Constraint name.
-     * @param mixed           $schema Driver specific foreign key schema.
+     * @param string              $name   Constraint name.
+     * @param mixed               $schema Driver specific foreign key schema.
      * @return AbstractReferenceSchema
      */
     public function referenceSchema(AbstractTableSchema $table, $name, $schema = null)
@@ -624,7 +624,7 @@ abstract class Driver extends Component
     public function queryCompiler($tablePrefix = '')
     {
         return Container::get(static::QUERY_COMPILER, array(
-            'driver' => $this,
+            'driver'      => $this,
             'tablePrefix' => $tablePrefix
         ));
     }
