@@ -17,14 +17,16 @@ use Spiral\Components\DBAL\QueryCompiler;
 class UpdateQuery extends AffectQuery
 {
     /**
-     * Array of column names associated with values to be updated. Values can include scalar, Parameter or SQLFragment data.
+     * Array of column names associated with values to be updated. Values can include scalar, Parameter
+     * or SqlFragment data.
      *
      * @var array
      */
     protected $values = array();
 
     /**
-     * AffectQuery is query builder used to compile affection (delete, update) queries for one associated table.
+     * AffectQuery is query builder used to compile affection (delete, update) queries for one
+     * associated table.
      *
      * @param Database      $database Parent database.
      * @param QueryCompiler $compiler Driver specific QueryGrammar instance (one per builder).
@@ -52,7 +54,8 @@ class UpdateQuery extends AffectQuery
     }
 
     /**
-     * New set of values to update. Will completely overwrite current presets. Values can include scalar, Parameter or SQLFragment data.
+     * New set of values to update. Will completely overwrite current presets. Values can include
+     * scalar, Parameter or SqlFragment data.
      *
      * @param array $values Array of column names associated with values to be updated.
      * @return static
@@ -79,8 +82,8 @@ class UpdateQuery extends AffectQuery
     }
 
     /**
-     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations. UpdateBuilder will
-     * compile parameters based on values and nested queries.
+     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
+     * UpdateBuilder will compile parameters based on values and nested queries.
      *
      * @return array
      */
@@ -114,7 +117,7 @@ class UpdateQuery extends AffectQuery
      */
     public function sqlStatement()
     {
-        if (!$this->values)
+        if (empty($this->values))
         {
             throw new DBALException("Update values should be specified.");
         }

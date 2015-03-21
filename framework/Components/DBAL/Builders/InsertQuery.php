@@ -30,8 +30,8 @@ class InsertQuery extends QueryBuilder
     protected $columns = array();
 
     /**
-     * InsertQuery is query builder used to compile insert query into one associated table. It support as single as batch
-     * rowsets.
+     * InsertQuery is query builder used to compile insert query into one associated table. It support
+     * as single as batch rowsets.
      *
      * @param Database      $database Parent database.
      * @param QueryCompiler $compiler Driver specific QueryGrammar instance (one per builder).
@@ -58,7 +58,8 @@ class InsertQuery extends QueryBuilder
     }
 
     /**
-     * Set insertion column names. Names can be provided as array, set of parameters or comma separated string.
+     * Set insertion column names. Names can be provided as array, set of parameters or comma separated
+     * string.
      *
      * Examples:
      * $insert->columns(["name", "email"]);
@@ -76,9 +77,9 @@ class InsertQuery extends QueryBuilder
     }
 
     /**
-     * Set insertion rowset values or multiple rowsets. Values can be provided in multiple forms (method parameters, array
-     * of values, array or rowsets). Columns names will be automatically fetched (if not already specified) from first
-     * provided rowset based on rowset keys.
+     * Set insertion rowset values or multiple rowsets. Values can be provided in multiple forms
+     * (method parameters, array of values, array or rowsets). Columns names will be automatically
+     * fetched (if not already specified) from first provided rowset based on rowset keys.
      *
      * Examples:
      * $insert->columns("name", "balance")->values("Wolfy-J", 10);
@@ -97,7 +98,8 @@ class InsertQuery extends QueryBuilder
      *  ]
      * ]);
      *
-     * @param mixed $values Array of values, array of rowsets of multiple parameters represents one rowset.
+     * @param mixed $values Array of values, array of rowsets of multiple parameters represents one
+     *                      rowset.
      * @return static
      */
     public function values($values)
@@ -111,7 +113,6 @@ class InsertQuery extends QueryBuilder
         reset($values);
 
         $multiple = is_array($values[key($values)]);
-
         if (!$multiple)
         {
             $this->columns = array_keys($values);
