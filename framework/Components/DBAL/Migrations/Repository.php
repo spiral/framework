@@ -98,7 +98,10 @@ class Repository extends Component
         }
         else
         {
-            $this->logger()->warning("Migration '{class}' already presented in loaded classes.", $migration);
+            self::logger()->warning(
+                "Migration '{class}' already presented in loaded classes.",
+                $migration
+            );
         }
 
         return Container::get($migration['class']);
@@ -108,8 +111,8 @@ class Repository extends Component
      * Request new migration filename based on user input and current timestamp.
      *
      * @param string $name
-     * @param string $chunk Additional string attached after timestamp, should be used when creating many migrations
-     *                      at once to ensure correct order. Empty by default.
+     * @param string $chunk Additional string attached after timestamp, should be used when creating
+     *                      many migrations at once to ensure correct order. Empty by default.
      * @param bool   $path  Full filename path will be returned.
      * @return string
      */
@@ -136,16 +139,19 @@ class Repository extends Component
     {
         $filename = explode('_', substr($filename, 0, -4));
 
+        $timestamp = \DateTime::createFromFormat('Ymd_His', $filename[0] . '_' . $filename[1])
+            ->getTimestamp();
+
         return array(
             'name'      => join('_', array_slice($filename, 2)),
-            'timestamp' => \DateTime::createFromFormat('Ymd_His', $filename[0] . '_' . $filename[1])->getTimestamp()
+            'timestamp' => $timestamp
         );
     }
 
     /**
-     * Help method used to register new migration by class name. Entire class declaration will be copied to reserved filename.
-     * There is no limitations of class name or namespace to use as Tokenizer component will be used to resolve target
-     * name.
+     * Help method used to register new migration by class name. Entire class declaration will be
+     * copied to reserved filename. There is no limitations of class name or namespace to use as
+     * Tokenizer component will be used to resolve target name.
      *
      * Examples:
      * $repository->registerMigration('create_blog_tables', 'Vendor\Blog\Migrations\BlogTables');
@@ -159,7 +165,9 @@ class Repository extends Component
     {
         if (!class_exists($class))
         {
-            throw new MigrationException("Unable to register migration, representing class does not exists.");
+            throw new MigrationException(
+                "Unable to register migration, representing class does not exists."
+            );
         }
 
         foreach ($this->getMigrations() as $migration)

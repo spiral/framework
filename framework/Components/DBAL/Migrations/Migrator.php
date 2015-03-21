@@ -39,8 +39,8 @@ class Migrator extends Component implements MigratorInterface
     protected $config = array();
 
     /**
-     * New migrator instance. Migrator responsible for running migrations and keeping track of what was already executed.
-     * Default migrator uses
+     * New migrator instance. Migrator responsible for running migrations and keeping track of what
+     * was already executed. Default migrator uses
      *
      * @param Repository $repository
      * @param Database   $database
@@ -84,8 +84,8 @@ class Migrator extends Component implements MigratorInterface
     }
 
     /**
-     * Check if migrator are set and can be used. Default migrator will check that migrations table exists in associated
-     * database.
+     * Check if migrator are set and can be used. Default migrator will check that migrations table
+     * exists in associated database.
      *
      * @return bool
      */
@@ -113,7 +113,8 @@ class Migrator extends Component implements MigratorInterface
     }
 
     /**
-     * Get list of all migrations with their class names, file names, status and migrated time (if presented).
+     * Get list of all migrations with their class names, file names, status and migrated time (if
+     * presented).
      *
      * @return array
      */
@@ -130,7 +131,7 @@ class Migrator extends Component implements MigratorInterface
 
             $migration += $dbMigration ?: array('id' => 0, 'performed' => false);
 
-            if ($migration['performed'])
+            if (!empty($migration['performed']))
             {
                 $migration['performed'] = Timestamp::castTimestamp(
                     $migration['performed'],
@@ -152,7 +153,7 @@ class Migrator extends Component implements MigratorInterface
         $result = null;
         foreach ($this->getMigrations() as $migration)
         {
-            if (!$migration['performed'])
+            if (empty($migration['performed']))
             {
                 $instance = $this->repository->getMigration($migration);
                 $instance->setDatabase($this->database);
@@ -180,7 +181,7 @@ class Migrator extends Component implements MigratorInterface
         $result = null;
         foreach (array_reverse($this->getMigrations()) as $migration)
         {
-            if ($migration['performed'])
+            if (!empty($migration['performed']))
             {
                 $instance = $this->repository->getMigration($migration);
                 $instance->setDatabase($this->database);

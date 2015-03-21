@@ -23,8 +23,8 @@ abstract class Migration extends Component implements MigrationInterface
     protected $database = null;
 
     /**
-     * Configuring migration. This method will be automatically called after migration created and used to resolved
-     * target database.
+     * Configuring migration. This method will be automatically called after migration created and
+     * used to resolve target database.
      *
      * @param Database $database
      */
@@ -45,8 +45,8 @@ abstract class Migration extends Component implements MigrationInterface
     }
 
     /**
-     * Get table schema from associated database, schema can be used for different operations, such as creation, updating,
-     * dropping and etc.
+     * Get table schema from associated database, schema can be used for different operations, such
+     * as creation, updating, dropping and etc.
      *
      * @param string $table Table name without prefix.
      * @return AbstractTableSchema

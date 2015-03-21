@@ -13,7 +13,8 @@ use Spiral\Components\DBAL\Database;
 interface MigratorInterface
 {
     /**
-     * New migrator instance. Migrator responsible for running migrations and keeping track of what was already executed.
+     * New migrator instance. Migrator responsible for running migrations and keeping track of what
+     * was already executed.
      *
      * @param Repository $repository
      * @param Database   $database
@@ -29,8 +30,8 @@ interface MigratorInterface
     public function isSafe();
 
     /**
-     * Check if migrator are set and can be used. Default migrator will check that migrations table exists in associated
-     * database.
+     * Check if migrator are set and can be used. Default migrator will check that migrations table
+     * exists in associated database.
      *
      * @return bool
      */
@@ -42,7 +43,8 @@ interface MigratorInterface
     public function configure();
 
     /**
-     * Get list of all migrations with their class names, file names, status and migrated time (if presented).
+     * Get list of all migrations with their class names, file names, status and migrated time (if
+     * presented).
      *
      * @return array
      */

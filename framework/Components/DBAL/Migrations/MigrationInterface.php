@@ -13,8 +13,8 @@ use Spiral\Components\DBAL\Database;
 interface MigrationInterface
 {
     /**
-     * Configuring migration. This method will be automatically called after migration created and used to resolved
-     * target database.
+     * Configuring migration. This method will be automatically called after migration created and
+     * used to resolve target database.
      *
      * @param Database $database
      */
