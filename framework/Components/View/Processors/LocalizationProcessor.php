@@ -12,7 +12,7 @@ use Spiral\Components\Localization\I18nManager;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
-class I18nProcessor implements ProcessorInterface
+class LocalizationProcessor implements ProcessorInterface
 {
     /**
      * Processor options. Will define i18n namespace prefix and expression to be treated as text to

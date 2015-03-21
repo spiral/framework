@@ -32,7 +32,8 @@ class Behaviour
     public $attributes = array();
 
     /**
-     * Additional node options, such as node should force it's own content, be called from parent namespace and etc.
+     * Additional node options, such as node should force it's own content, be called from parent
+     * namespace and etc.
      *
      * @var array
      */
@@ -46,8 +47,8 @@ class Behaviour
     public $contextNode = null;
 
     /**
-     * Create new smart token. Object will explain to node tokenizer what this token is, it can either be import, extend
-     * request or block definition.
+     * Create new smart token. Object will explain to node tokenizer what this token is, it can either
+     * be import, extend request or block definition.
      *
      * @param string $name       Block name, not required for extend or import types.
      * @param string $type       Token behaviour type (import, extend, block)
