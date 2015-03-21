@@ -107,13 +107,13 @@ class EvaluateProcessor implements ProcessorInterface
         $this->isolator->setBlocks($phpBlocks);
 
         //We can use eval() but with temp file error handling will be more complete
-        $evaluatorFilename = $this->view->cachedFilename($namespace, $view . '-evaluator');
-        $this->file->write($evaluatorFilename, $source, FileManager::RUNTIME, true);
+        $filename = $this->view->cachedFilename($namespace, $view . '-evaluator');
+        $this->file->write($filename, $source, FileManager::RUNTIME, true);
 
         try
         {
             ob_start();
-            require_once $evaluatorFilename;
+            require_once $filename;
             $source = ob_get_clean();
         }
         catch (\ErrorException $exception)
@@ -121,7 +121,7 @@ class EvaluateProcessor implements ProcessorInterface
             throw $exception;
         }
 
-        $this->file->remove($evaluatorFilename);
+        $this->file->remove($filename);
 
         //Let's back php source
         return $this->isolator->repairPHP($source);
