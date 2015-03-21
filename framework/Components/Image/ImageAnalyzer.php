@@ -141,6 +141,7 @@ class ImageAnalyzer extends Component
     public function analyzeImage()
     {
         benchmark("image::analyzeImage", $this->filename);
+
         for ($x = 0; $x < $this->dimension; $x++)
         {
             for ($y = 0; $y < $this->dimension; $y++)
@@ -148,6 +149,7 @@ class ImageAnalyzer extends Component
                 $this->collectColors($x, $y);
             }
         }
+
         benchmark("image::analyzeImage", $this->filename);
 
         return $this;
@@ -216,6 +218,7 @@ class ImageAnalyzer extends Component
     public function fetchColors($countColors = 5, $step = 0.005, $maxSteps = 2000)
     {
         benchmark("image::dominantColors", $this->filename);
+
         $dominant = array();
         foreach ($this->colorMatrix as $color)
         {
@@ -243,14 +246,15 @@ class ImageAnalyzer extends Component
         }
 
         arsort($dominant);
+
         benchmark("image::dominantColors", $this->filename);
 
         return $dominant;
     }
 
     /**
-     * Grouping colors together. Higher delta value - less colors will be created due more pairs will be counted as same
-     * colors.
+     * Grouping colors together. Higher delta value - less colors will be created due more pairs will
+     * be counted as same colors.
      *
      * @param array $colors Array of colors.
      * @param float $delta  Maximum distance between colors.
