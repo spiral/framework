@@ -56,15 +56,6 @@ class PrettyPrintProcessor implements ProcessorInterface
         //Step #3, no blank lines and html comments (will keep conditional commends)
         $lines = array_filter($lines, function ($line)
         {
-            if (
-                preg_match('/<!--(.*)-->/uis', $line)
-                && stripos($line, '[if') === false
-                && stripos($line, '[endif]') === false
-            )
-            {
-                return preg_replace('/<!--(.*)-->/uis', '', $line);
-            }
-
             return trim($line);
         });
 
