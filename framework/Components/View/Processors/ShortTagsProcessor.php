@@ -51,7 +51,7 @@ class ShortTagsProcessor implements ProcessorInterface
 
         foreach ($phpBlocks as &$phpBlock)
         {
-            if (preg_match('/^<\?(?!php)/', $phpBlock))
+            if (preg_match('/^<\?(?!php|=)/', $phpBlock))
             {
                 $phpBlock = '<?php ' . substr($phpBlock, 2);
             }
