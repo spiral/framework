@@ -149,6 +149,7 @@ class Tokenizer extends Component
         foreach ($tokens as $position => $token)
         {
             $token[self::CODE] = htmlentities($token[self::CODE]);
+
             foreach ($this->highlighting as $style => $tokens)
             {
                 //This way is slower, but more tolerant to memory usage
@@ -159,14 +160,18 @@ class Tokenizer extends Component
                         $lines = array();
                         foreach (explode("\n", $token[self::CODE]) as $line)
                         {
-                            $lines[] = '<span style="' . $style . '">' . $line . '</span>';
+                            $lines[] = '<span style="' . $style . '">'
+                                . $line
+                                . '</span>';
                         }
 
                         $token[self::CODE] = join("\n", $lines);
                     }
                     else
                     {
-                        $token[self::CODE] = '<span style="' . $style . '">' . $token[self::CODE] . '</span>';
+                        $token[self::CODE] = '<span style="' . $style . '">'
+                            . $token[self::CODE]
+                            . '</span>';
                     }
                     break;
                 }
@@ -182,7 +187,10 @@ class Tokenizer extends Component
             $line++;
             if ($line >= $targetLine - $countLines && $line <= $targetLine + $countLines)
             {
-                $result .= "<div class=\"" . ($line == $targetLine ? "highlighted" : "") . "\"><div class=\"number\">$line</div>" . mb_convert_encoding($code, 'utf-8') . "</div>";
+                $result .= "<div class=\"" . ($line == $targetLine ? "highlighted" : "") . "\">"
+                    . "<div class=\"number\">{$line}</div>"
+                    . mb_convert_encoding($code, 'utf-8')
+                    . "</div>";
             }
         }
 
@@ -190,7 +198,8 @@ class Tokenizer extends Component
     }
 
     /**
-     * Fetch tokens from specified filename. String tokens will be automatically extended with their type and line.
+     * Fetch tokens from specified filename. String tokens will be automatically extended with their
+     * type and line.
      *
      * @param string $filename
      * @return array
@@ -219,13 +228,14 @@ class Tokenizer extends Component
     }
 
     /**
-     * Index all available files excluding excludeDirectories and generate list of found classes with their names and
-     * filenames. Unreachable classes or files with conflicts be skipped and debug messages will generated. This is SLOW
-     * method, should be used only for static analysis.
+     * Index all available files excluding excludeDirectories and generate list of found classes with
+     * their names and filenames. Unreachable classes or files with conflicts be skipped and debug
+     * messages will generated. This is SLOW method, should be used only for static analysis.
      *
-     * @param mixed  $parent    Class or interface should be extended. By default - null (all classes). Parent will also
-     *                          be included to classes list as one of results.
-     * @param string $namespace Only classes in this namespace will be retrieved, null by default (all namespaces).
+     * @param mixed  $parent    Class or interface should be extended. By default - null (all classes).
+     *                          Parent will also be included to classes list as one of results.
+     * @param string $namespace Only classes in this namespace will be retrieved, null by default
+     *                          (all namespaces).
      * @param string $postfix   Only classes with such postfix will be analyzed, empty by default.
      * @param bool   $debug     If enabled additional debug messages will be raised.
      * @return array
@@ -235,14 +245,13 @@ class Tokenizer extends Component
         $result = array();
         $namespace = ltrim($namespace, '\\');
 
-        if ($parent && (is_object($parent) || is_string($parent)))
+        if (!empty($parent) && (is_object($parent) || is_string($parent)))
         {
             $parent = new ReflectionClass($parent);
         }
 
-        //Loader has to be enabled to operate correctly
         $this->loader->enable();
-        Loader::dispatcher()->addListener('notFound', $loaderException = function (Event $event)
+        $this->loader->dispatcher()->addListener('notFound', $loaderException = function (Event $event)
         {
             throw new TokenizerException("Class {$event->context['class']} can not be loaded.");
         });
@@ -262,11 +271,15 @@ class Tokenizer extends Component
                 }
 
                 $reflectionFile = $this->fileReflection($filename);
+
                 if ($reflectionFile->hasIncludes())
                 {
-                    $this->logger()->warning("File '{filename}' has includes and will be excluded from analysis.", array(
-                        'filename' => $this->file->relativePath($filename)
-                    ));
+                    self::logger()->warning(
+                        "File '{filename}' has includes and will be excluded from analysis.",
+                        array(
+                            'filename' => $this->file->relativePath($filename)
+                        )
+                    );
 
                     continue;
                 }
@@ -274,13 +287,12 @@ class Tokenizer extends Component
                 //We need only classes
                 foreach ($reflectionFile->getClasses() as $class)
                 {
-                    //Checking namespace
-                    if ($namespace && !(strpos($class, $namespace) === 0 || strpos($class, '\\' . $namespace) === 0))
+                    if (!empty($namespace) && strpos(ltrim($class, '\\'), $namespace) === false)
                     {
                         continue;
                     }
 
-                    if ($postfix && substr($class, -1 * strlen($postfix)) != $postfix)
+                    if (!empty($postfix) && substr($class, -1 * strlen($postfix)) != $postfix)
                     {
                         continue;
                     }
@@ -289,16 +301,25 @@ class Tokenizer extends Component
                     {
                         $reflection = new ReflectionClass($class);
 
-                        if ($parent && $parent->isTrait())
+                        if (!empty($parent))
                         {
-                            if (!in_array($parent->getName(), self::getTraits($class)))
+                            if ($parent->isTrait())
                             {
-                                continue;
+                                if (!in_array($parent->getName(), self::getTraits($class)))
+                                {
+                                    continue;
+                                }
                             }
-                        }
-                        elseif ($parent && !$reflection->isSubclassOf($parent) && $reflection->getName() != $parent->getName())
-                        {
-                            continue;
+                            else
+                            {
+                                if (
+                                    !$reflection->isSubclassOf($parent)
+                                    && $reflection->getName() != $parent->getName()
+                                )
+                                {
+                                    continue;
+                                }
+                            }
                         }
 
                         $result[$class] = array(
@@ -307,23 +328,30 @@ class Tokenizer extends Component
                             'abstract' => $reflection->isAbstract()
                         );
 
-                        $debug && $this->logger()->info("Class '{class}' has been successfully analyzed.", array(
-                            'class' => $class
-                        ));
+                        if ($debug)
+                        {
+                            self::logger()->info(
+                                "Class '{class}' has been successfully analyzed.",
+                                compact('class')
+                            );
+                        }
                     }
                     catch (\Exception $exception)
                     {
-                        $this->logger()->error("Unable to resolve class '{class}', error \"{message}\".", array(
-                            'filename' => $this->file->relativePath($filename),
-                            'class'    => $class,
-                            'message'  => $exception->getMessage()
-                        ));
+                        self::logger()->error(
+                            "Unable to resolve class '{class}', error \"{message}\".",
+                            array(
+                                'filename' => $this->file->relativePath($filename),
+                                'class'    => $class,
+                                'message'  => $exception->getMessage()
+                            )
+                        );
                     }
                 }
             }
         }
 
-        Loader::dispatcher()->removeListener('notFound', $loaderException);
+        $this->loader->dispatcher()->removeListener('notFound', $loaderException);
 
         return $result;
     }
@@ -354,30 +382,41 @@ class Tokenizer extends Component
     }
 
     /**
-     * Get ReflectionFile for given filename, reflection can be used to retrieve list of declared classes, interfaces,
-     * traits and functions, additional it can locate function usages.
+     * Get ReflectionFile for given filename, reflection can be used to retrieve list of declared
+     * classes, interfaces, traits and functions, additional it can locate function usages.
      *
      * @param string $filename PHP filename.
      * @return ReflectionFile
      */
     public function fileReflection($filename)
     {
-        if (!$this->cache)
+        if (empty($this->cache))
         {
             $this->cache = $this->core->loadData('tokenizer-reflections');
         }
 
-        if (isset($this->cache[$filename]) && $this->cache[$filename]['md5'] == $this->file->md5($filename))
+        if (
+            isset($this->cache[$filename])
+            && $this->cache[$filename]['md5'] == $this->file->md5($filename)
+        )
         {
-            $reflectionFile = ReflectionFile::make(compact('filename') + array(
-                    'tokenizer'    => $this,
-                    'cachedSchema' => $this->cache[$filename]
-                ));
+            $reflectionFile = ReflectionFile::make(array(
+                'filename'     => $filename,
+                'tokenizer'    => $this,
+                'cachedSchema' => $this->cache[$filename]
+            ));
         }
         else
         {
-            $reflectionFile = ReflectionFile::make(compact('filename') + array('tokenizer' => $this));
-            $this->cache[$filename] = array('md5' => $this->file->md5($filename)) + $reflectionFile->exportSchema();
+            $reflectionFile = ReflectionFile::make(array(
+                'filename'  => $filename,
+                'tokenizer' => $this
+            ));
+
+            $this->cache[$filename] = array(
+                    'md5' => $this->file->md5($filename)
+                ) + $reflectionFile->exportSchema();
+
             $this->core->saveData('tokenizer-reflections', $this->cache);
         }
 

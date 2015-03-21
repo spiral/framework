@@ -77,6 +77,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * New processors instance with options specified in view config.
      *
+     *
+     * @todo To be refactored, tests will help.
      * @param array       $options
      * @param ViewManager $view View component instance (if presented).
      */

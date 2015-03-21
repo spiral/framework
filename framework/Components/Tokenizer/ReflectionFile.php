@@ -23,14 +23,28 @@ class ReflectionFile extends Component
     const TOKEN_ID   = 3;
 
     /**
-     * Set of tokens required to detect classes, traits, interfaces and function declarations. We don't need any other
-     * token for that. 357 - T_TRAIT
+     * Set of tokens required to detect classes, traits, interfaces and function declarations. We
+     * don't need any other token for that.
      *
      * @var array
      */
     static protected $useTokens = array(
-        T_NAMESPACE, T_STRING, '{', '}', T_CLASS, T_INTERFACE, 357, T_FUNCTION, ';', T_NS_SEPARATOR,
-        T_INCLUDE, T_INCLUDE_ONCE, T_REQUIRE, T_REQUIRE_ONCE, T_USE, T_AS
+        '{',
+        '}',
+        ';',
+        T_NAMESPACE,
+        T_STRING,
+        T_CLASS,
+        T_INTERFACE,
+        T_TRAIT,
+        T_FUNCTION,
+        T_NS_SEPARATOR,
+        T_INCLUDE,
+        T_INCLUDE_ONCE,
+        T_REQUIRE,
+        T_REQUIRE_ONCE,
+        T_USE,
+        T_AS
     );
 
     /**
@@ -100,21 +114,21 @@ class ReflectionFile extends Component
     protected $functionUsages = array();
 
     /**
-     * File file reflection instance, allows to fetch information about classes, interfaces or traits declared in given
-     * file, used functions and other low level information. Reflector is very slow, so it's recommended to use only with
-     * cache.
+     * File file reflection instance, allows to fetch information about classes, interfaces or traits
+     * declared in given file, used functions and other low level information. Reflector is very slow,
+     * so it's recommended to use only with cache.
      *
      * @param string    $filename     Filename to be parsed.
      * @param Tokenizer $tokenizer    TokenManager instance.
-     * @param array     $cachedSchema Cached list of found classes, interfaces and etc, will be pre-loaded to memory to
-     *                                speed up processing.
+     * @param array     $cachedSchema Cached list of found classes, interfaces and etc, will be
+     *                                pre-loaded to memory to speed up processing.
      */
     public function __construct($filename, Tokenizer $tokenizer = null, array $cachedSchema = array())
     {
         $this->filename = $filename;
         $this->tokenizer = $tokenizer;
 
-        if ($cachedSchema)
+        if (!empty($cachedSchema))
         {
             $this->importSchema($cachedSchema);
 
@@ -180,8 +194,9 @@ class ReflectionFile extends Component
     }
 
     /**
-     * To detect all file declarations, including classes, interfaces, traits and methods. There is no need to remember
-     * lines and other information as it can be requested using Function or Class reflections.
+     * To detect all file declarations, including classes, interfaces, traits and methods. There is
+     * no need to remember lines and other information as it can be requested using Function or Class
+     * reflections.
      */
     protected function locateDeclarations()
     {

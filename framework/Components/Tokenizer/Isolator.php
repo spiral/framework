@@ -119,7 +119,7 @@ class Isolator extends Component
         $replaces = &$this->replaces;
         foreach ($this->patterns as $tag => $pattern)
         {
-            if (!$pattern['regexp'])
+            if (empty($pattern['regexp']))
             {
                 if ($replace = array_search($tag, $replaces))
                 {
@@ -145,7 +145,8 @@ class Isolator extends Component
                     return $key;
                 }
 
-                $replaces[$replace = sprintf($pattern['replace'], StringHelper::random(10) . '-' . uniqid())] = $tag;
+                $replace = sprintf($pattern['replace'], StringHelper::random(10) . '-' . uniqid());
+                $replaces[$replace] = $tag;
 
                 return $replace;
             }, $source);
@@ -202,7 +203,7 @@ class Isolator extends Component
                 continue;
             }
 
-            if ($phpBlock)
+            if (!empty($phpBlock))
             {
                 $phpBlock .= is_array($token) ? $token[1] : $token;
             }
