@@ -21,8 +21,9 @@ class EvaluateProcessor implements ProcessorInterface
      * @var array
      */
     protected $options = array(
-        'tagOpen'  => '<%',
-        'tagClose' => '%>'
+        'flags' => array(
+            '/*compile*/', '#compile', '#php-compile'
+        )
     );
 
     /**
@@ -50,23 +51,28 @@ class EvaluateProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array       $options
-     * @param ViewManager        $view View component instance (if presented).
+     * @param ViewManager $view View component instance (if presented).
      * @param FileManager $file FileManager component.
      * @param Isolator    $isolator
      */
-    public function __construct(array $options, ViewManager $view = null, FileManager $file = null, Isolator $isolator = null)
+    public function __construct(
+        array $options,
+        ViewManager $view = null,
+        FileManager $file = null,
+        Isolator $isolator = null
+    )
     {
         $this->options = $options + $this->options;
         $this->view = $view;
         $this->file = $file;
 
-        $this->isolator = $isolator->shortTags(true)->aspTags(true);
+        $this->isolator = $isolator->shortTags(true);
     }
 
     /**
-     * Performs view code pre-processing. View component will provide view source into processors, processors can perform
-     * any source manipulations using this code expect final rendering. Will run all php code in ASP tags during pre-rendering
-     * stage. This is "caching" php.
+     * Performs view code pre-processing. View component will provide view source into processors,
+     * processors can perform any source manipulations using this code expect final rendering. Will
+     * run all php code in ASP tags during pre-rendering stage. This is "caching" php.
      *
      * @param string $source    View source (code).
      * @param string $view      View name.
@@ -85,25 +91,14 @@ class EvaluateProcessor implements ProcessorInterface
 
         foreach ($this->isolator->getBlocks() as $id => $phpBlock)
         {
-            if (substr($phpBlock, 0, strlen($this->options['tagOpen'])) == $this->options['tagOpen'])
+            foreach ($this->options['flags'] as $flag)
             {
-                $phpBlock = trim($phpBlock);
-
-                $phpBlock = '<?' . substr($phpBlock, strlen($this->options['tagOpen']), -1 * strlen($this->options['tagClose'])) . '?>';
-
-                if (substr($phpBlock, 0, 3) == '<?=')
+                if (strpos($phpBlock, $flag) !== false)
                 {
-                    $phpBlock = '<?php echo ' . ltrim(substr($phpBlock, 3));
+                    $evaluatorBlocks[$id] = $phpBlock;
+
+                    continue 2;
                 }
-
-                if (preg_match('/^<\?(?!php)/', $phpBlock))
-                {
-                    $phpBlock = '<?php ' . substr($phpBlock, 2);
-                }
-
-                $evaluatorBlocks[$id] = $phpBlock;
-
-                continue;
             }
 
             $phpBlocks[$id] = $phpBlock;

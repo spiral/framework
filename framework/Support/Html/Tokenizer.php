@@ -95,7 +95,7 @@ class Tokenizer extends Component
             return $this->isolator;
         }
 
-        return $this->isolator = Isolator::make()->aspTags(true);
+        return $this->isolator = Isolator::make();
     }
 
     /**

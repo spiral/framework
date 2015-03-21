@@ -29,15 +29,17 @@ class Isolator extends Component
     protected $postfix = '';
 
     /**
-     * Replaces has to be performed before / after finding and mounting blocks. This replaces used to index PHP blocks
-     * which are not reachable in some conditions, such as if short_tags disabled or specified syntax required (ASP tags).
+     * Replaces has to be performed before / after finding and mounting blocks. This replaces used
+     * to index PHP blocks which are not reachable in some conditions, such as if short_tags disabled
+     * or specified syntax required (ASP tags).
      *
      * @var array
      */
     protected $patterns = array();
 
     /**
-     * Revert replaces, will contain list of existing and replaced tags (unique set), so output source will be identical
+     * Revert replaces, will contain list of existing and replaced tags (unique set), so output
+     * source will be identical
      * to input.
      *
      * @var array
@@ -52,38 +54,30 @@ class Isolator extends Component
     protected $shortTags = true;
 
     /**
-     * Asp tags will be optionally replaced to support extended php syntax.  WHAT DOES THIS MEAN? REVIEW WITH JOHN
-     *
-     * @var bool
-     */
-    protected $aspTags = false;
-
-    /**
      * New php isolator.
      *
      * @param string $prefix    Replaced block prefix, -php by default.
      * @param string $postfix   Replaced block postfix, block- by default.
      * @param bool   $shortTags Handle short tags. This is not required if short_tags are enabled.
-     * @param bool   $aspTags   Handle asp tags.
      */
-    public function __construct($prefix = '-php-', $postfix = '-block-', $shortTags = true, $aspTags = false)
+    public function __construct($prefix = '-php-', $postfix = '-block-', $shortTags = true)
     {
         $this->prefix = $prefix;
         $this->postfix = $postfix;
 
         $this->shortTags($shortTags);
-        $this->aspTags($aspTags);
     }
 
     /**
-     * Adding a new tag replacement pattern. Should include tag name, regular expression to handle tag and replacement
-     * string.
+     * Adding a new tag replacement pattern. Should include tag name, regular expression to handle
+     * tag and replacement string. Originally was used to support asp tags, now only for short tags/
      *
      * @param string $tag     PHP Tag to handle, can be an open or closed PHP tag.
-     * @param string $regexp  Patter to catch tags like that, WHATS THIS??? can be empty, in this case str_replace will
-     *                        be used.
-     * @param string $replace String tags has to be replaced with, has to be valid php opening or closed tag. Should
-     *                        include %s which will be used to identity how to revert replacements.
+     * @param string $regexp  Pattern used to catch tags, can be empty, in this case str_replace
+     *                        will be used.
+     * @param string $replace String tags has to be replaced with, has to be valid php opening or
+     *                        closed tag. Should include %s which will be used to identity how to
+     *                        revert replacements.
      */
     protected function addPattern($tag, $regexp = null, $replace = "<?php /*%s*/")
     {
@@ -91,8 +85,9 @@ class Isolator extends Component
     }
 
     /**
-     * Enable/disable caching blocks defined by PHP short tags. This allows the system to isolate blocks even in an
-     * environment where the short_tags option is disabled. This is enabled by default.
+     * Enable/disable caching blocks defined by PHP short tags. This allows the system to isolate
+     * blocks even in an environment where the short_tags option is disabled. This is enabled by
+     * default.
      *
      * @param bool $enable
      * @return static
@@ -113,30 +108,8 @@ class Isolator extends Component
     }
 
     /**
-     * Enabled caching blocks defined by ASP like tags. Used when caching view processor or in some other cases.
-     *
-     * @param bool $enable
-     * @return static
-     */
-    public function aspTags($enable)
-    {
-        if ($enable)
-        {
-            $this->addPattern('<%=', false, "<?php /*%s*/ echo ");
-            $this->addPattern('<%', false);
-            $this->addPattern('%>', false, "/*%s*/?>");
-        }
-        else
-        {
-            unset($this->patterns['<%'], $this->patterns['%>'], $this->patterns['<%=']);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Replace all matched tags with their <?php equivalent. These tags will be detected and parsed by token_get_all()
-     * function even if there isn't a directive in php.ini file.
+     * Replace all matched tags with their <?php equivalent. These tags will be detected and parsed
+     * by token_get_all() function even if there isn't a directive in php.ini file.
      *
      * @param string $source Valid PHP code.
      * @return string
@@ -182,8 +155,8 @@ class Isolator extends Component
     }
 
     /**
-     * Mount all original tags searched and replaced by replaceTags() function. The result of this function converts source
-     * to it's original form.
+     * Mount all original tags searched and replaced by replaceTags() function. The result of this
+     * function converts source to it's original form.
      *
      * @param string $source
      * @return string
@@ -194,8 +167,7 @@ class Isolator extends Component
     }
 
     /**
-     * Isolates all returned PHP blocks with a defined pattern. This is used to clean up input data, views or support extended
-     * PHP syntax.
+     * Isolates all returned PHP blocks with a defined pattern.
      *
      * @param string $source Valid PHP code.
      * @return string
@@ -247,7 +219,8 @@ class Isolator extends Component
             unset($phpBlock);
         }
 
-        //Will restore tags which were replaced but weren't handled by php (for example string contents)
+        //Will restore tags which were replaced but weren't handled by php (for example string
+        //contents)
         return $this->restoreTags($source);
     }
 
@@ -285,7 +258,8 @@ class Isolator extends Component
         return preg_replace_callback(
             '/' . preg_quote($this->prefix) . '(?P<id>[0-9]+)' . preg_quote($this->postfix) . '/',
             array($this, 'getBlock'),
-            $source);
+            $source
+        );
     }
 
     /**
@@ -296,7 +270,11 @@ class Isolator extends Component
      */
     public function removePHP($isolatedSource)
     {
-        return preg_replace('/' . preg_quote($this->prefix) . '(?P<id>[0-9]+)' . preg_quote($this->postfix) . '/', '', $isolatedSource);
+        return preg_replace(
+            '/' . preg_quote($this->prefix) . '(?P<id>[0-9]+)' . preg_quote($this->postfix) . '/',
+            '',
+            $isolatedSource
+        );
     }
 
     /**

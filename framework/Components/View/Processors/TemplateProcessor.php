@@ -77,8 +77,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array $options
-     * @param ViewManager  $view View component instance (if presented).
+     * @param array       $options
+     * @param ViewManager $view View component instance (if presented).
      */
     public function __construct(array $options, ViewManager $view = null)
     {
@@ -99,7 +99,11 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     public function processSource($source, $view, $namespace)
     {
         //Root node based on current view data
-        $root = Node::make(array('name' => 'root', 'source' => $source, 'options' => compact('namespace', 'view')));
+        $root = Node::make(array(
+            'name'    => 'root',
+            'source'  => $source,
+            'options' => compact('namespace', 'view')
+        ));
 
         return $root->compile();
     }

@@ -25,9 +25,9 @@ class PrettyPrintProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array    $options
-     * @param ViewManager     $view View component instance (if presented).
-     * @param Isolator $isolator
+     * @param array       $options
+     * @param ViewManager $view View component instance (if presented).
+     * @param Isolator    $isolator
      */
     public function __construct(array $options, ViewManager $view = null, Isolator $isolator = null)
     {
@@ -35,8 +35,8 @@ class PrettyPrintProcessor implements ProcessorInterface
     }
 
     /**
-     * Clean html of extra lines to optimize it a little, processors can create a lot of empty lines during combining view
-     * files, this processor should be called at the end of chain.
+     * Clean html of extra lines to optimize it a little, processors can create a lot of empty lines
+     * during combining view files, this processor should be called at the end of chain.
      *
      * @param string $source    View source (code).
      * @param string $view      View name.
@@ -56,7 +56,11 @@ class PrettyPrintProcessor implements ProcessorInterface
         //Step #3, no blank lines and html comments (will keep conditional commends)
         $lines = array_filter($lines, function ($line)
         {
-            if (preg_match('/<!--(.*)-->/uis', $line) && stripos($line, '[if') === false && stripos($line, '[endif]') === false)
+            if (
+                preg_match('/<!--(.*)-->/uis', $line)
+                && stripos($line, '[if') === false
+                && stripos($line, '[endif]') === false
+            )
             {
                 return preg_replace('/<!--(.*)-->/uis', '', $line);
             }

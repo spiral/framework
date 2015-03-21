@@ -19,8 +19,8 @@ interface ProcessorInterface
     public function __construct(array $options, ViewManager $view = null);
 
     /**
-     * Performs view code pre-processing. View component will provide view source into processors, processors can perform
-     * any source manipulations using this code expect final rendering.
+     * Performs view code pre-processing. View component will provide view source into processors,
+     * processors can perform any source manipulations using this code expect final rendering.
      *
      * @param string $source    View source (code).
      * @param string $view      View name.

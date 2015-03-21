@@ -34,8 +34,8 @@ class ShortTagsProcessor implements ProcessorInterface
     }
 
     /**
-     * Will convert short php tags to their longer representation, this will allow spiral views work even in environment
-     * with disabled short_tag_open.
+     * Will convert short php tags to their longer representation, this will allow spiral views work
+     * even in environment with disabled short_tag_open.
      *
      * @param string $source    View source (code).
      * @param string $view      View name.

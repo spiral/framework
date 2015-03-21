@@ -32,8 +32,8 @@ class StaticProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array $options
-     * @param ViewManager  $view View component instance (if presented).
+     * @param array       $options
+     * @param ViewManager $view View component instance (if presented).
      */
     public function __construct(array $options, ViewManager $view = null)
     {
@@ -42,8 +42,8 @@ class StaticProcessor implements ProcessorInterface
     }
 
     /**
-     * Will replace static variables in view source with their values or empty string if not specified. Default pattern
-     * if @{variable|default} can be redefined in view config.
+     * Will replace static variables in view source with their values or empty string if not specified.
+     * Default pattern if @{variable|default} can be redefined in view config.
      *
      * This variables can be used to redefine layout, browser support or switch to mobile version.
      *
@@ -66,6 +66,8 @@ class StaticProcessor implements ProcessorInterface
      */
     protected function replace($matches)
     {
-        return $this->view->staticVariable($matches['name']) ?: (isset($matches['default']) ? $matches['default'] : '');
+        return $this->view->staticVariable($matches['name'])
+            ? $this->view->staticVariable($matches['name'])
+            : (isset($matches['default']) ? $matches['default'] : '');
     }
 }

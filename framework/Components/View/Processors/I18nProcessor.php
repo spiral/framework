@@ -15,7 +15,8 @@ use Spiral\Components\View\ViewManager;
 class I18nProcessor implements ProcessorInterface
 {
     /**
-     * Processor options. Will define i18n namespace prefix and expression to be treated as text to localize.
+     * Processor options. Will define i18n namespace prefix and expression to be treated as text to
+     * localize.
      *
      * @var array
      */
@@ -25,8 +26,8 @@ class I18nProcessor implements ProcessorInterface
     );
 
     /**
-     * Current view namespace, this namespace is not identical to view rendering namespaces, this is i18n localization
-     * namespace.
+     * Current view namespace, this namespace is not identical to view rendering namespaces, this is
+     * i18n localization namespace.
      *
      * @var string
      */
@@ -61,8 +62,9 @@ class I18nProcessor implements ProcessorInterface
     }
 
     /**
-     * Performs i18n replaces for text in views. This processor should be called first, due templater combinations many
-     * new namespaces will be created, even if text inside them will be identical and inherited from parent view.
+     * Performs i18n replaces for text in views. This processor should be called first, due templater
+     * combinations many new namespaces will be created, even if text inside them will be identical
+     * and inherited from parent view.
      *
      * @param string $source    View source (code).
      * @param string $view      View name.
