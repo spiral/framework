@@ -16,7 +16,8 @@ use Spiral\Support\Generators\Config\ConfigWriterException;
 class ViewConfig extends ConfigWriter
 {
     /**
-     * View namespaces used to describe location of module view files, any count of namespaces can be created.
+     * View namespaces used to describe location of module view files, any count of namespaces can be
+     * created.
      *
      * @var array
      */
@@ -37,18 +38,26 @@ class ViewConfig extends ConfigWriter
     protected $baseDirectory = '';
 
     /**
-     * Config class used to update application configuration files with new sections, data and presets, it can resolve new
-     * config data by merging already exists presets with requested setting by one of specified merge methods.
+     * Config class used to update application configuration files with new sections, data and presets,
+     * it can resolve new config data by merging already exists presets with requested setting by one
+     * of specified merge methods.
      *
      * ViewConfig is specialized configurator allows modules mount view namespaces and view processors.
      *
      * @param FileManager $file          FileManager component.
      * @param Tokenizer   $tokenizer     Tokenizer component.
-     * @param string      $name          Config filename, should not include extensions, may include directory name.
+     * @param string      $name          Config filename, should not include extensions, may include
+     *                                   directory name.
      * @param int         $method        How system should merge existed and requested config contents.
      * @param string      $baseDirectory Base directory for registered namespaces.
      */
-    public function __construct(FileManager $file, Tokenizer $tokenizer, $name = 'views', $method = self::MERGE_CUSTOM, $baseDirectory = '')
+    public function __construct(
+        FileManager $file,
+        Tokenizer $tokenizer,
+        $name = 'views',
+        $method = self::MERGE_CUSTOM,
+        $baseDirectory = ''
+    )
     {
         $this->file = $file;
         $this->tokenizer = $tokenizer;
@@ -71,14 +80,15 @@ class ViewConfig extends ConfigWriter
     }
 
     /**
-     * Register view namespace linked to module directory. If following module supports view layouts, it's recommended to
-     * specify multiple view namespaces to support layout extensions.
+     * Register view namespace linked to module directory. If following module supports view layouts,
+     * it's recommended to specify multiple view namespaces to support layout extensions.
      *
      * Examples:
      * $viewConfig->viewNamespace('keeper', 'views');
      * $viewConfig->viewNamespace('keeper.origin', 'views');
      *
-     * Second namespace will allow application to replace some layout file but still inherit it from original view.
+     * Second namespace will allow application to replace some layout file but still inherit it from
+     * original view.
      *
      * @param string $namespace View namespace.
      * @param string $directory Directory name relative to modules directory.
@@ -103,8 +113,8 @@ class ViewConfig extends ConfigWriter
     }
 
     /**
-     * Methods will be applied to merge existed and custom configuration data in merge method is specified as Config::mergeCustom.
-     * This method usually used to perform logical merge.
+     * Methods will be applied to merge existed and custom configuration data in merge method is
+     * specified as Config::mergeCustom. This method usually used to perform logical merge.
      *
      * @param mixed $internal Requested configuration data.
      * @param mixed $existed  Existed configuration data.
@@ -119,10 +129,10 @@ class ViewConfig extends ConfigWriter
             $directory = $this->file->normalizePath($this->baseDirectory . '/' . $directory, true);
 
             $result['namespaces'][$namespace][] = $directory;
-            foreach ($result['namespaces'][$namespace] as &$directory)
+            foreach ($result['namespaces'][$namespace] as &$namespaceDirectory)
             {
-                $directory = $this->file->normalizePath($directory, true);
-                unset($directory);
+                $namespaceDirectory = $this->file->normalizePath($namespaceDirectory, true);
+                unset($namespaceDirectory);
             }
 
             $result['namespaces'][$namespace] = array_unique($result['namespaces'][$namespace]);
