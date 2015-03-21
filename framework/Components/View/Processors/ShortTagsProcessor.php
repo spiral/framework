@@ -24,9 +24,9 @@ class ShortTagsProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array    $options
-     * @param ViewManager     $view View component instance (if presented).
-     * @param Isolator $isolator
+     * @param array       $options
+     * @param ViewManager $view View component instance (if presented).
+     * @param Isolator    $isolator
      */
     public function __construct(array $options, ViewManager $view = null, Isolator $isolator = null)
     {
@@ -51,11 +51,6 @@ class ShortTagsProcessor implements ProcessorInterface
 
         foreach ($phpBlocks as &$phpBlock)
         {
-            if (substr($phpBlock, 0, 3) == '<?=')
-            {
-                $phpBlock = '<?php echo ' . ltrim(substr($phpBlock, 3));
-            }
-
             if (preg_match('/^<\?(?!php)/', $phpBlock))
             {
                 $phpBlock = '<?php ' . substr($phpBlock, 2);
