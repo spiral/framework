@@ -333,45 +333,51 @@ class ViewManager extends Component
     }
 
     /**
-     * Performs view file rendering. View file will can be selected from specified namespace, or
+     * @param       $view
+     * @param array $data
+     * @return View
+     */
+    public function get($view, array $data = array())
+    {
+        $namespace = $this->defaultNamespace;
+        if (strpos($view, ':'))
+        {
+            list($namespace, $view) = explode(':', $view);
+        }
+
+        return View::make(array(
+            'namespace' => $namespace,
+            'view'      => $view,
+            'filename'  => $this->getFilename($namespace, $view),
+            'data'      => $data
+        ));
+    }
+
+    /**
+     * Perform view file rendering. View file will can be selected from specified namespace, or
      * default namespace if not specified. Namespaces are defined in view config, or view event by
-     * installed modules and other components, to specify namespace use syntax "namespace:view",
-     * view name should't include .php extensions, however it can include folders and sub folders.
+     * installed modules and other components, to specify namespace use syntax "namespace:view", view
+     * name should't include .php extensions, however it can include folders and sub folders.
      *
      * View data has to be associated array and will be exported using extract() function and set of
      * local view variables, here variable name will be identical to array key.
      *
-     * Every view file will be pro-processed using view processors (also defined in view config)
-     * before rendering, result of pre-processing will be stored in names cache file to speed-up future
+     * Every view file will be pro-processed using view processors (also defined in view config) before
+     * rendering, result of pre-processing will be stored in names cache file to speed-up future
      * renderings.
      *
      * Example or view names:
      * home                     - render home view from default namespace
      * namespace:home           - render home view from specified namespace
      *
-     * @param string $__view__     View name without .php extension, can include namespace prefix
-     *                             separated by : symbol.
-     * @param array  $__viewData__ Array or view data, will be exported as local view variables, not
-     *                             available in view processors.
-     * @return mixed
+     * @param string $view View name without .php extension, can include namespace prefix separated
+     *                     by : symbol.
+     * @param array  $data Array or view data, will be exported as local view variables, not available
+     *                     in view processors.
+     * @return string
      */
-    public function render($__view__, array $__viewData__ = array())
+    public function render($view, array $data = array())
     {
-        $__namespace__ = $this->defaultNamespace;
-        if (strpos($__view__, ':'))
-        {
-            list($__namespace__, $__view__) = explode(':', $__view__);
-        }
-
-        benchmark('view::render', $__namespace__ . ':' . $__view__);
-        ob_start();
-
-        extract($__viewData__, EXTR_OVERWRITE);
-        include $this->getFilename($__namespace__, $__view__);
-
-        $result = ob_get_clean();
-        benchmark('view::render', $__namespace__ . ':' . $__view__);
-
-        return $result;
+        return $this->get($view, $data)->render();
     }
 }
