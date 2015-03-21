@@ -9,7 +9,7 @@
 namespace Spiral\Components\Debug;
 
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container\ContainerException;
 use Exception;
@@ -187,7 +187,7 @@ class Snapshot extends Component
             return $this->snapshot;
         }
 
-        return $this->snapshot = View::getInstance()->render($this->view, array(
+        return $this->snapshot = ViewManager::getInstance()->render($this->view, array(
             'exception' => $this
         ));
     }

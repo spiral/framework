@@ -9,7 +9,7 @@
 namespace Spiral\Tests\Cases\Components\View;
 
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Spiral\Helpers\StringHelper;
 use Spiral\Support\Tests\TestCase;
 use Spiral\Tests\MemoryCore;
@@ -626,7 +626,7 @@ class TemplaterTest extends TestCase
      * Configured view component.
      *
      * @param array $config
-     * @return View
+     * @return ViewManager
      * @throws \Spiral\Core\CoreException
      */
     protected function viewComponent(array $config = array())
@@ -656,7 +656,7 @@ class TemplaterTest extends TestCase
             );
         }
 
-        return new View(
+        return new ViewManager(
             MemoryCore::getInstance()->setConfig('views', $config),
             new FileManager()
         );

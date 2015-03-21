@@ -9,7 +9,7 @@
 namespace Spiral\Components\View\Processors\Templater;
 
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Spiral\Components\View\ViewException;
 
 class ImportAlias
@@ -77,7 +77,7 @@ class ImportAlias
         }
         else
         {
-            $this->namespace = View::getInstance()->defaultNamespace();
+            $this->namespace = ViewManager::getInstance()->defaultNamespace();
         }
 
         if (!empty($options['pattern']))
@@ -149,12 +149,12 @@ class ImportAlias
     /**
      * Will generate list of aliases associated with this import.
      *
-     * @param View   $view
+     * @param ViewManager   $view
      * @param string $separator
      * @return array
      * @throws ViewException
      */
-    public function generateAliases(View $view, $separator = '.')
+    public function generateAliases(ViewManager $view, $separator = '.')
     {
         $file = FileManager::getInstance();
         if (isset(self::$aliases[$this->aliasID()]))
@@ -192,7 +192,7 @@ class ImportAlias
             if ($file->exists($targetDirectory))
             {
                 //Getting views
-                foreach ($file->getFiles($targetDirectory, array(substr(View::EXTENSION, 1))) as $filename)
+                foreach ($file->getFiles($targetDirectory, array(substr(ViewManager::EXTENSION, 1))) as $filename)
                 {
                     //Filename in namespace
                     $name = $file->relativePath($filename, $targetDirectory);

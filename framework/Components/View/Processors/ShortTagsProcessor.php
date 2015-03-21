@@ -10,7 +10,7 @@ namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 
 class ShortTagsProcessor implements ProcessorInterface
 {
@@ -25,10 +25,10 @@ class ShortTagsProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array    $options
-     * @param View     $view View component instance (if presented).
+     * @param ViewManager     $view View component instance (if presented).
      * @param Isolator $isolator
      */
-    public function __construct(array $options, View $view = null, Isolator $isolator = null)
+    public function __construct(array $options, ViewManager $view = null, Isolator $isolator = null)
     {
         $this->isolator = $isolator;
     }

@@ -9,7 +9,7 @@
 namespace Spiral\Facades;
 
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\View as ViewComponent;
+use Spiral\Components\View\ViewManager as ViewComponent;
 use Spiral\Core\Events\DispatcherInterface;
 use Spiral\Core\Facade;
 

@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Processors;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\Processors\Templater\ImportAlias;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\Processors\Templater\Node;
 use Spiral\Core\Component;
@@ -70,7 +70,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * View component instance.
      *
-     * @var View
+     * @var ViewManager
      */
     protected $view = null;
 
@@ -78,14 +78,14 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      * New processors instance with options specified in view config.
      *
      * @param array $options
-     * @param View  $view View component instance (if presented).
+     * @param ViewManager  $view View component instance (if presented).
      */
-    public function __construct(array $options, View $view = null)
+    public function __construct(array $options, ViewManager $view = null)
     {
         $this->options = $options + $this->options;
         Node::setSupervisor($this);
 
-        $this->view = $view ?: View::getInstance();
+        $this->view = $view ?: ViewManager::getInstance();
     }
 
     /**
@@ -349,7 +349,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 );
 
                 //There is no need to force exception if import not loaded, but we can log it
-                View::logger()->error(
+                ViewManager::logger()->error(
                     "{message} in {file} at line {line} defined by '{tokenName}'",
                     array(
                         'message'   => $exception->getMessage(),

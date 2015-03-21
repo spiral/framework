@@ -9,7 +9,7 @@
 namespace Spiral\Commands\View;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -51,10 +51,10 @@ class CacheCommand extends Command
             $formatter = $this->getHelper('formatter');
             foreach ($directories as $directory)
             {
-                foreach ($this->file->getFiles($directory, array(substr(View::EXTENSION, 1))) as $filename)
+                foreach ($this->file->getFiles($directory, array(substr(ViewManager::EXTENSION, 1))) as $filename)
                 {
                     //View name (removing extension and ./)
-                    $view = substr($this->file->relativePath($filename, $directory), 2, -1 * strlen(View::EXTENSION));
+                    $view = substr($this->file->relativePath($filename, $directory), 2, -1 * strlen(ViewManager::EXTENSION));
 
                     if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE)
                     {

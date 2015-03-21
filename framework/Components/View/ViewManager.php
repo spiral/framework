@@ -13,7 +13,7 @@ use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
 
-class View extends Component
+class ViewManager extends Component
 {
     /**
      * Will provide us helper method getInstance().

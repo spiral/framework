@@ -10,7 +10,7 @@ namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\Localization\I18nManager;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 
 class I18nProcessor implements ProcessorInterface
 {
@@ -35,7 +35,7 @@ class I18nProcessor implements ProcessorInterface
     /**
      * View component.
      *
-     * @var View
+     * @var ViewManager
      */
     protected $view = null;
 
@@ -50,10 +50,10 @@ class I18nProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array       $options
-     * @param View        $view View component instance (if presented).
+     * @param ViewManager        $view View component instance (if presented).
      * @param I18nManager $i18n LocalizationManager component instance.
      */
-    public function __construct(array $options, View $view = null, I18nManager $i18n = null)
+    public function __construct(array $options, ViewManager $view = null, I18nManager $i18n = null)
     {
         $this->options = $options + $this->options;
         $this->view = $view;

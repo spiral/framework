@@ -9,7 +9,7 @@
 namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 
 class StaticProcessor implements ProcessorInterface
 {
@@ -25,7 +25,7 @@ class StaticProcessor implements ProcessorInterface
     /**
      * View component instance.
      *
-     * @var View
+     * @var ViewManager
      */
     protected $view = null;
 
@@ -33,9 +33,9 @@ class StaticProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array $options
-     * @param View  $view View component instance (if presented).
+     * @param ViewManager  $view View component instance (if presented).
      */
-    public function __construct(array $options, View $view = null)
+    public function __construct(array $options, ViewManager $view = null)
     {
         $this->options = $options + $this->options;
         $this->view = $view;

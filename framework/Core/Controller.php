@@ -23,7 +23,7 @@ use Spiral\Components;
  * @property Components\Tokenizer\Tokenizer        $tokenizer
  * @property Components\Cache\CacheManager         $cache
  * @property Components\Localization\I18nManager   $i18n
- * @property Components\View\View                  $view
+ * @property Components\View\ViewManager                  $view
  * @property Components\Redis\RedisManager         $redis
  * @property Components\Encrypter\Encrypter        $encrypter
  * @property Components\Image\ImageManager         $image

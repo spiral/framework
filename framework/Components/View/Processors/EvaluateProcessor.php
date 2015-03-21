@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Processors;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 
 class EvaluateProcessor implements ProcessorInterface
 {
@@ -28,7 +28,7 @@ class EvaluateProcessor implements ProcessorInterface
     /**
      * View component instance.
      *
-     * @var View
+     * @var ViewManager
      */
     protected $view = null;
 
@@ -50,11 +50,11 @@ class EvaluateProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array       $options
-     * @param View        $view View component instance (if presented).
+     * @param ViewManager        $view View component instance (if presented).
      * @param FileManager $file FileManager component.
      * @param Isolator    $isolator
      */
-    public function __construct(array $options, View $view = null, FileManager $file = null, Isolator $isolator = null)
+    public function __construct(array $options, ViewManager $view = null, FileManager $file = null, Isolator $isolator = null)
     {
         $this->options = $options + $this->options;
         $this->view = $view;

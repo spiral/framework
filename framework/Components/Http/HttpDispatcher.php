@@ -16,7 +16,7 @@ use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Router\RouterTrait;
 use Spiral\Components\Http\Router\Router;
 use Spiral\Components\View\VariableProviderInterface;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
@@ -549,7 +549,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
         if (isset($this->config['httpErrors'][$code]))
         {
             //We can render some content
-            $content = View::getInstance()->render($this->config['httpErrors'][$code], array(
+            $content = ViewManager::getInstance()->render($this->config['httpErrors'][$code], array(
                 'request' => $this->request
             ));
         }

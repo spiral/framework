@@ -9,7 +9,7 @@
 namespace Spiral\Tests\Cases\Components\View;
 
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Spiral\Support\Tests\TestCase;
 use Spiral\Tests\MemoryCore;
 
@@ -59,7 +59,7 @@ class NamespacesTest extends TestCase
             );
         }
 
-        return new View(
+        return new ViewManager(
             MemoryCore::getInstance()->setConfig('views', $config),
             new FileManager()
         );

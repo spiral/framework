@@ -11,7 +11,7 @@ namespace Spiral\Tests\Cases\Components\Debugger;
 use Spiral\Components\Debug\Debugger;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Tokenizer;
-use Spiral\Components\View\View;
+use Spiral\Components\View\ViewManager;
 use Spiral\Core\Container;
 use Spiral\Core\Loader;
 use Spiral\Support\Tests\TestCase;
@@ -134,7 +134,7 @@ class SnapshotTest extends TestCase
             );
         }
 
-        return new View(
+        return new ViewManager(
             MemoryCore::getInstance()->setConfig('views', $config),
             new FileManager()
         );
