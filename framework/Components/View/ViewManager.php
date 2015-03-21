@@ -346,8 +346,8 @@ class ViewManager extends Component
      * renderings.
      *
      * Example or view names:
-     * home                     - rendering home view from default namespace
-     * namespace:home           - rendering home view from specified namespace
+     * home                     - render home view from default namespace
+     * namespace:home           - render home view from specified namespace
      *
      * @param string $__view__     View name without .php extension, can include namespace prefix
      *                             separated by : symbol.

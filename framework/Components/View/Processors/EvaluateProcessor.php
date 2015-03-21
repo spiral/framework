@@ -70,9 +70,8 @@ class EvaluateProcessor implements ProcessorInterface
     }
 
     /**
-     * Performs view code pre-processing. View component will provide view source into processors,
-     * processors can perform any source manipulations using this code expect final rendering. Will
-     * run all php code in ASP tags during pre-rendering stage. This is "caching" php.
+     * Performs view code pre-processing. All php blocks with included compilation flag will be
+     * rendered as this stage.
      *
      * @param string $source    View source (code).
      * @param string $view      View name.

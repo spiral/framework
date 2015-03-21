@@ -59,9 +59,9 @@ class Tokenizer extends Component
     protected $loader = null;
 
     /**
-     * Rules and styles to highlight code using tokens. This rules used in Tokenizer->getCode() method to colorize some
-     * php parts in exceptions. Rule specified by: "style" => array(tokens), example:
-     *
+     * Rules and styles to highlight code using tokens. This rules used in Tokenizer->getCode()
+     * method to colorize some php parts in exceptions. Rule specified by: "style" => array(tokens),
+     * example:
      * Tokenizer->setHighlighting(array(
      *      'color: blue' => array(
      *          T_DNUMBER, T_LNUMBER
@@ -80,9 +80,10 @@ class Tokenizer extends Component
     protected $cache = array();
 
     /**
-     * Tokenizer used by spiral to fetch list of available classes, their declarations and locations. This class mostly
-     * used for indexing, orm and odm schemas and etc. Additionally this class has ability to perform simple PHP code
-     * highlighting which can be used in ExceptionResponses and snapshots.
+     * Tokenizer used by spiral to fetch list of available classes, their declarations and locations.
+     * This class mostly used for indexing, orm and odm schemas and etc. Additionally this class has
+     * ability to perform simple PHP code highlighting which can be used in ExceptionResponses and
+     * snapshots.
      *
      * @param Core        $core
      * @param FileManager $file
@@ -104,8 +105,8 @@ class Tokenizer extends Component
     }
 
     /**
-     * Rules and styles to highlight code using tokens. This rules used in Tokenizer->getCode() method to colorize some php
-     * parts in exceptions. Rule specified by: "style" => array(tokens), example:
+     * Rules and styles to highlight code using tokens. This rules used in Tokenizer->getCode() method
+     * to colorize some php parts in exceptions. Rule specified by: "style" => array(tokens), example:
      *
      * Tokenizer->setHighlighting(array(
      *      'color: blue' => array(
@@ -124,9 +125,9 @@ class Tokenizer extends Component
     }
 
     /**
-     * Fetch specified amount of lines from provided filename and highlight them according to specified highlighting rules
-     * (setHighlighting() method), target (middle) line number are specified in "$targetLine" argument and will be used
-     * as reference to count lines before and after.
+     * Fetch specified amount of lines from provided filename and highlight them according to specified
+     * highlighting rules (setHighlighting() method), target (middle) line number are specified in
+     * "$targetLine" argument and will be used as reference to count lines before and after.
      *
      * Example:
      * line = 10, countLines = 10
@@ -136,7 +137,8 @@ class Tokenizer extends Component
      *
      * @param string $filename   Filename to fetch and highlight lines from.
      * @param int    $targetLine Line number where code should be highlighted from.
-     * @param int    $countLines Lines to fetch before and after code line specified in previous argument.
+     * @param int    $countLines Lines to fetch before and after code line specified in previous
+     *                           argument.
      * @return string
      */
     public function highlightCode($filename, $targetLine, $countLines = 10)
