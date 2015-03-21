@@ -64,7 +64,7 @@ abstract class Checker
      */
     public function getMessage($method, \ReflectionClass $reflection = null)
     {
-        if ($reflection)
+        if (!empty($reflection))
         {
             $messages = $reflection->getDefaultProperties()['messages'];
             if (isset($messages[$method]))

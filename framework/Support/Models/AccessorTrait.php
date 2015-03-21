@@ -40,7 +40,8 @@ trait AccessorTrait
     abstract public function serializeData();
 
     /**
-     * Serialize accessor mocked value. This is legacy name and used like that to be compatible with ORM and ODM engines.
+     * Serialize accessor mocked value. This is legacy name and used like that to be compatible with
+     * ORM and ODM engines.
      *
      * @return mixed
      */

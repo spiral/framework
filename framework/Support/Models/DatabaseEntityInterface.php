@@ -20,8 +20,8 @@ interface DatabaseEntityInterface
     public function setField($name, $value, $filter = true);
 
     /**
-     * Get one specific field value and apply getter filter to it. You can disable getter filter by providing second
-     * argument.
+     * Get one specific field value and apply getter filter to it. You can disable getter filter by
+     * providing second argument.
      *
      * @param string $name    Field name.
      * @param mixed  $default Default value to return if field not set.
@@ -47,7 +47,8 @@ interface DatabaseEntityInterface
     public function setFields($fields = array());
 
     /**
-     * Create new model and set it's fields, all field values will be passed thought model filters to ensure their type.
+     * Create new model and set it's fields, all field values will be passed thought model filters
+     * to ensure their type.
      *
      * @param array $fields Model fields to set, will be passed thought filters.
      * @return static
@@ -70,8 +71,8 @@ interface DatabaseEntityInterface
     public function hasUpdates($field = null);
 
     /**
-     * Save model to related database. Model validation has to be performed before saving. Method should return true
-     * is model was successfully saved or false if validation/saving error occure.
+     * Save model to related database. Model validation has to be performed before saving. Method
+     * should return true is model was successfully saved or false if validation/saving error occure.
      *
      * @return bool
      */

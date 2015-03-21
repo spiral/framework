@@ -13,7 +13,8 @@ use Spiral\Support\Validation\ValueInterface;
 interface AccessorInterface extends ValueInterface, \JsonSerializable
 {
     /**
-     * Accessors can be used to mock different model values using "representative" class, like DateTime for timestamps.
+     * Accessors can be used to mock different model values using "representative" class, like
+     * DateTime for timestamps.
      *
      * @param mixed  $data    Data to mock.
      * @param object $parent
@@ -30,7 +31,8 @@ interface AccessorInterface extends ValueInterface, \JsonSerializable
     public function embed($parent);
 
     /**
-     * Serialize accessor mocked value. This is legacy name and used like that to be compatible with ORM and ODM engines.
+     * Serialize accessor mocked value. This is legacy name and used like that to be compatible with
+     * ORM and ODM engines.
      *
      * @return mixed
      */

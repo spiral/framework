@@ -20,7 +20,8 @@ class Timestamp extends Carbon implements AccessorInterface
     use AccessorTrait;
 
     /**
-     * Accessors can be used to mock different model values using "representative" class, like DateTime for timestamps.
+     * Accessors can be used to mock different model values using "representative" class, like
+     * DateTime for timestamps.
      *
      * @param mixed  $data
      * @param object $parent
@@ -91,8 +92,8 @@ class Timestamp extends Carbon implements AccessorInterface
     }
 
     /**
-     * Convert input variable to a valid timestamp. Can accept timestamp (will be converted to an int) or valid datetime
-     * string. Timezone of input datetime string can be set.
+     * Convert input variable to a valid timestamp. Can accept timestamp (will be converted to an int)
+     * or valid datetime string. Timezone of input datetime string can be set.
      *
      * @param string $datetime Timestamp or valid datetime string.
      * @param string $timezone Reference timezone. Will not apply if the input is a valid timestamp.
@@ -111,7 +112,7 @@ class Timestamp extends Carbon implements AccessorInterface
             return (int)$datetime;
         }
 
-        if ($timezone)
+        if (!empty($timezone))
         {
             return (new self($datetime, $timezone))->getTimestamp();
         }
