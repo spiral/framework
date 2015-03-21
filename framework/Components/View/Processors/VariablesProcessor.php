@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Processors;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
-class StaticProcessor implements ProcessorInterface
+class VariablesProcessor implements ProcessorInterface
 {
     /**
      * Static variables replace options.
