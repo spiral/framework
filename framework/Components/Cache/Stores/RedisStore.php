@@ -60,7 +60,8 @@ class RedisStore extends CacheStore
     }
 
     /**
-     * Check if store is working properly. Should check if the store drives still exists, files are writable, etc.
+     * Check if store is working properly. Should check if the store drives still exists, files are
+     * writable, etc.
      *
      * @return bool
      */
