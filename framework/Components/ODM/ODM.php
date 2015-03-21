@@ -39,8 +39,8 @@ class ODM extends Component implements Container\InjectionManagerInterface
     protected $core = null;
 
     /**
-     * Loaded documents schema. Schema contains association between models and collections, children chain, compiled default
-     * values and other presets can't be fetched in real time.
+     * Loaded documents schema. Schema contains association between models and collections, children
+     * chain, compiled default values and other presets can't be fetched in real time.
      *
      * @var array|null
      */
@@ -66,8 +66,9 @@ class ODM extends Component implements Container\InjectionManagerInterface
     }
 
     /**
-     * Get instance of MongoDatabase to handle connection, collections fetching and other operations. Spiral MongoDatabase
-     * is layer at top of MongoClient ans MongoDB, it has all MongoDB features plus ability to be injected.
+     * Get instance of MongoDatabase to handle connection, collections fetching and other operations.
+     * Spiral MongoDatabase is layer at top of MongoClient ans MongoDB, it has all MongoDB features
+     * plus ability to be injected.
      *
      * @param string $database Client ID.
      * @param array  $config   Connection options, only required for databases not listed in ODM config.
@@ -86,22 +87,26 @@ class ODM extends Component implements Container\InjectionManagerInterface
             return $this->databases[$database];
         }
 
-        if (!$config)
+        if (empty($config))
         {
             if (!isset($this->config['databases'][$database]))
             {
-                throw new ODMException("Unable to initiate mongo database, no presets for '{$database}' found.");
+                throw new ODMException(
+                    "Unable to initiate mongo database, no presets for '{$database}' found."
+                );
             }
 
             $config = $this->config['databases'][$database];
         }
 
         benchmark('odm::database', $database);
+
         $this->databases[$database] = Container::get(self::DATABASE, array(
             'name'   => $database,
             'config' => $config,
             'odm'    => $this
         ), null, true);
+
         benchmark('odm::database', $database);
 
         return $this->databases[$database];
@@ -146,8 +151,8 @@ class ODM extends Component implements Container\InjectionManagerInterface
     }
 
     /**
-     * Get ODM schema reader. Schema will detect all existed documents, collections, relationships between them and will
-     * generate virtual documentation.
+     * Get ODM schema reader. Schema will detect all existed documents, collections, relationships
+     * between them and will generate virtual documentation.
      *
      * @return SchemaReader
      */
@@ -157,17 +162,19 @@ class ODM extends Component implements Container\InjectionManagerInterface
     }
 
     /**
-     * Refresh ODM schema state, will reindex all found document models and render documentation for them. This is slow
-     * method using Tokenizer, refreshSchema() should not be called by user request.
+     * Refresh ODM schema state, will reindex all found document models and render documentation for
+     * them. This is slow method using Tokenizer, refreshSchema() should not be called by user request.
      */
     public function updateSchema()
     {
         $schema = $this->schemaReader();
 
-        if ($this->config['schema']['documentation'])
+        if (!empty($this->config['schema']['documentation']))
         {
             //Virtual ODM documentation to help IDE
-            DocumentationExporter::make(compact('schema'))->render($this->config['schema']['documentation']);
+            DocumentationExporter::make(compact('schema'))->render(
+                $this->config['schema']['documentation']
+            );
         }
 
         $this->schema = $this->event('odmSchema', $schema->normalizeSchema());
@@ -177,15 +184,15 @@ class ODM extends Component implements Container\InjectionManagerInterface
     }
 
     /**
-     * Create valid MongoId object based on string or id provided from client side, this methods can be used as model filter
-     * as it will pass MongoId objects without any change.
+     * Create valid MongoId object based on string or id provided from client side, this methods can
+     * be used as model filter as it will pass MongoId objects without any change.
      *
      * @param mixed $mongoID String or MongoId object.
      * @return \MongoId|null
      */
     public static function mongoID($mongoID)
     {
-        if (!$mongoID)
+        if (empty($mongoID))
         {
             return null;
         }
@@ -212,8 +219,8 @@ class ODM extends Component implements Container\InjectionManagerInterface
     }
 
     /**
-     * Method will return class name selected based on class definition rules, rules defined in Document class and can be
-     * LOGICAL or FIELDS based.
+     * Method will return class name selected based on class definition rules, rules defined in
+     * Document class and can be LOGICAL or FIELDS based.
      *
      * @see Document::DEFINITION
      * @param mixed $fields     Document fields fetched from database.
@@ -249,8 +256,8 @@ class ODM extends Component implements Container\InjectionManagerInterface
     }
 
     /**
-     * This is set of constants used in normalized ODM schema, you can use them to read already created schema but they
-     * are useless besides normal development process.
+     * This is set of constants used in normalized ODM schema, you can use them to read already created
+     * schema but they are useless besides normal development process.
      *
      * Class definition options.
      */
