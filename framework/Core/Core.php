@@ -64,10 +64,11 @@ class Core extends Container implements ConfigLoaderInterface
     const CONFIGS = '.php';
 
     /**
-     * Current environment id (name), that value can be used directly in code by accessing Core::getEnvironment() or
-     * Application::getEnvironment() (if you using that name), environment can be changed at any moment via setEnvironment()
-     * method. Environment used to merge configuration files (default + environment), so changing this value in a middle
-     * of application will keep already initiated components binded to previous values.
+     * Current environment id (name), that value can be used directly in code by accessing
+     * Core::getEnvironment() or Application::getEnvironment() (if you using that name), environment
+     * can be changed at any moment via setEnvironment() method. Environment used to merge configuration
+     * files (default + environment), so changing this value in a middle of application will keep
+     * already initiated components binded to previous values.
      *
      * @var string
      */
@@ -82,9 +83,9 @@ class Core extends Container implements ConfigLoaderInterface
     const TESTING     = 'testing';
 
     /**
-     * Set of directory aliases defined during application bootstrap and in index.php file. Such directory will be automatically
-     * resolved during reading config files and can be accessed using Core::directory() method. You can redefine any directory
-     * at any moment of time using same method.
+     * Set of directory aliases defined during application bootstrap and in index.php file. Such
+     * directory will be automatically resolved during reading config files and can be accessed using
+     * Core::directory() method. You can redefine any directory at any moment of time using same method.
      *
      * You can additionally use short function directory() to get or assign directory alias.
      *
@@ -100,16 +101,18 @@ class Core extends Container implements ConfigLoaderInterface
     );
 
     /**
-     * Set of components to be pre-loaded before bootstrap method. By default spiral load Loader, Modules and I18n components.
+     * Set of components to be pre-loaded before bootstrap method. By default spiral load Loader,
+     * Modules and I18n components.
      *
      * @var array
      */
     protected $autoload = array('loader', 'modules');
 
     /**
-     * Current application id, should be unique value between your environments, that value can be used in cache adapters
-     * to isolate multiple spiral instances, it's recommend to keep applicationID unique in terms of server. That value
-     * also will be used as postfix for all cache configurations and application data files.
+     * Current application id, should be unique value between your environments, that value can be
+     * used in cache adapters to isolate multiple spiral instances, it's recommend to keep applicationID
+     * unique in terms of server. That value also will be used as postfix for all cache configurations
+     * and application data files.
      *
      * @var string
      */
@@ -123,22 +126,45 @@ class Core extends Container implements ConfigLoaderInterface
     private $dispatcher = null;
 
     /**
-     * Initial application timezone. Can be redefined in child core realization. You can change timezones in runtime by
-     * using setTimezone() method.
+     * Initial application timezone. Can be redefined in child core realization. You can change
+     * timezones in runtime by using setTimezone() method.
      *
      * @var string
      */
     protected $timezone = 'UTC';
 
     /**
-     * Core constructor can be redefined by custom application and called as first function inside Core::start() or
-     * Application::start(). Core instance will be automatically binded for future use under alias "core" and can be passed
-     * to components, models and controllers using IoC container.
+     * Core constructor can be redefined by custom application and called as first function inside
+     * Core::start() or Application::start(). Core instance will be automatically binded for future
+     * use under alias "core" and can be passed to components, models and controllers using IoC container.
      **
-     * By default spiral will to check file named "environment.php" under application data directory, such file should
-     * contain simple php code to return environment id.
+     * By default spiral will to check file named "environment.php" under application data directory,
+     * such file should contain simple php code to return environment id.
      */
     public function __construct()
+    {
+        self::$directories['config'] = self::$directories['application'] . '/config';
+        self::$directories['runtime'] = self::$directories['application'] . '/runtime';
+        self::$directories['cache'] = self::$directories['runtime'] . '/cache';
+
+        $this->initBindings();
+
+        if (empty($this->environment))
+        {
+            $filename = self::directory('runtime') . '/environment.php';
+            $this->setEnvironment(file_exists($filename) ? (require $filename) : self::DEVELOPMENT);
+        }
+
+        /**
+         * Timezones are really important.
+         */
+        date_default_timezone_set($this->timezone);
+    }
+
+    /**
+     * Initiate application binding.
+     */
+    protected function initBindings()
     {
         self::$bindings = array(
             'core'                                   => 'Spiral\Core\Core',
@@ -170,21 +196,6 @@ class Core extends Container implements ConfigLoaderInterface
             'Spiral\Core\Events\DispatcherInterface' => 'events',
             'Psr\Log\LoggerInterface'                => 'logger'
         );
-
-        self::$directories['config'] = self::$directories['application'] . '/config';
-        self::$directories['runtime'] = self::$directories['application'] . '/runtime';
-        self::$directories['cache'] = self::$directories['runtime'] . '/cache';
-
-        if (!$this->environment)
-        {
-            $filename = self::directory('runtime') . '/environment.php';
-            $this->setEnvironment(file_exists($filename) ? (require $filename) : self::DEVELOPMENT);
-        }
-
-        /**
-         * Timezones are really important.
-         */
-        date_default_timezone_set($this->timezone);
     }
 
     /**
@@ -196,7 +207,7 @@ class Core extends Container implements ConfigLoaderInterface
      */
     public static function directory($alias, $value = null)
     {
-        if (!$value)
+        if (func_num_args() === 1)
         {
             return self::$directories[$alias];
         }
@@ -215,9 +226,10 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Current application id, should be unique value between your environments, that value can be used in cache adapters
-     * to isolate multiple spiral instances, it's recommend to keep applicationID unique in terms of server. By default
-     * value generated using current environment and name of directory where project files located.
+     * Current application id, should be unique value between your environments, that value can be
+     * used in cache adapters to isolate multiple spiral instances, it's recommend to keep applicationID
+     * unique in terms of server. By default value generated using current environment and name of
+     * directory where project files located.
      *
      * @return mixed
      */
@@ -227,8 +239,8 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Environment can be changed in runtime, all initiated components will use existed configurations, you will
-     * have to reload binded components to ensure that new configuration data used.
+     * Environment can be changed in runtime, all initiated components will use existed configurations,
+     * you will have to reload binded components to ensure that new configuration data used.
      *
      * @param mixed $environment
      * @param bool  $regenerateID
@@ -236,7 +248,7 @@ class Core extends Container implements ConfigLoaderInterface
     public function setEnvironment($environment, $regenerateID = true)
     {
         $this->environment = $environment;
-        iF ($regenerateID)
+        if ($regenerateID)
         {
             $this->applicationID = abs(crc32(self::directory('root') . $this->environment));
         }
@@ -286,12 +298,13 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Application enterpoint, should be called once in index.php file. That method will declare runtime
-     * version of core, initiate loader and run bootstrap() method. Rest of application flow will be controlled
-     * using Dispatcher instance which can be declared in $core->getDispatcher(). Use Application->start() to start
-     * application dispatcher.
+     * Application enterpoint, should be called once in index.php file. That method will declare
+     * runtime version of core, initiate loader and run bootstrap() method. Rest of application flow
+     * will be controlled using Dispatcher instance which can be declared in $core->getDispatcher().
+     * Use Application->start() to start application.
      *
-     * @param array $directories Spiral directories should include root, libraries, config and runtime directories.
+     * @param array $directories Spiral directories should include root, libraries, config and runtime
+     *                           directories.
      * @return static
      * @throws CoreException
      */
@@ -336,8 +349,8 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Method used by core to switch between HTTP and CLI dispatchers, can also be used in other application parts to
-     * determinate PHP environment.
+     * Method used by core to switch between HTTP and CLI dispatchers, can also be used in other
+     * application parts to determinate PHP environment.
      *
      * @return bool
      */
@@ -347,10 +360,10 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Should return appropriate to use dispatcher, by default implementation core will select dispatcher based on php environment,
-     * HTTP component will be used for web and CLI will be constructed while calling from console. This method can be
-     * redefined to introduce new dispatchers or logic to select one. Newly constructed dispatched will be binded under
-     * "dispatcher" alias.
+     * Should return appropriate to use dispatcher, by default implementation core will select
+     * dispatcher based on php environment, HTTP component will be used for web and CLI will be
+     * constructed while calling from console. This method can be redefined to introduce new dispatchers
+     * or logic to select one. Newly constructed dispatched will be binded under "dispatcher" alias.
      *
      * @return DispatcherInterface
      */
@@ -384,8 +397,8 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Calling controller method by fully specified or short controller name, action and addition options such as default
-     * controllers namespace, default name and postfix.
+     * Calling controller method by fully specified or short controller name, action and addition
+     * options such as default controllers namespace, default name and postfix.
      *
      * @param string $controller Controller name, or class, or name with namespace prefix.
      * @param string $action     Controller action, empty by default (controller will use default action).
@@ -404,7 +417,7 @@ class Core extends Container implements ConfigLoaderInterface
         $controller = self::get($controller);
         if (!$controller instanceof ControllerInterface)
         {
-            throw new CoreException("Not a valid controller.");
+            throw new ClientException(404, "Not a valid controller.");
         }
 
         return $controller->callAction($action, $parameters);
@@ -474,8 +487,8 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Load data previously saved to application cache, if file is not exists null will be returned. This method can be
-     * replaced by Core Traits to use different ways to store data like APC (this was already done as experiment).
+     * Load data previously saved to application cache, if file is not exists null will be returned.
+     * This method can be replaced by Core Traits to use different ways to store data like APC.
      *
      * @param string $filename  Filename without .php
      * @param string $directory Application cache directory will be used by default.
@@ -488,6 +501,7 @@ class Core extends Container implements ConfigLoaderInterface
         {
             return null;
         }
+
         try
         {
             return (require $filename);
@@ -499,14 +513,15 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Save runtime data to application cache, previously saved file can be removed or rewritten at any moment. Cache is
-     * determined by current applicationID and different for different environments. This method can be replaced by Core
-     * Traits to use different ways to store data like APC (this was already done as experiment).
+     * Save runtime data to application cache, previously saved file can be removed or rewritten at
+     * any moment. Cache is determined by current applicationID and different for different environments.
+     * This method can be replaced by Core Traits to use different ways to store data like APC.
      *
-     * All data stored using var_export() function, be aware of having to many write requests, however read will be optimized
-     * by PHP using OPCache.
+     * All data stored using var_export() function, be aware of having to many write requests, however
+     * read will be optimized by PHP using OPCache.
      *
-     * File permission specified in File::RUNTIME to make file readable and writable for both web and CLI sessions.
+     * File permission specified in File::RUNTIME to make file readable and writable for both web and
+     * CLI sessions.
      *
      * @param string $filename  Filename without .php
      * @param mixed  $data      Data to be stored, any format supported by var_export().
@@ -517,10 +532,13 @@ class Core extends Container implements ConfigLoaderInterface
     {
         $filename = $this->makeFilename($filename, $directory);
 
-        //This is required as File system component and can be called pretty early
-        $file = !is_object(self::$bindings['file']) ? self::get(self::$bindings['file']) : self::$bindings['file'];
+        //This is required as FileManager system component and can be called pretty early
+        $file = !is_object(self::$bindings['file'])
+            ? self::get(self::$bindings['file'])
+            : self::$bindings['file'];
 
-        if ($file->write($filename, '<?php return ' . var_export($data, true) . ';', Components\Files\FileManager::RUNTIME, true))
+        $data = '<?php return ' . var_export($data, true) . ';';
+        if ($file->write($filename, $data, Components\Files\FileManager::RUNTIME, true))
         {
             return $filename;
         }
@@ -529,9 +547,10 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Load configuration files specified in application config directory. Config file may have extension, locked under
-     * Core::getEnvironment() directory, this section will replace original config while application is under giver
-     * environment. All config files with merged environment stored under cache directory.
+     * Load configuration files specified in application config directory. Config file may have
+     * extension, locked under Core::getEnvironment() directory, this section will replace original
+     * config while application is under giver environment. All config files with merged environment
+     * stored under cache directory.
      *
      * @param string $config Config filename (no .php)
      * @return array
@@ -549,19 +568,28 @@ class Core extends Container implements ConfigLoaderInterface
         {
             if (!file_exists($filename))
             {
-                throw new CoreException("Unable to load '{$config}' configuration, file not found.");
+                throw new CoreException(
+                    "Unable to load '{$config}' configuration, file not found."
+                );
             }
 
             $data = (require $filename);
 
-            $environment = self::$directories['config'] . '/' . $this->getEnvironment() . '/' . $config . self::CONFIGS;
+            $environment = self::$directories['config']
+                . '/' . $this->getEnvironment() . '/' . $config . self::CONFIGS;
+
             if (file_exists($environment))
             {
                 $data = array_merge($data, (require $environment));
             }
 
             $data = $this->event('config', compact('config', 'data', 'filename'))['data'];
-            !is_object(self::$bindings['file']) && (self::$bindings['file'] = self::get(self::$bindings['file']));
+
+            if (!is_object(self::$bindings['file']))
+            {
+                self::$bindings['file'] = self::get(self::$bindings['file']);
+            }
+
             $this->saveData($cached, $data, null, true);
 
             return $data;
@@ -606,8 +634,8 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Get extension to use for runtime data or configuration cache, all file in cache directory will additionally get
-     * applicationID postfix.
+     * Get extension to use for runtime data or configuration cache, all file in cache directory will
+     * additionally get applicationID postfix.
      *
      * @param string $filename  Runtime data file name (without extension).
      * @param string $directory Directory to store data in.
