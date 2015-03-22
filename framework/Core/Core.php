@@ -207,7 +207,7 @@ class Core extends Container implements ConfigLoaderInterface
      */
     public static function directory($alias, $value = null)
     {
-        if (func_num_args() === 1)
+        if (empty($value))
         {
             return self::$directories[$alias];
         }
