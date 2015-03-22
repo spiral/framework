@@ -33,7 +33,7 @@ use Spiral\Components;
  * @property Components\ORM\ORM                    $orm
  *
  * @property Components\Http\Request               $request
- * @property Components\Http\Cookies\CookieManager $cookies
+ * @property Components\Http\Cookies\CookieStore $cookies
  * @property Components\Session\SessionStore       $session
  * @property Components\Http\Router\Router         $router
  */

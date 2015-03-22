@@ -19,7 +19,7 @@ use Spiral\Components\Http\Response;
 use Spiral\Components\Session\Http\SessionStarter;
 use Spiral\Core\Component;
 
-class CookieManager extends Component implements MiddlewareInterface
+class CookieStore extends Component implements MiddlewareInterface
 {
     /**
      * Required traits.
