@@ -333,8 +333,21 @@ class ViewManager extends Component
     }
 
     /**
-     * @param       $view
-     * @param array $data
+     * Get instance of View class binded to specified view filename. View file will can be selected
+     * from specified namespace, or default namespace if not specified.
+     *
+     * Every view file will be pro-processed using view processors (also defined in view config) before
+     * rendering, result of pre-processing will be stored in names cache file to speed-up future
+     * renderings.
+     *
+     * Example or view names:
+     * home                     - render home view from default namespace
+     * namespace:home           - render home view from specified namespace
+     *
+     * @param string $view View name without .php extension, can include namespace prefix separated
+     *                     by : symbol.
+     * @param array  $data Array or view data, will be exported as local view variables, not available
+     *                     in view processors.
      * @return View
      */
     public function get($view, array $data = array())
@@ -355,9 +368,7 @@ class ViewManager extends Component
 
     /**
      * Perform view file rendering. View file will can be selected from specified namespace, or
-     * default namespace if not specified. Namespaces are defined in view config, or view event by
-     * installed modules and other components, to specify namespace use syntax "namespace:view", view
-     * name should't include .php extensions, however it can include folders and sub folders.
+     * default namespace if not specified.
      *
      * View data has to be associated array and will be exported using extract() function and set of
      * local view variables, here variable name will be identical to array key.
