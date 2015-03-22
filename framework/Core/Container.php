@@ -61,19 +61,26 @@ class Container extends Component
             if (!$ignoreII && $injectionManager = $reflector->getConstant('INJECTION_MANAGER'))
             {
                 //Apparently checking constant is faster than checking interface
-                return call_user_func(array($injectionManager, 'resolveInjection'), $reflector, $contextParameter);
+                return call_user_func(
+                    array($injectionManager, 'resolveInjection'),
+                    $reflector,
+                    $contextParameter
+                );
             }
             elseif ($reflector->isInstantiable())
             {
                 if ($constructor = $reflector->getConstructor())
                 {
-                    $instance = $reflector->newInstanceArgs(self::resolveArguments($constructor, $parameters));
+                    $instance = $reflector->newInstanceArgs(
+                        self::resolveArguments($constructor, $parameters)
+                    );
                 }
                 else
                 {
                     $instance = $reflector->newInstance();
                 }
 
+                //Component declared SINGLETON constant, binding as constant value and class name.
                 if ($singleton = $reflector->getConstant('SINGLETON'))
                 {
                     self::$bindings[$reflector->getName()] = self::$bindings[$singleton] = $instance;
@@ -106,7 +113,12 @@ class Container extends Component
         {
             if (is_string($binding[0]))
             {
-                $instance = self::get($binding[0], $parameters, $contextParameter, $ignoreII, $requester);
+                $instance = self::get(
+                    $binding[0],
+                    $parameters,
+                    $contextParameter,
+                    $ignoreII, $requester
+                );
             }
             else
             {
@@ -115,6 +127,7 @@ class Container extends Component
 
             if ($binding[1])
             {
+                //Singleton
                 self::$bindings[$alias] = $instance;
             }
 
@@ -153,6 +166,7 @@ class Container extends Component
 
                     if (!$userArguments || !$parameter->getClass() || is_object($parameterValue))
                     {
+                        //Provided directly
                         $arguments[] = $parameterValue;
                         continue;
                     }

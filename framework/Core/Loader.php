@@ -43,8 +43,9 @@ class Loader extends Component
     protected $name = 'loadmap';
 
     /**
-     * Cached class locations, used to speed up classes loading and resolving names by namespace and postfix. In any
-     * scenario loadmap can significantly speedup application, due there is no need to ping filesystem anymore.
+     * Cached class locations, used to speed up classes loading and resolving names by namespace and
+     * postfix. In any scenario loadmap can significantly speedup application, due there is no need
+     * to ping filesystem anymore.
      *
      * @var array
      */
@@ -58,8 +59,8 @@ class Loader extends Component
     protected $enabled = false;
 
     /**
-     * Loader will automatically handle SPL autoload functions to start caching loadmap. In future loadmap can be used
-     * to pre-load all classes via one single file.
+     * Loader will automatically handle SPL autoload functions to start caching loadmap. In future
+     * loadmap can be used to pre-load all classes via one single file.
      *
      * @param Core $core
      */
@@ -70,8 +71,8 @@ class Loader extends Component
     }
 
     /**
-     * Performs auto-loading and core components initializations. All found classes will be saved into loadmap and fetched
-     * directly from it next call load request (without performing file lookup).
+     * Performs auto-loading and core components initializations. All found classes will be saved
+     * into loadmap and fetched directly from it next call load request (without performing file lookup).
      *
      * @return static
      * @throws CoreException
@@ -106,8 +107,8 @@ class Loader extends Component
     }
 
     /**
-     * Re-enabling autoloader to push up. This operation is required if some other class loader trying to handle autoload
-     * function.
+     * Re-enabling autoloader to push up. This operation is required if some other class loader
+     * trying to handle autoload function.
      *
      * For example - composer.
      */
@@ -170,9 +171,14 @@ class Loader extends Component
                 call_user_func($function, $class);
 
                 //Class was successfully found by external loader
-                if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false))
+                if (
+                    class_exists($class, false)
+                    || interface_exists($class, false)
+                    || trait_exists($class, false)
+                )
                 {
-                    //External loader will not provide us any information about class location, let's get it via Reflection
+                    //External loader will not provide us any information about class location, let's
+                    //get it via Reflection
                     $reflector = new \ReflectionClass($class);
 
                     try
