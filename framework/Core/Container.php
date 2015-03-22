@@ -245,7 +245,7 @@ class Container extends Component
      * @param string   $alias    Alias where singleton will be attached to.
      * @param callable $resolver Closure to resolve class instance.
      */
-    public static function bingSingleton($alias, $resolver)
+    public static function bindSingleton($alias, $resolver)
     {
         self::$bindings[$alias] = array($resolver, true);
     }
