@@ -33,7 +33,7 @@ abstract class Exporter extends Component
     /**
      * I18nManager component.
      *
-     * @var I18nManager
+     * @var Translator
      */
     protected $i18n = null;
 
@@ -54,10 +54,10 @@ abstract class Exporter extends Component
     /**
      * New indexer instance.
      *
-     * @param I18nManager $i18n
+     * @param Translator $i18n
      * @param FileManager $file
      */
-    public function __construct(I18nManager $i18n, FileManager $file)
+    public function __construct(Translator $i18n, FileManager $file)
     {
         $this->i18n = $i18n;
         $this->file = $file;

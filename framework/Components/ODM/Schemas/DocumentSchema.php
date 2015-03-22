@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ODM\Schemas;
 
-use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\Localization\Translator;
 use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
@@ -468,7 +468,7 @@ class DocumentSchema extends Component
                     {
                         $message = $rule['error'];
                     }
-                    if (substr($message, 0, 2) == I18nManager::I18N_PREFIX && substr($message, -2) == I18nManager::I18N_POSTFIX)
+                    if (substr($message, 0, 2) == Translator::I18N_PREFIX && substr($message, -2) == Translator::I18N_POSTFIX)
                     {
                         //Only I18N messages
                         if ($message && !isset($errorMessages[$message]))

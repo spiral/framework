@@ -9,7 +9,7 @@
 use Spiral\Core\Core;
 use Spiral\Components\Debug\Debugger;
 use Spiral\Helpers\StringHelper;
-use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\Localization\Translator;
 
 if (!function_exists('directory'))
 {
@@ -132,9 +132,9 @@ if (!function_exists('l'))
     function l($string)
     {
         $arguments = func_get_args();
-        array_unshift($arguments, I18nManager::DEFAULT_BUNDLE);
+        array_unshift($arguments, Translator::DEFAULT_BUNDLE);
 
-        return call_user_func_array(array(I18nManager::getInstance(), 'get'), $arguments);
+        return call_user_func_array(array(Translator::getInstance(), 'get'), $arguments);
     }
 }
 
@@ -158,7 +158,7 @@ if (!function_exists('p'))
      */
     function p($phrase, $number, $numberFormat = true)
     {
-        return I18nManager::getInstance()->pluralize($phrase, $number, $numberFormat);
+        return Translator::getInstance()->pluralize($phrase, $number, $numberFormat);
     }
 }
 

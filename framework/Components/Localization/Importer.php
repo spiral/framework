@@ -32,7 +32,7 @@ abstract class Importer extends Component
     /**
      * I18n component.
      *
-     * @var I18nManager
+     * @var Translator
      */
     protected $i18n = null;
 
@@ -60,11 +60,11 @@ abstract class Importer extends Component
     /**
      * New indexer instance.
      *
-     * @param I18nManager $i18n
+     * @param Translator $i18n
      * @param Core        $core
      * @param FileManager $file
      */
-    public function __construct(I18nManager $i18n, Core $core, FileManager $file)
+    public function __construct(Translator $i18n, Core $core, FileManager $file)
     {
         $this->i18n = $i18n;
         $this->core = $core;

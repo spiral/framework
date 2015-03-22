@@ -8,7 +8,7 @@
  */
 namespace Spiral\Tests\Cases\Support\Validation\Checkers;
 
-use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\Localization\Translator;
 use Spiral\Core\Container;
 use Spiral\Support\Tests\TestCase;
 use Spiral\Support\Validation\Validator;
@@ -32,7 +32,7 @@ class AddressCheckerTest extends TestCase
             )
         ));
 
-        Container::bind('i18n', new I18nManager($core));
+        Container::bind('i18n', new Translator($core));
     }
 
 

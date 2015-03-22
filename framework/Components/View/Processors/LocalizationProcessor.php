@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\View\Processors;
 
-use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\Localization\Translator;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
@@ -43,7 +43,7 @@ class LocalizationProcessor implements ProcessorInterface
     /**
      * I18n component instance.
      *
-     * @var I18nManager
+     * @var Translator
      */
     protected $i18n = null;
 
@@ -52,9 +52,9 @@ class LocalizationProcessor implements ProcessorInterface
      *
      * @param array       $options
      * @param ViewManager        $view View component instance (if presented).
-     * @param I18nManager $i18n LocalizationManager component instance.
+     * @param Translator $i18n LocalizationManager component instance.
      */
-    public function __construct(array $options, ViewManager $view = null, I18nManager $i18n = null)
+    public function __construct(array $options, ViewManager $view = null, Translator $i18n = null)
     {
         $this->options = $options + $this->options;
         $this->view = $view;

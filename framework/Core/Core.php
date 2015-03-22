@@ -22,7 +22,7 @@ use Spiral\Components;
  * @property Components\Debug\Debugger                    $debug
  * @property Components\Tokenizer\Tokenizer               $tokenizer
  * @property Components\Cache\CacheManager                $cache
- * @property Components\Localization\I18nManager          $i18n
+ * @property Components\Localization\Translator           $i18n
  * @property Components\View\ViewManager                  $view
  * @property Components\Redis\RedisManager                $redis
  * @property Components\Encrypter\Encrypter               $encrypter
@@ -167,30 +167,30 @@ class Core extends Container implements ConfigLoaderInterface
     protected function initBindings()
     {
         self::$bindings = array(
-            'core'                                   => 'Spiral\Core\Core',
+            'core'      => 'Spiral\Core\Core',
 
             //Dispatchers
-            'http'                                   => 'Spiral\Components\Http\HttpDispatcher',
-            'console'                                => 'Spiral\Components\Console\ConsoleDispatcher',
+            'http'      => 'Spiral\Components\Http\HttpDispatcher',
+            'console'   => 'Spiral\Components\Console\ConsoleDispatcher',
 
             //Core components
-            'loader'                                 => 'Spiral\Core\Loader',
-            'modules'                                => 'Spiral\Components\Modules\ModuleManager',
-            'file'                                   => 'Spiral\Components\Files\FileManager',
-            'debug'                                  => 'Spiral\Components\Debug\Debugger',
-            'tokenizer'                              => 'Spiral\Components\Tokenizer\Tokenizer',
-            'cache'                                  => 'Spiral\Components\Cache\CacheManager',
-            'i18n'                                   => 'Spiral\Components\Localization\I18nManager',
-            'view'                                   => 'Spiral\Components\View\ViewManager',
-            'redis'                                  => 'Spiral\Components\Redis\RedisManager',
-            'encrypter'                              => 'Spiral\Components\Encrypter\Encrypter',
-            'image'                                  => 'Spiral\Components\Image\ImageManager',
-            'storage'                                => 'Spiral\Components\Storage\StorageManager',
-            'dbal'                                   => 'Spiral\Components\DBAL\DatabaseManager',
-            'orm'                                    => 'Spiral\Components\ORM\ORM',
-            'odm'                                    => 'Spiral\Components\ODM\ODM',
-            'cookies'                                => 'Spiral\Components\Http\Cookies\CookieManager',
-            'session'                                => 'Spiral\Components\Session\SessionStore'
+            'loader'    => 'Spiral\Core\Loader',
+            'modules'   => 'Spiral\Components\Modules\ModuleManager',
+            'file'      => 'Spiral\Components\Files\FileManager',
+            'debug'     => 'Spiral\Components\Debug\Debugger',
+            'tokenizer' => 'Spiral\Components\Tokenizer\Tokenizer',
+            'cache'     => 'Spiral\Components\Cache\CacheManager',
+            'i18n'      => 'Spiral\Components\Localization\Translator',
+            'view'      => 'Spiral\Components\View\ViewManager',
+            'redis'     => 'Spiral\Components\Redis\RedisManager',
+            'encrypter' => 'Spiral\Components\Encrypter\Encrypter',
+            'image'     => 'Spiral\Components\Image\ImageManager',
+            'storage'   => 'Spiral\Components\Storage\StorageManager',
+            'dbal'      => 'Spiral\Components\DBAL\DatabaseManager',
+            'orm'       => 'Spiral\Components\ORM\ORM',
+            'odm'       => 'Spiral\Components\ODM\ODM',
+            'cookies'   => 'Spiral\Components\Http\Cookies\CookieManager',
+            'session'   => 'Spiral\Components\Session\SessionStore'
         );
     }
 

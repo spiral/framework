@@ -8,7 +8,7 @@
  */
 namespace Spiral\Support\Models;
 
-use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\Localization\Translator;
 use Spiral\Components\Localization\LocalizableTrait;
 use Spiral\Core\Component;
 use Spiral\Support\Validation\Validator;
@@ -598,7 +598,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
         $errors = array();
         foreach ($this->errors as $field => $error)
         {
-            if (is_string($error) && substr($error, 0, 2) == I18nManager::I18N_PREFIX && substr($error, -2) == I18nManager::I18N_POSTFIX)
+            if (is_string($error) && substr($error, 0, 2) == Translator::I18N_PREFIX && substr($error, -2) == Translator::I18N_POSTFIX)
             {
                 $error = $this->i18nMessage($error);
             }

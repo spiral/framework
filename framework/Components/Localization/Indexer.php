@@ -37,7 +37,7 @@ class Indexer extends Component
     /**
      * I18nManager component.
      *
-     * @var I18nManager
+     * @var Translator
      */
     protected $i18n = null;
 
@@ -58,11 +58,11 @@ class Indexer extends Component
     /**
      * New indexer instance.
      *
-     * @param I18nManager $i18n
+     * @param Translator $i18n
      * @param FileManager $file
      * @param Tokenizer   $tokenizer
      */
-    public function __construct(I18nManager $i18n, FileManager $file, Tokenizer $tokenizer)
+    public function __construct(Translator $i18n, FileManager $file, Tokenizer $tokenizer)
     {
         $this->i18n = $i18n;
         $this->file = $file;
@@ -119,14 +119,14 @@ class Indexer extends Component
                     }
 
                     $this->i18n->get(
-                        I18nManager::DEFAULT_BUNDLE,
+                        Translator::DEFAULT_BUNDLE,
                         $function->getArgument(0)->stringValue()
                     );
 
                     $this->registerString(
                         $filename,
                         $function->getLine(),
-                        I18nManager::DEFAULT_BUNDLE,
+                        Translator::DEFAULT_BUNDLE,
                         $function->getArgument(0)->stringValue());
                 }
 
@@ -287,8 +287,8 @@ class Indexer extends Component
 
         $string = $function->getArgument(0)->stringValue();
         if (
-            substr($string, 0, 2) == I18nManager::I18N_PREFIX
-            || substr($string, -2) == I18nManager::I18N_POSTFIX
+            substr($string, 0, 2) == Translator::I18N_PREFIX
+            || substr($string, -2) == Translator::I18N_POSTFIX
         )
         {
             //This string was defined in class attributes
@@ -333,8 +333,8 @@ class Indexer extends Component
         {
             if (
                 is_string($value)
-                && substr($value, 0, 2) == I18nManager::I18N_PREFIX
-                && substr($value, -2) == I18nManager::I18N_POSTFIX
+                && substr($value, 0, 2) == Translator::I18N_PREFIX
+                && substr($value, -2) == Translator::I18N_POSTFIX
             )
             {
                 $strings[] = substr($value, 2, -2);

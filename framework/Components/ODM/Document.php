@@ -9,7 +9,7 @@
 namespace Spiral\Components\ODM;
 
 use Carbon\Carbon;
-use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\Localization\Translator;
 use Spiral\Components\ODM\Schemas\DocumentSchema;
 use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\AccessorInterface;
@@ -841,12 +841,12 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         $errors = array();
         foreach ($this->errors as $field => $error)
         {
-            if (is_string($error) && substr($error, 0, 2) == I18nManager::I18N_PREFIX && substr($error, -2) == I18nManager::I18N_POSTFIX)
+            if (is_string($error) && substr($error, 0, 2) == Translator::I18N_PREFIX && substr($error, -2) == Translator::I18N_POSTFIX)
             {
                 if (isset($this->schema[ODM::D_MESSAGES][$error]))
                 {
                     //Parent message
-                    $error = I18nManager::getInstance()->get($this->schema[ODM::D_MESSAGES][$error], substr($error, 2, -2));
+                    $error = Translator::getInstance()->get($this->schema[ODM::D_MESSAGES][$error], substr($error, 2, -2));
                 }
                 else
                 {

@@ -14,7 +14,7 @@ use Spiral\Core\Core;
 use Spiral\Core\Events\Event;
 use Spiral\Helpers\StringHelper;
 
-class I18nManager extends Component implements VariableProviderInterface
+class Translator extends Component implements VariableProviderInterface
 {
     /**
      * Will provide us helper method getInstance().

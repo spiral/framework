@@ -8,7 +8,7 @@
  */
 namespace Spiral\Facades;
 
-use Spiral\Components\Localization\I18nManager;
+use Spiral\Components\Localization\Translator;
 use Spiral\Core\Facade;
 
 /**
@@ -23,8 +23,8 @@ use Spiral\Core\Facade;
  * @method static string set(string $bundle, string $string, string $translation = '')
  * @method static string pluralize(string $phrase, int $number, bool $numberFormat = true)
  * @method static string getAlias()
- * @method static I18nManager make(array $parameters = array())
- * @method static I18nManager getInstance()
+ * @method static Translator make(array $parameters = array())
+ * @method static Translator getInstance()
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
