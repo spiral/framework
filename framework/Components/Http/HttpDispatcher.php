@@ -62,7 +62,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
 
     /**
      * Set of middleware layers built to handle incoming Request and return Response. Middleware
-     * can be represented as class, string (DI), closure or array (callable method). HttpDispatcher 
+     * can be represented as class, string (DI), closure or array (callable method). HttpDispatcher
      * layer middlewares will be called in start() method. This set of middleware(s) used to filter
      * http request and response on application layer.
      *
@@ -536,8 +536,7 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
     {
         $content = '';
 
-        //TODO Check requested Content-Type
-        if ($this->request->isAjax())
+        if ($this->request->getHeader('Accept', false) == 'application/json')
         {
             $content = array('status' => $code);
 
@@ -549,9 +548,12 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
         if (isset($this->config['httpErrors'][$code]))
         {
             //We can render some content
-            $content = ViewManager::getInstance()->render($this->config['httpErrors'][$code], array(
-                'request' => $this->request
-            ));
+            $content = ViewManager::getInstance()->render(
+                $this->config['httpErrors'][$code],
+                array(
+                    'request' => $this->request
+                )
+            );
         }
 
         return new Response($content, $code);
