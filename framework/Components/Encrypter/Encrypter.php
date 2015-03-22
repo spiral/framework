@@ -143,7 +143,7 @@ class Encrypter extends Component
      * @param string $salt   String salt.
      * @return string
      */
-    public function buildSignature($string, $salt = null)
+    public function makeSignature($string, $salt = null)
     {
         return hash_hmac('sha256', $string . ($salt ? ':' . $salt : ''), $this->key);
     }
@@ -189,7 +189,7 @@ class Encrypter extends Component
         $result = json_encode(array(
             self::IV        => ($vector = bin2hex($vector)),
             self::DATA      => $encrypted,
-            self::SIGNATURE => $this->buildSignature($encrypted, $vector)
+            self::SIGNATURE => $this->makeSignature($encrypted, $vector)
         ));
 
         return base64_encode($result);
@@ -225,7 +225,7 @@ class Encrypter extends Component
         }
 
         //Verifying signature
-        if ($packed[self::SIGNATURE] !== $this->buildSignature($packed[self::DATA], $packed[self::IV]))
+        if ($packed[self::SIGNATURE] !== $this->makeSignature($packed[self::DATA], $packed[self::IV]))
         {
             throw new DecryptionException("Encrypted data does not have valid signature.");
         }

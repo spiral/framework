@@ -174,7 +174,7 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     }
 
     /**
-     * Get delete rule, possible values: NO ACTION, CASCADE, RESTRICT, SET NULL.
+     * Get delete rule, possible values: NO ACTION, CASCADE
      *
      * @return string
      */
@@ -187,7 +187,7 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
      * Set foreign key delete behaviour. Originally was named "deleteRule", but it created bad
      * associations.
      *
-     * @param string $rule Possible values: NO ACTION, CASCADE, RESTRICT, SET NULL.
+     * @param string $rule Possible values: NO ACTION, CASCADE
      * @return static
      */
     public function onDelete($rule = self::NO_ACTION)
@@ -198,7 +198,7 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     }
 
     /**
-     * Get update rule, possible values: NO ACTION, CASCADE, RESTRICT, SET NULL.
+     * Get update rule, possible values: NO ACTION, CASCADE
      *
      * @return string
      */
@@ -210,7 +210,7 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     /**
      * Set foreign key update behaviour.
      *
-     * @param string $rule Possible values: NO ACTION, CASCADE, RESTRICT, SET NULL.
+     * @param string $rule Possible values: NO ACTION, CASCADE
      * @return static
      */
     public function onUpdate($rule = self::NO_ACTION)

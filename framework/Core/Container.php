@@ -251,7 +251,7 @@ class Container extends Component
     }
 
     /**
-     * Check if desired alias or class name binded in IoC container. You can bind new alias using
+     * Check if desired alias or class name binded in Container. You can bind new alias using
      * Container::bind(), Container::bindSingleton().
      *
      * @param string $alias
@@ -274,7 +274,7 @@ class Container extends Component
     }
 
     /**
-     * Removed existed binding.
+     * Remove existed binding.
      *
      * @param string $alias
      */

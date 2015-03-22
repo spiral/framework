@@ -190,11 +190,7 @@ class Core extends Container implements ConfigLoaderInterface
             'orm'                                    => 'Spiral\Components\ORM\ORM',
             'odm'                                    => 'Spiral\Components\ODM\ODM',
             'cookies'                                => 'Spiral\Components\Http\Cookies\CookieManager',
-            'session'                                => 'Spiral\Components\Session\SessionStore',
-
-            //Additional interfaces
-            'Spiral\Core\Events\DispatcherInterface' => 'events',
-            'Psr\Log\LoggerInterface'                => 'logger'
+            'session'                                => 'Spiral\Components\Session\SessionStore'
         );
     }
 

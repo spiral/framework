@@ -24,6 +24,11 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     const SINGLETON = 'session';
 
     /**
+     * Do not use any custom handlers.
+     */
+    const NATIVE_HANDLER = 'native';
+
+    /**
      * Active session id.
      *
      * @var string
@@ -117,7 +122,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     /**
      * Session handler instance.
      *
-     * @return \SessionHandler
+     * @return \SessionHandler|null
      */
     public function getHandler()
     {
@@ -146,17 +151,25 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
 
         if (empty($handler))
         {
-            $config = $this->config['handlers'][$this->config['handler']];
-            $handler = $this->handler = Core::get(
-                $config['class'],
-                array('options' => $config, 'lifetime' => $this->config['lifetime']),
-                null,
-                true
-            );
+            $defaultHandler = $this->config['handler'];
+
+            if ($defaultHandler != self::NATIVE_HANDLER)
+            {
+                $config = $this->config['handlers'][$this->config['handler']];
+                $handler = $this->handler = Core::get(
+                    $config['class'],
+                    array('options' => $config, 'lifetime' => $this->config['lifetime']),
+                    null,
+                    true
+                );
+            }
         }
 
-        //Custom session handler
-        session_set_save_handler($handler, true);
+        if (!empty($handler))
+        {
+            //Custom session handler
+            session_set_save_handler($handler, true);
+        }
 
         try
         {
@@ -301,7 +314,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
      *
      * @return array
      */
-    public function getAll()
+    public function all()
     {
         return $this->start() ? $_SESSION : array();
     }
