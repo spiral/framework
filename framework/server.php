@@ -7,7 +7,7 @@
  * @copyright ©2009-2015
  */
 
-date_default_timezone_set('UTF');
+date_default_timezone_set('UTC');
 
 $requestURI = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $out = fopen('php://stdout', 'w');
