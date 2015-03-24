@@ -152,11 +152,12 @@ class Encrypter extends Component
      * Creates an initialization vector (IV) from a random source with specified size.
      *
      * @link http://php.net/manual/en/function.mcrypt-create-iv.php
+     * @param int $length
      * @return string
      */
-    protected function createIV()
+    protected function createIV($length = 16)
     {
-        return $this->random(16, true, false);
+        return $length ? $this->random($length, true, false) : '';
     }
 
     /**
@@ -176,7 +177,7 @@ class Encrypter extends Component
             throw new EncrypterException("Encryption key should not be empty.");
         }
 
-        $vector = $this->createIV();
+        $vector = $this->createIV(openssl_cipher_iv_length($this->method));
 
         $encrypted = openssl_encrypt(
             serialize($data),

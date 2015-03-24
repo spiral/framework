@@ -57,23 +57,36 @@ class EnvironmentCommand extends Command
         $this->core->saveData('environment', $this->argument('environment'), directory('runtime'));
         $this->writeln("Environment set to '<comment>{$this->argument('environment')}</comment>'.");
 
+        //We have to touch every config to ensure that cache is OK
+
+        $configDirectory = $this->file->normalizePath(directory('config'));
+
+        $alteredConfigs = array();
+        $configs = $this->file->getFiles($configDirectory, substr(Core::CONFIGS, 1));
+        foreach ($configs as $filename)
+        {
+            $environmentConfig = $configDirectory
+                . "/{$this->argument('environment')}/" . basename($filename);
+
+            if (dirname($filename) == $configDirectory && $this->file->exists($environmentConfig))
+            {
+                $alteredConfigs[] = $this->file->relativePath($filename, $configDirectory);
+            }
+
+            //Touching
+            $this->file->touch($filename);
+        }
+
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
         {
 
-            $alteredFilenames = array();
-            $configDirectory = $this->file->normalizePath(directory('config'));
-            foreach ($this->file->getFiles($configDirectory, array(substr(Core::CONFIGS, 1))) as $filename)
+            if (!empty($alteredConfigs))
             {
-                if (dirname($filename) == $configDirectory && $this->file->exists($configDirectory . "/{$this->argument('environment')}/" . basename($filename)))
-                {
-                    $alteredFilenames[] = $this->file->relativePath($filename, $configDirectory);
-                }
-            }
+                $this->writeln(
+                    "<info>Following configuration files will be altered by this environment:</info>"
+                );
 
-            if (!empty($alteredFilenames))
-            {
-                $this->writeln("<info>Following configuration files will be altered by this environment:</info>");
-                foreach ($alteredFilenames as $filename)
+                foreach ($alteredConfigs as $filename)
                 {
                     $this->writeln($filename);
                 }
