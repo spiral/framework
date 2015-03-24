@@ -211,14 +211,14 @@ class Debugger extends Component
             'config'    => $this->config['backtrace']['snapshots']
         ));
 
-        //Letting subscribers know...
-        $this->event('snapshot', $snapshot);
-
         if ($exception instanceof ClientException)
         {
             //No logging for ClientExceptions
             return $snapshot;
         }
+
+        //Letting subscribers know...
+        $this->event('snapshot', $snapshot);
 
         //Error message should be added to log only for non http exceptions
         if ($logException)

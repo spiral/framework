@@ -12,6 +12,7 @@ use Spiral\Core\Component\EventsTrait;
 use Spiral\Core\Component\SingletonTrait;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Components;
+use Spiral\Components\Debug\Snapshot;
 
 /**
  * @property Components\Http\HttpDispatcher               $http
@@ -33,7 +34,7 @@ use Spiral\Components;
  * @property Components\ORM\ORM                           $orm
  *
  * @property Components\Http\Request                      $request
- * @property Components\Http\Cookies\CookieStore        $cookies
+ * @property Components\Http\Cookies\CookieStore          $cookies
  * @property Components\Session\SessionStore              $session
  */
 class Core extends Container implements ConfigLoaderInterface
@@ -469,17 +470,27 @@ class Core extends Container implements ConfigLoaderInterface
         {
             if ($snapshot = $this->event('exception', $snapshot))
             {
-                if (!empty($this->dispatcher))
-                {
-                    $this->dispatcher->handleException($snapshot);
-
-                    return;
-                }
-
-                //Direct echoing to client
-                echo $snapshot;
+                $this->dispatchSnapshot($snapshot);
             }
         }
+    }
+
+    /**
+     * Pass exception handling to currently active dispatcher or render exception content.
+     *
+     * @param Snapshot $snapshot
+     */
+    protected function dispatchSnapshot(Snapshot $snapshot)
+    {
+        if (!empty($this->dispatcher))
+        {
+            $this->dispatcher->handleException($snapshot);
+
+            return;
+        }
+
+        //Direct echoing to client
+        echo $snapshot;
     }
 
     /**
