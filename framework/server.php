@@ -6,6 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
+
+date_default_timezone_set('UTF');
+
 $requestURI = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $out = fopen('php://stdout', 'w');
 
