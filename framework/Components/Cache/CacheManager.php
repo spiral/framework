@@ -12,6 +12,18 @@ use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
 
+/**
+ * @method bool has(string $name)
+ * @method mixed get(string $name)
+ * @method mixed set(string $name, mixed $data, int $lifetime)
+ * @method mixed forever(string $name, mixed $data)
+ * @method delete(string $name)
+ * @method mixed pull(string $name)
+ * @method mixed remember(string $name, int $lifetime, callback $callback)
+ * @method mixed increment(string $name, int $delta = 1)
+ * @method mixed decrement(string $name, int $delta = 1)
+ * @method mixed flush()
+ */
 class CacheManager extends Component implements Container\InjectionManagerInterface
 {
     /**
@@ -116,5 +128,17 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
         return Container::get($class->getName(), array(
             'cache' => self::getInstance()
         ), null, true);
+    }
+    
+    /**
+     * Bypass call to default store.
+     * 
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($method, array $arguments = array())
+    {
+        return call_user_func_array(array($this->store(), $method), $arguments);
     }
 }
