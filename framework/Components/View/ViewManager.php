@@ -149,7 +149,7 @@ class ViewManager extends Component
     }
 
     /**
-     * Add view namespace.
+     * Add view namespace directory.
      *
      * @param string $namespace
      * @param string $directory
@@ -157,7 +157,12 @@ class ViewManager extends Component
      */
     public function addNamespace($namespace, $directory)
     {
-        $this->namespaces[$namespace] = $directory;
+        if (!isset($this->namespaces[$namespace]))
+        {
+            $this->namespaces[$namespace] = array();
+        }
+
+        $this->namespaces[$namespace][] = $directory;
 
         return $this;
     }
