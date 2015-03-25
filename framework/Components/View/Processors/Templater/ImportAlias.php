@@ -96,8 +96,8 @@ class ImportAlias
 
         if (!isset($options['prefix']))
         {
-            //Prefix wasn't required and used to be in a free form, but Andrew Kirkovski and Andrew Logunov insist
-            //to have it this way. At least we can generate DTD in future.
+            //Prefix wasn't required and used to be in a free form, but Andrew Kirkovski and Andrew
+            //Logunov insist to have it this way. At least we can generate DTD in future.
             $options['prefix'] = $this->namespace;
         }
 
@@ -123,7 +123,8 @@ class ImportAlias
     }
 
     /**
-     * Copying import object to be used in another node, delta import used in cases if another node is child one.
+     * Copying import object to be used in another node, delta import used in cases if another node
+     * is child one.
      *
      * @param int $deltaLevel How import level changed.
      * @return ImportAlias

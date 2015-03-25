@@ -314,15 +314,18 @@ class ViewManager extends Component
                 {
                     benchmark('view::' . $processor, $namespace . ':' . $view);
 
+                    //Compiling
                     $source = $this->getProcessor($processor)->processSource(
                         $source,
                         $view,
-                        $namespace
+                        $namespace,
+                        $filename
                     );
 
                     benchmark('view::' . $processor, $namespace . ':' . $view);
                 }
 
+                //Saving compilation result to cache
                 $this->file->write($filename, $source, FileManager::RUNTIME, true);
             }
 
