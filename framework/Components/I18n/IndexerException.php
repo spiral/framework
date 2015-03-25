@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Localization;
+namespace Spiral\Components\I18n;
 
 use Spiral\Core\CoreException;
 
-class LocalizationException extends CoreException
+class IndexerException extends CoreException
 {
 
 }

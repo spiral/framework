@@ -8,7 +8,7 @@
  */
 namespace Spiral\Tests\Cases\Support\Validation\Checkers;
 
-use Spiral\Components\Localization\Translator;
+use Spiral\Components\I18n\Translator;
 use Spiral\Core\Container;
 use Spiral\Support\Tests\TestCase;
 use Spiral\Support\Validation\Validator;

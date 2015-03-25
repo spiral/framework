@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Localization;
+namespace Spiral\Components\I18n;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
@@ -70,13 +70,13 @@ abstract class Exporter extends Component
      * @param string $language Should be valid language id.
      * @param string $prefix   Only bundle names started with this prefix will be exported.
      * @return static
-     * @throws LocalizationException
+     * @throws I18nException
      */
     public function loadLanguage($language, $prefix = '')
     {
         if (!isset($this->i18nConfig['languages'][$language]))
         {
-            throw new LocalizationException(
+            throw new I18nException(
                 "Unable to export language '{$language}', no presets found."
             );
         }

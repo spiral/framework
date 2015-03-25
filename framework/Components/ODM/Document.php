@@ -9,7 +9,7 @@
 namespace Spiral\Components\ODM;
 
 use Carbon\Carbon;
-use Spiral\Components\Localization\Translator;
+use Spiral\Components\I18n\Translator;
 use Spiral\Components\ODM\Schemas\DocumentSchema;
 use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\AccessorInterface;

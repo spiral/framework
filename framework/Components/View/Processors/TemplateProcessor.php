@@ -46,8 +46,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             Node::TYPE_EXTEND => array('extend:', 'extends:'),
         ),
         'keywords'  => array(
-            'namespace'   => array('templater:namespace', 'view:namespace'),
-            'view'        => array('templater:view', 'view:name'),
+            'namespace'   => array('view:namespace', 'node:namespace'),
+            'view'        => array('view::parent', 'node:parent'),
             self::ALIASES => array(
                 'name'      => array('import', 'use', 'alias'),
                 'pattern'   => array('view', 'tag', 'views', 'folder', 'directory'),

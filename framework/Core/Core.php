@@ -23,7 +23,7 @@ use Spiral\Components\Debug\Snapshot;
  * @property Components\Debug\Debugger                    $debug
  * @property Components\Tokenizer\Tokenizer               $tokenizer
  * @property Components\Cache\CacheManager                $cache
- * @property Components\Localization\Translator           $i18n
+ * @property Components\I18n\Translator           $i18n
  * @property Components\View\ViewManager                  $view
  * @property Components\Redis\RedisManager                $redis
  * @property Components\Encrypter\Encrypter               $encrypter
@@ -181,7 +181,7 @@ class Core extends Container implements ConfigLoaderInterface
             'debug'     => 'Spiral\Components\Debug\Debugger',
             'tokenizer' => 'Spiral\Components\Tokenizer\Tokenizer',
             'cache'     => 'Spiral\Components\Cache\CacheManager',
-            'i18n'      => 'Spiral\Components\Localization\Translator',
+            'i18n'      => 'Spiral\Components\I18n\Translator',
             'view'      => 'Spiral\Components\View\ViewManager',
             'redis'     => 'Spiral\Components\Redis\RedisManager',
             'encrypter' => 'Spiral\Components\Encrypter\Encrypter',

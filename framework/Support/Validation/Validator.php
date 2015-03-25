@@ -8,7 +8,7 @@
  */
 namespace Spiral\Support\Validation;
 
-use Spiral\Components\Localization\LocalizableTrait;
+use Spiral\Components\I18n\LocalizableTrait;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 

@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Localization\GetText;
+namespace Spiral\Components\I18n\GetText;
 
-use Spiral\Components\Localization\Importer as LocalizationImporter;
+use Spiral\Components\I18n\Importer as LocalizationImporter;
 
 class Importer extends LocalizationImporter
 {

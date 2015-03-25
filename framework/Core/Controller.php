@@ -22,7 +22,7 @@ use Spiral\Components;
  * @property Components\Debug\Debugger             $debug
  * @property Components\Tokenizer\Tokenizer        $tokenizer
  * @property Components\Cache\CacheManager         $cache
- * @property Components\Localization\Translator    $i18n
+ * @property Components\I18n\Translator    $i18n
  * @property Components\View\ViewManager           $view
  * @property Components\Redis\RedisManager         $redis
  * @property Components\Encrypter\Encrypter        $encrypter

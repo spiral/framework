@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Localization;
+namespace Spiral\Components\I18n;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Reflection\FunctionUsage;
@@ -24,7 +24,7 @@ class Indexer extends Component
     /**
      * Trait declares I18n messages support.
      */
-    const LOCALIZABLE_TRAIT = 'Spiral\Components\Localization\LocalizableTrait';
+    const LOCALIZABLE_TRAIT = 'Spiral\Components\I18n\LocalizableTrait';
 
     /**
      * List of found function or message usages grouped by bundle id. Every found usage will be

@@ -8,11 +8,11 @@
  */
 namespace Spiral\Components\View\Processors;
 
-use Spiral\Components\Localization\Translator;
+use Spiral\Components\I18n\Translator;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
-class LocalizationProcessor implements ProcessorInterface
+class I18nProcessor implements ProcessorInterface
 {
     /**
      * Processor options. Will define i18n namespace prefix and expression to be treated as text to
@@ -51,8 +51,8 @@ class LocalizationProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array       $options
-     * @param ViewManager        $view View component instance (if presented).
-     * @param Translator $i18n LocalizationManager component instance.
+     * @param ViewManager $view View component instance (if presented).
+     * @param Translator  $i18n Translator component instance.
      */
     public function __construct(array $options, ViewManager $view = null, Translator $i18n = null)
     {

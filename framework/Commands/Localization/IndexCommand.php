@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands\Localization;
+namespace Spiral\Commands\I18n;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\Localization\Indexer;
+use Spiral\Components\I18n\Indexer;
 use Spiral\Core\Events\ObjectEvent;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

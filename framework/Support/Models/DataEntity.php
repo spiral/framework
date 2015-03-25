@@ -8,8 +8,8 @@
  */
 namespace Spiral\Support\Models;
 
-use Spiral\Components\Localization\Translator;
-use Spiral\Components\Localization\LocalizableTrait;
+use Spiral\Components\I18n\Translator;
+use Spiral\Components\I18n\LocalizableTrait;
 use Spiral\Core\Component;
 use Spiral\Support\Validation\Validator;
 

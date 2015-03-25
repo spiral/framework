@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Localization;
+namespace Spiral\Components\I18n;
 
 use Spiral\Components\View\VariableProviderInterface;
 use Spiral\Core\Component;
@@ -114,13 +114,13 @@ class Translator extends Component implements VariableProviderInterface
      * phrases will be fetched using new language options and bundles.
      *
      * @param string $language Valid language identifier (en, ru, de).
-     * @throws LocalizationException
+     * @throws I18nException
      */
     public function setLanguage($language)
     {
         if (!isset($this->config['languages'][$language]))
         {
-            throw new LocalizationException("Invalid language '{$language}', no presets found.");
+            throw new I18nException("Invalid language '{$language}', no presets found.");
         }
 
         //Cleaning all bundles

@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ODM\Schemas;
 
-use Spiral\Components\Localization\Translator;
+use Spiral\Components\I18n\Translator;
 use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;

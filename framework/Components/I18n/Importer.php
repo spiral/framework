@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Localization;
+namespace Spiral\Components\I18n;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
@@ -110,13 +110,13 @@ abstract class Importer extends Component
      *
      * @param string $filename
      * @return static
-     * @throws LocalizationException
+     * @throws I18nException
      */
     public function openFile($filename)
     {
         if (!$this->file->exists($filename))
         {
-            throw new LocalizationException(
+            throw new I18nException(
                 "Unable import i18n bundles from '{$filename}', file not exists."
             );
         }
@@ -133,20 +133,20 @@ abstract class Importer extends Component
      *
      * @param bool $mergeBundles If true data from existed bundle will merged with imported one, if
      *                           false imported will completely replace old values.
-     * @throws LocalizationException
+     * @throws I18nException
      */
     public function importBundles($mergeBundles = true)
     {
         if (empty($this->language))
         {
-            throw new LocalizationException(
+            throw new I18nException(
                 "Unable to provide bundles import, no language detected."
             );
         }
 
         if (!isset($this->i18nConfig['languages'][$this->language]))
         {
-            throw new LocalizationException(
+            throw new I18nException(
                 "Unable to import language '{$this->language}', no presets found."
             );
         }

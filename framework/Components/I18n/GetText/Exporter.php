@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Localization\GetText;
+namespace Spiral\Components\I18n\GetText;
 
-use Spiral\Components\Localization\Exporter as LocalicationExporter;
-use Spiral\Components\Localization\LocalizationException;
+use Spiral\Components\I18n\Exporter as LocalicationExporter;
+use Spiral\Components\I18n\I18nException;
 
 class Exporter extends LocalicationExporter
 {
@@ -34,13 +34,13 @@ class Exporter extends LocalicationExporter
      * @link http://en.wikipedia.org/wiki/Gettext
      * @param string $filename
      * @return mixed
-     * @throws LocalizationException
+     * @throws I18nException
      */
     public function exportBundles($filename)
     {
         if (empty($this->language))
         {
-            throw new LocalizationException("No language specified to be exported.");
+            throw new I18nException("No language specified to be exported.");
         }
 
         /**

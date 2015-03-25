@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands\Localization;
+namespace Spiral\Commands\I18n;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\Localization\GetText\Importer;
+use Spiral\Components\I18n\GetText\Importer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

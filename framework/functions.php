@@ -9,7 +9,7 @@
 use Spiral\Core\Core;
 use Spiral\Components\Debug\Debugger;
 use Spiral\Helpers\StringHelper;
-use Spiral\Components\Localization\Translator;
+use Spiral\Components\I18n\Translator;
 
 if (!function_exists('directory'))
 {

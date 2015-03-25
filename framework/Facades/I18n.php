@@ -8,7 +8,7 @@
  */
 namespace Spiral\Facades;
 
-use Spiral\Components\Localization\Translator;
+use Spiral\Components\I18n\Translator;
 use Spiral\Core\Facade;
 
 /**
