@@ -34,7 +34,13 @@ class UpdateQuery extends AffectQuery
      * @param array         $where    Initial set of where rules specified as array.
      * @param array         $values   Initial set of values to update.
      */
-    public function __construct(Database $database, QueryCompiler $compiler, $table = '', array $where = array(), array $values = array())
+    public function __construct(
+        Database $database,
+        QueryCompiler $compiler,
+        $table = '',
+        array $where = array(),
+        array $values = array()
+    )
     {
         parent::__construct($database, $compiler, $table, $where);
         $this->values = $values;

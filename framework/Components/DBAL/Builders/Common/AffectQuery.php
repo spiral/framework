@@ -52,7 +52,12 @@ abstract class AffectQuery extends QueryBuilder
      * @param string        $table    Associated table name.
      * @param array         $where    Initial set of where rules specified as array.
      */
-    public function __construct(Database $database, QueryCompiler $compiler, $table = '', array $where = array())
+    public function __construct(
+        Database $database,
+        QueryCompiler $compiler,
+        $table = '',
+        array $where = array()
+    )
     {
         parent::__construct($database, $compiler);
 

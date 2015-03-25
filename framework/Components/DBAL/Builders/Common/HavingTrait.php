@@ -34,7 +34,12 @@ trait HavingTrait
      * @return array
      * @throws DBALException
      */
-    abstract protected function whereToken($joiner, array $parameters, &$tokens = array(), $catchParameters = true);
+    abstract protected function whereToken(
+        $joiner,
+        array $parameters,
+        &$tokens = array(),
+        $catchParameters = true
+    );
 
     /**
      * Add having condition to statement. Having condition will be specified with AND boolean joiner.

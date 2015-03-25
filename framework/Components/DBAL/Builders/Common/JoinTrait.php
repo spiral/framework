@@ -324,5 +324,10 @@ trait JoinTrait
      * @return array
      * @throws DBALException
      */
-    abstract protected function whereToken($joiner, array $parameters, &$tokens = array(), $catchParameters = true);
+    abstract protected function whereToken(
+        $joiner,
+        array $parameters,
+        &$tokens = array(),
+        $catchParameters = true
+    );
 }

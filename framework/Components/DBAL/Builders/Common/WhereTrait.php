@@ -267,9 +267,14 @@ trait WhereTrait
      * @return array
      * @throws DBALException
      */
-    protected function whereToken($joiner, array $parameters, &$tokens = array(), $catchParameters = true)
+    protected function whereToken(
+        $joiner,
+        array $parameters,
+        &$tokens = array(),
+        $catchParameters = true
+    )
     {
-        list($identifier, $variousA, $variousB, $variousC) = $parameters + array(null, null, null, null, null);
+        list($identifier, $variousA, $variousB, $variousC) = $parameters + array_fill(0, 5, null);
 
         //Complex query is provided
         if (is_array($identifier))
