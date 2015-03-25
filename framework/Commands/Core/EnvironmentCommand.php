@@ -60,13 +60,13 @@ class EnvironmentCommand extends Command
         //We have to touch every config to ensure that cache is OK
 
         $configDirectory = $this->file->normalizePath(directory('config'));
+        $environmentDirectory = $configDirectory . "/{$this->argument('environment')}/";
 
         $alteredConfigs = array();
         $configs = $this->file->getFiles($configDirectory, substr(Core::CONFIGS, 1));
         foreach ($configs as $filename)
         {
-            $environmentConfig = $configDirectory
-                . "/{$this->argument('environment')}/" . basename($filename);
+            $environmentConfig = $environmentDirectory . basename($filename);
 
             if (dirname($filename) == $configDirectory && $this->file->exists($environmentConfig))
             {
@@ -79,7 +79,6 @@ class EnvironmentCommand extends Command
 
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
         {
-
             if (!empty($alteredConfigs))
             {
                 $this->writeln(

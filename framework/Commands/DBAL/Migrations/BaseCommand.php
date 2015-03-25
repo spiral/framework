@@ -53,7 +53,11 @@ abstract class BaseCommand extends Command
             return true;
         }
 
-        $this->writeln("<fg=red>Current environment '{$this->core->getEnvironment()}' is not safe to run migrations.</fg=red>");
+        $this->writeln(
+            "<fg=red>Current environment '{$this->core->getEnvironment()}' "
+            . "is not safe to run migrations.</fg=red>"
+        );
+
         if (!$this->ask->confirm("Do you wish to continue?"))
         {
             $this->writeln("<comment>Cancelling operation.</comment>");
@@ -66,8 +70,9 @@ abstract class BaseCommand extends Command
 
     /**
      * Executes the current command.
-     * This method is not abstract because you can use this class as a concrete class. In this case, instead of defining the
-     * execute() method, you set the code to execute by passing a Closure to the setCode() method.
+     * This method is not abstract because you can use this class as a concrete class. In this case,
+     * instead of defining the execute() method, you set the code to execute by passing a Closure to
+     * the setCode() method.
      *
      * Method will pass call to perform() method with DI.
      *

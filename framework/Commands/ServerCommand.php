@@ -31,7 +31,8 @@ class ServerCommand extends Command
     protected $description = 'Run Spiral Development server on specified host and port.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
      *
      * @var array
      */
@@ -40,7 +41,8 @@ class ServerCommand extends Command
     );
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */
@@ -56,7 +58,10 @@ class ServerCommand extends Command
     {
         $host = $this->argument('host') . ':' . $this->option('port');
 
-        $this->writeln("<info>Starting Spiral Development server at <comment>{$host}</comment></info>");
+        $this->writeln(
+            "<info>Starting Spiral Development server at <comment>{$host}</comment></info>"
+        );
+
         $this->writeln("Press <comment>Ctrl-C</comment> to quit.");
 
         $process = new Process(

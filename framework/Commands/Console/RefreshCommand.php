@@ -33,6 +33,9 @@ class RefreshCommand extends Command
     {
         $this->console->findCommands();
         $commands = count($this->console->getCommands());
-        $this->writeln("Console commands re-indexed, <comment>{$commands}</comment> commands found.");
+
+        $this->writeln(
+            "Console commands re-indexed, <comment>{$commands}</comment> commands found."
+        );
     }
 }

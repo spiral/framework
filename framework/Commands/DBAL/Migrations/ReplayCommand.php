@@ -27,7 +27,8 @@ class ReplayCommand extends BaseCommand
     protected $description = 'Replay (down, up) one or multiple migrations.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */

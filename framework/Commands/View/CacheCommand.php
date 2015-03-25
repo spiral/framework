@@ -34,7 +34,6 @@ class CacheCommand extends Command
      */
     public function perform()
     {
-
         foreach ($this->view->getNamespaces() as $namespace => $directories)
         {
             //Reverted to treat priority
@@ -51,10 +50,15 @@ class CacheCommand extends Command
             $formatter = $this->getHelper('formatter');
             foreach ($directories as $directory)
             {
-                foreach ($this->file->getFiles($directory, array(substr(ViewManager::EXTENSION, 1))) as $filename)
+                $viewFiles = $this->file->getFiles($directory, substr(ViewManager::EXTENSION, 1));
+                foreach ($viewFiles as $filename)
                 {
                     //View name (removing extension and ./)
-                    $view = substr($this->file->relativePath($filename, $directory), 2, -1 * strlen(ViewManager::EXTENSION));
+                    $view = substr(
+                        $this->file->relativePath($filename, $directory),
+                        2,
+                        -1 * strlen(ViewManager::EXTENSION)
+                    );
 
                     if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE)
                     {

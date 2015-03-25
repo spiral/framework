@@ -30,7 +30,8 @@ class ConfigureCommand extends Command
     protected $description = 'Configure file permissions, install modules and render view files.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */
@@ -44,6 +45,7 @@ class ConfigureCommand extends Command
     public function perform()
     {
         $this->writeln("<info>Verifying runtime directory existence and permissions.</info>");
+
         if (!$this->file->exists(directory('runtime')))
         {
             $this->file->ensureDirectory(directory('runtime'));
@@ -63,6 +65,7 @@ class ConfigureCommand extends Command
                     $this->writeln("Permissions updated for '<comment>{$filename}</comment>'.");
                 }
             }
+
             $this->writeln("Runtime directory permissions updated.");
         }
 

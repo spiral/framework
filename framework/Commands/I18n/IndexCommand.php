@@ -47,12 +47,17 @@ class IndexCommand extends Command
                 {
                     if ($event->context['class'])
                     {
-                        $this->writeln("In class <comment>{$event->context['class']}</comment>");
+                        $this->writeln(
+                            "In class <comment>{$event->context['class']}</comment>"
+                        );
                     }
                     else
                     {
                         $filename = $this->file->relativePath($event->context['filename']);
-                        $this->writeln("In <comment>{$filename}</comment> at line <comment>{$event->context['line']}</comment>");
+                        $this->writeln(
+                            "In <comment>{$filename}</comment> "
+                            . "at line <comment>{$event->context['line']}</comment>"
+                        );
                     }
                 }
             });
@@ -71,7 +76,10 @@ class IndexCommand extends Command
             $totalUsages += count($bundle);
         }
 
-        $this->writeln("<info>Strings found: <comment>{$totalUsages}</comment> in <comment>{$bundles}</comment> bundle(s).</info>");
+        $this->writeln(
+            "<info>Strings found: <comment>{$totalUsages}</comment> "
+            . "in <comment>{$bundles}</comment> bundle(s).</info>"
+        );
     }
 
     /**
@@ -84,7 +92,13 @@ class IndexCommand extends Command
         $application = $this->file->normalizePath(directory('application'));
 
         return array(
-            ['directory', 'd', InputOption::VALUE_OPTIONAL, 'Directory to scan for i18n function usages.', $application]
+            [
+                'directory',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Directory to scan for i18n function usages.',
+                $application
+            ]
         );
     }
 }

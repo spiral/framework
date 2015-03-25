@@ -30,7 +30,8 @@ class ImportCommand extends Command
     protected $description = 'Import GetText PO file to application bundles.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
      *
      * @var array
      */
@@ -39,7 +40,8 @@ class ImportCommand extends Command
     );
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */
@@ -52,7 +54,9 @@ class ImportCommand extends Command
      */
     public function perform()
     {
-        $this->writeln("Importing PO file '<comment>{$this->argument('filename')}</comment>'.");
+        $this->writeln(
+            "Importing PO file '<comment>{$this->argument('filename')}</comment>'."
+        );
 
         $importer = Importer::make();
         $importer->openFile($this->argument('filename'));
@@ -64,6 +68,9 @@ class ImportCommand extends Command
 
         $importer->importBundles();
 
-        $this->writeln("<info>Import completed, target language '<comment>{$importer->getLanguage()}</comment>'.</info>");
+        $this->writeln(
+            "<info>Import completed, target language "
+            . "'<comment>{$importer->getLanguage()}</comment>'.</info>"
+        );
     }
 }

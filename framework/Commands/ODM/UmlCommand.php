@@ -30,7 +30,8 @@ class UmlCommand extends Command
     protected $description = 'Export ODM schema to UML.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
      *
      * @var array
      */

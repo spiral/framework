@@ -11,8 +11,8 @@ namespace Spiral\Commands\Reactor\Creators;
 class MigrationCreator extends ClassCreator
 {
     /**
-     * ClassCreator used to render different declarations such as Controllers, Models and etc. All rendering performed
-     * using Reactor classes.
+     * ClassCreator used to render different declarations such as Controllers, Models and etc. All
+     * rendering performed using Reactor classes.
      *
      * @param string $name Target class name.
      */
@@ -22,8 +22,8 @@ class MigrationCreator extends ClassCreator
 
         $this->file->setComment("This file is generated automatically on " . date('c') . ".");
         $this->file->addUse('Spiral\Components\DBAL\Migrations\Migration');
-        $this->class->setParent('Migration');
 
+        $this->class->setParent('Migration');
         $this->class->method('up', 'Executing migration.');
         $this->class->method('down', 'Dropping (rollback) migration.');
     }

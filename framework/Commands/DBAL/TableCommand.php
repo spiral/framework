@@ -31,7 +31,8 @@ class TableCommand extends Command
     protected $description = 'View table schema of specific database.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
      *
      * @var array
      */
@@ -47,16 +48,28 @@ class TableCommand extends Command
      */
     public function perform()
     {
-        $table = $this->dbal->db($this->argument('db'))->table($this->argument('table'))->schema();
-        if (!$table->isExists())
+        $schema = $this->dbal->db($this->argument('db'))->table($this->argument('table'))->schema();
+
+        if (!$schema->isExists())
         {
-            throw new DBALException("Table {$this->argument('db')}.{$this->argument('table')} does not exists.");
+            throw new DBALException(
+                "Table {$this->argument('db')}.{$this->argument('table')} does not exists."
+            );
         }
 
-        $this->writeln("Columns of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:");
-        $grid = $this->table(array('Column:', 'Database Type:', 'Abstract Type:', 'PHP Type:', 'Default Value:'));
+        $this->writeln(
+            "Columns of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:"
+        );
 
-        foreach ($table->getColumns() as $column)
+        $table = $this->table(array(
+            'Column:',
+            'Database Type:',
+            'Abstract Type:',
+            'PHP Type:',
+            'Default Value:'
+        ));
+
+        foreach ($schema->getColumns() as $column)
         {
             $name = $column->getName();
             $type = $column->getType();
@@ -73,7 +86,7 @@ class TableCommand extends Command
                 $type .= " ({$column->getPrecision()},{$column->getScale()})";
             }
 
-            if (in_array($column->getName(), $table->getPrimaryKeys()))
+            if (in_array($column->getName(), $schema->getPrimaryKeys()))
             {
                 $name = "<fg=magenta>{$name}</fg=magenta>";
             }
@@ -88,34 +101,57 @@ class TableCommand extends Command
                 $defaultValue = "<info>{$defaultValue}</info>";
             }
 
-            $grid->addRow(array($name, $type, $abstractType, $column->phpType(), $defaultValue ?: "<comment>---</comment>"));
+            $table->addRow(array(
+                $name,
+                $type,
+                $abstractType,
+                $column->phpType(),
+                $defaultValue ?: "<comment>---</comment>"
+            ));
         }
 
-        $grid->render();
+        $table->render();
 
-        if ($table->getIndexes())
+        if ($schema->getIndexes())
         {
-            $this->writeln("\nIndexes of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:");
+            $this->writeln(
+                "\nIndexes of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:"
+            );
 
-            $grid = $this->table(array('Name:', 'Type:', 'Columns:'));
-            foreach ($table->getIndexes() as $index)
+            $table = $this->table(array(
+                'Name:',
+                'Type:',
+                'Columns:'
+            ));
+
+            foreach ($schema->getIndexes() as $index)
             {
-                $grid->addRow(array(
+                $table->addRow(array(
                     $index->getName(),
                     $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
                     join(", ", $index->getColumns())
                 ));
             }
-            $grid->render();
+            $table->render();
         }
-        if ($table->getForeigns())
+        if ($schema->getForeigns())
         {
-            $this->writeln("\nForeign keys of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:");
+            $this->writeln(
+                "\nForeign keys of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:"
+            );
 
-            $grid = $this->table(array('Name:', 'Column:', 'Foreign Table:', 'Foreign Column:', 'On Delete:', 'On Update:'));
-            foreach ($table->getForeigns() as $reference)
+            $table = $this->table(array(
+                'Name:',
+                'Column:',
+                'Foreign Table:',
+                'Foreign Column:',
+                'On Delete:',
+                'On Update:'
+            ));
+
+            foreach ($schema->getForeigns() as $reference)
             {
-                $grid->addRow(array(
+                $table->addRow(array(
                     $reference->getName(),
                     $reference->getColumn(),
                     $reference->getForeignTable(),
@@ -124,7 +160,7 @@ class TableCommand extends Command
                     $reference->getUpdateRule()
                 ));
             }
-            $grid->render();
+            $table->render();
         }
     }
 }

@@ -29,7 +29,8 @@ class ClearCommand extends Command
     protected $description = 'Clear view cache for all environments.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */
@@ -47,7 +48,8 @@ class ClearCommand extends Command
             $this->writeln("<info>Clearing view cache:</info>");
         }
 
-        foreach ($this->file->getFiles($this->view->getConfig()['caching']['directory']) as $filename)
+        $cacheFiles = $this->file->getFiles($this->view->getConfig()['caching']['directory']);
+        foreach ($cacheFiles as $filename)
         {
             !$this->option('emulate') && $this->file->remove($filename);
 

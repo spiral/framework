@@ -47,13 +47,21 @@ class ListCommand extends Command
     {
         if (!$modules = $this->modules->findModules())
         {
-            $this->writeln('<fg=red>No modules were found in any project file or library. Check Tokenizer config.</fg=red>');
+            $this->writeln(
+                '<fg=red>No modules were found in any project file or library. '
+                . 'Check Tokenizer config.</fg=red>'
+            );
 
             return;
         }
 
         $table = $this->table(array(
-            'Module:', 'Version:', 'Status:', 'Size:', 'Location:', 'Description:'
+            'Module:',
+            'Version:',
+            'Status:',
+            'Size:',
+            'Location:',
+            'Description:'
         ));
 
         foreach ($modules as $module)

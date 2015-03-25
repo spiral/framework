@@ -57,7 +57,7 @@ abstract class AffectQuery extends QueryBuilder
         parent::__construct($database, $compiler);
 
         $this->table = $table;
-        $where && $this->where($where);
+        !empty($where) && $this->where($where);
     }
 
     /**
@@ -96,7 +96,7 @@ abstract class AffectQuery extends QueryBuilder
      */
     public function run()
     {
-        if (!$this->whereTokens && !$this->limit && !$this->joins)
+        if (empty($this->whereTokens) && empty($this->limit) && empty($this->joins))
         {
             self::logger()->warning(
                 "Affect query performed without any condition or search limitation, "

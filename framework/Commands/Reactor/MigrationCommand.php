@@ -31,7 +31,8 @@ class MigrationCommand extends Command
     protected $description = 'Create a new migration class.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
      *
      * @var array
      */
@@ -74,9 +75,24 @@ class MigrationCommand extends Command
     protected function getOptions()
     {
         return array(
-            ['create', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Create table(s) creation/dropping code.'],
-            ['alter', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Create table(s) altering code.'],
-            ['comment', null, InputOption::VALUE_OPTIONAL, 'Optional comment to add as class header.']
+            [
+                'create',
+                null,
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Create table(s) creation/dropping code.'
+            ],
+            [
+                'alter',
+                null,
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Create table(s) altering code.'
+            ],
+            [
+                'comment',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Optional comment to add as class header.'
+            ]
         );
     }
 }

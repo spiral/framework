@@ -31,8 +31,8 @@ abstract class ClassCreator extends Component
     public $file = null;
 
     /**
-     * ClassCreator used to render different declarations such as Controllers, Models and etc. All rendering performed
-     * using Reactor classes.
+     * ClassCreator used to render different declarations such as Controllers, Models and etc. All
+     * rendering performed using Reactor classes.
      *
      * @param string $name Target class name.
      */
@@ -60,9 +60,10 @@ abstract class ClassCreator extends Component
      * Render the PHP file's code and deliver it to a given filename.
      *
      * @param string $filename        Filename to render code into.
-     * @param int    $mode            Use File::RUNTIME for 666 and File::READONLY for application files.
-     * @param bool   $ensureDirectory If true, helper will ensure that the destination directory exists and has the correct
-     *                                permissions.
+     * @param int    $mode            Use File::RUNTIME for 666 and File::READONLY for application
+     *                                files.
+     * @param bool   $ensureDirectory If true, helper will ensure that the destination directory
+     *                                exists and has the correct permissions.
      * @return bool
      */
     public function render($filename, $mode = FileManager::READONLY, $ensureDirectory = true)

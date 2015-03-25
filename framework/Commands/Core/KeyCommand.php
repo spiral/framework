@@ -44,7 +44,9 @@ class KeyCommand extends Command
         $configWriter->setConfig(compact('key'));
         $configWriter->writeConfig();
 
-        $this->writeln("<info>Encryption key '<comment>{$key}</comment>' "
-            . "set for environment '<comment>{$this->core->getEnvironment()}</comment>'.</info>");
+        $this->writeln(
+            "<info>Encryption key '<comment>{$key}</comment>' "
+            . "set for environment '<comment>{$this->core->getEnvironment()}</comment>'.</info>"
+        );
     }
 }

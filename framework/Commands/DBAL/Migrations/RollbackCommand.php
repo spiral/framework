@@ -27,7 +27,8 @@ class RollbackCommand extends BaseCommand
     protected $description = 'Rollback one (default) or multiple migrations.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */
@@ -51,7 +52,10 @@ class RollbackCommand extends BaseCommand
         {
             $found = true;
             $count--;
-            $this->writeln("<info>Migration <comment>{$migration['name']}</comment> was successfully rolled back.</info>");
+            $this->writeln(
+                "<info>Migration <comment>{$migration['name']}</comment> "
+                . "was successfully rolled back.</info>"
+            );
         }
 
         if (!$found)

@@ -30,7 +30,8 @@ class ExportCommand extends Command
     protected $description = 'Export specified language to GetText PO file.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
      *
      * @var array
      */
@@ -39,7 +40,8 @@ class ExportCommand extends Command
     );
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */
@@ -53,7 +55,9 @@ class ExportCommand extends Command
      */
     public function perform()
     {
-        $this->writeln("Exporting '<comment>{$this->option('language')}</comment>' language bundles to PO file.");
+        $this->writeln(
+            "Exporting '<comment>{$this->option('language')}</comment>' language bundles to PO file."
+        );
 
         $exporter = Exporter::make();
         $exporter->loadLanguage($this->option('language'), $this->option('prefix'));

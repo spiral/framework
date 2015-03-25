@@ -29,7 +29,8 @@ class ResetCommand extends Command
     protected $description = 'Reset application runtime cache and invalidate configs.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */

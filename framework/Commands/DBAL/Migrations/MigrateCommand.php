@@ -27,7 +27,8 @@ class MigrateCommand extends BaseCommand
     protected $description = 'Perform one or all outstanding migrations.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */
@@ -51,7 +52,10 @@ class MigrateCommand extends BaseCommand
         {
             $found = true;
             $count--;
-            $this->writeln("<info>Migration <comment>{$migration['name']}</comment> was successfully executed.</info>");
+            $this->writeln(
+                "<info>Migration <comment>{$migration['name']}</comment> "
+                . "was successfully executed.</info>"
+            );
         }
 
         if (!$found)

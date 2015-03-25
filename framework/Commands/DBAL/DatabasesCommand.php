@@ -30,7 +30,8 @@ class DatabasesCommand extends Command
     protected $description = 'Get list of databases, their tables and records count.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
      *
      * @var array
      */
@@ -59,7 +60,15 @@ class DatabasesCommand extends Command
             return;
         }
 
-        $grid = $this->table(array('Name (ID):', 'Database:', 'Driver:', 'Prefix:', 'Status:', 'Table Name:', 'Count Records:'));
+        $grid = $this->table(array(
+            'Name (ID):',
+            'Database:',
+            'Driver:',
+            'Prefix:',
+            'Status:',
+            'Table Name:',
+            'Count Records:'
+        ));
 
         foreach ($databases as $database)
         {
@@ -95,7 +104,14 @@ class DatabasesCommand extends Command
             $header[] = "<info>connected</info>";
             foreach ($database->getTables() as $table)
             {
-                $grid->addRow(array_merge($header, array($table->getName(), number_format($table->count()))));
+                $grid->addRow(array_merge(
+                    $header,
+                    array(
+                        $table->getName(),
+                        number_format($table->count())
+                    )
+                ));
+
                 $header = array("", "", "", "", "");
             }
 

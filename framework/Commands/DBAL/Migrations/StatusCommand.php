@@ -44,11 +44,15 @@ class StatusCommand extends BaseCommand
         $table = $this->table(array('Migration:', 'Filename:', 'Created at', 'Performed at'));
         foreach ($this->getMigrator()->getMigrations() as $migration)
         {
+            $timePerformed = $migration['performed']
+                ? '<info>' . date('Y-m-d H:i:s', $migration['performed']) . '</info>'
+                : self::NOT_PERFORMED;
+
             $table->addRow(array(
                 $migration['name'],
                 $migration['filename'],
                 date('Y-m-d H:i:s', $migration['timestamp']),
-                $migration['performed'] ? '<info>' . date('Y-m-d H:i:s', $migration['performed']) . '</info>' : self::NOT_PERFORMED
+                $timePerformed
             ));
         }
 
