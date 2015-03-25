@@ -235,7 +235,7 @@ class ViewManager extends Component
      * @return string
      * @throws ViewException
      */
-    protected function findView($namespace, $view)
+    public function findView($namespace, $view)
     {
         if (!isset($this->namespaces[$namespace]))
         {

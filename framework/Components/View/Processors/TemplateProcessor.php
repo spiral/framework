@@ -129,7 +129,10 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     public function describeToken(&$token, Node $node = null)
     {
         $tokenName = $token[Tokenizer::TOKEN_NAME];
-        $attributes = isset($token[Tokenizer::TOKEN_ATTRIBUTES]) ? $token[Tokenizer::TOKEN_ATTRIBUTES] : array();
+
+        $attributes = isset($token[Tokenizer::TOKEN_ATTRIBUTES])
+            ? $token[Tokenizer::TOKEN_ATTRIBUTES]
+            : array();
 
         $behaviour = 'keep-token';
         foreach ($this->options['prefixes'] as $type => $prefixes)
