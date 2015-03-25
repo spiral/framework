@@ -47,6 +47,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         ),
         'keywords'  => array(
             'namespace'   => array('templater:namespace', 'view:namespace'),
+            'view'        => array('templater:view', 'view:name'),
             self::ALIASES => array(
                 'name'      => array('import', 'use', 'alias'),
                 'pattern'   => array('view', 'tag', 'views', 'folder', 'directory'),
@@ -417,6 +418,12 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             {
                 //Namespace can be redefined from attribute
                 $namespace = $value;
+            }
+
+            if (in_array($attribute, $this->options['keywords']['view']))
+            {
+                //Overwriting view
+                $view = $value;
             }
         }
 
