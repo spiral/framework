@@ -1,11 +1,11 @@
 <extends:aliasB/>
-<use view="includes/*" prefix="i"/>
+<namespace path="self:includes" name="includes"/>
 
 <block:blockA>
     Block A defined in file alias D2(default).
     <aliasA/>
-    <i:blockB>
+    <includes:blockB>
         Block B context provided from alias D2(default).
         <aliasA/>
-    </i:blockB>
+    </includes:blockB>
 </block:blockA>

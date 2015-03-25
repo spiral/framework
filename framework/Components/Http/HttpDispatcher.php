@@ -15,7 +15,6 @@ use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Router\RouterTrait;
 use Spiral\Components\Http\Router\Router;
-use Spiral\Components\View\VariableProviderInterface;
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
@@ -24,7 +23,7 @@ use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\Events\Event;
 
-class HttpDispatcher extends Component implements DispatcherInterface, VariableProviderInterface
+class HttpDispatcher extends Component implements DispatcherInterface
 {
     /**
      * Required traits.
@@ -110,16 +109,13 @@ class HttpDispatcher extends Component implements DispatcherInterface, VariableP
     }
 
     /**
-     * Called by event component at time of composing view static variables. Such variables will
-     * change cache file name. Class which implements this method should add new variable to event
-     * context.
+     * Application base path.
      *
-     * @param Event $event
+     * @return string
      */
-    public function viewVariables(Event $event)
+    public function getBasePath()
     {
-        //Base Application path, use Request Active path to get module specific base path
-        $event->context['basePath'] = $this->config['basePath'];
+        return $this->config['basePath'];
     }
 
     /**

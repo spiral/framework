@@ -1,4 +1,6 @@
-<use namespace="default" prefix="love"/>
+<namespace path="default" name="love"/>
+<namespace path="self" name="inner"/>
+
 <block:blockA>Block A defined in file cross D(namespace).</block:blockA>
 
 <love:crossA blockB="Block B defined in cross D(namespace) via attribute.">
@@ -6,13 +8,13 @@
         Block M prepended by file cross D(namespace).
         <block:blockM/>
         Block M appended by file cross D(namespace).
-        <includes.blockB>
+        <inner:includes.blockB>
             Block B context provided by cross D(namespace).
-        </includes.blockB>
+        </inner:includes.blockB>
     </block:blockM>
 
     <block:footer>
-        <includes.blockB/>
+        <inner:includes.blockB/>
     </block:footer>
 </love:crossA>
 

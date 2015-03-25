@@ -96,15 +96,6 @@ class ViewManager extends Component
 
         //Mounting namespaces from config and external modules
         $this->namespaces = $this->config['namespaces'];
-
-        foreach ($this->config['variableProviders'] as $provider)
-        {
-            //Attaching view static variable provider
-            self::dispatcher()->addListener(
-                'staticVariables',
-                array(Container::get($provider), 'viewVariables')
-            );
-        }
     }
 
     /**
@@ -238,7 +229,14 @@ class ViewManager extends Component
      */
     public function cachedFilename($namespace, $view)
     {
-        $this->staticVariables = $this->event('staticVariables', $this->staticVariables);
+        foreach ($this->config['staticVariables'] as $variable => $provider)
+        {
+            $this->staticVariables[$variable] = call_user_func(
+                Container::get($provider[0]),
+                $provider[1]
+            );
+        }
+
         $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . static::EXTENSION;
 
         return $this->cacheDirectory() . '/'

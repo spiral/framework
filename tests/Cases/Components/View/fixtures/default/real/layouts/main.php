@@ -1,2 +1,2 @@
 <extends:real.layouts.basic/>
-<use views="namespace:tags/*" prefix="tags"/>
+<namespace path="namespace:tags" name="tags"/>

@@ -10,11 +10,13 @@ namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\Processors\Templater\ImportAlias;
+use Spiral\Components\View\Processors\Templater\Import;
+use Spiral\Components\View\Processors\Templater\AliasImport;
 use Spiral\Components\View\ViewManager;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\Processors\Templater\Node;
 use Spiral\Core\Component;
+use Spiral\Core\Core;
 use Spiral\Helpers\ArrayHelper;
 use Spiral\Support\Html\Tokenizer;
 use Spiral\Components\View\Processors\Templater\Behaviour;
@@ -23,9 +25,9 @@ use Spiral\Components\View\Processors\Templater\SupervisorInterface;
 class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 {
     /**
-     * Aliases options (directories and views) will be stored under this key.
+     * Imports.
      */
-    const ALIASES = 'aliases';
+    const IMPORTS = 'aliases';
 
     /**
      * Templater rendering options and names.
@@ -33,25 +35,28 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      * @var array
      */
     protected $options = array(
-        'separator' => '.',
-        'prefixes'  => array(
+        'separator'   => '.',
+        'prefixes'    => array(
             Node::TYPE_BLOCK  => array('block:', 'section:'),
-            Node::TYPE_EXTEND => array('extend:', 'extends:'),
+            Node::TYPE_EXTEND => array('extends:'),
+
         ),
-        'keywords'  => array(
-            'namespace'   => array('view:namespace', 'node:namespace'),
-            'view'        => array('view::parent', 'node:parent'),
-            self::ALIASES => array(
-                'name'      => array('import', 'use', 'alias'),
-                'pattern'   => array('view', 'tag', 'views', 'folder', 'directory'),
-                'namespace' => array('namespace'),
-                'prefix'    => array('prefix'),
-                'alias'     => array('as')
+        self::IMPORTS => array(
+            'alias'     => array(
+                'class' => 'Spiral\Components\View\Processors\Templater\AliasImport',
+                'path'  => array('path'),
+                'alias' => array('as')
             ),
-            'include'     => array(
-                'include'
+            'namespace' => array(
+                'class' => 'Spiral\Components\View\Processors\Templater\NamespaceImport',
+                'path'  => array('path'),
+                'name'  => array('name')
             )
-        )
+        ),
+        'context'     => array(
+            'namespace' => array('view:namespace', 'node:namespace'),
+            'view'      => array('view::parent', 'node:parent'),
+        ),
     );
 
     /**
@@ -185,19 +190,19 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                             $behaviour->contextNode = new Node(
                                 'root',
                                 $content,
-                                $nodeContext + array(self::ALIASES => array())
+                                $nodeContext + array(self::IMPORTS => array())
                             );
 
                             //Import options has to be merged before parent will be extended, make
                             //sure extend is first construction in file/block
-                            if (!empty($behaviour->contextNode->options[self::ALIASES]))
+                            if (!empty($behaviour->contextNode->options[self::IMPORTS]))
                             {
                                 /**
-                                 * @var ImportAlias $alias
+                                 * @var AliasImport $alias
                                  */
-                                foreach ($behaviour->contextNode->options[self::ALIASES] as $alias)
+                                foreach ($behaviour->contextNode->options[self::IMPORTS] as $alias)
                                 {
-                                    $node->options[self::ALIASES][] = $alias->getCopy(+1);
+                                    $node->options[self::IMPORTS][] = $alias->getCopy(+1);
                                 }
                             }
                             break;
@@ -217,28 +222,43 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             return true;
         }
 
-        /**
-         * Processing aliases and imports. Aliases should be used before any block defined and be at
-         * 1st level, in other scenario alias will be applied for block and it's content only.
-         */
-        if (in_array($token[Tokenizer::TOKEN_NAME], $this->options['keywords'][self::ALIASES]['name']))
+        if (isset($this->options[self::IMPORTS][$tokenName]))
         {
+            $importOptions = $this->options[self::IMPORTS][$tokenName];
+
+            //todo: refactor
             $options = array();
-            foreach ($this->options['keywords'][self::ALIASES] as $keyword => $names)
+
+            foreach ($importOptions as $option => $keywords)
             {
-                foreach ($names as $attributeName)
+                if (is_array($keywords))
                 {
-                    if (isset($token[Tokenizer::TOKEN_ATTRIBUTES][$attributeName]))
+                    foreach ($keywords as $attribute)
                     {
-                        $options[$keyword] = $token[Tokenizer::TOKEN_ATTRIBUTES][$attributeName];
+                        if (isset($attributes[$attribute]))
+                        {
+                            $options[$option] = $attributes[$attribute];
+                        }
                     }
                 }
             }
 
             try
             {
-                $alias = new ImportAlias($node->getLevel(), $options + $node->options);
-                $alias->generateAliases($this->view, $this->options['separator']);
+                /**
+                 * @var Import $import
+                 */
+                $import = Core::get($importOptions['class'], array(
+                        'level' => $node->getLevel(),
+                    ) + ($options + $node->options)
+                );
+
+                //Trying to generate all possible import values
+                $import->generateAliases(
+                    $this->view,
+                    $this->file,
+                    $this->options['separator']
+                );
             }
             catch (ViewException $exception)
             {
@@ -249,12 +269,12 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 );
             }
 
-            $node->options[self::ALIASES][] = $alias;
+            $node->options[self::IMPORTS][] = $import;
             ArrayHelper::stableSort(
-                $node->options[self::ALIASES],
-                function (ImportAlias $optionA, ImportAlias $optionB)
+                $node->options[self::IMPORTS],
+                function (Import $optionA, Import $optionB)
                 {
-                    return $optionA->level >= $optionB->level;
+                    return $optionA->getLevel() >= $optionB->getLevel();
                 }
             );
 
@@ -262,82 +282,75 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             return false;
         }
 
-        /**
-         * Do not allow automatic namespace import?
-         */
-        $includeContext = null;
-        if (strpos($tokenName, $this->options['separator']) !== false && strpos($tokenName, ':') === false)
+        //Checking if we need to load this token
+        if (empty($node->options[self::IMPORTS]))
         {
-            $includeContext = $this->fetchContext($tokenName, $attributes, $node->options);
+            return $behaviour;
         }
 
-        //Checking if we need to load this token
-        if (!empty($node->options[self::ALIASES]))
+        $includeContext = null;
+        foreach ($node->options[self::IMPORTS] as $alias)
         {
-            foreach ($node->options[self::ALIASES] as $alias)
+            $aliases = $alias->generateAliases(
+                $this->view,
+                $this->file,
+                $this->options['separator']
+            );
+
+            if (isset($aliases[$tokenName]))
             {
-                $aliases = $alias->generateAliases($this->view, $this->options['separator']);
-
-                /**
-                 * @var ImportAlias $alias
-                 */
-                if (isset($aliases[$tokenName]))
-                {
-                    $includeContext = array(
-                        'namespace' => $alias->getNamespace(),
-                        'view'      => $aliases[$tokenName]
-                    );
-
-                    break;
-                }
+                $includeContext = $this->fetchContext($aliases[$tokenName], array(), $node->options);
+                break;
             }
         }
 
-        if (!empty($includeContext))
+        if (empty($includeContext))
         {
-            $behaviour = new Behaviour(
-                $tokenName,
-                Node::TYPE_INCLUDE,
-                $attributes,
+            return $behaviour;
+        }
+
+        $behaviour = new Behaviour(
+            $tokenName,
+            Node::TYPE_INCLUDE,
+            $attributes,
+            $node->options
+        );
+
+        //Include node, all blocks inside current import namespace
+        $behaviour->contextNode = new Node(null, false, $node->options);
+
+        //Include parent (what we including) has it's own context
+        try
+        {
+            $content = $this->loadContent(
+                $includeContext['namespace'],
+                $includeContext['view'],
+                $token[Tokenizer::TOKEN_CONTENT],
                 $node->options
             );
 
-            //Include node, all blocks inside current import namespace
-            $behaviour->contextNode = new Node(null, false, $node->options);
+            $behaviour->contextNode->parent = new Node(null, $content, $includeContext);
+        }
+        catch (ViewException $exception)
+        {
+            $exception = $this->clarifyException(
+                $exception,
+                $token[Tokenizer::TOKEN_CONTENT],
+                $node->options
+            );
 
-            //Include parent (what we including) has it's own context
-            try
-            {
-                $content = $this->loadContent(
-                    $includeContext['namespace'],
-                    $includeContext['view'],
-                    $token[Tokenizer::TOKEN_CONTENT],
-                    $node->options
-                );
+            //There is no need to force exception if import not loaded, but we can log it
+            $this->view->logger()->error(
+                "{message} in {file} at line {line} defined by '{tokenName}'",
+                array(
+                    'message'   => $exception->getMessage(),
+                    'file'      => $exception->getFile(),
+                    'line'      => $exception->getLine(),
+                    'tokenName' => $tokenName
+                )
+            );
 
-                $behaviour->contextNode->parent = new Node(null, $content, $includeContext);
-            }
-            catch (ViewException $exception)
-            {
-                $exception = $this->clarifyException(
-                    $exception,
-                    $token[Tokenizer::TOKEN_CONTENT],
-                    $node->options
-                );
-
-                //There is no need to force exception if import not loaded, but we can log it
-                $this->view->logger()->error(
-                    "{message} in {file} at line {line} defined by '{tokenName}'",
-                    array(
-                        'message'   => $exception->getMessage(),
-                        'file'      => $exception->getFile(),
-                        'line'      => $exception->getLine(),
-                        'tokenName' => $tokenName
-                    )
-                );
-
-                return $token;
-            }
+            return $token;
         }
 
         //Uses and aliases
@@ -370,13 +383,13 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         foreach ($attributes as $attribute => $value)
         {
-            if (in_array($attribute, $this->options['keywords']['namespace']))
+            if (in_array($attribute, $this->options['context']['namespace']))
             {
                 //Namespace can be redefined from attribute
                 $namespace = $value;
             }
 
-            if (in_array($attribute, $this->options['keywords']['view']))
+            if (in_array($attribute, $this->options['context']['view']))
             {
                 //Overwriting view
                 $view = $value;

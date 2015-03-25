@@ -1,5 +1,5 @@
-<use view="default:includes/blockB" as="blockV"/>
-<use view="includes/*" prefix="i"/>
+<alias path="default:includes/blockB" as="blockV"/>
+<namespace path="self:includes" name="i"/>
 This is nested B(namespace).
 
 <i:blockA>

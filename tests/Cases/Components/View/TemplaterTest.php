@@ -27,7 +27,6 @@ class TemplaterTest extends TestCase
 
     public function testExtendA()
     {
-        //Direct template call
         $result = $this->render('extendA');
 
         $this->assertSame('Block A defined in file A(default).', $result[0]);
@@ -37,7 +36,6 @@ class TemplaterTest extends TestCase
 
     public function testExtendB()
     {
-        //Simple extending
         $result = $this->render('extendB');
 
         $this->assertSame('Block A defined in file A(default).', $result[0]);
@@ -47,7 +45,6 @@ class TemplaterTest extends TestCase
 
     public function testExtendC()
     {
-        //Double extending
         $result = $this->render('extendC');
 
         $this->assertSame('Block A defined in file A(default).', $result[0]);
@@ -57,7 +54,6 @@ class TemplaterTest extends TestCase
 
     public function testExtendD()
     {
-        //Extending with parent block
         $result = $this->render('extendD');
         $result = array_map('trim', $result);
 
@@ -69,7 +65,6 @@ class TemplaterTest extends TestCase
 
     public function testExtendE()
     {
-        //Extending with parent block
         $result = $this->render('extendE');
         $result = array_map('trim', $result);
 
@@ -81,7 +76,6 @@ class TemplaterTest extends TestCase
 
     public function testExtendF()
     {
-        //Extending with parent block
         $result = $this->render('extendF');
         $result = array_map('trim', $result);
 
@@ -94,7 +88,6 @@ class TemplaterTest extends TestCase
 
     public function testNamespaceExtendA()
     {
-        //Simple extending (namespace)
         $result = $this->render('namespace:extendA');
 
         $this->assertSame('Block A defined in file A(namespace).', $result[0]);
@@ -104,7 +97,6 @@ class TemplaterTest extends TestCase
 
     public function testNamespaceExtendB()
     {
-        //Direct template call (namespace)
         $result = $this->render('namespace:extendB');
 
         $this->assertSame('Block A defined in file A(namespace).', $result[0]);
@@ -114,7 +106,6 @@ class TemplaterTest extends TestCase
 
     public function testNamespaceExtendC()
     {
-        //Double extending (namespace)
         $result = $this->render('namespace:extendC');
 
         $this->assertSame('Block A defined in file A(namespace).', $result[0]);
@@ -124,8 +115,6 @@ class TemplaterTest extends TestCase
 
     public function testIncludeA()
     {
-        //Testing simple importing, some block has same names in both parent and child
-        //As block has simple name we have to declare explicitly
         $result = $this->render('includeA');
 
         $this->assertSame('Block A defined in file include A(default).', $result[0]);
@@ -137,8 +126,6 @@ class TemplaterTest extends TestCase
 
     public function testIncludeB()
     {
-        //Include extended template
-        //We using longer declaration
         $result = $this->render('includeB');
 
         $this->assertSame('Block A defined in file include B(default).', $result[0]);
@@ -150,8 +137,6 @@ class TemplaterTest extends TestCase
 
     public function testIncludeC()
     {
-        //Should be identical to namespace:extendC
-        //Including whole namespace
         $result = $this->render('includeC');
 
         $this->assertSame('Block A defined in file include C(default).', $result[0]);
@@ -163,8 +148,6 @@ class TemplaterTest extends TestCase
 
     public function testIncludeD()
     {
-        //Should be identical to namespace:extendC
-        //Custom prefix
         $result = $this->render('includeD');
 
         $this->assertSame('Block A defined in file include D(default).', $result[0]);
@@ -212,7 +195,7 @@ class TemplaterTest extends TestCase
 
     public function testIncludeG()
     {
-        //Automatically load tag with . included (same namespace)
+        //"self" namespace
         $result = $this->render('includeG');
 
         //Block A (default) expected
@@ -224,7 +207,6 @@ class TemplaterTest extends TestCase
 
     public function testNamespaceIncludeG()
     {
-        //Automatically load tag with . included (same namespace)
         $result = $this->render('namespace:includeG');
 
         //Block A (default) expected
@@ -236,7 +218,6 @@ class TemplaterTest extends TestCase
 
     public function testCrossA()
     {
-        //Cross imports, making sure namespace not lost
         $result = $this->render('crossA');
 
         //Blocks should be included from default namespace
@@ -249,7 +230,6 @@ class TemplaterTest extends TestCase
 
     public function testNamespaceCrossA()
     {
-        //Checking namespace
         $result = $this->render('namespace:crossA');
 
         //All imports should be from "namespace"
@@ -279,7 +259,6 @@ class TemplaterTest extends TestCase
 
     public function testNamespaceCrossB()
     {
-        //Including element inside another namespace but local context (reverted)
         $result = $this->render('namespace:crossB');
 
         $this->assertSame('Block A defined in file cross B(namespace).', $result[0]);
@@ -296,8 +275,6 @@ class TemplaterTest extends TestCase
 
     public function testCrossC()
     {
-        //Including element inside another namespace but local context
-        //+ parent block values (before extend)
         $result = $this->render("crossC");
 
         $this->assertSame('Block A defined in file cross C(default).', $result[0]);
@@ -313,8 +290,6 @@ class TemplaterTest extends TestCase
 
     public function testCrossC1()
     {
-        //Including element inside another namespace but local context
-        //+ parent block values (after extend)
         $result = $this->render("crossC1");
 
         $this->assertSame('Block A defined in file cross C1(default).', $result[0]);
@@ -330,8 +305,6 @@ class TemplaterTest extends TestCase
 
     public function testCrossC2()
     {
-        //Including element inside another namespace but local context
-        //+ parent block values (after and before extend)
         $result = $this->render("crossC2");
 
         $this->assertSame('Block A defined in file cross C2(default).', $result[0]);
@@ -391,7 +364,6 @@ class TemplaterTest extends TestCase
 
     public function testAliasA()
     {
-        //Simple aliasing
         $result = $this->render('aliasA');
 
         $this->assertSame('Block A defined in file alias A(default).', $result[0]);
@@ -403,7 +375,6 @@ class TemplaterTest extends TestCase
 
     public function testAliasB()
     {
-        //Aliasing to another namespace
         $result = $this->render("aliasB");
 
         $this->assertSame('Block A defined in file alias B(default).', $result[0]);
@@ -634,7 +605,7 @@ class TemplaterTest extends TestCase
         if (empty($config))
         {
             $config = array(
-                'namespaces'        => array(
+                'namespaces'      => array(
                     'default'   => array(
                         __DIR__ . '/fixtures/default/',
                         __DIR__ . '/fixtures/default-b/',
@@ -643,12 +614,12 @@ class TemplaterTest extends TestCase
                         __DIR__ . '/fixtures/namespace/',
                     )
                 ),
-                'caching'           => array(
+                'caching'         => array(
                     'enabled'   => false,
                     'directory' => directory('runtime')
                 ),
-                'variableProviders' => array(),
-                'processors'        => array(
+                'staticVariables' => array(),
+                'processors'      => array(
                     'templater' => array(
                         'class' => 'Spiral\Components\View\Processors\TemplateProcessor'
                     )

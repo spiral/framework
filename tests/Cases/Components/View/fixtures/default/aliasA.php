@@ -1,12 +1,12 @@
-<use view="includes/blockA" as="aliasA"/>
-<use view="includes/*" prefix="i"/>
+<namespace path="self:includes" name="includes"/>
+<alias path="self:includes/blockA" as="aliasA"/>
 
 <block:blockA>Block A defined in file alias A(default).</block:blockA>
 
 <block:blockB>
     Block B defined in file alias A(default).
     <aliasA/>
-    <i:blockB>
+    <includes:blockB>
         Block B context provided from alias A(default).
-    </i:blockB>
+    </includes:blockB>
 </block:blockB>

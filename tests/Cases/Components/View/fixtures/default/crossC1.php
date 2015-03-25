@@ -1,4 +1,6 @@
-<use namespace="namespace"/>
+<namespace path="namespace"/>
+<namespace path="self:includes" name="includes"/>
+
 <block:blockA>Block A defined in file cross C1(default).</block:blockA>
 
 <namespace:crossA>
@@ -9,7 +11,7 @@
     </block:blockM>
 
     <block:footer>
-        <includes.blockB/>
+        <includes:blockB/>
     </block:footer>
 
 </namespace:crossA>

@@ -1,8 +1,8 @@
 <extends:real.realA title="Real C Title."/>
-<use view="namespace:tags/span" as="span"/>
-<use view="namespace:tags/link" as="a"/>
-<use view="includes/blockC" as="i"/>
-<use view="includes/blockB" as="b"/>
+<alias path="namespace:tags/span" as="span"/>
+<alias path="namespace:tags/link" as="a"/>
+<alias path="self:includes/blockC" as="i"/>
+<alias path="self:includes/blockB" as="b"/>
 
 <block:content>
     <block:content/>

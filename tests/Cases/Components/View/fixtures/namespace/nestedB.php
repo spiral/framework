@@ -1,10 +1,11 @@
-<use view="default:includes/blockA" as="a"/>
+<alias path="default:includes/blockA" as="a"/>
+<namespace path="self"/>
 This is nested B(namespace).
 
 <a>
     <a/>
-    <includes.blockB>
+    <self:includes.blockB>
         <a></a>
-    </includes.blockB>
+    </self:includes.blockB>
     <a/>
 </a>

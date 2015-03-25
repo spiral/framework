@@ -120,17 +120,17 @@ class SnapshotTest extends TestCase
         if (empty($config))
         {
             $config = array(
-                'namespaces'        => array(
+                'namespaces'      => array(
                     'spiral' => array(
                         directory('framework') . '/views',
                     )
                 ),
-                'caching'           => array(
+                'caching'         => array(
                     'enabled'   => false,
                     'directory' => directory('runtime')
                 ),
-                'variableProviders' => array(),
-                'processors'        => array()
+                'staticVariables' => array(),
+                'processors'      => array()
             );
         }
 

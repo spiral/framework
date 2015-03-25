@@ -1,1 +1,1 @@
-<extend:tags.input type="password"/>
+<extends:tags.input type="password"/>

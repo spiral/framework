@@ -1,9 +1,11 @@
+<namespace path="self"/>
+
 This is nested B(namespace).
 
-<includes.blockA>
-    <includes.blockA/>
-    <includes.blockB>
-        <includes.blockA/>
-    </includes.blockB>
-    <includes.blockA/>
-</includes.blockA>
+<self:includes.blockA>
+    <self:includes.blockA/>
+    <self:includes.blockB>
+        <self:includes.blockA/>
+    </self:includes.blockB>
+    <self:includes.blockA/>
+</self:includes.blockA>

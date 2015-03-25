@@ -8,13 +8,12 @@
  */
 namespace Spiral\Components\I18n;
 
-use Spiral\Components\View\VariableProviderInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 use Spiral\Core\Events\Event;
 use Spiral\Helpers\StringHelper;
 
-class Translator extends Component implements VariableProviderInterface
+class Translator extends Component
 {
     /**
      * Will provide us helper method getInstance().
@@ -95,18 +94,6 @@ class Translator extends Component implements VariableProviderInterface
         $this->language = $this->config['default'];
         $this->languageOptions = $this->config['languages'][$this->language];
         $this->pluralizers[$this->language] = null;
-    }
-
-    /**
-     * Called by event component at time of composing view static variables. Such variables will
-     * change cache file name. Class which implements this method should add new variable to event
-     * context.
-     *
-     * @param Event $event
-     */
-    public function viewVariables(Event $event)
-    {
-        $event->context['language'] = $this->getLanguage();
     }
 
     /**

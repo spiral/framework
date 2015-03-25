@@ -41,7 +41,7 @@ class NamespacesTest extends TestCase
         if (empty($config))
         {
             $config = array(
-                'namespaces'        => array(
+                'namespaces'      => array(
                     'default'   => array(
                         __DIR__ . '/fixtures/default/',
                         __DIR__ . '/fixtures/default-b/',
@@ -50,12 +50,12 @@ class NamespacesTest extends TestCase
                         __DIR__ . '/fixtures/namespace/',
                     )
                 ),
-                'caching'           => array(
+                'caching'         => array(
                     'enabled'   => false,
                     'directory' => directory('runtime')
                 ),
-                'variableProviders' => array(),
-                'processors'        => array()
+                'staticVariables' => array(),
+                'processors'      => array()
             );
         }
 

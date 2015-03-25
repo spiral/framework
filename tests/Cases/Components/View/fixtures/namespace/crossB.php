@@ -1,9 +1,11 @@
-<use namespace="default"/>
+<namespace path="default" name="default"/>
+<namespace path="self"/>
+
 <block:blockA>Block A defined in file cross B(namespace).</block:blockA>
 
 <default:crossA>
     <block:footer>
-        <includes.blockB/>
+        <self:includes.blockB/>
     </block:footer>
 </default:crossA>
 
