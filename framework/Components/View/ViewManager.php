@@ -309,47 +309,60 @@ class ViewManager extends Component
      *
      * @param string $namespace  View namespace.
      * @param string $view       View filename, without php included.
-     * @param bool   $process    If true, view source will be processed using view processors before
+     * @param bool   $compile    If true, view source will be processed using view processors before
      *                           saving to cache.
      * @param bool   $resetCache Force cache reset. Cache can be also disabled in view config.
      * @return string
      * @throws ViewException
      */
-    public function getFilename($namespace, $view, $process = true, $resetCache = false)
+    public function getFilename($namespace, $view, $compile = true, $resetCache = false)
     {
-        if ($process)
+        if ($compile)
         {
             //Cached filename
-            $filename = $this->cachedFilename($namespace, $view);
+            $cacheFilename = $this->cachedFilename($namespace, $view);
 
-            if ($resetCache || $this->isExpired($filename, $namespace, $view))
+            if ($resetCache || $this->isExpired($cacheFilename, $namespace, $view))
             {
-                //Getting source from original filename
-                $source = $this->file->read($this->getFilename($namespace, $view, false));
-
-                foreach (array_keys($this->config['processors']) as $processor)
-                {
-                    benchmark('view::' . $processor, $namespace . ':' . $view);
-
-                    //Compiling
-                    $source = $this->getProcessor($processor)->processSource(
-                        $source,
-                        $view,
-                        $namespace,
-                        $filename
-                    );
-
-                    benchmark('view::' . $processor, $namespace . ':' . $view);
-                }
-
-                //Saving compilation result to cache
-                $this->file->write($filename, $source, FileManager::RUNTIME, true);
+                $compiled = $this->compile($namespace, $view, $cacheFilename);
+                $this->file->write($cacheFilename, $compiled, FileManager::RUNTIME, true);
             }
 
-            return $filename;
+            return $cacheFilename;
         }
 
         return $this->findView($namespace, $view);
+    }
+
+    /**
+     * Generate view cache.
+     *
+     * @param string $namespace     View namespace.
+     * @param string $view          View filename, without php included.
+     * @param string $cacheFilename Cache filename (for reference).
+     * @return bool|string
+     */
+    protected function compile($namespace, $view, $cacheFilename)
+    {
+        //Getting source from original filename
+        $source = $this->file->read($this->getFilename($namespace, $view, false));
+
+        foreach (array_keys($this->config['processors']) as $processor)
+        {
+            benchmark('view::' . $processor, $namespace . ':' . $view);
+
+            //Compiling
+            $source = $this->getProcessor($processor)->processSource(
+                $source,
+                $view,
+                $namespace,
+                $cacheFilename
+            );
+
+            benchmark('view::' . $processor, $namespace . ':' . $view);
+        }
+
+        return $source;
     }
 
     /**
