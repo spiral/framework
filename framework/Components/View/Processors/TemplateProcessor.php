@@ -23,11 +23,6 @@ use Spiral\Components\View\Processors\Templater\SupervisorInterface;
 class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 {
     /**
-     * Prefixes to ignore includes and force original html tags.
-     */
-    const FORCE_HTML = 'forceHTML';
-
-    /**
      * Aliases options (directories and views) will be stored under this key.
      */
     const ALIASES = 'aliases';
@@ -40,7 +35,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     protected $options = array(
         'separator' => '.',
         'prefixes'  => array(
-            self::FORCE_HTML  => array('html:', '/html:'),
             Node::TYPE_BLOCK  => array('block:', 'section:'),
             Node::TYPE_EXTEND => array('extend:', 'extends:'),
         ),
@@ -207,27 +201,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                                 }
                             }
                             break;
-
-                        case self::FORCE_HTML:
-                            $token[Tokenizer::TOKEN_NAME] = $name;
-                            $tokenType = $token[Tokenizer::TOKEN_TYPE];
-
-                            if ($tokenType == Tokenizer::TAG_OPEN || $tokenType == Tokenizer::TAG_SHORT)
-                            {
-                                $token[Tokenizer::TOKEN_CONTENT] = '<' . substr(
-                                        $token[Tokenizer::TOKEN_CONTENT],
-                                        strlen($prefix) + 1
-                                    );
-                            }
-                            else
-                            {
-                                $token[Tokenizer::TOKEN_CONTENT] = '</' . substr(
-                                        $token[Tokenizer::TOKEN_CONTENT],
-                                        strlen($prefix) + 2
-                                    );
-                            }
-
-                            return true;
                     }
                 }
             }
