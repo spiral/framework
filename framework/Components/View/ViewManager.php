@@ -143,9 +143,23 @@ class ViewManager extends Component
      * @param array $namespaces
      * @return array
      */
-    public function setNamespaces($namespaces)
+    public function setNamespaces(array $namespaces)
     {
         return $this->namespaces = $namespaces;
+    }
+
+    /**
+     * Add view namespace.
+     *
+     * @param string $namespace
+     * @param string $directory
+     * @return static
+     */
+    public function addNamespace($namespace, $directory)
+    {
+        $this->namespaces[$namespace] = $directory;
+
+        return $this;
     }
 
     /**
