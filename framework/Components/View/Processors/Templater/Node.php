@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Processors\Templater;
 use Spiral\Core\Component;
 use Spiral\Support\Html\Tokenizer;
 
-class Node extends Component
+class Node
 {
     /**
      * Tagging behaviour types. HTML node templater supports 3 basic behaviours: extend, import, and
@@ -25,6 +25,11 @@ class Node extends Component
      * While importing, this block will contain the entire node import.
      */
     const CONTEXT_BLOCK = 'context';
+
+    /**
+     * Short tags expression.
+     */
+    const SHORT_TAGS = '/\${(?P<name>[a-z0-9_\.\-]+)(?: *\| *(?P<default>[^}]+) *)?}/i';
 
     /**
      * Following expression will export nodes that were not used (skipped) as a set of attributes,
@@ -194,22 +199,19 @@ class Node extends Component
                     self::describeToken($token, $this);
                 }
 
-                if (self::$supervisor && self::$supervisor->getShortExpression())
+                //Looking for short tag definitions
+                if (preg_match_all(self::SHORT_TAGS, $token[Tokenizer::TOKEN_CONTENT], $matches))
                 {
-                    //Looking for short tag definitions
-                    if (preg_match_all(self::$supervisor->getShortExpression(), $token[Tokenizer::TOKEN_CONTENT], $matches))
+                    foreach ($matches['name'] as $index => $name)
                     {
-                        foreach ($matches['name'] as $index => $name)
-                        {
-                            $chunks = explode($matches[0][$index], $token[Tokenizer::TOKEN_CONTENT]);
-                            $this->nodes[] = array_shift($chunks);
+                        $chunks = explode($matches[0][$index], $token[Tokenizer::TOKEN_CONTENT]);
+                        $this->nodes[] = array_shift($chunks);
 
-                            $node = new static($name, array(), $this->options);
-                            $node->nodes = array($matches['default'][$index]);
-                            $this->nodes[] = $node;
+                        $node = new static($name, array(), $this->options);
+                        $node->nodes = array($matches['default'][$index]);
+                        $this->nodes[] = $node;
 
-                            $token[Tokenizer::TOKEN_CONTENT] = join($matches[0][$index], $chunks);
-                        }
+                        $token[Tokenizer::TOKEN_CONTENT] = join($matches[0][$index], $chunks);
                     }
                 }
 

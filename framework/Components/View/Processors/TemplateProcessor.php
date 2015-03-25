@@ -39,7 +39,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     protected $options = array(
         'separator' => '.',
-        'shortTags' => '/\${(?P<name>[a-z0-9_\.\-]+)(?: *\| *(?P<default>[^}]+) *)?}/i',
         'prefixes'  => array(
             self::FORCE_HTML  => array('html:', '/html:'),
             Node::TYPE_BLOCK  => array('block:', 'section:'),
@@ -85,8 +84,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     *
-     * @todo To be refactored, tests will help.
      * @param array       $options
      * @param ViewManager $view View component instance (if presented).
      * @param FileManager $file
@@ -96,8 +93,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         $this->options = $options + $this->options;
         Node::setSupervisor($this);
 
-        $this->view = $view ?: ViewManager::getInstance();
-        $this->file = $file ?: FileManager::getInstance();
+        $this->view = $view;
+        $this->file = $file;
     }
 
     /**
@@ -111,11 +108,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     public function processSource($source, $view, $namespace)
     {
         //Root node based on current view data
-        $root = Node::make(array(
-            'name'    => 'root',
-            'source'  => $source,
-            'options' => compact('namespace', 'view')
-        ));
+        $root = new Node('root', $source, compact('namespace', 'view'));
 
         return $root->compile();
     }
@@ -195,11 +188,11 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                             );
 
                             //This is another namespace than node
-                            $behaviour->contextNode = Node::make(array(
-                                'name'    => 'root',
-                                'source'  => $content,
-                                'options' => $nodeContext + array(self::ALIASES => array())
-                            ));
+                            $behaviour->contextNode = new Node(
+                                'root',
+                                $content,
+                                $nodeContext + array(self::ALIASES => array())
+                            );
 
                             //Import options has to be merged before parent will be extended, make
                             //sure extend is first construction in file/block
@@ -337,11 +330,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             );
 
             //Include node, all blocks inside current import namespace
-            $behaviour->contextNode = Node::make(array(
-                'name'    => null,
-                'source'  => false,
-                'options' => $node->options
-            ));
+            $behaviour->contextNode = new Node(null, false, $node->options);
 
             //Include parent (what we including) has it's own context
             try
@@ -353,11 +342,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                     $node->options
                 );
 
-                $behaviour->contextNode->parent = Node::make(array(
-                    'name'    => null,
-                    'source'  => $content,
-                    'options' => $includeContext
-                ));
+                $behaviour->contextNode->parent = new Node(null, $content, $includeContext);
             }
             catch (ViewException $exception)
             {
@@ -384,17 +369,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         //Uses and aliases
         return $behaviour;
-    }
-
-    /**
-     * Regular expression for detecting short tags. Short tags will not be processed if result
-     * of this function is empty.
-     *
-     * @return mixed
-     */
-    public function getShortExpression()
-    {
-        return $this->options['shortTags'];
     }
 
     /**
@@ -480,8 +454,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 break;
             }
 
-            $source = $this->view->getProcessor($processor)
-                ->processSource($source, $view, $namespace);
+            $source = $this->view->getProcessor($processor)->processSource($source, $view, $namespace);
         }
 
         //We can parse tokens before sending to Node, this will speed-up processing

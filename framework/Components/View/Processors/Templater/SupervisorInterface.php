@@ -25,12 +25,4 @@ interface SupervisorInterface
      * @return mixed|Behaviour
      */
     public function describeToken(&$token, Node $node = null);
-
-    /**
-     * Regular expression for detecting short tags. Short tags will not be processed if result of
-     * this function is empty.
-     *
-     * @return mixed
-     */
-    public function getShortExpression();
 }
