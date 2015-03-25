@@ -76,19 +76,28 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     protected $view = null;
 
     /**
+     * File component.
+     *
+     * @var FileManager
+     */
+    protected $file = null;
+
+    /**
      * New processors instance with options specified in view config.
      *
      *
      * @todo To be refactored, tests will help.
      * @param array       $options
      * @param ViewManager $view View component instance (if presented).
+     * @param FileManager $file
      */
-    public function __construct(array $options, ViewManager $view = null)
+    public function __construct(array $options, ViewManager $view = null, FileManager $file = null)
     {
         $this->options = $options + $this->options;
         Node::setSupervisor($this);
 
         $this->view = $view ?: ViewManager::getInstance();
+        $this->file = $file ?: FileManager::getInstance();
     }
 
     /**
@@ -359,7 +368,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 );
 
                 //There is no need to force exception if import not loaded, but we can log it
-                ViewManager::logger()->error(
+                $this->view->logger()->error(
                     "{message} in {file} at line {line} defined by '{tokenName}'",
                     array(
                         'message'   => $exception->getMessage(),
@@ -454,7 +463,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         try
         {
             //View without caching
-            $source = FileManager::getInstance()->read($this->view->getFilename($namespace, $view, false));
+            $source = $this->file->read($this->view->getFilename($namespace, $view, false));
         }
         catch (ViewException $exception)
         {
@@ -471,7 +480,8 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 break;
             }
 
-            $source = $this->view->getProcessor($processor)->processSource($source, $view, $namespace);
+            $source = $this->view->getProcessor($processor)
+                ->processSource($source, $view, $namespace);
         }
 
         //We can parse tokens before sending to Node, this will speed-up processing
@@ -488,8 +498,14 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     protected function clarifyException(ViewException $exception, $tokenContent, array $viewContext)
     {
+        $filename = $this->view->getFilename(
+            $viewContext['namespace'],
+            $viewContext['view'],
+            false
+        );
+
         //Current view source and filename
-        $source = file($filename = $this->view->getFilename($viewContext['namespace'], $viewContext['view'], false));
+        $source = file($filename);
 
         $foundLine = 0;
         foreach ($source as $lineNumber => $line)
