@@ -231,10 +231,10 @@ class ViewManager extends Component
     {
         foreach ($this->config['staticVariables'] as $variable => $provider)
         {
-            $this->staticVariables[$variable] = call_user_func(
+            $this->staticVariables[$variable] = call_user_func(array(
                 Container::get($provider[0]),
                 $provider[1]
-            );
+            ));
         }
 
         $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . static::EXTENSION;
