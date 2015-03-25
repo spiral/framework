@@ -16,7 +16,7 @@ use Spiral\Components\View\ViewManager;
 class EvaluateProcessor implements ProcessorInterface
 {
     /**
-     * Evaluator tags, ASP tags by default.
+     * List of flag used to detect that block has to be evaluated.
      *
      * @var array
      */

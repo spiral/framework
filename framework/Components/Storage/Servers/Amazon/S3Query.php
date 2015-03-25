@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Storage\Servers\AmazonS3;
+namespace Spiral\Components\Storage\Servers\Amazon;
 
 use Spiral\Components\Storage\Servers\Traits\StorageQueryTrait;
 use Spiral\Components\Storage\StorageContainer;

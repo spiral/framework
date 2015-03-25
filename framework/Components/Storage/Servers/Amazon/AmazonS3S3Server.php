@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Storage\Servers\AmazonS3;
+namespace Spiral\Components\Storage\Servers\Amazon;
 
 use Spiral\Components\Storage\ServerInterface;
 use Spiral\Components\Files\FileManager;
@@ -69,7 +69,7 @@ class AmazonS3Server implements ServerInterface
 
         if (!extension_loaded('hash'))
         {
-            throw new StorageException("Unable to initialize AmazonS3 storage adapter, extension 'hash' not found.");
+            throw new StorageException("Unable to initialize Amazon storage adapter, extension 'hash' not found.");
         }
     }
 
