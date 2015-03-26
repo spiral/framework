@@ -58,7 +58,12 @@ class StorageObject extends Component
      * @param StorageContainer $container Associated storage object.
      * @throws StorageException
      */
-    public function __construct($address, $name = '', StorageManager $storage, StorageContainer $container = null)
+    public function __construct(
+        $address,
+        $name = '',
+        StorageManager $storage,
+        StorageContainer $container = null
+    )
     {
         $this->storage = $storage;
 
