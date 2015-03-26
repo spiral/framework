@@ -24,9 +24,9 @@ trait SingletonTrait
     }
 
     /**
-     * Return singleton component instance, such method can be used only if "SINGLETON" constant declared and not empty.
-     * Class will be automatically created using IoC. Another class instance or realization can be binded under componentAlias,
-     * in this case this method return that object.
+     * Return singleton component instance, such method can be used only if "SINGLETON" constant
+     * declared and not empty. Class will be automatically created using IoC. Another class instance
+     * or realization can be binded under componentAlias, in this case this method return that object.
      *
      * @return static
      * @throws CoreException
@@ -35,7 +35,9 @@ trait SingletonTrait
     {
         if (!$alias = static::SINGLETON)
         {
-            throw new CoreException("Unable to get instance of '" . get_called_class() . "', no 'SINGLETON' constant.");
+            throw new CoreException(
+                "Unable to get instance of '" . get_called_class() . "', no 'SINGLETON' constant."
+            );
         }
 
         return Container::get(static::SINGLETON);

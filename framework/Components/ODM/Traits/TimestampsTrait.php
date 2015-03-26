@@ -9,11 +9,25 @@
 namespace Spiral\Components\ODM\Traits;
 
 use Spiral\Components\ODM\Document;
+use Spiral\Core\Events\DispatcherInterface;
 use Spiral\Core\Events\Event;
 use Spiral\Core\Events\ObjectEvent;
 
 trait TimestampsTrait
 {
+
+    /**
+     * EventDispatcher instance which is currently attached to component implementation, can be redefined
+     * using setDispatcher() method. EventDispatcher instance will be created on demand and depends on
+     * "events" binding in spiral core. Every new EventDispatcher will receive "name" argument which
+     * is equal to getAlias() method result and declares events namespace.
+     *
+     * If no "events" binding presented, default dispatcher will be used (performance reasons).
+     *
+     * @return DispatcherInterface
+     */
+    abstract public static function dispatcher();
+
     /**
      * Init timestamps.
      *
@@ -33,14 +47,14 @@ trait TimestampsTrait
             };
 
             //This check is required as Document::SCHEMA_ANALYSIS will be provided multiple times
-            if (!static::dispatcher()->hasListener('describe', $listener))
+            if (!self::dispatcher()->hasListener('describe', $listener))
             {
-                static::dispatcher()->addListener('describe', $listener);
+                self::dispatcher()->addListener('describe', $listener);
             }
         }
 
-        static::dispatcher()->addListener('saving', array(__CLASS__, 'timestampsHandler'));
-        static::dispatcher()->addListener('updating', array(__CLASS__, 'timestampsHandler'));
+        self::dispatcher()->addListener('saving', array(__CLASS__, 'timestampsHandler'));
+        self::dispatcher()->addListener('updating', array(__CLASS__, 'timestampsHandler'));
     }
 
     /**

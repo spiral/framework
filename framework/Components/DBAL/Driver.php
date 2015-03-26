@@ -184,7 +184,7 @@ abstract class Driver extends Component
      */
     public function getPDO()
     {
-        if ($this->pdo)
+        if (!empty($this->pdo))
         {
             return $this->pdo;
         }

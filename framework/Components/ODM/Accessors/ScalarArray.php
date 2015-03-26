@@ -35,8 +35,8 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     protected $updated = false;
 
     /**
-     * When solidState is true all atomic operations will be applied but not send to database, this flag will be automatically
-     * set when accessor copied from one object to another.
+     * When solidState is true all atomic operations will be applied but not send to database, this
+     * flag will be automatically set when accessor copied from one object to another.
      *
      * @var bool
      */
@@ -64,7 +64,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     protected $type = null;
 
     /**
-     * Supported type filters (boolean is not included, who the hell need keyless array of booleans?).
+     * Supported type filters.
      *
      * @var array
      */
@@ -91,7 +91,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
 
         if ($this->type == self::DETECT_TYPE)
         {
-            if (!$this->data)
+            if (empty($this->data))
             {
                 //How are we suppose detect something here?
                 $this->type = 'string';
@@ -127,8 +127,8 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     }
 
     /**
-     * When solid state is enabled no atomic operations will be pushed to databases and array will be saved as one big
-     * set request.
+     * When solid state is enabled no atomic operations will be pushed to databases and array will
+     * be saved as one big set request.
      *
      * @param bool $solidState Solid state flag value.
      * @return static
@@ -141,10 +141,12 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     }
 
     /**
-     * Copy Compositable to embed into specified parent. Documents with already set parent will return copy of themselves,
-     * in other scenario document will return itself. No type specified to keep it compatible with AccessorInterface.
+     * Copy Compositable to embed into specified parent. Documents with already set parent will return
+     * copy of themselves, in other scenario document will return itself. No type specified to keep
+     * it compatible with AccessorInterface.
      *
-     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared for.
+     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
+     *                                      for.
      * @return CompositableInterface
      * @throws ODMException
      */
@@ -345,7 +347,9 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     {
         if (!$this->solidState)
         {
-            throw new ODMException("Direct offset operation can not be performed for ScalarArray in non solid state.");
+            throw new ODMException(
+                "Direct offset operation can not be performed for ScalarArray in non solid state."
+            );
         }
 
         $this->updated = true;
@@ -372,7 +376,9 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     {
         if (!$this->solidState)
         {
-            throw new ODMException("Direct offset operation can not be performed for ScalarArray in non solid state.");
+            throw new ODMException(
+                "Direct offset operation can not be performed for ScalarArray in non solid state."
+            );
         }
 
         $this->updated = true;
@@ -462,12 +468,11 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
+     * (PHP 5 >= 5.4.0)
      * Specify data which should be serialized to JSON
      *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     *       which is a value of any type other than a resource.
+     * @return mixed
      */
     function jsonSerialize()
     {

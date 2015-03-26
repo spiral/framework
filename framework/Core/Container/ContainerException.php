@@ -14,9 +14,9 @@ use Spiral\Core\CoreException;
 class ContainerException extends CoreException
 {
     /**
-     * Injection reflection should not be used in application or other code, this is pure spiral core exception raised when
-     * system can't correctly resolve dependency injection. Exception build in away to inject real problem location into
-     * stack trace.
+     * Injection reflection should not be used in application or other code, this is pure spiral core
+     * exception raised when system can't correctly resolve dependency injection. Exception build in
+     * away to inject real problem location into stack trace.
      *
      * @param Exception         $exception Original exception raised during IoC.
      * @param \ReflectionMethod $method    Context method where injections were defined.
@@ -30,8 +30,8 @@ class ContainerException extends CoreException
     }
 
     /**
-     * Build exception stack trace with injected locations of method (or methods) caused error while resolving dependency
-     * injection.
+     * Build exception stack trace with injected locations of method (or methods) caused error while
+     * resolving dependency injection.
      *
      * @return array
      */
@@ -41,7 +41,9 @@ class ContainerException extends CoreException
         $exception = $this->getPrevious();
 
         //While nested DI error we have to rebuild whole problem path
-        $trace = $exception instanceof ContainerException ? $exception->injectionTrace() : $exception->getTrace();
+        $trace = $exception instanceof ContainerException
+            ? $exception->injectionTrace()
+            : $exception->getTrace();
 
         //Known issue with ReflectionException and trace shifting
         if ($exception instanceof \ReflectionException || $exception instanceof ContainerException)

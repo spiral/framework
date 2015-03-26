@@ -99,10 +99,10 @@ trait PaginatorTrait
      * Paginate current selection.
      *
      * @param int                    $limit         Pagination limit.
-     * @param string                 $pageParameter Name of parameter in request query which is used to store
-     *                                              the current page number. "page" by default.
-     * @param int                    $count         Forced count value, if 0 paginator will try to fetch count
-     *                                              from associated object.
+     * @param string $pageParameter                 Name of parameter in request query which is used
+     *                                              to store the current page number. "page" by default.
+     * @param int $count                            Forced count value, if 0 paginator will try to
+     *                                              fetch count from associated object.
      * @param ServerRequestInterface $request       Source of page number.
      * @return mixed
      */

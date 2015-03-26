@@ -75,7 +75,8 @@ class DocumentationExporter extends Component
         $name = explode('\\', $primaryClass);
         $name = end($name);
 
-        return ($namespace ? self::VIRTUAL_NAMESPACE : '') . '_CMP_' . $name . '_' . substr(md5($primaryClass), 0, 5);
+        return ($namespace ? self::VIRTUAL_NAMESPACE : '')
+        . '_CMP_' . $name . '_' . substr(md5($primaryClass), 0, 5);
     }
 
     /**
@@ -93,11 +94,13 @@ class DocumentationExporter extends Component
         $name = explode('\\', $primaryClass);
         $name = end($name);
 
-        return ($namespace ? self::VIRTUAL_NAMESPACE : '') . '_CL_' . $name . '_' . substr(md5($primaryClass), 0, 5);
+        return ($namespace ? self::VIRTUAL_NAMESPACE : '')
+        . '_CL_' . $name . '_' . substr(md5($primaryClass), 0, 5);
     }
 
     /**
-     * Get virtual documentation for Document model. Will render all model fields, methods, compositions and aggregations.
+     * Get virtual documentation for Document model. Will render all model fields, methods,
+     * compositions and aggregations.
      *
      * @param DocumentSchema $document
      * @return NamespaceElement
@@ -107,30 +110,49 @@ class DocumentationExporter extends Component
         $name = $document->shortName();
         $model = ClassElement::make(compact('name'));
 
-        //This name should be used in static methods, as ODM allows to store all class children in one collection
+        //This name should be used in static methods, as ODM allows to store all class children in
+        //one collection
         $primaryDocument = $document->primaryDocument()->shortName();
 
         //Static collection methods
         if ($document->getCollection())
         {
-            $model->method('find', array(
-                '@param array $query',
-                '@return ' . $this->collectionClass($document) . '|' . $primaryDocument . '[]'
-            ), array('query'))->setStatic(true)->parameter('query')->setOptional(true, array())->setType('array');
+            $model->method(
+                'find',
+                array(
+                    '@param array $query',
+                    '@return ' . $this->collectionClass($document) . '|' . $primaryDocument . '[]'
+                ), array('query')
+            )->setStatic(true)->parameter('query')->setOptional(true, array())->setType('array');
 
-            $model->method('findOne', array(
-                '@param array $query',
-                '@return ' . $primaryDocument . '|' . $name
-            ), array('query'))->setStatic(true)->parameter('query')->setOptional(true, array())->setType('array');
+            $model->method(
+                'findOne',
+                array(
+                    '@param array $query',
+                    '@return ' . $primaryDocument . '|' . $name
+                ),
+                array('query')
+            )->setStatic(true)->parameter('query')->setOptional(true, array())->setType('array');
 
-            $model->method('findByID', array(
-                '@param mixed $mongoID',
-                '@return ' . $primaryDocument . '|' . $name
-            ), array('mongoID'))->setStatic(true);
+            $model->method(
+                'findByID',
+                array(
+                    '@param mixed $mongoID',
+                    '@return ' . $primaryDocument . '|' . $name
+                ),
+                array('mongoID')
+            )->setStatic(true);
         }
 
         //Document creation method
-        $model->method('create', array('@param array $fields', '@return ' . $name), array('fields'))->setStatic(true);
+        $model->method(
+            'create',
+            array(
+                '@param array $fields',
+                '@return ' . $name
+            ),
+            array('fields')
+        )->setStatic(true);
 
         //Compositions
         foreach ($document->getCompositions() as $name => $composition)
@@ -146,8 +168,13 @@ class DocumentationExporter extends Component
             }
             else
             {
+                $compositorClass = $this->compositorClass($composited);
+
                 $this->compositors[$composited->getClass()] = $composited;
-                $model->property($name, '@var \\' . $composited->getClass() . '[]|' . $this->compositorClass($composited));
+                $model->property(
+                    $name,
+                    '@var \\' . $composited->getClass() . '[]|' . $compositorClass
+                );
             }
         }
 
@@ -200,26 +227,38 @@ class DocumentationExporter extends Component
 
             if ($aggregation['type'] == Document::ONE)
             {
-                $model->method($name, array(
-                    '@param array $query',
-                    '@return \\' . $aggregated->getClass()
-                ), array('query'))->parameter('query')->setOptional(true, array())->setType('array');
+                $model->method(
+                    $name,
+                    array(
+                        '@param array $query',
+                        '@return \\' . $aggregated->getClass()
+                    ),
+                    array('query')
+                )->parameter('query')->setOptional(true, array())->setType('array');
             }
             else
             {
-                $model->method($name, array(
-                    '@param array $query',
-                    '@return \\' . $aggregated->getClass() . '[]|' . $this->collectionClass($aggregated)
-                ), array('query'))->parameter('query')->setOptional(true, array())->setType('array');
+                $collectionClass = $this->collectionClass($aggregated);
+                $model->method(
+                    $name,
+                    array(
+                        '@param array $query',
+                        '@return \\' . $aggregated->getClass() . '[]|' . $collectionClass
+                    ),
+                    array('query')
+                )->parameter('query')->setOptional(true, array())->setType('array');
             }
         }
 
-        return NamespaceElement::make(array('name' => $document->getNamespace()))->addClass($model);
+        return NamespaceElement::make(array(
+            'name' => $document->getNamespace()
+        ))->addClass($model);
     }
 
 
     /**
-     * Get virtual documentation for ODMCollection, all method return values will be replaced with appropriate document type.
+     * Get virtual documentation for ODMCollection, all method return values will be replaced with
+     * appropriate document type.
      *
      * @param CollectionSchema $collection
      * @return ClassElement
@@ -227,6 +266,7 @@ class DocumentationExporter extends Component
     protected function renderCollection(CollectionSchema $collection)
     {
         $name = $this->collectionClass($collection->primaryDocument(), false);
+
         $class = ClassElement::make(compact('name'))->cloneSchema(SchemaReader::COLLECTION);
         $class->removeConstant('SINGLETON');
         $class->setParent(false);
@@ -293,10 +333,8 @@ class DocumentationExporter extends Component
         $virtualNamespace = NamespaceElement::make(array('name' => self::VIRTUAL_NAMESPACE));
         $virtualNamespace->setUses(array(
             'Spiral\Components\ODM\ODM',
-            //SchemaReader::COMPOSITOR,
             'Spiral\Support\Pagination\Paginator',
             'Spiral\Support\Pagination\PaginatorException',
-            //'spiral\\core\\dispatcher\\Request',
             'Spiral\Components\ODM\ODMException'
         ));
 

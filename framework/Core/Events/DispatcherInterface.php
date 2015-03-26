@@ -44,8 +44,8 @@ interface DispatcherInterface
     public function getListeners($event);
 
     /**
-     * Fire event by name. All attached event handlers will be performed in order they were registered. Method will return
-     * resulted event context which will be passed thought all event listeners.
+     * Fire event by name. All attached event handlers will be performed in order they were registered.
+     * Method will return resulted event context which will be passed thought all event listeners.
      *
      * @param string $event   Event name.
      * @param mixed  $context Primary event content.

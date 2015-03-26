@@ -30,7 +30,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     const ATOMIC_SET = '$set';
 
     /**
-     * System will define which class should be used for document representation based on unique class fields.
+     * System will define which class should be used for document representation based on unique class
+     * fields.
      *
      * Example:
      * class A: _id, name, address
@@ -41,7 +42,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     const DEFINITION_FIELDS = 1;
 
     /**
-     * System will define which class should be used for document representation based on static method result.
+     * System will define which class should be used for document representation based on static
+     * method result.
+     *
      * Document::defineClass(items)
      *
      * Example:
@@ -54,9 +57,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     const DEFINITION_LOGICAL = 2;
 
     /**
-     * How to define valid class declaration based on set of fields fetched from collection, default way is "FIELDS",
-     * this method will define set of unique fields existed in every class. Second option is to define method to resolve
-     * class declaration "LOGICAL".
+     * How to define valid class declaration based on set of fields fetched from collection, default
+     * way is "DEFINITION_FIELDS", this method will define set of unique fields existed in every class.
+     * Second option is to define method to resolve class declaration "DEFINITION_LOGICAL".
      */
     const DEFINITION = self::DEFINITION_FIELDS;
 
@@ -70,8 +73,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     const ONE  = 899;
 
     /**
-     * Model specific constant to indicate that model has to be validated while saving. You still can change this behaviour
-     * manually by providing argument to save method.
+     * Model specific constant to indicate that model has to be validated while saving. You still can
+     * change this behaviour manually by providing argument to save method.
      */
     const FORCE_VALIDATION = true;
 
@@ -96,15 +99,16 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     protected $parent = null;
 
     /**
-     * Collection name where document should be stored into. Collection will be automatically created on first document
-     * save.
+     * Collection name where document should be stored into. Collection will be automatically created
+     * on first document save.
      *
      * @var string
      */
     protected $collection = null;
 
     /**
-     * Database name/id where document related collection located in. By default default database will be used.
+     * Database name/id where document related collection located in. By default default database
+     * will be used.
      *
      * @var string
      */
@@ -131,30 +135,33 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * subDocuments => array(DocumentClass) //Array of documents type DocumentClass
      *
      * Aggregations:
-     * relationship => array(self::MANY => DocumentClass, array(someID => key::_id, key => value...)) //Reference to many
-     *                                                                                                  DocumentClass
-     * relationship => array(self::ONE => DocumentClass, array(someID => key::_id, key => value...))  //Reference to one
-     *                                                                                                  DocumentClass
+     * relationship => array(
+     *      self::MANY => DocumentClass, array(someID => key::_id, key => value...)
+     * ) //Reference to many DocumentClass
      *
-     * Schema will be extended in child document classes, additionally ODM will set some default filters based on values
-     * in ODM configuration and field type.
+     * relationship => array(
+     *      self::ONE => DocumentClass, array(someID => key::_id, key => value...)
+     * ) //Reference to one DocumentClass
+     *
+     * Schema will be extended in child document classes, additionally ODM will set some default
+     * filters based on values in ODM configuration and field type.
      *
      * @var array
      */
     protected $schema = array();
 
     /**
-     * Default values associated with document fields. Every default value will be passed thought appropriate filter to
-     * ensure that value type is strictly set.
+     * Default values associated with document fields. Every default value will be passed thought
+     * appropriate filter to ensure that value type is strictly set.
      *
      * @var array
      */
     protected $defaults = array();
 
     /**
-     * Documents marked with solid state flag will be saved entirely without generating separate atomic operations for each
-     * field, instead one big set operation will be created. Your atomic() calls with be applied to document data but will not
-     * be forwarded to collection.
+     * Documents marked with solid state flag will be saved entirely without generating separate
+     * atomic operations for each field, instead one big set operation will be created. Your atomic()
+     * calls with be applied to document data but will not be forwarded to collection.
      *
      * @var bool
      */
@@ -168,18 +175,18 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     protected $updates = array();
 
     /**
-     * Set of atomic operation has to be performed to save document into database. Atomic operation can not be generated
-     * if document in solid state. Some atomic operation (set) will be created automatically while changing document
-     * fields.
+     * Set of atomic operation has to be performed to save document into database. Atomic operation
+     * can not be generated if document in solid state. Some atomic operation (set) will be created
+     * automatically while changing document fields.
      *
      * @var array
      */
     protected $atomics = array();
 
     /**
-     * Create new Document instance, schema will be automatically loaded and cached. Note that fields provided in constructor
-     * will not be filtered, you have to use create() method for it, however input fields will be merged with default
-     * values to ensure that model is always in correct shape.
+     * Create new Document instance, schema will be automatically loaded and cached. Note that fields
+     * provided in constructor will not be filtered, you have to use create() method for it, however
+     * input fields will be merged with default values to ensure that model is always in correct shape.
      *
      * @param array                 $data   Document fields, filters will not be applied for this fields.
      * @param CompositableInterface $parent Parent document or compositor.
@@ -199,22 +206,23 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         $this->schema = self::$schemaCache[$class];
 
         //Forcing default values
-        if ($this->schema[ODM::D_DEFAULTS])
+        if (!empty($this->schema[ODM::D_DEFAULTS]))
         {
             $this->fields = $data
                 ? array_replace_recursive($this->schema[ODM::D_DEFAULTS], is_array($data) ? $data : array())
                 : $this->schema[ODM::D_DEFAULTS];
         }
 
-        if ((!$this->primaryKey() && !$this->parent) || !is_array($data))
+        if ((!$this->primaryKey() && empty($this->parent)) || !is_array($data))
         {
             $this->solidState(true)->validationRequired = true;
         }
     }
 
     /**
-     * Prepare document property before caching it ODM schema. This method fire event "property" and sends SCHEMA_ANALYSIS
-     * option to trait initializers. Method and even can be used to create custom filters, schema values and etc.
+     * Prepare document property before caching it ODM schema. This method fire event "property" and
+     * sends SCHEMA_ANALYSIS option to trait initializers. Method and even can be used to create
+     * custom filters, schema values and etc.
      *
      * @param DocumentSchema $schema
      * @param string         $property Model property name.
@@ -225,12 +233,16 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     {
         static::initialize(self::SCHEMA_ANALYSIS);
 
-        return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
+        return static::dispatcher()->fire('describe', compact(
+            'schema',
+            'property',
+            'value'
+        ))['value'];
     }
 
     /**
-     * Define class name should be used to represent fields fetched from Mongo collection. This method will be called if
-     * Document::DEFINITION constant equal to Document::DEFINITION_LOGICAL.
+     * Define class name should be used to represent fields fetched from Mongo collection. This method
+     * will be called if Document::DEFINITION constant equal to Document::DEFINITION_LOGICAL.
      *
      * @param array $fields
      * @return string
@@ -241,9 +253,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Change document solid state flag value. Documents marked with solid state flag will be saved entirely without generating
-     * separate atomic operations for each field, instead one big set operation will be called. Atomic operations functionality
-     * will be disabled.
+     * Change document solid state flag value. Documents marked with solid state flag will be saved
+     * entirely without generating separate atomic operations for each field, instead one big set
+     * operation will be called. Atomic operations functionality will be disabled.
      *
      * @param bool $solidState  Solid state flag value.
      * @param bool $forceUpdate Mark all fields as changed to force update later.
@@ -262,7 +274,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Get document primary key (_id) value. This value can be used to identify if model loaded from databases or just created.
+     * Get document primary key (_id) value. This value can be used to identify if model loaded from
+     * databases or just created.
      *
      * @return \MongoId
      */
@@ -312,7 +325,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Get mutator for specified field. Setters, getters and accessors can be retrieved using this method.
+     * Get mutator for specified field. Setters, getters and accessors can be retrieved using this
+     * method.
      *
      * @param string $field   Field name.
      * @param string $mutator Mutator type (setters, getters, accessors).
@@ -336,22 +350,23 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Copy Compositable to embed into specified parent. Documents with already set parent will return copy of themselves,
-     * in other scenario document will return itself.
+     * Copy Compositable to embed into specified parent. Documents with already set parent will return
+     * copy of themselves, in other scenario document will return itself.
      *
-     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared for.
+     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
+     *                                      for.
      * @return static
      */
     public function embed($parent)
     {
-        if (!$this->parent)
+        if (empty($this->parent))
         {
             $this->parent = $parent;
 
             return $this->solidState(true, true);
         }
 
-        if ($parent == $this->parent)
+        if ($parent === $this->parent)
         {
             return $this;
         }
@@ -384,7 +399,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Serialize object data for saving into database. This is common method for documents and compositors.
+     * Serialize object data for saving into database. This is common method for documents and
+     * compositors.
      *
      * @return mixed
      */
@@ -423,12 +439,15 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     {
         //Better replace it with isset later
         return !in_array($field, $this->schema[ODM::D_SECURED]) &&
-        !($this->schema[ODM::D_ASSIGNABLE] && !in_array($field, $this->schema[ODM::D_ASSIGNABLE]));
+        !(
+            $this->schema[ODM::D_ASSIGNABLE]
+            && !in_array($field, $this->schema[ODM::D_ASSIGNABLE])
+        );
     }
 
     /**
-     * Get all non secured model fields. ODM will automatically convert "_id" to "id" and convert all MongoId and MongoDates
-     * to scalar representations.
+     * Get all non secured model fields. ODM will automatically convert "_id" to "id" and convert all
+     * MongoId and MongoDates to scalar representations.
      *
      * @return array
      */
@@ -519,7 +538,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     {
         if (!isset($this->schema[ODM::D_AGGREGATIONS][$offset]))
         {
-            throw new ODMException("Unable to call " . get_class($this) . "->{$offset}(), no such function.");
+            throw new ODMException(
+                "Unable to call " . get_class($this) . "->{$offset}(), no such function."
+            );
         }
 
         $aggregation = $this->schema[ODM::D_AGGREGATIONS][$offset];
@@ -568,7 +589,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
         if (!array_key_exists($name, $this->updates))
         {
-            $this->updates[$name] = $original instanceof AccessorInterface ? $original->serializeData() : $original;
+            $this->updates[$name] = $original instanceof AccessorInterface
+                ? $original->serializeData()
+                : $original;
         }
     }
 
@@ -596,8 +619,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Alias for atomic operation $set. Attention, this operation is not identical to setField() method, it performs low level
-     * operation and can be used only for simple fields.
+     * Alias for atomic operation $set. Attention, this operation is not identical to setField() method,
+     * it performs low level operation and can be used only for simple fields.
      *
      * @param string $field
      * @param mixed  $value
@@ -658,7 +681,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
         if ($this->solidState)
         {
-            if ($container)
+            if (!empty($container))
             {
                 return array(self::ATOMIC_SET => array($container => $this->getFields()));
             }
@@ -669,7 +692,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             return $atomics;
         }
 
-        if (!$container)
+        if (empty($container))
         {
             $atomics = $this->atomics;
         }
@@ -695,7 +718,13 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
             if ($value instanceof CompositableInterface)
             {
-                $atomics = array_merge_recursive($atomics, $value->buildAtomics(($container ? $container . '.' : '') . $field));
+                $atomics = array_merge_recursive(
+                    $atomics,
+                    $value->buildAtomics(
+                        ($container ? $container . '.' : '') . $field
+                    )
+                );
+
                 continue;
             }
 
@@ -727,9 +756,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public function hasUpdates($field = null, $atomicsOnly = false)
     {
-        if (!$field)
+        if (empty($field))
         {
-            if ($this->updates || $this->atomics)
+            if (!empty($this->updates) || !empty($this->atomics))
             {
                 return true;
             }
@@ -784,14 +813,14 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Validator instance associated with model, will be response for validations of validation errors. Model related error
-     * localization should happen in model itself.
+     * Validator instance associated with model, will be response for validations of validation errors.
+     * Model related error localization should happen in model itself.
      *
      * @return Validator
      */
     public function getValidator()
     {
-        if ($this->validator)
+        if (!empty($this->validator))
         {
             //Refreshing data
             return $this->validator->setData($this->fields);
@@ -805,8 +834,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
 
     /**
-     * Validating model data using validation rules, all errors will be stored in model errors array. Errors will not be
-     * erased between function calls.
+     * Validating model data using validation rules, all errors will be stored in model errors array.
+     * Errors will not be erased between function calls.
      */
     protected function validate()
     {
@@ -828,9 +857,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Get all validation errors with applied localization using i18n component (if specified), any error message can be
-     * localized by using [[ ]] around it. Data will be automatically validated while calling this method (if not validated
-     * before).
+     * Get all validation errors with applied localization using i18n component (if specified), any
+     * error message can be localized by using [[ ]] around it. Data will be automatically validated
+     * while calling this method (if not validated before).
      *
      * @param bool $reset Remove all model messages and reset validation, false by default.
      * @return array
@@ -841,12 +870,19 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         $errors = array();
         foreach ($this->errors as $field => $error)
         {
-            if (is_string($error) && substr($error, 0, 2) == Translator::I18N_PREFIX && substr($error, -2) == Translator::I18N_POSTFIX)
+            if (
+                is_string($error)
+                && substr($error, 0, 2) == Translator::I18N_PREFIX
+                && substr($error, -2) == Translator::I18N_POSTFIX
+            )
             {
                 if (isset($this->schema[ODM::D_MESSAGES][$error]))
                 {
                     //Parent message
-                    $error = Translator::getInstance()->get($this->schema[ODM::D_MESSAGES][$error], substr($error, 2, -2));
+                    $error = Translator::getInstance()->get(
+                        $this->schema[ODM::D_MESSAGES][$error],
+                        substr($error, 2, -2)
+                    );
                 }
                 else
                 {
@@ -892,15 +928,16 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Save document and all nested data to ODM collection. Document has to be valid to be saved, in other scenario method
-     * will return false, model errors can be found in getErrors() method.
+     * Save document and all nested data to ODM collection. Document has to be valid to be saved, in
+     * other scenario method will return false, model errors can be found in getErrors() method.
      *
      * Events: saving, saved, updating, updated will be fired.
      *
-     * @param bool $validate Validate document fields and all children before saving, enabled by default. Turning this
-     *                       option off will increase performance but will make saving less secure. You can use it when
-     *                       model data was not modified directly by user. By default value is null which will force
-     *                       document to select behaviour from FORCE_VALIDATION constant.
+     * @param bool $validate Validate document fields and all children before saving, enabled by
+     *                       default. Turning this option off will increase performance but will make
+     *                       saving less secure. You can use it when model data was not modified
+     *                       directly by user. By default value is null which will force document to
+     *                       select behaviour from FORCE_VALIDATION constant.
      * @return bool
      * @throws ODMException
      */
@@ -916,9 +953,11 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             return false;
         }
 
-        if (!$this->collection || $this->isEmbedded())
+        if (empty($this->collection) || $this->isEmbedded())
         {
-            throw new ODMException("Unable to save " . get_class($this) . ", no direct access to collection.");
+            throw new ODMException(
+                "Unable to save " . get_class($this) . ", no direct access to collection."
+            );
         }
 
         if (!$this->primaryKey())
@@ -926,23 +965,34 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             $this->event('saving');
             unset($this->fields['_id']);
 
-            static::odmCollection($this->schema)->insert($this->fields = $this->serializeData());
+            static::odmCollection($this->schema)->insert(
+                $this->fields = $this->serializeData()
+            );
+
             $this->event('saved');
         }
         elseif ($this->hasUpdates())
         {
             $this->event('updating');
-            static::odmCollection($this->schema)->update(array('_id' => $this->primaryKey()), $this->buildAtomics());
+
+            static::odmCollection($this->schema)->update(
+                array(
+                    '_id' => $this->primaryKey()
+                ),
+                $this->buildAtomics()
+            );
+
             $this->event('updated');
         }
 
-        //$this->flushUpdates();
+        $this->flushUpdates();
 
         return true;
     }
 
     /**
-     * Delete document and all nested data from MongoCollection, document will be removed by primary key (_id).
+     * Delete document and all nested data from MongoCollection, document will be removed by primary
+     * key (_id).
      *
      * Events: deleting, deleted will be raised.
      */
@@ -950,18 +1000,23 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     {
         if (!$this->collection)
         {
-            throw new ODMException("Unable to delete " . get_class($this) . ", no collection assigned.");
+            throw new ODMException(
+                "Unable to delete " . get_class($this) . ", no collection assigned."
+            );
         }
 
         $this->event('deleting');
-        $this->primaryKey() && static::odmCollection($this->schema)->remove(array('_id' => $this->primaryKey()));
+        $this->primaryKey() && static::odmCollection($this->schema)->remove(array(
+            '_id' => $this->primaryKey()
+        ));
+
         $this->fields = $this->defaults;
         $this->event('deleted');
     }
 
     /**
-     * Create new model and set it's fields, all field values will be passed thought model filters to ensure their type.
-     * Events: created
+     * Create new model and set it's fields, all field values will be passed thought model filters
+     * to ensure their type. Events: created
      *
      * @param array $fields Model fields to set, will be passed thought filters.
      * @return static
@@ -998,9 +1053,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Select multiple documents from associated collection. Attention, due ODM architecture, find method can return any
-     * of Document types stored in collection, even if find called from specified class. You have to solve it manually
-     * by overwrite this method in your class.
+     * Select multiple documents from associated collection. Attention, due ODM architecture, find
+     * method can return any of Document types stored in collection, even if find called from specified
+     * class. You have to solve it manually by overwrite this method in your class.
      *
      * @param mixed $query Fields and conditions to filter by.
      * @return Collection|static[]
@@ -1022,10 +1077,11 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Select one document from collection by it's primary key, string key will be automatically converted to MongoId object.
-     * Null will be returned if provided string is not valid mongo id.
+     * Select one document from collection by it's primary key, string key will be automatically
+     * converted to MongoId object. Null will be returned if provided string is not valid mongo id.
      *
-     * @param mixed $mongoID Valid MongoId, string value will be automatically converted to MongoId object.
+     * @param mixed $mongoID Valid MongoId, string value will be automatically converted to MongoId
+     *                       object.
      * @return static
      * @throws ODMException
      */
@@ -1046,7 +1102,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public function __debugInfo()
     {
-        if (!$this->collection)
+        if (empty($this->collection))
         {
             return (object)array(
                 'fields'  => $this->getFields(),

@@ -32,9 +32,10 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     protected $classDefinition = null;
 
     /**
-     * Compositor marked with solid state flag will be saved entirely without generating separate atomic operations for each
-     * nested document, instead one big set operation will be called. Your atomic() calls with be applied to document data
-     * but will not be forwarded to collection. All compositors in solid state by default.
+     * Compositor marked with solid state flag will be saved entirely without generating separate
+     * atomic operations for each nested document, instead one big set operation will be called. Your
+     * atomic() calls with be applied to document data but will not be forwarded to collection. All
+     * compositors in solid state by default.
      *
      * @var bool
      */
@@ -48,17 +49,17 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     protected $documents = array();
 
     /**
-     * Set of document operations performed on compositor level, operations will include things like pull, push and addToSet.
-     * Operations stored in this form to ensure that at moment of generating atomic operation valid document form will be provided
-     * and no dup operation will be generated.
+     * Set of document operations performed on compositor level, operations will include things like
+     * pull, push and addToSet. Operations stored in this form to ensure that at moment of generating
+     * atomic operation valid document form will be provided and no dup operation will be generated.
      *
      * @var array
      */
     protected $operations = array();
 
     /**
-     * Indication that composition data were changed without using atomic operations, this flag will be set to true if any
-     * document added, removed via array operations.
+     * Indication that composition data were changed without using atomic operations, this flag will
+     * be set to true if any document added, removed via array operations.
      *
      * @var bool
      */
@@ -79,8 +80,8 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     protected $errors = array();
 
     /**
-     * New instance of Compositor. Compositor used to perform various atomic operations and manipulations with documents
-     * embedded to another document (as array).
+     * New instance of Compositor. Compositor used to perform various atomic operations and manipulations
+     * with documents embedded to another document (as array).
      *
      * @param array|mixed           $data
      * @param CompositableInterface $parent
@@ -93,14 +94,17 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
         $this->documents = is_array($data) ? $data : array();
         if (!$this->classDefinition = $classDefinition)
         {
-            throw new ODMException("Compositor can not be created without defined class definition way.");
+            throw new ODMException(
+                "Compositor can not be created without defined class definition way."
+            );
         }
     }
 
     /**
-     * Change compositor solid state flag value. Compositor marked with solid state flag will be saved entirely without
-     * generating separate atomic operations for each nested document, instead one big set operation will be called. Your
-     * atomic() calls with be applied to document data but will not be forwarded to collection.
+     * Change compositor solid state flag value. Compositor marked with solid state flag will be saved
+     * entirely without generating separate atomic operations for each nested document, instead one
+     * big set operation will be called. Your atomic() calls with be applied to document data but
+     * will not be forwarded to collection.
      *
      * @param bool $solidState Solid state flag value.
      * @return static|Document[]
@@ -124,10 +128,11 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     }
 
     /**
-     * Copy Compositable to embed into specified parent. Documents with already set parent will return copy of themselves,
-     * in other scenario document will return itself.
+     * Copy Compositable to embed into specified parent. Documents with already set parent will return
+     * copy of themselves, in other scenario document will return itself.
      *
-     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared for.
+     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
+     *                                      for.
      * @return static
      * @throws ODMException
      */
@@ -138,14 +143,14 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
             throw new ODMException("Compositors can be embedded only to ODM objects.");
         }
 
-        if (!$this->parent)
+        if (empty($this->parent))
         {
             $this->parent = $parent;
 
             return $this->solidState(true);
         }
 
-        if ($parent == $this->parent)
+        if ($parent === $this->parent)
         {
             return $this;
         }
@@ -154,7 +159,8 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     }
 
     /**
-     * Serialize object data for saving into database. This is common method for documents and compositors.
+     * Serialize object data for saving into database. This is common method for documents and
+     * compositors.
      *
      * @return mixed
      */
@@ -163,7 +169,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
         $result = array();
         foreach ($this->documents as $document)
         {
-            $result[] = $document instanceof CompositableInterface ? $document->serializeData() : $document;
+            $result[] = $document instanceof CompositableInterface
+                ? $document->serializeData()
+                : $document;
         }
 
         return $result;
@@ -206,7 +214,10 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
 
         if ($this->changedDirectly)
         {
-            throw new ODMException("Composition were changed with low level array manipulations, unable to generate atomic set (solid state off).");
+            throw new ODMException(
+                "Composition were changed with low level array manipulations, "
+                . "unable to generate atomic set (solid state off)."
+            );
         }
 
         //Attention, you HAVE to disable solid stable to use atomic operations in sub objects
@@ -241,7 +252,12 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
                     continue;
                 }
 
-                $atomics = array_merge($atomics, $document->buildAtomics(($container ? $container . '.' : '') . $offset));
+                $atomics = array_merge(
+                    $atomics,
+                    $document->buildAtomics(
+                        ($container ? $container . '.' : '') . $offset
+                    )
+                );
             }
         }
 
@@ -255,7 +271,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      */
     public function hasUpdates()
     {
-        if ($this->changedDirectly || $this->operations)
+        if ($this->changedDirectly || !empty($this->operations))
         {
             return true;
         }
@@ -333,7 +349,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     {
         if (!$this->solidState)
         {
-            throw new ODMException("Direct offset operation can not be performed for compositor in non solid state.");
+            throw new ODMException(
+                "Direct offset operation can not be performed for compositor in non solid state."
+            );
         }
 
         $this->changedDirectly = true;
@@ -393,7 +411,8 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     }
 
     /**
-     * Perform validation for all nested documents and return their errors in aggregated form and result validation result.
+     * Perform validation for all nested documents and return their errors in aggregated form and
+     * result validation result.
      *
      * @return bool
      */
@@ -415,7 +434,8 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     }
 
     /**
-     * Get document by array offset, instance will be automatically constructed if it's the first call to the model.
+     * Get document by array offset, instance will be automatically constructed if it's the first
+     * call to the model.
      *
      * @param int $offset
      * @return Document
@@ -434,7 +454,8 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     }
 
     /**
-     * Find composited (nested document) by matched query. Query can be or array of fields, or Document instance.
+     * Find composited (nested document) by matched query. Query can be or array of fields, or
+     * Document instance.
      *
      * @param array $query
      * @return array|Document[]
@@ -464,7 +485,8 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     }
 
     /**
-     * Find first composited (nested document) by matched query. Query can be or array of fields, or Document instance.
+     * Find first composited (nested document) by matched query. Query can be or array of fields, or
+     * Document instance.
      *
      * @param array $query
      * @return null|Document
@@ -551,7 +573,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     {
         if (!$this->solidState)
         {
-            throw new ODMException("Direct offset operation can not be performed for compositor in non solid state.");
+            throw new ODMException(
+                "Direct offset operation can not be performed for compositor in non solid state."
+            );
         }
 
         $this->changedDirectly = true;
@@ -579,7 +603,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     {
         if (!$this->solidState)
         {
-            throw new ODMException("Direct offset operation can not be performed for compositor in non solid state.");
+            throw new ODMException(
+                "Direct offset operation can not be performed for compositor in non solid state."
+            );
         }
 
         $this->changedDirectly = true;
@@ -611,7 +637,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
         {
             if ($this->operations && !isset($this->operations['push']))
             {
-                throw new ODMException("Unable to apply multiple atomic operation to composition.");
+                throw new ODMException(
+                    "Unable to apply multiple atomic operation to composition."
+                );
             }
 
             $this->operations['push'][] = $document;
@@ -716,12 +744,11 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
+     * (PHP 5 >= 5.4.0)
      * Specify data which should be serialized to JSON
      *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     *       which is a value of any type other than a resource.
+     * @return mixed
      */
     function jsonSerialize()
     {

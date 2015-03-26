@@ -24,7 +24,8 @@ class Timestamp extends BaseTimestamp implements ODMAccessor
     protected $original = null;
 
     /**
-     * Accessors can be used to mock different model values using "representative" class, like DateTime for timestamps.
+     * Accessors can be used to mock different model values using "representative" class, like
+     * DateTime for timestamps.
      *
      * @param mixed  $data
      * @param object $parent
@@ -46,10 +47,12 @@ class Timestamp extends BaseTimestamp implements ODMAccessor
     }
 
     /**
-     * Copy Compositable to embed into specified parent. Documents with already set parent will return copy of themselves,
-     * in other scenario document will return itself. No type specified to keep it compatible with AccessorInterface.
+     * Copy Compositable to embed into specified parent. Documents with already set parent will return
+     * copy of themselves, in other scenario document will return itself. No type specified to keep
+     * it compatible with AccessorInterface.
      *
-     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared for.
+     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
+     *                                      for.
      * @return CompositableInterface
      * @throws ODMException
      */

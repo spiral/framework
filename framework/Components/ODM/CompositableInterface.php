@@ -22,10 +22,12 @@ interface CompositableInterface extends AccessorInterface
     public function __construct($data = null, $parent = null, $options = null);
 
     /**
-     * Copy Compositable to embed into specified parent. Documents with already set parent will return copy of themselves,
-     * in other scenario document will return itself. No type specified to keep it compatible with AccessorInterface.
+     * Copy Compositable to embed into specified parent. Documents with already set parent will return
+     * copy of themselves, in other scenario document will return itself. No type specified to keep
+     * it compatible with AccessorInterface.
      *
-     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared for.
+     * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
+     *                                      for.
      * @return CompositableInterface
      */
     public function embed($parent);

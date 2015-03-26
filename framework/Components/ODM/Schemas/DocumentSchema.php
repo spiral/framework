@@ -83,8 +83,8 @@ class DocumentSchema extends Component
     }
 
     /**
-     * Document namespace. Both start and end namespace separators will be removed, to add start separator (absolute)
-     * namespace use method parameter "absolute".
+     * Document namespace. Both start and end namespace separators will be removed, to add start
+     * separator (absolute) namespace use method parameter "absolute".
      *
      * @param bool $absolute \\ will be prepended to namespace if true, disabled by default.
      * @return string
@@ -133,7 +133,10 @@ class DocumentSchema extends Component
         if ($merge && ($this->reflection->getParentClass()->getName() != SchemaReader::DOCUMENT))
         {
             $parentClass = $this->reflection->getParentClass()->getName();
-            $value = array_merge($this->odmSchema->getDocument($parentClass)->property($property, true), $value);
+            $value = array_merge(
+                $this->odmSchema->getDocument($parentClass)->property($property, true),
+                $value
+            );
         }
 
         return $this->propertiesCache[$property] = call_user_func(
@@ -200,7 +203,14 @@ class DocumentSchema extends Component
         $fields = array();
         foreach ($schema as $field => $type)
         {
-            if (is_array($type) && ((array_key_exists(Document::MANY, $type) || array_key_exists(Document::ONE, $type))))
+            if (
+                is_array($type)
+                &&
+                (
+                    array_key_exists(Document::MANY, $type)
+                    || array_key_exists(Document::ONE, $type)
+                )
+            )
             {
                 //Aggregation
                 continue;
@@ -245,7 +255,11 @@ class DocumentSchema extends Component
         {
             $resolved = array();
 
-            if (is_array($type) && is_scalar($type[0]) && $filter = $this->odmSchema->findMutator($field . '::' . $type[0]))
+            if (
+                is_array($type)
+                && is_scalar($type[0])
+                && $filter = $this->odmSchema->findMutator($field . '::' . $type[0])
+            )
             {
                 $resolved += $filter;
             }
@@ -261,7 +275,10 @@ class DocumentSchema extends Component
             if (isset($resolved['accessor']))
             {
                 //Ensuring type for accessor
-                $resolved['accessor'] = array($resolved['accessor'], is_array($type) ? $type[0] : $type);
+                $resolved['accessor'] = array(
+                    $resolved['accessor'],
+                    is_array($type) ? $type[0] : $type
+                );
             }
 
             foreach ($resolved as $mutator => $filter)
@@ -347,8 +364,8 @@ class DocumentSchema extends Component
     }
 
     /**
-     * Get document default values (merged with parent model(s) values). Default values will be passed thought model filters,
-     * this will help us to ensure that field will always have desired type.
+     * Get document default values (merged with parent model(s) values). Default values will be passed
+     * thought model filters, this will help us to ensure that field will always have desired type.
      *
      * @return array
      */
@@ -433,7 +450,8 @@ class DocumentSchema extends Component
     }
 
     /**
-     * Get error messages localization sources. This is required to correctly localize model errors without overlaps.
+     * Get error messages localization sources. This is required to correctly localize model errors
+     * without overlaps.
      *
      * @return array
      */
@@ -468,7 +486,10 @@ class DocumentSchema extends Component
                     {
                         $message = $rule['error'];
                     }
-                    if (substr($message, 0, 2) == Translator::I18N_PREFIX && substr($message, -2) == Translator::I18N_POSTFIX)
+                    if (
+                        substr($message, 0, 2) == Translator::I18N_PREFIX
+                        && substr($message, -2) == Translator::I18N_POSTFIX
+                    )
                     {
                         //Only I18N messages
                         if ($message && !isset($errorMessages[$message]))
@@ -484,8 +505,8 @@ class DocumentSchema extends Component
     }
 
     /**
-     * All methods declared in document. Method will include information about parameters, return type, static declaration
-     * and access level.
+     * All methods declared in document. Method will include information about parameters, return
+     * type, static declaration and access level.
      *
      * @return MethodSchema[]
      */
@@ -582,23 +603,37 @@ class DocumentSchema extends Component
         $aggregations = array();
         foreach ($schema as $field => $options)
         {
-            if (!is_array($options) || (!array_key_exists(Document::MANY, $options) && !array_key_exists(Document::ONE, $options)))
+            if (
+                !is_array($options)
+                || (
+                    !array_key_exists(Document::MANY, $options)
+                    && !array_key_exists(Document::ONE, $options)
+                )
+            )
             {
                 //Not aggregation
                 continue;
             }
 
             //Class to be aggregated
-            $class = isset($options[Document::MANY]) ? $options[Document::MANY] : $options[Document::ONE];
+            $class = isset($options[Document::MANY])
+                ? $options[Document::MANY]
+                : $options[Document::ONE];
 
             if (!$externalDocument = $this->odmSchema->getDocument($class))
             {
-                throw new ODMException("Unable to build aggregation {$this->class}.{$field}, no such document '{$class}'.");
+                throw new ODMException(
+                    "Unable to build aggregation {$this->class}.{$field}, "
+                    . "no such document '{$class}'."
+                );
             }
 
             if (!$externalDocument->getCollection())
             {
-                throw new ODMException("Unable to build aggregation {$this->class}.{$field}, document '{$class}' does not have any collection.");
+                throw new ODMException(
+                    "Unable to build aggregation {$this->class}.{$field}, "
+                    . "document '{$class}' does not have any collection."
+                );
             }
 
             $aggregations[$field] = array(
@@ -641,7 +676,8 @@ class DocumentSchema extends Component
     }
 
     /**
-     * Class name of first document used to create current model. Basically this is first class in extending chain.
+     * Class name of first document used to create current model. Basically this is first class in
+     * extending chain.
      *
      * @param bool $hasCollection Only document with defined collection.
      * @return string
@@ -652,7 +688,12 @@ class DocumentSchema extends Component
 
         while ($reflection->getParentClass()->getName() != SchemaReader::DOCUMENT)
         {
-            if ($hasCollection && !$this->odmSchema->getDocument($reflection->getParentClass()->getName())->getCollection())
+            if (
+                $hasCollection
+                && !$this->odmSchema->getDocument(
+                    $reflection->getParentClass()->getName()
+                )->getCollection()
+            )
             {
                 break;
             }
@@ -664,7 +705,8 @@ class DocumentSchema extends Component
     }
 
     /**
-     * Document schema of first document used to create current model. Basically this is first class in extending chain.
+     * Document schema of first document used to create current model. Basically this is first class
+     * in extending chain.
      *
      * @param bool $hasCollection Only document with defined collection.
      * @return DocumentSchema
@@ -675,9 +717,9 @@ class DocumentSchema extends Component
     }
 
     /**
-     * How to define valid class declaration based on set of fields fetched from collection, default way is "FIELDS",
-     * this method will define set of unique fields existed in every class. Second option is to define method to resolve
-     * class declaration "LOGICAL".
+     * How to define valid class declaration based on set of fields fetched from collection, default
+     * way is "DEFINITION_FIELDS", this method will define set of unique fields existed in every class.
+     * Second option is to define method to resolve class declaration "DEFINITION_LOGICAL".
      *
      * @return mixed
      * @throws ODMException
@@ -687,7 +729,10 @@ class DocumentSchema extends Component
         $classes = array();
         foreach ($this->odmSchema->getDocuments() as $documentSchema)
         {
-            if ($documentSchema->reflection->isSubclassOf($this->class) && !$documentSchema->reflection->isAbstract())
+            if (
+                $documentSchema->reflection->isSubclassOf($this->class)
+                && !$documentSchema->reflection->isAbstract()
+            )
             {
                 $classes[] = $documentSchema->class;
             }
@@ -733,12 +778,12 @@ class DocumentSchema extends Component
             {
                 $fields = $this->odmSchema->getDocument($class)->getFields();
 
-                if (!$fields)
+                if (empty($fields))
                 {
                     return null;
                 }
 
-                if (!$commonFields)
+                if (empty($commonFields))
                 {
                     $commonFields = $fields;
                 }
@@ -760,7 +805,10 @@ class DocumentSchema extends Component
 
                 if (!$fields)
                 {
-                    throw new ODMException("Unable to use class detection (property based) for document '{$class}', no unique fields found.");
+                    throw new ODMException(
+                        "Unable to use class detection (property based) for document '{$class}', "
+                        . "no unique fields found."
+                    );
                 }
 
                 reset($fields);

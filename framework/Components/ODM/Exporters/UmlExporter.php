@@ -28,7 +28,7 @@ class UmlExporter extends Component
      *
      * @var array
      */
-    protected $accessLevels = array(
+    protected $access = array(
         BaseElement::ACCESS_PUBLIC    => '+',
         BaseElement::ACCESS_PRIVATE   => '-',
         BaseElement::ACCESS_PROTECTED => '#'
@@ -117,7 +117,10 @@ class UmlExporter extends Component
                 $type = $type[0] . '[]';
             }
 
-            $this->line($this->accessLevels[BaseElement::ACCESS_PUBLIC] . ' ' . addslashes($type) . ' ' . $field, 1);
+            $this->line(
+                $this->access[BaseElement::ACCESS_PUBLIC] . ' ' . addslashes($type) . ' ' . $field,
+                1
+            );
         }
 
         //Methods
@@ -126,10 +129,16 @@ class UmlExporter extends Component
             $parameters = array();
             foreach ($method->getParameters() as $parameter)
             {
-                $parameters[] = ($parameter->getType() ? $parameter->getType() . ' ' : '') . $parameter->getName();
+                $parameters[] = ($parameter->getType() ? $parameter->getType() . ' ' : '')
+                    . $parameter->getName();
             }
 
-            $this->line($this->accessLevels[$method->getAccess()] . ' ' . $method->getReturn() . ' ' . $method->getName() . '(' . join(', ', $parameters) . ')', 1);
+            $this->line(
+                $this->access[$method->getAccess()] . ' '
+                . $method->getReturn() . ' '
+                . $method->getName() . '(' . join(', ', $parameters) . ')',
+                1
+            );
         }
 
         $this->line('}')->line('');
@@ -137,7 +146,9 @@ class UmlExporter extends Component
         //Parent class
         if ($parentDocument)
         {
-            $this->line("$className --|> " . $this->normalizeName($parentDocument->getClass()))->line('');
+            $this->line(
+                "$className --|> " . $this->normalizeName($parentDocument->getClass())
+            )->line('');
         }
 
         foreach ($document->getCompositions() as $name => $composition)
@@ -150,11 +161,15 @@ class UmlExporter extends Component
 
             if ($composition['type'] == ODM::CMP_MANY)
             {
-                $this->line("$className ..*" . $this->normalizeName($composition['class']) . ":$name")->line('');
+                $this->line(
+                    "$className ..*" . $this->normalizeName($composition['class']) . ":$name"
+                )->line('');
             }
             else
             {
-                $this->line("$className --* " . $this->normalizeName($composition['class']) . ":$name")->line('');
+                $this->line(
+                    "$className --* " . $this->normalizeName($composition['class']) . ":$name"
+                )->line('');
             }
         }
 
@@ -168,18 +183,22 @@ class UmlExporter extends Component
 
             if ($aggregation['type'] == Document::MANY)
             {
-                $this->line("$className ..o " . $this->normalizeName($aggregation['class']) . ":$name")->line('');
+                $this->line(
+                    "$className ..o " . $this->normalizeName($aggregation['class']) . ":$name"
+                )->line('');
             }
             else
             {
-                $this->line("$className --o " . $this->normalizeName($aggregation['class']) . ":$name")->line('');
+                $this->line(
+                    "$className --o " . $this->normalizeName($aggregation['class']) . ":$name"
+                )->line('');
             }
         }
     }
 
     /**
-     * Render UML classes diagram to specified file, all found Documents with their fields, methods and compositions will
-     * be used to generate such UML.
+     * Render UML classes diagram to specified file, all found Documents with their fields, methods
+     * and compositions will be used to generate such UML.
      *
      * @param string $filename
      * @return bool

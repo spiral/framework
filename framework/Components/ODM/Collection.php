@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ODM;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Component;
 use Spiral\Support\Pagination\PaginableInterface;
 use Spiral\Support\Pagination\PaginatorTrait;
@@ -108,8 +109,8 @@ class Collection extends Component implements \Iterator, PaginableInterface
     protected $sort = array();
 
     /**
-     * New ODM collection instance, ODM collection used to perform queries to MongoDatabase and resolve correct document
-     * instance based on response.
+     * New ODM collection instance, ODM collection used to perform queries to MongoDatabase and
+     * resolve correct document instance based on response.
      *
      * @link http://docs.mongodb.org/manual/tutorial/query-documents/
      * @param string $name     Collection name.
@@ -175,7 +176,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
         });
 
         $this->query = array_merge($this->query, $query);
-        if ($this->cursor)
+        if (!empty($this->cursor))
         {
             $this->cursor = null;
         }
@@ -199,8 +200,9 @@ class Collection extends Component implements \Iterator, PaginableInterface
      * Sorts the results by given fields.
      *
      * @link http://www.php.net/manual/en/mongocursor.sort.php
-     * @param array $fields An array of fields by which to sort. Each element in the array has as key the field name,
-     *                      and as value either 1 for ascending sort, or -1 for descending sort.
+     * @param array $fields An array of fields by which to sort. Each element in the array has as
+     *                      key the field name, and as value either 1 for ascending sort, or -1 for
+     *                      descending sort.
      * @return static|Document[]
      */
     public function sort(array $fields)
@@ -222,7 +224,8 @@ class Collection extends Component implements \Iterator, PaginableInterface
     }
 
     /**
-     * Perform query and get mongoDB cursor. Attention, mongo skip is not really optimal operation on high amount of data.
+     * Perform query and get mongoDB cursor. Attention, mongo skip is not really optimal operation
+     * on high amount of data.
      *
      * @param array $query  Fields and conditions to query by.
      * @param array $fields Fields of the results to return.
@@ -230,14 +233,14 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function getCursor($query = array(), $fields = array())
     {
-        if ($this->cursor && !$query && !$fields)
+        if (!empty($this->cursor) && empty($query) && empty($fields))
         {
             //Nothing changed since last cursor request
             return $this->cursor;
         }
 
         //Updating query
-        $query && $this->query($query);
+        !empty($query) && $this->query($query);
 
         //Getting cursor from database
         $this->cursor = $this->mongoCollection()->find($this->query, $fields);
@@ -250,12 +253,12 @@ class Collection extends Component implements \Iterator, PaginableInterface
         $this->offset && $this->cursor->skip($this->offset);
 
         $queryInfo = array('query' => $this->query, 'sort' => $this->sort);
-        if ($this->limit)
+        if (!empty($this->limit))
         {
             $queryInfo['limit'] = (int)$this->limit;
         }
 
-        if ($this->offset)
+        if (!empty($this->offset))
         {
             $queryInfo['offset'] = (int)$this->offset;
         }
@@ -278,12 +281,15 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     protected function createDocument(array $fields)
     {
-        if (!$this->schema)
+        if (empty($this->schema))
         {
             $this->schema = $this->odm->getSchema($this->database . '/' . $this->name);
-            if (!$this->schema)
+            if (empty($this->schema))
             {
-                throw new ODMException("Unable to find appropriate document class, no schema found for collection '{$this->database}/{$this->name}'.");
+                throw new ODMException(
+                    "Unable to find appropriate document class, "
+                    . "no schema found for collection '{$this->database}/{$this->name}'."
+                );
             }
         }
 
@@ -310,7 +316,8 @@ class Collection extends Component implements \Iterator, PaginableInterface
      * Select one document or it's fields from collection.
      *
      * @param array $query  Fields and conditions to query by.
-     * @param array $fields Fields of the results to return. If not provided Document object will be returned.
+     * @param array $fields Fields of the results to return. If not provided Document object will be
+     *                      returned.
      * @return Document|array
      */
     public function findOne(array $query = array(), array $fields = array())
@@ -372,7 +379,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function limit($limit = 0)
     {
-        $this->cursor && $this->cursor->limit($limit);
+        !empty($this->cursor) && $this->cursor->limit($limit);
         $this->limit = $limit;
 
         return $this;
@@ -387,7 +394,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function offset($offset = 0)
     {
-        $this->cursor && $this->cursor->skip($this->offset);
+        !empty($this->cursor) && $this->cursor->skip($this->offset);
         $this->offset = $offset;
 
         return $this;
@@ -463,22 +470,26 @@ class Collection extends Component implements \Iterator, PaginableInterface
     /**
      * Paginate current selection.
      *
-     * @param int              $limit         Pagination limit.
-     * @param string           $pageParameter Name of parameter in request query which is used to store the current page number.
-     *                                        "page" by default.
-     * @param int              $count         Forced count value, if 0 paginator will try to fetch count from associated object.
-     * @param RequestInterface $request       Dispatcher request.
+     * @param int                    $limit         Pagination limit.
+     * @param string                 $pageParameter Name of parameter in request query which is used
+     *                                              to store the current page number. "page" by default.
+     * @param int                    $count         Forced count value, if 0 paginator will try to fetch
+     *                                              count from associated object.
+     * @param ServerRequestInterface $request       Dispatcher request.
      * @return mixed
      * @throws ODMException
      */
     public function paginate($limit = 50, $pageParameter = 'page', $count = 0, $request = null)
     {
-        if ($this->cursor)
+        if (!empty($this->cursor))
         {
             throw new ODMException("Selection has to be paginated before cursor creation.");
         }
 
-        $this->paginator = Paginator::make(compact('pageParameter') + ($request ? compact('request') : array()));
+        $this->paginator = Paginator::make(
+            compact('pageParameter') + ($request ? compact('request') : array())
+        );
+
         $this->paginator->setLimit($limit);
         $this->paginationCount = $count;
 
@@ -514,7 +525,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function __destruct()
     {
-        $this->cursor && $this->cursor->reset();
+        !empty($this->cursor) && $this->cursor->reset();
         $this->cursor = $this->odm = $this->paginator = null;
         $this->query = array();
     }

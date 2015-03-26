@@ -28,9 +28,9 @@ class CollectionSchema extends Component
     protected $database = '';
 
     /**
-     * How to define valid class declaration based on set of fields fetched from collection, default way is "FIELDS",
-     * this method will define set of unique fields existed in every class. Second option is to define method to resolve
-     * class declaration "LOGICAL".
+     * How to define valid class declaration based on set of fields fetched from collection, default
+     * way is "DEFINITION_FIELDS", this method will define set of unique fields existed in every
+     * class. Second option is to define method to resolve class declaration "LOGICAL".
      *
      * @var array
      */
@@ -60,7 +60,13 @@ class CollectionSchema extends Component
      * @param string       $primaryClass    Primary class name.
      * @param SchemaReader $odmSchema       ODM schema.
      */
-    public function __construct($name, $database, $classDefinition, $primaryClass = '', SchemaReader $odmSchema)
+    public function __construct(
+        $name,
+        $database,
+        $classDefinition,
+        $primaryClass = '',
+        SchemaReader $odmSchema
+    )
     {
         $this->name = $name;
         $this->database = $database;
@@ -90,9 +96,9 @@ class CollectionSchema extends Component
     }
 
     /**
-     * How to define valid class declaration based on set of fields fetched from collection, default way is "FIELDS",
-     * this method will define set of unique fields existed in every class. Second option is to define method to resolve
-     * class declaration "LOGICAL".
+     * How to define valid class declaration based on set of fields fetched from collection, default
+     * way is "DEFINITION_FIELDS", this method will define set of unique fields existed in every class.
+     * Second option is to define method to resolve class declaration "DEFINITION_LOGICAL".
      *
      * @return array
      */
@@ -112,7 +118,8 @@ class CollectionSchema extends Component
     }
 
     /**
-     * Document schema of first document used to create current model. Basically this is first class in extending chain.
+     * Document schema of first document used to create current model. Basically this is first class
+     * in extending chain.
      *
      * @return null|DocumentSchema
      */

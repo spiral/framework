@@ -18,8 +18,9 @@ class ObjectEvent extends Event
     public $object = null;
 
     /**
-     * Event object created automatically via raise() method of EventDispatcher and passed to all handlers listening for
-     * this event name. ObjectEvent created by event trait and keeps event parent in "object" property.
+     * Event object created automatically via raise() method of EventDispatcher and passed to all
+     * handlers listening for this event name. ObjectEvent created by event trait and keeps event
+     * parent in "object" property.
      *
      * @param string $name
      * @param object $object
