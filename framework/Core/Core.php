@@ -190,7 +190,7 @@ class Core extends Container implements ConfigLoaderInterface
             'dbal'      => 'Spiral\Components\DBAL\DatabaseManager',
             'orm'       => 'Spiral\Components\ORM\ORM',
             'odm'       => 'Spiral\Components\ODM\ODM',
-            'cookies'   => 'Spiral\Components\Http\Cookies\CookieStore',
+            'cookies'   => 'Spiral\Components\Http\Cookies\CookieManager',
             'session'   => 'Spiral\Components\Session\SessionStore'
         );
     }

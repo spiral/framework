@@ -32,7 +32,7 @@ interface CookieInterface
      *
      * @return int
      */
-    public function getExpire();
+    public function getExpires();
 
     /**
      * The path on the server in which the cookie will be available on.
@@ -74,6 +74,14 @@ interface CookieInterface
      * @return bool
      */
     public function getHttpOnly();
+
+    /**
+     * Get new cookie with altered value. Original cookie object should not be changed.
+     *
+     * @param string $value
+     * @return Cookie
+     */
+    public function withValue($value);
 
     /**
      * Convert cookie instance to string.

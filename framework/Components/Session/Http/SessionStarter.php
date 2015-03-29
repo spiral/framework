@@ -104,7 +104,7 @@ class SessionStarter implements MiddlewareInterface
         {
             if ($response instanceof Response)
             {
-                return $response->withCookie(new Cookie(
+                return $response->withAddedHeader('Set-Cookie', new Cookie(
                     self::COOKIE,
                     $store->getID(),
                     $store->getConfig()['lifetime']

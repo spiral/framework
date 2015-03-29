@@ -117,17 +117,33 @@ class CookieManager extends Component implements MiddlewareInterface
 
             $altered = true;
 
-            try
-            {
-                $cookies[$name] = $this->getEncrypter()->decrypt($cookie);
-            }
-            catch (DecryptionException $exception)
-            {
-                $cookies[$name] = null;
-            }
+            $cookies[$name] = $this->decryptCookie($cookie);
         }
 
         return $altered ? $request->withCookieParams($cookies) : $request;
+    }
+
+    /**
+     * Helper method used to decrypt cookie value or values.
+     *
+     * @param string|array $cookie
+     * @return array|mixed|null
+     */
+    protected function decryptCookie($cookie)
+    {
+        try
+        {
+            if (is_array($cookie))
+            {
+                return array_map(array($this, 'decryptCookie'), $cookie);
+            }
+
+            return $this->getEncrypter()->decrypt($cookie);
+        }
+        catch (DecryptionException $exception)
+        {
+            return null;
+        }
     }
 
     /**
@@ -147,23 +163,21 @@ class CookieManager extends Component implements MiddlewareInterface
             $cookies = array_merge($cookies, $this->scheduled);
 
             //Merging cookies
-
-            foreach ($cookies as $cookie)
+            foreach ($cookies as &$cookie)
             {
+                if (!$cookie instanceof CookieInterface)
+                {
+                    continue;
+                }
 
-                if (
-                    !$cookie instanceof CookieInterface
-                    || in_array($cookie->getName(), $this->exclude)
-                )
+                if (!in_array($cookie->getName(), $this->exclude))
                 {
                     //Specified as string or as something else
                     continue;
                 }
 
-                //This thing should PACK cookie
-                $cookies[$cookie->getName()] =
-                    $this->getEncrypter()->encrypt($cookie->getValue()
-                    );
+                //Encrypting cookie
+                $cookie = $cookie->withValue($this->getEncrypter()->encrypt($cookie->getValue()));
             }
 
             $this->scheduled = array();
@@ -172,60 +186,7 @@ class CookieManager extends Component implements MiddlewareInterface
         }
 
         return $response;
-
-//        protected function sendCookie(CookieInterface $cookie)
-//    {
-//
-//        if (($path = $cookie->getPath()) == Cookie::DEPENDS)
-//        {
-//            $path = $this->config['basePath'];
-//        }
-//
-//        if (($domain = $cookie->getDomain()) == Cookie::DEPENDS)
-//        {
-//            $domain = $this->cookieDomain();
-//        }
-//
-//        if (($secure = $cookie->getSecure()) == Cookie::DEPENDS)
-//        {
-//            $secure = $this->request->getMethod() == 'https';
-//        }
-//
-//        setcookie(
-//            $cookie->getName(),
-//            $cookie->getValue(),
-//            $cookie->getExpire(),
-//            $path,
-//            $domain,
-//            $secure,
-//            $cookie->getHttpOnly()
-//        );
-//    }
     }
-
-//    /**
-//     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
-//     * to be shared between sub domains.
-//     *
-//     * @return string
-//     */
-//    public function cookieDomain()
-//    {
-//        $host = $this->request->getUri()->getHost();
-//
-//        if (filter_var($host, FILTER_VALIDATE_IP))
-//        {
-//            //We can't use . with IP addresses
-//            return $host;
-//        }
-//
-//        if ($this->config['cookies']['subDomains'])
-//        {
-//            $host = '.' . $host;
-//        }
-//
-//        return $host;
-//    }
 
     /**
      * Schedule new cookie. Cookie will be send while dispatching request.

@@ -157,7 +157,7 @@ class Cookie implements CookieInterface
      *
      * @return int
      */
-    public function getExpire()
+    public function getExpires()
     {
         return time() + $this->lifetime;
     }
@@ -216,19 +216,55 @@ class Cookie implements CookieInterface
     }
 
     /**
+     * Get new cookie with altered value. Original cookie object should not be changed.
+     *
+     * @param string $value
+     * @return Cookie
+     */
+    public function withValue($value)
+    {
+        $cookie = clone $this;
+        $cookie->value = $value;
+
+        return $cookie;
+    }
+
+    /**
      * Convert cookie instance to string.
      *
      * @return string
      */
     public function packHeader()
     {
+        $header = array();
 
+        $header[] = rawurlencode($this->name) . '=' . rawurlencode($this->value);
 
+        //Expiration time
+        $header['expires'] = gmdate(\DateTime::COOKIE, $this->getExpires());
+        $header[] = 'Max-Age=' . $this->lifetime;
 
+        if ($this->path)
+        {
+            $header[] = 'path=' . $this->path;
+        }
 
-        //Packing as set_cookie
-        //code
-        return 'name=1; options;';
+        if ($this->domain)
+        {
+            $header[] = $this->domain;
+        }
+
+        if ($this->secure)
+        {
+            $header[] = 'secure';
+        }
+
+        if ($this->httpOnly)
+        {
+            $header[] = 'httponly';
+        }
+
+        return join('; ', $header);
     }
 
     /**
