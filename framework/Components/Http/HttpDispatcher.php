@@ -412,17 +412,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected function sendCookie(CookieInterface $cookie)
     {
 
-        if (($path = $cookie->getPath()) == Cookie::DEPENDS)
+        if (($path = $cookie->getPath()) == Cookie::AUTO)
         {
             $path = $this->config['basePath'];
         }
 
-        if (($domain = $cookie->getDomain()) == Cookie::DEPENDS)
+        if (($domain = $cookie->getDomain()) == Cookie::AUTO)
         {
             $domain = $this->cookieDomain();
         }
 
-        if (($secure = $cookie->getSecure()) == Cookie::DEPENDS)
+        if (($secure = $cookie->getSecure()) == Cookie::AUTO)
         {
             $secure = $this->request->getMethod() == 'https';
         }

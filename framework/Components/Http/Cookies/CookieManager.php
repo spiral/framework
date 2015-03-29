@@ -223,9 +223,9 @@ class CookieManager extends Component implements MiddlewareInterface
         $name,
         $value = null,
         $lifetime = 0,
-        $path = Cookie::DEPENDS,
-        $domain = Cookie::DEPENDS,
-        $secure = Cookie::DEPENDS,
+        $path = Cookie::AUTO,
+        $domain = Cookie::AUTO,
+        $secure = Cookie::AUTO,
         $httpOnly = true
     )
     {
