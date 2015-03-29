@@ -120,7 +120,7 @@ class ConfigWriter extends Component
      */
     public function readConfig($directory)
     {
-        $filename = $this->file->normalizePath($directory . '/' . $this->name . Core::CONFIGS);
+        $filename = $this->file->normalizePath($directory . '/' . $this->name . Core::CONFIGS_EXTENSION);
         if (!file_exists($filename))
         {
             throw new ConfigWriterException(
@@ -258,7 +258,7 @@ class ConfigWriter extends Component
         $directory = $directory ?: directory('config');
 
         //Destination directory
-        $filename = $this->file->normalizePath($directory . '/' . $this->name . Core::CONFIGS);
+        $filename = $this->file->normalizePath($directory . '/' . $this->name . Core::CONFIGS_EXTENSION);
 
         $existed = null;
         if (file_exists($filename))

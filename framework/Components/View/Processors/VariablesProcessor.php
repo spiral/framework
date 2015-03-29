@@ -33,12 +33,12 @@ class VariablesProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array       $options
-     * @param ViewManager $view View component instance (if presented).
+     * @param ViewManager $compiler View component instance (if presented).
      */
-    public function __construct(array $options, ViewManager $view = null)
+    public function __construct(array $options, ViewManager $compiler = null)
     {
         $this->options = $options + $this->options;
-        $this->view = $view;
+        $this->view = $compiler;
     }
 
     /**

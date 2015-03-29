@@ -13,19 +13,19 @@ interface ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array $options
-     * @param ViewManager  $view View component instance (if presented).
+     * @param array        $options
+     * @param ViewCompiler $compiler View component instance (if presented).
      */
-    public function __construct(array $options, ViewManager $view = null);
+    public function __construct(array $options, ViewCompiler $compiler = null);
 
     /**
      * Performs view code pre-processing. View component will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
      * @param string $source    View source (code).
-     * @param string $view      View name.
      * @param string $namespace View namespace.
+     * @param string $view      View name.
      * @return string
      */
-    public function processSource($source, $view, $namespace);
+    public function processSource($source, $namespace, $view);
 }

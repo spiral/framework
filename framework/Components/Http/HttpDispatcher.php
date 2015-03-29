@@ -13,6 +13,7 @@ use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Http\Cookies\Cookie;
+use Spiral\Components\Http\Cookies\CookieInterface;
 use Spiral\Components\Http\Router\RouterTrait;
 use Spiral\Components\Http\Router\Router;
 use Spiral\Components\View\ViewManager;
@@ -385,54 +386,12 @@ class HttpDispatcher extends Component implements DispatcherInterface
             }
         }
 
-        if ($response instanceof Response)
-        {
-            $this->sendCookies($response);
-        }
-
         if ($response->getStatusCode() == 204)
         {
             return;
         }
 
         $this->sendStream($response->getBody());
-    }
-
-    /**
-     * Send response cookies. Spiral response stores cookies separately with headers to make them
-     * easier to send
-     *
-     * @param Response $response
-     */
-    protected function sendCookies(Response $response)
-    {
-        foreach ($response->getCookies() as $cookie)
-        {
-            if (($path = $cookie->getPath()) == Cookie::DEPENDS)
-            {
-                $path = $this->config['basePath'];
-            }
-
-            if (($domain = $cookie->getDomain()) == Cookie::DEPENDS)
-            {
-                $domain = $this->cookieDomain();
-            }
-
-            if (($secure = $cookie->getSecure()) == Cookie::DEPENDS)
-            {
-                $secure = $this->request->getMethod() == 'https';
-            }
-
-            setcookie(
-                $cookie->getName(),
-                $cookie->getValue(),
-                $cookie->getExpire(),
-                $path,
-                $domain,
-                $secure,
-                $cookie->getHttpOnly()
-            );
-        }
     }
 
     /**
@@ -456,30 +415,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
                 echo $stream->read(static::STREAM_BLOCK_SIZE);
             }
         }
-    }
-
-    /**
-     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
-     * to be shared between sub domains.
-     *
-     * @return string
-     */
-    protected function cookieDomain()
-    {
-        $host = $this->request->getUri()->getHost();
-
-        if (filter_var($host, FILTER_VALIDATE_IP))
-        {
-            //We can't use . with IP addresses
-            return $host;
-        }
-
-        if ($this->config['cookies']['subDomains'])
-        {
-            $host = '.' . $host;
-        }
-
-        return $host;
     }
 
     /**

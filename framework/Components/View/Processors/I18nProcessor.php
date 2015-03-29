@@ -51,13 +51,13 @@ class I18nProcessor implements ProcessorInterface
      * New processors instance with options specified in view config.
      *
      * @param array       $options
-     * @param ViewManager $view View component instance (if presented).
+     * @param ViewManager $compiler View component instance (if presented).
      * @param Translator  $i18n Translator component instance.
      */
-    public function __construct(array $options, ViewManager $view = null, Translator $i18n = null)
+    public function __construct(array $options, ViewManager $compiler = null, Translator $i18n = null)
     {
         $this->options = $options + $this->options;
-        $this->view = $view;
+        $this->view = $compiler;
         $this->i18n = $i18n;
     }
 
@@ -67,14 +67,14 @@ class I18nProcessor implements ProcessorInterface
      * and inherited from parent view.
      *
      * @param string $source    View source (code).
-     * @param string $view      View name.
      * @param string $namespace View namespace.
+     * @param string $view      View name.
      * @return string
      * @throws \ErrorException
      */
-    public function processSource($source, $view, $namespace)
+    public function processSource($source, $namespace,$view)
     {
-        $this->namespace = ($namespace != $this->view->defaultNamespace() ? $namespace . '-' : '');
+        $this->namespace = ($namespace != ViewManager::DEFAULT_NAMESPACE ? $namespace . '-' : '');
         $this->namespace .= $this->options['prefix'] . str_replace(array('/', '\\'), '-', $view);
 
         //Doing replacement

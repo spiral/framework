@@ -34,7 +34,7 @@ use Spiral\Components\Debug\Snapshot;
  * @property Components\ORM\ORM                           $orm
  *
  * @property Components\Http\Request                      $request
- * @property Components\Http\Cookies\CookieStore          $cookies
+ * @property Components\Http\Cookies\CookieManager          $cookies
  * @property Components\Session\SessionStore              $session
  */
 class Core extends Container implements ConfigLoaderInterface
@@ -57,12 +57,12 @@ class Core extends Container implements ConfigLoaderInterface
     /**
      * Extension to use to runtime data and configuration cache files.
      */
-    const RUNTIME = '.php';
+    const RUNTIME_EXTENSION = '.php';
 
     /**
      * Extension used for configuration files, ".php" by default.
      */
-    const CONFIGS = '.php';
+    const CONFIGS_EXTENSION = '.php';
 
     /**
      * Current environment id (name), that value can be used directly in code by accessing
@@ -565,7 +565,7 @@ class Core extends Container implements ConfigLoaderInterface
      */
     public function loadConfig($config)
     {
-        $filename = self::$directories['config'] . '/' . $config . self::CONFIGS;
+        $filename = self::$directories['config'] . '/' . $config . self::CONFIGS_EXTENSION;
 
         //Cached filename
         $cached = str_replace(array('/', '\\'), '-', 'config-' . $config);
@@ -583,7 +583,7 @@ class Core extends Container implements ConfigLoaderInterface
             $data = (require $filename);
 
             $environment = self::$directories['config']
-                . '/' . $this->getEnvironment() . '/' . $config . self::CONFIGS;
+                . '/' . $this->getEnvironment() . '/' . $config . self::CONFIGS_EXTENSION;
 
             if (file_exists($environment))
             {
@@ -654,9 +654,9 @@ class Core extends Container implements ConfigLoaderInterface
 
         if ($directory)
         {
-            return rtrim($directory, '/') . '/' . $filename . static::RUNTIME;
+            return rtrim($directory, '/') . '/' . $filename . static::RUNTIME_EXTENSION;
         }
 
-        return self::$directories['cache'] . "/$filename-{$this->applicationID}" . static::RUNTIME;
+        return self::$directories['cache'] . "/$filename-{$this->applicationID}" . static::RUNTIME_EXTENSION;
     }
 }

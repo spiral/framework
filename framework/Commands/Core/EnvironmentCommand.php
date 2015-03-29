@@ -63,7 +63,7 @@ class EnvironmentCommand extends Command
         $environmentDirectory = $configDirectory . "/{$this->argument('environment')}/";
 
         $alteredConfigs = array();
-        $configs = $this->file->getFiles($configDirectory, substr(Core::CONFIGS, 1));
+        $configs = $this->file->getFiles($configDirectory, substr(Core::CONFIGS_EXTENSION, 1));
         foreach ($configs as $filename)
         {
             $environmentConfig = $environmentDirectory . basename($filename);

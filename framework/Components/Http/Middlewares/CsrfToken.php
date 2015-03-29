@@ -71,12 +71,10 @@ class CsrfToken implements MiddlewareInterface
         $response = $next($request->withAttribute('crsfToken', $token));
         if ($requestCookie && $response instanceof Response)
         {
-            /**
-             * Right now we don't have too much options if response is not type of Response.
-             * We may use Session in future for this purposes, but if you really using non spiral
-             * Response class you probably can solve it by yourself. :)
-             */
-            $response = $response->withCookie(new Cookie(self::COOKIE, $token, 86400));
+            $response = $response->withAddedHeader(
+                'Set-Cookie',
+                new Cookie(self::COOKIE, $token, 86400)
+            );
         }
 
         return $response;

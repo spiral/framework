@@ -216,16 +216,28 @@ class Cookie implements CookieInterface
     }
 
     /**
-     * Get new cookie with altered value. Original cookie object should not be changed.
+     * Convert cookie instance to string.
      *
-     * @param string $value
-     * @return Cookie
+     * @return string
      */
-    public function withValue($value)
+    public function packHeader()
     {
-        $cookie = clone $this;
-        $cookie->value = $value;
 
-        return $cookie;
+
+
+
+        //Packing as set_cookie
+        //code
+        return 'name=1; options;';
+    }
+
+    /**
+     * Convert cookie instance to string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->packHeader();
     }
 }

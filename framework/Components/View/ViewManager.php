@@ -12,7 +12,16 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
+use Spiral\Helpers\ArrayHelper;
 
+
+/**
+ * PASS VIEW MANAGER TO COMPILER
+ *
+ * DEFINE COMPILER CLASS NOT ONLY OPTIONS
+ * MOVE FILE LOADING TO COMPILER?
+ * BASICALLY ABSTRACT FILE COMPILATION
+ */
 class ViewManager extends Component
 {
     /**
@@ -29,11 +38,6 @@ class ViewManager extends Component
     const SINGLETON = 'view';
 
     /**
-     * Following extension will be used for all view files.
-     */
-    const EXTENSION = '.php';
-
-    /**
      * View does not going to check if view file got changed compared to cached view filename. This
      * can applied to production environment statically build view files.
      *
@@ -47,7 +51,7 @@ class ViewManager extends Component
      * Default view namespace. View component can support as many namespaces and user want, to
      * specify names use render(namespace:view) syntax.
      */
-    protected $defaultNamespace = 'default';
+    const DEFAULT_NAMESPACE = 'default';
 
     /**
      * Registered view namespaces. Every namespace can include multiple search directories. Search
@@ -58,14 +62,6 @@ class ViewManager extends Component
      * @var array
      */
     protected $namespaces = array();
-
-    /**
-     * View processors. Processors used to pre-process view source and save it to cache, in normal
-     * operation mode processors will be called only once and never during user request.
-     *
-     * @var ProcessorInterface[]
-     */
-    protected $processors = array();
 
     /**
      * Variables for pre-processing and cache definition.
@@ -96,16 +92,6 @@ class ViewManager extends Component
 
         //Mounting namespaces from config and external modules
         $this->namespaces = $this->config['namespaces'];
-    }
-
-    /**
-     * Default namespace value.
-     *
-     * @return string
-     */
-    public function defaultNamespace()
-    {
-        return $this->defaultNamespace;
     }
 
     /**
@@ -159,46 +145,6 @@ class ViewManager extends Component
     }
 
     /**
-     * Getting view processor by name, processor will be loaded and configured automatically. Processors
-     * are created only for pre-processing view source to create static cache, this means you should't
-     * expect too high performance and optimizations inside, due it's more important to have good
-     * functionality and reliable results.
-     *
-     * You should never user view component in production with disabled cache, this will slow down
-     * your website dramatically.
-     *
-     * @param string $name
-     * @return ProcessorInterface
-     */
-    public function getProcessor($name)
-    {
-        if (isset($this->processors[$name]))
-        {
-            return $this->processors[$name];
-        }
-
-        $config = $this->config['processors'][$name];
-
-        return $this->processors[$name] = Container::get(
-            $config['class'],
-            array(
-                'options' => $config,
-                'view'    => $this
-            )
-        );
-    }
-
-    /**
-     * Names of currently registered view processors in their priority order.
-     *
-     * @return array
-     */
-    public function getProcessors()
-    {
-        return array_keys($this->config['processors']);
-    }
-
-    /**
      * Variables which will be applied on view caching and view processing stages, different variable
      * value will create different cache version. Usage example can be: layout redefinition, user
      * logged state and etc. You should never use this function for client or dynamic data.
@@ -237,10 +183,11 @@ class ViewManager extends Component
             ));
         }
 
-        $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . static::EXTENSION;
+        $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . Core::RUNTIME_EXTENSION;
 
         return $this->cacheDirectory() . '/'
-        . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-') . $postfix;
+        . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-')
+        . $postfix;
     }
 
     /**
@@ -249,10 +196,11 @@ class ViewManager extends Component
      *
      * @param string $namespace View namespace.
      * @param string $view      View filename, without .php included.
+     * @param string $compiler  Selected compiler name.
      * @return string
      * @throws ViewException
      */
-    public function findView($namespace, $view)
+    public function findView($namespace, $view, &$compiler = null)
     {
         if (!isset($this->namespaces[$namespace]))
         {
@@ -261,9 +209,14 @@ class ViewManager extends Component
 
         foreach ($this->namespaces[$namespace] as $directory)
         {
-            if ($this->file->exists($directory . '/' . $view . static::EXTENSION))
+            foreach ($this->config['compilers'] as $compiler => $options)
             {
-                return $this->file->normalizePath($directory . '/' . $view . static::EXTENSION);
+                if ($this->file->exists($directory . '/' . $view . '.' . $options['extension']))
+                {
+                    return $this->file->normalizePath(
+                        $directory . '/' . $view . '.' . $options['extension']
+                    );
+                }
             }
         }
 
@@ -278,10 +231,11 @@ class ViewManager extends Component
      * @param string $filename  View cache filename.
      * @param string $namespace View namespace.
      * @param string $view      View name.
+     * @param string $compiler  Selected compiler name.
      * @return bool
      * @throws ViewException
      */
-    protected function isExpired($filename, $namespace, $view)
+    protected function isExpired($filename, $namespace, $view, &$compiler = null)
     {
         if ($this->config['caching']['enabled'] === self::HARD_CACHE)
         {
@@ -300,7 +254,7 @@ class ViewManager extends Component
         }
 
         return $this->file->timeUpdated($filename) < $this->file->timeUpdated(
-            $this->findView($namespace, $view)
+            $this->findView($namespace, $view, $compiler)
         );
     }
 
@@ -320,11 +274,11 @@ class ViewManager extends Component
         if ($compile)
         {
             //Cached filename
-            $cacheFilename = $this->cachedFilename($namespace, $view);
+            $cacheFilename = $this->cachedFilename($namespace, $view, $compiler);
 
             if ($resetCache || $this->isExpired($cacheFilename, $namespace, $view))
             {
-                $compiled = $this->compile($namespace, $view, $cacheFilename);
+                $compiled = $this->compile($compiler, $namespace, $view, $cacheFilename);
                 $this->file->write($cacheFilename, $compiled, FileManager::RUNTIME, true);
             }
 
@@ -335,34 +289,30 @@ class ViewManager extends Component
     }
 
     /**
-     * Generate view cache.
+     * Generate view cache using defined compiler.
      *
-     * @param string $namespace     View namespace.
-     * @param string $view          View filename, without php included.
-     * @param string $cacheFilename Cache filename (for reference).
+     * @param string $compiler
+     * @param string $namespace View namespace.
+     * @param string $view      View filename, without php included.
+     * @param string $filename  Cache filename (for reference).
      * @return bool|string
      */
-    protected function compile($namespace, $view, $cacheFilename)
+    protected function compile($compiler, $namespace, $view, $filename)
     {
         //Getting source from original filename
         $source = $this->file->read($this->getFilename($namespace, $view, false));
 
-        foreach (array_keys($this->config['processors']) as $processor)
-        {
-            benchmark('view::' . $processor, $namespace . ':' . $view);
+        $processors = ArrayHelper::fetchKeys(
+            $this->config['processors'],
+            $this->config['compilers'][$compiler]['processors']
+        );
 
-            //Compiling
-            $source = $this->getProcessor($processor)->processSource(
-                $source,
-                $view,
-                $namespace,
-                $cacheFilename
-            );
+        //Making view compiler
+        $compiler = ViewCompiler::make(
+            compact('namespace', 'view', 'source', 'filename', 'processors')
+        );
 
-            benchmark('view::' . $processor, $namespace . ':' . $view);
-        }
-
-        return $source;
+        return $compiler->compile();
     }
 
     /**
@@ -385,7 +335,7 @@ class ViewManager extends Component
      */
     public function get($view, array $data = array())
     {
-        $namespace = $this->defaultNamespace;
+        $namespace = self::DEFAULT_NAMESPACE;
         if (strpos($view, ':'))
         {
             list($namespace, $view) = explode(':', $view);

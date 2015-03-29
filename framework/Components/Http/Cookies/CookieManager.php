@@ -19,7 +19,7 @@ use Spiral\Components\Http\Response;
 use Spiral\Components\Session\Http\SessionStarter;
 use Spiral\Core\Component;
 
-class CookieStore extends Component implements MiddlewareInterface
+class CookieManager extends Component implements MiddlewareInterface
 {
     /**
      * Required traits.
@@ -139,38 +139,93 @@ class CookieStore extends Component implements MiddlewareInterface
      */
     protected function encryptCookies(ResponseInterface $response)
     {
-        if (!$response instanceof Response)
-        {
-            //We may need to manually set headers in future
-            return $response;
-        }
-
-        if (($cookies = $response->getCookies()) || !empty($this->scheduled))
+        if (($cookies = $response->getHeaderLines('Set-Cookie', false)) || !empty($this->scheduled))
         {
             /**
              * @var CookieInterface[] $cookies
              */
             $cookies = array_merge($cookies, $this->scheduled);
+
+            //Merging cookies
+
             foreach ($cookies as $cookie)
             {
-                if (in_array($cookie->getName(), $this->exclude))
+
+                if (
+                    !$cookie instanceof CookieInterface
+                    || in_array($cookie->getName(), $this->exclude)
+                )
                 {
+                    //Specified as string or as something else
                     continue;
                 }
 
-                $cookies[$cookie->getName()] = $cookie->withValue(
-                    $this->getEncrypter()->encrypt($cookie->getValue())
-                );
+                //This thing should PACK cookie
+                $cookies[$cookie->getName()] =
+                    $this->getEncrypter()->encrypt($cookie->getValue()
+                    );
             }
 
             $this->scheduled = array();
 
-            //Overwriting cookies
-            return $response->withCookies($cookies);
+            return $response->withHeader('Set-Cookie', $cookies);
         }
 
         return $response;
+
+//        protected function sendCookie(CookieInterface $cookie)
+//    {
+//
+//        if (($path = $cookie->getPath()) == Cookie::DEPENDS)
+//        {
+//            $path = $this->config['basePath'];
+//        }
+//
+//        if (($domain = $cookie->getDomain()) == Cookie::DEPENDS)
+//        {
+//            $domain = $this->cookieDomain();
+//        }
+//
+//        if (($secure = $cookie->getSecure()) == Cookie::DEPENDS)
+//        {
+//            $secure = $this->request->getMethod() == 'https';
+//        }
+//
+//        setcookie(
+//            $cookie->getName(),
+//            $cookie->getValue(),
+//            $cookie->getExpire(),
+//            $path,
+//            $domain,
+//            $secure,
+//            $cookie->getHttpOnly()
+//        );
+//    }
     }
+
+//    /**
+//     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
+//     * to be shared between sub domains.
+//     *
+//     * @return string
+//     */
+//    public function cookieDomain()
+//    {
+//        $host = $this->request->getUri()->getHost();
+//
+//        if (filter_var($host, FILTER_VALIDATE_IP))
+//        {
+//            //We can't use . with IP addresses
+//            return $host;
+//        }
+//
+//        if ($this->config['cookies']['subDomains'])
+//        {
+//            $host = '.' . $host;
+//        }
+//
+//        return $host;
+//    }
 
     /**
      * Schedule new cookie. Cookie will be send while dispatching request.

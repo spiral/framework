@@ -76,10 +76,16 @@ interface CookieInterface
     public function getHttpOnly();
 
     /**
-     * Get new cookie with altered value. Original cookie object should not be changed.
+     * Convert cookie instance to string.
      *
-     * @param string $value
-     * @return Cookie
+     * @return string
      */
-    public function withValue($value);
+    public function packHeader();
+
+    /**
+     * Convert cookie instance to string.
+     *
+     * @return string
+     */
+    public function __toString();
 }

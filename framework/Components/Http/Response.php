@@ -135,13 +135,6 @@ class Response extends PsrMessage implements ResponseInterface
     protected $reasonPhrase = null;
 
     /**
-     * Cookies has to be send to client.
-     *
-     * @var CookieInterface[]
-     */
-    protected $cookies = array();
-
-    /**
      * New immutable response instance. Content can be provided
      *
      * @param string|StreamableInterface $content   String content or string.
@@ -270,90 +263,5 @@ class Response extends PsrMessage implements ResponseInterface
     public function getReasonPhrase()
     {
         return $this->reasonPhrase;
-    }
-
-    /**
-     * Create a new instance with the scheduled cookie instance, cookie will be
-     * sent to client in HttpDispatcher->dispatch() method.
-     *
-     * This method MUST be implemented in such a way as to retain the immutability of the message,
-     * and MUST return a new instance that has the new header and/or value.
-     *
-     * @see setcookie()
-     * @param CookieInterface $cookie Cookie instance.
-     * @return self
-     */
-    public function withCookie(CookieInterface $cookie)
-    {
-        $response = clone $this;
-        $response->cookies[$cookie->getName()] = $cookie;
-
-        return $response;
-    }
-
-    /**
-     * Create a new instance without the scheduled cookie instance, cookie will be
-     * sent to client in HttpDispatcher->dispatch() method.
-     *
-     * This method MUST be implemented in such a way as to retain the immutability of the message,
-     * and MUST return a new instance that has the new header and/or value.
-     *
-     * @see setcookie()
-     * @param string $name Cookie name.
-     * @return self
-     */
-    public function withoutCookie($name)
-    {
-        if (!isset($this->cookies[$name]))
-        {
-            return $this;
-        }
-
-        $response = clone $this;
-        unset($response->cookies[$name]);
-
-        return $response;
-    }
-
-    /**
-     * Create a new instance with replaced array of scheduled cookie instances,
-     * cookies will be sent to client in HttpDispatcher->dispatch() method.
-     *
-     * This method MUST be implemented in such a way as to retain the immutability of the message,
-     * and MUST return a new instance that has the new header and/or value.
-     *
-     * @see setcookie()
-     * @param CookieInterface[] $cookies
-     * @return self
-     * @throws \InvalidArgumentException For invalid cookie item.
-     */
-    public function withCookies(array $cookies)
-    {
-        $response = clone $this;
-        $response->cookies = array();
-        foreach ($cookies as $cookie)
-        {
-            if (!$cookie instanceof CookieInterface)
-            {
-                throw new \InvalidArgumentException(
-                    "Cookies array should contain only CookieInterface instances."
-                );
-            }
-
-            $response->cookies[$cookie->getName()] = $cookie;
-        }
-
-        return $response;
-    }
-
-    /**
-     * Get all cookies associated with response. Cookies will be send in HttpDispatcher->dispatch()
-     * method.
-     *
-     * @return CookieInterface[]
-     */
-    public function getCookies()
-    {
-        return $this->cookies;
     }
 }

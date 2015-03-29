@@ -84,15 +84,15 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      * New processors instance with options specified in view config.
      *
      * @param array       $options
-     * @param ViewManager $view View component instance (if presented).
+     * @param ViewManager $compiler View component instance (if presented).
      * @param FileManager $file
      */
-    public function __construct(array $options, ViewManager $view = null, FileManager $file = null)
+    public function __construct(array $options, ViewManager $compiler = null, FileManager $file = null)
     {
         $this->options = $options + $this->options;
         Node::setSupervisor($this);
 
-        $this->view = $view;
+        $this->view = $compiler;
         $this->file = $file;
     }
 
