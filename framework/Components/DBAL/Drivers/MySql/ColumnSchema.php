@@ -14,10 +14,10 @@ use Spiral\Components\DBAL\SqlFragment;
 class ColumnSchema extends AbstractColumnSchema
 {
     /**
-     * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision
-     * scale, unsigned flag and etc. Every declared type can be assigned using ->type() method, however to pass custom
-     * type parameters, methods has to be declared in database specific ColumnSchema. Type identifier not necessary
-     * should be real type name.
+     * Direct mapping from base abstract type to database internal type with specified data options,
+     * such as size, precision scale, unsigned flag and etc. Every declared type can be assigned using
+     * ->type() method, however to pass custom type parameters, methods has to be declared in database
+     * specific ColumnSchema. Type identifier not necessary should be real type name.
      *
      * Example:
      * integer => array('type' => 'int', 'size' => 1),
@@ -37,7 +37,8 @@ class ColumnSchema extends AbstractColumnSchema
         //Logical types
         'boolean'     => array('type' => 'tinyint', 'size' => 1),
 
-        //Integer types (size can always be changed with size method), longInteger has method alias bigInteger
+        //Integer types (size can always be changed with size method), longInteger has method alias
+        //bigInteger
         'integer'     => array('type' => 'int', 'size' => 11),
         'tinyInteger' => array('type' => 'tinyint', 'size' => 4),
         'bigInteger'  => array('type' => 'bigint', 'size' => 20),
@@ -77,8 +78,9 @@ class ColumnSchema extends AbstractColumnSchema
     );
 
     /**
-     * Driver specific reverse mapping, this mapping should link database type to one of standard internal types. Not
-     * resolved types will be marked as "unknown" which will map them as php type string.
+     * Driver specific reverse mapping, this mapping should link database type to one of standard
+     * internal types. Not resolved types will be marked as "unknown" which will map them as php type
+     * string.
      *
      * @invisible
      * @var array
@@ -117,7 +119,8 @@ class ColumnSchema extends AbstractColumnSchema
     /**
      * Parse column information provided by parent TableSchema and populate column values.
      *
-     * @param mixed $schema Column information fetched from database by TableSchema. Format depends on driver type.
+     * @param mixed $schema Column information fetched from database by TableSchema. Format depends
+     *                      on driver type.
      * @return mixed
      */
     protected function resolveSchema($schema)
