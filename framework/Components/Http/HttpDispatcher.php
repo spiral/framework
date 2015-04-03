@@ -375,6 +375,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
                 if ($header == 'Set-Cookie' && $value instanceof CookieInterface)
                 {
                     $this->sendCookie($value);
+                    continue;
                 }
 
                 header("{$header}: {$value}", $replace);

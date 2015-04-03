@@ -8,7 +8,9 @@
  */
 namespace Spiral\Components\Http\Cookies;
 
-interface CookieInterface
+use Spiral\Components\Http\Message\HeaderInterface;
+
+interface CookieInterface extends HeaderInterface
 {
     /**
      * The name of the cookie.
@@ -89,11 +91,4 @@ interface CookieInterface
      * @return string
      */
     public function packHeader();
-
-    /**
-     * Convert cookie instance to string.
-     *
-     * @return string
-     */
-    public function __toString();
 }

@@ -268,7 +268,7 @@ class Cookie implements CookieInterface
     }
 
     /**
-     * Convert cookie instance to string.
+     * Get string representation of header.
      *
      * @return string
      */

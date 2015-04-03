@@ -86,4 +86,14 @@ class ParameterBag
 
         return $result;
     }
+
+    /**
+     * Simplified way to dump information.
+     *
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        return $this->all();
+    }
 }

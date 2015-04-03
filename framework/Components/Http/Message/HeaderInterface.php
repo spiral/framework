@@ -1,0 +1,19 @@
+<?php
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ * @copyright ©2009-2015
+ */
+namespace Spiral\Components\Http\Message;
+
+interface HeaderInterface
+{
+    /**
+     * Get string representation of header.
+     *
+     * @return string
+     */
+    public function __toString();
+}

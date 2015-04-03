@@ -53,6 +53,16 @@ class CookieManager extends Component implements MiddlewareInterface
     protected $scheduled = array();
 
     /**
+     * Do not encrypt/decrypt cookie.
+     *
+     * @param string $name
+     */
+    public function excludeCookie($name)
+    {
+        $this->exclude[] = $name;
+    }
+
+    /**
      * Set custom encrypter.
      *
      * @param Encrypter $encrypter
@@ -170,7 +180,7 @@ class CookieManager extends Component implements MiddlewareInterface
                     continue;
                 }
 
-                if (!in_array($cookie->getName(), $this->exclude))
+                if (in_array($cookie->getName(), $this->exclude))
                 {
                     //Specified as string or as something else
                     continue;
@@ -178,6 +188,7 @@ class CookieManager extends Component implements MiddlewareInterface
 
                 //Encrypting cookie
                 $cookie = $cookie->withValue($this->getEncrypter()->encrypt($cookie->getValue()));
+                unset($cookie);
             }
 
             $this->scheduled = array();

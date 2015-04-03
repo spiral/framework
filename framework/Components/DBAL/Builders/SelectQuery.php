@@ -184,13 +184,29 @@ class SelectQuery extends QueryBuilder implements
      * Multiple orderBy() methods can be applied to one query. In case of unions order by will be
      * applied to united result.
      *
-     * @param string $identifier Column or expression of SqlFragment.
-     * @param string $direction  Sorting direction, ASC|DESC.
+     * Method can accept array parameters:
+     * $select->orderBy([
+     *      'id'   => 'DESC',
+     *      'name' => 'ASC'
+     * ]);
+     *
+     * @param string|array $identifier Column or expression of SqlFragment.
+     * @param string       $direction  Sorting direction, ASC|DESC.
      * @return static
      */
     public function orderBy($identifier, $direction = 'ASC')
     {
-        $this->orderBy[] = array($identifier, $direction);
+        if (is_array($identifier))
+        {
+            foreach ($identifier as $expression => $direction)
+            {
+                $this->orderBy[] = array($expression, $direction);
+            }
+        }
+        else
+        {
+            $this->orderBy[] = array($identifier, $direction);
+        }
 
         return $this;
     }
