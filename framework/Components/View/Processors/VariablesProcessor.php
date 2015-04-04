@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\View\Processors;
 
+use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
@@ -23,39 +24,43 @@ class VariablesProcessor implements ProcessorInterface
     );
 
     /**
-     * View component instance.
+     * ViewManager component instance.
      *
      * @var ViewManager
      */
-    protected $view = null;
+    protected $viewManager = null;
 
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array       $options
-     * @param ViewManager $compiler View component instance (if presented).
+     * @param LayeredCompiler $compiler Compiler instance.
+     * @param array           $options
      */
-    public function __construct(array $options, ViewManager $compiler = null)
+    public function __construct(LayeredCompiler $compiler, array $options)
     {
+        $this->viewManager = $compiler->getViewManager();
         $this->options = $options + $this->options;
-        $this->view = $compiler;
     }
 
     /**
-     * Will replace static variables in view source with their values or empty string if not specified.
-     * Default pattern if @{variable|default} can be redefined in view config.
-     *
-     * This variables can be used to redefine layout, browser support or switch to mobile version.
+     * Performs view code pre-processing. View component will provide view source into processors,
+     * processors can perform any source manipulations using this code expect final rendering.
      *
      * @param string $source    View source (code).
-     * @param string $view      View name.
      * @param string $namespace View namespace.
+     * @param string $view      View name.
+     * @param string $input     Input filename (usually real view file).
+     * @param string $output    Output filename (usually view cache, target file may not exists).
      * @return string
      */
-    public function processSource($source, $view, $namespace)
+    public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
         //Doing replacement
-        return preg_replace_callback($this->options['pattern'], array($this, 'replace'), $source);
+        return preg_replace_callback(
+            $this->options['pattern'],
+            array($this, 'replace'),
+            $source
+        );
     }
 
     /**
@@ -66,8 +71,8 @@ class VariablesProcessor implements ProcessorInterface
      */
     protected function replace($matches)
     {
-        return $this->view->staticVariable($matches['name'])
-            ? $this->view->staticVariable($matches['name'])
+        return $this->viewManager->staticVariable($matches['name'])
+            ? $this->viewManager->staticVariable($matches['name'])
             : (isset($matches['default']) ? $matches['default'] : '');
     }
 }

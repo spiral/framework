@@ -26,25 +26,30 @@ class PrettyPrintProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array       $options
-     * @param ViewManager $compiler View component instance (if presented).
-     * @param Isolator    $isolator
+     * @param LayeredCompiler $compiler Compiler instance.
+     * @param array           $options
+     * @param Isolator        $isolator
      */
-    public function __construct(array $options, LayeredCompiler $compiler = null, Isolator $isolator = null)
+    public function __construct(LayeredCompiler $compiler, array $options, Isolator $isolator = null)
     {
         $this->isolator = $isolator;
     }
 
     /**
+     * Performs view code pre-processing. View component will provide view source into processors,
+     * processors can perform any source manipulations using this code expect final rendering.
+     *
      * Clean html of extra lines to optimize it a little, processors can create a lot of empty lines
      * during combining view files, this processor should be called at the end of chain.
      *
      * @param string $source    View source (code).
-     * @param string $view      View name.
      * @param string $namespace View namespace.
+     * @param string $view      View name.
+     * @param string $input     Input filename (usually real view file).
+     * @param string $output    Output filename (usually view cache, target file may not exists).
      * @return string
      */
-    public function processSource($source, $view, $namespace)
+    public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
         //Step #1, \n only
         $source = StringHelper::normalizeEndings($source);

@@ -9,6 +9,7 @@
 namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\I18n\Translator;
+use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
@@ -34,13 +35,6 @@ class I18nProcessor implements ProcessorInterface
     protected $namespace = '';
 
     /**
-     * View component.
-     *
-     * @var ViewManager
-     */
-    protected $view = null;
-
-    /**
      * I18n component instance.
      *
      * @var Translator
@@ -50,29 +44,28 @@ class I18nProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array       $options
-     * @param ViewManager $compiler View component instance (if presented).
-     * @param Translator  $i18n Translator component instance.
+     * @param LayeredCompiler $compiler Compiler instance.
+     * @param array           $options
+     * @param Translator      $i18n     Translator component instance.
      */
-    public function __construct(array $options, ViewManager $compiler = null, Translator $i18n = null)
+    public function __construct(LayeredCompiler $compiler, array $options, Translator $i18n = null)
     {
         $this->options = $options + $this->options;
-        $this->view = $compiler;
         $this->i18n = $i18n;
     }
 
     /**
-     * Performs i18n replaces for text in views. This processor should be called first, due templater
-     * combinations many new namespaces will be created, even if text inside them will be identical
-     * and inherited from parent view.
+     * Performs view code pre-processing. View component will provide view source into processors,
+     * processors can perform any source manipulations using this code expect final rendering.
      *
      * @param string $source    View source (code).
      * @param string $namespace View namespace.
      * @param string $view      View name.
+     * @param string $input     Input filename (usually real view file).
+     * @param string $output    Output filename (usually view cache, target file may not exists).
      * @return string
-     * @throws \ErrorException
      */
-    public function processSource($source, $namespace,$view)
+    public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
         $this->namespace = ($namespace != ViewManager::DEFAULT_NAMESPACE ? $namespace . '-' : '');
         $this->namespace .= $this->options['prefix'] . str_replace(array('/', '\\'), '-', $view);

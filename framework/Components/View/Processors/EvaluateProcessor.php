@@ -28,18 +28,11 @@ class EvaluateProcessor implements ProcessorInterface
     );
 
     /**
-     * View component instance.
-     *
-     * @var LayeredCompiler
-     */
-    protected $compiler = null;
-
-    /**
      * View manager component.
      *
      * @var ViewManager
      */
-    protected $manager = null;
+    protected $viewManager = null;
 
     /**
      * File component.
@@ -55,42 +48,43 @@ class EvaluateProcessor implements ProcessorInterface
      */
     protected $isolator = null;
 
-
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array        $options
-     * @param LayeredCompiler $compiler View component instance (if presented).
-     * @param ViewManager  $manager
-     * @param FileManager  $file     FileManager component.
-     * @param Isolator     $isolator
+     * @param LayeredCompiler $compiler Compiler instance.
+     * @param array           $options
+     * @param FileManager     $file
+     * @param Isolator        $isolator
      */
     public function __construct(
+        LayeredCompiler $compiler,
         array $options,
-        LayeredCompiler $compiler = null,
-        ViewManager $manager = null,
         FileManager $file = null,
         Isolator $isolator = null
     )
     {
-        $this->options = $options + $this->options;
-        $this->compiler = $compiler;
+        $this->viewManager = $compiler->getViewManager();
         $this->file = $file;
 
+        $this->options = $options + $this->options;
         $this->isolator = $isolator->shortTags(true);
     }
 
     /**
-     * Performs view code pre-processing. All php blocks with included compilation flag will be
-     * rendered as this stage.
+     * Performs view code pre-processing. View component will provide view source into processors,
+     * processors can perform any source manipulations using this code expect final rendering.
+     *
+     * All php blocks with included compilation flag will be rendered as this stage.
      *
      * @param string $source    View source (code).
      * @param string $namespace View namespace.
      * @param string $view      View name.
+     * @param string $input     Input filename (usually real view file).
+     * @param string $output    Output filename (usually view cache, target file may not exists).
      * @return string
      * @throws \ErrorException
      */
-    public function processSource($source, $namespace, $view)
+    public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
         //Real php source code isolation
         $source = $this->isolator->isolatePHP($source);
@@ -118,7 +112,7 @@ class EvaluateProcessor implements ProcessorInterface
         $this->isolator->setBlocks($phpBlocks);
 
         //We can use eval() but with temp file error handling will be more complete
-        $filename = $this->manager->cachedFilename($namespace, $view . '-evaluator');
+        $filename = $this->viewManager->cachedFilename($namespace, $view . '-evaluator');
         $this->file->write($filename, $source, FileManager::RUNTIME, true);
 
         try

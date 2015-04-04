@@ -14,13 +14,6 @@ use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Helpers\ArrayHelper;
 
-/**
- * PASS VIEW MANAGER TO COMPILER
- *
- * DEFINE COMPILER CLASS NOT ONLY OPTIONS
- * MOVE FILE LOADING TO COMPILER?
- * BASICALLY ABSTRACT FILE COMPILATION
- */
 class ViewManager extends Component
 {
     /**
@@ -217,6 +210,15 @@ class ViewManager extends Component
         throw new ViewException("Unable to find view '{$view}' in namespace '{$namespace}'.");
     }
 
+    /**
+     * Check if compiled view cache expired and has to be re-rendered. You can disable view cache
+     * by altering view config (this will slow your application dramatically but will simplyfy
+     * development).
+     *
+     * @param string $viewFilename
+     * @param string $cachedFilename
+     * @return bool
+     */
     protected function isExpired($viewFilename, $cachedFilename)
     {
         if (!$this->config['caching']['enabled'])
@@ -256,7 +258,7 @@ class ViewManager extends Component
             $cacheFilename = $this->cachedFilename($namespace, $view);
             if ($resetCache || $this->isExpired($viewFilename, $cacheFilename))
             {
-                $compiled = $this->compile($engine, $namespace, $view, $cacheFilename);
+                $compiled = $this->compile($engine, $namespace, $view, $viewFilename, $cacheFilename);
 
                 //Saving compilation result to filename
                 $this->file->write($cacheFilename, $compiled, FileManager::RUNTIME, true);
@@ -274,21 +276,23 @@ class ViewManager extends Component
      * @param string $engine
      * @param string $namespace View namespace.
      * @param string $view      View filename, without php included.
-     * @param string $output    Cache filename (for reference).
+     * @param string $input     Input view filename.
+     * @param string $output    Output filename.,
      * @return bool|string
      */
-    protected function compile($engine, $namespace, $view, $output)
+    protected function compile($engine, $namespace, $view, $input, $output)
     {
-        //Getting source from original filename
-        $source = $this->file->read($this->getFilename($namespace, $view, false));
-
-        //TODO: Compiler class
-
-        $compiler = $this->config['compilers'][$engine]['compiler'];
-        $options = $this->config['compilers'][$engine]['options'];
-
-        $compiler = Container::get($engine, array(//TODO: FILL OPTIONS!
-        ));
+        /**
+         * @var CompilerInterface $compiler
+         */
+        $compiler = Container::get($this->config['compilers'][$engine]['compiler'], array(
+                'viewManager' => $this,
+                'namespace'   => $namespace,
+                'view'        => $view,
+                'source'      => $this->file->read($input),
+                'input'       => $input,
+                'output'      => $output,
+            ) + $this->config['compilers'][$engine]);
 
         return $compiler->compile();
     }
@@ -325,7 +329,13 @@ class ViewManager extends Component
         //View representer
         $view = $this->config['engines'][$engine]['view'];
 
-        return Container::get($view, compact('filename', 'namespace', 'view', 'data'));
+        return Container::get($view, array(
+            'viewManager' => $this,
+            'filename'    => $filename,
+            'namespace'   => $namespace,
+            'view'        => $view,
+            'data'        => $data
+        ));
     }
 
     /**

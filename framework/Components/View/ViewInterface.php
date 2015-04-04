@@ -13,13 +13,20 @@ interface ViewInterface
     /**
      * View instance binded to specified view file (file has to be already pre-processed).
      *
-     * @param string $filename  Compiled view file.
-     * @param string $namespace View namespace.
-     * @param string $view      View name.
-     * @param array  $data      Runtime data passed by controller or model, should be injected into
-     *                          view.
+     * @param ViewManager $viewManager ViewManager component.
+     * @param string      $filename    Compiled view file.
+     * @param string      $namespace   View namespace.
+     * @param string      $view        View name.
+     * @param array       $data        Runtime data passed by controller or model, should be injected into
+     *                                 view.
      */
-    public function __construct($filename, $namespace = '', $view = '', array $data = array());
+    public function __construct(
+        ViewManager $viewManager,
+        $filename,
+        $namespace = '',
+        $view = '',
+        array $data = array()
+    );
 
     /**
      * Perform view rendering using compiled view file and runtime data to be injected.

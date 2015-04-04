@@ -10,5 +10,14 @@ namespace Spiral\Components\View;
 
 interface CompilerInterface
 {
+    public function __construct(
+        ViewManager $viewManager,
+        $namespace,
+        $view,
+        $source,
+        $input = '',
+        $output = ''
+    );
+
     public function compile();
 }
