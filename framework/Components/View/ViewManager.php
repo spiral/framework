@@ -327,9 +327,9 @@ class ViewManager extends Component
         $filename = $this->getFilename($namespace, $view, true, false, $engine);
 
         //View representer
-        $view = $this->config['engines'][$engine]['view'];
+        $renderer = $this->config['engines'][$engine]['view'];
 
-        return Container::get($view, array(
+        return Container::get($renderer, array(
             'viewManager' => $this,
             'filename'    => $filename,
             'namespace'   => $namespace,
