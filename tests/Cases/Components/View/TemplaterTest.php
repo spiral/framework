@@ -619,9 +619,16 @@ class TemplaterTest extends TestCase
                     'directory' => directory('runtime')
                 ),
                 'staticVariables' => array(),
-                'processors'      => array(
-                    'templater' => array(
-                        'class' => 'Spiral\Components\View\Processors\TemplateProcessor'
+                'engines'         => array(
+                    'default' => array(
+                        'extensions' => array('php'),
+                        'compiler'   => 'Spiral\Components\View\LayeredCompiler',
+                        'view'       => 'Spiral\Components\View\View',
+                        'processors' => array(
+                            'templater' => array(
+                                'class' => 'Spiral\\Components\\View\\Processors\\TemplateProcessor'
+                            ),
+                        )
                     )
                 )
             );

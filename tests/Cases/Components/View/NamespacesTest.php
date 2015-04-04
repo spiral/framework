@@ -55,7 +55,14 @@ class NamespacesTest extends TestCase
                     'directory' => directory('runtime')
                 ),
                 'staticVariables' => array(),
-                'processors'      => array()
+                'engines'         => array(
+                    'default' => array(
+                        'extensions' => array('php'),
+                        'compiler'   => 'Spiral\Components\View\LayeredCompiler',
+                        'view'       => 'Spiral\Components\View\View',
+                        'processors' => array()
+                    )
+                )
             );
         }
 
