@@ -170,7 +170,7 @@ class ConfigWriter extends Component
 
     /**
      * Methods will be applied to merge existed and custom configuration data in merge method is
-     * specified as Config::mergeCustom. This method usually used to perform logical merge.
+     * specified as Config::MERGE_CUSTOM. This method usually used to perform logical merge.
      *
      * @param mixed $internal Requested configuration data.
      * @param mixed $existed  Existed configuration data.

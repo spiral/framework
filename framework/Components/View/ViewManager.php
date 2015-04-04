@@ -14,7 +14,6 @@ use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Helpers\ArrayHelper;
 
-
 /**
  * PASS VIEW MANAGER TO COMPILER
  *
@@ -36,16 +35,6 @@ class ViewManager extends Component
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = 'view';
-
-    /**
-     * View does not going to check if view file got changed compared to cached view filename. This
-     * can applied to production environment statically build view files.
-     *
-     * Attention! You WILL have to generate static view cache if using this option.
-     *
-     * Use spiral.cli spiral:core viewCache --generate
-     */
-    const HARD_CACHE = 2;
 
     /**
      * Default view namespace. View component can support as many namespaces and user want, to
@@ -196,26 +185,31 @@ class ViewManager extends Component
      *
      * @param string $namespace View namespace.
      * @param string $view      View filename, without .php included.
-     * @param string $compiler  Selected compiler name.
+     * @param string $engine    Name of used engine.
      * @return string
      * @throws ViewException
      */
-    public function findView($namespace, $view, &$compiler = null)
+    public function findView($namespace, $view, &$engine = null)
     {
         if (!isset($this->namespaces[$namespace]))
         {
             throw new ViewException("Undefined view namespace '{$namespace}'.");
         }
 
+        /**
+         * This section can be potentially cached in view runtime data to optimize
+         * view detection process, it's not required at this moment... but possible.
+         */
         foreach ($this->namespaces[$namespace] as $directory)
         {
-            foreach ($this->config['compilers'] as $compiler => $options)
+            foreach ($this->config['engines'] as $engine => $options)
             {
-                if ($this->file->exists($directory . '/' . $view . '.' . $options['extension']))
+                foreach ($options['extensions'] as $extension)
                 {
-                    return $this->file->normalizePath(
-                        $directory . '/' . $view . '.' . $options['extension']
-                    );
+                    if ($this->file->exists($directory . '/' . $view . '.' . $extension))
+                    {
+                        return $this->file->normalizePath($directory . '/' . $view . '.' . $extension);
+                    }
                 }
             }
         }
@@ -223,39 +217,20 @@ class ViewManager extends Component
         throw new ViewException("Unable to find view '{$view}' in namespace '{$namespace}'.");
     }
 
-    /**
-     * Check if cache view file expired, by default there is soft and hard cache techniques, soft
-     * will compare filetimes and hard will always return true (use on production with static view
-     * cache).
-     *
-     * @param string $filename  View cache filename.
-     * @param string $namespace View namespace.
-     * @param string $view      View name.
-     * @param string $compiler  Selected compiler name.
-     * @return bool
-     * @throws ViewException
-     */
-    protected function isExpired($filename, $namespace, $view, &$compiler = null)
+    protected function isExpired($viewFilename, $cachedFilename)
     {
-        if ($this->config['caching']['enabled'] === self::HARD_CACHE)
-        {
-            return false;
-        }
-
         if (!$this->config['caching']['enabled'])
         {
             //Aways invalidate
             return true;
         }
 
-        if (!$this->file->exists($filename))
+        if (!$this->file->exists($cachedFilename))
         {
             return true;
         }
 
-        return $this->file->timeUpdated($filename) < $this->file->timeUpdated(
-            $this->findView($namespace, $view, $compiler)
-        );
+        return $this->file->timeUpdated($cachedFilename) < $this->file->timeUpdated($viewFilename);
     }
 
     /**
@@ -266,51 +241,54 @@ class ViewManager extends Component
      * @param bool   $compile    If true, view source will be processed using view processors before
      *                           saving to cache.
      * @param bool   $resetCache Force cache reset. Cache can be also disabled in view config.
+     * @param string $engine     Name of used engine.
      * @return string
      * @throws ViewException
      */
-    public function getFilename($namespace, $view, $compile = true, $resetCache = false)
+    public function getFilename($namespace, $view, $compile = true, $resetCache = false, &$engine = null)
     {
-        if ($compile)
+        $viewFilename = $this->findView($namespace, $view, $engine);
+
+        //Pre-compilation is possible only when engine defined compiler
+        if ($compile && !empty($this->config['engines'][$engine]['compiler']))
         {
             //Cached filename
-            $cacheFilename = $this->cachedFilename($namespace, $view, $compiler);
-
-            if ($resetCache || $this->isExpired($cacheFilename, $namespace, $view))
+            $cacheFilename = $this->cachedFilename($namespace, $view);
+            if ($resetCache || $this->isExpired($viewFilename, $cacheFilename))
             {
-                $compiled = $this->compile($compiler, $namespace, $view, $cacheFilename);
+                $compiled = $this->compile($engine, $namespace, $view, $cacheFilename);
+
+                //Saving compilation result to filename
                 $this->file->write($cacheFilename, $compiled, FileManager::RUNTIME, true);
             }
 
             return $cacheFilename;
         }
 
-        return $this->findView($namespace, $view);
+        return $viewFilename;
     }
 
     /**
      * Generate view cache using defined compiler.
      *
-     * @param string $compiler
+     * @param string $engine
      * @param string $namespace View namespace.
      * @param string $view      View filename, without php included.
-     * @param string $filename  Cache filename (for reference).
+     * @param string $output    Cache filename (for reference).
      * @return bool|string
      */
-    protected function compile($compiler, $namespace, $view, $filename)
+    protected function compile($engine, $namespace, $view, $output)
     {
         //Getting source from original filename
         $source = $this->file->read($this->getFilename($namespace, $view, false));
 
-        $processors = ArrayHelper::fetchKeys(
-            $this->config['processors'],
-            $this->config['compilers'][$compiler]['processors']
-        );
+        //TODO: Compiler class
 
-        //Making view compiler
-        $compiler = ViewCompiler::make(
-            compact('namespace', 'view', 'source', 'filename', 'processors')
-        );
+        $compiler = $this->config['compilers'][$engine]['compiler'];
+        $options = $this->config['compilers'][$engine]['options'];
+
+        $compiler = Container::get($engine, array(//TODO: FILL OPTIONS!
+        ));
 
         return $compiler->compile();
     }
@@ -341,12 +319,13 @@ class ViewManager extends Component
             list($namespace, $view) = explode(':', $view);
         }
 
-        return View::make(array(
-            'namespace' => $namespace,
-            'view'      => $view,
-            'filename'  => $this->getFilename($namespace, $view),
-            'data'      => $data
-        ));
+        //Compiled view source
+        $filename = $this->getFilename($namespace, $view, true, false, $engine);
+
+        //View representer
+        $view = $this->config['engines'][$engine]['view'];
+
+        return Container::get($view, compact('filename', 'namespace', 'view', 'data'));
     }
 
     /**

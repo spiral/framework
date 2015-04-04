@@ -12,11 +12,10 @@ namespace Spiral\Components\View;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
-class ViewCompiler extends Component
+class LayeredCompiler extends Component implements CompilerInterface
 {
 
     protected $filename = '';
-    protected $source = '';
 
     protected $view = '';
     protected $namespace = '';
@@ -30,15 +29,11 @@ class ViewCompiler extends Component
      */
     protected $processors = array();
 
-
-    public function __construct($view, $namespace, $source, $filename, array $processors)
+    public function __construct($view, $namespace, $source, array $processors)
     {
-
         $this->source = $source;
-        $this->filename = $filename;
         $this->processors = $processors;
     }
-
 
     /**
      * Getting view processor by name, processor will be loaded and configured automatically. Processors
@@ -91,11 +86,4 @@ class ViewCompiler extends Component
 
         return $source;
     }
-
-
-    public function __toString()
-    {
-        return $this->compile();
-    }
-
-} 
+}

@@ -10,7 +10,7 @@ namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\ViewCompiler;
+use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ViewManager;
 use Spiral\Helpers\StringHelper;
 
@@ -30,7 +30,7 @@ class PrettyPrintProcessor implements ProcessorInterface
      * @param ViewManager $compiler View component instance (if presented).
      * @param Isolator    $isolator
      */
-    public function __construct(array $options, ViewCompiler $compiler = null, Isolator $isolator = null)
+    public function __construct(array $options, LayeredCompiler $compiler = null, Isolator $isolator = null)
     {
         $this->isolator = $isolator;
     }

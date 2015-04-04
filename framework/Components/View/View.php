@@ -10,7 +10,7 @@ namespace Spiral\Components\View;
 
 use Spiral\Core\Component;
 
-class View extends Component
+class View extends Component implements ViewInterface
 {
     /**
      * View filename, usually cached.
@@ -18,13 +18,6 @@ class View extends Component
      * @var string
      */
     protected $filename = '';
-
-    /**
-     * Runtime data has to be passed to view.
-     *
-     * @var array
-     */
-    protected $data = array();
 
     /**
      * View namespace.
@@ -41,18 +34,26 @@ class View extends Component
     protected $view = '';
 
     /**
+     * Runtime data has to be passed to view.
+     *
+     * @var array
+     */
+    protected $data = array();
+
+    /**
      * View instance binded to specified view file (file has to be already pre-processed).
      *
-     * @param string $filename
-     * @param array  $data
-     * @param string $namespace
-     * @param string $view
+     * @param string $filename  Compiled view file.
+     * @param string $namespace View namespace.
+     * @param string $view      View name.
+     * @param array  $data      Runtime data passed by controller or model, should be injected into
+     *                          view.
      */
-    public function __construct($filename, array $data = array(), $namespace = '', $view = '')
+    public function __construct($filename, $namespace = '', $view = '', array $data = array())
     {
+        $this->filename = $filename;
         $this->namespace = $namespace;
         $this->view = $view;
-        $this->filename = $filename;
         $this->data = $data;
     }
 
