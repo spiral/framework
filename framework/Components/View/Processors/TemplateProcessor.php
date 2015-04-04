@@ -9,6 +9,7 @@
 namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\Processors\Templater\Import;
 use Spiral\Components\View\Processors\Templater\AliasImport;
@@ -67,11 +68,18 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     protected $cache = array();
 
     /**
-     * View component instance.
+     * LayeredCompiler instance.
+     *
+     * @var LayeredCompiler
+     */
+    protected $compiler = null;
+
+    /**
+     * ViewManager instance.
      *
      * @var ViewManager
      */
-    protected $view = null;
+    protected $viewManager = null;
 
     /**
      * File component.
@@ -83,28 +91,35 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param array       $options
-     * @param ViewManager $compiler View component instance (if presented).
-     * @param FileManager $file
+     * @param LayeredCompiler $compiler Compiler instance.
+     * @param array           $options
+     * @param FileManager     $file
      */
-    public function __construct(array $options, ViewManager $compiler = null, FileManager $file = null)
+    public function __construct(LayeredCompiler $compiler, array $options, FileManager $file = null)
     {
+        $this->compiler = $compiler;
+        $this->viewManager = $compiler->getViewManager();
+
         $this->options = $options + $this->options;
         Node::setSupervisor($this);
 
-        $this->view = $compiler;
         $this->file = $file;
     }
 
     /**
+     * Performs view code pre-processing. View component will provide view source into processors,
+     * processors can perform any source manipulations using this code expect final rendering.
+     *
      * Templating engine based on extending and importing blocks.
      *
      * @param string $source    View source (code).
-     * @param string $view      View name.
      * @param string $namespace View namespace.
+     * @param string $view      View name.
+     * @param string $input     Input filename (usually real view file).
+     * @param string $output    Output filename (usually view cache, target file may not exists).
      * @return string
      */
-    public function processSource($source, $view, $namespace)
+    public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
         //Root node based on current view data
         $root = new Node('root', $source, compact('namespace', 'view'));
@@ -255,7 +270,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
                 //Trying to generate all possible import values
                 $import->generateAliases(
-                    $this->view,
+                    $this->viewManager,
                     $this->file,
                     $this->options['separator']
                 );
@@ -292,7 +307,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         foreach ($node->options[self::IMPORTS] as $alias)
         {
             $aliases = $alias->generateAliases(
-                $this->view,
+                $this->viewManager,
                 $this->file,
                 $this->options['separator']
             );
@@ -340,7 +355,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             );
 
             //There is no need to force exception if import not loaded, but we can log it
-            $this->view->logger()->error(
+            $this->viewManager->logger()->error(
                 "{message} in {file} at line {line} defined by '{tokenName}'",
                 array(
                     'message'   => $exception->getMessage(),
@@ -423,7 +438,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         try
         {
             //View without caching
-            $source = $this->file->read($this->view->getFilename($namespace, $view, false));
+            $source = $this->file->read($this->viewManager->getFilename($namespace, $view, false));
         }
         catch (ViewException $exception)
         {
@@ -433,14 +448,14 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         /**
          * Some processors should be called before templater, we have to keep this chain.
          */
-        foreach ($this->view->getProcessors() as $processor)
+        foreach ($this->compiler->getProcessors() as $processor)
         {
-            if ($this->view->getProcessor($processor) == $this)
+            if ($this->compiler->getProcessor($processor) == $this)
             {
                 break;
             }
 
-            $source = $this->view->getProcessor($processor)->processSource($source, $view, $namespace);
+            $source = $this->compiler->getProcessor($processor)->processSource($source, $view, $namespace);
         }
 
         //We can parse tokens before sending to Node, this will speed-up processing
@@ -457,7 +472,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     protected function clarifyException(ViewException $exception, $tokenContent, array $viewContext)
     {
-        $filename = $this->view->findView($viewContext['namespace'], $viewContext['view']);
+        $filename = $this->viewManager->findView($viewContext['namespace'], $viewContext['view']);
 
         //Current view source and filename
         $source = file($filename);

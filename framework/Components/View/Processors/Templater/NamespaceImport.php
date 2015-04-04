@@ -91,8 +91,8 @@ class NamespaceImport extends Import
             $targetDirectory = $file->normalizePath($lookupDirectory . '/' . $this->directory);
             if ($file->exists($targetDirectory))
             {
-
-                $viewFiles = $file->getFiles($targetDirectory, substr(ViewManager::EXTENSION, 1));
+                //TODO: EXTENSION
+                $viewFiles = $file->getFiles($targetDirectory, 'php');
 
                 //Getting views
                 foreach ($viewFiles as $filename)
