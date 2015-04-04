@@ -13,10 +13,10 @@ interface ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param LayeredCompiler $compiler Compiler instance.
+     * @param DefaultCompiler $compiler Compiler instance.
      * @param array           $options
      */
-    public function __construct(LayeredCompiler $compiler, array $options);
+    public function __construct(DefaultCompiler $compiler, array $options);
 
     /**
      * Performs view code pre-processing. View component will provide view source into processors,

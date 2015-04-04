@@ -133,7 +133,7 @@ class SnapshotTest extends TestCase
                 'engines'         => array(
                     'default' => array(
                         'extensions' => array('php'),
-                        'compiler'   => 'Spiral\Components\View\LayeredCompiler',
+                        'compiler'   => 'Spiral\Components\View\DefaultCompiler',
                         'view'       => 'Spiral\Components\View\View',
                         'processors' => array()
                     )

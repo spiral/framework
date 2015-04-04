@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\View\Processors;
 
-use Spiral\Components\View\LayeredCompiler;
+use Spiral\Components\View\DefaultCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
@@ -33,10 +33,10 @@ class VariablesProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param LayeredCompiler $compiler Compiler instance.
+     * @param DefaultCompiler $compiler Compiler instance.
      * @param array           $options
      */
-    public function __construct(LayeredCompiler $compiler, array $options)
+    public function __construct(DefaultCompiler $compiler, array $options)
     {
         $this->viewManager = $compiler->getManager();
         $this->options = $options + $this->options;

@@ -9,7 +9,7 @@
 namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\View\LayeredCompiler;
+use Spiral\Components\View\DefaultCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\Processors\Templater\Import;
 use Spiral\Components\View\Processors\Templater\AliasImport;
@@ -70,7 +70,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * LayeredCompiler instance.
      *
-     * @var LayeredCompiler
+     * @var DefaultCompiler
      */
     protected $compiler = null;
 
@@ -91,11 +91,11 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param LayeredCompiler $compiler Compiler instance.
+     * @param DefaultCompiler $compiler Compiler instance.
      * @param array           $options
      * @param FileManager     $file
      */
-    public function __construct(LayeredCompiler $compiler, array $options, FileManager $file = null)
+    public function __construct(DefaultCompiler $compiler, array $options, FileManager $file = null)
     {
         $this->compiler = $compiler;
         $this->viewManager = $compiler->getManager();

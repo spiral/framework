@@ -12,7 +12,7 @@ namespace Spiral\Components\View;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
-class LayeredCompiler extends Component implements CompilerInterface
+class DefaultCompiler extends Component implements CompilerInterface
 {
     /**
      * Instance of ViewManager component.
