@@ -457,11 +457,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     protected function clarifyException(ViewException $exception, $tokenContent, array $viewContext)
     {
-        $filename = $this->view->getFilename(
-            $viewContext['namespace'],
-            $viewContext['view'],
-            false
-        );
+        $filename = $this->view->findView($viewContext['namespace'], $viewContext['view']);
 
         //Current view source and filename
         $source = file($filename);

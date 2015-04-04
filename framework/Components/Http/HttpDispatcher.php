@@ -412,7 +412,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     protected function sendCookie(CookieInterface $cookie)
     {
-
         if (($path = $cookie->getPath()) == Cookie::AUTO)
         {
             $path = $this->config['basePath'];
@@ -544,7 +543,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $content = '';
 
-        if ($this->request->getHeader('Accept', false) == 'application/json')
+        if (strpos($this->request->getHeader('Accept', false), 'application/json') !== false)
         {
             $content = array('status' => $code);
 
@@ -558,9 +557,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             //We can render some content
             $content = ViewManager::getInstance()->render(
                 $this->config['httpErrors'][$code],
-                array(
-                    'request' => $this->request
-                )
+                array('request' => $this->request)
             );
         }
 
