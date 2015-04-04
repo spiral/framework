@@ -445,17 +445,21 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             throw $this->clarifyException($exception, $tokenContent, $viewContext);
         }
 
-        /**
-         * Some processors should be called before templater, we have to keep this chain.
-         */
         foreach ($this->compiler->getProcessors() as $processor)
         {
+            /**
+             * Some processors should be called before templater, we have to keep this chain.
+             */
             if ($this->compiler->getProcessor($processor) == $this)
             {
                 break;
             }
 
-            $source = $this->compiler->getProcessor($processor)->processSource($source, $view, $namespace);
+            $source = $this->compiler->getProcessor($processor)->processSource(
+                $source,
+                $view,
+                $namespace
+            );
         }
 
         //We can parse tokens before sending to Node, this will speed-up processing

@@ -236,7 +236,7 @@ class ViewManager extends Component
     }
 
     /**
-     * Returns cached or not cached version of view. Automatically apply view processors to source.
+     * Return cached or not cached version of view. Automatically apply view processors to source.
      *
      * @param string $namespace  View namespace.
      * @param string $view       View filename, without php included.
@@ -247,7 +247,13 @@ class ViewManager extends Component
      * @return string
      * @throws ViewException
      */
-    public function getFilename($namespace, $view, $compile = true, $resetCache = false, &$engine = null)
+    public function getFilename(
+        $namespace,
+        $view,
+        $compile = true,
+        $resetCache = false,
+        &$engine = null
+    )
     {
         $viewFilename = $this->findView($namespace, $view, $engine);
 
