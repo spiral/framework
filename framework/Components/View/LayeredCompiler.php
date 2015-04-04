@@ -100,7 +100,7 @@ class LayeredCompiler extends Component implements CompilerInterface
      *
      * @return ViewManager
      */
-    public function getViewManager()
+    public function getManager()
     {
         return $this->viewManager;
     }

@@ -38,7 +38,7 @@ class VariablesProcessor implements ProcessorInterface
      */
     public function __construct(LayeredCompiler $compiler, array $options)
     {
-        $this->viewManager = $compiler->getViewManager();
+        $this->viewManager = $compiler->getManager();
         $this->options = $options + $this->options;
     }
 

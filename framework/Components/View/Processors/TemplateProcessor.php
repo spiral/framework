@@ -98,7 +98,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     public function __construct(LayeredCompiler $compiler, array $options, FileManager $file = null)
     {
         $this->compiler = $compiler;
-        $this->viewManager = $compiler->getViewManager();
+        $this->viewManager = $compiler->getManager();
 
         $this->options = $options + $this->options;
         Node::setSupervisor($this);
