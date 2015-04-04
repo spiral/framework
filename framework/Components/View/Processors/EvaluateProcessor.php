@@ -63,7 +63,7 @@ class EvaluateProcessor implements ProcessorInterface
         Isolator $isolator = null
     )
     {
-        $this->viewManager = $compiler->getManager();
+        $this->viewManager = $compiler->viewManager();
         $this->file = $file;
 
         $this->options = $options + $this->options;
