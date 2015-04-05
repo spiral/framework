@@ -1,7 +1,7 @@
 <extend:http.layouts.error code="404" title="[[This page cannot be found]]"/>
 
 <block:message>
-    <?
+    <?php
     /**
      * Expecting error to happen inside request scope declared by HttpDispatcher in perform() method.
      *
