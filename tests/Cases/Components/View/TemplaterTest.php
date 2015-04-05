@@ -588,7 +588,7 @@ class TemplaterTest extends TestCase
      */
     protected function render($view, $blankLines = false)
     {
-        $lines = explode("\n", StringHelper::normalizeEndings($this->viewComponent()->render($view)));
+        $lines = explode("\n", StringHelper::normalizeEndings($this->viewManager()->render($view)));
 
         return array_values(array_map('trim', array_filter($lines, 'trim')));
     }
@@ -600,7 +600,7 @@ class TemplaterTest extends TestCase
      * @return ViewManager
      * @throws \Spiral\Core\CoreException
      */
-    protected function viewComponent(array $config = array())
+    protected function viewManager(array $config = array())
     {
         if (empty($config))
         {
@@ -622,7 +622,7 @@ class TemplaterTest extends TestCase
                 'engines'         => array(
                     'default' => array(
                         'extensions' => array('php'),
-                        'compiler'   => 'Spiral\Components\View\DefaultCompiler',
+                        'compiler'   => 'Spiral\Components\View\LayeredCompiler',
                         'view'       => 'Spiral\Components\View\View',
                         'processors' => array(
                             'templater' => array(

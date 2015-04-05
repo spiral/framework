@@ -27,7 +27,7 @@ class SnapshotTest extends TestCase
     protected function setUp()
     {
         $this->loader = new Loader(MemoryCore::getInstance());
-        Container::bind('view', $this->viewComponent());
+        Container::bind('view', $this->viewManager());
         Container::bind('tokenizer', $this->tokenizerComponent());
     }
 
@@ -115,14 +115,14 @@ class SnapshotTest extends TestCase
         );
     }
 
-    protected function viewComponent(array $config = array())
+    protected function viewManager(array $config = array())
     {
         if (empty($config))
         {
             $config = array(
                 'namespaces'      => array(
                     'spiral' => array(
-                        directory('framework') . '/views',
+                        directory('framework') . '/views'
                     )
                 ),
                 'caching'         => array(
@@ -133,7 +133,7 @@ class SnapshotTest extends TestCase
                 'engines'         => array(
                     'default' => array(
                         'extensions' => array('php'),
-                        'compiler'   => 'Spiral\Components\View\DefaultCompiler',
+                        'compiler'   => 'Spiral\Components\View\LayeredCompiler',
                         'view'       => 'Spiral\Components\View\View',
                         'processors' => array()
                     )

@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\View\Processors\Templater;
 
-use Spiral\Core\CoreException;
+use Spiral\Components\View\ViewException;
 
-class TemplaterException extends CoreException
+class TemplaterException extends ViewException
 {
 
 }

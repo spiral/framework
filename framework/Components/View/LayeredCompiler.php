@@ -12,7 +12,7 @@ namespace Spiral\Components\View;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
-class DefaultCompiler extends Component implements CompilerInterface
+class LayeredCompiler extends Component implements CompilerInterface
 {
     /**
      * Instance of ViewManager component.
@@ -68,25 +68,25 @@ class DefaultCompiler extends Component implements CompilerInterface
      * Instance of view compiler. Compilers used to pre-process view files for faster rendering in
      * runtime environment.
      *
-     * @param ViewManager $viewManager
+     * @param ViewManager $manager
+     * @param string      $source     Non-compiled source.
      * @param string      $namespace  View namespace.
      * @param string      $view       View name.
-     * @param string      $source     Non-compiled source.
      * @param string      $input      View filename.
      * @param string      $output     Cached view filename (can be empty or not exists).
      * @param array       $processors Layered compiler processors.
      */
     public function __construct(
-        ViewManager $viewManager,
+        ViewManager $manager,
+        $source,
         $namespace,
         $view,
-        $source,
         $input = '',
         $output = '',
         array $processors = array()
     )
     {
-        $this->viewManager = $viewManager;
+        $this->viewManager = $manager;
         $this->namespace = $namespace;
         $this->view = $view;
         $this->source = $source;

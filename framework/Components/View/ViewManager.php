@@ -292,12 +292,12 @@ class ViewManager extends Component
          * @var CompilerInterface $compiler
          */
         $compiler = Container::get($this->config['engines'][$engine]['compiler'], array(
-                'viewManager' => $this,
-                'namespace'   => $namespace,
-                'view'        => $view,
-                'source'      => $this->file->read($input),
-                'input'       => $input,
-                'output'      => $output,
+                'manager'   => $this,
+                'namespace' => $namespace,
+                'view'      => $view,
+                'source'    => $this->file->read($input),
+                'input'     => $input,
+                'output'    => $output,
             ) + $this->config['engines'][$engine]);
 
         return $compiler->compile();
@@ -336,11 +336,11 @@ class ViewManager extends Component
         $renderer = $this->config['engines'][$engine]['view'];
 
         return Container::get($renderer, array(
-            'viewManager' => $this,
-            'filename'    => $filename,
-            'namespace'   => $namespace,
-            'view'        => $view,
-            'data'        => $data
+            'manager'   => $this,
+            'filename'  => $filename,
+            'namespace' => $namespace,
+            'view'      => $view,
+            'data'      => $data
         ));
     }
 

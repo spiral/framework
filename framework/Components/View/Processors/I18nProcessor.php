@@ -9,7 +9,7 @@
 namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\I18n\Translator;
-use Spiral\Components\View\DefaultCompiler;
+use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 
@@ -44,18 +44,18 @@ class I18nProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param DefaultCompiler $compiler Compiler instance.
+     * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param Translator      $i18n     Translator component instance.
      */
-    public function __construct(DefaultCompiler $compiler, array $options, Translator $i18n = null)
+    public function __construct(LayeredCompiler $compiler, array $options, Translator $i18n = null)
     {
         $this->options = $options + $this->options;
         $this->i18n = $i18n;
     }
 
     /**
-     * Performs view code pre-processing. View component will provide view source into processors,
+     * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
      * @param string $source    View source (code).

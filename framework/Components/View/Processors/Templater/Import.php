@@ -14,9 +14,10 @@ use Spiral\Components\View\ViewManager;
 
 abstract class Import
 {
-
+    /**
+     * Keyword to replace currently active namespace.
+     */
     const SELF_NAMESPACE = 'self';
-
 
     /**
      * Import definition level, deeper in hierarchy import defined - higher level.
@@ -47,6 +48,11 @@ abstract class Import
         return $import;
     }
 
+    /**
+     * Get import priority level.
+     *
+     * @return int
+     */
     public function getLevel()
     {
         return $this->level;
@@ -55,13 +61,17 @@ abstract class Import
     /**
      * Will generate list of aliases associated with this import.
      *
-     * @param ViewManager $view
+     * @param ViewManager $manager
      * @param FileManager $file
      * @param string      $separator
      * @return array
      * @throws ViewException
      */
-    abstract public function generateAliases(ViewManager $view, FileManager $file, $separator = '.');
+    abstract public function generateAliases(
+        ViewManager $manager,
+        FileManager $file,
+        $separator = '.'
+    );
 
     /**
      * Associated view namespace.

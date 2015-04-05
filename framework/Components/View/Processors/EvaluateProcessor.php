@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Processors;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\DefaultCompiler;
+use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ViewManager;
 
 class EvaluateProcessor implements ProcessorInterface
@@ -51,13 +51,13 @@ class EvaluateProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param DefaultCompiler $compiler Compiler instance.
+     * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param FileManager     $file
      * @param Isolator        $isolator
      */
     public function __construct(
-        DefaultCompiler $compiler,
+        LayeredCompiler $compiler,
         array $options,
         FileManager $file = null,
         Isolator $isolator = null
@@ -71,7 +71,7 @@ class EvaluateProcessor implements ProcessorInterface
     }
 
     /**
-     * Performs view code pre-processing. View component will provide view source into processors,
+     * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
      * All php blocks with included compilation flag will be rendered as this stage.

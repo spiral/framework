@@ -43,15 +43,15 @@ class View extends Component implements ViewInterface
     /**
      * View instance binded to specified view file (file has to be already pre-processed).
      *
-     * @param ViewManager $viewManager ViewManager component.
-     * @param string      $filename    Compiled view file.
-     * @param string      $namespace   View namespace.
-     * @param string      $view        View name.
-     * @param array       $data        Runtime data passed by controller or model, should be injected
-     *                                 into view.
+     * @param ViewManager $manager    ViewManager component.
+     * @param string      $filename   Compiled view file.
+     * @param string      $namespace  View namespace.
+     * @param string      $view       View name.
+     * @param array       $data       Runtime data passed by controller or model, should be injected
+     *                                into view.
      */
     public function __construct(
-        ViewManager $viewManager,
+        ViewManager $manager,
         $filename,
         $namespace = '',
         $view = '',

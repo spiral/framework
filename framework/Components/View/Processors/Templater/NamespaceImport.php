@@ -14,9 +14,19 @@ use Spiral\Components\View\ViewException;
 
 class NamespaceImport extends Import
 {
+    /**
+     * Directory to be checked.
+     *
+     * @var string
+     */
     protected $directory = '';
 
-    protected $outer = '';
+    /**
+     * Local node namespace.
+     *
+     * @var string
+     */
+    protected $outerNamespace = '';
 
     /**
      * Cached list of tag aliases.
@@ -25,6 +35,15 @@ class NamespaceImport extends Import
      */
     protected static $aliases = array();
 
+    /**
+     * Namespace import used to declare local node namespaces binded to specified view namespace
+     * or directory. Usually used to import set of tags.
+     *
+     * @param int    $level
+     * @param string $namespace
+     * @param string $path
+     * @param string $name
+     */
     public function __construct($level, $namespace, $path, $name = '')
     {
         $this->level = $level;
@@ -38,10 +57,10 @@ class NamespaceImport extends Import
             $this->namespace = $path;
         }
 
-        $this->outer = $name;
-        if (empty($this->outer))
+        $this->outerNamespace = $name;
+        if (empty($this->outerNamespace))
         {
-            $this->outer = $this->namespace;
+            $this->outerNamespace = $this->namespace;
         }
 
         if ($this->namespace == self::SELF_NAMESPACE)
@@ -58,19 +77,19 @@ class NamespaceImport extends Import
      */
     protected function aliasID()
     {
-        return md5($this->namespace . '-' . $this->directory . '-' . $this->outer);
+        return md5($this->namespace . '-' . $this->directory . '-' . $this->outerNamespace);
     }
 
     /**
      * Will generate list of aliases associated with this import.
      *
-     * @param ViewManager $view
+     * @param ViewManager $manager
      * @param FileManager $file
      * @param string      $separator
      * @return array
      * @throws ViewException
      */
-    public function generateAliases(ViewManager $view, FileManager $file, $separator = '.')
+    public function generateAliases(ViewManager $manager, FileManager $file, $separator = '.')
     {
         if (isset(self::$aliases[$this->aliasID()]))
         {
@@ -78,12 +97,12 @@ class NamespaceImport extends Import
         }
 
         //Checking if namespace exists
-        if (!isset($view->getNamespaces()[$this->namespace]))
+        if (!isset($manager->getNamespaces()[$this->namespace]))
         {
             throw new ViewException("Undefined view namespace '{$this->namespace}'.");
         }
 
-        $directories = $view->getNamespaces()[$this->namespace];
+        $directories = $manager->getNamespaces()[$this->namespace];
 
         $aliases = array();
         foreach ($directories as $lookupDirectory)
@@ -91,8 +110,7 @@ class NamespaceImport extends Import
             $targetDirectory = $file->normalizePath($lookupDirectory . '/' . $this->directory);
             if ($file->exists($targetDirectory))
             {
-                //TODO: EXTENSION
-                $viewFiles = $file->getFiles($targetDirectory, 'php');
+                $viewFiles = $file->getFiles($targetDirectory);
 
                 //Getting views
                 foreach ($viewFiles as $filename)
@@ -102,16 +120,19 @@ class NamespaceImport extends Import
                     $filename = $file->relativePath($filename, $lookupDirectory);
 
                     //Removing ./ and .php
-                    $name = str_replace(array('/', '\\'), $separator, substr($name, 2, -4));
-                    $filename = str_replace(array('/', '\\'), $separator, substr($filename, 2, -4));
+                    $name = substr($name, 2, -1 * (strlen($file->extension($name)) + 1));
+                    $filename = substr($filename, 2, -1 * (strlen($file->extension($filename)) + 1));
+
+                    $name = str_replace(array('/', '\\'), $separator, $name);
+                    $filename = str_replace(array('/', '\\'), $separator, $filename);
 
                     //Registering alias
-                    $aliases[$this->outer . ':' . $name] = $this->namespace . ':' . $filename;
+                    $aliases[$this->outerNamespace . ':' . $name] = $this->namespace . ':' . $filename;
                 }
             }
         }
 
-        if (!$aliases)
+        if (empty($aliases))
         {
             throw new ViewException(
                 "No views were found under directory '{$this->directory}' in namespace '{$this->namespace}'."

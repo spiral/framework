@@ -13,7 +13,7 @@ interface ViewInterface
     /**
      * View instance binded to specified view file (file has to be already pre-processed).
      *
-     * @param ViewManager $viewManager ViewManager component.
+     * @param ViewManager $manager ViewManager component.
      * @param string      $filename    Compiled view file.
      * @param string      $namespace   View namespace.
      * @param string      $view        View name.
@@ -21,7 +21,7 @@ interface ViewInterface
      *                                 view.
      */
     public function __construct(
-        ViewManager $viewManager,
+        ViewManager $manager,
         $filename,
         $namespace = '',
         $view = '',

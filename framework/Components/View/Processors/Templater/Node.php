@@ -19,7 +19,7 @@ class Node
      */
     const TYPE_BLOCK   = 20;
     const TYPE_EXTEND  = 21;
-    const TYPE_INCLUDE = 22;
+    const TYPE_IMPORT = 22;
 
     /**
      * While importing, this block will contain the entire node import.
@@ -32,19 +32,12 @@ class Node
     const SHORT_TAGS = '/\${(?P<name>[a-z0-9_\.\-]+)(?: *\| *(?P<default>[^}]+) *)?}/i';
 
     /**
-     * Following expression will export nodes that were not used (skipped) as a set of attributes,
-     * used for extending
-     * default HTML tags.
-     */
-    protected $attributes = '/ node:attributes(=[\'"](?:include:(?P<include>[a-z_\-,]+))?\|?(?:exclude:(?P<exclude>[a-z_\-,]+))?[\'"])?/i';
-
-    /**
      * Content and behaviour supervisor will load and any tag definitions will be passed through it.
      * Generally, Supervisor is used to perform high level template management.
      *
      * @var SupervisorInterface
      */
-    static public $supervisor = null;
+    protected $supervisor = null;
 
     /**
      * Node name is used for rendering and reference purposes. The top node in the chain must be named
@@ -87,12 +80,19 @@ class Node
      * Call your (top) node "root". If you provide a list of previously parsed HTML tokens, this can
      * speed up the processing if there are multiple, identical imports.
      *
-     * @param string       $name    Node name. Use "root" for top node.
-     * @param string|array $source  Node source or array of parsed tokens.
-     * @param array        $options Options for Node behaviour.
+     * @param SupervisorInterface $supervisor Content loaded and behaviour resolver.
+     * @param string              $name       Node name. Use "root" for top node.
+     * @param string|array        $source     Node source or array of parsed tokens.
+     * @param array               $options    Options for Node behaviour.
      */
-    public function __construct($name, $source = array(), $options = array())
+    public function __construct(
+        SupervisorInterface $supervisor,
+        $name = 'root',
+        $source = array(),
+        $options = array()
+    )
     {
+        $this->supervisor = $supervisor;
         $this->name = $name;
         $this->options = $options;
 
@@ -131,17 +131,6 @@ class Node
     }
 
     /**
-     * By setting the parser supervisor, all load and tag definitions will be passed through it.
-     * Generally, supervisor is used to perform high level template management.
-     *
-     * @param SupervisorInterface $supervisor
-     */
-    public static function setSupervisor(SupervisorInterface $supervisor)
-    {
-        self::$supervisor = $supervisor;
-    }
-
-    /**
      * Parse text source.
      *
      * @param string $source
@@ -171,9 +160,11 @@ class Node
         $tokenLevel = 0;
         foreach ($tokens as $token)
         {
+            $tokenType = $token[Tokenizer::TOKEN_TYPE];
+
             if (!$current)
             {
-                if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_OPEN || $token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_SHORT)
+                if ($tokenType == Tokenizer::TAG_OPEN || $tokenType == Tokenizer::TAG_SHORT)
                 {
                     if (!$behaviour = self::describeToken($token, $this))
                     {
@@ -183,7 +174,7 @@ class Node
 
                     if ($behaviour instanceof Behaviour)
                     {
-                        if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_SHORT)
+                        if ($tokenType == Tokenizer::TAG_SHORT)
                         {
                             $this->registerNode($behaviour, array());
                             continue;
@@ -194,9 +185,9 @@ class Node
                     }
                 }
 
-                if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_CLOSE)
+                if ($tokenType == Tokenizer::TAG_CLOSE)
                 {
-                    self::describeToken($token, $this);
+                    $this->describeToken($token, $this);
                 }
 
                 //Looking for short tag definitions
@@ -207,7 +198,7 @@ class Node
                         $chunks = explode($matches[0][$index], $token[Tokenizer::TOKEN_CONTENT]);
                         $this->nodes[] = array_shift($chunks);
 
-                        $node = new static($name, array(), $this->options);
+                        $node = new static($this->supervisor, $name, array(), $this->options);
                         $node->nodes = array($matches['default'][$index]);
                         $this->nodes[] = $node;
 
@@ -230,7 +221,7 @@ class Node
 
             if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_OPEN || $token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_SHORT)
             {
-                if (!self::describeToken($token, $this))
+                if (!$this->describeToken($token, $this))
                 {
                     //Just skipping
                     continue;
@@ -250,7 +241,7 @@ class Node
 
             if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_CLOSE)
             {
-                if (!self::describeToken($token, $this))
+                if (!$this->describeToken($token, $this))
                 {
                     //Just skipping
                     continue;
@@ -300,11 +291,11 @@ class Node
                 {
                     if ($value instanceof Behaviour)
                     {
-                        $node = new static($attribute, array(), $value->options);
+                        $node = new static($this->supervisor, $attribute, array(), $value->options);
                     }
                     else
                     {
-                        $node = new static($attribute, array(), $this->options);
+                        $node = new static($this->supervisor, $attribute, array(), $this->options);
                         $node->nodes = array($value);
                     }
 
@@ -315,14 +306,14 @@ class Node
             case self::TYPE_BLOCK:
 
                 //Registering new block node
-                $this->nodes[] = new static($smartToken->name, $content, $smartToken->options);
+                $this->nodes[] = new static($this->supervisor, $smartToken->name, $content, $smartToken->options);
                 break;
 
-            case self::TYPE_INCLUDE:
+            case self::TYPE_IMPORT:
                 //Attributes will be used as nodes too
                 foreach ($smartToken->attributes as $attribute => $value)
                 {
-                    $node = new static($attribute);
+                    $node = new static($this->supervisor, $attribute);
                     $node->nodes = array($value);
 
                     $smartToken->contextNode->nodes[] = $node;
@@ -333,7 +324,13 @@ class Node
                  * <tag foo="bar">my data without block tags</tag>
                  * Context will be in the same namespace as the parents.
                  */
-                $smartToken->contextNode->nodes[] = new static(self::CONTEXT_BLOCK, $content, $smartToken->options);
+                $smartToken->contextNode->nodes[] = new static(
+                    $this->supervisor,
+                    self::CONTEXT_BLOCK,
+                    $content,
+                    $smartToken->options
+                );
+
                 $this->nodes[] = $smartToken->contextNode;
 
                 if ($smartToken->contextNode->parent)
@@ -462,7 +459,13 @@ class Node
             }
         }
 
-        if ($this->attributes && preg_match_all($this->attributes, $result, $matches))
+        if (preg_match_all(
+            '/ node:attributes(=[\'"]'
+            . '(?:include:(?P<include>[a-z_\-,]+))?\|?'
+            . '(?:exclude:(?P<exclude>[a-z_\-,]+))?[\'"])?/i',
+            $result,
+            $matches
+        ))
         {
             foreach ($matches[0] as $id => $replace)
             {
@@ -506,13 +509,8 @@ class Node
      * @param Node  $current Currently active node.
      * @return mixed|Behaviour
      */
-    protected static function describeToken(&$token, Node $current)
+    protected function describeToken(&$token, Node $current)
     {
-        if (!self::$supervisor)
-        {
-            return $token;
-        }
-
-        return self::$supervisor->describeToken($token, $current);
+        return $this->supervisor->describeToken($token, $current);
     }
 }

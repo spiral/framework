@@ -10,7 +10,7 @@ namespace Spiral\Components\View\Processors;
 
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\DefaultCompiler;
+use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ViewManager;
 use Spiral\Helpers\StringHelper;
 
@@ -26,17 +26,17 @@ class PrettyPrintProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param DefaultCompiler $compiler Compiler instance.
+     * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param Isolator        $isolator
      */
-    public function __construct(DefaultCompiler $compiler, array $options, Isolator $isolator = null)
+    public function __construct(LayeredCompiler $compiler, array $options, Isolator $isolator = null)
     {
         $this->isolator = $isolator;
     }
 
     /**
-     * Performs view code pre-processing. View component will provide view source into processors,
+     * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
      * Clean html of extra lines to optimize it a little, processors can create a lot of empty lines

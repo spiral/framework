@@ -26,7 +26,7 @@ class NamespacesTest extends TestCase
 
     public function testNamespaces()
     {
-        $view = $this->viewComponent();
+        $view = $this->viewManager();
 
         $this->assertSame('This is view A in default namespace A.', $view->render('viewA'));
         $this->assertSame('This is view B in default namespace B.', $view->render('viewB'));
@@ -36,7 +36,7 @@ class NamespacesTest extends TestCase
         $this->assertSame('This is view A in custom namespace.', $view->render('namespace:viewA'));
     }
 
-    protected function viewComponent(array $config = array())
+    protected function viewManager(array $config = array())
     {
         if (empty($config))
         {
@@ -58,7 +58,7 @@ class NamespacesTest extends TestCase
                 'engines'         => array(
                     'default' => array(
                         'extensions' => array('php'),
-                        'compiler'   => 'Spiral\Components\View\DefaultCompiler',
+                        'compiler'   => false,
                         'view'       => 'Spiral\Components\View\View',
                         'processors' => array()
                     )

@@ -47,13 +47,13 @@ class Behaviour
     public $contextNode = null;
 
     /**
-     * Create new smart token. Object will explain to node tokenizer what this token is, it can either
-     * be import, extend request or block definition.
+     * Behaviours created by supervisor instance and explains to Node how to process tag.
      *
      * @param string $name       Block name, not required for extend or import types.
      * @param string $type       Token behaviour type (import, extend, block)
-     * @param array  $attributes Array or token attributes, valid array from html\Tokenizer.
-     * @param array  $options    Additional node options.
+     * @param array  $attributes Array or token attributes, valid array from Html\Tokenizer.
+     * @param array  $options    Additional node options, such options will be passed to every node
+     *                           child.
      */
     public function __construct($name, $type, array $attributes = array(), array $options = array())
     {

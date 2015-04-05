@@ -14,10 +14,29 @@ use Spiral\Components\View\ViewException;
 
 class AliasImport extends Import
 {
+    /**
+     * View name aliases binded to.
+     *
+     * @var string
+     */
     protected $view = '';
 
+    /**
+     * Expected alias.
+     *
+     * @var string
+     */
     protected $alias = '';
 
+    /**
+     * Alias import allows used to define single tag replacement. It can be used to replace default
+     * html tags with custom implementation.
+     *
+     * @param int    $level
+     * @param string $namespace
+     * @param string $path
+     * @param string $alias
+     */
     public function __construct($level, $namespace, $path, $alias = '')
     {
         $this->level = $level;
@@ -26,7 +45,8 @@ class AliasImport extends Import
         if (strpos($path, ':') === false)
         {
             throw new ViewException(
-                "Import path should always include namespace. Use 'self' to import from current namespace."
+                "Import path should always include namespace. "
+                . "Use 'self' to import from current namespace."
             );
         }
 
@@ -47,13 +67,13 @@ class AliasImport extends Import
     /**
      * Will generate list of aliases associated with this import.
      *
-     * @param ViewManager $view
+     * @param ViewManager $manager
      * @param FileManager $file
      * @param string      $separator
      * @return array
      * @throws ViewException
      */
-    public function generateAliases(ViewManager $view, FileManager $file, $separator = '.')
+    public function generateAliases(ViewManager $manager, FileManager $file, $separator = '.')
     {
         return array(
             $this->alias => $this->namespace . ':' . $this->view
