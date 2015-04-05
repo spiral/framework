@@ -471,6 +471,17 @@ class Node
             }
         }
 
+        return $this->compileDynamicNodes($result);
+    }
+
+    /**
+     * Mount dynamically created attributes.
+     *
+     * @param string $result
+     * @return string
+     */
+    protected function compileDynamicNodes($result)
+    {
         if (preg_match_all(
             '/ node:attributes(=[\'"]'
             . '(?:include:(?P<include>[a-z_\-,]+))?\|?'
