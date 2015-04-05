@@ -96,11 +96,11 @@ class DefaultCompiler extends Component implements CompilerInterface
     }
 
     /**
-     * Get instance of ViewManager component.
+     * Get associated instance of view manager.
      *
      * @return ViewManager
      */
-    public function viewManager()
+    public function getViewManager()
     {
         return $this->viewManager;
     }

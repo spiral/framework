@@ -32,7 +32,7 @@ class EvaluateProcessor implements ProcessorInterface
      *
      * @var ViewManager
      */
-    protected $viewManager = null;
+    protected $manager = null;
 
     /**
      * File component.
@@ -63,7 +63,7 @@ class EvaluateProcessor implements ProcessorInterface
         Isolator $isolator = null
     )
     {
-        $this->viewManager = $compiler->viewManager();
+        $this->manager = $compiler->getViewManager();
         $this->file = $file;
 
         $this->options = $options + $this->options;
@@ -112,7 +112,7 @@ class EvaluateProcessor implements ProcessorInterface
         $this->isolator->setBlocks($phpBlocks);
 
         //We can use eval() but with temp file error handling will be more complete
-        $filename = $this->viewManager->cachedFilename($namespace, $view . '-evaluator');
+        $filename = $this->manager->cachedFilename($namespace, $view . '-evaluator');
         $this->file->write($filename, $source, FileManager::RUNTIME, true);
 
         try
