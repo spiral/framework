@@ -17,8 +17,8 @@ class Node
      * Tagging behaviour types. HTML node templater supports 3 basic behaviours: extend, import, and
      * block definition. By combining these behaviours, you can build almost any template.
      */
-    const TYPE_BLOCK   = 20;
-    const TYPE_EXTEND  = 21;
+    const TYPE_BLOCK  = 20;
+    const TYPE_EXTEND = 21;
     const TYPE_IMPORT = 22;
 
     /**
@@ -162,11 +162,13 @@ class Node
         {
             $tokenType = $token[Tokenizer::TOKEN_TYPE];
 
-            if (!$current)
+            if (empty($current))
             {
                 if ($tokenType == Tokenizer::TAG_OPEN || $tokenType == Tokenizer::TAG_SHORT)
                 {
-                    if (!$behaviour = self::describeToken($token, $this))
+                    $behaviour = $this->describeToken($token, $this);
+
+                    if (empty($behaviour))
                     {
                         //Token should be skipped
                         continue;
@@ -219,7 +221,7 @@ class Node
                 continue;
             }
 
-            if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_OPEN || $token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_SHORT)
+            if ($tokenType == Tokenizer::TAG_OPEN || $tokenType == Tokenizer::TAG_SHORT)
             {
                 if (!$this->describeToken($token, $this))
                 {
@@ -227,7 +229,8 @@ class Node
                     continue;
                 }
 
-                //There is a block with the same name as parent one, we have to make sure we are closing correct block
+                //There is a block with the same name as parent one, we have to make sure we are
+                //closing correct block
                 if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_OPEN)
                 {
                     if ($token[Tokenizer::TOKEN_NAME] == $current[Tokenizer::TOKEN_NAME])
@@ -239,7 +242,7 @@ class Node
                 }
             }
 
-            if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_CLOSE)
+            if ($tokenType == Tokenizer::TAG_CLOSE)
             {
                 if (!$this->describeToken($token, $this))
                 {
@@ -277,17 +280,17 @@ class Node
     /**
      * Register a new node based on the behaviours definition and content.
      *
-     * @param Behaviour $smartToken
+     * @param Behaviour $behaviour
      * @param array     $content
      */
-    protected function registerNode(Behaviour $smartToken, array $content)
+    protected function registerNode(Behaviour $behaviour, array $content)
     {
-        switch ($smartToken->type)
+        switch ($behaviour->type)
         {
             case self::TYPE_EXTEND:
-                $this->parent = $smartToken->contextNode;
+                $this->parent = $behaviour->contextNode;
 
-                foreach ($smartToken->attributes as $attribute => $value)
+                foreach ($behaviour->attributes as $attribute => $value)
                 {
                     if ($value instanceof Behaviour)
                     {
@@ -306,36 +309,45 @@ class Node
             case self::TYPE_BLOCK:
 
                 //Registering new block node
-                $this->nodes[] = new static($this->supervisor, $smartToken->name, $content, $smartToken->options);
+                $this->nodes[] = new static(
+                    $this->supervisor,
+                    $behaviour->name,
+                    $content,
+                    $behaviour->options
+                );
+
                 break;
 
             case self::TYPE_IMPORT:
+
                 //Attributes will be used as nodes too
-                foreach ($smartToken->attributes as $attribute => $value)
+                foreach ($behaviour->attributes as $attribute => $value)
                 {
                     $node = new static($this->supervisor, $attribute);
                     $node->nodes = array($value);
 
-                    $smartToken->contextNode->nodes[] = $node;
+                    $behaviour->contextNode->nodes[] = $node;
                 }
 
                 /**
-                 * We are putting all the children nodes into a context node, so you can use this construction as:
+                 * We are putting all the children nodes into a context node, so you can use this
+                 * construction as:
+                 *
                  * <tag foo="bar">my data without block tags</tag>
+                 *
                  * Context will be in the same namespace as the parents.
                  */
-                $smartToken->contextNode->nodes[] = new static(
+                $behaviour->contextNode->nodes[] = new static(
                     $this->supervisor,
                     self::CONTEXT_BLOCK,
                     $content,
-                    $smartToken->options
+                    $behaviour->options
                 );
 
-                $this->nodes[] = $smartToken->contextNode;
-
-                if ($smartToken->contextNode->parent)
+                $this->nodes[] = $behaviour->contextNode;
+                if (!empty($behaviour->contextNode->parent))
                 {
-                    $smartToken->contextNode->extendParent($smartToken->contextNode->parent);
+                    $behaviour->contextNode->extendParent($behaviour->contextNode->parent);
                 }
 
                 break;
@@ -475,12 +487,16 @@ class Node
                 $dynamicNodes = array();
                 foreach ($this->skippedNodes as $node)
                 {
-                    if (!$node->name || in_array($node->name, $exclude) || ($include && !in_array($node->name, $include)))
+                    if (
+                        !$node->name
+                        || in_array($node->name, $exclude)
+                        || ($include && !in_array($node->name, $include))
+                    )
                     {
                         continue;
                     }
 
-                    if ($node->name)
+                    if (!empty($node->name))
                     {
                         $dynamicNodes[$node->name] = $node->compile();
                     }
@@ -488,14 +504,18 @@ class Node
 
                 unset($dynamicNodes[self::CONTEXT_BLOCK]);
 
-                //Rendering (yes, we can render this part during collecting, 5 lines to top), but i want to do it like
-                //this, cos it will be more flexible to add more features in future
+                //Rendering (yes, we can render this part during collecting, 5 lines to top), but i
+                //want to do it like this, cos it will be more flexible to add more features in future
                 foreach ($dynamicNodes as $name => $attribute)
                 {
                     $dynamicNodes[$name] = $name . '="' . $attribute . '"';
                 }
 
-                $result = str_replace($replace, $dynamicNodes ? ' ' . join(' ', $dynamicNodes) : '', $result);
+                $result = str_replace(
+                    $replace,
+                    $dynamicNodes ? ' ' . join(' ', $dynamicNodes) : '',
+                    $result
+                );
             }
         }
 
