@@ -449,8 +449,7 @@ Debugger::dumpingStyles(array(
         }
         ?>
     </div>
-
-    <?
+    <?php
     if (Logger::logMessages())
     {
         ?>
@@ -469,7 +468,7 @@ Debugger::dumpingStyles(array(
             }
             ?>
         </div>
-    <?
+    <?php
     }
     ?>
     <div class="footer">
