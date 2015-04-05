@@ -336,12 +336,12 @@ abstract class Driver extends Component
             if ($this->config['profiling'] && isset($explained))
             {
                 benchmark(static::DRIVER_NAME . "::" . $this->databaseName(), $explained);
-                $this->logger()->debug($explained, compact('query', 'parameters'));
+                self::logger()->debug($explained, compact('query', 'parameters'));
             }
         }
         catch (\PDOException $exception)
         {
-            $this->logger()->error(
+            self::logger()->error(
                 DatabaseManager::interpolateQuery($query, $parameters),
                 compact('query', 'parameters')
             );
@@ -409,8 +409,8 @@ abstract class Driver extends Component
         $this->transactionLevel++;
         if ($this->transactionLevel == 1)
         {
-            $isolationLevel && $this->isolationLevel($isolationLevel);
-            $this->logger()->info('Starting transaction.');
+            !empty($isolationLevel) && $this->isolationLevel($isolationLevel);
+            self::logger()->info('Starting transaction.');
 
             return $this->getPDO()->beginTransaction();
         }
@@ -432,7 +432,7 @@ abstract class Driver extends Component
         $this->transactionLevel--;
         if ($this->transactionLevel == 0)
         {
-            $this->logger()->info('Committing transaction.');
+            self::logger()->info('Committing transaction.');
 
             return $this->getPDO()->commit();
         }
@@ -455,7 +455,7 @@ abstract class Driver extends Component
 
         if ($this->transactionLevel == 0)
         {
-            $this->logger()->info('Rolling black transaction.');
+            self::logger()->info('Rolling black transaction.');
 
             return $this->getPDO()->rollBack();
         }
@@ -474,7 +474,7 @@ abstract class Driver extends Component
      */
     protected function isolationLevel($level)
     {
-        $this->logger()->info("Setting transaction isolation level to '{$level}'.");
+        self::logger()->info("Setting transaction isolation level to '{$level}'.");
         $level && $this->statement("SET TRANSACTION ISOLATION LEVEL $level");
     }
 
@@ -486,7 +486,7 @@ abstract class Driver extends Component
      */
     protected function savepointCreate($name)
     {
-        $this->logger()->info("Creating savepoint '{$name}'.");
+        self::logger()->info("Creating savepoint '{$name}'.");
         $this->statement("SAVEPOINT {$name}");
     }
 
@@ -498,7 +498,7 @@ abstract class Driver extends Component
      */
     protected function savepointRelease($name)
     {
-        $this->logger()->info("Releasing savepoint '{$name}'.");
+        self::logger()->info("Releasing savepoint '{$name}'.");
         $this->statement("RELEASE SAVEPOINT {$name}");
     }
 
@@ -510,7 +510,7 @@ abstract class Driver extends Component
      */
     protected function savepointRollback($name)
     {
-        $this->logger()->info("Rolling back savepoint '{$name}'.");
+        self::logger()->info("Rolling back savepoint '{$name}'.");
         $this->statement("ROLLBACK TO SAVEPOINT {$name}}");
     }
 

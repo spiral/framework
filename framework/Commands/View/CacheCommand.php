@@ -50,14 +50,14 @@ class CacheCommand extends Command
             $formatter = $this->getHelper('formatter');
             foreach ($directories as $directory)
             {
-                $viewFiles = $this->file->getFiles($directory, substr(ViewManager::EXTENSION, 1));
+                $viewFiles = $this->file->getFiles($directory);
                 foreach ($viewFiles as $filename)
                 {
                     //View name (removing extension and ./)
                     $view = substr(
                         $this->file->relativePath($filename, $directory),
                         2,
-                        -1 * strlen(ViewManager::EXTENSION)
+                        -1 * (strlen($this->file->extension($filename)) + 1)
                     );
 
                     if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE)
