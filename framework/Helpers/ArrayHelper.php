@@ -73,6 +73,8 @@ class ArrayHelper
      * Sort an array with a user-defined comparison function and maintain index association. This is
      * stable sort which will keep order or elements if their compare result is equal.
      *
+     * Attention, this method is EXTREMELY SLOW.
+     *
      * @link http://stackoverflow.com/questions/1517793/stability-in-sorting-algorithms
      * @link http://php.net/manual/en/function.uasort.php
      * @param array    $array    The input array.
@@ -98,6 +100,7 @@ class ArrayHelper
 
             return;
         }
+
         $array = array();
 
         reset($arrayA);

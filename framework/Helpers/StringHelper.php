@@ -58,7 +58,7 @@ class StringHelper
     }
 
     /**
-     * Applies htmlspecialchars() and strip_tags() to string (if enabled). Can be used to clean up
+     * Applies htmlentities() and strip_tags() to string (if enabled). Can be used to clean up
      * data before rendering it in HTML.
      *
      * @param string $string    String to be escaped.
