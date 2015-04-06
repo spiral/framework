@@ -293,9 +293,11 @@ class ViewManager extends Component
          */
         $compiler = Container::get($this->config['engines'][$engine]['compiler'], array(
                 'manager'   => $this,
+                'source'    => $this->file->read($input),
+
                 'namespace' => $namespace,
                 'view'      => $view,
-                'source'    => $this->file->read($input),
+
                 'input'     => $input,
                 'output'    => $output,
             ) + $this->config['engines'][$engine]);
@@ -319,7 +321,7 @@ class ViewManager extends Component
      *                     by : symbol.
      * @param array  $data Array or view data, will be exported as local view variables, not available
      *                     in view processors.
-     * @return View
+     * @return ViewInterface
      */
     public function get($view, array $data = array())
     {

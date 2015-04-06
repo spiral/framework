@@ -9,6 +9,7 @@
 namespace Spiral\Support\Pagination;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Spiral\Core\Component;
 
 class Paginator extends Component
@@ -66,6 +67,13 @@ class Paginator extends Component
     protected $request = null;
 
     /**
+     * Uri.
+     *
+     * @var UriInterface
+     */
+    protected $uri = null;
+
+    /**
      * New paginator object is used to create page ranges, in addition to filtering database queries
      * or arrays to select a limited amount of records. By default, it can support ODM and ORM object,
      * DBAL queries and arrays. To add support for Pagination, simply implement pagination interface.
@@ -77,7 +85,7 @@ class Paginator extends Component
      */
     public function __construct($pageParameter = 'page', ServerRequestInterface $request = null)
     {
-        $this->request = $request;
+        $this->setRequest($request);
         $this->setParameter($pageParameter);
     }
 
@@ -89,6 +97,27 @@ class Paginator extends Component
     public function setRequest(ServerRequestInterface $request)
     {
         $this->request = $request;
+        $this->uri = $request->getUri();
+    }
+
+    /**
+     * Get current paginator Uri, by default identical to request uri.
+     *
+     * @return UriInterface
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * Update primary paginator uri.
+     *
+     * @param UriInterface $uri
+     */
+    public function setUri(UriInterface $uri)
+    {
+        $this->uri = $uri;
     }
 
     /**
@@ -373,15 +402,15 @@ class Paginator extends Component
      */
     public function buildURL($number = null)
     {
-        $publicURL = $this->request->getUri()->getPath();
+        $publicURL = $this->uri->getPath();
         if (!$number)
         {
-            return $publicURL;
+            return $publicURL . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
         }
 
         return $publicURL . '?' . http_build_query($this->getQuery() + array(
                 $this->pageParameter => $number
-            ));
+            )) . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
     }
 
     /**
