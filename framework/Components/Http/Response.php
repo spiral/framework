@@ -137,7 +137,7 @@ class Response extends PsrMessage implements ResponseInterface
     /**
      * New immutable response instance. Content can be provided
      *
-     * @param string|StreamableInterface $content   String content or string.
+     * @param string|StreamableInterface $content   String content or resource.
      * @param int                        $statusCode
      * @param array                      $headers
      * @param bool                       $normalize Normalize headers case (disabled by default).
@@ -242,7 +242,7 @@ class Response extends PsrMessage implements ResponseInterface
     {
         $response = clone $this;
         $response->setStatusCode($code);
-        $reasonPhrase && $response->reasonPhrase = $reasonPhrase;
+        !empty($reasonPhrase) && $response->reasonPhrase = $reasonPhrase;
 
         return $response;
     }
