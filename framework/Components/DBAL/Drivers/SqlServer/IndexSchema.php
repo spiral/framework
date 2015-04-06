@@ -15,7 +15,8 @@ class IndexSchema extends AbstractIndexSchema
     /**
      * Parse index information provided by parent TableSchema and populate index values.
      *
-     * @param mixed $schema Index information fetched from database by TableSchema. Format depends on driver type.
+     * @param mixed $schema Index information fetched from database by TableSchema. Format depends
+     *                      on driver type.
      * @return mixed
      */
     protected function resolveSchema($schema)

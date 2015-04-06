@@ -36,7 +36,8 @@ class InsertQuery extends BaseInsertQuery
 
         if ($primary = $driver->getPrimary($this->database->getPrefix() . $this->table))
         {
-            $this->logger()->debug("Primary key '{sequence}' automatically resolved for table '{table}'.", array(
+            self::logger()->debug(
+                "Primary key '{sequence}' automatically resolved for table '{table}'.", array(
                 'table'    => $this->table,
                 'sequence' => $primary
             ));
@@ -52,6 +53,9 @@ class InsertQuery extends BaseInsertQuery
      */
     public function run()
     {
-        return (int)$this->database->statement($this->sqlStatement(), $this->getParameters())->fetchColumn();
+        return (int)$this->database->statement(
+            $this->sqlStatement(),
+            $this->getParameters()
+        )->fetchColumn();
     }
 }

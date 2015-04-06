@@ -18,8 +18,8 @@ class SqliteDriver extends Driver
     const DRIVER_NAME = 'SQLite';
 
     /**
-     * Class names should be used to create schema instances to describe specified driver table. Schema realizations are
-     * driver specific and allows both schema reading and writing (migrations).
+     * Class names should be used to create schema instances to describe specified driver table.
+     * Schema realizations are driver specific and allows both schema reading and writing (migrations).
      */
     const SCHEMA_TABLE     = 'Spiral\Components\DBAL\Drivers\Sqlite\TableSchema';
     const SCHEMA_COLUMN    = 'Spiral\Components\DBAL\Drivers\Sqlite\ColumnSchema';
@@ -32,14 +32,16 @@ class SqliteDriver extends Driver
     const QUERY_COMPILER = 'Spiral\Components\DBAL\Drivers\Sqlite\QueryCompiler';
 
     /**
-     * Statement should be used for ColumnSchema to indicate that default datetime value should be set to current time.
+     * Statement should be used for ColumnSchema to indicate that default datetime value should be
+     * set to current time.
      *
      * @var string
      */
     const TIMESTAMP_NOW = 'CURRENT_TIMESTAMP';
 
     /**
-     * SQL query to fetch table names from database. Declared as constant only because i love well organized things.
+     * SQL query to fetch table names from database. Declared as constant only because i love well
+     * organized things.
      *
      * @var string
      */
@@ -53,8 +55,8 @@ class SqliteDriver extends Driver
     const TABLE_EXISTS_QUERY = "SELECT sql FROM sqlite_master WHERE type = 'table' and name = ?";
 
     /**
-     * Driver instances responsible for all database low level operations which can be DBMS specific - such as connection
-     * preparation, custom table/column/index/reference schemas and etc.
+     * Driver instances responsible for all database low level operations which can be DBMS
+     * specific - such as connection preparation, custom table/column/index/reference schemas and etc.
      *
      * @param array $config
      */
@@ -113,6 +115,9 @@ class SqliteDriver extends Driver
      */
     public function isolationLevel($level)
     {
-        $this->logger()->error("Transaction isolation level is not fully supported by SQLite ({level}).", compact('level'));
+        self::logger()->error(
+            "Transaction isolation level is not fully supported by SQLite ({level}).",
+            compact('level')
+        );
     }
 }

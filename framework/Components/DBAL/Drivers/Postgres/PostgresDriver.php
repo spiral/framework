@@ -23,8 +23,8 @@ class PostgresDriver extends Driver
     const DRIVER_NAME = 'Postgres';
 
     /**
-     * Class names should be used to create schema instances to describe specified driver table. Schema realizations are
-     * driver specific and allows both schema reading and writing (migrations).
+     * Class names should be used to create schema instances to describe specified driver table.
+     * Schema realizations are driver specific and allows both schema reading and writing (migrations).
      */
     const SCHEMA_TABLE     = 'Spiral\Components\DBAL\Drivers\Postgres\TableSchema';
     const SCHEMA_COLUMN    = 'Spiral\Components\DBAL\Drivers\Postgres\ColumnSchema';
@@ -37,37 +37,44 @@ class PostgresDriver extends Driver
     const QUERY_COMPILER = 'Spiral\Components\DBAL\Drivers\Postgres\QueryCompiler';
 
     /**
-     * Statement should be used for ColumnSchema to indicate that default datetime value should be set to current time.
+     * Statement should be used for ColumnSchema to indicate that default datetime value should be set
+     * to current time.
      *
      * @var string
      */
     const TIMESTAMP_NOW = 'now()';
 
     /**
-     * SQL query to fetch table names from database. Declared as constant only because i love well organized things.
+     * SQL query to fetch table names from database. Declared as constant only because i love well
+     * organized things.
      *
      * @var string
      */
-    const FETCH_TABLES_QUERY = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'";
+    const FETCH_TABLES_QUERY = "SELECT table_name FROM information_schema.tables
+                                WHERE table_schema = 'public' AND table_type = 'BASE TABLE'";
 
     /**
      * Query to check table existence.
      *
      * @var string
      */
-    const TABLE_EXISTS_QUERY = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' AND table_name = ?";
+    const TABLE_EXISTS_QUERY = "SELECT table_name FROM information_schema.tables
+                                WHERE table_schema = 'public'
+                                AND table_type = 'BASE TABLE'
+                                AND table_name = ?";
 
     /**
-     * Due postgres sequences mechanism we have two options to get last inserted id with valid value, use nextval() sequence,
-     * or use RETURN statement. Due we have ability to analyze any table, let's store primary keys in cache.
+     * Due postgres sequences mechanism we have two options to get last inserted id with valid value,
+     * use nextval() sequence, or use RETURN statement. Due we have ability to analyze any table, let's
+     * store primary keys in cache.
      *
      * @var array
      */
     protected $primaryKeys = array();
 
     /**
-     * Method used to get PDO instance for current driver, it can be overwritten by custom driver realization to perform
-     * DBMS specific operations.
+     * Method used to get PDO instance for current driver, it can be overwritten by custom driver
+     * realization to perform DBMS specific operations.
      *
      * @return PDO
      */
@@ -81,9 +88,10 @@ class PostgresDriver extends Driver
     }
 
     /**
-     * Get primary key name for dedicated table, used by InsertQuery to generate insert statement. Attention, DO NOT
-     * use this function by yourself. It's probably (not sure yet) will be erased or modified in future versions and replaced
-     * with ID reservation based on sequence name. If you need table primary key use table schemas.
+     * Get primary key name for dedicated table, used by InsertQuery to generate insert statement.
+     * Attention, DO NOT use this function by yourself. It's probably (not sure yet) will be erased
+     * or modified in future versions and replaced with ID reservation based on sequence name. If you
+     * need table primary key use table schemas.
      *
      * @param string $table Fully specified table name, including postfix.
      * @return string
@@ -91,19 +99,21 @@ class PostgresDriver extends Driver
      */
     public function getPrimary($table)
     {
-        if (!$this->primaryKeys)
+        if (empty($this->primaryKeys))
         {
             $this->primaryKeys = Core::getInstance()->loadData($this->databaseName() . '-primary');
         }
 
-        if ($this->primaryKeys && array_key_exists($table, $this->primaryKeys))
+        if (!empty($this->primaryKeys) && array_key_exists($table, $this->primaryKeys))
         {
             return $this->primaryKeys[$table];
         }
 
         if (!$this->hasTable($table))
         {
-            throw new DBALException("Unable to fetch table primary key, no such table '{$table}' exists.");
+            throw new DBALException(
+                "Unable to fetch table primary key, no such table '{$table}' exists."
+            );
         }
 
         $this->primaryKeys[$table] = $this->tableSchema($table)->getPrimaryKeys();
@@ -134,8 +144,8 @@ class PostgresDriver extends Driver
     }
 
     /**
-     * Fetch list of all available table names under linked database, this method is called by Database in getTables()
-     * method, same methods will automatically filter tables by their prefix.
+     * Fetch list of all available table names under linked database, this method is called by Database
+     * in getTables() method, same methods will automatically filter tables by their prefix.
      *
      * @return array
      */
@@ -151,8 +161,9 @@ class PostgresDriver extends Driver
     }
 
     /**
-     * Get InsertQuery builder with driver specific query compiler. Postgres uses custom query realization with automatic
-     * primary key name resolution. In future it should work based on id reservation.
+     * Get InsertQuery builder with driver specific query compiler. Postgres uses custom query
+     * realization with automatic primary key name resolution. In future it should work based on id
+     * reservation.
      *
      * @param Database $database   Database instance builder should be associated to.
      * @param array    $parameters Initial builder parameters.

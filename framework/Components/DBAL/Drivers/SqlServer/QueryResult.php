@@ -56,7 +56,8 @@ class QueryResult extends BaseQueryResult
     /**
      * Fetch one result row as array. Will remove ROW_NUMBER_COLUMN from result.
      *
-     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC by default.
+     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC
+     *                   by default.
      * @return array
      */
     public function fetch($mode = null)
@@ -70,7 +71,8 @@ class QueryResult extends BaseQueryResult
     /**
      * Returns an array containing all of the result set rows, do not use this method on big datasets.
      *
-     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC by default.
+     * @param bool $mode The fetch mode must be one of the PDO::FETCH_* constants, PDO::FETCH_ASSOC
+     *                   by default.
      * @return array
      */
     public function fetchAll($mode = null)

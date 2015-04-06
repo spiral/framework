@@ -14,10 +14,10 @@ use Spiral\Helpers\StringHelper;
 class ColumnSchema extends AbstractColumnSchema
 {
     /**
-     * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision
-     * scale, unsigned flag and etc. Every declared type can be assigned using ->type() method, however to pass custom
-     * type parameters, methods has to be declared in database specific ColumnSchema. Type identifier not necessary
-     * should be real type name.
+     * Direct mapping from base abstract type to database internal type with specified data options,
+     * such as size, precision scale, unsigned flag and etc. Every declared type can be assigned using
+     * ->type() method, however to pass custom type parameters, methods has to be declared in database
+     * specific ColumnSchema. Type identifier not necessary should be real type name.
      *
      * Example:
      * integer => array('type' => 'int', 'size' => 1),
@@ -37,7 +37,8 @@ class ColumnSchema extends AbstractColumnSchema
         //Logical types
         'boolean'     => 'bit',
 
-        //Integer types (size can always be changed with size method), longInteger has method alias bigInteger
+        //Integer types (size can always be changed with size method), longInteger has method alias
+        //bigInteger
         'integer'     => 'int',
         'tinyInteger' => 'tinyint',
         'bigInteger'  => 'bigint',
@@ -73,8 +74,9 @@ class ColumnSchema extends AbstractColumnSchema
     );
 
     /**
-     * Driver specific reverse mapping, this mapping should link database type to one of standard internal types. Not
-     * resolved types will be marked as "unknown" which will map them as php type string.
+     * Driver specific reverse mapping, this mapping should link database type to one of standard
+     * internal types. Not resolved types will be marked as "unknown" which will map them as php type
+     * string.
      *
      * @invisible
      * @var array
@@ -123,7 +125,8 @@ class ColumnSchema extends AbstractColumnSchema
     /**
      * Parse column information provided by parent TableSchema and populate column values.
      *
-     * @param mixed $schema Column information fetched from database by TableSchema. Format depends on driver type.
+     * @param mixed $schema Column information fetched from database by TableSchema. Format depends
+     *                      on driver type.
      * @return mixed
      */
     protected function resolveSchema($schema)
@@ -157,20 +160,27 @@ class ColumnSchema extends AbstractColumnSchema
             $this->defaultValue = substr($this->defaultValue, 1, -1);
         }
 
-        if (($this->phpType() != 'string') && ($this->defaultValue[0] == '(' && $this->defaultValue[strlen($this->defaultValue) - 1] == ')'))
+        if (
+            ($this->phpType() != 'string')
+            && (
+                $this->defaultValue[0] == '('
+                && $this->defaultValue[strlen($this->defaultValue) - 1] == ')'
+            )
+        )
         {
             $this->defaultValue = substr($this->defaultValue, 1, -1);
         }
 
         /**
-         * We have to fetch all column constrains cos default and enum check will be included into them, plus column drop
-         * is not possible without removing all constraints.
+         * We have to fetch all column constrains cos default and enum check will be included into
+         * them, plus column drop is not possible without removing all constraints.
          */
 
         $tableDriver = $this->table->getDriver();
-        if ($schema['default_object_id'])
+        if (!empty($schema['default_object_id']))
         {
-            $this->defaultConstraint = $tableDriver->query("SELECT name FROM sys.default_constraints WHERE object_id = ?", array(
+            $this->defaultConstraint = $tableDriver->query(
+                "SELECT name FROM sys.default_constraints WHERE object_id = ?", array(
                 $schema['default_object_id']
             ))->fetchColumn();
         }
@@ -182,7 +192,8 @@ class ColumnSchema extends AbstractColumnSchema
             join sys.sysconstraints AS [c] on o.object_id = [c].constid
             WHERE type_desc = 'CHECK_CONSTRAINT' AND parent_object_id = ? AND [c].colid = ?";
 
-            foreach ($tableDriver->query($query, array($schema['object_id'], $schema['column_id'])) as $checkConstraint)
+            foreach ($tableDriver->query($query, array($schema['object_id'], $schema['column_id']))
+                     as $checkConstraint)
             {
                 $this->enumConstraint = $checkConstraint['name'];
 

@@ -14,11 +14,13 @@ use Spiral\Components\DBAL\QueryCompiler as BaseQueryCompiler;
 class QueryCompiler extends BaseQueryCompiler
 {
     /**
-     * Compile insert query statement. Table name (without prefix), columns and list of rowsets is required.
+     * Compile insert query statement. Table name (without prefix), columns and list of rowsets is
+     * required.
      *
      * @param string $table   Table name without prefix.
      * @param array  $columns Columns name.
-     * @param array  $rowsets List of rowsets, usually presented by Parameter instances as every rowset is array of values.
+     * @param array  $rowsets List of rowsets, usually presented by Parameter instances as every rowset
+     *                        is array of values.
      * @return string
      * @throws DBALException
      */
@@ -54,7 +56,8 @@ class QueryCompiler extends BaseQueryCompiler
     }
 
     /**
-     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and order are required.
+     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit
+     * and order are required.
      * PostgresSQL requires nested query for ordering and limits.
      *
      * @link http://www.postgresql.org/message-id/1291109101.26137.35.camel@pcd12478
@@ -66,22 +69,39 @@ class QueryCompiler extends BaseQueryCompiler
      * @return string
      * @throws DBALException
      */
-    public function delete($table, array $joins = array(), array $where = array(), array $orderBy = array(), $limit = 0)
+    public function delete(
+        $table,
+        array $joins = array(),
+        array $where = array(),
+        array $orderBy = array(),
+        $limit = 0
+    )
     {
-        if (!$orderBy && !$limit)
+        if (empty($orderBy) && empty($limit))
         {
             return parent::delete($table, $joins, $where);
         }
 
-        $selection = self::select(array($table), false, array('rowid'), $joins, $where, array(), array(), $orderBy, $limit, 0);
+        $selection = self::select(
+            array($table),
+            false,
+            array('rowid'),
+            $joins,
+            $where,
+            array(),
+            array(),
+            $orderBy,
+            $limit,
+            0
+        );
 
         return self::delete($table) . " WHERE {$this->quote('rowid')} IN ($selection)";
     }
 
     /**
-     * Compile update query statement. Table name, set of values (associated with column names), joins and where tokens,
-     * order by tokens and limit are required. Default query compiler will not compile limit and order by, it has to be
-     * done on driver compiler level.
+     * Compile update query statement. Table name, set of values (associated with column names), joins
+     * and where tokens, order by tokens and limit are required. Default query compiler will not compile
+     * limit and order by, it has to be done on driver compiler level.
      *
      * @param string $table
      * @param array  $values
@@ -91,20 +111,39 @@ class QueryCompiler extends BaseQueryCompiler
      * @param int    $limit
      * @return string
      */
-    public function update($table, array $values, array $joins = array(), array $where = array(), array $orderBy = array(), $limit = 0)
+    public function update(
+        $table,
+        array $values,
+        array $joins = array(),
+        array $where = array(),
+        array $orderBy = array(),
+        $limit = 0
+    )
     {
-        if (!$orderBy && !$limit)
+        if (empty($orderBy) && empty($limit))
         {
             return parent::update($table, $values, $joins, $where);
         }
 
-        $selection = self::select(array($table), false, array('rowid'), $joins, $where, array(), array(), $orderBy, $limit, 0);
+        $selection = self::select(
+            array($table),
+            false,
+            array('rowid'),
+            $joins,
+            $where,
+            array(),
+            array(),
+            $orderBy,
+            $limit,
+            0
+        );
 
         return self::update($table, $values) . " WHERE {$this->quote('rowid')} IN ($selection)";
     }
 
     /**
-     * Render selection (affection) limit and offset. SQLite limit should be always provided (if offset not empty).
+     * Render selection (affection) limit and offset. SQLite limit should be always provided (if
+     * offset not empty).
      *
      * @link http://stackoverflow.com/questions/10491492/sqllite-with-skip-offset-only-not-limit
      * @param int $limit

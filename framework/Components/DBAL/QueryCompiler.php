@@ -197,7 +197,6 @@ class QueryCompiler extends Component
         array $unions = array()
     )
     {
-
         //This statement parts should be processed first to define set of table and column aliases
         $from = $this->tables($from);
         $joins = $joins ? $this->joins($joins) . ' ' : '';
@@ -216,17 +215,17 @@ class QueryCompiler extends Component
         $statement = rtrim("SELECT {$distinct}{$columns} "
                 . "FROM {$from} {$joins}{$where}{$groupBy}{$having}") . ' ';
 
-        if (!$unions && $orderBy)
+        if (empty($unions) && !empty($orderBy))
         {
             $statement .= $this->orderBy($orderBy) . ' ';
         }
 
-        if ($unions)
+        if (!empty($unions))
         {
             $statement .= $this->unions($unions) . ' ';
         }
 
-        if ($unions && $orderBy)
+        if (!empty($unions) && !empty($orderBy))
         {
             $statement .= $this->orderBy($orderBy) . ' ';
         }
@@ -261,12 +260,12 @@ class QueryCompiler extends Component
     {
         $statement = 'DELETE FROM ' . $this->quote($table, true) . ' ';
 
-        if ($joins)
+        if (!empty($joins))
         {
             $statement .= $this->joins($joins) . ' ';
         }
 
-        if ($where)
+        if (!empty($where))
         {
             $statement .= 'WHERE ' . $this->where($where);
         }
@@ -320,12 +319,12 @@ class QueryCompiler extends Component
 
         $statement .= join(', ', $values) . ' ';
 
-        if ($joins)
+        if (!empty($joins))
         {
             $statement .= $this->joins($joins) . ' ';
         }
 
-        if ($where)
+        if (!empty($where))
         {
             $statement .= 'WHERE ' . $this->where($where);
         }

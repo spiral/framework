@@ -15,7 +15,8 @@ class IndexSchema extends AbstractIndexSchema
     /**
      * Parse index information provided by parent TableSchema and populate index values.
      *
-     * @param mixed $schema Index information fetched from database by TableSchema. Format depends on driver type.
+     * @param mixed $schema Index information fetched from database by TableSchema. Format depends
+     *                      on driver type.
      * @return mixed
      */
     protected function resolveSchema($schema)
@@ -23,7 +24,8 @@ class IndexSchema extends AbstractIndexSchema
         $this->name = $schema['name'];
         $this->type = $schema['unique'] ? self::UNIQUE : self::NORMAL;
 
-        foreach ($this->table->getDriver()->query("PRAGMA INDEX_INFO({$this->getName(true)})") as $column)
+        foreach ($this->table->getDriver()->query("PRAGMA INDEX_INFO({$this->getName(true)})") as
+                 $column)
         {
             $this->columns[] = $column['name'];
         }

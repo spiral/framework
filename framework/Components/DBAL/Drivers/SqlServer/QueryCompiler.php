@@ -21,17 +21,18 @@ class QueryCompiler extends BaseQueryCompiler
     use LoggerTrait;
 
     /**
-     * Parent driver instance, driver used only for identifier() methods but can be required in other cases.
+     * Parent driver instance, driver used only for identifier() methods but can be required in other
+     * cases.
      *
      * @var SQLServerDriver
      */
     protected $driver = null;
 
     /**
-     * Compile select query statement. Table names, distinct flag, columns, joins, where tokens, having tokens, group by
-     * tokens (yeah, it's very big list), order by tokens, limit, offset values and unions are required. While compilation
-     * table aliases will be collected from join and table parts, which will allow their usage in every condition even if
-     * tablePrefix not empty.
+     * Compile select query statement. Table names, distinct flag, columns, joins, where tokens, having
+     * tokens, group by tokens (yeah, it's very big list), order by tokens, limit, offset values and
+     * unions are required. While compilation table aliases will be collected from join and table parts,
+     * which will allow their usage in every condition even if tablePrefix not empty.
      *
      * Attention, limiting and ordering UNIONS will fail in SQL SERVER < 2012.
      *
@@ -53,21 +54,49 @@ class QueryCompiler extends BaseQueryCompiler
      * @return string
      * @throws DBALException
      */
-    public function select(array $from, $distinct, array $columns, array $joins = array(), array $where = array(), array $having = array(),
-                           array $groupBy = array(), array $orderBy = array(), $limit = 0, $offset = 0, array $unions = array())
+    public function select(
+        array $from,
+        $distinct,
+        array $columns,
+        array $joins = array(),
+        array $where = array(),
+        array $having = array(),
+        array $groupBy = array(),
+        array $orderBy = array(),
+        $limit = 0,
+        $offset = 0,
+        array $unions = array()
+    )
     {
         if (!$limit && !$offset || ($this->driver->getServerVersion() >= 12 && $orderBy))
         {
-            return parent::select($from, $distinct, $columns, $joins, $where, $having, $groupBy, $orderBy, $limit, $offset, $unions);
+            return parent::select(
+                $from,
+                $distinct,
+                $columns
+                , $joins,
+                $where,
+                $having,
+                $groupBy,
+                $orderBy,
+                $limit,
+                $offset,
+                $unions
+            );
         }
 
         if ($this->driver->getServerVersion() >= 12)
         {
-            $this->logger()->warning("You can't use query limiting without specifying ORDER BY statement, sql fallback used.");
+            self::logger()->warning(
+                "You can't use query limiting without specifying ORDER BY statement, sql fallback used."
+            );
         }
         else
         {
-            $this->logger()->warning("You are using older version of SQLServer, it has some limitation with query limiting and unions.");
+            self::logger()->warning(
+                "You are using older version of SQLServer, "
+                . "it has some limitation with query limiting and unions."
+            );
         }
 
         if ($orderBy)
@@ -80,16 +109,31 @@ class QueryCompiler extends BaseQueryCompiler
         }
 
         //Will be removed by QueryResult
-        $columns[] = SqlFragment::make("ROW_NUMBER() OVER ($orderBy) AS " . $this->quote(QueryResult::ROW_NUMBER_COLUMN));
+        $columns[] = SqlFragment::make(
+            "ROW_NUMBER() OVER ($orderBy) AS " . $this->quote(QueryResult::ROW_NUMBER_COLUMN)
+        );
 
-        $selection = parent::select($from, $distinct, $columns, $joins, $where, $having, $groupBy, array(), 0, 0, $unions);
+        $selection = parent::select(
+            $from,
+            $distinct,
+            $columns,
+            $joins,
+            $where,
+            $having,
+            $groupBy,
+            array(),
+            0,
+            0,
+            $unions
+        );
 
-        return "SELECT * FROM (\n{$selection}\n) AS [selection_alias] " . $this->limit($limit, $offset, QueryResult::ROW_NUMBER_COLUMN);
+        return "SELECT * FROM (\n{$selection}\n) AS [selection_alias] "
+        . $this->limit($limit, $offset, QueryResult::ROW_NUMBER_COLUMN);
     }
 
     /**
-     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and order are required.
-     * PostgresSQL requires nested query for ordering and limits.
+     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and
+     * order are required. PostgresSQL requires nested query for ordering and limits.
      *
      * @link http://stackoverflow.com/questions/3439110/sql-server-update-a-table-by-using-order-by
      * @param string $table
@@ -100,22 +144,39 @@ class QueryCompiler extends BaseQueryCompiler
      * @return string
      * @throws DBALException
      */
-    public function delete($table, array $joins = array(), array $where = array(), array $orderBy = array(), $limit = 0)
+    public function delete(
+        $table,
+        array $joins = array(),
+        array $where = array(),
+        array $orderBy = array(),
+        $limit = 0
+    )
     {
-        if (!$orderBy && !$limit)
+        if (empty($orderBy) && empty($limit))
         {
             return parent::delete($table, $joins, $where);
         }
 
-        $cte = "WITH cte AS (" . self::select(array($table), false, array('*'), $joins, $where, array(), array(), $orderBy, $limit, 0) . ") ";
+        $cte = "WITH cte AS (" . self::select(
+                array($table),
+                false,
+                array('*'),
+                $joins,
+                $where,
+                array(),
+                array(),
+                $orderBy,
+                $limit,
+                0
+            ) . ") ";
 
         return $cte . self::delete(SqlFragment::make("cte"));
     }
 
     /**
-     * Compile update query statement. Table name, set of values (associated with column names), joins and where tokens,
-     * order by tokens and limit are required. Default query compiler will not compile limit and order by, it has to be
-     * done on driver compiler level.
+     * Compile update query statement. Table name, set of values (associated with column names),
+     * joins and where tokens, order by tokens and limit are required. Default query compiler will
+     * not compile limit and order by, it has to be done on driver compiler level.
      *
      * @link http://stackoverflow.com/questions/3439110/sql-server-update-a-table-by-using-order-by
      * @param string $table
@@ -126,21 +187,40 @@ class QueryCompiler extends BaseQueryCompiler
      * @param int    $limit
      * @return string
      */
-    public function update($table, array $values, array $joins = array(), array $where = array(), array $orderBy = array(), $limit = 0)
+    public function update(
+        $table,
+        array $values,
+        array $joins = array(),
+        array $where = array(),
+        array $orderBy = array(),
+        $limit = 0
+    )
     {
-        if (!$orderBy && !$limit)
+        if (empty($orderBy) && empty($limit))
         {
             return parent::update($table, $values, $joins, $where);
         }
 
-        $cte = "WITH cte AS (" . self::select(array($table), false, array_keys($values), $joins, $where, array(), array(), $orderBy, $limit, 0) . ") ";
+        $cte = "WITH cte AS (" . self::select(
+                array($table),
+                false,
+                array_keys($values),
+                $joins,
+                $where,
+                array(),
+                array(),
+                $orderBy,
+                $limit,
+                0
+            ) . ") ";
 
         return $cte . self::update(SqlFragment::make("cte"), $values);
     }
 
     /**
-     * Render selection (affection) limit and offset. Keywords for LIMIT and OFFSET will be included, attention, this
-     * method will render limit and offset independently which may not be supported by some databases.
+     * Render selection (affection) limit and offset. Keywords for LIMIT and OFFSET will be included,
+     * attention, this method will render limit and offset independently which may not be supported by
+     * some databases.
      *
      * @link http://stackoverflow.com/questions/2135418/equivalent-of-limit-and-offset-for-sql-server
      * @param int    $limit
