@@ -643,7 +643,12 @@ class Validator extends Component
      *                         to false.
      * @return bool|Validator
      */
-    public static function validateData(array $data, array $validates, $return = true, array &$errors = null)
+    public static function validateData(
+        array $data,
+        array $validates,
+        $return = true,
+        array &$errors = null
+    )
     {
         $validator = static::make(compact('data', 'validates'));
 

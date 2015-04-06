@@ -320,7 +320,8 @@ trait JoinTrait
      * @param string $joiner          Boolean joiner (AND|OR).
      * @param array  $parameters      Set of parameters collected from where functions.
      * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $catchParameters If true every found parameter will passed thought addParameter() method.
+     * @param bool   $catchParameters If true every found parameter will passed thought addParameter()
+     *                                method.
      * @return array
      * @throws DBALException
      */

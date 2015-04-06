@@ -12,7 +12,6 @@ use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\Schemas\AbstractIndexSchema;
 use Spiral\Components\DBAL\Schemas\AbstractReferenceSchema;
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
-use Spiral\Helpers\StringHelper;
 
 class TableSchema extends AbstractTableSchema
 {
@@ -31,8 +30,8 @@ class TableSchema extends AbstractTableSchema
     protected $engine = self::ENGINE_INNODB;
 
     /**
-     * Update table engine, due in current version we are not reading ENGINE in database and not allowing engine change
-     * there is no method to retrieve current value.
+     * Update table engine, due in current version we are not reading ENGINE in database and not allowing
+     * engine change there is no method to retrieve current value.
      *
      * @param string $engine
      * @return static
@@ -45,12 +44,13 @@ class TableSchema extends AbstractTableSchema
     }
 
     /**
-     * Driver specific method to load table columns schemas.  Method will not be called if table not exists. To create and
-     * register column schema use internal table method "registerColumn()".
+     * Driver specific method to load table columns schemas.  Method will not be called if table not
+     * exists. To create and register column schema use internal table method "registerColumn()".
      **/
     protected function loadColumns()
     {
-        $query = StringHelper::interpolate("SHOW FULL COLUMNS FROM {table}", array('table' => $this->getName(true)));
+        $query = interpolate("SHOW FULL COLUMNS FROM {table}", array('table' => $this->getName(true)));
+
         foreach ($this->driver->query($query)->bind(1, $columnName) as $column)
         {
             $this->registerColumn($columnName, $column);
@@ -58,13 +58,13 @@ class TableSchema extends AbstractTableSchema
     }
 
     /**
-     * Driver specific method to load table indexes schema(s). Method will not be called if table not exists. To create
-     * and register index schema use internal table method "registerIndex()".
+     * Driver specific method to load table indexes schema(s). Method will not be called if table not
+     * exists. To create and register index schema use internal table method "registerIndex()".
      */
     protected function loadIndexes()
     {
         $indexes = array();
-        $query = StringHelper::interpolate("SHOW INDEXES FROM {table}", array('table' => $this->getName(true)));
+        $query = interpolate("SHOW INDEXES FROM {table}", array('table' => $this->getName(true)));
         foreach ($this->driver->query($query) as $index)
         {
             if ($index['Key_name'] == 'PRIMARY')
@@ -84,22 +84,34 @@ class TableSchema extends AbstractTableSchema
     }
 
     /**
-     * Driver specific method to load table foreign key schema(s). Method will not be called if table not exists. To create
-     * and register reference (foreign key) schema use internal table method "registerReference()".
+     * Driver specific method to load table foreign key schema(s). Method will not be called if table
+     * not exists. To create and register reference (foreign key) schema use internal table method
+     * "registerReference()".
      */
     protected function loadReferences()
     {
-        $query = "SELECT * FROM information_schema.referential_constraints WHERE constraint_schema = ? AND table_name = ?";
-        foreach ($this->driver->query($query, array($this->driver->databaseName(), $this->name)) as $reference)
+        $query = "SELECT * FROM information_schema.referential_constraints "
+            . "WHERE constraint_schema = ? AND table_name = ?";
+        $references = $this->driver->query($query, array($this->driver->databaseName(), $this->name));
+
+        foreach ($references as $reference)
         {
-            $query = "SELECT * FROM information_schema.key_column_usage WHERE constraint_name = ? AND table_schema = ? AND table_name = ?";
-            $column = $this->driver->query($query, array($reference['CONSTRAINT_NAME'], $this->driver->databaseName(), $this->name))->fetch();
+            $query = "SELECT * FROM information_schema.key_column_usage "
+                . "WHERE constraint_name = ? AND table_schema = ? AND table_name = ?";
+
+            $column = $this->driver->query($query, array(
+                $reference['CONSTRAINT_NAME'],
+                $this->driver->databaseName(),
+                $this->name
+            ))->fetch();
+
             $this->registerReference($reference['CONSTRAINT_NAME'], $reference + $column);
         }
     }
 
     /**
-     * Generate table creation statement and execute it (if required). Method should return create table sql query.
+     * Generate table creation statement and execute it (if required). Method should return create
+     * table sql query.
      *
      * @param bool $execute If true generated statement will be automatically executed.
      * @return string
@@ -110,7 +122,7 @@ class TableSchema extends AbstractTableSchema
 
         //Additional table options
         $options = "ENGINE = {engine}";
-        $statement = $statement . ' ' . StringHelper::interpolate($options, array('engine' => $this->engine));
+        $statement = $statement . ' ' . interpolate($options, array('engine' => $this->engine));
 
         //Executing
         $execute && $this->driver->statement($statement);
@@ -135,7 +147,7 @@ class TableSchema extends AbstractTableSchema
      */
     protected function doColumnChange(AbstractColumnSchema $column, AbstractColumnSchema $dbColumn)
     {
-        $query = StringHelper::interpolate("ALTER TABLE {table} CHANGE {column} {statement}", array(
+        $query = interpolate("ALTER TABLE {table} CHANGE {column} {statement}", array(
             'table'     => $this->getName(true),
             'column'    => $dbColumn->getName(true),
             'statement' => $column->sqlStatement()
@@ -162,7 +174,7 @@ class TableSchema extends AbstractTableSchema
      */
     protected function doIndexChange(AbstractIndexSchema $index, AbstractIndexSchema $dbIndex)
     {
-        $query = StringHelper::interpolate("ALTER TABLE {table} DROP INDEX {original}, ADD {statement}", array(
+        $query = interpolate("ALTER TABLE {table} DROP INDEX {original}, ADD {statement}", array(
             'table'     => $this->getName(true),
             'original'  => $dbIndex->getName(true),
             'statement' => $index->sqlStatement(false)
@@ -178,6 +190,8 @@ class TableSchema extends AbstractTableSchema
      */
     protected function doForeignDrop(AbstractReferenceSchema $foreign)
     {
-        $this->driver->statement("ALTER TABLE {$this->getName(true)} DROP FOREIGN KEY {$foreign->getName(true)}");
+        $this->driver->statement(
+            "ALTER TABLE {$this->getName(true)} DROP FOREIGN KEY {$foreign->getName(true)}"
+        );
     }
 }

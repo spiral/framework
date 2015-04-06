@@ -15,7 +15,8 @@ class ReferenceSchema extends AbstractReferenceSchema
     /**
      * Parse schema information provided by parent TableSchema and populate foreign key values.
      *
-     * @param mixed $schema Foreign key information fetched from database by TableSchema. Format depends on database type.
+     * @param mixed $schema Foreign key information fetched from database by TableSchema. Format depends
+     *                      on database type.
      * @return mixed
      */
     protected function resolveSchema($schema)

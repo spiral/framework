@@ -32,7 +32,8 @@ class EnvironmentCommand extends Command
     protected $description = 'Change application environment.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments() method.
+     * Command arguments specified in Symphony format. For more complex definitions redefine
+     * getArguments() method.
      *
      * @var array
      */
@@ -41,7 +42,8 @@ class EnvironmentCommand extends Command
     );
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions() method.
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
      *
      * @var array
      */

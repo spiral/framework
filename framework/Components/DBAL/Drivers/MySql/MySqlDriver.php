@@ -19,8 +19,8 @@ class MySqlDriver extends Driver
     const DRIVER_NAME = 'MySQL';
 
     /**
-     * Class names should be used to create schema instances to describe specified driver table. Schema realizations are
-     * driver specific and allows both schema reading and writing (migrations).
+     * Class names should be used to create schema instances to describe specified driver table. Schema
+     * realizations are driver specific and allows both schema reading and writing (migrations).
      */
     const SCHEMA_TABLE     = 'Spiral\Components\DBAL\Drivers\MySql\TableSchema';
     const SCHEMA_COLUMN    = 'Spiral\Components\DBAL\Drivers\MySql\ColumnSchema';
@@ -33,7 +33,8 @@ class MySqlDriver extends Driver
     const QUERY_COMPILER = 'Spiral\Components\DBAL\Drivers\MySql\QueryCompiler';
 
     /**
-     * Statement should be used for ColumnSchema to indicate that default datetime value should be set to current time.
+     * Statement should be used for ColumnSchema to indicate that default datetime value should be
+     * set to current time.
      *
      * @var string
      */
@@ -55,7 +56,8 @@ class MySqlDriver extends Driver
      *
      * @var string
      */
-    const TABLE_EXISTS_QUERY = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?";
+    const TABLE_EXISTS_QUERY = "SELECT COUNT(*) FROM information_schema.tables
+                                WHERE table_schema = ? AND table_name = ?";
 
     /**
      * Check if linked database has specified table.
@@ -65,7 +67,8 @@ class MySqlDriver extends Driver
      */
     public function hasTable($name)
     {
-        return (bool)$this->query(self::TABLE_EXISTS_QUERY, array($this->databaseName, $name))->fetchColumn();
+        return (bool)$this->query(self::TABLE_EXISTS_QUERY, array($this->databaseName, $name))
+            ->fetchColumn();
     }
 
     /**
