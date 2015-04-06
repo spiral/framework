@@ -135,7 +135,9 @@ class Definition extends Component
      */
     public function getLocation()
     {
-        return $this->file->normalizePath(dirname((new \ReflectionClass($this->class))->getFileName()));
+        return $this->file->normalizePath(dirname(
+            (new \ReflectionClass($this->class))->getFileName()
+        ));
     }
 
     /**
