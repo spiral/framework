@@ -12,22 +12,24 @@ use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\Schemas\AbstractReferenceSchema;
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\DBAL\Schemas\SchemaBuilderException;
-use Spiral\Helpers\StringHelper;
 
 class TableSchema extends AbstractTableSchema
 {
     /**
-     * Driver specific method to load table columns schemas.  Method will not be called if table not exists. To create and
-     * register column schema use internal table method "registerColumn()".
+     * Driver specific method to load table columns schemas.  Method will not be called if table not
+     * exists. To create and register column schema use internal table method "registerColumn()".
      **/
     protected function loadColumns()
     {
-        $tableSQL = $this->driver->query("SELECT sql FROM sqlite_master WHERE type = 'table' and name = ?", array($this->name))->fetchColumn();
+        $tableSQL = $this->driver->query(
+            "SELECT sql FROM sqlite_master WHERE type = 'table' and name = ?",
+            array($this->name)
+        )->fetchColumn();
 
         /**
-         * There is not really many ways to get extra information about column in SQLite, let's parse table schema.
-         * As mention, spiral SQLite schema reader will support fully only tables created by spiral as we expecting every
-         * column definition be on new line.
+         * There is not really many ways to get extra information about column in SQLite, let's parse
+         * table schema. As mention, spiral SQLite schema reader will support fully only tables created
+         * by spiral as we expecting every column definition be on new line.
          */
         $tableStatement = explode("\n", $tableSQL);
 
@@ -47,8 +49,8 @@ class TableSchema extends AbstractTableSchema
     }
 
     /**
-     * Driver specific method to load table indexes schema(s). Method will not be called if table not exists. To create
-     * and register index schema use internal table method "registerIndex()".
+     * Driver specific method to load table indexes schema(s). Method will not be called if table not
+     * exists. To create and register index schema use internal table method "registerIndex()".
      */
     protected function loadIndexes()
     {
@@ -63,22 +65,25 @@ class TableSchema extends AbstractTableSchema
     }
 
     /**
-     * Driver specific method to load table foreign key schema(s). Method will not be called if table not exists. To create
-     * and register reference (foreign key) schema use internal table method "registerReference()".
+     * Driver specific method to load table foreign key schema(s). Method will not be called if table
+     * not exists. To create and register reference (foreign key) schema use internal table method
+     * "registerReference()".
      */
     protected function loadReferences()
     {
-        foreach ($this->driver->query("PRAGMA foreign_key_list({$this->getName(true)})") as $reference)
+        foreach ($this->driver->query("PRAGMA foreign_key_list({$this->getName(true)})") as
+                 $reference)
         {
             $this->registerReference($reference['id'], $reference);
         }
     }
 
     /**
-     * Perform set of atomic operations required to update table schema, such operations will include column adding, removal,
-     * altering; index adding, removing altering; foreign key constraints adding, removing and altering. All operations will
-     * be performed under common transaction, failing one - will rollback others. Attention, rolling back transaction with
-     * schema modifications can be not implemented in some databases.
+     * Perform set of atomic operations required to update table schema, such operations will include
+     * column adding, removal, altering; index adding, removing altering; foreign key constraints adding,
+     * removing and altering. All operations will be performed under common transaction, failing
+     * one - will rollback others. Attention, rolling back transaction with schema modifications can
+     * be not implemented in some databases.
      *
      * We will have to rebuild and copy database in SQLite as it has some limitations.
      *
@@ -89,7 +94,9 @@ class TableSchema extends AbstractTableSchema
     {
         if ($this->primaryKeys != $this->dbPrimaryKeys)
         {
-            throw new SchemaBuilderException("Primary keys can not be changed for already exists table.");
+            throw new SchemaBuilderException(
+                "Primary keys can not be changed for already exists table."
+            );
         }
 
         $this->driver->beginTransaction();
@@ -109,7 +116,8 @@ class TableSchema extends AbstractTableSchema
 
                     if (!$schema)
                     {
-                        $this->logger()->info("Dropping index [{statement}] from table {table}.", array(
+                        self::logger()->info(
+                            "Dropping index [{statement}] from table {table}.", array(
                             'statement' => $dbIndex->sqlStatement(true),
                             'table'     => $this->getName(true)
                         ));
@@ -120,7 +128,8 @@ class TableSchema extends AbstractTableSchema
 
                     if (!$dbIndex)
                     {
-                        $this->logger()->info("Adding index [{statement}] into table {table}.", array(
+                        self::logger()->info(
+                            "Adding index [{statement}] into table {table}.", array(
                             'statement' => $schema->sqlStatement(false),
                             'table'     => $this->getName(true)
                         ));
@@ -130,7 +139,8 @@ class TableSchema extends AbstractTableSchema
                     }
 
                     //Altering
-                    $this->logger()->info("Altering index [{statement}] to [{new}] in table {table}.", array(
+                    self::logger()->info(
+                        "Altering index [{statement}] to [{new}] in table {table}.", array(
                         'statement' => $dbIndex->sqlStatement(false),
                         'new'       => $schema->sqlStatement(false),
                         'table'     => $this->getName(true)
@@ -141,7 +151,8 @@ class TableSchema extends AbstractTableSchema
             }
             else
             {
-                $this->logger()->info("Rebuilding table {table} to apply required modifications.", array(
+                self::logger()->info(
+                    "Rebuilding table {table} to apply required modifications.", array(
                     'table' => $this->getName(true)
                 ));
 
@@ -167,20 +178,27 @@ class TableSchema extends AbstractTableSchema
                     }
                 }
 
-                $this->logger()->info("Migrating table data from {source} to {table} with columns mappings ({columns}) => ({target}).", array(
-                    'source'  => $this->driver->identifier($tableName),
-                    'table'   => $this->getName(true),
-                    'columns' => join(', ', $mapping),
-                    'target'  => join(', ', array_keys($mapping))
-                ));
+                self::logger()->info(
+                    "Migrating table data from {source} to {table} "
+                    . "with columns mappings ({columns}) => ({target}).",
+                    array(
+                        'source'  => $this->driver->identifier($tableName),
+                        'table'   => $this->getName(true),
+                        'columns' => join(', ', $mapping),
+                        'target'  => join(', ', array_keys($mapping))
+                    )
+                );
 
                 //http://stackoverflow.com/questions/4007014/alter-column-in-sqlite
-                $query = StringHelper::interpolate("INSERT INTO {table} ({target}) SELECT {columns} FROM {source}", array(
-                    'source'  => $this->driver->identifier($tableName),
-                    'table'   => $this->getName(true),
-                    'columns' => join(', ', $mapping),
-                    'target'  => join(', ', array_keys($mapping))
-                ));
+                $query = interpolate(
+                    "INSERT INTO {table} ({target}) SELECT {columns} FROM {source}",
+                    array(
+                        'source'  => $this->driver->identifier($tableName),
+                        'table'   => $this->getName(true),
+                        'columns' => join(', ', $mapping),
+                        'target'  => join(', ', array_keys($mapping))
+                    )
+                );
 
                 $this->driver->statement($query);
 
@@ -234,7 +252,10 @@ class TableSchema extends AbstractTableSchema
      * @param AbstractColumnSchema $column
      * @param AbstractColumnSchema $dbColumn
      */
-    protected function doColumnChange(AbstractColumnSchema $column, AbstractColumnSchema $dbColumn)
+    protected function doColumnChange(
+        AbstractColumnSchema $column,
+        AbstractColumnSchema $dbColumn
+    )
     {
         //Not supported
     }
@@ -265,7 +286,10 @@ class TableSchema extends AbstractTableSchema
      * @param AbstractReferenceSchema $foreign
      * @param AbstractReferenceSchema $dbForeign
      */
-    protected function doForeignChange(AbstractReferenceSchema $foreign, AbstractReferenceSchema $dbForeign)
+    protected function doForeignChange(
+        AbstractReferenceSchema $foreign,
+        AbstractReferenceSchema $dbForeign
+    )
     {
         //Not supported
     }
