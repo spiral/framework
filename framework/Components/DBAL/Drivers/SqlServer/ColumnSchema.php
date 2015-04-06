@@ -9,7 +9,6 @@
 namespace Spiral\Components\DBAL\Drivers\SqlServer;
 
 use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
-use Spiral\Helpers\StringHelper;
 
 class ColumnSchema extends AbstractColumnSchema
 {
@@ -188,19 +187,30 @@ class ColumnSchema extends AbstractColumnSchema
         //Potential enum
         if ($this->type == 'varchar' && $this->size)
         {
-            $query = "SELECT object_definition(o.object_id) AS [definition], OBJECT_NAME(o.OBJECT_ID) AS [name] FROM sys.objects AS o
-            join sys.sysconstraints AS [c] on o.object_id = [c].constid
-            WHERE type_desc = 'CHECK_CONSTRAINT' AND parent_object_id = ? AND [c].colid = ?";
+            $query = "SELECT object_definition(o.object_id) AS [definition],
+                             OBJECT_NAME(o.OBJECT_ID) AS [name]
+                      FROM sys.objects AS o
+                      JOIN sys.sysconstraints AS [c]
+                        ON o.object_id = [c].constid
+                      WHERE type_desc = 'CHECK_CONSTRAINT' AND parent_object_id = ? AND [c].colid = ?";
 
-            foreach ($tableDriver->query($query, array($schema['object_id'], $schema['column_id']))
-                     as $checkConstraint)
+            $constraints = $tableDriver->query($query, array(
+                $schema['object_id'],
+                $schema['column_id']
+            ));
+
+            foreach ($constraints as $checkConstraint)
             {
                 $this->enumConstraint = $checkConstraint['name'];
 
                 $name = preg_quote($this->getName(true));
 
                 //We made some assumptions here...
-                if (preg_match_all('/' . $name . '=[\']?([^\']+)[\']?/i', $checkConstraint['definition'], $matches))
+                if (preg_match_all(
+                    '/' . $name . '=[\']?([^\']+)[\']?/i',
+                    $checkConstraint['definition'],
+                    $matches
+                ))
                 {
                     $this->enumValues = $matches[1];
                     sort($this->enumValues);
@@ -210,9 +220,10 @@ class ColumnSchema extends AbstractColumnSchema
     }
 
     /**
-     * Get abstract type name, this method will map one of database types to limited set of ColumnSchema abstract types.
-     * Attention, this method is not used for schema comparasions (database type used), it's only for decorative purposes.
-     * If schema can't resolve type - "unknown" will be returned (by default mapped to php type string).
+     * Get abstract type name, this method will map one of database types to limited set of ColumnSchema
+     * abstract types. Attention, this method is not used for schema comparasions (database type used),
+     * it's only for decorative purposes. If schema can't resolve type - "unknown" will be returned
+     * (by default mapped to php type string).
      *
      * @return string
      */
@@ -227,9 +238,9 @@ class ColumnSchema extends AbstractColumnSchema
     }
 
     /**
-     * Give column enum type with specified set of allowed values, values can be provided as array or as multiple comma
-     * separate parameters. Attention, not all databases support enum as type, in this cases enum will be emulated via
-     * column constrain. Enum values are always string type.
+     * Give column enum type with specified set of allowed values, values can be provided as array
+     * or as multiple comma separate parameters. Attention, not all databases support enum as type,
+     * in this cases enum will be emulated via column constrain. Enum values are always string type.
      *
      * Examples:
      * $table->status->enum(array('active', 'disabled'));
@@ -268,10 +279,13 @@ class ColumnSchema extends AbstractColumnSchema
                 return $this->table->getName() . '_' . $this->getName() . '_enum';
             }
 
-            $this->enumConstraint = $this->table->getName() . '_' . $this->getName() . '_enum_' . uniqid();
+            $this->enumConstraint = $this->table->getName() . '_'
+                . $this->getName() . '_enum_' . uniqid();
         }
 
-        return $quote ? $this->table->getDriver()->identifier($this->enumConstraint) : $this->enumConstraint;
+        return $quote
+            ? $this->table->getDriver()->identifier($this->enumConstraint)
+            : $this->enumConstraint;
     }
 
     /**
@@ -339,7 +353,8 @@ class ColumnSchema extends AbstractColumnSchema
 
         $statement = $this->sqlStatement(true);
 
-        return "$statement CONSTRAINT {$this->getEnumConstraint(true, true)} CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
+        return "$statement CONSTRAINT {$this->getEnumConstraint(true, true)} "
+        . "CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
     }
 
     /**
@@ -365,7 +380,8 @@ class ColumnSchema extends AbstractColumnSchema
     }
 
     /**
-     * Generate set of altering operations should be applied to column to change it's type, size, default value or null flag.
+     * Generate set of altering operations should be applied to column to change it's type, size,
+     * default value or null flag.
      *
      * @param AbstractColumnSchema $original
      * @return array
@@ -374,8 +390,21 @@ class ColumnSchema extends AbstractColumnSchema
     {
         $operations = array();
 
-        $typeDefinition = array($this->type, $this->size, $this->precision, $this->scale, $this->nullable);
-        $originalType = array($original->type, $original->size, $original->precision, $original->scale, $original->nullable);
+        $typeDefinition = array(
+            $this->type,
+            $this->size,
+            $this->precision,
+            $this->scale,
+            $this->nullable
+        );
+
+        $originalType = array(
+            $original->type,
+            $original->size,
+            $original->precision,
+            $original->scale,
+            $original->nullable
+        );
 
         if ($typeDefinition != $originalType)
         {
@@ -414,14 +443,18 @@ class ColumnSchema extends AbstractColumnSchema
             if (!$this->defaultConstraint)
             {
                 //Making new name
-                $this->defaultConstraint = $this->table->getName() . '_' . $this->getName() . '_default_' . uniqid();
+                $this->defaultConstraint = $this->table->getName() . '_'
+                    . $this->getName() . '_default_' . uniqid();
             }
 
-            $operations[] = StringHelper::interpolate("ADD CONSTRAINT {constraint} DEFAULT {default} FOR {column}", array(
-                'constraint' => $this->table->getDriver()->identifier($this->defaultConstraint),
-                'column'     => $this->getName(true),
-                'default'    => $this->prepareDefault()
-            ));
+            $operations[] = interpolate(
+                "ADD CONSTRAINT {constraint} DEFAULT {default} FOR {column}",
+                array(
+                    'constraint' => $this->table->getDriver()->identifier($this->defaultConstraint),
+                    'column'     => $this->getName(true),
+                    'default'    => $this->prepareDefault()
+                )
+            );
         }
 
         //Constraint should be already removed it this moment (see doColumnChange in TableSchema)
@@ -433,7 +466,8 @@ class ColumnSchema extends AbstractColumnSchema
                 $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);
             }
 
-            $operations[] = "ADD CONSTRAINT {$this->getEnumConstraint(true)} CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
+            $operations[] = "ADD CONSTRAINT {$this->getEnumConstraint(true)} "
+                . "CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
         }
 
         return $operations;

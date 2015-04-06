@@ -11,7 +11,6 @@ namespace Spiral\Components\DBAL\Drivers\SqlServer;
 use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\Schemas\AbstractIndexSchema;
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
-use spiral\helpers\StringHelper;
 
 class TableSchema extends AbstractTableSchema
 {
@@ -21,13 +20,14 @@ class TableSchema extends AbstractTableSchema
     const RENAME_STATEMENT = "sp_rename @objname = '{table}', @newname = '{name}'";
 
     /**
-     * Driver specific method to load table columns schemas.  Method will not be called if table not exists. To create and
-     * register column schema use internal table method "registerColumn()".
+     * Driver specific method to load table columns schemas.  Method will not be called if table not
+     * exists. To create and register column schema use internal table method "registerColumn()".
      **/
     protected function loadColumns()
     {
-        $query = 'SELECT * FROM information_schema.columns INNER JOIN sys.columns AS sysColumns ON (
-                  object_name(object_id) = table_name AND sysColumns.name = COLUMN_NAME
+        $query = 'SELECT * FROM information_schema.columns INNER JOIN sys.columns AS sysColumns
+                    ON (
+                        object_name(object_id) = table_name AND sysColumns.name = COLUMN_NAME
                   ) WHERE table_name = ?';
         foreach ($this->driver->query($query, array($this->name)) as $column)
         {
@@ -36,18 +36,22 @@ class TableSchema extends AbstractTableSchema
     }
 
     /**
-     * Driver specific method to load table indexes schema(s). Method will not be called if table not exists. To create
-     * and register index schema use internal table method "registerIndex()".
+     * Driver specific method to load table indexes schema(s). Method will not be called if table not
+     * exists. To create and register index schema use internal table method "registerIndex()".
      *
      * @link http://stackoverflow.com/questions/765867/list-of-all-index-index-columns-in-sql-server-db
      */
     protected function loadIndexes()
     {
-        $query = "SELECT indexes.name AS indexName, cl.name AS columnName, is_primary_key AS isPrimary, is_unique AS isUnique
+        $query = "SELECT indexes.name AS indexName, cl.name AS columnName,
+                  is_primary_key AS isPrimary, is_unique AS isUnique
                   FROM sys.indexes AS indexes
-                  INNER JOIN sys.index_columns as columns ON  indexes.object_id = columns.object_id AND indexes.index_id = columns.index_id
-                  INNER JOIN sys.columns AS cl ON columns.object_id = cl.object_id AND columns.column_id = cl.column_id
-                  INNER JOIN sys.tables AS t ON indexes.object_id = t.object_id
+                  INNER JOIN sys.index_columns as columns
+                    ON indexes.object_id = columns.object_id AND indexes.index_id = columns.index_id
+                  INNER JOIN sys.columns AS cl
+                    ON columns.object_id = cl.object_id AND columns.column_id = cl.column_id
+                  INNER JOIN sys.tables AS t
+                    ON indexes.object_id = t.object_id
                   WHERE t.name = ?
                   ORDER BY indexes.name, indexes.index_id, columns.index_column_id";
 
@@ -71,8 +75,9 @@ class TableSchema extends AbstractTableSchema
     }
 
     /**
-     * Driver specific method to load table foreign key schema(s). Method will not be called if table not exists. To create
-     * and register reference (foreign key) schema use internal table method "registerReference()".
+     * Driver specific method to load table foreign key schema(s). Method will not be called if table
+     * not exists. To create and register reference (foreign key) schema use internal table method
+     * "registerReference()".
      */
     protected function loadReferences()
     {
@@ -115,7 +120,8 @@ class TableSchema extends AbstractTableSchema
             $column->setName($dbColumn->getName());
         }
 
-        //In SQLServer we have to drop ALL related indexes and foreign keys while applying type change... yeah...
+        //In SQLServer we have to drop ALL related indexes and foreign keys while
+        //applying type change... yeah...
         $indexesBackup = array();
         $foreignBackup = array();
         foreach ($this->indexes as $index)
@@ -144,7 +150,7 @@ class TableSchema extends AbstractTableSchema
 
         foreach ($column->alterOperations($dbColumn) as $operation)
         {
-            $query = StringHelper::interpolate('ALTER TABLE {table} {operation}', array(
+            $query = interpolate('ALTER TABLE {table} {operation}', array(
                 'table'     => $this->getName(true),
                 'operation' => $operation
             ));

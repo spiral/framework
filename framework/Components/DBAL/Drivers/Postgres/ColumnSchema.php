@@ -337,7 +337,8 @@ class ColumnSchema extends AbstractColumnSchema
                 return $this->table->getName() . '_' . $this->getName() . '_enum';
             }
 
-            $this->enumConstraint = $this->table->getName() . '_' . $this->getName() . '_enum_' . uniqid();
+            $this->enumConstraint = $this->table->getName() . '_'
+                . $this->getName() . '_enum_' . uniqid();
         }
 
         return $quote

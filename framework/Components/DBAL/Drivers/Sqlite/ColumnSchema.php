@@ -13,10 +13,10 @@ use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 class ColumnSchema extends AbstractColumnSchema
 {
     /**
-     * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision
-     * scale, unsigned flag and etc. Every declared type can be assigned using ->type() method, however to pass custom
-     * type parameters, methods has to be declared in database specific ColumnSchema. Type identifier not necessary
-     * should be real type name.
+     * Direct mapping from base abstract type to database internal type with specified data options,
+     * such as size, precision scale, unsigned flag and etc. Every declared type can be assigned using
+     * ->type() method, however to pass custom type parameters, methods has to be declared in database
+     * specific ColumnSchema. Type identifier not necessary should be real type name.
      *
      * Example:
      * integer => array('type' => 'int', 'size' => 1),
@@ -36,7 +36,8 @@ class ColumnSchema extends AbstractColumnSchema
         //Logical types
         'boolean'     => 'boolean',
 
-        //Integer types (size can always be changed with size method), longInteger has method alias bigInteger
+        //Integer types (size can always be changed with size method), longInteger has method alias
+        //bigInteger
         'integer'     => 'integer',
         'tinyInteger' => 'tinyint',
         'bigInteger'  => 'bigint',
@@ -72,8 +73,9 @@ class ColumnSchema extends AbstractColumnSchema
     );
 
     /**
-     * Driver specific reverse mapping, this mapping should link database type to one of standard internal types. Not
-     * resolved types will be marked as "unknown" which will map them as php type string.
+     * Driver specific reverse mapping, this mapping should link database type to one of standard
+     * internal types. Not resolved types will be marked as "unknown" which will map them as php type
+     * string.
      *
      * Attention, this mapping is valid only for tables created by spiral.
      *
@@ -108,7 +110,8 @@ class ColumnSchema extends AbstractColumnSchema
     /**
      * Parse schema information provided by parent TableSchema and populate column values.
      *
-     * @param mixed $schema Column information fetched from database by TableSchema. Format depends on database type.
+     * @param mixed $schema Column information fetched from database by TableSchema. Format depends
+     *                      on database type.
      * @return mixed
      */
     protected function resolveSchema($schema)
@@ -143,7 +146,11 @@ class ColumnSchema extends AbstractColumnSchema
             $name = $this->getName(true);
             foreach ($schema['tableStatement'] as $column)
             {
-                if (preg_match("/$name +enum.*?CHECK *\\($name in \\((.*?)\\)\\)/i", trim($column), $matches))
+                if (preg_match(
+                    "/$name +enum.*?CHECK *\\($name in \\((.*?)\\)\\)/i",
+                    trim($column),
+                    $matches
+                ))
                 {
                     $enumValues = explode(',', $matches[1]);
                     foreach ($enumValues as &$value)

@@ -19,8 +19,8 @@ class SqlServerDriver extends Driver
     const DRIVER_NAME = 'SQLServer';
 
     /**
-     * Class names should be used to create schema instances to describe specified driver table. Schema realizations are
-     * driver specific and allows both schema reading and writing (migrations).
+     * Class names should be used to create schema instances to describe specified driver table.
+     * Schema realizations are driver specific and allows both schema reading and writing (migrations).
      */
     const SCHEMA_TABLE     = 'Spiral\Components\DBAL\Drivers\SqlServer\TableSchema';
     const SCHEMA_COLUMN    = 'Spiral\Components\DBAL\Drivers\SqlServer\ColumnSchema';
@@ -45,25 +45,29 @@ class SqlServerDriver extends Driver
     const DATETIME = 'Y-m-d H:i:s';
 
     /**
-     * Statement should be used for ColumnSchema to indicate that default datetime value should be set to current time.
+     * Statement should be used for ColumnSchema to indicate that default datetime value should be
+     * set to current time.
      *
      * @var string
      */
     const TIMESTAMP_NOW = 'getdate()';
 
     /**
-     * SQL query to fetch table names from database. Declared as constant only because i love well organized things.
+     * SQL query to fetch table names from database. Declared as constant only because i love well
+     * organized things.
      *
      * @var string
      */
-    const FETCH_TABLES_QUERY = "SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE'";
+    const FETCH_TABLES_QUERY = "SELECT table_name FROM information_schema.tables
+                                WHERE table_type = 'BASE TABLE'";
 
     /**
      * Query to check table existence.
      *
      * @var string
      */
-    const TABLE_EXISTS_QUERY = "SELECT COUNT(*) FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_name = ?";
+    const TABLE_EXISTS_QUERY = "SELECT COUNT(*) FROM information_schema.tables
+                                WHERE table_type = 'BASE TABLE' AND table_name = ?";
 
     /**
      * Default driver PDO options set, this keys will be merged with data provided by DBAL configuration.
