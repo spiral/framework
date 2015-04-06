@@ -26,9 +26,10 @@ trait LoggerTrait
     }
 
     /**
-     * Logger instance which is currently attached to component implementation, can be redefined using setLogger() method.
-     * LoggerInterface instance will be created on demand and depends on "logger" binding in spiral core. Every new
-     * LoggerInterface will receive "name" argument which is equal to getAlias() method result and declares logging channel.
+     * Logger instance which is currently attached to component implementation, can be redefined
+     * using setLogger() method. LoggerInterface instance will be created on demand and depends on
+     * "logger" binding in spiral core. Every new LoggerInterface will receive "name" argument which
+     * is equal to getAlias() method result and declares logging channel.
      *
      * If no "logger" binding presented, default logger will be used (performance reasons).
      *

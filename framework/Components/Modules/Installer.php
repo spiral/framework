@@ -235,7 +235,11 @@ class Installer extends Component
      * @param int         $mode        File mode, use File::RUNTIME for publicly accessible files.
      * @return static
      */
-    public function registerDirectory($destination = null, $directory = null, $mode = FileManager::READONLY)
+    public function registerDirectory(
+        $destination = null,
+        $directory = null,
+        $mode = FileManager::READONLY
+    )
     {
         if (!empty($directory))
         {
@@ -244,7 +248,12 @@ class Installer extends Component
 
         if ($destination != '' && $destination != '/')
         {
-            $this->files[$destination] = array('source' => null, 'md5' => null, 'size' => null, 'mode' => $mode);
+            $this->files[$destination] = array(
+                'source' => null,
+                'md5' => null,
+                'size' => null,
+                'mode' => $mode
+            );
         }
 
         if (!empty($directory))

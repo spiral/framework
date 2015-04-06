@@ -269,9 +269,9 @@ class Request extends PsrRequest implements ServerRequestInterface
      *
      * Retrieves the deserialized query string arguments, if any.
      *
-     * Note: the query params might not be in sync with the URL or server params. If you need to ensure
-     * you are only getting the original values, you may need to parse the composed URL or the `QUERY_STRING`
-     * composed in the server params.
+     * Note: the query params might not be in sync with the URL or server params. If you need to
+     * ensure you are only getting the original values, you may need to parse the composed URL or the
+     * `QUERY_STRING` composed in the server params.
      *
      * @return array
      */

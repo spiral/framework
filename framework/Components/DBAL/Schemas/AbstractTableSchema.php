@@ -1186,7 +1186,10 @@ abstract class AbstractTableSchema extends Component
      * @param AbstractColumnSchema $column
      * @param AbstractColumnSchema $dbColumn
      */
-    abstract protected function doColumnChange(AbstractColumnSchema $column, AbstractColumnSchema $dbColumn);
+    abstract protected function doColumnChange(
+        AbstractColumnSchema $column,
+        AbstractColumnSchema $dbColumn
+    );
 
     /**
      * Driver specific index adding command.
@@ -1258,7 +1261,10 @@ abstract class AbstractTableSchema extends Component
      * @param AbstractReferenceSchema $foreign
      * @param AbstractReferenceSchema $dbForeign
      */
-    protected function doForeignChange(AbstractReferenceSchema $foreign, AbstractReferenceSchema $dbForeign)
+    protected function doForeignChange(
+        AbstractReferenceSchema $foreign,
+        AbstractReferenceSchema $dbForeign
+    )
     {
         $this->doForeignDrop($dbForeign);
         $this->doForeignAdd($foreign);

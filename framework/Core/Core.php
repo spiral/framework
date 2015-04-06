@@ -15,27 +15,27 @@ use Spiral\Components;
 use Spiral\Components\Debug\Snapshot;
 
 /**
- * @property Components\Http\HttpDispatcher               $http
- * @property Components\Console\ConsoleDispatcher         $console
- * @property Loader                                       $loader
- * @property Components\Modules\ModuleManager             $modules
- * @property Components\Files\FileManager                 $file
- * @property Components\Debug\Debugger                    $debug
- * @property Components\Tokenizer\Tokenizer               $tokenizer
- * @property Components\Cache\CacheManager                $cache
- * @property Components\I18n\Translator           $i18n
- * @property Components\View\ViewManager                  $view
- * @property Components\Redis\RedisManager                $redis
- * @property Components\Encrypter\Encrypter               $encrypter
- * @property Components\Image\ImageManager                $image
- * @property Components\Storage\StorageManager            $storage
- * @property Components\DBAL\DatabaseManager              $dbal
- * @property Components\ODM\ODM                           $odm
- * @property Components\ORM\ORM                           $orm
+ * @property Components\Http\HttpDispatcher                 $http
+ * @property Components\Console\ConsoleDispatcher           $console
+ * @property Loader                                         $loader
+ * @property Components\Modules\ModuleManager               $modules
+ * @property Components\Files\FileManager                   $file
+ * @property Components\Debug\Debugger                      $debug
+ * @property Components\Tokenizer\Tokenizer                 $tokenizer
+ * @property Components\Cache\CacheManager                  $cache
+ * @property Components\I18n\Translator                     $i18n
+ * @property Components\View\ViewManager                    $view
+ * @property Components\Redis\RedisManager                  $redis
+ * @property Components\Encrypter\Encrypter                 $encrypter
+ * @property Components\Image\ImageManager                  $image
+ * @property Components\Storage\StorageManager              $storage
+ * @property Components\DBAL\DatabaseManager                $dbal
+ * @property Components\ODM\ODM                             $odm
+ * @property Components\ORM\ORM                             $orm
  *
- * @property Components\Http\Request                      $request
+ * @property Components\Http\Request                        $request
  * @property Components\Http\Cookies\CookieManager          $cookies
- * @property Components\Session\SessionStore              $session
+ * @property Components\Session\SessionStore                $session
  */
 class Core extends Container implements ConfigLoaderInterface
 {
@@ -657,6 +657,7 @@ class Core extends Container implements ConfigLoaderInterface
             return rtrim($directory, '/') . '/' . $filename . static::RUNTIME_EXTENSION;
         }
 
-        return self::$directories['cache'] . "/$filename-{$this->applicationID}" . static::RUNTIME_EXTENSION;
+        return self::$directories['cache']
+        . "/$filename-{$this->applicationID}" . static::RUNTIME_EXTENSION;
     }
 }

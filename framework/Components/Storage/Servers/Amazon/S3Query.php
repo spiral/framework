@@ -42,9 +42,9 @@ class S3Query extends CurlQuery
     protected $commands = array();
 
     /**
-     * New rest\Query class, can be used to perform various requests to external api and websites, Query class can be
-     * extended to support additional syntax, response types or define custom behaviour. Https requests can only be made if
-     * they are supported by server environment.
+     * New rest\Query class, can be used to perform various requests to external api and websites,
+     * Query class can be extended to support additional syntax, response types or define custom
+     * behaviour. Https requests can only be made if they are supported by server environment.
      *
      * All requests will be made using CURL extension.
      *
@@ -67,7 +67,10 @@ class S3Query extends CurlQuery
         );
 
         //Full Query URL
-        parent::__construct(($options['secured'] ? 'https://' : 'http://') . $options['server'] . $this->objectURL, $method);
+        parent::__construct(
+            ($options['secured'] ? 'https://' : 'http://') . $options['server'] . $this->objectURL,
+            $method
+        );
     }
 
     /**
@@ -115,18 +118,23 @@ class S3Query extends CurlQuery
 
         $signature[] = $this->objectURL;
 
-        return base64_encode(hash_hmac('sha1', join("\n", $signature), $this->options['secretKey'], true));
+        return base64_encode(
+            hash_hmac('sha1', join("\n", $signature), $this->options['secretKey'], true)
+        );
     }
 
     /**
-     * Generate list of headers to send to CURL request, can be extended to perform additional headers logic, for example
-     * signatures or dynamic timestamps.
+     * Generate list of headers to send to CURL request, can be extended to perform additional headers
+     * logic, for example signatures or dynamic timestamps.
      *
      * @return array
      */
     protected function buildHeaders()
     {
-        $result = array('Authorization: AWS ' . $this->options['accessKey'] . ':' . $this->buildSignature());
+        $result = array(
+            'Authorization: AWS ' . $this->options['accessKey'] . ':' . $this->buildSignature()
+        );
+
         $result += parent::buildHeaders();
 
         return $result;

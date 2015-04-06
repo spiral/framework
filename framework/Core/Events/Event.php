@@ -39,8 +39,8 @@ class Event
     protected $stopped = false;
 
     /**
-     * Event object created automatically via raise() method of EventDispatcher and passed to all handlers listening for
-     * this event name.
+     * Event object created automatically via raise() method of EventDispatcher and passed to all
+     * handlers listening for this event name.
      *
      * @param string $name
      * @param mixed  $context

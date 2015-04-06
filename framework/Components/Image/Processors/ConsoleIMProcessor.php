@@ -250,7 +250,16 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
      * @param int    $style     Stroke style, solid and dotted styles supported by default.
      * @return static
      */
-    public function rectangle($x1, $y1, $x2, $y2, $fillColor, $color, $width = 1, $style = ImageObject::LINE_SOLID)
+    public function rectangle(
+        $x1,
+        $y1,
+        $x2,
+        $y2,
+        $fillColor,
+        $color,
+        $width = 1,
+        $style = ImageObject::LINE_SOLID
+    )
     {
         $lineStyle = '';
         if ($style == ImageObject::LINE_DOTTED)

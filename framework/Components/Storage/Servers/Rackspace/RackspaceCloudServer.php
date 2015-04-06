@@ -39,9 +39,10 @@ class RackspaceCloudServer implements ServerInterface
     );
 
     /**
-     * Current connection credentials. If cache options set to true in server options credentials will be stored between
-     * sessions. Authentication tokens are typically valid for 24 hours. Applications should be designed to re-authenticate
-     * after receiving a 401 (Unauthorized) response from a service endpoint.
+     * Current connection credentials. If cache options set to true in server options credentials will
+     * be stored between sessions. Authentication tokens are typically valid for 24 hours. Applications
+     * should be designed to re-authenticate after receiving a 401 (Unauthorized) response from a
+     * service endpoint.
      *
      * @var array
      */
@@ -62,16 +63,21 @@ class RackspaceCloudServer implements ServerInterface
     protected $cache = null;
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based. Every adapter should
-     * support basic set of low-level operations (create, move, copy and etc). Adapter instance called server, one adapter
-     * can be used for multiple servers.
+     * Every server represent one virtual storage which can be either local, remove or cloud based.
+     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Adapter instance called server, one adapter can be used for multiple servers.
      *
      * @param array          $options Storage connection options.
      * @param StorageManager $storage StorageManager component.
      * @param FileManager    $file    FileManager component.
      * @param CacheManager   $cache   CacheManager to remember connection credentials.
      */
-    public function __construct(array $options, StorageManager $storage, FileManager $file, CacheManager $cache = null)
+    public function __construct(
+        array $options,
+        StorageManager $storage,
+        FileManager $file,
+        CacheManager $cache = null
+    )
     {
         $this->options = $options + $this->options;
         $this->storage = $storage;
@@ -81,12 +87,20 @@ class RackspaceCloudServer implements ServerInterface
 
         if ($this->options['cache'])
         {
-            if (!$this->credentials = $this->cache->get($this->options['username'] . '@rackspace-credentials'))
+            $this->credentials = $this->cache->get(
+                $this->options['username'] . '@rackspace-credentials'
+            );
+
+            if (empty($this->credentials))
             {
                 $this->credentials = array();
             }
 
-            if (!$this->regions = $this->cache->get($this->options['username'] . '@rackspace-regions'))
+            $this->regions = $this->cache->get(
+                $this->options['username'] . '@rackspace-regions'
+            );
+
+            if (empty($this->regions))
             {
                 $this->regions = array();
             }
@@ -94,9 +108,9 @@ class RackspaceCloudServer implements ServerInterface
     }
 
     /**
-     * Connect rackspace to cloud, fetch credentials (Authentication tokens) and regions. Authentication tokens are typically
-     * valid for 24 hours. Applications should be designed to re-authenticate after receiving a 401 (Unauthorized) response
-     * from a service endpoint.
+     * Connect rackspace to cloud, fetch credentials (Authentication tokens) and regions. Authentication
+     * tokens are typically valid for 24 hours. Applications should be designed to re-authenticate after
+     * receiving a 401 (Unauthorized) response from a service endpoint.
      *
      * @param bool $reset Request new credentials ignoring currently existed values.
      * @return bool
@@ -108,7 +122,11 @@ class RackspaceCloudServer implements ServerInterface
             return true;
         }
 
-        $query = RackspaceQuery::make(array('options' => $this->options, 'URL' => $this->options['authServer'], 'method' => 'POST'));
+        $query = RackspaceQuery::make(array(
+            'options' => $this->options,
+            'URL'     => $this->options['authServer'],
+            'method'  => 'POST'
+        ));
 
         $result = $query->setRawPOST(json_encode(array(
             'auth' => array('RAX-KSKEY:apiKeyCredentials' => array(
@@ -141,8 +159,17 @@ class RackspaceCloudServer implements ServerInterface
 
             if ($this->options['cache'])
             {
-                $this->cache->set($this->options['username'] . '@rackspace-credentials', $this->credentials, 86400);
-                $this->cache->set($this->options['username'] . '@rackspace-regions', $this->regions, 86400);
+                $this->cache->set(
+                    $this->options['username'] . '@rackspace-credentials',
+                    $this->credentials,
+                    86400
+                );
+
+                $this->cache->set(
+                    $this->options['username'] . '@rackspace-regions',
+                    $this->regions,
+                    86400
+                );
             }
 
             return true;
@@ -161,13 +188,18 @@ class RackspaceCloudServer implements ServerInterface
      */
     protected function query(StorageContainer $container, $name, $method = 'HEAD')
     {
+        $url = $this->regionURL($container->options['region']);
+        $url .= '/' . $container->options['container'] . '/' . rawurlencode($name);
+
         $query = RackspaceQuery::make(array(
             'options' => $this->options,
-            'URL'     => $this->regionURL($container->options['region']) . '/' . $container->options['container'] . '/' . rawurlencode($name),
+            'URL'     => $url,
             'method'  => $method
         ));
 
-        return $query->setHeader('X-Auth-Token', $this->credentials['x-auth-token'])->setHeader('Date', gmdate('D, d M Y H:i:s T'));
+        return $query
+            ->setHeader('X-Auth-Token', $this->credentials['x-auth-token'])
+            ->setHeader('Date', gmdate('D, d M Y H:i:s T'));
     }
 
     /**
@@ -230,8 +262,8 @@ class RackspaceCloudServer implements ServerInterface
     }
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will not available using
-     * old filename.
+     * Create new storage object using given filename. File will be replaced to new location and will
+     * not available using old filename.
      *
      * @param string           $filename  Local filename to use for creation.
      * @param StorageContainer $container Container instance.
@@ -273,9 +305,10 @@ class RackspaceCloudServer implements ServerInterface
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location, adapter should download
-     * file to temporary file and return it's filename. All object stored in temporary files should be registered in
-     * File::$removeFiles, to be removed after script ends to clean used hard drive space.
+     * Allocate local filename for remove storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. All object stored in
+     * temporary files should be registered in File::$removeFiles, to be removed after script ends
+     * to clean used hard drive space.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -301,8 +334,8 @@ class RackspaceCloudServer implements ServerInterface
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require object recreation or
-     * download and can be performed on remote server.
+     * Remove storage object without changing it's own container. This operation does not require
+     * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -321,7 +354,11 @@ class RackspaceCloudServer implements ServerInterface
             return true;
         }
 
-        $result = $this->query($container, $name, 'COPY')->setHeader('Destination', '/' . $container->options['container'] . '/' . rawurlencode($newName))->run();
+        $result = $this->query($container, $name, 'COPY')
+            ->setHeader(
+                'Destination',
+                '/' . $container->options['container'] . '/' . rawurlencode($newName)
+            )->run();
 
         if ($result['status'] == 401)
         {
@@ -361,8 +398,8 @@ class RackspaceCloudServer implements ServerInterface
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Copy object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
@@ -383,7 +420,9 @@ class RackspaceCloudServer implements ServerInterface
 
         if (strcasecmp($container->options['region'], $destination->options['region']) !== 0)
         {
-            $this->storage->logger()->warning("Copying between regions are not allowed by Rackspace and performed using local buffer.");
+            $this->storage->logger()->warning(
+                "Copying between regions are not allowed by Rackspace and performed using local buffer."
+            );
 
             return $this->create($this->localFilename($container, $name), $destination, $name);
         }
@@ -402,8 +441,8 @@ class RackspaceCloudServer implements ServerInterface
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Move object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
@@ -424,7 +463,10 @@ class RackspaceCloudServer implements ServerInterface
 
         if (strcasecmp($container->options['region'], $destination->options['region']) !== 0)
         {
-            $this->storage->logger()->warning("Moving between regions are not allowed by Rackspace and performed using local buffer.");
+            $this->storage->logger()->warning(
+                "Moving between regions are not allowed by Rackspace and performed using local buffer."
+            );
+
             $this->create($this->localFilename($container, $name), $destination, $name);
 
             return $this->delete($container, $name);

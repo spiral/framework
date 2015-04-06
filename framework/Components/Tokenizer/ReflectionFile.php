@@ -200,6 +200,8 @@ class ReflectionFile extends Component
      */
     protected function locateDeclarations()
     {
+        $includeTokens = array(T_INCLUDE, T_INCLUDE_ONCE, T_REQUIRE, T_REQUIRE_ONCE);
+
         foreach ($this->tokens as $TID => $token)
         {
             $token[self::TOKEN_TYPE] == T_FUNCTION && $this->handleFunction($TID);
@@ -211,7 +213,7 @@ class ReflectionFile extends Component
                 $this->handleDeclaration($TID, $token[self::TOKEN_TYPE]);
             }
 
-            if (!$this->includes && in_array($token[self::TOKEN_TYPE], array(T_INCLUDE, T_INCLUDE_ONCE, T_REQUIRE, T_REQUIRE_ONCE)))
+            if (!$this->includes && in_array($token[self::TOKEN_TYPE], $includeTokens))
             {
                 //File has includes, this is not good.
                 $this->handleInclude($TID);
@@ -240,7 +242,11 @@ class ReflectionFile extends Component
 
             $namespace .= $token[self::TOKEN_CODE];
         }
-        while (isset($this->tokens[$TID]) && $this->tokens[$TID][self::TOKEN_CODE] != '{' && $this->tokens[$TID][self::TOKEN_CODE] != ';');
+        while (
+            isset($this->tokens[$TID])
+            && $this->tokens[$TID][self::TOKEN_CODE] != '{'
+            && $this->tokens[$TID][self::TOKEN_CODE] != ';'
+        );
 
         $uses = array();
         if (isset($this->namespaces[$namespace]))
@@ -266,8 +272,8 @@ class ReflectionFile extends Component
     }
 
     /**
-     * Helper methods to get namespace active at specified token position. Will return empty string (global namespace)
-     * if no namespace were found.
+     * Helper methods to get namespace active at specified token position. Will return empty string
+     * (global namespace) if no namespace were found.
      *
      * @param int $TID Token id to check for any active namespaces.
      * @return string
@@ -284,14 +290,18 @@ class ReflectionFile extends Component
         }
 
         //Seems like no namespace declaration
-        $this->namespaces[''] = array('firstTID' => 0, 'lastTID' => count($this->tokens), 'uses' => array());
+        $this->namespaces[''] = array(
+            'firstTID' => 0,
+            'lastTID'  => count($this->tokens),
+            'uses'     => array()
+        );
 
         return '';
     }
 
     /**
-     * Handle declaration of class, trait of interface. Declaration will be stored under it's token type in declarations
-     * array.
+     * Handle declaration of class, trait of interface. Declaration will be stored under it's token
+     * type in declarations array.
      *
      * @param int $firstTID  Declaration start token.
      * @param int $tokenType Declaring token type (T_CLASS, T_TRAIT, T_INTERFACE).
@@ -304,7 +314,6 @@ class ReflectionFile extends Component
             'lastTID'  => $this->findLastTID($firstTID)
         );
     }
-
 
     /**
      * Handle use (importing class from another namespace).
@@ -335,7 +344,7 @@ class ReflectionFile extends Component
             }
         }
 
-        if (!$localAlias)
+        if (empty($localAlias))
         {
             $names = explode('\\', $class);
             $localAlias = end($names);
@@ -357,7 +366,10 @@ class ReflectionFile extends Component
         {
             foreach ($declarations as $location)
             {
-                if ($this->tokens[$firstTID][self::TOKEN_ID] >= $location['firstTID'] && $this->tokens[$firstTID][self::TOKEN_ID] <= $location['lastTID'])
+                if (
+                    $this->tokens[$firstTID][self::TOKEN_ID] >= $location['firstTID']
+                    && $this->tokens[$firstTID][self::TOKEN_ID] <= $location['lastTID']
+                )
                 {
                     return;
                 }
@@ -437,8 +449,8 @@ class ReflectionFile extends Component
     }
 
     /**
-     * Check if file has. Includes can not be resolved automatically and can cause unpredictable problems, by default
-     * spiral classes indexer will ignore files with such includes.
+     * Check if file has. Includes can not be resolved automatically and can cause unpredictable problems,
+     * by default spiral classes indexer will ignore files with such includes.
      *
      * @return bool
      */
@@ -480,13 +492,14 @@ class ReflectionFile extends Component
     }
 
     /**
-     * Will located and return all functions usages found in source. Function name, location and arguments will be retrieved.
-     * This method can be used to detect i18n functions and methods. Due this code was written long time ago, it's not
-     * included to same tokenization process as for declarations, but may be included in future.
+     * Will located and return all functions usages found in source. Function name, location and
+     * arguments will be retrieved. This method can be used to detect i18n functions and methods.
+     * Due this code was written long time ago, it's not included to same tokenization process as for
+     * declarations, but may be included in future.
      *
      * Attention:
-     * No methods called via self, static or -> will not be recorded. Functions from another namespace currently not supported
-     * (will be in future), plus there is known issue about $class::method() calls.
+     * No methods called via self, static or -> will not be recorded. Functions from another namespace
+     * currently not supported (will be in future), plus there is known issue about $class::method() calls.
      *
      * @return FunctionUsage[]|array
      */
@@ -504,7 +517,8 @@ class ReflectionFile extends Component
      * Searching for function usages.
      *
      * @param array $tokens        List of parsed tokens from token_get_all() function.
-     * @param int   $functionLevel If function were used inside another function this variable will be increased.
+     * @param int   $functionLevel If function were used inside another function this variable will
+     *                             be increased.
      */
     protected function locateUsages(array $tokens, $functionLevel = 0)
     {
@@ -520,6 +534,9 @@ class ReflectionFile extends Component
         //Parsed arguments and their first token id
         $arguments = array();
         $argumentsTID = false;
+
+        //Tokens used to re-enable token detection
+        $stopTokens = array(T_STRING, T_WHITESPACE, T_DOUBLE_COLON, T_NS_SEPARATOR);
 
         foreach ($tokens as $TID => $token)
         {
@@ -537,7 +554,7 @@ class ReflectionFile extends Component
             }
             elseif ($skipTokens)
             {
-                if ($tokenType != T_STRING && $tokenType != T_WHITESPACE && $tokenType != T_DOUBLE_COLON && $tokenType != T_NS_SEPARATOR)
+                if (!in_array($tokenType, $stopTokens))
                 {
                     //Returning to search
                     $skipTokens = false;
@@ -626,7 +643,7 @@ class ReflectionFile extends Component
             }
 
             //Nothing valuable to remember, will be parsed later.
-            if ($functionTID && in_array($tokenType, array(T_STRING, T_WHITESPACE, T_DOUBLE_COLON, T_NS_SEPARATOR)))
+            if ($functionTID && in_array($tokenType, $stopTokens))
             {
                 continue;
             }

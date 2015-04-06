@@ -94,7 +94,12 @@ class ConfigWriter extends Component
      * @param Tokenizer   $tokenizer Tokenizer component.
      * @param int         $method    How system should merge existed and requested config contents.
      */
-    public function __construct($name, FileManager $file, Tokenizer $tokenizer, $method = self::MERGE_FOLLOW)
+    public function __construct(
+        $name,
+        FileManager $file,
+        Tokenizer $tokenizer,
+        $method = self::MERGE_FOLLOW
+    )
     {
         $this->name = $name;
         $this->file = $file;

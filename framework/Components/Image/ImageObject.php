@@ -313,7 +313,12 @@ class ImageObject extends Component
      *                           will select most notable color.
      * @return array
      */
-    public function getColors($countColors = 10, $dimension = 15, $step = 0.005, $mixMode = ImageAnalyzer::MIX_ADAPTIVE)
+    public function getColors(
+        $countColors = 10,
+        $dimension = 15,
+        $step = 0.005,
+        $mixMode = ImageAnalyzer::MIX_ADAPTIVE
+    )
     {
         if (!$this->isSupported())
         {
@@ -400,7 +405,14 @@ class ImageObject extends Component
      * @param int|bool    $height  Composited image height. Original overlay image height by default.
      * @return static
      */
-    public function composite(ImageObject $image, $opacity = 100, $x = 0, $y = 0, $width = false, $height = false)
+    public function composite(
+        ImageObject $image,
+        $opacity = 100,
+        $x = 0,
+        $y = 0,
+        $width = false,
+        $height = false
+    )
     {
         $this->processor()->composite(
             realpath($image->filename),
@@ -447,7 +459,16 @@ class ImageObject extends Component
      * @param int    $style     Stroke style, solid and dotted styles supported by default.
      * @return static
      */
-    public function rectangle($x1, $y1, $x2, $y2, $fillColor, $color, $width = 1, $style = self::LINE_SOLID)
+    public function rectangle(
+        $x1,
+        $y1,
+        $x2,
+        $y2,
+        $fillColor,
+        $color,
+        $width = 1,
+        $style = self::LINE_SOLID
+    )
     {
         $this->processor()->rectangle($x1, $y1, $x2, $y2, $fillColor, $color, $width, $style);
 

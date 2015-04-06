@@ -108,7 +108,10 @@ if (!function_exists('benchmark'))
      */
     function benchmark($record)
     {
-        return call_user_func_array(array('Spiral\Components\Debug\Debugger', 'benchmark'), func_get_args());
+        return call_user_func_array(
+            array('Spiral\Components\Debug\Debugger', 'benchmark'),
+            func_get_args()
+        );
     }
 }
 

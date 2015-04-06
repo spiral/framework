@@ -82,7 +82,13 @@ class StorageContainer extends Component implements InjectableInterface
      * @param StorageManager $storage StorageManager component.
      * @param FileManager    $file    FileManager component.
      */
-    public function __construct($server, $prefix, array $options, StorageManager $storage, FileManager $file)
+    public function __construct(
+        $server,
+        $prefix,
+        array $options,
+        StorageManager $storage,
+        FileManager $file
+    )
     {
         $this->prefix = $prefix;
         $this->server = $server;

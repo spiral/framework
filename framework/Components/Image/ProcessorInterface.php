@@ -81,7 +81,16 @@ interface ProcessorInterface
      * @param int    $width     Stroke width in pixels.
      * @param int    $style     Stroke style, solid and dotted styles supported by default.
      */
-    public function rectangle($x1, $y1, $x2, $y2, $fillColor, $color, $width = 1, $style = ImageObject::LINE_SOLID);
+    public function rectangle(
+        $x1,
+        $y1,
+        $x2,
+        $y2,
+        $fillColor,
+        $color,
+        $width = 1,
+        $style = ImageObject::LINE_SOLID
+    );
 
     /**
      * Draw text annotation with specified location, color and font.

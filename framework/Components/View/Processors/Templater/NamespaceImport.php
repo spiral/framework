@@ -135,7 +135,8 @@ class NamespaceImport extends Import
         if (empty($aliases))
         {
             throw new ViewException(
-                "No views were found under directory '{$this->directory}' in namespace '{$this->namespace}'."
+                "No views were found "
+                . "under directory '{$this->directory}' in namespace '{$this->namespace}'."
             );
         }
 

@@ -157,7 +157,9 @@ class SchemaReader extends Component
      */
     public function findMutator($abstractType)
     {
-        return isset($this->config['mutators'][$abstractType]) ? $this->config['mutators'][$abstractType] : array();
+        return isset($this->config['mutators'][$abstractType])
+            ? $this->config['mutators'][$abstractType]
+            : array();
     }
 
     /**
@@ -231,6 +233,9 @@ class SchemaReader extends Component
             return $classDefinition;
         }
 
-        return array(ODM::DEFINITION => $classDefinition['type'], ODM::DEFINITION_OPTIONS => $classDefinition['options']);
+        return array(
+            ODM::DEFINITION         => $classDefinition['type'],
+            ODM::DEFINITION_OPTIONS => $classDefinition['options']
+        );
     }
 }

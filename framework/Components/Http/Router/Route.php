@@ -149,7 +149,13 @@ class Route extends Component implements RouteInterface
      * @param array  $conditions Pre-defined set of route conditions.
      * @return Route
      */
-    public function __construct($name, $pattern, $target, array $defaults = array(), array $conditions = array())
+    public function __construct(
+        $name,
+        $pattern,
+        $target,
+        array $defaults = array(),
+        array $conditions = array()
+    )
     {
         if (empty($target))
         {
@@ -437,7 +443,11 @@ class Route extends Component implements RouteInterface
      * @param array                  $routeMiddlewares Middleware aliases provided from parent router.
      * @return mixed
      */
-    public function perform(ServerRequestInterface $request, Core $core, array $routeMiddlewares = array())
+    public function perform(
+        ServerRequestInterface $request,
+        Core $core,
+        array $routeMiddlewares = array()
+    )
     {
         if (empty($this->middlewares))
         {

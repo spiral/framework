@@ -20,9 +20,9 @@ class RackspaceQuery extends CurlQuery
     use StorageQueryTrait;
 
     /**
-     * New rest\Query class, can be used to perform various requests to external api and websites, Query class can be
-     * extended to support additional syntax, response types or define custom behaviour. Https requests can only be made if
-     * they are supported by server environment.
+     * New rest\Query class, can be used to perform various requests to external api and websites,
+     * Query class can be extended to support additional syntax, response types or define custom
+     * behaviour. Https requests can only be made if they are supported by server environment.
      *
      * All requests will be made using CURL extension.
      *

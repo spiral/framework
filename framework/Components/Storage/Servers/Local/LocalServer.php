@@ -23,9 +23,9 @@ class LocalServer implements ServerInterface
     protected $file = null;
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based. Every adapter should
-     * support basic set of low-level operations (create, move, copy and etc). Adapter instance called server, one adapter
-     * can be used for multiple servers.
+     * Every server represent one virtual storage which can be either local, remove or cloud based.
+     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Adapter instance called server, one adapter can be used for multiple servers.
      *
      * @param array          $options Storage connection options.
      * @param StorageManager $storage StorageManager component.
@@ -109,12 +109,14 @@ class LocalServer implements ServerInterface
      */
     public function filesize(StorageContainer $container, $name)
     {
-        return $this->file->exists($container->options['folder'] . $name) ? $this->file->size($container->options['folder'] . $name) : 0;
+        return $this->file->exists($container->options['folder'] . $name)
+            ? $this->file->size($container->options['folder'] . $name)
+            : 0;
     }
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will not available using
-     * old filename.
+     * Create new storage object using given filename. File will be replaced to new location and will
+     * not available using old filename.
      *
      * @param string           $filename  Local filename to use for creation.
      * @param StorageContainer $container Container instance.
@@ -139,9 +141,10 @@ class LocalServer implements ServerInterface
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location, adapter should download
-     * file to temporary file and return it's filename. All object stored in temporary files should be registered in
-     * File::$removeFiles, to be removed after script ends to clean used hard drive space.
+     * Allocate local filename for remove storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. All object stored in
+     * temporary files should be registered in File::$removeFiles, to be removed after script ends to
+     * clean used hard drive space.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -149,12 +152,14 @@ class LocalServer implements ServerInterface
      */
     public function localFilename(StorageContainer $container, $name)
     {
-        return $this->file->exists($container->options['folder'] . $name) ? $container->options['folder'] . $name : false;
+        return $this->file->exists($container->options['folder'] . $name)
+            ? $container->options['folder'] . $name
+            : false;
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require object recreation or
-     * download and can be performed on remote server.
+     * Remove storage object without changing it's own container. This operation does not require
+     * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -163,7 +168,11 @@ class LocalServer implements ServerInterface
      */
     public function rename(StorageContainer $container, $name, $newName)
     {
-        return $this->moveHelper($container, $container->options['folder'] . $name, $container->options['folder'] . $newName);
+        return $this->moveHelper(
+            $container,
+            $container->options['folder'] . $name,
+            $container->options['folder'] . $newName
+        );
     }
 
     /**
@@ -178,8 +187,8 @@ class LocalServer implements ServerInterface
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Copy object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
@@ -188,12 +197,16 @@ class LocalServer implements ServerInterface
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
     {
-        return $this->copyHelper($destination, $container->options['folder'] . $name, $destination->options['folder'] . $name);
+        return $this->copyHelper(
+            $destination,
+            $container->options['folder'] . $name,
+            $destination->options['folder'] . $name
+        );
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Move object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
@@ -202,6 +215,10 @@ class LocalServer implements ServerInterface
      */
     public function replace(StorageContainer $container, StorageContainer $destination, $name)
     {
-        return $this->moveHelper($destination, $container->options['folder'] . $name, $destination->options['folder'] . $name);
+        return $this->moveHelper(
+            $destination,
+            $container->options['folder'] . $name,
+            $destination->options['folder'] . $name
+        );
     }
 }

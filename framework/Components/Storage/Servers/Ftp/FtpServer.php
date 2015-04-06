@@ -54,9 +54,9 @@ class FtpServer implements ServerInterface
     protected $file = null;
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based. Every adapter should
-     * support basic set of low-level operations (create, move, copy and etc). Adapter instance called server, one adapter
-     * can be used for multiple servers.
+     * Every server represent one virtual storage which can be either local, remove or cloud based.
+     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Adapter instance called server, one adapter can be used for multiple servers.
      *
      * @param array          $options Storage connection options.
      * @param StorageManager $storage StorageManager component.
@@ -71,7 +71,9 @@ class FtpServer implements ServerInterface
 
         if (!function_exists('ftp_connect'))
         {
-            throw new StorageException("Unable to initialize ftp storage server, extension 'ftp' not found.");
+            throw new StorageException(
+                "Unable to initialize ftp storage server, extension 'ftp' not found."
+            );
         }
     }
 
@@ -80,14 +82,20 @@ class FtpServer implements ServerInterface
      *
      * @return bool
      */
-    protected function upConnection()
+    protected function connect()
     {
         if ($this->connection)
         {
             return true;
         }
 
-        if (!$this->connection = ftp_connect($this->options['server'], $this->options['port'], $this->options['timeout']))
+        $this->connection = ftp_connect(
+            $this->options['server'],
+            $this->options['port'],
+            $this->options['timeout']
+        );
+
+        if (empty($this->connection))
         {
             return false;
         }
@@ -124,7 +132,10 @@ class FtpServer implements ServerInterface
         {
             if (ftp_chdir($this->connection, $directory))
             {
-                !empty($container->options['mode']) && ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
+                if (!empty($container->options['mode']))
+                {
+                    ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
+                }
 
                 return true;
             }
@@ -151,7 +162,12 @@ class FtpServer implements ServerInterface
             catch (\Exception $exception)
             {
                 ftp_mkdir($this->connection, $directory);
-                !empty($container->options['mode']) && ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
+
+                if (!empty($container->options['mode']))
+                {
+                    ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
+                }
+
                 ftp_chdir($this->connection, $directory);
             }
         }
@@ -180,7 +196,7 @@ class FtpServer implements ServerInterface
      */
     public function exists(StorageContainer $container, $name)
     {
-        if (!$this->upConnection())
+        if (!$this->connect())
         {
             return false;
         }
@@ -197,7 +213,7 @@ class FtpServer implements ServerInterface
      */
     public function filesize(StorageContainer $container, $name)
     {
-        if (!$this->upConnection())
+        if (!$this->connect())
         {
             return false;
         }
@@ -206,8 +222,8 @@ class FtpServer implements ServerInterface
     }
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will not available using
-     * old filename.
+     * Create new storage object using given filename. File will be replaced to new location and will
+     * not available using old filename.
      *
      * @param string           $filename  Local filename to use for creation.
      * @param StorageContainer $container Container instance.
@@ -216,7 +232,7 @@ class FtpServer implements ServerInterface
      */
     public function create($filename, StorageContainer $container, $name)
     {
-        if (!$this->upConnection())
+        if (!$this->connect())
         {
             return false;
         }
@@ -236,7 +252,11 @@ class FtpServer implements ServerInterface
                 return false;
             }
 
-            !empty($container->options['mode']) && ftp_chmod($this->connection, $container->options['mode'], $location);
+            if (!empty($container->options['mode']))
+            {
+                ftp_chmod($this->connection, $container->options['mode'], $location);
+            }
+
             $this->file->remove($filename);
 
             return true;
@@ -249,9 +269,10 @@ class FtpServer implements ServerInterface
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location, adapter should download
-     * file to temporary file and return it's filename. All object stored in temporary files should be registered in
-     * File::$removeFiles, to be removed after script ends to clean used hard drive space.
+     * Allocate local filename for remove storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. All object stored in
+     * temporary files should be registered in File::$removeFiles, to be removed after script ends to
+     * clean used hard drive space.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -259,7 +280,7 @@ class FtpServer implements ServerInterface
      */
     public function localFilename(StorageContainer $container, $name)
     {
-        if (!$this->upConnection())
+        if (!$this->connect())
         {
             return false;
         }
@@ -273,12 +294,17 @@ class FtpServer implements ServerInterface
             return false;
         }
 
-        return ftp_get($this->connection, $filename, $this->resolveLocation($container, $name), FTP_BINARY) ? $filename : false;
+        return ftp_get(
+            $this->connection,
+            $filename,
+            $this->resolveLocation($container, $name),
+            FTP_BINARY
+        ) ? $filename : false;
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require object recreation or
-     * download and can be performed on remote server.
+     * Remove storage object without changing it's own container. This operation does not require
+     * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -287,7 +313,7 @@ class FtpServer implements ServerInterface
      */
     public function rename(StorageContainer $container, $name, $newName)
     {
-        if (!$this->upConnection())
+        if (!$this->connect())
         {
             return false;
         }
@@ -312,7 +338,10 @@ class FtpServer implements ServerInterface
                 return false;
             }
 
-            !empty($container->options['mode']) && ftp_chmod($this->connection, $container->options['mode'], $location);
+            if (!empty($container->options['mode']))
+            {
+                ftp_chmod($this->connection, $container->options['mode'], $location);
+            }
 
             return true;
         }
@@ -331,7 +360,7 @@ class FtpServer implements ServerInterface
      */
     public function delete(StorageContainer $container, $name)
     {
-        if (!$this->upConnection())
+        if (!$this->connect())
         {
             return;
         }
@@ -343,8 +372,8 @@ class FtpServer implements ServerInterface
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Copy object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
@@ -363,8 +392,8 @@ class FtpServer implements ServerInterface
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not require file download
-     * and can be performed remotely.
+     * Move object to another internal (under save server) container, this operation should may not
+     * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
@@ -373,7 +402,7 @@ class FtpServer implements ServerInterface
      */
     public function replace(StorageContainer $container, StorageContainer $destination, $name)
     {
-        if (!$this->upConnection())
+        if (!$this->connect())
         {
             return false;
         }
@@ -398,7 +427,10 @@ class FtpServer implements ServerInterface
                 return false;
             }
 
-            !empty($container->options['mode']) && ftp_chmod($this->connection, $container->options['mode'], $location);
+            if (!empty($container->options['mode']))
+            {
+                ftp_chmod($this->connection, $container->options['mode'], $location);
+            }
 
             return true;
         }

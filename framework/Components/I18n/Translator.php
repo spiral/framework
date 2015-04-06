@@ -45,7 +45,7 @@ class Translator extends Component
      * Active pluralization function, this function will be created on demand based on pluralization
      * formula defined in language options and should return form id based on provided number.
      *
-     * @link http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html?id=l10n/pluralforms
+     * @link http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html
      * @var \Closure[]
      */
     protected $pluralizers = array();

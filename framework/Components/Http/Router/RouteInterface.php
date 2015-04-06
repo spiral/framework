@@ -37,7 +37,11 @@ interface RouteInterface
      * @param array                  $routeMiddlewares Middleware aliases provided from parent router.
      * @return mixed
      */
-    public function perform(ServerRequestInterface $request, Core $core, array $routeMiddlewares = array());
+    public function perform(
+        ServerRequestInterface $request,
+        Core $core,
+        array $routeMiddlewares = array()
+    );
 
     /**
      * Create URL using route parameters (will be merged with default values), route pattern and base
