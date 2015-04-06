@@ -265,10 +265,10 @@ class ColumnSchema extends AbstractColumnSchema
         {
             if ($temporary)
             {
-                return $this->table->getName() . '_' . $this->getName() . '_enum_check';
+                return $this->table->getName() . '_' . $this->getName() . '_enum';
             }
 
-            $this->enumConstraint = $this->table->getName() . '_' . $this->getName() . '_enum_check_' . uniqid();
+            $this->enumConstraint = $this->table->getName() . '_' . $this->getName() . '_enum_' . uniqid();
         }
 
         return $quote ? $this->table->getDriver()->identifier($this->enumConstraint) : $this->enumConstraint;

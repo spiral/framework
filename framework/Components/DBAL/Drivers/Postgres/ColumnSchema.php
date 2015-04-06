@@ -14,10 +14,10 @@ use Spiral\Components\DBAL\SqlFragment;
 class ColumnSchema extends AbstractColumnSchema
 {
     /**
-     * Direct mapping from base abstract type to database internal type with specified data options, such as size, precision
-     * scale, unsigned flag and etc. Every declared type can be assigned using ->type() method, however to pass custom
-     * type parameters, methods has to be declared in database specific ColumnSchema. Type identifier not necessary
-     * should be real type name.
+     * Direct mapping from base abstract type to database internal type with specified data options,
+     * such as size, precision scale, unsigned flag and etc. Every declared type can be assigned using
+     * ->type() method, however to pass custom type parameters, methods has to be declared in database
+     * specific ColumnSchema. Type identifier not necessary should be real type name.
      *
      * Example:
      * integer => array('type' => 'int', 'size' => 1),
@@ -37,7 +37,8 @@ class ColumnSchema extends AbstractColumnSchema
         //Logical types
         'boolean'     => 'boolean',
 
-        //Integer types (size can always be changed with size method), longInteger has method alias bigInteger
+        //Integer types (size can always be changed with size method), longInteger has method alias
+        //bigInteger
         'integer'     => 'integer',
         'tinyInteger' => 'smallint',
         'bigInteger'  => 'bigint',
@@ -73,8 +74,9 @@ class ColumnSchema extends AbstractColumnSchema
     );
 
     /**
-     * Driver specific reverse mapping, this mapping should link database type to one of standard internal types. Not
-     * resolved types will be marked as "unknown" which will map them as php type string.
+     * Driver specific reverse mapping, this mapping should link database type to one of standard
+     * internal types. Not resolved types will be marked as "unknown" which will map them as php type
+     * string.
      *
      * @invisible
      * @var array
@@ -116,7 +118,8 @@ class ColumnSchema extends AbstractColumnSchema
     /**
      * Parse column information provided by parent TableSchema and populate column values.
      *
-     * @param mixed $schema Column information fetched from database by TableSchema. Format depends on driver type.
+     * @param mixed $schema Column information fetched from database by TableSchema. Format depends
+     *                      on driver type.
      * @return mixed
      */
     protected function resolveSchema($schema)
@@ -125,7 +128,10 @@ class ColumnSchema extends AbstractColumnSchema
         $this->defaultValue = $schema['column_default'];
         $this->nullable = $schema['is_nullable'] == 'YES';
 
-        if (in_array($this->type, array('int', 'bigint', 'integer')) && preg_match("/nextval(.*)/", $this->defaultValue))
+        if (
+            in_array($this->type, array('int', 'bigint', 'integer'))
+            && preg_match("/nextval(.*)/", $this->defaultValue)
+        )
         {
             $this->type = ($this->type == 'bigint' ? 'bigserial' : 'serial');
             $this->autoIncrement = true;
@@ -135,7 +141,12 @@ class ColumnSchema extends AbstractColumnSchema
             return;
         }
 
-        if (($this->type == 'character varying' || $this->type == 'character') && $schema['character_maximum_length'])
+        if (
+            (
+                $this->type == 'character varying' || $this->type == 'character'
+            )
+            && $schema['character_maximum_length']
+        )
         {
             $this->size = $schema['character_maximum_length'];
         }
@@ -147,27 +158,43 @@ class ColumnSchema extends AbstractColumnSchema
         }
 
         /**
-         * Attention, this is not default spiral enum type emulated via CHECK. This is real Postgres enum type.
+         * Attention, this is not default spiral enum type emulated via CHECK. This is real Postgres
+         * enum type.
          */
         if ($this->type == 'USER-DEFINED' && $schema['typtype'] == 'e')
         {
             $this->type = $schema['typname'];
-            $range = $this->table->getDriver()->query('SELECT enum_range(NULL::' . $this->type . ')')->fetchColumn(0);
+            $range = $this->table->getDriver()
+                ->query('SELECT enum_range(NULL::' . $this->type . ')')
+                ->fetchColumn(0);
+
             $this->enumValues = explode(',', substr($range, 1, -1));
 
-            if ($this->defaultValue)
+            if (!empty($this->defaultValue))
             {
                 //In database: 'value'::enumType
-                $this->defaultValue = substr($this->defaultValue, 1, strpos($this->defaultValue, $this->type) - 4);
+                $this->defaultValue = substr(
+                    $this->defaultValue,
+                    1,
+                    strpos($this->defaultValue, $this->type) - 4
+                );
             }
         }
 
         //Potential enum with manually created constraint (check in)
-        if (($this->type == 'character' || $this->type == 'character varying') && $this->size)
+        if (
+            (
+                $this->type == 'character' || $this->type == 'character varying'
+            )
+            && $this->size
+        )
         {
-            $query = "SELECT conname, consrc FROM pg_constraint WHERE conrelid = ? AND contype = 'c' AND consrc LIKE ?";
+            $query = "SELECT conname, consrc FROM pg_constraint
+                      WHERE conrelid = ? AND contype = 'c' AND consrc LIKE ?";
 
-            $constraints = $this->table->getDriver()->query($query, array($schema['tableOID'], '(' . $this->name . '%'));
+            $constraints = $this->table->getDriver()
+                ->query($query, array($schema['tableOID'], '(' . $this->name . '%'));
+
             foreach ($constraints as $constraint)
             {
                 if (preg_match('/ARRAY\[([^\]]+)\]/', $constraint['consrc'], $matches))
@@ -199,7 +226,9 @@ class ColumnSchema extends AbstractColumnSchema
             }
             elseif ($this->type == 'bit')
             {
-                $this->defaultValue = bindec(substr($this->defaultValue, 2, strpos($this->defaultValue, '::') - 3));
+                $this->defaultValue = bindec(
+                    substr($this->defaultValue, 2, strpos($this->defaultValue, '::') - 3)
+                );
             }
             elseif ($this->type == 'boolean')
             {
@@ -209,9 +238,10 @@ class ColumnSchema extends AbstractColumnSchema
     }
 
     /**
-     * Get abstract type name, this method will map one of database types to limited set of ColumnSchema abstract types.
-     * Attention, this method is not used for schema comparasions (database type used), it's only for decorative purposes.
-     * If schema can't resolve type - "unknown" will be returned (by default mapped to php type string).
+     * Get abstract type name, this method will map one of database types to limited set of ColumnSchema
+     * abstract types. Attention, this method is not used for schema comparasions (database type used),
+     * it's only for decorative purposes. If schema can't resolve type - "unknown" will be returned
+     * (by default mapped to php type string).
      *
      * @return string
      */
@@ -266,9 +296,9 @@ class ColumnSchema extends AbstractColumnSchema
     }
 
     /**
-     * Give column enum type with specified set of allowed values, values can be provided as array or as multiple comma
-     * separate parameters. Attention, not all databases support enum as type, in this cases enum will be emulated via
-     * column constrain. Enum values are always string type.
+     * Give column enum type with specified set of allowed values, values can be provided as array
+     * or as multiple comma separate parameters. Attention, not all databases support enum as type,
+     * in this cases enum will be emulated via column constrain. Enum values are always string type.
      *
      * Examples:
      * $table->status->enum(array('active', 'disabled'));
@@ -294,7 +324,8 @@ class ColumnSchema extends AbstractColumnSchema
      * Get name of enum constraint.
      *
      * @param bool $quote     True to quote identifier.
-     * @param bool $temporary If true enumConstraint identifier will be generated only for visual purposes.
+     * @param bool $temporary If true enumConstraint identifier will be generated only for visual
+     *                        purposes.
      * @return string
      */
     protected function getEnumConstraint($quote = false, $temporary = false)
@@ -303,13 +334,15 @@ class ColumnSchema extends AbstractColumnSchema
         {
             if ($temporary)
             {
-                return $this->table->getName() . '_' . $this->getName() . '_enum_check';
+                return $this->table->getName() . '_' . $this->getName() . '_enum';
             }
 
-            $this->enumConstraint = $this->table->getName() . '_' . $this->getName() . '_enum_check_' . uniqid();
+            $this->enumConstraint = $this->table->getName() . '_' . $this->getName() . '_enum_' . uniqid();
         }
 
-        return $quote ? $this->table->getDriver()->identifier($this->enumConstraint) : $this->enumConstraint;
+        return $quote
+            ? $this->table->getDriver()->identifier($this->enumConstraint)
+            : $this->enumConstraint;
     }
 
     /**
@@ -343,7 +376,8 @@ class ColumnSchema extends AbstractColumnSchema
             $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);
         }
 
-        return "$statement CONSTRAINT {$this->getEnumConstraint(true, true)} CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
+        return "$statement CONSTRAINT {$this->getEnumConstraint(true, true)} "
+        . "CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
     }
 
     /**
@@ -364,7 +398,8 @@ class ColumnSchema extends AbstractColumnSchema
     }
 
     /**
-     * Generate set of altering operations should be applied to column to change it's type, size, default value or null flag.
+     * Generate set of altering operations should be applied to column to change it's type, size,
+     * default value or null flag.
      *
      * @param AbstractColumnSchema $original
      * @return array
@@ -427,7 +462,8 @@ class ColumnSchema extends AbstractColumnSchema
 
         if ($original->nullable != $this->nullable)
         {
-            $operations[] = "ALTER COLUMN {$this->getName(true)} " . (!$this->nullable ? 'SET' : 'DROP') . " NOT NULL";
+            $operations[] = "ALTER COLUMN {$this->getName(true)} "
+                . (!$this->nullable ? 'SET' : 'DROP') . " NOT NULL";
         }
 
         if ($this->abstractType() == 'enum')
@@ -438,7 +474,8 @@ class ColumnSchema extends AbstractColumnSchema
                 $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);
             }
 
-            $operations[] = "ADD CONSTRAINT {$this->getEnumConstraint(true)} CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
+            $operations[] = "ADD CONSTRAINT {$this->getEnumConstraint(true)} "
+                . "CHECK ({$this->getName(true)} IN (" . join(', ', $enumValues) . "))";
         }
 
         return $operations;
