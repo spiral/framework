@@ -586,7 +586,7 @@ class TemplaterTest extends TestCase
      * @param string $view
      * @return array
      */
-    protected function render($view, $blankLines = false)
+    protected function render($view)
     {
         $lines = explode("\n", StringHelper::normalizeEndings($this->viewManager()->render($view)));
 

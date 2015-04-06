@@ -376,7 +376,7 @@ class ConfigWriter extends Component
         {
             if (!is_string($value))
             {
-                throw new RuntimeException("Unable to pack non scalar value.");
+                throw new \RuntimeException("Unable to pack non scalar value.");
             }
 
             $alias = $directory = $hasAlias = false;

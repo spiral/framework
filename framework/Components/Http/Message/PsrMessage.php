@@ -17,10 +17,9 @@ abstract class PsrMessage extends Component implements MessageInterface
     /**
      * HTTP protocol version.
      *
-     * @todo Change it back to 1.1 later, 1.0 required for ab benchmarking.
      * @var string
      */
-    protected $protocolVersion = '1.0';
+    protected $protocolVersion = '1.1';
 
     /**
      * Message headers

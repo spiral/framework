@@ -22,7 +22,6 @@ use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
-use Spiral\Core\Events\Event;
 
 class HttpDispatcher extends Component implements DispatcherInterface
 {

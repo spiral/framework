@@ -12,7 +12,6 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
-use Spiral\Helpers\ArrayHelper;
 
 class ViewManager extends Component
 {

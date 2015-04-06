@@ -10,7 +10,7 @@ namespace Spiral\Commands\DBAL\Migrations;
 
 use Spiral\Components\Console\Command;
 use Spiral\Components\DBAL\DatabaseManager;
-use Spiral\Components\DBAL\Driver;
+
 use Spiral\Components\DBAL\Migrations\Migrator;
 use Spiral\Core\Events\Event;
 use Symfony\Component\Console\Input\InputInterface;

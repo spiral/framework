@@ -10,7 +10,7 @@ namespace Spiral\Components\I18n;
 
 use Spiral\Core\Component;
 use Spiral\Core\Core;
-use Spiral\Core\Events\Event;
+
 use Spiral\Helpers\StringHelper;
 
 class Translator extends Component

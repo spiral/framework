@@ -30,7 +30,7 @@
 
     <p>
         Testing attributes without values.
-        <input type="checkbox" disabled prefix:attrbiute="ABC"/>
+        <input type="checkbox" disabled prefix:attribute="ABC"/>
     </p>
 </div>
 </body>

@@ -9,7 +9,7 @@
 namespace Spiral\Commands\DBAL;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\DBAL\DatabaseManager;
+
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\SqlFragment;
 use Symfony\Component\Console\Input\InputArgument;

@@ -9,7 +9,6 @@
 namespace Spiral\Commands\ODM;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\ODM\ODM;
 
 class UpdateCommand extends Command
 {

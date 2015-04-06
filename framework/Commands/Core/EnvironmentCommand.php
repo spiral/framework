@@ -9,7 +9,7 @@
 namespace Spiral\Commands\Core;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\Files\FileManager;
+
 use Spiral\Core\Core;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

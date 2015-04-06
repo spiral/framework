@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamableInterface;
 use Spiral\Components\Http\Message\PsrMessage;
 use Spiral\Components\Http\Message\Stream;
-use Spiral\Components\Http\Cookies\CookieInterface;
+
 use Spiral\Core\Component;
 
 class Response extends PsrMessage implements ResponseInterface

@@ -8,8 +8,7 @@
  */
 namespace Spiral\Commands\View;
 
-use Spiral\Components\Console\Command;
-use Spiral\Components\View\ViewManager;
+
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -9,7 +9,7 @@
 namespace Spiral\Commands\DBAL;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\DBAL\DatabaseManager;
+
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 

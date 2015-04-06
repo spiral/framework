@@ -8,9 +8,7 @@
  */
 namespace Spiral\Commands\Reactor;
 
-use Spiral\Components\Console\Command;
-use Spiral\Components\DBAL\DatabaseManager;
-use Spiral\Components\DBAL\Migrations\Repository;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

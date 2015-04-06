@@ -11,7 +11,6 @@ namespace Spiral\Components\View\Processors;
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
-use Spiral\Components\View\ViewManager;
 
 class ShortTagsProcessor implements ProcessorInterface
 {

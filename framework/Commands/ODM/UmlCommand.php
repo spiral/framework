@@ -10,7 +10,7 @@ namespace Spiral\Commands\ODM;
 
 use Spiral\Components\Console\Command;
 use Spiral\Components\ODM\Exporters\UmlExporter;
-use Spiral\Components\ODM\ODM;
+
 use Symfony\Component\Console\Input\InputArgument;
 
 class UmlCommand extends Command

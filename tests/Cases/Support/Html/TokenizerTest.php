@@ -203,11 +203,11 @@ class TokenizerTest extends TestCase
         $this->assertSame(array(
             Tokenizer::TOKEN_NAME       => 'input',
             Tokenizer::TOKEN_TYPE       => 'short',
-            Tokenizer::TOKEN_CONTENT    => '<input type="checkbox" disabled prefix:attrbiute="ABC"/>',
+            Tokenizer::TOKEN_CONTENT    => '<input type="checkbox" disabled prefix:attribute="ABC"/>',
             Tokenizer::TOKEN_ATTRIBUTES => array(
                 'type'             => 'checkbox',
                 'disabled'         => '',
-                'prefix:attrbiute' => 'ABC',
+                'prefix:attribute' => 'ABC',
             )
         ), $tokens[45]);
 
