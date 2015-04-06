@@ -427,15 +427,17 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
                 $field = $field->serializeData();
             }
 
-            if ($filter && $mutator = $this->getMutator($name, 'getter'))
+            if ($filter && $filter = $this->getMutator($name, 'getter'))
             {
                 try
                 {
-                    $field = call_user_func($mutator, $fields[$field]);
+                    $field = call_user_func($filter, $fields[$field]);
                 }
                 catch (\ErrorException $exception)
                 {
-                    $this->logger()->warning("Failed to apply filter to '{offset}' field.", compact('offset'));
+                    self::logger()->warning(
+                        "Failed to apply filter to '{offset}' field.", compact('offset')
+                    );
                     $field = null;
                 }
             }
@@ -454,7 +456,9 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      */
     protected function isAssignable($field)
     {
-        return !in_array($field, $this->secured) && !($this->assignable && !in_array($field, $this->assignable));
+        return !in_array($field, $this->secured) && !(
+            $this->assignable && !in_array($field, $this->assignable)
+        );
     }
 
     /**
@@ -506,14 +510,14 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Validator instance associated with model, will be response for validations of validation errors. Model related error
-     * localization should happen in model itself.
+     * Validator instance associated with model, will be response for validations of validation errors.
+     * Model related error localization should happen in model itself.
      *
      * @return Validator
      */
     public function getValidator()
     {
-        if ($this->validator)
+        if (!empty($this->validator))
         {
             //Refreshing data
             return $this->validator->setData($this->fields);
@@ -538,12 +542,12 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Validating model data using validation rules, all errors will be stored in model errors array. Errors will not be
-     * erased between function calls.
+     * Validating model data using validation rules, all errors will be stored in model errors array.
+     * Errors will not be erased between function calls.
      */
     protected function validate()
     {
-        if (!$this->validates)
+        if (empty($this->validates))
         {
             $this->validationRequired = false;
         }
@@ -561,8 +565,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Validate data and return validation status, true if all fields passed validation and false is some error messages
-     * collected (error messages can be forced manually using addError() method).
+     * Validate data and return validation status, true if all fields passed validation and false is
+     * some error messages collected (error messages can be forced manually using addError() method).
      *
      * @return bool
      */
@@ -574,8 +578,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Evil tween of isValid() method: validate data (if not already validated) and return true if any validation error
-     * occurred including errors added using addError() method.
+     * Evil tween of isValid() method: validate data (if not already validated) and return true if
+     * any validation error occurred including errors added using addError() method.
      *
      * @return bool
      */
@@ -585,9 +589,9 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Get all validation errors with applied localization using i18n component (if specified), any error message can be
-     * localized by using [[ ]] around it. Data will be automatically validated while calling this method (if not validated
-     * before).
+     * Get all validation errors with applied localization using i18n component (if specified), any
+     * error message can be localized by using [[ ]] around it. Data will be automatically validated
+     * while calling this method (if not validated before).
      *
      * @param bool $reset Remove all model messages and reset validation, false by default.
      * @return array
@@ -598,7 +602,11 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
         $errors = array();
         foreach ($this->errors as $field => $error)
         {
-            if (is_string($error) && substr($error, 0, 2) == Translator::I18N_PREFIX && substr($error, -2) == Translator::I18N_POSTFIX)
+            if (
+                is_string($error)
+                && substr($error, 0, 2) == Translator::I18N_PREFIX
+                && substr($error, -2) == Translator::I18N_POSTFIX
+            )
             {
                 $error = $this->i18nMessage($error);
             }
@@ -615,11 +623,11 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Adding error message. You can use this function to assign error manually. This message will be localized same way
-     * as other messages, however system will not be able to index them.
+     * Adding error message. You can use this function to assign error manually. This message will be
+     * localized same way as other messages, however system will not be able to index them.
      *
-     * To use custom errors combined with location use ->addError($model->getMessage()) and store your custom error messages
-     * in model::$messages array.
+     * To use custom errors combined with location use ->addError($model->getMessage()) and store your
+     * custom error messages in model::$messages array.
      *
      * @param string       $field   Field storing message.
      * @param string|array $message Message to be added.
@@ -630,11 +638,11 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
-     * Initialize model by calling it's methods named using pattern __init*. Such methods can be protected and will be called
-     * only once, on first model constructing.
+     * Initialize model by calling it's methods named using pattern __init*. Such methods can be
+     * protected and will be called only once, on first model constructing.
      *
-     * @param mixed $options Custom options passed to initializer. Providing option will force initialization methods even
-     *                       if entity already initiated.
+     * @param mixed $options Custom options passed to initializer. Providing option will force
+     *                       initialization methods even if entity already initiated.
      */
     protected static function initialize($options = null)
     {
