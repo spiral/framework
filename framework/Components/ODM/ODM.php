@@ -158,7 +158,9 @@ class ODM extends Component implements Container\InjectionManagerInterface
      */
     public function schemaReader()
     {
-        return SchemaReader::make(array('config' => $this->config['schema']));
+        return SchemaReader::make(array(
+            'config' => $this->config
+        ));
     }
 
     /**
@@ -169,11 +171,11 @@ class ODM extends Component implements Container\InjectionManagerInterface
     {
         $schema = $this->schemaReader();
 
-        if (!empty($this->config['schema']['documentation']))
+        if (!empty($this->config['documentation']))
         {
             //Virtual ODM documentation to help IDE
             DocumentationExporter::make(compact('schema'))->render(
-                $this->config['schema']['documentation']
+                $this->config['documentation']
             );
         }
 
