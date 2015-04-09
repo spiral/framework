@@ -87,7 +87,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected $endpoints = array();
 
     /**
-     * Set of middleware aliases defined to be used in routes for filtering request and altering response.
+     * Set of middleware aliases defined to be used in routes for filtering request and altering
+     * response.
      *
      * @var array
      */

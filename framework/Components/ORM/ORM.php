@@ -33,4 +33,17 @@ class ORM extends Component
         $this->core = $core;
         $this->config = $core->loadConfig('orm');
     }
+
+    /**
+     * Get ORM schema reader. Schema will detect all declared entities, their tables, columns,
+     * relationships and etc.
+     *
+     * @return SchemaReader
+     */
+    public function schemaReader()
+    {
+        return SchemaReader::make(array(
+            'config' => $this->config
+        ));
+    }
 }

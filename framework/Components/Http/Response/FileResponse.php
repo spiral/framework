@@ -22,20 +22,20 @@ class FileResponse extends Response
      * @param string $publicName Name show to client.
      * @param int    $statusCode
      * @param array  $headers
-     * @param bool   $normalize  Normalize headers case (disabled by default).
      */
     public function __construct(
         $filename,
         $publicName = null,
         $statusCode = 200,
-        array $headers = array(),
-        $normalize = true
+        array $headers = array()
     )
     {
         if (!$publicName)
         {
             $publicName = basename($filename);
         }
+
+        $headers = $this->prepareHeaders($headers, true);
 
         //Forcing default set of headers
         $headers += array(
@@ -48,6 +48,6 @@ class FileResponse extends Response
             'Pragma'                    => 'public'
         );
 
-        parent::__construct(new Stream($filename, 'rb'), $statusCode, $headers, $normalize);
+        parent::__construct(new Stream($filename, 'rb'), $statusCode, $headers, false);
     }
 }

@@ -20,9 +20,15 @@ use Spiral\Support\Validation\Validator;
 abstract class Document extends DataEntity implements CompositableInterface, DatabaseEntityInterface
 {
     /**
-     * ODM requested schema analysis.
+     * ODM requested schema analysis. This constant will be send as option while analysis.
      */
     const SCHEMA_ANALYSIS = 788;
+
+    /**
+     * Model specific constant to indicate that model has to be validated while saving. You still can
+     * change this behaviour manually by providing argument to save method.
+     */
+    const FORCE_VALIDATION = true;
 
     /**
      * Helper constant to identify atomic SET operations.
@@ -71,12 +77,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     const MANY = 778;
     const ONE  = 899;
-
-    /**
-     * Model specific constant to indicate that model has to be validated while saving. You still can
-     * change this behaviour manually by providing argument to save method.
-     */
-    const FORCE_VALIDATION = true;
 
     /**
      * Automatically convert "_id" to "id".

@@ -158,7 +158,9 @@ class ODM extends Component implements Container\InjectionManagerInterface
      */
     public function schemaReader()
     {
-        return SchemaReader::make(array('config' => $this->config['schema']));
+        return SchemaReader::make(array(
+            'config' => $this->config['schema']
+        ));
     }
 
     /**
