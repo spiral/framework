@@ -166,7 +166,12 @@ abstract class PsrMessage extends Component implements MessageInterface
     {
         $name = $this->normalizeHeader($name, $normalize);
 
-        if (!is_array($value) && !is_string($value) && !$value instanceof HeaderInterface)
+        if (is_object($value))
+        {
+            $value = (string)$value;
+        }
+
+        if (!is_array($value) && !is_string($value))
         {
             throw new \InvalidArgumentException(
                 'Invalid header value provided, only strings, arrays and HeaderInterface allowed.'
@@ -208,7 +213,12 @@ abstract class PsrMessage extends Component implements MessageInterface
             return $this->withHeader($name, $value, false);
         }
 
-        if (!is_array($value) && !is_string($value) && !$value instanceof HeaderInterface)
+        if (is_object($value))
+        {
+            $value = (string)$value;
+        }
+
+        if (!is_array($value) && !is_string($value))
         {
             throw new \InvalidArgumentException(
                 'Invalid header value provided, only strings, arrays and HeaderInterface allowed.'

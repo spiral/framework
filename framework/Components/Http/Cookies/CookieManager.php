@@ -185,7 +185,7 @@ class CookieManager extends Component implements MiddlewareInterface
             //Merging cookies
             foreach ($cookies as &$cookie)
             {
-                if (!$cookie instanceof CookieInterface)
+                if (!$cookie instanceof Cookie)
                 {
                     continue;
                 }
@@ -197,7 +197,7 @@ class CookieManager extends Component implements MiddlewareInterface
                 }
 
                 //Encrypting cookie
-                $cookie = $cookie->withValue($this->getEncrypter()->encrypt($cookie->getValue()));
+                $cookie = (string)$cookie->withValue($this->getEncrypter()->encrypt($cookie->getValue()));
                 unset($cookie);
             }
 
