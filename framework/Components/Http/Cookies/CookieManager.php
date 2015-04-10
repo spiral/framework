@@ -56,7 +56,7 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Cookies has to be send (specified via global scope).
      *
-     * @var CookieInterface[]
+     * @var Cookie[]
      */
     protected $scheduled = array();
 
@@ -177,9 +177,6 @@ class CookieManager extends Component implements MiddlewareInterface
     {
         if (!empty($this->scheduled))
         {
-            /**
-             * @var CookieInterface[] $cookies
-             */
             $cookies = array_merge($response->getHeaderLines('Set-Cookie'), $this->scheduled);
 
             //Merging cookies
@@ -287,10 +284,10 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Schedule new cookie instance to be send while dispatching request.
      *
-     * @param CookieInterface $cookie
+     * @param Cookie $cookie
      * @return static
      */
-    public function add(CookieInterface $cookie)
+    public function add(Cookie $cookie)
     {
         $this->scheduled[] = $cookie;
 
@@ -300,7 +297,7 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Cookies has to be send (specified via global scope).
      *
-     * @return CookieInterface[]
+     * @return Cookie[]
      */
     public function getScheduled()
     {
