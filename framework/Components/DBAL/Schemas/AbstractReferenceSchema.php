@@ -105,7 +105,7 @@ abstract class AbstractReferenceSchema extends Component implements SqlFragmentI
     public function getName($quoted = false)
     {
         $name = $this->name;
-        if (!empty($this->name))
+        if (empty($this->name))
         {
             $name = $this->table->getName() . '_foreign_' . $this->column . '_' . uniqid();
         }

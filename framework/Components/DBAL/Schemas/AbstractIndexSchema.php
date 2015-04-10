@@ -86,7 +86,7 @@ abstract class AbstractIndexSchema extends Component implements SqlFragmentInter
     public function getName($quoted = false)
     {
         $name = $this->name;
-        if (!$this->name)
+        if (empty($this->name))
         {
             $name = $this->table->getName() . '_index_' . join('_', $this->columns) . '_' . uniqid();
         }

@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Schemas\EntitySchema;
 use Spiral\Components\ORM\Schemas\RelationshipSchema;
 use Spiral\Components\Tokenizer\Tokenizer;
@@ -25,18 +26,21 @@ class SchemaReader extends Component
     /**
      * Mapping used to link relationship definition to relationship schemas.
      *
+     * @todo: think about morphed word
      * @var array
      */
     protected $relationships = array(
-        Entity::HAS_ONE              => 'Spiral\Components\ORM\Schemas\Relationships\HasOneSchemaSchema',
+        Entity::HAS_ONE              => 'Spiral\Components\ORM\Schemas\Relationships\HasOneSchema',
         Entity::HAS_MANY             => 'Spiral\Components\ORM\Schemas\Relationships\HasManySchema',
         Entity::BELONGS_TO           => 'Spiral\Components\ORM\Schemas\Relationships\BelongsToSchema',
         Entity::MANY_TO_MANY         => 'Spiral\Components\ORM\Schemas\Relationships\ManyToManySchema',
         Entity::MANY_THOUGHT         => 'Spiral\Components\ORM\Schemas\Relationships\ManyThoughtSchema',
-        Entity::HAS_ONE_MORPHED      => 'Spiral\Components\ORM\Schemas\Relationships\HasOneMorphedSchema',
-        Entity::HAS_MANY_MORPHED     => 'Spiral\Components\ORM\Schemas\Relationships\HasManyMorphedSchema',
+
         Entity::BELONGS_TO_MORPHED   => 'Spiral\Components\ORM\Schemas\Relationships\BelongsToMorphedSchema',
         Entity::MANY_TO_MANY_MORPHED => 'Spiral\Components\ORM\Schemas\Relationships\ManyToManyMorphedSchema',
+
+        Entity::MORPHED_HAS_ONE      => 'Spiral\Components\ORM\Schemas\Relationships\MorphedHasOneSchema',
+        Entity::MORPHED_HAS_MANY     => 'Spiral\Components\ORM\Schemas\Relationships\MorphedHasManySchema',
         Entity::MORPHED_MANY_TO_MANY => 'Spiral\Components\ORM\Schemas\Relationships\MorphedManyToManySchema'
     );
 
@@ -48,21 +52,32 @@ class SchemaReader extends Component
     protected $config = array();
 
     /**
+     * DatabaseManager instance.
+     *
+     * @var DatabaseManager
+     */
+    protected $dbal = null;
+
+    /**
      * Found entity schemas.
      *
      * @var array
      */
     protected $entities = array();
 
+    public $tables = array();
+
     /**
      * New ORM Schema reader instance.
      *
-     * @param array     $config
-     * @param Tokenizer $tokenizer
+     * @param array           $config
+     * @param Tokenizer       $tokenizer
+     * @param DatabaseManager $dbal
      */
-    public function __construct(array $config, Tokenizer $tokenizer)
+    public function __construct(array $config, Tokenizer $tokenizer, DatabaseManager $dbal)
     {
         $this->config = $config;
+        $this->dbal = $dbal;
 
         foreach ($tokenizer->getClasses(self::ENTITY) as $class => $definition)
         {
@@ -76,7 +91,14 @@ class SchemaReader extends Component
                 'ormSchema' => $this
             ));
         }
+
+        foreach ($this->entities as $e)
+        {
+            $e->castRelationships();
+        }
     }
+
+    //TODO: Add method to get table schema
 
     /**
      * All fetched entity schemas.
@@ -112,6 +134,18 @@ class SchemaReader extends Component
         return $this->entities[$class];
     }
 
+    public function getTableSchema($database, $table)
+    {
+        $this->tables[] = $table = $this->dbal->db($database)->table($table)->schema();
+
+        return $table;
+    }
+
+    public function getTableSchemas()
+    {
+        return $this->tables;
+    }
+
     /**
      * Get instance of relationship schema associated with provided definition. Relationship schema
      * may be different than defined in class schema, for example some relationships may change
@@ -123,14 +157,12 @@ class SchemaReader extends Component
      */
     public function getRelationshipSchema($name, array $definition)
     {
-        //First key should always declare relationship type
-        reset($definition);
-
         if (empty($definition))
         {
             throw new ORMException("Relationship definition can not be empty.");
         }
 
+        reset($definition);
         $type = key($definition);
 
         if (!isset($this->relationships[$type]))

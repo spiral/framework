@@ -29,35 +29,35 @@ class Entity extends DataEntity
      * By default entities will read schema from database, so you can connect your ORM model to
      * already existed table.
      */
-    const ACTIVE_SCHEMA = false;
+    const ACTIVE_SCHEMA = true;
 
-    const HAS_ONE    = 1098;
-    const HAS_MANY   = 2098;
-    const BELONGS_TO = 3323;
-
-    const MANY_TO_MANY = 4342;
-    const MANY_THOUGHT = 5344;
 
     /**
-     * MORPH CONNECTIONS.
+     * TODO!!!!
      */
-    const HAS_ONE_MORPHED    = 4342;
-    const HAS_MANY_MORPHED   = 4342;
-    const BELONGS_TO_MORPHED = 1212;
 
-    const MANY_TO_MANY_MORPHED = 4342;
-    const MORPHED_MANY_TO_MANY = 4342;
+    const HAS_ONE              = 101;
+    const HAS_MANY             = 102;
+    const BELONGS_TO           = 103;
+    const MANY_TO_MANY         = 104;
+    const MANY_THOUGHT         = 105;
+    const MORPHED_HAS_ONE      = 106;
+    const MORPHED_HAS_MANY     = 107;
+    const BELONGS_TO_MORPHED   = 108;
+    const MANY_TO_MANY_MORPHED = 109;
+    const MORPHED_MANY_TO_MANY = 1010;
 
     /**
      * Key values.
      */
-    const FOREIGN_KEY = 'foreign';
-    const LOCAL_KEY   = 'local';
-    const BACK_REF    = 'backref';
+    const FOREIGN_KEY = 901;
+    const LOCAL_KEY   = 902;
+    const LOCAL_TYPE  = 903;
+    const BACK_REF    = 904;
 
-    const THOUGHT     = 'thought';
-    const PIVOT_TABLE = 'thought';
-    const VIA_TABLE   = 'thought';
+    const THOUGHT     = 905;
+    const PIVOT_TABLE = 905;
+    const VIA_TABLE   = 905;
 
     /**
      * Constants used to declare index type. See documentation for indexes property.

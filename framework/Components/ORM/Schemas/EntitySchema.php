@@ -55,7 +55,8 @@ class EntitySchema extends Component
     protected $propertiesCache = array();
 
     /**
-     * Table schema used to fetch information about declared or fetched columns. Empty if entity is abstract.
+     * Table schema used to fetch information about declared or fetched columns. Empty if entity is
+     * abstract.
      *
      * @var AbstractTableSchema
      */
@@ -69,27 +70,27 @@ class EntitySchema extends Component
     protected $relationships = array();
 
     /**
-     * New EntitySchema instance, schema responsible for detecting relationships, columns and indexes. This class is really
-     * similar to DocumentSchema and can be merged into common parent in future.
+     * New EntitySchema instance, schema responsible for detecting relationships, columns and indexes.
+     * This class is really similar to DocumentSchema and can be merged into common parent in future.
      *
-     * @param string          $class     Class name.
-     * @param SchemaReader    $ormSchema Parent ORM schema (all other documents).
-     * @param DatabaseManager $dbal      DatabaseManager component.
+     * @param string       $class     Class name.
+     * @param SchemaReader $ormSchema Parent ORM schema (all other documents).
      */
-    public function __construct($class, SchemaReader $ormSchema, DatabaseManager $dbal)
+    public function __construct($class, SchemaReader $ormSchema)
     {
         $this->class = $class;
         $this->ormSchema = $ormSchema;
         $this->reflection = new \ReflectionClass($class);
 
-        if (!$this->isAbstract() && $this->getTable() && $this->getSchema())
+        if ($this->isAbstract())
         {
-            $database = $dbal->db($this->getDatabase());
-            $this->tableSchema = $database->table($this->getTable())->schema();
-
-            //Casting table columns, indexes, foreign keys and etc
-            $this->castTableSchema();
+            return;
         }
+
+        $this->tableSchema = $this->ormSchema->getTableSchema($this->getDatabase(), $this->getTable());
+
+        //Casting table columns, indexes, foreign keys and etc
+        $this->castTableSchema();
     }
 
     /**
@@ -142,9 +143,14 @@ class EntitySchema extends Component
      *
      * @return string
      */
-    public function roleName()
+    public function getRoleName()
     {
         return lcfirst($this->getShortName());
+    }
+
+    public function isActiveSchema()
+    {
+        return $this->reflection->getConstant('ACTIVE_SCHEMA');
     }
 
     /**
@@ -252,65 +258,6 @@ class EntitySchema extends Component
         return $this->property('indexes', true);
     }
 
-    /**
-     * Getting all secured fields.
-     *
-     * @return array
-     */
-    public function getSecured()
-    {
-        return $this->property('secured', true);
-    }
-
-    /**
-     * Getting all assignable fields.
-     *
-     * @return array
-     */
-    public function getAssignable()
-    {
-        return $this->property('assignable', true);
-    }
-
-    /**
-     * Getting all hidden fields.
-     *
-     * @return array
-     */
-    public function getHidden()
-    {
-        return $this->property('hidden', true);
-    }
-
-    //    /**
-    //     * Get document get filters (merged with parent model(s) values).
-    //     *
-    //     * @return array
-    //     */
-    //    public function getGetters()
-    //    {
-    //        return $this->getMutators()['getter'];
-    //    }
-    //
-    //    /**
-    //     * Get document set filters (merged with parent model(s) values).
-    //     *
-    //     * @return array
-    //     */
-    //    public function getSetters()
-    //    {
-    //        return $this->getMutators()['setter'];
-    //    }
-    //
-    //    /**
-    //     * Get document field accessors, this method will automatically create accessors for compositions.
-    //     *
-    //     * @return array
-    //     */
-    //    public function getAccessors()
-    //    {
-    //        return $this->getMutators()['accessor'];
-    //    }
 
     /**
      * Entity default values. No typecast here as it will be resolved on TableSchema level.
@@ -322,72 +269,6 @@ class EntitySchema extends Component
         return $this->property('defaults', true);
     }
 
-    /**
-     * Get all document validation rules (merged with parent model(s) values).
-     *
-     * @return array
-     */
-    public function getValidates()
-    {
-        return $this->property('validates', true);
-    }
-
-    /**
-     * Get error messages localization sources. This is required to correctly localize model errors
-     * without overlaps.
-     *
-     * This method is identical to DocumentSchema getMessages() and can be merged in future somehow.
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        $validates = array();
-        $reflection = $this->reflection;
-        while ($reflection->getName() != SchemaReader::ENTITY)
-        {
-            //Validation messages
-            if (!empty($reflection->getDefaultProperties()['validates']))
-            {
-                $validates[$reflection->getName()] = $reflection->getDefaultProperties()['validates'];
-            }
-
-            $reflection = $reflection->getParentClass();
-        }
-
-        $messages = array();
-        foreach (array_reverse($validates) as $parent => $validates)
-        {
-            foreach ($validates as $field => $rules)
-            {
-                foreach ($rules as $rule)
-                {
-                    $message = '';
-                    if (isset($rule['message']))
-                    {
-                        $message = $rule['message'];
-                    }
-                    elseif (isset($rule['error']))
-                    {
-                        $message = $rule['error'];
-                    }
-                    if (
-                        substr($message, 0, 2) == Translator::I18N_PREFIX
-                        && substr($message, -2) == Translator::I18N_POSTFIX
-                    )
-                    {
-                        //Only I18N messages
-                        if ($message && !isset($errorMessages[$message]))
-                        {
-                            $messages[$message] = $parent;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $messages;
-    }
 
     /**
      * Fill table schema with declared columns, their default values and etc.
@@ -417,11 +298,6 @@ class EntitySchema extends Component
     }
 
     /**
-     *
-     * TODO: REVISE COLUMN CREATION
-     *
-     *
-     *
      * Cast column schema based on provided column definition and default value. Spiral will force
      * default values (internally) for every NOT NULL column except primary keys.
      *
@@ -575,5 +451,25 @@ class EntitySchema extends Component
 
         //Defining index
         $this->tableSchema->index($columns)->unique($type == Entity::UNIQUE);
+    }
+
+    /**
+     * Casting entity relationships.
+     */
+    public function castRelationships()
+    {
+        foreach ($this->property('schema', true) as $name => $definition)
+        {
+            if (is_string($definition))
+            {
+                //Column definition
+                continue;
+            }
+
+            $relationship = $this->ormSchema->getRelationshipSchema($name, $definition);
+            $relationship->cast($this);
+
+            $this->relationships[$name] = $relationship;
+        }
     }
 }
