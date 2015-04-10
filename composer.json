@@ -18,7 +18,8 @@
     "predis/predis": "~1.0",
     "symfony/console": "2.6.4",
     "symfony/process": "~2.6",
-    "nesbot/carbon": "dev-master"
+    "nesbot/carbon": "dev-master",
+    "doctrine/inflector": "~1.0@dev"
   },
   "autoload": {
     "files": [

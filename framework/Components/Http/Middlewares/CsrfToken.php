@@ -68,7 +68,7 @@ class CsrfToken implements MiddlewareInterface
             }
         }
 
-        $response = $next($request->withAttribute('crsfToken', $token));
+        $response = $next($request->withAttribute('csrfToken', $token));
         if ($requestCookie && $response instanceof Response)
         {
             //Will work even with non spiral responses

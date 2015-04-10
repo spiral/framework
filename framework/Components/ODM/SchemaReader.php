@@ -155,7 +155,7 @@ class SchemaReader extends Component
      * @param string $abstractType Field type.
      * @return array
      */
-    public function findMutator($abstractType)
+    public function getMutators($abstractType)
     {
         return isset($this->config['mutators'][$abstractType])
             ? $this->config['mutators'][$abstractType]

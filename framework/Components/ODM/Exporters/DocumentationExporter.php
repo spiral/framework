@@ -107,12 +107,12 @@ class DocumentationExporter extends Component
      */
     protected function renderDocument(DocumentSchema $document)
     {
-        $name = $document->shortName();
+        $name = $document->getShortName();
         $model = ClassElement::make(compact('name'));
 
         //This name should be used in static methods, as ODM allows to store all class children in
         //one collection
-        $primaryDocument = $document->primaryDocument()->shortName();
+        $primaryDocument = $document->primaryDocument()->getShortName();
 
         //Static collection methods
         if ($document->getCollection())

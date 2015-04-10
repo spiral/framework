@@ -240,6 +240,8 @@ class CookieManager extends Component implements MiddlewareInterface
         $httpOnly = true
     )
     {
+        //FETCH VALUES FROM HERE
+
         $cookie = new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
         $this->scheduled[] = $cookie;
 

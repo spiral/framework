@@ -99,11 +99,9 @@ class DocumentSchema extends Component
      *
      * @return string
      */
-    public function shortName()
+    public function getShortName()
     {
-        $names = explode('\\', $this->class);
-
-        return end($names);
+        return $this->reflection->getShortName();
     }
 
     /**
@@ -258,16 +256,16 @@ class DocumentSchema extends Component
             if (
                 is_array($type)
                 && is_scalar($type[0])
-                && $filter = $this->odmSchema->findMutator($field . '::' . $type[0])
+                && $filter = $this->odmSchema->getMutators($field . '::' . $type[0])
             )
             {
                 $resolved += $filter;
             }
-            elseif (is_array($type) && $filter = $this->odmSchema->findMutator('array'))
+            elseif (is_array($type) && $filter = $this->odmSchema->getMutators('array'))
             {
                 $resolved += $filter;
             }
-            elseif (!is_array($type) && $filter = $this->odmSchema->findMutator($type))
+            elseif (!is_array($type) && $filter = $this->odmSchema->getMutators($type))
             {
                 $resolved += $filter;
             }

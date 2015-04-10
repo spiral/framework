@@ -25,7 +25,14 @@ class IndexSchema extends AbstractIndexSchema
 
         if (preg_match('/\(([^)]+)\)/', $schema, $matches))
         {
-            $this->columns = array_map('trim', explode(',', $matches[1]));
+            $this->columns = explode(',', $matches[1]);
+
+            foreach ($this->columns as &$column)
+            {
+                //Postgres with add quotes to all columns with uppercase letters
+                $column = trim($column, ' "\'');
+                unset($column);
+            }
         }
     }
 }

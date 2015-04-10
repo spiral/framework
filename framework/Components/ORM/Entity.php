@@ -8,9 +8,10 @@
  */
 namespace Spiral\Components\ORM;
 
-use Spiral\Core\Component;
+use Spiral\Components\ORM\Schemas\EntitySchema;
+use Spiral\Support\Models\DataEntity;
 
-class Entity extends Component
+class Entity extends DataEntity
 {
     /**
      * ORM requested schema analysis. This constant will be send as option while analysis.
@@ -63,4 +64,70 @@ class Entity extends Component
      */
     const INDEX  = 1000;
     const UNIQUE = 2000;
+
+    /**
+     * Already fetched schemas from ORM. Yes, ORM entity is really similar to ODM. Original ORM was
+     * written long time ago before ODM and solutions i put to ORM was later used for ODM, while
+     * "great transition" (tm) ODM was significantly updated and now ODM drive updates for ORM,
+     * the student become the teacher.
+     *
+     * @var array
+     */
+    protected static $schemaCache = array();
+
+    /**
+     * Table associated with entity. Spiral will guess table name automatically based on class name
+     * use Doctrine Inflector, however i'm STRONGLY recommend to declare table name manually as it
+     * gives more readable code.
+     *
+     * @var string
+     */
+    protected $table = null;
+
+    /**
+     * Database name/id where entity table located in. By default database will be used if nothing
+     * else is specified.
+     *
+     * @var string
+     */
+    protected $database = 'default';
+
+    protected $schema = array();
+    protected $indexes = array();
+
+    public function __construct($fields = array())
+    {
+        if (!isset(self::$schemaCache[$class = get_class($this)]))
+        {
+            static::initialize();
+            //            //self::$schemaCache[$class] = ORM::getInstance()->getSchema(get_class($this));
+        }
+
+        //Prepared document schema
+        //$this->schema = self::$schemaCache[$class];
+
+        //Merging with default values
+        //$this->fields = $fields + $this->schema[ORM::E_DEFAULTS];
+    }
+
+    /**
+     * Prepare document property before caching it ORM schema. This method fire event "property" and
+     * sends SCHEMA_ANALYSIS option to trait initializers. Method can be used to create custom filters,
+     * schema values and etc.
+     *
+     * @param EntitySchema $schema
+     * @param string       $property Model property name.
+     * @param mixed        $value    Model property value, will be provided in an inherited form.
+     * @return mixed
+     */
+    public static function describeProperty(EntitySchema $schema, $property, $value)
+    {
+        static::initialize(self::SCHEMA_ANALYSIS);
+
+        return static::dispatcher()->fire('describe', compact(
+            'schema',
+            'property',
+            'value'
+        ))['value'];
+    }
 }

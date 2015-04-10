@@ -98,7 +98,7 @@ class ColumnSchema extends AbstractColumnSchema
         'time'        => array('time', 'time with time zone', 'time without time zone'),
         'timestamp'   => array('timestamp', 'timestamp with time zone', 'timestamp without time zone'),
         'binary'      => array('bytea'),
-        'json'        => 'json'
+        'json'        => array('json')
     );
 
     /**

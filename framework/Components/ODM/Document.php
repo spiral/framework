@@ -221,8 +221,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
     /**
      * Prepare document property before caching it ODM schema. This method fire event "property" and
-     * sends SCHEMA_ANALYSIS option to trait initializers. Method and even can be used to create
-     * custom filters, schema values and etc.
+     * sends SCHEMA_ANALYSIS option to trait initializers. Method can be used to create custom filters,
+     * schema values and etc.
      *
      * @param DocumentSchema $schema
      * @param string         $property Model property name.
