@@ -6,9 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ORM\Relationships;
+namespace Spiral\Components\ORM\Relations;
 
-class BelongsTo 
+use Spiral\Components\ORM\Relation;
+
+class BelongsTo extends Relation
 {
+    public function getRelated()
+    {
 
+    }
 }

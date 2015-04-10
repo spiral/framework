@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
-abstract class Relationship
+abstract class Relation
 {
 
 }

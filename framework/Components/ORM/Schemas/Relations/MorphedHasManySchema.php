@@ -6,19 +6,18 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ORM\Schemas\Relationships;
+namespace Spiral\Components\ORM\Schemas\Relations;
 
 use Spiral\Components\ORM\Entity;
-use Spiral\Components\ORM\Schemas\EntitySchema;
 
 class MorphedHasManySchema extends MorphedHasOneSchema
 {
     /**
-     * Relationship type.
+     * Relation type.
      */
     const RELATIONSHIP_TYPE = Entity::MORPHED_HAS_MANY;
 
-    public function cast(EntitySchema $schema)
+    public function initiate()
     {
     }
 }

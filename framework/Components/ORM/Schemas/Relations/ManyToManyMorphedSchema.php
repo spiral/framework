@@ -6,34 +6,32 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ORM\Schemas\Relationships;
+namespace Spiral\Components\ORM\Schemas\Relations;
 
-use Doctrine\Common\Inflector\Inflector;
 use Spiral\Components\ORM\Entity;
-use Spiral\Components\ORM\Schemas\EntitySchema;
-use Spiral\Components\ORM\Schemas\RelationshipSchema;
+use Spiral\Components\ORM\Schemas\RelationSchema;
 
-class ManyToManyMorphedSchema extends RelationshipSchema
+class ManyToManyMorphedSchema extends RelationSchema
 {
     /**
-     * Relationship type.
+     * Relation type.
      */
     const RELATIONSHIP_TYPE = Entity::MANY_TO_MANY_MORPHED;
 
-    public function cast(EntitySchema $schema)
+    public function initiate()
     {
         $mapTable = $this->definition[Entity::PIVOT_TABLE];
 
-        $table = $this->ormSchema->getTableSchema($schema->getDatabase(), $mapTable);
+        $table = $this->ormSchema->getTableSchema($this->entitySchema->getDatabase(), $mapTable);
 
         $table->bigPrimary('id');
 
         //integer vs bigInteger
-        $table->column($schema->getRoleName() . '_id')
+        $table->column($this->entitySchema->getRoleName() . '_id')
             ->integer()
             ->index();
 
-        $table->column($schema->getRoleName() . '_id')->foreign($schema->getTable(), 'id');
+        $table->column($this->entitySchema->getRoleName() . '_id')->foreign($this->entitySchema->getTable(), 'id');
 
         $table->column($this->name . '_type')->string(32);
 

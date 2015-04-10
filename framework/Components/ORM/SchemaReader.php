@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Schemas\EntitySchema;
-use Spiral\Components\ORM\Schemas\RelationshipSchema;
+use Spiral\Components\ORM\Schemas\RelationSchema;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
@@ -30,18 +30,21 @@ class SchemaReader extends Component
      * @var array
      */
     protected $relationships = array(
-        Entity::HAS_ONE              => 'Spiral\Components\ORM\Schemas\Relationships\HasOneSchema',
-        Entity::HAS_MANY             => 'Spiral\Components\ORM\Schemas\Relationships\HasManySchema',
-        Entity::BELONGS_TO           => 'Spiral\Components\ORM\Schemas\Relationships\BelongsToSchema',
-        Entity::MANY_TO_MANY         => 'Spiral\Components\ORM\Schemas\Relationships\ManyToManySchema',
-        Entity::MANY_THOUGHT         => 'Spiral\Components\ORM\Schemas\Relationships\ManyThoughtSchema',
+        Entity::BELONGS_TO           => 'Spiral\Components\ORM\Schemas\Relations\BelongsToSchema',
 
-        Entity::BELONGS_TO_MORPHED   => 'Spiral\Components\ORM\Schemas\Relationships\BelongsToMorphedSchema',
-        Entity::MANY_TO_MANY_MORPHED => 'Spiral\Components\ORM\Schemas\Relationships\ManyToManyMorphedSchema',
+        Entity::HAS_ONE              => 'Spiral\Components\ORM\Schemas\Relations\HasOneSchema',
+        Entity::HAS_MANY             => 'Spiral\Components\ORM\Schemas\Relations\HasManySchema',
 
-        Entity::MORPHED_HAS_ONE      => 'Spiral\Components\ORM\Schemas\Relationships\MorphedHasOneSchema',
-        Entity::MORPHED_HAS_MANY     => 'Spiral\Components\ORM\Schemas\Relationships\MorphedHasManySchema',
-        Entity::MORPHED_MANY_TO_MANY => 'Spiral\Components\ORM\Schemas\Relationships\MorphedManyToManySchema'
+        Entity::MANY_TO_MANY         => 'Spiral\Components\ORM\Schemas\Relations\ManyToManySchema',
+        Entity::MANY_THOUGHT         => 'Spiral\Components\ORM\Schemas\Relations\ManyThoughtSchema',
+
+        Entity::BELONGS_TO_MORPHED   => 'Spiral\Components\ORM\Schemas\Relations\BelongsToMorphedSchema',
+
+        Entity::MORPHED_HAS_ONE      => 'Spiral\Components\ORM\Schemas\Relations\MorphedHasOneSchema',
+        Entity::MORPHED_HAS_MANY     => 'Spiral\Components\ORM\Schemas\Relations\MorphedHasManySchema',
+        Entity::MORPHED_MANY_TO_MANY => 'Spiral\Components\ORM\Schemas\Relations\MorphedManyToManySchema',
+        Entity::MANY_TO_MANY_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\ManyToManyMorphedSchema'
+
     );
 
     /**
@@ -94,7 +97,7 @@ class SchemaReader extends Component
 
         foreach ($this->entities as $e)
         {
-            $e->castRelationships();
+            $e->castRelations();
         }
     }
 
@@ -146,20 +149,11 @@ class SchemaReader extends Component
         return $this->tables;
     }
 
-    /**
-     * Get instance of relationship schema associated with provided definition. Relationship schema
-     * may be different than defined in class schema, for example some relationships may change
-     * their type to polymorphic form if foreign target declared as interface.
-     *
-     * @param string $name Relationship name.
-     * @param array  $definition
-     * @return RelationshipSchema
-     */
-    public function getRelationshipSchema($name, array $definition)
+    public function getRelationSchema(EntitySchema $entitySchema, $name, array $definition)
     {
         if (empty($definition))
         {
-            throw new ORMException("Relationship definition can not be empty.");
+            throw new ORMException("Relation definition can not be empty.");
         }
 
         reset($definition);
@@ -171,17 +165,18 @@ class SchemaReader extends Component
         }
 
         /**
-         * @var RelationshipSchema $relationship
+         * @var RelationSchema $relationship
          */
         $relationship = Container::get($this->relationships[$type], array(
-            'ormSchema'  => $this,
-            'name'       => $name,
-            'definition' => $definition
+            'ormSchema'    => $this,
+            'entitySchema' => $entitySchema,
+            'name'         => $name,
+            'definition'   => $definition
         ));
 
         if ($relationship->hasEquivalent())
         {
-            return $this->getRelationshipSchema($name, $relationship->getEquivalentDefinition());
+            return $this->getRelationSchema($entitySchema, $name, $relationship->getEquivalentDefinition());
         }
 
         return $relationship;

@@ -125,6 +125,11 @@ class EntitySchema extends Component
         return $this->class;
     }
 
+    public function getReflection()
+    {
+        return $this->reflection;
+    }
+
     /**
      * Entity class name without included namespace.
      *
@@ -269,6 +274,11 @@ class EntitySchema extends Component
         return $this->property('defaults', true);
     }
 
+
+    public function getPrimaryKey()
+    {
+        return array_slice($this->tableSchema->getPrimaryKeys(), 0, 1)[0];
+    }
 
     /**
      * Fill table schema with declared columns, their default values and etc.
@@ -456,7 +466,7 @@ class EntitySchema extends Component
     /**
      * Casting entity relationships.
      */
-    public function castRelationships()
+    public function castRelations()
     {
         foreach ($this->property('schema', true) as $name => $definition)
         {
@@ -466,8 +476,10 @@ class EntitySchema extends Component
                 continue;
             }
 
-            $relationship = $this->ormSchema->getRelationshipSchema($name, $definition);
-            $relationship->cast($this);
+            $relationship = $this->ormSchema->getRelationSchema($this, $name, $definition);
+
+            //Initiating required columns, foreign keys and indexes
+            $relationship->initiate($this);
 
             $this->relationships[$name] = $relationship;
         }

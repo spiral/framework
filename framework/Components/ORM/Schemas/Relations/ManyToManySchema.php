@@ -6,16 +6,15 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ORM\Schemas\Relationships;
+namespace Spiral\Components\ORM\Schemas\Relations;
 
 use Spiral\Components\ORM\Entity;
-use Spiral\Components\ORM\Schemas\EntitySchema;
-use Spiral\Components\ORM\Schemas\RelationshipSchema;
+use Spiral\Components\ORM\Schemas\RelationSchema;
 
-class ManyToManySchema extends RelationshipSchema
+class ManyToManySchema extends RelationSchema
 {
     /**
-     * Relationship type.
+     * Relation type.
      */
     const RELATIONSHIP_TYPE = Entity::MANY_TO_MANY;
 
@@ -24,21 +23,21 @@ class ManyToManySchema extends RelationshipSchema
      */
     const EQUIVALENT_RELATIONSHIP = Entity::MANY_TO_MANY_MORPHED;
 
-    public function cast(EntitySchema $schema)
+    public function initiate()
     {
         $target = $this->getTargetEntity();
 
         $mapTable = empty($this->definition[Entity::PIVOT_TABLE])
-            ? $schema->getTable() . '_' . $target->getTable() . '_map'
+            ? $this->entitySchema->getTable() . '_' . $target->getTable() . '_map'
             : $this->definition[Entity::PIVOT_TABLE];
-        $table = $this->ormSchema->getTableSchema($schema->getDatabase(), $mapTable);
+        $table = $this->ormSchema->getTableSchema($this->entitySchema->getDatabase(), $mapTable);
 
         $table->bigPrimary('id');
 
         //column type and name
-        $table->column($schema->getRoleName() . '_id')->integer()->foreign($schema->getTable(), 'id');
+        $table->column($this->entitySchema->getRoleName() . '_id')->integer()->foreign($this->entitySchema->getTable(), 'id');
         $table->column($target->getRoleName() . '_id')->integer()->foreign($target->getTable(), 'id');
 
-        $table->index($schema->getRoleName() . '_id', $target->getRoleName() . '_id')->unique(true);
+        $table->index($this->entitySchema->getRoleName() . '_id', $target->getRoleName() . '_id')->unique(true);
     }
 }
