@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Encrypter\DecryptionException;
 use Spiral\Components\Encrypter\Encrypter;
 use Spiral\Components\Encrypter\EncrypterException;
+use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\Middlewares\CsrfToken;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
@@ -30,6 +31,13 @@ class CookieManager extends Component implements MiddlewareInterface
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = 'cookies';
+
+    /**
+     * Http dispatcher instance fetched from context.
+     *
+     * @var HttpDispatcher
+     */
+    protected $httpDispatcher = null;
 
     /**
      * Cookie names should never be encrypted or decrypted.
@@ -98,6 +106,8 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
+        $this->httpDispatcher = $context;
+
         $request = $this->decryptCookies($request);
 
         /**
@@ -165,12 +175,12 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     protected function encryptCookies(ResponseInterface $response)
     {
-        if (($cookies = $response->getHeaderLines('Set-Cookie', false)) || !empty($this->scheduled))
+        if (!empty($this->scheduled))
         {
             /**
              * @var CookieInterface[] $cookies
              */
-            $cookies = array_merge($cookies, $this->scheduled);
+            $cookies = array_merge($response->getHeaderLines('Set-Cookie'), $this->scheduled);
 
             //Merging cookies
             foreach ($cookies as &$cookie)
@@ -201,6 +211,9 @@ class CookieManager extends Component implements MiddlewareInterface
 
     /**
      * Schedule new cookie. Cookie will be send while dispatching request.
+     *
+     * Domain, path, and secure values can be left in null state, in this case cookie manager will
+     * populate them automatically.
      *
      * @link http://php.net/manual/en/function.setcookie.php
      * @param string $name     The name of the cookie.
@@ -234,12 +247,27 @@ class CookieManager extends Component implements MiddlewareInterface
         $name,
         $value = null,
         $lifetime = 0,
-        $path = Cookie::AUTO,
-        $domain = Cookie::AUTO,
-        $secure = Cookie::AUTO,
+        $path = null,
+        $domain = null,
+        $secure = null,
         $httpOnly = true
     )
     {
+        if (is_null($path))
+        {
+            $path = $this->httpDispatcher->getConfig()['basePath'];
+        }
+
+        if (is_null($domain))
+        {
+            $domain = $this->httpDispatcher->cookieDomain();
+        }
+
+        if (is_null($secure))
+        {
+            $secure = $this->httpDispatcher->getRequest()->getMethod() == 'https';
+        }
+
         $cookie = new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
         $this->scheduled[] = $cookie;
 

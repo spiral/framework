@@ -10,6 +10,7 @@ namespace Spiral\Components\Http\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
+use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
 use Spiral\Core\Component;
@@ -68,13 +69,22 @@ class CsrfToken implements MiddlewareInterface
             }
         }
 
+        /**
+         * @var HttpDispatcher $context
+         */
         $response = $next($request->withAttribute('crsfToken', $token));
         if ($requestCookie && $response instanceof Response)
         {
             //Will work even with non spiral responses
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                new Cookie(self::COOKIE, $token, 86400)
+                new Cookie(
+                    self::COOKIE,
+                    $token,
+                    86400,
+                    $context->getConfig()['basePath'],
+                    $context->cookieDomain()
+                )
             );
         }
 

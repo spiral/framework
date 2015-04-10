@@ -371,12 +371,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
             $replace = true;
             foreach ($values as $value)
             {
-                if ($header == 'Set-Cookie' && $value instanceof CookieInterface)
-                {
-                    $this->sendCookie($value);
-                    continue;
-                }
-
                 header("{$header}: {$value}", $replace);
                 $replace = false;
             }
@@ -397,44 +391,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
         }
 
         $this->sendStream($response->getBody());
-    }
-
-    /**
-     * Simplified method used to send cookie content with forcing default values for domain, path
-     * and security. Will work only in cases where CookieInterface object user as header line in header
-     * "Set-Cookie".
-     *
-     * Even if CookieInstance should support header creation this method is preferred as it will
-     * allow HttpDispatcher manager default values.
-     *
-     * @param CookieInterface $cookie
-     */
-    protected function sendCookie(CookieInterface $cookie)
-    {
-        if (($path = $cookie->getPath()) == Cookie::AUTO)
-        {
-            $path = $this->config['basePath'];
-        }
-
-        if (($domain = $cookie->getDomain()) == Cookie::AUTO)
-        {
-            $domain = $this->cookieDomain();
-        }
-
-        if (($secure = $cookie->getSecure()) == Cookie::AUTO)
-        {
-            $secure = $this->request->getMethod() == 'https';
-        }
-
-        setcookie(
-            $cookie->getName(),
-            $cookie->getValue(),
-            $cookie->getExpires(),
-            $path,
-            $domain,
-            $secure,
-            $cookie->getHttpOnly()
-        );
     }
 
     /**

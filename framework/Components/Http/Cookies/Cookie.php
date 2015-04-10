@@ -8,14 +8,8 @@
  */
 namespace Spiral\Components\Http\Cookies;
 
-class Cookie implements CookieInterface
+class Cookie
 {
-    /**
-     * Value should be resolved automatically in HttpDispatcher->dispatch() method. This flag can be
-     * used only for secure, path and domain values.
-     */
-    const AUTO = null;
-
     /**
      * The name of the cookie.
      *
@@ -48,7 +42,7 @@ class Cookie implements CookieInterface
      *
      * @var string|null
      */
-    private $path = self::AUTO;
+    private $path = null;
 
     /**
      * The domain that the cookie is available. To make the cookie available on all subdomains of
@@ -58,7 +52,7 @@ class Cookie implements CookieInterface
      *
      * @var string|null
      */
-    private $domain = self::AUTO;
+    private $domain = null;
 
     /**
      * Indicates that the cookie should only be transmitted over a secure HTTPS connection from the
@@ -68,7 +62,7 @@ class Cookie implements CookieInterface
      *
      * @var string|null
      */
-    private $secure = self::AUTO;
+    private $secure = null;
 
     /**
      * When true the cookie will be made accessible only through the HTTP protocol. This means that
@@ -114,9 +108,9 @@ class Cookie implements CookieInterface
         $name,
         $value = null,
         $lifetime = 0,
-        $path = self::AUTO,
-        $domain = self::AUTO,
-        $secure = self::AUTO,
+        $path = null,
+        $domain = null,
+        $secure = false,
         $httpOnly = true
     )
     {
