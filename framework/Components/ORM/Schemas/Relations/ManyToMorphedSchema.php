@@ -90,5 +90,16 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function revertRelation($name, $type = null)
     {
+        foreach ($this->getTargets() as $entity)
+        {
+            $entity->addRelation($name, array(
+                Entity::MANY_TO_MANY => $this->entitySchema->getClass(),
+                Entity::PIVOT_TABLE  => $this->definition[Entity::PIVOT_TABLE],
+                Entity::OUTER_KEY    => $this->definition[Entity::INNER_KEY],
+                Entity::INNER_KEY    => $this->definition[Entity::OUTER_KEY],
+                Entity::MORPH_KEY    => $this->definition[Entity::MORPH_KEY],
+                Entity::CREATE_PIVOT => $this->definition[Entity::CREATE_PIVOT]
+            ));
+        }
     }
 }
