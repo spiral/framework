@@ -100,7 +100,6 @@ abstract class RelationSchema
             return;
         }
 
-        //TODO: Check if outer exists
         if (!class_exists($this->target) && !interface_exists($this->target))
         {
             throw new ORMException(

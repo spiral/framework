@@ -25,7 +25,6 @@ class HasOneSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::LOCAL_KEY         => '{entity:primaryKey}',
         Entity::OUTER_KEY         => '{entity:roleName}_{definition:LOCAL_KEY}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE'
@@ -47,7 +46,7 @@ class HasOneSchema extends RelationSchema
         {
             $foreignKey = $outerKey->foreign(
                 $this->entitySchema->getTable(),
-                $this->definition[Entity::LOCAL_KEY]
+                $this->entitySchema->getPrimaryKey()
             );
             $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);

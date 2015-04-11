@@ -9,9 +9,9 @@
 namespace Spiral\Components\ORM\Schemas\Relations;
 
 use Spiral\Components\ORM\Entity;
-use Spiral\Components\ORM\Schemas\RelationSchema;
+use Spiral\Components\ORM\Schemas\MorphedRelationSchema;
 
-class BelongsToMorphedSchema extends RelationSchema
+class BelongsToMorphedSchema extends MorphedRelationSchema
 {
     /**
      * Relation type.
