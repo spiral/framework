@@ -81,6 +81,14 @@ abstract class RelationSchema
      */
     protected $target = '';
 
+    /**
+     * New RelationSchema instance.
+     *
+     * @param SchemaReader $ormSchema
+     * @param EntitySchema $entitySchema
+     * @param string       $name
+     * @param array        $definition
+     */
     public function __construct(
         SchemaReader $ormSchema,
         EntitySchema $entitySchema,
@@ -111,6 +119,12 @@ abstract class RelationSchema
         $this->clarifyDefinition();
     }
 
+    /**
+     * Get instance on EntitySchema assosicated with outer entity (presented only for non polymorphic
+     * relations).
+     *
+     * @return null|EntitySchema
+     */
     protected function outerEntity()
     {
         return $this->ormSchema->getEntity($this->target);
@@ -138,6 +152,11 @@ abstract class RelationSchema
         }
     }
 
+    /**
+     * Option string used to populate definition template if no user value provided.
+     *
+     * @return array
+     */
     protected function definitionOptions()
     {
         $options = array(

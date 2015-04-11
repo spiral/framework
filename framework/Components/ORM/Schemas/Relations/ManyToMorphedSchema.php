@@ -30,7 +30,8 @@ class ManyToMorphedSchema extends MorphedRelationSchema
         Entity::OUTER_KEY         => '{name:singular}_{outer:primaryKey}',
         Entity::MORPH_KEY         => '{name:singular}_type',
         Entity::CONSTRAINT        => true,
-        Entity::CONSTRAINT_ACTION => 'CASCADE'
+        Entity::CONSTRAINT_ACTION => 'CASCADE',
+        Entity::CREATE_PIVOT      => true
     );
 
     /**
@@ -38,7 +39,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (empty($this->targets))
+        if (empty($this->targets) || !$this->definition[Entity::CREATE_PIVOT])
         {
             //No targets found, no need to generate anything
             return;

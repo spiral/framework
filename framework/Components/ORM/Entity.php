@@ -60,6 +60,8 @@ class Entity extends DataEntity
     const CONSTRAINT        = 906;
     const CONSTRAINT_ACTION = 907;
 
+    const CREATE_PIVOT      = 909;
+
     /**
      * Constants used to declare index type. See documentation for indexes property.
      */

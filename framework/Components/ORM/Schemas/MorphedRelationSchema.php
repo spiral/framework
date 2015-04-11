@@ -20,9 +20,28 @@ abstract class MorphedRelationSchema extends RelationSchema
      */
     protected $targets = array();
 
+    /**
+     * Primary key name used to every outer entity.
+     *
+     * @var string
+     */
     protected $outerPrimaryKey = null;
+
+    /**
+     * Primary ket abstract type used in every outer entity.
+     *
+     * @var string
+     */
     protected $outerPrimaryAbstractType = null;
 
+    /**
+     * New MorphedRelationSchema instance.
+     *
+     * @param SchemaReader $ormSchema
+     * @param EntitySchema $entitySchema
+     * @param string       $name
+     * @param array        $definition
+     */
     public function __construct(
         SchemaReader $ormSchema,
         EntitySchema $entitySchema,
@@ -70,6 +89,11 @@ abstract class MorphedRelationSchema extends RelationSchema
         }
     }
 
+    /**
+     * Option string used to populate definition template if no user value provided.
+     *
+     * @return array
+     */
     protected function definitionOptions()
     {
         $options = parent::definitionOptions();

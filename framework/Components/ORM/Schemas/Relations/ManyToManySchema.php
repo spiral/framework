@@ -33,7 +33,8 @@ class ManyToManySchema extends RelationSchema
         Entity::INNER_KEY         => '{entity:roleName}_{entity:primaryKey}',
         Entity::OUTER_KEY         => '{outer:roleName}_{outer:primaryKey}',
         Entity::CONSTRAINT        => true,
-        Entity::CONSTRAINT_ACTION => 'CASCADE'
+        Entity::CONSTRAINT_ACTION => 'CASCADE',
+        Entity::CREATE_PIVOT      => false
     );
 
     /**
@@ -77,6 +78,11 @@ class ManyToManySchema extends RelationSchema
      */
     public function buildSchema()
     {
+        if (!$this->definition[Entity::CREATE_PIVOT])
+        {
+            return;
+        }
+
         $pivotTable = $this->ormSchema->declareTable(
             $this->entitySchema->getDatabase(),
             $this->getPivotTableName()
