@@ -11,12 +11,12 @@ namespace Spiral\Components\ORM\Schemas\Relations;
 use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\Schemas\MorphedRelationSchema;
 
-class ManyToManyMorphedSchema extends MorphedRelationSchema
+class ManyToMorphedSchema extends MorphedRelationSchema
 {
     /**
      * Relation type.
      */
-    const RELATION_TYPE = Entity::MANY_TO_MANY_MORPHED;
+    const RELATION_TYPE = Entity::MANY_TO_MORPHED;
 
     /**
      * Default definition parameters, will be filled if parameter skipped from definition by user.
@@ -26,9 +26,9 @@ class ManyToManyMorphedSchema extends MorphedRelationSchema
      */
     protected $defaultDefinition = array(
         Entity::PIVOT_TABLE       => '{name:singular}_map',
-        Entity::LOCAL_KEY         => '{entity:roleName}_{entity:primaryKey}',
+        Entity::INNER_KEY         => '{entity:roleName}_{entity:primaryKey}',
         Entity::OUTER_KEY         => '{name:singular}_{outer:primaryKey}',
-        Entity::OUTER_TYPE        => '{name:singular}_type',
+        Entity::MORPH_KEY         => '{name:singular}_type',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE'
     );
@@ -51,22 +51,21 @@ class ManyToManyMorphedSchema extends MorphedRelationSchema
 
         $pivotTable->bigPrimary('id');
 
-        $localKey = $pivotTable->column($this->definition[Entity::LOCAL_KEY]);
+        $localKey = $pivotTable->column($this->definition[Entity::INNER_KEY]);
         $localKey->type($this->entitySchema->getPrimaryAbstractType());
         $localKey->index();
+
+        $morphKey = $pivotTable->column($this->definition[Entity::MORPH_KEY]);
+        $morphKey->string(static::TYPE_COLUMN_SIZE);
 
         $outerKey = $pivotTable->column($this->definition[Entity::OUTER_KEY]);
         $outerKey->type($this->outerPrimaryAbstractType);
 
-        //Building outer keys
-        $outerType = $pivotTable->column($this->definition[Entity::OUTER_TYPE]);
-        $outerType->string(static::TYPE_COLUMN_SIZE);
-
         //Complex index
         $pivotTable->unique(
-            $this->definition[Entity::LOCAL_KEY],
-            $this->definition[Entity::OUTER_KEY],
-            $this->definition[Entity::OUTER_TYPE]
+            $this->definition[Entity::INNER_KEY],
+            $this->definition[Entity::MORPH_KEY],
+            $this->definition[Entity::OUTER_KEY]
         );
 
         if ($this->definition[Entity::CONSTRAINT])

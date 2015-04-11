@@ -66,7 +66,7 @@ abstract class RelationSchema
      * Every parameter described by it's key and pattern.
      *
      * Example:
-     * Entity::LOCAL_KEY => '{foreign:roleName}_{foreign:pK}'
+     * Entity::INNER_KEY => '{foreign:roleName}_{foreign:pK}'
      * Entity::FOREIGN_KEY => '{foreign:pK}'
      *
      * @invisible
@@ -150,9 +150,8 @@ abstract class RelationSchema
         );
 
         $proposed = array(
-            Entity::OUTER_KEY     => 'FOREIGN_KEY',
-            Entity::LOCAL_KEY     => 'LOCAL_KEY',
-            Entity::LOCAL_TYPE    => 'LOCAL_TYPE',
+            Entity::OUTER_KEY     => 'OUTER_KEY',
+            Entity::INNER_KEY     => 'INNER_KEY',
             Entity::THOUGHT_TABLE => 'THOUGHT',
             Entity::PIVOT_TABLE   => 'PIVOT_TABLE'
         );

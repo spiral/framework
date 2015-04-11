@@ -21,7 +21,7 @@ class ManyToManySchema extends RelationSchema
     /**
      * Equivalent relationship resolved based on definition and not schema, usually polymorphic.
      */
-    const EQUIVALENT_RELATION = Entity::MANY_TO_MANY_MORPHED;
+    const EQUIVALENT_RELATION = Entity::MANY_TO_MORPHED;
 
     /**
      * Default definition parameters, will be filled if parameter skipped from definition by user.
@@ -30,7 +30,7 @@ class ManyToManySchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::LOCAL_KEY         => '{entity:roleName}_{entity:primaryKey}',
+        Entity::INNER_KEY         => '{entity:roleName}_{entity:primaryKey}',
         Entity::OUTER_KEY         => '{outer:roleName}_{outer:primaryKey}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE'
@@ -84,21 +84,21 @@ class ManyToManySchema extends RelationSchema
 
         $pivotTable->bigPrimary('id');
 
-        $localKey = $pivotTable->column($this->definition[Entity::LOCAL_KEY]);
-        $localKey->type($this->entitySchema->getPrimaryAbstractType());
+        $innerKey = $pivotTable->column($this->definition[Entity::INNER_KEY]);
+        $innerKey->type($this->entitySchema->getPrimaryAbstractType());
 
         $outerKey = $pivotTable->column($this->definition[Entity::OUTER_KEY]);
         $outerKey->type($this->outerEntity()->getPrimaryAbstractType());
 
         //Complex index
         $pivotTable->unique(
-            $this->definition[Entity::LOCAL_KEY],
+            $this->definition[Entity::INNER_KEY],
             $this->definition[Entity::OUTER_KEY]
         );
 
         if ($this->definition[Entity::CONSTRAINT])
         {
-            $foreignKey = $localKey->foreign(
+            $foreignKey = $innerKey->foreign(
                 $this->entitySchema->getTable(),
                 $this->entitySchema->getPrimaryKey()
             );

@@ -36,33 +36,29 @@ class Entity extends DataEntity
      * TODO!!!!
      */
 
-    const HAS_ONE              = 101;
-    const HAS_MANY             = 102;
-    const BELONGS_TO           = 103;
-    const MANY_TO_MANY         = 104;
-    const MANY_THOUGHT         = 105;
-    const MORPHED_HAS_ONE      = 106;
-    const MORPHED_HAS_MANY     = 107;
-    const BELONGS_TO_MORPHED   = 108;
-    const MANY_TO_MANY_MORPHED = 109;
-    const MORPHED_MANY_TO_MANY = 1010;
+    const HAS_ONE            = 101;
+    const HAS_MANY           = 102;
+    const BELONGS_TO         = 103;
+    const MANY_TO_MANY       = 104;
+    const MANY_THOUGHT       = 105;
+    const BELONGS_TO_MORPHED = 108;
+    const MANY_TO_MORPHED    = 109;
 
     /**
      * Key values.
      */
-    const OUTER_KEY  = 901;
-    const LOCAL_KEY  = 902;
-    const OUTER_TYPE = 903;
-    const LOCAL_TYPE = 904;
+    const OUTER_KEY = 901;
+    const INNER_KEY = 902;
+    const MORPH_KEY = 903;
 
-    const THOUGHT_TABLE = 905;
-    const PIVOT_TABLE   = 905;
-    const VIA_TABLE     = 905;
+    const THOUGHT_TABLE = 904;
+    const PIVOT_TABLE   = 904;
+    const VIA_TABLE     = 904;
 
-    const BACK_REF = 906;
+    const BACK_REF = 905;
 
-    const CONSTRAINT        = 907;
-    const CONSTRAINT_ACTION = 908;
+    const CONSTRAINT        = 906;
+    const CONSTRAINT_ACTION = 907;
 
     /**
      * Constants used to declare index type. See documentation for indexes property.

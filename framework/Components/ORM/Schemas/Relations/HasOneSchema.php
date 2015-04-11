@@ -25,7 +25,7 @@ class HasOneSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::OUTER_KEY         => '{entity:roleName}_{definition:LOCAL_KEY}',
+        Entity::OUTER_KEY         => '{entity:roleName}_{definition:INNER_KEY}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE'
     );

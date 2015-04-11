@@ -31,20 +31,16 @@ class SchemaReader extends Component
      * @var array
      */
     protected $relationships = array(
-        Entity::BELONGS_TO           => 'Spiral\Components\ORM\Schemas\Relations\BelongsToSchema',
+        Entity::BELONGS_TO         => 'Spiral\Components\ORM\Schemas\Relations\BelongsToSchema',
+        Entity::BELONGS_TO_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\BelongsToMorphedSchema',
 
-        Entity::HAS_ONE              => 'Spiral\Components\ORM\Schemas\Relations\HasOneSchema',
-        Entity::HAS_MANY             => 'Spiral\Components\ORM\Schemas\Relations\HasManySchema',
+        Entity::HAS_ONE            => 'Spiral\Components\ORM\Schemas\Relations\HasOneSchema',
+        Entity::HAS_MANY           => 'Spiral\Components\ORM\Schemas\Relations\HasManySchema',
 
-        Entity::MANY_TO_MANY         => 'Spiral\Components\ORM\Schemas\Relations\ManyToManySchema',
-        Entity::MANY_THOUGHT         => 'Spiral\Components\ORM\Schemas\Relations\ManyThoughtSchema',
+        Entity::MANY_TO_MANY       => 'Spiral\Components\ORM\Schemas\Relations\ManyToManySchema',
+        Entity::MANY_TO_MORPHED    => 'Spiral\Components\ORM\Schemas\Relations\ManyToMorphedSchema',
 
-        Entity::BELONGS_TO_MORPHED   => 'Spiral\Components\ORM\Schemas\Relations\BelongsToMorphedSchema',
-
-        Entity::MORPHED_HAS_ONE      => 'Spiral\Components\ORM\Schemas\Relations\MorphedHasOneSchema',
-        Entity::MORPHED_HAS_MANY     => 'Spiral\Components\ORM\Schemas\Relations\MorphedHasManySchema',
-        Entity::MORPHED_MANY_TO_MANY => 'Spiral\Components\ORM\Schemas\Relations\MorphedManyToManySchema',
-        Entity::MANY_TO_MANY_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\ManyToManyMorphedSchema'
+        Entity::MANY_THOUGHT       => 'Spiral\Components\ORM\Schemas\Relations\ManyThoughtSchema',
     );
 
     /**

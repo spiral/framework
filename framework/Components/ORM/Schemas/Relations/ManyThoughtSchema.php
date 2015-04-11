@@ -25,7 +25,7 @@ class ManyThoughtSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::LOCAL_KEY => '{entity:roleName}_{entity:primaryKey}',
+        Entity::INNER_KEY => '{entity:roleName}_{entity:primaryKey}',
         Entity::OUTER_KEY => '{outer:roleName}_{outer:primaryKey}'
     );
 

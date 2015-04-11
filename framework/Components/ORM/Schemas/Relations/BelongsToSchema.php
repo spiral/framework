@@ -29,7 +29,7 @@ class BelongsToSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::LOCAL_KEY         => '{outer:roleName}_{definition:FOREIGN_KEY}',
+        Entity::INNER_KEY         => '{outer:roleName}_{outer:primaryKey}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE'
     );
@@ -39,16 +39,16 @@ class BelongsToSchema extends RelationSchema
      */
     public function buildSchema()
     {
-        $localSchema = $this->entitySchema->getTableSchema();
+        $innerSchema = $this->entitySchema->getTableSchema();
 
-        $localKey = $localSchema->column($this->definition[Entity::LOCAL_KEY]);
-        $localKey->type($this->outerEntity()->getPrimaryAbstractType());
-        $localKey->nullable(true);
-        $localKey->index();
+        $innerKey = $innerSchema->column($this->definition[Entity::INNER_KEY]);
+        $innerKey->type($this->outerEntity()->getPrimaryAbstractType());
+        $innerKey->nullable(true);
+        $innerKey->index();
 
         if ($this->definition[Entity::CONSTRAINT])
         {
-            $foreignKey = $localKey->foreign(
+            $foreignKey = $innerKey->foreign(
                 $this->outerEntity()->getTable(),
                 $this->outerEntity()->getPrimaryKey()
             );
