@@ -29,9 +29,10 @@ class BelongsToSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::OUTER_KEY  => '{foreign:primaryKey}',
-        Entity::LOCAL_KEY  => '{foreign:roleName}_{definition:FOREIGN_KEY}',
-        Entity::CONSTRAINT => true
+        Entity::OUTER_KEY         => '{outer:primaryKey}',
+        Entity::LOCAL_KEY         => '{outer:roleName}_{definition:FOREIGN_KEY}',
+        Entity::CONSTRAINT        => true,
+        Entity::CONSTRAINT_ACTION => 'CASCADE'
     );
 
     /**
@@ -48,10 +49,12 @@ class BelongsToSchema extends RelationSchema
 
         if ($this->definition[Entity::CONSTRAINT])
         {
-            $localKey->foreign(
+            $foreignKey = $localKey->foreign(
                 $this->outerEntity()->getTable(),
                 $this->definition[Entity::OUTER_KEY]
-            )->onDelete('CASCADE')->onUpdate('CASCADE');
+            );
+            $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
+            $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
         }
     }
 }

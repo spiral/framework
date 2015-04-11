@@ -347,13 +347,14 @@ class EntitySchema extends Component
             $column->defaultValue($default);
         }
 
-        //Parsing definition
-        if (!preg_match(
+        $validType = preg_match(
             '/(?P<type>[a-z]+)(?: *\((?P<options>[^\)]+)\))?(?: *, *(?P<nullable>null(?:able)?))?/i',
             $definition,
             $matches
-        )
-        )
+        );
+
+        //Parsing definition
+        if (!$validType)
         {
             throw new ORMException(
                 "Unable to parse definition of  column {$this->getClass()}.'{$column->getName()}'."
@@ -497,5 +498,10 @@ class EntitySchema extends Component
 
             $this->relations[$name] = $relationship;
         }
+    }
+
+    public function __toString()
+    {
+        return $this->getClass();
     }
 }

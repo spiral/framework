@@ -30,21 +30,31 @@ class ManyToManySchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::LOCAL_KEY   => '{entity:roleName}_{entity:primaryKey}',
-        Entity::OUTER_KEY => '{foreign:roleName}_{foreign:primaryKey}'
+        Entity::LOCAL_KEY         => '{entity:roleName}_{entity:primaryKey}',
+        Entity::OUTER_KEY         => '{outer:roleName}_{outer:primaryKey}',
+        Entity::CONSTRAINT        => true,
+        Entity::CONSTRAINT_ACTION => 'CASCADE'
     );
 
+    /**
+     * Mount default values to relation definition.
+     */
     protected function clarifyDefinition()
     {
         parent::clarifyDefinition();
 
         if (empty($this->definition[Entity::PIVOT_TABLE]))
         {
-            $this->definition[Entity::PIVOT_TABLE] = $this->getPivotName();
+            $this->definition[Entity::PIVOT_TABLE] = $this->getPivotTableName();
         }
     }
 
-    protected function getPivotName()
+    /**
+     * Pivot table name.
+     *
+     * @return string
+     */
+    public function getPivotTableName()
     {
         if (isset($this->definition[Entity::PIVOT_TABLE]))
         {
@@ -52,27 +62,55 @@ class ManyToManySchema extends RelationSchema
         }
 
         //Generating pivot table name
-        $names = array($this->entitySchema->getRoleName(), $this->outerEntity()->getRoleName());
+        $names = array(
+            $this->entitySchema->getRoleName(),
+            $this->outerEntity()->getRoleName()
+        );
+
         asort($names);
 
         return join('_', $names) . '_map';
     }
 
+    /**
+     * Create all required relation columns, indexes and constraints.
+     */
     public function buildSchema()
     {
-        $target = $this->outerEntity();
+        $pivotTable = $this->ormSchema->declareTable(
+            $this->entitySchema->getDatabase(),
+            $this->getPivotTableName()
+        );
 
-        $mapTable = empty($this->definition[Entity::PIVOT_TABLE])
-            ? $this->entitySchema->getTable() . '_' . $target->getTable() . '_map'
-            : $this->definition[Entity::PIVOT_TABLE];
-        $table = $this->ormSchema->declareTable($this->entitySchema->getDatabase(), $mapTable);
+        $pivotTable->bigPrimary('id');
 
-        $table->bigPrimary('id');
+        $localKey = $pivotTable->column($this->definition[Entity::LOCAL_KEY]);
+        $localKey->type($this->entitySchema->getPrimaryAbstractType());
 
-        //column type and name, NULLABLE!
-        $table->column($this->entitySchema->getRoleName() . '_id')->integer()->foreign($this->entitySchema->getTable(), 'id');
-        $table->column($target->getRoleName() . '_id')->integer()->foreign($target->getTable(), 'id');
+        $outerKey = $pivotTable->column($this->definition[Entity::OUTER_KEY]);
+        $outerKey->type($this->outerEntity()->getPrimaryAbstractType());
 
-        $table->index($this->entitySchema->getRoleName() . '_id', $target->getRoleName() . '_id')->unique(true);
+        //Complex index
+        $pivotTable->unique(
+            $this->definition[Entity::LOCAL_KEY],
+            $this->definition[Entity::OUTER_KEY]
+        );
+
+        if ($this->definition[Entity::CONSTRAINT])
+        {
+            $foreignKey = $localKey->foreign(
+                $this->entitySchema->getTable(),
+                $this->entitySchema->getPrimaryKey()
+            );
+            $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
+            $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
+
+            $foreignKey = $outerKey->foreign(
+                $this->outerEntity()->getTable(),
+                $this->outerEntity()->getPrimaryKey()
+            );
+            $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
+            $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
+        }
     }
 }

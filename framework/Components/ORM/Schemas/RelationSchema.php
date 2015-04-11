@@ -27,6 +27,11 @@ abstract class RelationSchema
     const EQUIVALENT_RELATION = null;
 
     /**
+     * Size of string column dedicated to store outer role name.
+     */
+    const TYPE_COLUMN_SIZE = 32;
+
+    /**
      * Parent ORM schema holds all entity schemas.
      *
      * @invisible
@@ -90,10 +95,21 @@ abstract class RelationSchema
         $this->target = $definition[static::RELATION_TYPE];
 
         $this->definition = $definition;
-        if (!$this->hasEquivalent())
+        if ($this->hasEquivalent())
         {
-            $this->clarifyDefinition();
+            return;
         }
+
+        //TODO: Check if outer exists
+        if (!class_exists($this->target) && !interface_exists($this->target))
+        {
+            throw new ORMException(
+                "Unable to build relation from '{$this->entitySchema}' "
+                . "to undefined target '{$this->target}'."
+            );
+        }
+
+        $this->clarifyDefinition();
     }
 
     protected function outerEntity()
@@ -101,6 +117,9 @@ abstract class RelationSchema
         return $this->ormSchema->getEntity($this->target);
     }
 
+    /**
+     * Mount default values to relation definition.
+     */
     protected function clarifyDefinition()
     {
         foreach ($this->defaultDefinition as $property => $pattern)
@@ -132,11 +151,11 @@ abstract class RelationSchema
         );
 
         $proposed = array(
-            Entity::OUTER_KEY => 'FOREIGN_KEY',
-            Entity::LOCAL_KEY   => 'LOCAL_KEY',
-            Entity::LOCAL_TYPE  => 'LOCAL_TYPE',
-            Entity::THOUGHT     => 'THOUGHT',
-            Entity::PIVOT_TABLE => 'PIVOT_TABLE'
+            Entity::OUTER_KEY     => 'FOREIGN_KEY',
+            Entity::LOCAL_KEY     => 'LOCAL_KEY',
+            Entity::LOCAL_TYPE    => 'LOCAL_TYPE',
+            Entity::THOUGHT_TABLE => 'THOUGHT',
+            Entity::PIVOT_TABLE   => 'PIVOT_TABLE'
         );
 
         foreach ($proposed as $property => $alias)
@@ -150,9 +169,9 @@ abstract class RelationSchema
         if ($this->outerEntity())
         {
             $options = $options + array(
-                    'foreign:roleName'   => $this->outerEntity()->getRoleName(),
-                    'foreign:table'      => $this->outerEntity()->getTable(),
-                    'foreign:primaryKey' => $this->outerEntity()->getPrimaryKey()
+                    'outer:roleName'   => $this->outerEntity()->getRoleName(),
+                    'outer:table'      => $this->outerEntity()->getTable(),
+                    'outer:primaryKey' => $this->outerEntity()->getPrimaryKey()
                 );
         }
 

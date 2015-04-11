@@ -25,34 +25,56 @@ class ManyToManyMorphedSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::PIVOT_TABLE => '{name}',
-        Entity::LOCAL_KEY   => '{name:singular}_{foreign:primaryKey}',
-        Entity::LOCAL_TYPE  => '{name:singular}_type'
+        Entity::PIVOT_TABLE       => '{name:singular}_map',
+        Entity::LOCAL_KEY         => '{name:singular}_{outer:primaryKey}',
+        Entity::LOCAL_TYPE        => '{name:singular}_type',
+        Entity::CONSTRAINT        => true,
+        Entity::CONSTRAINT_ACTION => 'CASCADE'
     );
 
-    const TYPE_COLUMN_SIZE = 32;
-
+    /**
+     * Create all required relation columns, indexes and constraints.
+     */
     public function buildSchema()
     {
-        $table = $this->ormSchema->declareTable(
+        $pivotTable = $this->ormSchema->declareTable(
             $this->entitySchema->getDatabase(),
             $this->definition[Entity::PIVOT_TABLE]
         );
 
-        $table->bigPrimary('id');
+        $pivotTable->bigPrimary('id');
 
-        //integer vs bigInteger
-        $table->column($this->entitySchema->getRoleName() . '_id')
-            ->integer()
-            ->index();
+        dumP($this->definition);
+        echo 1;
 
-        $table->column($this->entitySchema->getRoleName() . '_id')->foreign($this->entitySchema->getTable(), 'id');
 
-        $table->column($this->name . '_type')->string(32);
-
-        //TODO: check primary key type
-        $table->column($this->name . '_id')->integer();
-
-        $table->index($this->name . '_type', $this->name . '_id');
+        //        $localKey = $pivotTable->column($this->definition[Entity::LOCAL_KEY]);
+        //        $localKey->type($this->entitySchema->getPrimaryAbstractType());
+        //
+        //        $outerKey = $pivotTable->column($this->definition[Entity::OUTER_KEY]);
+        //        $outerKey->type($this->outerEntity()->getPrimaryAbstractType());
+        //
+        //        //Complex index
+        //        $pivotTable->unique(
+        //            $this->definition[Entity::LOCAL_KEY],
+        //            $this->definition[Entity::OUTER_KEY]
+        //        );
+        //
+        //        if ($this->definition[Entity::CONSTRAINT])
+        //        {
+        //            $foreignKey = $localKey->foreign(
+        //                $this->entitySchema->getTable(),
+        //                $this->entitySchema->getPrimaryKey()
+        //            );
+        //            $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
+        //            $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
+        //
+        //            $foreignKey = $outerKey->foreign(
+        //                $this->outerEntity()->getTable(),
+        //                $this->outerEntity()->getPrimaryKey()
+        //            );
+        //            $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
+        //            $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
+        //        }
     }
 }

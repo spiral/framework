@@ -55,12 +55,14 @@ class Entity extends DataEntity
     const OUTER_TYPE = 903;
     const LOCAL_TYPE = 904;
 
-    const THOUGHT     = 905;
-    const PIVOT_TABLE = 905;
-    const VIA_TABLE   = 905;
+    const THOUGHT_TABLE = 905;
+    const PIVOT_TABLE   = 905;
+    const VIA_TABLE     = 905;
 
-    const BACK_REF   = 906;
-    const CONSTRAINT = 907;
+    const BACK_REF = 906;
+
+    const CONSTRAINT        = 907;
+    const CONSTRAINT_ACTION = 908;
 
     /**
      * Constants used to declare index type. See documentation for indexes property.
