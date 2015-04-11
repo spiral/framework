@@ -184,14 +184,13 @@ abstract class RelationSchema
     }
 
     /**
-     * Get instance on EntitySchema assosicated with outer entity (presented only for non polymorphic
-     * relations).
+     * Relation name.
      *
-     * @return null|EntitySchema
+     * @return string
      */
-    protected function outerEntity()
+    public function getName()
     {
-        return $this->ormSchema->getEntity($this->target);
+        return $this->name;
     }
 
     /**
@@ -202,6 +201,27 @@ abstract class RelationSchema
     public function getType()
     {
         return static::RELATION_TYPE;
+    }
+
+    /**
+     * Relation target class or interface.
+     *
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Get instance on EntitySchema assosicated with outer entity (presented only for non polymorphic
+     * relations).
+     *
+     * @return null|EntitySchema
+     */
+    protected function outerEntity()
+    {
+        return $this->ormSchema->getEntity($this->target);
     }
 
     /**
