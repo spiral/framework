@@ -18,7 +18,7 @@ class BelongsToMorphedSchema extends RelationSchema
      */
     const RELATION_TYPE = Entity::BELONGS_TO_MORPHED;
 
-    public function initiate()
+    public function buildSchema()
     {
         $table = $this->entitySchema->getTableSchema();
         $table->column($this->name . '_type')->string(32);

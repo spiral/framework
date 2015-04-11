@@ -18,19 +18,36 @@ class HasOneSchema extends RelationSchema
      */
     const RELATION_TYPE = Entity::HAS_ONE;
 
-    public function initiate()
+    /**
+     * Default definition parameters, will be filled if parameter skipped from definition by user.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $defaultDefinition = array(
+        Entity::LOCAL_KEY  => '{entity:primaryKey}',
+        Entity::OUTER_KEY  => '{entity:roleName}_{definition:LOCAL_KEY}',
+        Entity::CONSTRAINT => true
+    );
+
+    /**
+     * Create all required relation columns, indexes and constraints.
+     */
+    public function buildSchema()
     {
-        $this->define(Entity::LOCAL_KEY, '{entity:pK}');
-        $this->define(Entity::FOREIGN_KEY, '{entity:roleName}_{rel:LOCAL_KEY}');
+        $outerSchema = $this->outerEntity()->getTableSchema();
 
-        $foreignSchema = $this->getTargetEntity()->getTableSchema();
+        $outerKey = $outerSchema->column($this->definition[Entity::OUTER_KEY]);
+        $outerKey->type($this->entitySchema->getPrimaryAbstractType());
+        $outerKey->nullable();
+        $outerKey->index();
 
-        //Generate names
-        $foreignSchema->column($this->entitySchema->getRoleName() . '_id')->integer()
-            ->foreign($this->entitySchema->getTable(), 'id')
-            ->onDelete('CASCADE')
-            ->onUpdate('CASCADE');
-
-        $foreignSchema->column($this->entitySchema->getRoleName() . '_id')->index();
+        if ($this->definition[Entity::CONSTRAINT])
+        {
+            $outerKey->foreign(
+                $this->entitySchema->getTable(),
+                $this->definition[Entity::LOCAL_KEY]
+            )->onDelete('CASCADE')->onUpdate('CASCADE');
+        }
     }
 }

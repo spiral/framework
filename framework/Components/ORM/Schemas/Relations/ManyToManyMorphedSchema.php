@@ -18,11 +18,26 @@ class ManyToManyMorphedSchema extends RelationSchema
      */
     const RELATION_TYPE = Entity::MANY_TO_MANY_MORPHED;
 
-    public function initiate()
-    {
-        $mapTable = $this->definition[Entity::PIVOT_TABLE];
+    /**
+     * Default definition parameters, will be filled if parameter skipped from definition by user.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $defaultDefinition = array(
+        Entity::PIVOT_TABLE => '{name}',
+        Entity::LOCAL_KEY   => '{name:singular}_{foreign:primaryKey}',
+        Entity::LOCAL_TYPE  => '{name:singular}_type'
+    );
 
-        $table = $this->ormSchema->getTableSchema($this->entitySchema->getDatabase(), $mapTable);
+    const TYPE_COLUMN_SIZE = 32;
+
+    public function buildSchema()
+    {
+        $table = $this->ormSchema->declareTable(
+            $this->entitySchema->getDatabase(),
+            $this->definition[Entity::PIVOT_TABLE]
+        );
 
         $table->bigPrimary('id');
 

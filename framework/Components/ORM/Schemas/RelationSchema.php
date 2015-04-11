@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM\Schemas;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaReader;
@@ -55,9 +56,18 @@ abstract class RelationSchema
      */
     protected $definition = array();
 
-
+    /**
+     * Default definition parameters, will be filled if parameter skipped from definition by user.
+     * Every parameter described by it's key and pattern.
+     *
+     * Example:
+     * Entity::LOCAL_KEY => '{foreign:roleName}_{foreign:pK}'
+     * Entity::FOREIGN_KEY => '{foreign:pK}'
+     *
+     * @invisible
+     * @var array
+     */
     protected $defaultDefinition = array();
-
 
     /**
      * Target model or interface (for polymorphic classes).
@@ -66,22 +76,32 @@ abstract class RelationSchema
      */
     protected $target = '';
 
-    public function __construct(SchemaReader $ormSchema, EntitySchema $entitySchema, $name, array $definition)
+    public function __construct(
+        SchemaReader $ormSchema,
+        EntitySchema $entitySchema,
+        $name,
+        array $definition
+    )
     {
         $this->ormSchema = $ormSchema;
         $this->entitySchema = $entitySchema;
 
         $this->name = $name;
-        $this->definition = $definition;
         $this->target = $definition[static::RELATION_TYPE];
 
+        $this->definition = $definition;
         if (!$this->hasEquivalent())
         {
-            $this->definition = $this->clarifyDefinition($this->definition);
+            $this->clarifyDefinition();
         }
     }
 
-    protected function clarifyDefinition($definition)
+    protected function outerEntity()
+    {
+        return $this->ormSchema->getEntity($this->target);
+    }
+
+    protected function clarifyDefinition()
     {
         foreach ($this->defaultDefinition as $property => $pattern)
         {
@@ -90,63 +110,54 @@ abstract class RelationSchema
                 continue;
             }
 
+            if (!is_string($pattern))
+            {
+                $this->definition[$property] = $pattern;
+                continue;
+            }
 
+            $this->definition[$property] = interpolate($pattern, $this->definitionOptions());
         }
-
-        return $definition;
     }
 
-    protected function define($key, $format)
+    protected function definitionOptions()
     {
-        if (isset($this->definition[$key]))
-        {
-            return $this->definition[$key];
-        }
+        $options = array(
+            'name'              => $this->name,
+            'name:plural'       => Inflector::pluralize($this->name),
+            'name:singular'     => Inflector::singularize($this->name),
+            'entity:roleName'   => $this->entitySchema->getRoleName(),
+            'entity:table'      => $this->entitySchema->getTable(),
+            'entity:primaryKey' => $this->entitySchema->getPrimaryKey(),
+        );
 
-        return $this->definition[$key] = interpolate($format, array(
-            'name'             => $this->name,
-            'entity:roleName'  => $this->entitySchema->getRoleName(),
-            'entity:table'     => $this->entitySchema->getTable(),
-            'entity:pK'        => $this->entitySchema->getPrimaryKey(),
-            'foreign:roleName' => $this->getTargetEntity()->getRoleName(),
-            'foreign:table'    => $this->getTargetEntity()->getTable(),
-            'foreign:pK'       => $this->getTargetEntity()->getPrimaryKey()
-        ));
-    }
-
-
-    protected function getDefinitionOptions()
-    {
-        $keys = array(
-            Entity::FOREIGN_KEY => 'FOREIGN_KEY',
+        $proposed = array(
+            Entity::OUTER_KEY => 'FOREIGN_KEY',
             Entity::LOCAL_KEY   => 'LOCAL_KEY',
             Entity::LOCAL_TYPE  => 'LOCAL_TYPE',
             Entity::THOUGHT     => 'THOUGHT',
-            Entity::PIVOT_TABLE => 'PIVOT_TABLE',
-
+            Entity::PIVOT_TABLE => 'PIVOT_TABLE'
         );
 
-        $rrr = array();
-
-        foreach ($keys as $key => $name)
+        foreach ($proposed as $property => $alias)
         {
-            if (isset($this->definition[$key]))
+            if (isset($this->definition[$property]))
             {
-                $rrr[$name] = $this->definition[$key];
+                $options['definition:' . $alias] = $this->definition[$property];
             }
         }
 
-        return $rrr + array(
-            'name'             => $this->name,
-            'entity:roleName'  => $this->entitySchema->getRoleName(),
-            'entity:table'     => $this->entitySchema->getTable(),
-            'entity:pK'        => $this->entitySchema->getPrimaryKey(),
-            'foreign:roleName' => $this->getTargetEntity()->getRoleName(),
-            'foreign:table'    => $this->getTargetEntity()->getTable(),
-            'foreign:pK'       => $this->getTargetEntity()->getPrimaryKey()
-        );
-    }
+        if ($this->outerEntity())
+        {
+            $options = $options + array(
+                    'foreign:roleName'   => $this->outerEntity()->getRoleName(),
+                    'foreign:table'      => $this->outerEntity()->getTable(),
+                    'foreign:primaryKey' => $this->outerEntity()->getPrimaryKey()
+                );
+        }
 
+        return $options;
+    }
 
     /**
      * Relation type.
@@ -190,10 +201,8 @@ abstract class RelationSchema
         return array(static::EQUIVALENT_RELATION => $this->target) + $definition;
     }
 
-    protected function getTargetEntity()
-    {
-        return $this->ormSchema->getEntity($this->target);
-    }
-
-    abstract public function initiate();
+    /**
+     * Create all required relation columns, indexes and constraints.
+     */
+    abstract public function buildSchema();
 }

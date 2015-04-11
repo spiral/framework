@@ -18,7 +18,21 @@ class ManyThoughtSchema extends RelationSchema
      */
     const RELATION_TYPE = Entity::MANY_THOUGHT;
 
-    public function initiate()
+    /**
+     * Default definition parameters, will be filled if parameter skipped from definition by user.
+     *
+     * @var array
+     */
+    protected $defaultDefinition = array(
+        Entity::LOCAL_KEY   => '{entity:roleName}_{entity:primaryKey}',
+        Entity::OUTER_KEY => '{foreign:roleName}_{foreign:primaryKey}'
+    );
+
+    public function buildSchema()
     {
+        if (empty($this->definition[Entity::PIVOT_TABLE]))
+        {
+            //WE NEED IT!
+        }
     }
 }

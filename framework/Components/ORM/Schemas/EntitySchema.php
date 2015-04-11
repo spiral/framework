@@ -67,7 +67,7 @@ class EntitySchema extends Component
      *
      * @var array
      */
-    protected $relationships = array();
+    protected $relations = array();
 
     /**
      * New EntitySchema instance, schema responsible for detecting relationships, columns and indexes.
@@ -87,7 +87,7 @@ class EntitySchema extends Component
             return;
         }
 
-        $this->tableSchema = $this->ormSchema->getTableSchema($this->getDatabase(), $this->getTable());
+        $this->tableSchema = $this->ormSchema->declareTable($this->getDatabase(), $this->getTable());
 
         //Casting table columns, indexes, foreign keys and etc
         $this->castTableSchema();
@@ -195,10 +195,13 @@ class EntitySchema extends Component
         if ($merge && ($this->reflection->getParentClass()->getName() != SchemaReader::ENTITY))
         {
             $parentClass = $this->reflection->getParentClass()->getName();
-            $value = array_merge(
-                $this->ormSchema->getEntity($parentClass)->property($property, true),
-                $value
-            );
+            if (is_array($value))
+            {
+                $value = array_merge(
+                    $this->ormSchema->getEntity($parentClass)->property($property, true),
+                    $value
+                );
+            }
         }
 
         return $this->propertiesCache[$property] = call_user_func(
@@ -278,6 +281,17 @@ class EntitySchema extends Component
     public function getPrimaryKey()
     {
         return array_slice($this->tableSchema->getPrimaryKeys(), 0, 1)[0];
+    }
+
+
+    public function getPrimaryAbstractType()
+    {
+        if ($this->tableSchema->column($this->getPrimaryKey())->abstractType() == 'bigPrimary')
+        {
+            return 'bigInteger';
+        }
+
+        return 'integer';
     }
 
     /**
@@ -479,9 +493,9 @@ class EntitySchema extends Component
             $relationship = $this->ormSchema->getRelationSchema($this, $name, $definition);
 
             //Initiating required columns, foreign keys and indexes
-            $relationship->initiate($this);
+            $relationship->buildSchema($this);
 
-            $this->relationships[$name] = $relationship;
+            $this->relations[$name] = $relationship;
         }
     }
 }

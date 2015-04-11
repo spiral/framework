@@ -131,10 +131,14 @@ class DocumentSchema extends Component
         if ($merge && ($this->reflection->getParentClass()->getName() != SchemaReader::DOCUMENT))
         {
             $parentClass = $this->reflection->getParentClass()->getName();
-            $value = array_merge(
-                $this->odmSchema->getDocument($parentClass)->property($property, true),
-                $value
-            );
+
+            if (is_array($value))
+            {
+                $value = array_merge(
+                    $this->odmSchema->getDocument($parentClass)->property($property, true),
+                    $value
+                );
+            }
         }
 
         return $this->propertiesCache[$property] = call_user_func(

@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\DatabaseManager;
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\ORM\Schemas\EntitySchema;
 use Spiral\Components\ORM\Schemas\RelationSchema;
 use Spiral\Components\Tokenizer\Tokenizer;
@@ -63,7 +64,7 @@ class SchemaReader extends Component
     /**
      * Found entity schemas.
      *
-     * @var array
+     * @var EntitySchema[]
      */
     protected $entities = array();
 
@@ -96,7 +97,10 @@ class SchemaReader extends Component
 
         foreach ($this->entities as $e)
         {
-            $e->castRelations();
+            if (!$e->isAbstract())
+            {
+                $e->castRelations();
+            }
         }
     }
 
@@ -136,16 +140,47 @@ class SchemaReader extends Component
         return $this->entities[$class];
     }
 
-    public function getTableSchema($database, $table)
+    public function declareTable($database, $table)
     {
         $this->tables[] = $table = $this->dbal->db($database)->table($table)->schema();
 
         return $table;
     }
 
-    public function getTableSchemas()
+    public function getDeclaredTables($cascade = true)
     {
+        if ($cascade)
+        {
+            $tables = $this->tables;
+            uasort($tables, function (AbstractTableSchema $tableA, AbstractTableSchema $tableB)
+            {
+                return in_array($tableA->getName(), $tableB->getDependencies())
+                || count($tableB->getDependencies()) > count($tableA->getDependencies());
+            });
+
+            return array_reverse($tables);
+        }
+
         return $this->tables;
+    }
+
+    public function reflectSchema()
+    {
+        foreach ($this->tables as $table)
+        {
+            foreach ($this->entities as $entity)
+            {
+                if ($entity->getTableSchema() == $table && !$entity->isActiveSchema())
+                {
+                    //BABDBAD!
+                }
+            }
+        }
+
+        foreach ($this->getDeclaredTables(true) as $table)
+        {
+            $table->save();
+        }
     }
 
     public function getRelationSchema(EntitySchema $entitySchema, $name, array $definition)

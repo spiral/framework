@@ -23,14 +23,35 @@ class BelongsToSchema extends RelationSchema
      */
     const EQUIVALENT_RELATION = Entity::BELONGS_TO_MORPHED;
 
-    public function initiate()
-    {
-        $this->define(
-            Entity::FOREIGN_KEY, '{foreign:pK}'
-        );
+    /**
+     * Default definition parameters, will be filled if parameter skipped from definition by user.
+     *
+     * @var array
+     */
+    protected $defaultDefinition = array(
+        Entity::OUTER_KEY  => '{foreign:primaryKey}',
+        Entity::LOCAL_KEY  => '{foreign:roleName}_{definition:FOREIGN_KEY}',
+        Entity::CONSTRAINT => true
+    );
 
-        echo $this->define(
-            Entity::LOCAL_KEY, '{foreign:pK}_' . $this->definition[Entity::FOREIGN_KEY]
-        );
+    /**
+     * Create all required relation columns, indexes and constraints.
+     */
+    public function buildSchema()
+    {
+        $localSchema = $this->entitySchema->getTableSchema();
+
+        $localKey = $localSchema->column($this->definition[Entity::LOCAL_KEY]);
+        $localKey->type($this->outerEntity()->getPrimaryAbstractType());
+        $localKey->nullable(true);
+        $localKey->index();
+
+        if ($this->definition[Entity::CONSTRAINT])
+        {
+            $localKey->foreign(
+                $this->outerEntity()->getTable(),
+                $this->definition[Entity::OUTER_KEY]
+            )->onDelete('CASCADE')->onUpdate('CASCADE');
+        }
     }
 }

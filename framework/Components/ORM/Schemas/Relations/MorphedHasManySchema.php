@@ -17,7 +17,7 @@ class MorphedHasManySchema extends MorphedHasOneSchema
      */
     const RELATION_TYPE = Entity::MORPHED_HAS_MANY;
 
-    public function initiate()
+    public function buildSchema()
     {
     }
 }

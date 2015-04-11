@@ -10,6 +10,8 @@ namespace Spiral\Components\Http\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
+use Spiral\Components\Http\Cookies\CookieManager;
+use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
 use Spiral\Core\Component;
@@ -32,6 +34,23 @@ class CsrfToken implements MiddlewareInterface
      * Parameter name used to represent client token in POST data.
      */
     const PARAMETER = 'csrf-token';
+
+    /**
+     * CookieManager.
+     *
+     * @var CookieManager
+     */
+    protected $cookies = null;
+
+    /**
+     * Middleware constructing.
+     *
+     * @param CookieManager $cookies
+     */
+    public function __construct(CookieManager $cookies)
+    {
+        $this->cookies = $cookies;
+    }
 
     /**
      * Handle request generate response. Middleware used to alter incoming Request and/or Response
@@ -68,13 +87,13 @@ class CsrfToken implements MiddlewareInterface
             }
         }
 
-        $response = $next($request->withAttribute('csrfToken', $token));
+        $response = $next($request->withAttribute('crsfToken', $token));
         if ($requestCookie && $response instanceof Response)
         {
             //Will work even with non spiral responses
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                new Cookie(self::COOKIE, $token, 86400)
+                $this->cookies->create(self::COOKIE, $token, 86400)
             );
         }
 
