@@ -10,6 +10,7 @@ namespace Spiral\Components\Session\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
+use Spiral\Components\Http\Cookies\CookieManager;
 use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
@@ -24,11 +25,11 @@ class SessionStarter implements MiddlewareInterface
     const COOKIE = 'session';
 
     /**
-     * Http dispatcher instance fetched from context.
+     * CookieManager
      *
-     * @var HttpDispatcher
+     * @var CookieManager
      */
-    protected $httpDispatcher = null;
+    protected $cookies = null;
 
     /**
      * Session store instance.
@@ -36,6 +37,16 @@ class SessionStarter implements MiddlewareInterface
      * @var SessionStore
      */
     protected $store = null;
+
+    /**
+     * Middleware constructing.
+     *
+     * @param CookieManager $cookies
+     */
+    public function __construct(CookieManager $cookies)
+    {
+        $this->cookies = $cookies;
+    }
 
     /**
      * Manually set session store instance.
@@ -73,8 +84,6 @@ class SessionStarter implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
-        $this->httpDispatcher = $context;
-
         $cookies = $request->getCookieParams();
         if (isset($cookies[self::COOKIE]))
         {
@@ -114,13 +123,14 @@ class SessionStarter implements MiddlewareInterface
         {
             if ($response instanceof Response)
             {
-                return $response->withAddedHeader('Set-Cookie', new Cookie(
-                    self::COOKIE,
-                    $store->getID(),
-                    $store->getConfig()['lifetime'],
-                    $this->httpDispatcher->getConfig()['basePath'],
-                    $this->httpDispatcher->cookieDomain()
-                ));
+                return $response->withAddedHeader(
+                    'Set-Cookie',
+                    $this->cookies->create(
+                        self::COOKIE,
+                        $store->getID(),
+                        $store->getConfig()['lifetime']
+                    )
+                );
             }
         }
 

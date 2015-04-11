@@ -194,7 +194,10 @@ class CookieManager extends Component implements MiddlewareInterface
                 }
 
                 //Encrypting cookie
-                $cookie = (string)$cookie->withValue($this->getEncrypter()->encrypt($cookie->getValue()));
+                $cookie = (string)$cookie->withValue(
+                    $this->getEncrypter()->encrypt($cookie->getValue())
+                );
+
                 unset($cookie);
             }
 
@@ -204,6 +207,68 @@ class CookieManager extends Component implements MiddlewareInterface
         }
 
         return $response;
+    }
+
+    /**
+     * Create new cookie instance without adding it to scheduled list.
+     *
+     * Domain, path, and secure values can be left in null state, in this case cookie manager will
+     * populate them automatically.
+     *
+     * @link http://php.net/manual/en/function.setcookie.php
+     * @param string $name     The name of the cookie.
+     * @param string $value    The value of the cookie. This value is stored on the clients computer;
+     *                         do not store sensitive information.
+     * @param int    $lifetime Cookie lifetime. This value specified in seconds and declares period
+     *                         of time in which cookie will expire relatively to current time() value.
+     * @param string $path     The path on the server in which the cookie will be available on.
+     *                         If set to '/', the cookie will be available within the entire domain.
+     *                         If set to '/foo/', the cookie will only be available within the /foo/
+     *                         directory and all sub-directories such as /foo/bar/ of domain. The
+     *                         default value is the current directory that the cookie is being set in.
+     * @param string $domain   The domain that the cookie is available. To make the cookie available
+     *                         on all subdomains of example.com then you'd set it to '.example.com'.
+     *                         The . is not required but makes it compatible with more browsers.
+     *                         Setting it to www.example.com will make the cookie only available in
+     *                         the www subdomain. Refer to tail matching in the spec for details.
+     * @param bool   $secure   Indicates that the cookie should only be transmitted over a secure HTTPS
+     *                         connection from the client. When set to true, the cookie will only be
+     *                         set if a secure connection exists. On the server-side, it's on the
+     *                         programmer to send this kind of cookie only on secure connection (e.g.
+     *                         with respect to $_SERVER["HTTPS"]).
+     * @param bool   $httpOnly When true the cookie will be made accessible only through the HTTP
+     *                         protocol. This means that the cookie won't be accessible by scripting
+     *                         languages, such as JavaScript. This setting can effectively help to
+     *                         reduce identity theft through XSS attacks (although it is not supported
+     *                         by all browsers).
+     * @return Cookie
+     */
+    public function create(
+        $name,
+        $value = null,
+        $lifetime = 0,
+        $path = null,
+        $domain = null,
+        $secure = null,
+        $httpOnly = true
+    )
+    {
+        if (is_null($path))
+        {
+            $path = $this->httpDispatcher->getConfig()['basePath'];
+        }
+
+        if (is_null($domain))
+        {
+            $domain = $this->httpDispatcher->cookieDomain();
+        }
+
+        if (is_null($secure))
+        {
+            $secure = $this->httpDispatcher->getRequest()->getMethod() == 'https';
+        }
+
+        return new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
     }
 
     /**
@@ -250,22 +315,7 @@ class CookieManager extends Component implements MiddlewareInterface
         $httpOnly = true
     )
     {
-        if (is_null($path))
-        {
-            $path = $this->httpDispatcher->getConfig()['basePath'];
-        }
-
-        if (is_null($domain))
-        {
-            $domain = $this->httpDispatcher->cookieDomain();
-        }
-
-        if (is_null($secure))
-        {
-            $secure = $this->httpDispatcher->getRequest()->getMethod() == 'https';
-        }
-
-        $cookie = new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
+        $cookie = $this->create($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
         $this->scheduled[] = $cookie;
 
         return $cookie;
