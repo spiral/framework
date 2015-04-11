@@ -36,31 +36,55 @@ class Entity extends DataEntity
      * TODO!!!!
      */
 
-    const HAS_ONE            = 101;
-    const HAS_MANY           = 102;
-    const BELONGS_TO         = 103;
-    const MANY_TO_MANY       = 104;
-    const MANY_THOUGHT       = 105;
-    const BELONGS_TO_MORPHED = 108;
-    const MANY_TO_MORPHED    = 109;
+    const HAS_ONE            = 'has-one';
+    const HAS_MANY           = 'has-many';
+    const BELONGS_TO         = 'belongs-to';
+    const MANY_TO_MANY       = 'many-to-many';
+    const MANY_THOUGHT       = 'many-thought';
+    const BELONGS_TO_MORPHED = 'belongs-to-morphed';
+    const MANY_TO_MORPHED    = 'many-to-morphed';
+
+    //    const HAS_ONE            = 101;
+    //    const HAS_MANY           = 102;
+    //    const BELONGS_TO         = 103;
+    //    const MANY_TO_MANY       = 104;
+    //    const MANY_THOUGHT       = 105;
+    //    const BELONGS_TO_MORPHED = 108;
+    //    const MANY_TO_MORPHED    = 109;
 
     /**
      * Key values.
      */
-    const OUTER_KEY = 901;
-    const INNER_KEY = 902;
-    const MORPH_KEY = 903;
+    const OUTER_KEY = 'outer';
+    const INNER_KEY = 'inner';
+    const MORPH_KEY = 'morph';
 
-    const THOUGHT_TABLE = 904;
-    const PIVOT_TABLE   = 904;
-    const VIA_TABLE     = 904;
+    const THOUGHT_TABLE = 'thought';
+    const PIVOT_TABLE   = 'thought';
+    const VIA_TABLE     = 'thought';
 
-    const BACK_REF = 905;
+    const BACK_REF = 'back-ref';
 
-    const CONSTRAINT        = 906;
-    const CONSTRAINT_ACTION = 907;
+    const CONSTRAINT        = 'constraint';
+    const CONSTRAINT_ACTION = 'action';
 
-    const CREATE_PIVOT      = 909;
+    const CREATE_PIVOT = 'create-pivot';
+
+
+    //    const OUTER_KEY = 901;
+    //    const INNER_KEY = 902;
+    //    const MORPH_KEY = 903;
+    //
+    //    const THOUGHT_TABLE = 904;
+    //    const PIVOT_TABLE   = 904;
+    //    const VIA_TABLE     = 904;
+    //
+    //    const BACK_REF = 905;
+    //
+    //    const CONSTRAINT        = 906;
+    //    const CONSTRAINT_ACTION = 907;
+    //
+    //    const CREATE_PIVOT      = 909;
 
     /**
      * Constants used to declare index type. See documentation for indexes property.

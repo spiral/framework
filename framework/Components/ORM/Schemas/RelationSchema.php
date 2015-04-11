@@ -66,8 +66,7 @@ abstract class RelationSchema
      * Every parameter described by it's key and pattern.
      *
      * Example:
-     * Entity::INNER_KEY => '{foreign:roleName}_{foreign:pK}'
-     * Entity::FOREIGN_KEY => '{foreign:pK}'
+     * Entity::INNER_KEY => '{outer:roleName}_{outer:primaryKey}'
      *
      * @invisible
      * @var array
@@ -117,17 +116,6 @@ abstract class RelationSchema
         }
 
         $this->clarifyDefinition();
-    }
-
-    /**
-     * Get instance on EntitySchema assosicated with outer entity (presented only for non polymorphic
-     * relations).
-     *
-     * @return null|EntitySchema
-     */
-    protected function outerEntity()
-    {
-        return $this->ormSchema->getEntity($this->target);
     }
 
     /**
@@ -196,6 +184,17 @@ abstract class RelationSchema
     }
 
     /**
+     * Get instance on EntitySchema assosicated with outer entity (presented only for non polymorphic
+     * relations).
+     *
+     * @return null|EntitySchema
+     */
+    protected function outerEntity()
+    {
+        return $this->ormSchema->getEntity($this->target);
+    }
+
+    /**
      * Relation type.
      *
      * @return int
@@ -203,6 +202,16 @@ abstract class RelationSchema
     public function getType()
     {
         return static::RELATION_TYPE;
+    }
+
+    /**
+     * Relation definition.
+     *
+     * @return array
+     */
+    public function getDefinition()
+    {
+        return $this->definition;
     }
 
     /**
@@ -241,4 +250,23 @@ abstract class RelationSchema
      * Create all required relation columns, indexes and constraints.
      */
     abstract public function buildSchema();
+
+    /**
+     * Relation definition contains request to be reverted.
+     *
+     * @return bool
+     */
+    public function hasBackReference()
+    {
+        return isset($this->definition[Entity::BACK_REF]);
+    }
+
+    /**
+     * Create reverted relations in outer entity or entities.
+     *
+     * @param string $name Relation name.
+     * @param int    $type Back relation type, can be required some cases.
+     * @throws ORMException
+     */
+    abstract public function revertRelation($name, $type = null);
 }

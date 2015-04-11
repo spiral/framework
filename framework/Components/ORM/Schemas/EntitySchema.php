@@ -22,6 +22,10 @@ use Spiral\Core\Component;
 
 class EntitySchema extends Component
 {
+    /**
+     * Logging.
+     */
+    use Component\LoggerTrait;
 
     /**
      * Entity model class name.
@@ -491,15 +495,52 @@ class EntitySchema extends Component
                 continue;
             }
 
-            $relationship = $this->ormSchema->getRelationSchema($this, $name, $definition);
-
-            //Initiating required columns, foreign keys and indexes
-            $relationship->buildSchema($this);
-
-            $this->relations[$name] = $relationship;
+            $this->addRelation($name, $definition);
         }
     }
 
+    /**
+     * Get all declared entity relations.
+     *
+     * @return RelationSchema[]
+     */
+    public function getRelations()
+    {
+        return $this->relations;
+    }
+
+    /**
+     * Add relation to EntitySchema.
+     *
+     * @param string $name
+     * @param array  $definition
+     */
+    public function addRelation($name, array $definition)
+    {
+        if (isset($this->relations[$name]))
+        {
+            self::logger()->warning(
+                "Unable to create relation '{class}'.'{name}', connection already exists.",
+                array(
+                    'name'  => $name,
+                    'class' => $this->getClass()
+                ));
+
+            return;
+        }
+
+        $relationship = $this->ormSchema->getRelationSchema($this, $name, $definition);
+
+        //Initiating required columns, foreign keys and indexes
+        $relationship->buildSchema($this);
+        $this->relations[$name] = $relationship;
+    }
+
+    /**
+     * Return entity class name.
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->getClass();

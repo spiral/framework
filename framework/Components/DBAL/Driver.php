@@ -475,7 +475,7 @@ abstract class Driver extends Component
     protected function isolationLevel($level)
     {
         self::logger()->info("Setting transaction isolation level to '{$level}'.");
-        $level && $this->statement("SET TRANSACTION ISOLATION LEVEL $level");
+        $level && $this->statement("SET TRANSACTION ISOLATION LEVEL {$level}");
     }
 
     /**
@@ -511,7 +511,7 @@ abstract class Driver extends Component
     protected function savepointRollback($name)
     {
         self::logger()->info("Rolling back savepoint '{$name}'.");
-        $this->statement("ROLLBACK TO SAVEPOINT {$name}}");
+        $this->statement("ROLLBACK TO SAVEPOINT {$name}");
     }
 
     /**

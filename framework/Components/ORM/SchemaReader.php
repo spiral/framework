@@ -91,16 +91,41 @@ class SchemaReader extends Component
             ));
         }
 
-        foreach ($this->entities as $e)
+        $relations = array();
+        foreach ($this->entities as $entity)
         {
-            if (!$e->isAbstract())
+            if (!$entity->isAbstract())
             {
-                $e->castRelations();
+                $entity->castRelations();
+
+                foreach ($entity->getRelations() as $relation)
+                {
+                    if ($relation->hasBackReference())
+                    {
+                        $relations[] = $relation;
+                    }
+                }
+            }
+        }
+
+        /**
+         * @var RelationSchema $relation
+         */
+        foreach ($relations as $relation)
+        {
+            $backReference = $relation->getDefinition()[Entity::BACK_REF];
+
+            if (is_array($backReference))
+            {
+                //[TYPE, NAME]
+                $relation->revertRelation($backReference[1], $backReference[0]);
+            }
+            else
+            {
+                $relation->revertRelation($backReference);
             }
         }
     }
-
-    //TODO: Add method to get table schema
 
     /**
      * All fetched entity schemas.

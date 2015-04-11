@@ -16,6 +16,7 @@ abstract class MorphedRelationSchema extends RelationSchema
     /**
      * All entities relation is related to.
      *
+     * @invisible
      * @var EntitySchema[]
      */
     protected $targets = array();

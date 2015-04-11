@@ -44,4 +44,20 @@ class ManyThoughtSchema extends RelationSchema
             );
         }
     }
+
+    /**
+     * Create reverted relations in outer entity or entities.
+     *
+     * @param string $name Relation name.
+     * @param int    $type Back relation type, can be required some cases.
+     * @throws ORMException
+     */
+    public function revertRelation($name, $type = null)
+    {
+        $this->outerEntity()->addRelation($name, array(
+            Entity::MANY_THOUGHT => $this->entitySchema->getClass(),
+            Entity::OUTER_KEY    => $this->definition[Entity::INNER_KEY],
+            Entity::INNER_KEY    => $this->definition[Entity::OUTER_KEY]
+        ));
+    }
 }

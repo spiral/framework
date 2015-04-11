@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM\Schemas\Relations;
 
 use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\MorphedRelationSchema;
 
 class ManyToMorphedSchema extends MorphedRelationSchema
@@ -78,5 +79,16 @@ class ManyToMorphedSchema extends MorphedRelationSchema
             $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
         }
+    }
+
+    /**
+     * Create reverted relations in outer entity or entities.
+     *
+     * @param string $name Relation name.
+     * @param int    $type Back relation type, can be required some cases.
+     * @throws ORMException
+     */
+    public function revertRelation($name, $type = null)
+    {
     }
 }

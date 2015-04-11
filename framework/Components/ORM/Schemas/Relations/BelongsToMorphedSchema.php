@@ -56,4 +56,31 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
             $this->definition[Entity::INNER_KEY]
         );
     }
+
+    /**
+     * Create reverted relations in outer entity or entities.
+     *
+     * @param string $name Relation name.
+     * @param int    $type Back relation type, can be required some cases.
+     * @throws ORMException
+     */
+    public function revertRelation($name, $type = null)
+    {
+        if (empty($type))
+        {
+            throw new ORMException(
+                "Unable to revert BELONG_TO relation ({$this->entitySchema}), " .
+                "back relation type is missing."
+            );
+        }
+
+        foreach ($this->getTargets() as $entity)
+        {
+            $entity->addRelation($name, array(
+                $type             => $this->entitySchema->getClass(),
+                Entity::OUTER_KEY => $this->definition[Entity::INNER_KEY],
+                Entity::MORPH_KEY => $this->definition[Entity::MORPH_KEY]
+            ));
+        }
+    }
 }
