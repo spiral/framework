@@ -172,7 +172,7 @@ class Encrypter extends Component
      */
     public function encrypt($data)
     {
-        if (!$this->key)
+        if (empty($this->key))
         {
             throw new EncrypterException("Encryption key should not be empty.");
         }

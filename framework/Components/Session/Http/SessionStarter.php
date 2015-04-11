@@ -10,6 +10,8 @@ namespace Spiral\Components\Session\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\Cookie;
+use Spiral\Components\Http\Cookies\CookieManager;
+use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
 use Spiral\Components\Session\SessionStore;
@@ -23,11 +25,28 @@ class SessionStarter implements MiddlewareInterface
     const COOKIE = 'session';
 
     /**
+     * CookieManager
+     *
+     * @var CookieManager
+     */
+    protected $cookies = null;
+
+    /**
      * Session store instance.
      *
      * @var SessionStore
      */
     protected $store = null;
+
+    /**
+     * Middleware constructing.
+     *
+     * @param CookieManager $cookies
+     */
+    public function __construct(CookieManager $cookies)
+    {
+        $this->cookies = $cookies;
+    }
 
     /**
      * Manually set session store instance.
@@ -104,11 +123,14 @@ class SessionStarter implements MiddlewareInterface
         {
             if ($response instanceof Response)
             {
-                return $response->withAddedHeader('Set-Cookie', new Cookie(
-                    self::COOKIE,
-                    $store->getID(),
-                    $store->getConfig()['lifetime']
-                ));
+                return $response->withAddedHeader(
+                    'Set-Cookie',
+                    $this->cookies->create(
+                        self::COOKIE,
+                        $store->getID(),
+                        $store->getConfig()['lifetime']
+                    )
+                );
             }
         }
 

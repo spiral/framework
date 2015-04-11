@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Encrypter\DecryptionException;
 use Spiral\Components\Encrypter\Encrypter;
 use Spiral\Components\Encrypter\EncrypterException;
+use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\Middlewares\CsrfToken;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
@@ -24,12 +25,19 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Required traits.
      */
-    use Component\SingletonTrait;
+    use Component\SingletonTrait, Component\ConfigurableTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = 'cookies';
+
+    /**
+     * Http request.
+     *
+     * @var ServerRequestInterface
+     */
+    protected $request = null;
 
     /**
      * Cookie names should never be encrypted or decrypted.
@@ -48,9 +56,19 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Cookies has to be send (specified via global scope).
      *
-     * @var CookieInterface[]
+     * @var Cookie[]
      */
     protected $scheduled = array();
+
+    /**
+     * Middleware constructing.
+     *
+     * @param HttpDispatcher $dispatcher
+     */
+    public function __construct(HttpDispatcher $dispatcher)
+    {
+        $this->config = $dispatcher->getConfig()['cookies'];
+    }
 
     /**
      * Do not encrypt/decrypt cookie.
@@ -98,6 +116,8 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
+        $this->request = $request;
+
         $request = $this->decryptCookies($request);
 
         /**
@@ -165,17 +185,14 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     protected function encryptCookies(ResponseInterface $response)
     {
-        if (($cookies = $response->getHeaderLines('Set-Cookie', false)) || !empty($this->scheduled))
+        if (!empty($this->scheduled))
         {
-            /**
-             * @var CookieInterface[] $cookies
-             */
-            $cookies = array_merge($cookies, $this->scheduled);
+            $cookies = array_merge($response->getHeaderLines('Set-Cookie'), $this->scheduled);
 
             //Merging cookies
             foreach ($cookies as &$cookie)
             {
-                if (!$cookie instanceof CookieInterface)
+                if (!$cookie instanceof Cookie)
                 {
                     continue;
                 }
@@ -187,7 +204,10 @@ class CookieManager extends Component implements MiddlewareInterface
                 }
 
                 //Encrypting cookie
-                $cookie = $cookie->withValue($this->getEncrypter()->encrypt($cookie->getValue()));
+                $cookie = (string)$cookie->withValue(
+                    $this->getEncrypter()->encrypt($cookie->getValue())
+                );
+
                 unset($cookie);
             }
 
@@ -200,7 +220,104 @@ class CookieManager extends Component implements MiddlewareInterface
     }
 
     /**
+     * Create new cookie instance without adding it to scheduled list.
+     *
+     * Domain, path, and secure values can be left in null state, in this case cookie manager will
+     * populate them automatically.
+     *
+     * @link http://php.net/manual/en/function.setcookie.php
+     * @param string $name     The name of the cookie.
+     * @param string $value    The value of the cookie. This value is stored on the clients computer;
+     *                         do not store sensitive information.
+     * @param int    $lifetime Cookie lifetime. This value specified in seconds and declares period
+     *                         of time in which cookie will expire relatively to current time() value.
+     * @param string $path     The path on the server in which the cookie will be available on.
+     *                         If set to '/', the cookie will be available within the entire domain.
+     *                         If set to '/foo/', the cookie will only be available within the /foo/
+     *                         directory and all sub-directories such as /foo/bar/ of domain. The
+     *                         default value is the current directory that the cookie is being set in.
+     * @param string $domain   The domain that the cookie is available. To make the cookie available
+     *                         on all subdomains of example.com then you'd set it to '.example.com'.
+     *                         The . is not required but makes it compatible with more browsers.
+     *                         Setting it to www.example.com will make the cookie only available in
+     *                         the www subdomain. Refer to tail matching in the spec for details.
+     * @param bool   $secure   Indicates that the cookie should only be transmitted over a secure HTTPS
+     *                         connection from the client. When set to true, the cookie will only be
+     *                         set if a secure connection exists. On the server-side, it's on the
+     *                         programmer to send this kind of cookie only on secure connection (e.g.
+     *                         with respect to $_SERVER["HTTPS"]).
+     * @param bool   $httpOnly When true the cookie will be made accessible only through the HTTP
+     *                         protocol. This means that the cookie won't be accessible by scripting
+     *                         languages, such as JavaScript. This setting can effectively help to
+     *                         reduce identity theft through XSS attacks (although it is not supported
+     *                         by all browsers).
+     * @return Cookie
+     */
+    public function create(
+        $name,
+        $value = null,
+        $lifetime = 0,
+        $path = null,
+        $domain = null,
+        $secure = null,
+        $httpOnly = true
+    )
+    {
+        if (is_null($path))
+        {
+            $path = $this->config['path'];
+        }
+
+        if (is_null($domain))
+        {
+            $domain = $this->getDomain();
+        }
+
+        if (is_null($secure))
+        {
+            $secure = $this->request->getMethod() == 'https';
+        }
+
+        return new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
+    }
+
+    /**
+     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
+     * to be shared between sub domains.
+     *
+     * @return string
+     */
+    public function getDomain()
+    {
+        $host = $this->request->getUri()->getHost();
+
+        if (filter_var($host, FILTER_VALIDATE_IP))
+        {
+            //We can't use . with IP addresses
+            return $host;
+        }
+
+        if ($this->config['subDomains'])
+        {
+            $host = '.' . $host;
+        }
+
+        $port = $this->request->getUri()->getPort();
+
+        //Simple check to make sure that website is located on default port
+        if (!empty($port) && !in_array($port, array(80, 443)))
+        {
+            $host = $host . ':' . $port;
+        }
+
+        return $host;
+    }
+
+    /**
      * Schedule new cookie. Cookie will be send while dispatching request.
+     *
+     * Domain, path, and secure values can be left in null state, in this case cookie manager will
+     * populate them automatically.
      *
      * @link http://php.net/manual/en/function.setcookie.php
      * @param string $name     The name of the cookie.
@@ -234,15 +351,13 @@ class CookieManager extends Component implements MiddlewareInterface
         $name,
         $value = null,
         $lifetime = 0,
-        $path = Cookie::AUTO,
-        $domain = Cookie::AUTO,
-        $secure = Cookie::AUTO,
+        $path = null,
+        $domain = null,
+        $secure = null,
         $httpOnly = true
     )
     {
-        //FETCH VALUES FROM HERE
-
-        $cookie = new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
+        $cookie = $this->create($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
         $this->scheduled[] = $cookie;
 
         return $cookie;
@@ -255,16 +370,24 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     public function delete($name)
     {
+        foreach ($this->scheduled as $index => $cookie)
+        {
+            if ($cookie->getName() == $name)
+            {
+                unset($this->scheduled[$index]);
+            }
+        }
+
         $this->scheduled[] = new Cookie($name, null, -86400);
     }
 
     /**
      * Schedule new cookie instance to be send while dispatching request.
      *
-     * @param CookieInterface $cookie
+     * @param Cookie $cookie
      * @return static
      */
-    public function add(CookieInterface $cookie)
+    public function add(Cookie $cookie)
     {
         $this->scheduled[] = $cookie;
 
@@ -274,7 +397,7 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Cookies has to be send (specified via global scope).
      *
-     * @return CookieInterface[]
+     * @return Cookie[]
      */
     public function getScheduled()
     {
