@@ -9,9 +9,7 @@
 namespace Spiral\Components\Http\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Cookies\CookieManager;
-use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
 use Spiral\Core\Component;

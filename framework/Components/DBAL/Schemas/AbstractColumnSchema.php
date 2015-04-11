@@ -106,6 +106,19 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
     );
 
     /**
+     * Abstract type aliases (for consistency).
+     *
+     * @var array
+     */
+    protected $aliases = array(
+        'int'            => 'integer',
+        'bigint'         => 'bigInteger',
+        'incremental'    => 'primary',
+        'bigIncremental' => 'bigPrimary',
+        'bool'           => 'boolean'
+    );
+
+    /**
      * Driver specific reverse mapping, this mapping should link database type to one of standard
      * internal types. Not resolved types will be marked as "unknown" which will map them as php type
      * string.
@@ -329,6 +342,11 @@ abstract class AbstractColumnSchema extends Component implements SqlFragmentInte
      */
     public function type($type)
     {
+        if (isset($this->aliases[$type]))
+        {
+            $type = $this->aliases[$type];
+        }
+
         if (!isset($this->mapping[$type]))
         {
             throw new SchemaBuilderException("Undefined abstract/virtual type '{$type}'.");

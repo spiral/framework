@@ -27,6 +27,7 @@ class BelongsToSchema extends RelationSchema
     /**
      * Default definition parameters, will be filled if parameter skipped from definition by user.
      *
+     * @invisible
      * @var array
      */
     protected $defaultDefinition = array(

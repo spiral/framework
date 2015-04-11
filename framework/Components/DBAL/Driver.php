@@ -409,7 +409,11 @@ abstract class Driver extends Component
         $this->transactionLevel++;
         if ($this->transactionLevel == 1)
         {
-            !empty($isolationLevel) && $this->isolationLevel($isolationLevel);
+            if (!empty($isolationLevel))
+            {
+                $this->isolationLevel($isolationLevel);
+            }
+
             self::logger()->info('Starting transaction.');
 
             return $this->getPDO()->beginTransaction();
@@ -487,7 +491,7 @@ abstract class Driver extends Component
     protected function savepointCreate($name)
     {
         self::logger()->info("Creating savepoint '{$name}'.");
-        $this->statement("SAVEPOINT {$name}");
+        $this->statement("SAVEPOINT SVP{$name}");
     }
 
     /**
@@ -499,7 +503,7 @@ abstract class Driver extends Component
     protected function savepointRelease($name)
     {
         self::logger()->info("Releasing savepoint '{$name}'.");
-        $this->statement("RELEASE SAVEPOINT {$name}");
+        $this->statement("RELEASE SAVEPOINT SVP{$name}");
     }
 
     /**
@@ -511,7 +515,7 @@ abstract class Driver extends Component
     protected function savepointRollback($name)
     {
         self::logger()->info("Rolling back savepoint '{$name}'.");
-        $this->statement("ROLLBACK TO SAVEPOINT {$name}");
+        $this->statement("ROLLBACK TO SAVEPOINT SVP{$name}");
     }
 
     /**

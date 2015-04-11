@@ -163,9 +163,14 @@ class SchemaReader extends Component
 
     public function declareTable($database, $table)
     {
-        $this->tables[] = $table = $this->dbal->db($database)->table($table)->schema();
+        if (isset($this->tables[$database . '/' . $table]))
+        {
+            return $this->tables[$database . '/' . $table];
+        }
 
-        return $table;
+        $table = $this->dbal->db($database)->table($table)->schema();
+
+        return $this->tables[$database . '/' . $table->getName()] = $table;
     }
 
     public function getDeclaredTables($cascade = true)
