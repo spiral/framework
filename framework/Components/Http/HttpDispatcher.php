@@ -394,38 +394,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
     }
 
     /**
-     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
-     * to be shared between sub domains.
-     *
-     * @return string
-     */
-    public function cookieDomain()
-    {
-        $host = $this->request->getUri()->getHost();
-
-        if (filter_var($host, FILTER_VALIDATE_IP))
-        {
-            //We can't use . with IP addresses
-            return $host;
-        }
-
-        if ($this->config['cookies']['subDomains'])
-        {
-            $host = '.' . $host;
-        }
-
-        $port = $this->request->getUri()->getPort();
-
-        //Simple check to make sure that website is located on default port
-        if (!empty($port) && !in_array($port, array(80, 443)))
-        {
-            $host = $host . ':' . $port;
-        }
-
-        return $host;
-    }
-
-    /**
      * Sending stream content to client.
      *
      * @param StreamableInterface $stream

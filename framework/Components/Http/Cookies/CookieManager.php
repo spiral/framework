@@ -25,7 +25,7 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Required traits.
      */
-    use Component\SingletonTrait;
+    use Component\SingletonTrait, Component\ConfigurableTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -33,11 +33,11 @@ class CookieManager extends Component implements MiddlewareInterface
     const SINGLETON = 'cookies';
 
     /**
-     * Http dispatcher instance fetched from context.
+     * Http request.
      *
-     * @var HttpDispatcher
+     * @var ServerRequestInterface
      */
-    protected $httpDispatcher = null;
+    protected $request = null;
 
     /**
      * Cookie names should never be encrypted or decrypted.
@@ -59,6 +59,16 @@ class CookieManager extends Component implements MiddlewareInterface
      * @var Cookie[]
      */
     protected $scheduled = array();
+
+    /**
+     * Middleware constructing.
+     *
+     * @param HttpDispatcher $dispatcher
+     */
+    public function __construct(HttpDispatcher $dispatcher)
+    {
+        $this->config = $dispatcher->getConfig()['cookies'];
+    }
 
     /**
      * Do not encrypt/decrypt cookie.
@@ -106,7 +116,7 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
-        $this->httpDispatcher = $context;
+        $this->request = $request;
 
         $request = $this->decryptCookies($request);
 
@@ -255,20 +265,52 @@ class CookieManager extends Component implements MiddlewareInterface
     {
         if (is_null($path))
         {
-            $path = $this->httpDispatcher->getConfig()['basePath'];
+            $path = $this->config['path'];
         }
 
         if (is_null($domain))
         {
-            $domain = $this->httpDispatcher->cookieDomain();
+            $domain = $this->getDomain();
         }
 
         if (is_null($secure))
         {
-            $secure = $this->httpDispatcher->getRequest()->getMethod() == 'https';
+            $secure = $this->request->getMethod() == 'https';
         }
 
         return new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
+    }
+
+    /**
+     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
+     * to be shared between sub domains.
+     *
+     * @return string
+     */
+    public function getDomain()
+    {
+        $host = $this->request->getUri()->getHost();
+
+        if (filter_var($host, FILTER_VALIDATE_IP))
+        {
+            //We can't use . with IP addresses
+            return $host;
+        }
+
+        if ($this->config['subDomains'])
+        {
+            $host = '.' . $host;
+        }
+
+        $port = $this->request->getUri()->getPort();
+
+        //Simple check to make sure that website is located on default port
+        if (!empty($port) && !in_array($port, array(80, 443)))
+        {
+            $host = $host . ':' . $port;
+        }
+
+        return $host;
     }
 
     /**
@@ -328,6 +370,14 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     public function delete($name)
     {
+        foreach ($this->scheduled as $index => $cookie)
+        {
+            if ($cookie->getName() == $name)
+            {
+                unset($this->scheduled[$index]);
+            }
+        }
+
         $this->scheduled[] = new Cookie($name, null, -86400);
     }
 
