@@ -16,7 +16,7 @@ class ManyThoughtSchema extends RelationSchema
     /**
      * Relation type.
      */
-    const RELATIONSHIP_TYPE = Entity::MANY_THOUGHT;
+    const RELATION_TYPE = Entity::MANY_THOUGHT;
 
     public function initiate()
     {

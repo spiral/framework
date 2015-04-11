@@ -16,7 +16,7 @@ class ManyToManyMorphedSchema extends RelationSchema
     /**
      * Relation type.
      */
-    const RELATIONSHIP_TYPE = Entity::MANY_TO_MANY_MORPHED;
+    const RELATION_TYPE = Entity::MANY_TO_MANY_MORPHED;
 
     public function initiate()
     {

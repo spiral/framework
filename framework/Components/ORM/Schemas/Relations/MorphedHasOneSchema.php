@@ -16,7 +16,7 @@ class MorphedHasOneSchema extends RelationSchema
     /**
      * Relation type.
      */
-    const RELATIONSHIP_TYPE = Entity::MORPHED_HAS_ONE;
+    const RELATION_TYPE = Entity::MORPHED_HAS_ONE;
 
     public function initiate()
     {

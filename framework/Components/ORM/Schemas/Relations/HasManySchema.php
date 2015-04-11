@@ -15,5 +15,5 @@ class HasManySchema extends HasOneSchema
     /**
      * Relation type.
      */
-    const RELATIONSHIP_TYPE = Entity::HAS_MANY;
+    const RELATION_TYPE = Entity::HAS_MANY;
 }

@@ -16,7 +16,7 @@ class HasOneSchema extends RelationSchema
     /**
      * Relation type.
      */
-    const RELATIONSHIP_TYPE = Entity::HAS_ONE;
+    const RELATION_TYPE = Entity::HAS_ONE;
 
     public function initiate()
     {

@@ -44,7 +44,6 @@ class SchemaReader extends Component
         Entity::MORPHED_HAS_MANY     => 'Spiral\Components\ORM\Schemas\Relations\MorphedHasManySchema',
         Entity::MORPHED_MANY_TO_MANY => 'Spiral\Components\ORM\Schemas\Relations\MorphedManyToManySchema',
         Entity::MANY_TO_MANY_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\ManyToManyMorphedSchema'
-
     );
 
     /**

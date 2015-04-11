@@ -16,7 +16,7 @@ class BelongsToMorphedSchema extends RelationSchema
     /**
      * Relation type.
      */
-    const RELATIONSHIP_TYPE = Entity::BELONGS_TO_MORPHED;
+    const RELATION_TYPE = Entity::BELONGS_TO_MORPHED;
 
     public function initiate()
     {

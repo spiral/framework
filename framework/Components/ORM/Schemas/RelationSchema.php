@@ -18,12 +18,12 @@ abstract class RelationSchema
     /**
      * Relation type.
      */
-    const RELATIONSHIP_TYPE = null;
+    const RELATION_TYPE = null;
 
     /**
      * Equivalent relationship resolved based on definition and not schema, usually polymorphic.
      */
-    const EQUIVALENT_RELATIONSHIP = null;
+    const EQUIVALENT_RELATION = null;
 
     /**
      * Parent ORM schema holds all entity schemas.
@@ -55,7 +55,46 @@ abstract class RelationSchema
      */
     protected $definition = array();
 
+
     protected $defaultDefinition = array();
+
+
+    /**
+     * Target model or interface (for polymorphic classes).
+     *
+     * @var string
+     */
+    protected $target = '';
+
+    public function __construct(SchemaReader $ormSchema, EntitySchema $entitySchema, $name, array $definition)
+    {
+        $this->ormSchema = $ormSchema;
+        $this->entitySchema = $entitySchema;
+
+        $this->name = $name;
+        $this->definition = $definition;
+        $this->target = $definition[static::RELATION_TYPE];
+
+        if (!$this->hasEquivalent())
+        {
+            $this->definition = $this->clarifyDefinition($this->definition);
+        }
+    }
+
+    protected function clarifyDefinition($definition)
+    {
+        foreach ($this->defaultDefinition as $property => $pattern)
+        {
+            if (isset($this->definition[$property]))
+            {
+                continue;
+            }
+
+
+        }
+
+        return $definition;
+    }
 
     protected function define($key, $format)
     {
@@ -75,28 +114,6 @@ abstract class RelationSchema
         ));
     }
 
-
-    /**
-     * Target model or interface (for polymorphic classes).
-     *
-     * @var string
-     */
-    protected $target = '';
-
-    public function __construct(SchemaReader $ormSchema, EntitySchema $entitySchema, $name, array $definition)
-    {
-        $this->ormSchema = $ormSchema;
-        $this->entitySchema = $entitySchema;
-
-        $this->name = $name;
-        $this->definition = $definition;
-        $this->target = $definition[static::RELATIONSHIP_TYPE];
-
-        if (!$this->hasEquivalent())
-        {
-            $this->definition = $this->clarifyDefinition($this->definition);
-        }
-    }
 
     protected function getDefinitionOptions()
     {
@@ -131,11 +148,6 @@ abstract class RelationSchema
     }
 
 
-    protected function clarifyDefinition($definition)
-    {
-        return $definition;
-    }
-
     /**
      * Relation type.
      *
@@ -143,7 +155,7 @@ abstract class RelationSchema
      */
     public function getType()
     {
-        return static::RELATIONSHIP_TYPE;
+        return static::RELATION_TYPE;
     }
 
     /**
@@ -154,7 +166,7 @@ abstract class RelationSchema
      */
     public function hasEquivalent()
     {
-        if (!static::EQUIVALENT_RELATIONSHIP)
+        if (!static::EQUIVALENT_RELATION)
         {
             return false;
         }
@@ -173,9 +185,9 @@ abstract class RelationSchema
     public function getEquivalentDefinition()
     {
         $definition = $this->definition;
-        unset($definition[static::RELATIONSHIP_TYPE]);
+        unset($definition[static::RELATION_TYPE]);
 
-        return array(static::EQUIVALENT_RELATIONSHIP => $this->target) + $definition;
+        return array(static::EQUIVALENT_RELATION => $this->target) + $definition;
     }
 
     protected function getTargetEntity()
