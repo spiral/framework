@@ -316,13 +316,13 @@ class DocumentSchema extends Component
     }
 
     /**
-     * Getting all assignable fields.
+     * Getting all mass assignable fields.
      *
      * @return array
      */
-    public function getAssignable()
+    public function getFillable()
     {
-        return $this->property('assignable', true);
+        return $this->property('fillable', true);
     }
 
     /**

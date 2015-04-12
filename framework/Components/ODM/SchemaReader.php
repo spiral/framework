@@ -195,7 +195,7 @@ class SchemaReader extends Component
             $documentSchema[ODM::D_DEFAULTS] = $document->getDefaults();
             $documentSchema[ODM::D_HIDDEN] = $document->getHidden();
             $documentSchema[ODM::D_SECURED] = $document->getSecured();
-            $documentSchema[ODM::D_ASSIGNABLE] = $document->getAssignable();
+            $documentSchema[ODM::D_FILLABLE] = $document->getFillable();
 
             $documentSchema[ODM::D_MUTATORS] = $document->getMutators();
             $documentSchema[ODM::D_VALIDATES] = $document->getValidates();

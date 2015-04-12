@@ -435,13 +435,13 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param string $field
      * @return bool
      */
-    protected function isAssignable($field)
+    protected function isFillable($field)
     {
         //Better replace it with isset later
         return !in_array($field, $this->schema[ODM::D_SECURED]) &&
         !(
-            $this->schema[ODM::D_ASSIGNABLE]
-            && !in_array($field, $this->schema[ODM::D_ASSIGNABLE])
+            $this->schema[ODM::D_FILLABLE]
+            && !in_array($field, $this->schema[ODM::D_FILLABLE])
         );
     }
 

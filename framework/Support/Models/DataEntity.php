@@ -65,20 +65,20 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     protected $secured = array();
 
     /**
-     * List of hidden fields can not be fetched using publicFields() method (only directly).
-     *
-     * @var array
-     */
-    protected $hidden = array();
-
-    /**
      * Set of fields which can be assigned using setFields() method, if property is empty every field
      * except secured will be assignable. Fields can still be assigned directly using setField() or
      * __set() methods without any limitations.
      *
      * @var array
      */
-    protected $assignable = array();
+    protected $fillable = array();
+
+    /**
+     * List of hidden fields can not be fetched using publicFields() method (only directly).
+     *
+     * @var array
+     */
+    protected $hidden = array();
 
     /**
      * Validator instance will be used to check model fields.
@@ -454,10 +454,10 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      * @param string $field
      * @return bool
      */
-    protected function isAssignable($field)
+    protected function isFillable($field)
     {
         return !in_array($field, $this->secured) && !(
-            $this->assignable && !in_array($field, $this->assignable)
+            !empty($this->fillable) && !in_array($field, $this->fillable)
         );
     }
 
@@ -476,7 +476,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
 
         foreach ($this->event('setFields', $fields) as $name => $field)
         {
-            $this->isAssignable($field) && $this->setField($name, $field, true);
+            $this->isFillable($field) && $this->setField($name, $field, true);
         }
 
         return $this;

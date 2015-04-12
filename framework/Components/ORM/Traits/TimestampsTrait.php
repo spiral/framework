@@ -35,6 +35,13 @@ trait TimestampsTrait
                     $event->context['value']['time_created'] = 'timestamp';
                     $event->context['value']['time_updated'] = 'timestamp';
                 }
+
+                if ($event->context['property'] == 'secured')
+                {
+                    //Not editable by user via mass assignment
+                    $event->context['value'][] = 'timeCreated';
+                    $event->context['value'][] = 'timeUpdated';
+                }
             };
 
             //This check is required as Document::SCHEMA_ANALYSIS will be provided multiple times
