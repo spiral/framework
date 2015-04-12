@@ -66,9 +66,10 @@ class Parameter extends Component implements ParameterInterface
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
      */
-    public function sqlStatement()
+    public function sqlStatement(QueryCompiler $compiler = null)
     {
         if (is_array($this->value))
         {

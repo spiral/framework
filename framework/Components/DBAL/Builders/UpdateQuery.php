@@ -118,17 +118,19 @@ class UpdateQuery extends AffectQuery
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
-     * @throws DBALException
      */
-    public function sqlStatement()
+    public function sqlStatement(QueryCompiler $compiler = null)
     {
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+
         if (empty($this->values))
         {
             throw new DBALException("Update values should be specified.");
         }
 
-        return $this->compiler->update(
+        return $compiler->update(
             $this->table,
             $this->values,
             $this->joins,

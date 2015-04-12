@@ -280,11 +280,14 @@ class SelectQuery extends QueryBuilder implements
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
      */
-    public function sqlStatement()
+    public function sqlStatement(QueryCompiler $compiler = null)
     {
-        return $this->compiler->select(
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+
+        return $compiler->select(
             $this->fromTables,
             $this->distinct,
             $this->columns,

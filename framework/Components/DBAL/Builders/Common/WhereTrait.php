@@ -11,6 +11,9 @@ namespace Spiral\Components\DBAL\Builders\Common;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
+use Spiral\Components\DBAL\SqlFragmentInterface;
+use Spiral\Components\DBAL\SqlIdentifier;
+use Spiral\Components\DBAL\SqlIdentifierInterface;
 
 trait WhereTrait
 {
@@ -262,8 +265,8 @@ trait WhereTrait
      * @param string $joiner          Boolean joiner (AND|OR).
      * @param array  $parameters      Set of parameters collected from where functions.
      * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $catchParameters If true every found parameter will passed thought addParameter()
-     *                                method.
+     * @param bool   $dataParameters  If true every found parameter will passed thought addParameter()
+     *                                method, if false every parameter will be converted to identifier.
      * @return array
      * @throws DBALException
      */
@@ -271,7 +274,7 @@ trait WhereTrait
         $joiner,
         array $parameters,
         &$tokens = array(),
-        $catchParameters = true
+        $dataParameters = true
     )
     {
         list($identifier, $variousA, $variousB, $variousC) = $parameters + array_fill(0, 5, null);
@@ -283,20 +286,20 @@ trait WhereTrait
                 $identifier,
                 $joiner == 'AND' ? DatabaseManager::TOKEN_AND : DatabaseManager::TOKEN_OR,
                 $tokens,
-                $catchParameters
+                $dataParameters
             );
         }
 
         if ($identifier instanceof \Closure)
         {
             $tokens[] = array($joiner, '(');
-            call_user_func($identifier, $this, $joiner, $catchParameters);
+            call_user_func($identifier, $this, $joiner, $dataParameters);
             $tokens[] = array('', ')');
 
             return $tokens;
         }
 
-        if ($identifier instanceof QueryBuilder && $catchParameters)
+        if ($identifier instanceof QueryBuilder && $dataParameters)
         {
             //This will copy all parameters from QueryBuilder
             $this->addParameter($identifier);
@@ -313,7 +316,10 @@ trait WhereTrait
                 $tokens[] = array($joiner, array(
                     $identifier,
                     '=',
-                    $catchParameters ? $this->addParameter($variousA) : $variousA
+                    //Check if sql fragment
+                    $dataParameters
+                        ? $this->addParameter($variousA)
+                        : $this->wrapIdentifier($variousA)
                 ));
                 break;
             case 3:
@@ -321,7 +327,9 @@ trait WhereTrait
                 $tokens[] = array($joiner, array(
                     $identifier,
                     strtoupper($variousA),
-                    $catchParameters ? $this->addParameter($variousB) : $variousB
+                    $dataParameters
+                        ? $this->addParameter($variousB)
+                        : $this->wrapIdentifier($variousB)
                 ));
                 break;
             case 4:
@@ -337,12 +345,32 @@ trait WhereTrait
                 $tokens[] = array($joiner, array(
                     $identifier,
                     strtoupper($variousA),
-                    $catchParameters ? $this->addParameter($variousB) : $variousB,
-                    $catchParameters ? $this->addParameter($variousC) : $variousC
+                    $dataParameters
+                        ? $this->addParameter($variousB)
+                        : $this->wrapIdentifier($variousB),
+                    $dataParameters
+                        ? $this->addParameter($variousC)
+                        : $this->wrapIdentifier($variousC)
                 ));
         }
 
         return $tokens;
+    }
+
+    /**
+     * Automatically convert parameter to identifier.
+     *
+     * @param string $parameter
+     * @return SqlIdentifier
+     */
+    protected function wrapIdentifier($parameter)
+    {
+        if (!$parameter instanceof SqlFragmentInterface)
+        {
+            return SqlIdentifier::make($parameter);
+        }
+
+        return $parameter;
     }
 
     /**

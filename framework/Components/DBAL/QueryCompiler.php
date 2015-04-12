@@ -14,12 +14,6 @@ use Spiral\Core\Component;
 class QueryCompiler extends Component
 {
     /**
-     * Directions how to treat second argument in conditions in where() compiler method.
-     */
-    const VALUE_PLACEHOLDERS = 1;
-    const VALUE_IDENTIFIERS  = 2;
-
-    /**
      * Parent driver instance, driver used only for identifier() methods but can be required in other
      * cases.
      *
@@ -72,7 +66,7 @@ class QueryCompiler extends Component
     {
         if ($identifier instanceof SqlFragmentInterface)
         {
-            return $identifier->sqlStatement();
+            return $identifier->sqlStatement($this);
         }
 
         if (preg_match('/ as /i', $identifier, $matches))
@@ -301,11 +295,11 @@ class QueryCompiler extends Component
         {
             if ($value instanceof SelectQuery)
             {
-                $value = '(' . $value . ')';
+                $value = '(' . $value->sqlStatement($this) . ')';
             }
             elseif ($value instanceof SqlFragmentInterface)
             {
-                $value = $value->sqlStatement();
+                $value = $value->sqlStatement($this);
             }
             else
             {
@@ -387,7 +381,7 @@ class QueryCompiler extends Component
 
             if (!empty($join['on']))
             {
-                $statement .= ' ON (' . $this->where($join['on'], self::VALUE_IDENTIFIERS) . ')';
+                $statement .= ' ON (' . $this->where($join['on']) . ')';
             }
         }
 
@@ -395,15 +389,13 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile where statement, WHERE keywords will not be included. Methods has an options to replace
-     * all values with placeholder representation (?) or quote values as identifiers (used by joins).
+     * Compile where statement, WHERE keywords will not be included.
      *
      * @param array $tokens
-     * @param int   $mode Replace values with placeholders or quote of identifiers.
      * @return string
      * @throws DBALException
      */
-    public function where(array $tokens, $mode = self::VALUE_PLACEHOLDERS)
+    public function where(array $tokens)
     {
         if (!$tokens)
         {
@@ -457,14 +449,14 @@ class QueryCompiler extends Component
             if ($context instanceof SqlFragmentInterface)
             {
                 //( ?? )
-                $statement .= $joiner . ' ' . $context . ' ';
+                $statement .= $joiner . ' ' . $context->sqlStatement($this) . ' ';
                 continue;
             }
 
             list($identifier, $operator, $value) = $context;
             if ($identifier instanceof SqlFragmentInterface)
             {
-                $identifier = '(' . $identifier->sqlStatement() . ')';
+                $identifier = '(' . $identifier->sqlStatement($this) . ')';
             }
             else
             {
@@ -473,15 +465,8 @@ class QueryCompiler extends Component
 
             if ($operator == 'BETWEEN' || $operator == 'NOT BETWEEN')
             {
-                if ($mode == self::VALUE_PLACEHOLDERS)
-                {
-                    $statement .= "{$joiner} {$identifier} {$operator} ? AND ? ";
-                }
-                else
-                {
-                    $statement .= "{$joiner} {$identifier} "
-                        . "{$operator} {$this->quote($value)} AND {$this->quote($context[3])} ";
-                }
+                $statement .= "{$joiner} {$identifier} " . "{$operator} "
+                    . "{$this->renderValue($value)} AND {$this->renderValue($context[3])} ";
 
                 continue;
             }
@@ -493,8 +478,10 @@ class QueryCompiler extends Component
 
             if (
                 $operator == '='
-                && (is_array($value)
-                    || ($value instanceof ParameterInterface && is_array($value->getValue())))
+                && (
+                    is_array($value)
+                    || ($value instanceof ParameterInterface && is_array($value->getValue()))
+                )
             )
             {
                 $operator = 'IN';
@@ -504,13 +491,9 @@ class QueryCompiler extends Component
             {
                 $value = ' (' . $value . ') ';
             }
-            elseif ($value instanceof SqlFragmentInterface)
-            {
-                $value = $value->sqlStatement();
-            }
             else
             {
-                $value = ($mode == self::VALUE_PLACEHOLDERS) ? '?' : $this->quote($value);
+                $value = $this->renderValue($value);
             }
 
             $statement .= "{$joiner}{$identifier} {$operator} {$value} ";
@@ -522,6 +505,22 @@ class QueryCompiler extends Component
         }
 
         return trim($statement);
+    }
+
+    /**
+     * Prepare value for inserting into query (replace ?).
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function renderValue($value)
+    {
+        if ($value instanceof SqlFragmentInterface)
+        {
+            return $value->sqlStatement($this);
+        }
+
+        return '?';
     }
 
     /**

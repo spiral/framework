@@ -68,13 +68,14 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
         }
 
         if (
-            !$parameter instanceof SqlFragmentInterface
-            || $parameter instanceof ParameterInterface
-            || $parameter instanceof QueryBuilder
+            $parameter instanceof SqlFragmentInterface
+            || $parameter instanceof SqlIdentifierInterface
         )
         {
-            $this->parameters[] = $parameter;
+            return $parameter;
         }
+
+        $this->parameters[] = $parameter;
 
         return $parameter;
     }
@@ -128,9 +129,10 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
      */
-    abstract public function sqlStatement();
+    abstract public function sqlStatement(QueryCompiler $compiler = null);
 
     /**
      * Run QueryBuilder statement against parent database. Method will be overloaded by child builder

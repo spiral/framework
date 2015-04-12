@@ -48,9 +48,10 @@ class SqlFragment extends Component implements SqlFragmentInterface
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
      */
-    public function sqlStatement()
+    public function sqlStatement(QueryCompiler $compiler = null)
     {
         return $this->statement;
     }

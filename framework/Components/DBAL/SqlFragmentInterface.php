@@ -13,9 +13,10 @@ interface SqlFragmentInterface
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
      */
-    public function sqlStatement();
+    public function sqlStatement(QueryCompiler $compiler = null);
 
     /**
      * __toString

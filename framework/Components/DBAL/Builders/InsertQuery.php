@@ -152,10 +152,13 @@ class InsertQuery extends QueryBuilder
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
      */
-    public function sqlStatement()
+    public function sqlStatement(QueryCompiler $compiler = null)
     {
-        return $this->compiler->insert($this->table, $this->columns, $this->parameters);
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+
+        return $compiler->insert($this->table, $this->columns, $this->parameters);
     }
 }
