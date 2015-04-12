@@ -8,10 +8,9 @@
  */
 namespace Spiral\Components\DBAL\Schemas;
 
-use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Core\Component;
 
-abstract class AbstractIndexSchema extends Component implements SqlFragmentInterface
+abstract class AbstractIndexSchema extends Component
 {
     /**
      * Index types.

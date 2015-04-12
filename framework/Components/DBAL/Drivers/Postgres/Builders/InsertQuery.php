@@ -11,6 +11,7 @@ namespace Spiral\Components\DBAL\Drivers\Postgres\Builders;
 use Spiral\Components\DBAL\Builders\InsertQuery as BaseInsertQuery;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\Drivers\Postgres\PostgresDriver;
+use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Core\Component\LoggerTrait;
 
 class InsertQuery extends BaseInsertQuery
@@ -23,10 +24,10 @@ class InsertQuery extends BaseInsertQuery
     /**
      * Get or render SQL statement.
      *
+     * @param QueryCompiler $compiler
      * @return string
-     * @throws DBALException
      */
-    public function sqlStatement()
+    public function sqlStatement(QueryCompiler $compiler = null)
     {
         $driver = $this->database->getDriver();
         if (!$driver instanceof PostgresDriver)
@@ -43,7 +44,9 @@ class InsertQuery extends BaseInsertQuery
             ));
         }
 
-        return $this->compiler->insert($this->table, $this->columns, $this->parameters, $primary);
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+
+        return $compiler->insert($this->table, $this->columns, $this->parameters, $primary);
     }
 
     /**

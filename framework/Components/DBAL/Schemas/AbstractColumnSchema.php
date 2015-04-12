@@ -38,7 +38,7 @@ use Spiral\Core\Component;
  * @method AbstractColumnSchema|$this tinyBinary()
  * @method AbstractColumnSchema|$this longBinary()
  */
-abstract class AbstractColumnSchema extends Component implements SqlFragmentInterface
+abstract class AbstractColumnSchema extends Component
 {
     /**
      * Logging.

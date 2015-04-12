@@ -8,10 +8,9 @@
  */
 namespace Spiral\Components\DBAL\Schemas;
 
-use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Core\Component;
 
-abstract class AbstractReferenceSchema extends Component implements SqlFragmentInterface
+abstract class AbstractReferenceSchema extends Component
 {
     /**
      * Delete and update foreign key rules.
