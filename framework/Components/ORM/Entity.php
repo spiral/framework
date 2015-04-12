@@ -63,6 +63,9 @@ class Entity extends DataEntity
     const PIVOT_TABLE   = 'thought';
     const VIA_TABLE     = 'thought';
 
+    const THOUGHT_INNER_KEY = 'thought-inner';
+    const THOUGHT_OUTER_KEY = 'thought-outer';
+
     const BACK_REF = 'back-ref';
 
     const CONSTRAINT        = 'constraint';

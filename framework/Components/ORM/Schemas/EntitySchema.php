@@ -287,17 +287,6 @@ class EntitySchema extends Component
         return array_slice($this->tableSchema->getPrimaryKeys(), 0, 1)[0];
     }
 
-
-    public function getPrimaryAbstractType()
-    {
-        if ($this->tableSchema->column($this->getPrimaryKey())->abstractType() == 'bigPrimary')
-        {
-            return 'bigInteger';
-        }
-
-        return 'integer';
-    }
-
     /**
      * Fill table schema with declared columns, their default values and etc.
      */

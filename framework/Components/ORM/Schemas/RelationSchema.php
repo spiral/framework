@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM\Schemas;
 
 use Doctrine\Common\Inflector\Inflector;
+use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaReader;
@@ -232,6 +233,86 @@ abstract class RelationSchema
     public function getDefinition()
     {
         return $this->definition;
+    }
+
+    /**
+     * Inner key name.
+     *
+     * @return null|string
+     */
+    public function getInnerKey()
+    {
+        if (isset($this->definition[Entity::INNER_KEY]))
+        {
+            return $this->definition[Entity::INNER_KEY];
+        }
+
+        return null;
+    }
+
+    /**
+     * Abstract type needed to represent inner key (excluding primary keys).
+     *
+     * @return null|string
+     */
+    public function getInnerKeyType()
+    {
+        if (!$innerKey = $this->getInnerKey())
+        {
+            return null;
+        }
+
+        return $this->resolveAbstractType($this->entitySchema->getTableSchema()->column($innerKey));
+    }
+
+    /**
+     * Outer key name.
+     *
+     * @return null|string
+     */
+    public function getOuterKey()
+    {
+        if (isset($this->definition[Entity::OUTER_KEY]))
+        {
+            return $this->definition[Entity::OUTER_KEY];
+        }
+
+        return null;
+    }
+
+    /**
+     * Abstract type needed to represent outer key (excluding primary keys).
+     *
+     * @return null|string
+     */
+    public function getOuterKeyType()
+    {
+        if (!$outerKey = $this->getOuterKey())
+        {
+            return null;
+        }
+
+        return $this->resolveAbstractType($this->outerEntity()->getTableSchema()->column($outerKey));
+    }
+
+    /**
+     * Resolve correct abstract type to represent inner or outer key. Primary types will be converted
+     * to appropriate sized integers.
+     *
+     * @param AbstractColumnSchema $column
+     * @return string
+     */
+    protected function resolveAbstractType(AbstractColumnSchema $column)
+    {
+        switch ($column->abstractType())
+        {
+            case 'bigPrimary':
+                return 'bigInteger';
+            case 'primary':
+                return 'integer';
+            default:
+                return $column;
+        }
     }
 
     /**

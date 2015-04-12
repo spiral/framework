@@ -26,8 +26,10 @@ class ManyThoughtSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::INNER_KEY => '{entity:roleName}_{entity:primaryKey}',
-        Entity::OUTER_KEY => '{outer:roleName}_{outer:primaryKey}'
+        Entity::INNER_KEY         => '{entity:primaryKey}',
+        Entity::OUTER_KEY         => '{outer:primaryKey}',
+        Entity::THOUGHT_INNER_KEY => '{entity:roleName}_{definition:INNER_KEY}',
+        Entity::THOUGHT_OUTER_KEY => '{outer:roleName}_{definition:OUTER_KEY}'
     );
 
     /**
@@ -56,9 +58,11 @@ class ManyThoughtSchema extends RelationSchema
     public function revertRelation($name, $type = null)
     {
         $this->outerEntity()->addRelation($name, array(
-            Entity::MANY_THOUGHT => $this->entitySchema->getClass(),
-            Entity::OUTER_KEY    => $this->definition[Entity::INNER_KEY],
-            Entity::INNER_KEY    => $this->definition[Entity::OUTER_KEY]
+            Entity::MANY_THOUGHT      => $this->entitySchema->getClass(),
+            Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
+            Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
+            Entity::THOUGHT_INNER_KEY => $this->definition[Entity::THOUGHT_OUTER_KEY],
+            Entity::THOUGHT_OUTER_KEY => $this->definition[Entity::THOUGHT_INNER_KEY]
         ));
     }
 }

@@ -14,83 +14,6 @@ use Spiral\Components\ORM\SchemaReader;
 abstract class MorphedRelationSchema extends RelationSchema
 {
     /**
-     * All entities relation is related to.
-     *
-     * @invisible
-     * @var EntitySchema[]
-     */
-    protected $targets = array();
-
-    /**
-     * Primary key name used to every outer entity.
-     *
-     * @var string
-     */
-    protected $outerPrimaryKey = null;
-
-    /**
-     * Primary ket abstract type used in every outer entity.
-     *
-     * @var string
-     */
-    protected $outerPrimaryAbstractType = null;
-
-    /**
-     * New MorphedRelationSchema instance.
-     *
-     * @param SchemaReader $ormSchema
-     * @param EntitySchema $entitySchema
-     * @param string       $name
-     * @param array        $definition
-     */
-    public function __construct(
-        SchemaReader $ormSchema,
-        EntitySchema $entitySchema,
-        $name,
-        array $definition
-    )
-    {
-        $this->ormSchema = $ormSchema;
-        $this->target = $definition[static::RELATION_TYPE];
-        $this->findTargets();
-
-        parent::__construct($ormSchema, $entitySchema, $name, $definition);
-    }
-
-    /**
-     * Collect all possible relation targets and check their for consistency.
-     *
-     * @throws ORMException
-     */
-    protected function findTargets()
-    {
-        foreach ($this->ormSchema->getEntities() as $entity)
-        {
-            if ($entity->getReflection()->isSubclassOf($this->target))
-            {
-                $this->targets[] = $entity;
-
-                if (is_null($this->outerPrimaryKey))
-                {
-                    $this->outerPrimaryKey = $entity->getPrimaryKey();
-                    $this->outerPrimaryAbstractType = $entity->getPrimaryAbstractType();
-                }
-
-                //Consistency
-                if (
-                    $this->outerPrimaryKey != $entity->getPrimaryKey()
-                    || $this->outerPrimaryAbstractType != $entity->getPrimaryAbstractType()
-                )
-                {
-                    throw new ORMException(
-                        "Morphed relation requires consistent primary key name and type ({$entity})."
-                    );
-                }
-            }
-        }
-    }
-
-    /**
      * Option string used to populate definition template if no user value provided.
      *
      * @return array
@@ -98,7 +21,16 @@ abstract class MorphedRelationSchema extends RelationSchema
     protected function definitionOptions()
     {
         $options = parent::definitionOptions();
-        $options['outer:primaryKey'] = $this->outerPrimaryKey;
+
+        foreach ($this->ormSchema->getEntities() as $entity)
+        {
+            if ($entity->getReflection()->isSubclassOf($this->target))
+            {
+                //One model will be enough
+                $options['outer:primaryKey'] = $entity->getPrimaryKey();
+                break;
+            }
+        }
 
         return $options;
     }
@@ -108,8 +40,56 @@ abstract class MorphedRelationSchema extends RelationSchema
      *
      * @return EntitySchema[]
      */
-    public function getTargets()
+    public function getOuterEntities()
     {
-        return $this->targets;
+        $entities = array();
+        foreach ($this->ormSchema->getEntities() as $entity)
+        {
+            if ($entity->getReflection()->isSubclassOf($this->target))
+            {
+                //One model will be enough
+                $entities[] = $entity;
+            }
+        }
+
+        return $entities;
+    }
+
+    /**
+     * Abstract type needed to represent outer key (excluding primary keys).
+     *
+     * @return null|string
+     */
+    public function getOuterKeyType()
+    {
+        $outerKeyType = null;
+        foreach ($this->getOuterEntities() as $entity)
+        {
+            if (!$entity->getTableSchema()->hasColumn($this->getOuterKey()))
+            {
+                throw new ORMException(
+                    "Morphed relation requires outer key exists in every entity ({$entity})."
+                );
+            }
+
+            $entityKeyType = $this->resolveAbstractType(
+                $entity->getTableSchema()->column($this->getOuterKey())
+            );
+
+            if (is_null($outerKeyType))
+            {
+                $$outerKeyType = $entityKeyType;
+            }
+
+            //Consistency
+            if ($outerKeyType != $entityKeyType)
+            {
+                throw new ORMException(
+                    "Morphed relation requires consistent outer key type ({$entity})."
+                );
+            }
+        }
+
+        return $outerKeyType;
     }
 }

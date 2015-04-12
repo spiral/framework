@@ -26,6 +26,7 @@ class HasOneSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
+        Entity::INNER_KEY         => '{entity:primaryKey}',
         Entity::OUTER_KEY         => '{entity:roleName}_{definition:INNER_KEY}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE'
@@ -38,8 +39,8 @@ class HasOneSchema extends RelationSchema
     {
         $outerSchema = $this->outerEntity()->getTableSchema();
 
-        $outerKey = $outerSchema->column($this->definition[Entity::OUTER_KEY]);
-        $outerKey->type($this->entitySchema->getPrimaryAbstractType());
+        $outerKey = $outerSchema->column($this->getOuterKey());
+        $outerKey->type($this->getInnerKeyType());
         $outerKey->nullable(true);
         $outerKey->index();
 
@@ -66,6 +67,7 @@ class HasOneSchema extends RelationSchema
         $this->outerEntity()->addRelation($name, array(
             Entity::BELONGS_TO        => $this->entitySchema->getClass(),
             Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
+            Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
             Entity::CONSTRAINT        => $this->definition[Entity::CONSTRAINT],
             Entity::CONSTRAINT_ACTION => $this->definition[Entity::CONSTRAINT_ACTION]
         ));

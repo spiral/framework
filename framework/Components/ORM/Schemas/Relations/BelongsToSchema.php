@@ -31,7 +31,8 @@ class BelongsToSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::INNER_KEY         => '{outer:roleName}_{outer:primaryKey}',
+        Entity::OUTER_KEY         => '{outer:primaryKey}',
+        Entity::INNER_KEY         => '{outer:roleName}_{definition:OUTER_KEY}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE'
     );
@@ -43,8 +44,8 @@ class BelongsToSchema extends RelationSchema
     {
         $innerSchema = $this->entitySchema->getTableSchema();
 
-        $innerKey = $innerSchema->column($this->definition[Entity::INNER_KEY]);
-        $innerKey->type($this->outerEntity()->getPrimaryAbstractType());
+        $innerKey = $innerSchema->column($this->getInnerKey());
+        $innerKey->type($this->getOuterKeyType());
         $innerKey->nullable(true);
         $innerKey->index();
 
@@ -79,6 +80,7 @@ class BelongsToSchema extends RelationSchema
         $this->outerEntity()->addRelation($name, array(
             $type                     => $this->entitySchema->getClass(),
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
+            Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
             Entity::CONSTRAINT        => $this->definition[Entity::CONSTRAINT],
             Entity::CONSTRAINT_ACTION => $this->definition[Entity::CONSTRAINT_ACTION]
         ));

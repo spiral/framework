@@ -27,8 +27,10 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     protected $defaultDefinition = array(
         Entity::PIVOT_TABLE       => '{name:singular}_map',
-        Entity::INNER_KEY         => '{entity:roleName}_{entity:primaryKey}',
-        Entity::OUTER_KEY         => '{name:singular}_{outer:primaryKey}',
+        Entity::INNER_KEY         => '{entity:primaryKey}',
+        Entity::OUTER_KEY         => '{outer:primaryKey}',
+        Entity::THOUGHT_INNER_KEY => '{entity:roleName}_{definition:INNER_KEY}',
+        Entity::THOUGHT_OUTER_KEY => '{name:singular}_{definition:OUTER_KEY}',
         Entity::MORPH_KEY         => '{name:singular}_type',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE',
@@ -40,7 +42,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (empty($this->targets) || !$this->definition[Entity::CREATE_PIVOT])
+        if (empty($this->outerEntities) || !$this->definition[Entity::CREATE_PIVOT])
         {
             //No targets found, no need to generate anything
             return;
@@ -53,15 +55,15 @@ class ManyToMorphedSchema extends MorphedRelationSchema
 
         $pivotTable->bigPrimary('id');
 
-        $localKey = $pivotTable->column($this->definition[Entity::INNER_KEY]);
-        $localKey->type($this->entitySchema->getPrimaryAbstractType());
+        $localKey = $pivotTable->column($this->definition[Entity::THOUGHT_INNER_KEY]);
+        $localKey->type($this->getInnerKeyType());
         $localKey->index();
 
         $morphKey = $pivotTable->column($this->definition[Entity::MORPH_KEY]);
         $morphKey->string(static::TYPE_COLUMN_SIZE);
 
-        $outerKey = $pivotTable->column($this->definition[Entity::OUTER_KEY]);
-        $outerKey->type($this->outerPrimaryAbstractType);
+        $outerKey = $pivotTable->column($this->definition[Entity::THOUGHT_OUTER_KEY]);
+        $outerKey->type($this->getOuterKeyType());
 
         //Complex index
         $pivotTable->unique(
@@ -90,15 +92,17 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        foreach ($this->getTargets() as $entity)
+        foreach ($this->getOuterEntities() as $entity)
         {
             $entity->addRelation($name, array(
-                Entity::MANY_TO_MANY => $this->entitySchema->getClass(),
-                Entity::PIVOT_TABLE  => $this->definition[Entity::PIVOT_TABLE],
-                Entity::OUTER_KEY    => $this->definition[Entity::INNER_KEY],
-                Entity::INNER_KEY    => $this->definition[Entity::OUTER_KEY],
-                Entity::MORPH_KEY    => $this->definition[Entity::MORPH_KEY],
-                Entity::CREATE_PIVOT => $this->definition[Entity::CREATE_PIVOT]
+                Entity::MANY_TO_MANY      => $this->entitySchema->getClass(),
+                Entity::PIVOT_TABLE       => $this->definition[Entity::PIVOT_TABLE],
+                Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
+                Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
+                Entity::THOUGHT_INNER_KEY => $this->definition[Entity::THOUGHT_OUTER_KEY],
+                Entity::THOUGHT_OUTER_KEY => $this->definition[Entity::THOUGHT_INNER_KEY],
+                Entity::MORPH_KEY         => $this->definition[Entity::MORPH_KEY],
+                Entity::CREATE_PIVOT      => $this->definition[Entity::CREATE_PIVOT]
             ));
         }
     }

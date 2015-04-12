@@ -31,8 +31,10 @@ class ManyToManySchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::INNER_KEY         => '{entity:roleName}_{entity:primaryKey}',
-        Entity::OUTER_KEY         => '{outer:roleName}_{outer:primaryKey}',
+        Entity::INNER_KEY         => '{entity:primaryKey}',
+        Entity::OUTER_KEY         => '{outer:primaryKey}',
+        Entity::THOUGHT_INNER_KEY => '{entity:roleName}_{definition:INNER_KEY}',
+        Entity::THOUGHT_OUTER_KEY => '{outer:roleName}_{definition:OUTER_KEY}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE',
         Entity::CREATE_PIVOT      => false
@@ -91,16 +93,16 @@ class ManyToManySchema extends RelationSchema
 
         $pivotTable->bigPrimary('id');
 
-        $innerKey = $pivotTable->column($this->definition[Entity::INNER_KEY]);
-        $innerKey->type($this->entitySchema->getPrimaryAbstractType());
+        $innerKey = $pivotTable->column($this->definition[Entity::THOUGHT_INNER_KEY]);
+        $innerKey->type($this->getInnerKeyType());
 
-        $outerKey = $pivotTable->column($this->definition[Entity::OUTER_KEY]);
-        $outerKey->type($this->outerEntity()->getPrimaryAbstractType());
+        $outerKey = $pivotTable->column($this->definition[Entity::THOUGHT_OUTER_KEY]);
+        $outerKey->type($this->getOuterKeyType());
 
         //Complex index
         $pivotTable->unique(
-            $this->definition[Entity::INNER_KEY],
-            $this->definition[Entity::OUTER_KEY]
+            $this->definition[Entity::THOUGHT_INNER_KEY],
+            $this->definition[Entity::THOUGHT_OUTER_KEY]
         );
 
         if ($this->definition[Entity::CONSTRAINT] && empty($this->definition[Entity::MORPH_KEY]))
@@ -135,6 +137,8 @@ class ManyToManySchema extends RelationSchema
             Entity::PIVOT_TABLE       => $this->definition[Entity::PIVOT_TABLE],
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
             Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
+            Entity::THOUGHT_INNER_KEY => $this->definition[Entity::THOUGHT_OUTER_KEY],
+            Entity::THOUGHT_OUTER_KEY => $this->definition[Entity::THOUGHT_INNER_KEY],
             Entity::CONSTRAINT        => $this->definition[Entity::CONSTRAINT],
             Entity::CONSTRAINT_ACTION => $this->definition[Entity::CONSTRAINT_ACTION],
             Entity::CREATE_PIVOT      => $this->definition[Entity::CREATE_PIVOT]
