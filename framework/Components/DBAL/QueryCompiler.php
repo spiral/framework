@@ -70,7 +70,7 @@ class QueryCompiler extends Component
      */
     public function quote($identifier, $table = false)
     {
-        if ($identifier instanceof SqlFragment)
+        if ($identifier instanceof SqlFragmentInterface)
         {
             return $identifier->sqlStatement();
         }
@@ -462,7 +462,14 @@ class QueryCompiler extends Component
             }
 
             list($identifier, $operator, $value) = $context;
-            $identifier = $this->quote($identifier);
+            if ($identifier instanceof SqlFragmentInterface)
+            {
+                $identifier = '(' . $identifier->sqlStatement() . ')';
+            }
+            else
+            {
+                $identifier = $this->quote($identifier);
+            }
 
             if ($operator == 'BETWEEN' || $operator == 'NOT BETWEEN')
             {

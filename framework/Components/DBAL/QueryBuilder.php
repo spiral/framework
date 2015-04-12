@@ -67,12 +67,11 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
             $parameter = Parameter::make($parameter);
         }
 
-        if ($parameter instanceof QueryBuilder)
-        {
-            //Copying all parameters, getParameters() method should be bypassed. Why? Think by yourself!
-            $this->parameters = array_merge($this->parameters, $parameter->parameters);
-        }
-        elseif (!$parameter instanceof SqlFragmentInterface || $parameter instanceof ParameterInterface)
+        if (
+            !$parameter instanceof SqlFragmentInterface
+            || $parameter instanceof ParameterInterface
+            || $parameter instanceof QueryBuilder
+        )
         {
             $this->parameters[] = $parameter;
         }
@@ -111,7 +110,19 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
      */
     public function getParameters()
     {
-        return $this->parameters;
+        $parameters = array();
+        foreach ($this->parameters as $parameter)
+        {
+            if ($parameter instanceof QueryBuilder)
+            {
+                $parameters = array_merge($parameters, $parameter->getParameters());
+                continue;
+            }
+
+            $parameters[] = $parameter;
+        }
+
+        return $parameters;
     }
 
     /**

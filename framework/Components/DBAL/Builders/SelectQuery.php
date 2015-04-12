@@ -264,7 +264,8 @@ class SelectQuery extends QueryBuilder implements
      */
     public function getParameters()
     {
-        $parameters = $this->parameters;
+        $parameters = parent::getParameters();
+
         foreach ($this->unions as $union)
         {
             if ($union[0] instanceof QueryBuilder)
