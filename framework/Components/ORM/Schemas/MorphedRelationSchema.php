@@ -9,7 +9,7 @@
 namespace Spiral\Components\ORM\Schemas;
 
 use Spiral\Components\ORM\ORMException;
-use Spiral\Components\ORM\SchemaReader;
+use Spiral\Components\ORM\SchemaBuilder;
 
 abstract class MorphedRelationSchema extends RelationSchema
 {

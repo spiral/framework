@@ -154,11 +154,11 @@ class ODM extends Component implements Container\InjectionManagerInterface
      * Get ODM schema reader. Schema will detect all existed documents, collections, relationships
      * between them and will generate virtual documentation.
      *
-     * @return SchemaReader
+     * @return SchemaBuilder
      */
     public function schemaReader()
     {
-        return SchemaReader::make(array(
+        return SchemaBuilder::make(array(
             'config' => $this->config
         ));
     }

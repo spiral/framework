@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ODM\Schemas;
 
-use Spiral\Components\ODM\SchemaReader;
+use Spiral\Components\ODM\SchemaBuilder;
 use Spiral\Core\Component;
 
 class CollectionSchema extends Component
@@ -47,7 +47,7 @@ class CollectionSchema extends Component
      * Parent ODM schema holds all other documents.
      *
      * @invisible
-     * @var null|SchemaReader
+     * @var null|SchemaBuilder
      */
     protected $odmSchema = null;
 
@@ -58,14 +58,14 @@ class CollectionSchema extends Component
      * @param string       $database        Database name/id.
      * @param array        $classDefinition Class definition technique.
      * @param string       $primaryClass    Primary class name.
-     * @param SchemaReader $odmSchema       ODM schema.
+     * @param SchemaBuilder $odmSchema       ODM schema.
      */
     public function __construct(
         $name,
         $database,
         $classDefinition,
         $primaryClass = '',
-        SchemaReader $odmSchema
+        SchemaBuilder $odmSchema
     )
     {
         $this->name = $name;

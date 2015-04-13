@@ -11,7 +11,7 @@ namespace Spiral\Components\ODM\Exporters;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODM;
-use Spiral\Components\ODM\SchemaReader;
+use Spiral\Components\ODM\SchemaBuilder;
 use Spiral\Components\ODM\Schemas\DocumentSchema;
 use Spiral\Core\Component;
 use Spiral\Support\Generators\Reactor\BaseElement;
@@ -44,7 +44,7 @@ class UmlExporter extends Component
     /**
      * ODM documents schema.
      *
-     * @var SchemaReader
+     * @var SchemaBuilder
      */
     protected $schema = null;
 
@@ -58,10 +58,10 @@ class UmlExporter extends Component
     /**
      * New instance of UML ODM exporter.
      *
-     * @param SchemaReader $schema
+     * @param SchemaBuilder $schema
      * @param FileManager  $file
      */
-    public function __construct(SchemaReader $schema, FileManager $file)
+    public function __construct(SchemaBuilder $schema, FileManager $file)
     {
         $this->schema = $schema;
         $this->file = $file;

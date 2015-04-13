@@ -38,11 +38,11 @@ class ORM extends Component
      * Get ORM schema reader. Schema will detect all declared entities, their tables, columns,
      * relationships and etc.
      *
-     * @return SchemaReader
+     * @return SchemaBuilder
      */
     public function schemaReader()
     {
-        return SchemaReader::make(array(
+        return SchemaBuilder::make(array(
             'config' => $this->config
         ));
     }

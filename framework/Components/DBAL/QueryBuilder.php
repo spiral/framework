@@ -67,10 +67,7 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
             $parameter = Parameter::make($parameter);
         }
 
-        if (
-            $parameter instanceof SqlFragmentInterface
-            || $parameter instanceof SqlIdentifierInterface
-        )
+        if ($parameter instanceof SqlFragmentInterface)
         {
             return $parameter;
         }

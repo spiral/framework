@@ -11,7 +11,7 @@ namespace Spiral\Components\ODM\Exporters;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODM;
-use Spiral\Components\ODM\SchemaReader;
+use Spiral\Components\ODM\SchemaBuilder;
 use Spiral\Components\ODM\Schemas\CollectionSchema;
 use Spiral\Components\ODM\Schemas\DocumentSchema;
 use Spiral\Core\Component;
@@ -29,7 +29,7 @@ class DocumentationExporter extends Component
     /**
      * ODM documents schema.
      *
-     * @var SchemaReader
+     * @var SchemaBuilder
      */
     protected $schema = null;
 
@@ -53,9 +53,9 @@ class DocumentationExporter extends Component
     /**
      * New instance of documentation exporter. Reactor classes will be used to create such documentation.
      *
-     * @param SchemaReader $schema
+     * @param SchemaBuilder $schema
      */
-    public function __construct(SchemaReader $schema)
+    public function __construct(SchemaBuilder $schema)
     {
         $this->schema = $schema;
     }
@@ -267,7 +267,7 @@ class DocumentationExporter extends Component
     {
         $name = $this->collectionClass($collection->primaryDocument(), false);
 
-        $class = ClassElement::make(compact('name'))->cloneSchema(SchemaReader::COLLECTION);
+        $class = ClassElement::make(compact('name'))->cloneSchema(SchemaBuilder::COLLECTION);
         $class->removeConstant('SINGLETON');
         $class->setParent(false);
 
@@ -278,7 +278,7 @@ class DocumentationExporter extends Component
 
         //Replaces
         $class->replaceComments("static", $name);
-        $class->replaceComments(SchemaReader::DOCUMENT, $collection->primaryClass());
+        $class->replaceComments(SchemaBuilder::DOCUMENT, $collection->primaryClass());
         $class->replaceComments("Document", '\\' . $collection->primaryClass());
 
         return $class;
@@ -294,7 +294,7 @@ class DocumentationExporter extends Component
     {
         $name = $this->compositorClass($document->primaryDocument(), false);
 
-        $class = ClassElement::make(compact('name'))->cloneSchema(SchemaReader::COMPOSITOR);
+        $class = ClassElement::make(compact('name'))->cloneSchema(SchemaBuilder::COMPOSITOR);
         $class->setParent(false)->setInterfaces(array());
 
         foreach ($class->getProperties() as $property)
@@ -304,7 +304,7 @@ class DocumentationExporter extends Component
 
         //Replaces
         $class->replaceComments("Compositor", $name);
-        $class->replaceComments(SchemaReader::DOCUMENT, $document->primaryClass());
+        $class->replaceComments(SchemaBuilder::DOCUMENT, $document->primaryClass());
         $class->replaceComments("Document", '\\' . $document->primaryClass());
 
         return $class;

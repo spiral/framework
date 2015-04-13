@@ -12,7 +12,7 @@ use Doctrine\Common\Inflector\Inflector;
 use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\ORMException;
-use Spiral\Components\ORM\SchemaReader;
+use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Container;
 
 abstract class RelationSchema
@@ -36,7 +36,7 @@ abstract class RelationSchema
      * Parent ORM schema holds all entity schemas.
      *
      * @invisible
-     * @var SchemaReader
+     * @var SchemaBuilder
      */
     protected $ormSchema = null;
 
@@ -84,13 +84,13 @@ abstract class RelationSchema
     /**
      * New RelationSchema instance.
      *
-     * @param SchemaReader $ormSchema
+     * @param SchemaBuilder $ormSchema
      * @param EntitySchema $entitySchema
      * @param string       $name
      * @param array        $definition
      */
     public function __construct(
-        SchemaReader $ormSchema,
+        SchemaBuilder $ormSchema,
         EntitySchema $entitySchema,
         $name,
         array $definition

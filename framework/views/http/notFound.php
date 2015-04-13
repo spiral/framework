@@ -1,4 +1,4 @@
-<extend:http.layouts.error code="404" title="[[This page cannot be found]]"/>
+<extends:http.layouts.error code="404" title="[[This page cannot be found]]"/>
 
 <block:message>
     <?php

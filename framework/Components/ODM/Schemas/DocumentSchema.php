@@ -13,7 +13,7 @@ use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
-use Spiral\Components\ODM\SchemaReader;
+use Spiral\Components\ODM\SchemaBuilder;
 use Spiral\Core\Component;
 use Spiral\Support\Models\DataEntity;
 
@@ -30,7 +30,7 @@ class DocumentSchema extends Component
      * Parent ODM schema holds all other documents.
      *
      * @invisible
-     * @var SchemaReader
+     * @var SchemaBuilder
      */
     protected $odmSchema = null;
 
@@ -53,9 +53,9 @@ class DocumentSchema extends Component
      * and filters from Document models.
      *
      * @param string       $class     Class name.
-     * @param SchemaReader $odmSchema Parent ODM schema (all other documents).
+     * @param SchemaBuilder $odmSchema Parent ODM schema (all other documents).
      */
-    public function __construct($class, SchemaReader $odmSchema)
+    public function __construct($class, SchemaBuilder $odmSchema)
     {
         $this->class = $class;
         $this->odmSchema = $odmSchema;
@@ -128,7 +128,7 @@ class DocumentSchema extends Component
             return null;
         }
 
-        if ($merge && ($this->reflection->getParentClass()->getName() != SchemaReader::DOCUMENT))
+        if ($merge && ($this->reflection->getParentClass()->getName() != SchemaBuilder::DOCUMENT))
         {
             $parentClass = $this->reflection->getParentClass()->getName();
 
@@ -158,7 +158,7 @@ class DocumentSchema extends Component
     {
         $parentClass = $this->reflection->getParentClass()->getName();
 
-        return $parentClass != SchemaReader::DOCUMENT ? $parentClass : null;
+        return $parentClass != SchemaBuilder::DOCUMENT ? $parentClass : null;
     }
 
     /**
@@ -297,7 +297,7 @@ class DocumentSchema extends Component
         {
             //Composition::ONE has to be resolved little bit different way due model inheritance
             $mutators['accessor'][$field] = array(
-                $composition['type'] == ODM::CMP_MANY ? SchemaReader::COMPOSITOR : ODM::CMP_ONE,
+                $composition['type'] == ODM::CMP_MANY ? SchemaBuilder::COMPOSITOR : ODM::CMP_ONE,
                 $composition['classDefinition']
             );
         }
@@ -461,7 +461,7 @@ class DocumentSchema extends Component
     {
         $validates = array();
         $reflection = $this->reflection;
-        while ($reflection->getName() != SchemaReader::DOCUMENT)
+        while ($reflection->getName() != SchemaBuilder::DOCUMENT)
         {
             //Validation messages
             if (!empty($reflection->getDefaultProperties()['validates']))
@@ -559,7 +559,7 @@ class DocumentSchema extends Component
                     if (class_exists($type))
                     {
                         $reflection = new \ReflectionClass($type);
-                        if ($reflection->implementsInterface(SchemaReader::COMPOSITABLE))
+                        if ($reflection->implementsInterface(SchemaBuilder::COMPOSITABLE))
                         {
                             $compositions[$field] = array(
                                 'type'            => ODM::CMP_ONE,
@@ -688,7 +688,7 @@ class DocumentSchema extends Component
     {
         $reflection = $this->reflection;
 
-        while ($reflection->getParentClass()->getName() != SchemaReader::DOCUMENT)
+        while ($reflection->getParentClass()->getName() != SchemaBuilder::DOCUMENT)
         {
             if (
                 $hasCollection

@@ -13,7 +13,7 @@ use Spiral\Components\ODM\Schemas\DocumentSchema;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 
-class SchemaReader extends Component
+class SchemaBuilder extends Component
 {
     /**
      * ODM class names.

@@ -16,7 +16,7 @@ use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
-class SchemaReader extends Component
+class SchemaBuilder extends Component
 {
     /**
      * ORM class names.
@@ -194,6 +194,7 @@ class SchemaReader extends Component
     {
         foreach ($this->tables as $table)
         {
+            //IS ABSTRACT
             foreach ($this->entities as $entity)
             {
                 if ($entity->getTableSchema() == $table && !$entity->isActiveSchema())
