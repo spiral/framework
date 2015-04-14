@@ -28,7 +28,8 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
     protected $defaultDefinition = array(
         Entity::OUTER_KEY => '{outer:primaryKey}',
         Entity::INNER_KEY => '{name:singular}_{definition:OUTER_KEY}',
-        Entity::MORPH_KEY => '{name:singular}_type'
+        Entity::MORPH_KEY => '{name:singular}_type',
+        Entity::NULLABLE  => true
     );
 
     /**
@@ -51,6 +52,7 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
 
         $innerKey = $innerSchema->column($this->getInnerKey());
         $innerKey->type($this->getOuterKeyType());
+        $innerKey->nullable($this->definition[Entity::NULLABLE]);
 
         $innerSchema->index(
             $this->definition[Entity::MORPH_KEY],
@@ -81,7 +83,8 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
                 $type             => $this->entitySchema->getClass(),
                 Entity::OUTER_KEY => $this->definition[Entity::INNER_KEY],
                 Entity::INNER_KEY => $this->definition[Entity::OUTER_KEY],
-                Entity::MORPH_KEY => $this->definition[Entity::MORPH_KEY]
+                Entity::MORPH_KEY => $this->definition[Entity::MORPH_KEY],
+                Entity::NULLABLE  => $this->definition[Entity::NULLABLE]
             ));
         }
     }

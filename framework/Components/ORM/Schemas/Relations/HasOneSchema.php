@@ -29,7 +29,8 @@ class HasOneSchema extends RelationSchema
         Entity::INNER_KEY         => '{entity:primaryKey}',
         Entity::OUTER_KEY         => '{entity:roleName}_{definition:INNER_KEY}',
         Entity::CONSTRAINT        => true,
-        Entity::CONSTRAINT_ACTION => 'CASCADE'
+        Entity::CONSTRAINT_ACTION => 'CASCADE',
+        Entity::NULLABLE          => true
     );
 
     /**
@@ -41,7 +42,7 @@ class HasOneSchema extends RelationSchema
 
         $outerKey = $outerSchema->column($this->getOuterKey());
         $outerKey->type($this->getInnerKeyType());
-        $outerKey->nullable(true);
+        $outerKey->nullable($this->definition[Entity::NULLABLE]);
         $outerKey->index();
 
         if ($this->definition[Entity::CONSTRAINT] && empty($this->definition[Entity::MORPH_KEY]))
@@ -69,7 +70,8 @@ class HasOneSchema extends RelationSchema
             Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
             Entity::CONSTRAINT        => $this->definition[Entity::CONSTRAINT],
-            Entity::CONSTRAINT_ACTION => $this->definition[Entity::CONSTRAINT_ACTION]
+            Entity::CONSTRAINT_ACTION => $this->definition[Entity::CONSTRAINT_ACTION],
+            Entity::NULLABLE          => $this->definition[Entity::NULLABLE]
         ));
     }
 }

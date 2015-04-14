@@ -34,7 +34,8 @@ class BelongsToSchema extends RelationSchema
         Entity::OUTER_KEY         => '{outer:primaryKey}',
         Entity::INNER_KEY         => '{outer:roleName}_{definition:OUTER_KEY}',
         Entity::CONSTRAINT        => true,
-        Entity::CONSTRAINT_ACTION => 'CASCADE'
+        Entity::CONSTRAINT_ACTION => 'CASCADE',
+        Entity::NULLABLE          => true
     );
 
     /**
@@ -46,7 +47,7 @@ class BelongsToSchema extends RelationSchema
 
         $innerKey = $innerSchema->column($this->getInnerKey());
         $innerKey->type($this->getOuterKeyType());
-        $innerKey->nullable(true);
+        $innerKey->nullable($this->definition[Entity::NULLABLE]);
         $innerKey->index();
 
         if ($this->definition[Entity::CONSTRAINT])
@@ -82,7 +83,8 @@ class BelongsToSchema extends RelationSchema
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
             Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
             Entity::CONSTRAINT        => $this->definition[Entity::CONSTRAINT],
-            Entity::CONSTRAINT_ACTION => $this->definition[Entity::CONSTRAINT_ACTION]
+            Entity::CONSTRAINT_ACTION => $this->definition[Entity::CONSTRAINT_ACTION],
+            Entity::NULLABLE          => $this->definition[Entity::NULLABLE]
         ));
     }
 }

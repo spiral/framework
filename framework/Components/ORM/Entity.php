@@ -73,6 +73,7 @@ class Entity extends DataEntity
 
     const CREATE_PIVOT = 'create-pivot';
 
+    const NULLABLE = 'nullable';
 
     //    const OUTER_KEY = 901;
     //    const INNER_KEY = 902;
