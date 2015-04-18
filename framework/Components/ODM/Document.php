@@ -215,23 +215,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Prepare document property before caching it ODM schema. This method fire event "property" and
-     * sends SCHEMA_ANALYSIS option to trait initializers. Method can be used to create custom filters,
-     * schema values and etc.
-     *
-     * @param DocumentSchema $schema
-     * @param string         $property Model property name.
-     * @param mixed          $value    Model property value, will be provided in an inherited form.
-     * @return mixed
-     */
-    public static function describeProperty(DocumentSchema $schema, $property, $value)
-    {
-        static::initialize(self::SCHEMA_ANALYSIS);
-
-        return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
-    }
-
-    /**
      * Define class name should be used to represent fields fetched from Mongo collection. This method
      * will be called if Document::DEFINITION constant equal to Document::DEFINITION_LOGICAL.
      *

@@ -146,25 +146,7 @@ class Entity extends DataEntity
         //$this->fields = $fields + $this->schema[ORM::E_DEFAULTS];
     }
 
-    /**
-     * Prepare document property before caching it ORM schema. This method fire event "property" and
-     * sends SCHEMA_ANALYSIS option to trait initializers. Method can be used to create custom filters,
-     * schema values and etc.
-     *
-     * @param EntitySchema $schema
-     * @param string       $property Model property name.
-     * @param mixed        $value    Model property value, will be provided in an inherited form.
-     * @return mixed
-     */
-    public static function describeProperty(EntitySchema $schema, $property, $value)
-    {
-        static::initialize(self::SCHEMA_ANALYSIS);
-
-        return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
-    }
-
-
-    /**
+        /**
      * Get document primary key (_id) value. This value can be used to identify if model loaded from
      * databases or just created.
      *

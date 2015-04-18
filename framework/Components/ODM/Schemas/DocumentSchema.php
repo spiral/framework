@@ -8,17 +8,21 @@
  */
 namespace Spiral\Components\ODM\Schemas;
 
-use Spiral\Components\I18n\Translator;
 use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
 use Spiral\Components\ODM\SchemaBuilder;
-use Spiral\Core\Component;
 use Spiral\Support\Models\DataEntity;
+use Spiral\Support\Models\Schemas\ModelSchema;
 
-class DocumentSchema extends Component
+class DocumentSchema extends ModelSchema
 {
+    /**
+     * Base model class.
+     */
+    const BASE_CLASS = SchemaBuilder::DOCUMENT;
+
     /**
      * Document model class name.
      *
@@ -35,24 +39,10 @@ class DocumentSchema extends Component
     protected $odmSchema = null;
 
     /**
-     * Document model reflection.
-     *
-     * @var null|\ReflectionClass
-     */
-    protected $reflection = null;
-
-    /**
-     * Cache to speed up schema building.
-     *
-     * @var array
-     */
-    protected $propertiesCache = array();
-
-    /**
      * New DocumentSchema instance, document schema responsible for fetching schema, defaults
      * and filters from Document models.
      *
-     * @param string       $class     Class name.
+     * @param string        $class     Class name.
      * @param SchemaBuilder $odmSchema Parent ODM schema (all other documents).
      */
     public function __construct($class, SchemaBuilder $odmSchema)
@@ -60,48 +50,6 @@ class DocumentSchema extends Component
         $this->class = $class;
         $this->odmSchema = $odmSchema;
         $this->reflection = new \ReflectionClass($class);
-    }
-
-    /**
-     * Checks if class is abstract.
-     *
-     * @return bool
-     */
-    public function isAbstract()
-    {
-        return $this->reflection->isAbstract();
-    }
-
-    /**
-     * Document full class name.
-     *
-     * @return string
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     * Document namespace. Both start and end namespace separators will be removed, to add start
-     * separator (absolute) namespace use method parameter "absolute".
-     *
-     * @param bool $absolute \\ will be prepended to namespace if true, disabled by default.
-     * @return string
-     */
-    public function getNamespace($absolute = false)
-    {
-        return ($absolute ? '\\' : '') . trim($this->reflection->getNamespaceName(), '\\');
-    }
-
-    /**
-     * Document class name without included namespace.
-     *
-     * @return string
-     */
-    public function getShortName()
-    {
-        return $this->reflection->getShortName();
     }
 
     /**
@@ -231,26 +179,7 @@ class DocumentSchema extends Component
      */
     public function getMutators()
     {
-        $mutators = array(
-            'getter'   => array(),
-            'setter'   => array(),
-            'accessor' => array()
-        );
-
-        foreach ($this->property('getters', true) as $field => $filter)
-        {
-            $mutators['getter'][$field] = $filter;
-        }
-
-        foreach ($this->property('setters', true) as $field => $filter)
-        {
-            $mutators['setter'][$field] = $filter;
-        }
-
-        foreach ($this->property('accessors', true) as $field => $filter)
-        {
-            $mutators['accessor'][$field] = $filter;
-        }
+        $mutators = parent::getMutators();
 
         //Default values.
         foreach ($this->getFields() as $field => $type)
@@ -303,66 +232,6 @@ class DocumentSchema extends Component
         }
 
         return $mutators;
-    }
-
-    /**
-     * Getting all secured fields.
-     *
-     * @return array
-     */
-    public function getSecured()
-    {
-        return $this->property('secured', true);
-    }
-
-    /**
-     * Getting all mass assignable fields.
-     *
-     * @return array
-     */
-    public function getFillable()
-    {
-        return $this->property('fillable', true);
-    }
-
-    /**
-     * Getting all hidden fields.
-     *
-     * @return array
-     */
-    public function getHidden()
-    {
-        return $this->property('hidden', true);
-    }
-
-    /**
-     * Get document get filters (merged with parent model(s) values).
-     *
-     * @return array
-     */
-    public function getGetters()
-    {
-        return $this->getMutators()['getter'];
-    }
-
-    /**
-     * Get document set filters (merged with parent model(s) values).
-     *
-     * @return array
-     */
-    public function getSetters()
-    {
-        return $this->getMutators()['setter'];
-    }
-
-    /**
-     * Get document field accessors, this method will automatically create accessors for compositions.
-     *
-     * @return array
-     */
-    public function getAccessors()
-    {
-        return $this->getMutators()['accessor'];
     }
 
     /**
@@ -439,94 +308,6 @@ class DocumentSchema extends Component
         }
 
         return $defaults;
-    }
-
-    /**
-     * Get all document validation rules (merged with parent model(s) values).
-     *
-     * @return array
-     */
-    public function getValidates()
-    {
-        return $this->property('validates', true);
-    }
-
-    /**
-     * Get error messages localization sources. This is required to correctly localize model errors
-     * without overlaps.
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        $validates = array();
-        $reflection = $this->reflection;
-        while ($reflection->getName() != SchemaBuilder::DOCUMENT)
-        {
-            //Validation messages
-            if (!empty($reflection->getDefaultProperties()['validates']))
-            {
-                $validates[$reflection->getName()] = $reflection->getDefaultProperties()['validates'];
-            }
-
-            $reflection = $reflection->getParentClass();
-        }
-
-        $messages = array();
-        foreach (array_reverse($validates) as $parent => $validates)
-        {
-            foreach ($validates as $field => $rules)
-            {
-                foreach ($rules as $rule)
-                {
-                    $message = '';
-                    if (isset($rule['message']))
-                    {
-                        $message = $rule['message'];
-                    }
-                    elseif (isset($rule['error']))
-                    {
-                        $message = $rule['error'];
-                    }
-                    if (
-                        substr($message, 0, 2) == Translator::I18N_PREFIX
-                        && substr($message, -2) == Translator::I18N_POSTFIX
-                    )
-                    {
-                        //Only I18N messages
-                        if ($message && !isset($errorMessages[$message]))
-                        {
-                            $messages[$message] = $parent;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * All methods declared in document. Method will include information about parameters, return
-     * type, static declaration and access level.
-     *
-     * @return MethodSchema[]
-     */
-    public function getMethods()
-    {
-        $methods = array();
-
-        foreach ($this->reflection->getMethods() as $method)
-        {
-            if ($method->getDeclaringClass() != $this->reflection)
-            {
-                continue;
-            }
-
-            $methods[] = MethodSchema::make(array('reflection' => $method));
-        }
-
-        return $methods;
     }
 
     /**
