@@ -46,6 +46,28 @@ class ORM extends Component
         ));
     }
 
+    /**
+     * Refresh ODM schema state, will reindex all found document models and render documentation for
+     * them. This is slow method using Tokenizer, refreshSchema() should not be called by user request.
+     */
+    public function updateSchema()
+    {
+//        $schema = $this->schemaReader();
+//
+//        if (!empty($this->config['documentation']))
+//        {
+//            //Virtual ODM documentation to help IDE
+//            DocumentationExporter::make(compact('schema'))->render(
+//                $this->config['documentation']
+//            );
+//        }
+//
+//        $this->schema = $this->event('odmSchema', $schema->normalizeSchema());
+//
+//        //Saving
+//        $this->core->saveData('odmSchema', $this->schema);
+    }
+
 
     /**
      * flow:
