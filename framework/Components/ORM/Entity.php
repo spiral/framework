@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\Table;
 use Spiral\Components\ORM\Schemas\EntitySchema;
 use Spiral\Support\Models\DataEntity;
 
@@ -160,5 +161,73 @@ class Entity extends DataEntity
         static::initialize(self::SCHEMA_ANALYSIS);
 
         return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
+    }
+
+
+    /**
+     * Get document primary key (_id) value. This value can be used to identify if model loaded from
+     * databases or just created.
+     *
+     * @return \MongoId
+     */
+    public function primaryKey()
+    {
+        // return isset($this->fields['_id']) ? $this->fields['_id'] : null;
+    }
+
+    /**
+     * Is model were fetched from databases or recently created? Usually checks primary key value.
+     *
+     * @return bool
+     */
+    public function isLoaded()
+    {
+        return (bool)$this->primaryKey();
+    }
+
+    /**
+     * Table name associated with entity.
+     *
+     * @return string
+     */
+    public function getTable()
+    {
+        return $this->table;
+    }
+
+    /**
+     * Database name/id associated with entity.
+     *
+     * @return string
+     */
+    public function getDatabase()
+    {
+        return $this->database;
+    }
+
+    /**
+     * Get instance of DBAL\Table associated with specified entity.
+     *
+     * @param array $schema Forced document schema.
+     * @return Table
+     */
+    public static function dbalTable(array $schema = array())
+    {
+        $odm = ORM::getInstance();
+        $schema = $schema ?: $orm->getSchema(get_called_class());
+
+        static::initialize();
+        $odmCollection = Collection::make(array(
+            'name'     => $schema[ODM::D_COLLECTION],
+            'database' => $schema[ODM::D_DB],
+            'odm'      => $odm
+        ));
+
+        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        {
+            return self::dispatcher()->fire('odmCollection', $odmCollection);
+        }
+
+        return $odmCollection;
     }
 }

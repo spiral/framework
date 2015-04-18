@@ -33,7 +33,7 @@ class UpdateCommand extends Command
     {
         $this->writeln("Updating ORM and ODM schemas and virtual documentations...");
 
-        //TODO: ORM
+        $this->console->command('orm:update', array(), $this->output);
         $this->console->command('odm:update', array(), $this->output);
     }
 }

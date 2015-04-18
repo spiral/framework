@@ -24,13 +24,50 @@ class ORM extends Component
     const SINGLETON = 'orm';
 
     /**
+     * Core component.
+     *
+     * @var CoreInterface
+     */
+    protected $core = null;
+
+    /**
+     * Loaded entities schema. Schema contains full description about model behaviours, relations,
+     * columns and etc.
+     *
+     * @var array|null
+     */
+    protected $schema = null;
+
+    /**
      * ORM component instance.
      *
      * @param CoreInterface $core
      */
     public function __construct(CoreInterface $core)
     {
+        $this->core = $core;
         $this->config = $core->loadConfig('orm');
+    }
+
+    /**
+     * Get schema for specified document class or collection.
+     *
+     * @param string $item Document class or collection name (including database).
+     * @return mixed
+     */
+    public function getSchema($item)
+    {
+        if ($this->schema === null)
+        {
+            $this->schema = $this->core->loadData('ormSchema');
+        }
+
+        if (!isset($this->schema[$item]))
+        {
+            $this->updateSchema();
+        }
+
+        return $this->schema[$item];
     }
 
     /**
@@ -39,7 +76,7 @@ class ORM extends Component
      *
      * @return SchemaBuilder
      */
-    public function schemaReader()
+    public function schemaBuilder()
     {
         return SchemaBuilder::make(array(
             'config' => $this->config
@@ -52,20 +89,23 @@ class ORM extends Component
      */
     public function updateSchema()
     {
-//        $schema = $this->schemaReader();
-//
-//        if (!empty($this->config['documentation']))
-//        {
-//            //Virtual ODM documentation to help IDE
-//            DocumentationExporter::make(compact('schema'))->render(
-//                $this->config['documentation']
-//            );
-//        }
-//
-//        $this->schema = $this->event('odmSchema', $schema->normalizeSchema());
-//
-//        //Saving
-//        $this->core->saveData('odmSchema', $this->schema);
+        $schema = $this->schemaBuilder();
+
+        if (!empty($this->config['documentation']))
+        {
+            //Virtual ORM documentation to help IDE
+            //            DocumentationExporter::make(compact('schema'))->render(
+            //                $this->config['documentation']
+            //            );
+        }
+
+        //Building database!
+        $schema->executeSchema();
+
+        $this->schema = $this->event('schema', $schema->normalizeSchema());
+
+        //Saving
+        $this->core->saveData('ormSchema', $this->schema);
     }
 
 

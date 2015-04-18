@@ -190,7 +190,7 @@ class SchemaBuilder extends Component
         return $this->tables;
     }
 
-    public function reflectSchema()
+    public function executeSchema()
     {
         foreach ($this->tables as $table)
         {
@@ -254,5 +254,11 @@ class SchemaBuilder extends Component
         return isset($this->config['mutators'][$abstractType])
             ? $this->config['mutators'][$abstractType]
             : array();
+    }
+
+    public function normalizeSchema()
+    {
+
+        return 1;
     }
 }

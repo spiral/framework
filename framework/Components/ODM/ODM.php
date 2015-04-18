@@ -156,7 +156,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
      *
      * @return SchemaBuilder
      */
-    public function schemaReader()
+    public function schemaBuilder()
     {
         return SchemaBuilder::make(array(
             'config' => $this->config
@@ -169,7 +169,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
      */
     public function updateSchema()
     {
-        $schema = $this->schemaReader();
+        $schema = $this->schemaBuilder();
 
         if (!empty($this->config['documentation']))
         {
@@ -179,7 +179,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
             );
         }
 
-        $this->schema = $this->event('odmSchema', $schema->normalizeSchema());
+        $this->schema = $this->event('schema', $schema->normalizeSchema());
 
         //Saving
         $this->core->saveData('odmSchema', $this->schema);
@@ -281,7 +281,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
     const D_DEFAULTS     = 2;
     const D_HIDDEN       = 3;
     const D_SECURED      = 4;
-    const D_FILLABLE   = 5;
+    const D_FILLABLE     = 5;
     const D_MUTATORS     = 6;
     const D_VALIDATES    = 7;
     const D_MESSAGES     = 8;
