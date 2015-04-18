@@ -39,8 +39,8 @@ trait TimestampsTrait
                 if ($event->context['property'] == 'secured')
                 {
                     //Not editable by user via mass assignment
-                    $event->context['value'][] = 'timeCreated';
-                    $event->context['value'][] = 'timeUpdated';
+                    $event->context['value'][] = 'time_created';
+                    $event->context['value'][] = 'time_updated';
                 }
             };
 

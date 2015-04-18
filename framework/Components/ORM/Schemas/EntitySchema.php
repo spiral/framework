@@ -61,6 +61,13 @@ class EntitySchema extends ModelSchema
     protected $relations = array();
 
     /**
+     * Column names associated with their default values.
+     *
+     * @var array
+     */
+    protected $columns = array();
+
+    /**
      * New EntitySchema instance, schema responsible for detecting relationships, columns and indexes.
      * This class is really similar to DocumentSchema and can be merged into common parent in future.
      *
@@ -224,6 +231,16 @@ class EntitySchema extends ModelSchema
     }
 
     /**
+     * Get column names associated with their default values.
+     *
+     * @return array
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
      * Find all field mutators.
      *
      * @return mixed
@@ -279,17 +296,17 @@ class EntitySchema extends ModelSchema
      */
     protected function castTableSchema()
     {
-        $defaults = $this->getDefaults();
+        $this->columns = $this->getDefaults();
         foreach ($this->property('schema', true) as $name => $definition)
         {
             //Column definition
             if (is_string($definition))
             {
                 //Filling column values
-                $defaults[$name] = $this->castColumnSchema(
+                $this->columns[$name] = $this->castColumn(
                     $this->tableSchema->column($name),
                     $definition,
-                    isset($defaults[$name]) ? $defaults[$name] : null
+                    isset($this->columns[$name]) ? $this->columns[$name] : null
                 );
             }
         }
@@ -297,7 +314,7 @@ class EntitySchema extends ModelSchema
         //We can cast declared indexes there, however some relationships may cast more indexes
         foreach ($this->getIndexes() as $definition)
         {
-            $this->castIndexSchema($definition);
+            $this->castIndex($definition);
         }
     }
 
@@ -320,7 +337,7 @@ class EntitySchema extends ModelSchema
      * @return mixed
      * @throws ORMException
      */
-    protected function castColumnSchema(AbstractColumnSchema $column, $definition, $default = null)
+    protected function castColumn(AbstractColumnSchema $column, $definition, $default = null)
     {
         if (!is_null($default))
         {
@@ -428,7 +445,7 @@ class EntitySchema extends ModelSchema
      * @param array $definition
      * @throws ORMException
      */
-    protected function castIndexSchema(array $definition)
+    protected function castIndex(array $definition)
     {
         $type = null;
         $columns = array();
@@ -510,15 +527,5 @@ class EntitySchema extends ModelSchema
         //Initiating required columns, foreign keys and indexes
         $relationship->buildSchema($this);
         $this->relations[$name] = $relationship;
-    }
-
-    /**
-     * Return entity class name.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getClass();
     }
 }

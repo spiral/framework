@@ -85,9 +85,9 @@ abstract class RelationSchema
      * New RelationSchema instance.
      *
      * @param SchemaBuilder $ormSchema
-     * @param EntitySchema $entitySchema
-     * @param string       $name
-     * @param array        $definition
+     * @param EntitySchema  $entitySchema
+     * @param string        $name
+     * @param array         $definition
      */
     public function __construct(
         SchemaBuilder $ormSchema,
@@ -370,4 +370,38 @@ abstract class RelationSchema
      * @throws ORMException
      */
     abstract public function revertRelation($name, $type = null);
+
+    /**
+     * Normalize relation options.
+     *
+     * @return array
+     */
+    protected function normalizeDefinition()
+    {
+        $definition = $this->definition;
+
+        //Unnecessary fields.
+        unset(
+            $definition[Entity::CONSTRAINT],
+            $definition[Entity::CONSTRAINT_ACTION],
+            $definition[Entity::CREATE_PIVOT],
+            $definition[Entity::BACK_REF],
+            $definition[Entity::CONSTRAINT_ACTION]
+        );
+
+        return $definition;
+    }
+
+    /**
+     * Pack relation data into normalized structured to be used in cached ORM schema.
+     *
+     * @return array
+     */
+    public function normalizeSchema()
+    {
+        return array(
+            'name'       => $this->name,
+            'definition' => $this->normalizeDefinition()
+        );
+    }
 }

@@ -806,7 +806,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         ));
     }
 
-
     /**
      * Validating model data using validation rules, all errors will be stored in model errors array.
      * Errors will not be erased between function calls.

@@ -9,8 +9,10 @@
 namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\Table;
+use Spiral\Components\I18n\Translator;
 use Spiral\Components\ORM\Schemas\EntitySchema;
 use Spiral\Support\Models\DataEntity;
+use Spiral\Support\Validation\Validator;
 
 class Entity extends DataEntity
 {
@@ -131,12 +133,14 @@ class Entity extends DataEntity
     protected $schema = array();
     protected $indexes = array();
 
+    protected $defaults = array();
+
     public function __construct($fields = array())
     {
         if (!isset(self::$schemaCache[$class = get_class($this)]))
         {
             static::initialize();
-            //            //self::$schemaCache[$class] = ORM::getInstance()->getSchema(get_class($this));
+            self::$schemaCache[$class] = ORM::getInstance()->getSchema(get_class($this));
         }
 
         //Prepared document schema
@@ -146,7 +150,7 @@ class Entity extends DataEntity
         //$this->fields = $fields + $this->schema[ORM::E_DEFAULTS];
     }
 
-        /**
+    /**
      * Get document primary key (_id) value. This value can be used to identify if model loaded from
      * databases or just created.
      *
@@ -154,7 +158,9 @@ class Entity extends DataEntity
      */
     public function primaryKey()
     {
-        // return isset($this->fields['_id']) ? $this->fields['_id'] : null;
+        return isset($this->fields[$this->schema[ORM::E_PRIMARY_KEY]])
+            ? $this->fields[ORM::E_PRIMARY_KEY]
+            : null;
     }
 
     /**
@@ -188,6 +194,112 @@ class Entity extends DataEntity
     }
 
     /**
+     * Get mutator for specified field. Setters, getters and accessors can be retrieved using this
+     * method.
+     *
+     * @param string $field   Field name.
+     * @param string $mutator Mutator type (setters, getters, accessors).
+     * @return mixed|null
+     */
+    protected function getMutator($field, $mutator)
+    {
+        if (isset($this->schema[ORM::E_MUTATORS][$mutator][$field]))
+        {
+            $mutator = $this->schema[ORM::E_MUTATORS][$mutator][$field];
+
+            if (is_string($mutator) && isset(self::$mutatorAliases[$mutator]))
+            {
+                return self::$mutatorAliases[$mutator];
+            }
+
+            return $mutator;
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if field assignable.
+     *
+     * @param string $field
+     * @return bool
+     */
+    protected function isFillable($field)
+    {
+        //Better replace it with isset later
+        return !in_array($field, $this->schema[ORM::E_SECURED]) &&
+        !(
+            $this->schema[ORM::E_FILLABLE]
+            && !in_array($field, $this->schema[ORM::E_FILLABLE])
+        );
+    }
+
+    /**
+     * Validator instance associated with model, will be response for validations of validation errors.
+     * Model related error localization should happen in model itself.
+     *
+     * @return Validator
+     */
+    public function getValidator()
+    {
+        if (!empty($this->validator))
+        {
+            //Refreshing data
+            return $this->validator->setData($this->fields);
+        }
+
+        return $this->validator = Validator::make(array(
+            'data'      => $this->fields,
+            'validates' => $this->schema[ORM::E_VALIDATES]
+        ));
+    }
+
+    /**
+     * Get all validation errors with applied localization using i18n component (if specified), any
+     * error message can be localized by using [[ ]] around it. Data will be automatically validated
+     * while calling this method (if not validated before).
+     *
+     * @param bool $reset Remove all model messages and reset validation, false by default.
+     * @return array
+     */
+    public function getErrors($reset = false)
+    {
+        $this->validate();
+        $errors = array();
+        foreach ($this->errors as $field => $error)
+        {
+            if (
+                is_string($error)
+                && substr($error, 0, 2) == Translator::I18N_PREFIX
+                && substr($error, -2) == Translator::I18N_POSTFIX
+            )
+            {
+                if (isset($this->schema[ORM::E_MESSAGES][$error]))
+                {
+                    //Parent message
+                    $error = Translator::getInstance()->get(
+                        $this->schema[ORM::E_MESSAGES][$error],
+                        substr($error, 2, -2)
+                    );
+                }
+                else
+                {
+                    $error = $this->i18nMessage($error);
+                }
+            }
+
+            $errors[$field] = $error;
+        }
+
+        if ($reset)
+        {
+            $this->errors = array();
+        }
+
+        return $errors;
+    }
+
+    /**
      * Get instance of DBAL\Table associated with specified entity.
      *
      * @param array $schema Forced document schema.
@@ -195,21 +307,21 @@ class Entity extends DataEntity
      */
     public static function dbalTable(array $schema = array())
     {
-        $odm = ORM::getInstance();
-        $schema = $schema ?: $orm->getSchema(get_called_class());
-
-        static::initialize();
-        $odmCollection = Collection::make(array(
-            'name'     => $schema[ODM::D_COLLECTION],
-            'database' => $schema[ODM::D_DB],
-            'odm'      => $odm
-        ));
-
-        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
-        {
-            return self::dispatcher()->fire('odmCollection', $odmCollection);
-        }
-
-        return $odmCollection;
+        //        $odm = ORM::getInstance();
+        //        $schema = $schema ?: $orm->getSchema(get_called_class());
+        //
+        //        static::initialize();
+        //        $odmCollection = Collection::make(array(
+        //            'name'     => $schema[ODM::D_COLLECTION],
+        //            'database' => $schema[ODM::D_DB],
+        //            'odm'      => $odm
+        //        ));
+        //
+        //        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        //        {
+        //            return self::dispatcher()->fire('odmCollection', $odmCollection);
+        //        }
+        //
+        //        return $odmCollection;
     }
 }

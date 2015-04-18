@@ -213,6 +213,8 @@ class SchemaBuilder extends Component
             }
 
             $documentSchema[ODM::D_COMPOSITIONS] = array_keys($document->getCompositions());
+
+            ksort($documentSchema);
             $schema[$document->getClass()] = $documentSchema;
         }
 

@@ -92,4 +92,23 @@ abstract class MorphedRelationSchema extends RelationSchema
 
         return $outerKeyType;
     }
+
+    /**
+     * Normalize relation options.
+     *
+     * @return array
+     */
+    protected function normalizeDefinition()
+    {
+        $definition = parent::normalizeDefinition();
+
+        //Packing targets
+        $definition[static::RELATION_TYPE] = array();
+        foreach ($this->getOuterEntities() as $entity)
+        {
+            $definition[static::RELATION_TYPE][$entity->getRoleName()] = $entity->getClass();
+        }
+
+        return $definition;
+    }
 }

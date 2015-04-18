@@ -102,7 +102,7 @@ abstract class ModelSchema extends Component
      */
     public function getSecured()
     {
-        return $this->property('secured', true);
+        return array_unique($this->property('secured', true));
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class ModelSchema extends Component
      */
     public function getFillable()
     {
-        return $this->property('fillable', true);
+        return array_unique($this->property('fillable', true));
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class ModelSchema extends Component
      */
     public function getHidden()
     {
-        return $this->property('hidden', true);
+        return array_unique($this->property('hidden', true));
     }
 
     /**
@@ -272,5 +272,15 @@ abstract class ModelSchema extends Component
     public function getAccessors()
     {
         return $this->getMutators()['accessor'];
+    }
+
+    /**
+     * Return entity class name.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getClass();
     }
 }

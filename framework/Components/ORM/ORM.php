@@ -127,12 +127,25 @@ class ORM extends Component
      * 5-low) chunk based interaction, has to be done ON DBAL\SelectQuery level
      */
 
-    //force validations?
-
     /**
      * Normalized entity constants.
      */
-    const E_TABLE    = 0;
-    const E_DB       = 1;
-    const E_DEFAULTS = 2;
+    const E_TABLE       = 0;
+    const E_DB          = 1;
+    const E_COLUMNS     = 2;
+    const E_HIDDEN      = 3;
+    const E_SECURED     = 4;
+    const E_FILLABLE    = 5;
+    const E_MUTATORS    = 6;
+    const E_VALIDATES   = 7;
+    const E_MESSAGES    = 8;
+    const E_RELATIONS   = 9;
+    const E_PRIMARY_KEY = 10;
+
+
+    /**
+     * Normalized relation options.
+     */
+    const R_TYPE      = 0;
+    const R_DEFINITION = 1;
 }

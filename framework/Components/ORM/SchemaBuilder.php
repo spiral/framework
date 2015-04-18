@@ -256,9 +256,47 @@ class SchemaBuilder extends Component
             : array();
     }
 
+    /**
+     * Normalize ODM schema and export it to be used by ODM component and all documents.
+     *
+     * @return array
+     */
     public function normalizeSchema()
     {
+        $schema = array();
 
-        return 1;
+        foreach ($this->entities as $entity)
+        {
+            if ($entity->isAbstract())
+            {
+                continue;
+            }
+
+            $entitySchema = array();
+
+            $entitySchema[ORM::E_TABLE] = $entity->getTable();
+            $entitySchema[ORM::E_DB] = $entity->getDatabase();
+            $entitySchema[ORM::E_PRIMARY_KEY] = $entity->getPrimaryKey();
+
+            $entitySchema[ORM::E_COLUMNS] = $entity->getColumns();
+            $entitySchema[ORM::E_HIDDEN] = $entity->getHidden();
+            $entitySchema[ORM::E_SECURED] = $entity->getSecured();
+            $entitySchema[ORM::E_FILLABLE] = $entity->getFillable();
+
+            $entitySchema[ORM::E_MUTATORS] = $entity->getMutators();
+            $entitySchema[ORM::E_VALIDATES] = $entity->getValidates();
+            $entitySchema[ORM::E_MESSAGES] = $entity->getMessages();
+
+            //Relations
+            foreach ($entity->getRelations() as $name => $relation)
+            {
+                $entitySchema[ORM::E_RELATIONS][$name] = $relation->normalizeSchema();
+            }
+
+            ksort($entitySchema);
+            $schema[$entity->getClass()] = $entitySchema;
+        }
+
+        return $schema;
     }
 }
