@@ -33,7 +33,7 @@ class TouchCommand extends Command
     public function perform()
     {
         $configDirectory = $this->file->normalizePath(directory('config'));
-        $configs = $this->file->getFiles($configDirectory, substr(Core::CONFIGS_EXTENSION, 1));
+        $configs = $this->file->getFiles($configDirectory, Core::CONFIGS_EXTENSION);
         foreach ($configs as $filename)
         {
             $this->file->touch($filename);

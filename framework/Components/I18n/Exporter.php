@@ -114,7 +114,7 @@ abstract class Exporter extends Component
 
         $files = $this->file->getFiles(
             $this->i18nConfig['languages'][$language]['dataFolder'],
-            array(substr(Core::RUNTIME_EXTENSION, 1))
+           Core::RUNTIME_EXTENSION
         );
 
         foreach ($files as $filename)
