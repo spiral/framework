@@ -883,7 +883,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     public static function odmCollection(array $schema = array())
     {
         $odm = ODM::getInstance();
-        $schema = $schema ?: $odm->getSchema(get_called_class());
+        $schema = !empty($schema) ? $schema : $odm->getSchema(get_called_class());
 
         static::initialize();
         $odmCollection = Collection::make(array(

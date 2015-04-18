@@ -8,9 +8,11 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
 use Spiral\Components\ORM\Schemas\EntitySchema;
+use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
@@ -271,26 +273,25 @@ class Entity extends DataEntity
     /**
      * Get instance of DBAL\Table associated with specified entity.
      *
-     * @param array $schema Forced document schema.
+     * @param array           $schema Forced document schema.
+     * @param DatabaseManager $dbal   DatabaseManager instance.
      * @return Table
      */
-    public static function dbalTable(array $schema = array())
+    public static function dbalTable(array $schema = array(), DatabaseManager $dbal = null)
     {
-        //        $odm = ORM::getInstance();
-        //        $schema = $schema ?: $orm->getSchema(get_called_class());
-        //
-        //        static::initialize();
-        //        $odmCollection = Collection::make(array(
-        //            'name'     => $schema[ODM::D_COLLECTION],
-        //            'database' => $schema[ODM::D_DB],
-        //            'odm'      => $odm
-        //        ));
-        //
-        //        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
-        //        {
-        //            return self::dispatcher()->fire('odmCollection', $odmCollection);
-        //        }
-        //
-        //        return $odmCollection;
+        $orm = ORM::getInstance();
+        $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
+
+        $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
+
+        static::initialize();
+
+        $table = $dbal->db($schema[ORM::E_DB])->table($schema[ORM::E_TABLE]);
+        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        {
+            return self::dispatcher()->fire('dbalTable', $table);
+        }
+
+        return $table;
     }
 }

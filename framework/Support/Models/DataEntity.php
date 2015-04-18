@@ -653,7 +653,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      */
     protected static function initialize($options = null)
     {
-        if (isset(self::$initiatedModels[$class = get_called_class()]) && !$options)
+        if (isset(self::$initiatedModels[$class = get_called_class()]) && empty($options))
         {
             return;
         }
