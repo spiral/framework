@@ -75,6 +75,15 @@ class Entity extends DataEntity
 
     const NULLABLE = 'nullable';
 
+    const WHERE       = 'where';
+    const WHERE_PIVOT = 'where-pivot';
+
+    /**
+     * prefills
+     */
+    const PREFILL_FIELDS = 'prefill';
+    const PREFILL_PIVOT  = 'pivot';
+
     //    const OUTER_KEY = 901;
     //    const INNER_KEY = 902;
     //    const MORPH_KEY = 903;
@@ -155,10 +164,6 @@ class Entity extends DataEntity
     {
         static::initialize(self::SCHEMA_ANALYSIS);
 
-        return static::dispatcher()->fire('describe', compact(
-            'schema',
-            'property',
-            'value'
-        ))['value'];
+        return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
     }
 }

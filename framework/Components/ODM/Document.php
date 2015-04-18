@@ -233,11 +233,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     {
         static::initialize(self::SCHEMA_ANALYSIS);
 
-        return static::dispatcher()->fire('describe', compact(
-            'schema',
-            'property',
-            'value'
-        ))['value'];
+        return static::dispatcher()->fire('describe', compact('schema', 'property', 'value'))['value'];
     }
 
     /**
