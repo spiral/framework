@@ -60,7 +60,6 @@ class EnvironmentCommand extends Command
         $this->writeln("Environment set to '<comment>{$this->argument('environment')}</comment>'.");
 
         //We have to touch every config to ensure that cache is OK
-
         $configDirectory = $this->file->normalizePath(directory('config'));
         $environmentDirectory = $configDirectory . "/{$this->argument('environment')}/";
 
@@ -74,9 +73,6 @@ class EnvironmentCommand extends Command
             {
                 $alteredConfigs[] = $this->file->relativePath($filename, $configDirectory);
             }
-
-            //Touching
-            $this->file->touch($filename);
         }
 
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
@@ -97,6 +93,10 @@ class EnvironmentCommand extends Command
         if ($this->option('configure'))
         {
             $this->console->command('core:configure', array(), $this->output);
+        }
+        else
+        {
+            $this->console->command('core:touch', array(), $this->output);
         }
     }
 }

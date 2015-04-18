@@ -14,22 +14,17 @@ use Spiral\Support\Models\DataEntity;
 class Entity extends DataEntity
 {
     /**
-     * ORM requested schema analysis. This constant will be send as option while analysis.
+     * Set this constant to false to disable automatic column, index and foreign keys creation.
+     * By default entities will read schema from database, so you can connect your ORM model to
+     * already existed table.
      */
-    const SCHEMA_ANALYSIS = 788;
+    const ACTIVE_SCHEMA = true;
 
     /**
      * Model specific constant to indicate that model has to be validated while saving. You still can
      * change this behaviour manually by providing argument to save method.
      */
     const FORCE_VALIDATION = true;
-
-    /**
-     * Set this constant to false to disable automatic column, index and foreign keys creation.
-     * By default entities will read schema from database, so you can connect your ORM model to
-     * already existed table.
-     */
-    const ACTIVE_SCHEMA = true;
 
 
     /**

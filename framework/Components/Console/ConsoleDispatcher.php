@@ -173,6 +173,10 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     public function start(CoreInterface $core)
     {
         $this->loader->setName('loadmap-console');
+
+        //Console root directory is not equals to webroot
+        chdir(dirname(directory('root')));
+
         $this->getApplication()->run();
     }
 

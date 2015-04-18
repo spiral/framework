@@ -298,10 +298,8 @@ class ViewManager extends Component
         $compiler = Container::get($this->config['engines'][$engine]['compiler'], array(
                 'manager'   => $this,
                 'source'    => $this->file->read($input),
-
                 'namespace' => $namespace,
                 'view'      => $view,
-
                 'input'     => $input,
                 'output'    => $output,
             ) + $this->config['engines'][$engine]);

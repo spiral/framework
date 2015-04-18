@@ -12,8 +12,6 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
-use Spiral\Helpers\StringHelper;
-use Symfony\Component\Process\Exception\RuntimeException;
 
 class ConfigWriter extends Component
 {
@@ -90,21 +88,22 @@ class ConfigWriter extends Component
      *
      * @param string      $name      Config filename, should not include extensions, may include
      *                               directory name.
+     * @param int         $method    How system should merge existed and requested config contents.
      * @param FileManager $file      FileManager component.
      * @param Tokenizer   $tokenizer Tokenizer component.
-     * @param int         $method    How system should merge existed and requested config contents.
      */
     public function __construct(
         $name,
+        $method = self::MERGE_FOLLOW,
         FileManager $file,
-        Tokenizer $tokenizer,
-        $method = self::MERGE_FOLLOW
+        Tokenizer $tokenizer
     )
     {
         $this->name = $name;
+        $this->method = $method;
+
         $this->file = $file;
         $this->tokenizer = $tokenizer;
-        $this->method = $method;
     }
 
     /**
@@ -125,7 +124,10 @@ class ConfigWriter extends Component
      */
     public function readConfig($directory)
     {
-        $filename = $this->file->normalizePath($directory . '/' . $this->name . Core::CONFIGS_EXTENSION);
+        $filename = $this->file->normalizePath(
+            $directory . '/' . $this->name . '.' . Core::CONFIGS_EXTENSION
+        );
+
         if (!file_exists($filename))
         {
             throw new ConfigWriterException(
@@ -245,7 +247,7 @@ class ConfigWriter extends Component
             $config = $this->mergeConfig($config, $existed);
         }
 
-        return StringHelper::interpolate("{header}return {config};", array(
+        return interpolate("{header}return {config};", array(
             'header' => $this->configHeader,
             'config' => $this->serializeConfig($config)
         ));

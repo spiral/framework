@@ -21,6 +21,12 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     use LocalizableTrait, Component\LoggerTrait, Component\EventsTrait;
 
     /**
+     * Such option will be passed to trait initializers when some component requested model schema
+     * analysis.
+     */
+    const SCHEMA_ANALYSIS = 788;
+
+    /**
      * Mutator aliases. Aliases used to simplify definition of DataEntity setters and getters. New
      * filter alias can be defined at any moment by application or module. Aliases can also be used
      * for accessors.

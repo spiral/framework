@@ -19,17 +19,17 @@ class ApcStore extends CacheStore
     const STORE = 'apc';
 
     /**
-     * Functions to use.
+     * Cache driver types.
      */
-    const APC  = 0;
-    const APCU = 1;
+    const APC_DRIVER  = 0;
+    const APCU_DRIVER = 1;
 
     /**
-     * Cache type.
+     * Cache driver type.
      *
      * @var int
      */
-    protected $type = self::APC;
+    protected $driver = self::APC_DRIVER;
 
     /**
      * Cache prefix.
@@ -47,9 +47,9 @@ class ApcStore extends CacheStore
     public function __construct(CacheManager $cache)
     {
         parent::__construct($cache);
-        $this->prefix = !empty($this->options['prefix']) ? $this->options['prefix'] . ':' : '';
 
-        $this->type = function_exists('apcu_store') ? self::APCU : self::APC;
+        $this->prefix = !empty($this->options['prefix']) ? $this->options['prefix'] . ':' : '';
+        $this->driver = function_exists('apcu_store') ? self::APCU_DRIVER : self::APC_DRIVER;
     }
 
     /**
@@ -57,9 +57,9 @@ class ApcStore extends CacheStore
      *
      * @return int
      */
-    public function getType()
+    public function getDriver()
     {
-        return $this->type;
+        return $this->driver;
     }
 
     /**
@@ -81,7 +81,7 @@ class ApcStore extends CacheStore
      */
     public function has($name)
     {
-        if ($this->type == self::APCU)
+        if ($this->driver == self::APCU_DRIVER)
         {
             return apcu_exists($this->prefix . $name);
         }
@@ -97,7 +97,7 @@ class ApcStore extends CacheStore
      */
     public function get($name)
     {
-        if ($this->type == self::APCU)
+        if ($this->driver == self::APCU_DRIVER)
         {
             return apcu_fetch($this->prefix . $name);
         }
@@ -117,7 +117,7 @@ class ApcStore extends CacheStore
      */
     public function set($name, $data, $lifetime)
     {
-        if ($this->type == self::APCU)
+        if ($this->driver == self::APCU_DRIVER)
         {
             return apcu_store($this->prefix . $name, $data, $lifetime);
         }
@@ -144,7 +144,7 @@ class ApcStore extends CacheStore
      */
     public function delete($name)
     {
-        if ($this->type == self::APCU)
+        if ($this->driver == self::APCU_DRIVER)
         {
             apcu_delete($this->prefix . $name);
 
@@ -163,7 +163,7 @@ class ApcStore extends CacheStore
      */
     public function increment($name, $delta = 1)
     {
-        if ($this->type == self::APCU)
+        if ($this->driver == self::APCU_DRIVER)
         {
             return apcu_inc($this->prefix . $name, $delta);
         }
@@ -180,7 +180,7 @@ class ApcStore extends CacheStore
      */
     public function decrement($name, $delta = 1)
     {
-        if ($this->type == self::APCU)
+        if ($this->driver == self::APCU_DRIVER)
         {
             return apcu_dec($this->prefix . $name, $delta);
         }
@@ -195,7 +195,7 @@ class ApcStore extends CacheStore
      */
     public function flush()
     {
-        if ($this->type == self::APCU)
+        if ($this->driver == self::APCU_DRIVER)
         {
             apcu_clear_cache();
 

@@ -28,8 +28,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @property Components\Debug\Debugger            $debug
  * @property Components\Tokenizer\Tokenizer       $tokenizer
  * @property Components\Cache\CacheManager        $cache
- * @property Components\I18n\Translator  $i18n
- * @property Components\View\ViewManager                 $view
+ * @property Components\I18n\Translator           $i18n
+ * @property Components\View\ViewManager          $view
  * @property Components\Redis\RedisManager        $redis
  * @property Components\Encrypter\Encrypter       $encrypter
  * @property Components\Image\ImageManager        $image

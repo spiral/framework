@@ -52,12 +52,12 @@ class Core extends Container implements CoreInterface
     /**
      * Spiral Core version.
      */
-    const VERSION = '0.2.0-alpha';
+    const VERSION = '0.3.0-alpha';
 
     /**
      * Extension used for configuration files, ".php" by default.
      */
-    const CONFIGS_EXTENSION = '.php';
+    const CONFIGS_EXTENSION = 'php';
 
     /**
      * Current environment id (name), that value can be used directly in code by accessing
@@ -561,7 +561,7 @@ class Core extends Container implements CoreInterface
      */
     public function loadConfig($config)
     {
-        $filename = self::$directories['config'] . '/' . $config . self::CONFIGS_EXTENSION;
+        $filename = self::$directories['config'] . '/' . $config . '.' . self::CONFIGS_EXTENSION;
 
         //Cached filename
         $cached = str_replace(array('/', '\\'), '-', 'config-' . $config);
@@ -579,7 +579,7 @@ class Core extends Container implements CoreInterface
             $data = (require $filename);
 
             $environment = self::$directories['config']
-                . '/' . $this->getEnvironment() . '/' . $config . self::CONFIGS_EXTENSION;
+                . '/' . $this->getEnvironment() . '/' . $config . '.' . self::CONFIGS_EXTENSION;
 
             if (file_exists($environment))
             {
@@ -628,10 +628,10 @@ class Core extends Container implements CoreInterface
 
         if ($directory)
         {
-            return rtrim($directory, '/') . '/' . $filename . static::RUNTIME_EXTENSION;
+            return rtrim($directory, '/') . '/' . $filename . '.' . static::RUNTIME_EXTENSION;
         }
 
         return self::$directories['cache']
-        . "/$filename-{$this->applicationID}" . static::RUNTIME_EXTENSION;
+        . "/$filename-{$this->applicationID}" . '.' . static::RUNTIME_EXTENSION;
     }
 }

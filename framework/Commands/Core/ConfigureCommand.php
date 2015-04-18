@@ -20,7 +20,7 @@ class ConfigureCommand extends Command
      *
      * @var string
      */
-    protected $name = 'core:configure';
+    protected $name = 'configure';
 
     /**
      * Short command description.
@@ -68,6 +68,9 @@ class ConfigureCommand extends Command
 
             $this->writeln("Runtime directory permissions updated.");
         }
+
+        $this->writeln("\n<info>Updating configuration cache.</info>");
+        $this->console->command('core:touch', array(), $this->output);
 
         //Installing modules
         $this->writeln("\n<info>Installing all available modules.</info>");
