@@ -11,7 +11,6 @@ namespace Spiral\Components\ORM;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
-use Spiral\Components\ORM\Schemas\EntitySchema;
 use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
@@ -31,9 +30,8 @@ class Entity extends DataEntity
      */
     const FORCE_VALIDATION = true;
 
-
     /**
-     * TODO EXAMPLES!!!!
+     * TODO EXAMPLES AND DESCRIPTIONS!!!!
      */
     const HAS_ONE            = 101;
     const HAS_MANY           = 102;
@@ -293,5 +291,20 @@ class Entity extends DataEntity
         }
 
         return $table;
+    }
+
+
+    /**
+     * Simplified way to dump information.
+     *
+     * @return Object
+     */
+    public function __debugInfo()
+    {
+        return (object)array(
+            'table'  => $this->database . '/' . $this->table,
+            'fields' => $this->getFields(),
+            'errors' => $this->getErrors()
+        );
     }
 }

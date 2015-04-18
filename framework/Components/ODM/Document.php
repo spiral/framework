@@ -445,7 +445,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
                 continue;
             }
 
-            if ($value instanceof ODMAccessor)
+            if ($value instanceof AccessorInterface)
             {
                 $value = $value->serializeData();
             }
@@ -520,20 +520,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         $aggregation = $this->schema[ODM::D_AGGREGATIONS][$offset];
 
         //Query preparations
-        $query = $aggregation[ODM::AGR_QUERY];
-
-        $fields = $this->fields;
-        array_walk_recursive($query, function (&$value) use ($fields)
-        {
-            if (strpos($value, 'key::') === 0)
-            {
-                $value = $fields[substr($value, 5)];
-                if ($value instanceof CompositableInterface)
-                {
-                    $value = $value->serializeData();
-                }
-            }
-        });
+        $query = $this->prepareQuery($aggregation[ODM::AGR_QUERY]);
 
         if (isset($arguments[0]) && is_array($arguments[0]))
         {
@@ -547,6 +534,30 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         }
 
         return $collection;
+    }
+
+    /**
+     * Prepare aggregation query, all "key::name" usages will be replaced with real field value.
+     *
+     * @param array $query
+     * @return array
+     */
+    protected function prepareQuery(array $query)
+    {
+        $fields = $this->fields;
+        array_walk_recursive($query, function (&$value) use ($fields)
+        {
+            if (strpos($value, 'key::') === 0)
+            {
+                $value = $fields[substr($value, 5)];
+                if ($value instanceof CompositableInterface)
+                {
+                    $value = $value->serializeData();
+                }
+            }
+        });
+
+        return $query;
     }
 
     /**
