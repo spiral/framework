@@ -31,71 +31,40 @@ class Entity extends DataEntity
 
 
     /**
-     * TODO!!!!
+     * TODO EXAMPLES!!!!
      */
-
-    const HAS_ONE            = 'has-one';
-    const HAS_MANY           = 'has-many';
-    const BELONGS_TO         = 'belongs-to';
-    const MANY_TO_MANY       = 'many-to-many';
-    const MANY_THOUGHT       = 'many-thought';
-    const BELONGS_TO_MORPHED = 'belongs-to-morphed';
-    const MANY_TO_MORPHED    = 'many-to-morphed';
-
-    //    const HAS_ONE            = 101;
-    //    const HAS_MANY           = 102;
-    //    const BELONGS_TO         = 103;
-    //    const MANY_TO_MANY       = 104;
-    //    const MANY_THOUGHT       = 105;
-    //    const BELONGS_TO_MORPHED = 108;
-    //    const MANY_TO_MORPHED    = 109;
+    const HAS_ONE            = 101;
+    const HAS_MANY           = 102;
+    const BELONGS_TO         = 103;
+    const MANY_TO_MANY       = 104;
+    const MANY_THOUGHT       = 105;
+    const BELONGS_TO_MORPHED = 108;
+    const MANY_TO_MORPHED    = 109;
 
     /**
-     * Key values.
+     * Constants used to declare relation schemas.
      */
-    const OUTER_KEY = 'outer';
-    const INNER_KEY = 'inner';
-    const MORPH_KEY = 'morph';
-
-    const THOUGHT_TABLE = 'thought';
-    const PIVOT_TABLE   = 'thought';
-    const VIA_TABLE     = 'thought';
-
-    const THOUGHT_INNER_KEY = 'thought-inner';
-    const THOUGHT_OUTER_KEY = 'thought-outer';
-
-    const BACK_REF = 'back-ref';
-
-    const CONSTRAINT        = 'constraint';
-    const CONSTRAINT_ACTION = 'action';
-
-    const CREATE_PIVOT = 'create-pivot';
-
-    const NULLABLE = 'nullable';
-
-    const WHERE       = 'where';
-    const WHERE_PIVOT = 'where-pivot';
+    const OUTER_KEY         = 901;
+    const INNER_KEY         = 902;
+    const MORPH_KEY         = 903;
+    const THOUGHT_TABLE     = 904;
+    const PIVOT_TABLE       = 904;
+    const VIA_TABLE         = 904;
+    const THOUGHT_INNER_KEY = 905;
+    const THOUGHT_OUTER_KEY = 906;
+    const WHERE             = 907;
+    const WHERE_PIVOT       = 908;
+    const PREFILL_FIELDS    = 909;
+    const PREFILL_PIVOT     = 910;
 
     /**
-     * prefills
+     * Additional constants used to control relation schema creation.
      */
-    const PREFILL_FIELDS = 'prefill';
-    const PREFILL_PIVOT  = 'pivot';
-
-    //    const OUTER_KEY = 901;
-    //    const INNER_KEY = 902;
-    //    const MORPH_KEY = 903;
-    //
-    //    const THOUGHT_TABLE = 904;
-    //    const PIVOT_TABLE   = 904;
-    //    const VIA_TABLE     = 904;
-    //
-    //    const BACK_REF = 905;
-    //
-    //    const CONSTRAINT        = 906;
-    //    const CONSTRAINT_ACTION = 907;
-    //
-    //    const CREATE_PIVOT      = 909;
+    const BACK_REF          = 1001;
+    const CONSTRAINT        = 1002;
+    const CONSTRAINT_ACTION = 1003;
+    const CREATE_PIVOT      = 1004;
+    const NULLABLE          = 1005;
 
     /**
      * Constants used to declare index type. See documentation for indexes property.
@@ -144,10 +113,10 @@ class Entity extends DataEntity
         }
 
         //Prepared document schema
-        //$this->schema = self::$schemaCache[$class];
+        $this->schema = self::$schemaCache[$class];
 
         //Merging with default values
-        //$this->fields = $fields + $this->schema[ORM::E_DEFAULTS];
+        $this->fields = $fields + $this->schema[ORM::E_COLUMNS];
     }
 
     /**
