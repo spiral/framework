@@ -35,6 +35,11 @@ class ViewManager extends Component
     const DEFAULT_NAMESPACE = 'default';
 
     /**
+     * Extension used to represent cached view files.
+     */
+    const CACHE_EXTENSION = 'php';
+
+    /**
      * Registered view namespaces. Every namespace can include multiple search directories. Search
      * directory may have key which will be treated as namespace directory origin, this allows user
      * or template to include view from specified location, even if there is multiple directories under
@@ -164,7 +169,7 @@ class ViewManager extends Component
             ));
         }
 
-        $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . CoreInterface::RUNTIME_EXTENSION;
+        $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . '.' . self::CACHE_EXTENSION;
 
         return $this->cacheDirectory() . '/'
         . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-')
