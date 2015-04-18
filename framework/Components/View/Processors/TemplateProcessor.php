@@ -18,7 +18,7 @@ use Spiral\Components\View\ViewManager;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\Processors\Templater\Node;
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\Container;
 use Spiral\Helpers\ArrayHelper;
 use Spiral\Support\Html\Tokenizer;
 use Spiral\Components\View\Processors\Templater\Behaviour;
@@ -205,7 +205,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             return $behaviour;
         }
 
-
         $behaviour = new Behaviour($tokenName, Node::TYPE_IMPORT, $attributes, $node->options);
 
         //Include node, all blocks inside current import namespace
@@ -375,7 +374,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             /**
              * @var Import $import
              */
-            $import = Core::get($importOptions['class'], array(
+            $import = Container::get($importOptions['class'], array(
                     'level' => $node->getLevel(),
                 ) + ($options + $node->options)
             );

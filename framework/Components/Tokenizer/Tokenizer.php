@@ -12,6 +12,7 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
 use ReflectionClass;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\Events\Event;
 use Spiral\Core\Loader;
 
@@ -38,7 +39,7 @@ class Tokenizer extends Component
      * Core to check bindings and store classes cache.
      *
      * @invisible
-     * @var Core
+     * @var CoreInterface
      */
     protected $core = null;
 
@@ -85,11 +86,11 @@ class Tokenizer extends Component
      * ability to perform simple PHP code highlighting which can be used in ExceptionResponses and
      * snapshots.
      *
-     * @param Core        $core
-     * @param FileManager $file
-     * @param Loader      $loader
+     * @param CoreInterface $core
+     * @param FileManager   $file
+     * @param Loader        $loader
      */
-    public function __construct(Core $core, FileManager $file, Loader $loader)
+    public function __construct(CoreInterface $core, FileManager $file, Loader $loader)
     {
         $this->core = $core;
         $this->file = $file;

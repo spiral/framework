@@ -9,7 +9,7 @@
 namespace Spiral\Components\ORM;
 
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 class ORM extends Component
 {
@@ -26,11 +26,10 @@ class ORM extends Component
     /**
      * ORM component instance.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
-        $this->core = $core;
         $this->config = $core->loadConfig('orm');
     }
 

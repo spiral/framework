@@ -10,7 +10,7 @@ namespace Spiral\Components\Http\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Request;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\Dispatcher\ClientException;
 
 class ResourceRoute extends Route
@@ -40,10 +40,10 @@ class ResourceRoute extends Route
      * use request method to resolve action.
      *
      * @param ServerRequestInterface $request
-     * @param Core                   $core
+     * @param CoreInterface          $core
      * @return mixed
      */
-    protected function callAction(ServerRequestInterface $request, Core $core)
+    protected function callAction(ServerRequestInterface $request, CoreInterface $core)
     {
         $controller = rtrim($this->target, '::');
 

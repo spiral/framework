@@ -9,7 +9,7 @@
 namespace Spiral\Components\Http\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 interface RouteInterface
 {
@@ -33,13 +33,13 @@ interface RouteInterface
      * Perform route on given Request and return response.
      *
      * @param ServerRequestInterface $request
-     * @param Core                   $core
+     * @param CoreInterface          $core
      * @param array                  $routeMiddlewares Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
-        Core $core,
+        CoreInterface $core,
         array $routeMiddlewares = array()
     );
 

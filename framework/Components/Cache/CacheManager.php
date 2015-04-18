@@ -10,7 +10,7 @@ namespace Spiral\Components\Cache;
 
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 /**
  * @method bool has(string $name)
@@ -46,9 +46,9 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
     /**
      * Constructing CacheManager and selecting default adapter.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->config = $core->loadConfig('cache');
     }
@@ -129,12 +129,12 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
             'cache' => self::getInstance()
         ), null, true);
     }
-    
+
     /**
      * Bypass call to default store.
-     * 
+     *
      * @param string $method
-     * @param array $arguments
+     * @param array  $arguments
      * @return mixed
      */
     public function __call($method, array $arguments = array())

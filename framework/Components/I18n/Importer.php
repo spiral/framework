@@ -10,7 +10,7 @@ namespace Spiral\Components\I18n;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 abstract class Importer extends Component
 {
@@ -39,7 +39,7 @@ abstract class Importer extends Component
     /**
      * Core instance.
      *
-     * @var Core
+     * @var CoreInterface
      */
     protected $core = null;
 
@@ -60,11 +60,11 @@ abstract class Importer extends Component
     /**
      * New indexer instance.
      *
-     * @param Translator $i18n
-     * @param Core        $core
-     * @param FileManager $file
+     * @param Translator    $i18n
+     * @param CoreInterface $core
+     * @param FileManager   $file
      */
-    public function __construct(Translator $i18n, Core $core, FileManager $file)
+    public function __construct(Translator $i18n, CoreInterface $core, FileManager $file)
     {
         $this->i18n = $i18n;
         $this->core = $core;

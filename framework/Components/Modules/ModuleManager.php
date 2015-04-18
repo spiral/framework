@@ -11,7 +11,8 @@ namespace Spiral\Components\Modules;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\Container;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\CoreException;
 use Spiral\Support\Generators\Config\ConfigWriter;
 
@@ -39,10 +40,10 @@ class ModuleManager extends Component
      * modules will ensure all requested bindings mounted and packages initiated via calling module
      * bootstrap() method.
      *
-     * @param Core $core Core instance.
+     * @param CoreInterface $core Core instance.
      * @throws CoreException
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         try
         {
@@ -53,12 +54,12 @@ class ModuleManager extends Component
                 {
                     foreach ($module['bindings'] as $alias => $resolver)
                     {
-                        $core->bind($alias, $resolver);
+                        Container::bind($alias, $resolver);
                     }
 
                     if ($module['bootstrap'])
                     {
-                        $core->get($module['class'], compact('core'))->bootstrap();
+                        Container::get($module['class'], compact('core'))->bootstrap();
                     }
                 }
             }

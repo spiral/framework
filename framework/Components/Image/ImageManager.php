@@ -10,7 +10,7 @@ namespace Spiral\Components\Image;
 
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 class ImageManager extends Component
 {
@@ -24,9 +24,9 @@ class ImageManager extends Component
     /**
      * New image component instance.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->config = $core->loadConfig('image');
     }

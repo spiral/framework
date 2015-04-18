@@ -12,8 +12,9 @@ use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\DispatcherInterface;
+use Spiral\Core\Loader;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -49,9 +50,16 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     /**
      * Core to cache found commands.
      *
-     * @var Core
+     * @var CoreInterface
      */
     protected $core = null;
+
+    /**
+     * Loader component.
+     *
+     * @var Loader
+     */
+    protected $loader = null;
 
     /**
      * Cached list of all existed commands.
@@ -63,13 +71,15 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     /**
      * ConsoleDispatcher.
      *
-     * @param Tokenizer $tokenizer
-     * @param Core      $core
+     * @param Tokenizer     $tokenizer
+     * @param CoreInterface $core
+     * @param Loader        $loader
      */
-    public function __construct(Tokenizer $tokenizer, Core $core)
+    public function __construct(CoreInterface $core, Tokenizer $tokenizer, Loader $loader)
     {
-        $this->tokenizer = $tokenizer;
         $this->core = $core;
+        $this->tokenizer = $tokenizer;
+        $this->loader = $loader;
         $this->commands = $core->loadData('commands');
 
         if (!is_array($this->commands))
@@ -158,11 +168,11 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     /**
      * Letting dispatcher to control application flow and functionality.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function start(Core $core)
+    public function start(CoreInterface $core)
     {
-        $core->loader->setName('loadmap-console');
+        $this->loader->setName('loadmap-console');
         $this->getApplication()->run();
     }
 

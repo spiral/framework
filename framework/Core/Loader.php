@@ -62,9 +62,9 @@ class Loader extends Component
      * Loader will automatically handle SPL autoload functions to start caching loadmap. In future
      * loadmap can be used to pre-load all classes via one single file.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->core = $core;
         $this->enable();

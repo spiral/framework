@@ -11,7 +11,7 @@ namespace Spiral\Components\View;
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 class ViewManager extends Component
 {
@@ -63,10 +63,10 @@ class ViewManager extends Component
      * Constructing view component and initiating view namespaces, namespaces are used to find view
      * file destination and switch templates from one module to another.
      *
-     * @param Core        $core
-     * @param FileManager $file
+     * @param CoreInterface $core
+     * @param FileManager   $file
      */
-    public function __construct(Core $core, FileManager $file)
+    public function __construct(CoreInterface $core, FileManager $file)
     {
         $this->file = $file;
         $this->config = $core->loadConfig('views');
@@ -164,7 +164,7 @@ class ViewManager extends Component
             ));
         }
 
-        $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . Core::RUNTIME_EXTENSION;
+        $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . CoreInterface::RUNTIME_EXTENSION;
 
         return $this->cacheDirectory() . '/'
         . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-')

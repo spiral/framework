@@ -9,7 +9,8 @@
 namespace Spiral\Components\Session;
 
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\Container;
+use Spiral\Core\CoreInterface;
 
 class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
 {
@@ -61,9 +62,9 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
      * handlers. Attention, session store based on php sessions, so it's REALLY important to have
      * only one store at one moment of time.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->config = $core->loadConfig('session');
     }
@@ -156,7 +157,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
             if ($defaultHandler != self::NATIVE_HANDLER)
             {
                 $config = $this->config['handlers'][$this->config['handler']];
-                $handler = $this->handler = Core::get(
+                $handler = $this->handler = Container::get(
                     $config['class'],
                     array('options' => $config, 'lifetime' => $this->config['lifetime']),
                     null,

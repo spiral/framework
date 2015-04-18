@@ -15,9 +15,9 @@ interface DispatcherInterface
     /**
      * Letting dispatcher to control application flow and functionality.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function start(Core $core);
+    public function start(CoreInterface $core);
 
     /**
      * Every dispatcher should know how to handle exception snapshot provided by Debugger.

@@ -11,7 +11,7 @@ namespace Spiral\Components\Storage;
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 use Spiral\Helpers\StringHelper;
 
 class StorageManager extends Component implements Container\InjectionManagerInterface
@@ -60,9 +60,9 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      *
      * Storage component is of component which almost did not changed for last 4 years.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->config = $core->loadConfig('storage');
 
@@ -70,7 +70,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         foreach ($this->config['containers'] as $name => $container)
         {
             //Controllable injection implemented
-            $this->containers[$name] = Core::get(
+            $this->containers[$name] = Container::get(
                 self::CONTAINER,
                 $container + array('storage' => $this),
                 null,
@@ -209,7 +209,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
 
         $config = $this->config['servers'][$server];
 
-        return $this->servers[$server] = Core::get($config['class'], $config);
+        return $this->servers[$server] = Container::get($config['class'], $config);
     }
 
     /**

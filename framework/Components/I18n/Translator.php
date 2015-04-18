@@ -9,7 +9,7 @@
 namespace Spiral\Components\I18n;
 
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 use Spiral\Helpers\StringHelper;
 
@@ -76,7 +76,7 @@ class Translator extends Component
     /**
      * Core component.
      *
-     * @var Core
+     * @var CoreInterface
      */
     protected $core = null;
 
@@ -84,9 +84,9 @@ class Translator extends Component
      * New I18nManager component instance, while construing default language and timezone will be
      * mounted.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->core = $core;
         $this->config = $core->loadConfig('i18n');

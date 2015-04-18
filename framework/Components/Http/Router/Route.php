@@ -12,7 +12,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\MiddlewarePipe;
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\Container;
+use Spiral\Core\CoreInterface;
 
 class Route extends Component implements RouteInterface
 {
@@ -439,25 +440,25 @@ class Route extends Component implements RouteInterface
      * Perform route on given Request and return response.
      *
      * @param ServerRequestInterface $request
-     * @param Core                   $core
+     * @param CoreInterface          $core
      * @param array                  $routeMiddlewares Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
-        Core $core,
+        CoreInterface $core,
         array $routeMiddlewares = array()
     )
     {
         if (empty($this->middlewares))
         {
-            $target = $this->buildTarget($core);
+            $target = $this->callTarget($core);
 
             return $target($request, null, $this);
         }
 
         return $this->getPipeline($routeMiddlewares)
-            ->target($this->buildTarget($core))
+            ->target($this->callTarget($core))
             ->run($request, $this);
     }
 
@@ -484,10 +485,10 @@ class Route extends Component implements RouteInterface
     /**
      * Build callable route target.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      * @return callable|mixed|null|object
      */
-    protected function buildTarget(Core $core)
+    protected function callTarget(CoreInterface $core)
     {
         if (is_object($this->target) || is_array($this->target))
         {
@@ -497,7 +498,7 @@ class Route extends Component implements RouteInterface
         if (is_string($this->target) && strpos($this->target, self::CONTROLLER_SEPARATOR) === false)
         {
             //Middleware
-            return $core->get($this->target);
+            return Container::get($this->target);
         }
 
         return function (ServerRequestInterface $request) use ($core)
@@ -510,10 +511,10 @@ class Route extends Component implements RouteInterface
      * Execute controller action resolved via provided string target.
      *
      * @param ServerRequestInterface $request
-     * @param Core                   $core
+     * @param CoreInterface          $core
      * @return mixed
      */
-    protected function callAction(ServerRequestInterface $request, Core $core)
+    protected function callAction(ServerRequestInterface $request, CoreInterface $core)
     {
         $target = interpolate($this->target, $this->matches, '<', '>');
         list($controller, $action) = explode(self::CONTROLLER_SEPARATOR, $target);

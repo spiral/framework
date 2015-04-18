@@ -12,14 +12,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Debug\Snapshot;
-use Spiral\Components\Http\Cookies\Cookie;
-use Spiral\Components\Http\Cookies\CookieInterface;
 use Spiral\Components\Http\Router\RouterTrait;
 use Spiral\Components\Http\Router\Router;
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Core\DispatcherInterface;
 
@@ -48,7 +46,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      * Core instance.
      *
      * @invisible
-     * @var Core
+     * @var CoreInterface
      */
     protected $core = null;
 
@@ -97,9 +95,9 @@ class HttpDispatcher extends Component implements DispatcherInterface
     /**
      * New HttpDispatcher instance.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->core = $core;
         $this->config = $core->loadConfig('http');
@@ -142,9 +140,9 @@ class HttpDispatcher extends Component implements DispatcherInterface
     /**
      * Letting dispatcher to control application flow and functionality.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function start(Core $core)
+    public function start(CoreInterface $core)
     {
         if (empty($this->endpoints[$this->config['basePath']]))
         {
@@ -169,7 +167,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     protected function createRouter()
     {
-        return Core::get(
+        return Container::get(
             $this->config['router']['class'],
             array(
                 'core'             => $this->core,
@@ -221,7 +219,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             throw new ClientException(Response::SERVER_ERROR, 'Unable to select endpoint');
         }
 
-        $parentRequest = $this->core->getBinding('request');
+        $parentRequest = Container::getBinding('request');
 
         /**
          * So all inner middleware and code will known their context URL.
@@ -229,8 +227,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $request = $request->withAttribute('activePath', $activePath);
 
         //Creating scope
-        $this->core->bind('request', $request);
-        $this->core->bind(get_class($request), $request);
+        Container::bind('request', $request);
+        Container::bind(get_class($request), $request);
 
         $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
 
@@ -238,14 +236,14 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $response = $this->execute($request, $endpoint);
         benchmark('http::endpoint', $name);
 
-        $this->core->removeBinding(get_class($request));
-        $this->core->removeBinding('request');
+        Container::removeBinding(get_class($request));
+        Container::removeBinding('request');
 
         if (!empty($parentRequest))
         {
             //Restoring scope
-            $this->core->bind('request', $parentRequest);
-            $this->core->bind(get_class($parentRequest), $parentRequest);
+            Container::bind('request', $parentRequest);
+            Container::bind(get_class($parentRequest), $parentRequest);
         }
 
         return $response;

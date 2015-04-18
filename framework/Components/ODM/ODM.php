@@ -11,7 +11,7 @@ namespace Spiral\Components\ODM;
 use Spiral\Components\ODM\Exporters\DocumentationExporter;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\CoreException;
 
 class ODM extends Component implements Container\InjectionManagerInterface
@@ -34,7 +34,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
     /**
      * Core component.
      *
-     * @var Core
+     * @var CoreInterface
      */
     protected $core = null;
 
@@ -56,10 +56,10 @@ class ODM extends Component implements Container\InjectionManagerInterface
     /**
      * ODM component instance.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      * @throws CoreException
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->core = $core;
         $this->config = $core->loadConfig('odm');

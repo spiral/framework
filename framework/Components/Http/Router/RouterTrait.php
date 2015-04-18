@@ -49,7 +49,10 @@ trait RouterTrait
      */
     protected function createRouter()
     {
-        return Router::make(array('core' => Core::getInstance(), 'routes' => $this->routes));
+        return Router::make(array(
+            'core'   => Core::getInstance(),
+            'routes' => $this->routes
+        ));
     }
 
     /**

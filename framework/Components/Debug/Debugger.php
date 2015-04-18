@@ -12,6 +12,7 @@ use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Exception;
+use Spiral\Core\CoreInterface;
 use Spiral\Core\Dispatcher\ClientException;
 
 class Debugger extends Component
@@ -96,9 +97,9 @@ class Debugger extends Component
      * for use in any environment and any application point. This is first initiated component in
      * application.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->config = $core->loadConfig('debug');
     }

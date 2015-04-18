@@ -37,7 +37,7 @@ use Spiral\Components\Debug\Snapshot;
  * @property Components\Http\Cookies\CookieManager          $cookies
  * @property Components\Session\SessionStore                $session
  */
-class Core extends Container implements ConfigLoaderInterface
+class Core extends Container implements CoreInterface
 {
     /**
      * Singleton and events.s
@@ -53,11 +53,6 @@ class Core extends Container implements ConfigLoaderInterface
      * Spiral Core version.
      */
     const VERSION = '0.2.0-alpha';
-
-    /**
-     * Extension to use to runtime data and configuration cache files.
-     */
-    const RUNTIME_EXTENSION = '.php';
 
     /**
      * Extension used for configuration files, ".php" by default.
@@ -315,6 +310,7 @@ class Core extends Container implements ConfigLoaderInterface
         $core = self::$bindings[__CLASS__]
             = self::$bindings[get_called_class()]
             = self::$bindings[self::SINGLETON]
+            = self::$bindings['Spiral\Core\CoreInterface']
             = new static();
 
         //Error and exception handlers
@@ -394,7 +390,7 @@ class Core extends Container implements ConfigLoaderInterface
     }
 
     /**
-     * Calling controller method by fully specified or short controller name, action and addition
+     * Call controller method by fully specified or short controller name, action and addition
      * options such as default controllers namespace, default name and postfix.
      *
      * @param string $controller Controller name, or class, or name with namespace prefix.
@@ -616,28 +612,6 @@ class Core extends Container implements ConfigLoaderInterface
         }
 
         return $data;
-    }
-
-    /**
-     * Invalidate stored runtime data or configuration cache. Default runtime directory is used.
-     *
-     * @param string $filename Filename without .php
-     * @param bool   $config   Indication that provided filename is config name.
-     */
-    public function invalidateData($filename, $config = false)
-    {
-        if ($config)
-        {
-            $filename = str_replace(array('/', '\\'), '-', 'config-' . $filename);
-        }
-
-        //Cached filename
-        $filename = $this->makeFilename($filename);
-
-        if (file_exists($filename))
-        {
-            unlink($filename);
-        }
     }
 
     /**

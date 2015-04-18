@@ -9,8 +9,9 @@
 namespace Spiral\Components\Redis;
 
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Core\Container\InjectionManagerInterface;
-use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 /**
  * @method mixed del(array $keys)
@@ -203,9 +204,9 @@ class RedisManager extends Component implements InjectionManagerInterface
     /**
      * Redis facade initialization.
      *
-     * @param Core $core
+     * @param CoreInterface $core
      */
-    public function __construct(Core $core)
+    public function __construct(CoreInterface $core)
     {
         $this->config = $core->loadConfig('redis');
     }
@@ -247,7 +248,7 @@ class RedisManager extends Component implements InjectionManagerInterface
         //Creating client
         benchmark('redis::client', $client);
 
-        $this->clients[$client] = Core::get(self::CLIENT, array(
+        $this->clients[$client] = Container::get(self::CLIENT, array(
             'parameters' => $config['servers'],
             'options'    => isset($config['options']) ? $config['options'] : array(),
         ), null, true);

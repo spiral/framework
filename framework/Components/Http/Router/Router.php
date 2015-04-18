@@ -12,7 +12,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
 use Spiral\Core\Component;
-use Spiral\Core\Core;
+use Spiral\Core\Container;
+use Spiral\Core\CoreInterface;
 
 class Router extends Component implements MiddlewareInterface
 {
@@ -26,7 +27,7 @@ class Router extends Component implements MiddlewareInterface
      * target).
      *
      * @invisible
-     * @var Core
+     * @var CoreInterface
      */
     protected $core = null;
 
@@ -66,17 +67,17 @@ class Router extends Component implements MiddlewareInterface
      * Router middleware used by HttpDispatcher and modules to perform URI based routing with defined
      * endpoint such as controller action, closure or middleware.
      *
-     * @param Core        $core             Core instances required to call controller actions.
-     * @param Route|array $routes           Pre-defined array of routes (if were collected externally).
-     * @param array       $routeMiddlewares Set of middlewares defined to be used in routes for
-     *                                      filtering request and altering response.
-     * @param array       $default          Default route options (controller route), should include
-     *                                      pattern and target, can not have any middlewares attached.
-     * @param string      $activePath       Base path used to correctly resolve route url and pattern
-     *                                      when website or module associated with non empty URI path.
+     * @param CoreInterface $core             Core instances required to call controller actions.
+     * @param Route|array   $routes           Pre-defined array of routes (if were collected externally).
+     * @param array         $routeMiddlewares Set of middlewares defined to be used in routes for
+     *                                        filtering request and altering response.
+     * @param array         $default          Default route options (controller route), should include
+     *                                        pattern and target, can not have any middlewares attached.
+     * @param string        $activePath       Base path used to correctly resolve route url and pattern
+     *                                        when website or module associated with non empty URI path.
      */
     public function __construct(
-        Core $core,
+        CoreInterface $core,
         array $routes = array(),
         array $routeMiddlewares = array(),
         array $default = array(),
@@ -124,8 +125,8 @@ class Router extends Component implements MiddlewareInterface
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
         //Open router scope
-        $outerRouter = $this->core->getBinding('router');
-        $this->core->bind('router', $this);
+        $outerRouter = Container::getBinding('router');
+        Container::bind('router', $this);
 
         if (!$this->route = $this->findRoute($request))
         {
@@ -138,8 +139,8 @@ class Router extends Component implements MiddlewareInterface
         $response = $this->route->perform($request, $this->core, $this->routeMiddlewares);
 
         //Close router scope
-        $this->core->removeBinding('router');
-        !empty($outerRouter) && $this->core->bind('router', $outerRouter);
+        Container::removeBinding('router');
+        !empty($outerRouter) && Container::bind('router', $outerRouter);
 
         return $response;
     }
