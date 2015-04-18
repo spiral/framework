@@ -32,7 +32,7 @@ class BelongsToSchema extends RelationSchema
      */
     protected $defaultDefinition = array(
         Entity::OUTER_KEY         => '{outer:primaryKey}',
-        Entity::INNER_KEY         => '{outer:roleName}_{definition:OUTER_KEY}',
+        Entity::INNER_KEY         => '{name:singular}_{definition:OUTER_KEY}',
         Entity::CONSTRAINT        => true,
         Entity::CONSTRAINT_ACTION => 'CASCADE',
         Entity::NULLABLE          => true

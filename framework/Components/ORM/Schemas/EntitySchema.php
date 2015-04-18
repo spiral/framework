@@ -522,7 +522,7 @@ class EntitySchema extends ModelSchema
             return;
         }
 
-        $relationship = $this->ormSchema->getRelationSchema($this, $name, $definition);
+        $relationship = $this->ormSchema->relationSchema($this, $name, $definition);
 
         //Initiating required columns, foreign keys and indexes
         $relationship->buildSchema($this);

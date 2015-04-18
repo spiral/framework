@@ -27,7 +27,6 @@ class SchemaBuilder extends Component
     /**
      * Mapping used to link relationship definition to relationship schemas.
      *
-     * @todo: think about morphed word
      * @var array
      */
     protected $relationships = array(
@@ -64,6 +63,11 @@ class SchemaBuilder extends Component
      */
     protected $entities = array();
 
+    /**
+     * All declared tables.
+     *
+     * @var array
+     */
     public $tables = array();
 
     /**
@@ -161,6 +165,13 @@ class SchemaBuilder extends Component
         return $this->entities[$class];
     }
 
+    /**
+     * Declare table schema to be created.
+     *
+     * @param string $database
+     * @param string $table
+     * @return AbstractTableSchema
+     */
     public function declareTable($database, $table)
     {
         if (isset($this->tables[$database . '/' . $table]))
@@ -173,6 +184,13 @@ class SchemaBuilder extends Component
         return $this->tables[$database . '/' . $table->getName()] = $table;
     }
 
+    /**
+     * Get list of all declared tables. Cascade parameter will sort tables in order of their self
+     * dependencies.
+     *
+     * @param bool $cascade
+     * @return AbstractTableSchema[]
+     */
     public function getDeclaredTables($cascade = true)
     {
         if ($cascade)
@@ -190,16 +208,19 @@ class SchemaBuilder extends Component
         return $this->tables;
     }
 
+    /**
+     * Perform schema reflection to database(s). All declared tables will created or altered.
+     */
     public function executeSchema()
     {
         foreach ($this->tables as $table)
         {
-            //IS ABSTRACT
+            //TODO: IS ABSTRACT
             foreach ($this->entities as $entity)
             {
                 if ($entity->getTableSchema() == $table && !$entity->isActiveSchema())
                 {
-                    //BABDBAD!
+                    //TODO: BABDBAD!
                 }
             }
         }
@@ -210,7 +231,15 @@ class SchemaBuilder extends Component
         }
     }
 
-    public function getRelationSchema(EntitySchema $entitySchema, $name, array $definition)
+    /**
+     * Get appropriate relation schema based on provided definition.
+     *
+     * @param EntitySchema $entitySchema
+     * @param string       $name
+     * @param array        $definition
+     * @return RelationSchema
+     */
+    public function relationSchema(EntitySchema $entitySchema, $name, array $definition)
     {
         if (empty($definition))
         {
@@ -237,7 +266,7 @@ class SchemaBuilder extends Component
 
         if ($relationship->hasEquivalent())
         {
-            return $this->getRelationSchema($entitySchema, $name, $relationship->getEquivalentDefinition());
+            return $this->relationSchema($entitySchema, $name, $relationship->getEquivalentDefinition());
         }
 
         return $relationship;
