@@ -42,7 +42,7 @@ class SqlServerDriver extends Driver
      *
      * @var string
      */
-    const DATETIME = 'Y-m-d H:i:s';
+    const DATETIME = 'Y-m-d\TH:i:s';
 
     /**
      * Statement should be used for ColumnSchema to indicate that default datetime value should be

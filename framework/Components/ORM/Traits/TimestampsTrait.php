@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM\Traits;
 
 use Spiral\Components\DBAL\Database;
+use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ORM\Entity;
 use Spiral\Core\Events\DispatcherInterface;
 use Spiral\Core\Events\Event;
@@ -32,8 +33,8 @@ trait TimestampsTrait
             {
                 if ($event->context['property'] == 'schema')
                 {
-                    $event->context['value']['time_created'] = 'timestamp';
-                    $event->context['value']['time_updated'] = 'timestamp';
+                    $event->context['value']['time_created'] = 'timestamp,null';
+                    $event->context['value']['time_updated'] = 'timestamp,null';
                 }
 
                 if ($event->context['property'] == 'secured')

@@ -12,6 +12,8 @@ use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
 use Spiral\Core\Events\EventDispatcher;
+use Spiral\Support\Models\AccessorInterface;
+use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
@@ -99,12 +101,44 @@ class Entity extends DataEntity
      */
     protected $database = 'default';
 
+    /**
+     * TODO: DOCS
+     *
+     * @var array
+     */
     protected $schema = array();
+
+    /**
+     * TODO: DOCS
+     *
+     * @var array
+     */
     protected $indexes = array();
 
+    /**
+     * Default values associated with entity fields. This default values will be combined with values
+     * fetched from table schema.
+     *
+     * @var array
+     */
     protected $defaults = array();
 
-    public function __construct($fields = array())
+    /**
+     * Entity marked with solid state flag will be saved entirely without generating simplified update
+     * operations with only changed fields.
+     *
+     * @var bool
+     */
+    protected $solidState = false;
+
+    /**
+     * List of updated fields associated with their original values.
+     *
+     * @var array
+     */
+    protected $updates = array();
+
+    public function __construct($data = array())
     {
         if (!isset(self::$schemaCache[$class = get_class($this)]))
         {
@@ -116,7 +150,32 @@ class Entity extends DataEntity
         $this->schema = self::$schemaCache[$class];
 
         //Merging with default values
-        $this->fields = $fields + $this->schema[ORM::E_COLUMNS];
+        $this->fields = $data + $this->schema[ORM::E_COLUMNS];
+
+        if ((!$this->primaryKey()) || !is_array($data))
+        {
+            $this->solidState(true)->validationRequired = true;
+        }
+    }
+
+    /**
+     * Change entity solid state flag value. Entity marked with solid state flag will be saved
+     * entirely without generating simplified update operations with only changed fields.
+     *
+     * @param bool $solidState  Solid state flag value.
+     * @param bool $forceUpdate Mark all fields as changed to force update later.
+     * @return static
+     */
+    public function solidState($solidState, $forceUpdate = false)
+    {
+        $this->solidState = $solidState;
+
+        if ($forceUpdate)
+        {
+            $this->updates = $this->schema[ORM::E_COLUMNS];
+        }
+
+        return $this;
     }
 
     /**
@@ -201,6 +260,68 @@ class Entity extends DataEntity
             $this->schema[ORM::E_FILLABLE]
             && !in_array($field, $this->schema[ORM::E_FILLABLE])
         );
+    }
+
+    /**
+     * Set value to one of field. Setter filter can be disabled by providing last argument.
+     *
+     * @param string $name   Field name.
+     * @param mixed  $value  Value to set.
+     * @param bool   $filter If false no filter will be applied.
+     */
+    public function setField($name, $value, $filter = true)
+    {
+        $original = isset($this->fields[$name]) ? $this->fields[$name] : null;
+        parent::setField($name, $value, $filter);
+
+        if (!array_key_exists($name, $this->updates))
+        {
+            $this->updates[$name] = $original instanceof AccessorInterface
+                ? $original->serializeData()
+                : $original;
+        }
+    }
+
+    /**
+     * Check if entity or specific field is updated.
+     *
+     * @param string $field
+     * @return bool
+     */
+    public function hasUpdates($field = null)
+    {
+        if (empty($field))
+        {
+            if (!empty($this->updates))
+            {
+                return true;
+            }
+
+            foreach ($this->fields as $field => $value)
+            {
+                if ($value instanceof DatabaseEntityInterface && $value->hasUpdates())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (array_key_exists($field, $this->updates))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Mark object as successfully updated and flush all existed atomic operations and updates.
+     */
+    public function flushUpdates()
+    {
+        //TODO: NOT IMPLEMENTED YET
     }
 
     /**
@@ -291,6 +412,65 @@ class Entity extends DataEntity
         }
 
         return $table;
+    }
+
+    /**
+     * Save entity fields to associated table. Model has to be valid to be saved, in
+     * other scenario method will return false, model errors can be found in getErrors() method.
+     *
+     * Events: saving, saved, updating, updated will be fired.
+     *
+     * @param bool $validate Validate entity fields before saving, enabled by default. Turning this
+     *                       option off will increase performance but will make saving less secure.
+     *                       You can use it when model data was not modified directly by user. By
+     *                       default value is null which will force document to select behaviour
+     *                       from FORCE_VALIDATION constant.
+     * @return bool
+     * @throws ORMException
+     */
+    public function save($validate = null)
+    {
+        if (is_null($validate))
+        {
+            $validate = static::FORCE_VALIDATION;
+        }
+
+        if ($validate && !$this->isValid())
+        {
+            return false;
+        }
+
+        //Primary key field name
+        $primaryKey = $this->schema[ORM::E_PRIMARY_KEY];
+        if (!$this->isLoaded())
+        {
+            $this->event('saving');
+
+            //We will need to support models with primary keys in future
+            unset($this->fields[$primaryKey]);
+
+            //TODO: VALID SERIALIZATION!
+
+            $this->fields[$primaryKey] = static::dbalTable()->insert(
+                $this->fields = $this->getFields()
+            );
+
+            $this->event('saved');
+        }
+        elseif ($this->hasUpdates()) //TODO: always force update
+        {
+            $this->event('updating');
+
+            //TODO: VALID SERIALIZATION
+            static::dbalTable()->update($this->fields, array(
+                $primaryKey => $this->primaryKey()
+            ));
+
+            $this->event('updated');
+        }
+
+        $this->flushUpdates();
+        return true;
     }
 
 

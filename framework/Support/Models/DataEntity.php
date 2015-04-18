@@ -551,6 +551,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     /**
      * Validating model data using validation rules, all errors will be stored in model errors array.
      * Errors will not be erased between function calls.
+     *
+     * @return bool
      */
     protected function validate()
     {
@@ -569,6 +571,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
             $this->validator->setData(array());
             $this->errors = $this->event('validated', $this->errors);
         }
+
+        return empty($this->errors);
     }
 
     /**

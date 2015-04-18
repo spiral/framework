@@ -376,6 +376,7 @@ class EntitySchema extends ModelSchema
         call_user_func_array(array($column, $type), $options);
 
         $default = $column->getDefaultValue();
+
         if ($default instanceof SqlFragmentInterface)
         {
             //We have to rebuild default type in scalar form
@@ -409,7 +410,7 @@ class EntitySchema extends ModelSchema
         {
             $driver = $this->tableSchema->getDriver();
 
-            return preg_replace('/[a-z]/i', '0', $driver::DATETIME);
+            return $driver::DEFAULT_DATETIME;
         }
         else
         {

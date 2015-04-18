@@ -10,7 +10,6 @@ namespace Spiral\Components\ODM;
 
 use Carbon\Carbon;
 use Spiral\Components\I18n\Translator;
-use Spiral\Components\ODM\Schemas\DocumentSchema;
 use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\DatabaseEntityInterface;
@@ -241,7 +240,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
         if ($forceUpdate)
         {
-            $this->updates = $this->defaults;
+            $this->updates = $this->schema[ODM::D_DEFAULTS];
         }
 
         return $this;
@@ -820,6 +819,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     /**
      * Validating model data using validation rules, all errors will be stored in model errors array.
      * Errors will not be erased between function calls.
+     *
+     * @return bool
      */
     protected function validate()
     {
@@ -838,6 +839,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
                 $this->errors[$field] = $compositor->getErrors();
             }
         }
+
+        return empty($this->errors);
     }
 
     /**
@@ -944,7 +947,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             );
         }
 
-        if (!$this->primaryKey())
+        if (!$this->isLoaded())
         {
             $this->event('saving');
             unset($this->fields['_id']);
@@ -955,14 +958,12 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
             $this->event('saved');
         }
-        elseif ($this->hasUpdates())
+        elseif ($this->hasUpdates()) //TODO: always force update
         {
             $this->event('updating');
 
             static::odmCollection($this->schema)->update(
-                array(
-                    '_id' => $this->primaryKey()
-                ),
+                array('_id' => $this->primaryKey()),
                 $this->buildAtomics()
             );
 

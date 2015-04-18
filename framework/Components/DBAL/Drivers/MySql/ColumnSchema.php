@@ -64,8 +64,7 @@ class ColumnSchema extends AbstractColumnSchema
         'time'        => 'time',
         'timestamp'   => array(
             'type'         => 'timestamp',
-            'nullable'     => true,
-            'defaultValue' => 0
+            'defaultValue' => MySqlDriver::DEFAULT_DATETIME
         ),
 
         //Binary types
@@ -128,7 +127,6 @@ class ColumnSchema extends AbstractColumnSchema
         $this->type = $schema['Type'];
         $this->nullable = strtolower($schema['Null']) == 'yes';
         $this->defaultValue = $schema['Default'];
-        $this->unsigned = stripos($schema['Type'], 'unsigned') !== false;
         $this->autoIncrement = stripos($schema['Extra'], 'auto_increment') !== false;
 
         if (!preg_match('/^(?P<type>[a-z]+)(?:\((?P<options>[^\)]+)\))?/', $this->type, $matches))
