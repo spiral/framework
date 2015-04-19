@@ -398,6 +398,23 @@ class Entity extends DataEntity
         $this->updates = array();
     }
 
+
+    /**
+     * Get all non secured model fields. Additional processing can be applied to fields here.
+     *
+     * @return array
+     */
+    public function publicFields()
+    {
+        $fields = $this->getFields();
+        foreach ($this->schema[ORM::E_HIDDEN] as $secured)
+        {
+            unset($fields[$secured]);
+        }
+
+        return $this->event('publicFields', $fields);
+    }
+
     /**
      * Validator instance associated with model, will be response for validations of validation errors.
      * Model related error localization should happen in model itself.
