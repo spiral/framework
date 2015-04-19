@@ -62,7 +62,7 @@ abstract class Driver extends Component
     /**
      * Default datetime value.
      */
-    const DEFAULT_DATETIME = '0000-00-00 00:00:00';
+    const DEFAULT_DATETIME = '1970-01-01 00:00:00';
 
     /**
      * Statement should be used for ColumnSchema to indicate that default datetime value should be

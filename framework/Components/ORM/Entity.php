@@ -18,7 +18,7 @@ use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
-class Entity extends DataEntity
+abstract class Entity extends DataEntity
 {
     /**
      * Set this constant to false to disable automatic column, index and foreign keys creation.
@@ -308,6 +308,12 @@ class Entity extends DataEntity
      */
     public function setField($name, $value, $filter = true)
     {
+        if (!array_key_exists($name, $this->fields))
+        {
+            //TODO: Check relations
+            throw new ORMException("Undefined field '{$name}'.");
+        }
+
         $original = isset($this->fields[$name]) ? $this->fields[$name] : null;
         parent::setField($name, $value, $filter);
 

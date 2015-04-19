@@ -394,6 +394,7 @@ class EntitySchema extends ModelSchema
         if (empty($default) && !$column->isNullable())
         {
             $default = $this->castDefaultValue($column);
+            $column->defaultValue($default);
         }
 
         return $default;

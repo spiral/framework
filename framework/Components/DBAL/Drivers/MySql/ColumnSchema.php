@@ -10,6 +10,7 @@ namespace Spiral\Components\DBAL\Drivers\MySql;
 
 use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\SqlFragment;
+use Spiral\Support\Models\Accessors\Timestamp;
 
 class ColumnSchema extends AbstractColumnSchema
 {
@@ -172,6 +173,11 @@ class ColumnSchema extends AbstractColumnSchema
             //Cutting b\ and '
             $this->defaultValue = new SqlFragment($this->defaultValue);
         }
+
+        if ($this->abstractType() == 'timestamp' && $this->defaultValue == '0000-00-00 00:00:00')
+        {
+            $this->defaultValue = MySqlDriver::DEFAULT_DATETIME;
+        }
     }
 
     /**
@@ -183,7 +189,7 @@ class ColumnSchema extends AbstractColumnSchema
     {
         if ($this->abstractType() == 'timestamp' && is_scalar($this->defaultValue))
         {
-            return (int)$this->defaultValue;
+            return Timestamp::castTimestamp($this->defaultValue);
         }
 
         return parent::prepareDefault();
@@ -197,7 +203,6 @@ class ColumnSchema extends AbstractColumnSchema
     public function sqlStatement()
     {
         $statement = parent::sqlStatement();
-
         if ($this->autoIncrement)
         {
             return "{$statement} AUTO_INCREMENT";
