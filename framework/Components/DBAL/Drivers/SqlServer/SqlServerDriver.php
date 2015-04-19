@@ -45,6 +45,11 @@ class SqlServerDriver extends Driver
     const DATETIME = 'Y-m-d\TH:i:s';
 
     /**
+     * Default datetime value.
+     */
+    const DEFAULT_DATETIME = '0000-00-00T00:00:00';
+
+    /**
      * Statement should be used for ColumnSchema to indicate that default datetime value should be
      * set to current time.
      *

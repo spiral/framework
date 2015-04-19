@@ -250,8 +250,10 @@ class EntitySchema extends ModelSchema
         $mutators = parent::getMutators();
 
         //Default values.
-        foreach ($this->getSchema() as $field => $type)
+        foreach ($this->tableSchema->getColumns() as $field => $column)
         {
+            $type = $column->abstractType();
+
             if (is_array($type))
             {
                 continue;

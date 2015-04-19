@@ -28,7 +28,7 @@ abstract class JsonDocument extends Document implements ORMAccessor
      * be executed only while model updating.
      *
      * @param string $field Name of field where model/accessor stored into.
-     * @return array
+     * @return mixed
      */
     public function compileUpdates($field = '')
     {
