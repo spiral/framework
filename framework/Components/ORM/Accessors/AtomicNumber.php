@@ -20,6 +20,13 @@ class AtomicNumber implements ORMAccessor
     use AccessorTrait;
 
     /**
+     * Original value.
+     *
+     * @var float|int
+     */
+    protected $original = null;
+
+    /**
      * Numeric value.
      *
      * @var float|int
@@ -43,7 +50,7 @@ class AtomicNumber implements ORMAccessor
      */
     public function __construct($data = null, $parent = null, $options = null)
     {
-        $this->value = $data;
+        $this->original = $this->value = $data;
         $this->parent = $parent;
     }
 
@@ -65,7 +72,7 @@ class AtomicNumber implements ORMAccessor
      */
     public function setData($data)
     {
-        $this->value = $data;
+        $this->original = $this->value = $data;
         $this->delta = 0;
     }
 
@@ -76,7 +83,7 @@ class AtomicNumber implements ORMAccessor
      */
     public function hasUpdates()
     {
-        return $this->delta !== 0;
+        return $this->value !== $this->original;
     }
 
     /**
@@ -84,6 +91,7 @@ class AtomicNumber implements ORMAccessor
      */
     public function flushUpdates()
     {
+        $this->original = $this->value;
         $this->delta = 0;
     }
 
@@ -146,5 +154,28 @@ class AtomicNumber implements ORMAccessor
         $this->delta -= $delta;
 
         return $this;
+    }
+
+    /**
+     * Converting to string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->value;
+    }
+
+    /**
+     * Simplified way to dump information.
+     *
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        return (object)array(
+            'value' => $this->value,
+            'delta' => $this->delta
+        );
     }
 }

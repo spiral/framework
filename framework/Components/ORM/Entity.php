@@ -343,6 +343,11 @@ class Entity extends DataEntity
                 continue;
             }
 
+            if ($field instanceof ORMAccessor)
+            {
+                $field = $field->serializeData();
+            }
+
             $updates[$name] = $field;
         }
 
