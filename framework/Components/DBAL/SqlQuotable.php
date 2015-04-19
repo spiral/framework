@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\DBAL;
 
-class SqlIdentifier extends SqlFragment
+class SqlQuotable extends SqlFragment
 {
     /**
      * Get or render SQL statement.
@@ -18,6 +18,11 @@ class SqlIdentifier extends SqlFragment
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
+        if (empty($compiler))
+        {
+            return $this->statement;
+        }
+
         return $compiler->quote($this->statement);
     }
 }

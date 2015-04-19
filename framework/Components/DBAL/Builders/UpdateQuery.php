@@ -11,8 +11,10 @@ namespace Spiral\Components\DBAL\Builders;
 use Spiral\Components\DBAL\Builders\Common\AffectQuery;
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\DBALException;
+use Spiral\Components\DBAL\ParameterInterface;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
+use Spiral\Components\DBAL\SqlFragmentInterface;
 
 class UpdateQuery extends AffectQuery
 {
@@ -105,6 +107,11 @@ class UpdateQuery extends AffectQuery
                 {
                     $parameters[] = $parameter;
                 }
+                continue;
+            }
+
+            if ($value instanceof SqlFragmentInterface && !$value instanceof ParameterInterface)
+            {
                 continue;
             }
 

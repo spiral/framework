@@ -444,34 +444,19 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      */
     public function getFields($filter = true)
     {
-        $fields = $this->fields;
-
-        foreach ($fields as $name => &$field)
+        $result = array();
+        foreach ($this->fields as $name => &$field)
         {
-            if ($field instanceof AccessorInterface)
+            $value = $this->getField($name, true);
+            if ($value instanceof AccessorInterface)
             {
-                $field = $field->serializeData();
+                $value = $value->serializeData();
             }
 
-            if ($filter && $filter = $this->getMutator($name, 'getter'))
-            {
-                try
-                {
-                    $field = call_user_func($filter, $fields[$field]);
-                }
-                catch (\ErrorException $exception)
-                {
-                    self::logger()->warning(
-                        "Failed to apply filter to '{offset}' field.", compact('offset')
-                    );
-                    $field = null;
-                }
-            }
-
-            unset($field);
+            $result[$name] = $value;
         }
 
-        return $fields;
+        return $result;
     }
 
     /**
