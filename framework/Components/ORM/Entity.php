@@ -274,7 +274,9 @@ class Entity extends DataEntity
 
         if ($accessor == ODM::CMP_ONE)
         {
-            //Not an accessor by composited class
+            /**
+             * This section kept for future updates.
+             */
             $accessor = ODM::defineClass($value, $options);
         }
 
