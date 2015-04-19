@@ -447,13 +447,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
         $result = array();
         foreach ($this->fields as $name => &$field)
         {
-            $value = $this->getField($name, true);
-            if ($value instanceof AccessorInterface)
-            {
-                $value = $value->serializeData();
-            }
-
-            $result[$name] = $value;
+            $result[$name] = $this->getField($name, true);
         }
 
         return $result;
