@@ -418,6 +418,25 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     }
 
     /**
+     * Serialize object data for saving into database. No getters will be applied here.
+     *
+     * @return mixed
+     */
+    public function serializeData()
+    {
+        $result = $this->fields;
+        foreach ($result as $field => $value)
+        {
+            if ($value instanceof AccessorInterface)
+            {
+                $result[$field] = $value->serializeData();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Get all models fields. All accessors will be automatically converted to their values.
      *
      * @param bool $filter Apply getters.

@@ -10,5 +10,7 @@ namespace Spiral\Components\ORM;
 
 abstract class Relation
 {
-
+    public function __construct(array $definition, Entity $parent = null)
+    {
+    }
 }

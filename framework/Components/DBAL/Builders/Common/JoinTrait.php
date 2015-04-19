@@ -69,20 +69,20 @@ trait JoinTrait
      * join.
      *
      * Examples:
-     * $select->join('info', 'userID', 'users.id')->columns('info.balance');
-     * $select->join('info', 'userID', '=', 'users.id')->columns('info.balance');
-     * $select->join('info', ['userID' => 'users.id'])->columns('info.balance');
+     * $select->innerJoin('info', 'userID', 'users.id')->columns('info.balance');
+     * $select->innerJoin('info', 'userID', '=', 'users.id')->columns('info.balance');
+     * $select->innerJoin('info', ['userID' => 'users.id'])->columns('info.balance');
      *
-     * $select->join('info', function($select) {
+     * $select->innerJoin('info', function($select) {
      *      $select->on('userID', 'users.id')->orOn('userID', 'users.masterID');
      * })->columns('info.balance');
      *
      * Aliases can be also used:
-     * $select->join('info as i', 'i.userID', 'users.id')->columns('i.balance');
-     * $select->join('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
-     * $select->join('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
+     * $select->innerJoin('info as i', 'i.userID', 'users.id')->columns('i.balance');
+     * $select->innerJoin('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
+     * $select->innerJoin('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
      *
-     * $select->join('info as i', function($select) {
+     * $select->innerJoin('info as i', function($select) {
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
@@ -106,20 +106,20 @@ trait JoinTrait
      * join.
      *
      * Examples:
-     * $select->join('info', 'userID', 'users.id')->columns('info.balance');
-     * $select->join('info', 'userID', '=', 'users.id')->columns('info.balance');
-     * $select->join('info', ['userID' => 'users.id'])->columns('info.balance');
+     * $select->rightJoin('info', 'userID', 'users.id')->columns('info.balance');
+     * $select->rightJoin('info', 'userID', '=', 'users.id')->columns('info.balance');
+     * $select->rightJoin('info', ['userID' => 'users.id'])->columns('info.balance');
      *
-     * $select->join('info', function($select) {
+     * $select->rightJoin('info', function($select) {
      *      $select->on('userID', 'users.id')->orOn('userID', 'users.masterID');
      * })->columns('info.balance');
      *
      * Aliases can be also used:
-     * $select->join('info as i', 'i.userID', 'users.id')->columns('i.balance');
-     * $select->join('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
-     * $select->join('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
+     * $select->rightJoin('info as i', 'i.userID', 'users.id')->columns('i.balance');
+     * $select->rightJoin('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
+     * $select->rightJoin('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
      *
-     * $select->join('info as i', function($select) {
+     * $select->rightJoin('info as i', function($select) {
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
@@ -143,20 +143,20 @@ trait JoinTrait
      * join.
      *
      * Examples:
-     * $select->join('info', 'userID', 'users.id')->columns('info.balance');
-     * $select->join('info', 'userID', '=', 'users.id')->columns('info.balance');
-     * $select->join('info', ['userID' => 'users.id'])->columns('info.balance');
+     * $select->leftJoin('info', 'userID', 'users.id')->columns('info.balance');
+     * $select->leftJoin('info', 'userID', '=', 'users.id')->columns('info.balance');
+     * $select->leftJoin('info', ['userID' => 'users.id'])->columns('info.balance');
      *
-     * $select->join('info', function($select) {
+     * $select->leftJoin('info', function($select) {
      *      $select->on('userID', 'users.id')->orOn('userID', 'users.masterID');
      * })->columns('info.balance');
      *
      * Aliases can be also used:
-     * $select->join('info as i', 'i.userID', 'users.id')->columns('i.balance');
-     * $select->join('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
-     * $select->join('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
+     * $select->leftJoin('info as i', 'i.userID', 'users.id')->columns('i.balance');
+     * $select->leftJoin('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
+     * $select->leftJoin('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
      *
-     * $select->join('info as i', function($select) {
+     * $select->leftJoin('info as i', function($select) {
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
@@ -169,6 +169,43 @@ trait JoinTrait
      * @return static
      */
     public function leftJoin($table, $on = null)
+    {
+        $this->joins[$this->currentJoin = $table] = array('type' => 'LEFT', 'on' => array());
+
+        return call_user_func_array(array($this, 'on'), array_slice(func_get_args(), 1));
+    }
+
+    /**
+     * Register new FULL table join, all future on() method calls will associate conditions to this
+     * join.
+     *
+     * Examples:
+     * $select->fullJoin('info', 'userID', 'users.id')->columns('info.balance');
+     * $select->fullJoin('info', 'userID', '=', 'users.id')->columns('info.balance');
+     * $select->fullJoin('info', ['userID' => 'users.id'])->columns('info.balance');
+     *
+     * $select->fullJoin('info', function($select) {
+     *      $select->on('userID', 'users.id')->orOn('userID', 'users.masterID');
+     * })->columns('info.balance');
+     *
+     * Aliases can be also used:
+     * $select->fullJoin('info as i', 'i.userID', 'users.id')->columns('i.balance');
+     * $select->fullJoin('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
+     * $select->fullJoin('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
+     *
+     * $select->fullJoin('info as i', function($select) {
+     *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
+     * })->columns('i.balance');
+     *
+     * Join aliases can be used in columns, where conditions, having conditions, order by, sort by
+     * and aggregations.
+     *
+     * @link http://www.w3schools.com/sql/sql_join_left.asp
+     * @param string $table Joined table name (without prefix), can have defined alias.
+     * @param mixed  $on    Where parameters, closure of array of where conditions.
+     * @return static
+     */
+    public function fullJoin($table, $on = null)
     {
         $this->joins[$this->currentJoin = $table] = array('type' => 'LEFT', 'on' => array());
 

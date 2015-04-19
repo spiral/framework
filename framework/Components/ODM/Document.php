@@ -372,26 +372,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Serialize object data for saving into database. This is common method for documents and
-     * compositors.
-     *
-     * @return mixed
-     */
-    final public function serializeData()
-    {
-        $result = $this->fields;
-        foreach ($result as $field => $value)
-        {
-            if ($value instanceof AccessorInterface)
-            {
-                $result[$field] = $value->serializeData();
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * Update accessor mocked data.
      *
      * @param mixed $data
@@ -658,7 +638,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public function buildAtomics($container = '')
     {
-        if (!$this->hasUpdates())
+        if (!$this->hasUpdates() && !$this->solidState)
         {
             return array();
         }
@@ -958,7 +938,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
             $this->event('saved');
         }
-        elseif ($this->hasUpdates()) //TODO: always force update
+        elseif ($this->solidState || $this->hasUpdates())
         {
             $this->event('updating');
 

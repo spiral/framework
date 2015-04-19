@@ -11,6 +11,7 @@ namespace Spiral\Components\ORM;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
+use Spiral\Components\ODM\ODM;
 use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\DatabaseEntityInterface;
@@ -138,6 +139,15 @@ class Entity extends DataEntity
      */
     protected $updates = array();
 
+    /**
+     * Constructed set of relations.
+     *
+     * @var Relation[]
+     */
+    protected $relations = array();
+
+    //todo: get fields should not return pre-cached results
+
     public function __construct($data = array())
     {
         if (!isset(self::$schemaCache[$class = get_class($this)]))
@@ -187,7 +197,7 @@ class Entity extends DataEntity
     public function primaryKey()
     {
         return isset($this->fields[$this->schema[ORM::E_PRIMARY_KEY]])
-            ? $this->fields[ORM::E_PRIMARY_KEY]
+            ? $this->fields[$this->schema[ORM::E_PRIMARY_KEY]]
             : null;
     }
 
@@ -246,6 +256,31 @@ class Entity extends DataEntity
         return null;
     }
 
+
+    /**
+     * Get accessor instance.
+     *
+     * @param mixed  $value    Value to mock up.
+     * @param string $accessor Accessor definition (can be array).
+     * @return AccessorInterface
+     */
+    protected function defineAccessor($value, $accessor)
+    {
+        $options = null;
+        if (is_array($accessor))
+        {
+            list($accessor, $options) = $accessor;
+        }
+
+        if ($accessor == ODM::CMP_ONE)
+        {
+            //Not an accessor by composited class
+            $accessor = ODM::defineClass($value, $options);
+        }
+
+        return new $accessor($value, $this, $options);
+    }
+
     /**
      * Check if field assignable.
      *
@@ -283,6 +318,38 @@ class Entity extends DataEntity
     }
 
     /**
+     * Get array of changed or created fields for specified Entity or accessor.
+     *
+     * @return array
+     */
+    protected function compileUpdates()
+    {
+        if (!$this->hasUpdates() && !$this->solidState)
+        {
+            return array();
+        }
+
+        $updates = array();
+        foreach ($this->fields as $name => $field)
+        {
+            if ($field instanceof ORMAccessor && ($this->solidState || $field->hasUpdates()))
+            {
+                $updates[$name] = $field->compileUpdates($name);
+                continue;
+            }
+
+            if (!$this->solidState && !isset($this->updates[$name]))
+            {
+                continue;
+            }
+
+            $updates[$name] = $field;
+        }
+
+        return $updates;
+    }
+
+    /**
      * Check if entity or specific field is updated.
      *
      * @param string $field
@@ -299,7 +366,7 @@ class Entity extends DataEntity
 
             foreach ($this->fields as $field => $value)
             {
-                if ($value instanceof DatabaseEntityInterface && $value->hasUpdates())
+                if ($value instanceof ORMAccessor && $value->hasUpdates())
                 {
                     return true;
                 }
@@ -321,7 +388,7 @@ class Entity extends DataEntity
      */
     public function flushUpdates()
     {
-        //TODO: NOT IMPLEMENTED YET
+        $this->updates = array();
     }
 
     /**
@@ -449,27 +516,28 @@ class Entity extends DataEntity
             //We will need to support models with primary keys in future
             unset($this->fields[$primaryKey]);
 
-            //TODO: VALID SERIALIZATION!
-
             $this->fields[$primaryKey] = static::dbalTable()->insert(
-                $this->fields = $this->getFields()
+                $this->fields = $this->serializeData()
             );
 
             $this->event('saved');
         }
-        elseif ($this->hasUpdates()) //TODO: always force update
+        elseif ($this->solidState || $this->hasUpdates())
         {
             $this->event('updating');
 
-            //TODO: VALID SERIALIZATION
-            static::dbalTable()->update($this->fields, array(
-                $primaryKey => $this->primaryKey()
-            ));
+            static::dbalTable()->update(
+                $this->compileUpdates(),
+                array(
+                    $primaryKey => $this->primaryKey()
+                )
+            )->run();
 
             $this->event('updated');
         }
 
         $this->flushUpdates();
+
         return true;
     }
 

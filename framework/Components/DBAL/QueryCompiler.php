@@ -153,7 +153,7 @@ class QueryCompiler extends Component
             );
         }
 
-        return "INSERT INTO {$this->quote($table, true)} ({$this->columns($columns)}) "
+        return "INSERT INTO {$this->quote($table, true)} ({$this->columns($columns)})\n"
         . "VALUES " . join(', ', $rowsets);
     }
 
@@ -289,7 +289,7 @@ class QueryCompiler extends Component
         $limit = 0
     )
     {
-        $statement = 'UPDATE ' . $this->quote($table, true) . ' ';
+        $statement = 'UPDATE ' . $this->quote($table, true) . ' SET';
 
         foreach ($values as $column => &$value)
         {
@@ -306,7 +306,7 @@ class QueryCompiler extends Component
                 $value = '?';
             }
 
-            $value = 'SET ' . $this->quote($column) . ' = ' . $value;
+            $value = ' ' . $this->quote($column) . ' = ' . $value;
 
             unset($value);
         }
