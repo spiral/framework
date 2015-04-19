@@ -42,6 +42,12 @@ class Timestamp extends BaseTimestamp implements ORMAccessor
             parent::__construct($data, $parent, DatabaseManager::DEFAULT_TIMEZONE);
         }
 
+        if ($this->getTimestamp() === false)
+        {
+            //Correcting default values
+            $this->setTimestamp(0);
+        }
+
         $this->original = $this->getTimestamp();
     }
 
@@ -108,15 +114,5 @@ class Timestamp extends BaseTimestamp implements ORMAccessor
     public function flushUpdates()
     {
         $this->original = $this->getTimestamp();
-    }
-
-    /**
-     * Accessor default value.
-     *
-     * @return mixed
-     */
-    public function defaultValue()
-    {
-        return null;
     }
 }

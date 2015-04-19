@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM\Accessors;
 
 use Spiral\Components\ODM\Document;
+use Spiral\Components\ORM\Accessors\JsonDocument\LazyJson;
 use Spiral\Components\ORM\ORMAccessor;
 
 abstract class JsonDocument extends Document implements ORMAccessor
@@ -20,7 +21,7 @@ abstract class JsonDocument extends Document implements ORMAccessor
      */
     public function serializeData()
     {
-        return json_encode(parent::serializeData());
+        return new LazyJson(parent::serializeData());
     }
 
     /**
