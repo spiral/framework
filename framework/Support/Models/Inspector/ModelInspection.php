@@ -67,8 +67,57 @@ class ModelInspection extends Component
     {
         $this->fields = array();
 
-        foreach ($this->schema->getFields() as $field)
+        foreach ($this->schema->getFields() as $field => $type)
         {
+            $this->fields[$field] = $this->inspectField($field, $blacklist);
         }
+    }
+
+    /**
+     * Get field inspection.
+     *
+     * @param string $field
+     * @param array  $blacklist List of blacklisted keywords indicates that field has to be hidden
+     *                          from publicFields() result.
+     * @return FieldInspection
+     */
+    protected function inspectField($field, array $blacklist)
+    {
+        $filtered = array_key_exists(
+            $field, array_merge($this->schema->getGetters(), $this->schema->getAccessors())
+        );
+
+        $fillable = true;
+
+        if (in_array($field, $this->schema->getSecured()))
+        {
+            $fillable = false;
+        }
+
+        if ($this->schema->getFillable() != array())
+        {
+            $fillable = in_array($field, $this->schema->getFillable());
+        }
+
+        $blacklisted = false;
+
+        foreach ($blacklist as $keyword)
+        {
+            if (stripos($field, $keyword) !== false)
+            {
+                $blacklisted = true;
+                break;
+            }
+        }
+
+        return new FieldInspection(
+            $field,
+            $this->schema->getFields()[$field],
+            $fillable,
+            in_array($field, $this->schema->getHidden()),
+            $filtered,
+            array_key_exists($field, $this->schema->getValidates()),
+            $blacklisted
+        );
     }
 }
