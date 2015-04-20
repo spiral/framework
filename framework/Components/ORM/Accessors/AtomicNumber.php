@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM\Accessors;
 
+use Spiral\Components\DBAL\Driver;
 use Spiral\Components\DBAL\SqlQuotable;
 use Spiral\Components\ORM\ORMAccessor;
 use Spiral\Support\Models\AccessorTrait;
@@ -112,6 +113,17 @@ class AtomicNumber implements ORMAccessor
         $sign = $this->delta > 0 ? '+' : '-';
 
         return new SqlQuotable("{$field} {$sign} " . abs($this->delta));
+    }
+
+    /**
+     * Accessor default value specific to driver.
+     *
+     * @param Driver $driver
+     * @return mixed
+     */
+    public function defaultValue(Driver $driver)
+    {
+        return $this->serializeData();
     }
 
     /**

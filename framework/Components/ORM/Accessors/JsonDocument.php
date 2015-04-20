@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM\Accessors;
 
+use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ODM\Document;
 use Spiral\Components\ORM\ORMAccessor;
 
@@ -31,6 +32,17 @@ abstract class JsonDocument extends Document implements ORMAccessor
      * @return mixed
      */
     public function compileUpdates($field = '')
+    {
+        return $this->serializeData();
+    }
+
+    /**
+     * Accessor default value specific to driver.
+     *
+     * @param Driver $driver
+     * @return mixed
+     */
+    public function defaultValue(Driver $driver)
     {
         return $this->serializeData();
     }

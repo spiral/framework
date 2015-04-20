@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM\Accessors;
 
 use Spiral\Components\DBAL\DatabaseManager;
+use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ORM\ORMAccessor;
 use Spiral\Support\Models\Accessors\Timestamp as BaseTimestamp;
 
@@ -96,6 +97,17 @@ class Timestamp extends BaseTimestamp implements ORMAccessor
     public function compileUpdates($field = '')
     {
         return $this;
+    }
+
+    /**
+     * Accessor default value specific to driver.
+     *
+     * @param Driver $driver
+     * @return mixed
+     */
+    public function defaultValue(Driver $driver)
+    {
+        return $driver::DEFAULT_DATETIME;
     }
 
     /**

@@ -17,6 +17,7 @@ use Spiral\Components\ORM\ORMAccessor;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Component;
+use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Models\Schemas\ModelSchema;
 
 class EntitySchema extends ModelSchema
@@ -316,28 +317,9 @@ class EntitySchema extends ModelSchema
                     $definition,
                     isset($this->columns[$name]) ? $this->columns[$name] : null
                 );
-            }
 
-            if (array_key_exists($name, $this->getAccessors()))
-            {
-                $accessor = $this->getAccessors()[$name];
-                $option = null;
-                if (is_array($accessor))
-                {
-                    list($accessor, $option) = $accessor;
-                }
-
-                /**
-                 * @var ORMAccessor $accessor
-                 */
-                $accessor = new $accessor(
-                    isset($this->columns[$name]) ? $this->columns[$name] : null,
-                    null,
-                    $option
-                );
-
-                //We have to pass default value thought accessor
-                $this->columns[$name] = $accessor->serializeData();
+                //Preparing default value to be stored in cache
+                $this->columns[$name] = $this->prepareDefault($name, $this->columns[$name]);
             }
         }
 
@@ -460,6 +442,40 @@ class EntitySchema extends ModelSchema
         }
 
         return '';
+    }
+
+    protected function prepareDefault($name, $defaultValue = null)
+    {
+        if (array_key_exists($name, $this->getAccessors()))
+        {
+            $accessor = $this->getAccessors()[$name];
+            $option = null;
+            if (is_array($accessor))
+            {
+                list($accessor, $option) = $accessor;
+            }
+
+            /**
+             * @var ORMAccessor $accessor
+             */
+            $accessor = new $accessor($defaultValue, null, $option);
+
+            //We have to pass default value thought accessor
+            return $accessor->defaultValue($this->tableSchema->getDriver());
+        }
+
+        if (array_key_exists($name, $this->getSetters()))
+        {
+            $setter = $this->getSetters()[$name];
+
+            if (is_string($setter) && isset(Entity::$mutatorAliases[$setter]))
+            {
+                $setter = DataEntity::$mutatorAliases[$setter];
+            }
+
+            //We have to pass default value thought accessor
+            return call_user_func($setter, $defaultValue);
+        }
     }
 
     /**

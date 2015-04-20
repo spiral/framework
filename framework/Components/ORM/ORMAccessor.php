@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\Driver;
 use Spiral\Support\Models\AccessorInterface;
 
 interface ORMAccessor extends AccessorInterface
@@ -32,4 +33,12 @@ interface ORMAccessor extends AccessorInterface
      * @return mixed
      */
     public function compileUpdates($field = '');
+
+    /**
+     * Accessor default value specific to driver.
+     *
+     * @param Driver $driver
+     * @return mixed
+     */
+    public function defaultValue(Driver $driver);
 }
