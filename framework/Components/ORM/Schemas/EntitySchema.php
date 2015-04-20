@@ -13,6 +13,7 @@ use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ORMAccessor;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Component;
@@ -315,6 +316,28 @@ class EntitySchema extends ModelSchema
                     $definition,
                     isset($this->columns[$name]) ? $this->columns[$name] : null
                 );
+            }
+
+            if (array_key_exists($name, $this->getAccessors()))
+            {
+                $accessor = $this->getAccessors()[$name];
+                $option = null;
+                if (is_array($accessor))
+                {
+                    list($accessor, $option) = $accessor;
+                }
+
+                /**
+                 * @var ORMAccessor $accessor
+                 */
+                $accessor = new $accessor(
+                    isset($this->columns[$name]) ? $this->columns[$name] : null,
+                    null,
+                    $option
+                );
+
+                //We have to pass default value thought accessor
+                $this->columns[$name] = $accessor->serializeData();
             }
         }
 
