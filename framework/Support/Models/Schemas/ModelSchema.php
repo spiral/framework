@@ -275,6 +275,13 @@ abstract class ModelSchema extends Component
     }
 
     /**
+     * Fields associated with their type.
+     *
+     * @return array
+     */
+    abstract public function getFields();
+
+    /**
      * Return entity class name.
      *
      * @return string

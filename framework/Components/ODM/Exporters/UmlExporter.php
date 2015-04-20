@@ -46,7 +46,7 @@ class UmlExporter extends Component
      *
      * @var SchemaBuilder
      */
-    protected $schema = null;
+    protected $builder = null;
 
     /**
      * FileManager component.
@@ -58,12 +58,12 @@ class UmlExporter extends Component
     /**
      * New instance of UML ODM exporter.
      *
-     * @param SchemaBuilder $schema
+     * @param SchemaBuilder $builder
      * @param FileManager  $file
      */
-    public function __construct(SchemaBuilder $schema, FileManager $file)
+    public function __construct(SchemaBuilder $builder, FileManager $file)
     {
-        $this->schema = $schema;
+        $this->builder = $builder;
         $this->file = $file;
     }
 
@@ -102,7 +102,7 @@ class UmlExporter extends Component
         $parentDocument = null;
         if ($document->getParent())
         {
-            $parentDocument = $this->schema->getDocument($document->getParent());
+            $parentDocument = $this->builder->getDocument($document->getParent());
         }
 
         $className = $this->normalizeName($document->getClass());
@@ -207,7 +207,7 @@ class UmlExporter extends Component
     {
         $this->line('@startuml');
 
-        foreach ($this->schema->getDocuments() as $document)
+        foreach ($this->builder->getDocuments() as $document)
         {
             $this->renderDocument($document);
         }

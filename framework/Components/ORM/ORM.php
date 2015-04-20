@@ -86,26 +86,30 @@ class ORM extends Component
     /**
      * Refresh ODM schema state, will reindex all found document models and render documentation for
      * them. This is slow method using Tokenizer, refreshSchema() should not be called by user request.
+     *
+     * @return SchemaBuilder
      */
     public function updateSchema()
     {
-        $schema = $this->schemaBuilder();
+        $builder = $this->schemaBuilder();
 
         if (!empty($this->config['documentation']))
         {
             //Virtual ORM documentation to help IDE
-            //            DocumentationExporter::make(compact('schema'))->render(
+            //            DocumentationExporter::make(compact('builder'))->render(
             //                $this->config['documentation']
             //            );
         }
 
         //Building database!
-        $schema->executeSchema();
+        $builder->executeSchema();
 
-        $this->schema = $this->event('schema', $schema->normalizeSchema());
+        $this->schema = $this->event('schema', $builder->normalizeSchema());
 
         //Saving
         $this->core->saveData('ormSchema', $this->schema);
+
+        return $builder;
     }
 
     /**
@@ -113,7 +117,7 @@ class ORM extends Component
      */
     const E_TABLE       = 0;
     const E_DB          = 1;
-    const E_COLUMNS     = 2;
+    const E_DEFAULTS    = 2;
     const E_HIDDEN      = 3;
     const E_SECURED     = 4;
     const E_FILLABLE    = 5;

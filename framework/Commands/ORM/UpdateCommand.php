@@ -9,9 +9,17 @@
 namespace Spiral\Commands\ORM;
 
 use Spiral\Components\Console\Command;
+use Spiral\Components\ORM\SchemaBuilder;
 
 class UpdateCommand extends Command
 {
+    /**
+     * Schema builder instance.
+     *
+     * @var SchemaBuilder
+     */
+    public static $schemaBuilder = null;
+
     /**
      * Command name.
      *
@@ -31,7 +39,12 @@ class UpdateCommand extends Command
      */
     public function perform()
     {
-        $this->orm->updateSchema();
+        self::$schemaBuilder = $this->orm->updateSchema();
         $this->writeln("<info>ORM Schema and virtual documentation successfully updated.</info>");
+
+        //Inspecting
+        $this->console->command('orm:inspect', array(
+            '--short' => true
+        ), $this->output);
     }
 }

@@ -307,7 +307,7 @@ class SchemaBuilder extends Component
             $entitySchema[ORM::E_DB] = $entity->getDatabase();
             $entitySchema[ORM::E_PRIMARY_KEY] = $entity->getPrimaryKey();
 
-            $entitySchema[ORM::E_COLUMNS] = $entity->getColumns();
+            $entitySchema[ORM::E_DEFAULTS] = $entity->getDefaults();
             $entitySchema[ORM::E_HIDDEN] = $entity->getHidden();
             $entitySchema[ORM::E_SECURED] = $entity->getSecured();
             $entitySchema[ORM::E_FILLABLE] = $entity->getFillable();

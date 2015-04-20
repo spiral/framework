@@ -166,23 +166,27 @@ class ODM extends Component implements Container\InjectionManagerInterface
     /**
      * Refresh ODM schema state, will reindex all found document models and render documentation for
      * them. This is slow method using Tokenizer, refreshSchema() should not be called by user request.
+     *
+     * @return SchemaBuilder
      */
     public function updateSchema()
     {
-        $schema = $this->schemaBuilder();
+        $builder = $this->schemaBuilder();
 
         if (!empty($this->config['documentation']))
         {
             //Virtual ODM documentation to help IDE
-            DocumentationExporter::make(compact('schema'))->render(
+            DocumentationExporter::make(compact('builder'))->render(
                 $this->config['documentation']
             );
         }
 
-        $this->schema = $this->event('schema', $schema->normalizeSchema());
+        $this->schema = $this->event('schema', $builder->normalizeSchema());
 
         //Saving
         $this->core->saveData('odmSchema', $this->schema);
+
+        return $builder;
     }
 
     /**

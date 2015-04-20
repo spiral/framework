@@ -9,9 +9,17 @@
 namespace Spiral\Commands\ODM;
 
 use Spiral\Components\Console\Command;
+use Spiral\Components\ODM\SchemaBuilder;
 
 class UpdateCommand extends Command
 {
+    /**
+     * Schema builder instance.
+     *
+     * @var SchemaBuilder
+     */
+    public static $schemaBuilder = null;
+
     /**
      * Command name.
      *
@@ -31,7 +39,12 @@ class UpdateCommand extends Command
      */
     public function perform()
     {
-        $this->odm->updateSchema();
+        self::$schemaBuilder = $this->odm->updateSchema();
         $this->writeln("<info>ODM Schema and virtual documentation successfully updated.</info>");
+
+        //Inspecting
+        $this->console->command('odm:inspect', array(
+            '--short' => true
+        ), $this->output);
     }
 }

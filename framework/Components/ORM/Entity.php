@@ -160,7 +160,7 @@ abstract class Entity extends DataEntity
         $this->schema = self::$schemaCache[$class];
 
         //Merging with default values
-        $this->fields = $data + $this->schema[ORM::E_COLUMNS];
+        $this->fields = $data + $this->schema[ORM::E_DEFAULTS];
 
         if ((!$this->primaryKey()) || !is_array($data))
         {
@@ -182,7 +182,7 @@ abstract class Entity extends DataEntity
 
         if ($forceUpdate)
         {
-            $this->updates = $this->schema[ORM::E_COLUMNS];
+            $this->updates = $this->schema[ORM::E_DEFAULTS];
         }
 
         return $this;

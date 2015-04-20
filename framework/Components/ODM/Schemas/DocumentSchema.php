@@ -141,7 +141,7 @@ class DocumentSchema extends ModelSchema
     }
 
     /**
-     * Document embedded fields, including compositions.
+     * Fields associated with their type. Will include compositions.
      *
      * @return array
      */

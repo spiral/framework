@@ -31,7 +31,7 @@ class DocumentationExporter extends Component
      *
      * @var SchemaBuilder
      */
-    protected $schema = null;
+    protected $builder = null;
 
     /**
      * Required compositor declarations.
@@ -53,11 +53,11 @@ class DocumentationExporter extends Component
     /**
      * New instance of documentation exporter. Reactor classes will be used to create such documentation.
      *
-     * @param SchemaBuilder $schema
+     * @param SchemaBuilder $builder
      */
-    public function __construct(SchemaBuilder $schema)
+    public function __construct(SchemaBuilder $builder)
     {
-        $this->schema = $schema;
+        $this->builder = $builder;
     }
 
     /**
@@ -157,7 +157,7 @@ class DocumentationExporter extends Component
         //Compositions
         foreach ($document->getCompositions() as $name => $composition)
         {
-            if (!$composited = $this->schema->getDocument($composition['class']))
+            if (!$composited = $this->builder->getDocument($composition['class']))
             {
                 continue;
             }
@@ -220,7 +220,7 @@ class DocumentationExporter extends Component
         //Aggregations
         foreach ($document->getAggregations() as $name => $aggregation)
         {
-            if (!$aggregated = $this->schema->getDocument($aggregation['class']))
+            if (!$aggregated = $this->builder->getDocument($aggregation['class']))
             {
                 continue;
             }
@@ -320,7 +320,7 @@ class DocumentationExporter extends Component
     {
         $phpFile = FileElement::make()->setComment($this->header);
 
-        foreach ($this->schema->getDocuments() as $document)
+        foreach ($this->builder->getDocuments() as $document)
         {
             if ($document->isAbstract())
             {
@@ -338,7 +338,7 @@ class DocumentationExporter extends Component
             'Spiral\Components\ODM\ODMException'
         ));
 
-        foreach ($this->schema->getCollections() as $collection)
+        foreach ($this->builder->getCollections() as $collection)
         {
             $virtualNamespace->addClass($this->renderCollection($collection));
         }

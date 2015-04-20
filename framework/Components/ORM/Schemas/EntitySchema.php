@@ -221,23 +221,29 @@ class EntitySchema extends ModelSchema
     }
 
     /**
-     * Entity declared default values. No typecast here as it will be resolved on TableSchema level.
+     * Get column names associated with their default values.
      *
      * @return array
      */
     public function getDefaults()
     {
-        return $this->property('defaults', true);
+        return $this->columns;
     }
 
     /**
-     * Get column names associated with their default values.
+     * Fields associated with their type.
      *
      * @return array
      */
-    public function getColumns()
+    public function getFields()
     {
-        return $this->columns;
+        $result = array();
+        foreach ($this->tableSchema->getColumns() as $column)
+        {
+            $result[$column->getName()] = $column->phpType();
+        }
+
+        return $result;
     }
 
     /**
@@ -254,13 +260,12 @@ class EntitySchema extends ModelSchema
         {
             $type = $column->abstractType();
 
-            if (is_array($type))
-            {
-                continue;
-            }
-
             $resolved = array();
             if ($filter = $this->ormSchema->getMutators($type))
+            {
+                $resolved += $filter;
+            }
+            elseif ($filter = $this->ormSchema->getMutators('php:' . $column->phpType()))
             {
                 $resolved += $filter;
             }
@@ -298,7 +303,7 @@ class EntitySchema extends ModelSchema
      */
     protected function castTableSchema()
     {
-        $this->columns = $this->getDefaults();
+        $this->columns = $this->property('defaults', true);
         foreach ($this->property('schema', true) as $name => $definition)
         {
             //Column definition
