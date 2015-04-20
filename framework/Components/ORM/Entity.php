@@ -192,7 +192,7 @@ abstract class Entity extends DataEntity
      * Get document primary key (_id) value. This value can be used to identify if model loaded from
      * databases or just created.
      *
-     * @return \MongoId
+     * @return mixed
      */
     public function primaryKey()
     {
@@ -358,6 +358,9 @@ abstract class Entity extends DataEntity
 
             $updates[$name] = $field;
         }
+
+        //Primary key should present in update set
+        unset($updates[$this->schema[ORM::E_PRIMARY_KEY]]);
 
         return $updates;
     }
@@ -565,9 +568,7 @@ abstract class Entity extends DataEntity
 
             static::dbalTable()->update(
                 $this->compileUpdates(),
-                array(
-                    $primaryKey => $this->primaryKey()
-                )
+                array($primaryKey => $this->primaryKey())
             )->run();
 
             $this->event('updated');
