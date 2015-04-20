@@ -9,16 +9,10 @@
 namespace Spiral\Support\Models\Inspector;
 
 use Psr\Log\LogLevel;
-use Spiral\Components\I18n\LocalizableTrait;
 use Spiral\Core\Component;
 
 class FieldInspection extends Component
 {
-    /**
-     * Localizations.
-     */
-    use LocalizableTrait;
-
     /**
      * Field name.
      *
@@ -220,27 +214,18 @@ class FieldInspection extends Component
         $errors = array();
         if ($this->isBlacklisted())
         {
-            $errors[] = array(
-                LogLevel::WARNING,
-                $this->i18nMessage($this->messages['blacklisted'])
-            );
+            $errors[] = array(LogLevel::WARNING, $this->messages['blacklisted']);
         }
 
         if ($this->isFillable())
         {
             if (!$this->isFiltered() && !$this->isValidated())
             {
-                $errors[] = array(
-                    LogLevel::CRITICAL,
-                    $this->i18nMessage($this->messages['unsafe'])
-                );
+                $errors[] = array(LogLevel::CRITICAL, $this->messages['unsafe']);
             }
             elseif (!$this->isValidated())
             {
-                $errors[] = array(
-                    LogLevel::WARNING,
-                    $this->i18nMessage($this->messages['noValidations'])
-                );
+                $errors[] = array(LogLevel::WARNING, $this->messages['noValidations']);
             }
         }
 
