@@ -8,8 +8,16 @@
  */
 namespace Spiral\Support\Models\Inspector;
 
+use Psr\Log\LogLevel;
+use Spiral\Components\I18n\LocalizableTrait;
+
 class FieldInspection
 {
+    /**
+     * Localizations.
+     */
+    use LocalizableTrait;
+
     /**
      * Field name.
      *
@@ -149,5 +157,81 @@ class FieldInspection
     public function isBlacklisted()
     {
         return $this->blacklisted && !$this->hidden;
+    }
+
+    /**
+     * Get field safety level.
+     *
+     * @return int
+     */
+    public function safetyLevel()
+    {
+        if (!$this->isFillable())
+        {
+            return 5 - ($this->isBlacklisted() ? 2 : 0);
+        }
+
+        $level = 5;
+
+        if (!$this->isFiltered())
+        {
+            $level--;
+
+            if (!$this->isValidated())
+            {
+                /**
+                 * Very bad situation.
+                 */
+                $level -= 3;
+            }
+        }
+        elseif (!$this->isValidated())
+        {
+            $level -= 2;
+        }
+
+        if ($this->isBlacklisted())
+        {
+            $level--;
+        }
+
+        return max($level, 1);
+    }
+
+    /**
+     * Get detailed explanations of detected problems.
+     *
+     * @return array
+     */
+    public function getWarnings()
+    {
+        $errors = array();
+        if ($this->isBlacklisted())
+        {
+            $errors[] = array(
+                LogLevel::WARNING,
+                self::i18nMessage("Field is blacklisted but visible in publicFields().")
+            );
+        }
+
+        if ($this->isFillable())
+        {
+            if (!$this->isFiltered() && !$this->isValidated())
+            {
+                $errors[] = array(
+                    LogLevel::CRITICAL,
+                    self::i18nMessage("Field is fillable but no validations or filters provided.")
+                );
+            }
+            elseif (!$this->isValidated())
+            {
+                $errors[] = array(
+                    LogLevel::WARNING,
+                    self::i18nMessage("Field is fillable but no validations provided (has filters).")
+                );
+            }
+        }
+
+        return $errors;
     }
 }

@@ -6,16 +6,15 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands;
+namespace Spiral\Commands\Inspect;
 
 use Psr\Log\LogLevel;
-use Spiral\Components\Console\Command;
-use Spiral\Support\Models\Inspector;
+use Spiral\Commands\InspectCommand;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class InspectCommand extends Command
+class ModelCommand extends InspectCommand
 {
     /**
      * Just some constants.
@@ -31,14 +30,14 @@ class InspectCommand extends Command
      *
      * @var string
      */
-    protected $name = 'inspect';
+    protected $name = 'inspect:model';
 
     /**
      * Short command description.
      *
      * @var string
      */
-    protected $description = 'Inspect ORM and ODM models to locate unprotected field and rules.';
+    protected $description = 'Inspect specified ORM or ODM model to locate unprotected field and rules.';
 
     /**
      * Safety level values.
@@ -72,7 +71,7 @@ class InspectCommand extends Command
      * @var array
      */
     protected $arguments = array(
-        ['model', InputArgument::OPTIONAL, 'Give detailed report for specified model.']
+        ['model', InputArgument::REQUIRED, 'Give detailed report for specified model.']
     );
 
     /**
@@ -82,24 +81,8 @@ class InspectCommand extends Command
      * @var array
      */
     protected $options = array(
-        ['short', 's', InputOption::VALUE_NONE, 'Return shorted report.'],
         ['warnings', 'w', InputOption::VALUE_NONE, 'Show detailed model warnings.']
     );
-
-    /**
-     * Get inspector instance.
-     *
-     * @return Inspector
-     */
-    protected function getInspector()
-    {
-        return Inspector::make(array(
-            'schemas' => array_merge(
-                $this->odm->schemaBuilder()->getDocuments(),
-                $this->orm->schemaBuilder()->getEntities()
-            )
-        ));
-    }
 
     /**
      * Inspecting existed models.
@@ -109,27 +92,8 @@ class InspectCommand extends Command
         $inspector = $this->getInspector();
         $inspector->inspect();
 
-        if ($this->argument('model'))
-        {
-            $this->describeModel($inspector->getInspection($this->argument('model')));
+        $inspection = $inspector->getInspection($this->argument('model'));
 
-            return;
-        }
-
-        if ($this->option('short'))
-        {
-
-            return;
-        }
-    }
-
-    /**
-     * Render detailed inspection for model.
-     *
-     * @param Inspector\ModelInspection $inspection
-     */
-    protected function describeModel(Inspector\ModelInspection $inspection)
-    {
         $table = $this->table(array(
             'Field', 'Safety Level', 'Fillable', 'Filtered', 'Validated', 'Hidden'
         ));

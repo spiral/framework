@@ -120,4 +120,70 @@ class ModelInspection extends Component
     {
         return $this->fields;
     }
+
+    /**
+     * Count fields.
+     *
+     * @return int
+     */
+    public function countFields()
+    {
+        return count($this->fields);
+    }
+
+    /**
+     * Count of fields passed required level.
+     *
+     * @param int $level
+     * @return int
+     */
+    public function countPassed($level = 4)
+    {
+        $count = 0;
+        foreach ($this->fields as $field)
+        {
+            if ($field->safetyLevel() >= $level)
+            {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * Get model safety level (based on minimal value).
+     *
+     * @return int|mixed
+     */
+    public function safetyLevel()
+    {
+        $safetyLevel = 5;
+        foreach ($this->fields as $field)
+        {
+            $safetyLevel = min($field->safetyLevel(), $safetyLevel);
+        }
+
+        return $safetyLevel;
+    }
+
+    /**
+     * Get detailed explanations of detected problems.
+     *
+     * @return array
+     */
+    public function getWarnings()
+    {
+        $result = array();
+
+        foreach ($this->fields as $field)
+        {
+            if ($warnings = $field->getWarnings())
+            {
+                $result[$field->getName()] = $warnings;
+            }
+        }
+
+        return $result;
+    }
 }
