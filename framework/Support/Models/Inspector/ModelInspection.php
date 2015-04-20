@@ -74,7 +74,7 @@ class ModelInspection extends Component
     protected function inspectField($field, array $blacklist)
     {
         $filtered = array_key_exists(
-            $field, array_merge($this->schema->getGetters(), $this->schema->getAccessors())
+            $field, $this->schema->getSetters() + $this->schema->getAccessors()
         );
 
         $fillable = true;

@@ -8,10 +8,8 @@
  */
 namespace Spiral\Commands;
 
-use Psr\Log\LogLevel;
 use Spiral\Components\Console\Command;
 use Spiral\Support\Models\Inspector;
-use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -25,6 +23,11 @@ class InspectCommand extends Command
     const NO        = 'no';
     const GREEN_NO  = '<fg=green>no</fg=green>';
     const RED_NO    = '<fg=red>no</fg=red>';
+
+    /**
+     * Minimal safety level used to say that field is OK.
+     */
+    const MINIMAL_LEVEL = 3;
 
     /**
      * Command name.
@@ -54,18 +57,6 @@ class InspectCommand extends Command
     );
 
     /**
-     * Color levels for warnings.
-     *
-     * @var array
-     */
-    protected $warnings = array(
-        LogLevel::INFO      => '{warning}',
-        LogLevel::CRITICAL  => '<fg=red>{warning}</fg=red>',
-        LogLevel::WARNING   => '<fg=yellow>{warning}</fg=yellow>',
-        LogLevel::EMERGENCY => '<error>{warning}</error>',
-    );
-
-    /**
      * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
      * method.
      *
@@ -83,7 +74,6 @@ class InspectCommand extends Command
      */
     protected $options = array(
         ['short', 's', InputOption::VALUE_NONE, 'Return shorted report.'],
-        ['warnings', 'w', InputOption::VALUE_NONE, 'Show detailed model warnings.']
     );
 
     /**
@@ -120,71 +110,6 @@ class InspectCommand extends Command
         {
 
             return;
-        }
-    }
-
-    /**
-     * Render detailed inspection for model.
-     *
-     * @param Inspector\ModelInspection $inspection
-     */
-    protected function describeModel(Inspector\ModelInspection $inspection)
-    {
-        $table = $this->table(array(
-            'Field', 'Safety Level', 'Fillable', 'Filtered', 'Validated', 'Hidden'
-        ));
-
-        foreach ($inspection->getFields() as $field)
-        {
-            $table->addRow(array(
-                $field->getName(),
-                $this->safetyLevels[$field->safetyLevel()],
-                $field->isFillable() ? 'yes' : self::GREEN_NO,
-                $field->isFiltered() ? self::GREEN_YES : 'no',
-                $field->isValidated() ? self::GREEN_YES : 'no',
-                $field->isHidden() ? self::GREEN_YES : ($field->isBlacklisted() ? self::RED_NO : self::NO)
-            ));
-        }
-
-        $table->render();
-
-        $this->writeln("\nModel safety level is " . $this->safetyLevels[$inspection->safetyLevel()] . ".");
-
-        if (!$this->option('warnings'))
-        {
-            //Short model info
-            return;
-        }
-
-        $warnings = $inspection->getWarnings();
-        if (!empty($warnings))
-        {
-            $table = $this->table(array("Field", "Warnings"));
-
-            $this->writeln("\nFollowing warning were raised:");
-
-            foreach ($warnings as $field => $fieldWarnings)
-            {
-                $coloredWarnings = array();
-                foreach ($fieldWarnings as $warning)
-                {
-                    $coloredWarnings[] = interpolate($this->warnings[$warning[0]], array(
-                        'warning' => $warning[1]
-                    ));
-                }
-
-                $table->addRow(array(
-                    $field,
-                    join("\n", $coloredWarnings)
-                ));
-
-                if ($fieldWarnings != end($warnings))
-                {
-                    $table->addRow(new TableSeparator());
-                }
-            }
-
-            $table->render();
         }
     }
 }

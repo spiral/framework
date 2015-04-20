@@ -17,15 +17,6 @@ use Symfony\Component\Console\Input\InputOption;
 class ModelCommand extends InspectCommand
 {
     /**
-     * Just some constants.
-     */
-    const YES       = 'yes';
-    const GREEN_YES = '<fg=green>yes</fg=green>';
-    const NO        = 'no';
-    const GREEN_NO  = '<fg=green>no</fg=green>';
-    const RED_NO    = '<fg=red>no</fg=red>';
-
-    /**
      * Command name.
      *
      * @var string
@@ -38,19 +29,6 @@ class ModelCommand extends InspectCommand
      * @var string
      */
     protected $description = 'Inspect specified ORM or ODM model to locate unprotected field and rules.';
-
-    /**
-     * Safety level values.
-     *
-     * @var array
-     */
-    protected $safetyLevels = array(
-        1 => '<fg=red>Critical</fg=red>',
-        2 => '<fg=red>Bad</fg=red>',
-        3 => '<fg=yellow>Moderate</fg=yellow>',
-        4 => '<fg=yellow>Good</fg=yellow>',
-        5 => '<fg=green>Very Good</fg=green>'
-    );
 
     /**
      * Color levels for warnings.
@@ -112,7 +90,10 @@ class ModelCommand extends InspectCommand
 
         $table->render();
 
-        $this->writeln("\nModel safety level is " . $this->safetyLevels[$inspection->safetyLevel()] . ".");
+        $protectedRate = $inspection->countPassed(self::MINIMAL_LEVEL) / $inspection->countFields();
+
+        $this->write("\nModel safety level is " . $this->safetyLevels[$inspection->safetyLevel()] . ". ");
+        $this->writeln("Fields protection rate: <info>" . number_format(100 * $protectedRate, 1) . "%</info>");
 
         if (!$this->option('warnings'))
         {
@@ -127,6 +108,7 @@ class ModelCommand extends InspectCommand
 
             $this->writeln("\nFollowing warning were raised:");
 
+            $countWarnings = count($warnings);
             foreach ($warnings as $field => $fieldWarnings)
             {
                 $coloredWarnings = array();
@@ -142,7 +124,7 @@ class ModelCommand extends InspectCommand
                     join("\n", $coloredWarnings)
                 ));
 
-                if ($fieldWarnings != end($warnings))
+                if ((bool)--$countWarnings)
                 {
                     $table->addRow(new TableSeparator());
                 }
