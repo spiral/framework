@@ -70,5 +70,12 @@ class InspectCommand extends Command
     public function perform()
     {
         $inspector = $this->getInspector();
+        $inspector->inspect();
+
+        if ($this->option('short'))
+        {
+
+            return;
+        }
     }
 }

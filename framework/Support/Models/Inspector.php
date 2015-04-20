@@ -22,8 +22,7 @@ class Inspector extends Component
     protected $inspections = array();
 
     /**
-     * List of blacklisted keywords indicates that field has to be hidden from publicFields() response.
-     * Keywords will not change protection rate but will raise warning for every occurrence.
+     * List of blacklisted keywords indicates that field has to be hidden from publicFields() result.
      *
      * @var array
      */
@@ -39,7 +38,7 @@ class Inspector extends Component
 
     /**
      * New DataEntities inspector. Inspector will check secured and hidden fields, validations and
-     * filters to ensure that clients
+     * filters to ensure that client will always see what he has to see.
      *
      * @param ModelSchema[] $schemas
      */
@@ -62,10 +61,24 @@ class Inspector extends Component
     }
 
     /**
+     * Total analyzed models.
+     *
+     * @return int
+     */
+    public function countModels()
+    {
+        return count($this->inspections);
+    }
+
+    /**
      * Run inspections against model fields, validations, hidden/secure/fillable rules, filters
      * and etc.
      */
     public function inspect()
     {
+        foreach ($this->inspections as $inspection)
+        {
+            $inspection->inspect($this->blacklist);
+        }
     }
 }
