@@ -58,7 +58,7 @@ class Indexer extends Component
     /**
      * New indexer instance.
      *
-     * @param Translator $i18n
+     * @param Translator  $i18n
      * @param FileManager $file
      * @param Tokenizer   $tokenizer
      */
@@ -77,14 +77,24 @@ class Indexer extends Component
      * Do not use i18n methods via non-static call.
      *
      * @param string $directory Directory which has to be indexed. Application directory by default.
+     * @param array  $excludes  Skip indexation if keyword met in filename.
      * @return Indexer
      */
-    public function indexDirectory($directory = null)
+    public function indexDirectory($directory = null, array $excludes = array())
     {
         $directory = $directory ?: directory('application');
 
         foreach ($this->file->getFiles($directory, 'php') as $filename)
         {
+            $filename = $this->file->normalizePath($filename);
+            foreach ($excludes as $exclude)
+            {
+                if (strpos($filename, $exclude) !== false)
+                {
+                    continue 2;
+                }
+            }
+
             $fileReflection = $this->tokenizer->fileReflection($filename);
             $this->registerFunctions($filename, $fileReflection->functionUsages());
         }

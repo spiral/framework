@@ -31,6 +31,16 @@ class IndexCommand extends Command
     protected $description = 'Index all declared i18n strings and usages.';
 
     /**
+     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
+     * method.
+     *
+     * @var array
+     */
+    protected $options = array(
+        ['directory', 'd', InputOption::VALUE_OPTIONAL, 'Directory to scan for i18n function usages.']
+    );
+
+    /**
      * Running indexation.
      */
     public function perform()
@@ -64,7 +74,17 @@ class IndexCommand extends Command
         }
 
         $this->writeln("Scanning i18n function usages...");
-        $indexer->indexDirectory($this->option('directory'));
+        if ($this->option('directory'))
+        {
+            $indexer->indexDirectory($this->option('directory'));
+        }
+        else
+        {
+            foreach ($this->tokenizer->getConfig()['directories'] as $directory)
+            {
+                $indexer->indexDirectory($directory, $this->tokenizer->getConfig()['exclude']);
+            }
+        }
 
         $this->writeln("Scanning Localizable classes...");
         $indexer->indexClasses();
@@ -79,26 +99,6 @@ class IndexCommand extends Command
         $this->writeln(
             "<info>Strings found: <comment>{$totalUsages}</comment> "
             . "in <comment>{$bundles}</comment> bundle(s).</info>"
-        );
-    }
-
-    /**
-     * Command options. By default "options" property will be used.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        $application = $this->file->normalizePath(directory('application'));
-
-        return array(
-            [
-                'directory',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Directory to scan for i18n function usages.',
-                $application
-            ]
         );
     }
 }

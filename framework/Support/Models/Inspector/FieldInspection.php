@@ -11,7 +11,7 @@ namespace Spiral\Support\Models\Inspector;
 use Psr\Log\LogLevel;
 use Spiral\Components\I18n\LocalizableTrait;
 use Spiral\Core\Component;
-l('uo');
+
 class FieldInspection extends Component
 {
     /**

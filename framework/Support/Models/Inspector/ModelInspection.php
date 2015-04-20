@@ -74,7 +74,6 @@ class ModelInspection extends Component
     protected function inspectField($field, array $blacklist)
     {
         $filters = $this->schema->getSetters() + $this->schema->getAccessors();
-
         $fillable = true;
 
         if (in_array($field, $this->schema->getSecured()))
