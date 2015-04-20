@@ -69,6 +69,17 @@ class FieldInspection extends Component
     protected $blacklisted = false;
 
     /**
+     * Pre-defined messages.
+     *
+     * @var array
+     */
+    protected $messages = array(
+        'blacklisted'   => '[[Field is blacklisted but visible in publicFields().]]',
+        'unsafe'        => '[[Field is fillable but no validations or filters provided.]]',
+        'noValidations' => '[[Field is fillable but no validations provided (has filters).]]',
+    );
+
+    /**
      * New field inspection.
      *
      * @param string $name
@@ -211,7 +222,7 @@ class FieldInspection extends Component
         {
             $errors[] = array(
                 LogLevel::WARNING,
-                self::i18nMessage("Field is blacklisted but visible in publicFields().")
+                $this->i18nMessage($this->messages['blacklisted'])
             );
         }
 
@@ -221,14 +232,14 @@ class FieldInspection extends Component
             {
                 $errors[] = array(
                     LogLevel::CRITICAL,
-                    self::i18nMessage("Field is fillable but no validations or filters provided.")
+                    $this->i18nMessage($this->messages['unsafe'])
                 );
             }
             elseif (!$this->isValidated())
             {
                 $errors[] = array(
                     LogLevel::WARNING,
-                    self::i18nMessage("Field is fillable but no validations provided (has filters).")
+                    $this->i18nMessage($this->messages['noValidations'])
                 );
             }
         }
