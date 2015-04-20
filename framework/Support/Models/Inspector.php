@@ -9,6 +9,7 @@
 namespace Spiral\Support\Models;
 
 use Spiral\Core\Component;
+use Spiral\Support\Models\Inspector\InspectorException;
 use Spiral\Support\Models\Inspector\ModelInspection;
 use Spiral\Support\Models\Schemas\ModelSchema;
 
@@ -46,7 +47,10 @@ class Inspector extends Component
     {
         foreach ($schemas as $schema)
         {
-            $this->inspections[] = new ModelInspection($schema);
+            if (!$schema->isAbstract())
+            {
+                $this->inspections[$schema->getClass()] = new ModelInspection($schema);
+            }
         }
     }
 
@@ -58,6 +62,23 @@ class Inspector extends Component
     public function getInspections()
     {
         return $this->inspections;
+    }
+
+    /**
+     * Get model inspection or return null.
+     *
+     * @param string $class
+     * @return ModelInspection
+     * @throws InspectorException
+     */
+    public function getInspection($class)
+    {
+        if (!isset($this->inspections[$class]))
+        {
+            throw new InspectorException("Unable to get inspection for '{$class}' no such model.");
+        }
+
+        return $this->inspections[$class];
     }
 
     /**

@@ -72,10 +72,43 @@ class InspectCommand extends Command
         $inspector = $this->getInspector();
         $inspector->inspect();
 
+        if ($this->argument('model'))
+        {
+            $this->describeModel($inspector->getInspection($this->argument('model')));
+
+            return;
+        }
+
         if ($this->option('short'))
         {
 
             return;
         }
+    }
+
+    /**
+     * Render detailed inspection for model.
+     *
+     * @param Inspector\ModelInspection $inspection
+     */
+    protected function describeModel(Inspector\ModelInspection $inspection)
+    {
+        $table = $this->table(array(
+            'Field', 'P.Level', 'Fillable', 'Filtered', 'Validated', 'Hidden'
+        ));
+
+        foreach ($inspection->getFields() as $field)
+        {
+            $table->addRow(array(
+                $field->getName(),
+                '<fg=red>NONE</fg=red>',
+                $field->isFillable() ? 'yes' : 'no',
+                $field->isFiltered() ? 'yes' : 'no',
+                $field->isValidated() ? 'yes' : 'no',
+                $field->isHidden() ? 'yes' : 'no'
+            ));
+        }
+
+        $table->render();
     }
 }

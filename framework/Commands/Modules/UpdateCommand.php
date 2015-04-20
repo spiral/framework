@@ -13,21 +13,21 @@ use Spiral\Core\Events\ObjectEvent;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InstallCommand extends Command
+class UpdateCommand extends Command
 {
     /**
      * Command name.
      *
      * @var string
      */
-    protected $name = 'modules:install';
+    protected $name = 'modules:update';
 
     /**
      * Short command description.
      *
      * @var string
      */
-    protected $description = 'Install all available modules and/or update their resources.';
+    protected $description = 'Install/update all available modules and their resources.';
 
     /**
      * Mount available modules and update their resources.

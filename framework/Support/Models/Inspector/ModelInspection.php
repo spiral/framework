@@ -48,16 +48,6 @@ class ModelInspection extends Component
     }
 
     /**
-     * Get model fields inspections.
-     *
-     * @return FieldInspection[]
-     */
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    /**
      * Analyze model fields and etc.
      *
      * @param array $blacklist List of blacklisted keywords indicates that field has to be hidden
@@ -119,5 +109,15 @@ class ModelInspection extends Component
             array_key_exists($field, $this->schema->getValidates()),
             $blacklisted
         );
+    }
+
+    /**
+     * Get model fields inspections.
+     *
+     * @return FieldInspection[]
+     */
+    public function getFields()
+    {
+        return $this->fields;
     }
 }

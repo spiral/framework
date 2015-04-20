@@ -55,7 +55,7 @@ class DatabasesCommand extends Command
 
         if (empty($databases))
         {
-            $this->writeln("No databases found");
+            $this->writeln("No databases found.");
 
             return;
         }
