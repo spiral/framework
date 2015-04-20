@@ -88,7 +88,6 @@ class ModelInspection extends Component
         }
 
         $blacklisted = false;
-
         foreach ($blacklist as $keyword)
         {
             if (stripos($field, $keyword) !== false)
