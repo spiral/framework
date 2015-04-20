@@ -402,8 +402,15 @@ abstract class Entity extends DataEntity
     public function flushUpdates()
     {
         $this->updates = array();
-    }
 
+        foreach ($this->fields as $value)
+        {
+            if ($value instanceof ORMAccessor)
+            {
+                $value->flushUpdates();
+            }
+        }
+    }
 
     /**
      * Get all non secured model fields. Additional processing can be applied to fields here.
