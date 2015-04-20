@@ -73,9 +73,7 @@ class ModelInspection extends Component
      */
     protected function inspectField($field, array $blacklist)
     {
-        $filtered = array_key_exists(
-            $field, $this->schema->getSetters() + $this->schema->getAccessors()
-        );
+        $filters = $this->schema->getSetters() + $this->schema->getAccessors();
 
         $fillable = true;
 
@@ -105,7 +103,7 @@ class ModelInspection extends Component
             $this->schema->getFields()[$field],
             $fillable,
             in_array($field, $this->schema->getHidden()),
-            $filtered,
+            isset($filters[$field]),
             array_key_exists($field, $this->schema->getValidates()),
             $blacklisted
         );

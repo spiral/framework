@@ -119,6 +119,7 @@ class InspectCommand extends Command
             }
 
             $table->render();
+            $this->writeln("");
         }
 
         $this->writeln(interpolate(
