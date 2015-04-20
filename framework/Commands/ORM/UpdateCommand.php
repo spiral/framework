@@ -39,12 +39,13 @@ class UpdateCommand extends Command
      */
     public function perform()
     {
+        benchmark('orm:updating');
         self::$schemaBuilder = $this->orm->updateSchema();
-        $this->writeln("<info>ORM Schema and virtual documentation successfully updated.</info>");
+        $elapsed = benchmark('orm:updating');
 
-        //Inspecting
-        $this->console->command('orm:inspect', array(
-            '--short' => true
-        ), $this->output);
+        $this->writeln(
+            "<info>ORM Schema and virtual documentation successfully updated " .
+            "(<fg=yellow>" . number_format($elapsed, 3) . " s</fg=yellow>).</info>"
+        );
     }
 }

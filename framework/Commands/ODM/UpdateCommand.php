@@ -39,12 +39,13 @@ class UpdateCommand extends Command
      */
     public function perform()
     {
+        benchmark('odm:updating');
         self::$schemaBuilder = $this->odm->updateSchema();
-        $this->writeln("<info>ODM Schema and virtual documentation successfully updated.</info>");
+        $elapsed = benchmark('odm:updating');
 
-        //Inspecting
-        $this->console->command('odm:inspect', array(
-            '--short' => true
-        ), $this->output);
+        $this->writeln(
+            "<info>ODM Schema and virtual documentation successfully updated " .
+            "(<fg=yellow>" . number_format($elapsed, 3) . " s</fg=yellow>).</info>"
+        );
     }
 }

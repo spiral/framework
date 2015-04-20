@@ -92,6 +92,41 @@ class Inspector extends Component
     }
 
     /**
+     * Get average safety level.
+     *
+     * @return float
+     */
+    public function safetyLevel()
+    {
+        $safetyLevel = 0;
+        foreach ($this->inspections as $inspection)
+        {
+            $safetyLevel += $inspection->safetyLevel();
+        }
+
+        return $safetyLevel / $this->countModels();
+    }
+
+    /**
+     * Percent of passed/total fields.
+     *
+     * @param int $level
+     * @return float
+     */
+    public function protectionRate($level = 4)
+    {
+        $totalFields = 0;
+        $passedFields = 0;
+        foreach ($this->inspections as $inspection)
+        {
+            $totalFields += $inspection->countFields();
+            $passedFields += $inspection->countPassed($level);
+        }
+
+        return $passedFields / $totalFields;
+    }
+
+    /**
      * Run inspections against model fields, validations, hidden/secure/fillable rules, filters
      * and etc.
      */

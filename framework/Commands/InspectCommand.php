@@ -10,7 +10,6 @@ namespace Spiral\Commands;
 
 use Spiral\Components\Console\Command;
 use Spiral\Support\Models\Inspector;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class InspectCommand extends Command
@@ -57,16 +56,6 @@ class InspectCommand extends Command
     );
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
-     * method.
-     *
-     * @var array
-     */
-    protected $arguments = array(
-        ['model', InputArgument::OPTIONAL, 'Give detailed report for specified model.']
-    );
-
-    /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions()
      * method.
      *
@@ -83,10 +72,18 @@ class InspectCommand extends Command
      */
     protected function getInspector()
     {
+        $odmBuilder = !empty(\Spiral\Commands\ODM\UpdateCommand::$schemaBuilder)
+            ? \Spiral\Commands\ODM\UpdateCommand::$schemaBuilder
+            : $this->odm->schemaBuilder();
+
+        $ormBuilder = !empty(\Spiral\Commands\ORM\UpdateCommand::$schemaBuilder)
+            ? \Spiral\Commands\ORM\UpdateCommand::$schemaBuilder
+            : $this->orm->schemaBuilder();
+
         return Inspector::make(array(
             'schemas' => array_merge(
-                $this->odm->schemaBuilder()->getDocuments(),
-                $this->orm->schemaBuilder()->getEntities()
+                $odmBuilder->getDocuments(),
+                $ormBuilder->getEntities()
             )
         ));
     }
@@ -99,17 +96,43 @@ class InspectCommand extends Command
         $inspector = $this->getInspector();
         $inspector->inspect();
 
-        if ($this->argument('model'))
+        if (!$this->option('short'))
         {
-            $this->describeModel($inspector->getInspection($this->argument('model')));
+            $table = $this->table(array(
+                'Model', 'Safety Level', 'Protected', 'Warnings'
+            ));
 
-            return;
+            foreach ($inspector->getInspections() as $inspection)
+            {
+                $countWarnings = 0;
+                foreach ($inspection->getWarnings() as $warnings)
+                {
+                    $countWarnings += count($warnings);
+                }
+
+                $table->addRow(array(
+                    $inspection->getSchema()->getClass(),
+                    $this->safetyLevels[$inspection->safetyLevel()],
+                    $inspection->countPassed(self::MINIMAL_LEVEL) . ' / ' . $inspection->countFields(),
+                    $countWarnings . " warning(s)"
+                ));
+            }
+
+            $table->render();
         }
 
-        if ($this->option('short'))
-        {
+        $this->writeln(interpolate(
+            "Inspected models <fg=yellow>{count}</fg=yellow>, "
+            . "average safety level {level} ({number}), "
+            . "protected fields <info>{fields}%</info>.",
+            array(
+                'count'  => number_format($inspector->countModels()),
+                'level'  => $this->safetyLevels[(int)floor($inspector->safetyLevel())],
+                'number' => number_format($inspector->safetyLevel(), 2),
+                'fields' => number_format(100 * $inspector->protectionRate(self::MINIMAL_LEVEL), 2)
+            )
+        ));
 
-            return;
-        }
+        return;
     }
 }

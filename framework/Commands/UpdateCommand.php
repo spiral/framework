@@ -32,8 +32,15 @@ class UpdateCommand extends Command
     public function perform()
     {
         $this->writeln("Updating ORM and ODM schemas and virtual documentations...");
+        $this->writeln("");
 
         $this->console->command('orm:update', array(), $this->output);
         $this->console->command('odm:update', array(), $this->output);
+        $this->writeln("");
+
+        //Inspecting
+        $this->console->command('inspect', array(
+            '--short' => true
+        ), $this->output);
     }
 }
