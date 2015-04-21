@@ -374,7 +374,7 @@ class Core extends Container implements CoreInterface
      */
     public function start(DispatcherInterface $dispatcher = null)
     {
-        $this->dispatcher = $dispatcher ?: $this->getDispatcher();
+        $this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->getDispatcher();
         $this->dispatcher->start($this);
     }
 

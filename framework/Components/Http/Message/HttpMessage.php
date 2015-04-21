@@ -12,14 +12,14 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamableInterface;
 use Spiral\Core\Component;
 
-abstract class PsrMessage extends Component implements MessageInterface
+abstract class HttpMessage extends Component implements MessageInterface
 {
     /**
      * HTTP protocol version.
      *
      * @var string
      */
-    protected $protocolVersion = '1.1';
+    protected $protocolVersion = '1.0';
 
     /**
      * Message headers
@@ -99,14 +99,13 @@ abstract class PsrMessage extends Component implements MessageInterface
      * Checks if a header exists by the given case-insensitive name.
      *
      * @param string $name      Case-insensitive header field name.
-     * @param bool   $normalize Normalize header name.
      * @return bool             Returns true if any header names match the given header name using a
      *                          case-insensitive string comparison. Returns false if no matching header
      *                          name is found in the message.
      */
-    public function hasHeader($name, $normalize = true)
+    public function hasHeader($name)
     {
-        return array_key_exists($this->normalizeHeader($name, $normalize), $this->headers);
+        return array_key_exists($this->normalizeHeader($name), $this->headers);
     }
 
     /**
@@ -118,27 +117,25 @@ abstract class PsrMessage extends Component implements MessageInterface
      * NOTE: Not all header values may be appropriately represented using comma concatenation. For
      * such headers, use getHeaderLines() instead and supply your own delimiter when concatenating.
      *
-     * @param string $name      Case-insensitive header field name.
-     * @param bool   $normalize Normalize header name.
+     * @param string $name Case-insensitive header field name.
      * @return string
      */
-    public function getHeader($name, $normalize = true)
+    public function getHeader($name)
     {
-        return join(',', $this->getHeaderLines($name, $normalize));
+        return join(',', $this->getHeaderLines($name));
     }
 
     /**
      * Retrieves a header by the given case-insensitive name as an array of strings.
      *
-     * @param string $name      Case-insensitive header field name.
-     * @param bool   $normalize Normalize header name.
+     * @param string $name Case-insensitive header field name.
      * @return string[]
      */
-    public function getHeaderLines($name, $normalize = true)
+    public function getHeaderLines($name)
     {
-        $name = $this->normalizeHeader($name, $normalize);
+        $name = $this->normalizeHeader($name);
 
-        if (!$this->hasHeader($name, false))
+        if (!isset($this->headers[$name]))
         {
             return array();
         }
@@ -156,15 +153,14 @@ abstract class PsrMessage extends Component implements MessageInterface
      * This method MUST be implemented in such a way as to retain the immutability of the message,
      * and MUST return a new instance that has the new header and/or value.
      *
-     * @param string          $name      Case-insensitive header field name.
-     * @param string|string[] $value     Header value(s).
-     * @param bool            $normalize Normalize header name.
+     * @param string          $name  Case-insensitive header field name.
+     * @param string|string[] $value Header value(s).
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader($name, $value, $normalize = true)
+    public function withHeader($name, $value)
     {
-        $name = $this->normalizeHeader($name, $normalize);
+        $name = $this->normalizeHeader($name);
 
         if (is_object($value))
         {
@@ -198,19 +194,18 @@ abstract class PsrMessage extends Component implements MessageInterface
      * This method MUST be implemented in such a way as to retain the immutability of the message,
      * and MUST return a new instance that has the new header and/or value.
      *
-     * @param string          $name      Case-insensitive header field name to add.
-     * @param string|string[] $value     Header value(s).
-     * @param bool            $normalize Normalize header name.
+     * @param string          $name  Case-insensitive header field name to add.
+     * @param string|string[] $value Header value(s).
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader($name, $value, $normalize = true)
+    public function withAddedHeader($name, $value)
     {
-        $name = $this->normalizeHeader($name, $name);
+        $name = $this->normalizeHeader($name);
 
-        if (!$this->hasHeader($name, false))
+        if (!isset($this->headers[$name]))
         {
-            return $this->withHeader($name, $value, false);
+            return $this->withHeader($name, $value);
         }
 
         if (is_object($value))
@@ -244,14 +239,13 @@ abstract class PsrMessage extends Component implements MessageInterface
      * This method MUST be implemented in such a way as to retain the immutability of the message,
      * and MUST return a new instance that has the new header and/or value.
      *
-     * @param string $name      Case-insensitive header field name to remove.
-     * @param bool   $normalize Normalize header name.
+     * @param string $name Case-insensitive header field name to remove.
      * @return static
      */
-    public function withoutHeader($name, $normalize = true)
+    public function withoutHeader($name)
     {
-        $name = $this->normalizeHeader($name, $normalize);
-        if (!$this->hasHeader($name, false))
+        $name = $this->normalizeHeader($name);
+        if (!isset($this->headers[$name]))
         {
             return $this;
         }
@@ -296,28 +290,21 @@ abstract class PsrMessage extends Component implements MessageInterface
      * Ensure that header is in valid format.
      *
      * @param string $header
-     * @param bool   $normalize Apply normalization.
      * @return string
      */
-    protected function normalizeHeader($header, $normalize = true)
+    protected function normalizeHeader($header)
     {
-        if (!$normalize)
-        {
-            return $header;
-        }
-
         return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
     }
 
     /**
-     * Store header values in array form as requested by PSR7. Additionally this method can normalize
+     * Store header values in array form as requested by PSR7. Additionally this method will normalize
      * header names.
      *
      * @param array $headers
-     * @param bool  $normalize Apply normalization to header names.
      * @return array
      */
-    protected function prepareHeaders(array $headers, $normalize = true)
+    protected function normalizeHeaders(array $headers)
     {
         $result = array();
 
@@ -333,12 +320,7 @@ abstract class PsrMessage extends Component implements MessageInterface
                 $value = array($value);
             }
 
-            if ($normalize)
-            {
-                $header = $this->normalizeHeader($header);
-            }
-
-            $result[$header] = $value;
+            $result[$this->normalizeHeader($header)] = $value;
         }
 
         return $result;

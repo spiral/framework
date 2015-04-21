@@ -10,12 +10,13 @@ namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamableInterface;
-use Spiral\Components\Http\Message\PsrMessage;
+use Spiral\Components\Http\Message\HttpMessage;
 use Spiral\Components\Http\Message\Stream;
 
+use Spiral\Components\Http\Response\StringResponse;
 use Spiral\Core\Component;
 
-class Response extends PsrMessage implements ResponseInterface
+class Response extends HttpMessage implements ResponseInterface
 {
     /**
      * Default set of http codes.
@@ -151,8 +152,7 @@ class Response extends PsrMessage implements ResponseInterface
     {
         if (is_string($content))
         {
-            $this->body = new Stream('php://memory', 'wr');
-            $this->body->write($content);
+            $this->body = new StringResponse($content);
         }
         elseif ($content instanceof StreamableInterface)
         {
@@ -166,7 +166,7 @@ class Response extends PsrMessage implements ResponseInterface
         }
 
         $this->setStatusCode($statusCode);
-        $this->headers = $this->prepareHeaders($headers, $normalize);
+        $this->headers = $this->normalizeHeaders($headers, $normalize);
     }
 
     /**

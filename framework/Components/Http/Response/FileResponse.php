@@ -35,7 +35,7 @@ class FileResponse extends Response
             $publicName = basename($filename);
         }
 
-        $headers = $this->prepareHeaders($headers, true);
+        $headers = $this->normalizeHeaders($headers, true);
 
         //Forcing default set of headers
         $headers += array(

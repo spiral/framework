@@ -13,7 +13,7 @@ use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Request\FileBag;
 use Spiral\Components\Http\Request\ParameterBag;
-use Spiral\Components\Http\Request\PsrRequest;
+use Spiral\Components\Http\Request\HttpRequest;
 use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\ServerBag;
 use Spiral\Components\Http\Request\Uri;
@@ -26,7 +26,7 @@ use Spiral\Components\Http\Request\Uri;
  * @property ParameterBag $post
  * @property ParameterBag $files
  */
-class Request extends PsrRequest implements ServerRequestInterface
+class Request extends HttpRequest implements ServerRequestInterface
 {
     /**
      * The request "attributes" may be used to allow injection of any parameters derived from the
@@ -143,7 +143,7 @@ class Request extends PsrRequest implements ServerRequestInterface
         array $attributes = array()
     )
     {
-        parent::__construct($method, $uri, $body, $headers, false);
+        parent::__construct($method, $uri, $body, $headers);
 
         $this->serverParams = $serverParams;
         $this->cookieParams = $cookieParams;
@@ -201,13 +201,7 @@ class Request extends PsrRequest implements ServerRequestInterface
 
                 if (strpos($name, 'HTTP_') === 0)
                 {
-                    $name = str_replace(
-                        " ",
-                        "-",
-                        ucwords(strtolower(str_replace("_", " ", substr($name, 5))))
-                    );
-
-                    $headers[$name] = $value;
+                    $headers[str_replace("_", "-", substr($name, 5))] = $value;
                 }
             }
         }

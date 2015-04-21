@@ -375,7 +375,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             }
         }
 
-        if ($defaultHeaders)
+        if (!empty($defaultHeaders))
         {
             //We can force some header values if no replacement specified
             foreach ($defaultHeaders as $header => $value)

@@ -11,11 +11,11 @@ namespace Spiral\Components\Http\Request;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Message\PsrMessage;
+use Spiral\Components\Http\Message\HttpMessage;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Core\Component;
 
-class PsrRequest extends PsrMessage implements RequestInterface
+class HttpRequest extends HttpMessage implements RequestInterface
 {
     /**
      * The message's request target.
@@ -59,18 +59,16 @@ class PsrRequest extends PsrMessage implements RequestInterface
     /**
      * New Request instance.
      *
-     * @param string|null                $method    Request method.
-     * @param string|UriInterface        $uri       Requested URI.
-     * @param string|StreamableInterface $body      Request body or body stream.
-     * @param array                      $headers   Request headers.
-     * @param bool                       $normalize Normalize headers case (disabled by default).
+     * @param string|null                $method  Request method.
+     * @param string|UriInterface        $uri     Requested URI.
+     * @param string|StreamableInterface $body    Request body or body stream.
+     * @param array                      $headers Request headers.
      */
     public function __construct(
         $method = null,
         $uri = null,
         $body = 'php://memory',
-        array $headers = array(),
-        $normalize = true
+        array $headers = array()
     )
     {
         if (!empty($method) && !in_array(strtoupper($method), $this->allowedMethods))
@@ -85,7 +83,7 @@ class PsrRequest extends PsrMessage implements RequestInterface
 
         $this->method = $method;
         $this->body = ($body instanceof StreamableInterface) ? $body : new Stream($body);
-        $this->headers = $this->prepareHeaders($headers, $normalize);
+        $this->headers = $this->normalizeHeaders($headers);
     }
 
     /**
