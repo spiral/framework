@@ -22,7 +22,7 @@ use Spiral\Components;
  * @property Components\Debug\Debugger             $debug
  * @property Components\Tokenizer\Tokenizer        $tokenizer
  * @property Components\Cache\CacheManager         $cache
- * @property Components\I18n\Translator    $i18n
+ * @property Components\I18n\Translator            $i18n
  * @property Components\View\ViewManager           $view
  * @property Components\Redis\RedisManager         $redis
  * @property Components\Encrypter\Encrypter        $encrypter
@@ -71,7 +71,12 @@ class Controller extends Component implements ControllerInterface
      */
     public function callAction($action = '', array $parameters = array())
     {
-        if (!method_exists($this, $action = $action ?: $this->defaultAction))
+        if (empty($action))
+        {
+            $action = $this->defaultAction;
+        }
+
+        if (!method_exists($this, $action))
         {
             throw new ClientException(ClientException::NOT_FOUND);
         }
@@ -79,22 +84,20 @@ class Controller extends Component implements ControllerInterface
         $reflection = new \ReflectionMethod($this, $action);
 
         if (
-            !$reflection->isPublic()
-            || $reflection->isStatic()
+            $reflection->isStatic()
+            || !$reflection->isPublic()
             || !$reflection->isUserDefined()
             || $reflection->getDeclaringClass()->getName() == __CLASS__
         )
         {
-            throw new ClientException(
-                ClientException::NOT_FOUND,
-                "Action is not allowed"
-            );
+            throw new ClientException(ClientException::NOT_FOUND, "Action is not allowed");
         }
 
         $this->parameters = $parameters;
 
         //Getting set of arguments should be sent to requested method
         $arguments = $this->core->resolveArguments($reflection, $parameters, true);
+
         foreach ($reflection->getParameters() as $parameter)
         {
             if (!array_key_exists($parameter->getPosition(), $arguments) && !$parameter->isOptional())

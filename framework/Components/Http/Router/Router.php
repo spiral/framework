@@ -100,7 +100,7 @@ class Router extends Component implements MiddlewareInterface
         $this->routeMiddlewares = $routeMiddlewares;
 
         //Registering default route
-        if (!isset($this->routes[static::DEFAULT_ROUTE]) && $default)
+        if (!isset($this->routes[static::DEFAULT_ROUTE]) && !empty($default))
         {
             $this->routes[static::DEFAULT_ROUTE] = new Route(
                 static::DEFAULT_ROUTE,

@@ -219,7 +219,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             throw new ClientException(Response::SERVER_ERROR, 'Unable to select endpoint');
         }
 
-        $parentRequest = Container::getBinding('request');
+        $outerRequest = Container::getBinding('request');
 
         /**
          * So all inner middleware and code will known their context URL.
@@ -239,11 +239,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
         Container::removeBinding(get_class($request));
         Container::removeBinding('request');
 
-        if (!empty($parentRequest))
+        if (!empty($outerRequest))
         {
             //Restoring scope
-            Container::bind('request', $parentRequest);
-            Container::bind(get_class($parentRequest), $parentRequest);
+            Container::bind('request', $outerRequest);
+            Container::bind(get_class($outerRequest), $outerRequest);
         }
 
         return $response;
@@ -259,6 +259,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected function findEndpoint(UriInterface $uri, &$uriPath = null)
     {
         $uriPath = strtolower($uri->getPath());
+
         if (isset($this->endpoints[$uriPath]))
         {
             return $this->endpoints[$uriPath];
