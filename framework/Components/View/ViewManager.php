@@ -339,13 +339,7 @@ class ViewManager extends Component
         //View representer
         $renderer = $this->config['engines'][$engine]['view'];
 
-        return Container::get($renderer, array(
-            'manager'   => $this,
-            'filename'  => $filename,
-            'namespace' => $namespace,
-            'view'      => $view,
-            'data'      => $data
-        ));
+        return new $renderer($this, $filename, $namespace, $view, $data);
     }
 
     /**
