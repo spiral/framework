@@ -328,7 +328,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         if (is_array($response) || $response instanceof \JsonSerializable)
         {
-            if (is_array($response) && $plainOutput)
+            if (is_array($response) && !empty($plainOutput))
             {
                 $response['plainOutput'] = $plainOutput;
             }
