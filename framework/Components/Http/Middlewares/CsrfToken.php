@@ -8,10 +8,10 @@
  */
 namespace Spiral\Components\Http\Middlewares;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\CookieManager;
 use Spiral\Components\Http\MiddlewareInterface;
-use Spiral\Components\Http\Response;
 use Spiral\Core\Component;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Helpers\StringHelper;
@@ -57,7 +57,7 @@ class CsrfToken implements MiddlewareInterface
      * @param ServerRequestInterface $request Server request instance.
      * @param \Closure               $next    Next middleware/target.
      * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
-     * @return Response
+     * @return ResponseInterface
      * @throws ClientException
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
@@ -86,12 +86,12 @@ class CsrfToken implements MiddlewareInterface
         }
 
         $response = $next($request->withAttribute('crsfToken', $token));
-        if ($requestCookie && $response instanceof Response)
+        if ($requestCookie && $response instanceof ResponseInterface)
         {
             //Will work even with non spiral responses
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                $this->cookies->create(self::COOKIE, $token, 86400)
+                $this->cookies->create(self::COOKIE, $token, 86400)->packHeader()
             );
         }
 

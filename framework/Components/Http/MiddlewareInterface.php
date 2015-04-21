@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\Http;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 interface MiddlewareInterface
@@ -19,7 +20,7 @@ interface MiddlewareInterface
      * @param ServerRequestInterface $request Server request instance.
      * @param \Closure               $next    Next middleware/target.
      * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
-     * @return Response
+     * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null);
 }

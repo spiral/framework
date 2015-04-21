@@ -8,12 +8,10 @@
  */
 namespace Spiral\Components\Session\Http;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Cookies\CookieManager;
-use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\MiddlewareInterface;
-use Spiral\Components\Http\Response;
 use Spiral\Components\Session\SessionStore;
 use Spiral\Core\Container;
 
@@ -80,7 +78,7 @@ class SessionStarter implements MiddlewareInterface
      * @param ServerRequestInterface $request Server request instance.
      * @param \Closure               $next    Next middleware/target.
      * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
-     * @return Response
+     * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
@@ -110,18 +108,18 @@ class SessionStarter implements MiddlewareInterface
     /**
      * Mount session id or remove session cookie.
      *
-     * @param SessionStore $store
-     * @param Response     $response
-     * @param array        $cookies
-     * @return Response
+     * @param SessionStore      $store
+     * @param ResponseInterface $response
+     * @param array             $cookies
+     * @return ResponseInterface
      */
-    protected function commitSession(SessionStore $store, Response $response, array $cookies)
+    protected function commitSession(SessionStore $store, ResponseInterface $response, array $cookies)
     {
         $store->isStarted() && $store->commit();
 
         if (!isset($cookies[self::COOKIE]) || $cookies[self::COOKIE] != $store->getID())
         {
-            if ($response instanceof Response)
+            if ($response instanceof ResponseInterface)
             {
                 return $response->withAddedHeader(
                     'Set-Cookie',

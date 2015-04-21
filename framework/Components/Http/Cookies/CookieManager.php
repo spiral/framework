@@ -16,7 +16,6 @@ use Spiral\Components\Encrypter\EncrypterException;
 use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\Middlewares\CsrfToken;
 use Spiral\Components\Http\MiddlewareInterface;
-use Spiral\Components\Http\Response;
 use Spiral\Components\Session\Http\SessionStarter;
 use Spiral\Core\Component;
 
@@ -112,7 +111,7 @@ class CookieManager extends Component implements MiddlewareInterface
      * @param ServerRequestInterface $request Server request instance.
      * @param \Closure               $next    Next middleware/target.
      * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
-     * @return Response
+     * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
@@ -121,7 +120,7 @@ class CookieManager extends Component implements MiddlewareInterface
         $request = $this->decryptCookies($request);
 
         /**
-         * @var Response $response
+         * @var ResponseInterface $response
          */
         $response = $next($request);
 
@@ -180,7 +179,7 @@ class CookieManager extends Component implements MiddlewareInterface
      * Pack outcoming cookies with encrypted value.
      *
      * @param ResponseInterface $response
-     * @return ResponseInterface|Response
+     * @return ResponseInterface
      * @throws EncrypterException
      */
     protected function encryptCookies(ResponseInterface $response)
@@ -204,9 +203,9 @@ class CookieManager extends Component implements MiddlewareInterface
                 }
 
                 //Encrypting cookie
-                $cookie = (string)$cookie->withValue(
+                $cookie = $cookie->withValue(
                     $this->getEncrypter()->encrypt($cookie->getValue())
-                );
+                )->packHeader();
 
                 unset($cookie);
             }
