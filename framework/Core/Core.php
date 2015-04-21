@@ -87,7 +87,7 @@ class Core extends Container implements CoreInterface
      *
      * @var array
      */
-    private static $directories = array(
+    protected static $directories = array(
         'libraries'   => null,
         'framework'   => null,
         'application' => null,
@@ -112,14 +112,14 @@ class Core extends Container implements CoreInterface
      *
      * @var string
      */
-    private $applicationID = '';
+    protected $applicationID = '';
 
     /**
      * Current dispatcher instance response for application flow processing.
      *
      * @var DispatcherInterface
      */
-    private $dispatcher = null;
+    protected $dispatcher = null;
 
     /**
      * Initial application timezone. Can be redefined in child core realization. You can change
@@ -493,21 +493,21 @@ class Core extends Container implements CoreInterface
      * Load data previously saved to application cache, if file is not exists null will be returned.
      * This method can be replaced by Core Traits to use different ways to store data like APC.
      *
-     * @param string $filename  Filename without .php
+     * @param string $name      Filename without .php
      * @param string $directory Application cache directory will be used by default.
      * @param string $realPath  Generated file location will be stored in this variable.
      * @return mixed|array
      */
-    public function loadData($filename, $directory = null, &$realPath = null)
+    public function loadData($name, $directory = null, &$realPath = null)
     {
-        if (!file_exists($realPath = $filename = $this->makeFilename($filename, $directory)))
+        if (!file_exists($realPath = $this->makeFilename($name, $directory)))
         {
             return null;
         }
 
         try
         {
-            return (require $filename);
+            return (require $realPath);
         }
         catch (\ErrorException $exception)
         {
@@ -526,14 +526,14 @@ class Core extends Container implements CoreInterface
      * File permission specified in File::RUNTIME to make file readable and writable for both web and
      * CLI sessions.
      *
-     * @param string $filename  Filename without .php
+     * @param string $name      Filename without .php
      * @param mixed  $data      Data to be stored, any format supported by var_export().
      * @param string $directory Application cache directory will be used by default.
      * @return bool|string
      */
-    public function saveData($filename, $data, $directory = null)
+    public function saveData($name, $data, $directory = null)
     {
-        $filename = $this->makeFilename($filename, $directory);
+        $name = $this->makeFilename($name, $directory);
 
         //This is required as FileManager system component and can be called pretty early
         $file = !is_object(self::$bindings['file'])
@@ -541,9 +541,9 @@ class Core extends Container implements CoreInterface
             : self::$bindings['file'];
 
         $data = '<?php return ' . var_export($data, true) . ';';
-        if ($file->write($filename, $data, Components\Files\FileManager::RUNTIME, true))
+        if ($file->write($name, $data, Components\Files\FileManager::RUNTIME, true))
         {
-            return $filename;
+            return $name;
         }
 
         return false;
@@ -618,20 +618,20 @@ class Core extends Container implements CoreInterface
      * Get extension to use for runtime data or configuration cache, all file in cache directory will
      * additionally get applicationID postfix.
      *
-     * @param string $filename  Runtime data file name (without extension).
+     * @param string $name      Runtime data file name (without extension).
      * @param string $directory Directory to store data in.
      * @return string
      */
-    protected function makeFilename($filename, $directory = null)
+    protected function makeFilename($name, $directory = null)
     {
-        $filename = str_replace(array('/', '\\'), '-', $filename);
+        $name = str_replace(array('/', '\\'), '-', $name);
 
         if ($directory)
         {
-            return rtrim($directory, '/') . '/' . $filename . '.' . static::RUNTIME_EXTENSION;
+            return rtrim($directory, '/') . '/' . $name . '.' . static::RUNTIME_EXTENSION;
         }
 
         return self::$directories['cache']
-        . "/$filename-{$this->applicationID}" . '.' . static::RUNTIME_EXTENSION;
+        . "/$name-{$this->applicationID}" . '.' . static::RUNTIME_EXTENSION;
     }
 }

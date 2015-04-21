@@ -61,14 +61,14 @@ class MemoryCore extends Core
      * Load data previously saved to application cache, if file is not exists null will be returned. This method can be
      * replaced by Core Traits to use different ways to store data like APC (this was already done as experiment).
      *
-     * @param string $filename  Filename without .php
+     * @param string $name  Filename without .php
      * @param string $directory Application cache directory will be used by default.
      * @param string $realPath  Generated file location will be stored in this variable.
      * @return mixed
      */
-    public function loadData($filename, $directory = null, &$realPath = null)
+    public function loadData($name, $directory = null, &$realPath = null)
     {
-        return isset($this->data[$directory . $filename]) ? $this->data[$directory . $filename] : null;
+        return isset($this->data[$directory . $name]) ? $this->data[$directory . $name] : null;
     }
 
     /**
@@ -81,14 +81,14 @@ class MemoryCore extends Core
      *
      * File permission specified in File::RUNTIME to make file readable and writable for both web and CLI sessions.
      *
-     * @param string $filename  Filename without .php
+     * @param string $name  Filename without .php
      * @param mixed  $data      Data to be stored, any format supported by var_export().
      * @param string $directory Application cache directory will be used by default.
      * @return bool|string
      */
-    public function saveData($filename, $data, $directory = null)
+    public function saveData($name, $data, $directory = null)
     {
-        $this->data[$directory . $filename] = $data;
+        $this->data[$directory . $name] = $data;
     }
 
     /**
