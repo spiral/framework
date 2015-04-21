@@ -416,40 +416,19 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
                 continue;
             }
 
+            $value = $this->getField($field);
+
             //Better replace it with isset later
             if (in_array($field, $this->schema[ODM::D_COMPOSITIONS]))
             {
                 //Letting document to do the rest (expecting to be document or compositor)
-                $result[$field] = $this->getField($field)->publicFields();
+                $result[$field] = $value->publicFields();
                 continue;
-            }
-
-            if ($value instanceof AccessorInterface)
-            {
-                $value = $value->serializeData();
-            }
-
-            if ($mutator = $this->getMutator($field, 'getter'))
-            {
-                try
-                {
-                    $field = call_user_func($mutator, $value);
-                }
-                catch (\ErrorException $exception)
-                {
-                    self::logger()->warning("Failed to apply filter to '{field}' field.", compact('field'));
-                    $value = null;
-                }
             }
 
             if ($value instanceof \MongoId)
             {
                 $value = (string)$value;
-            }
-
-            if ($value instanceof \MongoDate)
-            {
-                $value = (string)(new Carbon())->setTimestamp($value->sec);
             }
 
             if (is_array($value))
@@ -459,11 +438,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
                     if ($value instanceof \MongoId)
                     {
                         $value = (string)$value;
-                    }
-
-                    if ($value instanceof \MongoDate)
-                    {
-                        $value = (string)(new Carbon())->setTimestamp($value->sec);
                     }
                 });
             }
