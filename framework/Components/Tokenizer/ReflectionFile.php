@@ -174,7 +174,8 @@ class ReflectionFile extends Component
         return array(
             'plainIncludes' => $this->includes,
             'declarations'  => $this->declarations,
-            'functions'     => $this->functions
+            'functions'     => $this->functions,
+            'namespaces'    => $this->namespaces
         );
     }
 
@@ -189,6 +190,7 @@ class ReflectionFile extends Component
         $this->includes = $schema['plainIncludes'];
         $this->declarations = $schema['declarations'];
         $this->functions = $schema['functions'];
+        $this->namespaces = $schema['namespaces'];
 
         return $this;
     }

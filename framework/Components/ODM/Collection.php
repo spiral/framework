@@ -72,7 +72,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
     protected $database = 'default';
 
     /**
-     * ODMManager component.
+     * ODM component.
      *
      * @invisible
      * @var ODM

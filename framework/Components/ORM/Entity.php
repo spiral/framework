@@ -11,14 +11,13 @@ namespace Spiral\Components\ORM;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
-use Spiral\Components\ODM\ODM;
 use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
-abstract class Entity extends DataEntity
+abstract class Entity extends DataEntity implements DatabaseEntityInterface
 {
     /**
      * Set this constant to false to disable automatic column, index and foreign keys creation.
@@ -254,33 +253,6 @@ abstract class Entity extends DataEntity
         }
 
         return null;
-    }
-
-
-    /**
-     * Get accessor instance.
-     *
-     * @param mixed  $value    Value to mock up.
-     * @param string $accessor Accessor definition (can be array).
-     * @return AccessorInterface
-     */
-    protected function defineAccessor($value, $accessor)
-    {
-        $options = null;
-        if (is_array($accessor))
-        {
-            list($accessor, $options) = $accessor;
-        }
-
-        if ($accessor == ODM::CMP_ONE)
-        {
-            /**
-             * This section kept for future updates.
-             */
-            $accessor = ODM::defineClass($value, $options);
-        }
-
-        return new $accessor($value, $this, $options);
     }
 
     /**
@@ -522,6 +494,33 @@ abstract class Entity extends DataEntity
     }
 
     /**
+     * Get associated orm Selector. Selectors used to build complex related queries and fetch
+     * models from database.
+     *
+     * @param array $schema
+     * @return Selector
+     */
+    public static function ormSelector(array $schema = array())
+    {
+        $orm = ORM::getInstance();
+        $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
+
+        static::initialize();
+
+        $selector = Selector::make(array(
+            'schema' => $schema,
+            'orm'    => $orm
+        ));
+
+        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        {
+            return self::dispatcher()->fire('selector', $selector);
+        }
+
+        return $selector;
+    }
+
+    /**
      * Save entity fields to associated table. Model has to be valid to be saved, in
      * other scenario method will return false, model errors can be found in getErrors() method.
      *
@@ -579,6 +578,91 @@ abstract class Entity extends DataEntity
         return true;
     }
 
+    /**
+     * Delete entity from database.
+     *
+     * Events: deleting, deleted will be raised.
+     */
+    public function delete()
+    {
+        $this->event('deleting');
+        $this->primaryKey() && static::dbalTable($this->schema)->delete(array(
+            $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
+        ));
+
+        $this->fields = $this->schema[ORM::E_DEFAULTS];
+        $this->event('deleted');
+    }
+
+    /**
+     * Create new model and set it's fields, all field values will be passed thought model filters
+     * to ensure their type. Events: created
+     *
+     * You have to save model by yourself!
+     *
+     * @param array $fields Model fields to set, will be passed thought filters.
+     * @return static
+     */
+    public static function create($fields = array())
+    {
+        $class = new static();
+
+        //Forcing validation (empty set of fields is not valid set of fields)
+        $class->validationRequired = true;
+        $class->setFields($fields)->event('created');
+
+        return $class;
+    }
+
+    /**
+     * Get default search scope.
+     *
+     * @param array $scope
+     * @return array
+     */
+    protected static function getScope($scope = array())
+    {
+        static::initialize();
+        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        {
+            $scope = self::dispatcher()->fire('scope', array(
+                'scope' => $scope,
+                'model' => get_called_class()
+            ))['scope'];
+        }
+
+        return $scope;
+    }
+
+    /**
+     * Get ORM selector used to build complex SQL queries to fetch model and it's relations.
+     *
+     * @param mixed $query Fields and conditions to filter by.
+     * @return Selector|static[]
+     */
+    public static function find(array $query = array())
+    {
+        return static::ormSelector()->query(self::getScope($query));
+    }
+
+    /**
+     * Select one entity from collection.
+     *
+     * TODO: Add WITH parameter
+     *
+     * @param array $query Fields and conditions to filter by.
+     * @return static
+     */
+    public static function findOne(array $query = array())
+    {
+        return static::find($query)->findOne();
+    }
+
+    public static function findByID($id = null)
+    {
+        //TODO: implement
+        // return static::findOne(array('_id' => $id));
+    }
 
     /**
      * Simplified way to dump information.

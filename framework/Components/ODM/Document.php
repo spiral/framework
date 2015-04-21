@@ -949,7 +949,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             '_id' => $this->primaryKey()
         ));
 
-        $this->fields = $this->defaults;
+        $this->fields = $this->schema[ODM::D_DEFAULTS];
         $this->event('deleted');
     }
 

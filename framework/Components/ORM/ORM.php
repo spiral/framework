@@ -52,17 +52,18 @@ class ORM extends Component
     /**
      * Get schema for specified document class or collection.
      *
-     * @param string $item Document class or collection name (including database).
+     * @param string $item   Document class or collection name (including database).
+     * @param bool   $update Automatically update schema if requested schema is missing.
      * @return mixed
      */
-    public function getSchema($item)
+    public function getSchema($item, $update = true)
     {
         if ($this->schema === null)
         {
             $this->schema = $this->core->loadData('ormSchema');
         }
 
-        if (!isset($this->schema[$item]))
+        if (!isset($this->schema[$item]) && $update)
         {
             $this->updateSchema();
         }
