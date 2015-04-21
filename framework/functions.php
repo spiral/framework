@@ -7,7 +7,7 @@
  * @copyright ©2009-2015
  */
 use Spiral\Core\Core;
-use Spiral\Components\Debug\Debugger;
+use Spiral\Components\Debug\Dumper;
 use Spiral\Helpers\StringHelper;
 use Spiral\Components\I18n\Translator;
 
@@ -80,9 +80,9 @@ if (!function_exists('dump'))
      * @param bool  $showStatic Set true to dump all static object properties.
      * @return null|string
      */
-    function dump($value, $output = Debugger::DUMP_ECHO, $showStatic = false)
+    function dump($value, $output = Dumper::DUMP_ECHO, $showStatic = false)
     {
-        return Debugger::dump($value, $output, $showStatic);
+        return Dumper::dump($value, $output, $showStatic);
     }
 }
 

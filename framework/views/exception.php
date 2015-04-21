@@ -3,7 +3,7 @@
  * @var \Spiral\Components\Debug\Snapshot $exception
  */
 use Spiral\Components\Tokenizer\Tokenizer;
-use Spiral\Components\Debug\Debugger;
+use Spiral\Components\Debug\Dumper;
 use Spiral\Components\Debug\Logger;
 
 $tokenizer = Tokenizer::getInstance();
@@ -41,7 +41,7 @@ $tokenizer->setHighlightingStyles(array(
 /**
  * Variable dumping styles.
  */
-Debugger::dumpingStyles(array(
+Dumper::dumpingStyles(array(
     'maxLevel'  => 10,
     'container' => 'background-color: white;',
     'indent'    => '&middot;    ',
@@ -385,10 +385,10 @@ Debugger::dumpingStyles(array(
                                         . '</span>';
                                 }
 
-                                $display = Debugger::getStyle($display, 'value', $type);
+                                $display = Dumper::getStyle($display, 'value', $type);
                                 $display = '<span class="argument" onclick="showDump(' . $argumentID . ')">' . $display
                                     . '<div id="dump-argument-' . $argumentID . '" class="dump">' .
-                                    $argument = Debugger::dump($argument, true) . '</div></span>';
+                                    $argument = Dumper::dump($argument, true) . '</div></span>';
 
                                 $arguments[] = $display;
                                 $argumentID++;
@@ -441,7 +441,7 @@ Debugger::dumpingStyles(array(
                         <?php echo $name?> (<?php echo count($GLOBALS[$variable]) ?>)
                     </div>
                     <div class="dump" id="dump-<?php echo $name?>" style="display: none;">
-                        <?php Debugger::dump($GLOBALS[$variable]) ?>
+                        <?php Dumper::dump($GLOBALS[$variable]) ?>
                     </div>
                 </div>
             <?php

@@ -103,7 +103,7 @@ class Logger extends AbstractLogger
     public function __construct(Debugger $debugger, $name = self::DEFAULT_NAME)
     {
         $this->name = $name;
-        $this->fileHandlers = $debugger->getFileHandlers($name);
+        $this->fileHandlers = $debugger->getLogHandlers($name);
 
         if (!self::$reqID)
         {
