@@ -186,28 +186,19 @@ class CookieManager extends Component implements MiddlewareInterface
     {
         if (!empty($this->scheduled))
         {
-            $cookies = array_merge($response->getHeaderLines('Set-Cookie'), $this->scheduled);
+            $cookies = $response->getHeaderLines('Set-Cookie');
 
             //Merging cookies
-            foreach ($cookies as &$cookie)
+            foreach ($this->scheduled as $cookie)
             {
-                if (!$cookie instanceof Cookie)
+                if (!in_array($cookie->getName(), $this->exclude))
                 {
-                    continue;
+                    $cookie = $cookie->withValue(
+                        $this->getEncrypter()->encrypt($cookie->getValue())
+                    );
                 }
 
-                if (in_array($cookie->getName(), $this->exclude))
-                {
-                    //Specified as string or as something else
-                    continue;
-                }
-
-                //Encrypting cookie
-                $cookie = $cookie->withValue(
-                    $this->getEncrypter()->encrypt($cookie->getValue())
-                )->packHeader();
-
-                unset($cookie);
+                $cookies[] = $cookie->packHeader();
             }
 
             $this->scheduled = array();

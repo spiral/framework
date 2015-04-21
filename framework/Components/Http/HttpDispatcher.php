@@ -401,7 +401,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         if (!$stream->isSeekable())
         {
-            echo $stream->getContents();
+            echo $stream->__toString();
         }
         else
         {
