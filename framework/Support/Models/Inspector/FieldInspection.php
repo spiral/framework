@@ -68,9 +68,9 @@ class FieldInspection extends Component
      * @var array
      */
     protected $messages = array(
-        'blacklisted'   => '[[Field is blacklisted but visible in publicFields().]]',
-        'unsafe'        => '[[Field is fillable but no validations or filters provided.]]',
-        'noValidations' => '[[Field is fillable but no validations provided (has filters).]]',
+        'blacklisted'   => 'Field is blacklisted but visible in publicFields().',
+        'unsafe'        => 'Field is fillable but no validations or filters provided.',
+        'noValidations' => 'Field is fillable but no validations provided (has filters).',
     );
 
     /**

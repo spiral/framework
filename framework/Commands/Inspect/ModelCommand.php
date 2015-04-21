@@ -82,7 +82,7 @@ class ModelCommand extends InspectCommand
                 $field->getName(),
                 $this->safetyLevels[$field->safetyLevel()],
                 $field->isFillable() ? 'yes' : self::GREEN_NO,
-                $field->isFiltered() ? self::GREEN_YES : 'no',
+                $field->isFiltered() ? self::GREEN_YES : self::RED_NO,
                 $field->isValidated() ? self::GREEN_YES : 'no',
                 $field->isHidden() ? self::GREEN_YES : ($field->isBlacklisted() ? self::RED_NO : self::NO)
             ));

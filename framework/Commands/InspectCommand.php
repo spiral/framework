@@ -48,7 +48,7 @@ class InspectCommand extends Command
      * @var array
      */
     protected $safetyLevels = array(
-        1 => '<fg=red>Critical</fg=red>',
+        1 => '<fg=red>Very Low</fg=red>',
         2 => '<fg=red>Bad</fg=red>',
         3 => '<fg=yellow>Moderate</fg=yellow>',
         4 => '<fg=yellow>Good</fg=yellow>',

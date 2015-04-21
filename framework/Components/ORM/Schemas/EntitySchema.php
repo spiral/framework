@@ -464,7 +464,7 @@ class EntitySchema extends ModelSchema
             return $accessor->defaultValue($this->tableSchema->getDriver());
         }
 
-        if (array_key_exists($name, $this->getSetters()))
+        if (array_key_exists($name, $this->getSetters()) && $this->getSetters()[$name])
         {
             $setter = $this->getSetters()[$name];
 
@@ -476,6 +476,8 @@ class EntitySchema extends ModelSchema
             //We have to pass default value thought accessor
             return call_user_func($setter, $defaultValue);
         }
+
+        return $defaultValue;
     }
 
     /**
