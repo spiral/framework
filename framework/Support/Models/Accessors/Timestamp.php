@@ -114,7 +114,7 @@ class Timestamp extends Carbon implements AccessorInterface
 
         if (!empty($timezone))
         {
-            return (new self($datetime, $timezone))->getTimestamp();
+            return (new self($datetime, null, $timezone))->getTimestamp();
         }
 
         return (int)strtotime($datetime);

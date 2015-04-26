@@ -508,8 +508,9 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
         static::initialize();
 
         $selector = Selector::make(array(
-            'schema' => $schema,
-            'orm'    => $orm
+            'schema'   => $schema,
+            'database' => DatabaseManager::getInstance()->db($schema[ORM::E_DB]),
+            'orm'      => $orm
         ));
 
         if (isset(EventDispatcher::$dispatchers[static::getAlias()]))

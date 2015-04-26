@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\Database;
 use Spiral\Core\Component;
 
 class Selector extends Component
@@ -19,6 +20,8 @@ class Selector extends Component
      */
     protected $schema = array();
 
+    protected $database = null;
+
     /**
      * ORM component. Used to access related schemas.
      *
@@ -27,9 +30,13 @@ class Selector extends Component
      */
     protected $orm = null;
 
-    public function __construct(array $schema, ORM $orm, array $query = array())
+    protected $loadingSchema = array();
+
+    public function __construct(array $schema, Database $database, ORM $orm, array $query = array())
     {
         $this->schema = $schema;
+        $this->database = $database;
+
         $this->orm = $orm;
     }
 }

@@ -39,9 +39,9 @@ use Spiral\Support\Pagination\Paginator;
 class Collection extends Component implements \Iterator, PaginableInterface
 {
     /**
-     * Pagination.
+     * Pagination and logging traits.
      */
-    use PaginatorTrait;
+    use PaginatorTrait, Component\LoggerTrait;
 
     /**
      * Sort order.
@@ -261,6 +261,13 @@ class Collection extends Component implements \Iterator, PaginableInterface
         if (!empty($this->offset))
         {
             $queryInfo['offset'] = (int)$this->offset;
+        }
+
+        if ((!empty($this->limit) || !empty($this->offset)) && empty($this->sort))
+        {
+            self::logger()->warning(
+                "MongoDB query executed with limit/offset but without specified sorting."
+            );
         }
 
         //$this->logger()->debug("{database}/{collection}: " . json_encode($queryInfo), array(

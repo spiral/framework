@@ -96,17 +96,18 @@ trait PaginatorTrait
     }
 
     /**
-     * Paginate current selection.
+     * Paginate current selection. If count parameter provided with null value, pagination will fetch
+     * count from target object (this may cause additional query).
      *
      * @param int                    $limit         Pagination limit.
-     * @param string $pageParameter                 Name of parameter in request query which is used
-     *                                              to store the current page number. "page" by default.
-     * @param int $count                            Forced count value, if 0 paginator will try to
+     * @param int|null               $count         Forced count value, if null paginator will try to
      *                                              fetch count from associated object.
+     * @param string                 $pageParameter Name of parameter in request query which is used
+     *                                              to store the current page number. "page" by default.
      * @param ServerRequestInterface $request       Source of page number.
      * @return mixed
      */
-    public function paginate($limit = 50, $pageParameter = 'page', $count = 0, $request = null)
+    public function paginate($limit = 25, $count = null, $pageParameter = 'page', $request = null)
     {
         $this->paginator = Paginator::make(compact('pageParameter', 'request'));
 
@@ -139,16 +140,16 @@ trait PaginatorTrait
      */
     protected function doPagination()
     {
-        if (!$this->paginator)
+        if (empty($this->paginator))
         {
             return $this;
         }
 
-        if ($this->paginationCount)
+        if (!empty($this->paginationCount))
         {
             $this->paginator->setCount($this->paginationCount);
         }
 
-        return $this->paginator->paginateObject($this, !(bool)$this->paginationCount);
+        return $this->paginator->paginateObject($this, empty($this->paginationCount));
     }
 }

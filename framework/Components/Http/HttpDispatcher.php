@@ -229,6 +229,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         //Creating scope
         Container::bind('request', $request);
         Container::bind(get_class($request), $request);
+        Container::bind('Psr\Http\Message\ServerRequestInterface', $request);
 
         $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
 
@@ -238,12 +239,14 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         Container::removeBinding(get_class($request));
         Container::removeBinding('request');
+        Container::removeBinding('Psr\Http\Message\ServerRequestInterface');
 
         if (!empty($outerRequest))
         {
             //Restoring scope
             Container::bind('request', $outerRequest);
             Container::bind(get_class($outerRequest), $outerRequest);
+            Container::bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
         }
 
         return $response;

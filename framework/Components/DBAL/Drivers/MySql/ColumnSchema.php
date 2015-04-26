@@ -189,7 +189,7 @@ class ColumnSchema extends AbstractColumnSchema
     {
         if ($this->abstractType() == 'timestamp' && is_scalar($this->defaultValue))
         {
-            return Timestamp::castTimestamp($this->defaultValue);
+            return Timestamp::castTimestamp($this->defaultValue, 'UTC');
         }
 
         return parent::prepareDefault();
