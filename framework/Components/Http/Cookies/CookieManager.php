@@ -32,6 +32,13 @@ class CookieManager extends Component implements MiddlewareInterface
     const SINGLETON = 'cookies';
 
     /**
+     * Cookie protection modes.
+     */
+    const NONE      = false;
+    const ENCRYPT   = true;
+    const SIGNATURE = false;
+
+    /**
      * Http request.
      *
      * @var ServerRequestInterface
@@ -117,14 +124,14 @@ class CookieManager extends Component implements MiddlewareInterface
     {
         $this->request = $request;
 
-        $request = $this->decryptCookies($request);
+        $request = $this->decodeCookies($request);
 
         /**
          * @var ResponseInterface $response
          */
         $response = $next($request);
 
-        return $this->encryptCookies($response);
+        return $this->mountCookies($response);
     }
 
     /**
@@ -133,18 +140,20 @@ class CookieManager extends Component implements MiddlewareInterface
      * @param ServerRequestInterface $request
      * @return ServerRequestInterface
      */
-    protected function decryptCookies(ServerRequestInterface $request)
+    protected function decodeCookies(ServerRequestInterface $request)
     {
         $altered = false;
         $cookies = $request->getCookieParams();
         foreach ($cookies as $name => $cookie)
         {
-            if (in_array($name, $this->exclude))
+            if (in_array($name, $this->exclude) || $this->config['protection'] == self::NONE)
             {
                 continue;
             }
 
             $altered = true;
+
+            //TODO: select protection mechanism
 
             $cookies[$name] = $this->decryptCookie($cookie);
         }
@@ -182,7 +191,7 @@ class CookieManager extends Component implements MiddlewareInterface
      * @return ResponseInterface
      * @throws EncrypterException
      */
-    protected function encryptCookies(ResponseInterface $response)
+    protected function mountCookies(ResponseInterface $response)
     {
         if (!empty($this->scheduled))
         {
@@ -191,12 +200,16 @@ class CookieManager extends Component implements MiddlewareInterface
             //Merging cookies
             foreach ($this->scheduled as $cookie)
             {
-                if (!in_array($cookie->getName(), $this->exclude))
+                if (in_array($cookie->getName(), $this->exclude))
                 {
-                    $cookie = $cookie->withValue(
-                        $this->getEncrypter()->encrypt($cookie->getValue())
-                    );
+                    $cookies[] = $cookie->packHeader();
+                    continue;
                 }
+
+                //TODO: select protection mechanism
+                $cookie = $cookie->withValue(
+                    $this->getEncrypter()->encrypt($cookie->getValue())
+                );
 
                 $cookies[] = $cookie->packHeader();
             }

@@ -229,6 +229,18 @@ class EntitySchema extends ModelSchema
      */
     public function getDefaults()
     {
+        //We have to reiterate columns as schema can be altered while relation creation
+        foreach ($this->tableSchema->getColumns() as $column)
+        {
+            if (!array_key_exists($column->getName(), $this->columns))
+            {
+                $this->columns[$column->getName()] = $this->prepareDefault(
+                    $column->getName(),
+                    $column->getDefaultValue()
+                );
+            }
+        }
+
         return $this->columns;
     }
 
@@ -444,6 +456,13 @@ class EntitySchema extends ModelSchema
         return '';
     }
 
+    /**
+     * Prepare default value to be stored in models schema.
+     *
+     * @param string $name
+     * @param mixed  $defaultValue
+     * @return mixed|null
+     */
     protected function prepareDefault($name, $defaultValue = null)
     {
         if (array_key_exists($name, $this->getAccessors()))

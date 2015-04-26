@@ -342,6 +342,7 @@ abstract class AbstractColumnSchema extends Component
      */
     public function type($type)
     {
+        dump($type, 2);
         if (isset($this->aliases[$type]))
         {
             $type = $this->aliases[$type];

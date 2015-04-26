@@ -350,6 +350,126 @@ trait JoinTrait
     }
 
     /**
+     * Add on condition to last registered join. On condition will be specified with AND boolean
+     * joiner. Method supports nested queries and array based (mongo like) where conditions. Syntax
+     * is identical to where methods except no arguments should be identifiers and not values.
+     *
+     * Attention: THIS METHOD WILL ADD PARAMETRIC CONDITION TO ON, USE "on" TO ADD column relations.
+     *
+     * Examples:
+     * $select->join('info')->onWhere('someValue', $value)->columns('info.balance');
+     * $select->join('info')->onWhere('someValue', '=', $value)->columns('info.balance');
+     * $select->join('info')->onWhere(['someValue' => $value])->columns('info.balance');
+     *
+     * $select->join('info')->onWhere(function($select) use($value, $anotherValue) {
+     *      $select->onWhere('someValue', $value)->orOnWhere('someValue', $anotherValue);
+     * })->columns('info.balance');
+     *
+     * Aliases can be also used:
+     * $select->join('info as i')->onWhere('i.someValue', $value)->columns('i.balance');
+     * $select->join('info as i')->onWhere('i.someValue', '=', $value)->columns('i.balance');
+     * $select->join('info as i')->onWhere(['i.someValue' => $value])->columns('i.balance');
+     *
+     * $select->join('info as i')->onWhere(function($select) use($value, $anotherValue) {
+     *      $select->onWhere('i.someValue', $value)->orOnWhere('i.someValue', $anotherValue);
+     * })->columns('i.balance');
+     *
+     * @see parseWhere()
+     * @see whereToken()
+     * @param mixed $on       Joined column name or SQLFragment, or where array.
+     * @param mixed $operator Foreign column is operator specified.
+     * @param mixed $value    Value.
+     * @return static
+     * @throws DBALException
+     */
+    public function onWhere($on = null, $operator = null, $value = null)
+    {
+        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], true);
+
+        return $this;
+    }
+
+    /**
+     * Add on condition to last registered join. On condition will be specified with AND boolean
+     * joiner. Method supports nested queries and array based (mongo like) where conditions. Syntax
+     * is identical to where methods except no arguments should be identifiers and not values.
+     *
+     * Attention: THIS METHOD WILL ADD PARAMETRIC CONDITION TO ON, USE "on" TO ADD column relations.
+     *
+     * Examples:
+     * $select->join('info')->andOnWhere('someValue', $value)->columns('info.balance');
+     * $select->join('info')->andOnWhere('someValue', '=', $value)->columns('info.balance');
+     * $select->join('info')->andOnWhere(['someValue' => $value])->columns('info.balance');
+     *
+     * $select->join('info')->andOnWhere(function($select) use($value, $anotherValue) {
+     *      $select->onWhere('someValue', $value)->orOnWhere('someValue', $anotherValue);
+     * })->columns('info.balance');
+     *
+     * Aliases can be also used:
+     * $select->join('info as i')->andOnWhere('i.someValue', $value)->columns('i.balance');
+     * $select->join('info as i')->andOnWhere('i.someValue', '=', $value)->columns('i.balance');
+     * $select->join('info as i')->andOnWhere(['i.someValue' => $value])->columns('i.balance');
+     *
+     * $select->join('info as i')->andOnWhere(function($select) use($value, $anotherValue) {
+     *      $select->onWhere('i.someValue', $value)->orOnWhere('i.someValue', $anotherValue);
+     * })->columns('i.balance');
+     *
+     * @see parseWhere()
+     * @see whereToken()
+     * @param mixed $on       Joined column name or SQLFragment, or where array.
+     * @param mixed $operator Foreign column is operator specified.
+     * @param mixed $value    Value.
+     * @return static
+     * @throws DBALException
+     */
+    public function andOnWhere($on = null, $operator = null, $value = null)
+    {
+        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], true);
+
+        return $this;
+    }
+
+    /**
+     * Add on condition to last registered join. On condition will be specified with OR boolean
+     * joiner. Method supports nested queries and array based (mongo like) where conditions. Syntax
+     * is identical to where methods except no arguments should be identifiers and not values.
+     *
+     * Attention: THIS METHOD WILL ADD PARAMETRIC CONDITION TO ON, USE "on" TO ADD column relations.
+     *
+     * Examples:
+     * $select->join('info')->orOnWhere('someValue', $value)->columns('info.balance');
+     * $select->join('info')->orOnWhere('someValue', '=', $value)->columns('info.balance');
+     * $select->join('info')->orOnWhere(['someValue' => $value])->columns('info.balance');
+     *
+     * $select->join('info')->orOnWhere(function($select) use($value, $anotherValue) {
+     *      $select->onWhere('someValue', $value)->orOnWhere('someValue', $anotherValue);
+     * })->columns('info.balance');
+     *
+     * Aliases can be also used:
+     * $select->join('info as i')->orOnWhere('i.someValue', $value)->columns('i.balance');
+     * $select->join('info as i')->orOnWhere('i.someValue', '=', $value)->columns('i.balance');
+     * $select->join('info as i')->orOnWhere(['i.someValue' => $value])->columns('i.balance');
+     *
+     * $select->join('info as i')->orOnWhere(function($select) use($value, $anotherValue) {
+     *      $select->onWhere('i.someValue', $value)->orOnWhere('i.someValue', $anotherValue);
+     * })->columns('i.balance');
+     *
+     * @see parseWhere()
+     * @see whereToken()
+     * @param mixed $on       Joined column name or SQLFragment, or where array.
+     * @param mixed $operator Foreign column is operator specified.
+     * @param mixed $value    Value.
+     * @return static
+     * @throws DBALException
+     */
+    public function orOnWhere($on = null, $operator = null, $value = null)
+    {
+        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], true);
+
+        return $this;
+    }
+
+    /**
      * Helper methods used to processed user input in where methods to internal where token, method
      * support all different combinations, closures and nested queries. Additionally i can be used
      * not only for where but for having and join tokens.

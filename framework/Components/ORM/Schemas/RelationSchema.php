@@ -11,6 +11,7 @@ namespace Spiral\Components\ORM\Schemas;
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Container;
@@ -311,7 +312,7 @@ abstract class RelationSchema
             case 'primary':
                 return 'integer';
             default:
-                return $column;
+                return $column->abstractType();
         }
     }
 
@@ -400,8 +401,8 @@ abstract class RelationSchema
     public function normalizeSchema()
     {
         return array(
-            'name'       => $this->name,
-            'definition' => $this->normalizeDefinition()
+            ORM::R_TYPE       => static::RELATION_TYPE,
+            ORM::R_DEFINITION => $this->normalizeDefinition()
         );
     }
 }

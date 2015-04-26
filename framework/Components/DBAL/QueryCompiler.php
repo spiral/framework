@@ -199,15 +199,15 @@ class QueryCompiler extends Component
         $columns = $this->columns($columns);
 
         //Conditions
-        $where = $where ? 'WHERE ' . $this->where($where) . ' ' : '';
-        $having = $having ? 'HAVING ' . $this->where($having) . ' ' : '';
+        $where = $where ? "\nWHERE " . $this->where($where) . ' ' : '';
+        $having = $having ? "\nHAVING " . $this->where($having) . ' ' : '';
 
         //Sortings and grouping
         $groupBy = $groupBy ? $this->groupBy($groupBy) . ' ' : '';
 
         //Initial statement have predictable order
         $statement = rtrim("SELECT {$distinct}{$columns} "
-                . "FROM {$from} {$joins}{$where}{$groupBy}{$having}") . ' ';
+                . "\nFROM {$from} {$joins}{$where}{$groupBy}{$having}") . ' ';
 
         if (empty($unions) && !empty($orderBy))
         {
@@ -261,7 +261,7 @@ class QueryCompiler extends Component
 
         if (!empty($where))
         {
-            $statement .= 'WHERE ' . $this->where($where);
+            $statement .= "\nWHERE " . $this->where($where);
         }
 
         return rtrim($statement);
@@ -289,7 +289,7 @@ class QueryCompiler extends Component
         $limit = 0
     )
     {
-        $statement = 'UPDATE ' . $this->quote($table, true) . ' SET';
+        $statement = 'UPDATE ' . $this->quote($table, true) . "\nSET";
 
         foreach ($values as $column => &$value)
         {
@@ -320,7 +320,7 @@ class QueryCompiler extends Component
 
         if (!empty($where))
         {
-            $statement .= 'WHERE ' . $this->where($where);
+            $statement .= "\nWHERE " . $this->where($where);
         }
 
         return rtrim($statement);
@@ -377,7 +377,7 @@ class QueryCompiler extends Component
         $statement = '';
         foreach ($joins as $table => $join)
         {
-            $statement .= $join['type'] . ' JOIN ' . $this->quote($table, true);
+            $statement .= "\n" . $join['type'] . ' JOIN ' . $this->quote($table, true);
 
             if (!empty($join['on']))
             {

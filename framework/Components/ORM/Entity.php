@@ -159,7 +159,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
         $this->schema = self::$schemaCache[$class];
 
         //Merging with default values
-        $this->fields = $data + $this->schema[ORM::E_DEFAULTS];
+        $this->fields = $data + $this->schema[ORM::E_COLUMNS];
 
         if ((!$this->primaryKey()) || !is_array($data))
         {
@@ -181,7 +181,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
 
         if ($forceUpdate)
         {
-            $this->updates = $this->schema[ORM::E_DEFAULTS];
+            $this->updates = $this->schema[ORM::E_COLUMNS];
         }
 
         return $this;
@@ -591,7 +591,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
             $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
         ));
 
-        $this->fields = $this->schema[ORM::E_DEFAULTS];
+        $this->fields = $this->schema[ORM::E_COLUMNS];
         $this->event('deleted');
     }
 

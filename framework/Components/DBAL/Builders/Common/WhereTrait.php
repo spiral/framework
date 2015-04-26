@@ -409,12 +409,12 @@ trait WhereTrait
      * @param array  $where           Array of where conditions.
      * @param string $grouping        Parent grouping token (OR, AND)
      * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $catchParameters If true every found parameter will passed thought addParameter()
-     *                                method.
+     * @param bool   $dataParameters  If true every found parameter will passed thought addParameter()
+     *                                method, if false every parameter will be converted to identifier.
      * @return array
      * @throws DBALException
      */
-    protected function parseWhere(array $where, $grouping, &$tokens, $catchParameters = true)
+    protected function parseWhere(array $where, $grouping, &$tokens, $dataParameters = true)
     {
         foreach ($where as $name => $value)
         {
@@ -428,7 +428,7 @@ trait WhereTrait
 
                 foreach ($value as $subWhere)
                 {
-                    $this->parseWhere($subWhere, strtoupper($name), $tokens, $catchParameters);
+                    $this->parseWhere($subWhere, strtoupper($name), $tokens, $dataParameters);
                 }
 
                 $tokens[] = array('', ')');
@@ -440,7 +440,11 @@ trait WhereTrait
                 //Simple association
                 $tokens[] = array(
                     $grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR',
-                    array($name, '=', $catchParameters ? $this->addParameter($value) : $value)
+                    array(
+                        $name,
+                        '=',
+                        $dataParameters ? $this->addParameter($value) : $this->wrapIdentifier($value)
+                    )
                 );
                 continue;
             }
@@ -472,8 +476,12 @@ trait WhereTrait
                     $tokens[] = array($innerJoiner, array(
                         $name,
                         $key,
-                        $catchParameters ? $this->addParameter($subValue) : $subValue[0],
-                        $catchParameters ? $this->addParameter($subValue[1]) : $subValue[1]
+                        $dataParameters
+                            ? $this->addParameter($subValue)
+                            : $this->wrapIdentifier($subValue[0]),
+                        $dataParameters
+                            ? $this->addParameter($subValue[1])
+                            : $this->wrapIdentifier($subValue[1])
                     ));
                 }
                 else
@@ -482,7 +490,9 @@ trait WhereTrait
                     $tokens[] = array($innerJoiner, array(
                         $name,
                         $key,
-                        $catchParameters ? $this->addParameter($subValue) : $subValue
+                        $dataParameters
+                            ? $this->addParameter($subValue)
+                            : $this->wrapIdentifier($subValue)
                     ));
                 }
             }

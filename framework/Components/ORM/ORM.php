@@ -38,6 +38,10 @@ class ORM extends Component
      */
     protected $schema = null;
 
+    protected static $relations = array(
+        Entity::HAS_ONE => 'Spiral\Components\ORM\Relations\HasOne'
+    );
+
     /**
      * ORM component instance.
      *
@@ -69,6 +73,20 @@ class ORM extends Component
         }
 
         return $this->schema[$item];
+    }
+
+    /**
+     * @param        $type
+     * @param array  $definition
+     * @param Entity $parent
+     * @param array  $data
+     * @return Relation
+     */
+    public function getRelation($type, array $definition, Entity $parent = null, $data = array())
+    {
+        $relation = self::$relations[$type];
+
+        return new $relation($definition, $parent, $data);
     }
 
     /**
@@ -118,7 +136,7 @@ class ORM extends Component
      */
     const E_TABLE       = 0;
     const E_DB          = 1;
-    const E_DEFAULTS    = 2;
+    const E_COLUMNS     = 2;
     const E_HIDDEN      = 3;
     const E_SECURED     = 4;
     const E_FILLABLE    = 5;
@@ -127,7 +145,6 @@ class ORM extends Component
     const E_MESSAGES    = 8;
     const E_RELATIONS   = 9;
     const E_PRIMARY_KEY = 10;
-
 
     /**
      * Normalized relation options.

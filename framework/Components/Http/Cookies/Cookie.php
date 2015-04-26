@@ -29,9 +29,9 @@ class Cookie
      * Cookie lifetime. This value specified in seconds and declares period of time in which cookie
      * will expire relatively to current time() value.
      *
-     * @var int
+     * @var int|null
      */
-    private $lifetime = 0;
+    private $lifetime = null;
 
     /**
      * The path on the server in which the cookie will be available on.
@@ -107,7 +107,7 @@ class Cookie
     public function __construct(
         $name,
         $value = null,
-        $lifetime = 0,
+        $lifetime = null,
         $path = null,
         $domain = null,
         $secure = false,
@@ -149,10 +149,17 @@ class Cookie
      * In other words, you'll most likely set this with the time function plus the number of seconds
      * before you want it to expire. Or you might use mktime.
      *
-     * @return int
+     * Will return null if lifetime is not specified.
+     *
+     * @return int|null
      */
     public function getExpires()
     {
+        if (empty($this->lifetime))
+        {
+            return null;
+        }
+
         return time() + $this->lifetime;
     }
 
@@ -230,20 +237,22 @@ class Cookie
      */
     public function packHeader()
     {
-        $header = array();
+        $header = array(
+            rawurlencode($this->name) . '=' . rawurlencode($this->value)
+        );
 
-        $header[] = rawurlencode($this->name) . '=' . rawurlencode($this->value);
+        if ($this->lifetime !== null)
+        {
+            $header['expires'] = gmdate(\DateTime::COOKIE, $this->getExpires());
+            $header[] = 'Max-Age=' . $this->lifetime;
+        }
 
-        //Expiration time
-        $header['expires'] = gmdate(\DateTime::COOKIE, $this->getExpires());
-        $header[] = 'Max-Age=' . $this->lifetime;
-
-        if ($this->path)
+        if (!empty($this->path))
         {
             $header[] = 'path=' . $this->path;
         }
 
-        if ($this->domain)
+        if (!empty($this->domain))
         {
             $header[] = $this->domain;
         }
