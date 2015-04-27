@@ -15,11 +15,11 @@ trait MethodTrait
     /**
      * Helper method used to call object function with automatic parameters resolution using Container.
      *
-     * @param string $method     Method name.
-     * @param array  $parameters Set of parameters to populate.
+     * @param string|\Closure $method     Method name.
+     * @param array           $parameters Set of parameters to populate.
      * @return mixed
      */
-    protected function callMethod($method = '', array $parameters = array())
+    protected function callFunction($method = '', array $parameters = array())
     {
         $reflection = new \ReflectionMethod($this, $method);
         $reflection->setAccessible(true);

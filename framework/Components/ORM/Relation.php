@@ -10,6 +10,8 @@ namespace Spiral\Components\ORM;
 
 abstract class Relation
 {
+    const OUTER_TABLE = 1;
+
     const RELATION_TYPE  = Entity::HAS_ONE;
     const DEFAULT_LOADER = Selector::POSTLOAD;
 
@@ -28,7 +30,7 @@ abstract class Relation
         return $this->target;
     }
 
-    public function inload($parentTable, Selector $selector, ORM $orm)
+    public function createInload($parentTable, Selector $selector)
     {
     }
 }

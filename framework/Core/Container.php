@@ -42,7 +42,6 @@ class Container extends Component
      * @param ReflectionParameter $contextParameter Parameter were used to declare DI.
      * @param bool                $ignoreII         If true, core will ignore InjectableInterface and
      *                                              resolve class as usual.
-     * @param string              $requester        Class name of injection requester.
      * @return mixed|null|object
      * @throws CoreException
      * @throws ContainerException
@@ -51,8 +50,7 @@ class Container extends Component
         $alias,
         $parameters = array(),
         ReflectionParameter $contextParameter = null,
-        $ignoreII = false,
-        $requester = null
+        $ignoreII = false
     )
     {
         if (!isset(self::$bindings[$alias]))
@@ -117,7 +115,7 @@ class Container extends Component
                     $binding[0],
                     $parameters,
                     $contextParameter,
-                    $ignoreII, $requester
+                    $ignoreII
                 );
             }
             else
@@ -141,16 +139,17 @@ class Container extends Component
      * Helper method to resolve constructor or function arguments, build required DI using IoC
      * container and mix with pre-defined set of named parameters.
      *
-     * @param \ReflectionMethod $reflection    Method or constructor should be filled with DI.
-     * @param array             $parameters    Outside parameters used in priority to DI. Named list.
-     * @param bool              $userArguments If true no exception will be raised while some argument
-     *                                         (not DI) can not be resolved. This parameter used to
-     *                                         pass error to controller.
+     * @param \ReflectionFunctionAbstract $reflection    Method or constructor should be filled with DI.
+     * @param array                       $parameters    Outside parameters used in priority to DI.
+     *                                                   Named list.
+     * @param bool                        $userArguments If true no exception will be raised while
+     *                                                   some argument (not DI) can not be resolved.
+     *                                                   This parameter used to pass error to controller.
      * @return array
      * @throws ContainerException
      */
     public static function resolveArguments(
-        \ReflectionMethod $reflection,
+        \ReflectionFunctionAbstract $reflection,
         array $parameters = array(),
         $userArguments = false
     )
@@ -180,8 +179,7 @@ class Container extends Component
                             $parameter->getClass()->getName(),
                             array(),
                             $parameter,
-                            false,
-                            $reflection->class
+                            false
                         );
 
                         continue;
@@ -203,8 +201,15 @@ class Container extends Component
 
                 if (!$userArguments)
                 {
+                    $name = $reflection->getName();
+
+                    if ($reflection instanceof \ReflectionMethod)
+                    {
+                        $name = $reflection->class . '::' . $name;
+                    }
+
                     throw new CoreException(
-                        "Unable to resolve '{$parameter->getName()}' argument in '{$reflection->class}'."
+                        "Unable to resolve '{$parameter->getName()}' argument in '{$name}'."
                     );
                 }
             }

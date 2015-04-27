@@ -452,13 +452,24 @@ class Route extends Component implements RouteInterface
     {
         if (empty($this->middlewares))
         {
-            $target = $this->callTarget($core);
+            if ($this->target instanceof \Closure)
+            {
+                $reflection = new \ReflectionFunction($this->target);
+
+                return $reflection->invokeArgs(Container::resolveArguments($reflection, array(
+                    'request' => $request,
+                    'context' => $this,
+                    'route'   => $this
+                )));
+            }
+
+            $target = $this->getTargetEndpoint($core);
 
             return $target($request, null, $this);
         }
 
         return $this->getPipeline($routeMiddlewares)
-            ->target($this->callTarget($core))
+            ->target($this->getTargetEndpoint($core))
             ->run($request, $this);
     }
 
@@ -488,7 +499,7 @@ class Route extends Component implements RouteInterface
      * @param CoreInterface $core
      * @return callable|mixed|null|object
      */
-    protected function callTarget(CoreInterface $core)
+    protected function getTargetEndpoint(CoreInterface $core)
     {
         if (is_object($this->target) || is_array($this->target))
         {

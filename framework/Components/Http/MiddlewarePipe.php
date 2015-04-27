@@ -109,6 +109,19 @@ class MiddlewarePipe extends Component
 
         if (!isset($this->middleware[$position]))
         {
+            if ($this->target instanceof \Closure)
+            {
+                $reflection = new \ReflectionFunction($this->target);
+
+                $arguments = array();
+                if (!empty($input))
+                {
+                    $arguments['request'] = $input;
+                }
+
+                return $reflection->invokeArgs(Container::resolveArguments($reflection, $arguments));
+            }
+
             return call_user_func($this->target, $input);
         }
 

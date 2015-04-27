@@ -45,7 +45,7 @@ trait TimestampsTrait
                 }
             };
 
-            //This check is required as Document::SCHEMA_ANALYSIS will be provided multiple times
+            //This check is required as Entity::SCHEMA_ANALYSIS will be provided multiple times
             if (!self::dispatcher()->hasListener('describe', $listener))
             {
                 self::dispatcher()->addListener('describe', $listener);

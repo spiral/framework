@@ -237,7 +237,7 @@ abstract class Command extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->callMethod('perform', compact('input', 'output'));
+        $this->callFunction('perform', compact('input', 'output'));
     }
 
     /**

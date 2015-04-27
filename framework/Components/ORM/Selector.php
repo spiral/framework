@@ -103,7 +103,7 @@ class Selector extends QueryBuilder
 
         $this->buildQuery();
 
-        return $compiler->select(
+        $statement = $compiler->select(
             array($this->schema[ORM::E_TABLE]),
             false, //todo: check if required
             $this->columns,
@@ -115,6 +115,8 @@ class Selector extends QueryBuilder
         //$this->limit,
         //$this->offset
         );
+
+        return $statement;
     }
 
     //    public function sqlStatement()
@@ -144,7 +146,7 @@ class Selector extends QueryBuilder
 
                 $outerSchema = $this->orm->getSchema($relation['relation']->getTarget());
 
-                $relation['relation']->inload($relation['parentTable'], $this, $this->orm);
+                $relation['relation']->createInload($relation['parentTable'], $this);
 
                 //Adding columns to list
                 $this->columns = array_merge(

@@ -92,7 +92,7 @@ abstract class BaseCommand extends Command
             $driver->dispatcher()->addListener('statement', array($this, 'displayQuery'));
         }
 
-        $this->callMethod('perform', compact('input', 'output'));
+        $this->callFunction('perform', compact('input', 'output'));
 
         $driver->dispatcher()->removeListener('statement', array($this, 'displayQuery'));
     }

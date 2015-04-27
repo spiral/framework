@@ -150,5 +150,6 @@ class ORM extends Component
      * Normalized relation options.
      */
     const R_TYPE       = 0;
-    const R_DEFINITION = 1;
+    const R_TABLE      = 1;
+    const R_DEFINITION = 2;
 }

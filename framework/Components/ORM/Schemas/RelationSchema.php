@@ -13,6 +13,7 @@ use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
+use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Container;
 
@@ -267,6 +268,21 @@ abstract class RelationSchema
     }
 
     /**
+     * Outer table name.
+     *
+     * @return null|string
+     */
+    public function getOuterTable()
+    {
+        if ($this->outerEntity())
+        {
+            return $this->outerEntity()->getTable();
+        }
+
+        return null;
+    }
+
+    /**
      * Outer key name.
      *
      * @return null|string
@@ -379,7 +395,7 @@ abstract class RelationSchema
      */
     protected function normalizeDefinition()
     {
-        $definition = $this->definition;
+        $definition = array(Relation::OUTER_TABLE => $this->getOuterTable()) + $this->definition;
 
         //Unnecessary fields.
         unset(
