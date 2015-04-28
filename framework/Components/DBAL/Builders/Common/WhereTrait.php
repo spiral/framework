@@ -319,7 +319,7 @@ trait WhereTrait
                     //Check if sql fragment
                     $dataParameters
                         ? $this->addParameter($variousA)
-                        : $this->wrapIdentifier($variousA)
+                        : $this->wrapExpression($variousA)
                 ));
                 break;
             case 3:
@@ -329,7 +329,7 @@ trait WhereTrait
                     strtoupper($variousA),
                     $dataParameters
                         ? $this->addParameter($variousB)
-                        : $this->wrapIdentifier($variousB)
+                        : $this->wrapExpression($variousB)
                 ));
                 break;
             case 4:
@@ -347,10 +347,10 @@ trait WhereTrait
                     strtoupper($variousA),
                     $dataParameters
                         ? $this->addParameter($variousB)
-                        : $this->wrapIdentifier($variousB),
+                        : $this->wrapExpression($variousB),
                     $dataParameters
                         ? $this->addParameter($variousC)
-                        : $this->wrapIdentifier($variousC)
+                        : $this->wrapExpression($variousC)
                 ));
         }
 
@@ -363,11 +363,11 @@ trait WhereTrait
      * @param string $parameter
      * @return SqlExpression
      */
-    protected function wrapIdentifier($parameter)
+    protected function wrapExpression($parameter)
     {
         if (!$parameter instanceof SqlFragmentInterface)
         {
-            return SqlExpression::make($parameter);
+            return new SqlExpression($parameter);
         }
 
         return $parameter;
@@ -443,7 +443,7 @@ trait WhereTrait
                     array(
                         $name,
                         '=',
-                        $dataParameters ? $this->addParameter($value) : $this->wrapIdentifier($value)
+                        $dataParameters ? $this->addParameter($value) : $this->wrapExpression($value)
                     )
                 );
                 continue;
@@ -478,10 +478,10 @@ trait WhereTrait
                         $key,
                         $dataParameters
                             ? $this->addParameter($subValue)
-                            : $this->wrapIdentifier($subValue[0]),
+                            : $this->wrapExpression($subValue[0]),
                         $dataParameters
                             ? $this->addParameter($subValue[1])
-                            : $this->wrapIdentifier($subValue[1])
+                            : $this->wrapExpression($subValue[1])
                     ));
                 }
                 else
@@ -492,7 +492,7 @@ trait WhereTrait
                         $key,
                         $dataParameters
                             ? $this->addParameter($subValue)
-                            : $this->wrapIdentifier($subValue)
+                            : $this->wrapExpression($subValue)
                     ));
                 }
             }

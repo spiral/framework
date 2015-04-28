@@ -10,7 +10,7 @@ namespace Spiral\Components\DBAL;
 
 use Spiral\Core\Component;
 
-class SqlFragment extends Component implements SqlFragmentInterface
+class SqlFragment implements SqlFragmentInterface
 {
     /**
      * Raw SQL statement.
@@ -29,20 +29,6 @@ class SqlFragment extends Component implements SqlFragmentInterface
     public function __construct($statement)
     {
         $this->statement = $statement;
-    }
-
-    /**
-     * Create or retrieve component instance using IoC container. This method can return already
-     * existed instance of class if that instance were defined as singleton and binded in core under
-     * same class name. Using binding mechanism target instance can be redefined to use another
-     * declaration. Be aware of that.
-     *
-     * @param string $statement
-     * @return SqlFragment
-     */
-    public static function make($statement = '')
-    {
-        return parent::make(compact('statement'));
     }
 
     /**

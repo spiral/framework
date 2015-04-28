@@ -10,7 +10,7 @@ namespace Spiral\Components\DBAL;
 
 use Spiral\Core\Component;
 
-class Parameter extends Component implements ParameterInterface
+class Parameter implements ParameterInterface
 {
     /**
      * Value parameter representing to query builders. Can be an array.
@@ -50,17 +50,6 @@ class Parameter extends Component implements ParameterInterface
     public function setValue($value)
     {
         $this->value = $value;
-    }
-
-    /**
-     * New instance on dbal query Parameter.
-     *
-     * @param mixed $value Binded value.
-     * @return Parameter
-     */
-    public static function make($value = array())
-    {
-        return parent::make(compact('value'));
     }
 
     /**
