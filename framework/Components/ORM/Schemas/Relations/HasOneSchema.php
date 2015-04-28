@@ -38,7 +38,7 @@ class HasOneSchema extends RelationSchema
      */
     public function buildSchema()
     {
-        $outerSchema = $this->outerEntity()->getTableSchema();
+        $outerSchema = $this->getOuterEntity()->getTableSchema();
 
         $outerKey = $outerSchema->column($this->getOuterKey());
         $outerKey->type($this->getInnerKeyType());
@@ -65,7 +65,7 @@ class HasOneSchema extends RelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        $this->outerEntity()->addRelation($name, array(
+        $this->getOuterEntity()->addRelation($name, array(
             Entity::BELONGS_TO        => $this->entitySchema->getClass(),
             Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],

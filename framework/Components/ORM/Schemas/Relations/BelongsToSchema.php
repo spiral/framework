@@ -53,8 +53,8 @@ class BelongsToSchema extends RelationSchema
         if ($this->definition[Entity::CONSTRAINT])
         {
             $foreignKey = $innerKey->foreign(
-                $this->outerEntity()->getTable(),
-                $this->outerEntity()->getPrimaryKey()
+                $this->getOuterEntity()->getTable(),
+                $this->getOuterEntity()->getPrimaryKey()
             );
             $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
@@ -78,7 +78,7 @@ class BelongsToSchema extends RelationSchema
             );
         }
 
-        $this->outerEntity()->addRelation($name, array(
+        $this->getOuterEntity()->addRelation($name, array(
             $type                     => $this->entitySchema->getClass(),
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
             Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],

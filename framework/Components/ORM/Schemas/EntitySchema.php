@@ -154,7 +154,7 @@ class EntitySchema extends ModelSchema
             if (is_array($value))
             {
                 $value = array_merge(
-                    $this->ormSchema->getEntity($parentClass)->property($property, true),
+                    $this->ormSchema->getActiveRecord($parentClass)->property($property, true),
                     $value
                 );
             }

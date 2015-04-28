@@ -76,10 +76,10 @@ class ORM extends Component
     }
 
     /**
-     * @param        $type
-     * @param array  $definition
+     * @param              $type
+     * @param array        $definition
      * @param Entity $parent
-     * @param array  $data
+     * @param array        $data
      * @return Relation
      */
     public function getRelation($type, array $definition, Entity $parent = null, $data = array())
@@ -124,6 +124,7 @@ class ORM extends Component
         $builder->executeSchema();
 
         $this->schema = $this->event('schema', $builder->normalizeSchema());
+        Entity::clearSchemaCache();
 
         //Saving
         $this->core->saveData('ormSchema', $this->schema);

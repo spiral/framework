@@ -57,7 +57,7 @@ class ManyThoughtSchema extends RelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        $this->outerEntity()->addRelation($name, array(
+        $this->getOuterEntity()->addRelation($name, array(
             Entity::MANY_THOUGHT      => $this->entitySchema->getClass(),
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
             Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],

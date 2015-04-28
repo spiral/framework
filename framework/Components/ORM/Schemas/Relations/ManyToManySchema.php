@@ -68,7 +68,7 @@ class ManyToManySchema extends RelationSchema
         //Generating pivot table name
         $names = array(
             $this->entitySchema->getRoleName(),
-            $this->outerEntity()->getRoleName()
+            $this->getOuterEntity()->getRoleName()
         );
 
         asort($names);
@@ -115,8 +115,8 @@ class ManyToManySchema extends RelationSchema
             $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
 
             $foreignKey = $outerKey->foreign(
-                $this->outerEntity()->getTable(),
-                $this->outerEntity()->getPrimaryKey()
+                $this->getOuterEntity()->getTable(),
+                $this->getOuterEntity()->getPrimaryKey()
             );
             $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
@@ -132,7 +132,7 @@ class ManyToManySchema extends RelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        $this->outerEntity()->addRelation($name, array(
+        $this->getOuterEntity()->addRelation($name, array(
             Entity::MANY_TO_MANY      => $this->entitySchema->getClass(),
             Entity::PIVOT_TABLE       => $this->definition[Entity::PIVOT_TABLE],
             Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],

@@ -86,10 +86,10 @@ abstract class RelationSchema
     /**
      * New RelationSchema instance.
      *
-     * @param SchemaBuilder $ormSchema
-     * @param EntitySchema  $entitySchema
-     * @param string        $name
-     * @param array         $definition
+     * @param SchemaBuilder      $ormSchema
+     * @param EntitySchema $entitySchema
+     * @param string             $name
+     * @param array              $definition
      */
     public function __construct(
         SchemaBuilder $ormSchema,
@@ -174,12 +174,12 @@ abstract class RelationSchema
             }
         }
 
-        if ($this->outerEntity())
+        if ($this->getOuterEntity())
         {
             $options = $options + array(
-                    'outer:roleName'   => $this->outerEntity()->getRoleName(),
-                    'outer:table'      => $this->outerEntity()->getTable(),
-                    'outer:primaryKey' => $this->outerEntity()->getPrimaryKey()
+                    'outer:roleName'   => $this->getOuterEntity()->getRoleName(),
+                    'outer:table'      => $this->getOuterEntity()->getTable(),
+                    'outer:primaryKey' => $this->getOuterEntity()->getPrimaryKey()
                 );
         }
 
@@ -222,9 +222,9 @@ abstract class RelationSchema
      *
      * @return null|EntitySchema
      */
-    protected function outerEntity()
+    protected function getOuterEntity()
     {
-        return $this->ormSchema->getEntity($this->target);
+        return $this->ormSchema->getActiveRecord($this->target);
     }
 
     /**
@@ -274,9 +274,9 @@ abstract class RelationSchema
      */
     public function getOuterTable()
     {
-        if ($this->outerEntity())
+        if ($this->getOuterEntity())
         {
-            return $this->outerEntity()->getTable();
+            return $this->getOuterEntity()->getTable();
         }
 
         return null;
@@ -309,7 +309,7 @@ abstract class RelationSchema
             return null;
         }
 
-        return $this->resolveAbstractType($this->outerEntity()->getTableSchema()->column($outerKey));
+        return $this->resolveAbstractType($this->getOuterEntity()->getTableSchema()->column($outerKey));
     }
 
     /**

@@ -1057,4 +1057,12 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             'errors'     => $this->getErrors()
         );
     }
+
+    /**
+     * Clear existed schema cache.
+     */
+    public static function clearSchemaCache()
+    {
+        self::$schemaCache = array();
+    }
 }

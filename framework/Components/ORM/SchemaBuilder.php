@@ -147,7 +147,7 @@ class SchemaBuilder extends Component
      * @param string $class Class name.
      * @return null|EntitySchema
      */
-    public function getEntity($class)
+    public function getActiveRecord($class)
     {
         if ($class == self::ENTITY)
         {

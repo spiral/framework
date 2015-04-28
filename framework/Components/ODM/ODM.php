@@ -182,6 +182,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
         }
 
         $this->schema = $this->event('schema', $builder->normalizeSchema());
+        Document::clearSchemaCache();
 
         //Saving
         $this->core->saveData('odmSchema', $this->schema);

@@ -17,6 +17,7 @@ use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
+//TODO: Rename to ActiveRecord
 abstract class Entity extends DataEntity implements DatabaseEntityInterface
 {
     /**
@@ -677,5 +678,13 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
             'fields' => $this->getFields(),
             'errors' => $this->getErrors()
         );
+    }
+
+    /**
+     * Clear existed schema cache.
+     */
+    public static function clearSchemaCache()
+    {
+        self::$schemaCache = array();
     }
 }
