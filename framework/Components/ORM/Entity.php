@@ -643,7 +643,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
      */
     public static function find(array $query = array())
     {
-        return static::ormSelector()->query(self::getScope($query));
+        return static::ormSelector();
     }
 
     /**

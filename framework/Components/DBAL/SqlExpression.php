@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\DBAL;
 
-class SqlQuotable extends SqlFragment
+class SqlExpression extends SqlFragment
 {
     /**
      * Get or render SQL statement.

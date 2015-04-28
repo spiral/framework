@@ -34,9 +34,9 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Cookie protection modes.
      */
-    const NONE      = false;
-    const ENCRYPT   = true;
-    const SIGNATURE = false;
+    const NONE    = false;
+    const ENCRYPT = true;
+    const HMAC    = 2;
 
     /**
      * Http request.

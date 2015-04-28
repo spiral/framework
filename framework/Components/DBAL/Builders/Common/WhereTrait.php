@@ -12,7 +12,7 @@ use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\SqlFragmentInterface;
-use Spiral\Components\DBAL\SqlQuotable;
+use Spiral\Components\DBAL\SqlExpression;
 use Spiral\Components\DBAL\SqlIdentifierInterface;
 
 trait WhereTrait
@@ -361,13 +361,13 @@ trait WhereTrait
      * Automatically convert parameter to identifier.
      *
      * @param string $parameter
-     * @return SqlQuotable
+     * @return SqlExpression
      */
     protected function wrapIdentifier($parameter)
     {
         if (!$parameter instanceof SqlFragmentInterface)
         {
-            return SqlQuotable::make($parameter);
+            return SqlExpression::make($parameter);
         }
 
         return $parameter;

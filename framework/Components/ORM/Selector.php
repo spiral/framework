@@ -58,7 +58,10 @@ class Selector extends QueryBuilder
         $this->orm = $orm;
     }
 
-
+    /**
+     * @param $relation
+     * @return $this
+     */
     public function with($relation)
     {
         if (strpos($relation, '.') !== false)
@@ -85,6 +88,8 @@ class Selector extends QueryBuilder
                 'relation'    => $relationInstance
             );
         }
+
+        return $this;
     }
 
     /**

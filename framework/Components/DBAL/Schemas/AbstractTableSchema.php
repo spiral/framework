@@ -328,7 +328,7 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get all declared columns. This list can be not identical to dbColumns property as it will
+     * Get all declared columns. This list may be not identical to dbColumns property as it will
      * represent desired table state.
      *
      * @return AbstractColumnSchema[]
@@ -444,7 +444,7 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get all declared indexes. This list can be not identical to dbIndexes property as it will
+     * Get all declared indexes. This list may be not identical to dbIndexes property as it will
      * represent desired table state.
      *
      * @return AbstractIndexSchema[]
@@ -530,7 +530,7 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Check if table has existed or declared foreign key references, linked to specified column.
+     * Check if table has existed or declared foreign key references linked to specified column.
      *
      * @param string $column Column name.
      * @return bool
@@ -541,7 +541,7 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get all declared foreign keys. This list can be not identical to dbReferences property as it
+     * Get all declared foreign keys. This list may be not identical to dbReferences property as it
      * will represent desired table state.
      *
      * @return AbstractReferenceSchema[]
@@ -710,7 +710,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @return array|AbstractColumnSchema[]
      */
-    protected function alteredColumns()
+    public function alteredColumns()
     {
         $altered = array();
         foreach ($this->columns as $column => $schema)
@@ -745,7 +745,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @return array|AbstractIndexSchema[]
      */
-    protected function alteredIndexes()
+    public function alteredIndexes()
     {
         $altered = array();
         foreach ($this->indexes as $index => $schema)
@@ -780,7 +780,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @return array|AbstractReferenceSchema[]
      */
-    protected function alteredReferences()
+    public function alteredReferences()
     {
         $altered = array();
         foreach ($this->references as $constraint => $schema)
@@ -810,7 +810,7 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Get list of table names should be existed before saving current table schema. This list includes
+     * Get list of table names should exist before saving current table schema. This list includes
      * all tables schema references to. Method can be used to sort multiple table schemas in order
      * they has to be created without violating constraints. Attention, resulted table list will
      * include table prefixes.
@@ -849,7 +849,8 @@ abstract class AbstractTableSchema extends Component
     }
 
     /**
-     * Drop table in database. This operation will be applied immediately.
+     * Drop table in database. This operation will be applied immediately. Double check that no other
+     * tables has constraints related to dropped schema.
      */
     public function drop()
     {
@@ -1036,7 +1037,7 @@ abstract class AbstractTableSchema extends Component
                 }
 
                 //Altering
-                static::logger()->info(
+                self::logger()->info(
                     "Altering column [{statement}] to [{new}] in table {table}.",
                     array(
                         'statement' => $dbColumn->sqlStatement(),
@@ -1054,7 +1055,7 @@ abstract class AbstractTableSchema extends Component
 
                 if (empty($schema))
                 {
-                    static::logger()->info(
+                    self::logger()->info(
                         "Dropping index [{statement}] from table {table}.",
                         array(
                             'statement' => $dbIndex->sqlStatement(true),
@@ -1068,7 +1069,7 @@ abstract class AbstractTableSchema extends Component
 
                 if (empty($dbIndex))
                 {
-                    static::logger()->info(
+                    self::logger()->info(
                         "Adding index [{statement}] into table {table}.",
                         array(
                             'statement' => $schema->sqlStatement(false),
@@ -1081,7 +1082,7 @@ abstract class AbstractTableSchema extends Component
                 }
 
                 //Altering
-                static::logger()->info(
+                self::logger()->info(
                     "Altering index [{statement}] to [{new}] in table {table}.",
                     array(
                         'statement' => $dbIndex->sqlStatement(false),
@@ -1099,7 +1100,7 @@ abstract class AbstractTableSchema extends Component
 
                 if (empty($schema))
                 {
-                    static::logger()->info(
+                    self::logger()->info(
                         "Dropping foreign key [{statement}] in table {table}.",
                         array(
                             'statement' => $dbForeign->sqlStatement(),
@@ -1113,7 +1114,7 @@ abstract class AbstractTableSchema extends Component
 
                 if (empty($dbForeign))
                 {
-                    static::logger()->info(
+                    self::logger()->info(
                         "Adding foreign key [{statement}] into table {table}.",
                         array(
                             'statement' => $schema->sqlStatement(),
@@ -1126,7 +1127,7 @@ abstract class AbstractTableSchema extends Component
                 }
 
                 //Altering
-                static::logger()->info(
+                self::logger()->info(
                     "Altering foreign key [{statement}] to [{new}] in table {table}.",
                     array(
                         'statement' => $dbForeign->sqlStatement(),

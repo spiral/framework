@@ -548,6 +548,8 @@ class DocumentSchema extends ModelSchema
              */
             uasort($classes, function ($classA, $classB)
             {
+                //TODO: Sorting is not stable sometimes, check in cases where many children found
+                //TODO: bug found at 27/04/2015
                 return (new \ReflectionClass($classA))->isSubclassOf($classB) ? 1 : -1;
             });
 
