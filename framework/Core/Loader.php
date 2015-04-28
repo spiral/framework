@@ -14,6 +14,9 @@ use Spiral\Core\Component\SingletonTrait;
 
 class Loader extends Component
 {
+    /**
+     * Required traits.
+     */
     use SingletonTrait, EventsTrait;
 
     /**
