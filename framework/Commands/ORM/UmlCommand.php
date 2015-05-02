@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands\ODM;
+namespace Spiral\Commands\ORM;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\ODM\Exporters\UmlExporter;
+use Spiral\Components\ORM\Exporters\UmlExporter;
 
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -20,14 +20,14 @@ class UmlCommand extends Command
      *
      * @var string
      */
-    protected $name = 'odm:uml';
+    protected $name = 'orm:uml';
 
     /**
      * Short command description.
      *
      * @var string
      */
-    protected $description = 'Export ODM schema to UML.';
+    protected $description = 'Export ORM schema to UML.';
 
     /**
      * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
@@ -44,7 +44,7 @@ class UmlCommand extends Command
      */
     public function perform()
     {
-        $umlExporter = UmlExporter::make(array('builder' => $this->odm->schemaBuilder()));
+        $umlExporter = UmlExporter::make(array('builder' => $this->orm->schemaBuilder()));
         $umlExporter->render($this->argument('filename'));
 
         $this->writeln("<info>UML schema successfully created:</info> {$this->argument('filename')}");

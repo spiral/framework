@@ -17,7 +17,7 @@ use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
-//TODO: Rename to ActiveRecord
+//TODO: Rename to ActiveRecord or not?
 abstract class Entity extends DataEntity implements DatabaseEntityInterface
 {
     /**
@@ -208,6 +208,11 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
      */
     public function isLoaded()
     {
+        if (empty($this->schema[ORM::E_PRIMARY_KEY]))
+        {
+            return true;
+        }
+
         return (bool)$this->primaryKey();
     }
 
@@ -557,9 +562,14 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
             //We will need to support models with primary keys in future
             unset($this->fields[$primaryKey]);
 
-            $this->fields[$primaryKey] = static::dbalTable()->insert(
+            $lastID = static::dbalTable()->insert(
                 $this->fields = $this->serializeData()
             );
+
+            if (!empty($primaryKey))
+            {
+                $this->fields[$primaryKey] = $lastID;
+            }
 
             $this->event('saved');
         }
@@ -588,9 +598,20 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     public function delete()
     {
         $this->event('deleting');
-        $this->primaryKey() && static::dbalTable($this->schema)->delete(array(
-            $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
-        ));
+
+        if ($this->isLoaded())
+        {
+            if (!empty($this->schema[ORM::E_PRIMARY_KEY]))
+            {
+                static::dbalTable($this->schema)->delete(array(
+                    $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
+                ))->run();
+            }
+            else
+            {
+                static::dbalTable($this->schema)->delete($this->serializeData())->run();
+            }
+        }
 
         $this->fields = $this->schema[ORM::E_COLUMNS];
         $this->event('deleted');

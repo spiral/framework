@@ -206,7 +206,7 @@ class QueryCompiler extends Component
         $groupBy = $groupBy ? $this->groupBy($groupBy) . ' ' : '';
 
         //Initial statement have predictable order
-        $statement = rtrim("SELECT {$distinct}{$columns} "
+        $statement = rtrim("SELECT\n{$distinct}{$columns}"
                 . "\nFROM {$from} {$joins}{$where}{$groupBy}{$having}") . ' ';
 
         if (empty($unions) && !empty($orderBy))
@@ -362,7 +362,7 @@ class QueryCompiler extends Component
      */
     public function columns(array $columns)
     {
-        return join(', ', array_map(array($this, 'quote'), $columns));
+        return wordwrap(join(', ', array_map(array($this, 'quote'), $columns)), 180);
     }
 
     /**

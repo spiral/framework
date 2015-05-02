@@ -37,6 +37,7 @@ trait LoggerTrait
      */
     public static function logger()
     {
+        //todo: getLogger(), hasLogger()
         if (isset(Logger::$loggers[$alias = static::getAlias()]))
         {
             return Logger::$loggers[$alias];

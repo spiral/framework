@@ -17,17 +17,17 @@ class HasOne extends Relation
 {
     const DEFAULT_LOADER = Selector::INLOAD;
 
-    public function createInload($parentTable, Selector $selector)
-    {
-        //TODO: RELATION NAME
-
-        $outerKey = $this->definition[self::OUTER_TABLE] . '.' . $this->definition[Entity::OUTER_KEY];
-
-        //Inner key has to be build based on parent table
-        $innerKey = $this->definition[Entity::INNER_KEY];
-
-        $selector->leftJoin($this->definition[self::OUTER_TABLE], array(
-            $outerKey => $parentTable . '.' . $innerKey
-        ));
-    }
+    //    public function createInload($parentTable, Selector $selector)
+    //    {
+    //        //TODO: RELATION NAME
+    //
+    //        $outerKey = $this->definition[self::OUTER_TABLE] . '.' . $this->definition[Entity::OUTER_KEY];
+    //
+    //        //Inner key has to be build based on parent table
+    //        $innerKey = $this->definition[Entity::INNER_KEY];
+    //
+    //        $selector->leftJoin($this->definition[self::OUTER_TABLE], array(
+    //            $outerKey => $parentTable . '.' . $innerKey
+    //        ));
+    //    }
 }

@@ -95,6 +95,8 @@ class SchemaBuilder extends Component
             ));
         }
 
+        //TODO: error with nested relations based on non declared auto key
+
         $relations = array();
         foreach ($this->entities as $entity)
         {
@@ -303,6 +305,7 @@ class SchemaBuilder extends Component
 
             $entitySchema = array();
 
+            $entitySchema[ORM::E_ROLE_NAME] = $entity->getRoleName();
             $entitySchema[ORM::E_TABLE] = $entity->getTable();
             $entitySchema[ORM::E_DB] = $entity->getDatabase();
             $entitySchema[ORM::E_PRIMARY_KEY] = $entity->getPrimaryKey();

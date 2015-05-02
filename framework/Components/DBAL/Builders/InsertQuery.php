@@ -116,13 +116,13 @@ class InsertQuery extends QueryBuilder
         if (!$multiple)
         {
             $this->columns = array_keys($values);
-            $this->parameters[] = Parameter::make(array_values($values));
+            $this->parameters[] = new Parameter(array_values($values));
         }
         else
         {
             foreach ($values as $rowset)
             {
-                $this->parameters[] = Parameter::make(array_values($rowset));
+                $this->parameters[] = new Parameter(array_values($rowset));
             }
         }
 

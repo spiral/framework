@@ -78,7 +78,7 @@ class ORM extends Component
     /**
      * @param              $type
      * @param array        $definition
-     * @param Entity $parent
+     * @param Entity       $parent
      * @param array        $data
      * @return Relation
      */
@@ -135,17 +135,18 @@ class ORM extends Component
     /**
      * Normalized entity constants.
      */
-    const E_TABLE       = 0;
-    const E_DB          = 1;
-    const E_COLUMNS     = 2;
-    const E_HIDDEN      = 3;
-    const E_SECURED     = 4;
-    const E_FILLABLE    = 5;
-    const E_MUTATORS    = 6;
-    const E_VALIDATES   = 7;
-    const E_MESSAGES    = 8;
-    const E_RELATIONS   = 9;
-    const E_PRIMARY_KEY = 10;
+    const E_ROLE_NAME   = 0;
+    const E_TABLE       = 1;
+    const E_DB          = 2;
+    const E_COLUMNS     = 3;
+    const E_HIDDEN      = 4;
+    const E_SECURED     = 5;
+    const E_FILLABLE    = 6;
+    const E_MUTATORS    = 7;
+    const E_VALIDATES   = 8;
+    const E_MESSAGES    = 9;
+    const E_RELATIONS   = 10;
+    const E_PRIMARY_KEY = 11;
 
     /**
      * Normalized relation options.

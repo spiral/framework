@@ -14,25 +14,17 @@ use Spiral\Components\DBAL\Builders\Common\WhereTrait;
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
+use Spiral\Components\ORM\Selector\Loaders\PrimaryLoader;
 use Spiral\Core\Component;
 
 class Selector extends QueryBuilder
 {
-    use WhereTrait, JoinTrait, HavingTrait;
+    use WhereTrait, JoinTrait, HavingTrait, Component\LoggerTrait;
 
     const INLOAD   = 1;
-    const POSTLOAD = 1;
+    const POSTLOAD = 2;
 
     const PRIMARY_MODEL = 0;
-
-    /**
-     * Schema of related model.
-     *
-     * @var array
-     */
-    protected $schema = array();
-
-    protected $database = null;
 
     /**
      * ORM component. Used to access related schemas.
@@ -42,54 +34,97 @@ class Selector extends QueryBuilder
      */
     protected $orm = null;
 
+    /**
+     * Database instance to fetch data from.
+     *
+     * @var Database
+     */
+    protected $database = null;
+
+    /**
+     * Set of nested loaders used to normalize loaded relations in correct set of data and modify query
+     * with required joins. Loaders separated by two primary sets - inload and postload loaders, inload
+     * will join data to primary query (for example has-one, belongs-to-parent relations), postload
+     * usually used to fetch has-many relations and will generate another query. Most of relations
+     * (except polymorphic) can be loaded both ways.
+     *
+     * Attention, using inload with has-many records will make limit() and offset() (pagination methods)
+     * useless due structure of resulted query. Additionally you can't use count() query in combination
+     * with such queries.
+     *
+     * Some loaded may return non array by Entity data like preloading belongs-to to ensure that
+     * multiple models will receive identical parents (in terms of reference and data).
+     *
+     * @var PrimaryLoader
+     */
+    protected $loader = null;
+
+
     protected $countColumns = 0;
 
-    protected $mapping = array();
+    public $columns = array();
 
-    public $loadWith = array();
 
-    protected $columns = array();
+    //    /**
+    //     * Set of loaders and nested loaded used to normalize loaded relations in correct set of nested
+    //     * data. Loaded separated by two primary sets - inload and postload loaders, inload will join data
+    //     * to primary query (for example has-one, belongs-to-parent relations), postload usually used to
+    //     * fetch has-many relations. Most of relations (except polymorphic) can be loaded both ways.
+    //     *
+    //     * Attention, using inload with has-many records will make limit() and offset() (pagination methods)
+    //     * useless due structure of resulted query. Additionally you can't use count() query in combination
+    //     * with such queries.
+    //     *
+    //     * Some loaded may return non array by Entity data like preloading belongs-to to ensure that
+    //     * multiple models will receive identical parents (in terms of reference and data).
+    //     *
+    //     * @var Loader[]
+    //     */
+    //    protected $loaders = array();
+    //
 
-    public function __construct(array $schema, Database $database, ORM $orm, array $query = array())
+    public function __construct(array $schema, ORM $orm, Database $database, array $query = array())
     {
-        $this->schema = $schema;
+        $this->orm = $orm;
+
         $this->database = $database;
 
-        $this->orm = $orm;
+        //We always has one loader
+        $this->loader = new PrimaryLoader($schema, $this->orm);
     }
 
     /**
-     * @param $relation
-     * @return $this
+     * TODO: Write description
+     *
+     * @param string|array $relation
+     * @param array        $options
+     * @return static
      */
-    public function with($relation)
+    public function with($relation, $options = array())
     {
-        if (strpos($relation, '.') !== false)
+        if (is_array($relation))
         {
-            //Building nested relation
-
-        }
-        else
-        {
-            if (!isset($this->schema[ORM::E_RELATIONS][$relation]))
+            foreach ($relation as $name => $options)
             {
-                throw new ORMException("Unknown relation '{$relation}'.");
+                //Multiple relations or relation with addition load options
+                $this->with($name, $options);
             }
 
-            $relationSchema = $this->schema[ORM::E_RELATIONS][$relation];
-            $relationInstance = $this->orm->getRelation(
-                $relationSchema[ORM::R_TYPE],
-                $relationSchema[ORM::R_DEFINITION]
-            );
-
-            $this->loadWith[$relation] = array(
-                'loader'      => $relationInstance::DEFAULT_LOADER,
-                'parentTable' => $this->schema[ORM::E_TABLE],
-                'relation'    => $relationInstance
-            );
+            return $this;
         }
 
+        //Nested loader
+        $this->loader->addLoader($relation, $options);
+
         return $this;
+    }
+
+    protected function buildQuery()
+    {
+        $this->countColumns = 0;
+        $this->columns = array();
+
+        $this->loader->clarifySelector($this);
     }
 
     /**
@@ -102,14 +137,15 @@ class Selector extends QueryBuilder
     {
         if (empty($compiler))
         {
-            //Database compiler
+            //In cases where compiled does not provided externally we can get compiler from related
+            //database, external compilers are good for testing
             $compiler = $this->database->getDriver()->queryCompiler($this->database->getPrefix());
         }
 
         $this->buildQuery();
 
         $statement = $compiler->select(
-            array($this->schema[ORM::E_TABLE]),
+            array($this->loader->getTable() . ' AS ' . $this->loader->getTableAlias()),
             false, //todo: check if required
             $this->columns,
             $this->joins,
@@ -124,77 +160,76 @@ class Selector extends QueryBuilder
         return $statement;
     }
 
-    //    public function sqlStatement()
-    //    {
-    //
-    //        $select = $this->dbalSelect()->from($this->schema[ORM::E_TABLE]);
-    //
-    //        //Building columns
-    //        $select->columns($this->buildColumns());
-    //
-    //        return $select;
-    //    }
-
-    protected function buildQuery()
+    /**
+     * Fetching data.
+     *
+     * @return array
+     */
+    public function fetchData()
     {
-        $this->countColumns = 0;
-        $this->columns = array();
-        $this->mapping = array();
+        $result = $this->database->query($statement = $this->sqlStatement(), $this->getParameters());
 
-        $primaryColumns = false;
-        foreach ($this->loadWith as $name => $relation)
+        benchmark('selector::parseResult', $statement);
+        $data = $this->loader->parseResult($result, $rowsCount);
+        benchmark('selector::parseResult', $statement);
+        $this->logCounts(count($data), $rowsCount);
+
+        //Moved out of benchmark to see memory usage
+        $this->loader->clean();
+        $result->close();
+
+        return $data;
+    }
+
+    protected function logCounts($dataCount, $rowsCount)
+    {
+        $logLevel = 'debug';
+        $logLevels = array(
+            1000 => 'critical',
+            500  => 'alert',
+            100  => 'notice',
+            10   => 'warning',
+            1    => 'debug'
+        );
+
+        $dataRatio = $rowsCount / $dataCount;
+        if ($dataRatio == 1)
         {
-            if ($relation['loader'] == self::INLOAD)
+            //No need to log it, everything seems fine
+            return;
+        }
+
+        foreach ($logLevels as $ratio => $logLevel)
+        {
+            if ($dataRatio > $ratio)
             {
-
-                $primaryColumns = true;
-
-                $outerSchema = $this->orm->getSchema($relation['relation']->getTarget());
-
-                $relation['relation']->createInload($relation['parentTable'], $this);
-
-                //Adding columns to list
-                $this->columns = array_merge(
-                    $this->columns,
-                    $entityColumns = $this->entityColumns($outerSchema)
-                );
-
-                $this->mapping[$name] = array(
-                    'columns'  => count($entityColumns),
-                    'multiple' => false //FOR RELATION TO DECIDE
-                );
+                break;
             }
         }
 
-        if ($primaryColumns)
-        {
-            $entityColumns = $this->entityColumns($this->schema);
-
-            $this->mapping = array_merge(array(
-                self::PRIMARY_MODEL => array(
-                    'columns'  => count($entityColumns),
-                    'multiple' => false
-                )
-            ), $this->mapping);
-
-            $this->columns = array_merge($entityColumns, $this->columns);
-        }
-        else
-        {
-            $this->columns = array(
-                $this->schema[ORM::E_TABLE] . '.*'
-            );
-        }
+        self::logger()->$logLevel(
+            "Query resulted with {rowsCount} row(s) grouped into {dataCount} records.",
+            compact('dataCount', 'rowsCount')
+        );
     }
 
-    protected function entityColumns(array $schema)
+    /**
+     * Generate set of columns required to represent desired model. Do not use this method by your own.
+     * Method will return columns offset.
+     *
+     * @param string $tableAlias
+     * @param array  $columns Original set of model columns.
+     * @return int
+     */
+    public function addColumns($tableAlias, array $columns)
     {
-        $columns = array();
-        foreach ($schema[ORM::E_COLUMNS] as $column => $defaultValue)
+        $offset = count($this->columns);
+
+        foreach ($columns as $column)
         {
-            $columns[] = $schema[ORM::E_TABLE] . '.' . $column . ' AS c' . (++$this->countColumns);
+            $this->columns[] = $tableAlias . '.' . $column . ' AS c' . (++$this->countColumns);
         }
 
-        return $columns;
+        return $offset;
     }
 }

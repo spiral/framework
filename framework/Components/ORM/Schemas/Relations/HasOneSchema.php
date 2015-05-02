@@ -49,8 +49,9 @@ class HasOneSchema extends RelationSchema
         {
             $foreignKey = $outerKey->foreign(
                 $this->entitySchema->getTable(),
-                $this->entitySchema->getPrimaryKey()
+                $this->getInnerKey()
             );
+
             $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
         }
