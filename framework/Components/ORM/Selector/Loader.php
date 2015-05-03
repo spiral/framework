@@ -8,6 +8,8 @@
  */
 namespace Spiral\Components\ORM\Selector;
 
+use Spiral\Components\DBAL\Database;
+use Spiral\Components\DBAL\QueryResult;
 use Spiral\Components\ORM\Entity;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
@@ -100,7 +102,11 @@ abstract class Loader
 
     protected $references = array();
 
+    protected $aggregatedReferences = array();
+
     protected $duplicates = array();
+
+    protected $result = array();
 
     /**
      * Sub loaders.
@@ -126,7 +132,7 @@ abstract class Loader
         //Compiling options
         $this->options['method'] = static::LOAD_METHOD;
 
-        if ($this->parent instanceof Selector\Loaders\PrimaryLoader)
+        if ($this->parent instanceof Selector\Loaders\RootLoader)
         {
             $this->options['tableAlias'] = $container;
         }
@@ -256,21 +262,42 @@ abstract class Loader
         return $this;
     }
 
-    public function clarifySelector(Selector $selector)
+    public function createSelector(Database $database)
     {
-        if ($this->options['method'] == Selector::INLOAD)
+        $selector = new Selector($this->schema, $this->orm, $database, array(), $this);
+
+        if (!empty($this->loaders))
         {
-            //Mounting columns
             $this->offset = $selector->addColumns(
-                $this->options['tableAlias'],
+                $this->getTableAlias(),
                 array_keys($this->schema[ORM::E_COLUMNS])
             );
-
-            //Inload conditions and etc
-            $this->clarifyQuery($selector);
         }
 
-        //TODO: do no execute on POSTLOAD
+        foreach ($this->loaders as $loader)
+        {
+            $loader->clarifySelector($selector);
+        }
+
+        return $selector;
+    }
+
+    public function clarifySelector(Selector $selector)
+    {
+        if ($this->options['method'] != Selector::INLOAD)
+        {
+            return;
+        }
+
+        //Mounting columns
+        $this->offset = $selector->addColumns(
+            $this->getTableAlias(),
+            array_keys($this->schema[ORM::E_COLUMNS])
+        );
+
+        //Inload conditions and etc
+        $this->clarifyQuery($selector);
+
         foreach ($this->loaders as $loader)
         {
             $loader->clarifySelector($selector);
@@ -278,6 +305,28 @@ abstract class Loader
     }
 
     abstract protected function clarifyQuery(Selector $selector);
+
+    /**
+     * @param Database $database
+     * @return Selector[]
+     */
+    public function getPostSelectors(Database $database)
+    {
+        $selectors = array();
+        foreach ($this->loaders as $loader)
+        {
+            if ($loader->options['method'] == Selector::POSTLOAD)
+            {
+                $selectors[] = $loader->createSelector($database);
+            }
+            else
+            {
+                $selectors = array_merge($selectors, $loader->getPostSelectors($database));
+            }
+        }
+
+        return $selectors;
+    }
 
 
     protected function fetchData(array $row)
@@ -288,7 +337,7 @@ abstract class Loader
         return array_combine($this->columns, $row);
     }
 
-    protected function mountDuplicate(array &$data)
+    protected function checkDuplicate(array &$data)
     {
         if (isset($this->schema[ORM::E_PRIMARY_KEY]))
         {
@@ -325,6 +374,22 @@ abstract class Loader
         return false;
     }
 
+    public function parseResult(QueryResult $result, &$rowsCount)
+    {
+        foreach ($result as $row)
+        {
+            $this->parseRow($row);
+            $rowsCount++;
+        }
+
+        return $this->result;
+    }
+
+    public function getResult()
+    {
+        return $this->result;
+    }
+
     abstract public function parseRow(array $row);
 
     protected function registerReferences(array &$data)
@@ -333,12 +398,38 @@ abstract class Loader
         {
             //Adding reference
             $this->references[$key . '::' . $data[$key]] = &$data;
+            $this->aggregatedReferences[$key][$data[$key]][] = &$data;
         }
     }
 
-    public function registerNested($reference, $container, array &$data, $multiple = false)
+    public function getAggregatedKeys($key)
     {
-        if (!isset($this->references[$reference]))
+        //TODO: DISABLE WHEN NOT REQUIRED
+
+        if (!isset($this->aggregatedReferences[$key]))
+        {
+            return array();
+        }
+
+        return array_keys($this->aggregatedReferences[$key]);
+    }
+
+    public function registerNestedParent($container, $key, $value, &$data)
+    {
+        foreach ($this->aggregatedReferences[$key][$value] as &$subset)
+        {
+            if (!isset($subset[$container]))
+            {
+                $subset[$container] = &$data;
+            }
+
+            unset($subset);
+        }
+    }
+
+    public function registerNested($referenceName, $container, array &$data, $multiple = false)
+    {
+        if (!isset($this->references[$referenceName]))
         {
             //Nothing to do
             return;
@@ -346,11 +437,19 @@ abstract class Loader
 
         if ($multiple)
         {
-            $this->references[$reference][$container][] = &$data;
+            $this->references[$referenceName][$container][] = &$data;
         }
         else
         {
-            $this->references[$reference][$container] = &$data;
+            if (!isset($this->references[$referenceName][$container]))
+            {
+                /**
+                 * There is very tricky spot where you have to be careful (i spend 2 hours for debugging).
+                 * If you will reassign references it will loose previous references and some sets of
+                 * data will be broken.
+                 */
+                $this->references[$referenceName][$container] = &$data;
+            }
         }
     }
 
@@ -358,7 +457,10 @@ abstract class Loader
     {
         foreach ($this->loaders as $loader)
         {
-            $loader->parseRow($row);
+            if ($loader->options['method'] == Selector::INLOAD)
+            {
+                $loader->parseRow($row);
+            }
         }
     }
 
@@ -366,6 +468,7 @@ abstract class Loader
     {
         $this->duplicates = array();
         $this->references = array();
+        $this->result = array();
         foreach ($this->loaders as $loader)
         {
             $loader->clean();

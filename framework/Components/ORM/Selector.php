@@ -14,7 +14,8 @@ use Spiral\Components\DBAL\Builders\Common\WhereTrait;
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
-use Spiral\Components\ORM\Selector\Loaders\PrimaryLoader;
+use Spiral\Components\ORM\Selector\Loader;
+use Spiral\Components\ORM\Selector\Loaders\RootLoader;
 use Spiral\Core\Component;
 
 class Selector extends QueryBuilder
@@ -55,9 +56,9 @@ class Selector extends QueryBuilder
      * Some loaded may return non array by Entity data like preloading belongs-to to ensure that
      * multiple models will receive identical parents (in terms of reference and data).
      *
-     * @var PrimaryLoader
+     * @var Loader
      */
-    protected $primaryLoader = null;
+    protected $loader = null;
 
     protected $countColumns = 0;
 
@@ -82,14 +83,26 @@ class Selector extends QueryBuilder
     //    protected $loaders = array();
     //
 
-    public function __construct(array $schema, ORM $orm, Database $database, array $query = array())
+    public function __construct(
+        array $schema,
+        ORM $orm,
+        Database $database,
+        array $query = array(),
+        Loader $loader = null
+    )
     {
         $this->orm = $orm;
-
         $this->database = $database;
 
         //We always has one loader
-        $this->primaryLoader = new PrimaryLoader($schema, $this->orm);
+        if (empty($loader))
+        {
+            $this->loader = new RootLoader($schema, $this->orm);
+        }
+        else
+        {
+            $this->loader = $loader;
+        }
     }
 
     /**
@@ -113,17 +126,18 @@ class Selector extends QueryBuilder
         }
 
         //Nested loader
-        $loader = $this->primaryLoader->addLoader($relation, $options);
+        $loader = $this->loader->addLoader($relation, $options);
 
         return $this;
     }
 
     protected function buildQuery()
     {
-        $this->countColumns = 0;
-        $this->columns = array();
+        //        $this->countColumns = 0;
+        //        $this->columns = array();
 
-        $this->primaryLoader->clarifySelector($this);
+        //TODO: reliable way to fix it!
+        $this->loader->clarifySelector($this);
     }
 
     /**
@@ -144,9 +158,9 @@ class Selector extends QueryBuilder
         $this->buildQuery();
 
         $statement = $compiler->select(
-            array($this->primaryLoader->getTable() . ' AS ' . $this->primaryLoader->getTableAlias()),
+            array($this->loader->getTable() . ' AS ' . $this->loader->getTableAlias()),
             false, //todo: check if required
-            $this->columns,
+            !empty($this->columns) ? $this->columns : array('*'),
             $this->joins,
             $this->whereTokens,
             $this->havingTokens,
@@ -169,13 +183,23 @@ class Selector extends QueryBuilder
         $result = $this->database->query($statement = $this->sqlStatement(), $this->getParameters());
 
         benchmark('selector::parseResult', $statement);
-        $data = $this->primaryLoader->parseResult($result, $rowsCount);
+        $data = $this->loader->parseResult($result, $rowsCount);
         benchmark('selector::parseResult', $statement);
-        $this->logCounts(count($data), $rowsCount);
+
+        !empty($data) && $this->logCounts(count($data), $rowsCount);
 
         //Moved out of benchmark to see memory usage
-        $this->primaryLoader->clean();
         $result->close();
+
+        //Looking for post selectors
+        foreach ($this->loader->getPostSelectors($this->database) as $selector)
+        {
+            //Fetching data from post selectors, due loaders are still linked together
+            $selector->fetchData();
+        }
+
+        $data = $this->loader->getResult();
+        $this->loader->clean();
 
         return $data;
     }

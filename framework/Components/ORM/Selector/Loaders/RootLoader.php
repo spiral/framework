@@ -8,14 +8,13 @@
  */
 namespace Spiral\Components\ORM\Selector\Loaders;
 
-use Spiral\Components\DBAL\QueryResult;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\Selector;
 use Spiral\Components\ORM\Selector\Loader;
 
-class PrimaryLoader extends Loader
+class RootLoader extends Loader
 {
-    protected $result = array();
+    const LOAD_METHOD = Selector::INLOAD;
 
     public function __construct(array $schema, ORM $orm, Loader $parent = null)
     {
@@ -48,47 +47,18 @@ class PrimaryLoader extends Loader
         //Nothing to do
     }
 
-    //TODO: with and without primary key
-
-    public function parseResult(QueryResult $result, &$rowsCount)
-    {
-        foreach ($result as $row)
-        {
-            $this->parseRow($row);
-            $rowsCount++;
-        }
-
-        return $this->result;
-    }
-
     public function parseRow(array $row)
     {
         //Fetching only required part of resulted row
         $data = $this->fetchData($row);
 
-        if (!$this->mountDuplicate($data))
+        if (!$this->checkDuplicate($data))
         {
             $this->result[] = &$data;
             $this->registerReferences($data);
         }
 
         $this->parseNested($row);
-    }
-
-    public function addNested($key, $value, $container, array $data)
-    {
-        if (!isset($this->references[$key . '::' . $value]))
-        {
-            return;
-        }
-
-        $this->references[$key . '::' . $value][$container] = $data;
-    }
-
-    public function clean()
-    {
-        parent::clean();
-        $this->result = array();
     }
 }
 

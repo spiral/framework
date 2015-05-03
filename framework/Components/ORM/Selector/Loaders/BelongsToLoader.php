@@ -21,7 +21,7 @@ class BelongsToLoader extends HasOneLoader
     /**
      * Default load method (inload or postload).
      */
-    const LOAD_METHOD = Selector::INLOAD; //TODO: change
+    const LOAD_METHOD = Selector::POSTLOAD;
 
     /**
      * Reference key (from parent object) required to speed up data normalization.
@@ -44,13 +44,27 @@ class BelongsToLoader extends HasOneLoader
             return;
         }
 
-        if (!$this->mountDuplicate($data))
+        if (!$this->checkDuplicate($data))
         {
             //Clarifying parent dataset
             $this->registerReferences($data);
         }
 
-        $this->parent->registerNested($referenceName, $this->container, $data, false);
+        //TODO! bug with results from outer query
+
+        if ($this->options['method'] == Selector::INLOAD)
+        {
+            $this->parent->registerNested($referenceName, $this->container, $data);
+        }
+        else
+        {
+            $this->parent->registerNestedParent(
+                $this->container,
+                $this->relationDefinition[Entity::INNER_KEY],
+                $data[$this->relationDefinition[Entity::OUTER_KEY]],
+                $data
+            );
+        }
 
         $this->parseNested($row);
     }

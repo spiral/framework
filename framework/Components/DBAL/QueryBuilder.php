@@ -64,10 +64,10 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     {
         if (!$parameter instanceof ParameterInterface && is_array($parameter))
         {
-            $parameter = Parameter::make($parameter);
+            $parameter = new Parameter($parameter);
         }
 
-        if ($parameter instanceof SqlFragmentInterface)
+        if ($parameter instanceof SqlFragmentInterface && !$parameter instanceof ParameterInterface)
         {
             return $parameter;
         }

@@ -21,7 +21,7 @@ class HasManyLoader extends HasOneLoader
     /**
      * Default load method (inload or postload).
      */
-    const LOAD_METHOD = Selector::INLOAD; //TODO: change
+    const LOAD_METHOD = Selector::POSTLOAD;
 
     const MULTIPLE = true;
 }

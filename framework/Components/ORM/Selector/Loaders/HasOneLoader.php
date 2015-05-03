@@ -8,7 +8,9 @@
  */
 namespace Spiral\Components\ORM\Selector\Loaders;
 
+use Spiral\Components\DBAL\Database;
 use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 use Spiral\Components\ORM\Selector\Loader;
@@ -52,13 +54,28 @@ class HasOneLoader extends Loader
             return;
         }
 
-        if (!$this->mountDuplicate($data))
+        //WHAT IF?
+        if (!$this->checkDuplicate($data))
         {
             //Clarifying parent dataset
-            $this->parent->registerNested($referenceName, $this->container, $data, static::MULTIPLE);
             $this->registerReferences($data);
+            $this->parent->registerNested($referenceName, $this->container, $data, static::MULTIPLE);
         }
 
         $this->parseNested($row);
+    }
+
+    public function createSelector(Database $database)
+    {
+        $selector = parent::createSelector($database);
+
+        //Adding condition
+        $selector->where(
+            $this->getTableAlias() . '.' . $this->relationDefinition[Entity::OUTER_KEY],
+            'IN',
+            array_unique($this->parent->getAggregatedKeys($this->getReferenceKey()))
+        );
+
+        return $selector;
     }
 }
