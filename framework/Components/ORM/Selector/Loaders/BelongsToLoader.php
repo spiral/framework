@@ -23,6 +23,17 @@ class BelongsToLoader extends HasOneLoader
      */
     const LOAD_METHOD = Selector::INLOAD; //TODO: change
 
+    /**
+     * Reference key (from parent object) required to speed up data normalization.
+     *
+     * @return string
+    //     */
+    //    public function getReferenceKey()
+    //    {
+    //        //No reference key is needed
+    //        return null;
+    //    }
+
     public function parseRow(array $row)
     {
         $data = $this->fetchData($row);
@@ -33,13 +44,14 @@ class BelongsToLoader extends HasOneLoader
             return;
         }
 
-        if (!$this->hasDuplicate($data))
+        if (!$this->mountDuplicate($data))
         {
             //Clarifying parent dataset
             $this->registerReferences($data);
         }
 
         $this->parent->registerNested($referenceName, $this->container, $data, false);
+
         $this->parseNested($row);
     }
 }

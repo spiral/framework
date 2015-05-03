@@ -92,7 +92,7 @@ class QueryCompiler extends Component
                     return $identifier;
                 }
 
-                if (!empty($table))
+                if ($table)
                 {
                     $table = false;
 
@@ -106,7 +106,7 @@ class QueryCompiler extends Component
 
         if (strpos($identifier, '.') === false)
         {
-            if (!empty($table) && !isset($this->aliases[$identifier]))
+            if ($table || !isset($this->aliases[$identifier]))
             {
                 $identifier = $this->tablePrefix . $identifier;
             }
@@ -117,7 +117,7 @@ class QueryCompiler extends Component
         $identifier = explode('.', $identifier);
 
         //Expecting first element be table name
-        if (!isset($this->aliases[$identifier[0]]))
+        if ($table || !isset($this->aliases[$identifier[0]]))
         {
             $identifier[0] = $this->tablePrefix . $identifier[0];
         }

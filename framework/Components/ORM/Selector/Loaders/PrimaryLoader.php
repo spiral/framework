@@ -66,7 +66,7 @@ class PrimaryLoader extends Loader
         //Fetching only required part of resulted row
         $data = $this->fetchData($row);
 
-        if (!$this->hasDuplicate($data))
+        if (!$this->mountDuplicate($data))
         {
             $this->result[] = &$data;
             $this->registerReferences($data);

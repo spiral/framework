@@ -57,8 +57,7 @@ class Selector extends QueryBuilder
      *
      * @var PrimaryLoader
      */
-    protected $loader = null;
-
+    protected $primaryLoader = null;
 
     protected $countColumns = 0;
 
@@ -90,7 +89,7 @@ class Selector extends QueryBuilder
         $this->database = $database;
 
         //We always has one loader
-        $this->loader = new PrimaryLoader($schema, $this->orm);
+        $this->primaryLoader = new PrimaryLoader($schema, $this->orm);
     }
 
     /**
@@ -114,7 +113,7 @@ class Selector extends QueryBuilder
         }
 
         //Nested loader
-        $this->loader->addLoader($relation, $options);
+        $loader = $this->primaryLoader->addLoader($relation, $options);
 
         return $this;
     }
@@ -124,7 +123,7 @@ class Selector extends QueryBuilder
         $this->countColumns = 0;
         $this->columns = array();
 
-        $this->loader->clarifySelector($this);
+        $this->primaryLoader->clarifySelector($this);
     }
 
     /**
@@ -145,7 +144,7 @@ class Selector extends QueryBuilder
         $this->buildQuery();
 
         $statement = $compiler->select(
-            array($this->loader->getTable() . ' AS ' . $this->loader->getTableAlias()),
+            array($this->primaryLoader->getTable() . ' AS ' . $this->primaryLoader->getTableAlias()),
             false, //todo: check if required
             $this->columns,
             $this->joins,
@@ -170,12 +169,12 @@ class Selector extends QueryBuilder
         $result = $this->database->query($statement = $this->sqlStatement(), $this->getParameters());
 
         benchmark('selector::parseResult', $statement);
-        $data = $this->loader->parseResult($result, $rowsCount);
+        $data = $this->primaryLoader->parseResult($result, $rowsCount);
         benchmark('selector::parseResult', $statement);
         $this->logCounts(count($data), $rowsCount);
 
         //Moved out of benchmark to see memory usage
-        $this->loader->clean();
+        $this->primaryLoader->clean();
         $result->close();
 
         return $data;

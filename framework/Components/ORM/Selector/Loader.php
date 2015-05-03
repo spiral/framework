@@ -213,9 +213,11 @@ abstract class Loader
         $loader->setOptions($options);
         $this->loaders[$relation] = $loader;
 
-        //Collecting reference keys
-        $this->referenceKeys[] = $loader->getReferenceKey();
-        $this->referenceKeys = array_unique($this->referenceKeys);
+        if ($loader->getReferenceKey())
+        {
+            $this->referenceKeys[] = $loader->getReferenceKey();
+            $this->referenceKeys = array_unique($this->referenceKeys);
+        }
 
         return $loader;
     }
@@ -286,17 +288,21 @@ abstract class Loader
         return array_combine($this->columns, $row);
     }
 
-    protected function hasDuplicate($data)
+    protected function mountDuplicate(array &$data)
     {
         if (isset($this->schema[ORM::E_PRIMARY_KEY]))
         {
-            if (isset($this->duplicates[$data[$this->schema[ORM::E_PRIMARY_KEY]]]))
+            $primaryKey = $this->schema[ORM::E_PRIMARY_KEY];
+
+            if (isset($this->duplicates[$data[$primaryKey]]))
             {
-                //Duplicate is presented
+                //Duplicate is presented, let's reduplicate
+                $data = $this->duplicates[$data[$primaryKey]];
+
                 return true;
             }
 
-            $this->duplicates[$data[$this->schema[ORM::E_PRIMARY_KEY]]] = true;
+            $this->duplicates[$data[$primaryKey]] = &$data;
         }
         else
         {
@@ -306,11 +312,14 @@ abstract class Loader
             $serialization = serialize($data);
             if (isset($this->duplicates[$serialization]))
             {
+                //Duplicate is presented, let's reduplicate
+                $data = $this->duplicates[$serialization];
+
                 //Duplicate is presented
                 return true;
             }
 
-            $this->duplicates[$serialization] = true;
+            $this->duplicates[$serialization] = &$data;
         }
 
         return false;
@@ -324,14 +333,6 @@ abstract class Loader
         {
             //Adding reference
             $this->references[$key . '::' . $data[$key]] = &$data;
-        }
-    }
-
-    protected function parseNested(array $row)
-    {
-        foreach ($this->loaders as $loader)
-        {
-            $loader->parseRow($row);
         }
     }
 
@@ -350,6 +351,14 @@ abstract class Loader
         else
         {
             $this->references[$reference][$container] = &$data;
+        }
+    }
+
+    protected function parseNested(array $row)
+    {
+        foreach ($this->loaders as $loader)
+        {
+            $loader->parseRow($row);
         }
     }
 

@@ -46,14 +46,13 @@ class HasOneLoader extends Loader
     public function parseRow(array $row)
     {
         $data = $this->fetchData($row);
-
         if (!$referenceName = $this->getReferenceName($data))
         {
             //Relation not loaded
             return;
         }
 
-        if (!$this->hasDuplicate($data))
+        if (!$this->mountDuplicate($data))
         {
             //Clarifying parent dataset
             $this->parent->registerNested($referenceName, $this->container, $data, static::MULTIPLE);
