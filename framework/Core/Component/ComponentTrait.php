@@ -35,6 +35,6 @@ trait ComponentTrait
      */
     public static function make($parameters = array())
     {
-        return Container::get(get_called_class(), $parameters);
+        return Container::getInstance()->get(get_called_class(), $parameters);
     }
 }

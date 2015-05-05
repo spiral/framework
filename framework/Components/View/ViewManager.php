@@ -164,7 +164,7 @@ class ViewManager extends Component
         foreach ($this->config['staticVariables'] as $variable => $provider)
         {
             $this->staticVariables[$variable] = call_user_func(array(
-                Container::get($provider[0]),
+                Container::getInstance()->get($provider[0]),
                 $provider[1]
             ));
         }
@@ -295,7 +295,7 @@ class ViewManager extends Component
         /**
          * @var CompilerInterface $compiler
          */
-        $compiler = Container::get($this->config['engines'][$engine]['compiler'], array(
+        $compiler = Container::getInstance()->get($this->config['engines'][$engine]['compiler'], array(
                 'manager'   => $this,
                 'source'    => $this->file->read($input),
                 'namespace' => $namespace,

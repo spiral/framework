@@ -59,7 +59,7 @@ class ModuleManager extends Component
 
                     if ($module['bootstrap'])
                     {
-                        Container::get($module['class'], compact('core'))->bootstrap();
+                        Container::getInstance()->get($module['class'], compact('core'))->bootstrap();
                     }
                 }
             }

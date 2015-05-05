@@ -254,13 +254,13 @@ abstract class Command extends BaseCommand
     }
 
     /**
-     * An alias for Container::get() method to retrieve components by their alias.
+     * An alias for Container::getInstance()->get() method to retrieve components by their alias.
      *
      * @param string $name Binding or component name/alias.
      * @return Component
      */
     public function __get($name)
     {
-        return Container::get($name);
+        return Container::getInstance()->get($name);
     }
 }

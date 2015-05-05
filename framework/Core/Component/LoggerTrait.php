@@ -48,6 +48,6 @@ trait LoggerTrait
             return Logger::$loggers[$alias] = new Logger(Debugger::getInstance(), $alias);
         }
 
-        return Logger::$loggers[$alias] = Container::get('logger', array('name' => $alias));
+        return Logger::$loggers[$alias] = Container::getInstance()->get('logger', array('name' => $alias));
     }
 }

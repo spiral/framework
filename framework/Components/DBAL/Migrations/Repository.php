@@ -104,7 +104,7 @@ class Repository extends Component
             );
         }
 
-        return Container::get($migration['class']);
+        return Container::getInstance()->get($migration['class']);
     }
 
     /**

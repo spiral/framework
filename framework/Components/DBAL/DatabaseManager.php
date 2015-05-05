@@ -114,12 +114,12 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
         {
             //Driver identifier can be fetched from connection string
             $driver = substr($config['connection'], 0, strpos($config['connection'], ':'));
-            $driver = Container::get($this->config['drivers'][$driver], compact('config'));
+            $driver = Container::getInstance()->get($this->config['drivers'][$driver], compact('config'));
         }
 
         benchmark('dbal::database', $database);
 
-        $this->databases[$database] = Container::get(self::DATABASE, array(
+        $this->databases[$database] = Container::getInstance()->get(self::DATABASE, array(
             'name'        => $database,
             'driver'      => $driver,
             'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
@@ -171,7 +171,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      */
     public function getMigrator($database = 'default', $directory = null)
     {
-        return Container::get($this->config['migrations']['migrator'], array(
+        return Container::getInstance()->get($this->config['migrations']['migrator'], array(
             'database'   => $this->db($database),
             'repository' => $this->migrationRepository($directory),
             'config'     => $this->config['migrations']

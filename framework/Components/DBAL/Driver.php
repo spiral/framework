@@ -369,7 +369,7 @@ abstract class Driver extends Component
      */
     public function query($query, array $parameters = array(), &$preparedParameters = null)
     {
-        return Container::get(static::QUERY_RESULT, array(
+        return Container::getInstance()->get(static::QUERY_RESULT, array(
             'statement'  => $this->statement($query, $parameters, $preparedParameters),
             'parameters' => $preparedParameters
         ));
@@ -562,7 +562,7 @@ abstract class Driver extends Component
      */
     public function tableSchema($table, $tablePrefix = '')
     {
-        return Container::get(static::SCHEMA_TABLE, array(
+        return Container::getInstance()->get(static::SCHEMA_TABLE, array(
             'driver'      => $this,
             'name'        => $table,
             'tablePrefix' => $tablePrefix
@@ -580,7 +580,7 @@ abstract class Driver extends Component
      */
     public function columnSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return Container::get(static::SCHEMA_COLUMN, compact('table', 'name', 'schema'));
+        return Container::getInstance()->get(static::SCHEMA_COLUMN, compact('table', 'name', 'schema'));
     }
 
     /**
@@ -594,7 +594,7 @@ abstract class Driver extends Component
      */
     public function indexSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return Container::get(static::SCHEMA_INDEX, compact('table', 'name', 'schema'));
+        return Container::getInstance()->get(static::SCHEMA_INDEX, compact('table', 'name', 'schema'));
     }
 
     /**
@@ -608,7 +608,7 @@ abstract class Driver extends Component
      */
     public function referenceSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return Container::get(static::SCHEMA_REFERENCE, compact('table', 'name', 'schema'));
+        return Container::getInstance()->get(static::SCHEMA_REFERENCE, compact('table', 'name', 'schema'));
     }
 
     /**
@@ -632,7 +632,7 @@ abstract class Driver extends Component
      */
     public function queryCompiler($tablePrefix = '')
     {
-        return Container::get(static::QUERY_COMPILER, array(
+        return Container::getInstance()->get(static::QUERY_COMPILER, array(
             'driver'      => $this,
             'tablePrefix' => $tablePrefix
         ));

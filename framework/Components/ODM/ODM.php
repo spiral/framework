@@ -101,7 +101,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
 
         benchmark('odm::database', $database);
 
-        $this->databases[$database] = Container::get(self::DATABASE, array(
+        $this->databases[$database] = Container::getInstance()->get(self::DATABASE, array(
             'name'   => $database,
             'config' => $config,
             'odm'    => $this

@@ -344,7 +344,7 @@ class Validator extends Component
             return self::$checkers[$name];
         }
 
-        return self::$checkers[$name] = Container::get(self::$checkers[$name]);
+        return self::$checkers[$name] = Container::getInstance()->get(self::$checkers[$name]);
     }
 
     /**

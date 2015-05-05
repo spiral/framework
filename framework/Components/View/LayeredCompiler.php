@@ -126,7 +126,7 @@ class LayeredCompiler extends Component implements CompilerInterface
 
         $config = $this->processors[$name];
 
-        return $this->processors[$name] = Container::get(
+        return $this->processors[$name] = Container::getInstance()->get(
             $config['class'],
             array(
                 'compiler' => $this,

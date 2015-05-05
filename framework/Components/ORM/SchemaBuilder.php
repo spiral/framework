@@ -259,7 +259,7 @@ class SchemaBuilder extends Component
         /**
          * @var RelationSchema $relationship
          */
-        $relationship = Container::get($this->relationships[$type], array(
+        $relationship = Container::getInstance()->get($this->relationships[$type], array(
             'ormSchema'    => $this,
             'entitySchema' => $entitySchema,
             'name'         => $name,

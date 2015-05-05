@@ -40,6 +40,6 @@ trait SingletonTrait
             );
         }
 
-        return Container::get(static::SINGLETON);
+        return Container::getInstance()->get(static::SINGLETON);
     }
 }

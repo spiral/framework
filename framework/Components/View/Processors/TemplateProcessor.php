@@ -374,7 +374,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             /**
              * @var Import $import
              */
-            $import = Container::get($importOptions['class'], array(
+            $import = Container::getInstance()->get($importOptions['class'], array(
                     'level' => $node->getLevel(),
                 ) + ($options + $node->options)
             );

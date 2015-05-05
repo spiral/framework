@@ -167,7 +167,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     protected function createRouter()
     {
-        return Container::get(
+        return Container::getInstance()->get(
             $this->config['router']['class'],
             array(
                 'core'             => $this->core,
@@ -296,7 +296,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         /**
          * @var callable $endpoint
          */
-        $endpoint = is_string($endpoint) ? Container::get($endpoint) : $endpoint;
+        $endpoint = is_string($endpoint) ? Container::getInstance()->get($endpoint) : $endpoint;
 
         ob_start();
         $response = $endpoint($request, null, $this);

@@ -82,6 +82,6 @@ class ImageManager extends Component
         $type = $type ?: $this->config['processor'];
         $config = $this->config['processors'][$type];
 
-        return Container::get($config['class'], compact('filename', 'config'));
+        return Container::getInstance()->get($config['class'], compact('filename', 'config'));
     }
 }

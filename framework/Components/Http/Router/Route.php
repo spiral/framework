@@ -509,7 +509,7 @@ class Route extends Component implements RouteInterface
         if (is_string($this->target) && strpos($this->target, self::CONTROLLER_SEPARATOR) === false)
         {
             //Middleware
-            return Container::get($this->target);
+            return Container::getInstance()->get($this->target);
         }
 
         return function (ServerRequestInterface $request) use ($core)

@@ -47,7 +47,7 @@ trait EventsTrait
             return EventDispatcher::$dispatchers[$alias] = new EventDispatcher($alias);
         }
 
-        return EventDispatcher::$dispatchers[$alias] = Container::get('events', array(
+        return EventDispatcher::$dispatchers[$alias] = Container::getInstance()->get('events', array(
             'name' => $alias
         ));
     }

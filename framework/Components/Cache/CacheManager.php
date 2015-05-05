@@ -88,7 +88,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
         }
 
         benchmark('cache::store', $store);
-        $this->stores[$store] = Container::get(
+        $this->stores[$store] = Container::getInstance()->get(
             $this->config['stores'][$store]['class'],
             array('cache' => $this),
             null,
@@ -125,7 +125,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
             return self::getInstance()->store();
         }
 
-        return Container::get($class->getName(), array(
+        return Container::getInstance()->get($class->getName(), array(
             'cache' => self::getInstance()
         ), null, true);
     }

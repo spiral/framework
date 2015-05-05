@@ -111,7 +111,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
         {
             try
             {
-                $command = Container::get($command);
+                $command = Container::getInstance()->get($command);
                 if (method_exists($command, 'isAvailable') && !$command->isAvailable())
                 {
                     continue;
