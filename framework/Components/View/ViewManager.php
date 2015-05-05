@@ -26,7 +26,7 @@ class ViewManager extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'view';
+    const SINGLETON = __CLASS__;
 
     /**
      * Default view namespace. View component can support as many namespaces and user want, to
