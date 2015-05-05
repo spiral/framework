@@ -9,6 +9,7 @@
 namespace Spiral\Core\Events;
 
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 
 class EventDispatcher extends Component implements DispatcherInterface
 {
@@ -17,7 +18,7 @@ class EventDispatcher extends Component implements DispatcherInterface
      *
      * @var array
      */
-    public static $dispatchers = array();
+    protected static $dispatchers = array();
 
     /**
      * Event listeners, use addHandler, removeHandler for adding new handlers and raiseEvent to
@@ -133,5 +134,50 @@ class EventDispatcher extends Component implements DispatcherInterface
         }
 
         return $walker->context;
+    }
+
+    /**
+     * Pre-define event dispatcher for specified component.
+     *
+     * @param string              $name Component alias.
+     * @param DispatcherInterface $dispatcher
+     */
+    public static function setDispatcher($name, DispatcherInterface $dispatcher)
+    {
+        self::$dispatchers[$name] = $dispatcher;
+    }
+
+    /**
+     * Check is specified event dispatcher already exists.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public static function hasDispatcher($name)
+    {
+        return isset(self::$dispatchers[$name]);
+    }
+
+    /**
+     * Get instance of event dispatcher for specified component. By default instance of EventDispatcher
+     * will be created, this behaviour can be redefined via binding "events" in Container.
+     *
+     * @param string $name Component alias.
+     * @return mixed|null|object|static
+     */
+    public static function getDispatcher($name)
+    {
+        if (isset(self::$dispatchers[$name]))
+        {
+            return self::$dispatchers[$name];
+        }
+
+        $container = Container::getInstance();
+        if (!$container->hasBinding('events'))
+        {
+            return self::$dispatchers[$name] = new static();
+        }
+
+        return self::$dispatchers[$name] = $container->get('events');
     }
 }

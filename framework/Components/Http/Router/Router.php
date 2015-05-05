@@ -124,9 +124,11 @@ class Router extends Component implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
+        $container = Container::getInstance();
+
         //Open router scope
-        $outerRouter = Container::getBinding('router');
-        Container::bind('router', $this);
+        $outerRouter = $container->getBinding('router');
+        $container->bind('router', $this);
 
         if (!$this->route = $this->findRoute($request))
         {
@@ -139,8 +141,8 @@ class Router extends Component implements MiddlewareInterface
         $response = $this->route->perform($request, $this->core, $this->routeMiddlewares);
 
         //Close router scope
-        Container::removeBinding('router');
-        !empty($outerRouter) && Container::bind('router', $outerRouter);
+        $container->removeBinding('router');
+        !empty($outerRouter) && $container->bind('router', $outerRouter);
 
         return $response;
     }

@@ -11,9 +11,14 @@ namespace Spiral\Core;
 use ReflectionParameter;
 use Spiral\Core\Container\ContainerException;
 
-class Container extends Component
+class Container extends Component implements \ArrayAccess
 {
-
+    /**
+     * Default container used in make spiral components and called when getInstance() or make() methods
+     * of components invoked. Technically this is only one real singleton.
+     *
+     * @var Container
+     */
     protected static $instance = null;
 
     /**
@@ -28,19 +33,17 @@ class Container extends Component
      *
      * @var array
      */
-    protected static $bindings = array();
-
-    public function setInstance(Container $container)
-    {
-        self::$instance = $container;
-    }
+    protected $bindings = array();
 
     /**
+     * Get default container used in make spiral components and called when getInstance() or make()
+     * methods of components invoked. Technically this is only one real singleton. SetInstance method
+     * is not presented (i feel this way), but possibly can be added in future.
+     *
      * @return static
      */
     public static function getInstance()
     {
-        //todo: change
         return self::$instance;
     }
 
@@ -63,14 +66,14 @@ class Container extends Component
      * @throws CoreException
      * @throws ContainerException
      */
-    public static function get(
+    public function get(
         $alias,
         $parameters = array(),
         ReflectionParameter $contextParameter = null,
         $ignoreII = false
     )
     {
-        if (!isset(self::$bindings[$alias]))
+        if (!isset($this->bindings[$alias]))
         {
             $reflector = new \ReflectionClass($alias);
             if (!$ignoreII && $injectionManager = $reflector->getConstant('INJECTION_MANAGER'))
@@ -87,7 +90,7 @@ class Container extends Component
                 if ($constructor = $reflector->getConstructor())
                 {
                     $instance = $reflector->newInstanceArgs(
-                        self::resolveArguments($constructor, $parameters)
+                        $this->resolveArguments($constructor, $parameters)
                     );
                 }
                 else
@@ -98,7 +101,7 @@ class Container extends Component
                 //Component declared SINGLETON constant, binding as constant value and class name.
                 if ($singleton = $reflector->getConstant('SINGLETON'))
                 {
-                    self::$bindings[$reflector->getName()] = self::$bindings[$singleton] = $instance;
+                    $this->bindings[$reflector->getName()] = $this->bindings[$singleton] = $instance;
                 }
 
                 return $instance;
@@ -107,18 +110,18 @@ class Container extends Component
             throw new CoreException("Class '{$alias}' can not be constructed.", 7);
         }
 
-        if (is_object($binding = self::$bindings[$alias]))
+        if (is_object($binding = $this->bindings[$alias]))
         {
             return $binding;
         }
 
         if (is_string($binding))
         {
-            $instance = self::get($binding, $parameters, $contextParameter, $ignoreII);
+            $instance = $this->get($binding, $parameters, $contextParameter, $ignoreII);
             if ($instance instanceof Component && $instance::SINGLETON)
             {
                 //To prevent double binding
-                self::$bindings[$binding] = self::$bindings[get_class($instance)] = $instance;
+                $this->bindings[$binding] = $this->bindings[get_class($instance)] = $instance;
             }
 
             return $instance;
@@ -128,12 +131,7 @@ class Container extends Component
         {
             if (is_string($binding[0]))
             {
-                $instance = self::get(
-                    $binding[0],
-                    $parameters,
-                    $contextParameter,
-                    $ignoreII
-                );
+                $instance = $this->get($binding[0], $parameters, $contextParameter, $ignoreII);
             }
             else
             {
@@ -143,7 +141,7 @@ class Container extends Component
             if ($binding[1])
             {
                 //Singleton
-                self::$bindings[$alias] = $instance;
+                $this->bindings[$alias] = $instance;
             }
 
             return $instance;
@@ -165,7 +163,7 @@ class Container extends Component
      * @return array
      * @throws ContainerException
      */
-    public static function resolveArguments(
+    public function resolveArguments(
         \ReflectionFunctionAbstract $reflection,
         array $parameters = array(),
         $userArguments = false
@@ -192,7 +190,7 @@ class Container extends Component
                 {
                     try
                     {
-                        $arguments[] = self::get(
+                        $arguments[] = $this->get(
                             $parameter->getClass()->getName(),
                             array(),
                             $parameter,
@@ -219,7 +217,6 @@ class Container extends Component
                 if (!$userArguments)
                 {
                     $name = $reflection->getName();
-
                     if ($reflection instanceof \ReflectionMethod)
                     {
                         $name = $reflection->class . '::' . $name;
@@ -248,16 +245,16 @@ class Container extends Component
      * @param string                 $alias  Alias where singleton will be attached to.
      * @param string|object|callable Closure to resolve class instance, class instance or class name.
      */
-    public static function bind($alias, $resolver)
+    public function bind($alias, $resolver)
     {
         if (is_array($resolver) || $resolver instanceof \Closure)
         {
-            self::$bindings[$alias] = array($resolver, false);
+            $this->bindings[$alias] = array($resolver, false);
 
             return;
         }
 
-        self::$bindings[$alias] = $resolver;
+        $this->bindings[$alias] = $resolver;
     }
 
     /**
@@ -267,9 +264,9 @@ class Container extends Component
      * @param string   $alias    Alias where singleton will be attached to.
      * @param callable $resolver Closure to resolve class instance.
      */
-    public static function bindSingleton($alias, $resolver)
+    public function bindSingleton($alias, $resolver)
     {
-        self::$bindings[$alias] = array($resolver, true);
+        $this->bindings[$alias] = array($resolver, true);
     }
 
     /**
@@ -279,9 +276,9 @@ class Container extends Component
      * @param string $alias
      * @return bool
      */
-    public static function hasBinding($alias)
+    public function hasBinding($alias)
     {
-        return isset(self::$bindings[$alias]);
+        return isset($this->bindings[$alias]);
     }
 
     /**
@@ -290,9 +287,9 @@ class Container extends Component
      * @param string $alias
      * @return mixed
      */
-    public static function getBinding($alias)
+    public function getBinding($alias)
     {
-        return isset(self::$bindings[$alias]) ? self::$bindings[$alias] : null;
+        return isset($this->bindings[$alias]) ? $this->bindings[$alias] : null;
     }
 
     /**
@@ -300,9 +297,9 @@ class Container extends Component
      *
      * @param string $alias
      */
-    public static function removeBinding($alias)
+    public function removeBinding($alias)
     {
-        unset(self::$bindings[$alias]);
+        unset($this->bindings[$alias]);
     }
 
     /**
@@ -310,9 +307,73 @@ class Container extends Component
      *
      * @return array
      */
-    public static function getBindings()
+    public function getBindings()
     {
-        return self::$bindings;
+        return $this->bindings;
     }
-    //todo: more methods
+
+    /**
+     * Alias for get() method.
+     *
+     * @param string $name
+     * @return mixed|null|object
+     */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * Alias for bind method.
+     *
+     * @param string $alias
+     * @param mixed  $resolver
+     */
+    public function __set($alias, $resolver)
+    {
+        $this->bind($alias, $resolver);
+    }
+
+    /**
+     * Alias for hasBinding() method.
+     *
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return $this->hasBinding($offset);
+    }
+
+    /**
+     * Alias for get() method.
+     *
+     * @param mixed $offset
+     * @return mixed|null|object
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * Alias for bind() method.
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->bind($offset, $value);
+    }
+
+    /**
+     * Alias for removeBinding() method.
+     *
+     * @param mixed $offset
+     */
+    public function offsetUnset($offset)
+    {
+        $this->removeBinding($offset);
+    }
 }

@@ -647,7 +647,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     protected static function getScope($scope = array())
     {
         static::initialize();
-        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        if (EventDispatcher::hasDispatcher(static::getAlias()))
         {
             $scope = self::dispatcher()->fire('scope', array(
                 'scope' => $scope,

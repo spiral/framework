@@ -257,16 +257,29 @@ class Logger extends AbstractLogger
         return self::$logMessages;
     }
 
+    /**
+     * Pre-define logger for specified component.
+     *
+     * @param string          $name Component alias.
+     * @param LoggerInterface $logger
+     */
     public static function setLogger($name, LoggerInterface $logger)
     {
         self::$loggers[$name] = $logger;
     }
 
+    /**
+     * Get instance of logger for specified component. By default instance of Logger will be created,
+     * this behaviour can be redefined via binding "logger" in Container.
+     *
+     * @param string $name Component alias.
+     * @return mixed|null|object|static
+     */
     public static function getLogger($name)
     {
         if (isset(self::$loggers[$name]))
         {
-            return Logger::$loggers[$name];
+            return self::$loggers[$name];
         }
 
         $container = Container::getInstance();
@@ -275,6 +288,6 @@ class Logger extends AbstractLogger
             return self::$loggers[$name] = new static(Debugger::getInstance(), $name);
         }
 
-        return self::$loggers[$name] = Container::getInstance()->get('logger', compact('name'));
+        return self::$loggers[$name] = $container->get('logger', compact('name'));
     }
 }

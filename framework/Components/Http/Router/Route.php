@@ -456,11 +456,13 @@ class Route extends Component implements RouteInterface
             {
                 $reflection = new \ReflectionFunction($this->target);
 
-                return $reflection->invokeArgs(Container::resolveArguments($reflection, array(
-                    'request' => $request,
-                    'context' => $this,
-                    'route'   => $this
-                )));
+                return $reflection->invokeArgs(
+                    Container::getInstance()->resolveArguments($reflection, array(
+                            'request' => $request,
+                            'context' => $this,
+                            'route'   => $this
+                        )
+                    ));
             }
 
             $target = $this->getTargetEndpoint($core);

@@ -166,7 +166,7 @@ class Core extends Container implements CoreInterface
      */
     protected function initBindings()
     {
-        self::$bindings = array(
+        $this->bindings = array(
             'core'      => 'Spiral\Core\Core',
 
             //Dispatchers
@@ -315,11 +315,13 @@ class Core extends Container implements CoreInterface
         /**
          * @var Core $core
          */
-        $core = self::$bindings[__CLASS__]
-            = self::$bindings[get_called_class()]
-            = self::$bindings[self::SINGLETON]
-            = self::$bindings['Spiral\Core\CoreInterface']
-            = new static($directories + array('framework' => dirname(__DIR__)));
+        $core = new static($directories + array('framework' => dirname(__DIR__)));
+
+        $core->bindings[__CLASS__]
+            = $core->bindings[get_called_class()]
+            = $core->bindings[self::SINGLETON]
+            = $core->bindings['Spiral\Core\CoreInterface']
+            = $core;
 
         /**
          * Making application to be instance of global container.
@@ -392,17 +394,6 @@ class Core extends Container implements CoreInterface
     }
 
     /**
-     * An alias for Core::get() method to retrieve components by their alias.
-     *
-     * @param string $name Binding or component name/alias.
-     * @return Component
-     */
-    public function __get($name)
-    {
-        return self::get($name);
-    }
-
-    /**
      * Call controller method by fully specified or short controller name, action and addition
      * options such as default controllers namespace, default name and postfix.
      *
@@ -420,7 +411,7 @@ class Core extends Container implements CoreInterface
             throw new ClientException(ClientException::NOT_FOUND);
         }
 
-        $controller = self::get($controller);
+        $controller = $this->get($controller);
         if (!$controller instanceof ControllerInterface)
         {
             throw new ClientException(404, "Not a valid controller.");
@@ -549,9 +540,9 @@ class Core extends Container implements CoreInterface
         $name = $this->makeFilename($name, $directory);
 
         //This is required as FileManager system component and can be called pretty early
-        $file = !is_object(self::$bindings['file'])
-            ? self::get(self::$bindings['file'])
-            : self::$bindings['file'];
+        $file = !is_object($this->bindings['file'])
+            ? $this->get($this->bindings['file'])
+            : $this->bindings['file'];
 
         $data = '<?php return ' . var_export($data, true) . ';';
         if ($file->write($name, $data, Components\Files\FileManager::RUNTIME, true))
@@ -601,9 +592,9 @@ class Core extends Container implements CoreInterface
 
             $data = $this->event('config', compact('config', 'data', 'filename'))['data'];
 
-            if (!is_object(self::$bindings['file']))
+            if (!is_object($this->bindings['file']))
             {
-                self::$bindings['file'] = self::get(self::$bindings['file']);
+                $this->bindings['file'] = $this->get($this->bindings['file']);
             }
 
             $this->saveData($cached, $data, null, true);

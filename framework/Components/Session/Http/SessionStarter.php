@@ -91,10 +91,13 @@ class SessionStarter implements MiddlewareInterface
 
         $response = $next();
 
-        if (empty($this->store) && is_object(Container::getBinding('session')))
+        if (
+            empty($this->store)
+            || is_object(Container::getInstance()->getBinding(SessionStore::getAlias()))
+        )
         {
             //Store were started by itself
-            $this->setStore(Container::getInstance()->get('session'));
+            $this->setStore(SessionStore::getInstance());
         }
 
         if (!empty($this->store) && ($this->store->isStarted() || $this->store->isDestroyed()))

@@ -22,7 +22,7 @@ trait EventsTrait
      */
     public static function setDispatcher(DispatcherInterface $dispatcher = null)
     {
-        EventDispatcher::$dispatchers[static::getAlias()] = $dispatcher;
+        EventDispatcher::setDispatcher(static::getAlias(), $dispatcher);
     }
 
     /**
@@ -37,19 +37,7 @@ trait EventsTrait
      */
     public static function dispatcher()
     {
-        if (isset(EventDispatcher::$dispatchers[$alias = static::getAlias()]))
-        {
-            return EventDispatcher::$dispatchers[$alias];
-        }
-
-        if (!Container::hasBinding('events'))
-        {
-            return EventDispatcher::$dispatchers[$alias] = new EventDispatcher($alias);
-        }
-
-        return EventDispatcher::$dispatchers[$alias] = Container::getInstance()->get('events', array(
-            'name' => $alias
-        ));
+        return EventDispatcher::getDispatcher(static::getAlias());
     }
 
     /**
@@ -61,11 +49,22 @@ trait EventsTrait
      */
     protected function event($event, $context = null)
     {
-        if (!isset(EventDispatcher::$dispatchers[$alias = static::getAlias()]))
+        if (!EventDispatcher::hasDispatcher(static::getAlias()))
         {
             return $context;
         }
 
         return self::dispatcher()->fire(new ObjectEvent($event, $this, $context));
+    }
+
+    /**
+     * Add event listener to specified event.
+     *
+     * @param string   $event    Event name.
+     * @param callable $listener Callback.
+     */
+    public function on($event, $listener)
+    {
+        self::dispatcher()->addListener($event, $listener);
     }
 }

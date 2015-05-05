@@ -47,6 +47,9 @@ class ModuleManager extends Component
     {
         try
         {
+            //In this case it will be much better to request Container in constructor argument,
+            //but we can always change it later
+            $container = Container::getInstance();
             $this->modules = $core->loadConfig('modules');
             if (!empty($this->modules))
             {
@@ -54,7 +57,7 @@ class ModuleManager extends Component
                 {
                     foreach ($module['bindings'] as $alias => $resolver)
                     {
-                        Container::bind($alias, $resolver);
+                        $container->bind($alias, $resolver);
                     }
 
                     if ($module['bootstrap'])
