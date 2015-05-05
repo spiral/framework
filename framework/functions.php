@@ -14,15 +14,14 @@ use Spiral\Components\I18n\Translator;
 if (!function_exists('directory'))
 {
     /**
-     * Get of set directory alias value.
+     * Get directory alias value.
      *
      * @param string $alias Directory alias, ie. "framework".
-     * @param string $value Directory path with ending slash.
      * @return null
      */
-    function directory($alias, $value = null)
+    function directory($alias)
     {
-        return Core::directory($alias, $value);
+        return Core::getInstance()->directory($alias);
     }
 }
 

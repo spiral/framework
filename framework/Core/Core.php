@@ -87,7 +87,7 @@ class Core extends Container implements CoreInterface
      *
      * @var array
      */
-    protected static $directories = array(
+    protected $directories = array(
         'libraries'   => null,
         'framework'   => null,
         'application' => null,
@@ -136,18 +136,22 @@ class Core extends Container implements CoreInterface
      **
      * By default spiral will to check file named "environment.php" under application data directory,
      * such file should contain simple php code to return environment id.
+     *
+     * @param array $directories Initial set of directories. Should include root and application aliases.
      */
-    public function __construct()
+    public function __construct(array $directories)
     {
-        self::$directories['config'] = self::$directories['application'] . '/config';
-        self::$directories['runtime'] = self::$directories['application'] . '/runtime';
-        self::$directories['cache'] = self::$directories['runtime'] . '/cache';
+        $this->directories = $directories;
+
+        $this->directories['config'] = $this->directories['application'] . '/config';
+        $this->directories['runtime'] = $this->directories['application'] . '/runtime';
+        $this->directories['cache'] = $this->directories['runtime'] . '/cache';
 
         $this->initBindings();
 
         if (empty($this->environment))
         {
-            $filename = self::directory('runtime') . '/environment.php';
+            $filename = $this->directory('runtime') . '/environment.php';
             $this->setEnvironment(file_exists($filename) ? (require $filename) : self::DEVELOPMENT);
         }
 
@@ -191,20 +195,26 @@ class Core extends Container implements CoreInterface
     }
 
     /**
-     * Get of set directory alias value. Use second argument to overwrite existed directory.
+     * Set directory alias value.
      *
      * @param string $alias Directory alias, ie. "framework".
      * @param string $value Directory path without ending slash.
      * @return null
      */
-    public static function directory($alias, $value = null)
+    public function setDirectory($alias, $value)
     {
-        if (empty($value))
-        {
-            return self::$directories[$alias];
-        }
+        return $this->directories[$alias] = $value;
+    }
 
-        return self::$directories[$alias] = $value;
+    /**
+     * Get directory value.
+     *
+     * @param string $alias Directory alias, ie. "framework".
+     * @return null
+     */
+    public function directory($alias)
+    {
+        return $this->directories[$alias];
     }
 
     /**
@@ -212,9 +222,9 @@ class Core extends Container implements CoreInterface
      *
      * @return array
      */
-    public static function getDirectories()
+    public function getDirectories()
     {
-        return self::$directories;
+        return $this->directories;
     }
 
     /**
@@ -242,7 +252,7 @@ class Core extends Container implements CoreInterface
         $this->environment = $environment;
         if ($regenerateID)
         {
-            $this->applicationID = abs(crc32(self::directory('root') . $this->environment));
+            $this->applicationID = abs(crc32($this->directory('root') . $this->environment));
         }
     }
 
@@ -302,8 +312,6 @@ class Core extends Container implements CoreInterface
      */
     public static function init(array $directories)
     {
-        self::$directories = $directories + array('framework' => dirname(__DIR__));
-
         /**
          * @var Core $core
          */
@@ -311,7 +319,7 @@ class Core extends Container implements CoreInterface
             = self::$bindings[get_called_class()]
             = self::$bindings[self::SINGLETON]
             = self::$bindings['Spiral\Core\CoreInterface']
-            = new static();
+            = new static($directories + array('framework' => dirname(__DIR__)));
 
         /**
          * Making application to be instance of global container.
@@ -325,7 +333,7 @@ class Core extends Container implements CoreInterface
 
         foreach ($core->autoload as $module)
         {
-            self::get($module, array('core' => $core));
+            $core->get($module, array('core' => $core));
         }
 
         //Bootstrapping
@@ -566,7 +574,7 @@ class Core extends Container implements CoreInterface
      */
     public function loadConfig($config)
     {
-        $filename = self::$directories['config'] . '/' . $config . '.' . self::CONFIGS_EXTENSION;
+        $filename = $this->directories['config'] . '/' . $config . '.' . self::CONFIGS_EXTENSION;
 
         //Cached filename
         $cached = str_replace(array('/', '\\'), '-', 'config-' . $config);
@@ -583,7 +591,7 @@ class Core extends Container implements CoreInterface
 
             $data = (require $filename);
 
-            $environment = self::$directories['config']
+            $environment = $this->directories['config']
                 . '/' . $this->getEnvironment() . '/' . $config . '.' . self::CONFIGS_EXTENSION;
 
             if (file_exists($environment))
@@ -636,7 +644,7 @@ class Core extends Container implements CoreInterface
             return rtrim($directory, '/') . '/' . $name . '.' . static::RUNTIME_EXTENSION;
         }
 
-        return self::$directories['cache']
+        return $this->directories['cache']
         . "/$name-{$this->applicationID}" . '.' . static::RUNTIME_EXTENSION;
     }
 }
