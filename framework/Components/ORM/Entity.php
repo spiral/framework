@@ -64,6 +64,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
      * Additional constants used to control relation schema creation.
      */
     const BACK_REF          = 1001;
+    const INVERSE           = 1001;
     const CONSTRAINT        = 1002;
     const CONSTRAINT_ACTION = 1003;
     const CREATE_PIVOT      = 1004;

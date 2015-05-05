@@ -59,7 +59,7 @@ class CacheCommand extends Command
                         -1 * (strlen($this->file->extension($filename)) + 1)
                     );
 
-                    if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE)
+                    if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
                     {
                         $this->write($formatter->formatSection($namespace, $view . ", ", 'fg=cyan'));
 
