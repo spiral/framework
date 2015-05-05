@@ -11,7 +11,7 @@ namespace Spiral\Core;
 use ReflectionParameter;
 use Spiral\Core\Container\ContainerException;
 
-class Container
+class Container extends Component
 {
 
     protected static $instance = null;
@@ -29,6 +29,11 @@ class Container
      * @var array
      */
     protected static $bindings = array();
+
+    public function setInstance(Container $container)
+    {
+        self::$instance = $container;
+    }
 
     /**
      * @return static

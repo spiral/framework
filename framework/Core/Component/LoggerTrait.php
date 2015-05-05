@@ -22,7 +22,7 @@ trait LoggerTrait
      */
     public static function setLogger(LoggerInterface $logger)
     {
-        Logger::$loggers[static::getAlias()] = $logger;
+        Logger::setLogger(static::getAlias(), $logger);
     }
 
     /**
@@ -37,17 +37,6 @@ trait LoggerTrait
      */
     public static function logger()
     {
-        //todo: getLogger(), hasLogger()
-        if (isset(Logger::$loggers[$alias = static::getAlias()]))
-        {
-            return Logger::$loggers[$alias];
-        }
-
-        if (!Container::hasBinding('logger'))
-        {
-            return Logger::$loggers[$alias] = new Logger(Debugger::getInstance(), $alias);
-        }
-
-        return Logger::$loggers[$alias] = Container::getInstance()->get('logger', array('name' => $alias));
+        return Logger::getLogger(static::getAlias());
     }
 }

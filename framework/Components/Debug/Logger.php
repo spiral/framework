@@ -9,8 +9,10 @@
 namespace Spiral\Components\Debug;
 
 use Psr\Log\AbstractLogger;
+use Psr\Log\LoggerInterface;
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 
 class Logger extends AbstractLogger
 {
@@ -47,7 +49,7 @@ class Logger extends AbstractLogger
      *
      * @var array
      */
-    public static $loggers = array();
+    protected static $loggers = array();
 
     /**
      * If enabled all debug messages will be additionally collected in Logger::$logMessages array for
@@ -253,5 +255,26 @@ class Logger extends AbstractLogger
     public static function logMessages()
     {
         return self::$logMessages;
+    }
+
+    public static function setLogger($name, LoggerInterface $logger)
+    {
+        self::$loggers[$name] = $logger;
+    }
+
+    public static function getLogger($name)
+    {
+        if (isset(self::$loggers[$name]))
+        {
+            return Logger::$loggers[$name];
+        }
+
+        $container = Container::getInstance();
+        if (!$container->hasBinding('logger'))
+        {
+            return self::$loggers[$name] = new static(Debugger::getInstance(), $name);
+        }
+
+        return self::$loggers[$name] = Container::getInstance()->get('logger', compact('name'));
     }
 }

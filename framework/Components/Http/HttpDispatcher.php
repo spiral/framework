@@ -219,7 +219,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
             throw new ClientException(Response::SERVER_ERROR, 'Unable to select endpoint');
         }
 
-        $outerRequest = Container::getBinding('request');
+        $container = Container::getInstance();
+        $outerRequest = $container->getBinding('request');
 
         /**
          * So all inner middleware and code will known their context URL.
@@ -227,9 +228,9 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $request = $request->withAttribute('activePath', $activePath);
 
         //Creating scope
-        Container::bind('request', $request);
-        Container::bind(get_class($request), $request);
-        Container::bind('Psr\Http\Message\ServerRequestInterface', $request);
+        $container->bind('request', $request);
+        $container->bind(get_class($request), $request);
+        $container->bind('Psr\Http\Message\ServerRequestInterface', $request);
 
         $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
 
@@ -237,16 +238,16 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $response = $this->execute($request, $endpoint);
         benchmark('http::endpoint', $name);
 
-        Container::removeBinding(get_class($request));
-        Container::removeBinding('request');
-        Container::removeBinding('Psr\Http\Message\ServerRequestInterface');
+        $container->removeBinding(get_class($request));
+        $container->removeBinding('request');
+        $container->removeBinding('Psr\Http\Message\ServerRequestInterface');
 
         if (!empty($outerRequest))
         {
             //Restoring scope
-            Container::bind('request', $outerRequest);
-            Container::bind(get_class($outerRequest), $outerRequest);
-            Container::bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
+            $container->bind('request', $outerRequest);
+            $container->bind(get_class($outerRequest), $outerRequest);
+            $container->bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
         }
 
         return $response;
