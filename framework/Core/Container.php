@@ -31,6 +31,7 @@ class Container extends Component implements \ArrayAccess
      * components and can simplify development. Spiral additionally provides way to create DI without
      * binding, it can be done by using real class or model name, or via ControllableInjection interface.
      *
+     * @invisible
      * @var array
      */
     protected $bindings = array();
