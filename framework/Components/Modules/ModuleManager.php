@@ -26,7 +26,7 @@ class ModuleManager extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'modules';
+    const SINGLETON = __CLASS__;
 
     /**
      * List of registered modules, their event associations, bootstraps and view namespaces.

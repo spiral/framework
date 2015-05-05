@@ -34,7 +34,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'cache';
+    const SINGLETON = __CLASS__;
 
     /**
      * Already constructed cache adapters.

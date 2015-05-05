@@ -25,7 +25,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'dbal';
+    const SINGLETON = __CLASS__;
 
     /**
      * Database class name, class can be redefined via Core bindings.

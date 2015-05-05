@@ -22,7 +22,7 @@ class Loader extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'loader';
+    const SINGLETON = __CLASS__;
 
     /**
      * Core instance.

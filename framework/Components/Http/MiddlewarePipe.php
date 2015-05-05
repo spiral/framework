@@ -119,7 +119,9 @@ class MiddlewarePipe extends Component
                     $arguments['request'] = $input;
                 }
 
-                return $reflection->invokeArgs(Container::resolveArguments($reflection, $arguments));
+                return $reflection->invokeArgs(
+                    Container::getInstance()->resolveArguments($reflection, $arguments)
+                );
             }
 
             return call_user_func($this->target, $input);

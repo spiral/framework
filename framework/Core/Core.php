@@ -47,7 +47,7 @@ class Core extends Container implements CoreInterface
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'core';
+    const SINGLETON = __CLASS__;
 
     /**
      * Spiral Core version.
@@ -312,6 +312,11 @@ class Core extends Container implements CoreInterface
             = self::$bindings[self::SINGLETON]
             = self::$bindings['Spiral\Core\CoreInterface']
             = new static();
+
+        /**
+         * Making application to be instance of global container.
+         */
+        self::$instance = $core;
 
         //Error and exception handlers
         set_error_handler(array($core, 'errorHandler'));

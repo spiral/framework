@@ -20,7 +20,7 @@ class FileManager extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'file';
+    const SINGLETON = __CLASS__;
 
     /**
      * Size constants for better size manipulations.

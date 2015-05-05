@@ -31,7 +31,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'console';
+    const SINGLETON = __CLASS__;
 
     /**
      * Tokenizer component.

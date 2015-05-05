@@ -28,7 +28,7 @@ class Debugger extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'debug';
+    const SINGLETON = __CLASS__;
 
     /**
      * If enabled Debugger::benchmark() method will collect all benchmarks into Debugger::$benchmarks

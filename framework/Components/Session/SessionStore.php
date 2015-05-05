@@ -22,7 +22,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'session';
+    const SINGLETON = __CLASS__;
 
     /**
      * Do not use any custom handlers.

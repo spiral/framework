@@ -29,7 +29,7 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'cookies';
+    const SINGLETON = __CLASS__;
 
     /**
      * Cookie protection modes.

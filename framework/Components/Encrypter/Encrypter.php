@@ -21,7 +21,7 @@ class Encrypter extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'encrypter';
+    const SINGLETON = __CLASS__;
 
     /**
      * Keys to use in packed data.

@@ -161,7 +161,7 @@ class RedisManager extends Component implements InjectionManagerInterface
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'redis';
+    const SINGLETON = __CLASS__;
 
     /**
      * Redis client class.

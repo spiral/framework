@@ -11,8 +11,11 @@ namespace Spiral\Core;
 use ReflectionParameter;
 use Spiral\Core\Container\ContainerException;
 
-class Container implements ContainerInterface
+class Container
 {
+
+    protected static $instance = null;
+
     /**
      * IoC bindings. Binding can include interface - class aliases, closures, singleton closures
      * and already constructed components stored as instances. Binding can be added using
@@ -28,12 +31,12 @@ class Container implements ContainerInterface
     protected static $bindings = array();
 
     /**
-     * @return ContainerInterface
+     * @return static
      */
     public static function getInstance()
     {
         //todo: change
-        return self::get('core');
+        return self::$instance;
     }
 
     /**

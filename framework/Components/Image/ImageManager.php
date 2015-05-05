@@ -19,7 +19,7 @@ class ImageManager extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'image';
+    const SINGLETON = __CLASS__;
 
     /**
      * New image component instance.

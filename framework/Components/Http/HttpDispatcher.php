@@ -35,7 +35,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'http';
+    const SINGLETON = __CLASS__;
 
     /**
      * Max block size to use while sending streams to client. Default is 16Kb.

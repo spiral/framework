@@ -21,7 +21,7 @@ class ORM extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'orm';
+    const SINGLETON = __CLASS__;
 
     /**
      * Core component.

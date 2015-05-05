@@ -23,7 +23,7 @@ class Translator extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'i18n';
+    const SINGLETON = __CLASS__;
 
     /**
      * Bundle to use for short localization syntax (l function).

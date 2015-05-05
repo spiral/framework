@@ -24,7 +24,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'odm';
+    const SINGLETON = __CLASS__;
 
     /**
      * MongoDatabase class name.

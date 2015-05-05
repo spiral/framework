@@ -24,7 +24,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'storage';
+    const SINGLETON = __CLASS__;
 
     /**
      * StorageContainer class for reference.
