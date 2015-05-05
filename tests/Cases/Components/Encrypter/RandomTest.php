@@ -27,6 +27,7 @@ class RandomTest extends TestCase
             $previousRandoms[] = $random;
         }
     }
+
     /**
      * Configured encrypter component.
      *

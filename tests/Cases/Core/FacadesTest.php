@@ -16,12 +16,12 @@ class FacadesTest extends TestCase
 {
     public function testBypassing()
     {
-        Container::bind('facadeTest', $this);
+        Container::getInstance()->bind('facadeTest', $this);
 
         $this->assertSame('ABC', TestFacade::method('abc'));
         $this->assertSame('XXX', TestFacade::method('xxx'));
 
-        Container::removeBinding('facadeTest');
+         Container::getInstance()->removeBinding('facadeTest');
     }
 
     public function method($value)

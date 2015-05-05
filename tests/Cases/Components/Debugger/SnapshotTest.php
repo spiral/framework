@@ -27,14 +27,14 @@ class SnapshotTest extends TestCase
     protected function setUp()
     {
         $this->loader = new Loader(MemoryCore::getInstance());
-        Container::bind('view', $this->viewManager());
-        Container::bind('tokenizer', $this->tokenizerComponent());
+        Container::getInstance()->bind('view', $this->viewManager());
+        Container::getInstance()->bind('tokenizer', $this->tokenizerComponent());
     }
 
     protected function tearDown()
     {
-        Container::removeBinding('view');
-        Container::removeBinding('tokenizer');
+        Container::getInstance()->removeBinding('view');
+        Container::getInstance()->removeBinding('tokenizer');
 
         $this->loader->disable();
         $this->loader = null;

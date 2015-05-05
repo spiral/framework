@@ -375,9 +375,9 @@ class Core extends Container implements CoreInterface
      *
      * @return DispatcherInterface
      */
-    protected function getDispatcher()
+    protected function createDispatcher()
     {
-        return self::get($this->isConsole() ? 'console' : 'http', array(
+        return $this->get($this->isConsole() ? 'console' : 'http', array(
             'core' => $this
         ));
     }
@@ -389,7 +389,7 @@ class Core extends Container implements CoreInterface
      */
     public function start(DispatcherInterface $dispatcher = null)
     {
-        $this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->getDispatcher();
+        $this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
         $this->dispatcher->start($this);
     }
 
@@ -540,9 +540,7 @@ class Core extends Container implements CoreInterface
         $name = $this->makeFilename($name, $directory);
 
         //This is required as FileManager system component and can be called pretty early
-        $file = !is_object($this->bindings['file'])
-            ? $this->get($this->bindings['file'])
-            : $this->bindings['file'];
+        $file = Components\Files\FileManager::getInstance();
 
         $data = '<?php return ' . var_export($data, true) . ';';
         if ($file->write($name, $data, Components\Files\FileManager::RUNTIME, true))
@@ -591,12 +589,6 @@ class Core extends Container implements CoreInterface
             }
 
             $data = $this->event('config', compact('config', 'data', 'filename'))['data'];
-
-            if (!is_object($this->bindings['file']))
-            {
-                $this->bindings['file'] = $this->get($this->bindings['file']);
-            }
-
             $this->saveData($cached, $data, null, true);
 
             return $data;

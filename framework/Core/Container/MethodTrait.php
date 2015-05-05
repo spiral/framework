@@ -24,6 +24,9 @@ trait MethodTrait
         $reflection = new \ReflectionMethod($this, $method);
         $reflection->setAccessible(true);
 
-        return $reflection->invokeArgs($this, Container::resolveArguments($reflection, $parameters));
+        return $reflection->invokeArgs(
+            $this,
+            Container::getInstance()->resolveArguments($reflection, $parameters)
+        );
     }
 }
