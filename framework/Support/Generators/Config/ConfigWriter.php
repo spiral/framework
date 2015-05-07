@@ -382,7 +382,7 @@ class ConfigWriter extends Component
             }
 
             $alias = $directory = $hasAlias = false;
-            $directories = Core::getDirectories();
+            $directories = Core::getInstance()->getDirectories();
 
             foreach ($directories as &$directory)
             {
