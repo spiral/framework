@@ -154,7 +154,6 @@ class CookieManager extends Component implements MiddlewareInterface
             $altered = true;
 
             //TODO: select protection mechanism
-
             $cookies[$name] = $this->decryptCookie($cookie);
         }
 

@@ -452,7 +452,7 @@ class Node
             {
                 if (!$node->name)
                 {
-                    //todo: add ability to ingest parent block into included view, use node options?
+                    //todo: add ability to ingest parent block into included view, use node options
                     $result .= $node->compile($this);
                     continue;
                 }

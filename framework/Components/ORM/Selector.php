@@ -17,6 +17,7 @@ use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
 use Spiral\Core\Component;
+use Spiral\Facades\Cache;
 
 class Selector extends QueryBuilder
 {
@@ -64,6 +65,13 @@ class Selector extends QueryBuilder
 
     public $columns = array();
 
+    /**
+     * Cache lifetime. Selector will cache parsed structure in opposite to SelectBuilder, this will
+     * ensure that sub data is valid and will save resources used to parse result.
+     *
+     * @var int
+     */
+    protected $cache = 0;
 
     //    /**
     //     * Set of loaders and nested loaded used to normalize loaded relations in correct set of nested
@@ -173,6 +181,13 @@ class Selector extends QueryBuilder
         return $statement;
     }
 
+    public function cache($lifetime)
+    {
+        $this->cache = $lifetime;
+
+        return $this;
+    }
+
     /**
      * Fetching data.
      *
@@ -180,7 +195,20 @@ class Selector extends QueryBuilder
      */
     public function fetchData()
     {
-        $result = $this->database->query($statement = $this->sqlStatement(), $this->getParameters());
+        $statement = $this->sqlStatement();
+
+        if (!empty($this->cache))
+        {
+            $cacheIdentifier = md5(serialize([$statement, $this->getParameters()]));
+            $cacheStore = Cache::getInstance()->store();
+
+            if ($cacheStore->has($cacheIdentifier))
+            {
+                return $cacheStore->get($cacheIdentifier);
+            }
+        }
+
+        $result = $this->database->query($statement, $this->getParameters());
 
         benchmark('selector::parseResult', $statement);
         $data = $this->loader->parseResult($result, $rowsCount);
@@ -200,6 +228,11 @@ class Selector extends QueryBuilder
 
         $data = $this->loader->getResult();
         $this->loader->clean();
+
+        if (!empty($this->cache) && !empty($cacheStore) && !empty($cacheIdentifier))
+        {
+            $cacheStore->set($cacheIdentifier, $data, $this->cache);
+        }
 
         return $data;
     }

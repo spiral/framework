@@ -315,7 +315,11 @@ class SelectQuery extends QueryBuilder implements
 
         if (!empty($this->cache))
         {
-            return $this->database->cached($this->cache, $this->sqlStatement(), $this->getParameters());
+            return $this->database->cached(
+                $this->cache,
+                $this->sqlStatement(),
+                $this->getParameters()
+            );
         }
 
         return $this->database->query($this->sqlStatement(), $this->getParameters());
