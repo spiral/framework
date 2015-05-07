@@ -457,8 +457,20 @@ class HttpDispatcher extends Component implements DispatcherInterface
             return;
         }
 
-        //We can expose snapshot to client
-        $this->dispatch(new Response($snapshot->renderSnapshot(), 500));
+        if ($this->request->getHeader('Accept') == 'application/json')
+        {
+            $content = array('status' => 500) + $snapshot->packException();
+            $this->dispatch(new Response(json_encode($content), 500, array(
+                'Content-Type' => 'application/json'
+            )));
+
+            return;
+        }
+        else
+        {
+            //Regular HTML snapshot
+            $this->dispatch(new Response($snapshot->renderSnapshot(), 500));
+        }
     }
 
     /**
@@ -471,7 +483,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $content = '';
 
-        if (strpos($this->request->getHeader('Accept', false), 'application/json') !== false)
+        if ($this->request->getHeader('Accept') == 'application/json')
         {
             $content = array('status' => $code);
 

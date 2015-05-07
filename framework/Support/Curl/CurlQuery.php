@@ -10,6 +10,11 @@ namespace Spiral\Support\Curl;
 
 use Spiral\Core\Component;
 
+/**
+ * Following CurlQuery should be removed or replaced with PSR7 aware implementation.
+ *
+ * @deprecated
+ */
 class CurlQuery extends Component
 {
     /**

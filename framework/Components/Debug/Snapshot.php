@@ -193,6 +193,23 @@ class Snapshot extends Component
     }
 
     /**
+     * Get shortened exception description. Usually used to send data over ajax.
+     *
+     * @return array
+     */
+    public function packException()
+    {
+        return array(
+            'error'    => $this->getMessage(),
+            'location' => array(
+                'file' => $this->getFile(),
+                'line' => $this->getLine()
+            ),
+            'trace'    => $this->getTrace()
+        );
+    }
+
+    /**
      * Render snapshot to client.
      *
      * @return string
