@@ -26,7 +26,7 @@ trait TimestampsTrait
      * @param mixed $options Custom options.
      */
     protected static function initTimestamps($options = null)
-    {echo 'uo!';
+    {
         if ($options == ActiveRecord::SCHEMA_ANALYSIS)
         {
             $listener = function (Event $event)

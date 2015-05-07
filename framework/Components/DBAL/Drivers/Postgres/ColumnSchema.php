@@ -136,7 +136,7 @@ class ColumnSchema extends AbstractColumnSchema
             $this->type = ($this->type == 'bigint' ? 'bigserial' : 'serial');
             $this->autoIncrement = true;
 
-            $this->defaultValue = SqlFragment::make($this->defaultValue);
+            $this->defaultValue = new SqlFragment($this->defaultValue);
 
             return;
         }

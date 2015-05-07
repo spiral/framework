@@ -392,7 +392,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
                 continue;
             }
 
-            if (!$this->solidState && !isset($this->updates[$name]))
+            if (!$this->solidState && !array_key_exists($name, $this->updates))
             {
                 continue;
             }
@@ -574,7 +574,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
 
         $table = static::dbalDatabase($schema, $dbal)->table($schema[ORM::E_TABLE]);
-        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        if (EventDispatcher::hasDispatcher(static::getAlias()))
         {
             return self::dispatcher()->fire('dbalTable', $table);
         }
