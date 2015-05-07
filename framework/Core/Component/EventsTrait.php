@@ -63,7 +63,7 @@ trait EventsTrait
      * @param string   $event    Event name.
      * @param callable $listener Callback.
      */
-    public function on($event, $listener)
+    public static function on($event, $listener)
     {
         self::dispatcher()->addListener($event, $listener);
     }

@@ -520,7 +520,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
             'orm'      => $orm
         ));
 
-        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        if (EventDispatcher::hasDispatcher(static::getAlias()))
         {
             return self::dispatcher()->fire('selector', $selector);
         }
