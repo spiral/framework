@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM\Selector;
 
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\QueryResult;
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Selector;
@@ -33,9 +33,9 @@ abstract class Loader
      * @var array
      */
     protected static $loaderClasses = array(
-        Entity::HAS_ONE    => 'Spiral\Components\ORM\Selector\Loaders\HasOneLoader',
-        Entity::HAS_MANY   => 'Spiral\Components\ORM\Selector\Loaders\HasManyLoader',
-        Entity::BELONGS_TO => 'Spiral\Components\ORM\Selector\Loaders\BelongsToLoader'
+        ActiveRecord::HAS_ONE    => 'Spiral\Components\ORM\Selector\Loaders\HasOneLoader',
+        ActiveRecord::HAS_MANY   => 'Spiral\Components\ORM\Selector\Loaders\HasManyLoader',
+        ActiveRecord::BELONGS_TO => 'Spiral\Components\ORM\Selector\Loaders\BelongsToLoader'
     );
 
     /**
@@ -153,20 +153,20 @@ abstract class Loader
     public function getReferenceKey()
     {
         //Fairly simple logic
-        return $this->relationDefinition[Entity::INNER_KEY];
+        return $this->relationDefinition[ActiveRecord::INNER_KEY];
     }
 
     public function getReferenceName(array $data)
     {
         $definition = $this->relationDefinition;
 
-        if (!isset($data[$definition[Entity::OUTER_KEY]]))
+        if (!isset($data[$definition[ActiveRecord::OUTER_KEY]]))
         {
             return null;
         }
 
         //Fairly simple logic
-        return $definition[Entity::INNER_KEY] . '::' . $data[$definition[Entity::OUTER_KEY]];
+        return $definition[ActiveRecord::INNER_KEY] . '::' . $data[$definition[ActiveRecord::OUTER_KEY]];
     }
 
     /**

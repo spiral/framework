@@ -8,16 +8,17 @@
  */
 namespace Spiral\Components\ORM\Schemas\Relations;
 
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\RelationSchema;
 
+//TODO: REWRITE ENTIRELLY
 class ManyThoughtSchema extends RelationSchema
 {
     /**
      * Relation type.
      */
-    const RELATION_TYPE = Entity::MANY_THOUGHT;
+    const RELATION_TYPE = ActiveRecord::MANY_THOUGHT;
 
     /**
      * Default definition parameters, will be filled if parameter skipped from definition by user.
@@ -26,10 +27,10 @@ class ManyThoughtSchema extends RelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::INNER_KEY         => '{entity:primaryKey}',
-        Entity::OUTER_KEY         => '{outer:primaryKey}',
-        Entity::THOUGHT_INNER_KEY => '{entity:roleName}_{definition:INNER_KEY}',
-        Entity::THOUGHT_OUTER_KEY => '{outer:roleName}_{definition:OUTER_KEY}'
+        ActiveRecord::INNER_KEY         => '{record:primaryKey}',
+        ActiveRecord::OUTER_KEY         => '{outer:primaryKey}',
+        ActiveRecord::THOUGHT_INNER_KEY => '{record:roleName}_{definition:INNER_KEY}',
+        ActiveRecord::THOUGHT_OUTER_KEY => '{outer:roleName}_{definition:OUTER_KEY}'
     );
 
     /**
@@ -39,17 +40,17 @@ class ManyThoughtSchema extends RelationSchema
      */
     public function buildSchema()
     {
-        if (empty($this->definition[Entity::PIVOT_TABLE]))
+        if (empty($this->definition[ActiveRecord::PIVOT_TABLE]))
         {
             throw new ORMException(
-                "Unable to build MANY_THOUGHT ({$this->entitySchema}) relation, "
+                "Unable to build MANY_THOUGHT ({$this->recordSchema}) relation, "
                 . "thought table has to be specified."
             );
         }
     }
 
     /**
-     * Create reverted relations in outer entity or entities.
+     * Create reverted relations in outer model or models.
      *
      * @param string $name Relation name.
      * @param int    $type Back relation type, can be required some cases.
@@ -57,12 +58,12 @@ class ManyThoughtSchema extends RelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        $this->getOuterEntity()->addRelation($name, array(
-            Entity::MANY_THOUGHT      => $this->entitySchema->getClass(),
-            Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
-            Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
-            Entity::THOUGHT_INNER_KEY => $this->definition[Entity::THOUGHT_OUTER_KEY],
-            Entity::THOUGHT_OUTER_KEY => $this->definition[Entity::THOUGHT_INNER_KEY]
+        $this->getOuterRecordSchema()->addRelation($name, array(
+            ActiveRecord::MANY_THOUGHT      => $this->recordSchema->getClass(),
+            ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
+            ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
+            ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
+            ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY]
         ));
     }
 }

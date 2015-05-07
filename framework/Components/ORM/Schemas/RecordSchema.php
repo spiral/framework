@@ -12,7 +12,7 @@ use Doctrine\Common\Inflector\Inflector;
 use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\DBAL\SqlFragmentInterface;
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORMAccessor;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaBuilder;
@@ -20,7 +20,7 @@ use Spiral\Core\Component;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Models\Schemas\ModelSchema;
 
-class EntitySchema extends ModelSchema
+class RecordSchema extends ModelSchema
 {
     /**
      * Logging.
@@ -30,10 +30,10 @@ class EntitySchema extends ModelSchema
     /**
      * Base model class.
      */
-    const BASE_CLASS = SchemaBuilder::ENTITY;
+    const BASE_CLASS = SchemaBuilder::ACTIVE_RECORD;
 
     /**
-     * Entity model class name.
+     * ActiveRecord model class name.
      *
      * @var string
      */
@@ -48,7 +48,7 @@ class EntitySchema extends ModelSchema
     protected $ormSchema = null;
 
     /**
-     * Table schema used to fetch information about declared or fetched columns. Empty if entity is
+     * Table schema used to fetch information about declared or fetched columns. Empty if model is
      * abstract.
      *
      * @var AbstractTableSchema
@@ -70,7 +70,7 @@ class EntitySchema extends ModelSchema
     protected $columns = array();
 
     /**
-     * New EntitySchema instance, schema responsible for detecting relationships, columns and indexes.
+     * New RecordSchema instance, schema responsible for detecting relationships, columns and indexes.
      * This class is really similar to DocumentSchema and can be merged into common parent in future.
      *
      * @param string        $class     Class name.
@@ -92,7 +92,7 @@ class EntitySchema extends ModelSchema
     }
 
     /**
-     * Get name should be used to represent entity relationship in foreign classes (default behaviour).
+     * Get name should be used to represent model relationship in foreign classes (default behaviour).
      *
      * Example:
      * Models\Post => HAS_ONE => post_id
@@ -105,7 +105,7 @@ class EntitySchema extends ModelSchema
     }
 
     /**
-     * True if entity allowed schema modifications.
+     * True if active record allowed schema modifications.
      *
      * @return bool
      */
@@ -148,13 +148,13 @@ class EntitySchema extends ModelSchema
             return null;
         }
 
-        if ($merge && ($this->reflection->getParentClass()->getName() != SchemaBuilder::ENTITY))
+        if ($merge && ($this->reflection->getParentClass()->getName() != SchemaBuilder::ACTIVE_RECORD))
         {
             $parentClass = $this->reflection->getParentClass()->getName();
             if (is_array($value))
             {
                 $value = array_merge(
-                    $this->ormSchema->getActiveRecord($parentClass)->property($property, true),
+                    $this->ormSchema->getRecordSchema($parentClass)->property($property, true),
                     $value
                 );
             }
@@ -169,7 +169,7 @@ class EntitySchema extends ModelSchema
     }
 
     /**
-     * Get table name associated with entity model.
+     * Get table name associated with model.
      *
      * @return mixed
      */
@@ -201,7 +201,7 @@ class EntitySchema extends ModelSchema
     }
 
     /**
-     * Get entity declared schema (merged with parent model(s) values).
+     * Get model declared schema (merged with parent model(s) values).
      *
      * @return array
      */
@@ -212,7 +212,7 @@ class EntitySchema extends ModelSchema
 
     /**
      * Get declared indexes. This is not the same set of indexes which can be presented in table
-     * schema, use EntitySchema->getTableSchema()->getIndexes() method for it.
+     * schema, use RecordSchema->getTableSchema()->getIndexes() method for it.
      *
      * @see getTableSchema()
      * @return array
@@ -487,7 +487,7 @@ class EntitySchema extends ModelSchema
         {
             $setter = $this->getSetters()[$name];
 
-            if (is_string($setter) && isset(Entity::$mutatorAliases[$setter]))
+            if (is_string($setter) && isset(ActiveRecord::$mutatorAliases[$setter]))
             {
                 $setter = DataEntity::$mutatorAliases[$setter];
             }
@@ -521,7 +521,7 @@ class EntitySchema extends ModelSchema
 
         foreach ($definition as $chunk)
         {
-            if ($chunk == Entity::INDEX || $chunk == Entity::UNIQUE)
+            if ($chunk == ActiveRecord::INDEX || $chunk == ActiveRecord::UNIQUE)
             {
                 $type = $chunk;
                 continue;
@@ -541,11 +541,11 @@ class EntitySchema extends ModelSchema
         }
 
         //Defining index
-        $this->tableSchema->index($columns)->unique($type == Entity::UNIQUE);
+        $this->tableSchema->index($columns)->unique($type == ActiveRecord::UNIQUE);
     }
 
     /**
-     * Casting entity relationships.
+     * Casting model relationships.
      */
     public function castRelations()
     {
@@ -562,7 +562,7 @@ class EntitySchema extends ModelSchema
     }
 
     /**
-     * Get all declared entity relations.
+     * Get all declared model relations.
      *
      * @return RelationSchema[]
      */
@@ -572,7 +572,7 @@ class EntitySchema extends ModelSchema
     }
 
     /**
-     * Add relation to EntitySchema.
+     * Add relation to RecordSchema.
      *
      * @param string $name
      * @param array  $definition

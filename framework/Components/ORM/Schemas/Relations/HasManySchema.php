@@ -8,12 +8,12 @@
  */
 namespace Spiral\Components\ORM\Schemas\Relations;
 
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 
 class HasManySchema extends HasOneSchema
 {
     /**
      * Relation type.
      */
-    const RELATION_TYPE = Entity::HAS_MANY;
+    const RELATION_TYPE = ActiveRecord::HAS_MANY;
 }

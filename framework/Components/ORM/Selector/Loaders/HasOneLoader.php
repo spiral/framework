@@ -9,7 +9,7 @@
 namespace Spiral\Components\ORM\Selector\Loaders;
 
 use Spiral\Components\DBAL\Database;
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
@@ -20,7 +20,7 @@ class HasOneLoader extends Loader
     /**
      * Relation type is required to correctly resolve foreign model.
      */
-    const RELATION_TYPE = Entity::HAS_ONE;
+    const RELATION_TYPE = ActiveRecord::HAS_ONE;
 
     /**
      * Default load method (inload or postload).
@@ -34,10 +34,10 @@ class HasOneLoader extends Loader
         //Relation definition
         $definition = $this->relationDefinition;
 
-        $outerKey = $this->options['tableAlias'] . '.' . $definition[Entity::OUTER_KEY];
+        $outerKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::OUTER_KEY];
 
         //Inner key has to be build based on parent table
-        $innerKey = $this->parent->getTableAlias() . '.' . $definition[Entity::INNER_KEY];
+        $innerKey = $this->parent->getTableAlias() . '.' . $definition[ActiveRecord::INNER_KEY];
 
         $selector->leftJoin(
             $definition[Relation::OUTER_TABLE] . ' AS ' . $this->options['tableAlias'],
@@ -71,7 +71,7 @@ class HasOneLoader extends Loader
 
         //Adding condition
         $selector->where(
-            $this->getTableAlias() . '.' . $this->relationDefinition[Entity::OUTER_KEY],
+            $this->getTableAlias() . '.' . $this->relationDefinition[ActiveRecord::OUTER_KEY],
             'IN',
             array_unique($this->parent->getAggregatedKeys($this->getReferenceKey()))
         );

@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
@@ -18,7 +19,7 @@ use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
 //TODO: Rename to ActiveRecord or not?
-abstract class Entity extends DataEntity implements DatabaseEntityInterface
+abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterface
 {
     /**
      * Set this constant to false to disable automatic column, index and foreign keys creation.
@@ -77,8 +78,8 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     const UNIQUE = 2000;
 
     /**
-     * Already fetched schemas from ORM. Yes, ORM entity is really similar to ODM. Original ORM was
-     * written long time ago before ODM and solutions i put to ORM was later used for ODM, while
+     * Already fetched schemas from ORM. Yes, ORM ActiveRecord is really similar to ODM. Original ORM
+     * was written long time ago before ODM and solutions i put to ORM was later used for ODM, while
      * "great transition" (tm) ODM was significantly updated and now ODM drive updates for ORM,
      * the student become the teacher.
      *
@@ -87,16 +88,16 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     protected static $schemaCache = array();
 
     /**
-     * Table associated with entity. Spiral will guess table name automatically based on class name
-     * use Doctrine Inflector, however i'm STRONGLY recommend to declare table name manually as it
-     * gives more readable code.
+     * Table associated with ActiveRecord. Spiral will guess table name automatically based on class
+     * name use Doctrine Inflector, however i'm STRONGLY recommend to declare table name manually as
+     * it gives more readable code.
      *
      * @var string
      */
     protected $table = null;
 
     /**
-     * Database name/id where entity table located in. By default database will be used if nothing
+     * Database name/id where record table located in. By default database will be used if nothing
      * else is specified.
      *
      * @var string
@@ -118,7 +119,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     protected $indexes = array();
 
     /**
-     * Default values associated with entity fields. This default values will be combined with values
+     * Default values associated with record fields. This default values will be combined with values
      * fetched from table schema.
      *
      * @var array
@@ -126,8 +127,8 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     protected $defaults = array();
 
     /**
-     * Entity marked with solid state flag will be saved entirely without generating simplified update
-     * operations with only changed fields.
+     * ActiveRecord marked with solid state flag will be saved entirely without generating simplified
+     * update operations with only changed fields.
      *
      * @var bool
      */
@@ -170,7 +171,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Change entity solid state flag value. Entity marked with solid state flag will be saved
+     * Change record solid state flag value. Record marked with solid state flag will be saved
      * entirely without generating simplified update operations with only changed fields.
      *
      * @param bool $solidState  Solid state flag value.
@@ -211,6 +212,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     {
         if (empty($this->schema[ORM::E_PRIMARY_KEY]))
         {
+            //Always loaded, technically...
             return true;
         }
 
@@ -218,7 +220,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Table name associated with entity.
+     * Table name associated with record.
      *
      * @return string
      */
@@ -228,7 +230,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Database name/id associated with entity.
+     * Database name/id associated with record.
      *
      * @return string
      */
@@ -278,6 +280,40 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
         );
     }
 
+    public function getRelation($name, $data = null)
+    {
+        if (!empty($this->relations[$name]))
+        {
+            if (is_array($this->relations[$name]))
+            {
+                $data = $this->relations[$name];
+                unset($this->relations[$name]);
+
+                return $this->getRelation($name, $data);
+            }
+
+            return $this->relations[$name];
+        }
+
+        //Constructing relation
+        if (!isset($this->schema[ORM::E_RELATIONS][$name]))
+        {
+            throw new ORMException("Undefined relation {$name} in model {$this->getAlias()}.");
+        }
+
+        $relation = $this->schema[ORM::E_RELATIONS][$name];
+
+        //todo: make it look better
+        $class = ORM::getInstance()->getConfig()['relations'][$relation[ORM::R_TYPE]]['class'];
+
+        return $this->relations[$name] = new $class(
+            $name,
+            $relation[ORM::R_DEFINITION],
+            $this,
+            $data
+        );
+    }
+
     /**
      * Set value to one of field. Setter filter can be disabled by providing last argument.
      *
@@ -305,7 +341,29 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Get array of changed or created fields for specified Entity or accessor.
+     * Offset to retrieve.
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @param mixed $offset The offset to retrieve.
+     * @return mixed
+     */
+    public function __get($offset)
+    {
+        if (isset($this->schema[ORM::E_RELATIONS][$offset]))
+        {
+            return $this->getRelation($offset)->getContent();
+        }
+
+        return $this->getField($offset, true);
+    }
+
+    public function __call($method, array $arguments)
+    {
+        return $this->getRelation($method)->getSelector($arguments);
+    }
+
+    /**
+     * Get array of changed or created fields for specified ActiveRecord or accessor.
      *
      * @return array
      */
@@ -476,7 +534,25 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Get instance of DBAL\Table associated with specified entity.
+     * Get instance of DBAL\Database associated with specified record.
+     *
+     * @param array           $schema Forced document schema.
+     * @param DatabaseManager $dbal   DatabaseManager instance.
+     * @return Database
+     */
+    public static function dbalDatabase(array $schema = array(), DatabaseManager $dbal = null)
+    {
+        $orm = ORM::getInstance();
+        $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
+        $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
+
+        static::initialize();
+
+        return $dbal->db($schema[ORM::E_DB]);
+    }
+
+    /**
+     * Get instance of DBAL\Table associated with specified record.
      *
      * @param array           $schema Forced document schema.
      * @param DatabaseManager $dbal   DatabaseManager instance.
@@ -486,12 +562,9 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     {
         $orm = ORM::getInstance();
         $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
-
         $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
 
-        static::initialize();
-
-        $table = $dbal->db($schema[ORM::E_DB])->table($schema[ORM::E_TABLE]);
+        $table = static::dbalDatabase($schema, $dbal)->table($schema[ORM::E_TABLE]);
         if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
         {
             return self::dispatcher()->fire('dbalTable', $table);
@@ -529,12 +602,12 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Save entity fields to associated table. Model has to be valid to be saved, in
+     * Save record fields to associated table. Model has to be valid to be saved, in
      * other scenario method will return false, model errors can be found in getErrors() method.
      *
      * Events: saving, saved, updating, updated will be fired.
      *
-     * @param bool $validate Validate entity fields before saving, enabled by default. Turning this
+     * @param bool $validate Validate record fields before saving, enabled by default. Turning this
      *                       option off will increase performance but will make saving less secure.
      *                       You can use it when model data was not modified directly by user. By
      *                       default value is null which will force document to select behaviour
@@ -592,7 +665,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Delete entity from database.
+     * Delete record from database.
      *
      * Events: deleting, deleted will be raised.
      */
@@ -649,6 +722,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
         static::initialize();
         if (EventDispatcher::hasDispatcher(static::getAlias()))
         {
+            //Do we need it?
             $scope = self::dispatcher()->fire('scope', array(
                 'scope' => $scope,
                 'model' => get_called_class()
@@ -670,7 +744,7 @@ abstract class Entity extends DataEntity implements DatabaseEntityInterface
     }
 
     /**
-     * Select one entity from collection.
+     * Select one record from collection.
      *
      * TODO: Add WITH parameter
      *

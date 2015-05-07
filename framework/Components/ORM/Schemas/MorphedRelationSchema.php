@@ -22,12 +22,12 @@ abstract class MorphedRelationSchema extends RelationSchema
     {
         $options = parent::definitionOptions();
 
-        foreach ($this->ormSchema->getEntities() as $entity)
+        foreach ($this->ormSchema->getRecords() as $record)
         {
-            if ($entity->getReflection()->isSubclassOf($this->target))
+            if ($record->getReflection()->isSubclassOf($this->target))
             {
                 //One model will be enough
-                $options['outer:primaryKey'] = $entity->getPrimaryKey();
+                $options['outer:primaryKey'] = $record->getPrimaryKey();
                 break;
             }
         }
@@ -38,17 +38,17 @@ abstract class MorphedRelationSchema extends RelationSchema
     /**
      * Get all relation target classes.
      *
-     * @return EntitySchema[]
+     * @return RecordSchema[]
      */
-    public function getOuterEntities()
+    public function getOuterRecordSchemas()
     {
         $entities = array();
-        foreach ($this->ormSchema->getEntities() as $entity)
+        foreach ($this->ormSchema->getRecords() as $record)
         {
-            if ($entity->getReflection()->isSubclassOf($this->target))
+            if ($record->getReflection()->isSubclassOf($this->target))
             {
                 //One model will be enough
-                $entities[] = $entity;
+                $entities[] = $record;
             }
         }
 
@@ -63,29 +63,29 @@ abstract class MorphedRelationSchema extends RelationSchema
     public function getOuterKeyType()
     {
         $outerKeyType = null;
-        foreach ($this->getOuterEntities() as $entity)
+        foreach ($this->getOuterRecordSchemas() as $record)
         {
-            if (!$entity->getTableSchema()->hasColumn($this->getOuterKey()))
+            if (!$record->getTableSchema()->hasColumn($this->getOuterKey()))
             {
                 throw new ORMException(
-                    "Morphed relation requires outer key exists in every entity ({$entity})."
+                    "Morphed relation requires outer key exists in every record ({$record})."
                 );
             }
 
-            $entityKeyType = $this->resolveAbstractType(
-                $entity->getTableSchema()->column($this->getOuterKey())
+            $recordKeyType = $this->resolveAbstractType(
+                $record->getTableSchema()->column($this->getOuterKey())
             );
 
             if (is_null($outerKeyType))
             {
-                $$outerKeyType = $entityKeyType;
+                $$outerKeyType = $recordKeyType;
             }
 
             //Consistency
-            if ($outerKeyType != $entityKeyType)
+            if ($outerKeyType != $recordKeyType)
             {
                 throw new ORMException(
-                    "Morphed relation requires consistent outer key type ({$entity})."
+                    "Morphed relation requires consistent outer key type ({$record})."
                 );
             }
         }
@@ -104,9 +104,9 @@ abstract class MorphedRelationSchema extends RelationSchema
 
         //Packing targets
         $definition[static::RELATION_TYPE] = array();
-        foreach ($this->getOuterEntities() as $entity)
+        foreach ($this->getOuterRecordSchemas() as $record)
         {
-            $definition[static::RELATION_TYPE][$entity->getRoleName()] = $entity->getClass();
+            $definition[static::RELATION_TYPE][$record->getRoleName()] = $record->getClass();
         }
 
         return $definition;

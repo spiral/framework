@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
-use Spiral\Components\ORM\Schemas\EntitySchema;
+use Spiral\Components\ORM\Schemas\RecordSchema;
 use Spiral\Components\ORM\Schemas\RelationSchema;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
@@ -21,8 +21,8 @@ class SchemaBuilder extends Component
     /**
      * ORM class names.
      */
-    const DATA_ENTITY = 'Spiral\Components\DataEntity';
-    const ENTITY      = 'Spiral\Components\ORM\Entity';
+    const DATA_ENTITY   = 'Spiral\Components\DataEntity';
+    const ACTIVE_RECORD = 'Spiral\Components\ORM\ActiveRecord';
 
     /**
      * Mapping used to link relationship definition to relationship schemas.
@@ -30,16 +30,16 @@ class SchemaBuilder extends Component
      * @var array
      */
     protected $relationships = array(
-        Entity::BELONGS_TO         => 'Spiral\Components\ORM\Schemas\Relations\BelongsToSchema',
-        Entity::BELONGS_TO_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\BelongsToMorphedSchema',
+        ActiveRecord::BELONGS_TO         => 'Spiral\Components\ORM\Schemas\Relations\BelongsToSchema',
+        ActiveRecord::BELONGS_TO_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\BelongsToMorphedSchema',
 
-        Entity::HAS_ONE            => 'Spiral\Components\ORM\Schemas\Relations\HasOneSchema',
-        Entity::HAS_MANY           => 'Spiral\Components\ORM\Schemas\Relations\HasManySchema',
+        ActiveRecord::HAS_ONE            => 'Spiral\Components\ORM\Schemas\Relations\HasOneSchema',
+        ActiveRecord::HAS_MANY           => 'Spiral\Components\ORM\Schemas\Relations\HasManySchema',
 
-        Entity::MANY_TO_MANY       => 'Spiral\Components\ORM\Schemas\Relations\ManyToManySchema',
-        Entity::MANY_TO_MORPHED    => 'Spiral\Components\ORM\Schemas\Relations\ManyToMorphedSchema',
+        ActiveRecord::MANY_TO_MANY       => 'Spiral\Components\ORM\Schemas\Relations\ManyToManySchema',
+        ActiveRecord::MANY_TO_MORPHED    => 'Spiral\Components\ORM\Schemas\Relations\ManyToMorphedSchema',
 
-        Entity::MANY_THOUGHT       => 'Spiral\Components\ORM\Schemas\Relations\ManyThoughtSchema',
+        ActiveRecord::MANY_THOUGHT       => 'Spiral\Components\ORM\Schemas\Relations\ManyThoughtSchema',
     );
 
     /**
@@ -59,9 +59,9 @@ class SchemaBuilder extends Component
     /**
      * Found entity schemas.
      *
-     * @var EntitySchema[]
+     * @var RecordSchema[]
      */
-    protected $entities = array();
+    protected $records = array();
 
     /**
      * All declared tables.
@@ -82,14 +82,14 @@ class SchemaBuilder extends Component
         $this->config = $config;
         $this->dbal = $dbal;
 
-        foreach ($tokenizer->getClasses(self::ENTITY) as $class => $definition)
+        foreach ($tokenizer->getClasses(self::ACTIVE_RECORD) as $class => $definition)
         {
-            if ($class == self::ENTITY)
+            if ($class == self::ACTIVE_RECORD)
             {
                 continue;
             }
 
-            $this->entities[$class] = EntitySchema::make(array(
+            $this->records[$class] = RecordSchema::make(array(
                 'class'     => $class,
                 'ormSchema' => $this
             ));
@@ -98,15 +98,15 @@ class SchemaBuilder extends Component
         //TODO: error with nested relations based on non declared auto key
 
         $relations = array();
-        foreach ($this->entities as $entity)
+        foreach ($this->records as $record)
         {
-            if (!$entity->isAbstract())
+            if (!$record->isAbstract())
             {
-                $entity->castRelations();
+                $record->castRelations();
 
-                foreach ($entity->getRelations() as $relation)
+                foreach ($record->getRelations() as $relation)
                 {
-                    if ($relation->hasBackReference())
+                    if ($relation->hasInvertedRelation())
                     {
                         $relations[] = $relation;
                     }
@@ -119,7 +119,7 @@ class SchemaBuilder extends Component
          */
         foreach ($relations as $relation)
         {
-            $backReference = $relation->getDefinition()[Entity::BACK_REF];
+            $backReference = $relation->getDefinition()[ActiveRecord::BACK_REF];
 
             if (is_array($backReference))
             {
@@ -136,35 +136,35 @@ class SchemaBuilder extends Component
     /**
      * All fetched entity schemas.
      *
-     * @return EntitySchema[]
+     * @return RecordSchema[]
      */
-    public function getEntities()
+    public function getRecords()
     {
-        return $this->entities;
+        return $this->records;
     }
 
     /**
-     * Get EntitySchema by class name.
+     * Get RecordSchema by class name.
      *
      * @param string $class Class name.
-     * @return null|EntitySchema
+     * @return null|RecordSchema
      */
-    public function getActiveRecord($class)
+    public function getRecordSchema($class)
     {
-        if ($class == self::ENTITY)
+        if ($class == self::ACTIVE_RECORD)
         {
-            return EntitySchema::make(array(
-                'class'     => self::ENTITY,
+            return RecordSchema::make(array(
+                'class'     => self::ACTIVE_RECORD,
                 'ormSchema' => $this
             ));
         }
 
-        if (!isset($this->entities[$class]))
+        if (!isset($this->records[$class]))
         {
             return null;
         }
 
-        return $this->entities[$class];
+        return $this->records[$class];
     }
 
     /**
@@ -218,7 +218,7 @@ class SchemaBuilder extends Component
         foreach ($this->tables as $table)
         {
             //TODO: IS ABSTRACT
-            foreach ($this->entities as $entity)
+            foreach ($this->records as $entity)
             {
                 if ($entity->getTableSchema() == $table && !$entity->isActiveSchema())
                 {
@@ -236,12 +236,12 @@ class SchemaBuilder extends Component
     /**
      * Get appropriate relation schema based on provided definition.
      *
-     * @param EntitySchema $entitySchema
+     * @param RecordSchema $recordSchema
      * @param string       $name
      * @param array        $definition
      * @return RelationSchema
      */
-    public function relationSchema(EntitySchema $entitySchema, $name, array $definition)
+    public function relationSchema(RecordSchema $recordSchema, $name, array $definition)
     {
         if (empty($definition))
         {
@@ -261,14 +261,14 @@ class SchemaBuilder extends Component
          */
         $relationship = Container::getInstance()->get($this->relationships[$type], array(
             'ormSchema'    => $this,
-            'entitySchema' => $entitySchema,
+            'recordSchema' => $recordSchema,
             'name'         => $name,
             'definition'   => $definition
         ));
 
         if ($relationship->hasEquivalent())
         {
-            return $this->relationSchema($entitySchema, $name, $relationship->getEquivalentDefinition());
+            return $this->relationSchema($recordSchema, $name, $relationship->getEquivalentDefinition());
         }
 
         return $relationship;
@@ -296,37 +296,37 @@ class SchemaBuilder extends Component
     {
         $schema = array();
 
-        foreach ($this->entities as $entity)
+        foreach ($this->records as $record)
         {
-            if ($entity->isAbstract())
+            if ($record->isAbstract())
             {
                 continue;
             }
 
-            $entitySchema = array();
+            $recordSchema = array();
 
-            $entitySchema[ORM::E_ROLE_NAME] = $entity->getRoleName();
-            $entitySchema[ORM::E_TABLE] = $entity->getTable();
-            $entitySchema[ORM::E_DB] = $entity->getDatabase();
-            $entitySchema[ORM::E_PRIMARY_KEY] = $entity->getPrimaryKey();
+            $recordSchema[ORM::E_ROLE_NAME] = $record->getRoleName();
+            $recordSchema[ORM::E_TABLE] = $record->getTable();
+            $recordSchema[ORM::E_DB] = $record->getDatabase();
+            $recordSchema[ORM::E_PRIMARY_KEY] = $record->getPrimaryKey();
 
-            $entitySchema[ORM::E_COLUMNS] = $entity->getDefaults();
-            $entitySchema[ORM::E_HIDDEN] = $entity->getHidden();
-            $entitySchema[ORM::E_SECURED] = $entity->getSecured();
-            $entitySchema[ORM::E_FILLABLE] = $entity->getFillable();
+            $recordSchema[ORM::E_COLUMNS] = $record->getDefaults();
+            $recordSchema[ORM::E_HIDDEN] = $record->getHidden();
+            $recordSchema[ORM::E_SECURED] = $record->getSecured();
+            $recordSchema[ORM::E_FILLABLE] = $record->getFillable();
 
-            $entitySchema[ORM::E_MUTATORS] = $entity->getMutators();
-            $entitySchema[ORM::E_VALIDATES] = $entity->getValidates();
-            $entitySchema[ORM::E_MESSAGES] = $entity->getMessages();
+            $recordSchema[ORM::E_MUTATORS] = $record->getMutators();
+            $recordSchema[ORM::E_VALIDATES] = $record->getValidates();
+            $recordSchema[ORM::E_MESSAGES] = $record->getMessages();
 
             //Relations
-            foreach ($entity->getRelations() as $name => $relation)
+            foreach ($record->getRelations() as $name => $relation)
             {
-                $entitySchema[ORM::E_RELATIONS][$name] = $relation->normalizeSchema();
+                $recordSchema[ORM::E_RELATIONS][$name] = $relation->normalizeSchema();
             }
 
-            ksort($entitySchema);
-            $schema[$entity->getClass()] = $entitySchema;
+            ksort($recordSchema);
+            $schema[$record->getClass()] = $recordSchema;
         }
 
         return $schema;

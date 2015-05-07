@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM\Traits;
 
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\Driver;
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Core\Events\DispatcherInterface;
 use Spiral\Core\Events\Event;
 use Spiral\Core\Events\ObjectEvent;
@@ -26,8 +26,8 @@ trait TimestampsTrait
      * @param mixed $options Custom options.
      */
     protected static function initTimestamps($options = null)
-    {
-        if ($options == Entity::SCHEMA_ANALYSIS)
+    {echo 'uo!';
+        if ($options == ActiveRecord::SCHEMA_ANALYSIS)
         {
             $listener = function (Event $event)
             {

@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM\Schemas;
 
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Relation;
@@ -35,7 +35,7 @@ abstract class RelationSchema
     const TYPE_COLUMN_SIZE = 32;
 
     /**
-     * Parent ORM schema holds all entity schemas.
+     * Parent ORM schema holds all active record schemas.
      *
      * @invisible
      * @var SchemaBuilder
@@ -43,12 +43,12 @@ abstract class RelationSchema
     protected $ormSchema = null;
 
     /**
-     * Associated entity schema.
+     * Associated active record schema.
      *
      * @invisible
-     * @var EntitySchema
+     * @var RecordSchema
      */
-    protected $entitySchema = null;
+    protected $recordSchema = null;
 
     /**
      * Relation name.
@@ -69,7 +69,7 @@ abstract class RelationSchema
      * Every parameter described by it's key and pattern.
      *
      * Example:
-     * Entity::INNER_KEY => '{outer:roleName}_{outer:primaryKey}'
+     * ActiveRecord::INNER_KEY => '{outer:roleName}_{outer:primaryKey}'
      *
      * @invisible
      * @var array
@@ -86,20 +86,20 @@ abstract class RelationSchema
     /**
      * New RelationSchema instance.
      *
-     * @param SchemaBuilder      $ormSchema
-     * @param EntitySchema $entitySchema
-     * @param string             $name
-     * @param array              $definition
+     * @param SchemaBuilder $ormSchema
+     * @param RecordSchema  $recordSchema
+     * @param string        $name
+     * @param array         $definition
      */
     public function __construct(
         SchemaBuilder $ormSchema,
-        EntitySchema $entitySchema,
+        RecordSchema $recordSchema,
         $name,
         array $definition
     )
     {
         $this->ormSchema = $ormSchema;
-        $this->entitySchema = $entitySchema;
+        $this->recordSchema = $recordSchema;
 
         $this->name = $name;
         $this->target = $definition[static::RELATION_TYPE];
@@ -113,7 +113,7 @@ abstract class RelationSchema
         if (!class_exists($this->target) && !interface_exists($this->target))
         {
             throw new ORMException(
-                "Unable to build relation from '{$this->entitySchema}' "
+                "Unable to build relation from '{$this->recordSchema}' "
                 . "to undefined target '{$this->target}'."
             );
         }
@@ -154,16 +154,16 @@ abstract class RelationSchema
             'name'              => $this->name,
             'name:plural'       => Inflector::pluralize($this->name),
             'name:singular'     => Inflector::singularize($this->name),
-            'entity:roleName'   => $this->entitySchema->getRoleName(),
-            'entity:table'      => $this->entitySchema->getTable(),
-            'entity:primaryKey' => $this->entitySchema->getPrimaryKey(),
+            'record:roleName'   => $this->recordSchema->getRoleName(),
+            'record:table'      => $this->recordSchema->getTable(),
+            'record:primaryKey' => $this->recordSchema->getPrimaryKey(),
         );
 
         $proposed = array(
-            Entity::OUTER_KEY     => 'OUTER_KEY',
-            Entity::INNER_KEY     => 'INNER_KEY',
-            Entity::THOUGHT_TABLE => 'THOUGHT',
-            Entity::PIVOT_TABLE   => 'PIVOT_TABLE'
+            ActiveRecord::OUTER_KEY     => 'OUTER_KEY',
+            ActiveRecord::INNER_KEY     => 'INNER_KEY',
+            ActiveRecord::THOUGHT_TABLE => 'THOUGHT',
+            ActiveRecord::PIVOT_TABLE   => 'PIVOT_TABLE'
         );
 
         foreach ($proposed as $property => $alias)
@@ -174,12 +174,12 @@ abstract class RelationSchema
             }
         }
 
-        if ($this->getOuterEntity())
+        if ($this->getOuterRecordSchema())
         {
             $options = $options + array(
-                    'outer:roleName'   => $this->getOuterEntity()->getRoleName(),
-                    'outer:table'      => $this->getOuterEntity()->getTable(),
-                    'outer:primaryKey' => $this->getOuterEntity()->getPrimaryKey()
+                    'outer:roleName'   => $this->getOuterRecordSchema()->getRoleName(),
+                    'outer:table'      => $this->getOuterRecordSchema()->getTable(),
+                    'outer:primaryKey' => $this->getOuterRecordSchema()->getPrimaryKey()
                 );
         }
 
@@ -217,14 +217,14 @@ abstract class RelationSchema
     }
 
     /**
-     * Get instance on EntitySchema assosicated with outer entity (presented only for non polymorphic
-     * relations).
+     * Get instance on RecordSchema assosicated with outer active record (presented only for non
+     * polymorphic relations).
      *
-     * @return null|EntitySchema
+     * @return null|RecordSchema
      */
-    protected function getOuterEntity()
+    protected function getOuterRecordSchema()
     {
-        return $this->ormSchema->getActiveRecord($this->target);
+        return $this->ormSchema->getRecordSchema($this->target);
     }
 
     /**
@@ -244,9 +244,9 @@ abstract class RelationSchema
      */
     public function getInnerKey()
     {
-        if (isset($this->definition[Entity::INNER_KEY]))
+        if (isset($this->definition[ActiveRecord::INNER_KEY]))
         {
-            return $this->definition[Entity::INNER_KEY];
+            return $this->definition[ActiveRecord::INNER_KEY];
         }
 
         return null;
@@ -264,7 +264,9 @@ abstract class RelationSchema
             return null;
         }
 
-        return $this->resolveAbstractType($this->entitySchema->getTableSchema()->column($innerKey));
+        return $this->resolveAbstractType(
+            $this->recordSchema->getTableSchema()->column($innerKey)
+        );
     }
 
     /**
@@ -274,9 +276,9 @@ abstract class RelationSchema
      */
     public function getOuterTable()
     {
-        if ($this->getOuterEntity())
+        if ($this->getOuterRecordSchema())
         {
-            return $this->getOuterEntity()->getTable();
+            return $this->getOuterRecordSchema()->getTable();
         }
 
         return null;
@@ -289,9 +291,9 @@ abstract class RelationSchema
      */
     public function getOuterKey()
     {
-        if (isset($this->definition[Entity::OUTER_KEY]))
+        if (isset($this->definition[ActiveRecord::OUTER_KEY]))
         {
-            return $this->definition[Entity::OUTER_KEY];
+            return $this->definition[ActiveRecord::OUTER_KEY];
         }
 
         return null;
@@ -309,7 +311,9 @@ abstract class RelationSchema
             return null;
         }
 
-        return $this->resolveAbstractType($this->getOuterEntity()->getTableSchema()->column($outerKey));
+        return $this->resolveAbstractType(
+            $this->getOuterRecordSchema()->getTableSchema()->column($outerKey)
+        );
     }
 
     /**
@@ -374,13 +378,13 @@ abstract class RelationSchema
      *
      * @return bool
      */
-    public function hasBackReference()
+    public function hasInvertedRelation()
     {
-        return isset($this->definition[Entity::BACK_REF]);
+        return isset($this->definition[ActiveRecord::BACK_REF]);
     }
 
     /**
-     * Create reverted relations in outer entity or entities.
+     * Create reverted relations in outer model or models.
      *
      * @param string $name Relation name.
      * @param int    $type Back relation type, can be required some cases.
@@ -395,15 +399,17 @@ abstract class RelationSchema
      */
     protected function normalizeDefinition()
     {
-        $definition = array(Relation::OUTER_TABLE => $this->getOuterTable()) + $this->definition;
+        $definition = array(
+                Relation::OUTER_TABLE => $this->getOuterTable()
+            ) + $this->definition;
 
         //Unnecessary fields.
         unset(
-            $definition[Entity::CONSTRAINT],
-            $definition[Entity::CONSTRAINT_ACTION],
-            $definition[Entity::CREATE_PIVOT],
-            $definition[Entity::BACK_REF],
-            $definition[Entity::CONSTRAINT_ACTION]
+            $definition[ActiveRecord::CONSTRAINT],
+            $definition[ActiveRecord::CONSTRAINT_ACTION],
+            $definition[ActiveRecord::CREATE_PIVOT],
+            $definition[ActiveRecord::BACK_REF],
+            $definition[ActiveRecord::CONSTRAINT_ACTION]
         );
 
         return $definition;

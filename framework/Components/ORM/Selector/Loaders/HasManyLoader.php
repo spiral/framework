@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ORM\Selector\Loaders;
 
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\Selector;
 
 class HasManyLoader extends HasOneLoader
@@ -16,7 +16,7 @@ class HasManyLoader extends HasOneLoader
     /**
      * Relation type is required to correctly resolve foreign model.
      */
-    const RELATION_TYPE = Entity::HAS_MANY;
+    const RELATION_TYPE = ActiveRecord::HAS_MANY;
 
     /**
      * Default load method (inload or postload).

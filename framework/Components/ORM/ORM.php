@@ -39,7 +39,7 @@ class ORM extends Component
     protected $schema = null;
 
     protected static $relations = array(
-        Entity::HAS_ONE => 'Spiral\Components\ORM\Relations\HasOne'
+        ActiveRecord::HAS_ONE => 'Spiral\Components\ORM\Relations\HasOne'
     );
 
     /**
@@ -78,11 +78,11 @@ class ORM extends Component
     /**
      * @param              $type
      * @param array        $definition
-     * @param Entity       $parent
+     * @param ActiveRecord       $parent
      * @param array        $data
      * @return Relation
      */
-    public function getRelation($type, array $definition, Entity $parent = null, $data = array())
+    public function getRelation($type, array $definition, ActiveRecord $parent = null, $data = array())
     {
         $relation = self::$relations[$type];
 
@@ -124,7 +124,7 @@ class ORM extends Component
         $builder->executeSchema();
 
         $this->schema = $this->event('schema', $builder->normalizeSchema());
-        Entity::clearSchemaCache();
+        ActiveRecord::clearSchemaCache();
 
         //Saving
         $this->core->saveData('ormSchema', $this->schema);

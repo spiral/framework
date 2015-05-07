@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM\Exporters;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\ORM\SchemaBuilder;
-use Spiral\Components\ORM\Schemas\EntitySchema;
+use Spiral\Components\ORM\Schemas\RecordSchema;
 use Spiral\Core\Component;
 use Spiral\Support\Generators\Reactor\BaseElement;
 
@@ -93,9 +93,9 @@ class UmlExporter extends Component
     /**
      * Add entity schema to UML.
      *
-     * @param EntitySchema $entity
+     * @param RecordSchema $entity
      */
-    protected function renderEntity(EntitySchema $entity)
+    protected function renderEntity(RecordSchema $entity)
     {
         $className = $this->normalizeName($entity->getClass());
         $this->line("class $className { ");
@@ -148,7 +148,7 @@ class UmlExporter extends Component
     {
         $this->line('@startuml');
 
-        foreach ($this->builder->getEntities() as $entity)
+        foreach ($this->builder->getRecords() as $entity)
         {
             $this->renderEntity($entity);
         }

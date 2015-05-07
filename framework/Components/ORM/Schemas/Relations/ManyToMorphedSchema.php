@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ORM\Schemas\Relations;
 
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\MorphedRelationSchema;
 
@@ -17,7 +17,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
     /**
      * Relation type.
      */
-    const RELATION_TYPE = Entity::MANY_TO_MORPHED;
+    const RELATION_TYPE = ActiveRecord::MANY_TO_MORPHED;
 
     /**
      * Default definition parameters, will be filled if parameter skipped from definition by user.
@@ -26,15 +26,15 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      * @var array
      */
     protected $defaultDefinition = array(
-        Entity::PIVOT_TABLE       => '{name:singular}_map',
-        Entity::INNER_KEY         => '{entity:primaryKey}',
-        Entity::OUTER_KEY         => '{outer:primaryKey}',
-        Entity::THOUGHT_INNER_KEY => '{entity:roleName}_{definition:INNER_KEY}',
-        Entity::THOUGHT_OUTER_KEY => '{name:singular}_{definition:OUTER_KEY}',
-        Entity::MORPH_KEY         => '{name:singular}_type',
-        Entity::CONSTRAINT        => true,
-        Entity::CONSTRAINT_ACTION => 'CASCADE',
-        Entity::CREATE_PIVOT      => true
+        ActiveRecord::PIVOT_TABLE       => '{name:singular}_map',
+        ActiveRecord::INNER_KEY         => '{record:primaryKey}',
+        ActiveRecord::OUTER_KEY         => '{outer:primaryKey}',
+        ActiveRecord::THOUGHT_INNER_KEY => '{record:roleName}_{definition:INNER_KEY}',
+        ActiveRecord::THOUGHT_OUTER_KEY => '{name:singular}_{definition:OUTER_KEY}',
+        ActiveRecord::MORPH_KEY         => '{name:singular}_type',
+        ActiveRecord::CONSTRAINT        => true,
+        ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
+        ActiveRecord::CREATE_PIVOT      => true
     );
 
     /**
@@ -42,49 +42,49 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (empty($this->outerEntities) || !$this->definition[Entity::CREATE_PIVOT])
+        if (empty($this->outerEntities) || !$this->definition[ActiveRecord::CREATE_PIVOT])
         {
             //No targets found, no need to generate anything
             return;
         }
 
         $pivotTable = $this->ormSchema->declareTable(
-            $this->entitySchema->getDatabase(),
-            $this->definition[Entity::PIVOT_TABLE]
+            $this->recordSchema->getDatabase(),
+            $this->definition[ActiveRecord::PIVOT_TABLE]
         );
 
         $pivotTable->bigPrimary('id');
 
-        $localKey = $pivotTable->column($this->definition[Entity::THOUGHT_INNER_KEY]);
+        $localKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
         $localKey->type($this->getInnerKeyType());
         $localKey->index();
 
-        $morphKey = $pivotTable->column($this->definition[Entity::MORPH_KEY]);
+        $morphKey = $pivotTable->column($this->definition[ActiveRecord::MORPH_KEY]);
         $morphKey->string(static::TYPE_COLUMN_SIZE);
 
-        $outerKey = $pivotTable->column($this->definition[Entity::THOUGHT_OUTER_KEY]);
+        $outerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
         $outerKey->type($this->getOuterKeyType());
 
         //Complex index
         $pivotTable->unique(
-            $this->definition[Entity::INNER_KEY],
-            $this->definition[Entity::MORPH_KEY],
-            $this->definition[Entity::OUTER_KEY]
+            $this->definition[ActiveRecord::INNER_KEY],
+            $this->definition[ActiveRecord::MORPH_KEY],
+            $this->definition[ActiveRecord::OUTER_KEY]
         );
 
-        if ($this->definition[Entity::CONSTRAINT])
+        if ($this->definition[ActiveRecord::CONSTRAINT])
         {
             $foreignKey = $localKey->foreign(
-                $this->entitySchema->getTable(),
-                $this->entitySchema->getPrimaryKey()
+                $this->recordSchema->getTable(),
+                $this->recordSchema->getPrimaryKey()
             );
-            $foreignKey->onDelete($this->definition[Entity::CONSTRAINT_ACTION]);
-            $foreignKey->onUpdate($this->definition[Entity::CONSTRAINT_ACTION]);
+            $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
+            $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
         }
     }
 
     /**
-     * Create reverted relations in outer entity or entities.
+     * Create reverted relations in outer model or models.
      *
      * @param string $name Relation name.
      * @param int    $type Back relation type, can be required some cases.
@@ -92,17 +92,17 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        foreach ($this->getOuterEntities() as $entity)
+        foreach ($this->getOuterRecordSchemas() as $record)
         {
-            $entity->addRelation($name, array(
-                Entity::MANY_TO_MANY      => $this->entitySchema->getClass(),
-                Entity::PIVOT_TABLE       => $this->definition[Entity::PIVOT_TABLE],
-                Entity::OUTER_KEY         => $this->definition[Entity::INNER_KEY],
-                Entity::INNER_KEY         => $this->definition[Entity::OUTER_KEY],
-                Entity::THOUGHT_INNER_KEY => $this->definition[Entity::THOUGHT_OUTER_KEY],
-                Entity::THOUGHT_OUTER_KEY => $this->definition[Entity::THOUGHT_INNER_KEY],
-                Entity::MORPH_KEY         => $this->definition[Entity::MORPH_KEY],
-                Entity::CREATE_PIVOT      => $this->definition[Entity::CREATE_PIVOT]
+            $record->addRelation($name, array(
+                ActiveRecord::MANY_TO_MANY      => $this->recordSchema->getClass(),
+                ActiveRecord::PIVOT_TABLE       => $this->definition[ActiveRecord::PIVOT_TABLE],
+                ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
+                ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
+                ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
+                ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
+                ActiveRecord::MORPH_KEY         => $this->definition[ActiveRecord::MORPH_KEY],
+                ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT]
             ));
         }
     }

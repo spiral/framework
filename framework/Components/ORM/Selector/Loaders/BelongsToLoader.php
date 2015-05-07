@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ORM\Selector\Loaders;
 
-use Spiral\Components\ORM\Entity;
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\Selector;
 
 class BelongsToLoader extends HasOneLoader
@@ -16,7 +16,7 @@ class BelongsToLoader extends HasOneLoader
     /**
      * Relation type is required to correctly resolve foreign model.
      */
-    const RELATION_TYPE = Entity::BELONGS_TO;
+    const RELATION_TYPE = ActiveRecord::BELONGS_TO;
 
     /**
      * Default load method (inload or postload).
@@ -60,8 +60,8 @@ class BelongsToLoader extends HasOneLoader
         {
             $this->parent->registerNestedParent(
                 $this->container,
-                $this->relationDefinition[Entity::INNER_KEY],
-                $data[$this->relationDefinition[Entity::OUTER_KEY]],
+                $this->relationDefinition[ActiveRecord::INNER_KEY],
+                $data[$this->relationDefinition[ActiveRecord::OUTER_KEY]],
                 $data
             );
         }
