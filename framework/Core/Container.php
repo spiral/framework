@@ -14,6 +14,11 @@ use Spiral\Core\Container\ContainerException;
 class Container extends Component implements \ArrayAccess
 {
     /**
+     * Code to throw when instance can not be constructed.
+     */
+    const NON_INSTANTIABLE_ERROR = 7;
+
+    /**
      * Default container used in make spiral components and called when getInstance() or make() methods
      * of components invoked. Technically this is only one real singleton.
      *
@@ -108,7 +113,10 @@ class Container extends Component implements \ArrayAccess
                 return $instance;
             }
 
-            throw new CoreException("Class '{$alias}' can not be constructed.", 7);
+            throw new CoreException(
+                "Class '{$alias}' can not be constructed.",
+                self::NON_INSTANTIABLE_ERROR
+            );
         }
 
         if (is_object($binding = $this->bindings[$alias]))
@@ -202,7 +210,10 @@ class Container extends Component implements \ArrayAccess
                     }
                     catch (CoreException $exception)
                     {
-                        if (!$parameter->isDefaultValueAvailable() || $exception->getCode() != 7)
+                        if (
+                            !$parameter->isDefaultValueAvailable()
+                            || $exception->getCode() != self::NON_INSTANTIABLE_ERROR
+                        )
                         {
                             throw $exception;
                         }

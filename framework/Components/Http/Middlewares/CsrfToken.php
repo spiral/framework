@@ -12,6 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Cookies\CookieManager;
 use Spiral\Components\Http\MiddlewareInterface;
+use Spiral\Components\Http\Response;
 use Spiral\Core\Component;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Helpers\StringHelper;
@@ -81,7 +82,8 @@ class CsrfToken implements MiddlewareInterface
         {
             if (!$this->compare($token, $this->fetchToken($request)))
             {
-                throw new ClientException(412, 'Bad CSRF Token');
+                //Let's return response directly
+                return (new Response('', 412))->withStatus(412, 'Bad CSRF Token');
             }
         }
 
