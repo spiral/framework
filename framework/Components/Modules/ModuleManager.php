@@ -70,6 +70,7 @@ class ModuleManager extends Component
         }
         catch (CoreException $exception)
         {
+            //Suspending all exceptions, i have to remember why i'm doing that
         }
     }
 

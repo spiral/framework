@@ -71,6 +71,7 @@ class Core extends Container implements CoreInterface
     /**
      * Default set of core bindings. Can be redefined while constructing core.
      *
+     * @invisible
      * @var array
      */
     protected $bindings = array(
@@ -110,7 +111,6 @@ class Core extends Container implements CoreInterface
      * @var string
      */
     protected $environment = null;
-
 
     /**
      * Set of directory aliases defined during application bootstrap and in index.php file. Such
