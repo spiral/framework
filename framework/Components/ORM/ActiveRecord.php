@@ -164,6 +164,15 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         //Merging with default values
         $this->fields = $data + $this->schema[ORM::E_COLUMNS];
 
+        foreach ($this->schema[ORM::E_RELATIONS] as $relation => $definition)
+        {
+            if (isset($this->fields[$relation]))
+            {
+                $this->relations[$relation] = $this->fields[$relation];
+                unset($this->fields[$relation]);
+            }
+        }
+
         if ((!$this->primaryKey()) || !is_array($data))
         {
             $this->solidState(true)->validationRequired = true;
@@ -770,7 +779,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     public function __debugInfo()
     {
         return (object)array(
-            'table'  => $this->database . '/' . $this->table,
+            'table'  => $this->schema[ORM::E_DB] . '/' . $this->schema[ORM::E_TABLE],
             'fields' => $this->getFields(),
             'errors' => $this->getErrors()
         );

@@ -53,6 +53,14 @@ class Controller extends Component implements ControllerInterface
     protected $defaultAction = 'index';
 
     /**
+     * Action prefix will be assigned to every provided action. Useful when you need methods like
+     * "new", "list" and etc.
+     *
+     * @var string
+     */
+    protected $actionPrefix = '';
+
+    /**
      * Last set of parameters passed to callAction method,
      *
      * @var array
@@ -76,6 +84,7 @@ class Controller extends Component implements ControllerInterface
             $action = $this->defaultAction;
         }
 
+        $action = $this->actionPrefix . $action;
         if (!method_exists($this, $action))
         {
             throw new ClientException(ClientException::NOT_FOUND);

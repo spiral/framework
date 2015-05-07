@@ -231,7 +231,9 @@ class Tokenizer extends Component
     /**
      * Index all available files excluding excludeDirectories and generate list of found classes with
      * their names and filenames. Unreachable classes or files with conflicts be skipped and debug
-     * messages will generated. This is SLOW method, should be used only for static analysis.
+     * messages will generated.
+     *
+     * This is SLOW method, should be used only for static analysis.
      *
      * @param mixed  $parent    Class or interface should be extended. By default - null (all classes).
      *                          Parent will also be included to classes list as one of results.

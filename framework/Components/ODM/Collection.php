@@ -36,6 +36,7 @@ use Spiral\Support\Pagination\Paginator;
  * @method bool|array distinct($key, $query)
  * @method array aggregate(array $pipeline, array $op, array $pipelineOperators)
  */
+//TODO: MOVE MODEL CREATION TO SEPARATE CLASS AND REMOVE CURSOR! NO IDEA WHAT IT'S DOING HERE
 class Collection extends Component implements \Iterator, PaginableInterface
 {
     /**
