@@ -50,6 +50,7 @@ class ModuleManager extends Component
             //In this case it will be much better to request Container in constructor argument,
             //but we can always change it later
             $container = Container::getInstance();
+
             $this->modules = $core->loadConfig('modules');
             if (!empty($this->modules))
             {
@@ -62,7 +63,7 @@ class ModuleManager extends Component
 
                     if ($module['bootstrap'])
                     {
-                        Container::getInstance()->get($module['class'], compact('core'))->bootstrap();
+                        $container->get($module['class'], compact('core'))->bootstrap();
                     }
                 }
             }
@@ -112,7 +113,6 @@ class ModuleManager extends Component
             }
 
             $definition = call_user_func(array($module['name'], 'getDefinition'));
-
             $definitions[$definition->getName()] = $definition;
         }
 

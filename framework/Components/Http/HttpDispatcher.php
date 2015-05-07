@@ -100,10 +100,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
     public function __construct(CoreInterface $core)
     {
         $this->core = $core;
+
         $this->config = $core->loadConfig('http');
+
         $this->middlewares = $this->config['middlewares'];
         $this->endpoints = $this->config['endpoints'];
-
         $this->routeMiddlewares = $this->config['routeMiddlewares'];
     }
 
