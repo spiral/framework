@@ -13,6 +13,7 @@ use Spiral\Core\Component\SingletonTrait;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Components;
 use Spiral\Components\Debug\Snapshot;
+use Spiral\Components\Files\FileManager;
 
 /**
  * @property Components\Http\HttpDispatcher                 $http
@@ -60,6 +61,46 @@ class Core extends Container implements CoreInterface
     const CONFIGS_EXTENSION = 'php';
 
     /**
+     * Some environment constants to use to produce more clean code with less magic values.
+     */
+    const DEVELOPMENT = 'development';
+    const PRODUCTION  = 'production';
+    const STAGING     = 'staging';
+    const TESTING     = 'testing';
+
+    /**
+     * Default set of core bindings. Can be redefined while constructing core.
+     *
+     * @var array
+     */
+    protected $bindings = array(
+        'core'      => 'Spiral\Core\Core',
+
+        //Dispatchers
+        'http'      => 'Spiral\Components\Http\HttpDispatcher',
+        'console'   => 'Spiral\Components\Console\ConsoleDispatcher',
+
+        //Core components
+        'loader'    => 'Spiral\Core\Loader',
+        'modules'   => 'Spiral\Components\Modules\ModuleManager',
+        'file'      => 'Spiral\Components\Files\FileManager',
+        'debug'     => 'Spiral\Components\Debug\Debugger',
+        'tokenizer' => 'Spiral\Components\Tokenizer\Tokenizer',
+        'cache'     => 'Spiral\Components\Cache\CacheManager',
+        'i18n'      => 'Spiral\Components\I18n\Translator',
+        'view'      => 'Spiral\Components\View\ViewManager',
+        'redis'     => 'Spiral\Components\Redis\RedisManager',
+        'encrypter' => 'Spiral\Components\Encrypter\Encrypter',
+        'image'     => 'Spiral\Components\Image\ImageManager',
+        'storage'   => 'Spiral\Components\Storage\StorageManager',
+        'dbal'      => 'Spiral\Components\DBAL\DatabaseManager',
+        'orm'       => 'Spiral\Components\ORM\ORM',
+        'odm'       => 'Spiral\Components\ODM\ODM',
+        'cookies'   => 'Spiral\Components\Http\Cookies\CookieManager',
+        'session'   => 'Spiral\Components\Session\SessionStore'
+    );
+
+    /**
      * Current environment id (name), that value can be used directly in code by accessing
      * Core::getEnvironment() or Application::getEnvironment() (if you using that name), environment
      * can be changed at any moment via setEnvironment() method. Environment used to merge configuration
@@ -70,13 +111,6 @@ class Core extends Container implements CoreInterface
      */
     protected $environment = null;
 
-    /**
-     * Some environment constants to use to produce more clean code with less magic values.
-     */
-    const DEVELOPMENT = 'development';
-    const PRODUCTION  = 'production';
-    const STAGING     = 'staging';
-    const TESTING     = 'testing';
 
     /**
      * Set of directory aliases defined during application bootstrap and in index.php file. Such
@@ -147,8 +181,6 @@ class Core extends Container implements CoreInterface
         $this->directories['runtime'] = $this->directories['application'] . '/runtime';
         $this->directories['cache'] = $this->directories['runtime'] . '/cache';
 
-        $this->initBindings();
-
         if (empty($this->environment))
         {
             $filename = $this->directory('runtime') . '/environment.php';
@@ -159,39 +191,6 @@ class Core extends Container implements CoreInterface
          * Timezones are really important.
          */
         date_default_timezone_set($this->timezone);
-    }
-
-    /**
-     * Initiate application binding.
-     */
-    protected function initBindings()
-    {
-        $this->bindings = array(
-            'core'      => 'Spiral\Core\Core',
-
-            //Dispatchers
-            'http'      => 'Spiral\Components\Http\HttpDispatcher',
-            'console'   => 'Spiral\Components\Console\ConsoleDispatcher',
-
-            //Core components
-            'loader'    => 'Spiral\Core\Loader',
-            'modules'   => 'Spiral\Components\Modules\ModuleManager',
-            'file'      => 'Spiral\Components\Files\FileManager',
-            'debug'     => 'Spiral\Components\Debug\Debugger',
-            'tokenizer' => 'Spiral\Components\Tokenizer\Tokenizer',
-            'cache'     => 'Spiral\Components\Cache\CacheManager',
-            'i18n'      => 'Spiral\Components\I18n\Translator',
-            'view'      => 'Spiral\Components\View\ViewManager',
-            'redis'     => 'Spiral\Components\Redis\RedisManager',
-            'encrypter' => 'Spiral\Components\Encrypter\Encrypter',
-            'image'     => 'Spiral\Components\Image\ImageManager',
-            'storage'   => 'Spiral\Components\Storage\StorageManager',
-            'dbal'      => 'Spiral\Components\DBAL\DatabaseManager',
-            'orm'       => 'Spiral\Components\ORM\ORM',
-            'odm'       => 'Spiral\Components\ODM\ODM',
-            'cookies'   => 'Spiral\Components\Http\Cookies\CookieManager',
-            'session'   => 'Spiral\Components\Session\SessionStore'
-        );
     }
 
     /**
@@ -411,6 +410,7 @@ class Core extends Container implements CoreInterface
             throw new ClientException(ClientException::NOT_FOUND);
         }
 
+        //Initiating controller with all required dependencies
         $controller = $this->get($controller);
         if (!$controller instanceof ControllerInterface)
         {
@@ -540,10 +540,10 @@ class Core extends Container implements CoreInterface
         $name = $this->makeFilename($name, $directory);
 
         //This is required as FileManager system component and can be called pretty early
-        $file = Components\Files\FileManager::getInstance();
+        $file = FileManager::getInstance();
 
         $data = '<?php return ' . var_export($data, true) . ';';
-        if ($file->write($name, $data, Components\Files\FileManager::RUNTIME, true))
+        if ($file->write($name, $data, FileManager::RUNTIME, true))
         {
             return $name;
         }
