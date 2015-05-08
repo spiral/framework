@@ -1,4 +1,4 @@
-Spiral PHP Framework, Current Status
+Spiral PHP Framework
 =======================
 [![Build Status](https://travis-ci.org/spiral-php/spiral.svg?branch=master)](https://travis-ci.org/spiral-php/spiral)
 
@@ -12,3 +12,11 @@ Spiral was originally built in 2009 for internal projects and has been continuou
 Base application with modules, views and routing: https://github.com/spiral-php/application
 
 Guide: https://github.com/spiral-php/guide
+
+Currently in development:
+- ORM Eager Loading Refactoring
+- ORM Relations Mapping
+- ORM Abstract and Parent classes handling
+- ORM Virtual Documentation generation
+- ORM UML export (only classes export done at the moment)
+- HTTP PSR7 update to match the latest specs
