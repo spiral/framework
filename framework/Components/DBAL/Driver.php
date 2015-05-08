@@ -279,26 +279,10 @@ abstract class Driver extends Component
 
             if (is_array($parameter))
             {
-                foreach ($parameter as &$value)
-                {
-                    if ($value instanceof ParameterInterface)
-                    {
-                        $value = $value->getValue();
-                    }
-
-                    if ($value instanceof \DateTime)
-                    {
-                        //We are going to convert all timestamps to database timezone which is UTC
-                        //by default
-                        $value = $value->setTimezone(
-                            new \DateTimeZone(DatabaseManager::defaultTimezone())
-                        )->format(static::DATETIME);
-                    }
-
-                    unset($value);
-                }
-
-                $result = array_merge($result, $parameter);
+                $result = array_merge(
+                    $result,
+                    $this->prepareParameters($parameter)
+                );
             }
             else
             {
