@@ -58,7 +58,7 @@ class File extends Facade
     const GB = 1073741824;
 
     /**
-     * Default file permissions is 766 (directories 777), this files are fully writable and readable
+     * Default file permissions is 777 (directories 777), this files are fully writable and readable
      * by all application environments. Usually this files stored under application/data folder,
      * however they can be in some other public locations.
      */

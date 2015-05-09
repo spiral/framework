@@ -73,7 +73,7 @@ class FileElement extends NamespaceElement
      * Render the PHP file's code and deliver it to a given filename.
      *
      * @param string $filename        Filename to render code into.
-     * @param int $mode               Use File::RUNTIME for 766 and File::READONLY for application
+     * @param int $mode               Use File::RUNTIME for 777 and File::READONLY for application
      *                                files.
      * @param bool $ensureDirectory   If true, helper will ensure that the destination directory exists
      *                                and has the correct permissions.
