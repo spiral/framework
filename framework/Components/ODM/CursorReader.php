@@ -79,7 +79,7 @@ class CursorReader implements \Iterator
         $class = $this->odm->defineClass($fields, $this->schema[ODM::C_DEFINITION]);
 
         //No IoC here due unpredictable consequences
-        return new $class($fields);
+        return new $class($fields, null, array(), $this->odm);
     }
 
     /**
