@@ -105,7 +105,7 @@ trait PaginatorTrait
      * @param string                 $pageParameter Name of parameter in request query which is used
      *                                              to store the current page number. "page" by default.
      * @param ServerRequestInterface $request       Source of page number.
-     * @return mixed
+     * @return static
      */
     public function paginate(
         $limit = 25,

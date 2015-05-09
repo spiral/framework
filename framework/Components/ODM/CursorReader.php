@@ -32,6 +32,16 @@ class CursorReader implements \Iterator
      */
     protected $schema = array();
 
+    /**
+     * CursorReader is wrapper at top of MongoCursor used to correctly resolve data type of result.
+     *
+     * @param \MongoCursor $cursor
+     * @param ODM          $odm
+     * @param array        $schema
+     * @param array        $sort
+     * @param int          $limit
+     * @param int          $offset
+     */
     public function __construct(
         \MongoCursor $cursor,
         ODM $odm,
@@ -67,6 +77,22 @@ class CursorReader implements \Iterator
 
         //No IoC here due unpredictable consequences
         return new $class($fields);
+    }
+
+    /**
+     * Sets the fields for a query.
+     *
+     * @link http://www.php.net/manual/en/mongocursor.fields.php
+     * @param array $fields Fields to return (or not return).
+     * @throws \MongoCursorException
+     * @return static
+     */
+    public function fields(array $fields)
+    {
+        $this->cursor->fields($fields);
+        $this->schema = array();
+
+        return $this;
     }
 
     /**
