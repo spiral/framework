@@ -711,6 +711,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public static function create($fields = array())
     {
+        /**
+         * @var ActiveRecord $class
+         */
         $class = new static();
 
         //Forcing validation (empty set of fields is not valid set of fields)

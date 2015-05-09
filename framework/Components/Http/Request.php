@@ -11,7 +11,6 @@ namespace Spiral\Components\Http;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamableInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Request\FileBag;
 use Spiral\Components\Http\Request\ParameterBag;
 use Spiral\Components\Http\Request\HttpRequest;
 use Spiral\Components\Http\Request\InputStream;

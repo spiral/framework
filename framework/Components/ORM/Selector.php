@@ -16,7 +16,6 @@ use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
-use Spiral\Components\ORM\Selector\SelectorResult;
 use Spiral\Core\Component;
 use Spiral\Facades\Cache;
 use Spiral\Support\Models\LazyIterator;

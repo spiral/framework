@@ -109,7 +109,7 @@ class QueryCompiler extends BaseQueryCompiler
         }
 
         //Will be removed by QueryResult
-        $columns[] = SqlFragment::make(
+        $columns[] = new SqlFragment(
             "ROW_NUMBER() OVER ($orderBy) AS " . $this->quote(QueryResult::ROW_NUMBER_COLUMN)
         );
 
@@ -170,7 +170,7 @@ class QueryCompiler extends BaseQueryCompiler
                 0
             ) . ") ";
 
-        return $cte . self::delete(SqlFragment::make("cte"));
+        return $cte . self::delete(new SqlFragment("cte"));
     }
 
     /**
@@ -214,7 +214,7 @@ class QueryCompiler extends BaseQueryCompiler
                 0
             ) . ") ";
 
-        return $cte . self::update(SqlFragment::make("cte"), $values);
+        return $cte . self::update(new SqlFragment("cte"), $values);
     }
 
     /**

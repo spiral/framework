@@ -493,7 +493,7 @@ abstract class AbstractColumnSchema extends Component
         {
             if (strtolower($this->defaultValue) == strtolower($this->table->getDriver()->timestampNow()))
             {
-                return SqlFragment::make($this->defaultValue);
+                return new SqlFragment($this->defaultValue);
             }
         }
 

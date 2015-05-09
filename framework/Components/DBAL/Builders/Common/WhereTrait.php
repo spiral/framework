@@ -13,7 +13,6 @@ use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Components\DBAL\SqlExpression;
-use Spiral\Components\DBAL\SqlIdentifierInterface;
 
 trait WhereTrait
 {

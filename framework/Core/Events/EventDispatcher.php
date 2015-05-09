@@ -109,6 +109,9 @@ class EventDispatcher extends Component implements DispatcherInterface
     {
         if (is_object($event))
         {
+            /**
+             * @var Event $walker
+             */
             $walker = $event;
             $event = $event->getName();
         }

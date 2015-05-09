@@ -28,7 +28,7 @@ class Importer extends LocalizationImporter
         //Indexing plural phrases
         $plurals = false;
 
-        $poLines = explode("\n", $this->core->file->read($filename));
+        $poLines = explode("\n", $this->file->read($filename));
 
         $buffer = '';
         foreach ($poLines as $line)
