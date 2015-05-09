@@ -200,7 +200,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param array $fields An array of fields by which to sort. Each element in the array has as
      *                      key the field name, and as value either 1 for ascending sort, or -1 for
      *                      descending sort.
-     * @return static|Document[]
+     * @return static
      */
     public function sort(array $fields)
     {
@@ -223,11 +223,12 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * Perform query and get mongoDB cursor. Attention, mongo skip is not really optimal operation
      * on high amount of data.
      *
-     * @param array $query  Fields and conditions to query by.
-     * @param array $fields Fields of the results to return.
+     * @param array $query       Fields and conditions to query by.
+     * @param array $fields      Fields of the results to return.
+     * @param bool  $plainResult If true no documents to will be created.
      * @return \MongoCursor
      */
-    public function createCursor($query = array(), $fields = array())
+    public function createCursor($query = array(), $fields = array(), $plainResult = false)
     {
         $this->query($query);
         $this->doPagination();
@@ -235,7 +236,9 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
         $cursorReader = new CursorReader(
             $this->mongoCollection()->find($this->query, $fields),
             $this->odm,
-            !empty($fields) ? array() : $this->odm->getSchema($this->database . '/' . $this->name),
+            !empty($fields) || $plainResult
+                ? array()
+                : $this->odm->getSchema($this->database . '/' . $this->name),
             $this->sort,
             $this->limit,
             $this->offset
@@ -288,7 +291,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * Send collection query to fetch multiple ODM Documents.
      *
      * @param array $query Fields and conditions to query by.
-     * @return static|Document[]
+     * @return static
      */
     public function find(array $query = array())
     {
@@ -333,7 +336,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
     public function fetchFields($fields = array())
     {
         $result = array();
-        foreach ($this->createCursor(array(), $fields) as $document)
+        foreach ($this->createCursor(array(), $fields, true) as $document)
         {
             $result[] = $document;
         }
@@ -346,7 +349,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      *
      * @link http://www.php.net/manual/en/mongocursor.limit.php
      * @param int $limit The number of results to return.
-     * @return static|Document[]
+     * @return static
      */
     public function limit($limit = 0)
     {
@@ -360,7 +363,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      *
      * @link http://www.php.net/manual/en/mongocursor.skip.php
      * @param int $offset The number of results to skip.
-     * @return static|Document[]
+     * @return static
      */
     public function offset($offset = 0)
     {
@@ -384,7 +387,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * Retrieve an external iterator, SelectBuilder will return QueryResult as iterator.
      *
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return CursorReader
+     * @return CursorReader|Document[]
      */
     public function getIterator()
     {

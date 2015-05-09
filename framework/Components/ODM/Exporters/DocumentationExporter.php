@@ -277,7 +277,7 @@ class DocumentationExporter extends Component
         }
 
         //Replaces
-        $class->replaceComments("static", $name);
+        $class->replaceComments("static", $name . '|' . '\\' . $collection->primaryClass() . '[]');
         $class->replaceComments(SchemaBuilder::DOCUMENT, $collection->primaryClass());
         $class->replaceComments("Document", '\\' . $collection->primaryClass());
 
@@ -336,6 +336,7 @@ class DocumentationExporter extends Component
             'Spiral\Support\Pagination\Paginator',
             'Spiral\Support\Pagination\PaginatorException',
             'Spiral\Components\ODM\ODMException',
+            'Spiral\Components\ODM\CursorReader',
             'Psr\Http\Message\ServerRequestInterface',
             'Psr\Log\LoggerInterface',
             'Spiral\Components\Debug\Logger'
