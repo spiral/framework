@@ -10,6 +10,8 @@ use Spiral\Core\Core;
 use Spiral\Components\Debug\Dumper;
 use Spiral\Helpers\StringHelper;
 use Spiral\Components\I18n\Translator;
+use Psr\Log\LogLevel;
+use Spiral\Components\Debug\Debugger;
 
 if (!function_exists('directory'))
 {

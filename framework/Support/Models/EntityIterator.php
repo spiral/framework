@@ -10,7 +10,7 @@ namespace Spiral\Support\Models;
 
 use Spiral\Core\Component;
 
-class LazyIterator extends Component implements \Iterator
+class EntityIterator extends Component implements \Iterator
 {
     protected $class = '';
     protected $data = array();
@@ -45,7 +45,6 @@ class LazyIterator extends Component implements \Iterator
         }
 
         $class = $this->class;
-
         return $this->data[$this->position] = new $class($data);
     }
 

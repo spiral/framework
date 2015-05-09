@@ -18,7 +18,7 @@ use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
 use Spiral\Core\Component;
 use Spiral\Facades\Cache;
-use Spiral\Support\Models\LazyIterator;
+use Spiral\Support\Models\EntityIterator;
 
 class Selector extends QueryBuilder implements \IteratorAggregate
 {
@@ -242,7 +242,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
     {
         //Where is the model name???
         //TODO: FIX IT!!
-        return new LazyIterator('Models\User', $this->fetchData());
+        return new EntityIterator('Models\User', $this->fetchData());
     }
 
     public function all()
