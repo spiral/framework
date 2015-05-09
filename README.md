@@ -1,6 +1,6 @@
 Spiral PHP Framework
 =======================
-[![Build Status](https://travis-ci.org/spiral-php/spiral.svg?branch=master)](https://travis-ci.org/spiral-php/spiral)
+[![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral)
 
 The Spiral framework provides a Rapid Application Development (RAD) platform to develop software applications 
 using an MVC architecture, using a simple but strong syntax similar to other popular frameworks.
