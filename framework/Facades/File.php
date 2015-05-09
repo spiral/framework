@@ -62,12 +62,12 @@ class File extends Facade
      * by all application environments. Usually this files stored under application/data folder,
      * however they can be in some other public locations.
      */
-    const RUNTIME = 0766;
+    const RUNTIME = FileManager::RUNTIME;
 
     /**
      * Work files are files which create by or for framework, like controllers, configs and config
      * directories. This means that only CLI mode application can modify them. You should not create
      * work files from web application.
      */
-    const READONLY = 0644;
+    const READONLY = FileManager::READONLY;
 }
