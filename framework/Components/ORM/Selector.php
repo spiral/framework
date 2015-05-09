@@ -64,7 +64,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
 
     protected $countColumns = 0;
 
-    public $columns = array();
+    protected $columns = array();
 
     /**
      * Cache lifetime. Selector will cache parsed structure in opposite to SelectBuilder, this will
@@ -295,7 +295,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
      * @param array  $columns Original set of model columns.
      * @return int
      */
-    public function addColumns($tableAlias, array $columns)
+    public function registerColumns($tableAlias, array $columns)
     {
         $offset = count($this->columns);
 

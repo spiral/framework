@@ -25,6 +25,13 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     protected $parent = null;
 
     /**
+     * ODM component.
+     *
+     * @var ODM
+     */
+    protected $odm = null;
+
+    /**
      * Local composition schema, contain information about class definition.
      *
      * @var mixed
@@ -86,11 +93,13 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      * @param array|mixed           $data
      * @param CompositableInterface $parent
      * @param array|string          $classDefinition
+     * @param ODM                   $odm ODM component.
      * @throws ODMException
      */
-    public function __construct($data = null, $parent = null, $classDefinition = array())
+    public function __construct($data = null, $parent = null, $classDefinition = null, ODM $odm = null)
     {
         $this->parent = $parent;
+        $this->odm = $odm;
         $this->documents = is_array($data) ? $data : array();
         if (!$this->classDefinition = $classDefinition)
         {
@@ -124,7 +133,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      */
     protected function defineClass(array $fields)
     {
-        return ODM::defineClass($fields, $this->classDefinition);
+        return $this->odm->defineClass($fields, $this->classDefinition);
     }
 
     /**
@@ -356,9 +365,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
 
         $this->changedDirectly = true;
         $this->documents[] = $document = call_user_func(array(
-            ODM::defineClass($fields, $this->classDefinition),
+            $this->odm->defineClass($fields, $this->classDefinition),
             'create'
-        ), $fields)->embed($this);
+        ), $fields, $this->odm)->embed($this);
 
         return $document;
     }
@@ -446,8 +455,8 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
 
         if (!$document instanceof Document)
         {
-            $class = ODM::defineClass($this->documents[$offset], $this->classDefinition);
-            $this->documents[$offset] = $document = new $class($document, $this);
+            $class = $this->odm->defineClass($this->documents[$offset], $this->classDefinition);
+            $this->documents[$offset] = $document = new $class($document, $this, array(), $this->odm);
         }
 
         return $document;

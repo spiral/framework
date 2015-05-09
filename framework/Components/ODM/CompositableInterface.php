@@ -18,8 +18,9 @@ interface CompositableInterface extends AccessorInterface
      * @param array|mixed           $data
      * @param CompositableInterface $parent
      * @param mixed                 $options Implementation specific options.
+     * @param ODM                   $odm     ODM component.
      */
-    public function __construct($data = null, $parent = null, $options = null);
+    public function __construct($data = null, $parent = null, $options = null, ODM $odm = null);
 
     /**
      * Copy Compositable to embed into specified parent. Documents with already set parent will return

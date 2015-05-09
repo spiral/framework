@@ -269,7 +269,7 @@ abstract class Loader
 
         if (!empty($this->loaders))
         {
-            $this->offset = $selector->addColumns(
+            $this->offset = $selector->registerColumns(
                 $this->getTableAlias(),
                 array_keys($this->schema[ORM::E_COLUMNS])
             );
@@ -291,7 +291,7 @@ abstract class Loader
         }
 
         //Mounting columns
-        $this->offset = $selector->addColumns(
+        $this->offset = $selector->registerColumns(
             $this->getTableAlias(),
             array_keys($this->schema[ORM::E_COLUMNS])
         );

@@ -78,6 +78,13 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     const REMOVE_ID_UNDERSCORE = true;
 
     /**
+     * ODM component.
+     *
+     * @var ODM
+     */
+    protected $odm = null;
+
+    /**
      * Already fetched schemas from ODM.
      *
      * @var array
@@ -185,15 +192,17 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param array                 $data   Document fields, filters will not be applied for this fields.
      * @param CompositableInterface $parent Parent document or compositor.
      * @param mixed                 $options
+     * @param ODM                   $odm    ODM component, will be received from container if not provided.
      */
-    public function __construct($data = array(), $parent = null, $options = null)
+    public function __construct($data = array(), $parent = null, $options = null, ODM $odm = null)
     {
         $this->parent = $parent;
+        $this->odm = !empty($odm) ? $odm : ODM::getInstance();
 
         if (!isset(self::$schemaCache[$class = get_class($this)]))
         {
             static::initialize();
-            self::$schemaCache[$class] = ODM::getInstance()->getSchema(get_class($this));
+            self::$schemaCache[$class] = $this->odm->getSchema(get_class($this));
         }
 
         //Prepared document schema
@@ -365,10 +374,10 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         if ($accessor == ODM::CMP_ONE)
         {
             //Not an accessor by composited class
-            $accessor = ODM::defineClass($value, $options);
+            $accessor = $this->odm->defineClass($value, $options);
         }
 
-        return new $accessor($value, $this, $options);
+        return new $accessor($value, $this, $options, $this->odm);
     }
 
     /**
@@ -480,7 +489,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             $query = array_merge($query, $arguments[0]);
         }
 
-        $collection = self::odmCollection($aggregation)->query($query);
+        $collection = static::odmCollection($aggregation, $this->odm)->query($query);
         if ($aggregation[ODM::AGR_TYPE] == self::ONE)
         {
             return $collection->findOne();
@@ -846,11 +855,12 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * Get ODM collection associated with specified document.
      *
      * @param array $schema Forced document schema.
+     * @param ODM   $odm    ODM component, will be received from Container if not specified.
      * @return Collection
      */
-    public static function odmCollection(array $schema = array())
+    public static function odmCollection(array $schema = array(), ODM $odm = null)
     {
-        $odm = ODM::getInstance();
+        $odm = !empty($odm) ? $odm : ODM::getInstance();
         $schema = !empty($schema) ? $schema : $odm->getSchema(get_called_class());
 
         static::initialize();
@@ -906,7 +916,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             $this->event('saving');
             unset($this->fields['_id']);
 
-            static::odmCollection($this->schema)->insert(
+            static::odmCollection($this->schema, $this->odm)->insert(
                 $this->fields = $this->serializeData()
             );
 
@@ -916,7 +926,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         {
             $this->event('updating');
 
-            static::odmCollection($this->schema)->update(
+            static::odmCollection($this->schema, $this->odm)->update(
                 array('_id' => $this->primaryKey()),
                 $this->buildAtomics()
             );
@@ -945,7 +955,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         }
 
         $this->event('deleting');
-        $this->primaryKey() && static::odmCollection($this->schema)->remove(array(
+        $this->primaryKey() && static::odmCollection($this->schema, $this->odm)->remove(array(
             '_id' => $this->primaryKey()
         ));
 
@@ -958,11 +968,15 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * to ensure their type. Events: created
      *
      * @param array $fields Model fields to set, will be passed thought filters.
+     * @param ODM   $odm    ODM component, will be received from Container if not provided.
      * @return static
      */
-    public static function create($fields = array())
+    public static function create($fields = array(), ODM $odm = null)
     {
-        $class = new static();
+        /**
+         * @var Document $class
+         */
+        $class = new static(array(), null, array(), $odm);
 
         //Forcing validation (empty set of fields is not valid set of fields)
         $class->validationRequired = true;

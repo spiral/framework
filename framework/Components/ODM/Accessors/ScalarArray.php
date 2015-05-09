@@ -10,6 +10,7 @@ namespace Spiral\Components\ODM\Accessors;
 
 use Spiral\Components\ODM\CompositableInterface;
 use Spiral\Components\ODM\Document;
+use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
 
@@ -81,9 +82,10 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      * @param array|mixed           $data
      * @param CompositableInterface $parent
      * @param mixed                 $type Implementation specific options.
+     * @param ODM                   $odm  ODM component.
      * @throws ODMException
      */
-    public function __construct($data = null, $parent = null, $type = self::DETECT_TYPE)
+    public function __construct($data = null, $parent = null, $type = self::DETECT_TYPE, ODM $odm = null)
     {
         $this->parent = $parent;
         $this->data = is_array($data) ? $data : array();

@@ -10,6 +10,7 @@ namespace Spiral\Components\ODM\Accessors;
 
 use Spiral\Components\ODM\CompositableInterface;
 use Spiral\Components\ODM\Document;
+use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
 use Spiral\Support\Models\Accessors\Timestamp as BaseTimestamp;
@@ -30,8 +31,9 @@ class Timestamp extends BaseTimestamp implements ODMAccessor
      * @param mixed  $data
      * @param object $parent
      * @param mixed  $timezone Source date timezone.
+     * @param ODM    $odm      ODM component.
      */
-    public function __construct($data = null, $parent = null, $timezone = null)
+    public function __construct($data = null, $parent = null, $timezone = null, ODM $odm = null)
     {
         $this->original = $data;
         if ($data instanceof \MongoDate)
