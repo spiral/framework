@@ -320,7 +320,7 @@ class DocumentationExporter extends Component
     {
         $phpFile = FileElement::make()->setComment($this->header);
 
-        foreach ($this->builder->getDocuments() as $document)
+        foreach ($this->builder->getDocumentSchemas() as $document)
         {
             if ($document->isAbstract())
             {

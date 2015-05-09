@@ -82,8 +82,8 @@ class InspectCommand extends Command
 
         return Inspector::make(array(
             'schemas' => array_merge(
-                $odmBuilder->getDocuments(),
-                $ormBuilder->getRecords()
+                $odmBuilder->getDocumentSchemas(),
+                $ormBuilder->getRecordSchemas()
             )
         ));
     }

@@ -68,7 +68,7 @@ class SchemaBuilder extends Component
             ));
         }
 
-        foreach ($this->getDocuments() as $documentSchema)
+        foreach ($this->getDocumentSchemas() as $documentSchema)
         {
             if (!$collection = $documentSchema->getCollection())
             {
@@ -113,7 +113,7 @@ class SchemaBuilder extends Component
      *
      * @return DocumentSchema[]
      */
-    public function getDocuments()
+    public function getDocumentSchemas()
     {
         return $this->documents;
     }

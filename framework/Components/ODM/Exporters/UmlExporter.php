@@ -207,7 +207,7 @@ class UmlExporter extends Component
     {
         $this->line('@startuml');
 
-        foreach ($this->builder->getDocuments() as $document)
+        foreach ($this->builder->getDocumentSchemas() as $document)
         {
             $this->renderDocument($document);
         }

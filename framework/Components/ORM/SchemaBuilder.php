@@ -138,7 +138,7 @@ class SchemaBuilder extends Component
      *
      * @return RecordSchema[]
      */
-    public function getRecords()
+    public function getRecordSchemas()
     {
         return $this->records;
     }

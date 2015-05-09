@@ -447,7 +447,7 @@ class DocumentSchema extends ModelSchema
     public function getChildren()
     {
         $result = array();
-        foreach ($this->odmSchema->getDocuments() as $schema)
+        foreach ($this->odmSchema->getDocumentSchemas() as $schema)
         {
             if ($schema->reflection->isSubclassOf($this->class))
             {
@@ -510,7 +510,7 @@ class DocumentSchema extends ModelSchema
     public function classDefinition()
     {
         $classes = array();
-        foreach ($this->odmSchema->getDocuments() as $documentSchema)
+        foreach ($this->odmSchema->getDocumentSchemas() as $documentSchema)
         {
             if (
                 $documentSchema->reflection->isSubclassOf($this->class)

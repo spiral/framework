@@ -148,7 +148,7 @@ class UmlExporter extends Component
     {
         $this->line('@startuml');
 
-        foreach ($this->builder->getRecords() as $entity)
+        foreach ($this->builder->getRecordSchemas() as $entity)
         {
             $this->renderEntity($entity);
         }

@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\ORM\Exporters\DocumentationExporter;
 use Spiral\Core\Component;
 use Spiral\Core\CoreInterface;
 
@@ -78,7 +79,7 @@ class ORM extends Component
     /**
      * @param              $type
      * @param array        $definition
-     * @param ActiveRecord       $parent
+     * @param ActiveRecord $parent
      * @param array        $data
      * @return Relation
      */
@@ -115,9 +116,9 @@ class ORM extends Component
         if (!empty($this->config['documentation']))
         {
             //Virtual ORM documentation to help IDE
-            //            DocumentationExporter::make(compact('builder'))->render(
-            //                $this->config['documentation']
-            //            );
+            DocumentationExporter::make(compact('builder'))->render(
+                $this->config['documentation']
+            );
         }
 
         //Building database!

@@ -22,7 +22,7 @@ abstract class MorphedRelationSchema extends RelationSchema
     {
         $options = parent::definitionOptions();
 
-        foreach ($this->ormSchema->getRecords() as $record)
+        foreach ($this->ormSchema->getRecordSchemas() as $record)
         {
             if ($record->getReflection()->isSubclassOf($this->target))
             {
@@ -43,7 +43,7 @@ abstract class MorphedRelationSchema extends RelationSchema
     public function getOuterRecordSchemas()
     {
         $entities = array();
-        foreach ($this->ormSchema->getRecords() as $record)
+        foreach ($this->ormSchema->getRecordSchemas() as $record)
         {
             if ($record->getReflection()->isSubclassOf($this->target))
             {
