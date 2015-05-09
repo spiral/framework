@@ -12,7 +12,7 @@ use Predis\Response\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\MiddlewareInterface;
 
-class JsonRequest implements MiddlewareInterface
+class JsonParser implements MiddlewareInterface
 {
     /**
      * Handle request generate response. Middleware used to alter incoming Request and/or Response
