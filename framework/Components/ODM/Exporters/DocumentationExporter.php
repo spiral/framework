@@ -335,7 +335,10 @@ class DocumentationExporter extends Component
             'Spiral\Components\ODM\ODM',
             'Spiral\Support\Pagination\Paginator',
             'Spiral\Support\Pagination\PaginatorException',
-            'Spiral\Components\ODM\ODMException'
+            'Spiral\Components\ODM\ODMException',
+            'Psr\Http\Message\ServerRequestInterface',
+            'Psr\Log\LoggerInterface',
+            'Spiral\Components\Debug\Logger'
         ));
 
         foreach ($this->builder->getCollections() as $collection)

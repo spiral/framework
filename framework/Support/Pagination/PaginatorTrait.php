@@ -107,10 +107,22 @@ trait PaginatorTrait
      * @param ServerRequestInterface $request       Source of page number.
      * @return mixed
      */
-    public function paginate($limit = 25, $count = null, $pageParameter = 'page', $request = null)
+    public function paginate(
+        $limit = 25,
+        $count = null,
+        $pageParameter = 'page',
+        ServerRequestInterface $request = null
+    )
     {
-        $this->paginator = Paginator::make(compact('pageParameter', 'request'));
 
+        $arguments = compact('pageParameter');
+
+        if (!empty($request))
+        {
+            $arguments['request'] = $request;
+        }
+
+        $this->paginator = Paginator::make($arguments);
         $this->paginator->setLimit($limit);
         $this->paginationCount = $count;
 

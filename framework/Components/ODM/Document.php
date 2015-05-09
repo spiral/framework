@@ -860,7 +860,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             'odm'      => $odm
         ));
 
-        if (isset(EventDispatcher::$dispatchers[static::getAlias()]))
+        if (EventDispatcher::hasDispatcher(static::getAlias()))
         {
             return self::dispatcher()->fire('odmCollection', $odmCollection);
         }

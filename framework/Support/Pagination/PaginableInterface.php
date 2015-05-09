@@ -39,7 +39,12 @@ interface PaginableInterface extends \Countable
      * @param ServerRequestInterface $request       Dispatcher request.
      * @return mixed
      */
-    public function paginate($limit = 50, $pageParameter = 'page', $count = 0, $request = null);
+    public function paginate(
+        $limit = 50,
+        $pageParameter = 'page',
+        $count = 0,
+        ServerRequestInterface $request = null
+    );
 
     /**
      * Get paginator for the current selection. Paginate method should be already called.

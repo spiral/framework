@@ -8,11 +8,9 @@
  */
 namespace Spiral\Components\ODM;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Component;
 use Spiral\Support\Pagination\PaginableInterface;
 use Spiral\Support\Pagination\PaginatorTrait;
-use Spiral\Support\Pagination\Paginator;
 
 /**
  * @method bool getSlaveOkay()
@@ -36,8 +34,7 @@ use Spiral\Support\Pagination\Paginator;
  * @method bool|array distinct($key, $query)
  * @method array aggregate(array $pipeline, array $op, array $pipelineOperators)
  */
-//TODO: MOVE MODEL CREATION TO SEPARATE CLASS AND REMOVE CURSOR! NO IDEA WHAT IT'S DOING HERE
-class Collection extends Component implements \Iterator, PaginableInterface
+class Collection extends Component implements \IteratorAggregate, PaginableInterface
 {
     /**
      * Pagination and logging traits.
@@ -94,13 +91,6 @@ class Collection extends Component implements \Iterator, PaginableInterface
      * @var array
      */
     protected $query = array();
-
-    /**
-     * Active selection cursor.
-     *
-     * @var \MongoCursor
-     */
-    protected $cursor = null;
 
     /**
      * Fields to sort.
@@ -177,10 +167,6 @@ class Collection extends Component implements \Iterator, PaginableInterface
         });
 
         $this->query = array_merge($this->query, $query);
-        if (!empty($this->cursor))
-        {
-            $this->cursor = null;
-        }
 
         return $this;
     }
@@ -208,7 +194,6 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function sort(array $fields)
     {
-        $this->cursor && $this->cursor->sort($fields);
         $this->sort = $fields;
 
         return $this;
@@ -232,26 +217,10 @@ class Collection extends Component implements \Iterator, PaginableInterface
      * @param array $fields Fields of the results to return.
      * @return \MongoCursor
      */
-    public function getCursor($query = array(), $fields = array())
+    public function createCursor($query = array(), $fields = array())
     {
-        if (!empty($this->cursor) && empty($query) && empty($fields))
-        {
-            //Nothing changed since last cursor request
-            return $this->cursor;
-        }
-
-        //Updating query
-        !empty($query) && $this->query($query);
-
-        //Getting cursor from database
-        $this->cursor = $this->mongoCollection()->find($this->query, $fields);
-
+        $this->query($query);
         $this->doPagination();
-
-        //Sorting, limits and skipping
-        $this->sort && $this->cursor->sort($this->sort);
-        $this->limit && $this->cursor->limit($this->limit);
-        $this->offset && $this->cursor->skip($this->offset);
 
         $queryInfo = array('query' => $this->query, 'sort' => $this->sort);
         if (!empty($this->limit))
@@ -271,40 +240,20 @@ class Collection extends Component implements \Iterator, PaginableInterface
             );
         }
 
-        //$this->logger()->debug("{database}/{collection}: " . json_encode($queryInfo), array(
-        //    'collection' => $this->name,
-        //    'database'   => $this->database,
-        //    'queryInfo'  => $queryInfo
-        //));
+        $this->logger()->debug("{database}/{collection}: " . json_encode($queryInfo), array(
+            'collection' => $this->name,
+            'database'   => $this->database,
+            'queryInfo'  => $queryInfo
+        ));
 
-        return $this->cursor;
-    }
-
-    /**
-     * Create document instance by class definition stored in ODM schema.
-     *
-     * @param array $fields
-     * @return Document
-     * @throws ODMException
-     */
-    protected function createDocument(array $fields)
-    {
-        if (empty($this->schema))
-        {
-            $this->schema = $this->odm->getSchema($this->database . '/' . $this->name);
-            if (empty($this->schema))
-            {
-                throw new ODMException(
-                    "Unable to find appropriate document class, "
-                    . "no schema found for collection '{$this->database}/{$this->name}'."
-                );
-            }
-        }
-
-        $class = $this->odm->defineClass($fields, $this->schema[ODM::C_DEFINITION]);
-
-        //No IoC here due unpredictable consequences
-        return new $class($fields);
+        return new CursorReader(
+            $this->mongoCollection()->find($this->query, $fields),
+            $this->odm,
+            !empty($fields) ? array() : $this->odm->getSchema($this->database . '/' . $this->name),
+            $this->sort,
+            $this->limit,
+            $this->offset
+        );
     }
 
     /**
@@ -315,9 +264,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function find(array $query = array())
     {
-        $this->getCursor($query);
-
-        return $this;
+        return $this->query($query);
     }
 
     /**
@@ -330,16 +277,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function findOne(array $query = array(), array $fields = array())
     {
-        if (!$document = $this->getCursor($query, $fields)->limit(1)->getNext())
-        {
-            return null;
-        }
-
-        //Resetting
-        $this->cursor->reset();
-        $this->cursor = null;
-
-        return $fields ? $document : $this->createDocument($document);
+        return $this->createCursor($query, $fields)->limit(1)->getNext();
     }
 
     /**
@@ -349,11 +287,8 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function fetchDocuments()
     {
-        //Ensure selection
-        $this->getCursor();
-
         $result = array();
-        foreach ($this as $document)
+        foreach ($this->createCursor() as $document)
         {
             $result[] = $document;
         }
@@ -370,7 +305,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
     public function fetchFields($fields = array())
     {
         $result = array();
-        foreach ($this->getCursor(array(), $fields) as $document)
+        foreach ($this->createCursor(array(), $fields) as $document)
         {
             $result[] = $document;
         }
@@ -387,7 +322,6 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function limit($limit = 0)
     {
-        !empty($this->cursor) && $this->cursor->limit($limit);
         $this->limit = $limit;
 
         return $this;
@@ -402,118 +336,31 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function offset($offset = 0)
     {
-        !empty($this->cursor) && $this->cursor->skip($this->offset);
         $this->offset = $offset;
 
         return $this;
     }
 
     /**
-     * Return the current document.
+     * Counts all matched documents.
      *
-     * @link http://www.php.net/manual/en/mongocursor.current.php
-     * @link http://php.net/manual/en/iterator.current.php
-     * @return Document
-     */
-    public function current()
-    {
-        $document = $this->getCursor()->current();
-
-        return $document ? $this->createDocument($document) : null;
-    }
-
-    /**
-     * Checks if there are any more elements in this cursor
-     *
-     * @link http://www.php.net/manual/en/mongocursor.hasnext.php
-     * @return bool
-     */
-    public function hasNext()
-    {
-        return $this->getCursor()->hasNext();
-    }
-
-    /**
-     * Advances the cursor to the next result.
-     *
-     * @link http://www.php.net/manual/en/mongocursor.next.php
-     */
-    public function next()
-    {
-        $this->getCursor()->next();
-    }
-
-    /**
-     * Returns the current result's _id (as string).
-     *
-     * @link http://www.php.net/manual/en/mongocursor.key.php
-     * @return string
-     */
-    public function key()
-    {
-        return $this->getCursor()->key();
-    }
-
-    /**
-     * Checks if the cursor is reading a valid result.
-     *
-     * @link http://www.php.net/manual/en/mongocursor.valid.php
-     * @return bool
-     */
-    public function valid()
-    {
-        return $this->getCursor()->valid();
-    }
-
-    /**
-     * Returns the cursor to the beginning of the result set.
-     *
-     * @link http://php.net/manual/en/mongocursor.rewind.php
-     */
-    public function rewind()
-    {
-        $this->getCursor()->rewind();
-    }
-
-    /**
-     * Paginate current selection.
-     *
-     * @param int                    $limit         Pagination limit.
-     * @param string                 $pageParameter Name of parameter in request query which is used
-     *                                              to store the current page number. "page" by default.
-     * @param int                    $count         Forced count value, if 0 paginator will try to fetch
-     *                                              count from associated object.
-     * @param ServerRequestInterface $request       Dispatcher request.
-     * @return mixed
-     * @throws ODMException
-     */
-    public function paginate($limit = 50, $pageParameter = 'page', $count = 0, $request = null)
-    {
-        if (!empty($this->cursor))
-        {
-            throw new ODMException("Selection has to be paginated before cursor creation.");
-        }
-
-        $this->paginator = Paginator::make(
-            compact('pageParameter') + ($request ? compact('request') : array())
-        );
-
-        $this->paginator->setLimit($limit);
-        $this->paginationCount = $count;
-
-        return $this;
-    }
-
-    /**
-     * Counts the number of results for this query.
-     *
-     * @link http://www.php.net/manual/en/mongocursor.count.php
-     * @param bool $all If false limit and offset will be included to query.
+     * @link http://docs.mongodb.org/manual/reference/method/db.collection.count/
      * @return int
      */
-    public function count($all = true)
+    public function count()
     {
-        return $this->getCursor()->count(!$all);
+        return $this->mongoCollection()->count($this->query);
+    }
+
+    /**
+     * Retrieve an external iterator, SelectBuilder will return QueryResult as iterator.
+     *
+     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @return CursorReader
+     */
+    public function getIterator()
+    {
+        return $this->createCursor();
     }
 
     /**
@@ -533,8 +380,7 @@ class Collection extends Component implements \Iterator, PaginableInterface
      */
     public function __destruct()
     {
-        !empty($this->cursor) && $this->cursor->reset();
-        $this->cursor = $this->odm = $this->paginator = null;
+        $this->odm = $this->paginator = null;
         $this->query = array();
     }
 
