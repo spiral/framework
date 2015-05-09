@@ -24,6 +24,12 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     const INJECTION_MANAGER = 'Spiral\Components\ODM\ODM';
 
     /**
+     * Profiling levels.
+     */
+    const PROFILE_SIMPLE  = 1;
+    const PROFILE_EXPLAIN = 2;
+
+    /**
      * ODM database instance name/id.
      *
      * @var string
@@ -35,7 +41,9 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
      *
      * @var array
      */
-    protected $config = array();
+    protected $config = array(
+        'profiling' => self::PROFILE_SIMPLE
+    );
 
     /**
      * ODMManager component.
@@ -62,7 +70,7 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     public function __construct($name, array $config, ODM $odm)
     {
         $this->name = $name;
-        $this->config = $config;
+        $this->config = $this->config + $config;
         $this->odm = $odm;
 
         //Selecting client
@@ -88,6 +96,40 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * While profiling enabled driver will create query logging and benchmarking events. This is
+     * recommended option on development environment.
+     *
+     * @param bool $enabled Enable or disable driver profiling.
+     * @return static
+     */
+    public function profiling($enabled = true)
+    {
+        $this->config['profiling'] = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Check if profiling mode is enabled.
+     *
+     * @return bool
+     */
+    public function isProfiling()
+    {
+        return !empty($this->config['profiling']);
+    }
+
+    /**
+     * Get database profiling level.
+     *
+     * @return int
+     */
+    public function getProfilingLevel()
+    {
+        return $this->config['profiling'];
     }
 
     /**

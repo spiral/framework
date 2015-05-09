@@ -172,6 +172,16 @@ abstract class Driver extends Component
     }
 
     /**
+     * Check if profiling mode is enabled.
+     *
+     * @return bool
+     */
+    public function isProfiling()
+    {
+        return $this->config['profiling'];
+    }
+
+    /**
      * Check if PDO already constructed and ready for use.
      *
      * @return bool

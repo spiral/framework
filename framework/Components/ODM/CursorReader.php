@@ -8,6 +8,9 @@
  */
 namespace Spiral\Components\ODM;
 
+/**
+ * @method array explain()
+ */
 class CursorReader implements \Iterator
 {
     /**

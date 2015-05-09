@@ -128,6 +128,16 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
     }
 
     /**
+     * MongoDatabase instance.
+     *
+     * @return MongoDatabase
+     */
+    public function mongoDatabase()
+    {
+        return $this->odm->db($this->database);
+    }
+
+    /**
      * Associated mongo database name/id.
      *
      * @return string
@@ -206,7 +216,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      */
     protected function mongoCollection()
     {
-        return $this->odm->db($this->database)->selectCollection($this->name);
+        return $this->mongoDatabase()->selectCollection($this->name);
     }
 
     /**
@@ -222,7 +232,32 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
         $this->query($query);
         $this->doPagination();
 
-        $queryInfo = array('query' => $this->query, 'sort' => $this->sort);
+        $cursorReader = new CursorReader(
+            $this->mongoCollection()->find($this->query, $fields),
+            $this->odm,
+            !empty($fields) ? array() : $this->odm->getSchema($this->database . '/' . $this->name),
+            $this->sort,
+            $this->limit,
+            $this->offset
+        );
+
+        if ((!empty($this->limit) || !empty($this->offset)) && empty($this->sort))
+        {
+            self::logger()->warning(
+                "MongoDB query executed with limit/offset but without specified sorting."
+            );
+        }
+
+        if (!$this->mongoDatabase()->isProfiling())
+        {
+            return $cursorReader;
+        }
+
+        $queryInfo = array(
+            'query' => $this->query,
+            'sort'  => $this->sort
+        );
+
         if (!empty($this->limit))
         {
             $queryInfo['limit'] = (int)$this->limit;
@@ -233,27 +268,20 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
             $queryInfo['offset'] = (int)$this->offset;
         }
 
-        if ((!empty($this->limit) || !empty($this->offset)) && empty($this->sort))
+        if ($this->mongoDatabase()->getProfilingLevel() == MongoDatabase::PROFILE_EXPLAIN)
         {
-            self::logger()->warning(
-                "MongoDB query executed with limit/offset but without specified sorting."
-            );
+            $queryInfo['explained'] = $cursorReader->explain();
         }
 
-        $this->logger()->debug("{database}/{collection}: " . json_encode($queryInfo), array(
-            'collection' => $this->name,
-            'database'   => $this->database,
-            'queryInfo'  => $queryInfo
-        ));
+        $this->logger()->debug(
+            "{database}/{collection}: " . json_encode($queryInfo, JSON_PRETTY_PRINT),
+            array(
+                'collection' => $this->name,
+                'database'   => $this->database,
+                'queryInfo'  => $queryInfo
+            ));
 
-        return new CursorReader(
-            $this->mongoCollection()->find($this->query, $fields),
-            $this->odm,
-            !empty($fields) ? array() : $this->odm->getSchema($this->database . '/' . $this->name),
-            $this->sort,
-            $this->limit,
-            $this->offset
-        );
+        return $cursorReader;
     }
 
     /**
