@@ -154,8 +154,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     protected $relations = array();
 
-    //todo: get fields should not return pre-cached results
-
+    //todo: add parent container?
     public function __construct($data = array(), ORM $orm = null)
     {
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();

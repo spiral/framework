@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ODM;
 
+use Spiral\Components\ODM\Collection\CursorReader;
 use Spiral\Core\Component;
 use Spiral\Support\Pagination\PaginableInterface;
 use Spiral\Support\Pagination\PaginatorTrait;

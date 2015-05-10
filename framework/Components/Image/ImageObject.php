@@ -12,8 +12,9 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 
 /**
- * @method static ImageObject make(array $parameters = array());
+ * Please avoid using ImageManager component until additional image processors created.
  *
+ * @deprecated
  * @property string   $filename
  * @property int      $type
  * @property int      $width

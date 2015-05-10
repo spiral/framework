@@ -12,6 +12,11 @@ use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 
+/**
+ * Please avoid using ImageManager component until additional image processors created.
+ *
+ * @deprecated
+ */
 class ImageManager extends Component
 {
     use Component\SingletonTrait, Component\ConfigurableTrait;

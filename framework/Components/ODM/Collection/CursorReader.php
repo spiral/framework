@@ -6,7 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ODM;
+namespace Spiral\Components\ODM\Collection;
+use Spiral\Components\ODM\ODM;
+use Spiral\Components\ODM\Document;
+use Spiral\Components\ODM\ODMException;
 
 /**
  * @method array explain()
@@ -183,7 +186,6 @@ class CursorReader implements \Iterator
     public function __call($method, array $arguments)
     {
         $result = call_user_func_array(array($this->cursor, $method), $arguments);
-
         if ($result === $this->cursor)
         {
             return $this;
