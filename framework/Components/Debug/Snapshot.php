@@ -27,6 +27,20 @@ class Snapshot extends Component
     protected $exception = null;
 
     /**
+     * FileManager used to save snaphots.
+     *
+     * @var FileManager
+     */
+    protected $fileManager = null;
+
+    /**
+     * ViewManager used to render snapshots.
+     *
+     * @var ViewManager
+     */
+    protected $viewManager = null;
+
+    /**
      * View name which going to be used to render exception backtrace, backtrace can be either saved
      * to specified file or
      * send to client.
@@ -54,13 +68,25 @@ class Snapshot extends Component
      * method and used to show or to store (if specified) backtrace and environment dump or occurred
      * error.
      *
-     * @param Exception $exception
-     * @param string    $view   View should be used to render backtrace.
-     * @param array     $config Options to render and store error snapshots.
+     * @param Exception   $exception
+     * @param FileManager $fileManager
+     * @param ViewManager $viewManager
+     * @param string      $view   View should be used to render backtrace.
+     * @param array       $config Options to render and store error snapshots.
      */
-    public function __construct(Exception $exception, $view = '', array $config = array())
+    public function __construct(
+        Exception $exception,
+        FileManager $fileManager,
+        ViewManager $viewManager,
+        $view = '',
+        array $config = array()
+    )
     {
         $this->exception = $exception;
+
+        $this->fileManager = $fileManager;
+        $this->viewManager = $viewManager;
+
         $this->view = $view;
 
         if (!empty($config['enabled']) && !($exception instanceof ClientException))
@@ -68,7 +94,7 @@ class Snapshot extends Component
             $reflection = new \ReflectionObject($exception);
             $this->snapshotFilename = $this->getFilename($config, $reflection->getShortName());
 
-            FileManager::getInstance()->write(
+            $this->fileManager->write(
                 $this->snapshotFilename,
                 $this->renderSnapshot(),
                 FileManager::RUNTIME,
@@ -118,7 +144,7 @@ class Snapshot extends Component
      */
     public function getFile()
     {
-        return FileManager::getInstance()->normalizePath($this->exception->getFile());
+        return $this->fileManager->normalizePath($this->exception->getFile());
     }
 
     /**
@@ -187,7 +213,7 @@ class Snapshot extends Component
             return $this->snapshot;
         }
 
-        return $this->snapshot = ViewManager::getInstance()->render($this->view, array(
+        return $this->snapshot = $this->viewManager->render($this->view, array(
             'exception' => $this
         ));
     }
