@@ -18,7 +18,6 @@ use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
 
-//TODO: Rename to ActiveRecord or not?
 abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterface
 {
     /**
@@ -76,6 +75,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     const INDEX  = 1000;
     const UNIQUE = 2000;
+
+    /**
+     * ORM component.
+     *
+     * @var ORM
+     */
+    protected $orm = null;
 
     /**
      * Already fetched schemas from ORM. Yes, ORM ActiveRecord is really similar to ODM. Original ORM
@@ -150,12 +156,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
     //todo: get fields should not return pre-cached results
 
-    public function __construct($data = array())
+    public function __construct($data = array(), ORM $orm = null)
     {
+        $this->orm = !empty($orm) ? $orm : ORM::getInstance();
         if (!isset(self::$schemaCache[$class = get_class($this)]))
         {
             static::initialize();
-            self::$schemaCache[$class] = ORM::getInstance()->getSchema(get_class($this));
+            self::$schemaCache[$class] = $this->orm->getSchema(get_class($this));
         }
 
         //Prepared document schema
@@ -313,8 +320,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $relation = $this->schema[ORM::E_RELATIONS][$name];
 
         //todo: make it look better
-        $class = ORM::getInstance()->getConfig()['relations'][$relation[ORM::R_TYPE]]['class'];
+        $class = $this->orm->getConfig()['relations'][$relation[ORM::R_TYPE]]['class'];
 
+        //TODO: Pass ORM to relation
         return $this->relations[$name] = new $class(
             $name,
             $relation[ORM::R_DEFINITION],
@@ -543,71 +551,63 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
-     * Get instance of DBAL\Database associated with specified record.
+     * Get instance of DBAL\Database associated with specified record. This is not static method which
+     * if used by Relations to find appropriate database.
      *
-     * @param array           $schema Forced document schema.
-     * @param DatabaseManager $dbal   DatabaseManager instance.
+     * @param DatabaseManager $dbal   DatabaseManager instance, will be received from container if not
+     *                                provided.
      * @return Database
      */
-    public static function dbalDatabase(array $schema = array(), DatabaseManager $dbal = null)
+    public function dbalDatabase(DatabaseManager $dbal = null)
     {
-        $orm = ORM::getInstance();
         $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
-        $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
 
-        static::initialize();
-
-        return $dbal->db($schema[ORM::E_DB]);
+        return $dbal->db($this->schema[ORM::E_DB]);
     }
 
     /**
      * Get instance of DBAL\Table associated with specified record.
      *
-     * @param array           $schema Forced document schema.
-     * @param DatabaseManager $dbal   DatabaseManager instance.
+     * @param ORM      $orm      ORM component, will be received from container if not provided.
+     * @param Database $database Database instance, will be received from container if not provided.
      * @return Table
      */
-    public static function dbalTable(array $schema = array(), DatabaseManager $dbal = null)
+    public static function dbalTable(ORM $orm = null, Database $database = null)
     {
-        $orm = ORM::getInstance();
-        $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
-        $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
+        $orm = !empty($orm) ? $orm : ORM::getInstance();
+        $schema = $orm->getSchema(get_called_class());
 
-        $table = static::dbalDatabase($schema, $dbal)->table($schema[ORM::E_TABLE]);
-        if (EventDispatcher::hasDispatcher(static::getAlias()))
+        if (empty($database))
         {
-            return self::dispatcher()->fire('dbalTable', $table);
+            $database = DatabaseManager::getInstance()->db($schema[ORM::E_DB]);
         }
 
-        return $table;
+        return $database->table($schema[ORM::E_TABLE]);
     }
 
     /**
      * Get associated orm Selector. Selectors used to build complex related queries and fetch
      * models from database.
      *
-     * @param array $schema
+     * @param ORM             $orm  ORM component, will be received from container if not provided.
+     * @param DatabaseManager $dbal DatabaseManager instance, will be received from container if not provided.
      * @return Selector
      */
-    public static function ormSelector(array $schema = array())
+    public static function ormSelector(ORM $orm = null, DatabaseManager $dbal = null)
     {
-        $orm = ORM::getInstance();
-        $schema = !empty($schema) ? $schema : $orm->getSchema(get_called_class());
+        $orm = !empty($orm) ? $orm : ORM::getInstance();
+        $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
 
+        //Traits
         static::initialize();
 
-        $selector = Selector::make(array(
+        $schema = $orm->getSchema(get_called_class());
+
+        return Selector::make(array(
             'schema'   => $schema,
-            'database' => DatabaseManager::getInstance()->db($schema[ORM::E_DB]),
+            'database' => $dbal->db($schema[ORM::E_DB]),
             'orm'      => $orm
         ));
-
-        if (EventDispatcher::hasDispatcher(static::getAlias()))
-        {
-            return self::dispatcher()->fire('selector', $selector);
-        }
-
-        return $selector;
     }
 
     /**
@@ -645,7 +645,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             //We will need to support models with primary keys in future
             unset($this->fields[$primaryKey]);
 
-            $lastID = static::dbalTable()->insert(
+            $lastID = static::dbalTable($this->orm, $this->dbalDatabase())->insert(
                 $this->fields = $this->serializeData()
             );
 
@@ -660,7 +660,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         {
             $this->event('updating');
 
-            static::dbalTable()->update(
+            static::dbalTable($this->orm, $this->dbalDatabase())->update(
                 $this->compileUpdates(),
                 array($primaryKey => $this->primaryKey())
             )->run();
@@ -686,13 +686,15 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         {
             if (!empty($this->schema[ORM::E_PRIMARY_KEY]))
             {
-                static::dbalTable($this->schema)->delete(array(
+                static::dbalTable($this->orm, $this->dbalDatabase())->delete(array(
                     $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
                 ))->run();
             }
             else
             {
-                static::dbalTable($this->schema)->delete($this->serializeData())->run();
+                static::dbalTable($this->orm, $this->dbalDatabase())->delete(
+                    $this->serializeData()
+                )->run();
             }
         }
 
@@ -731,7 +733,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     protected static function getScope($scope = array())
     {
+        //Traits
         static::initialize();
+
         if (EventDispatcher::hasDispatcher(static::getAlias()))
         {
             //Do we need it?

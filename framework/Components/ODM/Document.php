@@ -864,18 +864,12 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         $schema = !empty($schema) ? $schema : $odm->getSchema(get_called_class());
 
         static::initialize();
-        $odmCollection = Collection::make(array(
+
+        return Collection::make(array(
             'name'     => $schema[ODM::D_COLLECTION],
             'database' => $schema[ODM::D_DB],
             'odm'      => $odm
         ));
-
-        if (EventDispatcher::hasDispatcher(static::getAlias()))
-        {
-            return self::dispatcher()->fire('odmCollection', $odmCollection);
-        }
-
-        return $odmCollection;
     }
 
     /**

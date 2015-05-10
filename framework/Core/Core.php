@@ -334,7 +334,7 @@ class Core extends Container implements CoreInterface
 
         foreach ($core->autoload as $module)
         {
-            $core->get($module, array('core' => $core));
+            $core->get($module, compact('core'));
         }
 
         //Bootstrapping

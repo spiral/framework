@@ -20,6 +20,14 @@ interface DatabaseEntityInterface
     public function setField($name, $value, $filter = true);
 
     /**
+     * Update multiple non-secured model fields.
+     *
+     * @param array $fields
+     * @return static
+     */
+    public function setFields($fields = array());
+
+    /**
      * Get one specific field value and apply getter filter to it. You can disable getter filter by
      * providing second argument.
      *
@@ -37,14 +45,6 @@ interface DatabaseEntityInterface
      * @return array
      */
     public function getFields($filter = true);
-
-    /**
-     * Update multiple non-secured model fields.
-     *
-     * @param array $fields
-     * @return static
-     */
-    public function setFields($fields = array());
 
     /**
      * Create new model and set it's fields, all field values will be passed thought model filters
