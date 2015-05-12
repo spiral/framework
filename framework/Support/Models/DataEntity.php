@@ -180,7 +180,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      * @param string   $alias  Alias name.
      * @param callable $filter Filter to be applied, should be valid callable.
      */
-    public static function mutatorAlias($alias, $filter)
+    public static function setMutatorAlias($alias, $filter)
     {
         static::$mutatorAliases[$alias] = $filter;
     }

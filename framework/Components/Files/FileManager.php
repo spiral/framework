@@ -208,7 +208,7 @@ class FileManager extends Component
      * @param string $filename
      * @return bool
      */
-    public static function extension($filename)
+    public function extension($filename)
     {
         return strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     }
@@ -219,7 +219,7 @@ class FileManager extends Component
      * @param string $filename
      * @return bool
      */
-    public static function md5($filename)
+    public function md5($filename)
     {
         return md5_file($filename);
     }

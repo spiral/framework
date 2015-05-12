@@ -43,6 +43,14 @@ class HasOneLoader extends Loader
             $definition[Relation::OUTER_TABLE] . ' AS ' . $this->options['tableAlias'],
             array($outerKey => $innerKey)
         );
+
+        if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
+        {
+            $morphKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::MORPH_KEY];
+            $selector->onWhere(array(
+                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
+            ));
+        }
     }
 
     public function parseRow(array $row)
@@ -69,12 +77,23 @@ class HasOneLoader extends Loader
     {
         $selector = parent::createSelector($database);
 
+        //Relation definition
+        $definition = $this->relationDefinition;
+
         //Adding condition
         $selector->where(
-            $this->getTableAlias() . '.' . $this->relationDefinition[ActiveRecord::OUTER_KEY],
+            $this->getTableAlias() . '.' . $definition[ActiveRecord::OUTER_KEY],
             'IN',
             array_unique($this->parent->getAggregatedKeys($this->getReferenceKey()))
         );
+
+        if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
+        {
+            $morphKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::MORPH_KEY];
+            $selector->where(array(
+                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
+            ));
+        }
 
         return $selector;
     }

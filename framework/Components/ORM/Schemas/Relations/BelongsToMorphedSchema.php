@@ -39,7 +39,7 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (empty($this->outerEntities))
+        if (!$this->getOuterRecordSchemas())
         {
             //No targets found, no need to generate anything
             return;
@@ -80,7 +80,7 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
         foreach ($this->getOuterRecordSchemas() as $record)
         {
             $record->addRelation($name, array(
-                $type             => $this->recordSchema->getClass(),
+                $type                   => $this->recordSchema->getClass(),
                 ActiveRecord::OUTER_KEY => $this->definition[ActiveRecord::INNER_KEY],
                 ActiveRecord::INNER_KEY => $this->definition[ActiveRecord::OUTER_KEY],
                 ActiveRecord::MORPH_KEY => $this->definition[ActiveRecord::MORPH_KEY],

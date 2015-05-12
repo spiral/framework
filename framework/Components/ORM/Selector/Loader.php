@@ -189,8 +189,10 @@ abstract class Loader
 
         if (!isset($this->schema[ORM::E_RELATIONS][$relation]))
         {
+            $container = $this->container ?: $this->schema[ORM::E_ROLE_NAME];
+
             throw new ORMException(
-                "Undefined relation '{$relation}' under '{$this->container}'."
+                "Undefined relation '{$relation}' under '{$container}'."
             );
         }
 

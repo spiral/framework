@@ -289,7 +289,7 @@ class Validator extends Component
      * @param string $name     Alias name.
      * @param mixed  $callback Callback or closure or string.
      */
-    public static function setAlias($name, $callback)
+    public static function setValidationAlias($name, $callback)
     {
         static::$aliases[$name] = $callback;
     }

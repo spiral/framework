@@ -11,6 +11,7 @@ namespace Spiral\Components\ORM;
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
 use Spiral\Core\Component;
 use Spiral\Core\CoreInterface;
+use Spiral\Facades\Log;
 
 class ORM extends Component
 {
@@ -38,10 +39,6 @@ class ORM extends Component
      * @var array|null
      */
     protected $schema = null;
-
-    protected static $relations = array(
-        ActiveRecord::HAS_ONE => 'Spiral\Components\ORM\Relations\HasOne'
-    );
 
     /**
      * ORM component instance.
@@ -76,18 +73,17 @@ class ORM extends Component
         return $this->schema[$item];
     }
 
-    /**
-     * @param              $type
-     * @param array        $definition
-     * @param ActiveRecord $parent
-     * @param array        $data
-     * @return Relation
-     */
-    public function getRelation($type, array $definition, ActiveRecord $parent = null, $data = array())
-    {
-        $relation = self::$relations[$type];
 
-        return new $relation($definition, $parent, $data);
+    public function getRelation(
+        ActiveRecord $parent = null,
+        $type,
+        array $definition,
+        $data = array()
+    )
+    {
+        $class = $this->config['relations'][$type]['class'];
+
+        return new $class($this, $parent, $definition, $data);
     }
 
     /**

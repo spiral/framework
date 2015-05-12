@@ -78,14 +78,15 @@ abstract class MorphedRelationSchema extends RelationSchema
 
             if (is_null($outerKeyType))
             {
-                $$outerKeyType = $recordKeyType;
+                $outerKeyType = $recordKeyType;
             }
 
             //Consistency
             if ($outerKeyType != $recordKeyType)
             {
                 throw new ORMException(
-                    "Morphed relation requires consistent outer key type ({$record})."
+                    "Morphed relation requires consistent outer key type ({$record}), "
+                    . "expected '{$outerKeyType}' got '{$recordKeyType}''."
                 );
             }
         }

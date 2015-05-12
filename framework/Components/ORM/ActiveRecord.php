@@ -168,7 +168,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $this->schema = self::$schemaCache[$class];
 
         //Merging with default values
-        $this->fields = $data + $this->schema[ORM::E_COLUMNS];
+        $this->fields = (is_array($data) ? $data : array()) + $this->schema[ORM::E_COLUMNS];
 
         foreach ($this->schema[ORM::E_RELATIONS] as $relation => $definition)
         {
@@ -318,14 +318,10 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         $relation = $this->schema[ORM::E_RELATIONS][$name];
 
-        //todo: make it look better
-        $class = $this->orm->getConfig()['relations'][$relation[ORM::R_TYPE]]['class'];
-
-        //TODO: Pass ORM to relation
-        return $this->relations[$name] = new $class(
-            $name,
-            $relation[ORM::R_DEFINITION],
+        return $this->relations[$name] = $this->orm->getRelation(
             $this,
+            $relation[ORM::R_TYPE],
+            $relation[ORM::R_DEFINITION],
             $data
         );
     }

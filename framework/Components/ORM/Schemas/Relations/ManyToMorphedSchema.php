@@ -42,7 +42,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (empty($this->outerEntities) || !$this->definition[ActiveRecord::CREATE_PIVOT])
+        if (!$this->getOuterRecordSchemas() || !$this->definition[ActiveRecord::CREATE_PIVOT])
         {
             //No targets found, no need to generate anything
             return;

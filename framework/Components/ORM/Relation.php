@@ -20,12 +20,7 @@ abstract class Relation
      */
     const RELATION_TYPE = ActiveRecord::HAS_ONE;
 
-    /**
-     * Relation name. Name will be used to create automatic table alias while enable relation inloading.
-     *
-     * @var string
-     */
-    protected $name = '';
+    protected $orm = null;
 
     protected $parent = null;
 
@@ -45,10 +40,10 @@ abstract class Relation
 
     protected $data = array();
 
-    public function __construct($name, array $definition, ActiveRecord $parent = null, $data = null)
+    public function __construct(ORM $orm, ActiveRecord $parent = null, array $definition, $data = null)
     {
+        $this->orm = $orm;
         $this->parent = $parent;
-        $this->name = $name;
         $this->definition = $definition;
         $this->target = $definition[static::RELATION_TYPE];
         $this->data = $data;
@@ -73,12 +68,10 @@ abstract class Relation
 
     public function getSelector()
     {
-        $orm = ORM::getInstance();
-
         $selector = Selector::make(array(
-            'schema'   => $orm->getSchema($this->getTarget()),
+            'schema'   => $this->orm->getSchema($this->getTarget()),
             'database' => $this->parent->dbalDatabase(),
-            'orm'      => $orm
+            'orm'      => $this->orm
         ));
 
         return $selector;

@@ -175,7 +175,7 @@ class Response extends HttpMessage implements ResponseInterface
      * @param int $code
      * @return string|null
      */
-    public static function getPhrase($code)
+    protected static function getPhrase($code)
     {
         if (isset(self::$phrases[$code]))
         {

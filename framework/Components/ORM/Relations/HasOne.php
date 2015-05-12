@@ -9,7 +9,6 @@
 namespace Spiral\Components\ORM\Relations;
 
 use Spiral\Components\ORM\ActiveRecord;
-use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 
@@ -17,21 +16,31 @@ class HasOne extends Relation
 {
     const RELATION_TYPE = ActiveRecord::HAS_ONE;
 
+    protected $content = null;
+
     /**
      * @return mixed
      */
     public function getContent()
     {
-        //if (!$this->parent->isLoaded())
-        //{
-        //has to be handled
-        //we have to create model manually
-        //}
+        $target = $this->getTarget();
+
+        if (!$this->parent->isLoaded())
+        {
+            return $this->data = new $target(array(), $this->orm);
+        }
 
         if ($this->data === null)
         {
             $this->loadData();
         }
+
+        if (is_object($this->data))
+        {
+            return $this->data;
+        }
+
+        return $this->data = new $target($this->data, $this->orm);
     }
 
     public function getSelector()

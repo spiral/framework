@@ -63,6 +63,7 @@ class Dumper extends Component
      *
      * Method has alias with short function dump() which is always defined.
      *
+     * @deprecated DO NOT USE.
      * @param mixed $value  Value to be dumped.
      * @param int   $output Output method, can print, return or log value dump.
      * @return null|string
