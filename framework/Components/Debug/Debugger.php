@@ -81,7 +81,6 @@ class Debugger extends Component
      * current script session and recorded after option got enabled will be collection in benchmarks
      * array.
      *
-     * @deprecated DO NOT USE.
      * @param bool $enabled
      * @return bool
      */
@@ -106,7 +105,6 @@ class Debugger extends Component
      * ...
      * echo Debugger::benchmark('parseURL', 'google.com');
      *
-     * @deprecated DO NOT USE.
      * @param string $record Record name.
      * @return bool|float
      */
@@ -145,7 +143,6 @@ class Debugger extends Component
      * only if Debugger::$benchmarking is true, in opposite case all finished records will be erased
      * right after completion.
      *
-     * @deprecated DO NOT USE.
      * @return array|null
      */
     public static function getBenchmarks()
