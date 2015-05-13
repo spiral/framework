@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\View;
+namespace Spiral\Components\View\ConfigWriter;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Tokenizer;

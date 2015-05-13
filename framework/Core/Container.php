@@ -156,6 +156,11 @@ class Container extends Component implements \ArrayAccess
             return $instance;
         }
 
+        if ($binding == __CLASS__)
+        {
+            return self::$instance;
+        }
+
         return null;
     }
 
