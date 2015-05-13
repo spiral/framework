@@ -79,6 +79,11 @@ class Container extends Component implements \ArrayAccess
         $ignoreII = false
     )
     {
+        if ($alias == __CLASS__)
+        {
+            return self::$instance;
+        }
+
         if (!isset($this->bindings[$alias]))
         {
             $reflector = new \ReflectionClass($alias);
@@ -154,11 +159,6 @@ class Container extends Component implements \ArrayAccess
             }
 
             return $instance;
-        }
-
-        if ($binding == __CLASS__)
-        {
-            return self::$instance;
         }
 
         return null;
