@@ -636,6 +636,7 @@ class TemplaterTest extends TestCase
 
         return new ViewManager(
             MemoryCore::getInstance()->setConfig('views', $config),
+            MemoryCore::getInstance(),
             new FileManager()
         );
     }
