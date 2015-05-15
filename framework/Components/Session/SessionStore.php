@@ -30,6 +30,14 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     const NATIVE_HANDLER = 'native';
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Active session id.
      *
      * @var string
@@ -63,9 +71,11 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
      * only one store at one moment of time.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
+        $this->container = $container;
         $this->config = $core->loadConfig('session');
     }
 
@@ -157,7 +167,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
             if ($defaultHandler != self::NATIVE_HANDLER)
             {
                 $config = $this->config['handlers'][$this->config['handler']];
-                $handler = $this->handler = Container::getInstance()->get(
+                $handler = $this->handler = $this->container->get(
                     $config['class'],
                     array('options' => $config, 'lifetime' => $this->config['lifetime']),
                     null,

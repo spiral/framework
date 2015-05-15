@@ -27,13 +27,23 @@ class ImageManager extends Component
     const SINGLETON = __CLASS__;
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * New image component instance.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
         $this->config = $core->loadConfig('image');
+        $this->container = $container;
     }
 
     /**
@@ -87,6 +97,6 @@ class ImageManager extends Component
         $type = $type ?: $this->config['processor'];
         $config = $this->config['processors'][$type];
 
-        return Container::getInstance()->get($config['class'], compact('filename', 'config'));
+        return $this->container->get($config['class'], compact('filename', 'config'));
     }
 }

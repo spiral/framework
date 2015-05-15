@@ -61,16 +61,18 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * Storage component is of component which almost did not changed for last 4 years.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
+        $this->container = $container;
         $this->config = $core->loadConfig('storage');
 
         //Loading containers
         foreach ($this->config['containers'] as $name => $container)
         {
             //Controllable injection implemented
-            $this->containers[$name] = Container::getInstance()->get(
+            $this->containers[$name] = $this->container->get(
                 self::CONTAINER,
                 $container + array('storage' => $this),
                 null,
@@ -104,7 +106,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         );
 
         //Controllable injection implemented
-        return $this->containers[$name] = Container::getInstance()->get(
+        return $this->containers[$name] = $this->container->get(
             self::CONTAINER,
             compact('prefix', 'server', 'options') + array('storage' => $this),
             null,
@@ -209,7 +211,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
 
         $config = $this->config['servers'][$server];
 
-        return $this->servers[$server] = Container::getInstance()->get($config['class'], $config);
+        return $this->servers[$server] = $this->container->get($config['class'], $config);
     }
 
     /**

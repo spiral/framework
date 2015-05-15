@@ -37,6 +37,14 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
     const SINGLETON = __CLASS__;
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Already constructed cache adapters.
      *
      * @var CacheStore[]
@@ -47,10 +55,12 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
      * Constructing CacheManager and selecting default adapter.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
         $this->config = $core->loadConfig('cache');
+        $this->container = $container;
     }
 
     /**
@@ -88,7 +98,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
         }
 
         benchmark('cache::store', $store);
-        $this->stores[$store] = Container::getInstance()->get(
+        $this->stores[$store] = $this->container->get(
             $this->config['stores'][$store]['class'],
             array('cache' => $this),
             null,

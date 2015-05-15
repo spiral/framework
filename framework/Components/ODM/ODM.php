@@ -39,6 +39,14 @@ class ODM extends Component implements Container\InjectionManagerInterface
     protected $core = null;
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Loaded documents schema. Schema contains association between models and collections, children
      * chain, compiled default values and other presets can't be fetched in real time.
      *
@@ -57,11 +65,13 @@ class ODM extends Component implements Container\InjectionManagerInterface
      * ODM component instance.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      * @throws CoreException
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
         $this->core = $core;
+        $this->container = $container;
         $this->config = $core->loadConfig('odm');
     }
 
@@ -101,7 +111,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
 
         benchmark('odm::database', $database);
 
-        $this->databases[$database] = Container::getInstance()->get(self::DATABASE, array(
+        $this->databases[$database] = $this->container->get(self::DATABASE, array(
             'name'   => $database,
             'config' => $config,
             'odm'    => $this

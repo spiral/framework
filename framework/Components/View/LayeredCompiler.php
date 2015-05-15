@@ -22,6 +22,14 @@ class LayeredCompiler extends Component implements CompilerInterface
     protected $viewManager = null;
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * View namespace.
      *
      * @var string
@@ -74,6 +82,7 @@ class LayeredCompiler extends Component implements CompilerInterface
      * @param string      $view       View name.
      * @param string      $input      View filename.
      * @param string      $output     Cached view filename (can be empty or not exists).
+     * @param Container   $container
      * @param array       $processors Layered compiler processors.
      */
     public function __construct(
@@ -83,10 +92,13 @@ class LayeredCompiler extends Component implements CompilerInterface
         $view,
         $input = '',
         $output = '',
+        Container $container = null,
         array $processors = array()
     )
     {
         $this->viewManager = $manager;
+        $this->container = $container;
+
         $this->namespace = $namespace;
         $this->view = $view;
         $this->source = $source;
@@ -126,7 +138,7 @@ class LayeredCompiler extends Component implements CompilerInterface
 
         $config = $this->processors[$name];
 
-        return $this->processors[$name] = Container::getInstance()->get(
+        return $this->processors[$name] = $this->container->get(
             $config['class'],
             array(
                 'compiler' => $this,

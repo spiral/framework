@@ -193,6 +193,14 @@ class RedisManager extends Component implements InjectionManagerInterface
     const SCAN_RETRY          = 1;
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Redis clients list. Every client build based on provided list of servers and options, component
      * can have multiple clients created, for example one for cache and one for database purposes.
      * Client instance will be created on demand.
@@ -205,9 +213,11 @@ class RedisManager extends Component implements InjectionManagerInterface
      * Redis facade initialization.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
+        $this->container = $container;
         $this->config = $core->loadConfig('redis');
     }
 
@@ -248,7 +258,7 @@ class RedisManager extends Component implements InjectionManagerInterface
         //Creating client
         benchmark('redis::client', $client);
 
-        $this->clients[$client] = Container::getInstance()->get(self::CLIENT, array(
+        $this->clients[$client] = $this->container->get(self::CLIENT, array(
             'parameters' => $config['servers'],
             'options'    => isset($config['options']) ? $config['options'] : array(),
         ), null, true);

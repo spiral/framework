@@ -40,6 +40,22 @@ class ViewManager extends Component
     const CACHE_EXTENSION = 'php';
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
+     * FileManager component.
+     *
+     * @invisible
+     * @var FileManager
+     */
+    protected $file = null;
+
+    /**
      * Registered view namespaces. Every namespace can include multiple search directories. Search
      * directory may have key which will be treated as namespace directory origin, this allows user
      * or template to include view from specified location, even if there is multiple directories under
@@ -57,22 +73,16 @@ class ViewManager extends Component
     protected $staticVariables = array();
 
     /**
-     * FileManager component.
-     *
-     * @invisible
-     * @var FileManager
-     */
-    protected $file = null;
-
-    /**
      * Constructing view component and initiating view namespaces, namespaces are used to find view
      * file destination and switch templates from one module to another.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      * @param FileManager   $file
      */
-    public function __construct(CoreInterface $core, FileManager $file)
+    public function __construct(CoreInterface $core, Container $container, FileManager $file)
     {
+        $this->container = $container;
         $this->file = $file;
         $this->config = $core->loadConfig('views');
 
@@ -164,7 +174,7 @@ class ViewManager extends Component
         foreach ($this->config['staticVariables'] as $variable => $provider)
         {
             $this->staticVariables[$variable] = call_user_func(array(
-                Container::getInstance()->get($provider[0]),
+                $this->container->get($provider[0]),
                 $provider[1]
             ));
         }
@@ -295,7 +305,7 @@ class ViewManager extends Component
         /**
          * @var CompilerInterface $compiler
          */
-        $compiler = Container::getInstance()->get($this->config['engines'][$engine]['compiler'], array(
+        $compiler = $this->container->get($this->config['engines'][$engine]['compiler'], array(
                 'manager'   => $this,
                 'source'    => $this->file->read($input),
                 'namespace' => $namespace,

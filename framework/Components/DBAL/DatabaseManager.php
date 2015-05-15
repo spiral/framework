@@ -47,6 +47,14 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     const DEFAULT_TIMEZONE = 'UTC';
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Constructed instances of DBAL databases.
      *
      * @var Database[]
@@ -58,11 +66,13 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      * their schema builders/describers.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      * @throws CoreException
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
         $this->config = $core->loadConfig('dbal');
+        $this->container = $container;
     }
 
     /**
@@ -114,12 +124,12 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
         {
             //Driver identifier can be fetched from connection string
             $driver = substr($config['connection'], 0, strpos($config['connection'], ':'));
-            $driver = Container::getInstance()->get($this->config['drivers'][$driver], compact('config'));
+            $driver = $this->container->get($this->config['drivers'][$driver], compact('config'));
         }
 
         benchmark('dbal::database', $database);
 
-        $this->databases[$database] = Container::getInstance()->get(self::DATABASE, array(
+        $this->databases[$database] = $this->container->get(self::DATABASE, array(
             'name'        => $database,
             'driver'      => $driver,
             'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
@@ -171,7 +181,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      */
     public function getMigrator($database = 'default', $directory = null)
     {
-        return Container::getInstance()->get($this->config['migrations']['migrator'], array(
+        return $this->container->get($this->config['migrations']['migrator'], array(
             'database'   => $this->db($database),
             'repository' => $this->migrationRepository($directory),
             'config'     => $this->config['migrations']
