@@ -29,6 +29,14 @@ class ModuleManager extends Component
     const SINGLETON = __CLASS__;
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * List of registered modules, their event associations, bootstraps and view namespaces.
      *
      * @var array
@@ -41,16 +49,15 @@ class ModuleManager extends Component
      * bootstrap() method.
      *
      * @param CoreInterface $core Core instance.
+     * @param Container     $container
      * @throws CoreException
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
+        $this->container = $container;
+
         try
         {
-            //In this case it will be much better to request Container in constructor argument,
-            //but we can always change it later
-            $container = Container::getInstance();
-
             $this->modules = $core->loadConfig('modules');
             if (!empty($this->modules))
             {
@@ -58,12 +65,12 @@ class ModuleManager extends Component
                 {
                     foreach ($module['bindings'] as $alias => $resolver)
                     {
-                        $container->bind($alias, $resolver);
+                        $this->container->bind($alias, $resolver);
                     }
 
                     if ($module['bootstrap'])
                     {
-                        $container->get($module['class'], compact('core'))->bootstrap();
+                        $this->container->get($module['class'], compact('core'))->bootstrap();
                     }
                 }
             }
