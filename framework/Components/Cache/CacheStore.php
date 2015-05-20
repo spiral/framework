@@ -142,7 +142,7 @@ abstract class CacheStore extends Component implements StoreInterface, Injectabl
     {
         if (!$this->has($name))
         {
-            self::set($name, $value = call_user_func($callback), $lifetime);
+            $this->set($name, $value = call_user_func($callback), $lifetime);
 
             return $value;
         }
