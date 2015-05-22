@@ -99,7 +99,7 @@ class ModuleManager extends Component
      */
     public function hasModule($module)
     {
-        return isset($this->modules[$module]) ? $this->modules[$module] : false;
+        return array_key_exists($module, $this->modules) ? $this->modules[$module] : false;
     }
 
     /**
@@ -112,7 +112,10 @@ class ModuleManager extends Component
     {
         $definitions = array();
 
-        $classes = Tokenizer::getInstance()->getClasses('Spiral\Components\Modules\ModuleInterface');
+        //Delayed and not included to constructor dependencies to speed up application.
+        $classes = Tokenizer::getInstance($this->container)
+            ->getClasses('Spiral\Components\Modules\ModuleInterface');
+
         foreach ($classes as $module)
         {
             if ($module['abstract'])
@@ -174,7 +177,10 @@ class ModuleManager extends Component
 
         //Updating configuration
         $config = ConfigWriter::make(
-            array('name' => 'modules', 'method' => ConfigWriter::OVERWRITE),
+            array(
+                'name'   => 'modules',
+                'method' => ConfigWriter::OVERWRITE
+            ),
             $this->container
         );
 

@@ -14,7 +14,7 @@
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "psr/log": "*",
-    "psr/http-message": "0.9.*",
+    "psr/http-message": "*",
     "predis/predis": "~1.0",
     "symfony/console": "2.6.4",
     "symfony/process": "~2.6",
