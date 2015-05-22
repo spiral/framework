@@ -116,7 +116,7 @@ class Paginator extends Component
     }
 
     /**
-     * Update primary paginator uri.
+     * Update primary paginator uri. Uri much not include query string.
      *
      * @param UriInterface $uri
      */

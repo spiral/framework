@@ -122,7 +122,7 @@ trait PaginatorTrait
             $arguments['request'] = $request;
         }
 
-        $this->paginator = Paginator::make($arguments);
+        $this->paginator = new Paginator($pageParameter, $request);
         $this->paginator->setLimit($limit);
         $this->paginationCount = $count;
 
