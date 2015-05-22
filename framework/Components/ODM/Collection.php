@@ -277,7 +277,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
             $queryInfo['explained'] = $cursorReader->explain();
         }
 
-        $this->logger()->debug(
+        self::logger()->debug(
             "{database}/{collection}: " . json_encode($queryInfo, JSON_PRETTY_PRINT),
             array(
                 'collection' => $this->name,

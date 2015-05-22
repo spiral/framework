@@ -434,7 +434,7 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
             }
 
             $command = interpolate($this->options['commandPrefix'] . $command['command'], $options);
-            $this->logger()->info($command);
+            self::logger()->info($command);
 
             benchmark('image::imageMagic', $command);
             $process = new Process($command);
@@ -442,7 +442,7 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
 
             if ($error = $process->getErrorOutput())
             {
-                $this->logger()->error($error);
+                self::logger()->error($error);
                 throw new ImageException("Unable to process image using ImageMagic console.");
             }
 

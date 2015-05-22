@@ -312,7 +312,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
             catch (\ErrorException $exception)
             {
                 $value = call_user_func($filter, null);
-                $this->logger()->warning("Failed to apply filter to '{name}' field.", compact('name'));
+                self::logger()->warning("Failed to apply filter to '{name}' field.", compact('name'));
             }
         }
 
