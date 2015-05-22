@@ -268,17 +268,19 @@ class Dumper extends Component
 
         if (method_exists($variable, '__debugInfo'))
         {
+            $variable = $variable->__debugInfo();
+
+            if (is_object($variable))
+            {
+                return $this->dumpObject($variable, $level, false);
+            }
+
             $result .= $this->dumpVariable(
-                $variable = $variable->__debugInfo(),
+                $variable,
                 '',
                 $level + (is_scalar($variable)),
                 true
             );
-
-            if ($hideType)
-            {
-                return $result;
-            }
 
             return $result . $indent . $this->getStyle(")", "parentheses") . "\n";
         }

@@ -166,29 +166,28 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
         return $this->sqlStatement();
     }
 
-    //TODO: UNCOMMENT LATER
-    //    /**
-    //     * Simplified way to dump information.
-    //     *
-    //     * @return object
-    //     */
-    //    public function __debugInfo()
-    //    {
-    //        try
-    //        {
-    //            $queryString = $this->queryString();
-    //        }
-    //        catch (\Exception $exception)
-    //        {
-    //            $queryString = "[ERROR: {$exception->getMessage()}]";
-    //        }
-    //
-    //        $debugInfo = array(
-    //            'statement' => $queryString,
-    //            'compiler'  => get_class($this->compiler),
-    //            'database'  => $this->database
-    //        );
-    //
-    //        return (object)$debugInfo;
-    //    }
+    /**
+     * Simplified way to dump information.
+     *
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        try
+        {
+            $queryString = $this->queryString();
+        }
+        catch (\Exception $exception)
+        {
+            $queryString = "[ERROR: {$exception->getMessage()}]";
+        }
+
+        $debugInfo = array(
+            'statement' => $queryString,
+            'compiler'  => get_class($this->compiler),
+            'database'  => $this->database
+        );
+
+        return (object)$debugInfo;
+    }
 }
