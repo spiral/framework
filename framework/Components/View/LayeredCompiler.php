@@ -108,16 +108,6 @@ class LayeredCompiler extends Component implements CompilerInterface
     }
 
     /**
-     * Get associated instance of view manager.
-     *
-     * @return ViewManager
-     */
-    public function getViewManager()
-    {
-        return $this->viewManager;
-    }
-
-    /**
      * Get view processor by name, processor will be loaded and configured automatically. Processors
      * are created only for pre-processing view source to create static cache, this means you should't
      * expect too high performance and optimizations inside, due it's more important to have good
@@ -141,8 +131,9 @@ class LayeredCompiler extends Component implements CompilerInterface
         return $this->processors[$name] = $this->container->get(
             $config['class'],
             array(
-                'compiler' => $this,
-                'options'  => $config
+                'compiler'    => $this,
+                'viewManager' => $this->viewManager,
+                'options'     => $config
             )
         );
     }

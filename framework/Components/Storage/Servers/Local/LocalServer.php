@@ -25,7 +25,6 @@ class LocalServer implements ServerInterface
     /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
      * Every adapter should support basic set of low-level operations (create, move, copy and etc).
-     * Adapter instance called server, one adapter can be used for multiple servers.
      *
      * @param array          $options Storage connection options.
      * @param StorageManager $storage StorageManager component.

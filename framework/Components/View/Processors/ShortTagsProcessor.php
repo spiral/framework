@@ -11,6 +11,7 @@ namespace Spiral\Components\View\Processors;
 use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
+use Spiral\Components\View\ViewManager;
 
 class ShortTagsProcessor implements ProcessorInterface
 {
@@ -24,11 +25,17 @@ class ShortTagsProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
+     * @param ViewManager     $viewManager
      * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param Isolator        $isolator
      */
-    public function __construct(LayeredCompiler $compiler, array $options, Isolator $isolator = null)
+    public function __construct(
+        ViewManager $viewManager,
+        LayeredCompiler $compiler,
+        array $options,
+        Isolator $isolator = null
+    )
     {
         $this->isolator = $isolator;
     }

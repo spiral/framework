@@ -44,11 +44,17 @@ class I18nProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
+     * @param ViewManager     $viewManager
      * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param Translator      $i18n     Translator component instance.
      */
-    public function __construct(LayeredCompiler $compiler, array $options, Translator $i18n = null)
+    public function __construct(
+        ViewManager $viewManager,
+        LayeredCompiler $compiler,
+        array $options,
+        Translator $i18n = null
+    )
     {
         $this->options = $options + $this->options;
         $this->i18n = $i18n;

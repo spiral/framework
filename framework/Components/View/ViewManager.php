@@ -76,11 +76,11 @@ class ViewManager extends Component
      * Constructing view component and initiating view namespaces, namespaces are used to find view
      * file destination and switch templates from one module to another.
      *
-     * @param CoreInterface $core
      * @param Container     $container
+     * @param CoreInterface $core
      * @param FileManager   $file
      */
-    public function __construct(CoreInterface $core, Container $container, FileManager $file)
+    public function __construct(Container $container, CoreInterface $core, FileManager $file)
     {
         $this->container = $container;
         $this->file = $file;
@@ -276,6 +276,7 @@ class ViewManager extends Component
         {
             //Cached filename
             $cacheFilename = $this->cachedFilename($namespace, $view);
+
             if ($resetCache || $this->isExpired($viewFilename, $cacheFilename))
             {
                 $compiled = $this->compile($engine, $namespace, $view, $viewFilename, $cacheFilename);

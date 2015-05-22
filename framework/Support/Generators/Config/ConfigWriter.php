@@ -97,7 +97,7 @@ class ConfigWriter extends Component
      * @param string      $name        Config filename, should not include extensions, may include
      *                                 directory name.
      * @param int         $method      How system should merge existed and requested config contents.
-     * @param Core        $core        Core intance to fetch list of directories.
+     * @param Core        $core        Core instance to fetch list of directories.
      * @param FileManager $file        FileManager component.
      * @param Tokenizer   $tokenizer   Tokenizer component.
      */

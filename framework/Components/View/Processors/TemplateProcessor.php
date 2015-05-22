@@ -80,7 +80,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      *
      * @var ViewManager
      */
-    protected $manager = null;
+    protected $viewManager = null;
 
     /**
      * File component.
@@ -100,19 +100,21 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * New processors instance with options specified in view config.
      *
+     * @param ViewManager     $viewManager
      * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param FileManager     $file
      * @param Container       $container
      */
     public function __construct(
+        ViewManager $viewManager,
         LayeredCompiler $compiler,
         array $options,
         FileManager $file = null,
         Container $container = null)
     {
+        $this->viewManager = $viewManager;
         $this->compiler = $compiler;
-        $this->manager = $compiler->getViewManager();
 
         $this->options = $options + $this->options;
         $this->file = $file;
@@ -200,7 +202,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
              * @var Import $import
              */
             $aliases = $import->generateAliases(
-                $this->manager,
+                $this->viewManager,
                 $this->file,
                 $this->options['separator']
             );
@@ -246,7 +248,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             );
 
             //There is no need to force exception if import not loaded, but we can log it
-            $this->manager->logger()->error(
+            $this->viewManager->logger()->error(
                 "{message} in {file} at line {line} defined by '{tokenName}'",
                 array(
                     'message'   => $exception->getMessage(),
@@ -395,7 +397,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             );
 
             //Trying to generate all possible import values
-            $import->generateAliases($this->manager, $this->file, $this->options['separator']);
+            $import->generateAliases($this->viewManager, $this->file, $this->options['separator']);
         }
         catch (ViewException $exception)
         {
@@ -487,7 +489,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         try
         {
             //View without caching
-            $source = $this->file->read($this->manager->getFilename($namespace, $view, false));
+            $source = $this->file->read($this->viewManager->getFilename($namespace, $view, false));
         }
         catch (ViewException $exception)
         {
@@ -525,7 +527,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     protected function clarifyException(ViewException $exception, $tokenContent, array $location)
     {
-        $filename = $this->manager->findView($location['namespace'], $location['view']);
+        $filename = $this->viewManager->findView($location['namespace'], $location['view']);
 
         //Current view source and filename
         $source = file($filename);

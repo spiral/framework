@@ -28,17 +28,18 @@ class VariablesProcessor implements ProcessorInterface
      *
      * @var ViewManager
      */
-    protected $manager = null;
+    protected $viewManager = null;
 
     /**
      * New processors instance with options specified in view config.
      *
+     * @param ViewManager     $viewManager
      * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      */
-    public function __construct(LayeredCompiler $compiler, array $options)
+    public function __construct(ViewManager $viewManager, LayeredCompiler $compiler, array $options)
     {
-        $this->manager = $compiler->getViewManager();
+        $this->viewManager = $viewManager;
         $this->options = $options + $this->options;
     }
 
@@ -71,8 +72,8 @@ class VariablesProcessor implements ProcessorInterface
      */
     protected function replace($matches)
     {
-        return $this->manager->staticVariable($matches['name'])
-            ? $this->manager->staticVariable($matches['name'])
+        return $this->viewManager->staticVariable($matches['name'])
+            ? $this->viewManager->staticVariable($matches['name'])
             : (isset($matches['default']) ? $matches['default'] : '');
     }
 }

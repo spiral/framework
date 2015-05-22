@@ -54,7 +54,6 @@ class AmazonS3Server implements ServerInterface
     /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
      * Every adapter should support basic set of low-level operations (create, move, copy and etc).
-     * Adapter instance called server, one adapter can be used for multiple servers.
      *
      * @todo Remove all legacy code and start using Amazon SDK.
      * @param array          $options Storage connection options.

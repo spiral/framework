@@ -86,7 +86,7 @@ class View extends Component implements ViewInterface
         if (is_string($parameters))
         {
             return call_user_func_array(
-                array($container->get(ViewManager::getAlias()), 'get'), func_get_args()
+                array(ViewManager::getInstance($container), 'get'), func_get_args()
             );
         }
 

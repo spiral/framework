@@ -51,12 +51,14 @@ class EvaluateProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
+     * @param ViewManager     $viewManager
      * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param FileManager     $file
      * @param Isolator        $isolator
      */
     public function __construct(
+        ViewManager $viewManager,
         LayeredCompiler $compiler,
         array $options,
         FileManager $file = null,

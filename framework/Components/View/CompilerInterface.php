@@ -31,13 +31,6 @@ interface CompilerInterface
     );
 
     /**
-     * Get associated instance of view manager.
-     *
-     * @return ViewManager
-     */
-    public function getViewManager();
-
-    /**
      * Compile original view file to plain php code.
      *
      * @return string
