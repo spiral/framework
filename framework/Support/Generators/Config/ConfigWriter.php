@@ -53,12 +53,11 @@ class ConfigWriter extends Component
     protected $tokenizer = null;
 
     /**
-     * Core.
+     * Config data exporter.
      *
-     * @invisible
-     * @var CoreInterface
+     * @var ConfigExporter
      */
-    protected $core = null;
+    protected $exporter = null;
 
     /**
      * Config file name, should not include file extension but may have directory included.
@@ -95,16 +94,17 @@ class ConfigWriter extends Component
      * it can resolve new config data by merging already exists presets with requested setting by one
      * of specified merge methods.
      *
-     * @param string      $name      Config filename, should not include extensions, may include
-     *                               directory name.
-     * @param int         $method    How system should merge existed and requested config contents.
-     * @param FileManager $file      FileManager component.
-     * @param Tokenizer   $tokenizer Tokenizer component.
+     * @param string      $name        Config filename, should not include extensions, may include
+     *                                 directory name.
+     * @param int         $method      How system should merge existed and requested config contents.
+     * @param Core        $core        Core intance to fetch list of directories.
+     * @param FileManager $file        FileManager component.
+     * @param Tokenizer   $tokenizer   Tokenizer component.
      */
     public function __construct(
         $name,
         $method = self::MERGE_FOLLOW,
-        CoreInterface $core,
+        Core $core,
         FileManager $file,
         Tokenizer $tokenizer
     )
@@ -114,7 +114,8 @@ class ConfigWriter extends Component
 
         $this->file = $file;
         $this->tokenizer = $tokenizer;
-        $this->core = $core;
+
+        $this->exporter = new ConfigExporter($core, $file);
     }
 
     /**
@@ -260,7 +261,7 @@ class ConfigWriter extends Component
 
         return interpolate("{header}return {config};", array(
             'header' => $this->configHeader,
-            'config' => $this->serializeConfig($config)
+            'config' => $this->exporter->export($config)
         ));
     }
 
@@ -288,147 +289,5 @@ class ConfigWriter extends Component
         }
 
         return $this->file->write($filename, $this->renderConfig($existed), $mode, true);
-    }
-
-    /**
-     * Serialize config data with valid formatting (4 spaces for indent) and mounted path constants.
-     *
-     * @param array  $data   Merged config data.
-     * @param string $indent Indent value (4 spaces by default).
-     * @param int    $level  Array level.
-     * @return string
-     */
-    protected function serializeConfig(array $data, $indent = '    ', $level = 0)
-    {
-        //Delimiters between rows and sub-arrays.
-        $assign = "=>";
-        $subIndent = "";
-        $keyIndent = "";
-
-        if ($indent)
-        {
-            $assign = " => ";
-            $subIndent = "\n" . str_repeat($indent, $level + 2);
-            $keyIndent = "\n" . str_repeat($indent, $level + 1);
-        }
-
-        //No keys for associated array
-        $associated = array_diff_key($data, array_keys(array_keys($data)));
-
-        $result = array();
-        $keyLength = 0;
-        foreach ($data as $name => $value)
-        {
-            $keyLength = max(strlen(var_export($name, true)), $keyLength);
-        }
-
-        foreach ($data as $name => $value)
-        {
-            if ($associated)
-            {
-                $name = str_pad(var_export($name, true), $keyLength, ' ', STR_PAD_RIGHT) . $assign;
-            }
-            else
-            {
-                $name = "";
-            }
-
-            if (!is_array($value))
-            {
-                $result[] = $this->packValue($name, $value);
-                continue;
-            }
-
-            if ($value == array())
-            {
-                $result[] = $name . "array()";
-                continue;
-            }
-
-            //Sub-array
-            $result[] = $name . "array({$subIndent}" . $this->serializeConfig(
-                    $value,
-                    $indent,
-                    $level + 1
-                ) . "{$keyIndent})";
-        }
-
-        if ($level !== 0)
-        {
-            return $result ? join(",$keyIndent", $result) : "";
-        }
-        else
-        {
-            if (!empty($indent))
-            {
-                return "array({$indent}\n" . join(",{$keyIndent}", $result) . "\n)";
-            }
-
-            return "array(" . join(",{$keyIndent}", $result) . ")";
-        }
-    }
-
-    /**
-     * Pack scalar value to config.
-     *
-     * @param string $name
-     * @param mixed  $value
-     * @return string
-     */
-    protected function packValue($name, $value)
-    {
-        if (is_null($value))
-        {
-            $value = "null";
-        }
-        elseif (is_bool($value))
-        {
-            $value = ($value ? "true" : "false");
-        }
-        elseif (!is_numeric($value))
-        {
-            if (!is_string($value))
-            {
-                throw new \RuntimeException("Unable to pack non scalar value.");
-            }
-
-            $alias = $directory = $hasAlias = false;
-            $directories = $this->core->getDirectories();
-
-            foreach ($directories as &$directory)
-            {
-                $directory = $this->file->normalizePath($directory);
-                unset($directory);
-            }
-
-            //Sorting to get longest first
-            uasort($directories, function ($valueA, $valueB)
-            {
-                return strlen($valueA) < strlen($valueB);
-            });
-
-            foreach ($directories as $alias => $directory)
-            {
-                if (strpos($this->file->normalizePath($value), $directory) === 0)
-                {
-                    $hasAlias = true;
-                    break;
-                }
-            }
-
-            if (!$hasAlias)
-            {
-                $value = var_export($value, true);
-            }
-            elseif (!empty($directory))
-            {
-                $value = 'directory("' . $alias . '") . ' . var_export(
-                        substr($value, strlen($directory)),
-                        true
-                    );
-            }
-        }
-
-        return $name . $value;
     }
 }
