@@ -130,7 +130,7 @@ class MethodElement extends BaseElement
     {
         if (!isset($this->parameters[$name]))
         {
-            $this->parameters[$name] = ParameterElement::make(compact('name'));
+            $this->parameters[$name] = new ParameterElement($name);
         }
 
         if ($docComment && !in_array($docComment, $this->docComment))
@@ -186,7 +186,7 @@ class MethodElement extends BaseElement
                     $indentLevel--;
                 }
 
-                $this->source[] = self::applyIndent($line, $indentLevel);
+                $this->source[] = self::setIndent($line, $indentLevel);
                 if (strpos($line, '{') !== false)
                 {
                     $indentLevel++;
@@ -260,7 +260,7 @@ class MethodElement extends BaseElement
                 continue;
             }
 
-            $result[] = self::applyIndent($line, $indentLevel);
+            $result[] = self::setIndent($line, $indentLevel);
         }
 
         $result[] = '}';

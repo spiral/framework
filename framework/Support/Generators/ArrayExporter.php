@@ -9,6 +9,7 @@
 namespace Spiral\Support\Generators;
 
 use Spiral\Core\Component;
+use Spiral\Support\Generators\Reactor\BaseElement;
 
 class ArrayExporter extends Component
 {
@@ -20,19 +21,12 @@ class ArrayExporter extends Component
      * @param int    $level  Array level.
      * @return string
      */
-    public function export(array $array, $indent = '    ', $level = 0)
+    public function export(array $array, $indent = BaseElement::INDENT, $level = 0)
     {
         //Delimiters between rows and sub-arrays.
-        $assign = "=>";
-        $subIndent = "";
-        $keyIndent = "";
-
-        if ($indent)
-        {
-            $assign = " => ";
-            $subIndent = "\n" . str_repeat($indent, $level + 2);
-            $keyIndent = "\n" . str_repeat($indent, $level + 1);
-        }
+        $assign = " => ";
+        $subIndent = "\n" . str_repeat($indent, $level + 2);
+        $keyIndent = "\n" . str_repeat($indent, $level + 1);
 
         //No keys for associated array
         $associated = array_diff_key($array, array_keys(array_keys($array)));
@@ -81,12 +75,7 @@ class ArrayExporter extends Component
         }
         else
         {
-            if (!empty($indent))
-            {
-                return "array({$indent}\n" . join(",{$keyIndent}", $result) . "\n)";
-            }
-
-            return "array(" . join(",{$keyIndent}", $result) . ")";
+            return "array({$indent}\n" . join(",{$keyIndent}", $result) . "\n)";
         }
     }
 

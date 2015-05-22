@@ -172,7 +172,7 @@ class ClassElement extends BaseElement
     {
         if (!$this->hasProperty($name))
         {
-            $this->properties[$name] = PropertyElement::make(compact('name'));
+            $this->properties[$name] = new PropertyElement($name);
         }
 
         $docComment && $this->properties[$name]->setComment($docComment);
@@ -274,7 +274,7 @@ class ClassElement extends BaseElement
     {
         if (!$this->hasMethod($name))
         {
-            $this->methods[$name] = MethodElement::make(compact('name'));
+            $this->methods[$name] = new MethodElement($name);
         }
 
         if ($docType)
@@ -353,7 +353,7 @@ class ClassElement extends BaseElement
         //Constants
         foreach ($this->constants as $constant => $value)
         {
-            $result[] = static::applyIndent(
+            $result[] = static::setIndent(
                 'const ' . $constant . ' = ' . var_export($value, true) . ';',
                 $indentLevel + 1
             );

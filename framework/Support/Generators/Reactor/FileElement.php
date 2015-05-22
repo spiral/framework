@@ -104,7 +104,7 @@ class FileElement extends NamespaceElement
         //Uses
         foreach ($this->uses as $class)
         {
-            $result[] = self::applyIndent('use ' . $class . ';', $indentLevel);
+            $result[] = self::setIndent('use ' . $class . ';', $indentLevel);
         }
 
         //Classes

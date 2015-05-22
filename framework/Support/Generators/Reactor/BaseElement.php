@@ -21,12 +21,9 @@ abstract class BaseElement extends Component
     const ACCESS_PROTECTED = 'protected';
 
     /**
-     * Indent string used to generate the nested constructions (such as the methods in class,
-     * parameters, classes in namespace). This is 4 spaces by default.
-     *
-     * @var string
+     * Indent is always 4 spaces.
      */
-    public static $indent = "    ";
+    const INDENT = "    ";
 
     /**
      * Element name, which can be used for multiple purposes such as class name, property name,
@@ -178,6 +175,7 @@ abstract class BaseElement extends Component
      */
     abstract public function createDeclaration($indentLevel = 0);
 
+
     /**
      * Apply current indent and tabulation level to string. This method will shift string to the right
      * using an indent string declared in RElement::$indent using $indentLevel argument as a multiplier
@@ -187,9 +185,9 @@ abstract class BaseElement extends Component
      * @param int    $indentLevel Tabulation level.
      * @return string
      */
-    public static function applyIndent($string, $indentLevel = 0)
+    public static function setIndent($string, $indentLevel = 0)
     {
-        return str_repeat(static::$indent, max($indentLevel, 0)) . $string;
+        return str_repeat(self::INDENT, max($indentLevel, 0)) . $string;
     }
 
     /**
@@ -205,7 +203,7 @@ abstract class BaseElement extends Component
     {
         foreach ($lines as &$line)
         {
-            $line = static::applyIndent($line, $indentLevel);
+            $line = self::setIndent($line, $indentLevel);
             unset($line);
         }
 

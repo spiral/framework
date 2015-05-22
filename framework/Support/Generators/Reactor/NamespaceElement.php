@@ -94,7 +94,7 @@ class NamespaceElement extends BaseElement
         //Uses
         foreach ($this->uses as $class)
         {
-            $result[] = self::applyIndent('use ' . $class . ';', $indentLevel + 1);
+            $result[] = self::setIndent('use ' . $class . ';', $indentLevel + 1);
         }
 
         //Classes

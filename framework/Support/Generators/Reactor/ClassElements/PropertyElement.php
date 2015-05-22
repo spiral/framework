@@ -8,6 +8,7 @@
  */
 namespace Spiral\Support\Generators\Reactor\ClassElements;
 
+use Spiral\Support\Generators\ArrayExporter;
 use Spiral\Support\Generators\Reactor\BaseElement;
 
 class PropertyElement extends BaseElement
