@@ -127,29 +127,18 @@ class Database extends Component implements InjectableInterface
     protected $driver = null;
 
     /**
-     * Container.
-     *
-     * @invisible
-     * @var Container
-     */
-    protected $container = null;
-
-    /**
      * New Database instance. Database class is high level abstraction at top of Driver. Multiple
      * databases can use same driver and be different by table prefix.
      *
-     * @param string    $name        Internal database name/id.
-     * @param Driver    $driver      Driver instance responsible for database connection.
-     * @param string    $tablePrefix Default database table prefix, will be used for all table identifiers.
-     * @param Container $container
+     * @param string $name        Internal database name/id.
+     * @param Driver $driver      Driver instance responsible for database connection.
+     * @param string $tablePrefix Default database table prefix, will be used for all table identifiers.
      */
-    public function __construct($name, Driver $driver, $tablePrefix = '', Container $container)
+    public function __construct($name, Driver $driver, $tablePrefix = '')
     {
         $this->name = $name;
         $this->driver = $driver;
         $this->setPrefix($tablePrefix);
-
-        $this->container = $container;
     }
 
     /**
@@ -289,14 +278,11 @@ class Database extends Component implements InjectableInterface
         }
 
         return $this->event('cached', array(
-            'result'     => CachedResult::make(
-                compact('store', 'cacheID', 'query', 'parameters', 'data'),
-                $this->container
-            ),
+            'result'     => new CachedResult($store, $cacheID, $query, $parameters, $data),
             'query'      => $query,
             'parameters' => $parameters,
             'database'   => $this
-        ));
+        ))['result'];
     }
 
     /**
@@ -458,7 +444,7 @@ class Database extends Component implements InjectableInterface
      */
     public function table($name)
     {
-        return Table::make(array('name' => $name, 'database' => $this), $this->container);
+        return new Table($name, $this);
     }
 
     /**

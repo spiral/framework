@@ -135,13 +135,15 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
         Container $container
     )
     {
+        $cacheManager = self::getInstance($container);
+
         if (!$class->isInstantiable())
         {
-            return self::getInstance($container)->store();
+            return $cacheManager->store();
         }
 
         return $container->get($class->getName(), array(
-            'cache' => self::getInstance($container)
+            'cache' => $cacheManager
         ), null, true);
     }
 

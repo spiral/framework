@@ -12,6 +12,7 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 class ConfigWriter extends Component
 {
@@ -50,6 +51,14 @@ class ConfigWriter extends Component
      * @var Tokenizer
      */
     protected $tokenizer = null;
+
+    /**
+     * Core.
+     *
+     * @invisible
+     * @var CoreInterface
+     */
+    protected $core = null;
 
     /**
      * Config file name, should not include file extension but may have directory included.
@@ -95,6 +104,7 @@ class ConfigWriter extends Component
     public function __construct(
         $name,
         $method = self::MERGE_FOLLOW,
+        CoreInterface $core,
         FileManager $file,
         Tokenizer $tokenizer
     )
@@ -104,6 +114,7 @@ class ConfigWriter extends Component
 
         $this->file = $file;
         $this->tokenizer = $tokenizer;
+        $this->core = $core;
     }
 
     /**
@@ -382,7 +393,7 @@ class ConfigWriter extends Component
             }
 
             $alias = $directory = $hasAlias = false;
-            $directories = Core::getInstance()->getDirectories();
+            $directories = $this->core->getDirectories();
 
             foreach ($directories as &$directory)
             {

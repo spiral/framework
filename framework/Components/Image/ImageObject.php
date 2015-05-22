@@ -684,7 +684,7 @@ class ImageObject extends Component
         try
         {
             $this->properties = getimagesize($this->filename, $imageinfo);
-            $this->iptc = IptcData::make(compact('filename', 'imageinfo'));
+            $this->iptc = new IptcData($this->filename, $imageinfo, FileManager::getInstance());
         }
         catch (\Exception $exception)
         {

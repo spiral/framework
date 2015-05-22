@@ -56,6 +56,7 @@ class AmazonS3Server implements ServerInterface
      * Every adapter should support basic set of low-level operations (create, move, copy and etc).
      * Adapter instance called server, one adapter can be used for multiple servers.
      *
+     * @todo Remove all legacy code and start using Amazon SDK.
      * @param array          $options Storage connection options.
      * @param StorageManager $storage StorageManager component.
      * @param FileManager    $file    FileManager component.
@@ -85,9 +86,7 @@ class AmazonS3Server implements ServerInterface
      */
     protected function query(StorageContainer $container, $name, $method = 'HEAD')
     {
-        return S3Query::make(compact('container', 'name', 'method') + array(
-                'options' => $this->options
-            ));
+        return new S3Query($this->options, $container, $name, $method);
     }
 
     /**

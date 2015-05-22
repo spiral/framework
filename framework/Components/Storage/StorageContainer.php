@@ -167,8 +167,8 @@ class StorageContainer extends Component implements InjectableInterface
     public function filesize($name)
     {
         StorageManager::logger()->info(
-            "Get filesize of '{$this->buildAddress($name)}' at '{$this->server}'.
-            ");
+            "Get filesize of '{$this->buildAddress($name)}' at '{$this->server}'."
+        );
 
         benchmark("storage::filesize", $this->prefix . $name);
         $filesize = $this->getServer()->filesize($this, $name);
@@ -203,12 +203,7 @@ class StorageContainer extends Component implements InjectableInterface
             }
 
             //Storage object
-            return StorageObject::make(array(
-                'address'   => $this->buildAddress($name),
-                'storage'   => $this->storage,
-                'name'      => $name,
-                'container' => $this
-            ));
+            return new StorageObject($this->buildAddress($name), $name, $this->storage, $this);
         }
         benchmark("storage::create", $this->prefix . $name);
 
@@ -310,12 +305,12 @@ class StorageContainer extends Component implements InjectableInterface
                     . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
                 );
 
-                return StorageObject::make(array(
-                    'address'   => $destination->buildAddress($name),
-                    'storage'   => $this->storage,
-                    'name'      => $name,
-                    'container' => $destination
-                ));
+                return new StorageObject(
+                    $destination->buildAddress($name),
+                    $name,
+                    $this->storage,
+                    $destination
+                );
             }
 
             benchmark("storage::copy", $this->prefix . $name);
@@ -338,12 +333,13 @@ class StorageContainer extends Component implements InjectableInterface
                 . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
             );
 
-            return StorageObject::make(array(
-                'address'   => $destination->buildAddress($name),
-                'storage'   => $this->storage,
-                'name'      => $name,
-                'container' => $destination
-            ));
+            return new StorageObject(
+                $destination->buildAddress($name),
+                $name,
+                $this->storage,
+                $name,
+                $destination
+            );
         }
 
         throw new StorageException(

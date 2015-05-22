@@ -191,11 +191,7 @@ class RackspaceCloudServer implements ServerInterface
         $url = $this->regionURL($container->options['region']);
         $url .= '/' . $container->options['container'] . '/' . rawurlencode($name);
 
-        $query = RackspaceQuery::make(array(
-            'options' => $this->options,
-            'URL'     => $url,
-            'method'  => $method
-        ));
+        $query = new RackspaceQuery($this->options, $url, $method);
 
         return $query
             ->setHeader('X-Auth-Token', $this->credentials['x-auth-token'])

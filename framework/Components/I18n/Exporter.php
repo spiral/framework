@@ -54,7 +54,7 @@ abstract class Exporter extends Component
     /**
      * New indexer instance.
      *
-     * @param Translator $i18n
+     * @param Translator  $i18n
      * @param FileManager $file
      */
     public function __construct(Translator $i18n, FileManager $file)
@@ -114,7 +114,7 @@ abstract class Exporter extends Component
 
         $files = $this->file->getFiles(
             $this->i18nConfig['languages'][$language]['dataFolder'],
-           Core::RUNTIME_EXTENSION
+            Core::RUNTIME_EXTENSION
         );
 
         foreach ($files as $filename)
