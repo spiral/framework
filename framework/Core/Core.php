@@ -14,6 +14,8 @@ use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Components;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Http\HttpDispatcher;
+use Spiral\Components\Console\ConsoleDispatcher;
 
 /**
  * @property Components\Http\HttpDispatcher                 $http
@@ -376,9 +378,9 @@ class Core extends Container implements CoreInterface
      */
     protected function createDispatcher()
     {
-        return $this->get($this->isConsole() ? 'console' : 'http', array(
-            'core' => $this
-        ));
+        $dispatcher = $this->isConsole() ? ConsoleDispatcher::SINGLETON : HttpDispatcher::SINGLETON;
+
+        return $this->get($dispatcher, array('core' => $this));
     }
 
     /**
