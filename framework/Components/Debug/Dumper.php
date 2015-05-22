@@ -14,6 +14,16 @@ use Spiral\Core\Core;
 class Dumper extends Component
 {
     /**
+     * Making singleton.
+     */
+    use Component\SingletonTrait;
+
+    /**
+     * Declaring to IoC that class is singleton.
+     */
+    const SINGLETON = __CLASS__;
+
+    /**
      * Options for Debugger::dump() function to specify dump destination, default options are: return,
      * echo dump into log container "dumps".
      */
@@ -23,12 +33,19 @@ class Dumper extends Component
     const DUMP_LOG_NICE = 3;
 
     /**
+     * Debugger instance
+     *
+     * @var Debugger
+     */
+    protected $debugger = null;
+
+    /**
      * Dump styles used to colorize and format variable dump performed using Debugger::dump or dump()
      * functions.
      *
      * @var array
      */
-    private static $dumping = array(
+    private $dumpStyles = array(
         'maxLevel'  => 10,
         'container' => 'background-color: white; font-family: monospace;',
         'indent'    => '&middot;    ',
@@ -56,6 +73,16 @@ class Dumper extends Component
     );
 
     /**
+     * Debugger instance.
+     *
+     * @param Debugger $debugger
+     */
+    public function __construct(Debugger $debugger)
+    {
+        $this->debugger = $debugger;
+    }
+
+    /**
      * Helper function to dump variable into specified destination (output, log or return) using
      * pre-defined dumping styles. This method is fairly slow and should not be used in productions
      * environment. Only use it during development, error handling and other not high loaded
@@ -67,7 +94,7 @@ class Dumper extends Component
      * @param int   $output Output method, can print, return or log value dump.
      * @return null|string
      */
-    public static function dump($value, $output = self::DUMP_ECHO)
+    public function dump($value, $output = self::DUMP_ECHO)
     {
         if (Core::isConsole() && $output != self::DUMP_LOG)
         {
@@ -76,8 +103,8 @@ class Dumper extends Component
             return null;
         }
 
-        $result = "<pre style='" . self::$dumping['container'] . "'>"
-            . self::dumpVariable($value, '', 0)
+        $result = "<pre style='" . $this->dumpStyles['container'] . "'>"
+            . $this->dumpVariable($value, '', 0)
             . "</pre>";
 
         switch ($output)
@@ -90,11 +117,11 @@ class Dumper extends Component
                 return $result;
 
             case self::DUMP_LOG:
-                Debugger::logger()->debug(print_r($value, true));
+                $this->debugger->logger()->debug(print_r($value, true));
                 break;
 
             case self::DUMP_LOG_NICE:
-                Debugger::logger()->debug(self::dump($value, self::DUMP_RETURN));
+                $this->debugger->logger()->debug($this->dump($value, self::DUMP_RETURN));
                 break;
         }
 
@@ -115,34 +142,34 @@ class Dumper extends Component
      * @param bool   $hideType True to hide object/array type declaration, used by __debugInfo.
      * @return string
      */
-    private static function dumpVariable($variable, $name = '', $level = 0, $hideType = false)
+    private function dumpVariable($variable, $name = '', $level = 0, $hideType = false)
     {
-        $result = $indent = self::getIndent($level);
+        $result = $indent = $this->getIndent($level);
         if (!$hideType && $name)
         {
-            $result .= self::getStyle($name, "name") . self::getStyle(" = ", "indent", "equal");
+            $result .= $this->getStyle($name, "name") . $this->getStyle(" = ", "indent", "equal");
         }
 
-        if ($level > self::$dumping['maxLevel'])
+        if ($level > $this->dumpStyles['maxLevel'])
         {
-            return $indent . self::getStyle('-possible recursion-', 'recursion') . "\n";
+            return $indent . $this->getStyle('-possible recursion-', 'recursion') . "\n";
         }
 
         $type = strtolower(gettype($variable));
 
         if ($type == 'array')
         {
-            return $result . self::dumpArray($variable, $level, $hideType);
+            return $result . $this->dumpArray($variable, $level, $hideType);
         }
 
         if ($type == 'object')
         {
-            return $result . self::dumpObject($variable, $level, $hideType);
+            return $result . $this->dumpObject($variable, $level, $hideType);
         }
 
         if ($type == 'resource')
         {
-            $result .= self::getStyle(
+            $result .= $this->getStyle(
                     get_resource_type($variable) . " resource ",
                     "type",
                     "resource"
@@ -151,7 +178,7 @@ class Dumper extends Component
             return $result;
         }
 
-        $result .= self::getStyle($type . "(" . strlen($variable) . ")", "type", $type);
+        $result .= $this->getStyle($type . "(" . strlen($variable) . ")", "type", $type);
 
         $value = null;
         switch ($type)
@@ -172,7 +199,7 @@ class Dumper extends Component
                 }
         }
 
-        return $result . " " . self::getStyle($value, "value", $type) . "\n";
+        return $result . " " . $this->getStyle($value, "value", $type) . "\n";
     }
 
     /**
@@ -183,15 +210,15 @@ class Dumper extends Component
      * @param bool  $hideType True to hide object/array type declaration, used by __debugInfo.
      * @return string
      */
-    private static function dumpArray($variable, $level, $hideType)
+    private function dumpArray($variable, $level, $hideType)
     {
         $result = '';
-        $indent = self::getIndent($level);
+        $indent = $this->getIndent($level);
         if (!$hideType)
         {
             $count = count($variable);
-            $result .= self::getStyle("array({$count})", "type", "array")
-                . "\n" . $indent . self::getStyle("(", "indent", "(") . "\n";
+            $result .= $this->getStyle("array({$count})", "type", "array")
+                . "\n" . $indent . $this->getStyle("(", "indent", "(") . "\n";
         }
 
         foreach ($variable as $name => $value)
@@ -205,7 +232,7 @@ class Dumper extends Component
                 $name = "'" . $name . "'";
             }
 
-            $result .= self::dumpVariable(
+            $result .= $this->dumpVariable(
                 $value,
                 "[{$name}]",
                 $level + 1
@@ -214,7 +241,7 @@ class Dumper extends Component
 
         if (!$hideType)
         {
-            $result .= $indent . self::getStyle(")", "indent", ")") . "\n";
+            $result .= $indent . $this->getStyle(")", "indent", ")") . "\n";
         }
 
         return $result;
@@ -228,20 +255,20 @@ class Dumper extends Component
      * @param bool  $hideType True to hide object/array type declaration, used by __debugInfo.
      * @return string
      */
-    private static function dumpObject($variable, $level, $hideType)
+    private function dumpObject($variable, $level, $hideType)
     {
         $result = '';
-        $indent = self::getIndent($level);
+        $indent = $this->getIndent($level);
         if (!$hideType)
         {
             $type = get_class($variable) . " object ";
-            $result .= self::getStyle($type, "type", "object") .
-                "\n" . $indent . self::getStyle("(", "indent", "(") . "\n";
+            $result .= $this->getStyle($type, "type", "object") .
+                "\n" . $indent . $this->getStyle("(", "indent", "(") . "\n";
         }
 
         if (method_exists($variable, '__debugInfo'))
         {
-            $result .= self::dumpVariable(
+            $result .= $this->dumpVariable(
                 $variable = $variable->__debugInfo(),
                 '',
                 $level + (is_scalar($variable)),
@@ -253,7 +280,7 @@ class Dumper extends Component
                 return $result;
             }
 
-            return $result . $indent . self::getStyle(")", "parentheses") . "\n";
+            return $result . $indent . $this->getStyle(")", "parentheses") . "\n";
         }
 
         $refection = new \ReflectionObject($variable);
@@ -287,14 +314,14 @@ class Dumper extends Component
             }
 
             $value = $property->getValue($variable);
-            $result .= self::dumpVariable(
+            $result .= $this->dumpVariable(
                 $value,
-                $property->getName() . self::getStyle(":" . $access, "access", $access),
+                $property->getName() . $this->getStyle(":" . $access, "access", $access),
                 $level + 1
             );
         }
 
-        return $result . $indent . self::getStyle(")", "parentheses") . "\n";
+        return $result . $indent . $this->getStyle(")", "parentheses") . "\n";
     }
 
     /**
@@ -303,14 +330,14 @@ class Dumper extends Component
      * @param int $level
      * @return string
      */
-    private static function getIndent($level)
+    private function getIndent($level)
     {
         if (!$level)
         {
             return '';
         }
 
-        return self::getStyle(str_repeat(self::$dumping["indent"], $level), "indent");
+        return $this->getStyle(str_repeat($this->dumpStyles["indent"], $level), "indent");
     }
 
     /**
@@ -318,9 +345,9 @@ class Dumper extends Component
      *
      * @param array $styles
      */
-    public static function dumpingStyles(array $styles)
+    public function dumpingStyles(array $styles)
     {
-        self::$dumping = $styles;
+        $this->dumpStyles = $styles;
     }
 
     /**
@@ -332,19 +359,19 @@ class Dumper extends Component
      * @param string $subType Content sub type (int, string and etc...)
      * @return string
      */
-    public static function getStyle($content, $type, $subType = '')
+    public function getStyle($content, $type, $subType = '')
     {
-        if (isset(self::$dumping['styles'][$type . '-' . $subType]))
+        if (isset($this->dumpStyles['styles'][$type . '-' . $subType]))
         {
-            $style = self::$dumping['styles'][$type . '-' . $subType];
+            $style = $this->dumpStyles['styles'][$type . '-' . $subType];
         }
-        elseif (isset(self::$dumping['styles'][$type]))
+        elseif (isset($this->dumpStyles['styles'][$type]))
         {
-            $style = self::$dumping['styles'][$type];
+            $style = $this->dumpStyles['styles'][$type];
         }
         else
         {
-            $style = self::$dumping['styles']['common'];
+            $style = $this->dumpStyles['styles']['common'];
         }
 
         if (!empty($style))

@@ -83,7 +83,7 @@ if (!function_exists('dump'))
      */
     function dump($value, $output = Dumper::DUMP_ECHO, $showStatic = false)
     {
-        return Dumper::dump($value, $output, $showStatic);
+        return Dumper::getInstance()->dump($value, $output, $showStatic);
     }
 }
 

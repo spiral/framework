@@ -31,16 +31,6 @@ class Debugger extends Component
     const SINGLETON = __CLASS__;
 
     /**
-     * If enabled Debugger::benchmark() method will collect all benchmarks into Debugger::$benchmarks
-     * property. Benchmarks can retrieved using Debugger::getBenchmarks() method. Only records from
-     * current script session and recorded after option got enabled will be collection in benchmarks
-     * array.
-     *
-     * @var bool
-     */
-    protected static $benchmarking = false;
-
-    /**
      * Benchmarking. You can use Debugger::benchmark('record') to start and stop profiling for some
      * operations. Multiple spiral components already have benchmarking mounted, however benchmarking
      * is disabled by default and be enabled by Debugger::benchmarking() method. Benchmarks can
@@ -73,23 +63,6 @@ class Debugger extends Component
         return isset($this->config['loggers']['containers'][$container])
             ? $this->config['loggers']['containers'][$container]
             : array();
-    }
-
-    /**
-     * If enabled Debugger::benchmark() method will collect all benchmarks into Debugger::$benchmarks
-     * property. Benchmarks can retrieved using Debugger::getBenchmarks() method. Only records from
-     * current script session and recorded after option got enabled will be collection in benchmarks
-     * array.
-     *
-     * @param bool $enabled
-     * @return bool
-     */
-    public static function benchmarking($enabled = true)
-    {
-        $currentValue = self::$benchmarking;
-        self::$benchmarking = $enabled;
-
-        return $currentValue;
     }
 
     /**
@@ -128,14 +101,7 @@ class Debugger extends Component
         self::$benchmarks[$record][] = microtime(true);
         self::$benchmarks[$record][] = memory_get_usage();
 
-        $result = self::$benchmarks[$record][2] - self::$benchmarks[$record][0];
-
-        if (!self::$benchmarking)
-        {
-            unset(self::$benchmarks[$record]);
-        }
-
-        return $result;
+        return self::$benchmarks[$record][2] - self::$benchmarks[$record][0];
     }
 
     /**
