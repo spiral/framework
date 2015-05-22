@@ -150,8 +150,9 @@ class Repository extends Component
     {
         $filename = explode('_', substr($filename, 0, -4));
 
-        $timestamp = \DateTime::createFromFormat('Ymd_His', $filename[0] . '_' . $filename[1])
-            ->getTimestamp();
+        $timestamp = \DateTime::createFromFormat(
+            'Ymd_His', $filename[0] . '_' . $filename[1]
+        )->getTimestamp();
 
         return array(
             'name'      => join('_', array_slice($filename, 2)),

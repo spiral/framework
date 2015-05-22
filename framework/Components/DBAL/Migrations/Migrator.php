@@ -39,14 +39,22 @@ class Migrator extends Component implements MigratorInterface
     protected $config = array();
 
     /**
+     * Core used to resolve environment.
+     *
+     * @var Core
+     */
+    protected $core = null;
+
+    /**
      * New migrator instance. Migrator responsible for running migrations and keeping track of what
      * was already executed. Default migrator uses
      *
      * @param Repository $repository
      * @param Database   $database
      * @param array      $config
+     * @param Core       $core
      */
-    public function __construct(Repository $repository, Database $database, $config)
+    public function __construct(Repository $repository, Database $database, $config, Core $core = null)
     {
         $this->repository = $repository;
         $this->database = $database;
@@ -80,7 +88,12 @@ class Migrator extends Component implements MigratorInterface
      */
     public function isSafe()
     {
-        return in_array(Core::getInstance()->getEnvironment(), $this->config['safeEnvironments']);
+        if (empty($this->core))
+        {
+            return false;
+        }
+
+        return in_array($this->core->getEnvironment(), $this->config['safeEnvironments']);
     }
 
     /**
@@ -135,7 +148,7 @@ class Migrator extends Component implements MigratorInterface
             {
                 $migration['performed'] = Timestamp::castTimestamp(
                     $migration['performed'],
-                    DatabaseManager::defaultTimezone()
+                    DatabaseManager::DEFAULT_TIMEZONE
                 );
             }
 

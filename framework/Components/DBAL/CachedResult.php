@@ -25,7 +25,7 @@ class CachedResult extends QueryResult
      *
      * @var string
      */
-    protected $cacheID = '';
+    protected $key = '';
 
     /**
      * Query string (without mounted bindings).
@@ -77,7 +77,7 @@ class CachedResult extends QueryResult
     )
     {
         $this->store = $store;
-        $this->cacheID = $cacheID;
+        $this->key = $cacheID;
         $this->query = $query;
         $this->parameters = $parameters;
         $this->data = $data;
@@ -93,8 +93,8 @@ class CachedResult extends QueryResult
         $this->data = array();
         $this->count = 0;
 
-        $this->store->delete($this->cacheID);
-        $this->cacheID = null;
+        $this->store->delete($this->key);
+        $this->key = null;
     }
 
     /**
@@ -299,7 +299,7 @@ class CachedResult extends QueryResult
     {
         return (object)array(
             'store'     => get_class($this->store),
-            'cacheID'   => $this->cacheID,
+            'cacheKey'  => $this->key,
             'statement' => $this->queryString(),
             'count'     => $this->count,
             'rows'      => $this->count > static::DUMP_LIMIT

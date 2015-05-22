@@ -257,32 +257,37 @@ class Database extends Component implements InjectableInterface
      * @param int        $lifetime   Cache lifetime in seconds.
      * @param string     $query      SQL statement with parameter placeholders.
      * @param array      $parameters Parameters to be binded into query.
+     * @param string     $key        Cache key to be used to store query result.
      * @param CacheStore $store      Cache store to store result in, if null default store will be used.
      * @return CachedResult
      * @throws CacheException
      */
-    public function cached($lifetime, $query, array $parameters = array(), CacheStore $store = null)
+    public function cached(
+        $lifetime,
+        $query,
+        array $parameters = array(),
+        $key = '',
+        CacheStore $store = null
+    )
     {
-        $store = !empty($store) ? $store : $this->container->get(CacheManager::getAlias())->store();
+        $store = !empty($store) ? $store : CacheManager::getInstance()->store();
 
-        $cacheID = md5(serialize(array($query, $parameters, $this->name)));
+        if (empty($key))
+        {
+            $key = md5(serialize(array($query, $parameters, $this->name)));
+        }
 
-        if (!$store->has($cacheID))
+        if (!$store->has($key))
         {
             $data = $this->query($query, $parameters)->fetchAll();
-            $store->set($cacheID, $data, $lifetime);
+            $store->set($key, $data, $lifetime);
         }
         else
         {
-            $data = $store->get($cacheID);
+            $data = $store->get($key);
         }
 
-        return $this->event('cached', array(
-            'result'     => new CachedResult($store, $cacheID, $query, $parameters, $data),
-            'query'      => $query,
-            'parameters' => $parameters,
-            'database'   => $this
-        ))['result'];
+        return new CachedResult($store, $key, $query, $parameters, $data);
     }
 
     /**

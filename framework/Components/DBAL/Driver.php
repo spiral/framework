@@ -294,7 +294,7 @@ abstract class Driver extends Component
             {
                 //We are going to convert all timestamps to database timezone which is UTC by default
                 $parameter = $parameter->setTimezone(
-                    new \DateTimeZone(DatabaseManager::defaultTimezone())
+                    new \DateTimeZone(DatabaseManager::DEFAULT_TIMEZONE)
                 )->format(static::DATETIME);
             }
 
