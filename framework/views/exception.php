@@ -41,7 +41,7 @@ $tokenizer->setHighlightingStyles(array(
 /**
  * Variable dumping styles.
  */
-Dumper::dumpingStyles(array(
+Dumper::setStyles(array(
     'maxLevel'  => 10,
     'container' => 'background-color: white;',
     'indent'    => '&middot;    ',

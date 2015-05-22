@@ -359,6 +359,7 @@ class Tokenizer extends Component
         return $result;
     }
 
+
     /**
      * Get all class traits.
      *

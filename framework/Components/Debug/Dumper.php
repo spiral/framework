@@ -45,7 +45,7 @@ class Dumper extends Component
      *
      * @var array
      */
-    private $dumpStyles = array(
+    private $styles = array(
         'maxLevel'  => 10,
         'container' => 'background-color: white; font-family: monospace;',
         'indent'    => '&middot;    ',
@@ -103,7 +103,7 @@ class Dumper extends Component
             return null;
         }
 
-        $result = "<pre style='" . $this->dumpStyles['container'] . "'>"
+        $result = "<pre style='" . $this->styles['container'] . "'>"
             . $this->dumpVariable($value, '', 0)
             . "</pre>";
 
@@ -150,7 +150,7 @@ class Dumper extends Component
             $result .= $this->getStyle($name, "name") . $this->getStyle(" = ", "indent", "equal");
         }
 
-        if ($level > $this->dumpStyles['maxLevel'])
+        if ($level > $this->styles['maxLevel'])
         {
             return $indent . $this->getStyle('-possible recursion-', 'recursion') . "\n";
         }
@@ -337,7 +337,39 @@ class Dumper extends Component
             return '';
         }
 
-        return $this->getStyle(str_repeat($this->dumpStyles["indent"], $level), "indent");
+        return $this->getStyle(str_repeat($this->styles["indent"], $level), "indent");
+    }
+
+    /**
+     * Stylize content using pre-defined style. Dump styles defined in Debugger::$dumping and can be
+     * redefined at any moment.
+     *
+     * @param string $element Content to apply style to.
+     * @param string $type    Content type (value, indent, name and etc)
+     * @param string $subType Content sub type (int, string and etc...)
+     * @return string
+     */
+    public function getStyle($element, $type, $subType = '')
+    {
+        if (isset($this->styles['styles'][$type . '-' . $subType]))
+        {
+            $style = $this->styles['styles'][$type . '-' . $subType];
+        }
+        elseif (isset($this->styles['styles'][$type]))
+        {
+            $style = $this->styles['styles'][$type];
+        }
+        else
+        {
+            $style = $this->styles['styles']['common'];
+        }
+
+        if (!empty($style))
+        {
+            $element = "<span style='color: {$style};'>$element</span>";
+        }
+
+        return $element;
     }
 
     /**
@@ -345,40 +377,8 @@ class Dumper extends Component
      *
      * @param array $styles
      */
-    public function dumpingStyles(array $styles)
+    public function setStyles(array $styles)
     {
-        $this->dumpStyles = $styles;
-    }
-
-    /**
-     * Stylize content using pre-defined style. Dump styles defined in Debugger::$dumping and can be
-     * redefined at any moment.
-     *
-     * @param string $content Content to apply style to.
-     * @param string $type    Content type (value, indent, name and etc)
-     * @param string $subType Content sub type (int, string and etc...)
-     * @return string
-     */
-    public function getStyle($content, $type, $subType = '')
-    {
-        if (isset($this->dumpStyles['styles'][$type . '-' . $subType]))
-        {
-            $style = $this->dumpStyles['styles'][$type . '-' . $subType];
-        }
-        elseif (isset($this->dumpStyles['styles'][$type]))
-        {
-            $style = $this->dumpStyles['styles'][$type];
-        }
-        else
-        {
-            $style = $this->dumpStyles['styles']['common'];
-        }
-
-        if (!empty($style))
-        {
-            $content = "<span style='color: {$style};'>$content</span>";
-        }
-
-        return $content;
+        $this->styles = $styles;
     }
 }
