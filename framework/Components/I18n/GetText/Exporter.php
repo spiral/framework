@@ -14,17 +14,6 @@ use Spiral\Components\I18n\I18nException;
 class Exporter extends LocalicationExporter
 {
     /**
-     * Escape string to validly insert it into PO file.
-     *
-     * @param string $string
-     * @return string
-     */
-    static protected function escape($string)
-    {
-        return '"' . addcslashes(preg_replace('/[\n\r]+/', '\n', $string), '"') . '"';
-    }
-
-    /**
      * Export collected bundles data to specified file using format described by exporter. Language
      * bundles will be exported using PO format (same format used for GetText), due spiral uses
      * localization bundles every translation line will be prepended with comment contains bundle id,
@@ -92,24 +81,24 @@ class Exporter extends LocalicationExporter
                 if (is_array($value))
                 {
                     //Plural forms
-                    $output[] = 'msgid_plural ' . self::escape($value[count($value) - 1]);
+                    $output[] = 'msgid_plural ' . $this->escape($value[count($value) - 1]);
 
                     for ($form = 0; $form < $pluralForms; $form++)
                     {
                         if (isset($value[$form]))
                         {
-                            $output[] = 'msgstr[' . $form . '] ' . self::escape($value[$form]);
+                            $output[] = 'msgstr[' . $form . '] ' . $this->escape($value[$form]);
                         }
                         else
                         {
-                            $output[] = 'msgstr[' . $form . '] ' . self::escape($value[count($value) - 1]);
+                            $output[] = 'msgstr[' . $form . '] ' . $this->escape($value[count($value) - 1]);
                         }
                     }
                 }
                 else
                 {
                     //We can escape text here, it will be backed to normal state on importing
-                    $output[] = 'msgstr ' . self::escape($value);
+                    $output[] = 'msgstr ' . $this->escape($value);
                 }
 
                 $output[] = '';
@@ -117,5 +106,16 @@ class Exporter extends LocalicationExporter
         }
 
         return $this->file->write($filename, join("\n", $output));
+    }
+
+    /**
+     * Escape string to validly insert it into PO file.
+     *
+     * @param string $string
+     * @return string
+     */
+    protected function escape($string)
+    {
+        return '"' . addcslashes(preg_replace('/[\n\r]+/', '\n', $string), '"') . '"';
     }
 }
