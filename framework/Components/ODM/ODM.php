@@ -175,7 +175,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
     {
         return SchemaBuilder::make(array(
             'config' => $this->config
-        ));
+        ), $this->container);
     }
 
     /**
@@ -191,7 +191,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
         if (!empty($this->config['documentation']))
         {
             //Virtual ODM documentation to help IDE
-            DocumentationExporter::make(compact('builder'))->render(
+            DocumentationExporter::make(compact('builder'), $this->container)->render(
                 $this->config['documentation']
             );
         }

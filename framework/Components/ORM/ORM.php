@@ -10,6 +10,7 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Facades\Log;
 
@@ -33,6 +34,14 @@ class ORM extends Component
     protected $core = null;
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Loaded entities schema. Schema contains full description about model behaviours, relations,
      * columns and etc.
      *
@@ -44,10 +53,13 @@ class ORM extends Component
      * ORM component instance.
      *
      * @param CoreInterface $core
+     * @param Container     $container
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(CoreInterface $core, Container $container)
     {
         $this->core = $core;
+        $this->container = $container;
+
         $this->config = $core->loadConfig('orm');
     }
 
@@ -96,7 +108,7 @@ class ORM extends Component
     {
         return SchemaBuilder::make(array(
             'config' => $this->config
-        ));
+        ), $this->container);
     }
 
     /**
@@ -112,7 +124,7 @@ class ORM extends Component
         if (!empty($this->config['documentation']))
         {
             //Virtual ORM documentation to help IDE
-            DocumentationExporter::make(compact('builder'))->render(
+            DocumentationExporter::make(compact('builder'), $this->container)->render(
                 $this->config['documentation']
             );
         }
