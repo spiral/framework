@@ -71,16 +71,7 @@ class Tokenizer extends Component
     public function __construct($isolatePHP = true)
     {
         $this->isolatePHP = $isolatePHP;
-    }
-
-    /**
-     * Set custom isolator instance.
-     *
-     * @param Isolator $isolator
-     */
-    public function setIsolator(Isolator $isolator)
-    {
-        $this->isolator = $isolator;
+        $this->isolator = new Isolator();
     }
 
     /**
@@ -90,12 +81,7 @@ class Tokenizer extends Component
      */
     protected function getIsolator()
     {
-        if (!empty($this->isolator))
-        {
-            return $this->isolator;
-        }
-
-        return $this->isolator = new Isolator();
+        return $this->isolator;
     }
 
     /**
@@ -257,12 +243,7 @@ class Tokenizer extends Component
         }
 
         //Local PHP isolation
-        $isolator = Isolator::make(array(
-            'prefix'    => '-argument-',
-            'postfix'   => '-block-',
-            'shortTags' => true,
-            'aspTags'   => true
-        ));
+        $isolator = new Isolator('-argument-', '-block-', true);
 
         $content = $isolator->isolatePHP($content);
 

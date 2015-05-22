@@ -73,45 +73,6 @@ class Request extends HttpRequest implements ServerRequestInterface
     protected $parsedBody = array();
 
     /**
-     * Parameter bags is set of classes designed to simplify access to request parameters, this classes
-     * should implement READ ONLY interfaces and do not alter data. Every bag should be invokable.
-     *
-     * @invisible
-     * @var array
-     */
-    protected $bags = array(
-        'headers'      => 'Spiral\Components\Http\Request\HeaderBag',
-        'serverParams' => 'Spiral\Components\Http\Request\ServerBag',
-        'cookieParams' => 'Spiral\Components\Http\Request\ParameterBag',
-        'queryParams'  => 'Spiral\Components\Http\Request\ParameterBag',
-        'fileParams'   => 'Spiral\Components\Http\Request\ParameterBag',
-        'parsedBody'   => 'Spiral\Components\Http\Request\ParameterBag'
-    );
-
-    /**
-     * Associations between real bag instances and simplified property name.
-     *
-     * @invisible
-     * @var array
-     */
-    protected $bagsMapping = array(
-        'headers' => 'headers',
-        'server'  => 'serverParams',
-        'cookies' => 'cookieParams',
-        'query'   => 'queryParams',
-        'files'   => 'fileParams',
-        'post'    => 'parsedBody'
-    );
-
-    /**
-     * Constructed parameter bags.
-     *
-     * @invisible
-     * @var array
-     */
-    protected $bagInstances = array();
-
-    /**
      * New Server Request instance.
      *
      * @param string                     $method       Request method.
@@ -451,71 +412,5 @@ class Request extends HttpRequest implements ServerRequestInterface
         unset($request->attributes[$name]);
 
         return $request;
-    }
-
-    /**
-     * Check if ajax header presented. Default header to check: X-Requested-With
-     *
-     * @return bool
-     */
-    public function isAjax()
-    {
-        if (empty($this->headers['X-Requested-With']))
-        {
-            return false;
-        }
-
-        return strtolower($this->headers['X-Requested-With']) == 'xmlhttprequest';
-    }
-
-    /**
-     * Client connection IP address, this value is identical to value in $_SERVER['REMOTE_ADDR'] and
-     * does not have any extra logic to fetch address from proxy headers and etc.
-     *
-     * @return string
-     */
-    public function remoteAddr()
-    {
-        return $this->serverParams['REMOTE_ADDR'];
-    }
-
-    /**
-     * Get instance of parameter bag associated with one of request properties.
-     *
-     * @param string $name Parameter name.
-     * @return ParameterBag
-     */
-    public function __get($name)
-    {
-        $property = $this->bagsMapping[$name];
-
-        if (isset($this->bagInstances[$property]))
-        {
-            return $this->bagInstances[$property];
-        }
-
-        $bagClass = $this->bags[$property];
-
-        return $this->bagInstances[$property] = new $bagClass($this->{$property});
-    }
-
-    /**
-     * Alias for __get.
-     *
-     * @param string $name
-     * @param array  $arguments
-     * @return ParameterBag
-     */
-    public function __call($name, array $arguments)
-    {
-        return $this->__get($name);
-    }
-
-    /**
-     * Flushing all bag instances on clone.
-     */
-    public function __clone()
-    {
-        $this->bagInstances = array();
     }
 }
