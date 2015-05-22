@@ -1010,7 +1010,7 @@ abstract class AbstractTableSchema extends Component
 
                 if (empty($schema))
                 {
-                    static::logger()->info(
+                    self::logger()->info(
                         "Dropping column [{statement}] from table {table}.",
                         array(
                             'statement' => $dbColumn->sqlStatement(),
@@ -1024,7 +1024,7 @@ abstract class AbstractTableSchema extends Component
 
                 if (empty($dbColumn))
                 {
-                    static::logger()->info(
+                    self::logger()->info(
                         "Adding column [{statement}] into table {table}.",
                         array(
                             'statement' => $schema->sqlStatement(),

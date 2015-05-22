@@ -743,7 +743,7 @@ abstract class AbstractColumnSchema extends Component
                 }
             }
 
-            static::logger()->debug("Column '{name}' has changed attributes: {difference}.", array(
+            self::logger()->debug("Column '{name}' has changed attributes: {difference}.", array(
                 'name'       => $this->name,
                 'difference' => join(', ', $difference)
             ));
