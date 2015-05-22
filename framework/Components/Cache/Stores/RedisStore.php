@@ -55,6 +55,11 @@ class RedisStore extends CacheStore
     {
         parent::__construct($cache);
 
+        if (empty($redis))
+        {
+            $redis = RedisManager::getInstance();
+        }
+
         $this->client = $redis->client($this->options['client']);
         $this->prefix = !empty($this->options['prefix']) ? $this->options['prefix'] . ':' : '';
     }

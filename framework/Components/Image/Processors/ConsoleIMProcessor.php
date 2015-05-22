@@ -61,6 +61,13 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     protected $commands = array();
 
     /**
+     * FileManager component.
+     *
+     * @var FileManager
+     */
+    protected $file = null;
+
+    /**
      * New image processor instance. Image processor represents operations associated with one
      * specific image file, all processing operation (resize, crop and etc) described via operations
      * sequence and perform on image save, every ImageObject will have it's own processor.
@@ -68,13 +75,15 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
      * Every processor will implement set of pre-defined operations, however additional operations
      * can be supported by processor and extend default set of image manipulations.
      *
-     * @param string $filename Local filename.
-     * @param array  $options  Processor specific options.
+     * @param string      $filename Local filename.
+     * @param array       $options  Processor specific options.
+     * @param FileManager $file     FileManager.
      */
-    public function __construct($filename, array $options)
+    public function __construct($filename, array $options, FileManager $file = null)
     {
         $this->options = $this->options + $options;
         $this->filename = $filename;
+        $this->file = !empty($file) ? $file : FileManager::getInstance();
     }
 
     /**
@@ -148,7 +157,8 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
     public function command($command, $application = 'convert')
     {
         $this->commands[] = array(
-            'command' => "{$application} {options} {input} {$command}"
+            'command' =>
+                "{$application} {options} {input} {$command}"
                 . " {drawing} {quality} {depth} {removeIPTC} {output}",
             'drawing' => array()
         );
@@ -439,7 +449,7 @@ class ConsoleIMProcessor extends Component implements ProcessorInterface
             benchmark('image::imageMagic', $command);
 
             //File modified outside of PHP
-            FileManager::getInstance()->clearCache($output);
+            $this->file->clearCache($output);
         }
 
         //Flush all commands

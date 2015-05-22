@@ -12,9 +12,6 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 
 /**
- * Please avoid using ImageManager component until additional image processors created.
- *
- * @deprecated
  * @property string   $filename
  * @property int      $type
  * @property int      $width
@@ -64,6 +61,13 @@ class ImageObject extends Component
      * @var string
      */
     protected $filename = '';
+
+    /**
+     * ImageManager component.
+     *
+     * @var ImageManager
+     */
+    protected $image = null;
 
     /**
      * Properties retrieved from image file using getimagesize() function.
@@ -121,11 +125,12 @@ class ImageObject extends Component
      * can be used to verify that file is supported and can be processed. ImageObject preferred to
      * be used for processing existed images, rather that creating new.
      *
-     * @param string      $filename Local image filename.
-     * @param FileManager $file     FileManager component.
+     * @param string       $filename Local image filename.
+     * @param ImageManager $image    ImageManager component.
+     * @param FileManager  $file     FileManager component.
      * @throws ImageException
      */
-    public function __construct($filename, FileManager $file)
+    public function __construct($filename, ImageManager $image, FileManager $file)
     {
         if (!function_exists('getimagesize'))
         {
@@ -139,10 +144,12 @@ class ImageObject extends Component
             return;
         }
 
+        $this->image = $image;
+
         try
         {
             $this->properties = getimagesize($filename, $imageinfo);
-            $this->iptc = IptcData::make(compact('filename', 'imageinfo'));
+            $this->iptc = new IptcData($filename, $imageinfo, $file);
             $this->filename = $filename;
 
             if (!array_key_exists($this->properties[2], static::$imageTypes))
@@ -326,11 +333,9 @@ class ImageObject extends Component
             return array();
         }
 
-        $analysis = ImageAnalyzer::make(array(
-                'filename' => $this->filename
-            ) + compact('dimension', 'mixMode'));
+        $analyzer = new ImageAnalyzer($this->filename, $dimension, $mixMode);
 
-        return $analysis->analyzeImage()->fetchColors($countColors, $step);
+        return $analyzer->analyzeImage()->fetchColors($countColors, $step);
     }
 
     /**
@@ -353,7 +358,7 @@ class ImageObject extends Component
      */
     public function resize($width, $height)
     {
-        $this->processor()->resize($width, $height);
+        $this->getProcessor()->resize($width, $height);
 
         $ratio = $this->width / $this->height;
         if ($ratio <= ($width / $height))
@@ -383,7 +388,7 @@ class ImageObject extends Component
      */
     public function crop($x, $y, $width, $height)
     {
-        $this->processor()->crop($x, $y, $width, $height);
+        $this->getProcessor()->crop($x, $y, $width, $height);
 
         $this->properties[0] = min($this->width - $x, $width);
         $this->properties[1] = min($this->height - $y, $height);
@@ -415,7 +420,7 @@ class ImageObject extends Component
         $height = false
     )
     {
-        $this->processor()->composite(
+        $this->getProcessor()->composite(
             realpath($image->filename),
             $x,
             $y,
@@ -441,7 +446,7 @@ class ImageObject extends Component
      */
     public function line($x1, $y1, $x2, $y2, $color, $width = 1, $style = self::LINE_SOLID)
     {
-        $this->processor()->line($x1, $y1, $x2, $y2, $color, $width, $style);
+        $this->getProcessor()->line($x1, $y1, $x2, $y2, $color, $width, $style);
 
         return $this;
     }
@@ -471,7 +476,7 @@ class ImageObject extends Component
         $style = self::LINE_SOLID
     )
     {
-        $this->processor()->rectangle($x1, $y1, $x2, $y2, $fillColor, $color, $width, $style);
+        $this->getProcessor()->rectangle($x1, $y1, $x2, $y2, $fillColor, $color, $width, $style);
 
         return $this;
     }
@@ -490,7 +495,7 @@ class ImageObject extends Component
      */
     public function annotation($x, $y, $string, $color, $font = '', $size = 12, $angle = 0)
     {
-        $this->processor()->annotation($x, $y, $string, $color, $font, $size, $angle);
+        $this->getProcessor()->annotation($x, $y, $string, $color, $font, $size, $angle);
 
         return $this;
     }
@@ -513,7 +518,7 @@ class ImageObject extends Component
      */
     public function blur($sigma, $radius = 0)
     {
-        $this->processor()->blur($sigma, $radius);
+        $this->getProcessor()->blur($sigma, $radius);
 
         return $this;
     }
@@ -529,7 +534,7 @@ class ImageObject extends Component
      */
     public function sharpen($sigma, $radius = 0)
     {
-        $this->processor()->sharpen($sigma, $radius);
+        $this->getProcessor()->sharpen($sigma, $radius);
 
         return $this;
     }
@@ -542,7 +547,7 @@ class ImageObject extends Component
      */
     public function grayScale()
     {
-        $this->processor()->grayScale();
+        $this->getProcessor()->grayScale();
 
         return $this;
     }
@@ -679,7 +684,7 @@ class ImageObject extends Component
      */
     public function save($quality = false, $removeIPTC = false)
     {
-        $this->processor()->process(realpath($this->filename), $quality, $removeIPTC);
+        $this->getProcessor()->process(realpath($this->filename), $quality, $removeIPTC);
 
         try
         {
@@ -706,7 +711,7 @@ class ImageObject extends Component
      */
     public function saveAs($filename, $quality = false, $removeIPTC = false)
     {
-        $this->processor()->process($filename, $quality, $removeIPTC);
+        $this->getProcessor()->process($filename, $quality, $removeIPTC);
 
         return static::make(compact('filename'));
     }
@@ -719,22 +724,28 @@ class ImageObject extends Component
      * Every processor will implement set of pre-defined operations, however additional operations
      * can be supported by processor and extend default set of image manipulations.
      *
-     * Changing processor to another type will erase all registered and not performed image commands.
-     *
-     * @param string $type Forced processor id.
      * @return ProcessorInterface
      */
-    public function processor($type = '')
+    public function getProcessor()
     {
         if ($this->processor)
         {
             return $this->processor;
         }
 
-        return $this->processor = ImageManager::getInstance()->imageProcessor(
-            realpath($this->filename),
-            $type
-        );
+        return $this->processor = $this->image->imageProcessor(realpath($this->filename));
+    }
+
+    /**
+     * Force image processor instance. Changing processor to another type will erase all registered
+     * and not performed image commands.
+     *
+     * @param string $type
+     * @return ProcessorInterface
+     */
+    public function setProcessor($type)
+    {
+        return $this->processor = $this->image->imageProcessor(realpath($this->filename), $type);
     }
 
     /**
