@@ -250,33 +250,34 @@ class Dumper extends Component
     /**
      * Helper method used to dump objects.
      *
-     * @param mixed $variable Value to be dumped.
-     * @param int   $level
-     * @param bool  $hideType True to hide object/array type declaration, used by __debugInfo.
+     * @param mixed  $variable Value to be dumped.
+     * @param int    $level
+     * @param bool   $hideType True to hide object/array type declaration, used by __debugInfo.
+     * @param string $class    Class name to be used.
      * @return string
      */
-    private function dumpObject($variable, $level, $hideType)
+    private function dumpObject($variable, $level, $hideType, $class = '')
     {
         $result = '';
         $indent = $this->getIndent($level);
         if (!$hideType)
         {
-            $type = get_class($variable) . " object ";
+            $type = ($class ?: get_class($variable)) . " object ";
             $result .= $this->getStyle($type, "type", "object") .
                 "\n" . $indent . $this->getStyle("(", "indent", "(") . "\n";
         }
 
         if (method_exists($variable, '__debugInfo'))
         {
-            $variable = $variable->__debugInfo();
+            $debugInfo = $variable->__debugInfo();
 
-            if (is_object($variable))
+            if (is_object($debugInfo))
             {
-                return $this->dumpObject($variable, $level, false);
+                return $this->dumpObject($debugInfo, $level, false, get_class($variable));
             }
 
             $result .= $this->dumpVariable(
-                $variable,
+                $debugInfo,
                 '',
                 $level + (is_scalar($variable)),
                 true

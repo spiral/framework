@@ -281,12 +281,11 @@ trait WhereTrait
         //Complex query is provided
         if (is_array($identifier))
         {
-            return $this->parseWhere(
-                $identifier,
-                $joiner == 'AND' ? DatabaseManager::TOKEN_AND : DatabaseManager::TOKEN_OR,
-                $tokens,
-                $dataParameters
-            );
+            $tokens[] = array($joiner, '(');
+            $this->parseWhere($identifier, DatabaseManager::TOKEN_AND, $tokens, $dataParameters);
+            $tokens[] = array('', ')');
+
+            return $tokens;
         }
 
         if ($identifier instanceof \Closure)
@@ -417,11 +416,10 @@ trait WhereTrait
     {
         foreach ($where as $name => $value)
         {
+            $tokenName = strtoupper($name);
+
             //Grouping identifier (@OR, @AND), Mongo like style
-            if (
-                strtoupper($name) == DatabaseManager::TOKEN_AND
-                || strtoupper($name) == DatabaseManager::TOKEN_OR
-            )
+            if ($tokenName == DatabaseManager::TOKEN_AND || $tokenName == DatabaseManager::TOKEN_OR)
             {
                 $tokens[] = array($grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR', '(');
 
@@ -442,7 +440,9 @@ trait WhereTrait
                     array(
                         $name,
                         '=',
-                        $dataParameters ? $this->addParameter($value) : $this->wrapExpression($value)
+                        $dataParameters
+                            ? $this->addParameter($value)
+                            : $this->wrapExpression($value)
                     )
                 );
                 continue;
