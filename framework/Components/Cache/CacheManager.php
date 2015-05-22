@@ -136,7 +136,6 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
     )
     {
         $cacheManager = self::getInstance($container);
-
         if (!$class->isInstantiable())
         {
             return $cacheManager->store();
