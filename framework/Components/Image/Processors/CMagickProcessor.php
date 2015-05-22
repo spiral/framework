@@ -26,7 +26,7 @@ use Symfony\Component\Process\Process;
  *                                   converting more polite for CPU.
  * @property bool   $openMP          Multi-thread support, disabled by default.
  */
-class ConsoleIMProcessor extends Component implements ProcessorInterface
+class CMagickProcessor extends Component implements ProcessorInterface
 {
     /**
      * Logging shell queries.
