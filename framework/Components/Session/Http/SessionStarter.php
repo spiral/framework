@@ -30,6 +30,13 @@ class SessionStarter implements MiddlewareInterface
     protected $cookies = null;
 
     /**
+     * Container used to resolve session store.
+     *
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Session store instance.
      *
      * @var SessionStore
@@ -40,10 +47,12 @@ class SessionStarter implements MiddlewareInterface
      * Middleware constructing.
      *
      * @param CookieManager $cookies
+     * @param Container     $container
      */
-    public function __construct(CookieManager $cookies)
+    public function __construct(CookieManager $cookies, Container $container)
     {
         $this->cookies = $cookies;
+        $this->container = $container;
     }
 
     /**
@@ -68,7 +77,7 @@ class SessionStarter implements MiddlewareInterface
             return $this->store;
         }
 
-        return $this->store = SessionStore::make();
+        return $this->store = SessionStore::getInstance($this->container);
     }
 
     /**
@@ -83,6 +92,7 @@ class SessionStarter implements MiddlewareInterface
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
         $cookies = $request->getCookieParams();
+
         if (isset($cookies[self::COOKIE]))
         {
             //Mounting ID retrieved from cookies
@@ -91,13 +101,10 @@ class SessionStarter implements MiddlewareInterface
 
         $response = $next();
 
-        if (
-            empty($this->store)
-            || is_object(Container::getInstance()->getBinding(SessionStore::getAlias()))
-        )
+        if (empty($this->store) || is_object($this->container->getBinding(SessionStore::getAlias())))
         {
             //Store were started by itself
-            $this->setStore(SessionStore::getInstance());
+            $this->setStore($this->container->get(SessionStore::getAlias()));
         }
 
         if (!empty($this->store) && ($this->store->isStarted() || $this->store->isDestroyed()))
