@@ -23,6 +23,14 @@ class Router extends Component implements MiddlewareInterface
     const DEFAULT_ROUTE = 'default';
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Core/Application instance is required to execute controllers (if route has controller as it's
      * target).
      *
@@ -67,6 +75,7 @@ class Router extends Component implements MiddlewareInterface
      * Router middleware used by HttpDispatcher and modules to perform URI based routing with defined
      * endpoint such as controller action, closure or middleware.
      *
+     * @param Container     $container
      * @param CoreInterface $core             Core instances required to call controller actions.
      * @param Route|array   $routes           Pre-defined array of routes (if were collected externally).
      * @param array         $routeMiddlewares Set of middlewares defined to be used in routes for
@@ -77,6 +86,7 @@ class Router extends Component implements MiddlewareInterface
      *                                        when website or module associated with non empty URI path.
      */
     public function __construct(
+        Container $container,
         CoreInterface $core,
         array $routes = array(),
         array $routeMiddlewares = array(),
@@ -84,6 +94,7 @@ class Router extends Component implements MiddlewareInterface
         $activePath = '/'
     )
     {
+        $this->container = $container;
         $this->core = $core;
 
         foreach ($routes as $route)
@@ -103,6 +114,7 @@ class Router extends Component implements MiddlewareInterface
         if (!isset($this->routes[static::DEFAULT_ROUTE]) && !empty($default))
         {
             $this->routes[static::DEFAULT_ROUTE] = new Route(
+                $this->container,
                 static::DEFAULT_ROUTE,
                 $default['pattern'],
                 $default['target'],
@@ -124,11 +136,9 @@ class Router extends Component implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
-        $container = Container::getInstance();
-
         //Open router scope
-        $outerRouter = $container->getBinding('router');
-        $container->bind('router', $this);
+        $outerRouter = $this->container->getBinding('router');
+        $this->container->bind('router', $this);
 
         if (!$this->route = $this->findRoute($request))
         {
@@ -141,8 +151,8 @@ class Router extends Component implements MiddlewareInterface
         $response = $this->route->perform($request, $this->core, $this->routeMiddlewares);
 
         //Close router scope
-        $container->removeBinding('router');
-        !empty($outerRouter) && $container->bind('router', $outerRouter);
+        $this->container->removeBinding('router');
+        !empty($outerRouter) && $this->container->bind('router', $outerRouter);
 
         return $response;
     }

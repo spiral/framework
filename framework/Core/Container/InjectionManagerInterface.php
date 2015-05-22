@@ -8,6 +8,8 @@
  */
 namespace Spiral\Core\Container;
 
+use Spiral\Core\Container;
+
 interface InjectionManagerInterface
 {
     /**
@@ -20,7 +22,12 @@ interface InjectionManagerInterface
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
+     * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter);
+    public static function resolveInjection(
+        \ReflectionClass $class,
+        \ReflectionParameter $parameter,
+        Container $container
+    );
 }

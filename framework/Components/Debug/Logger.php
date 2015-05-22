@@ -285,7 +285,7 @@ class Logger extends AbstractLogger
         $container = Container::getInstance();
         if (!$container->hasBinding('logger'))
         {
-            return self::$loggers[$name] = new static(Debugger::getInstance(), $name);
+            return self::$loggers[$name] = new static(Debugger::getInstance($container), $name);
         }
 
         return self::$loggers[$name] = $container->get('logger', compact('name'));

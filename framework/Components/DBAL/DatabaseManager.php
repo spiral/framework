@@ -150,11 +150,16 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
+     * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
+    public static function resolveInjection(
+        \ReflectionClass $class,
+        \ReflectionParameter $parameter,
+        Container $container
+    )
     {
-        return self::getInstance()->db($parameter->getName());
+        return self::getInstance($container)->db($parameter->getName());
     }
 
     /**
@@ -168,7 +173,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     {
         return Repository::make(array(
             'directory' => $directory ?: $this->config['migrations']['directory']
-        ));
+        ), $this->container);
     }
 
     /**

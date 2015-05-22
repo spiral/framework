@@ -28,6 +28,14 @@ class Route extends Component implements RouteInterface
     const CONTROLLER_SEPARATOR = '::';
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Route name used to identify route instance in router stack. This is required to generate urls
      * using route pattern and set of provided parameters.
      *
@@ -142,15 +150,17 @@ class Route extends Component implements RouteInterface
      * Or be associated with middleware:
      * Http::route('/something(/<value>)', new MyMiddleware());
      *
-     * @param string $name       Route name for url generation.
-     * @param string $pattern    Route pattern.
-     * @param mixed  $target     Route target, can be either controller expression (including action
-     *                           name separated by ::), closure or middleware.
-     * @param array  $defaults   Set of default patter values.
-     * @param array  $conditions Pre-defined set of route conditions.
+     * @param Container $container  Container used to resolve endpoints.
+     * @param string    $name       Route name for url generation.
+     * @param string    $pattern    Route pattern.
+     * @param mixed     $target     Route target, can be either controller expression (including action
+     *                              name separated by ::), closure or middleware.
+     * @param array     $defaults   Set of default patter values.
+     * @param array     $conditions Pre-defined set of route conditions.
      * @return Route
      */
     public function __construct(
+        Container $container,
         $name,
         $pattern,
         $target,
@@ -162,6 +172,8 @@ class Route extends Component implements RouteInterface
         {
             throw new \InvalidArgumentException("Route target should not be empty.");
         }
+
+        $this->container = $container;;
 
         $this->name = $name;
         $this->pattern = $pattern;
@@ -457,7 +469,7 @@ class Route extends Component implements RouteInterface
                 $reflection = new \ReflectionFunction($this->target);
 
                 return $reflection->invokeArgs(
-                    Container::getInstance()->resolveArguments($reflection, array(
+                    $this->container->resolveArguments($reflection, array(
                             'request' => $request,
                             'context' => $this,
                             'route'   => $this
@@ -511,7 +523,7 @@ class Route extends Component implements RouteInterface
         if (is_string($this->target) && strpos($this->target, self::CONTROLLER_SEPARATOR) === false)
         {
             //Middleware
-            return Container::getInstance()->get($this->target);
+            return $this->container->get($this->target);
         }
 
         return function (ServerRequestInterface $request) use ($core)

@@ -90,19 +90,34 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     protected $file = null;
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * New processors instance with options specified in view config.
      *
      * @param LayeredCompiler $compiler Compiler instance.
      * @param array           $options
      * @param FileManager     $file
+     * @param Container       $container
      */
-    public function __construct(LayeredCompiler $compiler, array $options, FileManager $file = null)
+    public function __construct(
+        LayeredCompiler $compiler,
+        array $options,
+        FileManager $file = null,
+        Container $container = null)
     {
         $this->compiler = $compiler;
         $this->manager = $compiler->getViewManager();
 
         $this->options = $options + $this->options;
         $this->file = $file;
+
+        $this->container = $container;
     }
 
     /**
@@ -374,7 +389,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             /**
              * @var Import $import
              */
-            $import = Container::getInstance()->get($importOptions['class'], array(
+            $import = $this->container->get($importOptions['class'], array(
                     'level' => $node->getLevel(),
                 ) + ($options + $node->options)
             );

@@ -108,7 +108,7 @@ class CookieManager extends Component implements MiddlewareInterface
             return $this->encrypter;
         }
 
-        return $this->encrypter = Encrypter::make();
+        return $this->encrypter = Encrypter::getInstance();
     }
 
     /**

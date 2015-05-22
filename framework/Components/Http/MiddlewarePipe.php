@@ -15,6 +15,14 @@ use Spiral\Core\Container;
 class MiddlewarePipe extends Component
 {
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Set of middleware layers builded to handle incoming Request and return Response. Middleware
      * can be represented as class, string (DI) or array (callable method).
      *
@@ -42,10 +50,12 @@ class MiddlewarePipe extends Component
      * Middleware Pipeline used by HttpDispatchers to pass request thought middleware(s) and receive
      * filtered result. Pipeline can be used outside dispatcher in routes, modules and controllers.
      *
+     * @param Container             $container
      * @param MiddlewareInterface[] $middleware
      */
-    public function __construct(array $middleware = array())
+    public function __construct(Container $container, array $middleware = array())
     {
+        $this->container = $container;
         $this->middleware = $middleware;
     }
 
@@ -120,7 +130,7 @@ class MiddlewarePipe extends Component
                 }
 
                 return $reflection->invokeArgs(
-                    Container::getInstance()->resolveArguments($reflection, $arguments)
+                    $this->container->resolveArguments($reflection, $arguments)
                 );
             }
 
@@ -131,7 +141,7 @@ class MiddlewarePipe extends Component
          * @var callable $middleware
          */
         $middleware = $this->middleware[$position];
-        $middleware = is_string($middleware) ? Container::getInstance()->get($middleware) : $middleware;
+        $middleware = is_string($middleware) ? $this->container->get($middleware) : $middleware;
 
         return $middleware($input, $next, $this->context);
     }

@@ -9,6 +9,7 @@
 namespace Spiral\Components\View;
 
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 
 class View extends Component implements ViewInterface
 {
@@ -71,17 +72,25 @@ class View extends Component implements ViewInterface
      * View::make('namespace:view');
      * View::make('namespace:view', ['name' => 'value']);
      *
-     * @param array $parameters
+     * @param array     $parameters
+     * @param Container $container
      * @return mixed|static
      */
-    public static function make($parameters = array())
+    public static function make($parameters = array(), Container $container = null)
     {
-        if (is_string($parameters))
+        if (empty($container))
         {
-            return call_user_func_array(array(ViewManager::getInstance(), 'get'), func_get_args());
+            $container = Container::getInstance();
         }
 
-        return parent::make($parameters);
+        if (is_string($parameters))
+        {
+            return call_user_func_array(
+                array($container->get(ViewManager::getAlias()), 'get'), func_get_args()
+            );
+        }
+
+        return parent::make($parameters, $container);
     }
 
     /**

@@ -105,6 +105,14 @@ abstract class Driver extends Component
     );
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * PDO connection.
      *
      * @var PDO
@@ -123,11 +131,14 @@ abstract class Driver extends Component
      * Driver instances responsible for all database low level operations which can be DBMS specific
      * - such as connection preparation, custom table/column/index/reference schemas and etc.
      *
-     * @param array $config
+     * @param array     $config
+     * @param Container $container
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = array(), Container $container)
     {
         $this->config = $config + $this->config;
+        $this->container = $container;
+
         $this->options = $config['options'] + $this->options;
 
         if (preg_match('/(?:dbname|database)=([^;]+)/i', $this->config['connection'], $matches))
@@ -363,7 +374,7 @@ abstract class Driver extends Component
      */
     public function query($query, array $parameters = array(), &$preparedParameters = null)
     {
-        return Container::getInstance()->get(static::QUERY_RESULT, array(
+        return $this->container->get(static::QUERY_RESULT, array(
             'statement'  => $this->statement($query, $parameters, $preparedParameters),
             'parameters' => $preparedParameters
         ));
@@ -556,7 +567,7 @@ abstract class Driver extends Component
      */
     public function tableSchema($table, $tablePrefix = '')
     {
-        return Container::getInstance()->get(
+        return $this->container->get(
             static::SCHEMA_TABLE,
             array(
                 'driver'      => $this,
@@ -577,7 +588,7 @@ abstract class Driver extends Component
      */
     public function columnSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return Container::getInstance()->get(
+        return $this->container->get(
             static::SCHEMA_COLUMN,
             compact('table', 'name', 'schema')
         );
@@ -594,7 +605,7 @@ abstract class Driver extends Component
      */
     public function indexSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return Container::getInstance()->get(
+        return $this->container->get(
             static::SCHEMA_INDEX,
             compact('table', 'name', 'schema')
         );
@@ -611,7 +622,7 @@ abstract class Driver extends Component
      */
     public function referenceSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return Container::getInstance()->get(
+        return $this->container->get(
             static::SCHEMA_REFERENCE,
             compact('table', 'name', 'schema')
         );
@@ -638,7 +649,7 @@ abstract class Driver extends Component
      */
     public function queryCompiler($tablePrefix = '')
     {
-        return Container::getInstance()->get(
+        return $this->container->get(
             static::QUERY_COMPILER,
             array(
                 'driver'      => $this,
@@ -659,7 +670,7 @@ abstract class Driver extends Component
         return InsertQuery::make(array(
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters);
+            ) + $parameters, $this->container);
     }
 
     /**
@@ -674,7 +685,7 @@ abstract class Driver extends Component
         return SelectQuery::make(array(
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters);
+            ) + $parameters, $this->container);
     }
 
     /**
@@ -689,7 +700,7 @@ abstract class Driver extends Component
         return DeleteQuery::make(array(
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters);
+            ) + $parameters, $this->container);
     }
 
     /**
@@ -704,7 +715,7 @@ abstract class Driver extends Component
         return UpdateQuery::make(array(
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters);
+            ) + $parameters, $this->container);
     }
 
     /**

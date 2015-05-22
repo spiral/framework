@@ -31,6 +31,14 @@ class Validator extends Component
     const STOP_VALIDATION = -99;
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Rules with that condition should be treated as not empty stop flag, this means, that all
      * other conditions attached to same field name will be skipped if not empty rule will fail. Use
      * it to define required and non required fields with optional conditions to perform only when
@@ -235,19 +243,33 @@ class Validator extends Component
      *      ["notEmpty"], ["boolean"]
      * )
      *
-     * @param array $data                Data to be validated.
-     * @param array $validates           Validation rules.
-     * @param bool  $interpolateNames    If true all messages will be interpolated with field name
-     *                                   included, in other scenario
-     *                                   only method parameters will be embedded, this option can be
-     *                                   disabled by model or outside
-     *                                   to mount custom field labels.
+     * @param array     $data             Data to be validated.
+     * @param array     $validates        Validation rules.
+     * @param bool      $interpolateNames If true all messages will be interpolated with field name
+     *                                    included, in other scenario
+     *                                    only method parameters will be embedded, this option can be
+     *                                    disabled by model or outside
+     *                                    to mount custom field labels.
+     * @param Container $container        Container instance used to resolve checkers, global container
+     *                                    will be used if nothing else provided.
      */
-    public function __construct(array $data, array $validates, $interpolateNames = true)
+    public function __construct(
+        array $data,
+        array $validates,
+        $interpolateNames = true,
+        Container $container = null
+    )
     {
         $this->data = $data;
         $this->validates = $validates;
         $this->interpolateNames = $interpolateNames;
+
+        if (empty($container))
+        {
+            $container = Container::getInstance();
+        }
+
+        $this->container = $container;
     }
 
     /**
@@ -344,7 +366,7 @@ class Validator extends Component
             return self::$checkers[$name];
         }
 
-        return self::$checkers[$name] = Container::getInstance()->get(self::$checkers[$name]);
+        return self::$checkers[$name] = $this->container->get(self::$checkers[$name]);
     }
 
     /**
@@ -636,21 +658,23 @@ class Validator extends Component
      *      ["notEmpty"], ["boolean"]
      * )
      *
-     * @param array $data      Data to be validated.
-     * @param array $validates Validation rules.
-     * @param bool  $return    True to return created validator, false to return validation status.
-     * @param array $errors    Collected error messages if validation failed and return argument set
-     *                         to false.
+     * @param array     $data      Data to be validated.
+     * @param array     $validates Validation rules.
+     * @param bool      $return    True to return created validator, false to return validation status.
+     * @param array     $errors    Collected error messages if validation failed and return argument set
+     *                             to false.
+     * @param Container $container Container instance to use to resolve checkers.
      * @return bool|Validator
      */
     public static function validateData(
         array $data,
         array $validates,
         $return = true,
-        array &$errors = null
+        array &$errors = null,
+        Container $container = null
     )
     {
-        $validator = static::make(compact('data', 'validates'));
+        $validator = static::make(compact('data', 'validates'), $container);
 
         if (!$return)
         {
@@ -670,15 +694,22 @@ class Validator extends Component
     /**
      * Alias for validateData method. All documentation located there.
      *
-     * @param array $data      Data to be validated.
-     * @param array $validates Validation rules.
-     * @param bool  $return    True to return created validator, false to return validation status.
-     * @param array $errors    Collected error messages if validation failed and return argument set
-     *                         to false.
+     * @param array     $data      Data to be validated.
+     * @param array     $validates Validation rules.
+     * @param bool      $return    True to return created validator, false to return validation status.
+     * @param array     $errors    Collected error messages if validation failed and return argument set
+     *                             to false.
+     * @param Container $container Container instance to use to resolve checkers.
      * @return bool|Validator
      */
-    public static function create(array $data, array $validates, $return = true, array &$errors = null)
+    public static function create(
+        array $data,
+        array $validates,
+        $return = true,
+        array &$errors = null,
+        Container $container = null
+    )
     {
-        return static::validateData($data, $validates, $return, $errors);
+        return static::validateData($data, $validates, $return, $errors, $container);
     }
 }

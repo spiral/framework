@@ -13,7 +13,9 @@ use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\Driver;
 use PDO;
 use Spiral\Components\DBAL\Drivers\Postgres\Builders\InsertQuery;
+use Spiral\Core\Container;
 use Spiral\Core\Core;
+use Spiral\Core\CoreInterface;
 
 class PostgresDriver extends Driver
 {
@@ -64,6 +66,13 @@ class PostgresDriver extends Driver
                                 AND table_name = ?";
 
     /**
+     * CoreInterface.
+     *
+     * @var CoreInterface
+     */
+    protected $core = null;
+
+    /**
      * Due postgres sequences mechanism we have two options to get last inserted id with valid value,
      * use nextval() sequence, or use RETURN statement. Due we have ability to analyze any table, let's
      * store primary keys in cache.
@@ -71,6 +80,20 @@ class PostgresDriver extends Driver
      * @var array
      */
     protected $primaryKeys = array();
+
+    /**
+     * Driver instances responsible for all database low level operations which can be DBMS specific
+     * - such as connection preparation, custom table/column/index/reference schemas and etc.
+     *
+     * @param array         $config
+     * @param Container     $container
+     * @param CoreInterface $core
+     */
+    public function __construct(array $config = array(), Container $container, CoreInterface $core)
+    {
+        parent::__construct($config, $container);
+        $this->core = $core;
+    }
 
     /**
      * Method used to get PDO instance for current driver, it can be overwritten by custom driver
@@ -101,7 +124,7 @@ class PostgresDriver extends Driver
     {
         if (empty($this->primaryKeys))
         {
-            $this->primaryKeys = Core::getInstance()->loadData($this->databaseName() . '-primary');
+            $this->primaryKeys = $this->core->loadData($this->databaseName() . '-primary');
         }
 
         if (!empty($this->primaryKeys) && array_key_exists($table, $this->primaryKeys))
@@ -127,7 +150,7 @@ class PostgresDriver extends Driver
         $this->primaryKeys[$table] = $this->primaryKeys[$table][0];
 
         //Caching
-        Core::getInstance()->saveData($this->databaseName() . '-primary', $this->primaryKeys);
+        $this->core->saveData($this->databaseName() . '-primary', $this->primaryKeys);
 
         return $this->primaryKeys[$table];
     }
@@ -174,6 +197,6 @@ class PostgresDriver extends Driver
         return InsertQuery::make(array(
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters);
+            ) + $parameters, $this->container);
     }
 }

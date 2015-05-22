@@ -48,17 +48,28 @@ class Repository extends Component
     protected $tokenizer = null;
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * MigrationRepository instance. Manager responsible for registering and retrieving existed migrations.
      *
      * @param string      $directory
      * @param FileManager $file
      * @param Tokenizer   $tokenizer
+     * @param Container   $container
      */
-    public function __construct($directory, FileManager $file, Tokenizer $tokenizer)
+    public function __construct($directory, FileManager $file, Tokenizer $tokenizer, Container $container)
     {
         $this->directory = $directory;
         $this->file = $file;
         $this->tokenizer = $tokenizer;
+
+        $this->container = $container;
     }
 
     /**
@@ -104,7 +115,7 @@ class Repository extends Component
             );
         }
 
-        return Container::getInstance()->get($migration['class']);
+        return $this->container->get($migration['class']);
     }
 
     /**
@@ -120,7 +131,7 @@ class Repository extends Component
     {
         $name = StringHelper::url($name, '_');
 
-        $filename = StringHelper::interpolate(self::FILENAME_FORMAT, array(
+        $filename = interpolate(self::FILENAME_FORMAT, array(
             'timestamp' => date('Ymd_His'),
             'chunk'     => $chunk,
             'name'      => $name

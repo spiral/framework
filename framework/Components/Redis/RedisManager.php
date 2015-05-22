@@ -278,11 +278,16 @@ class RedisManager extends Component implements InjectionManagerInterface
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
+     * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
+    public static function resolveInjection(
+        \ReflectionClass $class,
+        \ReflectionParameter $parameter,
+        Container $container
+    )
     {
-        return self::getInstance()->client($parameter->getName());
+        return self::getInstance($container)->client($parameter->getName());
     }
 
     /**

@@ -57,6 +57,14 @@ class SchemaBuilder extends Component
     protected $dbal = null;
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Found entity schemas.
      *
      * @var RecordSchema[]
@@ -76,11 +84,17 @@ class SchemaBuilder extends Component
      * @param array           $config
      * @param Tokenizer       $tokenizer
      * @param DatabaseManager $dbal
+     * @param Container       $contaner
      */
-    public function __construct(array $config, Tokenizer $tokenizer, DatabaseManager $dbal)
+    public function __construct(
+        array $config,
+        Tokenizer $tokenizer,
+        DatabaseManager $dbal,
+        Container $container)
     {
         $this->config = $config;
         $this->dbal = $dbal;
+        $this->container = $container;
 
         foreach ($tokenizer->getClasses(self::ACTIVE_RECORD) as $class => $definition)
         {
@@ -92,7 +106,7 @@ class SchemaBuilder extends Component
             $this->records[$class] = RecordSchema::make(array(
                 'class'     => $class,
                 'ormSchema' => $this
-            ));
+            ), $this->container);
         }
 
         //TODO: error with nested relations based on non declared auto key
@@ -156,7 +170,7 @@ class SchemaBuilder extends Component
             return RecordSchema::make(array(
                 'class'     => self::ACTIVE_RECORD,
                 'ormSchema' => $this
-            ));
+            ), $this->container);
         }
 
         if (!isset($this->records[$class]))
@@ -259,7 +273,7 @@ class SchemaBuilder extends Component
         /**
          * @var RelationSchema $relationship
          */
-        $relationship = Container::getInstance()->get($this->relationships[$type], array(
+        $relationship = $this->container->get($this->relationships[$type], array(
             'ormSchema'    => $this,
             'recordSchema' => $recordSchema,
             'name'         => $name,

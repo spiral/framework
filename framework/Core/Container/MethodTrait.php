@@ -17,16 +17,26 @@ trait MethodTrait
      *
      * @param string|\Closure $method     Method name.
      * @param array           $parameters Set of parameters to populate.
+     * @param Container       $container  Container to resolve dependencies.
      * @return mixed
      */
-    protected function callFunction($method = '', array $parameters = array())
+    protected function callFunction(
+        $method = '',
+        array $parameters = array(),
+        Container $container = null
+    )
     {
         $reflection = new \ReflectionMethod($this, $method);
         $reflection->setAccessible(true);
 
+        if (empty($container))
+        {
+            $container = Container::getInstance();
+        }
+
         return $reflection->invokeArgs(
             $this,
-            Container::getInstance()->resolveArguments($reflection, $parameters)
+            $container->resolveArguments($reflection, $parameters)
         );
     }
 }

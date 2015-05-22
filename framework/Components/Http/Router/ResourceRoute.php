@@ -10,6 +10,7 @@ namespace Spiral\Components\Http\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\Request;
+use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Dispatcher\ClientException;
 
@@ -26,13 +27,19 @@ class ResourceRoute extends Route
      * POST    /resource/id   => Controller->update(id)
      * DELETE  /resource/id   => Controller->delete(id)
      *
-     * @param string $resource   Resource name.
-     * @param string $controller Controller class.
+     * @param Container $container
+     * @param string    $resource   Resource name.
+     * @param string    $controller Controller class.
      * @return ResourceRoute
      */
-    public function __construct($resource, $controller)
+    public function __construct(Container $container, $resource, $controller)
     {
-        parent::__construct('resource::' . $resource, $resource . '(/<id>)', $controller . '::');
+        parent::__construct(
+            $container,
+            'resource::' . $resource,
+            $resource . '(/<id>)',
+            $controller . '::'
+        );
     }
 
     /**

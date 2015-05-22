@@ -77,7 +77,7 @@ class ImageManager extends Component
      */
     public function open($filename)
     {
-        return ImageObject::make(compact('filename'));
+        return ImageObject::make(compact('filename'), $this->container);
     }
 
     /**

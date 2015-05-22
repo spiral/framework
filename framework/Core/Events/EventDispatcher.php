@@ -165,17 +165,23 @@ class EventDispatcher extends Component implements DispatcherInterface
      * Get instance of event dispatcher for specified component. By default instance of EventDispatcher
      * will be created, this behaviour can be redefined via binding "events" in Container.
      *
-     * @param string $name Component alias.
+     * @param string    $name      Component alias.
+     * @param Container $container Container to resolve event dispatcher. Global container will be
+     *                             used if nothing else is provided.
      * @return mixed|null|object|static
      */
-    public static function getDispatcher($name)
+    public static function getDispatcher($name, Container $container = null)
     {
         if (isset(self::$dispatchers[$name]))
         {
             return self::$dispatchers[$name];
         }
 
-        $container = Container::getInstance();
+        if (empty($container))
+        {
+            $container = Container::getInstance();
+        }
+
         if (!$container->hasBinding('events'))
         {
             return self::$dispatchers[$name] = new static();

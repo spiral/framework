@@ -8,10 +8,18 @@
  */
 namespace Spiral\Components\Http\Router;
 
-use Spiral\Core\Core;
+use Spiral\Core\Container;
 
 trait RouterTrait
 {
+    /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
     /**
      * Set of pre-defined routes to be send to Router and passed thought request later.
      *
@@ -49,7 +57,10 @@ trait RouterTrait
      */
     protected function createRouter()
     {
-        return Router::make(array('routes' => $this->routes));
+        return Router::make(array(
+            'container' => $this->container,
+            'routes'    => $this->routes
+        ), $this->container);
     }
 
     /**
@@ -117,7 +128,7 @@ trait RouterTrait
      */
     public function route($pattern, $target = null, array $defaults = array())
     {
-        $this->addRoute($route = new Route($pattern, $pattern, $target, $defaults));
+        $this->addRoute($route = new Route($this->container, $pattern, $pattern, $target, $defaults));
 
         return $route;
     }
@@ -139,7 +150,7 @@ trait RouterTrait
      */
     public function resource($resource, $controller)
     {
-        $this->addRoute($route = new ResourceRoute($resource, $controller));
+        $this->addRoute($route = new ResourceRoute($this->container, $resource, $controller));
 
         return $route;
     }

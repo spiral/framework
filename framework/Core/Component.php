@@ -31,15 +31,19 @@ abstract class Component
      * same class name. Using binding mechanism target instance can be redefined to use another
      * declaration. Be aware of that.
      *
-     * @param array $parameters Named parameters list to use for instance constructing.
+     * @param array     $parameters Named parameters list to use for instance constructing.
+     * @param Container $container  Container instance used to resolve dependencies, if not provided
+     *                              global container will be used.
      * @return static
      * @throws CoreException
      */
-    public static function make($parameters = array())
+    public static function make($parameters = array(), Container $container = null)
     {
-        return Container::getInstance()->get(
-            get_called_class(),
-            $parameters
-        );
+        if (empty($container))
+        {
+            $container = Container::getInstance();
+        }
+
+        return $container->get(get_called_class(), $parameters);
     }
 }

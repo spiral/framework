@@ -32,6 +32,14 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     const CONTAINER = 'Spiral\Components\Storage\StorageContainer';
 
     /**
+     * Container instance.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * List of initiated storage containers, every container represent one "virtual" folder which
      * can be located on local machine, another server (ftp) or in cloud (amazon, rackspace). Container
      * provides basic unified functionality to manage files inside, all low level operations perform
@@ -146,11 +154,16 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
+     * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
+    public static function resolveInjection(
+        \ReflectionClass $class,
+        \ReflectionParameter $parameter,
+        Container $container
+    )
     {
-        return self::getInstance()->container($parameter->getName());
+        return self::getInstance($container)->container($parameter->getName());
     }
 
     /**
@@ -240,8 +253,8 @@ class StorageManager extends Component implements Container\InjectionManagerInte
 
         if (!empty($filename))
         {
-            $extension = FileManager::getInstance()->extension($filename);
-            $name = StringHelper::interpolate($name, array(
+            $extension = FileManager::getInstance($this->container)->extension($filename);
+            $name = interpolate($name, array(
                 'ext'       => $extension,
                 'name'      => substr(basename($filename), 0, -1 * (strlen($extension) + 1)),
                 'filename'  => basename($filename),
@@ -265,6 +278,6 @@ class StorageManager extends Component implements Container\InjectionManagerInte
             'address'   => $address,
             'storage'   => $this,
             'container' => null
-        ));
+        ), $this->container);
     }
 }

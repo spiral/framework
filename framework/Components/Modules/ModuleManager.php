@@ -173,7 +173,11 @@ class ModuleManager extends Component
         }
 
         //Updating configuration
-        $config = ConfigWriter::make(array('name' => 'modules', 'method' => ConfigWriter::OVERWRITE));
+        $config = ConfigWriter::make(
+            array('name' => 'modules', 'method' => ConfigWriter::OVERWRITE),
+            $this->container
+        );
+
         $config->setConfig($this->modules)->writeConfig(directory('config'), FileManager::READONLY);
     }
 }

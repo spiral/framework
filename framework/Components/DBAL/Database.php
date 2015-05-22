@@ -16,6 +16,7 @@ use Spiral\Components\DBAL\Builders\InsertQuery;
 use Spiral\Components\DBAL\Builders\SelectQuery;
 use Spiral\Components\DBAL\Builders\UpdateQuery;
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Core\Container\InjectableInterface;
 
 class Database extends Component implements InjectableInterface
@@ -126,18 +127,29 @@ class Database extends Component implements InjectableInterface
     protected $driver = null;
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * New Database instance. Database class is high level abstraction at top of Driver. Multiple
      * databases can use same driver and be different by table prefix.
      *
-     * @param string $name        Internal database name/id.
-     * @param Driver $driver      Driver instance responsible for database connection.
-     * @param string $tablePrefix Default database table prefix, will be used for all table identifiers.
+     * @param string    $name        Internal database name/id.
+     * @param Driver    $driver      Driver instance responsible for database connection.
+     * @param string    $tablePrefix Default database table prefix, will be used for all table identifiers.
+     * @param Container $container
      */
-    public function __construct($name, Driver $driver, $tablePrefix = '')
+    public function __construct($name, Driver $driver, $tablePrefix = '', Container $container)
     {
         $this->name = $name;
         $this->driver = $driver;
         $this->setPrefix($tablePrefix);
+
+        $this->container = $container;
     }
 
     /**
@@ -262,7 +274,7 @@ class Database extends Component implements InjectableInterface
      */
     public function cached($lifetime, $query, array $parameters = array(), CacheStore $store = null)
     {
-        $store = $store ?: CacheManager::getInstance()->store();
+        $store = !empty($store) ? $store : $this->container->get(CacheManager::getAlias())->store();
 
         $cacheID = md5(serialize(array($query, $parameters, $this->name)));
 
@@ -277,7 +289,10 @@ class Database extends Component implements InjectableInterface
         }
 
         return $this->event('cached', array(
-            'result'     => CachedResult::make(compact('store', 'cacheID', 'query', 'parameters', 'data')),
+            'result'     => CachedResult::make(
+                compact('store', 'cacheID', 'query', 'parameters', 'data'),
+                $this->container
+            ),
             'query'      => $query,
             'parameters' => $parameters,
             'database'   => $this
@@ -443,7 +458,7 @@ class Database extends Component implements InjectableInterface
      */
     public function table($name)
     {
-        return Table::make(array('name' => $name, 'database' => $this));
+        return Table::make(array('name' => $name, 'database' => $this), $this->container);
     }
 
     /**

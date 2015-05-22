@@ -62,6 +62,14 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     protected $loader = null;
 
     /**
+     * Container.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Cached list of all existed commands.
      *
      * @var array
@@ -74,13 +82,16 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      * @param Tokenizer     $tokenizer
      * @param CoreInterface $core
      * @param Loader        $loader
+     * @param Container     $container
      */
-    public function __construct(CoreInterface $core, Tokenizer $tokenizer, Loader $loader)
+    public function __construct(CoreInterface $core, Tokenizer $tokenizer, Loader $loader, Container $container)
     {
         $this->core = $core;
         $this->tokenizer = $tokenizer;
         $this->loader = $loader;
         $this->commands = $core->loadData('commands');
+
+        $this->container = $container;
 
         if (!is_array($this->commands))
         {
@@ -111,7 +122,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
         {
             try
             {
-                $command = Container::getInstance()->get($command);
+                $command = $this->container->get($command);
                 if (method_exists($command, 'isAvailable') && !$command->isAvailable())
                 {
                     continue;
@@ -200,7 +211,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
         return CommandOutput::make(array(
             'code'   => $code,
             'output' => $output
-        ));
+        ), $this->container);
     }
 
     /**

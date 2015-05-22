@@ -126,17 +126,22 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
+     * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
+    public static function resolveInjection(
+        \ReflectionClass $class,
+        \ReflectionParameter $parameter,
+        Container $container
+    )
     {
         if (!$class->isInstantiable())
         {
-            return self::getInstance()->store();
+            return self::getInstance($container)->store();
         }
 
-        return Container::getInstance()->get($class->getName(), array(
-            'cache' => self::getInstance()
+        return $container->get($class->getName(), array(
+            'cache' => self::getInstance($container)
         ), null, true);
     }
 

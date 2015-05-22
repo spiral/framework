@@ -18,10 +18,17 @@ trait SingletonTrait
      * declared and not empty. Class will be automatically created using IoC. Another class instance
      * or realization can be binded under componentAlias, in this case this method return that object.
      *
+     * @param Container $container Container instance to resolve object, global container will be used
+     *                             if no option provided.
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(Container $container = null)
     {
-        return Container::getInstance()->get(static::SINGLETON);
+        if (empty($container))
+        {
+            $container = Container::getInstance();
+        }
+
+        return $container->get(static::SINGLETON);
     }
 }
