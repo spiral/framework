@@ -212,11 +212,7 @@ abstract class Command extends BaseCommand
         $this->options = $this->input->getOptions();
         $this->arguments = $this->input->getArguments();
 
-        $this->ask = AskHelper::make(array(
-            'helper' => $this->getHelper('question'),
-            'input'  => $input,
-            'output' => $output
-        ));
+        $this->ask = new AskHelper($this->getHelper('question'), $input, $output);
 
         return parent::run($input, $output);
     }

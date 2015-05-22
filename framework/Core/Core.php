@@ -540,7 +540,7 @@ class Core extends Container implements CoreInterface
         $name = $this->makeFilename($name, $directory);
 
         //This is required as FileManager system component and can be called pretty early
-        $file = FileManager::getInstance();
+        $file = FileManager::getInstance($this);
 
         $data = '<?php return ' . var_export($data, true) . ';';
         if ($file->write($name, $data, FileManager::RUNTIME, true))

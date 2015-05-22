@@ -385,6 +385,18 @@ class Tokenizer extends Component
     }
 
     /**
+     * Check if file cache is presented.
+     *
+     * @param string $filename
+     * @return bool
+     */
+    protected function hasFileCache($filename)
+    {
+        return isset($this->cache[$filename])
+        && $this->cache[$filename]['md5'] == $this->file->md5($filename);
+    }
+
+    /**
      * Get ReflectionFile for given filename, reflection can be used to retrieve list of declared
      * classes, interfaces, traits and functions, additional it can locate function usages.
      *
@@ -398,23 +410,13 @@ class Tokenizer extends Component
             $this->cache = $this->core->loadData('tokenizer-reflections');
         }
 
-        if (
-            isset($this->cache[$filename])
-            && $this->cache[$filename]['md5'] == $this->file->md5($filename)
-        )
+        if ($this->hasFileCache($filename))
         {
-            $reflectionFile = ReflectionFile::make(array(
-                'filename'     => $filename,
-                'tokenizer'    => $this,
-                'cachedSchema' => $this->cache[$filename]
-            ));
+            $reflectionFile = new ReflectionFile($filename, $this, $this->cache[$filename]);
         }
         else
         {
-            $reflectionFile = ReflectionFile::make(array(
-                'filename'  => $filename,
-                'tokenizer' => $this
-            ));
+            $reflectionFile = new ReflectionFile($filename, $this);
 
             $this->cache[$filename] = array(
                     'md5' => $this->file->md5($filename)

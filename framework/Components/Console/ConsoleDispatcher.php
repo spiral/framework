@@ -208,10 +208,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
             $output = ($output ?: new BufferedOutput())
         );
 
-        return CommandOutput::make(array(
-            'code'   => $code,
-            'output' => $output
-        ), $this->container);
+        return new CommandOutput($code, $output);
     }
 
     /**
