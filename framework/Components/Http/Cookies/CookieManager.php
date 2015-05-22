@@ -117,10 +117,9 @@ class CookieManager extends Component implements MiddlewareInterface
      *
      * @param ServerRequestInterface $request Server request instance.
      * @param \Closure               $next    Next middleware/target.
-     * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
+    public function __invoke(ServerRequestInterface $request, \Closure $next = null)
     {
         $this->request = $request;
 

@@ -39,14 +39,6 @@ class MiddlewarePipe extends Component
     protected $target = null;
 
     /**
-     * Pipe context, usually includes parent object or options provided from outside. Can be used to
-     * identify basePath, base request or route options.
-     *
-     * @var mixed
-     */
-    protected $context = null;
-
-    /**
      * Middleware Pipeline used by HttpDispatchers to pass request thought middleware(s) and receive
      * filtered result. Pipeline can be used outside dispatcher in routes, modules and controllers.
      *
@@ -93,13 +85,10 @@ class MiddlewarePipe extends Component
      * method and middleware logic.
      *
      * @param ServerRequestInterface $input
-     * @param mixed                  $context
      * @return mixed
      */
-    public function run(ServerRequestInterface $input, $context = null)
+    public function run(ServerRequestInterface $input)
     {
-        $this->context = $context;
-
         return $this->next(0, $input);
     }
 
@@ -143,6 +132,6 @@ class MiddlewarePipe extends Component
         $middleware = $this->middleware[$position];
         $middleware = is_string($middleware) ? $this->container->get($middleware) : $middleware;
 
-        return $middleware($input, $next, $this->context);
+        return $middleware($input, $next);
     }
 }
