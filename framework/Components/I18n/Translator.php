@@ -42,11 +42,9 @@ class Translator extends Component
     const I18N_POSTFIX = ']]';
 
     /**
-     * Active pluralization function, this function will be created on demand based on pluralization
-     * formula defined in language options and should return form id based on provided number.
+     * Constructed language pluralizers.
      *
-     * @link http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html
-     * @var \Closure[]
+     * @var PluralizerInterface[]
      */
     protected $pluralizers = array();
 
@@ -93,7 +91,6 @@ class Translator extends Component
 
         $this->language = $this->config['default'];
         $this->languageOptions = $this->config['languages'][$this->language];
-        $this->pluralizers[$this->language] = null;
     }
 
     /**
@@ -115,11 +112,6 @@ class Translator extends Component
 
         $this->language = $language;
         $this->languageOptions = $this->config['languages'][$language];
-
-        if (!isset($this->pluralizers[$language]))
-        {
-            $this->pluralizers[$language] = null;
-        }
     }
 
     /**
@@ -130,6 +122,29 @@ class Translator extends Component
     public function getLanguage()
     {
         return $this->language;
+    }
+
+    /**
+     * Get language specific pluralizer.
+     *
+     * @param string $language If empty current language pluralizer will be returned.
+     * @return PluralizerInterface
+     */
+    public function getPluralizer($language = '')
+    {
+        if (empty($language))
+        {
+            $language = $this->language;
+        }
+
+        if (isset($this->pluralizers[$language]))
+        {
+            return $this->pluralizers[$language];
+        }
+
+        $pluralizer = $this->config['languages'][$language]['pluralizer'];
+
+        return $this->pluralizers[$language] = new $pluralizer;
     }
 
     /**
@@ -265,19 +280,11 @@ class Translator extends Component
     {
         $this->loadBundle($bundle = $this->config['plurals']);
 
-        if (!$pluralizer = $this->pluralizers[$this->language])
-        {
-            $pluralizer = ($this->pluralizers[$this->language] = create_function(
-                '$number, $form',
-                'return ' . $this->languageOptions['pluralizer']['formula'] . ';'
-            ));
-        }
-
         if (!isset($this->bundles[$bundle][$phrase = $this->normalize($phrase)]))
         {
             $this->bundles[$bundle][$phrase] = array_pad(
                 array(),
-                $this->languageOptions['pluralizer']['countForms'],
+                $this->getPluralizer()->countForms(),
                 func_get_arg(0)
             );
 
@@ -289,9 +296,8 @@ class Translator extends Component
             return $this->bundles[$bundle][$phrase];
         }
 
-        return sprintf($pluralizer(
-            $number,
-            $this->bundles[$bundle][$phrase]),
+        return sprintf(
+            $this->getPluralizer()->getForm($number, $this->bundles[$bundle][$phrase]),
             $numberFormat ? number_format($number) : $number
         );
     }

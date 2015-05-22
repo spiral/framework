@@ -43,18 +43,8 @@ class Exporter extends LocalicationExporter
             throw new I18nException("No language specified to be exported.");
         }
 
-        /**
-         * We can reuse plural formula to let PO editor understand our phrases.
-         */
-        $pluralForms = $this->i18nConfig['languages'][$this->language]['pluralizer']['countForms'];
-
-        $formula = preg_replace(
-            '/\$form\[([0-9])\]/',
-            '\1',
-            $this->i18nConfig['languages'][$this->language]['pluralizer']['formula']
-        );
-
-        $pluralFormula = str_replace('$number', 'n', $formula);
+        $pluralForms = $this->i18n->getPluralizer($this->language)->countForms();
+        $pluralFormula = $this->i18n->getPluralizer($this->language)->getFormula();
 
         /**
          * PO file header.
