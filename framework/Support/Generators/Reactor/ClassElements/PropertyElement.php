@@ -177,9 +177,19 @@ class PropertyElement extends BaseElement
 
         if ($this->isDefault())
         {
-            if ($this->defaultValue === array())
+            if (is_array($this->defaultValue))
             {
-                $property .= ' = array()';
+                $exporter = new ArrayExporter();
+                $value = explode("\n", $exporter->export($this->defaultValue, self::INDENT));
+
+                foreach ($value as &$line)
+                {
+                    $line = self::setIndent($line, $indentLevel);
+                    unset($line);
+                }
+
+                $value[0] = ltrim($value[0]);
+                $property .= ' = ' . join("\n", $value);
             }
             else
             {

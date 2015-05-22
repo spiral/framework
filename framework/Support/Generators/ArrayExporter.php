@@ -75,7 +75,7 @@ class ArrayExporter extends Component
         }
         else
         {
-            return "array({$indent}\n" . join(",{$keyIndent}", $result) . "\n)";
+            return "array({$keyIndent}" . join(",{$keyIndent}", $result) . "\n)";
         }
     }
 
