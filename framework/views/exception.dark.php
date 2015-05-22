@@ -7,6 +7,7 @@ use Spiral\Components\Debug\Dumper;
 use Spiral\Components\Debug\Logger;
 
 $tokenizer = Tokenizer::getInstance();
+$dumper = Dumper::getInstance();
 
 /**
  * Code highlighting styles.
@@ -39,7 +40,7 @@ $tokenizer->setHighlightingStyles(array(
 /**
  * Variable dumping styles.
  */
-Dumper::setStyles(array(
+$dumper->setStyles(array(
     'maxLevel'  => 10,
     'container' => 'background-color: #232323;',
     'indent'    => '&middot;    ',
@@ -394,10 +395,10 @@ Dumper::setStyles(array(
                                         . '</span>';
                                 }
 
-                                $display = Dumper::getStyle($display, 'value', $type);
+                                $display = $dumper->getStyle($display, 'value', $type);
                                 $display = '<span class="argument" onclick="showDump(' . $argumentID . ')">' . $display
                                     . '<div id="dump-argument-' . $argumentID . '" class="dump">' .
-                                    $argument = Dumper::dump($argument, true) . '</div></span>';
+                                    $argument = dump($argument, true) . '</div></span>';
 
                                 $arguments[] = $display;
                                 $argumentID++;
@@ -449,7 +450,7 @@ Dumper::setStyles(array(
                         <?php echo $name?> (<?php echo count($GLOBALS[$variable]) ?>)
                     </div>
                     <div class="dump" id="dump-<?php echo $name?>" style="display: none;">
-                        <?php Dumper::dump($GLOBALS[$variable]) ?>
+                        <?php dump($GLOBALS[$variable]) ?>
                     </div>
                 </div>
             <?php
