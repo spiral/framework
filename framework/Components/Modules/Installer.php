@@ -250,9 +250,9 @@ class Installer extends Component
         {
             $this->files[$destination] = array(
                 'source' => null,
-                'md5' => null,
-                'size' => null,
-                'mode' => $mode
+                'md5'    => null,
+                'size'   => null,
+                'mode'   => $mode
             );
         }
 
@@ -531,13 +531,24 @@ class Installer extends Component
      */
     public function install($conflicts = self::CONFLICTS_OVERWRITE)
     {
-        self::logger()->info("Mounting files.");
-        $this->mountFiles($conflicts);
-
         self::logger()->info("Mounting configurations.");
         $this->mountConfigs();
 
         self::logger()->info("Mounting migrations.");
         $this->mountMigrations();
+
+        $this->update();
+    }
+
+    /**
+     * Perform module update, method will move all module files, no configs or migrations will be
+     * created/altered.
+     *
+     * @param int $conflicts
+     */
+    public function update($conflicts = self::CONFLICTS_OVERWRITE)
+    {
+        self::logger()->info("Mounting files.");
+        $this->mountFiles($conflicts);
     }
 }

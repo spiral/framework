@@ -13,7 +13,7 @@ use Spiral\Components\Storage\StorageContainer;
 use Spiral\Support\Curl\CurlException;
 use Spiral\Support\Curl\CurlQuery;
 
-class S3Query extends CurlQuery
+class AmazonQuery extends CurlQuery
 {
     /**
      * Common storage query abilities.

@@ -15,7 +15,7 @@ use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
 use Spiral\Components\Storage\StorageManager;
 
-class AmazonS3Server implements ServerInterface
+class AmazonCloudServer implements ServerInterface
 {
     /**
      * Common storage server functionality.
@@ -81,11 +81,11 @@ class AmazonS3Server implements ServerInterface
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
      * @param string           $method    HTTP method.
-     * @return S3Query
+     * @return AmazonQuery
      */
     protected function query(StorageContainer $container, $name, $method = 'HEAD')
     {
-        return new S3Query($this->options, $container, $name, $method);
+        return new AmazonQuery($this->options, $container, $name, $method);
     }
 
     /**

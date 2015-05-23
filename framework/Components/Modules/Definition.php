@@ -172,7 +172,7 @@ class Definition extends Component
      *
      * @return array|bool
      */
-    public function isMounted()
+    public function isInstalled()
     {
         return $this->modules->hasModule($this->getName());
     }

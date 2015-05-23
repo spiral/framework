@@ -56,28 +56,22 @@ class ModuleManager extends Component
     {
         $this->container = $container;
 
-        try
+        $this->modules = $core->loadConfig('modules');
+        if (!empty($this->modules))
         {
-            $this->modules = $core->loadConfig('modules');
-            if (!empty($this->modules))
+            foreach ($this->modules as $module)
             {
-                foreach ($this->modules as $module)
+                foreach ($module['bindings'] as $alias => $resolver)
                 {
-                    foreach ($module['bindings'] as $alias => $resolver)
-                    {
-                        $this->container->bind($alias, $resolver);
-                    }
+                    $this->container->bind($alias, $resolver);
+                }
 
-                    if ($module['bootstrap'])
-                    {
-                        $this->container->get($module['class'], compact('core'))->bootstrap();
-                    }
+                if ($module['bootstrap'])
+                {
+                    //Some modules may request initialization
+                    $this->container->get($module['class'], compact('core'))->bootstrap();
                 }
             }
-        }
-        catch (CoreException $exception)
-        {
-            //Suspending all exceptions, i have to remember why i'm doing that
         }
     }
 

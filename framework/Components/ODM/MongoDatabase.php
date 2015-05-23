@@ -30,6 +30,14 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     const PROFILE_EXPLAIN = 2;
 
     /**
+     * ODMManager component.
+     *
+     * @invisible
+     * @var ODM
+     */
+    protected $odm = null;
+
+    /**
      * ODM database instance name/id.
      *
      * @var string
@@ -46,14 +54,6 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     );
 
     /**
-     * ODMManager component.
-     *
-     * @invisible
-     * @var ODM
-     */
-    protected $odm = null;
-
-    /**
      * Mongo connection instance.
      *
      * @var \Mongo|\MongoClient
@@ -63,15 +63,15 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
     /**
      * New MongoDatabase instance.
      *
+     * @param ODM    $odm    ODMManager component.
      * @param string $name   ODM database instance name/id.
      * @param array  $config Connection configuration.
-     * @param ODM    $odm    ODMManager component.
      */
-    public function __construct($name, array $config, ODM $odm)
+    public function __construct(ODM $odm, $name, array $config)
     {
+        $this->odm = $odm;
         $this->name = $name;
         $this->config = $this->config + $config;
-        $this->odm = $odm;
 
         //Selecting client
         benchmark('mongo::connect', $this->config['database']);
@@ -142,11 +142,6 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
      */
     public function odmCollection($name, array $query = array())
     {
-        return Collection::make(array(
-            'name'     => $name,
-            'database' => $this->name,
-            'odm'      => $this->odm,
-            'query'    => $query
-        ));
+        return new Collection($this->odm, $this->name, $name, $query);
     }
 }

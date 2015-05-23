@@ -62,10 +62,7 @@ class SchemaBuilder extends Component
                 continue;
             }
 
-            $this->documents[$class] = DocumentSchema::make(array(
-                'class'     => $class,
-                'odmSchema' => $this
-            ));
+            $this->documents[$class] = new DocumentSchema($class, $this);
         }
 
         foreach ($this->getDocumentSchemas() as $documentSchema)
@@ -86,23 +83,23 @@ class SchemaBuilder extends Component
                 if ($documentSchema->getCollection() == $primaryDocument->getCollection())
                 {
                     //Child document use same collection as parent?
-                    $this->collections[$collection] = CollectionSchema::make(array(
-                        'name'            => $primaryDocument->getCollection(),
-                        'database'        => $primaryDocument->getDatabase(),
-                        'classDefinition' => $primaryDocument->classDefinition(),
-                        'primaryClass'    => $primaryDocument->getClass(),
-                        'odmSchema'       => $this
-                    ));
+                    $this->collections[$collection] = new CollectionSchema(
+                        $primaryDocument->getCollection(),
+                        $primaryDocument->getDatabase(),
+                        $primaryDocument->classDefinition(),
+                        $primaryDocument->getClass(),
+                        $this
+                    );
                 }
                 else
                 {
-                    $this->collections[$collection] = CollectionSchema::make(array(
-                        'name'            => $documentSchema->getCollection(),
-                        'database'        => $documentSchema->getDatabase(),
-                        'classDefinition' => $documentSchema->classDefinition(),
-                        'primaryClass'    => $documentSchema->getClass(),
-                        'odmSchema'       => $this
-                    ));
+                    $this->collections[$collection] = new CollectionSchema(
+                        $documentSchema->getCollection(),
+                        $documentSchema->getDatabase(),
+                        $documentSchema->classDefinition(),
+                        $documentSchema->getClass(),
+                        $this
+                    );
                 }
             }
         }

@@ -16,8 +16,8 @@ class ListCommand extends Command
     /**
      * Status texts.
      */
-    const MOUNTED     = '<info>installed</info>';
-    const NOT_MOUNTED = '<fg=red>not installed</fg=red>';
+    const INTALLED      = '<info>installed</info>';
+    const NOT_INSTALLED = '<fg=red>not installed</fg=red>';
 
     /**
      * Command name.
@@ -69,7 +69,7 @@ class ListCommand extends Command
             $table->addRow(array(
                 $module->getName(),
                 $this->getVersion($module->getName()),
-                $module->isMounted() ? self::MOUNTED : self::NOT_MOUNTED,
+                $module->isInstalled() ? self::INTALLED : self::NOT_INSTALLED,
                 StringHelper::formatBytes($module->getSize()),
                 $this->file->relativePath($module->getLocation()),
                 wordwrap($module->getDescription())

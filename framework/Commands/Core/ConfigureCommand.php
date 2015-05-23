@@ -73,7 +73,11 @@ class ConfigureCommand extends Command
         $this->console->command('core:touch', array(), $this->output);
 
         //Installing modules
-        $this->writeln("\n<info>Installing/updating all available modules.</info>");
+        $this->writeln("\n<info>Installing all available modules.</info>");
+        $this->console->command('modules:install', array('--all' => true), $this->output);
+
+        //Updating modules
+        $this->writeln("\n<info>Updating existed modules.</info>");
         $this->console->command('modules:update', array(), $this->output);
 
         //Updating commands cache

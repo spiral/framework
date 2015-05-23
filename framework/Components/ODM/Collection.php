@@ -57,6 +57,14 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
     const DESCENDING = -1;
 
     /**
+     * ODM component.
+     *
+     * @invisible
+     * @var ODM
+     */
+    protected $odm = null;
+
+    /**
      * Mongo collection name.
      *
      * @var string
@@ -69,14 +77,6 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @var string
      */
     protected $database = 'default';
-
-    /**
-     * ODM component.
-     *
-     * @invisible
-     * @var ODM
-     */
-    protected $odm = null;
 
     /**
      * Collection schema used to define classes used for documents and other operations.
@@ -105,16 +105,17 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * resolve correct document instance based on response.
      *
      * @link http://docs.mongodb.org/manual/tutorial/query-documents/
-     * @param string $name     Collection name.
-     * @param string $database Associated database name/id.
      * @param ODM    $odm      ODMManager component instance.
+     * @param string $database Associated database name/id.
+     * @param string $name     Collection name.
      * @param array  $query    Fields and conditions to query by.
      */
-    public function __construct($name, $database, ODM $odm, array $query = array())
+    public function __construct(ODM $odm, $database, $name, array $query = array())
     {
+        $this->odm = $odm;
+
         $this->name = $name;
         $this->database = $database;
-        $this->odm = $odm;
         $this->query = $query;
     }
 
