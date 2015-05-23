@@ -112,9 +112,9 @@ class PostgresDriver extends Driver
 
     /**
      * Get primary key name for dedicated table, used by InsertQuery to generate insert statement.
-     * Attention, DO NOT use this function by yourself. It's probably (not sure yet) will be erased
-     * or modified in future versions and replaced with ID reservation based on sequence name. If you
-     * need table primary key use table schemas.
+     * Attention, DO NOT use this function by yourself. It will be likely erased or modified in future
+     * versions and replaced with ID reservation based on sequence name. If you need table primary key
+     * use table schemas.
      *
      * @param string $table Fully specified table name, including postfix.
      * @return string
@@ -124,7 +124,7 @@ class PostgresDriver extends Driver
     {
         if (empty($this->primaryKeys))
         {
-            $this->primaryKeys = $this->core->loadData($this->databaseName() . '-primary');
+            $this->primaryKeys = $this->core->loadData($this->getDatabaseName() . '-primary');
         }
 
         if (!empty($this->primaryKeys) && array_key_exists($table, $this->primaryKeys))
@@ -150,7 +150,7 @@ class PostgresDriver extends Driver
         $this->primaryKeys[$table] = $this->primaryKeys[$table][0];
 
         //Caching
-        $this->core->saveData($this->databaseName() . '-primary', $this->primaryKeys);
+        $this->core->saveData($this->getDatabaseName() . '-primary', $this->primaryKeys);
 
         return $this->primaryKeys[$table];
     }

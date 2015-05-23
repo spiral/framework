@@ -92,7 +92,7 @@ class TableSchema extends AbstractTableSchema
     {
         $query = "SELECT * FROM information_schema.referential_constraints "
             . "WHERE constraint_schema = ? AND table_name = ?";
-        $references = $this->driver->query($query, array($this->driver->databaseName(), $this->name));
+        $references = $this->driver->query($query, array($this->driver->getDatabaseName(), $this->name));
 
         foreach ($references as $reference)
         {
@@ -101,7 +101,7 @@ class TableSchema extends AbstractTableSchema
 
             $column = $this->driver->query($query, array(
                 $reference['CONSTRAINT_NAME'],
-                $this->driver->databaseName(),
+                $this->driver->getDatabaseName(),
                 $this->name
             ))->fetch();
 

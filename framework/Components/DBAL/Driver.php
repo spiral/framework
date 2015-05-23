@@ -163,7 +163,7 @@ abstract class Driver extends Component
      *
      * @return string|null
      */
-    public function databaseName()
+    public function getDatabaseName()
     {
         return $this->databaseName;
     }
@@ -216,7 +216,7 @@ abstract class Driver extends Component
         }
 
         benchmark(static::DRIVER_NAME . "::connect", $this->config['connection']);
-        $this->pdo = $this->createPDO();
+        $this->pdo = $this->event('connect', $this->createPDO());
         benchmark(static::DRIVER_NAME . "::connect", $this->config['connection']);
 
         return $this->pdo;
@@ -258,6 +258,7 @@ abstract class Driver extends Component
      */
     public function disconnect()
     {
+        $this->event('disconnect', $this->pdo);
         $this->pdo = null;
 
         return $this;
@@ -330,8 +331,8 @@ abstract class Driver extends Component
         {
             if ($this->config['profiling'])
             {
-                $explained = DatabaseManager::interpolateQuery($query, $parameters);
-                benchmark(static::DRIVER_NAME . "::" . $this->databaseName(), $explained);
+                $builtQuery = DatabaseManager::interpolateQuery($query, $parameters);
+                benchmark(static::DRIVER_NAME . "::" . $this->getDatabaseName(), $builtQuery);
             }
 
             $pdoStatement = $this->getPDO()->prepare($query);
@@ -343,16 +344,18 @@ abstract class Driver extends Component
                 'parameters' => $parameters
             ));
 
-            if ($this->config['profiling'] && isset($explained))
+            if ($this->config['profiling'] && isset($builtQuery))
             {
-                benchmark(static::DRIVER_NAME . "::" . $this->databaseName(), $explained);
-                self::logger()->debug($explained, compact('query', 'parameters'));
+                benchmark(static::DRIVER_NAME . "::" . $this->getDatabaseName(), $builtQuery);
+                self::logger()->debug($builtQuery, compact('query', 'parameters'));
             }
         }
         catch (\PDOException $exception)
         {
             self::logger()->error(
-                DatabaseManager::interpolateQuery($query, $parameters),
+                !empty($builtQuery)
+                    ? $builtQuery
+                    : DatabaseManager::interpolateQuery($query, $parameters),
                 compact('query', 'parameters')
             );
 
@@ -489,7 +492,7 @@ abstract class Driver extends Component
     protected function isolationLevel($level)
     {
         self::logger()->info("Setting transaction isolation level to '{$level}'.");
-        $level && $this->statement("SET TRANSACTION ISOLATION LEVEL {$level}");
+        !empty($level) && $this->statement("SET TRANSACTION ISOLATION LEVEL {$level}");
     }
 
     /**
@@ -588,10 +591,7 @@ abstract class Driver extends Component
      */
     public function columnSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return $this->container->get(
-            static::SCHEMA_COLUMN,
-            compact('table', 'name', 'schema')
-        );
+        return $this->container->get(static::SCHEMA_COLUMN, compact('table', 'name', 'schema'));
     }
 
     /**
@@ -605,10 +605,7 @@ abstract class Driver extends Component
      */
     public function indexSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return $this->container->get(
-            static::SCHEMA_INDEX,
-            compact('table', 'name', 'schema')
-        );
+        return $this->container->get(static::SCHEMA_INDEX, compact('table', 'name', 'schema'));
     }
 
     /**
@@ -622,10 +619,7 @@ abstract class Driver extends Component
      */
     public function referenceSchema(AbstractTableSchema $table, $name, $schema = null)
     {
-        return $this->container->get(
-            static::SCHEMA_REFERENCE,
-            compact('table', 'name', 'schema')
-        );
+        return $this->container->get(static::SCHEMA_REFERENCE, compact('table', 'name', 'schema'));
     }
 
     /**
@@ -728,7 +722,7 @@ abstract class Driver extends Component
         return (object)array(
             'connection' => $this->config['connection'],
             'connected'  => $this->isConnected(),
-            'database'   => $this->databaseName(),
+            'database'   => $this->getDatabaseName(),
             'options'    => $this->options
         );
     }

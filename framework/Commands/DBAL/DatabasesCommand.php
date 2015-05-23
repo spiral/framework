@@ -77,7 +77,7 @@ class DatabasesCommand extends Command
 
             $header = array(
                 $database->getName(),
-                $database->getDriver()->databaseName(),
+                $database->getDriver()->getDatabaseName(),
                 $driver::DRIVER_NAME,
                 $database->getPrefix() ?: "<comment>---</comment>"
             );
