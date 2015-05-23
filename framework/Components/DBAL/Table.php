@@ -38,7 +38,7 @@ use Spiral\Core\Component;
  * @method int max($identifier) Perform aggregation based on column or expression value.
  * @method int sum($identifier) Perform aggregation based on column or expression value.
  */
-class Table extends Component implements \JsonSerializable
+class Table extends Component implements \JsonSerializable, \IteratorAggregate, \Countable
 {
     /**
      * Table name, without prefix.

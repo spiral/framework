@@ -130,11 +130,11 @@ class Database extends Component implements InjectableInterface
      * New Database instance. Database class is high level abstraction at top of Driver. Multiple
      * databases can use same driver and be different by table prefix.
      *
-     * @param string $name        Internal database name/id.
      * @param Driver $driver      Driver instance responsible for database connection.
+     * @param string $name        Internal database name/id.
      * @param string $tablePrefix Default database table prefix, will be used for all table identifiers.
      */
-    public function __construct($name, Driver $driver, $tablePrefix = '')
+    public function __construct(Driver $driver, $name, $tablePrefix = '')
     {
         $this->name = $name;
         $this->driver = $driver;
@@ -274,18 +274,21 @@ class Database extends Component implements InjectableInterface
 
         if (empty($key))
         {
-            $key = md5(serialize(array($query, $parameters, $this->name)));
+            /**
+             * Trying to build unique query id based on provided options and environment.
+             */
+            $key = md5(serialize(array(
+                $query,
+                $parameters,
+                $this->name,
+                $this->tablePrefix
+            )));
         }
 
-        if (!$store->has($key))
+        $data = $store->remember($key, $lifetime, function () use ($query, $parameters)
         {
-            $data = $this->query($query, $parameters)->fetchAll();
-            $store->set($key, $data, $lifetime);
-        }
-        else
-        {
-            $data = $store->get($key);
-        }
+            return $this->query($query, $parameters)->fetchAll();
+        });
 
         return new CachedResult($store, $key, $query, $parameters, $data);
     }
@@ -318,7 +321,7 @@ class Database extends Component implements InjectableInterface
      */
     public function insert($table = '')
     {
-        return $this->getDriver()->insertBuilder($this, compact('table'));
+        return $this->driver->insertBuilder($this, compact('table'));
     }
 
     /**
@@ -330,7 +333,7 @@ class Database extends Component implements InjectableInterface
      */
     public function delete($table = '', array $where = array())
     {
-        return $this->getDriver()->deleteBuilder($this, compact('table', 'where'));
+        return $this->driver->deleteBuilder($this, compact('table', 'where'));
     }
 
     /**
@@ -343,7 +346,7 @@ class Database extends Component implements InjectableInterface
      */
     public function update($table = '', array $values = array(), array $where = array())
     {
-        return $this->getDriver()->updateBuilder($this, compact('table', 'values', 'where'));
+        return $this->driver->updateBuilder($this, compact('table', 'values', 'where'));
     }
 
     /**
