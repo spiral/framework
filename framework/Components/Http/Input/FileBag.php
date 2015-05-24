@@ -18,7 +18,7 @@ use Psr\Http\Message\UploadedFileInterface;
  * @method UploadedFileInterface[] fetch(array $keys, $fill = false, $filler = null)
  * @method \ArrayIterator|UploadedFileInterface[] getIterator()
  */
-class FilesBag extends ParameterBag
+class FileBag extends InputBag
 {
 
 }

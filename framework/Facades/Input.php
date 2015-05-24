@@ -11,7 +11,16 @@ namespace Spiral\Facades;
 use Spiral\Core\Facade;
 
 /**
- *
+ * @method static mixed header($name, $default = null, $implode = ',')
+ * @method static mixed data($name, $default = null)
+ * @method static mixed post($name, $default = null)
+ * @method static mixed query($name, $default = null)
+ * @method static mixed cookie($name, $default = null)
+ * @method static mixed file($name, $default = null)
+ * @method static mixed server($name, $default = null)
+ * @method static bool isAjax()
+ * @method static string|null remoteAddr()
+ * @method static bool isJsonExpected()
  */
 class Input extends Facade
 {

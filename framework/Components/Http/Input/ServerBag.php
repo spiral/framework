@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\Http\Input;
 
-class ServerBag extends ParameterBag
+class ServerBag extends InputBag
 {
     /**
      * Normalizing name to simplify selection.

@@ -8,19 +8,16 @@
  */
 namespace Spiral\Components\Http\Input;
 
-class HeaderBag extends ParameterBag
+class HeaderBag extends InputBag
 {
     /**
-     * Parameter bag used to perform read only operations with request attributes.
+     * Parameter bag used to perform read only operations with request attributes
      *
-     * @param array $parameters
+     * @param array $data
      */
-    public function __construct(array $parameters)
+    public function __construct(array $data)
     {
-        foreach ($parameters as $header => $values)
-        {
-            $this->data[$header] = join(',', $values);
-        }
+        $this->data = $data;
     }
 
     /**
@@ -48,28 +45,48 @@ class HeaderBag extends ParameterBag
     /**
      * Get property value.
      *
-     * @param string $name    Property key.
-     * @param mixed  $default Default value if key not exists.
+     * @param string      $name    Property key.
+     * @param mixed       $default Default value if key not exists.
+     * @param bool|string $implode Implode header lines, false to return header as array.
      * @return mixed
      */
-    public function get($name, $default = null)
+    public function get($name, $default = null, $implode = ',')
     {
-        return parent::get($this->normalize($name), $default);
+        $value = parent::get($this->normalize($name), $default);
+
+        if (!empty($implode))
+        {
+            return implode($implode, $value);
+        }
+
+        return $value;
     }
 
     /**
      * Fetch only specified keys from property values. Missed values can be filled with defined filler.
      * Attention, resulted keys will be equal to normalized names, not requested ones.
      *
-     * @param array $keys Keys to fetch from parameter values.
-     * @param bool  $fill Fill missing key with filler value.
-     * @param mixed $filler
+     * @param array       $keys    Keys to fetch from parameter values.
+     * @param bool        $fill    Fill missing key with filler value.
+     * @param mixed       $filler
+     * @param bool|string $implode Implode header lines, false to return header as array.
      * @return array
      */
-    public function fetch(array $keys, $fill = false, $filler = null)
+    public function fetch(array $keys, $fill = false, $filler = null, $implode = ',')
     {
         $keys = array_map(array($this, 'normalize'), $keys);
 
-        return parent::fetch($keys, $fill, $filler);
+        $values = parent::fetch($keys, $fill, $filler);
+
+        if (!empty($implode))
+        {
+            foreach ($values as &$value)
+            {
+                $value = implode($implode, $value);
+                unset($value);
+            }
+        }
+
+        return $values;
     }
 }

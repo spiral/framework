@@ -10,7 +10,7 @@ namespace Spiral\Components\Http\Input;
 
 use Spiral\Helpers\ArrayHelper;
 
-class ParameterBag implements \IteratorAggregate
+class InputBag implements \IteratorAggregate
 {
     /**
      * Associated parameters to read.
@@ -22,11 +22,11 @@ class ParameterBag implements \IteratorAggregate
     /**
      * Parameter bag used to perform read only operations with request attributes.
      *
-     * @param array $parameters
+     * @param array $data
      */
-    public function __construct(array $parameters)
+    public function __construct(array $data)
     {
-        $this->data = $parameters;
+        $this->data = $data;
     }
 
     /**
