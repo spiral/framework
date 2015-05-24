@@ -53,7 +53,7 @@ class Router extends Component implements MiddlewareInterface
      * @todo add middleware
      * @var array
      */
-    protected $middlewares = array();
+    protected $middlewareAliases = array();
 
     /**
      * Base path fetched automatically from request attribute "activePath" which is populated by
@@ -144,7 +144,7 @@ class Router extends Component implements MiddlewareInterface
         $this->activePath = $request->getAttribute('activePath', $this->activePath);
 
         //Executing found route
-        $response = $this->route->perform($request, $this->core, $this->middlewares);
+        $response = $this->route->perform($request, $this->core, $this->middlewareAliases);
 
         //Close router scope
         $this->container->removeBinding('router');

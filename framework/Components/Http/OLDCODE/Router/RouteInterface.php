@@ -34,13 +34,13 @@ interface RouteInterface
      *
      * @param ServerRequestInterface $request
      * @param CoreInterface          $core
-     * @param array                  $middlewares Middleware aliases provided from parent router.
+     * @param array                  $middlewaresAliases Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
         CoreInterface $core,
-        array $middlewares = array()
+        array $middlewaresAliases = array()
     );
 
     /**

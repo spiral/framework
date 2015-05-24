@@ -453,13 +453,13 @@ class Route extends Component implements RouteInterface
      *
      * @param ServerRequestInterface $request
      * @param CoreInterface          $core
-     * @param array                  $middlewares Middleware aliases provided from parent router.
+     * @param array                  $middlewaresAliases Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
         CoreInterface $core,
-        array $middlewares = array()
+        array $middlewaresAliases = array()
     )
     {
         if (empty($this->middlewares))
@@ -482,7 +482,7 @@ class Route extends Component implements RouteInterface
             return $target($request, null, $this);
         }
 
-        return $this->getPipeline($middlewares)
+        return $this->createPipeline($middlewaresAliases)
             ->target($this->getTargetEndpoint($core))
             ->run($request, $this);
     }
@@ -490,17 +490,17 @@ class Route extends Component implements RouteInterface
     /**
      * Construct route middleware pipeline.
      *
-     * @param array $routeMiddlewares Middleware aliases provided from parent router.
+     * @param array $middlewareAliases Middleware aliases provided from parent router.
      * @return MiddlewarePipe
      */
-    protected function getPipeline(array $routeMiddlewares = array())
+    protected function createPipeline(array $middlewareAliases = array())
     {
         $middlewares = array();
         foreach ($this->middlewares as $middleware)
         {
             //Resolving middleware aliases
-            $middlewares[] = isset($routeMiddlewares[$middleware])
-                ? $routeMiddlewares[$middleware]
+            $middlewares[] = isset($middlewareAliases[$middleware])
+                ? $middlewareAliases[$middleware]
                 : $middleware;
         }
 

@@ -60,6 +60,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * Pre-constructed file stream.
      *
+     * @invisible
      * @var null|StreamInterface
      */
     private $stream = null;
@@ -69,7 +70,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @var bool
      */
-    private $isUnavailable = false;
+    private $isMoved = false;
 
     /**
      * New instance of Uploaded file.
@@ -84,7 +85,7 @@ class UploadedFile implements UploadedFileInterface
     {
         if (is_string($path))
         {
-            $this->file = $path;
+            $this->path = $path;
         }
         elseif (is_resource($path))
         {
@@ -120,7 +121,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getStream()
     {
-        if ($this->isUnavailable)
+        if ($this->isMoved)
         {
             throw new \RuntimeException("File was moved and not available anymore.");
         }
@@ -167,7 +168,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function moveTo($targetPath)
     {
-        if ($this->isUnavailable)
+        if ($this->isMoved)
         {
             throw new \RuntimeException("File was moved and not available anymore.");
         }
@@ -199,7 +200,7 @@ class UploadedFile implements UploadedFileInterface
             throw new RuntimeException("An error occurred while moving uploaded file.");
         }
 
-        $this->isUnavailable = true;
+        $this->isMoved = true;
     }
 
     /**
@@ -269,5 +270,91 @@ class UploadedFile implements UploadedFileInterface
     public function getClientMediaType()
     {
         return $this->clientMediaType;
+    }
+
+    /**
+     * Convert global $_FILES to normalized tree when every file represented by UploadedFileInterface.
+     *
+     * @param array $files Usually global $_FILES.
+     * @return array|UploadedFileInterface[]
+     * @throws \InvalidArgumentException
+     */
+    public static function normalizeFiles($files)
+    {
+        $result = array();
+
+        foreach ($files as $key => $value)
+        {
+            if ($value instanceof UploadedFileInterface)
+            {
+                $result[$key] = $value;
+                continue;
+            }
+
+            if (!is_array($value))
+            {
+                throw new \InvalidArgumentException("Invalid uploaded files tree structure.");
+                continue;
+            }
+
+            if (is_array($value) && isset($value['tmp_name']))
+            {
+                $result[$key] = self::createUploadedFile($value);
+                continue;
+            }
+
+            if (is_array($value))
+            {
+                $result[$key] = self::normalizeFiles($value);
+                continue;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Create UploadedFileInterface instance based on provided tree structure.
+     *
+     * @param array $file $_FILES item compatible structure.
+     * @return array|UploadedFileInterface
+     */
+    private static function createUploadedFile(array $file)
+    {
+        if (is_array($file['tmp_name']))
+        {
+            return self::normalizeNestedFiles($file);
+        }
+
+        return new UploadedFile(
+            $file['tmp_name'],
+            $file['size'],
+            $file['error'],
+            $file['name'],
+            $file['type']
+        );
+    }
+
+    /**
+     * Perform normalization to resolve files uploaded under nested name (array of files).
+     *
+     * @param array $files
+     * @return UploadedFileInterface[]
+     */
+    private static function normalizeNestedFiles(array $files)
+    {
+        $result = array();
+        foreach (array_keys($files['tmp_name']) as $key)
+        {
+            $result[$key] = self::createUploadedFile(array(
+                'tmp_name' => $files['tmp_name'][$key],
+                'size'     => $files['size'][$key],
+                'error'    => $files['error'][$key],
+                'name'     => $files['name'][$key],
+                'type'     => $files['type'][$key]
+            ));
+        }
+
+        return $result;
     }
 }

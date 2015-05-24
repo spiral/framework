@@ -24,7 +24,7 @@ use Spiral\Core\Component;
  * @link http://www.ietf.org/rfc/rfc7230.txt
  * @link http://www.ietf.org/rfc/rfc7231.txt
  */
-abstract class HttpMessage extends Component implements MessageInterface
+abstract class PsrMessage extends Component implements MessageInterface
 {
     /**
      * HTTP protocol version.
@@ -43,6 +43,7 @@ abstract class HttpMessage extends Component implements MessageInterface
     /**
      * Normalized (lowercased) set of header names. Required to correctly preserve header lookup.
      *
+     * @invisible
      * @var array
      */
     protected $normalizedHeaders = array();

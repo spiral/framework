@@ -29,8 +29,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
     use Component\SingletonTrait,
         Component\LoggerTrait,
         Component\EventsTrait,
-        Component\ConfigurableTrait,
-        RouterTrait;
+        Component\ConfigurableTrait;//,
+       // RouterTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.

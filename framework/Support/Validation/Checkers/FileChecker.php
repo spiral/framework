@@ -109,7 +109,8 @@ class FileChecker extends Checker
     }
 
     /**
-     * Pass files where public or local name has allowed extensions.
+     * Pass files where public or local name has allowed extensions. This is soft validation, no
+     * real guarantee that extension was not manually modified by client.
      *
      * @param array|string $file       Local file or uploaded file array.
      * @param array|mixed  $extensions Array of acceptable extensions.

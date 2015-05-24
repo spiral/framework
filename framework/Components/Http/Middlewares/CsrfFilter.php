@@ -17,7 +17,7 @@ use Spiral\Core\Component;
 use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Helpers\StringHelper;
 
-class CsrfToken implements MiddlewareInterface
+class CsrfFilter implements MiddlewareInterface
 {
     /**
      * Token have to check in cookies and queries.
