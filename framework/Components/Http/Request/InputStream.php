@@ -44,6 +44,27 @@ class InputStream extends Stream
     }
 
     /**
+     * Reads all data from the stream into a string, from the beginning to end.
+     *
+     * This method MUST attempt to seek to the beginning of the stream before reading data and read
+     * the stream until the end is reached.
+     *
+     * Warning: This could attempt to load a large amount of data into memory.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        if (!$this->ended)
+        {
+            //Reading the rest of memory
+            $this->getContents();
+        }
+
+        return $this->cached;
+    }
+
+    /**
      * Separates any underlying resources from the stream.
      *
      * After the stream has been detached, the stream is in an unusable state.
@@ -53,6 +74,7 @@ class InputStream extends Stream
     public function detach()
     {
         $resource = parent::detach();
+
         $this->cached = '';
         $this->ended = false;
 
@@ -100,68 +122,27 @@ class InputStream extends Stream
     }
 
     /**
-     * Returns the remaining contents in a string.
+     * Returns the remaining contents in a string
      *
-     * @param int $maxLength
      * @return string
+     * @throws \RuntimeException if unable to read or an error occurs while
+     *     reading.
      */
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
         if ($this->ended)
         {
             return $this->cached;
         }
 
-        $contents = stream_get_contents($this->resource, $maxLength);
+        $contents = stream_get_contents($this->resource, -1);
         $this->cached .= $contents;
 
-        if ($maxLength === -1 || $this->eof())
+        if ($this->eof())
         {
             $this->ended = true;
         }
 
         return $contents;
-    }
-
-    /**
-     * Get stream metadata as an associative array or retrieve a specific key.
-     *
-     * The keys returned are identical to the keys returned from PHP's stream_get_meta_data() function.
-     *
-     * @link http://php.net/manual/en/function.stream-get-meta-data.php
-     * @param string $key       Specific metadata to retrieve.
-     * @return array|mixed|null Returns an associative array if no key is provided. Returns a specific
-     *                          key value if a key is provided and the value is found, or null if the
-     *                          key is not found.
-     */
-    public function getMetadata($key = null)
-    {
-        if ($key)
-        {
-            return $this->metadata;
-        }
-
-        return array_key_exists($key, $this->metadata) ? $this->metadata[$key] : null;
-    }
-
-    /**
-     * Reads all data from the stream into a string, from the beginning to end.
-     *
-     * This method MUST attempt to seek to the beginning of the stream before reading data and read
-     * the stream until the end is reached.
-     *
-     * Warning: This could attempt to load a large amount of data into memory.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        if (!$this->ended)
-        {
-            //Reading the rest
-            $this->getContents();
-        }
-
-        return $this->cached;
     }
 }
