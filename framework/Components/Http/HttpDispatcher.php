@@ -43,6 +43,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
     const STREAM_BLOCK_SIZE = 16384;
 
     /**
+     * Default spiral router with known constructor. This constant helps to speed up router creation.
+     */
+    const DEFAULT_ROUTER = 'Spiral\Components\Http\Router\Router';
+
+    /**
      * Core instance.
      *
      * @invisible
@@ -85,14 +90,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected $endpoints = array();
 
     /**
-     * Set of middleware aliases defined to be used in routes for filtering request and altering
-     * response.
-     *
-     * @var array
-     */
-    protected $routeMiddlewares = array();
-
-    /**
      * New HttpDispatcher instance.
      *
      * @param CoreInterface $core
@@ -107,7 +104,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         $this->middlewares = $this->config['middlewares'];
         $this->endpoints = $this->config['endpoints'];
-        $this->routeMiddlewares = $this->config['routeMiddlewares'];
     }
 
     /**
@@ -170,15 +166,27 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     protected function createRouter()
     {
+        $router = $this->config['router']['class'];
+
+        if ($router == self::DEFAULT_ROUTER)
+        {
+            return new $router(
+                $this->container,
+                $this->core,
+                $this->routes,
+                $this->config['router']['defaultRoute'],
+                $this->config['basePath']
+            );
+        }
+
         return $this->container->get(
-            $this->config['router']['class'],
+            $router,
             array(
-                'container'        => $this->container,
-                'core'             => $this->core,
-                'routes'           => $this->routes,
-                'default'          => $this->config['router']['defaultRoute'],
-                'routeMiddlewares' => $this->routeMiddlewares,
-                'activePath'       => $this->config['basePath']
+                'container'  => $this->container,
+                'core'       => $this->core,
+                'routes'     => $this->routes,
+                'default'    => $this->config['router']['defaultRoute'],
+                'activePath' => $this->config['basePath']
             )
         );
     }

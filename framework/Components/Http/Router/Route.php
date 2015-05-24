@@ -453,13 +453,13 @@ class Route extends Component implements RouteInterface
      *
      * @param ServerRequestInterface $request
      * @param CoreInterface          $core
-     * @param array                  $routeMiddlewares Middleware aliases provided from parent router.
+     * @param array                  $middlewares Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
         CoreInterface $core,
-        array $routeMiddlewares = array()
+        array $middlewares = array()
     )
     {
         if (empty($this->middlewares))
@@ -482,7 +482,7 @@ class Route extends Component implements RouteInterface
             return $target($request, null, $this);
         }
 
-        return $this->getPipeline($routeMiddlewares)
+        return $this->getPipeline($middlewares)
             ->target($this->getTargetEndpoint($core))
             ->run($request, $this);
     }

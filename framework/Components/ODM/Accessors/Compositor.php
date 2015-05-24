@@ -14,6 +14,9 @@ use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
 
+/**
+ * This class can be potentially merged with ORM collection and Models EntityIterator.
+ */
 class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayAccess
 {
     /**
@@ -218,7 +221,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
 
         if ($this->solidState)
         {
-            return array(Document::ATOMIC_SET => array($container => $this->serializeData()));
+            return array(Document::ATOMIC_SET => array(
+                $container => $this->serializeData()
+            ));
         }
 
         if ($this->changedDirectly)

@@ -50,9 +50,10 @@ class Router extends Component implements MiddlewareInterface
      * Set of middleware aliases defined to be used in routes for filtering request and altering
      * response.
      *
+     * @todo add middleware
      * @var array
      */
-    protected $routeMiddlewares = array();
+    protected $middlewares = array();
 
     /**
      * Base path fetched automatically from request attribute "activePath" which is populated by
@@ -78,8 +79,6 @@ class Router extends Component implements MiddlewareInterface
      * @param Container     $container
      * @param CoreInterface $core             Core instances required to call controller actions.
      * @param Route|array   $routes           Pre-defined array of routes (if were collected externally).
-     * @param array         $routeMiddlewares Set of middlewares defined to be used in routes for
-     *                                        filtering request and altering response.
      * @param array         $default          Default route options (controller route), should include
      *                                        pattern and target, can not have any middlewares attached.
      * @param string        $activePath       Base path used to correctly resolve route url and pattern
@@ -89,7 +88,6 @@ class Router extends Component implements MiddlewareInterface
         Container $container,
         CoreInterface $core,
         array $routes = array(),
-        array $routeMiddlewares = array(),
         array $default = array(),
         $activePath = '/'
     )
@@ -107,8 +105,6 @@ class Router extends Component implements MiddlewareInterface
             //Name aliasing is required to perform URL generation later.
             $this->routes[$route->getName()] = $route;
         }
-
-        $this->routeMiddlewares = $routeMiddlewares;
 
         //Registering default route
         if (!isset($this->routes[static::DEFAULT_ROUTE]) && !empty($default))
@@ -148,7 +144,7 @@ class Router extends Component implements MiddlewareInterface
         $this->activePath = $request->getAttribute('activePath', $this->activePath);
 
         //Executing found route
-        $response = $this->route->perform($request, $this->core, $this->routeMiddlewares);
+        $response = $this->route->perform($request, $this->core, $this->middlewares);
 
         //Close router scope
         $this->container->removeBinding('router');

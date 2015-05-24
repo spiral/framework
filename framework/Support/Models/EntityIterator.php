@@ -10,6 +10,9 @@ namespace Spiral\Support\Models;
 
 use Spiral\Core\Component;
 
+/**
+ * TODO: NOT FINISHED YET.
+ */
 class EntityIterator extends Component implements \Iterator
 {
     protected $class = '';
@@ -45,6 +48,7 @@ class EntityIterator extends Component implements \Iterator
         }
 
         $class = $this->class;
+
         return $this->data[$this->position] = new $class($data);
     }
 
