@@ -18,29 +18,29 @@ use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Console\ConsoleDispatcher;
 
 /**
- * @property Components\Http\HttpDispatcher                 $http
- * @property Components\Console\ConsoleDispatcher           $console
- * @property Loader                                         $loader
- * @property Components\Modules\ModuleManager               $modules
- * @property Components\Files\FileManager                   $file
- * @property Components\Debug\Debugger                      $debug
- * @property Components\Tokenizer\Tokenizer                 $tokenizer
- * @property Components\Cache\CacheManager                  $cache
- * @property Components\I18n\Translator                     $i18n
- * @property Components\View\ViewManager                    $view
- * @property Components\Redis\RedisManager                  $redis
- * @property Components\Encrypter\Encrypter                 $encrypter
- * @property Components\Image\ImageManager                  $image
- * @property Components\Storage\StorageManager              $storage
- * @property Components\DBAL\DatabaseManager                $dbal
- * @property Components\ODM\ODM                             $odm
- * @property Components\ORM\ORM                             $orm
+ * @property Components\Http\HttpDispatcher           $http
+ * @property Components\Console\ConsoleDispatcher     $console
+ * @property Loader                                   $loader
+ * @property Components\Modules\ModuleManager         $modules
+ * @property Components\Files\FileManager             $file
+ * @property Components\Debug\Debugger                $debug
+ * @property Components\Tokenizer\Tokenizer           $tokenizer
+ * @property Components\Cache\CacheManager            $cache
+ * @property Components\I18n\Translator               $i18n
+ * @property Components\View\ViewManager              $view
+ * @property Components\Redis\RedisManager            $redis
+ * @property Components\Encrypter\Encrypter           $encrypter
+ * @property Components\Image\ImageManager            $image
+ * @property Components\Storage\StorageManager        $storage
+ * @property Components\DBAL\DatabaseManager          $dbal
+ * @property Components\ODM\ODM                       $odm
+ * @property Components\ORM\ORM                       $orm
  *
- * @property Components\View\Processors\ExpressionProcessor $viewExpressions
  *
- * @property Components\Http\Request                        $request
- * @property Components\Http\Cookies\CookieManager          $cookies
- * @property Components\Session\SessionStore                $session
+ * @property \Psr\Http\Message\ServerRequestInterface $request
+ * @property Components\Http\Cookies\CookieManager    $cookies
+ * @property Components\Session\SessionStore          $session
+ * @property Components\Http\Router\Router            $router
  */
 class Core extends Container implements CoreInterface
 {
@@ -79,32 +79,30 @@ class Core extends Container implements CoreInterface
      * @var array
      */
     protected $bindings = array(
-        'core'            => 'Spiral\Core\Core',
+        'core'      => 'Spiral\Core\Core',
 
         //Dispatchers
-        'http'            => 'Spiral\Components\Http\HttpDispatcher',
-        'console'         => 'Spiral\Components\Console\ConsoleDispatcher',
+        'http'      => 'Spiral\Components\Http\HttpDispatcher',
+        'console'   => 'Spiral\Components\Console\ConsoleDispatcher',
 
         //Core components
-        'loader'          => 'Spiral\Core\Loader',
-        'modules'         => 'Spiral\Components\Modules\ModuleManager',
-        'file'            => 'Spiral\Components\Files\FileManager',
-        'debug'           => 'Spiral\Components\Debug\Debugger',
-        'tokenizer'       => 'Spiral\Components\Tokenizer\Tokenizer',
-        'cache'           => 'Spiral\Components\Cache\CacheManager',
-        'i18n'            => 'Spiral\Components\I18n\Translator',
-        'view'            => 'Spiral\Components\View\ViewManager',
-        'redis'           => 'Spiral\Components\Redis\RedisManager',
-        'encrypter'       => 'Spiral\Components\Encrypter\Encrypter',
-        'image'           => 'Spiral\Components\Image\ImageManager',
-        'storage'         => 'Spiral\Components\Storage\StorageManager',
-        'dbal'            => 'Spiral\Components\DBAL\DatabaseManager',
-        'orm'             => 'Spiral\Components\ORM\ORM',
-        'odm'             => 'Spiral\Components\ODM\ODM',
-        'cookies'         => 'Spiral\Components\Http\Cookies\CookieManager',
-        'session'         => 'Spiral\Components\Session\SessionStore',
-
-        'viewExpressions' => 'Components\View\Processors\ExpressionProcessor'
+        'loader'    => 'Spiral\Core\Loader',
+        'modules'   => 'Spiral\Components\Modules\ModuleManager',
+        'file'      => 'Spiral\Components\Files\FileManager',
+        'debug'     => 'Spiral\Components\Debug\Debugger',
+        'tokenizer' => 'Spiral\Components\Tokenizer\Tokenizer',
+        'cache'     => 'Spiral\Components\Cache\CacheManager',
+        'i18n'      => 'Spiral\Components\I18n\Translator',
+        'view'      => 'Spiral\Components\View\ViewManager',
+        'redis'     => 'Spiral\Components\Redis\RedisManager',
+        'encrypter' => 'Spiral\Components\Encrypter\Encrypter',
+        'image'     => 'Spiral\Components\Image\ImageManager',
+        'storage'   => 'Spiral\Components\Storage\StorageManager',
+        'dbal'      => 'Spiral\Components\DBAL\DatabaseManager',
+        'orm'       => 'Spiral\Components\ORM\ORM',
+        'odm'       => 'Spiral\Components\ODM\ODM',
+        'cookies'   => 'Spiral\Components\Http\Cookies\CookieManager',
+        'session'   => 'Spiral\Components\Session\SessionStore'
     );
 
     /**
