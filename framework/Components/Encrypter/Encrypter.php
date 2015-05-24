@@ -77,6 +77,16 @@ class Encrypter extends Component
     }
 
     /**
+     * Get current encrypter key.
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
      * Set the encryption cipher.
      *
      * @param  string $method

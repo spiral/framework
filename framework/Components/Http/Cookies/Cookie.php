@@ -155,7 +155,7 @@ class Cookie
      */
     public function getExpires()
     {
-        if (empty($this->lifetime))
+        if ($this->lifetime === null)
         {
             return null;
         }

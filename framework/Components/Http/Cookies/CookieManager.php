@@ -18,6 +18,8 @@ use Spiral\Components\Http\Middlewares\CsrfFilter;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Session\Http\SessionStarter;
 use Spiral\Core\Component;
+use Spiral\Core\Container;
+use Spiral\Facades\Cookies;
 
 class CookieManager extends Component implements MiddlewareInterface
 {
@@ -32,15 +34,34 @@ class CookieManager extends Component implements MiddlewareInterface
     const SINGLETON = __CLASS__;
 
     /**
+     * Algorithm used to sign cookies.
+     */
+    const HMAC_ALGORITHM = 'sha256';
+
+    /**
+     * Generated MAC length, has to be stripped from cookie.
+     */
+    const MAC_LENGTH = 64;
+
+    /**
      * Cookie protection modes.
      */
-    const NONE    = false;
-    const ENCRYPT = true;
-    const HMAC    = 2;
+    const NONE    = 'none';
+    const ENCRYPT = 'encrypt';
+    const MAC     = 'mac';
+
+    /**
+     * Container instance is required to resolve encrypter when required.
+     *
+     * @invisible
+     * @var Container
+     */
+    protected $container = null;
 
     /**
      * Http request.
      *
+     * @invisible
      * @var ServerRequestInterface
      */
     protected $request = null;
@@ -69,10 +90,12 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Middleware constructing.
      *
+     * @param Container      $container
      * @param HttpDispatcher $dispatcher
      */
-    public function __construct(HttpDispatcher $dispatcher)
+    public function __construct(Container $container, HttpDispatcher $dispatcher)
     {
+        $this->container = $container;
         $this->config = $dispatcher->getConfig()['cookies'];
     }
 
@@ -108,7 +131,7 @@ class CookieManager extends Component implements MiddlewareInterface
             return $this->encrypter;
         }
 
-        return $this->encrypter = Encrypter::getInstance();
+        return $this->encrypter = Encrypter::getInstance($this->container);
     }
 
     /**
@@ -143,43 +166,19 @@ class CookieManager extends Component implements MiddlewareInterface
     {
         $altered = false;
         $cookies = $request->getCookieParams();
+
         foreach ($cookies as $name => $cookie)
         {
-            if (in_array($name, $this->exclude) || $this->config['protection'] == self::NONE)
+            if (in_array($name, $this->exclude) || $this->config['method'] == self::NONE)
             {
                 continue;
             }
 
             $altered = true;
-
-            //TODO: select protection mechanism
-            $cookies[$name] = $this->decryptCookie($cookie);
+            $cookies[$name] = $this->decodeCookie($cookie);
         }
 
         return $altered ? $request->withCookieParams($cookies) : $request;
-    }
-
-    /**
-     * Helper method used to decrypt cookie value or values.
-     *
-     * @param string|array $cookie
-     * @return array|mixed|null
-     */
-    protected function decryptCookie($cookie)
-    {
-        try
-        {
-            if (is_array($cookie))
-            {
-                return array_map(array($this, 'decryptCookie'), $cookie);
-            }
-
-            return $this->getEncrypter()->decrypt($cookie);
-        }
-        catch (DecryptionException $exception)
-        {
-            return null;
-        }
     }
 
     /**
@@ -191,33 +190,97 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     protected function mountCookies(ResponseInterface $response)
     {
-        if (!empty($this->scheduled))
+        if (empty($this->scheduled))
         {
-            $cookies = $response->getHeaderLines('Set-Cookie');
-
-            //Merging cookies
-            foreach ($this->scheduled as $cookie)
-            {
-                if (in_array($cookie->getName(), $this->exclude))
-                {
-                    $cookies[] = $cookie->packHeader();
-                    continue;
-                }
-
-                //TODO: select protection mechanism
-                $cookie = $cookie->withValue(
-                    $this->getEncrypter()->encrypt($cookie->getValue())
-                );
-
-                $cookies[] = $cookie->packHeader();
-            }
-
-            $this->scheduled = array();
-
-            return $response->withHeader('Set-Cookie', $cookies);
+            return $response;
         }
 
-        return $response;
+        $cookies = $response->getHeader('Set-Cookie');
+
+        //Merging cookies
+        foreach ($this->scheduled as $cookie)
+        {
+            if (in_array($cookie->getName(), $this->exclude) || $this->config['method'] == self::NONE)
+            {
+                $cookies[] = $cookie->packHeader();
+                continue;
+            }
+
+            $cookies[] = $this->encodeCookie($cookie)->packHeader();
+        }
+
+        $this->scheduled = array();
+
+        return $response->withHeader('Set-Cookie', $cookies);
+    }
+
+    /**
+     * Helper method used to decrypt cookie value or values.
+     *
+     * @param string|array $cookie
+     * @return array|mixed|null
+     */
+    protected function decodeCookie($cookie)
+    {
+        if ($this->config['method'] == 'encrypt')
+        {
+            try
+            {
+                if (is_array($cookie))
+                {
+                    return array_map(array($this, 'decodeCookie'), $cookie);
+                }
+
+                return $this->getEncrypter()->decrypt($cookie);
+            }
+            catch (DecryptionException $exception)
+            {
+                return null;
+            }
+        }
+
+        //MAC
+        $mac = substr($cookie, -1 * self::MAC_LENGTH);
+        $value = substr($cookie, 0, strlen($cookie) - strlen($mac));
+
+        if ($this->getSignature($value) != $mac)
+        {
+            return null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Encode cookie to be sent to client
+     *
+     * @param Cookie $cookie
+     * @return Cookie
+     */
+    protected function encodeCookie(Cookie $cookie)
+    {
+        if ($this->config['method'] == 'encrypt')
+        {
+            return $cookie->withValue(
+                $this->getEncrypter()->encrypt($cookie->getValue())
+            );
+        }
+
+        //MAC
+        return $cookie->withValue(
+            $cookie->getValue() . $this->getSignature($cookie->getValue())
+        );
+    }
+
+    /**
+     * Create cookie signature.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function getSignature($value)
+    {
+        return hash_hmac(self::HMAC_ALGORITHM, $value, $this->getEncrypter()->getKey());
     }
 
     /**
@@ -257,7 +320,7 @@ class CookieManager extends Component implements MiddlewareInterface
     public function create(
         $name,
         $value = null,
-        $lifetime = 0,
+        $lifetime = null,
         $path = null,
         $domain = null,
         $secure = null,
@@ -283,8 +346,29 @@ class CookieManager extends Component implements MiddlewareInterface
     }
 
     /**
-     * Default domain to set cookie for. Will add . as prefix if config specified that cookies has
-     * to be shared between sub domains.
+     * Change domain pattern. Domain pattern specified in cookie config is presented as valid sprintf
+     * expression.
+     *
+     * Example:
+     * mydomain.com //Forced domain value
+     * %s           //Cookies will be mounted on current domain
+     * .%s          //Cookies will be mounted on current domain and sub domains
+     *
+     * @param string $domain
+     */
+    public function setDomain($domain)
+    {
+        $this->config['domain'] = $domain;
+    }
+
+    /**
+     * Default domain to set cookie for. Domain pattern specified in cookie config is presented as
+     * valid sprintf expression.
+     *
+     * Example:
+     * mydomain.com //Forced domain value
+     * %s           //Cookies will be mounted on current domain
+     * .%s          //Cookies will be mounted on current domain and sub domains
      *
      * @return string
      */
@@ -292,26 +376,25 @@ class CookieManager extends Component implements MiddlewareInterface
     {
         $host = $this->request->getUri()->getHost();
 
+        $pattern = $this->config['domain'];
         if (filter_var($host, FILTER_VALIDATE_IP))
         {
-            //We can't use . with IP addresses
-            return $host;
+            //We can't use sub domains
+            $pattern = ltrim($pattern, '.');
         }
 
-        if ($this->config['subDomains'])
-        {
-            $host = '.' . $host;
-        }
-
-        $port = $this->request->getUri()->getPort();
-
-        //Simple check to make sure that website is located on default port
-        if (!empty($port) && !in_array($port, array(80, 443)))
+        if ($port = $this->request->getUri()->getPort())
         {
             $host = $host . ':' . $port;
         }
 
-        return $host;
+        if (strpos($pattern, '%s') === false)
+        {
+            //Forced domain
+            return $pattern;
+        }
+
+        return sprintf($pattern, $host);
     }
 
     /**
@@ -351,7 +434,7 @@ class CookieManager extends Component implements MiddlewareInterface
     public function set(
         $name,
         $value = null,
-        $lifetime = 0,
+        $lifetime = null,
         $path = null,
         $domain = null,
         $secure = null,

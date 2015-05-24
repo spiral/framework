@@ -46,13 +46,13 @@ class SessionStarter implements MiddlewareInterface
     /**
      * Middleware constructing.
      *
-     * @param CookieManager $cookies
      * @param Container     $container
+     * @param CookieManager $cookies
      */
-    public function __construct(CookieManager $cookies, Container $container)
+    public function __construct(Container $container, CookieManager $cookies)
     {
-        $this->cookies = $cookies;
         $this->container = $container;
+        $this->cookies = $cookies;
     }
 
     /**
