@@ -55,6 +55,36 @@ abstract class HttpMessage extends Component implements MessageInterface
     protected $body = null;
 
     /**
+     * Normalize set of headers to ensure it's values and normalized (lowercased) named.
+     *
+     * @param array $headers Headers to filter.
+     * @return array Filtered headers and names.
+     */
+    protected function normalizeHeaders(array $headers)
+    {
+        $filteredHeaders = array();
+        $normalizedNames = array();
+
+        foreach ($headers as $header => $value)
+        {
+            if (!is_string($header))
+            {
+                continue;
+            }
+
+            if (!is_array($value) && !is_string($value))
+            {
+                continue;
+            }
+
+            $normalizedNames[strtolower($header)] = $header;
+            $filteredHeaders[$header] = !is_array($value) ? array($value) : $value;
+        }
+
+        return [$filteredHeaders, $normalizedNames];
+    }
+
+    /**
      * Retrieves the HTTP protocol version as a string.
      *
      * The string MUST contain only the HTTP version number (e.g., "1.1", "1.0").

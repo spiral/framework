@@ -10,7 +10,9 @@ namespace Spiral\Components\Http\Response;
 
 use Psr\Http\Message\StreamableInterface;
 
-class StringResponse implements StreamableInterface
+//TODO: REFACTOR
+
+class StringStream implements StreamableInterface
 {
     /**
      * String content.

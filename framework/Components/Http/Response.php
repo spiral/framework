@@ -9,11 +9,10 @@
 namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Http\Message\HttpMessage;
 use Spiral\Components\Http\Message\Stream;
-
-use Spiral\Components\Http\Response\StringResponse;
+use Spiral\Components\Http\Response\StringStream;
 use Spiral\Core\Component;
 
 class Response extends HttpMessage implements ResponseInterface
@@ -37,7 +36,7 @@ class Response extends HttpMessage implements ResponseInterface
      *
      * @var array
      */
-    protected static $phrases = array(
+    protected $reasonPhrases = array(
         //Technical
         100 => "Continue",
         101 => "Switching Protocols",
@@ -138,59 +137,87 @@ class Response extends HttpMessage implements ResponseInterface
     /**
      * New immutable response instance. Content can be provided
      *
-     * @param string|StreamableInterface $content   String content or resource.
-     * @param int                        $statusCode
-     * @param array                      $headers
-     * @param bool                       $normalize Normalize headers case (disabled by default).
+     * @param string|resource|StreamInterface $content String content or resource.
+     * @param int                             $status
+     * @param array                           $headers
      */
-    public function __construct(
-        $content = '',
-        $statusCode = 200,
-        array $headers = array(),
-        $normalize = true
-    )
+    public function __construct($content = '', $status = 200, array $headers = array())
     {
         if (is_string($content))
         {
-            $this->body = new StringResponse($content);
+            $this->body = new StringStream($content);
         }
-        elseif ($content instanceof StreamableInterface)
+        elseif ($content instanceof StreamInterface)
         {
             $this->body = $content;
+        }
+        elseif (is_resource($content))
+        {
+            $this->body = new Stream($content, 'wb+');
         }
         else
         {
             throw new \InvalidArgumentException(
-                "Invalid content value, only strings and StreamableInterface allowed."
+                "Invalid content value, only strings and StreamInterface allowed."
             );
         }
 
-        $this->setStatusCode($statusCode);
-        $this->headers = $this->normalizeHeaders($headers, $normalize);
+        $this->statusCode = (int)$status;
+        $this->reasonPhrase = $this->getPhrase($status);
+
+        list($this->headers, $this->normalizedHeaders) = $this->normalizeHeaders($headers);
     }
 
     /**
      * Helper method to retrieve status phrase based on status code.
      *
-     * @param int $code
+     * @param int $status
      * @return string|null
      */
-    protected static function getPhrase($code)
+    protected function getPhrase($status)
     {
-        if (isset(self::$phrases[$code]))
+        if (isset($this->reasonPhrases[$status]))
         {
-            return self::$phrases[$code];
+            return $this->reasonPhrases[$status];
         }
 
         return null;
     }
 
     /**
-     * Helper method to set status code and validate it's value.
+     * Gets the response status code.
      *
-     * @param int $code
+     * The status code is a 3-digit integer result code of the server's attempt
+     * to understand and satisfy the request.
+     *
+     * @return int Status code.
      */
-    protected function setStatusCode($code)
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * Return an instance with the specified status code and, optionally, reason phrase.
+     *
+     * If no reason phrase is specified, implementations MAY choose to default
+     * to the RFC 7231 or IANA recommended reason phrase for the response's
+     * status code.
+     *
+     * This method MUST be implemented in such a way as to retain the
+     * immutability of the message, and MUST return an instance that has the
+     * updated status and reason phrase.
+     *
+     * @link http://tools.ietf.org/html/rfc7231#section-6
+     * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+     * @param int    $code         The 3-digit integer result code to set.
+     * @param string $reasonPhrase The reason phrase to use with the
+     *                             provided status code; if none is provided, implementations MAY
+     *                             use the defaults as suggested in the HTTP specification.
+     * @return self
+     * @throws \InvalidArgumentException For invalid status code arguments.
+     */
+    public function withStatus($code, $reasonPhrase = '')
     {
         $code = (int)$code;
         if ($code < 200 || $code > 600)
@@ -200,68 +227,28 @@ class Response extends HttpMessage implements ResponseInterface
             );
         }
 
-        $this->statusCode = $code;
-        $this->reasonPhrase = self::getPhrase($code);
+        $message = clone $this;
+        $message->statusCode = (int)$code;
+        $message->reasonPhrase = !empty($reasonPhrase) ? $reasonPhrase : $this->getPhrase($code);
+
+        return $message;
     }
 
     /**
-     * Gets the response Status-Code.
+     * Gets the response reason phrase associated with the status code.
      *
-     * The Status-Code is a 3-digit integer result code of the server's attempt
-     * to understand and satisfy the request.
-     *
-     * @return integer Status code.
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * Create a new instance with the specified status code, and optionally
-     * reason phrase, for the response.
-     *
-     * If no Reason-Phrase is specified, implementations MAY choose to default
-     * to the RFC 7231 or IANA recommended reason phrase for the response's
-     * Status-Code.
-     *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return a new instance that has the
-     * updated status and reason phrase.
-     *
-     * @link http://tools.ietf.org/html/rfc7231#section-6
-     * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * @param integer     $code         The 3-digit integer result code to set.
-     * @param null|string $reasonPhrase The reason phrase to use with the
-     *                                  provided status code; if none is provided, implementations MAY
-     *                                  use the defaults as suggested in the HTTP specification.
-     * @return self
-     * @throws \InvalidArgumentException For invalid status code arguments.
-     */
-    public function withStatus($code, $reasonPhrase = null)
-    {
-        $response = clone $this;
-        $response->setStatusCode($code);
-        !empty($reasonPhrase) && $response->reasonPhrase = $reasonPhrase;
-
-        return $response;
-    }
-
-    /**
-     * Gets the response Reason-Phrase, a short textual description of the Status-Code.
-     *
-     * Because a Reason-Phrase is not a required element in a response
-     * Status-Line, the Reason-Phrase value MAY be null. Implementations MAY
+     * Because a reason phrase is not a required element in a response
+     * status line, the reason phrase value MAY be null. Implementations MAY
      * choose to return the default RFC 7231 recommended reason phrase (or those
      * listed in the IANA HTTP Status Code Registry) for the response's
-     * Status-Code.
+     * status code.
      *
      * @link http://tools.ietf.org/html/rfc7231#section-6
      * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * @return string|null Reason phrase, or null if unknown.
+     * @return string Reason phrase; must return an empty string if none present.
      */
     public function getReasonPhrase()
     {
-        return $this->reasonPhrase;
+        return !empty($this->reasonPhrase) ? $this->reasonPhrase : '';
     }
 }

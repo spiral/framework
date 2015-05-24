@@ -12,6 +12,8 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Components\Http\Response;
 
+//TODO: REFACTOR
+
 class Redirect extends Response
 {
     /**

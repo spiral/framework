@@ -9,7 +9,7 @@
 namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamableInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Debug\Snapshot;
 use Spiral\Components\Http\Router\RouterTrait;
@@ -409,11 +409,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
     }
 
     /**
-     * Sending stream content to client.
+     * Send stream content to client.
      *
-     * @param StreamableInterface $stream
+     * @param StreamInterface $stream
      */
-    protected function sendStream(StreamableInterface $stream)
+    protected function sendStream(StreamInterface $stream)
     {
         if (!$stream->isSeekable())
         {
@@ -443,6 +443,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
         if ($exception instanceof ClientException)
         {
             $uri = $this->request->getUri();
+
+            //TODO: FIX IT!
             self::logger()->warning(
                 "{scheme}://{host}{path} caused the error {code} ({message}) by client {remote}.",
                 array(
@@ -451,7 +453,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
                     'path'    => $uri->getPath(),
                     'code'    => $exception->getCode(),
                     'message' => $exception->getMessage() ?: '-not specified-',
-                    'remote'  => $this->request->remoteAddr()
+                    //  'remote'  => $this->request->remoteAddr()
                 )
             );
 

@@ -11,6 +11,8 @@ namespace Spiral\Components\Http\Response;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Components\Http\Response;
 
+
+//TODO: REFACTOR
 class FileResponse extends Response
 {
     /**
