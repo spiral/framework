@@ -152,7 +152,7 @@ abstract class ModelSchema extends Component
                 continue;
             }
 
-            $methods[] = MethodSchema::make(array('reflection' => $method));
+            $methods[] = new MethodSchema($method);
         }
 
         return $methods;
