@@ -65,6 +65,33 @@ class Controller extends Component implements ControllerInterface
     protected $parameters = array();
 
     /**
+     * Method executed before controller action beign called. Should return nothing to let controller
+     * execute action itself. Any returned result will prevent action execution and will be returned
+     * from callAction.
+     *
+     * @param string $method   Method name (normalized via reflection).
+     * @param array  $aruments Method arguments.
+     */
+    protected function beforeAction($action, array $arguments)
+    {
+        return null;
+    }
+
+    /**
+     * Method executed after controller action beign called. Original or altered result should be
+     * returned.
+     *
+     * @param string $method   Method name (normalized via reflection).
+     * @param array  $aruments Method arguments.
+     * @param mixed  $result   Method result (plain output not included).
+     * @return mixed
+     */
+    protected function afterAction($method, array $aruments, $result)
+    {
+        return $result;
+    }
+
+    /**
      * Performing controller action. This method should either return response object or string, or
      * any other type supported by specified dispatcher. This method can be overwritten in child
      * controller to force some specific Response or modify output from every controller action.
@@ -116,11 +143,17 @@ class Controller extends Component implements ControllerInterface
 
         $action = $reflection->getName();
 
+        if (($result = $this->beforeAction($action, $arguments)) !== null)
+        {
+            //Got filtered.
+            return $result;
+        }
+
         benchmark(get_called_class(), $action);
-        $response = $reflection->invokeArgs($this, $arguments);
+        $result = $reflection->invokeArgs($this, $arguments);
         benchmark(get_called_class(), $action);
 
-        return $response;
+        return $this->afterAction($action, $arguments, $result);
     }
 
     /**
