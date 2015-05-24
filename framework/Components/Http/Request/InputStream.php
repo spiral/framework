@@ -13,8 +13,8 @@ use Spiral\Components\Http\Message\Stream;
 class InputStream extends Stream
 {
     /**
-     * Cached stream content, required to correctly resolve behaviour when php://input can't be read
-     * twice.
+     * Cached stream content, required to correctly resolve behaviour when php://input can't be
+     * read twice.
      *
      * @invisible
      * @var string
@@ -30,8 +30,8 @@ class InputStream extends Stream
     protected $ended = false;
 
     /**
-     * Create new Stream instance based on provided stream resource or uri (including filenames). Php
-     * input has to be cached as it can be read only once.
+     * Create new Stream instance based on provided stream resource or uri (including filenames).
+     * Php input has to be cached as it can be read only once.
      *
      * @link https://github.com/phly/http/blob/master/src/PhpInputStream.php
      * @link http://php.net/manual/en/wrappers.php.php
@@ -46,11 +46,15 @@ class InputStream extends Stream
     /**
      * Reads all data from the stream into a string, from the beginning to end.
      *
-     * This method MUST attempt to seek to the beginning of the stream before reading data and read
-     * the stream until the end is reached.
+     * This method MUST attempt to seek to the beginning of the stream before
+     * reading data and read the stream until the end is reached.
      *
      * Warning: This could attempt to load a large amount of data into memory.
      *
+     * This method MUST NOT raise an exception in order to conform with PHP's
+     * string casting operations.
+     *
+     * @see http://php.net/manual/en/language.oop5.magic.php#object.tostring
      * @return string
      */
     public function __toString()
@@ -104,10 +108,12 @@ class InputStream extends Stream
     /**
      * Read data from the stream.
      *
-     * @param int $length   Read up to $length bytes from the object and return them. Fewer than $length
-     *                      bytes may be returned if underlying stream call returns fewer bytes.
-     * @return string|false Returns the data read from the stream, false if unable to read or if an
-     *                      error occurs.
+     * @param int $length Read up to $length bytes from the object and return
+     *                    them. Fewer than $length bytes may be returned if underlying stream
+     *                    call returns fewer bytes.
+     * @return string Returns the data read from the stream, or an empty string
+     *                    if no bytes are available.
+     * @throws \RuntimeException if an error occurs.
      */
     public function read($length)
     {
