@@ -84,26 +84,26 @@ class MiddlewarePipe extends Component
      * Run pipeline chain with specified input request and context. Response type depends on target
      * method and middleware logic.
      *
-     * @param ServerRequestInterface $input
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function run(ServerRequestInterface $input)
+    public function run(ServerRequestInterface $request)
     {
-        return $this->next(0, $input);
+        return $this->next(0, $request);
     }
 
     /**
      * Internal method used to jump between middleware layers.
      *
      * @param int                    $position
-     * @param ServerRequestInterface $input
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    protected function next($position = 0, $input = null)
+    protected function next($position = 0, $request = null)
     {
-        $next = function ($contextInput = null) use ($position, $input)
+        $next = function ($contextInput = null) use ($position, $request)
         {
-            return $this->next(++$position, $contextInput ?: $input);
+            return $this->next(++$position, $contextInput ?: $request);
         };
 
         if (!isset($this->middleware[$position]))
@@ -113,9 +113,9 @@ class MiddlewarePipe extends Component
                 $reflection = new \ReflectionFunction($this->target);
 
                 $arguments = array();
-                if (!empty($input))
+                if (!empty($request))
                 {
-                    $arguments['request'] = $input;
+                    $arguments['request'] = $request;
                 }
 
                 return $reflection->invokeArgs(
@@ -123,7 +123,7 @@ class MiddlewarePipe extends Component
                 );
             }
 
-            return call_user_func($this->target, $input);
+            return call_user_func($this->target, $request);
         }
 
         /**
@@ -134,6 +134,6 @@ class MiddlewarePipe extends Component
             ? $this->container->get($middleware)
             : $middleware;
 
-        return $middleware($input, $next);
+        return $middleware($request, $next);
     }
 }
