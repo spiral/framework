@@ -445,17 +445,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
             $uri = $this->request->getUri();
 
             //TODO: FIX IT!
-            self::logger()->warning(
-                "{scheme}://{host}{path} caused the error {code} ({message}) by client {remote}.",
-                array(
-                    'scheme'  => $uri->getScheme(),
-                    'host'    => $uri->getHost(),
-                    'path'    => $uri->getPath(),
-                    'code'    => $exception->getCode(),
-                    'message' => $exception->getMessage() ?: '-not specified-',
-                    //  'remote'  => $this->request->remoteAddr()
-                )
-            );
+            //            self::logger()->warning(
+            //                "{scheme}://{host}{path} caused the error {code} ({message}) by client {remote}.",
+            //                array(
+            //                    'scheme'  => $uri->getScheme(),
+            //                    'host'    => $uri->getHost(),
+            //                    'path'    => $uri->getPath(),
+            //                    'code'    => $exception->getCode(),
+            //                    'message' => $exception->getMessage() ?: '-not specified-',
+            //                    //  'remote'  => $this->request->remoteAddr()
+            //                )
+            //            );
 
             $this->dispatch($this->errorResponse($exception->getCode()));
 
@@ -507,7 +507,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         if (isset($this->config['httpErrors'][$code]))
         {
             //We can render some content
-            $content = ViewManager::getInstance()->render(
+            $content = ViewManager::getInstance($this->container)->render(
                 $this->config['httpErrors'][$code],
                 array('request' => $this->request)
             );
