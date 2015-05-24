@@ -19,7 +19,7 @@ abstract class HttpMessage extends Component implements MessageInterface
      *
      * @var string
      */
-    protected $protocolVersion = '1.0';
+    protected $protocolVersion = '1.1';
 
     /**
      * Message headers

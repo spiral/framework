@@ -130,7 +130,9 @@ class MiddlewarePipe extends Component
          * @var callable $middleware
          */
         $middleware = $this->middleware[$position];
-        $middleware = is_string($middleware) ? $this->container->get($middleware) : $middleware;
+        $middleware = is_string($middleware)
+            ? $this->container->get($middleware)
+            : $middleware;
 
         return $middleware($input, $next);
     }

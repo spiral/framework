@@ -40,11 +40,6 @@ use Spiral\Components;
 class Controller extends Component implements ControllerInterface
 {
     /**
-     * Can be potentially used in controller.
-     */
-    use LoggerTrait;
-
-    /**
      * Default action to run. This action will be performed if dispatcher didn't specified another
      * action to run.
      *

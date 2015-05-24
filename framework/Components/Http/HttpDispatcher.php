@@ -372,7 +372,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
             ob_get_clean();
         }
 
-        $statusHeader = "HTTP/{$response->getProtocolVersion()} {$response->getStatusCode()}";
+        /**
+         * For our needs we will overwrite protocol version with value provided by client browser.
+         */
+        $statusHeader = "HTTP/{$this->request->getProtocolVersion()} {$response->getStatusCode()}";
         header(rtrim("{$statusHeader} {$response->getReasonPhrase()}"));
 
         $defaultHeaders = $this->config['headers'];

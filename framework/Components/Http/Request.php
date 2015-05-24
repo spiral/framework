@@ -122,7 +122,7 @@ class Request extends HttpRequest implements ServerRequestInterface
      */
     public static function castRequest(array $attributes = array())
     {
-        return new static(
+        $request = new static(
             $_SERVER['REQUEST_METHOD'],
             Uri::castUri($_SERVER),
             new InputStream(),
@@ -134,6 +134,17 @@ class Request extends HttpRequest implements ServerRequestInterface
             $_POST,
             $attributes
         );
+
+        if (isset($_SERVER['SERVER_PROTOCOL']) && $_SERVER['SERVER_PROTOCOL'] === 'HTTP/1.0')
+        {
+            $request->protocolVersion = '1.0';
+        }
+        else
+        {
+            $request->protocolVersion = '1.1';
+        }
+
+        return $request;
     }
 
     /**

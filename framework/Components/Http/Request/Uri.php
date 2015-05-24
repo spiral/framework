@@ -159,18 +159,15 @@ class Uri implements UriInterface
         {
             $uri->path = $server['UNENCODED_URL'];
         }
-
-        if (isset($server['REQUEST_URI']))
+        elseif (isset($server['REQUEST_URI']))
         {
             $uri->path = $server['REQUEST_URI'];
         }
-
-        if (isset($server['HTTP_X_REWRITE_URL']))
+        elseif (isset($server['HTTP_X_REWRITE_URL']))
         {
             $uri->path = $server['HTTP_X_REWRITE_URL'];
         }
-
-        if (isset($server['HTTP_X_ORIGINAL_URL']))
+        elseif (isset($server['HTTP_X_ORIGINAL_URL']))
         {
             $uri->path = $server['HTTP_X_ORIGINAL_URL'];
         }
