@@ -17,14 +17,6 @@ use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\ServerBag;
 use Spiral\Components\Http\Request\Uri;
 
-/**
- * @property ParameterBag $headers
- * @property ServerBag    $server
- * @property ParameterBag $cookies
- * @property ParameterBag $query
- * @property ParameterBag $post
- * @property ParameterBag $files
- */
 class Request extends HttpRequest implements ServerRequestInterface
 {
     /**

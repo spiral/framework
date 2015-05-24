@@ -10,9 +10,98 @@ namespace Spiral\Components\Http\Request;
 
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Spiral\Components\Http\HttpDispatcher;
+use Spiral\Components\Http\Message\Stream;
+use Spiral\Core\Core;
+use Symfony\Component\Process\Exception\RuntimeException;
 
 class UploadedFile implements UploadedFileInterface
 {
+    /**
+     * Block size used to moved file to final destination.
+     */
+    const STREAM_BLOCK_SIZE = HttpDispatcher::STREAM_BLOCK_SIZE;
+
+    /**
+     * Temporary file path.
+     *
+     * @var string
+     */
+    private $path = '';
+
+    /**
+     * Uploaded file error.
+     *
+     * @var int
+     */
+    private $error = 0;
+
+    /**
+     * Uploaded file size.
+     *
+     * @var int
+     */
+    private $size = 0;
+
+    /**
+     * Client filename (not safe).
+     *
+     * @var string
+     */
+    private $clientFilename = '';
+
+    /**
+     * Client media type, not safe.
+     *
+     * @var string
+     */
+    private $clientMediaType = '';
+
+    /**
+     * Pre-constructed file stream.
+     *
+     * @var null|StreamInterface
+     */
+    private $stream = null;
+
+    /**
+     * File becomes unavailable after moving.
+     *
+     * @var bool
+     */
+    private $isUnavailable = false;
+
+    /**
+     * New instance of Uploaded file.
+     *
+     * @param string|Stream|resource $path            Local filename, or stream, or resource.
+     * @param int                    $size            Uploaded filesize.
+     * @param int                    $error           Upload error.
+     * @param null                   $clientFilename  Non safe client filename.
+     * @param null                   $clientMediaType Non safe client mediatype.
+     */
+    public function __construct($path, $size, $error, $clientFilename = null, $clientMediaType = null)
+    {
+        if (is_string($path))
+        {
+            $this->file = $path;
+        }
+        elseif (is_resource($path))
+        {
+            $this->stream = new Stream($path);
+        }
+        elseif ($path instanceof StreamInterface)
+        {
+            $this->stream = $path;
+        }
+
+        $this->size = $size;
+        $this->error = $error;
+
+        $this->clientFilename = $clientFilename;
+        $this->clientMediaType = $clientMediaType;
+    }
+
     /**
      * Retrieve a stream representing the uploaded file.
      *
@@ -31,6 +120,17 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getStream()
     {
+        if ($this->isUnavailable)
+        {
+            throw new \RuntimeException("File was moved and not available anymore.");
+        }
+
+        if (!empty($this->stream))
+        {
+            return $this->stream;
+        }
+
+        return $this->stream = new Stream($this->path);
     }
 
     /**
@@ -67,6 +167,39 @@ class UploadedFile implements UploadedFileInterface
      */
     public function moveTo($targetPath)
     {
+        if ($this->isUnavailable)
+        {
+            throw new \RuntimeException("File was moved and not available anymore.");
+        }
+
+        if (Core::isConsole() || !PHP_SAPI || empty($this->path))
+        {
+            $stream = $this->getStream();
+
+            if (!$destination = fopen($targetPath, 'wb+'))
+            {
+                throw new RuntimeException("An error occurred while moving uploaded file.");
+            }
+
+            $stream->rewind();
+            while (!$stream->eof())
+            {
+                fwrite($destination, $stream->read(self::STREAM_BLOCK_SIZE));
+            }
+
+            fclose($destination);
+
+            //No more need in our stream
+            $stream->close();
+            $this->stream = null;
+        }
+
+        if (move_uploaded_file($this->file, $targetPath) === false)
+        {
+            throw new RuntimeException("An error occurred while moving uploaded file.");
+        }
+
+        $this->isUnavailable = true;
     }
 
     /**
@@ -80,6 +213,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getSize()
     {
+        return $this->size;
     }
 
     /**
@@ -98,6 +232,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getError()
     {
+        return $this->error;
     }
 
     /**
@@ -115,6 +250,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getClientFilename()
     {
+        return $this->clientFilename;
     }
 
     /**
@@ -132,5 +268,6 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getClientMediaType()
     {
+        return $this->clientMediaType;
     }
 }
