@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\Http;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
@@ -32,24 +33,76 @@ class InputManager extends Component
     protected $container = null;
 
     /**
-     * FileManager is required to create temporary files based on UploadedFileInterface.
+     * Cached instance of ServerRequestInterface.
      *
-     * @var FileManager
+     * @var ServerRequestInterface
      */
-    protected $file = null;
+    protected $request = null;
 
     /**
      * Instance of InputManager. Input manager responsible for simplifying access to
-     * ServerRequestInterface parameters such as data (post), query, cookies and etc. InputManager
-     * additionally provides simplified fallback to create temporary files based on
-     * UploadedFileInterface.
+     * ServerRequestInterface parameters such as data (post), query, cookies and etc.
      *
-     * @param Container   $container
-     * @param FileManager $file
+     * @param Container $container
      */
-    public function __construct(Container $container, FileManager $file)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->file = $file;
+    }
+
+    /**
+     * Get active instance of ServerRequestInterface.
+     *
+     * @return ServerRequestInterface
+     */
+    public function getRequest()
+    {
+        if (!empty($this->request))
+        {
+            //Checking if we still pointing to right request
+            if ($this->request !== $this->container->get('request'))
+            {
+                $this->request = null;
+
+                //Our parameter bags has expired
+            }
+        }
+
+        return $this->request = $this->container->get('request');
+    }
+
+
+
+    /**
+     * Check if request was made using XmlHttpRequest
+     *
+     * @return bool
+     */
+    public function isAjax()
+    {
+        return strtolower($this->getRequest()->getHeader('X-Requested-With')) == 'xmlhttprequest';
+    }
+
+    /**
+     * Get remove addr resolved from $_SERVER['REMOTE_ADDR']. Will return null if nothing if key not
+     * exists.
+     *
+     * @return string|null
+     */
+    public function remoteAddr()
+    {
+        $serverParams = $this->getRequest()->getServerParams();
+
+        return isset($serverParams['REMOTE_ADDR']) ? $serverParams['REMOTE_ADDR'] : null;
+    }
+
+    /**
+     * Check if frontend requested json response.
+     *
+     * @return bool
+     */
+    public function isJsonExpected()
+    {
+        return $this->getRequest()->getHeaderLine('Accept') == 'application/json';
     }
 }

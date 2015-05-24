@@ -36,6 +36,7 @@ use Spiral\Components;
  * @property Components\Http\Cookies\CookieManager    $cookies
  * @property Components\Session\SessionStore          $session
  * @property Components\Http\Router\Router            $router
+ * @property Components\Http\InputManager             $input
  */
 class Controller extends Component implements ControllerInterface
 {

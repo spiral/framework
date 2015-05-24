@@ -30,7 +30,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         Component\LoggerTrait,
         Component\EventsTrait,
         Component\ConfigurableTrait;//,
-       // RouterTrait;
+    // RouterTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -444,18 +444,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
         {
             $uri = $this->request->getUri();
 
-            //TODO: FIX IT!
-            //            self::logger()->warning(
-            //                "{scheme}://{host}{path} caused the error {code} ({message}) by client {remote}.",
-            //                array(
-            //                    'scheme'  => $uri->getScheme(),
-            //                    'host'    => $uri->getHost(),
-            //                    'path'    => $uri->getPath(),
-            //                    'code'    => $exception->getCode(),
-            //                    'message' => $exception->getMessage() ?: '-not specified-',
-            //                    //  'remote'  => $this->request->remoteAddr()
-            //                )
-            //            );
+            self::logger()->warning(
+                "{scheme}://{host}{path} caused the error {code} ({message}) by client {remote}.",
+                array(
+                    'scheme'  => $uri->getScheme(),
+                    'host'    => $uri->getHost(),
+                    'path'    => $uri->getPath(),
+                    'code'    => $exception->getCode(),
+                    'message' => $exception->getMessage() ?: '-not specified-',
+                    'remote'  => InputManager::getInstance($this->container)->remoteAddr()
+                )
+            );
 
             $this->dispatch($this->errorResponse($exception->getCode()));
 

@@ -41,6 +41,7 @@ use Spiral\Components\Console\ConsoleDispatcher;
  * @property Components\Http\Cookies\CookieManager    $cookies
  * @property Components\Session\SessionStore          $session
  * @property Components\Http\Router\Router            $router
+ * @property Components\Http\InputManager             $input
  */
 class Core extends Container implements CoreInterface
 {
@@ -102,7 +103,8 @@ class Core extends Container implements CoreInterface
         'orm'       => 'Spiral\Components\ORM\ORM',
         'odm'       => 'Spiral\Components\ODM\ODM',
         'cookies'   => 'Spiral\Components\Http\Cookies\CookieManager',
-        'session'   => 'Spiral\Components\Session\SessionStore'
+        'session'   => 'Spiral\Components\Session\SessionStore',
+        'input'     => 'Spiral\Components\Http\InputManager'
     );
 
     /**
