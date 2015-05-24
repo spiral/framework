@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http\Request;
+namespace Spiral\Components\Http;
 
 use Psr\Http\Message\UriInterface;
 
@@ -114,7 +114,6 @@ class Uri implements UriInterface
             $this->parseUri($uri);
         }
     }
-
 
     /**
      * Retrieve the scheme component of the URI.
