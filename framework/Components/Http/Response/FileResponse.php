@@ -11,8 +11,6 @@ namespace Spiral\Components\Http\Response;
 use Spiral\Components\Http\Message\Stream;
 use Spiral\Components\Http\Response;
 
-
-//TODO: REFACTOR
 class FileResponse extends Response
 {
     /**
@@ -22,22 +20,15 @@ class FileResponse extends Response
      *
      * @param string $filename   Local filename to be send.
      * @param string $publicName Name show to client.
-     * @param int    $statusCode
+     * @param int    $status
      * @param array  $headers
      */
-    public function __construct(
-        $filename,
-        $publicName = null,
-        $statusCode = 200,
-        array $headers = array()
-    )
+    public function __construct($filename, $publicName = null, $status = 200, array $headers = array())
     {
         if (!$publicName)
         {
             $publicName = basename($filename);
         }
-
-        $headers = $this->normalizeHeaders($headers, true);
 
         //Forcing default set of headers
         $headers += array(
@@ -50,6 +41,6 @@ class FileResponse extends Response
             'Pragma'                    => 'public'
         );
 
-        parent::__construct(new Stream($filename, 'rb'), $statusCode, $headers, false);
+        parent::__construct(new Stream($filename, 'rb'), $status, $headers);
     }
 }
