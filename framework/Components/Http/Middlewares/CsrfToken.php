@@ -120,7 +120,7 @@ class CsrfToken implements MiddlewareInterface
     {
         if ($request->hasHeader(self::HEADER))
         {
-            return (string)$request->getHeader(self::HEADER);
+            return (string)$request->getHeaderLine(self::HEADER);
         }
 
         //Checking POST data

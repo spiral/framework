@@ -469,7 +469,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             return;
         }
 
-        if ($this->request->getHeader('Accept') == 'application/json')
+        if ($this->request->getHeaderLine('Accept') == 'application/json')
         {
             $content = array('status' => 500) + $snapshot->packException();
             $this->dispatch(new Response(json_encode($content), 500, array(
@@ -495,7 +495,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         $content = '';
 
-        if ($this->request->getHeader('Accept') == 'application/json')
+        if ($this->request->getHeaderLine('Accept') == 'application/json')
         {
             $content = array('status' => $code);
 
