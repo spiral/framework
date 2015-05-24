@@ -21,6 +21,12 @@ use Spiral\Support\Validation\Validator;
 abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterface
 {
     /**
+     * We are going to inherit parent validation, we have to let i18n indexer know to collect both
+     * local and parent messages under one bundle.
+     */
+    const I18N_INHERIT_MESSAGES = true;
+
+    /**
      * Set this constant to false to disable automatic column, index and foreign keys creation.
      * By default entities will read schema from database, so you can connect your ORM model to
      * already existed table.

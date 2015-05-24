@@ -243,8 +243,11 @@ class Indexer extends Component
             //Indexing class
             $reflection = new \ReflectionClass($class);
 
+            //We have to merge both local and parent class messages
+            $recursively = $reflection->getConstant('I18N_INHERIT_MESSAGES');
+
             $bundle = call_user_func(array($reflection->getName(), 'i18nBundle'));
-            foreach ($this->fetchStrings($reflection) as $string)
+            foreach ($this->fetchStrings($reflection, $recursively) as $string)
             {
                 $this->i18n->get($bundle, $string);
                 $this->registerString(
@@ -305,12 +308,14 @@ class Indexer extends Component
     }
 
     /**
-     * Fetching strings has to be localized from class default values.
+     * Fetching strings has to be localized from class default values, values can be fetched recursively
+     * and merged with parent data.
      *
      * @param \ReflectionClass $reflection
+     * @param bool             $recursively
      * @return array
      */
-    protected function fetchStrings(\ReflectionClass $reflection)
+    protected function fetchStrings(\ReflectionClass $reflection, $recursively = false)
     {
         $defaultProperties = $reflection->getDefaultProperties();
 
@@ -334,6 +339,11 @@ class Indexer extends Component
                 $strings[] = substr($value, 2, -2);
             }
         });
+
+        if ($recursively && $reflection->getParentClass())
+        {
+            $strings = array_merge($strings, $this->fetchStrings($reflection->getParentClass(), true));
+        }
 
         return $strings;
     }

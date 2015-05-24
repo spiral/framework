@@ -25,6 +25,8 @@ trait LocalizableTrait
      * model messages from attributes ([[ and ]] will be cut) or be called directly in one of model
      * method. Both usages will be indexed and captured to bundles.
      *
+     * If you want to index both local and parent messages, set constant I18N_INHERIT_MESSAGES to true.
+     *
      * @return string
      */
     public static function i18nBundle()

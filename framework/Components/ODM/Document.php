@@ -19,6 +19,12 @@ use Spiral\Support\Validation\Validator;
 abstract class Document extends DataEntity implements CompositableInterface, DatabaseEntityInterface
 {
     /**
+     * We are going to inherit parent validation, we have to let i18n indexer know to collect both
+     * local and parent messages under one bundle.
+     */
+    const I18N_INHERIT_MESSAGES = true;
+
+    /**
      * Model specific constant to indicate that model has to be validated while saving. You still can
      * change this behaviour manually by providing argument to save method.
      */
