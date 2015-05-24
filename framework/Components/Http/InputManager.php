@@ -9,6 +9,7 @@
 namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Components\Http\Input\FileBag;
 use Spiral\Components\Http\Input\HeaderBag;
 use Spiral\Components\Http\Input\InputBag;
@@ -231,7 +232,7 @@ class InputManager extends Component
      *
      * @param string $name    Key name.
      * @param mixed  $default Default value.
-     * @return mixed
+     * @return UploadedFileInterface|null
      */
     public function file($name, $default = null)
     {

@@ -8,6 +8,7 @@
  */
 namespace Spiral\Facades;
 
+use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Core\Facade;
 
 /**
@@ -16,7 +17,7 @@ use Spiral\Core\Facade;
  * @method static mixed post($name, $default = null)
  * @method static mixed query($name, $default = null)
  * @method static mixed cookie($name, $default = null)
- * @method static mixed file($name, $default = null)
+ * @method static UploadedFileInterface|null file($name, $default = null)
  * @method static mixed server($name, $default = null)
  * @method static bool isAjax()
  * @method static string|null remoteAddr()
