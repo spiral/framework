@@ -27,7 +27,7 @@ class UpdateCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Install/update all available modules and their resources.';
+    protected $description = 'Update installed module resources.';
 
     /**
      * Mount available modules and update their resources.
@@ -61,6 +61,11 @@ class UpdateCommand extends Command
                     )
                 );
             };
+
+            if (!$module->isInstalled())
+            {
+                continue;
+            }
 
             $installer = $module->getInstaller();
             if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
