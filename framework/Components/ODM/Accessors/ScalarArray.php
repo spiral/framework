@@ -73,7 +73,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
         'int'     => 'intval',
         'float'   => 'floatval',
         'string'  => array('Spiral\Helpers\ValueHelper', 'castString'),
-        'MongoId' => 'mongoID',
+        'MongoId' => 'mongoID'
     );
 
     /**

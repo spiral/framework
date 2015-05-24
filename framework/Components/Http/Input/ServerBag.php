@@ -6,32 +6,19 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http\Request;
+namespace Spiral\Components\Http\Input;
 
-class HeaderBag extends ParameterBag
+class ServerBag extends ParameterBag
 {
     /**
-     * Parameter bag used to perform read only operations with request attributes.
+     * Normalizing name to simplify selection.
      *
-     * @param array $parameters
-     */
-    public function __construct(array $parameters)
-    {
-        foreach ($parameters as $header => $values)
-        {
-            $this->data[$header] = join(',', $values);
-        }
-    }
-
-    /**
-     * Normalize header name.
-     *
-     * @param string $header
+     * @param string $name
      * @return string
      */
-    protected function normalize($header)
+    protected function normalize($name)
     {
-        return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
+        return preg_replace('/[^a-z]/i', '_', strtoupper($name));
     }
 
     /**
@@ -55,6 +42,16 @@ class HeaderBag extends ParameterBag
     public function get($name, $default = null)
     {
         return parent::get($this->normalize($name), $default);
+    }
+
+    /**
+     * Get all property values.
+     *
+     * @return array
+     */
+    public function all()
+    {
+        return $this->data;
     }
 
     /**

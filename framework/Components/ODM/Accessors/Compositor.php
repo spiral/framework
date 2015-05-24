@@ -15,7 +15,7 @@ use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
 
 /**
- * This class can be potentially merged with ORM collection and Models EntityIterator.
+ * This class can be potentially should be merged with ORM collection and Models EntityIterator.
  */
 class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayAccess
 {

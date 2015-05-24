@@ -218,7 +218,10 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         if (!empty($this->schema[ODM::D_DEFAULTS]))
         {
             $this->fields = $data
-                ? array_replace_recursive($this->schema[ODM::D_DEFAULTS], is_array($data) ? $data : array())
+                ? array_replace_recursive(
+                    $this->schema[ODM::D_DEFAULTS],
+                    is_array($data) ? $data : array()
+                )
                 : $this->schema[ODM::D_DEFAULTS];
         }
 
@@ -849,11 +852,11 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     /**
      * Get ODM collection associated with specified document.
      *
-     * @param array $schema Forced document schema.
      * @param ODM   $odm    ODM component, will be received from Container if not specified.
+     * @param array $schema Forced document schema.
      * @return Collection
      */
-    public static function odmCollection(array $schema = array(), ODM $odm = null)
+    public static function odmCollection(ODM $odm = null, array $schema = array())
     {
         $odm = !empty($odm) ? $odm : ODM::getInstance();
         $schema = !empty($schema) ? $schema : $odm->getSchema(get_called_class());
@@ -901,7 +904,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             $this->event('saving');
             unset($this->fields['_id']);
 
-            static::odmCollection($this->schema, $this->odm)->insert(
+            static::odmCollection($this->odm, $this->schema)->insert(
                 $this->fields = $this->serializeData()
             );
 
@@ -911,7 +914,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         {
             $this->event('updating');
 
-            static::odmCollection($this->schema, $this->odm)->update(
+            static::odmCollection($this->odm, $this->schema)->update(
                 array('_id' => $this->primaryKey()),
                 $this->buildAtomics()
             );
@@ -940,7 +943,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         }
 
         $this->event('deleting');
-        $this->primaryKey() && static::odmCollection($this->schema, $this->odm)->remove(array(
+        $this->primaryKey() && static::odmCollection($this->odm, $this->schema)->remove(array(
             '_id' => $this->primaryKey()
         ));
 

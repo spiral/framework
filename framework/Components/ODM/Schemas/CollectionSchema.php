@@ -14,6 +14,14 @@ use Spiral\Core\Component;
 class CollectionSchema extends Component
 {
     /**
+     * Parent ODM schema builder holds all other documents.
+     *
+     * @invisible
+     * @var null|SchemaBuilder
+     */
+    protected $builder = null;
+
+    /**
      * Collection database id.
      *
      * @var string
@@ -44,35 +52,27 @@ class CollectionSchema extends Component
     protected $primaryClass = '';
 
     /**
-     * Parent ODM schema holds all other documents.
-     *
-     * @invisible
-     * @var null|SchemaBuilder
-     */
-    protected $odmSchema = null;
-
-    /**
      * New collection schema.
      *
-     * @param string       $name            Collection name.
-     * @param string       $database        Database name/id.
-     * @param array        $classDefinition Class definition technique.
-     * @param string       $primaryClass    Primary class name.
-     * @param SchemaBuilder $odmSchema       ODM schema.
+     * @param SchemaBuilder $builder         ODM schema.
+     * @param string        $name            Collection name.
+     * @param string        $database        Database name/id.
+     * @param array         $classDefinition Class definition technique.
+     * @param string        $primaryClass    Primary class name.
      */
     public function __construct(
+        SchemaBuilder $builder,
         $name,
         $database,
         $classDefinition,
-        $primaryClass = '',
-        SchemaBuilder $odmSchema
+        $primaryClass = ''
     )
     {
+        $this->builder = $builder;
         $this->name = $name;
         $this->database = $database;
         $this->classDefinition = $classDefinition;
         $this->primaryClass = $primaryClass;
-        $this->odmSchema = $odmSchema;
     }
 
     /**
@@ -125,6 +125,6 @@ class CollectionSchema extends Component
      */
     public function primaryDocument()
     {
-        return $this->odmSchema->getDocument($this->primaryClass);
+        return $this->builder->getDocument($this->primaryClass);
     }
 }

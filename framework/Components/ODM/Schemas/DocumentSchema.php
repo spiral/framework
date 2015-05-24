@@ -24,6 +24,14 @@ class DocumentSchema extends ModelSchema
     const BASE_CLASS = SchemaBuilder::DOCUMENT;
 
     /**
+     * Parent ODM schema builder holds all other documents.
+     *
+     * @invisible
+     * @var SchemaBuilder
+     */
+    protected $builder = null;
+
+    /**
      * Document model class name.
      *
      * @var string
@@ -31,24 +39,16 @@ class DocumentSchema extends ModelSchema
     protected $class = '';
 
     /**
-     * Parent ODM schema holds all other documents.
-     *
-     * @invisible
-     * @var SchemaBuilder
-     */
-    protected $odmSchema = null;
-
-    /**
      * New DocumentSchema instance, document schema responsible for fetching schema, defaults
      * and filters from Document models.
      *
-     * @param string        $class     Class name.
-     * @param SchemaBuilder $odmSchema Parent ODM schema (all other documents).
+     * @param SchemaBuilder $builder Parent ODM schema (all other documents).
+     * @param string        $class   Class name.
      */
-    public function __construct($class, SchemaBuilder $odmSchema)
+    public function __construct(SchemaBuilder $builder, $class)
     {
+        $this->builder = $builder;
         $this->class = $class;
-        $this->odmSchema = $odmSchema;
         $this->reflection = new \ReflectionClass($class);
     }
 
@@ -83,7 +83,7 @@ class DocumentSchema extends ModelSchema
             if (is_array($value))
             {
                 $value = array_merge(
-                    $this->odmSchema->getDocument($parentClass)->property($property, true),
+                    $this->builder->getDocument($parentClass)->property($property, true),
                     $value
                 );
             }
@@ -189,16 +189,16 @@ class DocumentSchema extends ModelSchema
             if (
                 is_array($type)
                 && is_scalar($type[0])
-                && $filter = $this->odmSchema->getMutators($field . '::' . $type[0])
+                && $filter = $this->builder->getMutators($field . '::' . $type[0])
             )
             {
                 $resolved += $filter;
             }
-            elseif (is_array($type) && $filter = $this->odmSchema->getMutators('array'))
+            elseif (is_array($type) && $filter = $this->builder->getMutators('array'))
             {
                 $resolved += $filter;
             }
-            elseif (!is_array($type) && $filter = $this->odmSchema->getMutators($type))
+            elseif (!is_array($type) && $filter = $this->builder->getMutators($type))
             {
                 $resolved += $filter;
             }
@@ -248,7 +248,7 @@ class DocumentSchema extends ModelSchema
         {
             if ($composition['type'] == ODM::CMP_ONE)
             {
-                $defaults[$field] = $this->odmSchema->getDocument($composition['class'])->getDefaults();
+                $defaults[$field] = $this->builder->getDocument($composition['class'])->getDefaults();
             }
         }
 
@@ -322,7 +322,7 @@ class DocumentSchema extends ModelSchema
         $compositions = array();
         foreach ($fields as $field => $type)
         {
-            if (is_string($type) && $foreignDocument = $this->odmSchema->getDocument($type))
+            if (is_string($type) && $foreignDocument = $this->builder->getDocument($type))
             {
                 $compositions[$field] = array(
                     'type'            => ODM::CMP_ONE,
@@ -359,7 +359,7 @@ class DocumentSchema extends ModelSchema
             }
 
             $class = $type[0];
-            if (is_string($class) && $foreignDocument = $this->odmSchema->getDocument($class))
+            if (is_string($class) && $foreignDocument = $this->builder->getDocument($class))
             {
                 //Rename type to represent real model name
                 $compositions[$field] = array(
@@ -403,7 +403,7 @@ class DocumentSchema extends ModelSchema
                 ? $options[Document::MANY]
                 : $options[Document::ONE];
 
-            if (!$externalDocument = $this->odmSchema->getDocument($class))
+            if (!$externalDocument = $this->builder->getDocument($class))
             {
                 throw new ODMException(
                     "Unable to build aggregation {$this->class}.{$field}, "
@@ -447,7 +447,7 @@ class DocumentSchema extends ModelSchema
     public function getChildren()
     {
         $result = array();
-        foreach ($this->odmSchema->getDocumentSchemas() as $schema)
+        foreach ($this->builder->getDocumentSchemas() as $schema)
         {
             if ($schema->reflection->isSubclassOf($this->class))
             {
@@ -473,7 +473,7 @@ class DocumentSchema extends ModelSchema
         {
             if (
                 $hasCollection
-                && !$this->odmSchema->getDocument(
+                && !$this->builder->getDocument(
                     $reflection->getParentClass()->getName()
                 )->getCollection()
             )
@@ -496,7 +496,7 @@ class DocumentSchema extends ModelSchema
      */
     public function primaryDocument($hasCollection = false)
     {
-        return $this->odmSchema->getDocument($this->primaryClass($hasCollection));
+        return $this->builder->getDocument($this->primaryClass($hasCollection));
     }
 
     /**
@@ -510,7 +510,7 @@ class DocumentSchema extends ModelSchema
     public function classDefinition()
     {
         $classes = array();
-        foreach ($this->odmSchema->getDocumentSchemas() as $documentSchema)
+        foreach ($this->builder->getDocumentSchemas() as $documentSchema)
         {
             if (
                 $documentSchema->reflection->isSubclassOf($this->class)
@@ -561,7 +561,7 @@ class DocumentSchema extends ModelSchema
 
             foreach ($classes as $class => &$fields)
             {
-                $fields = $this->odmSchema->getDocument($class)->getFields();
+                $fields = $this->builder->getDocument($class)->getFields();
 
                 if (empty($fields))
                 {

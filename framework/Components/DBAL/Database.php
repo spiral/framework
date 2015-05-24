@@ -105,6 +105,21 @@ class Database extends Component implements InjectableInterface
     const TIMESTAMP_NOW = 'DRIVER_SPECIFIC_NOW_EXPRESSION';
 
     /**
+     * Associated driver instance. Driver provides database specific support including correct schema
+     * builders, query builders and quote mechanisms.
+     *
+     * @var Driver
+     */
+    protected $driver = null;
+
+    /**
+     * Container is required to resolve CacheManager when required.
+     *
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Database connection name/id.
      *
      * @var string
@@ -118,23 +133,18 @@ class Database extends Component implements InjectableInterface
      */
     protected $tablePrefix = '';
 
-    /**
-     * Associated driver instance. Driver provides database specific support including correct schema
-     * builders, query builders and quote mechanisms.
-     *
-     * @var Driver
-     */
-    protected $driver = null;
 
     /**
      * New Database instance. Database class is high level abstraction at top of Driver. Multiple
      * databases can use same driver and be different by table prefix.
      *
-     * @param Driver $driver      Driver instance responsible for database connection.
-     * @param string $name        Internal database name/id.
-     * @param string $tablePrefix Default database table prefix, will be used for all table identifiers.
+     * @param Driver    $driver      Driver instance responsible for database connection.
+     * @param Container $container   Container is required to resolve CacheManager component when
+     *                               required.
+     * @param string    $name        Internal database name/id.
+     * @param string    $tablePrefix Default database table prefix, will be used for all table identifiers.
      */
-    public function __construct(Driver $driver, $name, $tablePrefix = '')
+    public function __construct(Driver $driver, Container $container, $name, $tablePrefix = '')
     {
         $this->name = $name;
         $this->driver = $driver;
@@ -270,7 +280,7 @@ class Database extends Component implements InjectableInterface
         CacheStore $store = null
     )
     {
-        $store = !empty($store) ? $store : CacheManager::getInstance()->store();
+        $store = !empty($store) ? $store : CacheManager::getInstance($this->container)->store();
 
         if (empty($key))
         {

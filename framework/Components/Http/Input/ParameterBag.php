@@ -6,19 +6,27 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http\Request;
+namespace Spiral\Components\Http\Input;
 
-class ServerBag extends ParameterBag
+use Spiral\Helpers\ArrayHelper;
+
+class ParameterBag
 {
     /**
-     * Normalizing name to simplify selection.
+     * Associated parameters to read.
      *
-     * @param string $name
-     * @return string
+     * @var array
      */
-    protected function normalize($name)
+    protected $data;
+
+    /**
+     * Parameter bag used to perform read only operations with request attributes.
+     *
+     * @param array $parameters
+     */
+    public function __construct(array $parameters)
     {
-        return preg_replace('/[^a-z]/i', '_', strtoupper($name));
+        $this->data = $parameters;
     }
 
     /**
@@ -29,7 +37,7 @@ class ServerBag extends ParameterBag
      */
     public function has($name)
     {
-        return parent::has($this->normalize($name));
+        return array_key_exists($name, $this->data);
     }
 
     /**
@@ -41,7 +49,12 @@ class ServerBag extends ParameterBag
      */
     public function get($name, $default = null)
     {
-        return parent::get($this->normalize($name), $default);
+        if (!$this->has($name))
+        {
+            return $default;
+        }
+
+        return $this->data[$name];
     }
 
     /**
@@ -56,7 +69,6 @@ class ServerBag extends ParameterBag
 
     /**
      * Fetch only specified keys from property values. Missed values can be filled with defined filler.
-     * Attention, resulted keys will be equal to normalized names, not requested ones.
      *
      * @param array $keys Keys to fetch from parameter values.
      * @param bool  $fill Fill missing key with filler value.
@@ -65,8 +77,23 @@ class ServerBag extends ParameterBag
      */
     public function fetch(array $keys, $fill = false, $filler = null)
     {
-        $keys = array_map(array($this, 'normalize'), $keys);
+        $result = ArrayHelper::fetchKeys($this->data, $keys);
 
-        return parent::fetch($keys, $fill, $filler);
+        if ($fill)
+        {
+            $result = $result + array_fill_keys($keys, $filler);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Simplified way to dump information.
+     *
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        return $this->all();
     }
 }
