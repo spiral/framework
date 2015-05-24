@@ -141,22 +141,31 @@ class ViewManager extends Component
     }
 
     /**
+     * Get static variable by names.
+     *
+     * @param string $name
+     * @param mixed  $default
+     * @return string
+     */
+    public function getVariable($name, $default = null)
+    {
+        return array_key_exists($name, $this->staticVariables) ?
+            $this->staticVariables[$name]
+            : $default;
+    }
+
+    /**
      * Variables which will be applied on view caching and view processing stages, different variable
      * value will create different cache version. Usage example can be: layout redefinition, user
      * logged state and etc. You should never use this function for client or dynamic data.
      *
      * @param string $name
-     * @param string $value If skipped current value or null will be returned.
+     * @param string $value
      * @return string
      */
-    public function staticVariable($name, $value = null)
+    public function setVariable($name, $value)
     {
-        if (func_num_args() == 1)
-        {
-            return isset($this->staticVariables[$name]) ? $this->staticVariables[$name] : null;
-        }
-
-        return $this->staticVariables[$name] = $value;
+        $this->staticVariables[$name] = $value;
     }
 
     /**

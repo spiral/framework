@@ -13,29 +13,31 @@ use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Components;
 
 /**
- * @property Core                                  $core
- * @property Components\Http\HttpDispatcher        $http
- * @property Components\Console\ConsoleDispatcher  $console
- * @property Loader                                $loader
- * @property Components\Modules\ModuleManager      $modules
- * @property Components\Files\FileManager          $file
- * @property Components\Debug\Debugger             $debug
- * @property Components\Tokenizer\Tokenizer        $tokenizer
- * @property Components\Cache\CacheManager         $cache
- * @property Components\I18n\Translator            $i18n
- * @property Components\View\ViewManager           $view
- * @property Components\Redis\RedisManager         $redis
- * @property Components\Encrypter\Encrypter        $encrypter
- * @property Components\Image\ImageManager         $image
- * @property Components\Storage\StorageManager     $storage
- * @property Components\DBAL\DatabaseManager       $dbal
- * @property Components\ODM\ODM                    $odm
- * @property Components\ORM\ORM                    $orm
+ * @property Core                                           $core
+ * @property Components\Http\HttpDispatcher                 $http
+ * @property Components\Console\ConsoleDispatcher           $console
+ * @property Loader                                         $loader
+ * @property Components\Modules\ModuleManager               $modules
+ * @property Components\Files\FileManager                   $file
+ * @property Components\Debug\Debugger                      $debug
+ * @property Components\Tokenizer\Tokenizer                 $tokenizer
+ * @property Components\Cache\CacheManager                  $cache
+ * @property Components\I18n\Translator                     $i18n
+ * @property Components\View\ViewManager                    $view
+ * @property Components\Redis\RedisManager                  $redis
+ * @property Components\Encrypter\Encrypter                 $encrypter
+ * @property Components\Image\ImageManager                  $image
+ * @property Components\Storage\StorageManager              $storage
+ * @property Components\DBAL\DatabaseManager                $dbal
+ * @property Components\ODM\ODM                             $odm
+ * @property Components\ORM\ORM                             $orm
  *
- * @property Components\Http\Request               $request
- * @property Components\Http\Cookies\CookieManager $cookies
- * @property Components\Session\SessionStore       $session
- * @property Components\Http\Router\Router         $router
+ * @property Components\View\Processors\ExpressionProcessor $viewExpressions
+ *
+ * @property Components\Http\Request                        $request
+ * @property Components\Http\Cookies\CookieManager          $cookies
+ * @property Components\Session\SessionStore                $session
+ * @property Components\Http\Router\Router                  $router
  */
 class Controller extends Component implements ControllerInterface
 {

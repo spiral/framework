@@ -11,17 +11,17 @@ namespace Spiral\Components\View\Processors;
 use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
+use Spiral\Core\Component;
+use Spiral\Core\Component\SingletonTrait;
 
-class VariablesProcessor implements ProcessorInterface
+class ExpressionProcessor implements ProcessorInterface
 {
     /**
      * Static variables replace options.
      *
      * @var array
      */
-    protected $options = array(
-        'pattern' => '/@\{(?P<name>[a-z0-9_\.\-]+)(?: *\| *(?P<default>[^}]+))?}/i'
-    );
+    protected $expressions = array();
 
     /**
      * ViewManager component instance.
@@ -40,7 +40,7 @@ class VariablesProcessor implements ProcessorInterface
     public function __construct(ViewManager $viewManager, LayeredCompiler $compiler, array $options)
     {
         $this->viewManager = $viewManager;
-        $this->options = $options + $this->options;
+        $this->expressions = $options['expressions'];
     }
 
     /**
@@ -56,24 +56,25 @@ class VariablesProcessor implements ProcessorInterface
      */
     public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
-        //Doing replacement
-        return preg_replace_callback(
-            $this->options['pattern'],
-            array($this, 'replace'),
-            $source
-        );
+        foreach ($this->expressions as $expression)
+        {
+            $source = preg_replace_callback($expression['pattern'], $expression['callback'], $source);
+        }
+
+        return $source;
     }
 
     /**
-     * Getting static variable value.
+     * Embedded replacer used to set static variable or it's default value.
      *
      * @param array $matches
      * @return string
      */
-    protected function replace($matches)
+    public function staticVariable(array $matches)
     {
-        return $this->viewManager->staticVariable($matches['name'])
-            ? $this->viewManager->staticVariable($matches['name'])
-            : (isset($matches['default']) ? $matches['default'] : '');
+        return $this->viewManager->getVariable(
+            $matches['name'],
+            !empty($matches['default']) ? $matches['default'] : ''
+        );
     }
 }
