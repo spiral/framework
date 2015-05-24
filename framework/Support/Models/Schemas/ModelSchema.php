@@ -136,61 +136,6 @@ abstract class ModelSchema extends Component
     }
 
     /**
-     * Get error messages localization sources. This is required to correctly localize model errors
-     * without overlaps.
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        $validates = array();
-        $reflection = $this->reflection;
-        while ($reflection->getName() != static::BASE_CLASS)
-        {
-            //Validation messages
-            if (!empty($reflection->getDefaultProperties()['validates']))
-            {
-                $validates[$reflection->getName()] = $reflection->getDefaultProperties()['validates'];
-            }
-
-            $reflection = $reflection->getParentClass();
-        }
-
-        $messages = array();
-        foreach (array_reverse($validates) as $parent => $validates)
-        {
-            foreach ($validates as $field => $rules)
-            {
-                foreach ($rules as $rule)
-                {
-                    $message = '';
-                    if (isset($rule['message']))
-                    {
-                        $message = $rule['message'];
-                    }
-                    elseif (isset($rule['error']))
-                    {
-                        $message = $rule['error'];
-                    }
-                    if (
-                        substr($message, 0, 2) == Translator::I18N_PREFIX
-                        && substr($message, -2) == Translator::I18N_POSTFIX
-                    )
-                    {
-                        //Only I18N messages
-                        if ($message && !isset($errorMessages[$message]))
-                        {
-                            $messages[$message] = $parent;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
      * All methods declared in document. Method will include information about parameters, return
      * type, static declaration and access level.
      *

@@ -153,9 +153,8 @@ class ORM extends Component
     const E_FILLABLE    = 6;
     const E_MUTATORS    = 7;
     const E_VALIDATES   = 8;
-    const E_MESSAGES    = 9;
-    const E_RELATIONS   = 10;
-    const E_PRIMARY_KEY = 11;
+    const E_RELATIONS   = 9;
+    const E_PRIMARY_KEY = 10;
 
     /**
      * Normalized relation options.

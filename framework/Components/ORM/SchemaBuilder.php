@@ -331,7 +331,6 @@ class SchemaBuilder extends Component
 
             $recordSchema[ORM::E_MUTATORS] = $record->getMutators();
             $recordSchema[ORM::E_VALIDATES] = $record->getValidates();
-            $recordSchema[ORM::E_MESSAGES] = $record->getMessages();
 
             //Relations
             foreach ($record->getRelations() as $name => $relation)

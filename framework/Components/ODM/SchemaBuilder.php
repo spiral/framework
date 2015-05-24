@@ -196,7 +196,6 @@ class SchemaBuilder extends Component
 
             $documentSchema[ODM::D_MUTATORS] = $document->getMutators();
             $documentSchema[ODM::D_VALIDATES] = $document->getValidates();
-            $documentSchema[ODM::D_MESSAGES] = $document->getMessages();
 
             $documentSchema[ODM::D_AGGREGATIONS] = array();
             foreach ($document->getAggregations() as $name => $aggregation)

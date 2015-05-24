@@ -22,7 +22,6 @@ use Spiral\Core\Component;
  * @method SelectQuery orderBy(string $identifier, string $direction = 'ASC')
  * @method SelectQuery cache(int $lifetime)
  * @method QueryResult run(bool $paginate = true)
- * @method int count()
  * @method SelectQuery limit(int $limit = 0)
  * @method SelectQuery offset(int $offset = 0)
  * @method SelectQuery paginate($limit = 50, $pageParameter = 'page', $fetchCount = true, $request = null)
@@ -190,6 +189,16 @@ class Table extends Component implements \JsonSerializable, \IteratorAggregate, 
     public function update(array $values = array(), array $where = array())
     {
         return $this->database->update($this->name, $values, $where);
+    }
+
+    /**
+     * Count number of records in table.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->select()->count();
     }
 
     /**

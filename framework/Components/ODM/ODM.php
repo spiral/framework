@@ -304,9 +304,8 @@ class ODM extends Component implements Container\InjectionManagerInterface
     const D_FILLABLE     = 5;
     const D_MUTATORS     = 6;
     const D_VALIDATES    = 7;
-    const D_MESSAGES     = 8;
-    const D_AGGREGATIONS = 9;
-    const D_COMPOSITIONS = 10;
+    const D_AGGREGATIONS = 8;
+    const D_COMPOSITIONS = 9;
 
     /**
      * Normalized aggregation.

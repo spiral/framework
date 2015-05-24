@@ -826,18 +826,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
                 && substr($error, -2) == Translator::I18N_POSTFIX
             )
             {
-                if (isset($this->schema[ODM::D_MESSAGES][$error]))
-                {
-                    //Parent message
-                    $error = Translator::getInstance()->get(
-                        $this->schema[ODM::D_MESSAGES][$error],
-                        substr($error, 2, -2)
-                    );
-                }
-                else
-                {
-                    $error = $this->i18nMessage($error);
-                }
+                $error = $this->i18nMessage($error);
             }
 
             $errors[$field] = $error;
@@ -865,11 +854,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
         static::initialize();
 
-        return Collection::make(array(
-            'name'     => $schema[ODM::D_COLLECTION],
-            'database' => $schema[ODM::D_DB],
-            'odm'      => $odm
-        ));
+        return new Collection($odm, $schema[ODM::D_DB], $schema[ODM::D_COLLECTION]);
     }
 
     /**

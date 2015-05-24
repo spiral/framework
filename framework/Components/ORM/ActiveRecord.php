@@ -520,18 +520,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
                 && substr($error, -2) == Translator::I18N_POSTFIX
             )
             {
-                if (isset($this->schema[ORM::E_MESSAGES][$error]))
-                {
-                    //Parent message
-                    $error = Translator::getInstance()->get(
-                        $this->schema[ORM::E_MESSAGES][$error],
-                        substr($error, 2, -2)
-                    );
-                }
-                else
-                {
-                    $error = $this->i18nMessage($error);
-                }
+                $error = $this->i18nMessage($error);
             }
 
             $errors[$field] = $error;

@@ -243,30 +243,17 @@ class Indexer extends Component
             //Indexing class
             $reflection = new \ReflectionClass($class);
 
-            //Class strings
-            $strings = $this->fetchStrings($reflection);
-
-            //Parent class strings
-            $parentStrings = $reflection->getParentClass()
-                ? $this->fetchStrings($reflection->getParentClass(), true)
-                : array();
-
-            //Only unique
-            if ($strings = array_diff($strings, $parentStrings))
+            $bundle = call_user_func(array($reflection->getName(), 'i18nBundle'));
+            foreach ($this->fetchStrings($reflection) as $string)
             {
-                $bundle = call_user_func(array($reflection->getName(), 'i18nBundle'));
-
-                foreach ($strings as $string)
-                {
-                    $this->i18n->get($bundle, $string);
-                    $this->registerString(
-                        $location['filename'],
-                        0,
-                        $bundle,
-                        $string,
-                        $reflection->getName()
-                    );
-                }
+                $this->i18n->get($bundle, $string);
+                $this->registerString(
+                    $location['filename'],
+                    0,
+                    $bundle,
+                    $string,
+                    $reflection->getName()
+                );
             }
         }
     }
@@ -318,15 +305,12 @@ class Indexer extends Component
     }
 
     /**
-     * Fetching strings has to be localized from class default values, values can be fetched recursively
-     * and merged
-     * with parent data.
+     * Fetching strings has to be localized from class default values.
      *
      * @param \ReflectionClass $reflection
-     * @param bool             $recursively
      * @return array
      */
-    protected function fetchStrings(\ReflectionClass $reflection, $recursively = false)
+    protected function fetchStrings(\ReflectionClass $reflection)
     {
         $defaultProperties = $reflection->getDefaultProperties();
 
@@ -350,11 +334,6 @@ class Indexer extends Component
                 $strings[] = substr($value, 2, -2);
             }
         });
-
-        if ($recursively && $reflection->getParentClass())
-        {
-            $strings = array_merge($strings, $this->fetchStrings($reflection->getParentClass(), true));
-        }
 
         return $strings;
     }
