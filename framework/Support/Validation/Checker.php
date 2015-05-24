@@ -18,6 +18,12 @@ abstract class Checker
     use LocalizableTrait;
 
     /**
+     * We are going to inherit parent validation, we have to let i18n indexer know to collect both
+     * local and parent messages under one bundle.
+     */
+    const I18N_INHERIT_MESSAGES = true;
+
+    /**
      * Set of default error messages associated with their check methods organized by method name.
      * Will be returned by the checker to replace the default validator message. Can have placeholders
      * for interpolation.
@@ -69,10 +75,8 @@ abstract class Checker
             $messages = $reflection->getDefaultProperties()['messages'];
             if (isset($messages[$method]))
             {
-                return call_user_func(
-                    array($reflection->getName(), 'i18nMessage'),
-                    $messages[$method]
-                );
+                //We are inheriting parent messages
+                return $this->i18nMessage($messages[$method]);
             }
         }
         elseif (isset($this->messages[$method]))
