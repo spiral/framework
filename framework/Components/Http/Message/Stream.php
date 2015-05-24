@@ -11,6 +11,13 @@ namespace Spiral\Components\Http\Message;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Process\Exception\RuntimeException;
 
+/**
+ * Describes a data stream.
+ *
+ * Typically, an instance will wrap a PHP stream; this interface provides
+ * a wrapper around the most common operations, including serialization of
+ * the entire stream to a string.
+ */
 class Stream implements StreamInterface
 {
     /**
