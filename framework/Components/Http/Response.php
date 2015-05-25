@@ -49,6 +49,7 @@ class Response extends PsrMessage implements ResponseInterface
     /**
      * Status code headers.
      *
+     * @invisible
      * @var array
      */
     protected $reasonPhrases = array(
