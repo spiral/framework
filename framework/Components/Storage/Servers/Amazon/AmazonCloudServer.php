@@ -149,8 +149,6 @@ class AmazonCloudServer implements ServerInterface
             ->setHeader('Content-Type', $mimetype)
             ->run();
 
-        $this->file->remove($filename);
-
         return $result['status'] == 200 || $result['status'] == 201;
     }
 

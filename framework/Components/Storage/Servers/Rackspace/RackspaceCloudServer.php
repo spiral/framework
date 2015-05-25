@@ -294,8 +294,6 @@ class RackspaceCloudServer implements ServerInterface
             return $this->connect(true) && $this->create($filename, $container, $name);
         }
 
-        $this->file->remove($filename);
-
         return $result['status'] == 200 || $result['status'] == 201;
     }
 

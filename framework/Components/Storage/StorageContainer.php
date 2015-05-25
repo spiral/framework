@@ -197,11 +197,6 @@ class StorageContainer extends Component implements InjectableInterface
         {
             benchmark("storage::create", $this->prefix . $name);
 
-            if ($filename)
-            {
-                $this->file->remove($filename);
-            }
-
             //Storage object
             return new StorageObject($this->buildAddress($name), $name, $this->storage, $this);
         }

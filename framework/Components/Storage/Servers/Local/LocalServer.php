@@ -126,7 +126,7 @@ class LocalServer implements ServerInterface
     {
         if ($filename && $this->file->exists($filename))
         {
-            return $this->moveHelper($container, $filename, $container->options['folder'] . $name);
+            return $this->copyHelper($container, $filename, $container->options['folder'] . $name);
         }
 
         if ($this->file->touch($filename = $container->options['folder'] . $name))

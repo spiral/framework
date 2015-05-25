@@ -256,8 +256,6 @@ class FtpServer implements ServerInterface
                 ftp_chmod($this->connection, $container->options['mode'], $location);
             }
 
-            $this->file->remove($filename);
-
             return true;
         }
         catch (\ErrorException $exception)
