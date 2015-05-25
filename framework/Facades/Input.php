@@ -9,6 +9,7 @@
 namespace Spiral\Facades;
 
 use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 use Spiral\Core\Facade;
 
 /**
@@ -19,9 +20,13 @@ use Spiral\Core\Facade;
  * @method static mixed cookie($name, $default = null)
  * @method static UploadedFileInterface|null file($name, $default = null)
  * @method static mixed server($name, $default = null)
+ * @method static mixed attribute($name, $default = null)
+ * @method static UriInterface getUri()
+ * @method static string getPath()
+ * @method static string getMethod()
+ * @method static bool isSecure()
  * @method static bool isAjax()
- * @method static string|null remoteAddr()
- * @method static bool isJsonExpected()
+ * @method static string|null getRemoteAddr()
  */
 class Input extends Facade
 {

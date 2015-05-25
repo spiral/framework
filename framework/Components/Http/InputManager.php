@@ -25,6 +25,7 @@ use Spiral\Core\Container;
  * @property InputBag   $cookies
  * @property FileBag    $files
  * @property ServerBag  $server
+ * @property InputBag   $attributes
  */
 class InputManager extends Component
 {
@@ -61,29 +62,33 @@ class InputManager extends Component
      * @var array
      */
     protected $bagAssociations = array(
-        'headers' => array(
+        'headers'    => array(
             'class'  => 'Spiral\Components\Http\Input\HeaderBag',
             'source' => 'getHeaders'
         ),
-        'data'    => array(
+        'data'       => array(
             'class'  => 'Spiral\Components\Http\Input\InputBag',
             'source' => 'getParsedBody'
         ),
-        'query'   => array(
+        'query'      => array(
             'class'  => 'Spiral\Components\Http\Input\InputBag',
             'source' => 'getQueryParams'
         ),
-        'cookies' => array(
+        'cookies'    => array(
             'class'  => 'Spiral\Components\Http\Input\InputBag',
             'source' => 'getCookieParams'
         ),
-        'files'   => array(
+        'files'      => array(
             'class'  => 'Spiral\Components\Http\Input\FileBag',
             'source' => 'getUploadedFiles'
         ),
-        'server'  => array(
+        'server'     => array(
             'class'  => 'Spiral\Components\Http\Input\ServerBag',
             'source' => 'getServerParams'
+        ),
+        'attributes' => array(
+            'class'  => 'Spiral\Components\Http\Input\InputBag',
+            'source' => 'getAttributes'
         )
     );
 
@@ -250,6 +255,18 @@ class InputManager extends Component
     public function server($name, $default = null)
     {
         return $this->server->get($name, $default);
+    }
+
+    /**
+     * Fetch value from request attributes (for example activePath or csrf token).
+     *
+     * @param string $name    Key name.
+     * @param mixed  $default Default value.
+     * @return mixed
+     */
+    public function attribute($name, $default = null)
+    {
+        return $this->attributes->get($name, $default);
     }
 
     /**
