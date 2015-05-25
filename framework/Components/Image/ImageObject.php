@@ -70,6 +70,13 @@ class ImageObject extends Component
     protected $image = null;
 
     /**
+     * File manager.
+     *
+     * @var FileManager
+     */
+    protected $file = null;
+
+    /**
      * Properties retrieved from image file using getimagesize() function.
      *
      * Index 0 and 1 contains respectively the width and the height of the image.
@@ -145,6 +152,7 @@ class ImageObject extends Component
         }
 
         $this->image = $image;
+        $this->file = $file;
 
         try
         {
@@ -689,7 +697,7 @@ class ImageObject extends Component
         try
         {
             $this->properties = getimagesize($this->filename, $imageinfo);
-            $this->iptc = new IptcData($this->filename, $imageinfo, FileManager::getInstance());
+            $this->iptc = new IptcData($this->filename, $imageinfo, $this->file);
         }
         catch (\Exception $exception)
         {
@@ -759,5 +767,20 @@ class ImageObject extends Component
     public static function open($filename)
     {
         return static::make(compact('filename'));
+    }
+
+    /**
+     * Simplified dump info.
+     *
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        return (object)array(
+            'filename' => $this->filename,
+            'type'     => $this->type(),
+            'width'    => $this->width(),
+            'height'   => $this->height()
+        );
     }
 }
