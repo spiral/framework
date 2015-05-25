@@ -110,8 +110,6 @@ class StreamWrapper
      */
     public function stream_read($count)
     {
-        dump($count);
-
         return $this->stream->read($count);
     }
 
