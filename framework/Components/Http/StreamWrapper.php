@@ -113,7 +113,9 @@ class StreamWrapper
      */
     public function stream_seek($offset, $whence = SEEK_SET)
     {
-        return $this->stream->seek($offset, $whence);
+        $this->stream->seek($offset, $whence);
+
+        return true;
     }
 
     /**
