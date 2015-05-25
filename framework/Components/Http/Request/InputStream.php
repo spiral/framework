@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\Http\Request;
 
-use Spiral\Components\Http\Message\Stream;
+use Spiral\Components\Http\Stream;
 
 class InputStream extends Stream
 {

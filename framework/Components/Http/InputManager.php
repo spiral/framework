@@ -251,6 +251,8 @@ class InputManager extends Component
         return $this->server->get($name, $default);
     }
 
+    //TODO: ADD MORE NICE METHODS
+
     /**
      * Check if request was made using XmlHttpRequest
      *

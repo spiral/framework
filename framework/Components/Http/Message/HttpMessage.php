@@ -24,7 +24,7 @@ use Spiral\Core\Component;
  * @link http://www.ietf.org/rfc/rfc7230.txt
  * @link http://www.ietf.org/rfc/rfc7231.txt
  */
-abstract class PsrMessage extends Component implements MessageInterface
+abstract class HttpMessage extends Component implements MessageInterface
 {
     /**
      * HTTP protocol version.

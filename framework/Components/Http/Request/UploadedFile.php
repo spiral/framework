@@ -11,7 +11,7 @@ namespace Spiral\Components\Http\Request;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Components\Http\HttpDispatcher;
-use Spiral\Components\Http\Message\Stream;
+use Spiral\Components\Http\Stream;
 use Spiral\Core\Core;
 use Symfony\Component\Process\Exception\RuntimeException;
 
@@ -75,11 +75,11 @@ class UploadedFile implements UploadedFileInterface
     /**
      * New instance of Uploaded file.
      *
-     * @param string|Stream|resource $path            Local filename, or stream, or resource.
-     * @param int                    $size            Uploaded filesize.
-     * @param int                    $error           Upload error.
-     * @param null                   $clientFilename  Non safe client filename.
-     * @param null                   $clientMediaType Non safe client mediatype.
+     * @param string|StreamInterface|resource $path            Local filename, or stream, or resource.
+     * @param int                             $size            Uploaded filesize.
+     * @param int                             $error           Upload error.
+     * @param null                            $clientFilename  Non safe client filename.
+     * @param null                            $clientMediaType Non safe client mediatype.
      */
     public function __construct($path, $size, $error, $clientFilename = null, $clientMediaType = null)
     {
@@ -195,7 +195,7 @@ class UploadedFile implements UploadedFileInterface
             $this->stream = null;
         }
 
-        if (move_uploaded_file($this->file, $targetPath) === false)
+        if (move_uploaded_file($this->path, $targetPath) === false)
         {
             throw new RuntimeException("An error occurred while moving uploaded file.");
         }

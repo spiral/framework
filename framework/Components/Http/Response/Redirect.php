@@ -9,7 +9,7 @@
 namespace Spiral\Components\Http\Response;
 
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Message\Stream;
+use Spiral\Components\Http\Stream;
 use Spiral\Components\Http\Response;
 
 class Redirect extends Response

@@ -6,10 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Http\Message;
+namespace Spiral\Components\Http;
 
 use Psr\Http\Message\StreamInterface;
-use Symfony\Component\Process\Exception\RuntimeException;
 
 /**
  * Describes a data stream.
@@ -144,14 +143,14 @@ class Stream implements StreamInterface
     {
         if (empty($this->resource))
         {
-            throw new RuntimeException("Unable to tell steam position in detached state.");
+            throw new \RuntimeException("Unable to tell steam position in detached state.");
         }
 
         $position = ftell($this->resource);
 
         if (!is_int($position))
         {
-            throw new RuntimeException("Unable to retrieve stream position.");
+            throw new \RuntimeException("Unable to retrieve stream position.");
         }
 
         return $position;
@@ -193,17 +192,17 @@ class Stream implements StreamInterface
     {
         if (empty($this->resource))
         {
-            throw new RuntimeException("Unable to seek steam in detached state.");
+            throw new \RuntimeException("Unable to seek steam in detached state.");
         }
 
         if (!$this->isSeekable())
         {
-            throw new RuntimeException("Unable to seek steam, stream is not seekable.");
+            throw new \RuntimeException("Unable to seek steam, stream is not seekable.");
         }
 
         if (fseek($this->resource, $offset, $whence) !== 0)
         {
-            throw new RuntimeException("Unable to seek stream.");
+            throw new \RuntimeException("Unable to seek stream.");
         }
     }
 
@@ -248,12 +247,12 @@ class Stream implements StreamInterface
     {
         if ($this->isWritable())
         {
-            throw new RuntimeException("Unable to write into stream, stream is not writable.");
+            throw new \RuntimeException("Unable to write into stream, stream is not writable.");
         }
 
         if (($result = fwrite($this->resource, $string)) === false)
         {
-            throw new RuntimeException('Unable to write into stream, an error occurred.');
+            throw new \RuntimeException('Unable to write into stream, an error occurred.');
         }
 
         return $result;
@@ -288,14 +287,14 @@ class Stream implements StreamInterface
     {
         if (!$this->isReadable())
         {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 "Unable to read from stream, stream is not readable or in detached state."
             );
         }
 
         if (($result = fread($this->resource, $length)) === false)
         {
-            throw new RuntimeException('Unable to read from stream, an error occurred.');
+            throw new \RuntimeException('Unable to read from stream, an error occurred.');
         }
 
         return $result;
@@ -317,7 +316,7 @@ class Stream implements StreamInterface
 
         if (($result = stream_get_contents($this->resource)) === false)
         {
-            throw new RuntimeException('Unable to read from stream, an error occurred.');
+            throw new \RuntimeException('Unable to read from stream, an error occurred.');
         }
 
         return $result;

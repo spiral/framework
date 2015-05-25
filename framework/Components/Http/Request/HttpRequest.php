@@ -11,10 +11,10 @@ namespace Spiral\Components\Http\Request;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Message\PsrMessage;
-use Spiral\Components\Http\Message\Stream;
+use Spiral\Components\Http\Message\HttpMessage;
 use Spiral\Components\Http\Uri;
 use Spiral\Core\Component;
+use Spiral\Support\Streams\Stream\Stream;
 
 /**
  * Representation of an outgoing, client-side request.
@@ -35,7 +35,7 @@ use Spiral\Core\Component;
  * be implemented such that they retain the internal state of the current
  * message and return an instance that contains the changed state.
  */
-class PsrRequest extends PsrMessage implements RequestInterface
+class HttpRequest extends HttpMessage implements RequestInterface
 {
     /**
      * The message's request target.

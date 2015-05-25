@@ -10,8 +10,7 @@ namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Spiral\Components\Http\Message\PsrMessage;
-use Spiral\Components\Http\Message\Stream;
+use Spiral\Components\Http\Message\HttpMessage;
 use Spiral\Components\Http\Response\StringStream;
 use Spiral\Core\Component;
 
@@ -30,7 +29,7 @@ use Spiral\Core\Component;
  * be implemented such that they retain the internal state of the current
  * message and return an instance that contains the changed state.
  */
-class Response extends PsrMessage implements ResponseInterface
+class Response extends HttpMessage implements ResponseInterface
 {
     /**
      * Default set of http codes.

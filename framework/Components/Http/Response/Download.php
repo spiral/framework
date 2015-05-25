@@ -8,10 +8,10 @@
  */
 namespace Spiral\Components\Http\Response;
 
-use Spiral\Components\Http\Message\Stream;
+use Spiral\Components\Http\Stream;
 use Spiral\Components\Http\Response;
 
-class FileResponse extends Response
+class Download extends Response
 {
     /**
      * FileResponse used to create responses associated with local file stream. Response will automatically

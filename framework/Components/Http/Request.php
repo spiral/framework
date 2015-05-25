@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Components\Http\Request\PsrRequest;
+use Spiral\Components\Http\Request\HttpRequest;
 use Spiral\Components\Http\Request\InputStream;
 use Spiral\Components\Http\Request\UploadedFile;
 
@@ -54,7 +54,7 @@ use Spiral\Components\Http\Request\UploadedFile;
  * be implemented such that they retain the internal state of the current
  * message and return an instance that contains the changed state.
  */
-class Request extends PsrRequest implements ServerRequestInterface
+class Request extends HttpRequest implements ServerRequestInterface
 {
     /**
      * The request "attributes" may be used to allow injection of any parameters derived from the
