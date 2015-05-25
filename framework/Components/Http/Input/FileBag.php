@@ -9,6 +9,7 @@
 namespace Spiral\Components\Http\Input;
 
 use Psr\Http\Message\UploadedFileInterface;
+use Spiral\Components\Http\StreamWrapper;
 
 /**
  * Type hinting.
@@ -20,5 +21,19 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class FileBag extends InputBag
 {
+    /**
+     * Get URI (temporary "filename") associated with UploadedFile resource.
+     *
+     * @param string $name
+     * @return null|string
+     */
+    public function getUri($name)
+    {
+        if ($uploadedFile = $this->get($name))
+        {
+            return StreamWrapper::getUri($uploadedFile->getStream());
+        }
 
+        return null;
+    }
 }
