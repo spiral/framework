@@ -27,7 +27,7 @@ class FileBag extends InputBag
      * @param string $name
      * @return null|string
      */
-    public function getUri($name)
+    public function uri($name)
     {
         if ($uploadedFile = $this->get($name))
         {

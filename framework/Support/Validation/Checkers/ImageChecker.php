@@ -29,6 +29,14 @@ class ImageChecker extends FileChecker
     );
 
     /**
+     * Previously opened ImageObjects. This is used to speed up the script while applying multiple
+     * rules to one image.
+     *
+     * @var ImageObject[]
+     */
+    static protected $imageCache = array();
+
+    /**
      * Image component.
      *
      * @var ImageManager
@@ -48,14 +56,6 @@ class ImageChecker extends FileChecker
     }
 
     /**
-     * Previously opened ImageObjects. This is used to speed up the script while applying multiple
-     * rules to one image.
-     *
-     * @var ImageObject[]
-     */
-    static protected $imageObjects = array();
-
-    /**
      * Helper function to get ImageObject from a non specified input. Can accept both local filename
      * or uploaded file array. To validate the file array as a local file (without checking for
      * is_uploaded_file()), array must have the field "local" filled in. This trick can be used with
@@ -67,14 +67,9 @@ class ImageChecker extends FileChecker
     protected function getImage($file)
     {
         $filename = $this->getFilename($file);
-        if (isset(self::$imageObjects[$filename]))
+        if (isset(self::$imageCache[$filename]))
         {
-            return self::$imageObjects[$filename];
-        }
-
-        if (!$this->file->exists($filename))
-        {
-            return false;
+            return self::$imageCache[$filename];
         }
 
         $image = $this->image->open($filename);
@@ -83,7 +78,7 @@ class ImageChecker extends FileChecker
             return false;
         }
 
-        return self::$imageObjects[$filename] = $image;
+        return self::$imageCache[$filename] = $image;
     }
 
     /**
@@ -181,6 +176,6 @@ class ImageChecker extends FileChecker
      */
     public static function cleanCache()
     {
-        self::$imageObjects = array();
+        self::$imageCache = array();
     }
 }

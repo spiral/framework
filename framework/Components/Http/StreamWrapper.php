@@ -62,15 +62,6 @@ class StreamWrapper
     );
 
     /**
-     * Close StreamInterface.
-     */
-    public function stream_close()
-    {
-        //TODO: VERIFY
-        $this->stream->rewind();
-    }
-
-    /**
      * Check if StreamInterface ended.
      *
      * @return bool

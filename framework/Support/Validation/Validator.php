@@ -660,56 +660,11 @@ class Validator extends Component
      *
      * @param array     $data      Data to be validated.
      * @param array     $validates Validation rules.
-     * @param bool      $return    True to return created validator, false to return validation status.
-     * @param array     $errors    Collected error messages if validation failed and return argument set
-     *                             to false.
      * @param Container $container Container instance to use to resolve checkers.
      * @return bool|Validator
      */
-    public static function validateData(
-        array $data,
-        array $validates,
-        $return = true,
-        array &$errors = null,
-        Container $container = null
-    )
+    public static function create(array $data, array $validates, Container $container = null)
     {
-        $validator = static::make(compact('data', 'validates'), $container);
-
-        if (!$return)
-        {
-            if (!$validator->isValid())
-            {
-                $errors = $validator->getErrors();
-
-                return false;
-            }
-
-            return true;
-        }
-
-        return $validator;
-    }
-
-    /**
-     * Alias for validateData method. All documentation located there.
-     *
-     * @param array     $data      Data to be validated.
-     * @param array     $validates Validation rules.
-     * @param bool      $return    True to return created validator, false to return validation status.
-     * @param array     $errors    Collected error messages if validation failed and return argument set
-     *                             to false.
-     * @param Container $container Container instance to use to resolve checkers.
-     * @return bool|Validator
-     */
-    public static function create(
-        array $data,
-        array $validates,
-        $return = true,
-        array &$errors = null,
-        Container $container = null
-    )
-    {
-        return static::validateData($data, $validates, $return, $errors, $container);
+        return static::make(compact('data', 'validates'), $container);
     }
 }

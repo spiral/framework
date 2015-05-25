@@ -8,7 +8,9 @@
  */
 namespace Spiral\Support\Validation\Checkers;
 
+use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Http\StreamWrapper;
 use Spiral\Support\Validation\Checker;
 
 class FileChecker extends Checker
@@ -44,25 +46,23 @@ class FileChecker extends Checker
     }
 
     /**
-     * Helper function that retrieves the real filename. Can accept both local filename or an uploaded
-     * file array. To validate the file array as a local file (without checking for is_uploaded_file()),
-     * array must have the field "local" filled in. This trick can be used with some more complex
-     * validators or file processors.
+     * Helper function that retrieves the real filename. Method can accept as real filename or instance
+     * of UploadedFileInterface. Use second parameter to pass only uploaded files.
      *
-     * @param string|array $file         Local filename or uploaded file array.
-     * @param bool         $onlyUploaded Pass only uploaded files.
-     * @return string
+     * @param string|UploadedFileInterface $file         Local filename or uploaded file array.
+     * @param bool                         $onlyUploaded Pass only uploaded files.
+     * @return string|bool
      */
     protected function getFilename($file, $onlyUploaded = true)
     {
+        if ($file instanceof UploadedFileInterface)
+        {
+            return StreamWrapper::getUri($file->getStream());
+        }
+
         if ($onlyUploaded && !$this->file->isUploaded($file, true))
         {
             return false;
-        }
-
-        if (is_array($file) && array_key_exists('tmp_name', $file))
-        {
-            return $this->file->exists($file['tmp_name']) ? $file['tmp_name'] : false;
         }
 
         return $this->file->exists($file) ? $file : false;
@@ -118,14 +118,14 @@ class FileChecker extends Checker
      */
     public function extension($file, $extensions)
     {
-        if (is_array($file))
+        if ($file instanceof UploadedFileInterface)
         {
             if (!is_array($extensions))
             {
                 $extensions = array_slice(func_get_args(), 1);
             }
 
-            return in_array($this->file->extension($file['name']), $extensions);
+            return in_array($this->file->extension($file->getClientFilename()), $extensions);
         }
 
         return in_array($this->file->extension($file), $extensions);
