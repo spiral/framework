@@ -38,11 +38,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
     const SINGLETON = __CLASS__;
 
     /**
-     * Max block size to use while sending streams to client. Default is 16Kb.
-     */
-    const STREAM_BLOCK_SIZE = 16384;
-
-    /**
      * Default spiral router with known constructor. This constant helps to speed up router creation.
      */
     const DEFAULT_ROUTER = 'Spiral\Components\Http\Router\Router';
@@ -426,7 +421,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
             while (!$stream->eof())
             {
-                echo $stream->read(static::STREAM_BLOCK_SIZE);
+                echo $stream->read(Stream::READ_BLOCK_SIZE);
             }
         }
     }

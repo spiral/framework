@@ -18,11 +18,6 @@ use Symfony\Component\Process\Exception\RuntimeException;
 class UploadedFile implements UploadedFileInterface
 {
     /**
-     * Block size used to moved file to final destination.
-     */
-    const STREAM_BLOCK_SIZE = HttpDispatcher::STREAM_BLOCK_SIZE;
-
-    /**
      * Temporary file path.
      *
      * @var string
@@ -185,7 +180,7 @@ class UploadedFile implements UploadedFileInterface
             $stream->rewind();
             while (!$stream->eof())
             {
-                fwrite($destination, $stream->read(self::STREAM_BLOCK_SIZE));
+                fwrite($destination, $stream->read(Stream::READ_BLOCK_SIZE));
             }
 
             fclose($destination);

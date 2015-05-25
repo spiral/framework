@@ -40,13 +40,34 @@ class StreamWrapper
      */
     private $stream = null;
 
+    /**
+     * Stream mode (r, r+, w).
+     *
+     * @var int
+     */
+    private $mode = 0;
+
+    /**
+     * Association between mode and it's inode value.
+     *
+     * @var array
+     */
+    private static $modes = array(
+        'r'   => 33060,
+        'rb'  => 33060,
+        'r+'  => 33206,
+        'rb+' => 33206,
+        'w'   => 33188,
+        'wb'  => 33188
+    );
 
     /**
      * Close StreamInterface.
      */
     public function stream_close()
     {
-        //TODO: check if this is nesessary
+        //TODO: VERIFY
+        $this->stream->rewind();
     }
 
     /**
@@ -70,7 +91,15 @@ class StreamWrapper
      */
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        return fopen(__FILE__, 'rb');
+        if (!isset(self::$uris[$path]))
+        {
+            return false;
+        }
+
+        $this->stream = self::$uris[$path];
+        $this->mode = $mode;
+
+        return true;
     }
 
     /**
@@ -81,6 +110,8 @@ class StreamWrapper
      */
     public function stream_read($count)
     {
+        dump($count);
+
         return $this->stream->read($count);
     }
 
@@ -146,12 +177,32 @@ class StreamWrapper
         return $this->getStreamStats(self::$uris[$path]);
     }
 
+    /**
+     * Helper method used to correctly resolve StreamInterface stats.
+     *
+     * @param StreamInterface $stream
+     * @return array
+     */
     private function getStreamStats(StreamInterface $stream)
     {
+        $mode = $this->mode;
+        if (empty($mode))
+        {
+            if ($stream->isReadable())
+            {
+                $mode = 'r';
+            }
+
+            if ($stream->isWritable())
+            {
+                $mode = !empty($mode) ? 'r+' : 'w';
+            }
+        }
+
         return array(
             'dev'     => 0,
             'ino'     => 0,
-            'mode'    => 33060, //TODO: right mode
+            'mode'    => self::$modes[$mode],
             'nlink'   => 0,
             'uid'     => 0,
             'gid'     => 0,
@@ -195,8 +246,32 @@ class StreamWrapper
         return $uri;
     }
 
+    /**
+     * Create StreamInterface associated resource.
+     *
+     * @param StreamInterface $stream
+     * @return resource
+     */
     public static function getResource(StreamInterface $stream)
     {
+        $mode = null;
+
+        if ($stream->isReadable())
+        {
+            $mode = 'r';
+        }
+
+        if ($stream->isWritable())
+        {
+            $mode = !empty($mode) ? 'r+' : 'w';
+        }
+
+        if (!$mode)
+        {
+            throw new \RuntimeException("Stream is not available in read or write modes.");
+        }
+
+        return fopen(self::getUri($stream), $mode);
     }
 
     /**

@@ -20,6 +20,11 @@ use Psr\Http\Message\StreamInterface;
 class Stream implements StreamInterface
 {
     /**
+     * Max block size to use while sending streams to client. Default is 16Kb.
+     */
+    const READ_BLOCK_SIZE = 8192;
+
+    /**
      * Associated stream resource.
      *
      * @var resource
