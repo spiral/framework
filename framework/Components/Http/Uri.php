@@ -561,7 +561,7 @@ class Uri implements UriInterface
 
         $this->uriCache .= $this->getAuthority();
 
-        if (!empty($this->path))
+        if (empty($this->path))
         {
             $this->uriCache .= '/';
         }
