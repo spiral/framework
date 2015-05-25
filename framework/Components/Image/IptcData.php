@@ -377,4 +377,14 @@ class IptcData extends Component
 
         return true;
     }
+
+    /**
+     * Simplified data dumper.
+     *
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->getAll();
+    }
 }
