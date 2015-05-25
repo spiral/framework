@@ -156,14 +156,13 @@ class ImageObject extends Component
 
         try
         {
-            $this->properties = getimagesize($filename, $imageinfo);
-            $this->iptc = new IptcData($filename, $imageinfo, $file);
+            $this->properties = getimagesize($filename);
             $this->filename = $filename;
 
             if (!array_key_exists($this->properties[2], static::$imageTypes))
             {
                 $this->properties = array();
-                $this->filename = false;
+                $this->filename = null;
             }
         }
         catch (\Exception $exception)
@@ -198,7 +197,7 @@ class ImageObject extends Component
      *
      * @return string
      */
-    public function type()
+    public function getType()
     {
         return $this->isSupported() ? static::$imageTypes[$this->properties[2]] : '';
     }
@@ -208,7 +207,7 @@ class ImageObject extends Component
      *
      * @return int
      */
-    public function width()
+    public function getWidth()
     {
         return $this->isSupported() ? $this->properties[0] : 0;
     }
@@ -218,7 +217,7 @@ class ImageObject extends Component
      *
      * @return int
      */
-    public function height()
+    public function getHeight()
     {
         return $this->isSupported() ? $this->properties[1] : 0;
     }
@@ -279,8 +278,8 @@ class ImageObject extends Component
             return false;
         }
 
-        $width = $this->width();
-        $height = $this->height();
+        $width = $this->getWidth();
+        $height = $this->getHeight();
 
         if ($width / $height >= $panoramicRatio)
         {
@@ -307,9 +306,21 @@ class ImageObject extends Component
      * @link http://www.sno.phy.queensu.ca/~phil/exiftool/
      * @return IptcData
      */
-    public function iptc()
+    public function getIptc()
     {
-        return $this->isSupported() ? $this->iptc : null;
+        if (!empty($this->iptc))
+        {
+            return $this->iptc;
+        }
+
+        if (!$this->isSupported())
+        {
+            return null;
+        }
+
+        getimagesize($this->filename, $imageinfo);
+
+        return $this->iptc = new IptcData($this->filename, $imageinfo, $this->file);
     }
 
     /**
@@ -354,6 +365,8 @@ class ImageObject extends Component
      */
     public function __get($method)
     {
+        $method = 'get' . ucfirst($method);
+
         return $this->$method();
     }
 
@@ -581,8 +594,8 @@ class ImageObject extends Component
         list($xAxis, $yAxis) = explode('-', $position);
 
         return $this->crop(
-            $this->offset($xAxis, $width, $this->width()),
-            $this->offset($yAxis, $height, $this->height()),
+            $this->offset($xAxis, $width, $this->getWidth()),
+            $this->offset($yAxis, $height, $this->getHeight()),
             $width,
             $height
         );
@@ -697,7 +710,7 @@ class ImageObject extends Component
         try
         {
             $this->properties = getimagesize($this->filename, $imageinfo);
-            $this->iptc = new IptcData($this->filename, $imageinfo, $this->file);
+            $this->iptc = null;
         }
         catch (\Exception $exception)
         {
@@ -778,9 +791,9 @@ class ImageObject extends Component
     {
         return (object)array(
             'filename' => $this->filename,
-            'type'     => $this->type(),
-            'width'    => $this->width(),
-            'height'   => $this->height()
+            'type'     => $this->getType(),
+            'width'    => $this->getWidth(),
+            'height'   => $this->getHeight()
         );
     }
 }

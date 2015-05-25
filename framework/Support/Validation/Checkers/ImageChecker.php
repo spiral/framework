@@ -101,7 +101,7 @@ class ImageChecker extends FileChecker
             $types = array_slice(func_get_args(), 1);
         }
 
-        return in_array($image->type(), $types);
+        return in_array($image->getType(), $types);
     }
 
     /**
@@ -130,12 +130,12 @@ class ImageChecker extends FileChecker
             return false;
         }
 
-        if ($image->width() >= $width)
+        if ($image->getWidth() >= $width)
         {
             return false;
         }
 
-        if ($height && $image->height() >= $height)
+        if ($height && $image->getHeight() >= $height)
         {
             return false;
         }
@@ -158,12 +158,12 @@ class ImageChecker extends FileChecker
             return false;
         }
 
-        if ($image->width() <= $width)
+        if ($image->getWidth() <= $width)
         {
             return false;
         }
 
-        if ($height && $image->height() <= $height)
+        if ($height && $image->getHeight() <= $height)
         {
             return false;
         }
