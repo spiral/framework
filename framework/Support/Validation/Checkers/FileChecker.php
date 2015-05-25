@@ -57,6 +57,11 @@ class FileChecker extends Checker
     {
         if ($file instanceof UploadedFileInterface)
         {
+            if ($file->getError())
+            {
+                return false;
+            }
+
             return StreamWrapper::getUri($file->getStream());
         }
 
@@ -87,6 +92,11 @@ class FileChecker extends Checker
      */
     public function uploaded($file)
     {
+        if ($file instanceof UploadedFileInterface)
+        {
+            return !$file->getError();
+        }
+
         return (bool)$this->getFilename($file, true);
     }
 
