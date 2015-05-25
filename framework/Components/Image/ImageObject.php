@@ -19,7 +19,6 @@ use Spiral\Core\Component;
  * @property string   $mimetype
  * @property array    $properties
  * @property string   $orientation
- * @property IptcData $iptc
  */
 class ImageObject extends Component
 {
@@ -101,15 +100,6 @@ class ImageObject extends Component
      * @var array
      */
     protected $properties = array();
-
-    /**
-     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily
-     * encoded and decoded by most popular photo editing software. Usually contains software
-     * identified, picture title, keywords and etc.
-     *
-     * @var IptcData
-     */
-    protected $iptc = null;
 
     /**
      * Image processor represents operations associated with one specific image file, all processing
@@ -288,32 +278,6 @@ class ImageObject extends Component
         {
             return $width >= $height ? self::LANDSCAPE : self::PORTRAIT;
         }
-    }
-
-    /**
-     * IPTC metadata embedded in images are often referred to as "IPTC headers", and can be easily
-     * encoded and decoded by most popular photo editing software. Usually contains software
-     * identified, picture title, keywords and etc. For more complex image metadata manipulations
-     * consider using: http://www.sno.phy.queensu.ca/~phil/exiftool/
-     *
-     * @link http://www.sno.phy.queensu.ca/~phil/exiftool/
-     * @return IptcData
-     */
-    public function getIptc()
-    {
-        if (!empty($this->iptc))
-        {
-            return $this->iptc;
-        }
-
-        if (!$this->isSupported())
-        {
-            return null;
-        }
-
-        getimagesize($this->filename, $imageinfo);
-
-        return $this->iptc = new IptcData($this->filename, $imageinfo, $this->file);
     }
 
     /**
@@ -703,7 +667,6 @@ class ImageObject extends Component
         try
         {
             $this->properties = getimagesize($this->filename, $imageinfo);
-            $this->iptc = null;
         }
         catch (\Exception $exception)
         {
