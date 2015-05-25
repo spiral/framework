@@ -139,13 +139,6 @@ class ImageObject extends Component
      */
     public function __construct($filename, ImageManager $image, FileManager $file)
     {
-        if (!function_exists('getimagesize'))
-        {
-            throw new ImageException(
-                "Unable to find required function 'getimagesize', GD2 extension required."
-            );
-        }
-
         if (!$file->exists($filename))
         {
             return;
