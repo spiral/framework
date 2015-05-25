@@ -10,6 +10,7 @@ namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Input\FileBag;
 use Spiral\Components\Http\Input\HeaderBag;
 use Spiral\Components\Http\Input\InputBag;
@@ -251,7 +252,55 @@ class InputManager extends Component
         return $this->server->get($name, $default);
     }
 
-    //TODO: ADD MORE NICE METHODS
+    /**
+     * Get UriInterface associated with current request.
+     *
+     * @return UriInterface
+     */
+    public function getUri()
+    {
+        return $this->getRequest()->getUri();
+    }
+
+    /**
+     * Get page path (including leading slash).
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        $path = $this->getUri()->getPath();
+        if (empty($path))
+        {
+            return '/';
+        }
+        elseif ($path[0] !== '/')
+        {
+            return '/' . $path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Get HTTP method request was made with.
+     *
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->getRequest()->getMethod();
+    }
+
+    /**
+     * Check if request was made over http protocol.
+     *
+     * @return bool
+     */
+    public function isSecure()
+    {
+        return $this->getRequest()->getUri()->getScheme() == 'https';
+    }
 
     /**
      * Check if request was made using XmlHttpRequest
@@ -269,20 +318,10 @@ class InputManager extends Component
      *
      * @return string|null
      */
-    public function remoteAddr()
+    public function getRemoteAddr()
     {
         $serverParams = $this->getRequest()->getServerParams();
 
         return isset($serverParams['REMOTE_ADDR']) ? $serverParams['REMOTE_ADDR'] : null;
-    }
-
-    /**
-     * Check if frontend requested json response.
-     *
-     * @return bool
-     */
-    public function isJsonExpected()
-    {
-        return $this->getRequest()->getHeaderLine('Accept') == 'application / json';
     }
 }

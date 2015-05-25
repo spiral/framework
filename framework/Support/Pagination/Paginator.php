@@ -407,13 +407,22 @@ class Paginator extends Component
      */
     public function buildURL($number = null)
     {
-        $publicURL = $this->uri->getPath();
-        if (!$number)
+        $path = $this->uri->getPath();
+        if (!$path)
         {
-            return $publicURL . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
+            $path = '/';
+        }
+        elseif ($path[0] != '/')
+        {
+            $path = '/' . $path;
         }
 
-        return $publicURL . '?' . http_build_query($this->getQuery() + array(
+        if (!$number)
+        {
+            return $path . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
+        }
+
+        return $path . '?' . http_build_query($this->getQuery() + array(
                 $this->pageParameter => $number
             )) . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
     }
