@@ -326,7 +326,7 @@ class InputManager extends Component
      */
     public function isAjax()
     {
-        return strtolower($this->getRequest()->getHeader('X-Requested-With')) == 'xmlhttprequest';
+        return strtolower($this->getRequest()->getHeaderLine('X-Requested-With')) == 'xmlhttprequest';
     }
 
     /**
