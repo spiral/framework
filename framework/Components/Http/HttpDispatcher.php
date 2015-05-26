@@ -266,6 +266,14 @@ class HttpDispatcher extends Component implements DispatcherInterface
     protected function findEndpoint(UriInterface $uri, &$uriPath = null)
     {
         $uriPath = strtolower($uri->getPath());
+        if (empty($uriPath))
+        {
+            $uriPath = '/';
+        }
+        elseif ($uriPath[0] !== '/')
+        {
+            $uriPath = '/' . $uriPath;
+        }
 
         if (isset($this->endpoints[$uriPath]))
         {
