@@ -90,6 +90,8 @@ class StreamWrapper
         $this->stream = self::$uris[$path];
         $this->mode = $mode;
 
+        $this->stream->rewind();
+
         return true;
     }
 

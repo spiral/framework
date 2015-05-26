@@ -186,7 +186,7 @@ class Validator extends Component
     /**
      * Data to be validated. Nothing else to say.
      *
-     * @var array
+     * @var array|\ArrayAccess
      */
     protected $data = array();
 
@@ -243,18 +243,17 @@ class Validator extends Component
      *      ["notEmpty"], ["boolean"]
      * )
      *
-     * @param array     $data             Data to be validated.
-     * @param array     $validates        Validation rules.
-     * @param bool      $interpolateNames If true all messages will be interpolated with field name
-     *                                    included, in other scenario
-     *                                    only method parameters will be embedded, this option can be
-     *                                    disabled by model or outside
-     *                                    to mount custom field labels.
-     * @param Container $container        Container instance used to resolve checkers, global container
-     *                                    will be used if nothing else provided.
+     * @param array|\ArrayAccess $data             Data to be validated.
+     * @param array              $validates        Validation rules.
+     * @param bool               $interpolateNames If true all messages will be interpolated with field
+     *                                             name included, in other scenario only method parameters
+     *                                             will be embedded, this option can be disabled by
+     *                                             model or outside to mount custom field labels.
+     * @param Container $container                 Container instance used to resolve checkers, global
+     *                                             container will be used if nothing else provided.
      */
     public function __construct(
-        array $data,
+        $data,
         array $validates,
         $interpolateNames = true,
         Container $container = null
@@ -276,7 +275,7 @@ class Validator extends Component
      * Update validation data (context), this method will automatically clean all existed error
      * messages and set validated flag to false.
      *
-     * @param array $data Data to be validated.
+     * @param array|\ArrayAccess $data Data to be validated.
      * @return Validator
      */
     public function setData($data)
@@ -658,12 +657,12 @@ class Validator extends Component
      *      ["notEmpty"], ["boolean"]
      * )
      *
-     * @param array     $data      Data to be validated.
-     * @param array     $validates Validation rules.
-     * @param Container $container Container instance to use to resolve checkers.
+     * @param array|\ArrayAccess $data      Data to be validated.
+     * @param array              $validates Validation rules.
+     * @param Container          $container Container instance to use to resolve checkers.
      * @return bool|Validator
      */
-    public static function create(array $data, array $validates, Container $container = null)
+    public static function create($data, array $validates, Container $container = null)
     {
         return static::make(compact('data', 'validates'), $container);
     }

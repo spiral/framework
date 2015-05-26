@@ -10,7 +10,7 @@ namespace Spiral\Components\Http\Input;
 
 use Spiral\Helpers\ArrayHelper;
 
-class InputBag implements \IteratorAggregate
+class InputBag implements \IteratorAggregate, \ArrayAccess
 {
     /**
      * Associated parameters to read.
@@ -95,6 +95,55 @@ class InputBag implements \IteratorAggregate
         }
 
         return $result;
+    }
+
+    /**
+     * Whether a offset exists
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * @param mixed $offset
+     * @return boolean
+     */
+    public function offsetExists($offset)
+    {
+        return $this->has($offset);
+    }
+
+    /**
+     * Offset to retrieve
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @param mixed $offset
+     * @return mixed Can return all value types.
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * Offset to set
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @param mixed $offset
+     * @param mixed $value
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new \RuntimeException("InputBag does not allow parameter altering.");
+    }
+
+    /**
+     * Offset to unset
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @param mixed $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        throw new \RuntimeException("InputBag does not allow parameter altering.");
     }
 
     /**
