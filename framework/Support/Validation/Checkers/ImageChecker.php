@@ -158,12 +158,12 @@ class ImageChecker extends FileChecker
             return false;
         }
 
-        if ($image->getWidth() <= $width)
+        if ($image->getWidth() < $width)
         {
             return false;
         }
 
-        if ($height && $image->getHeight() <= $height)
+        if ($height && $image->getHeight() < $height)
         {
             return false;
         }
