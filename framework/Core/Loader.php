@@ -25,11 +25,11 @@ class Loader extends Component
     const SINGLETON = __CLASS__;
 
     /**
-     * Core instance.
+     * RuntimeCacheInterface instance.
      *
-     * @var Core
+     * @var RuntimeCacheInterface
      */
-    protected $core = null;
+    protected $runtime = null;
 
     /**
      * List of classes loading during this working session.
@@ -65,11 +65,11 @@ class Loader extends Component
      * Loader will automatically handle SPL autoload functions to start caching loadmap. In future
      * loadmap can be used to pre-load all classes via one single file.
      *
-     * @param CoreInterface $core
+     * @param RuntimeCacheInterface $runtime
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(RuntimeCacheInterface $runtime)
     {
-        $this->core = $core;
+        $this->runtime = $runtime;
         $this->enable();
     }
 
@@ -84,7 +84,7 @@ class Loader extends Component
     {
         if (!$this->enabled)
         {
-            if ((!$this->loadmap = $this->core->loadData($this->name)) || !is_array($this->loadmap))
+            if ((!$this->loadmap = $this->runtime->loadData($this->name)) || !is_array($this->loadmap))
             {
                 $this->loadmap = array();
             }
@@ -129,7 +129,7 @@ class Loader extends Component
     {
         if ($this->name != $name)
         {
-            if ((!$this->loadmap = $this->core->loadData($name)) || !is_array($this->loadmap))
+            if ((!$this->loadmap = $this->runtime->loadData($name)) || !is_array($this->loadmap))
             {
                 $this->loadmap = array();
             }
@@ -158,7 +158,7 @@ class Loader extends Component
             {
                 //File was replaced or removed
                 unset($this->loadmap[$class]);
-                $this->core->saveData($this->name, $this->loadmap, null, true);
+                $this->runtime->saveData($this->name, $this->loadmap, null, true);
 
                 //Trying to update route to class
                 $this->loadClass($class);
@@ -195,7 +195,7 @@ class Loader extends Component
                     if (isset($filename) && file_exists($filename))
                     {
                         $this->loadmap[$class] = $this->classes[$class] = $filename;
-                        $this->core->saveData($this->name, $this->loadmap, null, true);
+                        $this->runtime->saveData($this->name, $this->loadmap, null, true);
                     }
 
                     return;
@@ -235,7 +235,7 @@ class Loader extends Component
     {
         $this->loadmap = $loadmap;
 
-        $this->core->saveData($this->name, $this->loadmap, null, true);
+        $this->runtime->saveData($this->name, $this->loadmap, null, true);
     }
 
     /**
