@@ -15,6 +15,7 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\Loader;
+use Spiral\Core\RuntimeCacheInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -48,11 +49,11 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     protected $application = null;
 
     /**
-     * Core to cache found commands.
+     * Runtime cache manager.
      *
-     * @var CoreInterface
+     * @var RuntimeCacheInterface
      */
-    protected $core = null;
+    protected $runtime = null;
 
     /**
      * Loader component.
@@ -79,17 +80,23 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     /**
      * ConsoleDispatcher.
      *
-     * @param Tokenizer     $tokenizer
-     * @param CoreInterface $core
-     * @param Loader        $loader
-     * @param Container     $container
+     * @param Tokenizer             $tokenizer
+     * @param RuntimeCacheInterface $runtime
+     * @param Loader                $loader
+     * @param Container             $container
      */
-    public function __construct(CoreInterface $core, Tokenizer $tokenizer, Loader $loader, Container $container)
+    public function __construct(
+        RuntimeCacheInterface $runtime,
+        Tokenizer $tokenizer,
+        Loader $loader,
+        Container $container
+    )
     {
-        $this->core = $core;
+        $this->runtime = $runtime;
+        $this->commands = $runtime->loadData('commands');
+
         $this->tokenizer = $tokenizer;
         $this->loader = $loader;
-        $this->commands = $core->loadData('commands');
 
         $this->container = $container;
 
@@ -163,7 +170,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
             $this->commands[] = $class['name'];
         }
 
-        $this->core->saveData('commands', $this->commands);
+        $this->runtime->saveData('commands', $this->commands);
     }
 
     /**

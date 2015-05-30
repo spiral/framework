@@ -16,6 +16,7 @@ use Spiral\Components\DBAL\Drivers\Postgres\Builders\InsertQuery;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\RuntimeCacheInterface;
 
 class PostgresDriver extends Driver
 {
@@ -70,7 +71,7 @@ class PostgresDriver extends Driver
      *
      * @var CoreInterface
      */
-    protected $core = null;
+    protected $runtime = null;
 
     /**
      * Due postgres sequences mechanism we have two options to get last inserted id with valid value,
@@ -85,14 +86,18 @@ class PostgresDriver extends Driver
      * Driver instances responsible for all database low level operations which can be DBMS specific
      * - such as connection preparation, custom table/column/index/reference schemas and etc.
      *
-     * @param array         $config
-     * @param Container     $container
-     * @param CoreInterface $core
+     * @param array                 $config
+     * @param Container             $container
+     * @param RuntimeCacheInterface $runtime
      */
-    public function __construct(array $config = array(), Container $container, CoreInterface $core)
+    public function __construct(
+        array $config = array(),
+        Container $container,
+        RuntimeCacheInterface $runtime
+    )
     {
         parent::__construct($config, $container);
-        $this->core = $core;
+        $this->runtime = $runtime;
     }
 
     /**
@@ -124,7 +129,7 @@ class PostgresDriver extends Driver
     {
         if (empty($this->primaryKeys))
         {
-            $this->primaryKeys = $this->core->loadData($this->getDatabaseName() . '-primary');
+            $this->primaryKeys = $this->runtime->loadData($this->getDatabaseName() . '-primary');
         }
 
         if (!empty($this->primaryKeys) && array_key_exists($table, $this->primaryKeys))
@@ -150,7 +155,7 @@ class PostgresDriver extends Driver
         $this->primaryKeys[$table] = $this->primaryKeys[$table][0];
 
         //Caching
-        $this->core->saveData($this->getDatabaseName() . '-primary', $this->primaryKeys);
+        $this->runtime->saveData($this->getDatabaseName() . '-primary', $this->primaryKeys);
 
         return $this->primaryKeys[$table];
     }

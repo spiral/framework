@@ -10,7 +10,7 @@ namespace Spiral\Components\View;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
-use Spiral\Core\ConfigStoreInterface;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 
@@ -77,16 +77,19 @@ class ViewManager extends Component
      * Constructing view component and initiating view namespaces, namespaces are used to find view
      * file destination and switch templates from one module to another.
      *
-     * @param Container            $container
-     * @param ConfigStoreInterface $configStore
-     * @param FileManager          $file
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
+     * @param FileManager           $file
      */
-    public function __construct(Container $container, ConfigStoreInterface $configStore, FileManager $file)
+    public function __construct(
+        ConfiguratorInterface $configurator,
+        Container $container,
+        FileManager $file
+    )
     {
+        $this->config = $configurator->getConfig('views');
         $this->container = $container;
-
         $this->file = $file;
-        $this->config = $configStore->loadConfig('views');
 
         //Mounting namespaces from config and external modules
         $this->namespaces = $this->config['namespaces'];

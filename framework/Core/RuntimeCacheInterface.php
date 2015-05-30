@@ -8,7 +8,7 @@
  */
 namespace Spiral\Core;
 
-interface RuntimeDataInterface
+interface RuntimeCacheInterface
 {
     /**
      * Load data previously saved to application cache, if file is not exists null will be returned.

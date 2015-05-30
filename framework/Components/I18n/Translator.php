@@ -87,7 +87,7 @@ class Translator extends Component
     public function __construct(CoreInterface $core)
     {
         $this->core = $core;
-        $this->config = $core->loadConfig('i18n');
+        $this->config = $core->getConfig('i18n');
 
         $this->language = $this->config['default'];
         $this->languageOptions = $this->config['languages'][$this->language];

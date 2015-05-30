@@ -326,9 +326,8 @@ class Core extends Container implements CoreInterface
             = $core->bindings[get_called_class()]
             = $core->bindings[self::SINGLETON]
             = $core->bindings['Spiral\Core\CoreInterface']
-            //todo: think about better naming
-            = $core->bindings['Spiral\Core\ConfigStoreInterface']
-            = $core->bindings['Spiral\Core\RuntimeDataInterface']
+            = $core->bindings['Spiral\Core\ConfiguratorInterface']
+            = $core->bindings['Spiral\Core\RuntimeCacheInterface']
             = $core;
 
         /**
@@ -570,7 +569,7 @@ class Core extends Container implements CoreInterface
      * @return array
      * @throws CoreException
      */
-    public function loadConfig($config)
+    public function getConfig($config)
     {
         $filename = $this->directories['config'] . '/' . $config . '.' . self::CONFIGS_EXTENSION;
 
@@ -613,7 +612,7 @@ class Core extends Container implements CoreInterface
             file_exists($cachedFilename) && unlink($cachedFilename);
 
             //Configuration were updated, reloading
-            return $this->loadConfig($config);
+            return $this->getConfig($config);
         }
 
         return $data;

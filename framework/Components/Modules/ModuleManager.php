@@ -11,6 +11,7 @@ namespace Spiral\Components\Modules;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\CoreException;
@@ -48,15 +49,15 @@ class ModuleManager extends Component
      * modules will ensure all requested bindings mounted and packages initiated via calling module
      * bootstrap() method.
      *
-     * @param CoreInterface $core Core instance.
-     * @param Container     $container
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      * @throws CoreException
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, Container $container)
     {
         $this->container = $container;
 
-        $this->modules = $core->loadConfig('modules');
+        $this->modules = $configurator->getConfig('modules');
         if (!empty($this->modules))
         {
             foreach ($this->modules as $module)

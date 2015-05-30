@@ -9,6 +9,7 @@
 namespace Spiral\Components\Redis;
 
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\InjectionManagerInterface;
 use Spiral\Core\CoreInterface;
@@ -212,13 +213,13 @@ class RedisManager extends Component implements InjectionManagerInterface
     /**
      * Redis facade initialization.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, Container $container)
     {
+        $this->config = $configurator->getConfig('redis');
         $this->container = $container;
-        $this->config = $core->loadConfig('redis');
     }
 
     /**

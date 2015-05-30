@@ -96,7 +96,7 @@ class Tokenizer extends Component
         $this->file = $file;
         $this->loader = $loader;
 
-        $this->config = $core->loadConfig('tokenizer');
+        $this->config = $core->getConfig('tokenizer');
 
         foreach ($this->config['directories'] as &$directory)
         {

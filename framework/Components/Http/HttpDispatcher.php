@@ -9,6 +9,7 @@
 namespace Spiral\Components\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Debug\Snapshot;
@@ -95,7 +96,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $this->core = $core;
         $this->container = $container;
 
-        $this->config = $core->loadConfig('http');
+        $this->config = $core->getConfig('http');
 
         $this->middlewares = $this->config['middlewares'];
         $this->endpoints = $this->config['endpoints'];
@@ -213,13 +214,13 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * Every request passed to perform method will be registered in Container scope under "request"
      * and class name binding.
+     **
      *
-     * todo: think about it
-     * @param Request $request
+     * @param ServerRequestInterface $request
      * @return array|ResponseInterface
      * @throws ClientException
      */
-    public function perform(Request $request)
+    public function perform(ServerRequestInterface $request)
     {
         if (!$endpoint = $this->findEndpoint($request->getUri(), $activePath))
         {
@@ -236,8 +237,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         //Creating scope
         $this->container->bind('request', $request);
-
-        //TODO: BUG NOT SERVER!!!!
         $this->container->bind('Psr\Http\Message\ServerRequestInterface', $request);
 
         $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
@@ -252,6 +251,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         {
             //Restoring scope
             $this->container->bind('request', $outerRequest);
+            $this->container->bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
         }
 
         return $response;
@@ -300,11 +300,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
      * Execute endpoint middleware. Right now this method supports only spiral middlewares, but can
      * also be easily changed to support another syntax like handle(request, response).
      *
-     * @param Request                             $request
+     * @param ServerRequestInterface              $request
      * @param string|callable|MiddlewareInterface $endpoint
      * @return mixed
      */
-    protected function execute(Request $request, $endpoint)
+    protected function execute(ServerRequestInterface $request, $endpoint)
     {
         /**
          * @var callable $endpoint

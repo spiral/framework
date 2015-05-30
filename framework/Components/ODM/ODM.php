@@ -72,7 +72,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
     {
         $this->core = $core;
         $this->container = $container;
-        $this->config = $core->loadConfig('odm');
+        $this->config = $core->getConfig('odm');
     }
 
     /**

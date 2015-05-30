@@ -9,6 +9,7 @@
 namespace Spiral\Components\Session;
 
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 
@@ -70,13 +71,13 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
      * handlers. Attention, session store based on php sessions, so it's REALLY important to have
      * only one store at one moment of time.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, Container $container)
     {
+        $this->config = $configurator->getConfig('session');
         $this->container = $container;
-        $this->config = $core->loadConfig('session');
     }
 
     /**

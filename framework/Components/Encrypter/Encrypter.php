@@ -9,6 +9,7 @@
 namespace Spiral\Components\Encrypter;
 
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\CoreInterface;
 
 class Encrypter extends Component
@@ -48,12 +49,12 @@ class Encrypter extends Component
     /**
      * New encrypter component.
      *
-     * @param CoreInterface $core
+     * @param ConfiguratorInterface $configurator
      * @throws EncrypterException
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(ConfiguratorInterface $configurator)
     {
-        $this->config = $core->loadConfig('encrypter');
+        $this->config = $configurator->getConfig('encrypter');
         $this->setKey($this->config['key']);
 
         if (!empty($this->config['method']))

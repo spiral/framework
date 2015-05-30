@@ -8,11 +8,11 @@
  */
 namespace Spiral\Core;
 
-interface ConfigStoreInterface
+interface ConfiguratorInterface
 {
     /**
      * Load configuration files specified in application config directory. Config file may have
-     * extension, locked under Core::getEnvironment() directory, this section will replace original
+     * extension, locked under Core->getEnvironment() directory, this section will replace original
      * config while application is under giver environment. All config files with merged environment
      * stored under cache directory.
      *
@@ -20,5 +20,5 @@ interface ConfigStoreInterface
      * @return array
      * @throws CoreException
      */
-    public function loadConfig($config);
+    public function getConfig($config);
 }

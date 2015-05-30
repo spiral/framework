@@ -60,7 +60,7 @@ class ORM extends Component
         $this->core = $core;
         $this->container = $container;
 
-        $this->config = $core->loadConfig('orm');
+        $this->config = $core->getConfig('orm');
     }
 
     /**

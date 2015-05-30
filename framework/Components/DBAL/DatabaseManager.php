@@ -11,6 +11,7 @@ namespace Spiral\Components\DBAL;
 use Spiral\Components\DBAL\Migrations\Repository;
 use Spiral\Components\DBAL\Migrations\Migrator;
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreException;
 use Spiral\Core\CoreInterface;
@@ -65,13 +66,13 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      * DBAL component instance, component is responsible for connections to various SQL databases and
      * their schema builders/describers.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      * @throws CoreException
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, Container $container)
     {
-        $this->config = $core->loadConfig('dbal');
+        $this->config = $configurator->getConfig('dbal');
         $this->container = $container;
     }
 

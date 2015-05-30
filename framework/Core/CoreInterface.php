@@ -10,7 +10,7 @@ namespace Spiral\Core;
 
 use Spiral\Core\Dispatcher\ClientException;
 
-interface CoreInterface extends ConfigStoreInterface, RuntimeDataInterface
+interface CoreInterface extends ConfiguratorInterface, RuntimeCacheInterface
 {
     /**
      * Extension to use to runtime data and configuration cache files.

@@ -9,6 +9,7 @@
 namespace Spiral\Components\Cache;
 
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 
@@ -54,12 +55,12 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
     /**
      * Constructing CacheManager and selecting default adapter.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, Container $container)
     {
-        $this->config = $core->loadConfig('cache');
+        $this->config = $configurator->getConfig('cache');
         $this->container = $container;
     }
 

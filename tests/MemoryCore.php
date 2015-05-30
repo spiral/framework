@@ -114,7 +114,7 @@ class MemoryCore extends Core
      * @return mixed|array
      * @throws CoreException
      */
-    public function loadConfig($config)
+    public function getConfig($config)
     {
         if (!isset($this->configs[$config]))
         {
