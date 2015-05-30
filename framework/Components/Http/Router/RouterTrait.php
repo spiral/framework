@@ -128,6 +128,7 @@ trait RouterTrait
      */
     public function route($pattern, $target = null, array $defaults = array())
     {
+        //rework
         $this->addRoute($route = new Route($this->container, $pattern, $pattern, $target, $defaults));
 
         return $route;

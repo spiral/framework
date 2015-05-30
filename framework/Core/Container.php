@@ -93,7 +93,8 @@ class Container extends Component implements \ArrayAccess
                 return call_user_func(
                     array($injectionManager, 'resolveInjection'),
                     $reflector,
-                    $contextParameter
+                    $contextParameter,
+                    $this
                 );
             }
             elseif ($reflector->isInstantiable())

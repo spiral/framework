@@ -326,6 +326,9 @@ class Core extends Container implements CoreInterface
             = $core->bindings[get_called_class()]
             = $core->bindings[self::SINGLETON]
             = $core->bindings['Spiral\Core\CoreInterface']
+            //todo: think about better naming
+            = $core->bindings['Spiral\Core\ConfigStoreInterface']
+            = $core->bindings['Spiral\Core\RuntimeDataInterface']
             = $core;
 
         /**

@@ -29,9 +29,12 @@ class FileBag extends InputBag
      */
     public function uri($name)
     {
-        if ($uploadedFile = $this->get($name))
+        if ($file = $this->get($name))
         {
-            return StreamWrapper::getUri($uploadedFile->getStream());
+            if (!$file->getError())
+            {
+                return StreamWrapper::getUri($file->getStream());
+            }
         }
 
         return null;

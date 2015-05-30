@@ -214,6 +214,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      * Every request passed to perform method will be registered in Container scope under "request"
      * and class name binding.
      *
+     * todo: think about it
      * @param Request $request
      * @return array|ResponseInterface
      * @throws ClientException
@@ -235,6 +236,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         //Creating scope
         $this->container->bind('request', $request);
+
+        //TODO: BUG NOT SERVER!!!!
         $this->container->bind('Psr\Http\Message\ServerRequestInterface', $request);
 
         $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
@@ -244,13 +247,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
         benchmark('http::endpoint', $name);
 
         $this->container->removeBinding('request');
-        $this->container->removeBinding('Psr\Http\Message\ServerRequestInterface');
 
         if (!empty($outerRequest))
         {
             //Restoring scope
             $this->container->bind('request', $outerRequest);
-            $this->container->bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
         }
 
         return $response;
