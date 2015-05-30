@@ -62,7 +62,7 @@ class SchemaBuilder extends Component
                 continue;
             }
 
-            $this->documents[$class] = new DocumentSchema($class, $this);
+            $this->documents[$class] = new DocumentSchema($this, $class);
         }
 
         foreach ($this->getDocumentSchemas() as $documentSchema)
@@ -84,21 +84,23 @@ class SchemaBuilder extends Component
                 {
                     //Child document use same collection as parent?
                     $this->collections[$collection] = new CollectionSchema(
+                        $this,
                         $primaryDocument->getCollection(),
                         $primaryDocument->getDatabase(),
                         $primaryDocument->classDefinition(),
-                        $primaryDocument->getClass(),
-                        $this
+                        $primaryDocument->getClass()
                     );
                 }
                 else
                 {
+
                     $this->collections[$collection] = new CollectionSchema(
+                        $this,
                         $documentSchema->getCollection(),
                         $documentSchema->getDatabase(),
                         $documentSchema->classDefinition(),
-                        $documentSchema->getClass(),
-                        $this
+                        $documentSchema->getClass()
+
                     );
                 }
             }
@@ -135,7 +137,7 @@ class SchemaBuilder extends Component
     {
         if ($class == self::DOCUMENT)
         {
-            return new DocumentSchema(self::DOCUMENT, $this);
+            return new DocumentSchema($this, self::DOCUMENT);
         }
 
         if (!isset($this->documents[$class]))
