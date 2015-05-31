@@ -249,7 +249,7 @@ class Validator extends Component
      *                                             name included, in other scenario only method parameters
      *                                             will be embedded, this option can be disabled by
      *                                             model or outside to mount custom field labels.
-     * @param Container $container                 Container instance used to resolve checkers, global
+     * @param Container          $container        Container instance used to resolve checkers, global
      *                                             container will be used if nothing else provided.
      */
     public function __construct(

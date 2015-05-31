@@ -133,7 +133,6 @@ class UmlExporter extends Component
         }
 
         $this->line('}')->line('');
-
         //TODO: Complete relations
     }
 

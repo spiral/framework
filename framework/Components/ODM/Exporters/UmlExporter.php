@@ -59,7 +59,7 @@ class UmlExporter extends Component
      * New instance of UML ODM exporter.
      *
      * @param SchemaBuilder $builder
-     * @param FileManager  $file
+     * @param FileManager   $file
      */
     public function __construct(SchemaBuilder $builder, FileManager $file)
     {

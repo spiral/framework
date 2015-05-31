@@ -7,6 +7,7 @@
  * @copyright ©2009-2015
  */
 namespace Spiral\Components\ODM\Collection;
+
 use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODMException;

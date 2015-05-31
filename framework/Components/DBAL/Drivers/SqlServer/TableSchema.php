@@ -81,7 +81,8 @@ class TableSchema extends AbstractTableSchema
      */
     protected function loadReferences()
     {
-        foreach ($this->driver->query("sp_fkeys @fktable_name = ?", array($this->name)) as $reference)
+        foreach ($this->driver->query("sp_fkeys @fktable_name = ?", array($this->name)) as
+                 $reference)
         {
             $this->registerReference($reference['FK_NAME'], $reference);
         }
