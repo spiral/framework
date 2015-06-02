@@ -17,6 +17,7 @@ use Spiral\Components\Http\Router\RouterTrait;
 use Spiral\Components\Http\Router\Router;
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Dispatcher\ClientException;
@@ -88,15 +89,20 @@ class HttpDispatcher extends Component implements DispatcherInterface
     /**
      * New HttpDispatcher instance.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param CoreInterface         $core
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(
+        CoreInterface $core,
+        ConfiguratorInterface $configurator,
+        Container $container
+    )
     {
-        $this->config = $core->getConfig('http');
-
         $this->core = $core;
         $this->container = $container;
+
+        $this->config = $configurator->getConfig('http');
 
         $this->middlewares = $this->config['middlewares'];
         $this->endpoints = $this->config['endpoints'];

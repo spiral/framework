@@ -10,13 +10,8 @@ namespace Spiral\Core;
 
 use Spiral\Core\Dispatcher\ClientException;
 
-interface CoreInterface extends ConfiguratorInterface, RuntimeCacheInterface
+interface CoreInterface
 {
-    /**
-     * Extension to use to runtime data and configuration cache files.
-     */
-    const RUNTIME_EXTENSION = 'php';
-
     /**
      * Call controller method by fully specified or short controller name, action and addition
      * options such as default controllers namespace, default name and postfix.

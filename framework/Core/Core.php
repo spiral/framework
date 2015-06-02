@@ -43,7 +43,7 @@ use Spiral\Components\Console\ConsoleDispatcher;
  * @property Components\Http\Router\Router            $router
  * @property Components\Http\InputManager             $input
  */
-class Core extends Container implements CoreInterface
+class Core extends Container implements CoreInterface, ConfiguratorInterface, RuntimeCacheInterface
 {
     /**
      * Singleton and events.s

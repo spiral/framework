@@ -11,6 +11,11 @@ namespace Spiral\Core;
 interface RuntimeCacheInterface
 {
     /**
+     * Extension to use to runtime data and configuration cache files.
+     */
+    const RUNTIME_EXTENSION = 'php';
+
+    /**
      * Load data previously saved to application cache, if file is not exists null will be returned.
      * This method can be replaced by Core Traits to use different ways to store data like APC.
      *
