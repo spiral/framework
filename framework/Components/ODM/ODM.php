@@ -10,9 +10,11 @@ namespace Spiral\Components\ODM;
 
 use Spiral\Components\ODM\Exporters\DocumentationExporter;
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\CoreException;
+use Spiral\Core\RuntimeCacheInterface;
 
 class ODM extends Component implements Container\InjectionManagerInterface
 {
@@ -36,7 +38,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
      *
      * @var CoreInterface
      */
-    protected $core = null;
+    protected $runtime = null;
 
     /**
      * Container instance.
@@ -64,15 +66,21 @@ class ODM extends Component implements Container\InjectionManagerInterface
     /**
      * ODM component instance.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param ConfiguratorInterface $configurator
+     * @param RuntimeCacheInterface $runtime
+     * @param Container             $container
      * @throws CoreException
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(
+        ConfiguratorInterface $configurator,
+        RuntimeCacheInterface $runtime,
+        Container $container
+    )
     {
-        $this->core = $core;
+        $this->config = $configurator->getConfig('odm');
+
+        $this->runtime = $runtime;
         $this->container = $container;
-        $this->config = $core->getConfig('odm');
     }
 
     /**
@@ -154,7 +162,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
     {
         if ($this->schema === null)
         {
-            $this->schema = $this->core->loadData('odmSchema');
+            $this->schema = $this->runtime->loadData('odmSchema');
         }
 
         if (!isset($this->schema[$item]))
@@ -200,7 +208,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
         Document::clearSchemaCache();
 
         //Saving
-        $this->core->saveData('odmSchema', $this->schema);
+        $this->runtime->saveData('odmSchema', $this->schema);
 
         return $builder;
     }
