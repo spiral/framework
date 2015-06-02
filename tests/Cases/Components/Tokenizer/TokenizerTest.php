@@ -185,6 +185,7 @@ class TokenizerTest extends TestCase
 
         return new Tokenizer(
             MemoryCore::getInstance()->setConfig('tokenizer', $config),
+            MemoryCore::getInstance(),
             new FileManager(),
             $this->loader
         );

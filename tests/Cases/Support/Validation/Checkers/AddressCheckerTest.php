@@ -32,13 +32,13 @@ class AddressCheckerTest extends TestCase
             )
         ));
 
-        Container::getInstance()->bind('i18n', new Translator($core));
+        Container::getInstance()->bind('i18n', new Translator($core, $core));
     }
 
 
     protected function tearDown()
     {
-         Container::getInstance()->removeBinding('i18n');
+        Container::getInstance()->removeBinding('i18n');
     }
 
     public function testEmail()
