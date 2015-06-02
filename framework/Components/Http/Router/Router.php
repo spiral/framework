@@ -154,7 +154,11 @@ class Router extends Component implements MiddlewareInterface
         }
 
         //Executing found route
-        $response = $this->activeRoute->perform($request, $this->core, $this->middlewareAliases);
+        $response = $this->activeRoute->perform(
+            $request,
+            $this->core,
+            $this->middlewareAliases
+        );
 
         //Close router scope
         $this->container->removeBinding('router');
@@ -252,16 +256,16 @@ class Router extends Component implements MiddlewareInterface
         if (!isset($this->routes[$route]))
         {
             //Will be handled via default route where route name is specified as controller::action
-            if (strpos($route, '::'))
+            if (strpos($route, Route::CONTROLLER_SEPARATOR))
             {
                 throw new RouterException(
-                    "Unable to locate route or use default route with controller::action pattern."
+                    "Unable to locate route or use default route with controller+action pattern."
                 );
             }
 
             $route = self::DEFAULT_ROUTE;
 
-            list($controller, $action) = explode('::', $route);
+            list($controller, $action) = explode(Route::CONTROLLER_SEPARATOR, $route);
             $parameters = compact('controller', 'action') + $parameters;
         }
 
