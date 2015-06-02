@@ -176,19 +176,17 @@ class HttpDispatcher extends Component implements DispatcherInterface
                 $this->container,
                 $this->core,
                 $this->routes,
-                $this->config['router']['defaultRoute'],
-                $this->config['basePath']
+                $this->config['router']['defaultRoute']
             );
         }
 
         return $this->container->get(
             $router,
             array(
-                'container'  => $this->container,
-                'core'       => $this->core,
-                'routes'     => $this->routes,
-                'default'    => $this->config['router']['defaultRoute'],
-                'activePath' => $this->config['basePath']
+                'container'    => $this->container,
+                'core'         => $this->core,
+                'routes'       => $this->routes,
+                'defaultRoute' => $this->config['router']['defaultRoute']
             )
         );
     }
@@ -205,6 +203,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         {
             $this->request = Request::castRequest(array(
                 'basePath'     => $this->config['basePath'],
+                'activePath'   => $this->config['basePath'],
                 'exposeErrors' => $this->config['exposeErrors']
             ));
         }

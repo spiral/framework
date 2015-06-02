@@ -23,7 +23,7 @@ class Router extends Component implements MiddlewareInterface
      * based routing in cases where no other route found.
      *
      * Default route should support <controller> and <action> parameters. Basically this is multi
-     * controller route.
+     * controller route. Default route should be instance of spiral Route or compatible.
      */
     const DEFAULT_ROUTE = 'default';
 
@@ -76,6 +76,50 @@ class Router extends Component implements MiddlewareInterface
      */
     protected $activeRoute = null;
 
+    /**
+     * Router middleware used by HttpDispatcher and modules to perform URI based routing with defined
+     * endpoint such as controller action, closure or middleware.
+     *
+     * @param Container     $container
+     * @param CoreInterface $core             Core instances required to call controller actions.
+     * @param Route|array   $routes           Pre-defined array of routes (if were collected externally).
+     * @param array         $defaultRoute     Default route options (controller route), should include
+     *                                        pattern and target.
+     */
+    public function __construct(
+        Container $container,
+        CoreInterface $core,
+        array $routes = array(),
+        array $defaultRoute = array()
+    )
+    {
+        $this->container = $container;
+        $this->core = $core;
+
+        foreach ($routes as $route)
+        {
+            if (!$route instanceof RouteInterface)
+            {
+                throw new \InvalidArgumentException("Routes should be array of Route instances.");
+            }
+
+            //Name aliasing is required to perform URL generation later.
+            $this->routes[$route->getName()] = $route;
+        }
+
+        //Registering default route which should handle all unhandled controllers
+        if (!isset($this->routes[static::DEFAULT_ROUTE]) && !empty($defaultRoute))
+        {
+            //TODO: REWRITE
+            //            $this->routes[static::DEFAULT_ROUTE] = new Route(
+            //                $this->container,
+            //                static::DEFAULT_ROUTE,
+            //                $defaultRoute['pattern'],
+            //                $defaultRoute['target'],
+            //                $defaultRoute['defaults']
+            //            );
+        }
+    }
 
     /**
      * Create new middleware alias which can be used in any route by it's short name.
@@ -160,6 +204,23 @@ class Router extends Component implements MiddlewareInterface
     }
 
     /**
+     * Get route by name. Use Router::DEFAULT_ROUTE to get default route (kinda obviously).
+     *
+     * @param string $route
+     * @return RouteInterface
+     * @throws RouterException
+     */
+    public function getRoute($route)
+    {
+        if (!isset($this->routes[$route]))
+        {
+            throw new RouterException("Undefined route '{$route}'.");
+        }
+
+        return $this->routes[$route];
+    }
+
+    /**
      * Get currently active route, this value will be populated only after router successfully handled
      * incoming request.
      *
@@ -175,7 +236,8 @@ class Router extends Component implements MiddlewareInterface
      * injected to route pattern and prefixed with activePath value.
      *
      * You can enter controller::action type route, in this case appropriate controller and action
-     * will be injected into default route as controller and action parameters accordingly.
+     * will be injected into default route as controller and action parameters accordingly. Default
+     * route should be instance of spiral Route or compatible.
      *
      * Example:
      * $this->router->url('post::view', ['id' => 1]);
@@ -197,10 +259,10 @@ class Router extends Component implements MiddlewareInterface
                 );
             }
 
+            $route = self::DEFAULT_ROUTE;
+
             list($controller, $action) = explode('::', $route);
             $parameters = compact('controller', 'action') + $parameters;
-
-            $route = self::DEFAULT_ROUTE;
         }
 
         return $this->routes[$route]->buildURL($parameters, $this->activePath);
@@ -210,7 +272,8 @@ class Router extends Component implements MiddlewareInterface
      * Generate redirect based on url rendered using specified route pattern.
      *
      * You can enter controller::action type route, in this case appropriate controller and action
-     * will be injected into default route as controller and action parameters accordingly.
+     * will be injected into default route as controller and action parameters accordingly. Default
+     * route should be instance of spiral Route or compatible.
      *
      * Example:
      * return $this->router->redirect('post::view', ['id' => 1]);
