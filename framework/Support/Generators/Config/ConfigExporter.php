@@ -12,6 +12,7 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Core;
 use Spiral\Support\Generators\ArrayExporter;
 
+//TODO: REWORK
 class ConfigExporter extends ArrayExporter
 {
     /**
@@ -49,7 +50,6 @@ class ConfigExporter extends ArrayExporter
      */
     protected function packValue($name, $value)
     {
-
         if (is_null($value))
         {
             $value = "null";

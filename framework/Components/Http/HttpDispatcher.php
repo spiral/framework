@@ -176,7 +176,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
                 $this->container,
                 $this->core,
                 $this->routes,
-                $this->config['router']['defaultRoute']
+                $this->config['router']['primaryRoute']
             );
         }
 
@@ -186,7 +186,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
                 'container'    => $this->container,
                 'core'         => $this->core,
                 'routes'       => $this->routes,
-                'defaultRoute' => $this->config['router']['defaultRoute']
+                'primaryRoute' => $this->config['router']['primaryRoute']
             )
         );
     }

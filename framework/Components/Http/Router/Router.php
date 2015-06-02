@@ -19,13 +19,13 @@ use Spiral\Core\CoreInterface;
 class Router extends Component implements MiddlewareInterface
 {
     /**
-     * Internal name for default route. Default route used to resolve url and perform controller
+     * Internal name for primary (default) route. Primary route used to resolve url and perform controller
      * based routing in cases where no other route found.
      *
-     * Default route should support <controller> and <action> parameters. Basically this is multi
-     * controller route. Default route should be instance of spiral Route or compatible.
+     * Primary route should support <controller> and <action> parameters. Basically this is multi
+     * controller route. Primary route should be instance of spiral DirectRoute or compatible.
      */
-    const DEFAULT_ROUTE = 'default';
+    const PRIMARY_ROUTE = 'default';
 
     /**
      * Container.
@@ -83,14 +83,14 @@ class Router extends Component implements MiddlewareInterface
      * @param Container     $container
      * @param CoreInterface $core             Core instances required to call controller actions.
      * @param Route|array   $routes           Pre-defined array of routes (if were collected externally).
-     * @param array         $defaultRoute     Default route options (controller route), should include
+     * @param array         $primaryRoute     Default route options (controller route), should include
      *                                        pattern and target.
      */
     public function __construct(
         Container $container,
         CoreInterface $core,
         array $routes = array(),
-        array $defaultRoute = array()
+        array $primaryRoute = array()
     )
     {
         $this->container = $container;
@@ -108,7 +108,7 @@ class Router extends Component implements MiddlewareInterface
         }
 
         //Registering default route which should handle all unhandled controllers
-        if (!isset($this->routes[static::DEFAULT_ROUTE]) && !empty($defaultRoute))
+        if (!isset($this->routes[static::PRIMARY_ROUTE]) && !empty($primaryRoute))
         {
             //TODO: REWRITE
             //            $this->routes[static::DEFAULT_ROUTE] = new Route(
@@ -208,7 +208,7 @@ class Router extends Component implements MiddlewareInterface
     }
 
     /**
-     * Get route by name. Use Router::DEFAULT_ROUTE to get default route (kinda obviously).
+     * Get route by name. Use Router::PRIMARY_ROUTE to get default route.
      *
      * @param string $route
      * @return RouteInterface
@@ -241,7 +241,7 @@ class Router extends Component implements MiddlewareInterface
      *
      * You can enter controller::action type route, in this case appropriate controller and action
      * will be injected into default route as controller and action parameters accordingly. Default
-     * route should be instance of spiral Route or compatible.
+     * route should be instance of spiral DirectRoute or compatible.
      *
      * Example:
      * $this->router->url('post::view', ['id' => 1]);
@@ -263,7 +263,7 @@ class Router extends Component implements MiddlewareInterface
                 );
             }
 
-            $route = self::DEFAULT_ROUTE;
+            $route = self::PRIMARY_ROUTE;
 
             list($controller, $action) = explode(Route::CONTROLLER_SEPARATOR, $route);
             $parameters = compact('controller', 'action') + $parameters;
@@ -277,7 +277,7 @@ class Router extends Component implements MiddlewareInterface
      *
      * You can enter controller::action type route, in this case appropriate controller and action
      * will be injected into default route as controller and action parameters accordingly. Default
-     * route should be instance of spiral Route or compatible.
+     * route should be instance of spiral DirectRoute or compatible.
      *
      * Example:
      * return $this->router->redirect('post::view', ['id' => 1]);

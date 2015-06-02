@@ -6,11 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Support\Curl;
+namespace Spiral\Components\Http\Router;
 
-use Spiral\Core\CoreException;
-
-class CurlException extends CoreException
+class DirectRoute extends Route
 {
 
 }

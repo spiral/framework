@@ -14,6 +14,7 @@ use Spiral\Core\Component;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 
+//TODO: REWORK
 class ConfigWriter extends Component
 {
     /**
