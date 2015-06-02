@@ -23,8 +23,8 @@ class Configurator implements ConfiguratorInterface
      * Example:
      *
      * new Configurator([
-     *  'dbal' => ...,
-     *  'cache' => ...
+     *  'dbal'  => [...],
+     *  'cache' => [...]
      * ]);
      *
      * @param array $configs
