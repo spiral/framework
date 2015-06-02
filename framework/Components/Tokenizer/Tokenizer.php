@@ -10,11 +10,13 @@ namespace Spiral\Components\Tokenizer;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Core;
 use ReflectionClass;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Events\Event;
 use Spiral\Core\Loader;
+use Spiral\Core\RuntimeCacheInterface;
 
 class Tokenizer extends Component
 {
@@ -36,12 +38,12 @@ class Tokenizer extends Component
     const LINE = 2;
 
     /**
-     * Core to check bindings and store classes cache.
+     * To cache tokenizer class map.
      *
      * @invisible
      * @var CoreInterface
      */
-    protected $core = null;
+    protected $runtime = null;
 
     /**
      * FileManager component to load files.
@@ -86,17 +88,23 @@ class Tokenizer extends Component
      * ability to perform simple PHP code highlighting which can be used in ExceptionResponses and
      * snapshots.
      *
-     * @param CoreInterface $core
-     * @param FileManager   $file
-     * @param Loader        $loader
+     * @param ConfiguratorInterface   $configurator
+     * @param RuntimeCacheInterface $runtime
+     * @param FileManager             $file
+     * @param Loader                  $loader
      */
-    public function __construct(CoreInterface $core, FileManager $file, Loader $loader)
+    public function __construct(
+        ConfiguratorInterface $configurator,
+        RuntimeCacheInterface $runtime,
+        FileManager $file,
+        Loader $loader
+    )
     {
-        $this->core = $core;
+        $this->runtime = $runtime;
         $this->file = $file;
         $this->loader = $loader;
 
-        $this->config = $core->getConfig('tokenizer');
+        $this->config = $configurator->getConfig('tokenizer');
 
         foreach ($this->config['directories'] as &$directory)
         {
@@ -408,7 +416,7 @@ class Tokenizer extends Component
     {
         if (empty($this->cache))
         {
-            $this->cache = $this->core->loadData('tokenizer-reflections');
+            $this->cache = $this->runtime->loadData('tokenizer-reflections');
         }
 
         if ($this->hasFileCache($filename))
@@ -423,7 +431,7 @@ class Tokenizer extends Component
                     'md5' => $this->file->md5($filename)
                 ) + $reflectionFile->exportSchema();
 
-            $this->core->saveData('tokenizer-reflections', $this->cache);
+            $this->runtime->saveData('tokenizer-reflections', $this->cache);
         }
 
         return $reflectionFile;

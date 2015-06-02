@@ -93,10 +93,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
      */
     public function __construct(CoreInterface $core, Container $container)
     {
+        $this->config = $core->getConfig('http');
+
         $this->core = $core;
         $this->container = $container;
-
-        $this->config = $core->getConfig('http');
 
         $this->middlewares = $this->config['middlewares'];
         $this->endpoints = $this->config['endpoints'];

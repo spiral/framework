@@ -9,8 +9,10 @@
 namespace Spiral\Components\I18n;
 
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\CoreInterface;
 
+use Spiral\Core\RuntimeCacheInterface;
 use Spiral\Helpers\StringHelper;
 
 class Translator extends Component
@@ -74,20 +76,21 @@ class Translator extends Component
     /**
      * Core component.
      *
-     * @var CoreInterface
+     * @var RuntimeCacheInterface
      */
-    protected $core = null;
+    protected $runtime = null;
 
     /**
      * New I18nManager component instance, while construing default language and timezone will be
      * mounted.
      *
-     * @param CoreInterface $core
+     * @param ConfiguratorInterface $configurator
+     * @param RuntimeCacheInterface $runtime
      */
-    public function __construct(CoreInterface $core)
+    public function __construct(ConfiguratorInterface $configurator, RuntimeCacheInterface $runtime)
     {
-        $this->core = $core;
-        $this->config = $core->getConfig('i18n');
+        $this->runtime = $runtime;
+        $this->config = $configurator->getConfig('i18n');
 
         $this->language = $this->config['default'];
         $this->languageOptions = $this->config['languages'][$this->language];
@@ -159,7 +162,7 @@ class Translator extends Component
             return;
         }
 
-        $this->bundles[$bundle] = $this->core->loadData(
+        $this->bundles[$bundle] = $this->runtime->loadData(
             $bundle,
             $this->languageOptions['dataFolder']
         );
@@ -182,7 +185,7 @@ class Translator extends Component
             return;
         }
 
-        $this->core->saveData(
+        $this->runtime->saveData(
             $bundle,
             $this->bundles[$bundle],
             $this->languageOptions['dataFolder']

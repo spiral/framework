@@ -322,8 +322,7 @@ class Core extends Container implements CoreInterface
          */
         $core = new static($directories + array('framework' => dirname(__DIR__)));
 
-        $core->bindings[__CLASS__]
-            = $core->bindings[get_called_class()]
+        $core->bindings[get_called_class()]
             = $core->bindings[self::SINGLETON]
             = $core->bindings['Spiral\Core\CoreInterface']
             = $core->bindings['Spiral\Core\ConfiguratorInterface']
