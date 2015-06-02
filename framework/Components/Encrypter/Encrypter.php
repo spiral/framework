@@ -55,8 +55,8 @@ class Encrypter extends Component
     public function __construct(ConfiguratorInterface $configurator)
     {
         $this->config = $configurator->getConfig('encrypter');
-        $this->setKey($this->config['key']);
 
+        $this->setKey($this->config['key']);
         if (!empty($this->config['method']))
         {
             $this->method = $this->config['method'];
