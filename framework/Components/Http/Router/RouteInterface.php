@@ -25,9 +25,10 @@ interface RouteInterface
      * Check if route matched with provided request. Will check url pattern and pre-conditions.
      *
      * @param ServerRequestInterface $request
+     * @param string                 $basePath
      * @return bool
      */
-    public function match(ServerRequestInterface $request);
+    public function match(ServerRequestInterface $request, $basePath = '/');
 
     /**
      * Perform route on given Request and return response.

@@ -8,9 +8,10 @@
  */
 namespace Spiral\Components\Http\Router;
 
+use Predis\Response\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\MiddlewareInterface;
-use Spiral\Components\Http\Response;
+use Spiral\Components\Http\Response\Redirect;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
@@ -18,7 +19,11 @@ use Spiral\Core\CoreInterface;
 class Router extends Component implements MiddlewareInterface
 {
     /**
-     * Internal name for default route.
+     * Internal name for default route. Default route used to resolve url and perform controller
+     * based routing in cases where no other route found.
+     *
+     * Default route should support <controller> and <action> parameters. Basically this is multi
+     * controller route.
      */
     const DEFAULT_ROUTE = 'default';
 
@@ -47,11 +52,10 @@ class Router extends Component implements MiddlewareInterface
     protected $routes = array();
 
     /**
-     * Set of middleware aliases defined to be used in routes for filtering request and altering
-     * response.
+     * Set of route specific middlewares aliases by short string name. This technique allows developer
+     * to assign middleware for group of routes.
      *
-     * @todo add middleware
-     * @var array
+     * @var array|MiddlewareInterface[]|callable[]
      */
     protected $middlewareAliases = array();
 
@@ -70,55 +74,18 @@ class Router extends Component implements MiddlewareInterface
      *
      * @var RouteInterface|null
      */
-    protected $route = null;
+    protected $activeRoute = null;
+
 
     /**
-     * Router middleware used by HttpDispatcher and modules to perform URI based routing with defined
-     * endpoint such as controller action, closure or middleware.
+     * Create new middleware alias which can be used in any route by it's short name.
      *
-     * @param Container     $container
-     * @param CoreInterface $core             Core instances required to call controller actions.
-     * @param Route|array   $routes           Pre-defined array of routes (if were collected externally).
-     * @param array         $default          Default route options (controller route), should include
-     *                                        pattern and target, can not have any middlewares attached.
-     * @param string        $activePath       Base path used to correctly resolve route url and pattern
-     *                                        when website or module associated with non empty URI path.
+     * @param string                       $alias
+     * @param callable|MiddlewareInterface $middleware
      */
-    public function __construct(
-        Container $container,
-        CoreInterface $core,
-        array $routes = array(),
-        array $default = array(),
-        $activePath = '/'
-    )
+    public function addMiddleware($alias, $middleware)
     {
-        $this->container = $container;
-        $this->core = $core;
-
-        foreach ($routes as $route)
-        {
-            if (!$route instanceof RouteInterface)
-            {
-                throw new \InvalidArgumentException("Routes should be array of Route instances.");
-            }
-
-            //Name aliasing is required to perform URL generation later.
-            $this->routes[$route->getName()] = $route;
-        }
-
-        //Registering default route
-        if (!isset($this->routes[static::DEFAULT_ROUTE]) && !empty($default))
-        {
-            $this->routes[static::DEFAULT_ROUTE] = new Route(
-                $this->container,
-                static::DEFAULT_ROUTE,
-                $default['pattern'],
-                $default['target'],
-                $default['defaults']
-            );
-        }
-
-        $this->activePath = $activePath;
+        $this->middlewareAliases[$alias] = $middleware;
     }
 
     /**
@@ -128,7 +95,7 @@ class Router extends Component implements MiddlewareInterface
      * @param ServerRequestInterface $request Server request instance.
      * @param \Closure               $next    Next middleware/target.
      * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
-     * @return Response
+     * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null, $context = null)
     {
@@ -136,15 +103,14 @@ class Router extends Component implements MiddlewareInterface
         $outerRouter = $this->container->getBinding('router');
         $this->container->bind('router', $this);
 
-        if (!$this->route = $this->findRoute($request))
+        $this->activePath = $request->getAttribute('activePath', $this->activePath);
+        if (!$this->activeRoute = $this->findRoute($request, $this->activePath))
         {
             throw new RouterException("No routes matched given request.");
         }
 
-        $this->activePath = $request->getAttribute('activePath', $this->activePath);
-
         //Executing found route
-        $response = $this->route->perform($request, $this->core, $this->middlewareAliases);
+        $response = $this->activeRoute->perform($request, $this->core, $this->middlewareAliases);
 
         //Close router scope
         $this->container->removeBinding('router');
@@ -154,30 +120,17 @@ class Router extends Component implements MiddlewareInterface
     }
 
     /**
-     * Handle request generate response. Middleware used to alter incoming Request and/or Response
-     * generated by inner pipeline layers. Alias for __invoke.
-     *
-     * @param ServerRequestInterface $request Server request instance.
-     * @param \Closure               $next    Next middleware/target.
-     * @param object|null            $context Pipeline context, can be HttpDispatcher, Route or module.
-     * @return Response
-     */
-    public function handle(ServerRequestInterface $request, \Closure $next = null, $context = null)
-    {
-        return $this->__invoke($request, $next, $context);
-    }
-
-    /**
      * Find route matched for given request.
      *
      * @param ServerRequestInterface $request
-     * @return null|Route
+     * @param string                 $basePath
+     * @return null|RouteInterface
      */
-    protected function findRoute(ServerRequestInterface $request)
+    protected function findRoute(ServerRequestInterface $request, $basePath)
     {
         foreach ($this->routes as $route)
         {
-            if ($route->match($request))
+            if ($route->match($request, $basePath))
             {
                 return $route;
             }
@@ -214,12 +167,18 @@ class Router extends Component implements MiddlewareInterface
      */
     public function activeRoute()
     {
-        return $this->route;
+        return $this->activeRoute;
     }
 
     /**
      * Generate url using route name and set of provided parameters. Parameters will be automatically
      * injected to route pattern and prefixed with activePath value.
+     *
+     * You can enter controller::action type route, in this case appropriate controller and action
+     * will be injected into default route as controller and action parameters accordingly.
+     *
+     * Example:
+     * $this->router->url('post::view', ['id' => 1]);
      *
      * @param string $route      Route name.
      * @param array  $parameters Route parameters including controller name, action and etc.
@@ -230,7 +189,18 @@ class Router extends Component implements MiddlewareInterface
     {
         if (!isset($this->routes[$route]))
         {
-            throw new RouterException("Undefined route '{$route}'.");
+            //Will be handled via default route where route name is specified as controller::action
+            if (strpos($route, '::'))
+            {
+                throw new RouterException(
+                    "Unable to locate route or use default route with controller::action pattern."
+                );
+            }
+
+            list($controller, $action) = explode('::', $route);
+            $parameters = compact('controller', 'action') + $parameters;
+
+            $route = self::DEFAULT_ROUTE;
         }
 
         return $this->routes[$route]->buildURL($parameters, $this->activePath);
@@ -239,12 +209,18 @@ class Router extends Component implements MiddlewareInterface
     /**
      * Generate redirect based on url rendered using specified route pattern.
      *
+     * You can enter controller::action type route, in this case appropriate controller and action
+     * will be injected into default route as controller and action parameters accordingly.
+     *
+     * Example:
+     * return $this->router->redirect('post::view', ['id' => 1]);
+     *
      * @param string $route      Route name.
      * @param array  $parameters Route parameters including controller name, action and etc.
-     * @return Response\Redirect
+     * @return Redirect
      */
     public function redirect($route, array $parameters = array())
     {
-        return new Response\Redirect($this->url($route, $parameters));
+        return new Redirect($this->url($route, $parameters));
     }
 }

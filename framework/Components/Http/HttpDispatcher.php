@@ -234,6 +234,9 @@ class HttpDispatcher extends Component implements DispatcherInterface
             throw new ClientException(Response::SERVER_ERROR, 'Unable to select endpoint');
         }
 
+        /**
+         * We have to keep outer request to create nested scope.
+         */
         $outerRequest = $this->container->getBinding('request');
 
         /**
