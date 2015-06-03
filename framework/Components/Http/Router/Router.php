@@ -247,7 +247,7 @@ class Router extends Component implements MiddlewareInterface
             if (strpos($route, Route::CONTROLLER_SEPARATOR) == false && strpos($route, '/') === false)
             {
                 throw new RouterException(
-                    "Unable to locate route or use default route with controller+action pattern."
+                    "Unable to locate route or use default route with controller/action pattern."
                 );
             }
 

@@ -90,7 +90,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
     )
     {
         $this->container = $container;
-
         $this->config = $configurator->getConfig('http');
 
         $this->middlewares = $this->config['middlewares'];
