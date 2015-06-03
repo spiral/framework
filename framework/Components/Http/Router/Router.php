@@ -96,16 +96,16 @@ class Router extends Component implements MiddlewareInterface
         }
 
         //Registering default route which should handle all unhandled controllers
-        if (!isset($this->routes[static::PRIMARY_ROUTE]) && !empty($primaryRoute))
+        if (!isset($this->routes[self::PRIMARY_ROUTE]) && !empty($primaryRoute))
         {
-            //TODO: REWRITE
-            //            $this->routes[static::DEFAULT_ROUTE] = new DirectRoute(
-            //                $this->container,
-            //                static::DEFAULT_ROUTE,
-            //                $defaultRoute['pattern'],
-            //                $defaultRoute['target'],
-            //                $defaultRoute['defaults']
-            //            );
+            $this->routes[self::PRIMARY_ROUTE] = new DirectRoute(
+                self::PRIMARY_ROUTE,
+                $primaryRoute['pattern'],
+                $primaryRoute['namespace'],
+                $primaryRoute['postfix'],
+                $primaryRoute['defaults'],
+                $primaryRoute['controllers']
+            );
         }
     }
 
@@ -233,6 +233,7 @@ class Router extends Component implements MiddlewareInterface
      *
      * Example:
      * $this->router->url('post::view', ['id' => 1]);
+     * $this->router->url('post/view', ['id' => 1]);
      *
      * @param string $route      Route name.
      * @param array  $parameters Route parameters including controller name, action and etc.
@@ -244,17 +245,20 @@ class Router extends Component implements MiddlewareInterface
         if (!isset($this->routes[$route]))
         {
             //Will be handled via default route where route name is specified as controller::action
-            if (strpos($route, Route::CONTROLLER_SEPARATOR))
+            if (strpos($route, Route::CONTROLLER_SEPARATOR) || strpos($route, '/'))
             {
                 throw new RouterException(
                     "Unable to locate route or use default route with controller+action pattern."
                 );
             }
 
-            $route = self::PRIMARY_ROUTE;
+            list($controller, $action) = explode(
+                Route::CONTROLLER_SEPARATOR,
+                str_replace('/', Route::CONTROLLER_SEPARATOR, $route)
+            );
 
-            list($controller, $action) = explode(Route::CONTROLLER_SEPARATOR, $route);
             $parameters = compact('controller', 'action') + $parameters;
+            $route = self::PRIMARY_ROUTE;
         }
 
         return $this->routes[$route]->createURL($parameters, $this->activePath);

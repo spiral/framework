@@ -69,7 +69,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @var bool
      */
-    protected $withHost = false;
+    protected $useHost = false;
 
     /**
      * Compiled route options, pattern and etc. Internal data.
@@ -119,9 +119,9 @@ abstract class AbstractRoute implements RouteInterface
      * @param bool $withHost
      * @return static
      */
-    public function withHost($withHost = true)
+    public function useHost($withHost = true)
     {
-        $this->withHost = $withHost;
+        $this->useHost = $withHost;
 
         return $this;
     }
@@ -245,7 +245,7 @@ abstract class AbstractRoute implements RouteInterface
             $path = '/' . $path;
         }
 
-        if ($this->withHost)
+        if ($this->useHost)
         {
             $uri = $request->getUri()->getHost() . $path;
         }
