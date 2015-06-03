@@ -208,7 +208,7 @@ abstract class AbstractRoute implements RouteInterface
         $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $this->pattern);
         $this->compiled = array(
             'pattern'  => '/^' . strtr($template, $replaces) . '$/u',
-            'template' => stripslashes(str_replace(array(')', '(', '?'), '', $template)),
+            'template' => stripslashes(str_replace('?', '', $template)),
             'options'  => array_fill_keys($options, null)
         );
     }
@@ -310,12 +310,30 @@ abstract class AbstractRoute implements RouteInterface
 
         $parameters = $parameters + $this->defaults + $this->compiled['options'];
 
-        //Cleaning all bad symbols
-        $parameters = array_map(array('Spiral\Helpers\UrlHelper', 'slug'), $parameters);
-
         //Rendering URL
-        $url = interpolate($this->compiled['template'], $parameters, '<', '>');
+        $url = interpolate(
+            $this->compiled['template'],
+            array_map(array('Spiral\Helpers\UrlHelper', 'slug'), $parameters),
+            '<',
+            '>'
+        );
 
-        return $basePath . trim(str_replace('//', '/', $url), '/');
+        $query = '';
+
+        //Getting additional parameters
+        $queryParameters = array_diff_key($parameters, $this->compiled['options']);
+        if (!empty($queryParameters))
+        {
+            $query = '?' . http_build_query($queryParameters);
+        }
+
+        //Kicking empty blocks
+        return $basePath . strtr($url, array(
+            '()'  => '',
+            '(/)' => '',
+            '('   => '',
+            ')'   => '',
+            '//'  => '/',
+        )) . $query;
     }
 }
