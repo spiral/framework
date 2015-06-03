@@ -74,7 +74,6 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * Compiled route options, pattern and etc. Internal data.
      *
-     * @invisible
      * @var array
      */
     protected $compiled = array();

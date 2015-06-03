@@ -142,8 +142,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         $pipeline = new MiddlewarePipe($this->container, $this->middlewares);
         $response = $pipeline->target(array($this, 'perform'))->run(
-            $this->getRequest(),
-            $this
+            $this->getRequest()
         );
 
         //Use $event->object->getRequest() to access original request
@@ -307,7 +306,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $endpoint = is_string($endpoint) ? $this->container->get($endpoint) : $endpoint;
 
         ob_start();
-        $response = $endpoint($request, null, $this);
+        $response = $endpoint($request, null);
         $plainOutput = ob_get_clean();
 
         return $this->wrapResponse($response, $plainOutput);
