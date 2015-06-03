@@ -14,7 +14,6 @@ use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response\Redirect;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
 
 class Router extends Component implements MiddlewareInterface
 {
@@ -25,7 +24,7 @@ class Router extends Component implements MiddlewareInterface
      * Primary route should support <controller> and <action> parameters. Basically this is multi
      * controller route. Primary route should be instance of spiral DirectRoute or compatible.
      */
-    const PRIMARY_ROUTE = 'default';
+    const PRIMARY_ROUTE = 'primary';
 
     /**
      * Container.

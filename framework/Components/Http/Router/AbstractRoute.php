@@ -206,16 +206,10 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $this->pattern);
-        $template = stripslashes(str_replace(
-            array(')', '(', '?'),
-            '',
-            $template
-        ));
-
         $this->compiled = array(
             'pattern'  => '/^' . strtr($template, $replaces) . '$/u',
-            'template' => $template,
-            'options'  => $options
+            'template' => stripslashes(str_replace(array(')', '(', '?'), '', $template)),
+            'options'  => array_fill_keys($options, null)
         );
     }
 
@@ -256,9 +250,9 @@ abstract class AbstractRoute implements RouteInterface
         if (preg_match($this->compiled['pattern'], rtrim($uri, '/'), $this->matches))
         {
             $this->matches = array_merge(
-                $this->matches,
+                $this->compiled['options'],
                 $this->defaults,
-                array_fill_keys($this->compiled['options'], null)
+                $this->matches
             );
 
             return true;
@@ -314,11 +308,7 @@ abstract class AbstractRoute implements RouteInterface
             $this->compile();
         }
 
-        $parameters = array_merge(
-            $parameters,
-            $this->defaults,
-            array_fill_keys($this->compiled['options'], null)
-        );
+        $parameters = $parameters + $this->defaults + $this->compiled['options'];
 
         //Cleaning all bad symbols
         $parameters = array_map(array('Spiral\Helpers\UrlHelper', 'slug'), $parameters);

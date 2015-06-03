@@ -163,7 +163,7 @@ class DirectRoute extends AbstractRoute
         }
         else
         {
-            $controller = $this->namespace . '\\' . $controller . $this->postfix;
+            $controller = $this->namespace . '\\' . ucfirst($controller) . $this->postfix;
         }
 
         return $core->callAction($controller, $this->matches['action'], $this->matches);
