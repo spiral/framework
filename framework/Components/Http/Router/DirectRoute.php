@@ -8,7 +8,19 @@
  */
 namespace Spiral\Components\Http\Router;
 
-class DirectRoute extends Route
+class DirectRoute extends AbstractRoute
 {
+    protected $namespace = '';
 
+    protected $postfix = '';
+
+    protected $controllers = array();
+
+
+    public function controllers(array $controllers)
+    {
+        $this->controllers += $controllers;
+
+        return $this;
+    }
 }

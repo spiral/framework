@@ -9,6 +9,7 @@
 namespace Spiral\Components\Http\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 
 interface RouteInterface
@@ -34,13 +35,14 @@ interface RouteInterface
      * Perform route on given Request and return response.
      *
      * @param ServerRequestInterface $request
-     * @param CoreInterface          $core
+     * @param Container              $container          Container is required to get valid middleware
+     *                                                   instance.
      * @param array                  $middlewaresAliases Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
-        CoreInterface $core,
+        Container $container,
         array $middlewaresAliases = array()
     );
 
@@ -52,5 +54,5 @@ interface RouteInterface
      * @param string $basePath
      * @return string
      */
-    public function buildURL(array $parameters = array(), $basePath = '/');
+    public function createURL(array $parameters = array(), $basePath = '/');
 }

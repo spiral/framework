@@ -23,7 +23,7 @@ class UrlHelperTest extends TestCase
 
     public function testConvert()
     {
-        $this->assertSame('Test-url-message', UrlHelper::convert('Test url+message!'));
-        $this->assertSame('Be-good-very-good', UrlHelper::convert('Be good, very good!'));
+        $this->assertSame('Test-url-message', UrlHelper::slug('Test url+message!'));
+        $this->assertSame('Be-good-very-good', UrlHelper::slug('Be good, very good!'));
     }
 }

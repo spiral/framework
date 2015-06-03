@@ -89,7 +89,7 @@ class StringHelper
      * @param string $delimiter Segments delimiter, "-" by default.
      * @return string
      */
-    public static function url($string, $delimiter = '-')
+    public static function urlSlug($string, $delimiter = '-')
     {
         foreach (self::$replaces as $exceptions)
         {

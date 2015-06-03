@@ -36,15 +36,6 @@ class Router extends Component implements MiddlewareInterface
     protected $container = null;
 
     /**
-     * Core/Application instance is required to execute controllers (if route has controller as it's
-     * target).
-     *
-     * @invisible
-     * @var CoreInterface
-     */
-    protected $core = null;
-
-    /**
      * Registered routes.
      *
      * @var RouteInterface[]
@@ -80,21 +71,18 @@ class Router extends Component implements MiddlewareInterface
      * Router middleware used by HttpDispatcher and modules to perform URI based routing with defined
      * endpoint such as controller action, closure or middleware.
      *
-     * @param Container     $container
-     * @param CoreInterface $core             Core instances required to call controller actions.
-     * @param Route|array   $routes           Pre-defined array of routes (if were collected externally).
-     * @param array         $primaryRoute     Default route options (controller route), should include
+     * @param Container   $container
+     * @param Route|array $routes             Pre-defined array of routes (if were collected externally).
+     * @param array       $primaryRoute       Default route options (controller route), should include
      *                                        pattern and target.
      */
     public function __construct(
         Container $container,
-        CoreInterface $core,
         array $routes = array(),
         array $primaryRoute = array()
     )
     {
         $this->container = $container;
-        $this->core = $core;
 
         foreach ($routes as $route)
         {
@@ -111,7 +99,7 @@ class Router extends Component implements MiddlewareInterface
         if (!isset($this->routes[static::PRIMARY_ROUTE]) && !empty($primaryRoute))
         {
             //TODO: REWRITE
-            //            $this->routes[static::DEFAULT_ROUTE] = new Route(
+            //            $this->routes[static::DEFAULT_ROUTE] = new DirectRoute(
             //                $this->container,
             //                static::DEFAULT_ROUTE,
             //                $defaultRoute['pattern'],
@@ -127,7 +115,7 @@ class Router extends Component implements MiddlewareInterface
      * @param string                       $alias
      * @param callable|MiddlewareInterface $middleware
      */
-    public function addMiddleware($alias, $middleware)
+    public function registerMiddleware($alias, $middleware)
     {
         $this->middlewareAliases[$alias] = $middleware;
     }
@@ -155,8 +143,8 @@ class Router extends Component implements MiddlewareInterface
 
         //Executing found route
         $response = $this->activeRoute->perform(
-            $request,
-            $this->core,
+            $request->withAttribute('route', $this->activeRoute),
+            $this->container,
             $this->middlewareAliases
         );
 
@@ -269,7 +257,7 @@ class Router extends Component implements MiddlewareInterface
             $parameters = compact('controller', 'action') + $parameters;
         }
 
-        return $this->routes[$route]->buildURL($parameters, $this->activePath);
+        return $this->routes[$route]->createURL($parameters, $this->activePath);
     }
 
     /**

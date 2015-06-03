@@ -42,8 +42,8 @@ class UrlHelper
      * @param string $delimiter Segments delimiter, "-" by default.
      * @return string
      */
-    public static function convert($string, $delimiter = '-')
+    public static function slug($string, $delimiter = '-')
     {
-        return StringHelper::url($string, $delimiter);
+        return StringHelper::urlSlug($string, $delimiter);
     }
 }

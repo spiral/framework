@@ -42,8 +42,8 @@ class StringHelperTest extends TestCase
 
     public function testURL()
     {
-        $this->assertSame('Test-url-message', StringHelper::url('Test url+message!'));
-        $this->assertSame('Be-good-very-good', StringHelper::url('Be good, very good!'));
+        $this->assertSame('Test-url-message', StringHelper::urlSlug('Test url+message!'));
+        $this->assertSame('Be-good-very-good', StringHelper::urlSlug('Be good, very good!'));
     }
 
     public function testShorter()

@@ -129,7 +129,7 @@ class Repository extends Component
      */
     public function getFilename($name, $chunk = '', $path = false)
     {
-        $name = StringHelper::url($name, '_');
+        $name = StringHelper::urlSlug($name, '_');
 
         $filename = interpolate(self::FILENAME_FORMAT, array(
             'timestamp' => date('Ymd_His'),

@@ -51,7 +51,7 @@ abstract class ClassCreator extends Component
      */
     protected function generateName($name)
     {
-        $name = StringHelper::url(ucwords(str_replace('_', ' ', $name)), '');
+        $name = StringHelper::urlSlug(ucwords(str_replace('_', ' ', $name)), '');
 
         return ClassElement::make(compact('name'));
     }
