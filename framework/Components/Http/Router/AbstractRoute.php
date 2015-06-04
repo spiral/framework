@@ -99,6 +99,16 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
+     * Get route pattern.
+     *
+     * @return string
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
      * Set route name. This action should be performed BEFORE parent router will be created, in other
      * scenario route will be available under old name.
      *

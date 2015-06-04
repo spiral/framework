@@ -37,7 +37,7 @@ interface RouteInterface
      * @param ServerRequestInterface $request
      * @param Container              $container          Container is required to get valid middleware
      *                                                   instance.
-     * @param array                  $middlewareAliases Middleware aliases provided from parent router.
+     * @param array                  $middlewareAliases  Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(

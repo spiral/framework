@@ -32,6 +32,15 @@ class Logger extends AbstractLogger
     const DEFAULT_NAME = 'debug';
 
     /**
+     * Message parts (stored in static log container).
+     */
+    const MESSAGE_CONTAINER = 0;
+    const MESSAGE_TIMESTAMP = 1;
+    const MESSAGE_LEVEL     = 2;
+    const MESSAGE_BODY      = 3;
+    const MESSAGE_CONTEXT   = 4;
+
+    /**
      * Time format and postfix for rotated files. "all" format will be used for messages going to
      * container assigned to ALL_MESSAGES (without level).
      *
@@ -180,7 +189,13 @@ class Logger extends AbstractLogger
         $message = interpolate($message, $context);
         if (self::$memoryLogging)
         {
-            self::$logMessages[] = array($this->name, microtime(true), $level, $message, $context);
+            self::$logMessages[] = array(
+                self::MESSAGE_CONTAINER => $this->name,
+                self::MESSAGE_TIMESTAMP => microtime(true),
+                self::MESSAGE_LEVEL     => $level,
+                self::MESSAGE_BODY      => $message,
+                self::MESSAGE_CONTEXT   => $context
+            );
         }
 
         $handled = $this->event('message', array(
