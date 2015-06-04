@@ -112,22 +112,17 @@ class DirectRoute extends AbstractRoute
      * @param ServerRequestInterface $request
      * @param Container              $container          Container is required to get valid middleware
      *                                                   instance.
-     * @param array                  $middlewaresAliases Middleware aliases provided from parent router.
+     * @param array                  $middlewareAliases  Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
         Container $container,
-        array $middlewaresAliases = array()
+        array $middlewareAliases = array()
     )
     {
-        if (empty($this->middlewares))
-        {
-            return call_user_func($this->getCallable($container), $request);
-        }
-
-        return $this->getPipeline($container, $middlewaresAliases)
-            ->target($this->getCallable($container))
+        return $this->getPipeline($container, $middlewareAliases)
+            ->target($this->getEndpoint($container))
             ->run($request);
     }
 
@@ -137,12 +132,14 @@ class DirectRoute extends AbstractRoute
      * @param Container $container
      * @return callable
      */
-    protected function getCallable(Container $container)
+    protected function getEndpoint(Container $container)
     {
-        return function (ServerRequestInterface $request) use ($container)
+        $route = $this;
+
+        return function (ServerRequestInterface $request) use ($route, $container)
         {
             //Calling controller (using core resolved via container)
-            return $this->callAction($container->get('Spiral\Core\CoreInterface'), $request);
+            return $route->callAction($container->get('Spiral\Core\CoreInterface'), $request);
         };
     }
 

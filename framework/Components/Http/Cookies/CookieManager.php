@@ -28,10 +28,6 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     use Component\ConfigurableTrait;
 
-    /**
-     * Cookie component scope binding.
-     */
-    const BINDING = 'cookies';
 
     /**
      * Algorithm used to sign cookies.
@@ -145,8 +141,8 @@ class CookieManager extends Component implements MiddlewareInterface
     public function __invoke(ServerRequestInterface $request, \Closure $next = null)
     {
         //Opening scope
-        $outerManager = $this->container->getBinding(self::BINDING);
-        $this->container->bind(self::BINDING, $this);
+        $outerManager = $this->container->getBinding(__CLASS__);
+        $this->container->bind(__CLASS__, $this);
 
         $this->request = $request;
         $request = $this->decodeCookies($request);
@@ -159,8 +155,8 @@ class CookieManager extends Component implements MiddlewareInterface
         $response = $this->mountCookies($response);
 
         //Restoring scope
-        $this->container->removeBinding(self::BINDING);
-        !empty($outerManager) && $this->container->bind(self::BINDING, $outerManager);
+        $this->container->removeBinding(__CLASS__);
+        !empty($outerManager) && $this->container->bind(__CLASS__, $outerManager);
 
         return $response;
     }

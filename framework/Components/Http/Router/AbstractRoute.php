@@ -272,10 +272,10 @@ abstract class AbstractRoute implements RouteInterface
      * Create route specific request pipeline.
      *
      * @param Container $container
-     * @param array     $middlewaresAliases
+     * @param array     $middlewareAliases
      * @return MiddlewarePipe
      */
-    protected function getPipeline(Container $container, array $middlewaresAliases = array())
+    protected function getPipeline(Container $container, array $middlewareAliases = array())
     {
         $middlewares = array();
         foreach ($this->middlewares as $middleware)

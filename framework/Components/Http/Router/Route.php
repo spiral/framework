@@ -92,35 +92,17 @@ class Route extends AbstractRoute
      * @param ServerRequestInterface $request
      * @param Container              $container          Container is required to get valid middleware
      *                                                   instance.
-     * @param array                  $middlewaresAliases Middleware aliases provided from parent router.
+     * @param array                  $middlewareAliases  Middleware aliases provided from parent router.
      * @return mixed
      */
     public function perform(
         ServerRequestInterface $request,
         Container $container,
-        array $middlewaresAliases = array()
+        array $middlewareAliases = array()
     )
     {
-        if (empty($this->middlewares))
-        {
-            if ($this->target instanceof \Closure)
-            {
-                $reflection = new \ReflectionFunction($this->target);
-
-                return $reflection->invokeArgs(
-                    $container->resolveArguments($reflection,
-                        array(
-                            'request' => $request,
-                            'route'   => $this
-                        )
-                    ));
-            }
-
-            return call_user_func($this->getCallable($container), $request);
-        }
-
-        return $this->getPipeline($container, $middlewaresAliases)
-            ->target($this->getCallable($container))
+        return $this->getPipeline($container, $middlewareAliases)
+            ->target($this->getEndpoint($container))
             ->run($request);
     }
 
@@ -130,7 +112,7 @@ class Route extends AbstractRoute
      * @param Container $container
      * @return callable
      */
-    protected function getCallable(Container $container)
+    protected function getEndpoint(Container $container)
     {
         if (is_object($this->target) || is_array($this->target))
         {
@@ -143,10 +125,12 @@ class Route extends AbstractRoute
             return $container->get($this->target);
         }
 
-        return function (ServerRequestInterface $request) use ($container)
+        $route = $this;
+
+        return function (ServerRequestInterface $request) use ($route, $container)
         {
             //Calling controller (using core resolved via container)
-            return $this->callAction($container->get('Spiral\Core\CoreInterface'), $request);
+            return $route->callAction($container->get('Spiral\Core\CoreInterface'), $request);
         };
     }
 
