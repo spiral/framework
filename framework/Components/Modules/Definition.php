@@ -174,7 +174,7 @@ class Definition extends Component
      */
     public function isInstalled()
     {
-        return $this->modules->hasModule($this->getName());
+        return (bool)$this->modules->hasModule($this->getName());
     }
 
     /**

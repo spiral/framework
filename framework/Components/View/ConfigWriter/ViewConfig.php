@@ -57,16 +57,13 @@ class ViewConfig extends ConfigWriter
      *
      * ViewConfig is specialized configurator allows modules mount view namespaces and view processors.
      *
-     * @param string      $name          Config filename, should not include extensions, may include
-     *                                   directory name.
+     * @param int|string  $method        How system should merge existed and requested config contents.
      * @param string      $baseDirectory Base directory for registered namespaces.
-     * @param int         $method        How system should merge existed and requested config contents.
      * @param Core        $core          Core instance to fetch list of directories.
      * @param FileManager $file          FileManager component.
      * @param Tokenizer   $tokenizer     Tokenizer component.
      */
     public function __construct(
-        $name,
         $method = self::MERGE_FOLLOW,
         $baseDirectory = '',
         Core $core,
@@ -74,7 +71,7 @@ class ViewConfig extends ConfigWriter
         Tokenizer $tokenizer
     )
     {
-        parent::__construct($name, $method, $core, $file, $tokenizer);
+        parent::__construct('view', $method, $core, $file, $tokenizer);
         $this->baseDirectory = $baseDirectory;
     }
 

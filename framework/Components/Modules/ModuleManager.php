@@ -108,8 +108,9 @@ class ModuleManager extends Component
         $definitions = array();
 
         //Delayed and not included to constructor dependencies to speed up application.
-        $classes = Tokenizer::getInstance($this->container)
-            ->getClasses('Spiral\Components\Modules\ModuleInterface');
+        $classes = Tokenizer::getInstance($this->container)->getClasses(
+            'Spiral\Components\Modules\ModuleInterface'
+        );
 
         foreach ($classes as $module)
         {

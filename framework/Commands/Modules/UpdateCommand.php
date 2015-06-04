@@ -73,7 +73,7 @@ class UpdateCommand extends Command
                 $installer->logger()->dispatcher()->addListener('message', $messenger);
             }
 
-            $installer->install();
+            $installer->update();
             $installer->logger()->dispatcher()->removeListener('message', $messenger);
 
             $this->modules->registerModule($module);
