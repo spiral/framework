@@ -10,6 +10,7 @@ namespace Spiral\Components\Http\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Cookies\CookieManager;
 use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response;
@@ -25,6 +26,11 @@ class CsrfFilter implements MiddlewareInterface
     const COOKIE = 'csrf-token';
 
     /**
+     * Verification cookie lifetime.
+     */
+    const LIFETIME = 86400;
+
+    /**
      * Header to check for token instead of POST/GET data.
      */
     const HEADER = 'X-CSRF-Token';
@@ -33,23 +39,6 @@ class CsrfFilter implements MiddlewareInterface
      * Parameter name used to represent client token in POST data.
      */
     const PARAMETER = 'csrf-token';
-
-    /**
-     * CookieManager.
-     *
-     * @var CookieManager
-     */
-    protected $cookies = null;
-
-    /**
-     * Middleware constructing.
-     *
-     * @param CookieManager $cookies
-     */
-    public function __construct(CookieManager $cookies)
-    {
-        $this->cookies = $cookies;
-    }
 
     /**
      * Handle request generate response. Middleware used to alter incoming Request and/or Response
@@ -92,7 +81,7 @@ class CsrfFilter implements MiddlewareInterface
             //Will work even with non spiral responses
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                $this->cookies->create(self::COOKIE, $token, 86400)->packHeader()
+                Cookie::create(self::COOKIE, $token, self::LIFETIME)->packHeader()
             );
         }
 
