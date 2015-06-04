@@ -139,13 +139,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
             $this->endpoints[$this->config['basePath']] = $this->createRouter();
         }
 
-        $pipeline = new MiddlewarePipe($this->container, $this->middlewares);
-        $response = $pipeline->target(array($this, 'perform'))->run(
-            $this->getRequest()
+        $this->dispatch(
+            $this->event('dispatch', $this->perform(
+                $this->getRequest()
+            ))
         );
-
-        //Use $event->object->getRequest() to access original request
-        $this->dispatch($this->event('dispatch', $response));
     }
 
     /**
@@ -204,7 +202,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * Every request passed to perform method will be registered in Container scope under "request"
      * and class name binding.
-     **
+     *
+     * Http component middlewares will be applied to request and response.
      *
      * @param ServerRequestInterface $request
      * @return array|ResponseInterface
@@ -235,7 +234,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
 
         benchmark('http::endpoint', $name);
-        $response = $this->execute($request, $endpoint);
+        $pipeline = new MiddlewarePipe($this->container, $this->middlewares);
+        $response = $pipeline->target($endpoint)->run($request);
         benchmark('http::endpoint', $name);
 
         $this->container->removeBinding('request');
@@ -287,74 +287,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
         }
 
         return null;
-    }
-
-    /**
-     * Execute endpoint middleware. Right now this method supports only spiral middlewares, but can
-     * also be easily changed to support another syntax like handle(request, response).
-     *
-     * @param ServerRequestInterface              $request
-     * @param string|callable|MiddlewareInterface $endpoint
-     * @return mixed
-     */
-    protected function execute(ServerRequestInterface $request, $endpoint)
-    {
-        /**
-         * @var callable $endpoint
-         */
-        $endpoint = is_string($endpoint) ? $this->container->get($endpoint) : $endpoint;
-
-        ob_start();
-        $response = $endpoint($request, null);
-        $plainOutput = ob_get_clean();
-
-        return $this->wrapResponse($response, $plainOutput);
-    }
-
-    /**
-     * Helper method used to wrap raw response from middlewares and controllers to correct Response
-     * class. Method support string and JsonSerializable (including arrays) inputs. Default status
-     * will be set as 200. If you want to specify default set of headers for raw responses check
-     * http->config->headers section.
-     *
-     * You can force status for JSON responses by providing response as array with "status" key equals
-     * to desired HTTP code.
-     *
-     * @param mixed  $response
-     * @param string $plainOutput
-     * @return Response
-     */
-    protected function wrapResponse($response, $plainOutput = '')
-    {
-        if ($response instanceof ResponseInterface)
-        {
-            if (!empty($plainOutput))
-            {
-                $response->getBody()->write($plainOutput);
-            }
-
-            return $response;
-        }
-
-        if (is_array($response) || $response instanceof \JsonSerializable)
-        {
-            if (is_array($response) && !empty($plainOutput))
-            {
-                $response['plainOutput'] = $plainOutput;
-            }
-
-            $code = 200;
-            if (is_array($response) && isset($response['status']))
-            {
-                $code = $response['status'];
-            }
-
-            return new Response(json_encode($response), $code, array(
-                'Content-Type' => 'application/json'
-            ));
-        }
-
-        return new Response($response . $plainOutput);
     }
 
     /**

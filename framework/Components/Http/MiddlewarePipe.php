@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\Http;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
@@ -85,7 +86,7 @@ class MiddlewarePipe extends Component
      * method and middleware logic.
      *
      * @param ServerRequestInterface $request
-     * @return mixed
+     * @return ResponseInterface
      */
     public function run(ServerRequestInterface $request)
     {
@@ -123,7 +124,11 @@ class MiddlewarePipe extends Component
                 );
             }
 
-            return call_user_func($this->target, $request);
+            ob_start();
+            $response = call_user_func($this->target, $request);
+            $plainOutput = ob_get_clean();
+
+            return $this->wrapResponse($response, $plainOutput);
         }
 
         /**
@@ -135,5 +140,51 @@ class MiddlewarePipe extends Component
             : $middleware;
 
         return $middleware($request, $next);
+    }
+
+    /**
+     * Helper method used to wrap raw response from middlewares and controllers to correct Response
+     * class. Method support string and JsonSerializable (including arrays) inputs. Default status
+     * will be set as 200. If you want to specify default set of headers for raw responses check
+     * http->config->headers section.
+     *
+     * You can force status for JSON responses by providing response as array with "status" key equals
+     * to desired HTTP code.
+     *
+     * @param mixed  $response
+     * @param string $plainOutput
+     * @return Response
+     */
+    protected function wrapResponse($response, $plainOutput = '')
+    {
+        if ($response instanceof ResponseInterface)
+        {
+            if (!empty($plainOutput))
+            {
+                $response->getBody()->write($plainOutput);
+            }
+
+            return $response;
+        }
+
+        if (is_array($response) || $response instanceof \JsonSerializable)
+        {
+            if (is_array($response) && !empty($plainOutput))
+            {
+                $response['plainOutput'] = $plainOutput;
+            }
+
+            $code = 200;
+            if (is_array($response) && isset($response['status']))
+            {
+                $code = $response['status'];
+            }
+
+            return new Response(json_encode($response), $code, array(
+                'Content-Type' => 'application/json'
+            ));
+        }
+
+        return new Response($response . $plainOutput);
     }
 }

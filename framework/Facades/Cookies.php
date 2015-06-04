@@ -13,6 +13,8 @@ use Spiral\Components\Http\Cookies\CookieManager;
 use Spiral\Core\Facade;
 
 /**
+ * Attention, this facade will not work outside CookieManager scope!
+ *
  * @method static setEncrypter(Encrypter $encrypter)
  * @method static Encrypter getEncrypter()
  * @method static Cookie set(string $name, string $value = null, int $lifetime = 0, string $path = null, string $domain = null, bool $secure = null, bool $httpOnly = true)

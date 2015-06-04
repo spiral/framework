@@ -14,7 +14,6 @@ use Spiral\Core\Core;
 use Spiral\Support\Generators\Config\ConfigWriter;
 use Spiral\Support\Generators\Config\ConfigWriterException;
 
-//TODO: ADD PROCESSORS
 class ViewConfig extends ConfigWriter
 {
     /**
@@ -23,7 +22,14 @@ class ViewConfig extends ConfigWriter
      *
      * @var array
      */
-    protected $viewNamespaces = array();
+    protected $namespaces = array();
+
+    /**
+     * View engines to be registered in view config.
+     *
+     * @var array
+     */
+    protected $engines = array();
 
     /**
      * View processors has to be registered and their location in chain.
@@ -53,7 +59,6 @@ class ViewConfig extends ConfigWriter
      * @param Core        $core          Core instance to fetch list of directories.
      * @param FileManager $file          FileManager component.
      * @param Tokenizer   $tokenizer     Tokenizer component.
-     *
      */
     public function __construct(
         $name,
@@ -64,7 +69,6 @@ class ViewConfig extends ConfigWriter
         Tokenizer $tokenizer
     )
     {
-
         parent::__construct($name, $method, $core, $file, $tokenizer);
         $this->baseDirectory = $baseDirectory;
     }
@@ -97,11 +101,19 @@ class ViewConfig extends ConfigWriter
      * @param string $directory Directory name relative to modules directory.
      * @return ViewConfig
      */
-    public function addNamespace($namespace, $directory = 'views')
+    public function registerNamespace($namespace, $directory = 'views')
     {
-        $this->viewNamespaces[$namespace] = $directory;
+        $this->namespaces[$namespace] = $directory;
 
         return $this;
+    }
+
+    public function registerEngine($name, array $extensions, $compiler, $view, array $options = array())
+    {
+    }
+
+    public function registerProcessor($processor, array $after)
+    {
     }
 
     /**
@@ -127,7 +139,7 @@ class ViewConfig extends ConfigWriter
     {
         $result = $existed;
 
-        foreach ($this->viewNamespaces as $namespace => $directory)
+        foreach ($this->namespaces as $namespace => $directory)
         {
             $directory = $this->file->normalizePath($this->baseDirectory . '/' . $directory, true);
 

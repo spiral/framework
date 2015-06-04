@@ -26,12 +26,7 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * Required traits.
      */
-    use Component\SingletonTrait, Component\ConfigurableTrait;
-
-    /**
-     * Declares to IoC that component instance should be treated as singleton.
-     */
-    const SINGLETON = __CLASS__;
+    use Component\ConfigurableTrait;
 
     /**
      * Algorithm used to sign cookies.
@@ -144,8 +139,11 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     public function __invoke(ServerRequestInterface $request, \Closure $next = null)
     {
-        $this->request = $request;
+        //Opening scope
+        $outerManager = $this->container->getBinding(__CLASS__);
+        $this->container->bind(__CLASS__, $this);
 
+        $this->request = $request;
         $request = $this->decodeCookies($request);
 
         /**
@@ -153,7 +151,13 @@ class CookieManager extends Component implements MiddlewareInterface
          */
         $response = $next($request);
 
-        return $this->mountCookies($response);
+        $response = $this->mountCookies($response);
+
+        //Restoring scope
+        $this->container->removeBinding(__CLASS__);
+        !empty($outerManager) && $this->container->bind(__CLASS__, $outerManager);
+
+        return $response;
     }
 
     /**

@@ -156,12 +156,8 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
-     * Associated inner middleware with route. Middleware will be executed "at top" of real route
-     * target such as controller. Attention, response provided from inner not necessary will be
-     * type of ResponseInterface as real response wrapping will happen on higher HttpDispatcher
-     * level.
-     *
-     * Route can use middlewares previously registered in Route by it's aliases.
+     * Associated inner middleware with route. Route can use middlewares previously registered in
+     * Route by it's aliases.
      *
      * Example:
      *
