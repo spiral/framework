@@ -69,7 +69,8 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     /**
      * SessionStore is singleton object used to manager sessions using default/non default session
      * handlers. Attention, session store based on php sessions, so it's REALLY important to have
-     * only one store at one moment of time.
+     * only one store at one moment of time. You still can have multiple session using http->perform
+     * and nested requests, but it will be non efficient.
      *
      * @param ConfiguratorInterface $configurator
      * @param Container             $container
@@ -81,18 +82,21 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Update session id. This operation is possible only when session is stopped.
+     * Update session id.
      *
      * @param string $id
      */
     public function setID($id)
     {
-        if ($this->started)
+        if ($this->id != $id)
         {
-            throw new SessionException("Unable to change session id, session already started.");
+            $this->id = $id;
+            if ($this->started)
+            {
+                $this->commit();
+                $this->start();
+            }
         }
-
-        $this->id = $id;
     }
 
     /**

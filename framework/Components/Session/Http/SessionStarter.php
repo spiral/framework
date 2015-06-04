@@ -48,16 +48,6 @@ class SessionStarter implements MiddlewareInterface
     }
 
     /**
-     * Manually set session store instance.
-     *
-     * @param SessionStore $store
-     */
-    public function setStore(SessionStore $store)
-    {
-        $this->store = $store;
-    }
-
-    /**
      * Get session store instance.
      *
      * @return SessionStore
@@ -84,10 +74,16 @@ class SessionStarter implements MiddlewareInterface
     {
         $cookies = $request->getCookieParams();
 
+        $outerID = null;
         if (isset($cookies[self::COOKIE]))
         {
+            if ($this->getStore()->isStarted())
+            {
+                $outerID = $this->getStore()->getID();
+            }
+
             //Mounting ID retrieved from cookies
-            $this->getStore()->setID($cookies[self::COOKIE]);
+            $this->store->setID($cookies[self::COOKIE]);
         }
 
         $response = $next();
@@ -95,13 +91,16 @@ class SessionStarter implements MiddlewareInterface
         if (empty($this->store) && is_object($this->container->getBinding(SessionStore::getAlias())))
         {
             //Store were started by itself
-            $this->setStore($this->container->get(SessionStore::getAlias()));
+            $this->store = $this->container->get(SessionStore::getAlias());
         }
 
         if (!empty($this->store) && ($this->store->isStarted() || $this->store->isDestroyed()))
         {
-            return $this->commitSession($this->store, $response, $cookies);
+            $response = $this->commitSession($this->store, $response, $cookies);
         }
+
+        //Restoring original session, not super efficient operation
+        !empty($outerID) && $this->store->setID($outerID);
 
         return $response;
     }
