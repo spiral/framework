@@ -220,7 +220,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
         /**
          * We have to keep outer request to create nested scope.
          */
-        $outerRequest = $this->container->getBinding('request');
+        $outerRequest = $this->container->getBinding('Psr\Http\Message\ServerRequestInterface');
 
         /**
          * So all inner middleware and code will known their context URL.
@@ -228,7 +228,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $request = $request->withAttribute('activePath', $activePath);
 
         //Creating scope
-        $this->container->bind('request', $request);
         $this->container->bind('Psr\Http\Message\ServerRequestInterface', $request);
 
         $pipeline = new HttpPipeline($this->container, $this->middlewares);
@@ -239,7 +238,6 @@ class HttpDispatcher extends Component implements DispatcherInterface
         if (!empty($outerRequest))
         {
             //Restoring scope
-            $this->container->bind('request', $outerRequest);
             $this->container->bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
         }
 

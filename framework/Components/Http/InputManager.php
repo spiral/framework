@@ -120,7 +120,7 @@ class InputManager extends Component
         if (!empty($this->request))
         {
             //Checking if we still pointing to right request
-            if ($this->request !== $this->container->get('request'))
+            if ($this->request !== $this->container->get('Psr\Http\Message\ServerRequestInterface'))
             {
                 $this->request = null;
 
@@ -129,7 +129,7 @@ class InputManager extends Component
             }
         }
 
-        return $this->request = $this->container->get('request');
+        return $this->request = $this->container->get('Psr\Http\Message\ServerRequestInterface');
     }
 
     /**

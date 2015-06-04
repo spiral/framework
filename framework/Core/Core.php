@@ -104,7 +104,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         'odm'       => 'Spiral\Components\ODM\ODM',
         'cookies'   => 'Spiral\Components\Http\Cookies\CookieManager',
         'session'   => 'Spiral\Components\Session\SessionStore',
-        'input'     => 'Spiral\Components\Http\InputManager'
+        'input'     => 'Spiral\Components\Http\InputManager',
+
+        'request'   => 'Psr\Http\Message\ServerRequestInterface'
     );
 
     /**

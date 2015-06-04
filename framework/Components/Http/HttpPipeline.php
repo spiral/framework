@@ -24,7 +24,7 @@ class HttpPipeline extends Component
     protected $container = null;
 
     /**
-     * Set of middleware layers builded to handle incoming Request and return Response. Middleware
+     * Set of middleware layers built to handle incoming Request and return Response. Middleware
      * can be represented as class, string (DI) or array (callable method).
      *
      * @var array|MiddlewareInterface[]
