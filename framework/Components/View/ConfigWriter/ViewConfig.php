@@ -108,11 +108,31 @@ class ViewConfig extends ConfigWriter
         return $this;
     }
 
+    /**
+     * Register new view engine linked to specified extensions set.
+     *
+     * @param string $name
+     * @param array  $extensions
+     * @param string $compiler
+     * @param string $view
+     * @param array  $options
+     */
     public function registerEngine($name, array $extensions, $compiler, $view, array $options = array())
     {
+        $this->engines[$name] = array(
+                'extensions' => $extensions,
+                'compiler'   => $compiler,
+                'view'       => $view
+            ) + $options;
     }
 
-    public function registerProcessor($processor, array $after)
+    /**
+     * @param string $processor
+     * @param string $class
+     * @param array  $options
+     * @param array  $before
+     */
+    public function registerProcessor($processor, $class, $options = array(), array $before = array())
     {
     }
 
