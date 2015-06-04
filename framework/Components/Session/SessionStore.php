@@ -96,6 +96,12 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
                 $this->commit();
                 $this->start();
             }
+
+            if ($this->destroyed)
+            {
+                $this->destroyed = false;
+                $this->start();
+            }
         }
     }
 
@@ -231,7 +237,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
     public function commit()
     {
         benchmark('session::commit');
-        $this->start() && session_write_close();
+        $this->started && session_write_close();
         benchmark('session::commit');
 
         $this->started = false;
@@ -250,7 +256,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
         }
 
         benchmark('session::destroy');
-        $this->start() && session_destroy();
+        $this->started && session_destroy();
         benchmark('session::destroy');
 
         $this->id = '';
