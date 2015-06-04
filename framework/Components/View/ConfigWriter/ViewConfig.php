@@ -71,7 +71,7 @@ class ViewConfig extends ConfigWriter
         Tokenizer $tokenizer
     )
     {
-        parent::__construct('view', $method, $core, $file, $tokenizer);
+        parent::__construct('views', $method, $core, $file, $tokenizer);
         $this->baseDirectory = $baseDirectory;
     }
 
