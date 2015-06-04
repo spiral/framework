@@ -17,6 +17,11 @@ use Spiral\Support\Generators\Config\ConfigWriterException;
 class ViewConfig extends ConfigWriter
 {
     /**
+     * View config can add default
+     */
+    const DEFAULT_ENGINE = 'default';
+
+    /**
      * View namespaces used to describe location of module view files, any count of namespaces can be
      * created.
      *
@@ -127,13 +132,18 @@ class ViewConfig extends ConfigWriter
     }
 
     /**
+     * View processors can be added only to default spiral engine which uses LayeredCompiler and should
+     * exists under "default" name.
+     *
      * @param string $processor
      * @param string $class
      * @param array  $options
-     * @param array  $before
      */
-    public function registerProcessor($processor, $class, $options = array(), array $before = array())
+    public function registerProcessor($processor, $class, $options = array())
     {
+        $this->processors[$processor] = array(
+                'class' => $class,
+            ) + $options;
     }
 
     /**
@@ -171,6 +181,15 @@ class ViewConfig extends ConfigWriter
             }
 
             $result['namespaces'][$namespace] = array_unique($result['namespaces'][$namespace]);
+        }
+
+        //Adding new engines
+        $result['engines'] += $this->engines;
+
+        //Processors
+        if (isset($result['engines'][self::DEFAULT_ENGINE]['processors']))
+        {
+            $result['engines'][self::DEFAULT_ENGINE]['processors'] += $this->processors;
         }
 
         return $result;
