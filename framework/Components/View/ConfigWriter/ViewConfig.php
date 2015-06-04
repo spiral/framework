@@ -14,7 +14,7 @@ use Spiral\Core\Core;
 use Spiral\Support\Generators\Config\ConfigWriter;
 use Spiral\Support\Generators\Config\ConfigWriterException;
 
-//TODO: ADD PROCESSOR
+//TODO: ADD PROCESSORS
 class ViewConfig extends ConfigWriter
 {
     /**

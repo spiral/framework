@@ -12,7 +12,6 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Core;
 use Spiral\Support\Generators\ArrayExporter;
 
-//TODO: REWORK
 class ConfigExporter extends ArrayExporter
 {
     /**
