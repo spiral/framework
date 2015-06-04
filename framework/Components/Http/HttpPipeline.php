@@ -13,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
-class MiddlewarePipe extends Component
+class HttpPipeline extends Component
 {
     /**
      * Container.

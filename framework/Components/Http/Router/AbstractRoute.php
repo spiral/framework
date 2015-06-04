@@ -10,7 +10,7 @@ namespace Spiral\Components\Http\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Components\Http\MiddlewareInterface;
-use Spiral\Components\Http\MiddlewarePipe;
+use Spiral\Components\Http\HttpPipeline;
 use Spiral\Core\Container;
 
 abstract class AbstractRoute implements RouteInterface
@@ -273,7 +273,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @param Container $container
      * @param array     $middlewareAliases
-     * @return MiddlewarePipe
+     * @return HttpPipeline
      */
     protected function getPipeline(Container $container, array $middlewareAliases = array())
     {
@@ -286,7 +286,7 @@ abstract class AbstractRoute implements RouteInterface
                 : $middleware;
         }
 
-        return new MiddlewarePipe($container, $middlewares);
+        return new HttpPipeline($container, $middlewares);
     }
 
     /**

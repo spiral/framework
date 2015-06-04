@@ -231,12 +231,8 @@ class HttpDispatcher extends Component implements DispatcherInterface
         $this->container->bind('request', $request);
         $this->container->bind('Psr\Http\Message\ServerRequestInterface', $request);
 
-        $name = is_object($endpoint) ? get_class($endpoint) : $endpoint;
-
-        benchmark('http::endpoint', $name);
-        $pipeline = new MiddlewarePipe($this->container, $this->middlewares);
+        $pipeline = new HttpPipeline($this->container, $this->middlewares);
         $response = $pipeline->target($endpoint)->run($request);
-        benchmark('http::endpoint', $name);
 
         $this->container->removeBinding('request');
 
