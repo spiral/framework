@@ -74,6 +74,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * Compiled route options, pattern and etc. Internal data.
      *
+     * @invisible
      * @var array
      */
     protected $compiled = array();
@@ -82,7 +83,6 @@ abstract class AbstractRoute implements RouteInterface
      * Result of regular expression. Matched can be used to fill target controller pattern or send
      * to controller method as arguments.
      *
-     * @invisible
      * @var array
      */
     protected $matches = array();
@@ -255,6 +255,8 @@ abstract class AbstractRoute implements RouteInterface
 
         if (preg_match($this->compiled['pattern'], rtrim($uri, '/'), $this->matches))
         {
+            //To get only named matches
+            $this->matches = array_intersect_key($this->matches, $this->compiled['options']);
             $this->matches = array_merge(
                 $this->compiled['options'],
                 $this->defaults,
