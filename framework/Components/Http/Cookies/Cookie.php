@@ -233,6 +233,7 @@ class Cookie
     /**
      * Convert cookie instance to string.
      *
+     * @link http://www.w3.org/Protocols/rfc2109/rfc2109
      * @return string
      */
     public function packHeader()
@@ -243,7 +244,7 @@ class Cookie
 
         if ($this->lifetime !== null)
         {
-            $header['expires'] = gmdate(\DateTime::COOKIE, $this->getExpires());
+            $header[] = 'Expires=' . gmdate(\DateTime::COOKIE, $this->getExpires());
             $header[] = 'Max-Age=' . $this->lifetime;
         }
 
