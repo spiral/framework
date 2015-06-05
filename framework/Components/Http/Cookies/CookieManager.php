@@ -147,15 +147,11 @@ class CookieManager extends Component implements MiddlewareInterface
         $this->request = $request;
         $request = $this->decodeCookies($request);
 
-        //Mounting cookie domain
-        $request = $request->withAttribute('cookieDomain', $this->getDomain());
-
         /**
          * @var ResponseInterface $response
          */
-        $response = $next($request);
-
-        $response = $this->mountCookies($response);
+        $response = $next($request->withAttribute('cookieDomain', $this->getDomain()));
+                $response = $this->mountCookies($response);
 
         //Restoring scope
         $this->container->removeBinding(__CLASS__);

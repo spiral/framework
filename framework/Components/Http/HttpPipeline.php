@@ -29,7 +29,7 @@ class HttpPipeline extends Component
      *
      * @var array|MiddlewareInterface[]
      */
-    protected $middleware = array();
+    protected $middlewares = array();
 
     /**
      * Final endpoint has to be called, this is "the deepest" part of pipeline. It's not necessary
@@ -43,13 +43,13 @@ class HttpPipeline extends Component
      * Middleware Pipeline used by HttpDispatchers to pass request thought middleware(s) and receive
      * filtered result. Pipeline can be used outside dispatcher in routes, modules and controllers.
      *
-     * @param Container             $container
+     * @param Container             $container Container is required to create request scope.
      * @param MiddlewareInterface[] $middleware
      */
     public function __construct(Container $container, array $middleware = array())
     {
         $this->container = $container;
-        $this->middleware = $middleware;
+        $this->middlewares = $middleware;
     }
 
     /**
@@ -62,7 +62,7 @@ class HttpPipeline extends Component
      */
     public function add($middleware)
     {
-        $this->middleware[] = $middleware;
+        $this->middlewares[] = $middleware;
 
         return $this;
     }
@@ -97,49 +97,70 @@ class HttpPipeline extends Component
      * Internal method used to jump between middleware layers.
      *
      * @param int                    $position
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface $outerRequest
      * @return mixed
      */
-    protected function next($position = 0, $request = null)
+    protected function next($position, ServerRequestInterface $outerRequest)
     {
-        $next = function ($contextInput = null) use ($position, $request)
+        $next = function ($request = null) use ($position, $outerRequest)
         {
-            return $this->next(++$position, $contextInput ?: $request);
+            return $this->next(++$position, $request ?: $outerRequest);
         };
 
-        if (!isset($this->middleware[$position]))
+        if (!isset($this->middlewares[$position]))
         {
-            if ($this->target instanceof \Closure)
-            {
-                $reflection = new \ReflectionFunction($this->target);
-
-                $arguments = array();
-                if (!empty($request))
-                {
-                    $arguments['request'] = $request;
-                }
-
-                return $reflection->invokeArgs(
-                    $this->container->resolveArguments($reflection, $arguments)
-                );
-            }
-
-            ob_start();
-            $response = call_user_func($this->target, $request);
-            $plainOutput = ob_get_clean();
-
-            return $this->wrapResponse($response, $plainOutput);
+            return $this->getResponse($outerRequest);
         }
 
         /**
          * @var callable $middleware
          */
-        $middleware = $this->middleware[$position];
+        $middleware = $this->middlewares[$position];
         $middleware = is_string($middleware)
             ? $this->container->get($middleware)
             : $middleware;
 
-        return $middleware($request, $next);
+        return $middleware($outerRequest, $next);
+    }
+
+    /**
+     * Execute pipeline target and get reponse.
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    protected function getResponse(ServerRequestInterface $request)
+    {
+        /**
+         * We have to keep outer request to create nested scope.
+         */
+        $outerRequest = $this->container->getBinding('Psr\Http\Message\ServerRequestInterface');
+        $this->container->bind('Psr\Http\Message\ServerRequestInterface', $request);
+
+        ob_start();
+        if ($this->target instanceof \Closure)
+        {
+            $reflection = new \ReflectionFunction($this->target);
+            $response = $reflection->invokeArgs(
+                $this->container->resolveArguments($reflection, array(
+                    'request' => $request
+                ))
+            );
+        }
+        else
+        {
+            $response = call_user_func($this->target, $request);
+        }
+        $plainOutput = ob_get_clean();
+
+        $this->container->removeBinding('Psr\Http\Message\ServerRequestInterface');
+        if (!empty($outerRequest))
+        {
+            //Restoring scope
+            $this->container->bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
+        }
+
+        return $this->wrapResponse($response, $plainOutput);
     }
 
     /**
@@ -153,7 +174,7 @@ class HttpPipeline extends Component
      *
      * @param mixed  $response
      * @param string $plainOutput
-     * @return Response
+     * @return ResponseInterface
      */
     protected function wrapResponse($response, $plainOutput = '')
     {

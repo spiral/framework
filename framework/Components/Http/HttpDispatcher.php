@@ -217,31 +217,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
             throw new ClientException(Response::SERVER_ERROR, 'Unable to select endpoint');
         }
 
-        /**
-         * We have to keep outer request to create nested scope.
-         */
-        $outerRequest = $this->container->getBinding('Psr\Http\Message\ServerRequestInterface');
-
-        /**
-         * So all inner middleware and code will known their context URL.
-         */
-        $request = $request->withAttribute('activePath', $activePath);
-
-        //Creating scope
-        $this->container->bind('Psr\Http\Message\ServerRequestInterface', $request);
-
         $pipeline = new HttpPipeline($this->container, $this->middlewares);
-        $response = $pipeline->target($endpoint)->run($request);
 
-        $this->container->removeBinding('request');
-
-        if (!empty($outerRequest))
-        {
-            //Restoring scope
-            $this->container->bind('Psr\Http\Message\ServerRequestInterface', $outerRequest);
-        }
-
-        return $response;
+        return $pipeline->target($endpoint)->run(
+            $request->withAttribute('activePath', $activePath)
+        );
     }
 
     /**

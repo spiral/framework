@@ -52,7 +52,7 @@ class CsrfFilter implements MiddlewareInterface
     public function __invoke(ServerRequestInterface $request, \Closure $next = null)
     {
         $token = null;
-        $requestCookie = false;
+        $setCookie = false;
 
         $cookies = $request->getCookieParams();
         if (isset($cookies[self::COOKIE]))
@@ -63,7 +63,7 @@ class CsrfFilter implements MiddlewareInterface
         {
             //Making new token
             $token = StringHelper::random(16);
-            $requestCookie = true;
+            $setCookie = true;
         }
 
         if ($this->isRequired($request))
@@ -76,7 +76,7 @@ class CsrfFilter implements MiddlewareInterface
         }
 
         $response = $next($request->withAttribute('crsfToken', $token));
-        if ($requestCookie && $response instanceof ResponseInterface)
+        if ($setCookie && $response instanceof ResponseInterface)
         {
             //Will work even with non spiral responses
             $response = $response->withAddedHeader(

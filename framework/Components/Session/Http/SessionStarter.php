@@ -86,7 +86,10 @@ class SessionStarter implements MiddlewareInterface
             $this->store->setID($cookies[self::COOKIE]);
         }
 
-        $response = $next();
+        /**
+         * @var ResponseInterface $response
+         */
+        $response = $next($request);
 
         if (empty($this->store) && is_object($this->container->getBinding(SessionStore::getAlias())))
         {
@@ -116,10 +119,8 @@ class SessionStarter implements MiddlewareInterface
      */
     protected function setCookie(
         ServerRequestInterface $request,
-
         ResponseInterface $response,
         SessionStore $store,
-
         array $cookies
     )
     {
