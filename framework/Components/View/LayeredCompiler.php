@@ -15,6 +15,13 @@ use Spiral\Core\Container;
 class LayeredCompiler extends Component implements CompilerInterface
 {
     /**
+     * Instance of currently active compiler, can be used in some views.
+     *
+     * @var LayeredCompiler
+     */
+    protected static $instance = null;
+
+    /**
      * Instance of ViewManager component.
      *
      * @var ViewManager
@@ -108,6 +115,16 @@ class LayeredCompiler extends Component implements CompilerInterface
     }
 
     /**
+     * Instance of LayeredCompiler will be returned only on compilation stage.
+     *
+     * @return LayeredCompiler
+     */
+    public static function getInstance()
+    {
+        return self::$instance;
+    }
+
+    /**
      * Get view processor by name, processor will be loaded and configured automatically. Processors
      * are created only for pre-processing view source to create static cache, this means you should't
      * expect too high performance and optimizations inside, due it's more important to have good
@@ -155,6 +172,9 @@ class LayeredCompiler extends Component implements CompilerInterface
      */
     public function compile()
     {
+        $outerCompiler = self::$instance;
+        self::$instance = $this;
+
         $source = $this->source;
         foreach ($this->getProcessors() as $processor)
         {
@@ -170,6 +190,15 @@ class LayeredCompiler extends Component implements CompilerInterface
             );
 
             benchmark('view::' . $processor, $this->namespace . ':' . $this->view);
+        }
+
+        if (!empty($outerCompiler))
+        {
+            self::$instance = $outerCompiler;
+        }
+        else
+        {
+            self::$instance = null;
         }
 
         return $source;
