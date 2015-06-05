@@ -249,22 +249,22 @@ class Cookie
 
         if (!empty($this->path))
         {
-            $header[] = 'path=' . $this->path;
+            $header[] = 'Path=' . $this->path;
         }
 
         if (!empty($this->domain))
         {
-            $header[] = 'domain=' . $this->domain;
+            $header[] = 'Domain=' . $this->domain;
         }
 
         if ($this->secure)
         {
-            $header[] = 'secure';
+            $header[] = 'Secure';
         }
 
         if ($this->httpOnly)
         {
-            $header[] = 'httponly';
+            $header[] = 'HttpOnly';
         }
 
         return join('; ', $header);

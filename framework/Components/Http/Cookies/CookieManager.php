@@ -151,7 +151,7 @@ class CookieManager extends Component implements MiddlewareInterface
          * @var ResponseInterface $response
          */
         $response = $next($request->withAttribute('cookieDomain', $this->getDomain()));
-                $response = $this->mountCookies($response);
+        $response = $this->mountCookies($response);
 
         //Restoring scope
         $this->container->removeBinding(__CLASS__);
@@ -331,11 +331,6 @@ class CookieManager extends Component implements MiddlewareInterface
         $httpOnly = true
     )
     {
-        if (is_null($path))
-        {
-            $path = $this->config['path'];
-        }
-
         if (is_null($domain))
         {
             $domain = $this->getDomain();
