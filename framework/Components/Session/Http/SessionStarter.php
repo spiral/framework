@@ -96,7 +96,7 @@ class SessionStarter implements MiddlewareInterface
 
         if (!empty($this->store) && ($this->store->isStarted() || $this->store->isDestroyed()))
         {
-            $response = $this->commitSession($this->store, $response, $cookies);
+            $response = $this->setCookie($request, $response, $this->store, $cookies);
         }
 
         //Restoring original session, not super efficient operation
@@ -108,12 +108,20 @@ class SessionStarter implements MiddlewareInterface
     /**
      * Mount session id or remove session cookie.
      *
-     * @param SessionStore      $store
-     * @param ResponseInterface $response
-     * @param array             $cookies
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     * @param SessionStore           $store
+     * @param array                  $cookies
      * @return ResponseInterface
      */
-    protected function commitSession(SessionStore $store, ResponseInterface $response, array $cookies)
+    protected function setCookie(
+        ServerRequestInterface $request,
+
+        ResponseInterface $response,
+        SessionStore $store,
+
+        array $cookies
+    )
     {
         $store->isStarted() && $store->commit();
 
@@ -126,7 +134,9 @@ class SessionStarter implements MiddlewareInterface
                     Cookie::create(
                         self::COOKIE,
                         $store->getID(),
-                        $store->getConfig()['lifetime']
+                        $store->getConfig()['lifetime'],
+                        null,
+                        $request->getAttribute('cookieDomain', null)
                     )->packHeader()
                 );
             }

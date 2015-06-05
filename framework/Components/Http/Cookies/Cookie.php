@@ -254,7 +254,7 @@ class Cookie
 
         if (!empty($this->domain))
         {
-            $header[] = $this->domain;
+            $header[] = 'domain=' . $this->domain;
         }
 
         if ($this->secure)

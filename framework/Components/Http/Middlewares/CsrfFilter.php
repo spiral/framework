@@ -81,7 +81,13 @@ class CsrfFilter implements MiddlewareInterface
             //Will work even with non spiral responses
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                Cookie::create(self::COOKIE, $token, self::LIFETIME)->packHeader()
+                Cookie::create(
+                    self::COOKIE,
+                    $token,
+                    self::LIFETIME,
+                    null,
+                    $request->getAttribute('cookieDomain', null)
+                )->packHeader()
             );
         }
 
