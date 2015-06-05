@@ -78,7 +78,7 @@ class UpdateCommand extends Command
 
             $this->modules->registerModule($module);
             $this->writeln(
-                "Module '<comment>{$module->getName()}</comment>' successfully installed/updated."
+                "Module '<comment>{$module->getName()}</comment>' successfully updated."
             );
         }
     }
