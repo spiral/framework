@@ -13,7 +13,8 @@ use Psr\Http\Message\UriInterface;
 /**
  * Value object representing a URI. A lot of solutions inspired by https://github.com/phly/http
  * which is PHP5.5 only. Spiral might migrate to https://github.com/zendframework/zend-diactoros
- * once PHP5.4 is completely deprecated.
+ * once PHP5.4 is completely deprecated (spiral already switched to 5.5, so this may happen pretty
+ * soon).
  *
  * This interface is meant to represent URIs according to RFC 3986 and to
  * provide methods for most common operations. Additional functionality for
