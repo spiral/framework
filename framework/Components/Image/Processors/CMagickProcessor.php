@@ -9,6 +9,7 @@
 namespace Spiral\Components\Image\Processors;
 
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Http\StreamWrapper;
 use Spiral\Components\Image\ImageException;
 use Spiral\Components\Image\ImageObject;
 use Spiral\Components\Image\ProcessorInterface;
@@ -84,6 +85,22 @@ class CMagickProcessor extends Component implements ProcessorInterface
         $this->options = $this->options + $options;
         $this->filename = $filename;
         $this->file = !empty($file) ? $file : FileManager::getInstance();
+
+
+        if (StreamWrapper::isWrapped($filename))
+        {
+            //We can't work with memory stream, we need a copy for our console image magick
+            $tempFilename = $file->tempFilename($file->extension($filename));
+
+            //Removed when work is done
+            $file->blackspot($tempFilename);
+
+            //Let's copy data source
+            copy($tempFilename, $filename);
+
+            $this->filename = $tempFilename;
+        }
+
     }
 
     /**

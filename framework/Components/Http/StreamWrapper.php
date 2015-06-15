@@ -240,6 +240,17 @@ class StreamWrapper
     }
 
     /**
+     * Check if given uri points to one of wrapped streams.
+     *
+     * @param string $uri
+     * @return bool
+     */
+    public static function isWrapped($uri)
+    {
+        return isset( self::$uris[$uri]);
+    }
+
+    /**
      * Create StreamInterface associated resource.
      *
      * @param StreamInterface $stream
