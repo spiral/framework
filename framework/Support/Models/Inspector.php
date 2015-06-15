@@ -96,12 +96,17 @@ class Inspector extends Component
      *
      * @return float
      */
-    public function safetyLevel()
+    public function getSafetyLevel()
     {
         $safetyLevel = 0;
         foreach ($this->inspections as $inspection)
         {
             $safetyLevel += $inspection->safetyLevel();
+        }
+
+        if(!$this->countModels())
+        {
+            return 1;
         }
 
         return $safetyLevel / $this->countModels();
@@ -113,7 +118,7 @@ class Inspector extends Component
      * @param int $level
      * @return float
      */
-    public function protectionRate($level = 4)
+    public function getProtectionRate($level = 4)
     {
         $totalFields = 0;
         $passedFields = 0;

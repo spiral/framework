@@ -128,9 +128,9 @@ class InspectCommand extends Command
             . "protected fields <info>{fields}%</info>.",
             array(
                 'count'  => number_format($inspector->countModels()),
-                'level'  => $this->safetyLevels[(int)floor($inspector->safetyLevel())],
-                'number' => number_format($inspector->safetyLevel(), 2),
-                'fields' => number_format(100 * $inspector->protectionRate(self::MINIMAL_LEVEL), 2)
+                'level'  => $this->safetyLevels[(int)floor($inspector->getSafetyLevel())],
+                'number' => number_format($inspector->getSafetyLevel(), 2),
+                'fields' => number_format(100 * $inspector->getProtectionRate(self::MINIMAL_LEVEL), 2)
             )
         ));
 
