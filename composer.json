@@ -19,7 +19,8 @@
     "symfony/console": "2.6.4",
     "symfony/process": "~2.6",
     "nesbot/carbon": "dev-master",
-    "doctrine/inflector": "~1.0@dev"
+    "doctrine/inflector": "~1.0@dev",
+    "guzzlehttp/guzzle": "~6.0"
   },
   "autoload": {
     "files": [
