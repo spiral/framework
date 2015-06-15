@@ -726,7 +726,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         //Traits
         static::initialize();
 
-        if (EventDispatcher::hasDispatcher(static::getAlias()))
+        if (EventDispatcher::hasDispatcher(static::class))
         {
             //Do we need it?
             $scope = self::dispatcher()->fire('scope', array(

@@ -982,7 +982,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     protected static function getScope($scope = array())
     {
         static::initialize();
-        if (EventDispatcher::hasDispatcher(static::getAlias()))
+        if (EventDispatcher::hasDispatcher(static::class))
         {
             $scope = self::dispatcher()->fire('scope', array(
                 'scope' => $scope,

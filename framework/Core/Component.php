@@ -16,16 +16,6 @@ abstract class Component
     const SINGLETON = '';
 
     /**
-     * Component alias name should be used for logger chanel and other operations.
-     *
-     * @return string
-     */
-    public static function getAlias()
-    {
-        return get_called_class();
-    }
-
-    /**
      * Create or retrieve component instance using IoC container. This method can return already
      * existed instance of class if that instance were defined as singleton and binded in core under
      * same class name. Using binding mechanism target instance can be redefined to use another

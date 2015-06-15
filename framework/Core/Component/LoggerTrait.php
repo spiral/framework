@@ -22,7 +22,7 @@ trait LoggerTrait
      */
     public static function setLogger(LoggerInterface $logger)
     {
-        Logger::setLogger(static::getAlias(), $logger);
+        Logger::setLogger(static::class, $logger);
     }
 
     /**
@@ -37,6 +37,6 @@ trait LoggerTrait
      */
     public static function logger()
     {
-        return Logger::getLogger(static::getAlias());
+        return Logger::getLogger(static::class);
     }
 }

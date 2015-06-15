@@ -22,7 +22,7 @@ trait EventsTrait
      */
     public static function setDispatcher(DispatcherInterface $dispatcher = null)
     {
-        EventDispatcher::setDispatcher(static::getAlias(), $dispatcher);
+        EventDispatcher::setDispatcher(static::class, $dispatcher);
     }
 
     /**
@@ -37,7 +37,7 @@ trait EventsTrait
      */
     public static function dispatcher()
     {
-        return EventDispatcher::getDispatcher(static::getAlias());
+        return EventDispatcher::getDispatcher(static::class);
     }
 
     /**
@@ -49,7 +49,7 @@ trait EventsTrait
      */
     protected function event($event, $context = null)
     {
-        if (!EventDispatcher::hasDispatcher(static::getAlias()))
+        if (!EventDispatcher::hasDispatcher(static::class))
         {
             return $context;
         }
