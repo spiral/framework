@@ -29,11 +29,6 @@ class ODM extends Component implements Container\InjectionManagerInterface
     const SINGLETON = __CLASS__;
 
     /**
-     * MongoDatabase class name.
-     */
-    const DATABASE = 'Spiral\Components\ODM\MongoDatabase';
-
-    /**
      * Core component.
      *
      * @var CoreInterface
@@ -119,11 +114,16 @@ class ODM extends Component implements Container\InjectionManagerInterface
 
         benchmark('odm::database', $database);
 
-        $this->databases[$database] = $this->container->get(self::DATABASE, array(
-            'name'   => $database,
-            'config' => $config,
-            'odm'    => $this
-        ), null, true);
+        $this->databases[$database] = $this->container->get(
+            MongoDatabase::class,
+            array(
+                'name'   => $database,
+                'config' => $config,
+                'odm'    => $this
+            ),
+            null,
+            true
+        );
 
         benchmark('odm::database', $database);
 
@@ -291,47 +291,47 @@ class ODM extends Component implements Container\InjectionManagerInterface
      *
      * Class definition options.
      */
-    const DEFINITION         = 0;
+    const DEFINITION = 0;
     const DEFINITION_OPTIONS = 1;
 
     /**
      * Normalized collection constants.
      */
-    const C_NAME       = 0;
-    const C_DB         = 1;
+    const C_NAME = 0;
+    const C_DB = 1;
     const C_DEFINITION = 2;
 
     /**
      * Normalized document constants.
      */
-    const D_COLLECTION   = 0;
-    const D_DB           = 1;
-    const D_DEFAULTS     = 2;
-    const D_HIDDEN       = 3;
-    const D_SECURED      = 4;
-    const D_FILLABLE     = 5;
-    const D_MUTATORS     = 6;
-    const D_VALIDATES    = 7;
+    const D_COLLECTION = 0;
+    const D_DB = 1;
+    const D_DEFAULTS = 2;
+    const D_HIDDEN = 3;
+    const D_SECURED = 4;
+    const D_FILLABLE = 5;
+    const D_MUTATORS = 6;
+    const D_VALIDATES = 7;
     const D_AGGREGATIONS = 8;
     const D_COMPOSITIONS = 9;
 
     /**
      * Normalized aggregation.
      */
-    const AGR_TYPE  = 0;
+    const AGR_TYPE = 0;
     const AGR_QUERY = 1;
 
     /**
      * Matched to D_COLLECTION and D_DB to use in Document::odmCollection() method.
      */
     const AGR_COLLECTION = 0;
-    const AGR_DB         = 1;
+    const AGR_DB = 1;
 
     /**
      * Normalized composition.
      */
-    const CMP_TYPE       = 0;
+    const CMP_TYPE = 0;
     const CMP_DEFINITION = 1;
-    const CMP_ONE        = 0x111;
-    const CMP_MANY       = 0x222;
+    const CMP_ONE = 0x111;
+    const CMP_MANY = 0x222;
 }

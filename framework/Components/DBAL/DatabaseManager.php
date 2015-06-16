@@ -29,16 +29,11 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
     const SINGLETON = __CLASS__;
 
     /**
-     * Database class name, class can be redefined via Core bindings.
-     */
-    const DATABASE = 'Spiral\Components\DBAL\Database';
-
-    /**
      * QueryBuilder constants. This particular constants used in WhereTrait to convert array query
      * to where tokens.
      */
     const TOKEN_AND = "@AND";
-    const TOKEN_OR  = "@OR";
+    const TOKEN_OR = "@OR";
 
     /**
      * By default spiral will force all time conversion into single timezone before storing in
@@ -130,11 +125,16 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
 
         benchmark('dbal::database', $database);
 
-        $this->databases[$database] = $this->container->get(self::DATABASE, array(
-            'name'        => $database,
-            'driver'      => $driver,
-            'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
-        ), null, true);
+        $this->databases[$database] = $this->container->get(
+            Database::class,
+            array(
+                'name'        => $database,
+                'driver'      => $driver,
+                'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
+            ),
+            null,
+            true
+        );
 
         benchmark('dbal::database', $database);
 
