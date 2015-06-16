@@ -8,10 +8,11 @@
  */
 namespace Spiral\Components\Storage;
 
+use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
 
 class StorageManager extends Component implements Container\InjectionManagerInterface
 {
@@ -24,11 +25,6 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = __CLASS__;
-
-    /**
-     * StorageContainer class for reference.
-     */
-    const CONTAINER = 'Spiral\Components\Storage\StorageContainer';
 
     /**
      * Container instance.
@@ -68,20 +64,20 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * Storage component is of component which almost did not changed for last 4 years but must be
      * updated later to follow latest specs.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, Container $container)
     {
         $this->container = $container;
-        $this->config = $core->loadConfig('storage');
+        $this->config = $configurator->getConfig('storage');
 
         //Loading containers
         foreach ($this->config['containers'] as $name => $container)
         {
             //Controllable injection implemented
             $this->containers[$name] = $this->container->get(
-                self::CONTAINER,
+                StorageContainer::class,
                 $container + array('storage' => $this),
                 null,
                 true
@@ -115,7 +111,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
 
         //Controllable injection implemented
         return $this->containers[$name] = $this->container->get(
-            self::CONTAINER,
+            StorageContainer::class,
             compact('prefix', 'server', 'options') + array('storage' => $this),
             null,
             true
@@ -235,13 +231,13 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * While object creation original filename, name (no extension) or extension can be embedded to
      * new object name using string interpolation ({name}.{ext}}
      *
-     * Example:
+     * Example (using Facades):
      * Storage::create('cloud', $id . '-{name}.{ext}', $filename);
      * Storage::create('cloud', $id . '-upload-{filename}', $filename);
      *
      * @param string|StorageContainer $container Container name, id or instance.
      * @param string                  $name      Object name should be used in container.
-     * @param string                  $filename
+     * @param string|StreamInterface  $filename
      * @return StorageObject|bool
      */
     public function create($container, $name, $filename = '')
@@ -254,12 +250,14 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         if (!empty($filename))
         {
             $extension = FileManager::getInstance($this->container)->extension($filename);
-            $name = interpolate($name, array(
-                'ext'       => $extension,
-                'name'      => substr(basename($filename), 0, -1 * (strlen($extension) + 1)),
-                'filename'  => basename($filename),
-                'extension' => $extension
-            ));
+            $name = interpolate($name,
+                array(
+                    'ext'       => $extension,
+                    'name'      => substr(basename($filename), 0, -1 * (strlen($extension) + 1)),
+                    'filename'  => basename($filename),
+                    'extension' => $extension
+                )
+            );
         }
 
         return $container->create($filename, $name);
