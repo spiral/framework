@@ -110,6 +110,15 @@ class ColumnSchema extends AbstractColumnSchema
     );
 
     /**
+     * List of types forbids default value set.
+     *
+     * @var array
+     */
+    protected $forbiddenDefaults = array(
+        'text', 'mediumtext', 'tinytext', 'longtext', 'blog', 'tinyblob', 'longblob'
+    );
+
+    /**
      * Field is auto incremental.
      *
      * @var bool
@@ -202,7 +211,17 @@ class ColumnSchema extends AbstractColumnSchema
      */
     public function sqlStatement()
     {
+        $defaultValue = $this->defaultValue;
+        if (in_array($this->type, $this->forbiddenDefaults))
+        {
+            //Flushing default value for forbidden types
+            $this->defaultValue = null;
+        }
+
         $statement = parent::sqlStatement();
+
+        $this->defaultValue = $defaultValue;
+
         if ($this->autoIncrement)
         {
             return "{$statement} AUTO_INCREMENT";

@@ -13,6 +13,7 @@ use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
 use Spiral\Core\Events\EventDispatcher;
+use Spiral\Facades\Log;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
