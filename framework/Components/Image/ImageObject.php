@@ -399,7 +399,7 @@ class ImageObject extends Component
     )
     {
         $this->getProcessor()->composite(
-            realpath($image->filename),
+            $image->filename,
             $x,
             $y,
             ($width === false) ? $image->width : $width,
@@ -662,7 +662,7 @@ class ImageObject extends Component
      */
     public function save($quality = false, $removeIPTC = false)
     {
-        $this->getProcessor()->process(realpath($this->filename), $quality, $removeIPTC);
+        $this->getProcessor()->process($this->filename, $quality, $removeIPTC);
 
         try
         {
@@ -710,7 +710,7 @@ class ImageObject extends Component
             return $this->processor;
         }
 
-        return $this->processor = $this->image->imageProcessor(realpath($this->filename));
+        return $this->processor = $this->image->imageProcessor($this->filename);
     }
 
     /**
@@ -722,7 +722,7 @@ class ImageObject extends Component
      */
     public function setProcessor($type)
     {
-        return $this->processor = $this->image->imageProcessor(realpath($this->filename), $type);
+        return $this->processor = $this->image->imageProcessor($this->filename, $type);
     }
 
     /**

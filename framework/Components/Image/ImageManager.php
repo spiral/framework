@@ -91,8 +91,8 @@ class ImageManager extends Component
     public function imageProcessor($filename, $type = '')
     {
         $type = $type ?: $this->config['processor'];
-        $config = $this->config['processors'][$type];
+        $options = $this->config['processors'][$type];
 
-        return $this->container->get($config['class'], compact('filename', 'config'));
+        return $this->container->get($options['class'], compact('filename', 'options'));
     }
 }

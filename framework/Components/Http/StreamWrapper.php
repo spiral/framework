@@ -247,7 +247,7 @@ class StreamWrapper
      */
     public static function isWrapped($uri)
     {
-        return isset( self::$uris[$uri]);
+        return isset(self::$uris[$uri]);
     }
 
     /**

@@ -15,6 +15,7 @@ use Spiral\Components\Image\ImageObject;
 use Spiral\Components\Image\ProcessorInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Component\LoggerTrait;
+use Spiral\Facades\Log;
 use Symfony\Component\Process\Process;
 
 /**
@@ -83,24 +84,39 @@ class CMagickProcessor extends Component implements ProcessorInterface
     public function __construct($filename, array $options, FileManager $file = null)
     {
         $this->options = $this->options + $options;
-        $this->filename = $filename;
         $this->file = !empty($file) ? $file : FileManager::getInstance();
 
+        $this->filename = $this->resolveFilename($filename);
+    }
 
+    /**
+     * Get real filename or dump stream to hard drive to make it available for image magick.
+     *
+     * @param string $filename
+     * @return string
+     */
+    protected function resolveFilename($filename)
+    {
         if (StreamWrapper::isWrapped($filename))
         {
             //We can't work with memory stream, we need a copy for our console image magick
-            $tempFilename = $file->tempFilename($file->extension($filename));
+            $tempFilename = $this->file->tempFilename($this->file->extension($filename));
 
             //Removed when work is done
-            $file->blackspot($tempFilename);
+            $this->file->blackspot($tempFilename);
 
             //Let's copy data source
-            copy($tempFilename, $filename);
+            copy($filename, $tempFilename);
 
-            $this->filename = $tempFilename;
+            return $tempFilename;
         }
 
+        if (substr($filename, 0, 1) !== '/')
+        {
+            $filename = $this->file->normalizePath(getcwd() . '/' . $filename);
+        }
+
+        return $filename;
     }
 
     /**
@@ -227,6 +243,8 @@ class CMagickProcessor extends Component implements ProcessorInterface
      */
     public function composite($filename, $x = 0, $y = 0, $width, $height, $opacity)
     {
+        $filename = $this->resolveFilename($filename);
+
         $x = $x >= 0 ? '+' . (int)$x : (int)$x;
         $y = $y >= 0 ? '+' . (int)$y : (int)$y;
 
@@ -402,6 +420,15 @@ class CMagickProcessor extends Component implements ProcessorInterface
      */
     public function process($output, $quality, $removeIPTC = true)
     {
+        if (StreamWrapper::isWrapped($output))
+        {
+            throw new ImageException("Unable to write processing result to memory wrapper.");
+        }
+        else
+        {
+            $output = $this->resolveFilename($output);
+        }
+
         //Empty command to transcode file
         if (empty($this->commands))
         {
