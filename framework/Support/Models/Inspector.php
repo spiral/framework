@@ -128,6 +128,11 @@ class Inspector extends Component
             $passedFields += $inspection->countPassed($level);
         }
 
+        if($totalFields==0)
+        {
+            return 1;
+        }
+
         return $passedFields / $totalFields;
     }
 
