@@ -104,9 +104,9 @@ class Inspector extends Component
             $safetyLevel += $inspection->safetyLevel();
         }
 
-        if(!$this->countModels())
+        if (!$this->countModels())
         {
-            return 1;
+            return 5;
         }
 
         return $safetyLevel / $this->countModels();
@@ -128,7 +128,7 @@ class Inspector extends Component
             $passedFields += $inspection->countPassed($level);
         }
 
-        if($totalFields==0)
+        if ($totalFields == 0)
         {
             return 1;
         }
