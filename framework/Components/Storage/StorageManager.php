@@ -9,7 +9,6 @@
 namespace Spiral\Components\Storage;
 
 use Psr\Http\Message\StreamInterface;
-use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
@@ -19,7 +18,9 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     /**
      * Will provide us helper method getInstance().
      */
-    use Component\SingletonTrait, Component\ConfigurableTrait, Component\LoggerTrait;
+    use Component\SingletonTrait,
+        Component\ConfigurableTrait,
+        Component\LoggerTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -249,7 +250,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
 
         if (!empty($filename))
         {
-            $extension = FileManager::getInstance($this->container)->extension($filename);
+            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             $name = interpolate($name,
                 array(
                     'ext'       => $extension,
