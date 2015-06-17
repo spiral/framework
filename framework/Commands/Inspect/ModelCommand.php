@@ -13,6 +13,7 @@ use Spiral\Commands\InspectCommand;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ModelCommand extends InspectCommand
 {
@@ -53,16 +54,6 @@ class ModelCommand extends InspectCommand
     );
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
-     */
-    protected $options = array(
-        ['warnings', 'w', InputOption::VALUE_NONE, 'Show detailed model warnings.']
-    );
-
-    /**
      * Inspecting existed models.
      */
     public function perform()
@@ -95,13 +86,12 @@ class ModelCommand extends InspectCommand
         $this->write("\nModel safety level is " . $this->safetyLevels[$inspection->safetyLevel()] . ". ");
         $this->writeln("Fields protection rate: <info>" . number_format(100 * $protectedRate, 1) . "%</info>");
 
-        if (!$this->option('warnings'))
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
         {
             //Short model info
             return;
         }
 
-        $warnings = $inspection->getWarnings();
         if (!empty($warnings))
         {
             $table = $this->table(array("Field", "Warnings"));
