@@ -381,7 +381,7 @@ class QueryCompiler extends Component
 
             if (!empty($join['on']))
             {
-                $statement .= ' ON (' . $this->where($join['on']) . ')';
+                $statement .= ' ON ' . $this->where($join['on']);
             }
         }
 

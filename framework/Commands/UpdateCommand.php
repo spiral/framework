@@ -9,6 +9,7 @@
 namespace Spiral\Commands;
 
 use Spiral\Components\Console\Command;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends Command
 {
@@ -40,7 +41,7 @@ class UpdateCommand extends Command
 
         //Inspecting
         $this->console->command('inspect', array(
-            '--short' => true
+            '--short' => $this->output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE
         ), $this->output);
     }
 }
