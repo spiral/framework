@@ -86,7 +86,7 @@ class ModelCommand extends InspectCommand
         $this->write("\nModel safety level is " . $this->safetyLevels[$inspection->safetyLevel()] . ". ");
         $this->writeln("Fields protection rate: <info>" . number_format(100 * $protectedRate, 1) . "%</info>");
 
-        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
+        if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE)
         {
             //Short model info
             return;
