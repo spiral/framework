@@ -172,7 +172,7 @@ class StorageContainer extends Component implements InjectableInterface
         );
 
         benchmark("storage::filesize", $this->prefix . $name);
-        $filesize = $this->getServer()->filesize($this, $name);
+        $filesize = $this->getServer()->size($this, $name);
         benchmark("storage::filesize", $this->prefix . $name);
 
         return $filesize;
