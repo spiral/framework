@@ -9,7 +9,7 @@
 
 namespace Spiral\Components\Storage;
 
-abstract class StorageStorageServer implements StorageServerInterface
+abstract class StorageServer implements StorageServerInterface
 {
     /**
      * List of known file mimetypes to generate valid file Content-Type header.

@@ -13,9 +13,9 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Components\Http\Stream;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageManager;
-use Spiral\Components\Storage\StorageStorageServer;
+use Spiral\Components\Storage\StorageServer;
 
-class LocalServer extends StorageStorageServer
+class LocalServer extends StorageServer
 {
     /**
      * File component.

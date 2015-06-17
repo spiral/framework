@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\Storage\Servers;
 
-use Spiral\Components\Storage\StorageStorageServer;
+use Spiral\Components\Storage\StorageServer;
 
-class RackspaceServer extends StorageStorageServer
+class RackspaceServer extends StorageServer
 {
 
 } 

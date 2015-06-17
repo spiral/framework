@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\Storage\Servers;
 
-use Spiral\Components\Storage\StorageStorageServer;
+use Spiral\Components\Storage\StorageServer;
 
-class FtpServer extends StorageStorageServer
+class FtpServer extends StorageServer
 {
 
 } 
