@@ -11,7 +11,7 @@ namespace Spiral\Components\Storage;
 use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\FileManager;
 
-interface ServerInterface
+interface StorageServerInterface
 {
     /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
@@ -39,7 +39,7 @@ interface ServerInterface
      * @param string           $name      Relative object name.
      * @return int
      */
-    public function filesize(StorageContainer $container, $name);
+    public function size(StorageContainer $container, $name);
 
     /**
      * Create new storage object using given filename. File will be replaced to new location and will
@@ -53,14 +53,14 @@ interface ServerInterface
     public function create($filename, StorageContainer $container, $name);
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location,
+     * Allocate local filename for remote storage object, if container represent remote location,
      * adapter should download file to temporary file and return it's filename. All object stored in
      * temporary files should be registered in FileManager->blackspot(), to be removed after script
      * ends to clean used hard drive space.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return string
+     * @return string|bool
      */
     public function localFilename(StorageContainer $container, $name);
 
@@ -71,7 +71,7 @@ interface ServerInterface
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return StreamInterface
+     * @return StreamInterface|bool
      */
     public function getStream(StorageContainer $container, $name);
 
@@ -95,7 +95,7 @@ interface ServerInterface
     public function delete(StorageContainer $container, $name);
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not
+     * Copy object to another internal (under same server) container, this operation should may not
      * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
@@ -106,7 +106,7 @@ interface ServerInterface
     public function copy(StorageContainer $container, StorageContainer $destination, $name);
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not
+     * Move object to another internal (under same server) container, this operation should may not
      * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.

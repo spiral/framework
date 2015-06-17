@@ -9,7 +9,7 @@
 namespace Spiral\Facades;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Components\Storage\ServerInterface;
+use Spiral\Components\Storage\StorageServerInterface;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageObject;
@@ -20,7 +20,7 @@ use Spiral\Core\Facade;
  * @method static StorageContainer container(string $container)
  * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
  * @method static StorageContainer locateContainer(string $address, string $name = null)
- * @method static ServerInterface server(string $server, array $options = array())
+ * @method static StorageServerInterface server(string $server, array $options = array())
  * @method static StorageObject|bool create(StorageContainer $container, string $name, string $filename = '')
  * @method static StorageObject open(string $address)
  * @method static string getAlias()

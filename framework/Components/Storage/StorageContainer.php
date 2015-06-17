@@ -104,7 +104,7 @@ class StorageContainer extends Component implements InjectableInterface
      * (create, move, copy and etc). Adapter instance called server, one adapter can be used for
      * multiple servers.
      *
-     * @return ServerInterface
+     * @return StorageServerInterface
      */
     public function getServer()
     {
@@ -165,7 +165,7 @@ class StorageContainer extends Component implements InjectableInterface
      * @param string $name Relative object name.
      * @return int
      */
-    public function filesize($name)
+    public function size($name)
     {
         StorageManager::logger()->info(
             "Get filesize of '{$this->buildAddress($name)}' at '{$this->server}'."

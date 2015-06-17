@@ -52,7 +52,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * Every adapter should support basic set of low-level operations (create, move, copy and etc).
      * Adapter instance called server, one adapter can be used for multiple servers.
      *
-     * @var ServerInterface[]
+     * @var StorageServerInterface[]
      */
     protected $servers = array();
 
@@ -199,7 +199,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      *
      * @param string $server  Server name or id.
      * @param array  $options Server options, required only it not defined in config.
-     * @return ServerInterface
+     * @return StorageServerInterface
      * @throws StorageException
      */
     public function server($server, array $options = array())

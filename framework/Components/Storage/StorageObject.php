@@ -144,14 +144,14 @@ class StorageObject extends Component
      *
      * @return int
      */
-    public function getFilesize()
+    public function getSize()
     {
         if (empty($this->name))
         {
             return false;
         }
 
-        return $this->container->filesize($this->name);
+        return $this->container->size($this->name);
     }
 
     /**
@@ -207,9 +207,8 @@ class StorageObject extends Component
 
         $this->container->delete($this->name);
 
-        $this->name = '';
+        $this->address = $this->name = '';
         $this->container = null;
-        $this->address = '';
     }
 
     /**
