@@ -92,6 +92,7 @@ class ModelCommand extends InspectCommand
             return;
         }
 
+        $warnings = $inspection->getWarnings();
         if (!empty($warnings))
         {
             $table = $this->table(array("Field", "Warnings"));
