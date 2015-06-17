@@ -269,13 +269,10 @@ abstract class Loader
     {
         $selector = new Selector($this->schema, $this->orm, $database, array(), $this);
 
-        if (!empty($this->loaders))
-        {
-            $this->offset = $selector->registerColumns(
-                $this->getTableAlias(),
-                array_keys($this->schema[ORM::E_COLUMNS])
-            );
-        }
+        $this->offset = $selector->registerColumns(
+            $this->getTableAlias(),
+            array_keys($this->schema[ORM::E_COLUMNS])
+        );
 
         foreach ($this->loaders as $loader)
         {

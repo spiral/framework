@@ -70,7 +70,7 @@ class ModelCommand extends InspectCommand
         $inspector = $this->getInspector();
         $inspector->inspect();
 
-        $inspection = $inspector->getInspection($this->argument('model'));
+        $inspection = $inspector->getInspection(str_replace('/', '\\', $this->argument('model')));
 
         $table = $this->table(array(
             'Field', 'Safety Level', 'Fillable', 'Filtered', 'Validated', 'Hidden'

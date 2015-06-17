@@ -9,12 +9,13 @@
 namespace Spiral\Components\Storage\Servers;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Uri;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageServer;
 
-class AmazonServer extends StorageServer
+abstract class AmazonServer extends StorageServer
 {
     /**
      * Storage component.
@@ -45,12 +46,10 @@ class AmazonServer extends StorageServer
      * @var array
      */
     protected $options = array(
-        'server'      => 's3.amazonaws.com',
-        'secured'     => true,
-        'timeout'     => 0,
-        'certificate' => '',
-        'accessKey'   => '',
-        'secretKey'   => ''
+        'server'    => 'https://s3.amazonaws.com',
+        'timeout'   => 0,
+        'accessKey' => '',
+        'secretKey' => ''
     );
 
     /**
@@ -71,8 +70,9 @@ class AmazonServer extends StorageServer
         $this->client = $client = new Client($this->options);
     }
 
-    protected function getQuery(StorageContainer $container, $name)
+    protected function createRequest(StorageContainer $container, $name)
     {
+        $uri = new Uri($this->options['server'] . '/' . $container->options['bucket'] . '/' . rawurlencode($name));
 
     }
 } 
