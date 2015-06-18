@@ -9,7 +9,7 @@
 namespace Spiral\Components\Http\Input;
 
 use Psr\Http\Message\UploadedFileInterface;
-use Spiral\Components\Http\StreamWrapper;
+use Spiral\Components\Files\StreamWrapper;
 
 /**
  * Type hinting.

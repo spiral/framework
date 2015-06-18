@@ -9,13 +9,12 @@
 namespace Spiral\Components\Image\Processors;
 
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\Http\StreamWrapper;
+use Spiral\Components\Files\StreamWrapper;
 use Spiral\Components\Image\ImageException;
 use Spiral\Components\Image\ImageObject;
 use Spiral\Components\Image\ProcessorInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Component\LoggerTrait;
-use Spiral\Facades\Log;
 use Symfony\Component\Process\Process;
 
 /**

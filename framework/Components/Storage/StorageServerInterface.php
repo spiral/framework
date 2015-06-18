@@ -30,7 +30,7 @@ interface StorageServerInterface
      * @param string           $name      Relative object name.
      * @return bool
      */
-    public function exists(StorageContainer $container, $name);
+    public function isExists(StorageContainer $container, $name);
 
     /**
      * Retrieve object size in bytes, should return 0 if object not exists.
@@ -39,7 +39,7 @@ interface StorageServerInterface
      * @param string           $name      Relative object name.
      * @return int
      */
-    public function size(StorageContainer $container, $name);
+    public function getSize(StorageContainer $container, $name);
 
     /**
      * Create new storage object using given filename. File will be replaced to new location and will
@@ -62,7 +62,7 @@ interface StorageServerInterface
      * @param string           $name      Relative object name.
      * @return string|bool
      */
-    public function localFilename(StorageContainer $container, $name);
+    public function allocateFilename(StorageContainer $container, $name);
 
     /**
      * Get temporary read-only stream used to represent remote content. This method is very identical

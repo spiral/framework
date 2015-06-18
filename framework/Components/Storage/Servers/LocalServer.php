@@ -44,7 +44,7 @@ class LocalServer extends StorageServer
      * @param string           $name      Relative object name.
      * @return bool
      */
-    public function exists(StorageContainer $container, $name)
+    public function isExists(StorageContainer $container, $name)
     {
         return $this->file->exists($container->options['folder'] . $name);
     }
@@ -56,7 +56,7 @@ class LocalServer extends StorageServer
      * @param string           $name      Relative object name.
      * @return int
      */
-    public function size(StorageContainer $container, $name)
+    public function getSize(StorageContainer $container, $name)
     {
         return $this->file->exists($container->options['folder'] . $name)
             ? $this->file->size($container->options['folder'] . $name)
@@ -99,7 +99,7 @@ class LocalServer extends StorageServer
      * @param string           $name      Relative object name.
      * @return string|bool
      */
-    public function localFilename(StorageContainer $container, $name)
+    public function allocateFilename(StorageContainer $container, $name)
     {
         return $this->file->exists($container->options['folder'] . $name)
             ? $container->options['folder'] . $name
@@ -117,12 +117,12 @@ class LocalServer extends StorageServer
      */
     public function getStream(StorageContainer $container, $name)
     {
-        if (!$this->exists($container, $name))
+        if (!$this->isExists($container, $name))
         {
             return false;
         }
 
-        return new Stream($this->localFilename($container, $name));
+        return new Stream($this->allocateFilename($container, $name));
     }
 
     /**

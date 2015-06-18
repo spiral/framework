@@ -153,7 +153,7 @@ class StorageContainer extends Component implements InjectableInterface
         );
 
         benchmark("storage::exists", $this->prefix . $name);
-        $result = $this->getServer()->exists($this, $name);
+        $result = $this->getServer()->isExists($this, $name);
         benchmark("storage::exists", $this->prefix . $name);
 
         return $result;
@@ -165,15 +165,15 @@ class StorageContainer extends Component implements InjectableInterface
      * @param string $name Relative object name.
      * @return int
      */
-    public function size($name)
+    public function getSize($name)
     {
         StorageManager::logger()->info(
             "Get filesize of '{$this->buildAddress($name)}' at '{$this->server}'."
         );
 
-        benchmark("storage::filesize", $this->prefix . $name);
-        $filesize = $this->getServer()->size($this, $name);
-        benchmark("storage::filesize", $this->prefix . $name);
+        benchmark("storage::size", $this->prefix . $name);
+        $filesize = $this->getServer()->getSize($this, $name);
+        benchmark("storage::size", $this->prefix . $name);
 
         return $filesize;
     }
@@ -217,14 +217,14 @@ class StorageContainer extends Component implements InjectableInterface
      * @param string $name Relative object name.
      * @return string
      */
-    public function localFilename($name)
+    public function allocateFilename($name)
     {
         StorageManager::logger()->info(
             "Get local filename of '{$this->buildAddress($name)}' at '{$this->server}' server."
         );
 
         benchmark("storage::filename", $this->prefix . $name);
-        $filename = $this->getServer()->localFilename($this, $name);
+        $filename = $this->getServer()->allocateFilename($this, $name);
         benchmark("storage::filename", $this->prefix . $name);
 
         return $filename;
@@ -339,7 +339,7 @@ class StorageContainer extends Component implements InjectableInterface
         /**
          * Now we will try to copy object using current server as a buffer.
          */
-        $filename = $this->getServer()->localFilename($this, $name);
+        $filename = $this->getServer()->allocateFilename($this, $name);
 
         //Uploading
         if ($filename && $destination->create($filename, $name))
@@ -402,7 +402,7 @@ class StorageContainer extends Component implements InjectableInterface
         /**
          * Now we will try to replace object using current server as a buffer.
          */
-        $filename = $this->getServer()->localFilename($this, $name);
+        $filename = $this->getServer()->allocateFilename($this, $name);
 
         //Uploading
         if ($filename && $destination->create($filename, $name))

@@ -151,7 +151,7 @@ class StorageObject extends Component
             return false;
         }
 
-        return $this->container->size($this->name);
+        return $this->container->getSize($this->name);
     }
 
     /**
@@ -167,7 +167,7 @@ class StorageObject extends Component
             return '';
         }
 
-        return $this->container->localFilename($this->name);
+        return $this->container->allocateFilename($this->name);
     }
 
     /**
