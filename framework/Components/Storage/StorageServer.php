@@ -9,6 +9,8 @@
 
 namespace Spiral\Components\Storage;
 
+use Spiral\Components\Files\StreamWrapper;
+
 abstract class StorageServer implements StorageServerInterface
 {
     /**
@@ -50,12 +52,12 @@ abstract class StorageServer implements StorageServerInterface
     );
 
     /**
-     * Find appropriate file mimetype by given filename.
+     * Find appropriate file mimetype by given filename (extension will be used).
      *
      * @param string $filename Local filename.
      * @return string
      */
-    protected function getMimetype($filename)
+    protected function getMimeType($filename)
     {
         //File extension
         $extension = strtolower(pathinfo($filename, 4));
@@ -66,5 +68,22 @@ abstract class StorageServer implements StorageServerInterface
         }
 
         return $this->mimetypes['default'];
+    }
+
+    /**
+     * Allocate local filename for remote storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. All object stored in
+     * temporary files should be registered in FileManager->blackspot(), to be removed after script
+     * ends to clean used hard drive space.
+     *
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Relative object name.
+     * @return string|bool
+     */
+    public function allocateFilename(StorageContainer $container, $name)
+    {
+        //Default implementation will use stream to create temporary filename, such filename
+        //can't be used outside php scope
+        return StreamWrapper::getUri($this->getStream($container, $name));
     }
 } 
