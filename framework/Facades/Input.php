@@ -26,7 +26,7 @@ use Spiral\Core\Facade;
  * @method static string getMethod()
  * @method static bool isSecure()
  * @method static bool isAjax()
- * @method static string|null getRemoteAddr()
+ * @method static string|null getRemoteAddress()
  */
 class Input extends Facade
 {

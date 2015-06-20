@@ -335,7 +335,7 @@ class InputManager extends Component
      *
      * @return string|null
      */
-    public function getRemoteAddr()
+    public function getRemoteAddress()
     {
         $serverParams = $this->getRequest()->getServerParams();
 
