@@ -259,7 +259,6 @@ class StreamWrapper
     public static function getResource(StreamInterface $stream)
     {
         $mode = null;
-
         if ($stream->isReadable())
         {
             $mode = 'r';
@@ -270,7 +269,7 @@ class StreamWrapper
             $mode = !empty($mode) ? 'r+' : 'w';
         }
 
-        if (!$mode)
+        if (empty($mode))
         {
             throw new \RuntimeException("Stream is not available in read or write modes.");
         }
