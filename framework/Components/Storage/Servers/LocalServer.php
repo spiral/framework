@@ -74,6 +74,7 @@ class LocalServer extends StorageServer
      */
     public function create(StorageContainer $container, $name, $origin)
     {
+        $origin = $this->getUri($origin);
         if (!empty($origin) && $this->file->exists($origin))
         {
             return $this->internalCopy($container, $origin, $container->options['folder'] . $name);
@@ -122,6 +123,7 @@ class LocalServer extends StorageServer
             return false;
         }
 
+        //Getting readonly stream
         return new Stream($this->allocateFilename($container, $name));
     }
 

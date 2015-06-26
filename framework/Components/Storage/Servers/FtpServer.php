@@ -168,7 +168,7 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        if (!$this->file->exists($origin))
+        if (!$this->file->exists($origin = $this->getUri($origin)))
         {
             $origin = $this->file->tempFilename();
         }

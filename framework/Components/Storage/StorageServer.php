@@ -9,6 +9,7 @@
 
 namespace Spiral\Components\Storage;
 
+use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\StreamWrapper;
 
 abstract class StorageServer implements StorageServerInterface
@@ -52,6 +53,23 @@ abstract class StorageServer implements StorageServerInterface
     );
 
     /**
+     * Allocate local filename for remote storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. All object stored in
+     * temporary files should be registered in FileManager->blackspot(), to be removed after script
+     * ends to clean used hard drive space.
+     *
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Relative object name.
+     * @return string|bool
+     */
+    public function allocateFilename(StorageContainer $container, $name)
+    {
+        //Default implementation will use stream to create temporary filename, such filename
+        //can't be used outside php scope
+        return StreamWrapper::getUri($this->getStream($container, $name));
+    }
+
+    /**
      * Find appropriate file mimetype by given filename (extension will be used).
      *
      * @param string $filename Local filename.
@@ -71,19 +89,23 @@ abstract class StorageServer implements StorageServerInterface
     }
 
     /**
-     * Allocate local filename for remote storage object, if container represent remote location,
-     * adapter should download file to temporary file and return it's filename. All object stored in
-     * temporary files should be registered in FileManager->blackspot(), to be removed after script
-     * ends to clean used hard drive space.
+     * Get filename to be used in file based methods and etc. Will create virtual Uri for streams.
      *
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @return string|bool
+     * @param string|StreamInterface $filename
+     * @return string
      */
-    public function allocateFilename(StorageContainer $container, $name)
+    protected function getUri($filename)
     {
-        //Default implementation will use stream to create temporary filename, such filename
-        //can't be used outside php scope
-        return StreamWrapper::getUri($this->getStream($container, $name));
+        if (empty($filename) || is_string($filename))
+        {
+            return $filename;
+        }
+
+        if ($filename instanceof StreamInterface)
+        {
+            return StreamWrapper::getUri($filename);
+        }
+
+        throw new StorageException("Unable to get filename for non Stream instance.");
     }
 } 
