@@ -165,6 +165,7 @@ class AmazonServer extends StorageServer
         }
         catch (ClientException $exception)
         {
+            //Reasonable?
             if ($exception->getCode() != 404)
             {
                 throw $exception;
@@ -187,6 +188,28 @@ class AmazonServer extends StorageServer
      */
     public function rename(StorageContainer $container, $name, $newName)
     {
+        try
+        {
+            $this->client->send(
+                $this->createRequest('PUT', $container, $newName, array(), array(
+                    'Acl'         => $container->options['public'] ? 'public-read' : 'private',
+                    'Copy-Source' => $this->buildUri($container, $name)->getPath()
+                ))
+            );
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() != 404)
+            {
+                throw $exception;
+            }
+
+            return false;
+        }
+
+        $this->delete($container, $name);
+
+        return true;
     }
 
     /**
@@ -197,6 +220,7 @@ class AmazonServer extends StorageServer
      */
     public function delete(StorageContainer $container, $name)
     {
+        $this->client->send($this->createRequest('DELETE', $container, $name));
     }
 
     /**
@@ -210,6 +234,31 @@ class AmazonServer extends StorageServer
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
     {
+        if ($container->options['bucket'] == $destination->options['bucket'])
+        {
+            return true;
+        }
+
+        try
+        {
+            $this->client->send(
+                $this->createRequest('PUT', $destination, $name, array(), array(
+                    'Acl'         => $destination->options['public'] ? 'public-read' : 'private',
+                    'Copy-Source' => $this->buildUri($container, $name)->getPath()
+                ))
+            );
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() != 404)
+            {
+                throw $exception;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -223,6 +272,14 @@ class AmazonServer extends StorageServer
      */
     public function replace(StorageContainer $container, StorageContainer $destination, $name)
     {
+        if ($this->copy($container, $destination, $name))
+        {
+            $this->delete($container, $name);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
