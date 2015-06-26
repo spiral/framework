@@ -74,7 +74,7 @@ class LocalServer extends StorageServer
      */
     public function create(StorageContainer $container, $name, $origin)
     {
-        $origin = $this->getUri($origin);
+        $origin = $this->resolveFilename($origin);
         if (!empty($origin) && $this->file->exists($origin))
         {
             return $this->internalCopy($container, $origin, $container->options['folder'] . $name);

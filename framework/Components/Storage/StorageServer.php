@@ -94,7 +94,7 @@ abstract class StorageServer implements StorageServerInterface
      * @param string|StreamInterface $filename
      * @return string
      */
-    protected function getUri($filename)
+    protected function resolveFilename($filename)
     {
         if (empty($filename) || is_string($filename))
         {
