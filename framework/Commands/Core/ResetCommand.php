@@ -50,7 +50,7 @@ class ResetCommand extends Command
 
         foreach ($this->file->getFiles(directory('cache')) as $filename)
         {
-            !$this->option('emulate') && $this->file->remove($filename);
+            !$this->option('emulate') && $this->file->delete($filename);
 
             if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
             {

@@ -148,7 +148,7 @@ class FileStore extends CacheStore
      */
     public function delete($name)
     {
-        $this->file->remove($this->buildFilename($name));
+        $this->file->delete($this->buildFilename($name));
     }
 
     /**
@@ -195,7 +195,7 @@ class FileStore extends CacheStore
 
         foreach ($files as $filename)
         {
-            $this->file->remove($filename);
+            $this->file->delete($filename);
         }
 
         return count($files);

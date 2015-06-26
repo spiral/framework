@@ -150,11 +150,11 @@ class FileManager extends Component
     /**
      * Will try to remove file. No exception will be thrown if file no exists.
      *
-     * @see remove()
+     * @see delete()
      * @param string $filename
      * @return bool
      */
-    public function remove($filename)
+    public function delete($filename)
     {
         if ($this->exists($filename))
         {
@@ -527,7 +527,7 @@ class FileManager extends Component
     {
         foreach ($this->removeFiles as $filename)
         {
-            $this->remove($filename);
+            $this->delete($filename);
         }
     }
 

@@ -128,7 +128,7 @@ class EvaluateProcessor implements ProcessorInterface
             throw $exception;
         }
 
-        $this->file->remove($filename);
+        $this->file->delete($filename);
 
         //Let's back php source
         return $this->isolator->repairPHP($source);

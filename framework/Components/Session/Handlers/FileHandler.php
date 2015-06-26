@@ -62,7 +62,7 @@ class FileHandler implements \SessionHandlerInterface
      */
     public function destroy($session_id)
     {
-        return $this->file->remove($this->directory . '/' . $session_id);
+        return $this->file->delete($this->directory . '/' . $session_id);
     }
 
     /**
@@ -80,7 +80,7 @@ class FileHandler implements \SessionHandlerInterface
         {
             if ($this->file->timeUpdated($filename) < time() - $maxlifetime)
             {
-                $this->file->remove($filename);
+                $this->file->delete($filename);
             }
         }
     }

@@ -69,7 +69,7 @@ class LocalServer extends StorageServer
      *
      * @param StorageContainer       $container Container instance.
      * @param string                 $name      Relative object name.
-     * @param string|StreamInterface $origin  Local filename or stream to use for creation.
+     * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
     public function create(StorageContainer $container, $name, $origin)
@@ -151,7 +151,7 @@ class LocalServer extends StorageServer
      */
     public function delete(StorageContainer $container, $name)
     {
-        $this->file->remove($container->options['folder'] . $name);
+        $this->file->delete($container->options['folder'] . $name);
     }
 
     /**

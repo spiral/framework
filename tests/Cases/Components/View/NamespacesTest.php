@@ -20,7 +20,7 @@ class NamespacesTest extends TestCase
         $file = new FileManager();
         foreach ($file->getFiles(directory('runtime')) as $filename)
         {
-            $file->remove($filename);
+            $file->delete($filename);
         }
     }
 
