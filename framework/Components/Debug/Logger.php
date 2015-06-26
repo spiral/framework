@@ -19,7 +19,7 @@ class Logger extends AbstractLogger
     /**
      * Events for logging.
      */
-    use Component\ComponentTrait, Component\EventsTrait;
+    use Component\MakeTrait, Component\EventsTrait;
 
     /**
      * Helper constant to associate all log levels with one filename.

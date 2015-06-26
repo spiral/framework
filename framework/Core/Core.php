@@ -35,6 +35,7 @@ use Spiral\Components\Console\ConsoleDispatcher;
  * @property Components\DBAL\DatabaseManager          $dbal
  * @property Components\ODM\ODM                       $odm
  * @property Components\ORM\ORM                       $orm
+ * @property Components\Guzzle\HttpClient             $guzzle
  *
  * @property \Psr\Http\Message\ServerRequestInterface $request
  * @property Components\Http\Cookies\CookieManager    $cookies
@@ -105,7 +106,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         'session'   => 'Spiral\Components\Session\SessionStore',
         'input'     => 'Spiral\Components\Http\InputManager',
 
-        'request'   => 'Psr\Http\Message\ServerRequestInterface'
+        'request'   => 'Psr\Http\Message\ServerRequestInterface',
+
+        //External components
+        'guzzle'    => 'Spiral\Components\Guzzle\HttpClient'
     );
 
     /**
