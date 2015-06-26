@@ -17,11 +17,10 @@ interface StorageServerInterface
      * Every server represent one virtual storage which can be either local, remove or cloud based.
      * Every server should support basic set of low-level operations (create, move, copy and etc).
      *
-     * @param array          $options Storage connection options.
-     * @param StorageManager $storage Storage Storage component.
-     * @param FileManager    $file    File component.
+     * @param FileManager $file    File component.
+     * @param array       $options Storage connection options.
      */
-    public function __construct(array $options, StorageManager $storage, FileManager $file);
+    public function __construct(FileManager $file, array $options);
 
     /**
      * Check if given object (name) exists in specified container.

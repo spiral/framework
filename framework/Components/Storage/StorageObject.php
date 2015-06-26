@@ -136,7 +136,7 @@ class StorageObject extends Component
             return false;
         }
 
-        return $this->container->exists($this->name);
+        return $this->container->isExists($this->name);
     }
 
     /**

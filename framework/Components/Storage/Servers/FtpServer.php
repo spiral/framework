@@ -25,13 +25,6 @@ class FtpServer extends StorageServer
      */
     protected $connection = null;
 
-    /**
-     * StorageManager component.
-     *
-     * @invisible
-     * @var StorageManager
-     */
-    protected $storage = null;
 
     /**
      * Configuration of FTP component, home directory, server options and etc.
@@ -49,24 +42,15 @@ class FtpServer extends StorageServer
     );
 
     /**
-     * File component.
-     *
-     * @var FileManager
-     */
-    protected $file = null;
-
-    /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
      * Every adapter should support basic set of low-level operations (create, move, copy and etc).
      *
-     * @param array          $options Storage connection options.
-     * @param StorageManager $storage StorageManager component.
-     * @param FileManager    $file    FileManager component.
+     * @param FileManager $file    FileManager component.
+     * @param array       $options Storage connection options.
      * @throws StorageException
      */
-    public function __construct(array $options, StorageManager $storage, FileManager $file)
+    public function __construct(FileManager $file, array $options)
     {
-        $this->storage = $storage;
         $this->options = $options + $this->options;
         $this->file = $file;
 
@@ -168,16 +152,11 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        if (!$this->file->exists($origin = $this->resolveFilename($origin)))
-        {
-            $origin = $this->file->tempFilename();
-        }
-
         $location = $this->ensureLocation($container, $name);
 
         try
         {
-            if (!ftp_put($this->connection, $location, $origin, FTP_BINARY))
+            if (!ftp_put($this->connection, $location, $this->resolveFilename($origin), FTP_BINARY))
             {
                 return false;
             }

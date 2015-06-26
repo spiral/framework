@@ -18,26 +18,6 @@ use Spiral\Components\Storage\StorageServer;
 class LocalServer extends StorageServer
 {
     /**
-     * File component.
-     *
-     * @var FileManager
-     */
-    protected $file = null;
-
-    /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based.
-     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
-     *
-     * @param array          $options Storage connection options.
-     * @param StorageManager $storage StorageManager component.
-     * @param FileManager    $file    FileManager component.
-     */
-    public function __construct(array $options, StorageManager $storage, FileManager $file)
-    {
-        $this->file = $file;
-    }
-
-    /**
      * Check if given object (name) exists in specified container.
      *
      * @param StorageContainer $container Container instance.
@@ -74,20 +54,11 @@ class LocalServer extends StorageServer
      */
     public function create(StorageContainer $container, $name, $origin)
     {
-        $origin = $this->resolveFilename($origin);
-        if (!empty($origin) && $this->file->exists($origin))
-        {
-            return $this->internalCopy($container, $origin, $container->options['folder'] . $name);
-        }
-
-        if ($this->file->touch($origin = $container->options['folder'] . $name))
-        {
-            $mode = !empty($container->options['mode']) ?: FileManager::RUNTIME;
-
-            return $this->file->setPermissions($origin, $mode);
-        }
-
-        return false;
+        return $this->internalCopy(
+            $container,
+            $this->resolveFilename($origin),
+            $container->options['folder'] . $name
+        );
     }
 
     /**

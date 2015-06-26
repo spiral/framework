@@ -9,6 +9,7 @@
 namespace Spiral\Components\Storage;
 
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
@@ -236,9 +237,10 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * Storage::create('cloud', $id . '-{name}.{ext}', $filename);
      * Storage::create('cloud', $id . '-upload-{filename}', $filename);
      *
-     * @param string|StorageContainer $container Container name, id or instance.
-     * @param string                  $name      Object name should be used in container.
-     * @param string|StreamInterface  $origin    Local filename or Stream.
+     * @param string|StorageContainer                      $container Container name, id or instance.
+     * @param string                                       $name      Object name should be used in
+     *                                                                container.
+     * @param string|StreamInterface|UploadedFileInterface $origin    Local filename or Stream.
      * @return StorageObject|bool
      */
     public function create($container, $name, $origin = '')

@@ -9,6 +9,7 @@
 namespace Spiral\Components\Storage;
 
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container\InjectableInterface;
@@ -146,7 +147,7 @@ class StorageContainer extends Component implements InjectableInterface
      * @param string $name Relative object name.
      * @return bool
      */
-    public function exists($name)
+    public function isExists($name)
     {
         StorageManager::logger()->info(
             "Check '{$this->buildAddress($name)}' exists at '{$this->server}'."
@@ -156,7 +157,7 @@ class StorageContainer extends Component implements InjectableInterface
         $result = $this->getServer()->isExists($this, $name);
         benchmark("storage::exists", $this->prefix . $name);
 
-        return $result;
+        return (bool)$result;
     }
 
     /**
@@ -182,19 +183,25 @@ class StorageContainer extends Component implements InjectableInterface
      * Create new storage object using given filename. File will be replaced to new location and will
      * not available using old filename.
      *
-     * @param string                 $name     Relative object name.
-     * @param string|StreamInterface $filename Local filename or stream to use for creation.
+     * @param string                                       $name     Relative object name.
+     * @param string|StreamInterface|UploadedFileInterface $origin   Local filename or stream to use
+     *                                                               for creation.
      * @return StorageObject
      * @throws StorageException
      */
-    public function create($name, $filename)
+    public function create($name, $origin)
     {
         StorageManager::logger()->info(
             "Create '{$this->buildAddress($name)}' at '{$this->server}' server."
         );
 
+        if ($origin instanceof UploadedFileInterface)
+        {
+            $origin = $origin->getStream();
+        }
+
         benchmark("storage::create", $this->prefix . $name);
-        if ($this->getServer()->create($this, $name, $filename))
+        if ($this->getServer()->create($this, $name, $origin))
         {
             benchmark("storage::create", $this->prefix . $name);
 
@@ -241,7 +248,7 @@ class StorageContainer extends Component implements InjectableInterface
     public function getStream($name)
     {
         StorageManager::logger()->info(
-            "Get local filename of '{$this->buildAddress($name)}' at '{$this->server}' server."
+            "Get stream for '{$this->buildAddress($name)}' at '{$this->server}' server."
         );
 
         benchmark("storage::stream", $this->prefix . $name);

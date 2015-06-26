@@ -36,7 +36,6 @@ use Spiral\Components\Console\ConsoleDispatcher;
  * @property Components\ODM\ODM                       $odm
  * @property Components\ORM\ORM                       $orm
  *
- *
  * @property \Psr\Http\Message\ServerRequestInterface $request
  * @property Components\Http\Cookies\CookieManager    $cookies
  * @property Components\Session\SessionStore          $session

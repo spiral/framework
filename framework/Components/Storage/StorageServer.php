@@ -10,47 +10,30 @@
 namespace Spiral\Components\Storage;
 
 use Psr\Http\Message\StreamInterface;
+use Spiral\Components\Files\FileManager;
 use Spiral\Components\Files\StreamWrapper;
+use Spiral\Components\Http\Stream;
 
 abstract class StorageServer implements StorageServerInterface
 {
     /**
-     * List of known file mimetypes to generate valid file Content-Type header.
+     * File component.
      *
-     * @var array
+     * @var FileManager
      */
-    protected $mimetypes = array(
-        'default' => 'application/octet-stream',
-        'jpg'     => 'image/jpeg',
-        'jpeg'    => 'image/jpeg',
-        'gif'     => 'image/gif',
-        'png'     => 'image/png',
-        'tif'     => 'image/tiff',
-        'tiff'    => 'image/tiff',
-        'ico'     => 'image/x-icon',
-        'swf'     => 'application/x-shockwave-flash',
-        'pdf'     => 'application/pdf',
-        'zip'     => 'application/zip',
-        'gz'      => 'application/x-gzip',
-        'tar'     => 'application/x-tar',
-        'bz'      => 'application/x-bzip',
-        'bz2'     => 'application/x-bzip2',
-        'txt'     => 'text/plain',
-        'htm'     => 'text/html',
-        'html'    => 'text/html',
-        'css'     => 'text/css',
-        'js'      => 'text/javascript',
-        'xml'     => 'text/xml',
-        'ogg'     => 'application/ogg',
-        'mp3'     => 'audio/mpeg',
-        'wav'     => 'audio/x-wav',
-        'avi'     => 'video/x-msvideo',
-        'mpg'     => 'video/mpeg',
-        'mpeg'    => 'video/mpeg',
-        'mov'     => 'video/quicktime',
-        'flv'     => 'video/x-flv',
-        'php'     => 'text/x-php'
-    );
+    protected $file = null;
+
+    /**
+     * Every server represent one virtual storage which can be either local, remove or cloud based.
+     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     *
+     * @param FileManager $file    FileManager component.
+     * @param array       $options Storage connection options.
+     */
+    public function __construct(FileManager $file, array $options)
+    {
+        $this->file = $file;
+    }
 
     /**
      * Allocate local filename for remote storage object, if container represent remote location,
@@ -64,48 +47,60 @@ abstract class StorageServer implements StorageServerInterface
      */
     public function allocateFilename(StorageContainer $container, $name)
     {
-        //Default implementation will use stream to create temporary filename, such filename
-        //can't be used outside php scope
-        return StreamWrapper::getUri($this->getStream($container, $name));
-    }
-
-    /**
-     * Find appropriate file mimetype by given filename (extension will be used).
-     *
-     * @param string $filename Local filename.
-     * @return string
-     */
-    protected function getMimeType($filename)
-    {
-        //File extension
-        $extension = strtolower(pathinfo($filename, 4));
-
-        if (isset($this->mimetypes[$extension]))
+        if (empty($stream = $this->getStream($container, $name)))
         {
-            return $this->mimetypes[$extension];
+            return false;
         }
 
-        return $this->mimetypes['default'];
+        //Default implementation will use stream to create temporary filename, such filename
+        //can't be used outside php scope
+        return StreamWrapper::getUri($stream);
     }
 
     /**
      * Get filename to be used in file based methods and etc. Will create virtual Uri for streams.
      *
-     * @param string|StreamInterface $filename
+     * @param string|StreamInterface $origin
      * @return string
      */
-    protected function resolveFilename($filename)
+    protected function resolveFilename($origin)
     {
-        if (empty($filename) || is_string($filename))
+        if (empty($origin) || is_string($origin))
         {
-            return $filename;
+            if (!$this->file->exists($origin))
+            {
+                return StreamWrapper::getUri(\GuzzleHttp\Psr7\stream_for(''));
+            }
+
+            return $origin;
         }
 
-        if ($filename instanceof StreamInterface)
+        if ($origin instanceof StreamInterface)
         {
-            return StreamWrapper::getUri($filename);
+            return StreamWrapper::getUri($origin);
         }
 
         throw new StorageException("Unable to get filename for non Stream instance.");
+    }
+
+    /**
+     * Get stream associated with origin data.
+     *
+     * @param string|StreamInterface $origin
+     * @return StreamInterface
+     */
+    protected function resolveStream($origin)
+    {
+        if ($origin instanceof StreamInterface)
+        {
+            return $origin;
+        }
+
+        if (empty($origin))
+        {
+            return \GuzzleHttp\Psr7\stream_for('');
+        }
+
+        return new Stream($origin);
     }
 } 
