@@ -176,8 +176,7 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will
-     * not available using old filename.
+     * Upload new storage object using given filename or stream.
      *
      * @param string                                       $name     Relative object name.
      * @param string|StreamInterface|UploadedFileInterface $origin   Local filename or stream to use
@@ -185,7 +184,7 @@ class StorageContainer extends Component implements InjectableInterface
      * @return StorageObject
      * @throws StorageException
      */
-    public function create($name, $origin)
+    public function upload($name, $origin)
     {
         $this->log("Create '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
@@ -196,7 +195,7 @@ class StorageContainer extends Component implements InjectableInterface
         }
 
         benchmark("storage::create", $this->prefix . $name);
-        if ($this->getServer()->create($this, $name, $origin))
+        if ($this->getServer()->upload($this, $name, $origin))
         {
             benchmark("storage::create", $this->prefix . $name);
 
@@ -335,7 +334,7 @@ class StorageContainer extends Component implements InjectableInterface
          * Now we will try to copy object using current server/memory as a buffer.
          */
         $stream = $this->getServer()->getStream($this, $name);
-        if ($stream && $destination->create($name, $stream))
+        if ($stream && $destination->upload($name, $stream))
         {
             $this->log(
                 "External copy '{$this->server}'.'{$this->buildAddress($name)}' "
@@ -396,7 +395,7 @@ class StorageContainer extends Component implements InjectableInterface
          * Now we will try to replace object using current server/memory as a buffer.
          */
         $stream = $this->getServer()->getStream($this, $name);
-        if ($stream && $destination->create($name, $stream))
+        if ($stream && $destination->upload($name, $stream))
         {
             $this->log(
                 "External move '{$this->server}'.'{$this->buildAddress($name)}'"

@@ -112,15 +112,14 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will
-     * not available using old filename.
+     * Upload new storage object using given filename or stream.
      *
      * @param StorageContainer       $container Container instance.
      * @param string                 $name      Relative object name.
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function create(StorageContainer $container, $name, $origin)
+    public function upload(StorageContainer $container, $name, $origin)
     {
         if (empty($mimetype = \GuzzleHttp\Psr7\mimetype_from_filename($name)))
         {
