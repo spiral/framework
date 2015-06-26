@@ -219,6 +219,10 @@ class FtpServer extends StorageServer
             return false;
         }
 
+        /**
+         * This method should be potentially updated to use getStream method as content provider.
+         */
+
         //File should be removed after processing
         $this->file->blackspot($filename = $this->file->tempFilename($this->file->extension($name)));
 
