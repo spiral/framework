@@ -158,7 +158,7 @@ class FtpServer extends StorageServer
      *
      * @param StorageContainer       $container Container instance.
      * @param string                 $name      Relative object name.
-     * @param string|StreamInterface $origin  Local filename or stream to use for creation.
+     * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
     public function create(StorageContainer $container, $name, $origin)
@@ -361,8 +361,7 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        $this->ensureLocation($container, $name);
-        $location = $this->getPath($destination, $name);
+        $location = $this->ensureLocation($container, $name);
 
         try
         {
@@ -390,7 +389,7 @@ class FtpServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return bool
+     * @return bool|string
      */
     protected function ensureLocation(StorageContainer $container, $name)
     {
@@ -405,7 +404,7 @@ class FtpServer extends StorageServer
                     ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
                 }
 
-                return true;
+                return $this->getPath($container, $name);
             }
         }
         catch (\Exception $exception)
@@ -440,7 +439,7 @@ class FtpServer extends StorageServer
             }
         }
 
-        return true;
+        return $this->getPath($container, $name);
     }
 
     /**
