@@ -156,21 +156,21 @@ class FtpServer extends StorageServer
      * Create new storage object using given filename. File will be replaced to new location and will
      * not available using old filename.
      *
-     * @param string           $filename  Local filename to use for creation.
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param StorageContainer       $container Container instance.
+     * @param string                 $name      Relative object name.
+     * @param string|StreamInterface $origin  Local filename or stream to use for creation.
      * @return bool
      */
-    public function create($filename, StorageContainer $container, $name)
+    public function create(StorageContainer $container, $name, $origin)
     {
         if (!$this->connect())
         {
             return false;
         }
 
-        if (!$this->file->exists($filename))
+        if (!$this->file->exists($origin))
         {
-            $filename = $this->file->tempFilename();
+            $origin = $this->file->tempFilename();
         }
 
         $this->ensureLocation($container, $name);
@@ -178,7 +178,7 @@ class FtpServer extends StorageServer
 
         try
         {
-            if (!ftp_put($this->connection, $location, $filename, FTP_BINARY))
+            if (!ftp_put($this->connection, $location, $origin, FTP_BINARY))
             {
                 return false;
             }

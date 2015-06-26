@@ -45,12 +45,12 @@ interface StorageServerInterface
      * Create new storage object using given filename. File will be replaced to new location and will
      * not available using old filename.
      *
-     * @param string           $filename  Local filename to use for creation.
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param StorageContainer       $container Container instance.
+     * @param string                 $name      Relative object name.
+     * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function create($filename, StorageContainer $container, $name);
+    public function create(StorageContainer $container, $name, $origin);
 
     /**
      * Allocate local filename for remote storage object, if container represent remote location,

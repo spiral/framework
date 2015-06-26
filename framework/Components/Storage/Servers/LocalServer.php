@@ -67,23 +67,23 @@ class LocalServer extends StorageServer
      * Create new storage object using given filename. File will be replaced to new location and will
      * not available using old filename.
      *
-     * @param string           $filename  Local filename to use for creation.
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param StorageContainer       $container Container instance.
+     * @param string                 $name      Relative object name.
+     * @param string|StreamInterface $origin  Local filename or stream to use for creation.
      * @return bool
      */
-    public function create($filename, StorageContainer $container, $name)
+    public function create(StorageContainer $container, $name, $origin)
     {
-        if (!empty($filename) && $this->file->exists($filename))
+        if (!empty($origin) && $this->file->exists($origin))
         {
-            return $this->internalCopy($container, $filename, $container->options['folder'] . $name);
+            return $this->internalCopy($container, $origin, $container->options['folder'] . $name);
         }
 
-        if ($this->file->touch($filename = $container->options['folder'] . $name))
+        if ($this->file->touch($origin = $container->options['folder'] . $name))
         {
             $mode = !empty($container->options['mode']) ?: FileManager::RUNTIME;
 
-            return $this->file->setPermissions($filename, $mode);
+            return $this->file->setPermissions($origin, $mode);
         }
 
         return false;

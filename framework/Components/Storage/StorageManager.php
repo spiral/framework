@@ -238,30 +238,30 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      *
      * @param string|StorageContainer $container Container name, id or instance.
      * @param string                  $name      Object name should be used in container.
-     * @param string|StreamInterface  $filename
+     * @param string|StreamInterface  $origin    Local filename or Stream.
      * @return StorageObject|bool
      */
-    public function create($container, $name, $filename = '')
+    public function create($container, $name, $origin = '')
     {
         if (is_string($container))
         {
             $container = $this->container($container);
         }
 
-        if (!empty($filename))
+        if (!empty($origin) && is_string($origin))
         {
-            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $extension = strtolower(pathinfo($origin, PATHINFO_EXTENSION));
             $name = interpolate($name,
                 array(
                     'ext'       => $extension,
-                    'name'      => substr(basename($filename), 0, -1 * (strlen($extension) + 1)),
-                    'filename'  => basename($filename),
+                    'name'      => substr(basename($origin), 0, -1 * (strlen($extension) + 1)),
+                    'filename'  => basename($origin),
                     'extension' => $extension
                 )
             );
         }
 
-        return $container->create($filename, $name);
+        return $container->create($name, $origin);
     }
 
     /**

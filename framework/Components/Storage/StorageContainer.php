@@ -182,19 +182,19 @@ class StorageContainer extends Component implements InjectableInterface
      * Create new storage object using given filename. File will be replaced to new location and will
      * not available using old filename.
      *
-     * @param string $filename Local filename to use for creation.
-     * @param string $name     Relative object name.
+     * @param string                 $name     Relative object name.
+     * @param string|StreamInterface $filename Local filename or stream to use for creation.
      * @return StorageObject
      * @throws StorageException
      */
-    public function create($filename, $name)
+    public function create($name, $filename)
     {
         StorageManager::logger()->info(
             "Create '{$this->buildAddress($name)}' at '{$this->server}' server."
         );
 
         benchmark("storage::create", $this->prefix . $name);
-        if ($this->getServer()->create($filename, $this, $name))
+        if ($this->getServer()->create($this, $name, $filename))
         {
             benchmark("storage::create", $this->prefix . $name);
 
