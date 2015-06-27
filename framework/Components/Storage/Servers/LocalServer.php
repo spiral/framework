@@ -84,13 +84,13 @@ class LocalServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return StreamInterface|bool
+     * @return StreamInterface|null
      */
     public function getStream(StorageContainer $container, $name)
     {
         if (!$this->isExists($container, $name))
         {
-            return false;
+            return null;
         }
 
         //Getting readonly stream

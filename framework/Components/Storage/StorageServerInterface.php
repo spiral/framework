@@ -51,10 +51,9 @@ interface StorageServerInterface
     public function upload(StorageContainer $container, $name, $origin);
 
     /**
-     * Allocate local filename for remote storage object, if container represent remote location,
-     * adapter should download file to temporary file and return it's filename. All object stored in
-     * temporary files should be registered in FileManager->blackspot(), to be removed after script
-     * ends to clean used hard drive space.
+     * Allocate local filename for remove storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. File is in readonly
+     * mode, and in some cases will be erased on shutdown.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
@@ -69,7 +68,7 @@ interface StorageServerInterface
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return StreamInterface|bool
+     * @return StreamInterface|null
      */
     public function getStream(StorageContainer $container, $name);
 

@@ -380,6 +380,7 @@ class FileManager extends Component
         {
             //We probably should find more optimal way of doing that
             rename($tempFilename, $tempFilename = $tempFilename . '.' . $extension);
+            $this->removeFiles[] = $tempFilename;
         }
 
         return $tempFilename;
@@ -501,20 +502,6 @@ class FileManager extends Component
         }
 
         return mkdir($directory, $mode, true);
-    }
-
-    /**
-     * Mark filename to be removed after application stops, this method widely used by remove storage
-     * server to erase temporary fetcher files.
-     *
-     * @param string $filename
-     * @return static
-     */
-    public function blackspot($filename)
-    {
-        $this->removeFiles[] = $filename;
-
-        return $this;
     }
 
     /**

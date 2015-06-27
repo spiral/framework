@@ -15,26 +15,12 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Storage\StorageContainer;
-use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageServer;
 
 class AmazonServer extends StorageServer
 {
-    /**
-     * Default mimetype to be used when nothing else can be applied.
-     */
-    const DEFAULT_MIMETYPE = 'application/octet-stream';
-
-    /**
-     * Guzzle client.
-     *
-     * @var Client
-     */
-    protected $client = null;
-
     /**
      * Server configuration, connection options, auth keys and certificates.
      *
@@ -48,6 +34,13 @@ class AmazonServer extends StorageServer
     );
 
     /**
+     * Guzzle client.
+     *
+     * @var Client
+     */
+    protected $client = null;
+
+    /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
      * Every adapter should support basic set of low-level operations (create, move, copy and etc).
      *
@@ -56,8 +49,7 @@ class AmazonServer extends StorageServer
      */
     public function __construct(FileManager $file, array $options)
     {
-        $this->options = $options + $this->options;
-        $this->file = $file;
+        parent::__construct($file, $options);
 
         //Some options can be passed directly for guzzle client
         $this->client = new Client($this->options);
@@ -74,7 +66,7 @@ class AmazonServer extends StorageServer
     {
         try
         {
-            $response = $this->client->send($this->createRequest('HEAD', $container, $name));
+            $response = $this->client->send($this->buildRequest('HEAD', $container, $name));
         }
         catch (ClientException $exception)
         {
@@ -126,7 +118,7 @@ class AmazonServer extends StorageServer
             $mimetype = self::DEFAULT_MIMETYPE;
         }
 
-        $request = $this->createRequest(
+        $request = $this->buildRequest(
             'PUT',
             $container,
             $name,
@@ -159,7 +151,7 @@ class AmazonServer extends StorageServer
         try
         {
             $response = $this->client->send(
-                $this->createRequest('GET', $container, $name)
+                $this->buildRequest('GET', $container, $name)
             );
         }
         catch (ClientException $exception)
@@ -170,7 +162,7 @@ class AmazonServer extends StorageServer
                 throw $exception;
             }
 
-            return false;
+            return null;
         }
 
         return $response->getBody();
@@ -181,7 +173,7 @@ class AmazonServer extends StorageServer
      * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $oldname      Relative object name.
+     * @param string           $oldname   Relative object name.
      * @param string           $newname   New object name.
      * @return bool
      */
@@ -190,7 +182,7 @@ class AmazonServer extends StorageServer
         try
         {
             $this->client->send(
-                $this->createRequest('PUT', $container, $newname, array(), array(
+                $this->buildRequest('PUT', $container, $newname, array(), array(
                     'Acl'         => $container->options['public'] ? 'public-read' : 'private',
                     'Copy-Source' => $this->buildUri($container, $oldname)->getPath()
                 ))
@@ -219,7 +211,7 @@ class AmazonServer extends StorageServer
      */
     public function delete(StorageContainer $container, $name)
     {
-        $this->client->send($this->createRequest('DELETE', $container, $name));
+        $this->client->send($this->buildRequest('DELETE', $container, $name));
     }
 
     /**
@@ -233,15 +225,10 @@ class AmazonServer extends StorageServer
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
     {
-        if ($container->options['bucket'] == $destination->options['bucket'])
-        {
-            return true;
-        }
-
         try
         {
             $this->client->send(
-                $this->createRequest('PUT', $destination, $name, array(), array(
+                $this->buildRequest('PUT', $destination, $name, array(), array(
                     'Acl'         => $destination->options['public'] ? 'public-read' : 'private',
                     'Copy-Source' => $this->buildUri($container, $name)->getPath()
                 ))
@@ -261,27 +248,6 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * Move object to another internal (under same server) container, this operation should may not
-     * require file download and can be performed remotely.
-     *
-     * @param StorageContainer $container   Container instance.
-     * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
-     * @return bool
-     */
-    public function replace(StorageContainer $container, StorageContainer $destination, $name)
-    {
-        if ($this->copy($container, $destination, $name))
-        {
-            $this->delete($container, $name);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param                  $method
      * @param StorageContainer $container
      * @param                  $name
@@ -289,7 +255,7 @@ class AmazonServer extends StorageServer
      * @param array            $commands
      * @return RequestInterface
      */
-    protected function createRequest(
+    protected function buildRequest(
         $method,
         StorageContainer $container,
         $name,

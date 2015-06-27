@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\Image;
 
+use Psr\Http\Message\StreamInterface;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;

@@ -210,9 +210,8 @@ class StorageContainer extends Component implements InjectableInterface
 
     /**
      * Allocate local filename for remove storage object, if container represent remote location,
-     * adapter should download file to temporary file and return it's filename. All object stored in
-     * temporary files should be registered in FileManager->blackspot(), to be removed after script
-     * ends to clean used hard drive space.
+     * adapter should download file to temporary file and return it's filename. File is in readonly
+     * mode, and in some cases will be erased on shutdown.
      *
      * @param string $name Relative object name.
      * @return string
@@ -241,10 +240,14 @@ class StorageContainer extends Component implements InjectableInterface
         $this->log("Get stream for '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
         benchmark("{$this->server}::stream", $this->prefix . $name);
-        $filename = $this->getServer()->getStream($this, $name);
+        if (!$stream = $this->getServer()->getStream($this, $name))
+        {
+            //exception
+        }
+
         benchmark("{$this->server}::stream", $this->prefix . $name);
 
-        return $filename;
+        return $stream;
     }
 
     /**
@@ -259,6 +262,11 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function rename($oldname, $newname)
     {
+        if ($oldname == $newname)
+        {
+            return true;
+        }
+
         benchmark("{$this->server}::rename", $this->prefix . $oldname);
         if ($this->getServer()->rename($this, $oldname, $newname))
         {
@@ -303,6 +311,11 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function copy(StorageContainer $destination, $name)
     {
+        if ($destination == $this)
+        {
+            return new StorageObject($this->buildAddress($name), $name, $this->storage, $this);
+        }
+
         //Internal copying
         if ($this->server == $destination->server)
         {
@@ -333,7 +346,7 @@ class StorageContainer extends Component implements InjectableInterface
         /**
          * Now we will try to copy object using current server/memory as a buffer.
          */
-        $stream = $this->getServer()->getStream($this, $name);
+        $stream = $this->getStream($name);
         if ($stream && $destination->upload($name, $stream))
         {
             $this->log(
@@ -368,6 +381,11 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function replace(StorageContainer $destination, $name)
     {
+        if ($destination == $this)
+        {
+            return $this->buildAddress($name);
+        }
+
         //Internal copying
         if ($this->server == $destination->server)
         {
@@ -393,7 +411,7 @@ class StorageContainer extends Component implements InjectableInterface
         /**
          * Now we will try to replace object using current server/memory as a buffer.
          */
-        $stream = $this->getServer()->getStream($this, $name);
+        $stream = $this->getStream($name);
         if ($stream && $destination->upload($name, $stream))
         {
             $this->log(
