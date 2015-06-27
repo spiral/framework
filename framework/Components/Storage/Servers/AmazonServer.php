@@ -233,29 +233,36 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * Copy object to another internal (under same server) container, this operation should may not
+     * Copy object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
+     *
+     * Method should return false or thrown an exception if object can not be copied.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
+     * @param string           $name        Storage object name.
      * @return bool
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
     {
         try
         {
-            $this->client->send(
-                $this->buildRequest('PUT', $destination, $name, array(), array(
+            $this->client->send($this->buildRequest(
+                'PUT',
+                $destination,
+                $name,
+                array(),
+                array(
                     'Acl'         => $destination->options['public'] ? 'public-read' : 'private',
                     'Copy-Source' => $this->buildUri($container, $name)->getPath()
-                ))
-            );
+                )
+            ));
         }
         catch (ClientException $exception)
         {
             if ($exception->getCode() != 404)
             {
+                //Some authorization or other error
                 throw $exception;
             }
 
@@ -266,11 +273,27 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * @param                  $method
-     * @param StorageContainer $container
-     * @param                  $name
-     * @param array            $headers
-     * @param array            $commands
+     * Create instance of UriInterface based on provided container instance and storage object name.
+     *
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Storage object name.
+     * @return Uri
+     */
+    protected function buildUri(StorageContainer $container, $name)
+    {
+        return new Uri(
+            $this->options['server'] . '/' . $container->options['bucket'] . '/' . rawurlencode($name)
+        );
+    }
+
+    /**
+     * Helper method used to create signed amazon request with correct set of headers.
+     *
+     * @param string           $method    Http method.
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Storage object name.
+     * @param array            $headers   Request headers.
+     * @param array            $commands  Amazon commands associated with values.
      * @return RequestInterface
      */
     protected function buildRequest(
@@ -295,13 +318,12 @@ class AmazonServer extends StorageServer
         );
     }
 
-    protected function buildUri(StorageContainer $container, $name)
-    {
-        return new Uri(
-            $this->options['server'] . '/' . $container->options['bucket'] . '/' . rawurlencode($name)
-        );
-    }
-
+    /**
+     * Generate request headers based on provided set of amazon commands.
+     *
+     * @param array $commands
+     * @return array
+     */
     protected function packCommands(array $commands)
     {
         $headers = array();
@@ -313,6 +335,14 @@ class AmazonServer extends StorageServer
         return $headers;
     }
 
+    /**
+     * Sign amazon request.
+     *
+     * @param RequestInterface $request
+     * @param array            $packedCommands Headers generated based on request commands, see
+     *                                         packCommands() method for more information.
+     * @return RequestInterface
+     */
     protected function signRequest(RequestInterface $request, array $packedCommands = array())
     {
         $signature = array(
@@ -322,7 +352,6 @@ class AmazonServer extends StorageServer
             $request->getHeaderLine('Date')
         );
 
-        //todo: improve it
         $normalizedCommands = array();
         foreach ($packedCommands as $command => $value)
         {

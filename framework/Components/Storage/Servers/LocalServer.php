@@ -153,12 +153,14 @@ class LocalServer extends StorageServer
     }
 
     /**
-     * Move object to another internal (under same server) container, this operation should may not
+     * Replace object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
+     *
+     * Method should return false or thrown an exception if object can not be replaced.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
+     * @param string           $name        Storage object name.
      * @return bool
      */
     public function replace(StorageContainer $container, StorageContainer $destination, $name)
@@ -185,7 +187,7 @@ class LocalServer extends StorageServer
             return false;
         }
 
-        $mode = !empty($container->options['mode']) ?: FileManager::RUNTIME;
+        $mode = !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME;
         $this->file->ensureDirectory(dirname($destination), $mode);
 
         if (!$this->file->move($filename, $destination))
