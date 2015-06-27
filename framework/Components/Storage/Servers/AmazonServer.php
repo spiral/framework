@@ -269,7 +269,7 @@ class AmazonServer extends StorageServer
      * @param string           $name        Relative object name.
      * @return bool
      */
-    public function move(StorageContainer $container, StorageContainer $destination, $name)
+    public function replace(StorageContainer $container, StorageContainer $destination, $name)
     {
         if ($this->copy($container, $destination, $name))
         {

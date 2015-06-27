@@ -480,7 +480,6 @@ class FileManager extends Component
         if ($recursivePermissions)
         {
             $directories = array(basename($directory));
-
             $baseDirectory = $directory;
 
             while (!is_dir($baseDirectory = dirname($baseDirectory)))

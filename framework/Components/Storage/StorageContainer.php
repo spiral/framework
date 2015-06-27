@@ -151,9 +151,9 @@ class StorageContainer extends Component implements InjectableInterface
     {
         $this->log("Check '{$this->buildAddress($name)}' exists at '{$this->server}'.");
 
-        benchmark("storage::exists", $this->prefix . $name);
+        benchmark("{$this->server}::exists", $this->prefix . $name);
         $result = $this->getServer()->isExists($this, $name);
-        benchmark("storage::exists", $this->prefix . $name);
+        benchmark("{$this->server}::exists", $this->prefix . $name);
 
         return (bool)$result;
     }
@@ -168,9 +168,9 @@ class StorageContainer extends Component implements InjectableInterface
     {
         $this->log("Get size of '{$this->buildAddress($name)}' at '{$this->server}'.");
 
-        benchmark("storage::size", $this->prefix . $name);
+        benchmark("{$this->server}::size", $this->prefix . $name);
         $filesize = $this->getServer()->getSize($this, $name);
-        benchmark("storage::size", $this->prefix . $name);
+        benchmark("{$this->server}::size", $this->prefix . $name);
 
         return $filesize;
     }
@@ -194,15 +194,15 @@ class StorageContainer extends Component implements InjectableInterface
             $origin = $origin->getStream();
         }
 
-        benchmark("storage::upload", $this->prefix . $name);
+        benchmark("{$this->server}::upload", $this->prefix . $name);
         if ($this->getServer()->upload($this, $name, $origin))
         {
-            benchmark("storage::upload", $this->prefix . $name);
+            benchmark("{$this->server}::upload", $this->prefix . $name);
 
             return new StorageObject($this->buildAddress($name), $name, $this->storage, $this);
         }
 
-        benchmark("storage::upload", $this->prefix . $name);
+        benchmark("{$this->server}::upload", $this->prefix . $name);
         throw new StorageException(
             "Unable to upload '{$this->buildAddress($name)}' at '{$this->server}' server."
         );
@@ -221,9 +221,9 @@ class StorageContainer extends Component implements InjectableInterface
     {
         $this->log("Get local filename of '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        benchmark("storage::filename", $this->prefix . $name);
+        benchmark("{$this->server}::filename", $this->prefix . $name);
         $filename = $this->getServer()->allocateFilename($this, $name);
-        benchmark("storage::filename", $this->prefix . $name);
+        benchmark("{$this->server}::filename", $this->prefix . $name);
 
         return $filename;
     }
@@ -240,9 +240,9 @@ class StorageContainer extends Component implements InjectableInterface
     {
         $this->log("Get stream for '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        benchmark("storage::stream", $this->prefix . $name);
+        benchmark("{$this->server}::stream", $this->prefix . $name);
         $filename = $this->getServer()->getStream($this, $name);
-        benchmark("storage::stream", $this->prefix . $name);
+        benchmark("{$this->server}::stream", $this->prefix . $name);
 
         return $filename;
     }
@@ -259,10 +259,10 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function rename($oldname, $newname)
     {
-        benchmark("storage::rename", $this->prefix . $oldname);
+        benchmark("{$this->server}::rename", $this->prefix . $oldname);
         if ($this->getServer()->rename($this, $oldname, $newname))
         {
-            benchmark("storage::rename", $this->prefix . $oldname);
+            benchmark("{$this->server}::rename", $this->prefix . $oldname);
             $this->log(
                 "Rename '{$this->buildAddress($oldname)}' "
                 . "to '{$this->buildAddress($newname)}' at '{$this->server}' server."
@@ -270,7 +270,7 @@ class StorageContainer extends Component implements InjectableInterface
 
             return $this->buildAddress($newname);
         }
-        benchmark("storage::rename", $this->prefix . $oldname);
+        benchmark("{$this->server}::rename", $this->prefix . $oldname);
 
         throw new StorageException(
             "Unable to rename '{$this->buildAddress($oldname)}' "
@@ -287,9 +287,9 @@ class StorageContainer extends Component implements InjectableInterface
     {
         $this->log("Delete '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        benchmark("storage::delete", $this->prefix . $name);
+        benchmark("{$this->server}::delete", $this->prefix . $name);
         $this->getServer()->delete($this, $name);
-        benchmark("storage::delete", $this->prefix . $name);
+        benchmark("{$this->server}::delete", $this->prefix . $name);
     }
 
     /**
@@ -306,10 +306,10 @@ class StorageContainer extends Component implements InjectableInterface
         //Internal copying
         if ($this->server == $destination->server)
         {
-            benchmark("storage::copy", $this->prefix . $name);
+            benchmark("{$this->server}::copy", $this->prefix . $name);
             if ($this->getServer()->copy($this, $destination, $name))
             {
-                benchmark("storage::copy", $this->prefix . $name);
+                benchmark("{$this->server}::copy", $this->prefix . $name);
                 $this->log(
                     "Internal copy '{$this->buildAddress($name)}' "
                     . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
@@ -323,7 +323,7 @@ class StorageContainer extends Component implements InjectableInterface
                 );
             }
 
-            benchmark("storage::copy", $this->prefix . $name);
+            benchmark("{$this->server}::copy", $this->prefix . $name);
             throw new StorageException(
                 "Unable to copy '{$this->buildAddress($name)}' "
                 . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
@@ -366,15 +366,15 @@ class StorageContainer extends Component implements InjectableInterface
      * @return string
      * @throws StorageException
      */
-    public function move(StorageContainer $destination, $name)
+    public function replace(StorageContainer $destination, $name)
     {
         //Internal copying
         if ($this->server == $destination->server)
         {
-            benchmark("storage::replace", $this->prefix . $name);
-            if ($this->getServer()->move($this, $destination, $name))
+            benchmark("{$this->server}::replace", $this->prefix . $name);
+            if ($this->getServer()->replace($this, $destination, $name))
             {
-                benchmark("storage::replace", $this->prefix . $name);
+                benchmark("{$this->server}::replace", $this->prefix . $name);
                 $this->log(
                     "Internal move '{$this->buildAddress($name)}' "
                     . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
@@ -383,7 +383,7 @@ class StorageContainer extends Component implements InjectableInterface
                 return $destination->buildAddress($name);
             }
 
-            benchmark("storage::replace", $this->prefix . $name);
+            benchmark("{$this->server}::replace", $this->prefix . $name);
             throw new StorageException(
                 "Unable to move '{$this->buildAddress($name)}' "
                 . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
