@@ -149,7 +149,7 @@ class FtpServer extends StorageServer
         try
         {
             $location = $this->ensureLocation($container, $name);
-            if (!ftp_put($this->connection, $location, $this->resolveFilename($origin), FTP_BINARY))
+            if (!ftp_put($this->connection, $location, $this->castFilename($origin), FTP_BINARY))
             {
                 return false;
             }
@@ -269,27 +269,6 @@ class FtpServer extends StorageServer
         {
             ftp_delete($this->connection, $this->getPath($container, $name));
         }
-    }
-
-    /**
-     * Copy object to another internal (under same server) container, this operation should may not
-     * require file download and can be performed remotely.
-     *
-     * @param StorageContainer $container   Container instance.
-     * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
-     * @return bool
-     */
-    public function copy(StorageContainer $container, StorageContainer $destination, $name)
-    {
-        //Copying available only using buffer server
-        if (!$filename = $this->allocateFilename($container, $name))
-        {
-            //exception
-            return false;
-        }
-
-        return $this->upload($filename, $destination, $name);
     }
 
     /**

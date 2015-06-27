@@ -19,14 +19,29 @@ use Spiral\Components\Storage\StorageServer;
 class SftpServer extends StorageServer
 {
     /**
+     * Authorization methods.
+     */
+    const NONE     = 'none';
+    const PASSWORD = 'password';
+    const PUBKEY   = 'pubkey';
+
+    /**
      * Configuration of FTP component, home directory, server options and etc.
      *
      * @var array
      */
     protected $options = array(
-        'host' => '',
-        'port' => 22,
-        'home' => '/'
+        'host'          => '',
+        'methods'       => array(),
+        'port'          => 22,
+        'home'          => '/',
+        'authorization' => 'authMethod',
+        'username'      => '',
+        'password'      => '',
+
+        'publicKey'     => '',
+        'privateKey'    => '',
+        'secret'        => null
     );
 
     /**
@@ -56,32 +71,6 @@ class SftpServer extends StorageServer
         }
 
         $this->connect();
-    }
-
-    /**
-     * Ensure that SSH connection is up and can be used for file operations.
-     *
-     * @return bool
-     * @throws StorageException
-     */
-    protected function connect()
-    {
-        if (!empty($this->connection))
-        {
-            return true;
-        }
-
-        if (!$connection = ssh2_connect($this->options['host'], $this->options['port']))
-        {
-            throw new StorageException(
-                "Unable to connect to remote SSH server '{$this->options['host']}'."
-            );
-        }
-
-        //Authorization METHODS!
-        ssh2_auth_password($connection, 'USERNAME', 'PASSWORD');
-
-        $this->sftp = ssh2_sftp($connection);
     }
 
     /**
@@ -211,42 +200,56 @@ class SftpServer extends StorageServer
     }
 
     /**
-     * Copy object to another internal (under same server) container, this operation should may not
-     * require file download and can be performed remotely.
+     * Ensure that SSH connection is up and can be used for file operations.
      *
-     * @param StorageContainer $container   Container instance.
-     * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
      * @return bool
+     * @throws StorageException
      */
-    public function copy(StorageContainer $container, StorageContainer $destination, $name)
+    protected function connect()
     {
-        //Copying using local streams
-        return $this->upload($destination, $name, $this->getStream($container, $name));
-    }
-
-    /**
-     * Move object to another internal (under same server) container, this operation should may not
-     * require file download and can be performed remotely.
-     *
-     * @param StorageContainer $container   Container instance.
-     * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
-     * @return bool
-     */
-    public function replace(StorageContainer $container, StorageContainer $destination, $name)
-    {
-        if ($this->copy($container, $destination, $name))
+        if (!empty($this->connection))
         {
-            $this->delete($container, $name);
-
             return true;
         }
 
-        //exceptions?
+        $session = ssh2_connect(
+            $this->options['host'],
+            $this->options['port'],
+            $this->options['methods']
+        );
 
-        return false;
+        if (empty($session))
+        {
+            throw new StorageException(
+                "Unable to connect to remote SSH server '{$this->options['host']}'."
+            );
+        }
+
+        //Authorization
+        switch ($this->options['authMethod'])
+        {
+            case self::NONE:
+                ssh2_auth_none($session, $this->options['username']);
+                break;
+            case self::PASSWORD;
+                ssh2_auth_password($session, $this->options['username'], $this->options['password']);
+                break;
+            case self::PUBKEY:
+                ssh2_auth_pubkey_file(
+                    $session,
+                    $this->options['username'],
+                    $this->options['publicKey'],
+                    $this->options['privateKey'],
+                    $this->options['secret']
+                );
+                break;
+        }
+
+        $this->sftp = ssh2_sftp($session);
+
+        return true;
     }
+
 
     /**
      * Ensure that target object directory exists and has right permissions.

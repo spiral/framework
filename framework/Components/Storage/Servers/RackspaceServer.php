@@ -171,8 +171,8 @@ class RackspaceServer extends StorageServer
         {
             $this->client->send($this->buildRequest('PUT', $container, $name, array(
                 'Content-Type' => $mimetype,
-                'Etag'         => md5_file($this->resolveFilename($origin))
-            ))->withBody($this->resolveStream($origin)));
+                'Etag'         => md5_file($this->castFilename($origin))
+            ))->withBody($this->castStream($origin)));
         }
         catch (ClientException $exception)
         {
@@ -313,7 +313,8 @@ class RackspaceServer extends StorageServer
                 "Copying between regions are not allowed by Rackspace and performed using local buffer."
             );
 
-            return $this->upload($destination, $name, $this->getStream($container, $name));
+            //Using local memory/disk as buffer
+            return parent::copy($container, $destination, $name);
         }
 
         try

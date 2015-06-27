@@ -55,7 +55,7 @@ class LocalServer extends StorageServer
     {
         return $this->internalCopy(
             $container,
-            $this->resolveFilename($origin),
+            $this->castFilename($origin),
             $container->options['folder'] . $name
         );
     }

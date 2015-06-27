@@ -70,6 +70,20 @@ abstract class StorageServer implements StorageServerInterface
     }
 
     /**
+     * Copy object to another internal (under same server) container, this operation should may not
+     * require file download and can be performed remotely.
+     *
+     * @param StorageContainer $container   Container instance.
+     * @param StorageContainer $destination Destination container (under same server).
+     * @param string           $name        Relative object name.
+     * @return bool
+     */
+    public function copy(StorageContainer $container, StorageContainer $destination, $name)
+    {
+        return $this->upload($destination, $name, $this->getStream($container, $name));
+    }
+
+    /**
      * Move object to another internal (under same server) container, this operation should may not
      * require file download and can be performed remotely.
      *
@@ -96,7 +110,7 @@ abstract class StorageServer implements StorageServerInterface
      * @param string|StreamInterface $origin
      * @return string
      */
-    protected function resolveFilename($origin)
+    protected function castFilename($origin)
     {
         if (empty($origin) || is_string($origin))
         {
@@ -122,7 +136,7 @@ abstract class StorageServer implements StorageServerInterface
      * @param string|StreamInterface $origin
      * @return StreamInterface
      */
-    protected function resolveStream($origin)
+    protected function castStream($origin)
     {
         if ($origin instanceof StreamInterface)
         {

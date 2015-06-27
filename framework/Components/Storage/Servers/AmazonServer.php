@@ -123,7 +123,7 @@ class AmazonServer extends StorageServer
             $container,
             $name,
             array(
-                'Content-MD5'  => base64_encode(md5_file($this->resolveFilename($origin), true)),
+                'Content-MD5'  => base64_encode(md5_file($this->castFilename($origin), true)),
                 'Content-Type' => $mimetype
             ),
             array(
@@ -132,7 +132,7 @@ class AmazonServer extends StorageServer
             )
         );
 
-        $response = $this->client->send($request->withBody($this->resolveStream($origin)));
+        $response = $this->client->send($request->withBody($this->castStream($origin)));
 
         return $response->getStatusCode() == 200;
     }
