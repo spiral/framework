@@ -36,10 +36,10 @@ abstract class StorageServer implements StorageServerInterface
     protected $file = null;
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based.
-     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Every server represent one virtual storage which can be either local, remote or cloud based.
+     * Every server should support basic set of low-level operations (create, move, copy and etc).
      *
-     * @param FileManager $file    FileManager component.
+     * @param FileManager $file    File component.
      * @param array       $options Storage connection options.
      */
     public function __construct(FileManager $file, array $options)
@@ -49,12 +49,14 @@ abstract class StorageServer implements StorageServerInterface
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location,
+     * Allocate local filename for remote storage object, if container represent remote location,
      * adapter should download file to temporary file and return it's filename. File is in readonly
      * mode, and in some cases will be erased on shutdown.
      *
+     * Method should return false or thrown an exception if local filename can not be allocated.
+     *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return string|bool
      */
     public function allocateFilename(StorageContainer $container, $name)
@@ -70,12 +72,14 @@ abstract class StorageServer implements StorageServerInterface
     }
 
     /**
-     * Copy object to another internal (under same server) container, this operation should may not
+     * Copy object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
+     *
+     * Method should return false or thrown an exception if object can not be copied.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
+     * @param string           $name        Storage object name.
      * @return bool
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
@@ -84,12 +88,14 @@ abstract class StorageServer implements StorageServerInterface
     }
 
     /**
-     * Move object to another internal (under same server) container, this operation should may not
+     * Replace object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
+     *
+     * Method should return false or thrown an exception if object can not be replaced.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
+     * @param string           $name        Storage object name.
      * @return bool
      */
     public function replace(StorageContainer $container, StorageContainer $destination, $name)

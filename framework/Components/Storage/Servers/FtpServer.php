@@ -13,7 +13,6 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Components\Http\Stream;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
-use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageServer;
 
 class FtpServer extends StorageServer
@@ -41,12 +40,11 @@ class FtpServer extends StorageServer
     protected $connection = null;
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based.
-     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Every server represent one virtual storage which can be either local, remote or cloud based.
+     * Every server should support basic set of low-level operations (create, move, copy and etc).
      *
-     * @param FileManager $file    FileManager component.
+     * @param FileManager $file    File component.
      * @param array       $options Storage connection options.
-     * @throws StorageException
      */
     public function __construct(FileManager $file, array $options)
     {
@@ -63,55 +61,11 @@ class FtpServer extends StorageServer
     }
 
     /**
-     * Ensure that FTP connection is up and can be used for file operations.
+     * Check if given object (name) exists in specified container. Method should never fail if file
+     * not exists and will return bool in any condition.
      *
-     * @return bool
-     * @throws StorageException
-     */
-    protected function connect()
-    {
-        if (!empty($this->connection))
-        {
-            return true;
-        }
-
-        $this->connection = ftp_connect(
-            $this->options['host'],
-            $this->options['port'],
-            $this->options['timeout']
-        );
-
-        if (empty($this->connection))
-        {
-            throw new StorageException(
-                "Unable to connect to remote FTP server '{$this->options['host']}'."
-            );
-        }
-
-        if (!ftp_login($this->connection, $this->options['login'], $this->options['password']))
-        {
-            ftp_close($this->connection);
-
-            throw new StorageException(
-                "Unable to connect to remote FTP server '{$this->options['host']}'."
-            );
-        }
-
-        if (!ftp_pasv($this->connection, $this->options['passive']))
-        {
-            ftp_close($this->connection);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if given object (name) exists in specified container.
-     *
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param StorageContainer $container Container instance associated with specific server.
+     * @param string           $name      Storage object name.
      * @return bool
      */
     public function isExists(StorageContainer $container, $name)
@@ -120,10 +74,10 @@ class FtpServer extends StorageServer
     }
 
     /**
-     * Retrieve object size in bytes, should return 0 if object not exists.
+     * Retrieve object size in bytes, should return false if object does not exists.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return int|bool
      */
     public function getSize(StorageContainer $container, $name)
@@ -137,47 +91,41 @@ class FtpServer extends StorageServer
     }
 
     /**
-     * Upload new storage object using given filename or stream.
+     * Upload storage object using given filename or stream. Method can return false in case of failed
+     * upload or thrown custom exception if needed.
      *
      * @param StorageContainer       $container Container instance.
-     * @param string                 $name      Relative object name.
+     * @param string                 $name      Given storage object name.
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
     public function upload(StorageContainer $container, $name, $origin)
     {
-        try
+        $location = $this->ensureLocation($container, $name);
+        if (!ftp_put($this->connection, $location, $this->castFilename($origin), FTP_BINARY))
         {
-            $location = $this->ensureLocation($container, $name);
-            if (!ftp_put($this->connection, $location, $this->castFilename($origin), FTP_BINARY))
-            {
-                return false;
-            }
-
-            if (!empty($container->options['mode']))
-            {
-                //todo: default mode
-                ftp_chmod($this->connection, $container->options['mode'], $location);
-            }
-
-            return true;
-        }
-        catch (\ErrorException $exception)
-        {
+            return false;
         }
 
-        return false;
+        ftp_chmod(
+            $this->connection,
+            !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME,
+            $location
+        );
+
+        return true;
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location,
-     * adapter should download file to temporary file and return it's filename. All object stored in
-     * temporary files should be registered in File::$removeFiles, to be removed after script ends to
-     * clean used hard drive space.
+     * Allocate local filename for remote storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. File is in readonly
+     * mode, and in some cases will be erased on shutdown.
+     *
+     * Method should return false or thrown an exception if local filename can not be allocated.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @return string
+     * @param string           $name      Storage object name.
+     * @return string|bool
      */
     public function allocateFilename(StorageContainer $container, $name)
     {
@@ -185,10 +133,6 @@ class FtpServer extends StorageServer
         {
             return false;
         }
-
-        /**
-         * This method should be potentially updated to use getStream method as content provider.
-         */
 
         //File should be removed after processing
         $tempFilename = $this->file->tempFilename($this->file->extension($name));
@@ -199,31 +143,34 @@ class FtpServer extends StorageServer
     }
 
     /**
-     * Get temporary read-only stream used to represent remote content. This method is very identical
-     * to localFilename, however in some cases it may store data content in memory simplifying
-     * development.
+     * Get temporary read-only stream used to represent remote content. This method is very similar
+     * to localFilename, however in some cases it may store data content in memory.
+     *
+     * Method should return false or thrown an exception if stream can not be allocated.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return StreamInterface|null
      */
     public function getStream(StorageContainer $container, $name)
     {
         if (!$filename = $this->allocateFilename($container, $name))
         {
-            return null;
+            return false;
         }
 
         return new Stream($filename);
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require
+     * Rename storage object without changing it's container. This operation does not require
      * object recreation or download and can be performed on remote server.
      *
+     * Method should return false or thrown an exception if object can not be renamed.
+     *
      * @param StorageContainer $container Container instance.
-     * @param string           $oldname   Relative object name.
-     * @param string           $newname   New object name.
+     * @param string           $oldname   Storage object name.
+     * @param string           $newname   New storage object name.
      * @return bool
      */
     public function rename(StorageContainer $container, $oldname, $newname)
@@ -233,35 +180,27 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        $this->ensureLocation($container, $newname);
-        $location = $this->getPath($container, $newname);
-
-        try
+        $location = $this->ensureLocation($container, $newname);
+        if (!ftp_rename($this->connection, $this->getPath($container, $oldname), $location))
         {
-            if (!ftp_rename($this->connection, $this->getPath($container, $oldname), $location))
-            {
-                return false;
-            }
-
-            if (!empty($container->options['mode']))
-            {
-                ftp_chmod($this->connection, $container->options['mode'], $location);
-            }
-
-            return true;
-        }
-        catch (\ErrorException $exception)
-        {
+            return false;
         }
 
-        return false;
+        ftp_chmod(
+            $this->connection,
+            !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME,
+            $location
+        );
+
+        return true;
     }
 
     /**
-     * Delete storage object from specified container.
+     * Delete storage object from specified container. Method should not fail if object does not
+     * exists.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      */
     public function delete(StorageContainer $container, $name)
     {
@@ -313,6 +252,51 @@ class FtpServer extends StorageServer
         }
 
         return false;
+    }
+
+    /**
+     * Ensure that FTP connection is up and can be used for file operations.
+     *
+     * @return bool
+     * @throws StorageException
+     */
+    protected function connect()
+    {
+        if (!empty($this->connection))
+        {
+            return true;
+        }
+
+        $this->connection = ftp_connect(
+            $this->options['host'],
+            $this->options['port'],
+            $this->options['timeout']
+        );
+
+        if (empty($this->connection))
+        {
+            throw new StorageException(
+                "Unable to connect to remote FTP server '{$this->options['host']}'."
+            );
+        }
+
+        if (!ftp_login($this->connection, $this->options['login'], $this->options['password']))
+        {
+            ftp_close($this->connection);
+
+            throw new StorageException(
+                "Unable to connect to remote FTP server '{$this->options['host']}'."
+            );
+        }
+
+        if (!ftp_pasv($this->connection, $this->options['passive']))
+        {
+            ftp_close($this->connection);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

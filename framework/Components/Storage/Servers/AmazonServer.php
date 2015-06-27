@@ -10,6 +10,7 @@ namespace Spiral\Components\Storage\Servers;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
@@ -41,10 +42,10 @@ class AmazonServer extends StorageServer
     protected $client = null;
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based.
-     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Every server represent one virtual storage which can be either local, remote or cloud based.
+     * Every server should support basic set of low-level operations (create, move, copy and etc).
      *
-     * @param FileManager $file    FileManager component.
+     * @param FileManager $file    File component.
      * @param array       $options Storage connection options.
      */
     public function __construct(FileManager $file, array $options)
@@ -56,11 +57,13 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * Check if given object (name) exists in specified container.
+     * Check if given object (name) exists in specified container. Method should never fail if file
+     * not exists and will return bool in any condition.
      *
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param StorageContainer $container Container instance associated with specific server.
+     * @param string           $name      Storage object name.
      * @return bool|ResponseInterface
+     * @throws ClientException
      */
     public function isExists(StorageContainer $container, $name)
     {
@@ -75,6 +78,7 @@ class AmazonServer extends StorageServer
                 return false;
             }
 
+            //Something wrong with connection
             throw $exception;
         }
 
@@ -87,10 +91,10 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * Retrieve object size in bytes, should return 0 if object not exists.
+     * Retrieve object size in bytes, should return false if object does not exists.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return int|bool
      */
     public function getSize(StorageContainer $container, $name)
@@ -104,12 +108,15 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * Upload new storage object using given filename or stream.
+     * Upload storage object using given filename or stream. Method can return false in case of failed
+     * upload or thrown custom exception if needed.
      *
      * @param StorageContainer       $container Container instance.
-     * @param string                 $name      Relative object name.
+     * @param string                 $name      Given storage object name.
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
+     * @throws ClientException
+     * @throws ServerException
      */
     public function upload(StorageContainer $container, $name, $origin)
     {
@@ -132,66 +139,76 @@ class AmazonServer extends StorageServer
             )
         );
 
-        $response = $this->client->send($request->withBody($this->castStream($origin)));
-
-        return $response->getStatusCode() == 200;
+        return $this->client->send(
+            $request->withBody($this->castStream($origin))
+        )->getStatusCode() == 200;
     }
 
     /**
-     * Get temporary read-only stream used to represent remote content. This method is very identical
-     * to localFilename, however in some cases it may store data content in memory simplifying
-     * development.
+     * Get temporary read-only stream used to represent remote content. This method is very similar
+     * to localFilename, however in some cases it may store data content in memory.
+     *
+     * Method should return false or thrown an exception if stream can not be allocated.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @return StreamInterface|bool
+     * @param string           $name      Storage object name.
+     * @return StreamInterface|null
+     * @throws ClientException
+     * @throws ServerException
      */
     public function getStream(StorageContainer $container, $name)
     {
         try
         {
-            $response = $this->client->send(
-                $this->buildRequest('GET', $container, $name)
-            );
+            $response = $this->client->send($this->buildRequest('GET', $container, $name));
         }
         catch (ClientException $exception)
         {
-            //Reasonable?
             if ($exception->getCode() != 404)
             {
+                //Some authorization or other error
                 throw $exception;
             }
 
-            return null;
+            return false;
         }
 
         return $response->getBody();
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require
+     * Rename storage object without changing it's container. This operation does not require
      * object recreation or download and can be performed on remote server.
      *
+     * Method should return false or thrown an exception if object can not be renamed.
+     *
      * @param StorageContainer $container Container instance.
-     * @param string           $oldname   Relative object name.
-     * @param string           $newname   New object name.
+     * @param string           $oldname   Storage object name.
+     * @param string           $newname   New storage object name.
      * @return bool
+     * @throws ClientException
+     * @throws ServerException
      */
     public function rename(StorageContainer $container, $oldname, $newname)
     {
         try
         {
-            $this->client->send(
-                $this->buildRequest('PUT', $container, $newname, array(), array(
+            $this->client->send($this->buildRequest(
+                'PUT',
+                $container,
+                $newname,
+                array(),
+                array(
                     'Acl'         => $container->options['public'] ? 'public-read' : 'private',
                     'Copy-Source' => $this->buildUri($container, $oldname)->getPath()
-                ))
-            );
+                )
+            ));
         }
         catch (ClientException $exception)
         {
             if ($exception->getCode() != 404)
             {
+                //Some authorization or other error
                 throw $exception;
             }
 
@@ -204,10 +221,11 @@ class AmazonServer extends StorageServer
     }
 
     /**
-     * Delete storage object from specified container.
+     * Delete storage object from specified container. Method should not fail if object does not
+     * exists.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      */
     public function delete(StorageContainer $container, $name)
     {

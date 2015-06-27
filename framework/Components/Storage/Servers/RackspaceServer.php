@@ -73,7 +73,7 @@ class RackspaceServer extends StorageServer
     protected $regions = array();
 
     /**
-     * Every server represent one virtual storage which can be either local, remove or cloud based.
+     * Every server represent one virtual storage which can be either local, remote or cloud based.
      * Every server should support basic set of low-level operations (create, move, copy and etc).
      *
      * @param FileManager  $file    File component.
@@ -85,7 +85,7 @@ class RackspaceServer extends StorageServer
         parent::__construct($file, $options);
         $this->cache = $cache;
 
-        if (!empty($this->options['cache']))
+        if ($this->options['cache'])
         {
             $this->authToken = $this->cache->get($this->options['username'] . '@rackspace-token');
             $this->regions = $this->cache->get($this->options['username'] . '@rackspace-regions');
@@ -98,11 +98,12 @@ class RackspaceServer extends StorageServer
     }
 
     /**
-     * Check if given object (name) exists in specified container.
+     * Check if given object (name) exists in specified container. Method should never fail if file
+     * not exists and will return bool in any condition.
      *
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @return bool|ResponseInterface
+     * @param StorageContainer $container Container instance associated with specific server.
+     * @param string           $name      Storage object name.
+     * @return bool
      */
     public function isExists(StorageContainer $container, $name)
     {
@@ -124,6 +125,7 @@ class RackspaceServer extends StorageServer
                 return $this->isExists($container, $name);
             }
 
+            //Some unexpected error
             throw $exception;
         }
 
@@ -136,10 +138,10 @@ class RackspaceServer extends StorageServer
     }
 
     /**
-     * Retrieve object size in bytes, should return 0 if object not exists.
+     * Retrieve object size in bytes, should return false if object does not exists.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return int|bool
      */
     public function getSize(StorageContainer $container, $name)
@@ -153,10 +155,11 @@ class RackspaceServer extends StorageServer
     }
 
     /**
-     * Upload new storage object using given filename or stream.
+     * Upload storage object using given filename or stream. Method can return false in case of failed
+     * upload or thrown custom exception if needed.
      *
      * @param StorageContainer       $container Container instance.
-     * @param string                 $name      Relative object name.
+     * @param string                 $name      Given storage object name.
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
@@ -169,10 +172,17 @@ class RackspaceServer extends StorageServer
 
         try
         {
-            $this->client->send($this->buildRequest('PUT', $container, $name, array(
-                'Content-Type' => $mimetype,
-                'Etag'         => md5_file($this->castFilename($origin))
-            ))->withBody($this->castStream($origin)));
+            $request = $this->buildRequest(
+                'PUT',
+                $container,
+                $name,
+                array(
+                    'Content-Type' => $mimetype,
+                    'Etag'         => md5_file($this->castFilename($origin))
+                )
+            );
+
+            $this->client->send($request->withBody($this->castStream($origin)));
         }
         catch (ClientException $exception)
         {
@@ -182,27 +192,29 @@ class RackspaceServer extends StorageServer
 
                 return $this->upload($container, $name, $origin);
             }
+
+            //Some unexpected error
+            throw $exception;
         }
 
         return true;
     }
 
     /**
-     * Get temporary read-only stream used to represent remote content. This method is very identical
-     * to localFilename, however in some cases it may store data content in memory simplifying
-     * development.
+     * Get temporary read-only stream used to represent remote content. This method is very similar
+     * to localFilename, however in some cases it may store data content in memory.
+     *
+     * Method should return false or thrown an exception if stream can not be allocated.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return StreamInterface|null
      */
     public function getStream(StorageContainer $container, $name)
     {
         try
         {
-            $response = $this->client->send(
-                $this->buildRequest('GET', $container, $name)
-            );
+            $response = $this->client->send($this->buildRequest('GET', $container, $name));
         }
         catch (ClientException $exception)
         {
@@ -219,36 +231,36 @@ class RackspaceServer extends StorageServer
                 throw $exception;
             }
 
-            return null;
+            return false;
         }
 
         return $response->getBody();
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require
+     * Rename storage object without changing it's container. This operation does not require
      * object recreation or download and can be performed on remote server.
      *
+     * Method should return false or thrown an exception if object can not be renamed.
+     *
      * @param StorageContainer $container Container instance.
-     * @param string           $oldname   Relative object name.
-     * @param string           $newname   New object name.
+     * @param string           $oldname   Storage object name.
+     * @param string           $newname   New storage object name.
      * @return bool
      */
     public function rename(StorageContainer $container, $oldname, $newname)
     {
         try
         {
-            $this->client->send(
-                $this->buildRequest(
-                    'PUT',
-                    $container,
-                    $newname,
-                    array(
-                        'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($oldname),
-                        'Content-Length' => 0
-                    )
+            $this->client->send($this->buildRequest(
+                'PUT',
+                $container,
+                $newname,
+                array(
+                    'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($oldname),
+                    'Content-Length' => 0
                 )
-            );
+            ));
         }
         catch (ClientException $exception)
         {
@@ -269,10 +281,11 @@ class RackspaceServer extends StorageServer
     }
 
     /**
-     * Delete storage object from specified container.
+     * Delete storage object from specified container. Method should not fail if object does not
+     * exists.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      */
     public function delete(StorageContainer $container, $name)
     {
@@ -297,12 +310,14 @@ class RackspaceServer extends StorageServer
     }
 
     /**
-     * Copy object to another internal (under same server) container, this operation should may not
+     * Copy object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
+     *
+     * Method should return false or thrown an exception if object can not be copied.
      *
      * @param StorageContainer $container   Container instance.
      * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
+     * @param string           $name        Storage object name.
      * @return bool
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)

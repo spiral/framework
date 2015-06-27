@@ -113,10 +113,20 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
+     * Get container prefix value.
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
      * Check if object with given address can be potentially located inside this container and return
      * prefix length.
      *
-     * @param string $address Object address.
+     * @param string $address Storage object address (including name and prefix).
      * @return bool|int
      */
     public function checkPrefix($address)
@@ -142,51 +152,52 @@ class StorageContainer extends Component implements InjectableInterface
     }
 
     /**
-     * Check if given object (name) exists in current container.
+     * Check if given object (name) exists in current container. Method should never fail if file
+     * not exists and will return bool in any condition.
      *
-     * @param string $name Relative object name.
+     * @param string $name Storage object name.
      * @return bool
      */
     public function isExists($name)
     {
-        $this->log("Check '{$this->buildAddress($name)}' exists at '{$this->server}'.");
+        $this->log("Checking existence of '{$this->buildAddress($name)}' at '{$this->server}'.");
 
-        benchmark("{$this->server}::exists", $this->prefix . $name);
-        $result = $this->getServer()->isExists($this, $name);
-        benchmark("{$this->server}::exists", $this->prefix . $name);
+        benchmark("{$this->server}::exists", $this->buildAddress($name));
+        $result = (bool)$this->getServer()->isExists($this, $name);
+        benchmark("{$this->server}::exists", $this->buildAddress($name));
 
-        return (bool)$result;
+        return $result;
     }
 
     /**
-     * Retrieve object size in bytes, should return 0 if object not exists.
+     * Retrieve object size in bytes, should return false if object does not exists.
      *
-     * @param string $name Relative object name.
+     * @param string $name Storage object name.
      * @return int|bool
      */
     public function getSize($name)
     {
-        $this->log("Get size of '{$this->buildAddress($name)}' at '{$this->server}'.");
+        $this->log("Getting size of '{$this->buildAddress($name)}' at '{$this->server}'.");
 
-        benchmark("{$this->server}::size", $this->prefix . $name);
-        $filesize = $this->getServer()->getSize($this, $name);
-        benchmark("{$this->server}::size", $this->prefix . $name);
+        benchmark("{$this->server}::size", $this->buildAddress($name));
+        $size = $this->getServer()->getSize($this, $name);
+        benchmark("{$this->server}::size", $this->buildAddress($name));
 
-        return $filesize;
+        return $size;
     }
 
     /**
-     * Upload new storage object using given filename or stream.
+     * Upload storage object using given filename or stream. Method can return false in case of failed
+     * upload or thrown custom exception if needed.
      *
-     * @param string                                       $name     Relative object name.
-     * @param string|StreamInterface|UploadedFileInterface $origin   Local filename or stream to use
-     *                                                               for creation.
+     * @param string                                       $name   Given storage object name.
+     * @param string|StreamInterface|UploadedFileInterface $origin Local filename or stream to use
+     *                                                             for creation.
      * @return StorageObject
-     * @throws StorageException
      */
     public function upload($name, $origin)
     {
-        $this->log("Upload '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        $this->log("Uploading '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
         if ($origin instanceof UploadedFileInterface)
         {
@@ -194,70 +205,77 @@ class StorageContainer extends Component implements InjectableInterface
             $origin = $origin->getStream();
         }
 
-        benchmark("{$this->server}::upload", $this->prefix . $name);
-        if ($this->getServer()->upload($this, $name, $origin))
-        {
-            benchmark("{$this->server}::upload", $this->prefix . $name);
+        benchmark("{$this->server}::upload", $this->buildAddress($name));
 
-            return new StorageObject($this->buildAddress($name), $name, $this->storage, $this);
+        if (!$this->getServer()->upload($this, $name, $origin))
+        {
+            throw new StorageException(
+                "Unable to upload content into '{$this->buildAddress($name)}' at '{$this->server}' server."
+            );
         }
 
-        benchmark("{$this->server}::upload", $this->prefix . $name);
-        throw new StorageException(
-            "Unable to upload '{$this->buildAddress($name)}' at '{$this->server}' server."
-        );
+        benchmark("{$this->server}::upload", $this->buildAddress($name));
+
+        return new StorageObject($this->buildAddress($name), $name, $this->storage, $this);
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location,
+     * Allocate local filename for remote storage object, if container represent remote location,
      * adapter should download file to temporary file and return it's filename. File is in readonly
      * mode, and in some cases will be erased on shutdown.
      *
-     * @param string $name Relative object name.
+     * @param string $name Storage object name.
      * @return string
+     * @throws StorageException
      */
     public function allocateFilename($name)
     {
-        $this->log("Get local filename of '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        $this->log("Getting local filename of '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        benchmark("{$this->server}::filename", $this->prefix . $name);
-        $filename = $this->getServer()->allocateFilename($this, $name);
-        benchmark("{$this->server}::filename", $this->prefix . $name);
+        benchmark("{$this->server}::filename", $this->buildAddress($name));
+        if (!$filename = $this->getServer()->allocateFilename($this, $name))
+        {
+            throw new StorageException(
+                "Unable to allocate local filename for '{$this->buildAddress($name)}' "
+                . "at '{$this->server}' server."
+            );
+        }
+        benchmark("{$this->server}::filename", $this->buildAddress($name));
 
         return $filename;
     }
 
     /**
-     * Get temporary read-only stream used to represent remote content. This method is very identical
-     * to localFilename, however in some cases it may store data content in memory simplifying
-     * development.
+     * Get temporary read-only stream used to represent remote content. This method is very similar
+     * to localFilename, however in some cases it may store data content in memory.
      *
-     * @param string $name Relative object name.
+     * @param string $name Storage object name.
      * @return StreamInterface
+     * @throws StorageException
      */
     public function getStream($name)
     {
-        $this->log("Get stream for '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        $this->log("Getting stream for '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        benchmark("{$this->server}::stream", $this->prefix . $name);
+        benchmark("{$this->server}::stream", $this->buildAddress($name));
         if (!$stream = $this->getServer()->getStream($this, $name))
         {
-            //exception
+            throw new StorageException(
+                "Unable to allocate stream for '{$this->buildAddress($name)}' at '{$this->server}' server."
+            );
         }
-
-        benchmark("{$this->server}::stream", $this->prefix . $name);
+        benchmark("{$this->server}::stream", $this->buildAddress($name));
 
         return $stream;
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require
-     * object recreation or download and can be performed on remote server. Will return renamed object
-     * address if success.
+     * Rename storage object without changing it's container. This operation does not require
+     * object recreation or download and can be performed on remote server.
      *
-     * @param string $oldname Relative object name.
-     * @param string $newname New object name.
-     * @return string
+     * @param string $oldname Storage object name.
+     * @param string $newname New storage object name.
+     * @return bool
      * @throws StorageException
      */
     public function rename($oldname, $newname)
@@ -267,46 +285,48 @@ class StorageContainer extends Component implements InjectableInterface
             return true;
         }
 
-        benchmark("{$this->server}::rename", $this->prefix . $oldname);
-        if ($this->getServer()->rename($this, $oldname, $newname))
+        $this->log(
+            "Renaming '{$this->buildAddress($oldname)}' to '{$this->buildAddress($newname)}' "
+            . "at '{$this->server}' server."
+        );
+
+        benchmark("{$this->server}::rename", $this->buildAddress($oldname));
+        if (!$this->getServer()->rename($this, $oldname, $newname))
         {
-            benchmark("{$this->server}::rename", $this->prefix . $oldname);
-            $this->log(
-                "Rename '{$this->buildAddress($oldname)}' "
+            throw new StorageException(
+                "Unable to rename '{$this->buildAddress($oldname)}' "
                 . "to '{$this->buildAddress($newname)}' at '{$this->server}' server."
             );
-
-            return $this->buildAddress($newname);
         }
-        benchmark("{$this->server}::rename", $this->prefix . $oldname);
+        benchmark("{$this->server}::rename", $this->buildAddress($oldname));
 
-        throw new StorageException(
-            "Unable to rename '{$this->buildAddress($oldname)}' "
-            . "to '{$this->buildAddress($newname)}' at '{$this->server}' server."
-        );
+        return $this->buildAddress($newname);
     }
 
     /**
-     * Delete storage object from specified container.
+     * Delete storage object from specified container. Method should not fail if object does not
+     * exists.
      *
-     * @param string $name Relative object name.
+     * @param string $name Storage object name.
      */
     public function delete($name)
     {
         $this->log("Delete '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        benchmark("{$this->server}::delete", $this->prefix . $name);
+        benchmark("{$this->server}::delete", $this->buildAddress($name));
         $this->getServer()->delete($this, $name);
-        benchmark("{$this->server}::delete", $this->prefix . $name);
+        benchmark("{$this->server}::delete", $this->buildAddress($name));
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not
+     * Copy object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
      *
+     * Method will return new instance of StorageObject associated with copied data.
+     *
      * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
-     * @return StorageObject
+     * @param string           $name        Storage object name.
+     * @return bool
      * @throws StorageException
      */
     public function copy(StorageContainer $destination, $name)
@@ -319,63 +339,51 @@ class StorageContainer extends Component implements InjectableInterface
         //Internal copying
         if ($this->server == $destination->server)
         {
-            benchmark("{$this->server}::copy", $this->prefix . $name);
-            if ($this->getServer()->copy($this, $destination, $name))
-            {
-                benchmark("{$this->server}::copy", $this->prefix . $name);
-                $this->log(
-                    "Internal copy '{$this->buildAddress($name)}' "
-                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
-                );
-
-                return new StorageObject(
-                    $destination->buildAddress($name),
-                    $name,
-                    $this->storage,
-                    $destination
-                );
-            }
-
-            benchmark("{$this->server}::copy", $this->prefix . $name);
-            throw new StorageException(
-                "Unable to copy '{$this->buildAddress($name)}' "
+            $this->log(
+                "Internal copying of '{$this->buildAddress($name)}' "
                 . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
             );
-        }
 
-        /**
-         * Now we will try to copy object using current server/memory as a buffer.
-         */
-        $stream = $this->getStream($name);
-        if ($stream && $destination->upload($name, $stream))
+            benchmark("{$this->server}::copy", $this->buildAddress($name));
+            if (!$this->getServer()->copy($this, $destination, $name))
+            {
+                throw new StorageException(
+                    "Unable to copy '{$this->buildAddress($name)}' "
+                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+                );
+            }
+            benchmark("{$this->server}::copy", $this->buildAddress($name));
+        }
+        else
         {
             $this->log(
-                "External copy '{$this->server}'.'{$this->buildAddress($name)}' "
+                "External copying of '{$this->server}'.'{$this->buildAddress($name)}' "
                 . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
             );
 
-            return new StorageObject(
-                $destination->buildAddress($name),
-                $name,
-                $this->storage,
-                $destination
-            );
+            $stream = $this->getStream($name);
+
+            //Now we will try to copy object using current server/memory as a buffer.
+            if (empty($stream) || !$destination->upload($name, $stream))
+            {
+                throw new StorageException(
+                    "Unable to copy '{$this->server}'.'{$this->buildAddress($name)}' "
+                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+                );
+            }
         }
 
-        throw new StorageException(
-            "Unable to copy '{$this->server}'.'{$this->buildAddress($name)}' "
-            . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
-        );
+        return new StorageObject($destination->buildAddress($name), $name, $this->storage, $destination);
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not
+     * Replace object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
      *
-     * Will return replaced object address if success.
+     * Method will return replaced storage object address.
      *
      * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
+     * @param string           $name        Storage object name.
      * @return string
      * @throws StorageException
      */
@@ -389,45 +397,43 @@ class StorageContainer extends Component implements InjectableInterface
         //Internal copying
         if ($this->server == $destination->server)
         {
-            benchmark("{$this->server}::replace", $this->prefix . $name);
-            if ($this->getServer()->replace($this, $destination, $name))
-            {
-                benchmark("{$this->server}::replace", $this->prefix . $name);
-                $this->log(
-                    "Internal move '{$this->buildAddress($name)}' "
-                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
-                );
-
-                return $destination->buildAddress($name);
-            }
-
-            benchmark("{$this->server}::replace", $this->prefix . $name);
-            throw new StorageException(
-                "Unable to move '{$this->buildAddress($name)}' "
+            $this->log(
+                "Internal moving '{$this->buildAddress($name)}' "
                 . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
             );
-        }
 
-        /**
-         * Now we will try to replace object using current server/memory as a buffer.
-         */
-        $stream = $this->getStream($name);
-        if ($stream && $destination->upload($name, $stream))
+            benchmark("{$this->server}::replace", $this->buildAddress($name));
+            if (!$this->getServer()->replace($this, $destination, $name))
+            {
+                throw new StorageException(
+                    "Unable to move '{$this->buildAddress($name)}' "
+                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+                );
+            }
+            benchmark("{$this->server}::replace", $this->buildAddress($name));
+        }
+        else
         {
             $this->log(
-                "External move '{$this->server}'.'{$this->buildAddress($name)}'"
+                "External moving '{$this->server}'.'{$this->buildAddress($name)}'"
                 . " to '{$destination->server}'.'{$destination->buildAddress($name)}'."
             );
 
-            $stream->detach() && $this->delete($name);
+            $stream = $this->getStream($name);
 
-            return $destination->buildAddress($name);
+            //Now we will try to replace object using current server/memory as a buffer.
+            if (empty($stream) || !$destination->upload($name, $stream))
+            {
+                throw new StorageException(
+                    "Unable to replace '{$this->server}'.'{$this->buildAddress($name)}' "
+                    . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
+                );
+            }
+
+            $stream->detach() && $this->delete($name);
         }
 
-        throw new StorageException(
-            "Unable to move '{$this->server}'.'{$this->buildAddress($name)}' "
-            . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
-        );
+        return $this->buildAddress($name);
     }
 
     /**

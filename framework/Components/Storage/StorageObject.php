@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\Storage;
 
+use Psr\Http\Message\StreamInterface;
 use Spiral\Core\Component;
 
 class StorageObject extends Component
@@ -125,7 +126,8 @@ class StorageObject extends Component
     }
 
     /**
-     * Check if given object (name) exists in associated container.
+     * Check if object exists in associated container. Method should never fail if file not exists
+     * and will return bool in any condition.
      *
      * @return bool
      */
@@ -140,7 +142,7 @@ class StorageObject extends Component
     }
 
     /**
-     * Retrieve object size in bytes, should return 0 if object not exists.
+     * Retrieve object size in bytes, should return false if object does not exists.
      *
      * @return int|bool
      */
@@ -155,10 +157,12 @@ class StorageObject extends Component
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location,
-     * adapter should download file to temporary file and return it's filename.
+     * Allocate local filename for remote storage object, if container represent remote location,
+     * adapter should download file to temporary file and return it's filename. File is in readonly
+     * mode, and in some cases will be erased on shutdown.
      *
      * @return string
+     * @throws StorageException
      */
     public function localFilename()
     {
@@ -171,32 +175,46 @@ class StorageObject extends Component
     }
 
     /**
-     * Remove storage object without changing it's own container. This operation does not require
+     * Get temporary read-only stream used to represent remote content. This method is very similar
+     * to localFilename, however in some cases it may store data content in memory.
+     *
+     * @return StreamInterface
+     * @throws StorageException
+     */
+    public function getStream()
+    {
+        if (empty($this->name))
+        {
+            return '';
+        }
+
+        return $this->container->getStream($this->name);
+    }
+
+    /**
+     * Rename storage object without changing it's container. This operation does not require
      * object recreation or download and can be performed on remote server.
      *
-     * @param string $newname
-     * @return bool|StorageObject
+     * @param string $newname New storage object name.
+     * @return StorageObject
+     * @throws StorageException
      */
     public function rename($newname)
     {
         if (empty($this->name))
         {
-            return false;
+            throw new StorageException("Unable to rename unassigned storage object.");
         }
 
         $this->address = $this->container->rename($this->name, $newname);
-        if (!empty($this->address))
-        {
-            $this->name = $newname;
+        $this->name = $newname;
 
-            return $this;
-        }
-
-        return false;
+        return $this;
     }
 
     /**
-     * Delete storage object from associated container.
+     * Delete storage object from associated container. Method should not fail if object does not
+     * exists.
      */
     public function delete()
     {
@@ -212,18 +230,20 @@ class StorageObject extends Component
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not
+     * Copy object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
      *
-     * @param StorageContainer|string $destination Destination container.
-     * @return StorageObject
+     * Method will return new instance of StorageObject associated with copied data.
+     *
+     * @param StorageContainer $destination Destination container (under same server).
+     * @return bool
      * @throws StorageException
      */
     public function copy($destination)
     {
         if (empty($this->name))
         {
-            return false;
+            throw new StorageException("Unable to copy unassigned storage object.");
         }
 
         if (is_string($destination))
@@ -235,20 +255,20 @@ class StorageObject extends Component
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not
+     * Replace object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
      *
-     * Will return replaced object address if success.
+     * Method will return replaced storage object address.
      *
-     * @param StorageContainer|string $destination Destination container.
-     * @return bool|StorageObject
+     * @param StorageContainer $destination Destination container (under same server).
+     * @return string
      * @throws StorageException
      */
     public function replace($destination)
     {
         if (empty($this->name))
         {
-            return false;
+            throw new StorageException("Unable to replace unassigned storage object.");
         }
 
         if (is_string($destination))
@@ -257,14 +277,9 @@ class StorageObject extends Component
         }
 
         $this->address = $this->container->replace($destination, $this->name);
-        if (!empty($this->address))
-        {
-            $this->container = $destination;
+        $this->container = $destination;
 
-            return $this;
-        }
-
-        return false;
+        return $this;
     }
 
     /**
