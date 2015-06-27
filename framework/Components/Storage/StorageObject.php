@@ -256,7 +256,7 @@ class StorageObject extends Component
             $destination = $this->storage->container($destination);
         }
 
-        $this->address = $this->container->replace($destination, $this->name);
+        $this->address = $this->container->move($destination, $this->name);
         if (!empty($this->address))
         {
             $this->container = $destination;

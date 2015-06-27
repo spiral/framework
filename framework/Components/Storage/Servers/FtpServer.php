@@ -19,6 +19,13 @@ use Spiral\Components\Storage\StorageServer;
 class FtpServer extends StorageServer
 {
     /**
+     * FTP connection resource.
+     *
+     * @var resource
+     */
+    protected $connection = null;
+
+    /**
      * Configuration of FTP component, home directory, server options and etc.
      *
      * @var array
@@ -34,13 +41,6 @@ class FtpServer extends StorageServer
     );
 
     /**
-     * FTP connection resource.
-     *
-     * @var resource
-     */
-    protected $connection = null;
-
-    /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
      * Every adapter should support basic set of low-level operations (create, move, copy and etc).
      *
@@ -51,6 +51,7 @@ class FtpServer extends StorageServer
     public function __construct(FileManager $file, array $options)
     {
         parent::__construct($file, $options);
+        $this->options = $options + $this->options;
 
         if (!extension_loaded('ftp'))
         {
@@ -58,8 +59,6 @@ class FtpServer extends StorageServer
                 "Unable to initialize ftp storage server, extension 'ftp' not found."
             );
         }
-
-        $this->connect();
     }
 
     /**
@@ -116,6 +115,8 @@ class FtpServer extends StorageServer
      */
     public function isExists(StorageContainer $container, $name)
     {
+        $this->connect();
+
         return ftp_size($this->connection, $this->getPath($container, $name)) != -1;
     }
 
@@ -128,6 +129,7 @@ class FtpServer extends StorageServer
      */
     public function getSize(StorageContainer $container, $name)
     {
+        $this->connect();
         if (($size = ftp_size($this->connection, $this->getPath($container, $name))) != -1)
         {
             return $size;
@@ -146,6 +148,8 @@ class FtpServer extends StorageServer
      */
     public function upload(StorageContainer $container, $name, $origin)
     {
+        $this->connect();
+
         try
         {
             $location = $this->ensureLocation($container, $name);
@@ -191,10 +195,10 @@ class FtpServer extends StorageServer
          */
 
         //File should be removed after processing
-        $tempFilename = $this->file->tempFilename($this->file->extension($name));
+        $this->file->blackspot($filename = $this->file->tempFilename($this->file->extension($name)));
 
-        return ftp_get($this->connection, $tempFilename, $this->getPath($container, $name), FTP_BINARY)
-            ? $tempFilename
+        return ftp_get($this->connection, $filename, $this->getPath($container, $name), FTP_BINARY)
+            ? $filename
             : false;
     }
 
@@ -205,13 +209,13 @@ class FtpServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return StreamInterface|null
+     * @return StreamInterface|bool
      */
     public function getStream(StorageContainer $container, $name)
     {
         if (!$filename = $this->allocateFilename($container, $name))
         {
-            return null;
+            return false;
         }
 
         return new Stream($filename);
@@ -222,12 +226,17 @@ class FtpServer extends StorageServer
      * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $oldname   Relative object name.
+     * @param string           $oldname      Relative object name.
      * @param string           $newname   New object name.
      * @return bool
      */
     public function rename(StorageContainer $container, $oldname, $newname)
     {
+        if ($oldname == $newname)
+        {
+            return true;
+        }
+
         if (!$this->isExists($container, $oldname))
         {
             return false;
@@ -285,7 +294,6 @@ class FtpServer extends StorageServer
         //Copying available only using buffer server
         if (!$filename = $this->allocateFilename($container, $name))
         {
-            //exception
             return false;
         }
 
@@ -301,7 +309,7 @@ class FtpServer extends StorageServer
      * @param string           $name        Relative object name.
      * @return bool
      */
-    public function replace(StorageContainer $container, StorageContainer $destination, $name)
+    public function move(StorageContainer $container, StorageContainer $destination, $name)
     {
         if ($container->options == $destination->options)
         {
@@ -345,6 +353,7 @@ class FtpServer extends StorageServer
      */
     protected function ensureLocation(StorageContainer $container, $name)
     {
+        $this->connect();
         $directory = dirname($this->getPath($container, $name));
 
         try
@@ -353,7 +362,6 @@ class FtpServer extends StorageServer
             {
                 if (!empty($container->options['mode']))
                 {
-                    //todo: force mode
                     ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
                 }
 
