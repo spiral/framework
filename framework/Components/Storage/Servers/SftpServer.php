@@ -19,13 +19,6 @@ use Spiral\Components\Storage\StorageServer;
 class SftpServer extends StorageServer
 {
     /**
-     * SFTP connection resource.
-     *
-     * @var resource
-     */
-    protected $sftp = null;
-
-    /**
      * Configuration of FTP component, home directory, server options and etc.
      *
      * @var array
@@ -35,6 +28,13 @@ class SftpServer extends StorageServer
         'port' => 22,
         'home' => '/'
     );
+
+    /**
+     * SFTP connection resource.
+     *
+     * @var resource
+     */
+    protected $sftp = null;
 
     /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
@@ -47,7 +47,6 @@ class SftpServer extends StorageServer
     public function __construct(FileManager $file, array $options)
     {
         parent::__construct($file, $options);
-        $this->options = $options + $this->options;
 
         if (!extension_loaded('ssh2'))
         {
@@ -55,6 +54,8 @@ class SftpServer extends StorageServer
                 "Unable to initialize sftp storage server, extension 'ssh2' not found."
             );
         }
+
+        $this->connect();
     }
 
     /**
@@ -78,7 +79,7 @@ class SftpServer extends StorageServer
         }
 
         //Authorization METHODS!
-        ssh2_auth_password($connection, 'Wolfy-J', '%canon2631jump%');
+        ssh2_auth_password($connection, 'USERNAME', 'PASSWORD');
 
         $this->sftp = ssh2_sftp($connection);
     }
@@ -92,8 +93,6 @@ class SftpServer extends StorageServer
      */
     public function isExists(StorageContainer $container, $name)
     {
-        $this->connect();
-
         return file_exists($this->getUri($container, $name));
     }
 
@@ -106,8 +105,6 @@ class SftpServer extends StorageServer
      */
     public function getSize(StorageContainer $container, $name)
     {
-        $this->connect();
-
         if (!$this->isExists($container, $name))
         {
             return false;
@@ -126,8 +123,6 @@ class SftpServer extends StorageServer
      */
     public function upload(StorageContainer $container, $name, $origin)
     {
-        $this->connect();
-
         if ($origin instanceof StreamInterface)
         {
             $expectedSize = $origin->getSize();
@@ -159,12 +154,10 @@ class SftpServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return StreamInterface|bool
+     * @return StreamInterface|null
      */
     public function getStream(StorageContainer $container, $name)
     {
-        $this->connect();
-
         return new Stream($this->getUri($container, $name));
     }
 
@@ -179,11 +172,6 @@ class SftpServer extends StorageServer
      */
     public function rename(StorageContainer $container, $oldname, $newname)
     {
-        if ($oldname == $newname)
-        {
-            return true;
-        }
-
         if (!$this->isExists($container, $oldname))
         {
             //return false;
@@ -269,7 +257,6 @@ class SftpServer extends StorageServer
      */
     protected function ensureLocation(StorageContainer $container, $name)
     {
-        $this->connect();
         $directory = dirname($this->getPath($container, $name));
 
         if (file_exists('ssh2.sftp://' . $this->sftp . $directory))

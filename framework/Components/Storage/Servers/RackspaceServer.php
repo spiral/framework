@@ -8,35 +8,62 @@
  */
 namespace Spiral\Components\Storage\Servers;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+use Spiral\Components\Cache\CacheManager;
+use Spiral\Components\Files\FileManager;
+use Spiral\Components\Http\Uri;
 use Spiral\Components\Storage\StorageContainer;
+use Spiral\Components\Storage\StorageException;
+use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageServer;
 
 class RackspaceServer extends StorageServer
 {
+    /**
+     * Default cache lifetime is 24 hours.
+     */
+    const CACHE_LIFETIME = 86400;
+
     /**
      * Server configuration, connection options, auth keys and certificates.
      *
      * @var array
      */
     protected $options = array(
-        'server'      => 'auth.api.rackspacecloud.com/v1.0',
-        'authServer'  => 'https://identity.api.rackspacecloud.com/v2.0/tokens',
-        'secured'     => true,
-        'certificate' => '',
-        'username'    => '',
-        'accessKey'   => '',
-        'cache'       => true
+        'server'     => 'https://auth.api.rackspacecloud.com/v1.0',
+        'authServer' => 'https://identity.api.rackspacecloud.com/v2.0/tokens',
+        'username'   => '',
+        'apiKey'     => '',
+        'cache'      => true
     );
 
     /**
-     * Current connection credentials. If cache options set to true in server options credentials will
-     * be stored between sessions. Authentication tokens are typically valid for 24 hours. Applications
-     * should be designed to re-authenticate after receiving a 401 (Unauthorized) response from a
-     * service endpoint.
+     * Cache component to remember connection.
      *
-     * @var array
+     * @invisible
+     * @var CacheManager
      */
-    private $credentials = array();
+    protected $cache = null;
+
+    /**
+     * Guzzle client.
+     *
+     * @var Client
+     */
+    protected $client = null;
+
+    /**
+     * Rackspace authentication token.
+     *
+     * @var string
+     */
+    protected $authToken = array();
 
     /**
      * All fetched rackspace regions, some operations can be performed only inside one region.
@@ -46,162 +73,28 @@ class RackspaceServer extends StorageServer
     protected $regions = array();
 
     /**
-     * Cache component to remember connection.
-     *
-     * @var CacheManager
-     */
-    protected $cache = null;
-
-    /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
-     * Every adapter should support basic set of low-level operations (create, move, copy and etc).
+     * Every server should support basic set of low-level operations (create, move, copy and etc).
      *
-     * @param array          $options Storage connection options.
-     * @param StorageManager $storage StorageManager component.
-     * @param FileManager    $file    FileManager component.
-     * @param CacheManager   $cache   CacheManager to remember connection credentials.
+     * @param FileManager  $file    File component.
+     * @param array        $options Storage connection options.
+     * @param CacheManager $cache   CacheManager to remember connection credentials across sessions.
      */
-    public function __construct(
-        array $options,
-        StorageManager $storage,
-        FileManager $file,
-        CacheManager $cache = null
-    )
+    public function __construct(FileManager $file, array $options, CacheManager $cache = null)
     {
-        $this->options = $options + $this->options;
-        $this->storage = $storage;
-        $this->file = $file;
-
+        parent::__construct($file, $options);
         $this->cache = $cache;
 
-        if ($this->options['cache'])
+        if (!empty($this->options['cache']))
         {
-            $this->credentials = $this->cache->get(
-                $this->options['username'] . '@rackspace-credentials'
-            );
-
-            if (empty($this->credentials))
-            {
-                $this->credentials = array();
-            }
-
-            $this->regions = $this->cache->get(
-                $this->options['username'] . '@rackspace-regions'
-            );
-
-            if (empty($this->regions))
-            {
-                $this->regions = array();
-            }
-        }
-    }
-
-    /**
-     * Connect rackspace to cloud, fetch credentials (Authentication tokens) and regions. Authentication
-     * tokens are typically valid for 24 hours. Applications should be designed to re-authenticate after
-     * receiving a 401 (Unauthorized) response from a service endpoint.
-     *
-     * @param bool $reset Request new credentials ignoring currently existed values.
-     * @return bool
-     */
-    protected function connect($reset = false)
-    {
-        if (!$reset && $this->credentials)
-        {
-            return true;
+            $this->authToken = $this->cache->get($this->options['username'] . '@rackspace-token');
+            $this->regions = $this->cache->get($this->options['username'] . '@rackspace-regions');
         }
 
-        $query = RackspaceQuery::make(array(
-            'options' => $this->options,
-            'URL'     => $this->options['authServer'],
-            'method'  => 'POST'
-        ));
+        //Some options can be passed directly for guzzle client
+        $this->client = new Client($this->options);
 
-        $result = $query->setRawPOST(json_encode(array(
-            'auth' => array('RAX-KSKEY:apiKeyCredentials' => array(
-                'username' => $this->options['username'],
-                'apiKey'   => $this->options['accessKey']
-            )))))
-            ->setHeader('Content-Type', 'application/json')
-            ->run();
-
-        $content = json_decode($result['content'], 1);
-        if ($result['status'] == 200 && is_array($content))
-        {
-            foreach ($content['access']['serviceCatalog'] as $location)
-            {
-                if ($location['name'] == 'cloudFiles')
-                {
-                    foreach ($location['endpoints'] as $server)
-                    {
-                        $this->regions[$server['region']] = $server['publicURL'];
-                    }
-                }
-            }
-
-            if (!isset($content['access']['token']['id']))
-            {
-                return false;
-            }
-
-            $this->credentials['x-auth-token'] = $content['access']['token']['id'];
-
-            if ($this->options['cache'])
-            {
-                $this->cache->set(
-                    $this->options['username'] . '@rackspace-credentials',
-                    $this->credentials,
-                    86400
-                );
-
-                $this->cache->set(
-                    $this->options['username'] . '@rackspace-regions',
-                    $this->regions,
-                    86400
-                );
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Rackspace query helper used to perform requests to S3 storage servers.
-     *
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @param string           $method    HTTP method.
-     * @return RackspaceQuery
-     */
-    protected function query(StorageContainer $container, $name, $method = 'HEAD')
-    {
-        $url = $this->regionURL($container->options['region']);
-        $url .= '/' . $container->options['container'] . '/' . rawurlencode($name);
-
-        $query = new RackspaceQuery($this->options, $url, $method);
-
-        return $query
-            ->setHeader('X-Auth-Token', $this->credentials['x-auth-token'])
-            ->setHeader('Date', gmdate('D, d M Y H:i:s T'));
-    }
-
-    /**
-     * Find url for given region id.
-     *
-     * @param string $region Region ID.
-     * @return mixed
-     * @throws StorageException
-     */
-    protected function regionURL($region)
-    {
-        if (!isset($this->regions[$region]))
-        {
-            throw new StorageException("'{$region}' region is not supported by Rackspace.");
-        }
-
-        return $this->regions[$region];
+        $this->connect();
     }
 
     /**
@@ -209,24 +102,37 @@ class RackspaceServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @param array            $headers   Headers associated with file.
-     * @return bool
+     * @return bool|ResponseInterface
      */
-    public function exists(StorageContainer $container, $name, &$headers = null)
+    public function isExists(StorageContainer $container, $name)
     {
-        if (!$this->connect())
+        try
+        {
+            $response = $this->client->send($this->buildRequest('HEAD', $container, $name));
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() == 404)
+            {
+                return false;
+            }
+
+            if ($exception->getCode() == 401)
+            {
+                $this->reconnect();
+
+                return $this->isExists($container, $name);
+            }
+
+            throw $exception;
+        }
+
+        if ($response->getStatusCode() !== 200)
         {
             return false;
         }
 
-        $headers = $this->query($container, $name)->run();
-
-        if ($headers['status'] == 401)
-        {
-            return $this->connect(true) && $this->exists($container, $name, $headers);
-        }
-
-        return $headers['status'] == 200;
+        return $response;
     }
 
     /**
@@ -234,86 +140,89 @@ class RackspaceServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return int
+     * @return int|bool
      */
-    public function filesize(StorageContainer $container, $name)
+    public function getSize(StorageContainer $container, $name)
     {
-        if (!$this->exists($container, $name, $headers))
+        if (empty($response = $this->isExists($container, $name)))
         {
-            return 0;
+            return false;
         }
 
-        return (int)$headers['content-length'];
+        return (int)$response->getHeaderLine('Content-Length');
     }
 
     /**
-     * Create new storage object using given filename. File will be replaced to new location and will
-     * not available using old filename.
+     * Upload new storage object using given filename or stream.
      *
-     * @param string           $filename  Local filename to use for creation.
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param StorageContainer       $container Container instance.
+     * @param string                 $name      Relative object name.
+     * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function create($filename, StorageContainer $container, $name)
+    public function upload(StorageContainer $container, $name, $origin)
     {
-        if (!$this->connect())
+        if (empty($mimetype = \GuzzleHttp\Psr7\mimetype_from_filename($name)))
         {
-            return false;
+            $mimetype = self::DEFAULT_MIMETYPE;
         }
 
-        if (!$this->file->exists($filename))
+        try
         {
-            $filename = $this->file->tempFilename();
+            $this->client->send($this->buildRequest('PUT', $container, $name, array(
+                'Content-Type' => $mimetype,
+                'Etag'         => md5_file($this->resolveFilename($origin))
+            ))->withBody($this->resolveStream($origin)));
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() == 401)
+            {
+                $this->reconnect();
+
+                return $this->upload($container, $name, $origin);
+            }
         }
 
-        if (($mimetype = $this->getMimetype($filename)) == $this->mimetypes['default'])
-        {
-            $mimetype = $this->getMimetype($name);
-        }
-
-        $result = $this->query($container, $name, 'PUT')
-            ->setHeader('Etag', md5_file($filename))
-            ->setHeader('Content-Type', $mimetype)
-            ->setHeader('Expect', '')
-            ->setFilename($filename)
-            ->run();
-
-        if ($result['status'] == 401)
-        {
-            return $this->connect(true) && $this->create($filename, $container, $name);
-        }
-
-        return $result['status'] == 200 || $result['status'] == 201;
+        return true;
     }
 
     /**
-     * Allocate local filename for remove storage object, if container represent remote location,
-     * adapter should download file to temporary file and return it's filename. All object stored in
-     * temporary files should be registered in File::$removeFiles, to be removed after script ends
-     * to clean used hard drive space.
+     * Get temporary read-only stream used to represent remote content. This method is very identical
+     * to localFilename, however in some cases it may store data content in memory simplifying
+     * development.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return string
+     * @return StreamInterface|null
      */
-    public function localFilename(StorageContainer $container, $name)
+    public function getStream(StorageContainer $container, $name)
     {
-        if (!$this->connect())
+        try
         {
-            return false;
+            $response = $this->client->send(
+                $this->buildRequest('GET', $container, $name)
+            );
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() == 401)
+            {
+                $this->reconnect();
+
+                return $this->getStream($container, $name);
+            }
+
+            //Reasonable?
+            if ($exception->getCode() != 404)
+            {
+                throw $exception;
+            }
+
+            return null;
         }
 
-        //File should be removed after processing
-        $this->file->blackspot($filename = $this->file->tempFilename($this->file->extension($name)));
-        $result = $this->query($container, $name, 'GET')->setFilename($filename)->run();
-
-        if ($result['status'] == 401)
-        {
-            return $this->connect(true) && $this->localFilename($container, $name);
-        }
-
-        return $result['status'] == 200 ? $filename : false;
+        return $response->getBody();
     }
 
     /**
@@ -321,39 +230,42 @@ class RackspaceServer extends StorageServer
      * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @param string           $newName   New object name.
+     * @param string           $oldname   Relative object name.
+     * @param string           $newname   New object name.
      * @return bool
      */
-    public function rename(StorageContainer $container, $name, $newName)
+    public function rename(StorageContainer $container, $oldname, $newname)
     {
-        if (!$this->connect())
+        try
         {
-            return false;
+            $this->client->send(
+                $this->buildRequest(
+                    'PUT',
+                    $container,
+                    $newname,
+                    array(
+                        'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($oldname),
+                        'Content-Length' => 0
+                    )
+                )
+            );
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() == 401)
+            {
+                $this->reconnect();
+
+                return $this->rename($container, $oldname, $newname);
+            }
+
+            throw $exception;
         }
 
-        if ($newName == $name)
-        {
-            return true;
-        }
+        //Deleting old file
+        $this->delete($container, $oldname);
 
-        $result = $this->query($container, $name, 'COPY')
-            ->setHeader(
-                'Destination',
-                '/' . $container->options['container'] . '/' . rawurlencode($newName)
-            )->run();
-
-        if ($result['status'] == 401)
-        {
-            return $this->connect(true) && $this->rename($container, $name, $name);
-        }
-
-        if ($result['status'] == 200 || $result['status'] == 201)
-        {
-            return $this->delete($container, $name);
-        }
-
-        return false;
+        return true;
     }
 
     /**
@@ -361,27 +273,31 @@ class RackspaceServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return bool
      */
     public function delete(StorageContainer $container, $name)
     {
-        if (!$this->connect())
+        try
         {
-            return false;
+            $this->client->send($this->buildRequest('DELETE', $container, $name));
         }
-
-        $result = $this->query($container, $name, 'DELETE')->run();
-
-        if ($result['status'] == 401)
+        catch (ClientException $exception)
         {
-            $this->connect(true) && $this->delete($container, $name);
-        }
+            if ($exception->getCode() == 401)
+            {
+                $this->reconnect();
 
-        return true;
+                return $this->delete($container, $name);
+            }
+
+            if ($exception->getCode() != 404)
+            {
+                throw $exception;
+            }
+        }
     }
 
     /**
-     * Copy object to another internal (under save server) container, this operation should may not
+     * Copy object to another internal (under same server) container, this operation should may not
      * require file download and can be performed remotely.
      *
      * @param StorageContainer $container   Container instance.
@@ -391,84 +307,174 @@ class RackspaceServer extends StorageServer
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
     {
-        if (!$this->connect())
+        if ($container->options['region'] != $destination->options['region'])
         {
-            return false;
-        }
-
-        if ($container->options['container'] == $destination->options['container'])
-        {
-            return true;
-        }
-
-        if (strcasecmp($container->options['region'], $destination->options['region']) !== 0)
-        {
-            $this->storage->logger()->warning(
+            StorageManager::logger()->warning(
                 "Copying between regions are not allowed by Rackspace and performed using local buffer."
             );
 
-            return $this->create($this->localFilename($container, $name), $destination, $name);
+            return $this->upload($destination, $name, $this->getStream($container, $name));
         }
 
-        $result = $this->query($destination, $name, 'PUT')
-            ->setHeader('X-Copy-From', '/' . $container->options['container'] . '/' . rawurlencode($name))
-            ->setHeader('Content-Length', 0)
-            ->run();
-
-        if ($result['status'] == 401)
+        try
         {
-            return $this->connect(true) && $this->connect($container, $destination, $name);
+            $this->client->send(
+                $this->buildRequest(
+                    'PUT',
+                    $destination,
+                    $name,
+                    array(
+                        'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($name),
+                        'Content-Length' => 0
+                    )
+                )
+            );
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() == 401)
+            {
+                $this->reconnect();
+
+                return $this->connect($container, $destination, $name);
+            }
+
+            throw $exception;
         }
 
-        return $result['status'] == 201 || $result['status'] == 200 || $result['status'] == 204;
+        return true;
     }
 
     /**
-     * Move object to another internal (under save server) container, this operation should may not
-     * require file download and can be performed remotely.
-     *
-     * @param StorageContainer $container   Container instance.
-     * @param StorageContainer $destination Destination container (under same server).
-     * @param string           $name        Relative object name.
-     * @return bool
+     * Connect rackspace to cloud, fetch credentials (Authentication tokens) and regions. Authentication
+     * tokens are typically valid for 24 hours.
      */
-    public function replace(StorageContainer $container, StorageContainer $destination, $name)
+    protected function connect()
     {
-        if (!$this->connect())
+        if (!empty($this->authToken))
         {
-            return false;
-        }
-
-        if ($container->options['container'] == $destination->options['container'])
-        {
+            //Already got credentials from cache
             return true;
         }
 
-        if (strcasecmp($container->options['region'], $destination->options['region']) !== 0)
+        //Credentials request
+        $request = new Request(
+            'POST',
+            $this->options['authServer'],
+            array(
+                'Content-Type' => 'application/json'
+            ),
+            json_encode(
+                array(
+                    'auth' => array(
+                        'RAX-KSKEY:apiKeyCredentials' => array(
+                            'username' => $this->options['username'],
+                            'apiKey'   => $this->options['apiKey']
+                        )
+                    )
+                )
+            )
+        );
+
+        try
         {
-            $this->storage->logger()->warning(
-                "Moving between regions are not allowed by Rackspace and performed using local buffer."
+            /**
+             * @var Response $response
+             */
+            $response = $this->client->send($request);
+        }
+        catch (ClientException $exception)
+        {
+            if ($exception->getCode() == 401)
+            {
+                throw new StorageException(
+                    "Unable to perform Rackspace authorization using given credentials."
+                );
+            }
+
+            throw $exception;
+        }
+
+        $response = json_decode((string)$response->getBody(), 1);
+
+        foreach ($response['access']['serviceCatalog'] as $location)
+        {
+            if ($location['name'] == 'cloudFiles')
+            {
+                foreach ($location['endpoints'] as $server)
+                {
+                    $this->regions[$server['region']] = $server['publicURL'];
+                }
+            }
+        }
+
+        if (!isset($response['access']['token']['id']))
+        {
+            throw new StorageException("Unable to fetch rackspace auth token.");
+        }
+
+        $this->authToken = $response['access']['token']['id'];
+
+        if ($this->options['cache'])
+        {
+            $this->cache->set(
+                $this->options['username'] . '@rackspace-token',
+                $this->authToken,
+                self::CACHE_LIFETIME
             );
 
-            $this->create($this->localFilename($container, $name), $destination, $name);
-
-            return $this->delete($container, $name);
+            $this->cache->set(
+                $this->options['username'] . '@rackspace-regions',
+                $this->regions,
+                self::CACHE_LIFETIME
+            );
         }
 
-        $result = $this->query($container, $name, 'COPY')
-            ->setHeader('Destination', '/' . $destination->options['container'] . '/' . rawurlencode($name))
-            ->run();
+        return true;
+    }
 
-        if ($result['status'] == 401)
+    /**
+     * Flush existed token and reconnect, can be required if token has expired.
+     */
+    protected function reconnect()
+    {
+        $this->authToken = null;
+        $this->connect();
+    }
+
+    /**
+     * @param                  $method
+     * @param StorageContainer $container
+     * @param                  $name
+     * @param array            $headers
+     * @return RequestInterface
+     */
+    protected function buildRequest($method, StorageContainer $container, $name, array $headers = array())
+    {
+        //Adding auth headers
+        $headers += array(
+            'X-Auth-Token' => $this->authToken,
+            'Date'         => gmdate('D, d M Y H:i:s T')
+        );
+
+        return new Request($method, $this->buildUri($container, $name), $headers);
+    }
+
+    protected function buildUri(StorageContainer $container, $name)
+    {
+        if (empty($container->options['region']))
         {
-            return $this->connect(true) && $this->replace($container, $destination, $name);
+            throw new StorageException("Every rackspace container should have specified region.");
         }
 
-        if ($result['status'] == 201)
+        $region = $container->options['region'];
+        if (!isset($this->regions[$region]))
         {
-            return $this->delete($container, $name);
+            throw new StorageException("'{$region}' region is not supported by Rackspace.");
         }
 
-        return false;
+        return new Uri(
+            $this->regions[$region] . '/' . $container->options['container'] . '/' . rawurlencode($name)
+        );
     }
 }
