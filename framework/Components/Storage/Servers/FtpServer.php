@@ -294,6 +294,7 @@ class FtpServer extends StorageServer
         //Copying available only using buffer server
         if (!$filename = $this->allocateFilename($container, $name))
         {
+            //exception
             return false;
         }
 
@@ -309,7 +310,7 @@ class FtpServer extends StorageServer
      * @param string           $name        Relative object name.
      * @return bool
      */
-    public function move(StorageContainer $container, StorageContainer $destination, $name)
+    public function replace(StorageContainer $container, StorageContainer $destination, $name)
     {
         if ($container->options == $destination->options)
         {
@@ -362,6 +363,7 @@ class FtpServer extends StorageServer
             {
                 if (!empty($container->options['mode']))
                 {
+                    //todo: force mode
                     ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
                 }
 

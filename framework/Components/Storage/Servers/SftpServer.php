@@ -10,6 +10,7 @@ namespace Spiral\Components\Storage\Servers;
 
 use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Files\StreamWrapper;
 use Spiral\Components\Http\Stream;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
@@ -125,6 +126,30 @@ class SftpServer extends StorageServer
      */
     public function upload(StorageContainer $container, $name, $origin)
     {
+        $this->connect();
+
+        if ($origin instanceof StreamInterface)
+        {
+            $expectedSize = $origin->getSize();
+            $source = StreamWrapper::getResource($origin);
+        }
+        else
+        {
+            $expectedSize = filesize($origin);
+            $source = fopen($origin, 'r');
+        }
+
+        //Remote file
+        $this->ensureLocation($container, $name);
+        $destination = fopen($this->getUri($container, $name), 'w');
+
+        //We can check size here
+        $size = stream_copy_to_stream($source, $destination);
+
+        fclose($source);
+        fclose($destination);
+
+        return $expectedSize == $size;
     }
 
     /**
@@ -166,6 +191,12 @@ class SftpServer extends StorageServer
 
         $location = $this->ensureLocation($container, $newname);
 
+        if (file_exists($this->getUri($container, $newname)))
+        {
+            //We have to clean location before renaming
+            $this->delete($container, $newname);
+        }
+
         //todo: exception
         dump(ssh2_sftp_rename($this->sftp, $this->getPath($container, $oldname), $location));
 
@@ -202,6 +233,8 @@ class SftpServer extends StorageServer
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
     {
+        //Copying using local streams
+        return $this->upload($destination, $name, $this->getStream($container, $name));
     }
 
     /**
@@ -213,8 +246,18 @@ class SftpServer extends StorageServer
      * @param string           $name        Relative object name.
      * @return bool
      */
-    public function move(StorageContainer $container, StorageContainer $destination, $name)
+    public function replace(StorageContainer $container, StorageContainer $destination, $name)
     {
+        if ($this->copy($container, $destination, $name))
+        {
+            $this->delete($container, $name);
+
+            return true;
+        }
+
+        //exceptions?
+
+        return false;
     }
 
     /**
@@ -229,27 +272,22 @@ class SftpServer extends StorageServer
         $this->connect();
         $directory = dirname($this->getPath($container, $name));
 
-        return '';
-        try
+        if (file_exists('ssh2.sftp://' . $this->sftp . $directory))
         {
-            if (ftp_chdir($this->connection, $directory))
+            //Trying to change directory mode
+            if (!empty($container->options['mode']) && function_exists('ssh2_sftp_chmod'))
             {
-                if (!empty($container->options['mode']))
-                {
-                    ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
-                }
-
-                return $this->getPath($container, $name);
+                ssh2_sftp_chmod($this->sftp, $directory, $container->options['mode'] | 0111);
             }
-        }
-        catch (\Exception $exception)
-        {
-            //Directory should be created
+
+            return $this->getPath($container, $name);
         }
 
-        ftp_chdir($this->connection, $this->options['home']);
+        //TODO: RECURSIVELLY?
 
         $directories = explode('/', substr($directory, strlen($this->options['home'])));
+
+        $location = $this->options['home'];
         foreach ($directories as $directory)
         {
             if (!$directory)
@@ -257,20 +295,19 @@ class SftpServer extends StorageServer
                 continue;
             }
 
-            try
-            {
-                ftp_chdir($this->connection, $directory);
-            }
-            catch (\Exception $exception)
-            {
-                ftp_mkdir($this->connection, $directory);
+            $location .= '/' . $directory;
 
-                if (!empty($container->options['mode']))
+            if (!file_exists('ssh2.sftp://' . $this->sftp . $location))
+            {
+                if (!ssh2_sftp_mkdir($this->sftp, $location))
                 {
-                    ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
+                    //exception
                 }
 
-                ftp_chdir($this->connection, $directory);
+                if (!empty($container->options['mode']) && function_exists('ssh2_sftp_chmod'))
+                {
+                    ssh2_sftp_chmod($this->sftp, $location, $container->options['mode'] | 0111);
+                }
             }
         }
 
@@ -287,7 +324,7 @@ class SftpServer extends StorageServer
     protected function getPath(StorageContainer $container, $name)
     {
         return $this->file->normalizePath(
-            $this->options['home'] . '/' . $container->options['folder'] . $name
+            $this->options['home'] . '/' . $container->options['folder'] . '/' . $name
         );
     }
 
