@@ -197,7 +197,7 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function upload($name, $origin)
     {
-        $this->log("Uploading '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        $this->log("Uploading to '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
         if ($origin instanceof UploadedFileInterface)
         {
