@@ -34,13 +34,13 @@ class LocalServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return int
+     * @return int|bool
      */
     public function getSize(StorageContainer $container, $name)
     {
         return $this->file->exists($container->options['folder'] . $name)
             ? $this->file->size($container->options['folder'] . $name)
-            : 0;
+            : false;
     }
 
     /**
@@ -102,16 +102,16 @@ class LocalServer extends StorageServer
      * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @param string           $newName   New object name.
+     * @param string           $oldname      Relative object name.
+     * @param string           $newname   New object name.
      * @return bool
      */
-    public function rename(StorageContainer $container, $name, $newName)
+    public function rename(StorageContainer $container, $oldname, $newname)
     {
         return $this->internalMove(
             $container,
-            $container->options['folder'] . $name,
-            $container->options['folder'] . $newName
+            $container->options['folder'] . $oldname,
+            $container->options['folder'] . $newname
         );
     }
 
@@ -153,7 +153,7 @@ class LocalServer extends StorageServer
      * @param string           $name        Relative object name.
      * @return bool
      */
-    public function replace(StorageContainer $container, StorageContainer $destination, $name)
+    public function move(StorageContainer $container, StorageContainer $destination, $name)
     {
         return $this->internalMove(
             $destination,

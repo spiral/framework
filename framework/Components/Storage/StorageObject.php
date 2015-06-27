@@ -142,7 +142,7 @@ class StorageObject extends Component
     /**
      * Retrieve object size in bytes, should return 0 if object not exists.
      *
-     * @return int
+     * @return int|bool
      */
     public function getSize()
     {
@@ -160,7 +160,7 @@ class StorageObject extends Component
      *
      * @return string
      */
-    public function getFilename()
+    public function localFilename()
     {
         if (empty($this->name))
         {
@@ -174,20 +174,20 @@ class StorageObject extends Component
      * Remove storage object without changing it's own container. This operation does not require
      * object recreation or download and can be performed on remote server.
      *
-     * @param string $newName
+     * @param string $newname
      * @return bool|StorageObject
      */
-    public function rename($newName)
+    public function rename($newname)
     {
         if (empty($this->name))
         {
             return false;
         }
 
-        $this->address = $this->container->rename($this->name, $newName);
+        $this->address = $this->container->rename($this->name, $newname);
         if (!empty($this->address))
         {
-            $this->name = $newName;
+            $this->name = $newname;
 
             return $this;
         }
@@ -215,7 +215,7 @@ class StorageObject extends Component
      * Copy object to another internal (under save server) container, this operation should may not
      * require file download and can be performed remotely.
      *
-     * @param StorageContainer $destination Destination container (under same server).
+     * @param StorageContainer|string $destination Destination container.
      * @return StorageObject
      * @throws StorageException
      */
@@ -240,7 +240,7 @@ class StorageObject extends Component
      *
      * Will return replaced object address if success.
      *
-     * @param StorageContainer $destination Destination container (under same server).
+     * @param StorageContainer|string $destination Destination container.
      * @return bool|StorageObject
      * @throws StorageException
      */
@@ -256,7 +256,7 @@ class StorageObject extends Component
             $destination = $this->storage->container($destination);
         }
 
-        $this->address = $this->container->replace($destination, $this->name);
+        $this->address = $this->container->move($destination, $this->name);
         if (!empty($this->address))
         {
             $this->container = $destination;

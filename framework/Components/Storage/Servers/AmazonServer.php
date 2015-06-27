@@ -99,13 +99,13 @@ class AmazonServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return int
+     * @return int|bool
      */
     public function getSize(StorageContainer $container, $name)
     {
         if (empty($response = $this->isExists($container, $name)))
         {
-            return 0;
+            return false;
         }
 
         return (int)$response->getHeaderLine('Content-Length');
@@ -181,18 +181,18 @@ class AmazonServer extends StorageServer
      * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @param string           $newName   New object name.
+     * @param string           $oldname      Relative object name.
+     * @param string           $newname   New object name.
      * @return bool
      */
-    public function rename(StorageContainer $container, $name, $newName)
+    public function rename(StorageContainer $container, $oldname, $newname)
     {
         try
         {
             $this->client->send(
-                $this->createRequest('PUT', $container, $newName, array(), array(
+                $this->createRequest('PUT', $container, $newname, array(), array(
                     'Acl'         => $container->options['public'] ? 'public-read' : 'private',
-                    'Copy-Source' => $this->buildUri($container, $name)->getPath()
+                    'Copy-Source' => $this->buildUri($container, $oldname)->getPath()
                 ))
             );
         }
@@ -206,7 +206,7 @@ class AmazonServer extends StorageServer
             return false;
         }
 
-        $this->delete($container, $name);
+        $this->delete($container, $oldname);
 
         return true;
     }
@@ -269,7 +269,7 @@ class AmazonServer extends StorageServer
      * @param string           $name        Relative object name.
      * @return bool
      */
-    public function replace(StorageContainer $container, StorageContainer $destination, $name)
+    public function move(StorageContainer $container, StorageContainer $destination, $name)
     {
         if ($this->copy($container, $destination, $name))
         {

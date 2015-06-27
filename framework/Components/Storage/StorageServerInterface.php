@@ -36,7 +36,7 @@ interface StorageServerInterface
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return int
+     * @return int|bool
      */
     public function getSize(StorageContainer $container, $name);
 
@@ -78,11 +78,11 @@ interface StorageServerInterface
      * object recreation or download and can be performed on remote server.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @param string           $newName   New object name.
+     * @param string           $oldname      Relative object name.
+     * @param string           $newname   New object name.
      * @return bool
      */
-    public function rename(StorageContainer $container, $name, $newName);
+    public function rename(StorageContainer $container, $oldname, $newname);
 
     /**
      * Delete storage object from specified container.
@@ -112,5 +112,5 @@ interface StorageServerInterface
      * @param string           $name        Relative object name.
      * @return bool
      */
-    public function replace(StorageContainer $container, StorageContainer $destination, $name);
+    public function move(StorageContainer $container, StorageContainer $destination, $name);
 }
