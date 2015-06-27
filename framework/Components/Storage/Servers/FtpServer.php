@@ -18,7 +18,7 @@ use Spiral\Components\Storage\StorageServer;
 class FtpServer extends StorageServer
 {
     /**
-     * Configuration of FTP component, home directory, server options and etc.
+     * Server configuration, connection options, auth keys and certificates.
      *
      * @var array
      */
@@ -107,13 +107,7 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        ftp_chmod(
-            $this->connection,
-            !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME,
-            $location
-        );
-
-        return true;
+        return $this->refreshPermissions($container, $name);
     }
 
     /**
@@ -186,13 +180,7 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        ftp_chmod(
-            $this->connection,
-            !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME,
-            $location
-        );
-
-        return true;
+        return $this->refreshPermissions($container, $newname);
     }
 
     /**
@@ -234,13 +222,7 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        ftp_chmod(
-            $this->connection,
-            !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME,
-            $location
-        );
-
-        return true;
+        return $this->refreshPermissions($destination, $name);
     }
 
     /**
@@ -336,7 +318,7 @@ class FtpServer extends StorageServer
      * Get full file location on server including homedir.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return string
      */
     protected function getPath(StorageContainer $container, $name)
@@ -344,6 +326,22 @@ class FtpServer extends StorageServer
         return $this->file->normalizePath(
             $this->options['home'] . '/' . $container->options['folder'] . $name
         );
+    }
+
+    /**
+     * Refresh file permissions accordingly to container options.
+     *
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Storage object name.
+     * @return bool
+     */
+    protected function refreshPermissions(StorageContainer $container, $name)
+    {
+        $mode = !empty($container->options['mode'])
+            ? $container->options['mode']
+            : FileManager::RUNTIME;
+
+        return ftp_chmod($this->connection, $mode, $this->getPath($container, $name)) !== false;
     }
 
     /**

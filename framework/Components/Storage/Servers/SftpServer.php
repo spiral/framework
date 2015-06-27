@@ -26,22 +26,27 @@ class SftpServer extends StorageServer
     const PUB_KEY  = 'pubkey';
 
     /**
-     * Configuration of FTP component, home directory, server options and etc.
+     * Server configuration, connection options, auth keys and certificates.
      *
      * @var array
      */
     protected $options = array(
-        'host'          => '',
-        'methods'       => array(),
-        'port'          => 22,
-        'home'          => '/',
-        'authorization' => 'authMethod',
-        'username'      => '',
-        'password'      => '',
+        'host'       => '',
+        'methods'    => array(),
+        'port'       => 22,
+        'home'       => '/',
 
-        'publicKey'     => '',
-        'privateKey'    => '',
-        'secret'        => null
+        //Authorization method and username
+        'authMethod' => 'password',
+        'username'   => '',
+
+        //Used with "password" authorization
+        'password'   => '',
+
+        //User with "pubkey" authorization
+        'publicKey'  => '',
+        'privateKey' => '',
+        'secret'     => null
     );
 
     /**
@@ -125,7 +130,7 @@ class SftpServer extends StorageServer
             $source = fopen($origin, 'r');
         }
 
-        //Making sure target directory exists
+        //Make sure target directory exists
         $this->ensureLocation($container, $name);
 
         //Remote file
@@ -137,7 +142,7 @@ class SftpServer extends StorageServer
         fclose($source);
         fclose($destination);
 
-        return $expectedSize == $size;
+        return $expectedSize == $size && $this->refreshPermissions($container, $name);
     }
 
     /**
@@ -165,31 +170,28 @@ class SftpServer extends StorageServer
      * @param string           $oldname   Storage object name.
      * @param string           $newname   New storage object name.
      * @return bool
+     * @throws StorageException
      */
     public function rename(StorageContainer $container, $oldname, $newname)
     {
         if (!$this->isExists($container, $oldname))
         {
-            //return false;
+            return false;
         }
 
         $location = $this->ensureLocation($container, $newname);
-
         if (file_exists($this->getUri($container, $newname)))
         {
             //We have to clean location before renaming
             $this->delete($container, $newname);
         }
 
-        //todo: exception
-        dump(ssh2_sftp_rename($this->sftp, $this->getPath($container, $oldname), $location));
-
-        if (!empty($container->options['mode']) && function_exists('ssh2_sftp_chmod'))
+        if (!ssh2_sftp_rename($this->sftp, $this->getPath($container, $oldname), $location))
         {
-            ssh2_sftp_chmod($this->sftp, $location, $container->options['mode']);
+            return false;
         }
 
-        return true;
+        return $this->refreshPermissions($container, $newname);
     }
 
     /**
@@ -215,11 +217,6 @@ class SftpServer extends StorageServer
      */
     protected function connect()
     {
-        if (!empty($this->connection))
-        {
-            return true;
-        }
-
         $session = ssh2_connect(
             $this->options['host'],
             $this->options['port'],
@@ -239,9 +236,11 @@ class SftpServer extends StorageServer
             case self::NONE:
                 ssh2_auth_none($session, $this->options['username']);
                 break;
+
             case self::PASSWORD;
                 ssh2_auth_password($session, $this->options['username'], $this->options['password']);
                 break;
+
             case self::PUB_KEY:
                 ssh2_auth_pubkey_file(
                     $session,
@@ -258,30 +257,58 @@ class SftpServer extends StorageServer
         return true;
     }
 
+    /**
+     * Get full file location on server including homedir.
+     *
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Storage object name.
+     * @return string
+     */
+    protected function getPath(StorageContainer $container, $name)
+    {
+        return $this->file->normalizePath(
+            $this->options['home'] . '/' . $container->options['folder'] . '/' . $name
+        );
+    }
+
+    /**
+     * Get ssh2 specific uri which can be used in default php functions. Assigned to ssh2.sftp
+     * stream wrapper.
+     *
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Storage object name.
+     * @return string
+     */
+    protected function getUri(StorageContainer $container, $name)
+    {
+        return 'ssh2.sftp://' . $this->sftp . $this->getPath($container, $name);
+    }
 
     /**
      * Ensure that target object directory exists and has right permissions.
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Relative object name.
-     * @return bool|string
+     * @return string
+     * @throws StorageException
      */
     protected function ensureLocation(StorageContainer $container, $name)
     {
         $directory = dirname($this->getPath($container, $name));
 
+        $mode = !empty($container->options['mode'])
+            ? $container->options['mode']
+            : FileManager::RUNTIME;
+
         if (file_exists('ssh2.sftp://' . $this->sftp . $directory))
         {
-            //Trying to change directory mode
-            if (!empty($container->options['mode']) && function_exists('ssh2_sftp_chmod'))
+            if (function_exists('ssh2_sftp_chmod'))
             {
-                ssh2_sftp_chmod($this->sftp, $directory, $container->options['mode'] | 0111);
+                ssh2_sftp_chmod($this->sftp, $directory, $mode | 0111);
             }
 
             return $this->getPath($container, $name);
         }
-
-        //TODO: RECURSIVELLY?
 
         $directories = explode('/', substr($directory, strlen($this->options['home'])));
 
@@ -299,12 +326,14 @@ class SftpServer extends StorageServer
             {
                 if (!ssh2_sftp_mkdir($this->sftp, $location))
                 {
-                    //exception
+                    throw new StorageException(
+                        "Unable to create directory {$location} using sftp connection."
+                    );
                 }
 
-                if (!empty($container->options['mode']) && function_exists('ssh2_sftp_chmod'))
+                if (function_exists('ssh2_sftp_chmod'))
                 {
-                    ssh2_sftp_chmod($this->sftp, $location, $container->options['mode'] | 0111);
+                    ssh2_sftp_chmod($this->sftp, $directory, $mode | 0111);
                 }
             }
         }
@@ -313,28 +342,23 @@ class SftpServer extends StorageServer
     }
 
     /**
-     * Get full file location on server including homedir.
+     * Refresh file permissions accordingly to container options.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @return string
+     * @param string           $name      Storage object name.
+     * @return bool
      */
-    protected function getPath(StorageContainer $container, $name)
+    protected function refreshPermissions(StorageContainer $container, $name)
     {
-        return $this->file->normalizePath(
-            $this->options['home'] . '/' . $container->options['folder'] . '/' . $name
-        );
-    }
+        if (!function_exists('ssh2_sftp_chmod'))
+        {
+            return true;
+        }
 
-    /**
-     * Get ssh2 specific uri which can be used in default php functions.
-     *
-     * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
-     * @return string
-     */
-    protected function getUri(StorageContainer $container, $name)
-    {
-        return 'ssh2.sftp://' . $this->sftp . $this->getPath($container, $name);
+        $mode = !empty($container->options['mode'])
+            ? $container->options['mode']
+            : FileManager::RUNTIME;
+
+        return ssh2_sftp_chmod($this->sftp, $this->getPath($container, $name), $mode);
     }
 }
