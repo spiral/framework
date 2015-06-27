@@ -244,10 +244,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      */
     public function upload($container, $name, $origin = '')
     {
-        if (is_string($container))
-        {
-            $container = $this->container($container);
-        }
+        $container = is_string($container) ? $this->container($container) : $container;
 
         if (!empty($origin) && is_string($origin))
         {
