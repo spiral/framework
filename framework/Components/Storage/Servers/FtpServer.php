@@ -223,52 +223,34 @@ class FtpServer extends StorageServer
      */
     public function replace(StorageContainer $container, StorageContainer $destination, $name)
     {
-        if ($container->options == $destination->options)
-        {
-            return true;
-        }
-
         if (!$this->isExists($container, $name))
         {
             return false;
         }
 
         $location = $this->ensureLocation($container, $name);
-
-        try
+        if (!ftp_rename($this->connection, $this->getPath($container, $name), $location))
         {
-            if (!ftp_rename($this->connection, $this->getPath($container, $name), $location))
-            {
-                return false;
-            }
-
-            if (!empty($container->options['mode']))
-            {
-                ftp_chmod($this->connection, $container->options['mode'], $location);
-            }
-
-            return true;
-        }
-        catch (\ErrorException $exception)
-        {
+            return false;
         }
 
-        return false;
+        ftp_chmod(
+            $this->connection,
+            !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME,
+            $location
+        );
+
+        return true;
     }
 
     /**
-     * Ensure that FTP connection is up and can be used for file operations.
+     * Open FTP connection.
      *
      * @return bool
      * @throws StorageException
      */
     protected function connect()
     {
-        if (!empty($this->connection))
-        {
-            return true;
-        }
-
         $this->connection = ftp_connect(
             $this->options['host'],
             $this->options['port'],
@@ -284,8 +266,6 @@ class FtpServer extends StorageServer
 
         if (!ftp_login($this->connection, $this->options['login'], $this->options['password']))
         {
-            ftp_close($this->connection);
-
             throw new StorageException(
                 "Unable to connect to remote FTP server '{$this->options['host']}'."
             );
@@ -293,9 +273,9 @@ class FtpServer extends StorageServer
 
         if (!ftp_pasv($this->connection, $this->options['passive']))
         {
-            ftp_close($this->connection);
-
-            return false;
+            throw new StorageException(
+                "Unable to set passive mode at remote FTP server '{$this->options['host']}'."
+            );
         }
 
         return true;
@@ -305,29 +285,26 @@ class FtpServer extends StorageServer
      * Ensure that target object directory exists and has right permissions.
      *
      * @param StorageContainer $container Container instance.
-     * @param string           $name      Relative object name.
+     * @param string           $name      Storage object name.
      * @return bool|string
      */
     protected function ensureLocation(StorageContainer $container, $name)
     {
         $directory = dirname($this->getPath($container, $name));
+        $mode = !empty($container->options['mode']) ? $container->options['mode'] : FileManager::RUNTIME;
 
         try
         {
             if (ftp_chdir($this->connection, $directory))
             {
-                if (!empty($container->options['mode']))
-                {
-                    //todo: force mode
-                    ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
-                }
+                ftp_chmod($this->connection, $mode | 0111, $directory);
 
                 return $this->getPath($container, $name);
             }
         }
         catch (\Exception $exception)
         {
-            //Directory should be created
+            //Directory has to be created
         }
 
         ftp_chdir($this->connection, $this->options['home']);
@@ -347,12 +324,7 @@ class FtpServer extends StorageServer
             catch (\Exception $exception)
             {
                 ftp_mkdir($this->connection, $directory);
-
-                if (!empty($container->options['mode']))
-                {
-                    ftp_chmod($this->connection, $container->options['mode'] | 0111, $directory);
-                }
-
+                ftp_chmod($this->connection, $mode | 0111, $directory);
                 ftp_chdir($this->connection, $directory);
             }
         }
