@@ -93,7 +93,6 @@ class RackspaceServer extends StorageServer
 
         //Some options can be passed directly for guzzle client
         $this->client = new Client($this->options);
-
         $this->connect();
     }
 
@@ -103,7 +102,7 @@ class RackspaceServer extends StorageServer
      *
      * @param StorageContainer $container Container instance associated with specific server.
      * @param string           $name      Storage object name.
-     * @return bool
+     * @return bool|ResponseInterface
      */
     public function isExists(StorageContainer $container, $name)
     {
@@ -225,7 +224,6 @@ class RackspaceServer extends StorageServer
                 return $this->getStream($container, $name);
             }
 
-            //Reasonable?
             if ($exception->getCode() != 404)
             {
                 throw $exception;
@@ -298,11 +296,9 @@ class RackspaceServer extends StorageServer
             if ($exception->getCode() == 401)
             {
                 $this->reconnect();
-
-                return $this->delete($container, $name);
+                $this->delete($container, $name);
             }
-
-            if ($exception->getCode() != 404)
+            elseif ($exception->getCode() != 404)
             {
                 throw $exception;
             }
@@ -334,17 +330,15 @@ class RackspaceServer extends StorageServer
 
         try
         {
-            $this->client->send(
-                $this->buildRequest(
-                    'PUT',
-                    $destination,
-                    $name,
-                    array(
-                        'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($name),
-                        'Content-Length' => 0
-                    )
+            $this->client->send($this->buildRequest(
+                'PUT',
+                $destination,
+                $name,
+                array(
+                    'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($name),
+                    'Content-Length' => 0
                 )
-            );
+            ));
         }
         catch (ClientException $exception)
         {
@@ -362,8 +356,7 @@ class RackspaceServer extends StorageServer
     }
 
     /**
-     * Connect rackspace to cloud, fetch credentials (Authentication tokens) and regions. Authentication
-     * tokens are typically valid for 24 hours.
+     * Fetch RackSpace authentication token and build list of region urls.
      */
     protected function connect()
     {
@@ -459,23 +452,14 @@ class RackspaceServer extends StorageServer
     }
 
     /**
-     * @param                  $method
-     * @param StorageContainer $container
-     * @param                  $name
-     * @param array            $headers
-     * @return RequestInterface
+     * Create instance of UriInterface based on provided container instance and storage object name.
+     * Region url will be automatically resolved and included to generated instance.
+     *
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Storage object name.
+     * @return Uri
+     * @throws StorageException
      */
-    protected function buildRequest($method, StorageContainer $container, $name, array $headers = array())
-    {
-        //Adding auth headers
-        $headers += array(
-            'X-Auth-Token' => $this->authToken,
-            'Date'         => gmdate('D, d M Y H:i:s T')
-        );
-
-        return new Request($method, $this->buildUri($container, $name), $headers);
-    }
-
     protected function buildUri(StorageContainer $container, $name)
     {
         if (empty($container->options['region']))
@@ -492,5 +476,25 @@ class RackspaceServer extends StorageServer
         return new Uri(
             $this->regions[$region] . '/' . $container->options['container'] . '/' . rawurlencode($name)
         );
+    }
+
+    /**
+     * Helper method used to create request with forced authorization token.
+     *
+     * @param string           $method    Http method.
+     * @param StorageContainer $container Container instance.
+     * @param string           $name      Storage object name.
+     * @param array            $headers   Request headers.
+     * @return RequestInterface
+     */
+    protected function buildRequest($method, StorageContainer $container, $name, array $headers = array())
+    {
+        //Adding auth headers
+        $headers += array(
+            'X-Auth-Token' => $this->authToken,
+            'Date'         => gmdate('D, d M Y H:i:s T')
+        );
+
+        return new Request($method, $this->buildUri($container, $name), $headers);
     }
 }
