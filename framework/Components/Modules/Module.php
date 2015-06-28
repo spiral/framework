@@ -30,16 +30,27 @@ abstract class Module extends Component implements ModuleInterface
      */
     public static function getDefinition()
     {
+        $file = FileManager::getInstance();
+
         $moduleDirectory = dirname((new \ReflectionClass(get_called_class()))->getFileName());
         $composer = $moduleDirectory . '/composer.json';
 
-        $composer = json_decode(FileManager::getInstance()->read($composer), true);
+        if (!$file->exists($composer))
+        {
+            if (!$file->exists($composer = basename($moduleDirectory) . '/composer.json'))
+            {
+                //Source directory is one level higher
+                throw new ModuleException("Unable to locate composer.json file.");
+            }
+        }
+
+        $composer = json_decode($file->read($composer), true);
 
         return Definition::make(array(
             'class'        => get_called_class(),
             'name'         => $composer['name'],
             'description'  => isset($composer['description']) ? $composer['description'] : '',
-            'dependencies' => isset($composer['require']) ? array_keys($composer['require']) : '',
+            'dependencies' => isset($composer['require']) ? array_keys($composer['require']) : ''
         ));
     }
 
