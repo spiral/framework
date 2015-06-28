@@ -226,8 +226,8 @@ class StorageManager extends Component implements Container\InjectionManagerInte
     }
 
     /**
-     * Create new storage object with specified container, object can be created as empty (not
-     * supported by some adapters) or using local filename or via Stream or via UploadedFile.
+     * Create new storage object (or update existed) with specified container, object can be created
+     * as empty, using local filename, via Stream or using UploadedFile.
      *
      * While object creation original filename, name (no extension) or extension can be embedded to
      * new object name using string interpolation ({name}.{ext}}
@@ -242,7 +242,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * @param string|StreamInterface|UploadedFileInterface $origin    Local filename or Stream.
      * @return StorageObject|bool
      */
-    public function upload($container, $name, $origin = '')
+    public function put($container, $name, $origin = '')
     {
         $container = is_string($container) ? $this->container($container) : $container;
 
@@ -259,7 +259,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
             );
         }
 
-        return $container->upload($name, $origin);
+        return $container->put($name, $origin);
     }
 
     /**

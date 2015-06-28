@@ -158,12 +158,12 @@ class StorageContainer extends Component implements InjectableInterface
      * @param string $name Storage object name.
      * @return bool
      */
-    public function isExists($name)
+    public function exists($name)
     {
         $this->log("Checking existence of '{$this->buildAddress($name)}' at '{$this->server}'.");
 
         benchmark("{$this->server}::exists", $this->buildAddress($name));
-        $result = (bool)$this->getServer()->isExists($this, $name);
+        $result = (bool)$this->getServer()->exists($this, $name);
         benchmark("{$this->server}::exists", $this->buildAddress($name));
 
         return $result;
@@ -195,7 +195,7 @@ class StorageContainer extends Component implements InjectableInterface
      *                                                             for creation.
      * @return StorageObject
      */
-    public function upload($name, $origin)
+    public function put($name, $origin)
     {
         $this->log("Uploading to '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
@@ -207,7 +207,7 @@ class StorageContainer extends Component implements InjectableInterface
 
         benchmark("{$this->server}::upload", $this->buildAddress($name));
 
-        if (!$this->getServer()->upload($this, $name, $origin))
+        if (!$this->getServer()->put($this, $name, $origin))
         {
             throw new StorageException(
                 "Unable to upload content into '{$this->buildAddress($name)}' at '{$this->server}' server."
@@ -364,7 +364,7 @@ class StorageContainer extends Component implements InjectableInterface
             $stream = $this->getStream($name);
 
             //Now we will try to copy object using current server/memory as a buffer.
-            if (empty($stream) || !$destination->upload($name, $stream))
+            if (empty($stream) || !$destination->put($name, $stream))
             {
                 throw new StorageException(
                     "Unable to copy '{$this->server}'.'{$this->buildAddress($name)}' "
@@ -422,7 +422,7 @@ class StorageContainer extends Component implements InjectableInterface
             $stream = $this->getStream($name);
 
             //Now we will try to replace object using current server/memory as a buffer.
-            if (empty($stream) || !$destination->upload($name, $stream))
+            if (empty($stream) || !$destination->put($name, $stream))
             {
                 throw new StorageException(
                     "Unable to replace '{$this->server}'.'{$this->buildAddress($name)}' "

@@ -104,7 +104,7 @@ class RackspaceServer extends StorageServer
      * @param string           $name      Storage object name.
      * @return bool|ResponseInterface
      */
-    public function isExists(StorageContainer $container, $name)
+    public function exists(StorageContainer $container, $name)
     {
         try
         {
@@ -121,7 +121,7 @@ class RackspaceServer extends StorageServer
             {
                 $this->reconnect();
 
-                return $this->isExists($container, $name);
+                return $this->exists($container, $name);
             }
 
             //Some unexpected error
@@ -145,7 +145,7 @@ class RackspaceServer extends StorageServer
      */
     public function getSize(StorageContainer $container, $name)
     {
-        if (empty($response = $this->isExists($container, $name)))
+        if (empty($response = $this->exists($container, $name)))
         {
             return false;
         }
@@ -162,7 +162,7 @@ class RackspaceServer extends StorageServer
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function upload(StorageContainer $container, $name, $origin)
+    public function put(StorageContainer $container, $name, $origin)
     {
         if (empty($mimetype = \GuzzleHttp\Psr7\mimetype_from_filename($name)))
         {
@@ -189,7 +189,7 @@ class RackspaceServer extends StorageServer
             {
                 $this->reconnect();
 
-                return $this->upload($container, $name, $origin);
+                return $this->put($container, $name, $origin);
             }
 
             //Some unexpected error

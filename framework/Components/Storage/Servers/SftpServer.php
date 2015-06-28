@@ -86,7 +86,7 @@ class SftpServer extends StorageServer
      * @param string           $name      Storage object name.
      * @return bool
      */
-    public function isExists(StorageContainer $container, $name)
+    public function exists(StorageContainer $container, $name)
     {
         return file_exists($this->getUri($container, $name));
     }
@@ -100,7 +100,7 @@ class SftpServer extends StorageServer
      */
     public function getSize(StorageContainer $container, $name)
     {
-        if (!$this->isExists($container, $name))
+        if (!$this->exists($container, $name))
         {
             return false;
         }
@@ -117,7 +117,7 @@ class SftpServer extends StorageServer
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function upload(StorageContainer $container, $name, $origin)
+    public function put(StorageContainer $container, $name, $origin)
     {
         if ($origin instanceof StreamInterface)
         {
@@ -174,7 +174,7 @@ class SftpServer extends StorageServer
      */
     public function rename(StorageContainer $container, $oldname, $newname)
     {
-        if (!$this->isExists($container, $oldname))
+        if (!$this->exists($container, $oldname))
         {
             return false;
         }
@@ -203,7 +203,7 @@ class SftpServer extends StorageServer
      */
     public function delete(StorageContainer $container, $name)
     {
-        if ($this->isExists($container, $name))
+        if ($this->exists($container, $name))
         {
             ssh2_sftp_unlink($this->sftp, $this->getPath($container, $name));
         }

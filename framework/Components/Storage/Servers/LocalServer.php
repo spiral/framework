@@ -24,7 +24,7 @@ class LocalServer extends StorageServer
      * @param string           $name      Storage object name.
      * @return bool
      */
-    public function isExists(StorageContainer $container, $name)
+    public function exists(StorageContainer $container, $name)
     {
         return $this->file->exists($container->options['folder'] . $name);
     }
@@ -52,7 +52,7 @@ class LocalServer extends StorageServer
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function upload(StorageContainer $container, $name, $origin)
+    public function put(StorageContainer $container, $name, $origin)
     {
         return $this->internalCopy(
             $container,
@@ -91,7 +91,7 @@ class LocalServer extends StorageServer
      */
     public function getStream(StorageContainer $container, $name)
     {
-        if (!$this->isExists($container, $name))
+        if (!$this->exists($container, $name))
         {
             return false;
         }

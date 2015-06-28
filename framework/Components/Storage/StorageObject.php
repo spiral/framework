@@ -131,14 +131,14 @@ class StorageObject extends Component
      *
      * @return bool
      */
-    public function isExists()
+    public function exists()
     {
         if (empty($this->name))
         {
             return false;
         }
 
-        return $this->container->isExists($this->name);
+        return $this->container->exists($this->name);
     }
 
     /**

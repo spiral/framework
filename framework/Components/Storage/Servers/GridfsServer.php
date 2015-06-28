@@ -59,7 +59,7 @@ class GridfsServer extends StorageServer
      * @param string           $name      Storage object name.
      * @return bool|\MongoGridFSFile
      */
-    public function isExists(StorageContainer $container, $name)
+    public function exists(StorageContainer $container, $name)
     {
         return $this->getGridFS($container)->findOne(array(
             'filename' => $name
@@ -75,7 +75,7 @@ class GridfsServer extends StorageServer
      */
     public function getSize(StorageContainer $container, $name)
     {
-        if (!$file = $this->isExists($container, $name))
+        if (!$file = $this->exists($container, $name))
         {
             return false;
         }
@@ -94,7 +94,7 @@ class GridfsServer extends StorageServer
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function upload(StorageContainer $container, $name, $origin)
+    public function put(StorageContainer $container, $name, $origin)
     {
         //We have to remove existed file first, this might not be super optimal operation.
         //Can be re-thinked
@@ -138,7 +138,7 @@ class GridfsServer extends StorageServer
      */
     public function getStream(StorageContainer $container, $name)
     {
-        if (!$file = $this->isExists($container, $name))
+        if (!$file = $this->exists($container, $name))
         {
             return false;
         }

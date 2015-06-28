@@ -65,7 +65,7 @@ class AmazonServer extends StorageServer
      * @return bool|ResponseInterface
      * @throws ClientException
      */
-    public function isExists(StorageContainer $container, $name)
+    public function exists(StorageContainer $container, $name)
     {
         try
         {
@@ -99,7 +99,7 @@ class AmazonServer extends StorageServer
      */
     public function getSize(StorageContainer $container, $name)
     {
-        if (empty($response = $this->isExists($container, $name)))
+        if (empty($response = $this->exists($container, $name)))
         {
             return false;
         }
@@ -118,7 +118,7 @@ class AmazonServer extends StorageServer
      * @throws ClientException
      * @throws ServerException
      */
-    public function upload(StorageContainer $container, $name, $origin)
+    public function put(StorageContainer $container, $name, $origin)
     {
         if (empty($mimetype = \GuzzleHttp\Psr7\mimetype_from_filename($name)))
         {

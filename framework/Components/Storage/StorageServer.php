@@ -84,7 +84,7 @@ abstract class StorageServer implements StorageServerInterface
      */
     public function copy(StorageContainer $container, StorageContainer $destination, $name)
     {
-        return $this->upload($destination, $name, $this->getStream($container, $name));
+        return $this->put($destination, $name, $this->getStream($container, $name));
     }
 
     /**

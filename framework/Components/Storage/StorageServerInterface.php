@@ -30,7 +30,7 @@ interface StorageServerInterface
      * @param string           $name      Storage object name.
      * @return bool
      */
-    public function isExists(StorageContainer $container, $name);
+    public function exists(StorageContainer $container, $name);
 
     /**
      * Retrieve object size in bytes, should return false if object does not exists.
@@ -50,7 +50,7 @@ interface StorageServerInterface
      * @param string|StreamInterface $origin    Local filename or stream to use for creation.
      * @return bool
      */
-    public function upload(StorageContainer $container, $name, $origin);
+    public function put(StorageContainer $container, $name, $origin);
 
     /**
      * Allocate local filename for remote storage object, if container represent remote location,
