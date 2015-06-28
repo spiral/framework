@@ -179,7 +179,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
                 $config = $this->config['handlers'][$this->config['handler']];
                 $handler = $this->handler = $this->container->get(
                     $config['class'],
-                    array('options' => $config, 'lifetime' => $this->config['lifetime']),
+                    ['options' => $config, 'lifetime' => $this->config['lifetime']],
                     null,
                     true
                 );
@@ -337,7 +337,7 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
      */
     public function all()
     {
-        return $this->start() ? $_SESSION : array();
+        return $this->start() ? $_SESSION : [];
     }
 
     /**

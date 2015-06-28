@@ -38,20 +38,20 @@ class MigrationCreator extends ClassCreator
     {
         $table = var_export($table, true);
 
-        $this->class->method('up')->setSource(array(
+        $this->class->method('up')->setSource([
             "",
             "//Creating table \"" . func_get_arg(0) . "\"",
             "\$schema = \$this->schema($table);",
             "\$schema->column('id')->primary();",
             "",
             "\$schema->save();"
-        ), true);
+        ], true);
 
-        $this->class->method('down')->setSource(array(
+        $this->class->method('down')->setSource([
             "",
             "//Dropping table \"" . func_get_arg(0) . "\"",
             "\$this->schema($table)->drop();"
-        ), true);
+        ], true);
     }
 
     /**
@@ -64,20 +64,20 @@ class MigrationCreator extends ClassCreator
     {
         $table = var_export($table, true);
 
-        $this->class->method('up')->setSource(array(
+        $this->class->method('up')->setSource([
             "",
             "//Altering table \"" . func_get_arg(0) . "\"",
             "\$schema = \$this->schema($table);",
             "",
             "\$schema->save();"
-        ), true);
+        ], true);
 
-        $this->class->method('down')->setSource(array(
+        $this->class->method('down')->setSource([
             "",
             "//Rolling back changes in table \"" . func_get_arg(0) . "\"",
             "\$schema = \$this->schema($table);",
             "",
             "\$schema->save();"
-        ), true);
+        ], true);
     }
 }

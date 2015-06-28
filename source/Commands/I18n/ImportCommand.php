@@ -35,9 +35,9 @@ class ImportCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['filename', InputArgument::REQUIRED, 'Input filename.'],
-    );
+    ];
 
     /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions()
@@ -45,9 +45,9 @@ class ImportCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['language', 'l', InputOption::VALUE_OPTIONAL, 'Target language.', 'auto'],
-    );
+    ];
 
     /**
      * Exporting to GetText format.

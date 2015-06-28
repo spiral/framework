@@ -24,7 +24,7 @@ class UpdateQuery extends AffectQuery
      *
      * @var array
      */
-    protected $values = array();
+    protected $values = [];
 
     /**
      * AffectQuery is query builder used to compile affection (delete, update) queries for one
@@ -40,8 +40,8 @@ class UpdateQuery extends AffectQuery
         Database $database,
         QueryCompiler $compiler,
         $table = '',
-        array $where = array(),
-        array $values = array()
+        array $where = [],
+        array $values = []
     )
     {
         parent::__construct($database, $compiler, $table, $where);
@@ -97,7 +97,7 @@ class UpdateQuery extends AffectQuery
      */
     public function getParameters()
     {
-        $parameters = array();
+        $parameters = [];
 
         foreach ($this->values as $value)
         {

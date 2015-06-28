@@ -29,7 +29,7 @@ class Behaviour
      *
      * @var array
      */
-    public $attributes = array();
+    public $attributes = [];
 
     /**
      * Additional node options, such as node should force it's own content, be called from parent
@@ -37,7 +37,7 @@ class Behaviour
      *
      * @var array
      */
-    public $options = array();
+    public $options = [];
 
     /**
      * Context node, parent in case of extending or importing.
@@ -55,7 +55,7 @@ class Behaviour
      * @param array  $options    Additional node options, such options will be passed to every node
      *                           child.
      */
-    public function __construct($name, $type, array $attributes = array(), array $options = array())
+    public function __construct($name, $type, array $attributes = [], array $options = [])
     {
         $this->name = $name;
         $this->type = $type;

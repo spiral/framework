@@ -66,7 +66,7 @@ class Definition extends Component
      *
      * @var array
      */
-    protected $dependencies = array();
+    protected $dependencies = [];
 
     /**
      * Module definition should explain where module located, name, description and other meta
@@ -85,7 +85,7 @@ class Definition extends Component
         $class,
         $name,
         $description = '',
-        $dependencies = array()
+        $dependencies = []
     )
     {
         $this->file = $file;
@@ -191,6 +191,6 @@ class Definition extends Component
             return $this->installer;
         }
 
-        return $this->installer = call_user_func(array($this->class, 'getInstaller'), $this);
+        return $this->installer = call_user_func([$this->class, 'getInstaller'], $this);
     }
 }

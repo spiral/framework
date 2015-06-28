@@ -25,13 +25,13 @@ class HasOneSchema extends RelationSchema
      * @invisible
      * @var array
      */
-    protected $defaultDefinition = array(
+    protected $defaultDefinition = [
         ActiveRecord::INNER_KEY         => '{record:primaryKey}',
         ActiveRecord::OUTER_KEY         => '{record:roleName}_{definition:INNER_KEY}',
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
         ActiveRecord::NULLABLE          => true
-    );
+    ];
 
     /**
      * Create all required relation columns, indexes and constraints.
@@ -68,13 +68,13 @@ class HasOneSchema extends RelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        $this->getOuterRecordSchema()->addRelation($name, array(
+        $this->getOuterRecordSchema()->addRelation($name, [
             ActiveRecord::BELONGS_TO        => $this->recordSchema->getClass(),
             ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
             ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
             ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
             ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
             ActiveRecord::NULLABLE          => $this->definition[ActiveRecord::NULLABLE]
-        ));
+        ]);
     }
 }

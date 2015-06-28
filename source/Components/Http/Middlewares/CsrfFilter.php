@@ -101,7 +101,7 @@ class CsrfFilter implements MiddlewareInterface
      */
     protected function isRequired(ServerRequestInterface $request)
     {
-        return !in_array($request->getMethod(), array('GET', 'HEAD', 'OPTIONS'));
+        return !in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']);
     }
 
     /**

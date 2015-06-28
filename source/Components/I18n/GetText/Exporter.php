@@ -38,8 +38,8 @@ class Exporter extends LocalicationExporter
         /**
          * PO file header.
          */
-        $duplicates = array();
-        $output = array();
+        $duplicates = [];
+        $output = [];
         $output[] = 'msgid ""';
         $output[] = 'msgstr ""';
         $output[] = '"Project-Id-Version: Spiral Framework\n"';

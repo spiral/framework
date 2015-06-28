@@ -37,9 +37,9 @@ class EnvironmentCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['environment', InputArgument::REQUIRED, 'Environment name.']
-    );
+    ];
 
     /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions()
@@ -47,9 +47,9 @@ class EnvironmentCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['configure', 'c', InputOption::VALUE_NONE, 'Reconfigure application after update.']
-    );
+    ];
 
     /**
      * Updating application environment.
@@ -63,7 +63,7 @@ class EnvironmentCommand extends Command
         $configDirectory = $this->file->normalizePath(directory('config'));
         $environmentDirectory = $configDirectory . "/{$this->argument('environment')}/";
 
-        $alteredConfigs = array();
+        $alteredConfigs = [];
         $configs = $this->file->getFiles($configDirectory, Core::CONFIGS_EXTENSION);
         foreach ($configs as $filename)
         {
@@ -92,11 +92,11 @@ class EnvironmentCommand extends Command
 
         if ($this->option('configure'))
         {
-            $this->console->command('core:configure', array(), $this->output);
+            $this->console->command('core:configure', [], $this->output);
         }
         else
         {
-            $this->console->command('core:touch', array(), $this->output);
+            $this->console->command('core:touch', [], $this->output);
         }
     }
 }

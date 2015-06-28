@@ -89,7 +89,7 @@ class ORM extends Component
         ActiveRecord $parent = null,
         $type,
         array $definition,
-        $data = array()
+        $data = []
     )
     {
         $class = $this->config['relations'][$type]['class'];
@@ -105,9 +105,9 @@ class ORM extends Component
      */
     public function schemaBuilder()
     {
-        return SchemaBuilder::make(array(
+        return SchemaBuilder::make([
             'config' => $this->config
-        ), $this->container);
+        ], $this->container);
     }
 
     /**

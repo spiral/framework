@@ -40,7 +40,7 @@ class CachedResult extends QueryResult
      *
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * As CachedResult can't interact directly with PDOStatement, fetch mode has to be emulated.
@@ -55,7 +55,7 @@ class CachedResult extends QueryResult
      *
      * @var array
      */
-    protected $bindings = array();
+    protected $bindings = [];
 
     /**
      * CacheResult instance used to represent query result fetched from database and stored in
@@ -72,8 +72,8 @@ class CachedResult extends QueryResult
         CacheStore $store,
         $cacheID,
         $query,
-        array $parameters = array(),
-        array $data = array()
+        array $parameters = [],
+        array $data = []
     )
     {
         $this->store = $store;
@@ -90,7 +90,7 @@ class CachedResult extends QueryResult
      */
     public function flush()
     {
-        $this->data = array();
+        $this->data = [];
         $this->count = 0;
 
         $this->store->delete($this->key);
@@ -243,7 +243,7 @@ class CachedResult extends QueryResult
         $mode && $this->fetchMode($mode);
 
         //So we can properly emulate bindings and etc.
-        $result = array();
+        $result = [];
         foreach ($this as $row)
         {
             $result[] = $row;
@@ -297,7 +297,7 @@ class CachedResult extends QueryResult
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'store'     => get_class($this->store),
             'cacheKey'  => $this->key,
             'statement' => $this->queryString(),
@@ -305,6 +305,6 @@ class CachedResult extends QueryResult
             'rows'      => $this->count > static::DUMP_LIMIT
                 ? '[TOO MANY RECORDS TO DISPLAY]'
                 : $this->fetchAll(\PDO::FETCH_ASSOC)
-        );
+        ];
     }
 }

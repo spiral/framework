@@ -22,5 +22,5 @@ interface ControllerInterface
      * @return mixed
      * @throws ClientException
      */
-    public function callAction($action = '', array $parameters = array());
+    public function callAction($action = '', array $parameters = []);
 }

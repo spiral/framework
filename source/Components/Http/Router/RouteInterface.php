@@ -42,7 +42,7 @@ interface RouteInterface
     public function perform(
         ServerRequestInterface $request,
         Container $container,
-        array $middlewareAliases = array()
+        array $middlewareAliases = []
     );
 
     /**
@@ -53,5 +53,5 @@ interface RouteInterface
      * @param string $basePath
      * @return string
      */
-    public function createURL(array $parameters = array(), $basePath = '/');
+    public function createURL(array $parameters = [], $basePath = '/');
 }

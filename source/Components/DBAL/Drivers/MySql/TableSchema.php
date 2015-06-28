@@ -49,7 +49,7 @@ class TableSchema extends AbstractTableSchema
      **/
     protected function loadColumns()
     {
-        $query = interpolate("SHOW FULL COLUMNS FROM {table}", array('table' => $this->getName(true)));
+        $query = interpolate("SHOW FULL COLUMNS FROM {table}", ['table' => $this->getName(true)]);
 
         foreach ($this->driver->query($query)->bind(1, $columnName) as $column)
         {
@@ -63,8 +63,8 @@ class TableSchema extends AbstractTableSchema
      */
     protected function loadIndexes()
     {
-        $indexes = array();
-        $query = interpolate("SHOW INDEXES FROM {table}", array('table' => $this->getName(true)));
+        $indexes = [];
+        $query = interpolate("SHOW INDEXES FROM {table}", ['table' => $this->getName(true)]);
         foreach ($this->driver->query($query) as $index)
         {
             if ($index['Key_name'] == 'PRIMARY')
@@ -92,18 +92,18 @@ class TableSchema extends AbstractTableSchema
     {
         $query = "SELECT * FROM information_schema.referential_constraints "
             . "WHERE constraint_schema = ? AND table_name = ?";
-        $references = $this->driver->query($query, array($this->driver->getDatabaseName(), $this->name));
+        $references = $this->driver->query($query, [$this->driver->getDatabaseName(), $this->name]);
 
         foreach ($references as $reference)
         {
             $query = "SELECT * FROM information_schema.key_column_usage "
                 . "WHERE constraint_name = ? AND table_schema = ? AND table_name = ?";
 
-            $column = $this->driver->query($query, array(
+            $column = $this->driver->query($query, [
                 $reference['CONSTRAINT_NAME'],
                 $this->driver->getDatabaseName(),
                 $this->name
-            ))->fetch();
+            ])->fetch();
 
             $this->registerReference($reference['CONSTRAINT_NAME'], $reference + $column);
         }
@@ -122,7 +122,7 @@ class TableSchema extends AbstractTableSchema
 
         //Additional table options
         $options = "ENGINE = {engine}";
-        $statement = $statement . ' ' . interpolate($options, array('engine' => $this->engine));
+        $statement = $statement . ' ' . interpolate($options, ['engine' => $this->engine]);
 
         //Executing
         $execute && $this->driver->statement($statement);
@@ -147,11 +147,11 @@ class TableSchema extends AbstractTableSchema
      */
     protected function doColumnChange(AbstractColumnSchema $column, AbstractColumnSchema $dbColumn)
     {
-        $query = interpolate("ALTER TABLE {table} CHANGE {column} {statement}", array(
+        $query = interpolate("ALTER TABLE {table} CHANGE {column} {statement}", [
             'table'     => $this->getName(true),
             'column'    => $dbColumn->getName(true),
             'statement' => $column->sqlStatement()
-        ));
+        ]);
 
         $this->driver->statement($query);
     }
@@ -174,11 +174,11 @@ class TableSchema extends AbstractTableSchema
      */
     protected function doIndexChange(AbstractIndexSchema $index, AbstractIndexSchema $dbIndex)
     {
-        $query = interpolate("ALTER TABLE {table} DROP INDEX {original}, ADD {statement}", array(
+        $query = interpolate("ALTER TABLE {table} DROP INDEX {original}, ADD {statement}", [
             'table'     => $this->getName(true),
             'original'  => $dbIndex->getName(true),
             'statement' => $index->sqlStatement(false)
-        ));
+        ]);
 
         $this->driver->statement($query);
     }

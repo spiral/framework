@@ -20,14 +20,14 @@ class Inspector extends Component
      *
      * @var ModelInspection[]
      */
-    protected $inspections = array();
+    protected $inspections = [];
 
     /**
      * List of blacklisted keywords indicates that field has to be hidden from publicFields() result.
      *
      * @var array
      */
-    protected $blacklist = array(
+    protected $blacklist = [
         'password',
         'hidden',
         'private',
@@ -35,7 +35,7 @@ class Inspector extends Component
         'email',
         'card',
         'internal'
-    );
+    ];
 
     /**
      * New DataEntities inspector. Inspector will check secured and hidden fields, validations and

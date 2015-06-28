@@ -79,7 +79,7 @@ class Installer extends Component
      *
      * @var array
      */
-    protected $files = array();
+    protected $files = [];
 
     /**
      * Bindings defined by module and should be mounted during application initialization. This is
@@ -87,21 +87,21 @@ class Installer extends Component
      *
      * @var array
      */
-    protected $bindings = array();
+    protected $bindings = [];
 
     /**
      * Configs to be moved to application or merged with existed config.
      *
      * @var ConfigWriter[]
      */
-    protected $configs = array();
+    protected $configs = [];
 
     /**
      * Migration classes to be registered in DBAL component.
      *
      * @var array
      */
-    protected $migrations = array();
+    protected $migrations = [];
 
     /**
      * Module installer responsible for operations like copying resources, registering configs, view
@@ -211,12 +211,12 @@ class Installer extends Component
             );
         }
 
-        $this->files[$this->file->normalizePath($destination)] = array(
+        $this->files[$this->file->normalizePath($destination)] = [
             'source'  => $filename,
             'md5Hash' => $this->file->md5($this->moduleDirectory . $filename),
             'size'    => $this->file->size($this->moduleDirectory . $filename),
             'mode'    => $mode
-        );
+        ];
 
         return $this;
     }
@@ -248,12 +248,12 @@ class Installer extends Component
 
         if ($destination != '' && $destination != '/')
         {
-            $this->files[$destination] = array(
+            $this->files[$destination] = [
                 'source' => null,
                 'md5'    => null,
                 'size'   => null,
                 'mode'   => $mode
-            );
+            ];
         }
 
         if (!empty($directory))
@@ -374,7 +374,7 @@ class Installer extends Component
      */
     public function getConflicts()
     {
-        $conflicts = array();
+        $conflicts = [];
         foreach ($this->files as $filename => $definition)
         {
             if (empty($definition['source']))
@@ -391,17 +391,17 @@ class Installer extends Component
                 continue;
             }
 
-            $conflicts[$filename] = array(
-                'required'  => array(
+            $conflicts[$filename] = [
+                'required'  => [
                     'md5Hash' => $definition['md5Hash'],
                     'size'    => $definition['size']
-                ),
-                'retrieved' => array(
+                ],
+                'retrieved' => [
                     'md5Hash' => $this->file->md5($filename),
                     'size'    => $this->file->size($filename)
-                ),
+                ],
                 'source'    => $definition['source']
-            );
+            ];
         }
 
         return $conflicts;
@@ -429,10 +429,10 @@ class Installer extends Component
 
             if (!$definition['source'])
             {
-                self::logger()->debug("Ensuring directory '{directory}' with mode '{mode}'.", array(
+                self::logger()->debug("Ensuring directory '{directory}' with mode '{mode}'.", [
                     'directory' => substr($this->file->relativePath($filename), 2),
                     'mode'      => decoct($definition['mode'])
-                ));
+                ]);
 
                 //Directory
                 $this->file->ensureDirectory($filename, $definition['mode']);
@@ -443,10 +443,10 @@ class Installer extends Component
             {
                 if ($this->file->md5($filename) == $definition['md5Hash'])
                 {
-                    self::logger()->debug("Module file '[module]/{source}' already mounted.", array(
+                    self::logger()->debug("Module file '[module]/{source}' already mounted.", [
                         'source'      => $definition['source'],
                         'destination' => substr($this->file->relativePath($filename), 2)
-                    ));
+                    ]);
 
                     continue;
                 }
@@ -455,10 +455,10 @@ class Installer extends Component
                 {
                     self::logger()->warning(
                         "Module file '[module]/{source}' already mounted and different version, ignoring.",
-                        array(
+                        [
                             'source'      => $definition['source'],
                             'destination' => substr($this->file->relativePath($filename), 2)
-                        )
+                        ]
                     );
                     continue;
                 }
@@ -466,10 +466,10 @@ class Installer extends Component
                 {
                     self::logger()->warning(
                         "Module file '[module]/{source}' already mounted and different version, replacing.",
-                        array(
+                        [
                             'source'      => $definition['source'],
                             'destination' => substr($this->file->relativePath($filename), 2)
-                        )
+                        ]
                     );
                 }
             }
@@ -477,10 +477,10 @@ class Installer extends Component
             {
                 self::logger()->debug(
                     "Mounting module file '[module]/{source}' into '{destination}'.",
-                    array(
+                    [
                         'source'      => $definition['source'],
                         'destination' => substr($this->file->relativePath($filename), 2)
-                    )
+                    ]
                 );
             }
 
@@ -502,9 +502,9 @@ class Installer extends Component
         {
             $config->writeConfig(directory('config'), $mode, $this);
 
-            self::logger()->debug("Updating configuration file '{config}'.", array(
+            self::logger()->debug("Updating configuration file '{config}'.", [
                 'config' => $config->getName()
-            ));
+            ]);
         }
     }
 

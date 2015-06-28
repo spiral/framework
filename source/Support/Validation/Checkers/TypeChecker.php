@@ -20,12 +20,12 @@ class TypeChecker extends Checker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "notEmpty" => "[[Field '{field}' should not be empty.]]",
         "boolean"  => "[[Field '{field}' is not valid boolean.]]",
         "datetime" => "[[Field '{field}' is not valid datetime.]]",
         "timezone" => "[[Field '{field}' is not valid timezone.]]"
-    );
+    ];
 
     /**
      * Will return true if value not empty. Uses !empty() function.

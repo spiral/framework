@@ -78,7 +78,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
      * @invisible
      * @var array
      */
-    protected $bindings = array(
+    protected $bindings = [
         'core'      => 'Spiral\Core\Core',
 
         //Dispatchers
@@ -108,7 +108,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
 
         //Pre-bundled, but supplied as external modules with common class
         'image'     => 'Spiral\Components\Image\ImageManager',
-    );
+    ];
 
     /**
      * Current environment id (name), that value can be used directly in code by accessing
@@ -130,14 +130,14 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
      *
      * @var array
      */
-    protected $directories = array(
+    protected $directories = [
         'libraries'   => null,
         'framework'   => null,
         'application' => null,
         'runtime'     => null,
         'config'      => null,
         'cache'       => null
-    );
+    ];
 
     /**
      * Set of components to be pre-loaded before bootstrap method. By default spiral load Loader,
@@ -145,7 +145,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
      *
      * @var array
      */
-    protected $autoload = array('loader', 'modules');
+    protected $autoload = ['loader', 'modules'];
 
     /**
      * Current application id, should be unique value between your environments, that value can be
@@ -323,7 +323,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         /**
          * @var Core $core
          */
-        $core = new static($directories + array('framework' => dirname(__DIR__)));
+        $core = new static($directories + ['framework' => dirname(__DIR__)]);
 
         $core->bindings[get_called_class()]
             = $core->bindings[self::SINGLETON]
@@ -338,9 +338,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         self::$instance = $core;
 
         //Error and exception handlers
-        set_error_handler(array($core, 'errorHandler'));
-        set_exception_handler(array($core, 'handleException'));
-        register_shutdown_function(array($core, 'shutdownHandler'));
+        set_error_handler([$core, 'errorHandler']);
+        set_exception_handler([$core, 'handleException']);
+        register_shutdown_function([$core, 'shutdownHandler']);
 
         foreach ($core->autoload as $module)
         {
@@ -388,7 +388,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
     {
         $dispatcher = $this->isConsole() ? ConsoleDispatcher::SINGLETON : HttpDispatcher::SINGLETON;
 
-        return $this->get($dispatcher, array('core' => $this));
+        return $this->get($dispatcher, ['core' => $this]);
     }
 
     /**
@@ -413,7 +413,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
      * @throws ClientException
      * @throws CoreException
      */
-    public function callAction($controller, $action = '', array $parameters = array())
+    public function callAction($controller, $action = '', array $parameters = [])
     {
         if (!class_exists($controller))
         {
@@ -576,7 +576,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         $filename = $this->directories['config'] . '/' . $config . '.' . self::CONFIGS_EXTENSION;
 
         //Cached filename
-        $cached = str_replace(array('/', '\\'), '-', 'config-' . $config);
+        $cached = str_replace(['/', '\\'], '-', 'config-' . $config);
 
         //Cached configuration
         if (($data = $this->loadData($cached, null, $cachedFilename)) === null)
@@ -630,7 +630,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
      */
     protected function makeFilename($name, $directory = null)
     {
-        $name = str_replace(array('/', '\\'), '-', $name);
+        $name = str_replace(['/', '\\'], '-', $name);
 
         if ($directory)
         {

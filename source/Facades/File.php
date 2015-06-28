@@ -29,13 +29,13 @@ use Spiral\Core\Facade;
  * @method static void clearCache($filename = null)
  * @method static int getPermissions($filename, $clearCache = true)
  * @method static bool setPermissions($filename, $mode, $clearCache = true)
- * @method static array getFiles($directory, $extensions = null, &$result = array())
+ * @method static array getFiles($directory, $extensions = null, &$result = [])
  * @method static string tempFilename($extension = '', $directory = null, $prefix = 'sp')
  * @method static string relativePath($location, $relativeTo = null)
  * @method static string normalizePath($path, $directory = false)
  * @method static bool ensureDirectory($directory, $mode = 511, $recursivePermissions = true)
  * @method static void removeFiles()
- * @method static FileManager make($parameters = array(), Container $container = null)
+ * @method static FileManager make($parameters = [], Container $container = null)
  * @method static FileManager getInstance(Container $container = null)
  */
 class File extends Facade

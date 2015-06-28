@@ -62,7 +62,7 @@ abstract class RelationSchema
      *
      * @var array
      */
-    protected $definition = array();
+    protected $definition = [];
 
     /**
      * Default definition parameters, will be filled if parameter skipped from definition by user.
@@ -74,7 +74,7 @@ abstract class RelationSchema
      * @invisible
      * @var array
      */
-    protected $defaultDefinition = array();
+    protected $defaultDefinition = [];
 
     /**
      * Target model or interface (for polymorphic classes).
@@ -150,21 +150,21 @@ abstract class RelationSchema
      */
     protected function definitionOptions()
     {
-        $options = array(
+        $options = [
             'name'              => $this->name,
             'name:plural'       => Inflector::pluralize($this->name),
             'name:singular'     => Inflector::singularize($this->name),
             'record:roleName'   => $this->recordSchema->getRoleName(),
             'record:table'      => $this->recordSchema->getTable(),
             'record:primaryKey' => $this->recordSchema->getPrimaryKey(),
-        );
+        ];
 
-        $proposed = array(
+        $proposed = [
             ActiveRecord::OUTER_KEY     => 'OUTER_KEY',
             ActiveRecord::INNER_KEY     => 'INNER_KEY',
             ActiveRecord::THOUGHT_TABLE => 'THOUGHT',
             ActiveRecord::PIVOT_TABLE   => 'PIVOT_TABLE'
-        );
+        ];
 
         foreach ($proposed as $property => $alias)
         {
@@ -176,11 +176,11 @@ abstract class RelationSchema
 
         if ($this->getOuterRecordSchema())
         {
-            $options = $options + array(
+            $options = $options + [
                     'outer:roleName'   => $this->getOuterRecordSchema()->getRoleName(),
                     'outer:table'      => $this->getOuterRecordSchema()->getTable(),
                     'outer:primaryKey' => $this->getOuterRecordSchema()->getPrimaryKey()
-                );
+                ];
         }
 
         return $options;
@@ -365,7 +365,7 @@ abstract class RelationSchema
         $definition = $this->definition;
         unset($definition[static::RELATION_TYPE]);
 
-        return array(static::EQUIVALENT_RELATION => $this->target) + $definition;
+        return [static::EQUIVALENT_RELATION => $this->target] + $definition;
     }
 
     /**
@@ -399,9 +399,9 @@ abstract class RelationSchema
      */
     protected function normalizeDefinition()
     {
-        $definition = array(
+        $definition = [
                 Relation::OUTER_TABLE => $this->getOuterTable()
-            ) + $this->definition;
+            ] + $this->definition;
 
         //Unnecessary fields.
         unset(
@@ -422,9 +422,9 @@ abstract class RelationSchema
      */
     public function normalizeSchema()
     {
-        return array(
+        return [
             ORM::R_TYPE       => static::RELATION_TYPE,
             ORM::R_DEFINITION => $this->normalizeDefinition()
-        );
+        ];
     }
 }

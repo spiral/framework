@@ -26,7 +26,7 @@ use Spiral\Core\Facade;
  * @method static void delete($name)
  * @method static CookieManager add(Cookie $cookie)
  * @method static Cookie[] getScheduled()
- * @method static CookieManager make($parameters = array(), Container $container = null)
+ * @method static CookieManager make($parameters = [], Container $container = null)
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */

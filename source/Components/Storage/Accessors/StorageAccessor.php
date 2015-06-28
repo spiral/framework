@@ -241,7 +241,7 @@ abstract class StorageAccessor implements AccessorInterface
             );
         }
 
-        $result = call_user_func_array(array($this->storageObject, $method), $arguments);
+        $result = call_user_func_array([$this->storageObject, $method], $arguments);
         if ($result === $this->storageObject)
         {
             return $this;

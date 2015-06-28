@@ -64,42 +64,42 @@ class Request extends HttpRequest implements ServerRequestInterface
      *
      * @var array
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      * Data related to the incoming request environment, typically derived from PHP's $_SERVER superglobal.
      *
      * @var array
      */
-    protected $serverParams = array();
+    protected $serverParams = [];
 
     /**
      * Cookies sent by the client to the server.
      *
      * @var array
      */
-    protected $cookieParams = array();
+    protected $cookieParams = [];
 
     /**
      * The deserialized query string arguments, if any.
      *
      * @var array
      */
-    protected $queryParams = array();
+    protected $queryParams = [];
 
     /**
      * Uploaded file instances.
      *
      * @var array|UploadedFileInterface[]
      */
-    protected $uploadedFiles = array();
+    protected $uploadedFiles = [];
 
     /**
      * Parameters provided in the request body. In most cases equals to _POST.
      *
      * @var array
      */
-    protected $parsedBody = array();
+    protected $parsedBody = [];
 
     /**
      * New Server Request instance.
@@ -123,13 +123,13 @@ class Request extends HttpRequest implements ServerRequestInterface
         $method = null,
         $uri = null,
         $body = 'php://memory',
-        array $headers = array(),
-        array $serverParams = array(),
-        array $cookieParams = array(),
-        array $queryParams = array(),
-        array $uploadedFiles = array(),
-        array $parsedBody = array(),
-        array $attributes = array()
+        array $headers = [],
+        array $serverParams = [],
+        array $cookieParams = [],
+        array $queryParams = [],
+        array $uploadedFiles = [],
+        array $parsedBody = [],
+        array $attributes = []
     )
     {
         parent::__construct($method, $uri, $body, $headers);
@@ -433,7 +433,7 @@ class Request extends HttpRequest implements ServerRequestInterface
      * @param array $attributes Initial set of attributes.
      * @return static
      */
-    public static function castRequest(array $attributes = array())
+    public static function castRequest(array $attributes = [])
     {
         $request = new static(
             $_SERVER['REQUEST_METHOD'],
@@ -475,7 +475,7 @@ class Request extends HttpRequest implements ServerRequestInterface
         }
         else
         {
-            $headers = array();
+            $headers = [];
             foreach ($server as $name => $value)
             {
                 if ($name === 'HTTP_COOKIE')

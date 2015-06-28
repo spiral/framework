@@ -23,11 +23,11 @@ class FileChecker extends Checker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "exists"    => "[[There was an error while uploading '{field}' file.]]",
         "size"      => "[[File '{field}' exceeds the maximum file size of {1}KB.]]",
         "extension" => "[[File '{field}' has an invalid file format.]]"
-    );
+    ];
 
     /**
      * FileManager component.

@@ -26,12 +26,12 @@ class ImageChecker extends FileChecker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "type"    => "[[The file '{field}' is not a supported image type.]]",
         "valid"   => "[[The file '{field}' should be a valid image (JPEG, PNG or GIF).]]",
         "smaller" => "[[The image dimensions of '{field}' should not exceed {0}x{1}px.]]",
         "bigger"  => "[[The image dimensions of '{field}' should be at least {0}x{1}px.]]"
-    );
+    ];
 
     /**
      * All known image types. This type will be associated with value from getimagesize() and can be
@@ -39,10 +39,10 @@ class ImageChecker extends FileChecker
      *
      * @var array
      */
-    protected $imageTypes = array(
+    protected $imageTypes = [
         'null', 'gif', 'jpeg', 'png', 'swf', 'psd', 'bmp', 'tiff',
         'tiff', 'jpc', 'jp2', 'jpx', 'jb2', 'swc', 'iff', 'wbmp', 'xbm'
-    );
+    ];
 
     /**
      * New instance of image checker. Image checker depends on the Image and File components.
@@ -106,7 +106,7 @@ class ImageChecker extends FileChecker
      */
     public function valid($file)
     {
-        return $this->type($file, array('jpeg', 'png', 'gif'));
+        return $this->type($file, ['jpeg', 'png', 'gif']);
     }
 
     /**

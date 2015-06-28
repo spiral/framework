@@ -14,7 +14,7 @@ use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Core\Component;
 
 /**
- * @method static AbstractColumnSchema make(array $parameters = array());
+ * @method static AbstractColumnSchema make(array $parameters = []);
  *
  * @method AbstractColumnSchema|$this boolean()
  *
@@ -58,7 +58,7 @@ abstract class AbstractColumnSchema extends Component
      * @invisible
      * @var array
      */
-    protected $mapping = array(
+    protected $mapping = [
         //Primary sequences
         'primary'     => null,
         'bigPrimary'  => null,
@@ -103,20 +103,20 @@ abstract class AbstractColumnSchema extends Component
 
         //Additional types
         'json'        => null
-    );
+    ];
 
     /**
      * Abstract type aliases (for consistency).
      *
      * @var array
      */
-    protected $aliases = array(
+    protected $aliases = [
         'int'            => 'integer',
         'bigint'         => 'bigInteger',
         'incremental'    => 'primary',
         'bigIncremental' => 'bigPrimary',
         'bool'           => 'boolean'
-    );
+    ];
 
     /**
      * Driver specific reverse mapping, this mapping should link database type to one of standard
@@ -126,30 +126,30 @@ abstract class AbstractColumnSchema extends Component
      * @invisible
      * @var array
      */
-    protected $reverseMapping = array(
-        'primary'     => array(),
-        'bigPrimary'  => array(),
-        'enum'        => array(),
-        'boolean'     => array(),
-        'integer'     => array(),
-        'tinyInteger' => array(),
-        'bigInteger'  => array(),
-        'string'      => array(),
-        'text'        => array(),
-        'tinyText'    => array(),
-        'longText'    => array(),
-        'double'      => array(),
-        'float'       => array(),
-        'decimal'     => array(),
-        'datetime'    => array(),
-        'date'        => array(),
-        'time'        => array(),
-        'timestamp'   => array(),
-        'binary'      => array(),
-        'tinyBinary'  => array(),
-        'longBinary'  => array(),
-        'json'        => array()
-    );
+    protected $reverseMapping = [
+        'primary'     => [],
+        'bigPrimary'  => [],
+        'enum'        => [],
+        'boolean'     => [],
+        'integer'     => [],
+        'tinyInteger' => [],
+        'bigInteger'  => [],
+        'string'      => [],
+        'text'        => [],
+        'tinyText'    => [],
+        'longText'    => [],
+        'double'      => [],
+        'float'       => [],
+        'decimal'     => [],
+        'datetime'    => [],
+        'date'        => [],
+        'time'        => [],
+        'timestamp'   => [],
+        'binary'      => [],
+        'tinyBinary'  => [],
+        'longBinary'  => [],
+        'json'        => []
+    ];
 
     /**
      * Internal php mapping from abstract types to internal php type. Result of this conversion will
@@ -160,11 +160,11 @@ abstract class AbstractColumnSchema extends Component
      * @invisible
      * @var array
      */
-    protected $phpMapping = array(
-        'int'   => array('primary', 'bigPrimary', 'integer', 'tinyInteger', 'bigInteger'),
-        'bool'  => array('boolean'),
-        'float' => array('double', 'float', 'decimal')
-    );
+    protected $phpMapping = [
+        'int'   => ['primary', 'bigPrimary', 'integer', 'tinyInteger', 'bigInteger'],
+        'bool'  => ['boolean'],
+        'float' => ['double', 'float', 'decimal']
+    ];
 
     /**
      * Column name.
@@ -234,7 +234,7 @@ abstract class AbstractColumnSchema extends Component
      *
      * @var array
      */
-    protected $enumValues = array();
+    protected $enumValues = [];
 
     /**
      * ColumnSchema
@@ -356,7 +356,7 @@ abstract class AbstractColumnSchema extends Component
          * Resetting all values to default state.
          */
         $this->size = $this->precision = $this->scale = 0;
-        $this->enumValues = array();
+        $this->enumValues = [];
 
         if (is_string($this->mapping[$type]))
         {
@@ -489,7 +489,7 @@ abstract class AbstractColumnSchema extends Component
             return $this->defaultValue;
         }
 
-        if (in_array($this->abstractType(), array('time', 'date', 'datetime', 'timestamp')))
+        if (in_array($this->abstractType(), ['time', 'date', 'datetime', 'timestamp']))
         {
             if (strtolower($this->defaultValue) == strtolower($this->table->getDriver()->timestampNow()))
             {
@@ -657,7 +657,7 @@ abstract class AbstractColumnSchema extends Component
      * @param array  $arguments Not used.
      * @return static
      */
-    public function __call($type, array $arguments = array())
+    public function __call($type, array $arguments = [])
     {
         return $this->type($type);
     }
@@ -726,7 +726,7 @@ abstract class AbstractColumnSchema extends Component
             $columnVars = get_object_vars($this);
             $dbColumnVars = get_object_vars($dbColumn);
 
-            $difference = array();
+            $difference = [];
 
             foreach ($columnVars as $name => $value)
             {
@@ -743,10 +743,10 @@ abstract class AbstractColumnSchema extends Component
                 }
             }
 
-            self::logger()->debug("Column '{name}' has changed attributes: {difference}.", array(
+            self::logger()->debug("Column '{name}' has changed attributes: {difference}.", [
                 'name'       => $this->name,
                 'difference' => join(', ', $difference)
-            ));
+            ]);
         }
 
         return $this == $dbColumn;
@@ -794,7 +794,7 @@ abstract class AbstractColumnSchema extends Component
      */
     protected function enumType()
     {
-        $enumValues = array();
+        $enumValues = [];
         foreach ($this->enumValues as $value)
         {
             $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);
@@ -815,7 +815,7 @@ abstract class AbstractColumnSchema extends Component
      */
     public function sqlStatement()
     {
-        $statement = array($this->getName(true), $this->type);
+        $statement = [$this->getName(true), $this->type];
 
         if ($this->abstractType() == 'enum')
         {
@@ -851,7 +851,7 @@ abstract class AbstractColumnSchema extends Component
      */
     public function getConstraints()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -871,14 +871,14 @@ abstract class AbstractColumnSchema extends Component
      */
     public function __debugInfo()
     {
-        $column = array(
+        $column = [
             'name' => $this->name,
-            'type' => array(
+            'type' => [
                 'database' => $this->type,
                 'schema'   => $this->abstractType(),
                 'php'      => $this->phpType()
-            )
-        );
+            ]
+        ];
 
         if (!empty($this->size))
         {

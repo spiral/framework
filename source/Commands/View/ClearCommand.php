@@ -34,9 +34,9 @@ class ClearCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['emulate', 'e', InputOption::VALUE_NONE, 'If set, cache cleaning will be emulated.']
-    );
+    ];
 
     /**
      * Clear view cache.

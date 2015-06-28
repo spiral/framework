@@ -36,9 +36,9 @@ class ServerCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['host', InputArgument::OPTIONAL, 'Host name.', 'localhost']
-    );
+    ];
 
     /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions()
@@ -46,10 +46,10 @@ class ServerCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['port', 'p', InputOption::VALUE_OPTIONAL, 'Port number.', 8080],
         ['timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout to hang out server.', 3600],
-    );
+    ];
 
     /**
      * Running server.

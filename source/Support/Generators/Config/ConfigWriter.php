@@ -77,7 +77,7 @@ class ConfigWriter extends Component
      *
      * @var array
      */
-    protected $content = array();
+    protected $content = [];
 
     /**
      * Config file header should include php tag declaration and may contain doc comment describing
@@ -261,10 +261,10 @@ class ConfigWriter extends Component
             $config = $this->mergeConfig($config, $existed);
         }
 
-        return interpolate("{header}return {config};", array(
+        return interpolate("{header}return {config};", [
             'header' => $this->configHeader,
             'config' => $this->exporter->export($config)
-        ));
+        ]);
     }
 
     /**

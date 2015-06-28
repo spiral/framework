@@ -203,14 +203,14 @@ class Database extends Component implements InjectableInterface
      * @param array  $parameters Parameters to be binded into query.
      * @return \PDOStatement
      */
-    public function statement($query, array $parameters = array())
+    public function statement($query, array $parameters = [])
     {
-        return $this->event('statement', array(
+        return $this->event('statement', [
             'statement'  => $this->driver->statement($query, $parameters),
             'query'      => $query,
             'parameters' => $parameters,
             'database'   => $this
-        ))['statement'];
+        ])['statement'];
     }
 
     /**
@@ -222,7 +222,7 @@ class Database extends Component implements InjectableInterface
      * @return int
      * @throws \PDOException
      */
-    public function affect($query, array $parameters = array())
+    public function affect($query, array $parameters = [])
     {
         return $this->statement($query, $parameters)->rowCount();
     }
@@ -236,7 +236,7 @@ class Database extends Component implements InjectableInterface
      * @return int
      * @throws \PDOException
      */
-    public function execute($query, array $parameters = array())
+    public function execute($query, array $parameters = [])
     {
         return $this->statement($query, $parameters)->rowCount();
     }
@@ -250,14 +250,14 @@ class Database extends Component implements InjectableInterface
      * @return QueryResult
      * @throws \PDOException
      */
-    public function query($query, array $parameters = array())
+    public function query($query, array $parameters = [])
     {
-        return $this->event('query', array(
+        return $this->event('query', [
             'statement'  => $this->driver->query($query, $parameters),
             'query'      => $query,
             'parameters' => $parameters,
             'database'   => $this
-        ))['statement'];
+        ])['statement'];
     }
 
     /**
@@ -275,7 +275,7 @@ class Database extends Component implements InjectableInterface
     public function cached(
         $lifetime,
         $query,
-        array $parameters = array(),
+        array $parameters = [],
         $key = '',
         CacheStore $store = null
     )
@@ -287,12 +287,12 @@ class Database extends Component implements InjectableInterface
             /**
              * Trying to build unique query id based on provided options and environment.
              */
-            $key = md5(serialize(array(
+            $key = md5(serialize([
                 $query,
                 $parameters,
                 $this->name,
                 $this->tablePrefix
-            )));
+            ]));
         }
 
         $data = $store->remember($key, $lifetime, function () use ($query, $parameters)
@@ -320,7 +320,7 @@ class Database extends Component implements InjectableInterface
             $columns = $columns[0];
         }
 
-        return $this->driver->selectBuilder($this, array('columns' => $columns));
+        return $this->driver->selectBuilder($this, ['columns' => $columns]);
     }
 
     /**
@@ -341,7 +341,7 @@ class Database extends Component implements InjectableInterface
      * @param array  $where Initial set of where rules specified as array.
      * @return DeleteQuery
      */
-    public function delete($table = '', array $where = array())
+    public function delete($table = '', array $where = [])
     {
         return $this->driver->deleteBuilder($this, compact('table', 'where'));
     }
@@ -354,7 +354,7 @@ class Database extends Component implements InjectableInterface
      * @param array  $where  Initial set of where rules specified as array.
      * @return UpdateQuery
      */
-    public function update($table = '', array $values = array(), array $where = array())
+    public function update($table = '', array $values = [], array $where = [])
     {
         return $this->driver->updateBuilder($this, compact('table', 'values', 'where'));
     }
@@ -428,7 +428,7 @@ class Database extends Component implements InjectableInterface
      */
     public function getTables()
     {
-        $result = array();
+        $result = [];
         foreach ($this->driver->tableNames() as $table)
         {
             if ($this->tablePrefix && strpos($table, $this->tablePrefix) !== 0)

@@ -21,7 +21,7 @@ use Spiral\Core\Facade;
  * @method static string get($bundle, $string)
  * @method static string set($bundle, $string, $translation = '')
  * @method static string pluralize($phrase, $number, $numberFormat = true)
- * @method static Translator make($parameters = array(), Container $container = null)
+ * @method static Translator make($parameters = [], Container $container = null)
  * @method static Translator getInstance(Container $container = null)
  * @method static array getConfig()
  * @method static array setConfig(array $config)

@@ -56,7 +56,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
      *
      * @var MongoDatabase[]
      */
-    protected $databases = array();
+    protected $databases = [];
 
     /**
      * ODM component instance.
@@ -88,7 +88,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
      * @return MongoDatabase
      * @throws ODMException
      */
-    public function db($database = 'default', array $config = array())
+    public function db($database = 'default', array $config = [])
     {
         if (isset($this->config['aliases'][$database]))
         {
@@ -116,11 +116,11 @@ class ODM extends Component implements Container\InjectionManagerInterface
 
         $this->databases[$database] = $this->container->get(
             MongoDatabase::class,
-            array(
+            [
                 'name'   => $database,
                 'config' => $config,
                 'odm'    => $this
-            ),
+            ],
             null,
             true
         );
@@ -181,9 +181,9 @@ class ODM extends Component implements Container\InjectionManagerInterface
      */
     public function schemaBuilder()
     {
-        return SchemaBuilder::make(array(
+        return SchemaBuilder::make([
             'config' => $this->config
-        ), $this->container);
+        ], $this->container);
     }
 
     /**

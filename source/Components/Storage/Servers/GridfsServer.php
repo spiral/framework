@@ -23,9 +23,9 @@ class GridfsServer extends StorageServer
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'database' => 'default'
-    );
+    ];
 
     /**
      * Associated mongo database.
@@ -60,9 +60,9 @@ class GridfsServer extends StorageServer
      */
     public function exists(StorageContainer $container, $name)
     {
-        return $this->getGridFS($container)->findOne(array(
+        return $this->getGridFS($container)->findOne([
             'filename' => $name
-        ));
+        ]);
     }
 
     /**
@@ -115,7 +115,7 @@ class GridfsServer extends StorageServer
         $tempFilename = $this->file->tempFilename();
         copy($this->castFilename($origin), $tempFilename);
 
-        if (!$this->getGridFS($container)->storeFile($tempFilename, array('filename' => $name)))
+        if (!$this->getGridFS($container)->storeFile($tempFilename, ['filename' => $name]))
         {
             return false;
         }
@@ -161,12 +161,12 @@ class GridfsServer extends StorageServer
         $this->delete($container, $newname);
 
         return $this->getGridFS($container)->update(
-            array(
+            [
                 'filename' => $oldname
-            ),
-            array(
-                '$set' => array('filename' => $newname)
-            )
+            ],
+            [
+                '$set' => ['filename' => $newname]
+            ]
         );
     }
 
@@ -179,7 +179,7 @@ class GridfsServer extends StorageServer
      */
     public function delete(StorageContainer $container, $name)
     {
-        $this->getGridFS($container)->remove(array('filename' => $name));
+        $this->getGridFS($container)->remove(['filename' => $name]);
     }
 
     /**
@@ -191,7 +191,7 @@ class GridfsServer extends StorageServer
     protected function getGridFS(StorageContainer $container)
     {
         $gridFs = $this->database->getGridFS($container->options['collection']);
-        $gridFs->ensureIndex(array('filename' => 1));
+        $gridFs->ensureIndex(['filename' => 1]);
 
         return $gridFs;
     }

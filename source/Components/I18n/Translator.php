@@ -46,7 +46,7 @@ class Translator extends Component
      *
      * @var PluralizerInterface[]
      */
-    protected $pluralizers = array();
+    protected $pluralizers = [];
 
     /**
      * Currently selected language identifier.
@@ -61,7 +61,7 @@ class Translator extends Component
      *
      * @var array
      */
-    protected $languageOptions = array();
+    protected $languageOptions = [];
 
     /**
      * Already loaded language bundles, bundle define list of associations between primary and
@@ -69,7 +69,7 @@ class Translator extends Component
      *
      * @var array
      */
-    protected $bundles = array();
+    protected $bundles = [];
 
     /**
      * Core component.
@@ -109,7 +109,7 @@ class Translator extends Component
         }
 
         //Cleaning all bundles
-        $this->bundles = array();
+        $this->bundles = [];
 
         $this->language = $language;
         $this->languageOptions = $this->config['languages'][$language];
@@ -167,7 +167,7 @@ class Translator extends Component
 
         if (empty($this->bundles[$bundle]))
         {
-            $this->bundles[$bundle] = array();
+            $this->bundles[$bundle] = [];
         }
     }
 
@@ -284,7 +284,7 @@ class Translator extends Component
         if (!isset($this->bundles[$bundle][$phrase = $this->normalize($phrase)]))
         {
             $this->bundles[$bundle][$phrase] = array_pad(
-                array(),
+                [],
                 $this->getPluralizer()->countForms(),
                 func_get_arg(0)
             );

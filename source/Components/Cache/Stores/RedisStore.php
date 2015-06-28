@@ -25,10 +25,10 @@ class RedisStore extends CacheStore
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'client' => 'default',
         'prefix' => 'spiral'
-    );
+    ];
 
     /**
      * Redis client used for cache operations.

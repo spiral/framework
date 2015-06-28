@@ -33,7 +33,7 @@ class DirectRoute extends AbstractRoute
      *
      * @var array
      */
-    protected $controllers = array();
+    protected $controllers = [];
 
     /**
      * DirectRoute can route only to controllers, which means that pattern should always include
@@ -76,8 +76,8 @@ class DirectRoute extends AbstractRoute
         $pattern,
         $namespace,
         $postfix,
-        array $defaults = array(),
-        array $controllers = array()
+        array $defaults = [],
+        array $controllers = []
     )
     {
         $this->name = $name;
@@ -118,7 +118,7 @@ class DirectRoute extends AbstractRoute
     public function perform(
         ServerRequestInterface $request,
         Container $container,
-        array $middlewareAliases = array()
+        array $middlewareAliases = []
     )
     {
         return $this->getPipeline($container, $middlewareAliases)

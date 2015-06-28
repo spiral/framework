@@ -19,11 +19,11 @@ class AddressChecker extends Checker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "email"     => "[[Field '{field}' is not a valid email address.]]",
         "fullEmail" => "[[Field '{field}' is not a valid email address.]]",
         "url"       => "[[Field '{field}' is not a valid URL.]]"
-    );
+    ];
 
     /**
      * Email address validation. An internal PHP function filter_var() will be used.

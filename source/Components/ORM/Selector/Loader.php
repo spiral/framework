@@ -32,11 +32,11 @@ abstract class Loader
      *
      * @var array
      */
-    protected static $loaderClasses = array(
+    protected static $loaderClasses = [
         ActiveRecord::HAS_ONE    => 'Spiral\Components\ORM\Selector\Loaders\HasOneLoader',
         ActiveRecord::HAS_MANY   => 'Spiral\Components\ORM\Selector\Loaders\HasManyLoader',
         ActiveRecord::BELONGS_TO => 'Spiral\Components\ORM\Selector\Loaders\BelongsToLoader'
-    );
+    ];
 
     /**
      * Container related to parent loader.
@@ -50,7 +50,7 @@ abstract class Loader
      *
      * @var array
      */
-    protected $relationDefinition = array();
+    protected $relationDefinition = [];
 
     /**
      * ORM component is required to fetch all required model schemas.
@@ -66,7 +66,7 @@ abstract class Loader
      * @invisible
      * @var array
      */
-    protected $schema = array();
+    protected $schema = [];
 
     /**
      * Parent loader.
@@ -81,10 +81,10 @@ abstract class Loader
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'method'     => null,
         'tableAlias' => null
-    );
+    ];
 
     /**
      * List of keys has to be stored as data references. This set of keys is required by inner loader(s)
@@ -92,32 +92,32 @@ abstract class Loader
      *
      * @var array
      */
-    protected $referenceKeys = array();
+    protected $referenceKeys = [];
 
-    protected $columns = array();
+    protected $columns = [];
 
     protected $offset = 0;
 
     protected $countColumns = 0;
 
-    protected $references = array();
+    protected $references = [];
 
-    protected $aggregatedReferences = array();
+    protected $aggregatedReferences = [];
 
-    protected $duplicates = array();
+    protected $duplicates = [];
 
-    protected $result = array();
+    protected $result = [];
 
     /**
      * Sub loaders.
      *
      * @var Loader[]
      */
-    public $loaders = array();
+    public $loaders = [];
 
     public function __construct(
         $container,
-        array $relationDefinition = array(),
+        array $relationDefinition = [],
         ORM $orm,
         Loader $parent = null
     )
@@ -174,7 +174,7 @@ abstract class Loader
      * @param array  $options
      * @return Loader
      */
-    public function addLoader($relation, array $options = array())
+    public function addLoader($relation, array $options = [])
     {
         if (($position = strpos($relation, '.')) !== false)
         {
@@ -258,7 +258,7 @@ abstract class Loader
      * @param array $options
      * @return static
      */
-    public function setOptions(array $options = array())
+    public function setOptions(array $options = [])
     {
         $this->options = $options + $this->options;
 
@@ -267,7 +267,7 @@ abstract class Loader
 
     public function createSelector(Database $database)
     {
-        $selector = new Selector($this->schema, $this->orm, $database, array(), $this);
+        $selector = new Selector($this->schema, $this->orm, $database, [], $this);
 
         $this->offset = $selector->registerColumns(
             $this->getTableAlias(),
@@ -312,7 +312,7 @@ abstract class Loader
      */
     public function getPostSelectors(Database $database)
     {
-        $selectors = array();
+        $selectors = [];
         foreach ($this->loaders as $loader)
         {
             if ($loader->options['method'] == Selector::POSTLOAD)
@@ -408,7 +408,7 @@ abstract class Loader
 
         if (!isset($this->aggregatedReferences[$key]))
         {
-            return array();
+            return [];
         }
 
         return array_keys($this->aggregatedReferences[$key]);
@@ -466,9 +466,9 @@ abstract class Loader
 
     public function clean()
     {
-        $this->duplicates = array();
-        $this->references = array();
-        $this->result = array();
+        $this->duplicates = [];
+        $this->references = [];
+        $this->result = [];
         foreach ($this->loaders as $loader)
         {
             $loader->clean();

@@ -31,7 +31,7 @@ class ArrayExporter extends Component
         //No keys for associated array
         $associated = array_diff_key($array, array_keys(array_keys($array)));
 
-        $result = array();
+        $result = [];
         $keyLength = 0;
         foreach ($array as $name => $value)
         {
@@ -55,7 +55,7 @@ class ArrayExporter extends Component
                 continue;
             }
 
-            if ($value == array())
+            if ($value == [])
             {
                 $result[] = $name . "array()";
                 continue;

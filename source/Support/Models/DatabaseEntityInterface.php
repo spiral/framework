@@ -25,7 +25,7 @@ interface DatabaseEntityInterface
      * @param array $fields
      * @return static
      */
-    public function setFields($fields = array());
+    public function setFields($fields = []);
 
     /**
      * Get one specific field value and apply getter filter to it. You can disable getter filter by
@@ -53,7 +53,7 @@ interface DatabaseEntityInterface
      * @param array $fields Model fields to set, will be passed thought filters.
      * @return static
      */
-    public static function create($fields = array());
+    public static function create($fields = []);
 
     /**
      * Is model were fetched from databases or recently created? Usually checks primary key value.

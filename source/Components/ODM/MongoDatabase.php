@@ -49,9 +49,9 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
      *
      * @var array
      */
-    protected $config = array(
+    protected $config = [
         'profiling' => self::PROFILE_SIMPLE
-    );
+    ];
 
     /**
      * Mongo connection instance.
@@ -140,7 +140,7 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
      * @param array  $query Initial collection query.
      * @return Collection
      */
-    public function odmCollection($name, array $query = array())
+    public function odmCollection($name, array $query = [])
     {
         return new Collection($this->odm, $this->name, $name, $query);
     }

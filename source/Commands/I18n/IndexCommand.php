@@ -36,9 +36,9 @@ class IndexCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['directory', 'd', InputOption::VALUE_OPTIONAL, 'Directory to scan for i18n function usages.']
-    );
+    ];
 
     /**
      * Running indexation.

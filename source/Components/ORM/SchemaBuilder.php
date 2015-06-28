@@ -29,7 +29,7 @@ class SchemaBuilder extends Component
      *
      * @var array
      */
-    protected $relationships = array(
+    protected $relationships = [
         ActiveRecord::BELONGS_TO         => 'Spiral\Components\ORM\Schemas\Relations\BelongsToSchema',
         ActiveRecord::BELONGS_TO_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\BelongsToMorphedSchema',
 
@@ -40,14 +40,14 @@ class SchemaBuilder extends Component
         ActiveRecord::MANY_TO_MORPHED    => 'Spiral\Components\ORM\Schemas\Relations\ManyToMorphedSchema',
 
         ActiveRecord::MANY_THOUGHT       => 'Spiral\Components\ORM\Schemas\Relations\ManyThoughtSchema',
-    );
+    ];
 
     /**
      * Schema generating configuration.
      *
      * @var array
      */
-    protected $config = array();
+    protected $config = [];
 
     /**
      * DatabaseManager instance.
@@ -69,14 +69,14 @@ class SchemaBuilder extends Component
      *
      * @var RecordSchema[]
      */
-    protected $records = array();
+    protected $records = [];
 
     /**
      * All declared tables.
      *
      * @var array
      */
-    public $tables = array();
+    public $tables = [];
 
     /**
      * New ORM Schema reader instance.
@@ -103,15 +103,15 @@ class SchemaBuilder extends Component
                 continue;
             }
 
-            $this->records[$class] = RecordSchema::make(array(
+            $this->records[$class] = RecordSchema::make([
                 'class'     => $class,
                 'ormSchema' => $this
-            ), $this->container);
+            ], $this->container);
         }
 
         //TODO: error with nested relations based on non declared auto key
 
-        $relations = array();
+        $relations = [];
         foreach ($this->records as $record)
         {
             if (!$record->isAbstract())
@@ -167,10 +167,10 @@ class SchemaBuilder extends Component
     {
         if ($class == self::ACTIVE_RECORD)
         {
-            return RecordSchema::make(array(
+            return RecordSchema::make([
                 'class'     => self::ACTIVE_RECORD,
                 'ormSchema' => $this
-            ), $this->container);
+            ], $this->container);
         }
 
         if (!isset($this->records[$class]))
@@ -273,12 +273,12 @@ class SchemaBuilder extends Component
         /**
          * @var RelationSchema $relationship
          */
-        $relationship = $this->container->get($this->relationships[$type], array(
+        $relationship = $this->container->get($this->relationships[$type], [
             'ormSchema'    => $this,
             'recordSchema' => $recordSchema,
             'name'         => $name,
             'definition'   => $definition
-        ));
+        ]);
 
         if ($relationship->hasEquivalent())
         {
@@ -298,7 +298,7 @@ class SchemaBuilder extends Component
     {
         return isset($this->config['mutators'][$abstractType])
             ? $this->config['mutators'][$abstractType]
-            : array();
+            : [];
     }
 
     /**
@@ -308,7 +308,7 @@ class SchemaBuilder extends Component
      */
     public function normalizeSchema()
     {
-        $schema = array();
+        $schema = [];
 
         foreach ($this->records as $record)
         {
@@ -317,7 +317,7 @@ class SchemaBuilder extends Component
                 continue;
             }
 
-            $recordSchema = array();
+            $recordSchema = [];
 
             $recordSchema[ORM::E_ROLE_NAME] = $record->getRoleName();
             $recordSchema[ORM::E_TABLE] = $record->getTable();

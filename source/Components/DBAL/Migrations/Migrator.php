@@ -36,7 +36,7 @@ class Migrator extends Component implements MigratorInterface
      *
      * @var array
      */
-    protected $config = array();
+    protected $config = [];
 
     /**
      * Core used to resolve environment.
@@ -142,7 +142,7 @@ class Migrator extends Component implements MigratorInterface
                 ->select('id', 'timePerformed as performed')
                 ->run()->fetch();
 
-            $migration += $dbMigration ?: array('id' => 0, 'performed' => false);
+            $migration += $dbMigration ?: ['id' => 0, 'performed' => false];
 
             if (!empty($migration['performed']))
             {
@@ -172,11 +172,11 @@ class Migrator extends Component implements MigratorInterface
                 $instance->setDatabase($this->database);
                 $instance->up();
 
-                $this->table()->insert(array(
+                $this->table()->insert([
                     'migration'     => $migration['name'],
                     'timestamp'     => $migration['timestamp'],
                     'timePerformed' => new \DateTime('now')
-                ));
+                ]);
 
                 $result = $migration;
                 break;
@@ -201,7 +201,7 @@ class Migrator extends Component implements MigratorInterface
 
                 $instance->down();
 
-                $this->table()->delete(array('id' => $migration['id']))->run();
+                $this->table()->delete(['id' => $migration['id']])->run();
 
                 $result = $migration;
                 break;

@@ -85,10 +85,10 @@ class Timestamp extends Carbon implements AccessorInterface
      */
     public function jsonSerialize()
     {
-        return array(
+        return [
             'date'     => $this->toDateTimeString(),
             'timezone' => $this->timezoneName
-        );
+        ];
     }
 
     /**

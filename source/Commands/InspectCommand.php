@@ -47,13 +47,13 @@ class InspectCommand extends Command
      *
      * @var array
      */
-    protected $safetyLevels = array(
+    protected $safetyLevels = [
         1 => '<fg=red>Very Low</fg=red>',
         2 => '<fg=red>Bad</fg=red>',
         3 => '<fg=yellow>Moderate</fg=yellow>',
         4 => '<fg=yellow>Good</fg=yellow>',
         5 => '<fg=green>Very Good</fg=green>'
-    );
+    ];
 
     /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions()
@@ -61,9 +61,9 @@ class InspectCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['short', 's', InputOption::VALUE_NONE, 'Return shorted report.'],
-    );
+    ];
 
     /**
      * Get inspector instance.
@@ -80,12 +80,12 @@ class InspectCommand extends Command
             ? \Spiral\Commands\ORM\UpdateCommand::$schemaBuilder
             : $this->orm->schemaBuilder();
 
-        return Inspector::make(array(
+        return Inspector::make([
             'schemas' => array_merge(
                 $odmBuilder->getDocumentSchemas(),
                 $ormBuilder->getRecordSchemas()
             )
-        ));
+        ]);
     }
 
     /**
@@ -98,9 +98,9 @@ class InspectCommand extends Command
 
         if (!$this->option('short'))
         {
-            $table = $this->table(array(
+            $table = $this->table([
                 'Model', 'Safety Level', 'Protected', 'Warnings'
-            ));
+            ]);
 
             foreach ($inspector->getInspections() as $inspection)
             {
@@ -110,12 +110,12 @@ class InspectCommand extends Command
                     $countWarnings += count($warnings);
                 }
 
-                $table->addRow(array(
+                $table->addRow([
                     $inspection->getSchema()->getClass(),
                     $this->safetyLevels[$inspection->safetyLevel()],
                     $inspection->countPassed(self::MINIMAL_LEVEL) . ' / ' . $inspection->countFields(),
                     $countWarnings . " warning(s)"
-                ));
+                ]);
             }
 
             $table->render();
@@ -126,12 +126,12 @@ class InspectCommand extends Command
             "Inspected models <fg=yellow>{count}</fg=yellow>, "
             . "average safety level {level} ({number}), "
             . "protected fields <info>{fields}%</info>.",
-            array(
+            [
                 'count'  => number_format($inspector->countModels()),
                 'level'  => $this->safetyLevels[(int)floor($inspector->getSafetyLevel())],
                 'number' => number_format($inspector->getSafetyLevel(), 2),
                 'fields' => number_format(100 * $inspector->getProtectionRate(self::MINIMAL_LEVEL), 2)
-            )
+            ]
         ));
 
         return;

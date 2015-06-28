@@ -32,7 +32,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      * to where tokens.
      */
     const TOKEN_AND = "@AND";
-    const TOKEN_OR = "@OR";
+    const TOKEN_OR  = "@OR";
 
     /**
      * By default spiral will force all time conversion into single timezone before storing in
@@ -54,7 +54,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      *
      * @var Database[]
      */
-    protected $databases = array();
+    protected $databases = [];
 
     /**
      * DBAL component instance, component is responsible for connections to various SQL databases and
@@ -91,7 +91,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      * @return Database
      * @throws DBALException
      */
-    public function db($database = 'default', array $config = array(), Driver $driver = null)
+    public function db($database = 'default', array $config = [], Driver $driver = null)
     {
         if (isset($this->config['aliases'][$database]))
         {
@@ -126,11 +126,11 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
 
         $this->databases[$database] = $this->container->get(
             Database::class,
-            array(
+            [
                 'name'        => $database,
                 'driver'      => $driver,
                 'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
-            ),
+            ],
             null,
             true
         );
@@ -171,9 +171,9 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      */
     public function migrationRepository($directory = null)
     {
-        return Repository::make(array(
+        return Repository::make([
             'directory' => $directory ?: $this->config['migrations']['directory']
-        ), $this->container);
+        ], $this->container);
     }
 
     /**
@@ -186,11 +186,11 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      */
     public function getMigrator($database = 'default', $directory = null)
     {
-        return $this->container->get($this->config['migrations']['migrator'], array(
+        return $this->container->get($this->config['migrations']['migrator'], [
             'database'   => $this->db($database),
             'repository' => $this->migrationRepository($directory),
             'config'     => $this->config['migrations']
-        ));
+        ]);
     }
 
     /**
@@ -201,7 +201,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
      * @param array  $parameters Parameters to be binded into query.
      * @return mixed
      */
-    public static function interpolateQuery($query, array $parameters = array())
+    public static function interpolateQuery($query, array $parameters = [])
     {
         if (empty($parameters))
         {

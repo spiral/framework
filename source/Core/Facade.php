@@ -26,8 +26,8 @@ class Facade
      */
     public static function __callStatic($method, array $arguments)
     {
-        return call_user_func_array(array(
-            Container::getInstance()->get(static::COMPONENT), $method),
+        return call_user_func_array([
+            Container::getInstance()->get(static::COMPONENT), $method],
             $arguments
         );
     }

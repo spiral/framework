@@ -32,9 +32,9 @@ class MigrateCommand extends BaseCommand
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['one', 'o', InputOption::VALUE_NONE, 'Execute only one (first) migration.']
-    );
+    ];
 
     /**
      * Execute one or multiple migrations.

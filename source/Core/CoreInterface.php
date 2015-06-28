@@ -23,5 +23,5 @@ interface CoreInterface
      * @throws ClientException
      * @throws CoreException
      */
-    public function callAction($controller, $action = '', array $parameters = array());
+    public function callAction($controller, $action = '', array $parameters = []);
 }

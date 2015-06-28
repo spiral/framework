@@ -15,7 +15,7 @@ class Configurator implements ConfiguratorInterface
      *
      * @var array
      */
-    protected $configs = array();
+    protected $configs = [];
 
     /**
      * Set of configurations declared by component name or config container.

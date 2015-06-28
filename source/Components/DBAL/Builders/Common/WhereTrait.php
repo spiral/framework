@@ -24,7 +24,7 @@ trait WhereTrait
      *
      * @var array
      */
-    protected $whereTokens = array();
+    protected $whereTokens = [];
 
     /**
      * Registering query parameters. Array parameters will be converted to Parameter object to
@@ -249,7 +249,7 @@ trait WhereTrait
      * @return static
      * @throws DBALException
      */
-    public function orWhere($identifier, $variousA = array(), $variousB = null, $variousC = null)
+    public function orWhere($identifier, $variousA = [], $variousB = null, $variousC = null)
     {
         $this->whereToken('OR', func_get_args(), $this->whereTokens);
 
@@ -272,7 +272,7 @@ trait WhereTrait
     protected function whereToken(
         $joiner,
         array $parameters,
-        &$tokens = array(),
+        &$tokens = [],
         $dataParameters = true
     )
     {
@@ -281,18 +281,18 @@ trait WhereTrait
         //Complex query is provided
         if (is_array($identifier))
         {
-            $tokens[] = array($joiner, '(');
+            $tokens[] = [$joiner, '('];
             $this->parseWhere($identifier, DatabaseManager::TOKEN_AND, $tokens, $dataParameters);
-            $tokens[] = array('', ')');
+            $tokens[] = ['', ')'];
 
             return $tokens;
         }
 
         if ($identifier instanceof \Closure)
         {
-            $tokens[] = array($joiner, '(');
+            $tokens[] = [$joiner, '('];
             call_user_func($identifier, $this, $joiner, $dataParameters);
-            $tokens[] = array('', ')');
+            $tokens[] = ['', ')'];
 
             return $tokens;
         }
@@ -307,40 +307,40 @@ trait WhereTrait
         {
             case 1:
                 //A single token
-                $tokens[] = array($joiner, $identifier);
+                $tokens[] = [$joiner, $identifier];
                 break;
             case 2:
                 //Simple condition
-                $tokens[] = array($joiner, array(
+                $tokens[] = [$joiner, [
                     $identifier,
                     '=',
                     //Check if sql fragment
                     $dataParameters
                         ? $this->addParameter($variousA)
                         : $this->wrapExpression($variousA)
-                ));
+                ]];
                 break;
             case 3:
                 //Operator is specified
-                $tokens[] = array($joiner, array(
+                $tokens[] = [$joiner, [
                     $identifier,
                     strtoupper($variousA),
                     $dataParameters
                         ? $this->addParameter($variousB)
                         : $this->wrapExpression($variousB)
-                ));
+                ]];
                 break;
             case 4:
                 //BETWEEN or NOT BETWEEN
                 $variousA = strtoupper($variousA);
-                if (!in_array($variousA, array('BETWEEN', 'NOT BETWEEN')))
+                if (!in_array($variousA, ['BETWEEN', 'NOT BETWEEN']))
                 {
                     throw new DBALException(
                         'Only "BETWEEN" or "NOT BETWEEN" can define second comparasions value.'
                     );
                 }
 
-                $tokens[] = array($joiner, array(
+                $tokens[] = [$joiner, [
                     $identifier,
                     strtoupper($variousA),
                     $dataParameters
@@ -349,7 +349,7 @@ trait WhereTrait
                     $dataParameters
                         ? $this->addParameter($variousC)
                         : $this->wrapExpression($variousC)
-                ));
+                ]];
         }
 
         return $tokens;
@@ -421,37 +421,37 @@ trait WhereTrait
             //Grouping identifier (@OR, @AND), Mongo like style
             if ($tokenName == DatabaseManager::TOKEN_AND || $tokenName == DatabaseManager::TOKEN_OR)
             {
-                $tokens[] = array($grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR', '(');
+                $tokens[] = [$grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR', '('];
 
                 foreach ($value as $subWhere)
                 {
                     $this->parseWhere($subWhere, strtoupper($name), $tokens, $dataParameters);
                 }
 
-                $tokens[] = array('', ')');
+                $tokens[] = ['', ')'];
                 continue;
             }
 
             if (!is_array($value))
             {
                 //Simple association
-                $tokens[] = array(
+                $tokens[] = [
                     $grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR',
-                    array(
+                    [
                         $name,
                         '=',
                         $dataParameters
                             ? $this->addParameter($value)
                             : $this->wrapExpression($value)
-                    )
-                );
+                    ]
+                ];
                 continue;
             }
 
             $innerJoiner = $grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR';
             if (count($value) > 1)
             {
-                $tokens[] = array($grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR', '(');
+                $tokens[] = [$grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR', '('];
                 $innerJoiner = 'AND';
             }
 
@@ -462,7 +462,7 @@ trait WhereTrait
                     throw new DBALException("Nested conditions should have defined operator.");
                 }
                 $key = strtoupper($key);
-                if (in_array($key, array('BETWEEN', 'NOT BETWEEN')))
+                if (in_array($key, ['BETWEEN', 'NOT BETWEEN']))
                 {
                     if (!is_array($subValue) || count($subValue) != 2)
                     {
@@ -472,7 +472,7 @@ trait WhereTrait
                     }
 
                     //One complex operation
-                    $tokens[] = array($innerJoiner, array(
+                    $tokens[] = [$innerJoiner, [
                         $name,
                         $key,
                         $dataParameters
@@ -481,24 +481,24 @@ trait WhereTrait
                         $dataParameters
                             ? $this->addParameter($subValue[1])
                             : $this->wrapExpression($subValue[1])
-                    ));
+                    ]];
                 }
                 else
                 {
                     //One complex operation
-                    $tokens[] = array($innerJoiner, array(
+                    $tokens[] = [$innerJoiner, [
                         $name,
                         $key,
                         $dataParameters
                             ? $this->addParameter($subValue)
                             : $this->wrapExpression($subValue)
-                    ));
+                    ]];
                 }
             }
 
             if (count($value) > 1)
             {
-                $tokens[] = array('', ')');
+                $tokens[] = ['', ')'];
             }
         }
 

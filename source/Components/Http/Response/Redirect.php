@@ -22,8 +22,8 @@ class Redirect extends Response
      */
     public function __construct($uri, $status = self::REDIRECT)
     {
-        parent::__construct(new Stream(), $status, array(
+        parent::__construct(new Stream(), $status, [
             'Location' => (string)$uri
-        ));
+        ]);
     }
 }

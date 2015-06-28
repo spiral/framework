@@ -37,7 +37,7 @@ class Debugger extends Component
      *
      * @var array
      */
-    protected static $benchmarks = array();
+    protected static $benchmarks = [];
 
     /**
      * Constructing debug component. Debug is one of primary spiral component and will be available
@@ -61,7 +61,7 @@ class Debugger extends Component
     {
         return isset($this->config['loggers']['containers'][$container])
             ? $this->config['loggers']['containers'][$container]
-            : array();
+            : [];
     }
 
     /**
@@ -89,10 +89,10 @@ class Debugger extends Component
 
         if (!isset(self::$benchmarks[$record]))
         {
-            self::$benchmarks[$record] = array(
+            self::$benchmarks[$record] = [
                 microtime(true),
                 memory_get_usage()
-            );
+            ];
 
             return true;
         }
@@ -129,11 +129,11 @@ class Debugger extends Component
      */
     public function handleException(Exception $exception, $logException = true)
     {
-        $snapshot = Snapshot::make(array(
+        $snapshot = Snapshot::make([
             'exception' => $exception,
             'view'      => $this->config['backtrace']['view'],
             'config'    => $this->config['backtrace']['snapshots']
-        ));
+        ]);
 
         if ($exception instanceof ClientException)
         {

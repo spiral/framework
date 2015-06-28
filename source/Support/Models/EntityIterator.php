@@ -16,7 +16,7 @@ use Spiral\Core\Component;
 class EntityIterator extends Component implements \Iterator
 {
     protected $class = '';
-    protected $data = array();
+    protected $data = [];
 
     protected $position = 0;
 

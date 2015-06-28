@@ -50,8 +50,8 @@ trait TimestampsTrait
             }
         }
 
-        self::dispatcher()->addListener('saving', array(__CLASS__, 'timestampsHandler'));
-        self::dispatcher()->addListener('updating', array(__CLASS__, 'timestampsHandler'));
+        self::dispatcher()->addListener('saving', [__CLASS__, 'timestampsHandler']);
+        self::dispatcher()->addListener('updating', [__CLASS__, 'timestampsHandler']);
     }
 
     /**

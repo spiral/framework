@@ -18,12 +18,12 @@ use Spiral\Core\Facade;
 
 /**
  * @method static string defaultTimezone()
- * @method static Database db($database = 'default', array $config = array(), Driver $driver = null)
+ * @method static Database db($database = 'default', array $config = [], Driver $driver = null)
  * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter, Container $container)
  * @method static Repository migrationRepository($directory = null)
  * @method static Migrator getMigrator($database = 'default', $directory = null)
- * @method static mixed interpolateQuery($query, array $parameters = array())
- * @method static DatabaseManager make($parameters = array(), Container $container = null)
+ * @method static mixed interpolateQuery($query, array $parameters = [])
+ * @method static DatabaseManager make($parameters = [], Container $container = null)
  * @method static DatabaseManager getInstance(Container $container = null)
  * @method static array getConfig()
  * @method static array setConfig(array $config)

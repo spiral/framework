@@ -22,7 +22,7 @@ class FtpServer extends StorageServer
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'host'     => '',
         'port'     => 21,
         'timeout'  => 60,
@@ -30,7 +30,7 @@ class FtpServer extends StorageServer
         'password' => '',
         'home'     => '/',
         'passive'  => true
-    );
+    ];
 
     /**
      * FTP connection resource.

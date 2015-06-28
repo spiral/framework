@@ -37,7 +37,7 @@ class ReferenceSchema extends AbstractReferenceSchema
      */
     public function sqlStatement()
     {
-        $statement = array();
+        $statement = [];
 
         $statement[] = 'FOREIGN KEY';
         $statement[] = '(' . $this->table->getDriver()->identifier($this->column) . ')';

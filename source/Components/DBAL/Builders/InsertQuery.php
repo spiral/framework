@@ -27,7 +27,7 @@ class InsertQuery extends QueryBuilder
      *
      * @var array
      */
-    protected $columns = array();
+    protected $columns = [];
 
     /**
      * InsertQuery is query builder used to compile insert query into one associated table. It support
@@ -134,7 +134,7 @@ class InsertQuery extends QueryBuilder
      */
     public function flushValues()
     {
-        $this->parameters = array();
+        $this->parameters = [];
     }
 
     /**

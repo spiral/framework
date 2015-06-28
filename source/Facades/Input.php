@@ -33,7 +33,7 @@ use Spiral\Core\Facade;
  * @method static bool isSecure()
  * @method static bool isAjax()
  * @method static string|null getRemoteAddress()
- * @method static InputManager make($parameters = array(), Container $container = null)
+ * @method static InputManager make($parameters = [], Container $container = null)
  * @method static InputManager getInstance(Container $container = null)
  */
 class Input extends Facade

@@ -31,7 +31,7 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
      *
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * Cursor position, used to determinate current data index.
@@ -61,7 +61,7 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
      * @param PDOStatement $statement
      * @param array        $parameters
      */
-    public function __construct(PDOStatement $statement, array $parameters = array())
+    public function __construct(PDOStatement $statement, array $parameters = [])
     {
         $this->statement = $statement;
         $this->parameters = $parameters;
@@ -274,13 +274,13 @@ class QueryResult extends Component implements \Countable, \Iterator, \JsonSeria
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'statement' => $this->queryString(),
             'count'     => $this->count,
             'rows'      => $this->count > static::DUMP_LIMIT
                 ? '[TOO MANY RECORDS TO DISPLAY]'
                 : $this->fetchAll(\PDO::FETCH_ASSOC)
-        );
+        ];
     }
 
     /**

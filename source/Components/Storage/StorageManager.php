@@ -46,7 +46,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      *
      * @var StorageContainer[]
      */
-    protected $containers = array();
+    protected $containers = [];
 
     /**
      * Every server represent one virtual storage which can be either local, remove or cloud based.
@@ -55,7 +55,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      *
      * @var StorageServerInterface[]
      */
-    protected $servers = array();
+    protected $servers = [];
 
     /**
      * Initiate storage component to load all container and adapters. Storage component commonly used
@@ -80,7 +80,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
             //Controllable injection implemented
             $this->containers[$name] = $this->container->get(
                 StorageContainer::class,
-                $container + array('storage' => $this),
+                $container + ['storage' => $this],
                 null,
                 true
             );
@@ -99,7 +99,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * @return StorageContainer
      * @throws StorageException
      */
-    public function registerContainer($name, $prefix, $server, array $options = array())
+    public function registerContainer($name, $prefix, $server, array $options = [])
     {
         if (isset($this->containers[$name]))
         {
@@ -114,7 +114,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         //Controllable injection implemented
         return $this->containers[$name] = $this->container->get(
             StorageContainer::class,
-            compact('prefix', 'server', 'options') + array('storage' => $this),
+            compact('prefix', 'server', 'options') + ['storage' => $this],
             null,
             true
         );
@@ -203,7 +203,7 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * @return StorageServerInterface
      * @throws StorageException
      */
-    public function server($server, array $options = array())
+    public function server($server, array $options = [])
     {
         if (isset($this->servers[$server]))
         {
@@ -252,12 +252,12 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         {
             $extension = strtolower(pathinfo($origin, PATHINFO_EXTENSION));
             $name = interpolate($name,
-                array(
+                [
                     'ext'       => $extension,
                     'name'      => substr(basename($origin), 0, -1 * (strlen($extension) + 1)),
                     'filename'  => basename($origin),
                     'extension' => $extension
-                )
+                ]
             );
         }
 
@@ -273,10 +273,10 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      */
     public function open($address)
     {
-        return StorageObject::make(array(
+        return StorageObject::make([
             'address'   => $address,
             'storage'   => $this,
             'container' => null
-        ), $this->container);
+        ], $this->container);
     }
 }

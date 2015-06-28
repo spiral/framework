@@ -183,7 +183,7 @@ class ParameterElement extends Component
 
         if ($this->options)
         {
-            if ($this->defaultValue === array())
+            if ($this->defaultValue === [])
             {
                 $result .= ' = array()';
             }

@@ -25,7 +25,7 @@ trait MakeTrait
      * @return static
      * @throws CoreException
      */
-    public static function make($parameters = array(), Container $container = null)
+    public static function make($parameters = [], Container $container = null)
     {
         if (empty($container))
         {

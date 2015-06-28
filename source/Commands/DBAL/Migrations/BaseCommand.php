@@ -89,12 +89,12 @@ abstract class BaseCommand extends Command
 
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
         {
-            $driver->dispatcher()->addListener('statement', array($this, 'displayQuery'));
+            $driver->dispatcher()->addListener('statement', [$this, 'displayQuery']);
         }
 
         $this->callFunction('perform', compact('input', 'output'));
 
-        $driver->dispatcher()->removeListener('statement', array($this, 'displayQuery'));
+        $driver->dispatcher()->removeListener('statement', [$this, 'displayQuery']);
     }
 
     /**
@@ -116,9 +116,9 @@ abstract class BaseCommand extends Command
      */
     protected function getOptions()
     {
-        return array_merge($this->options, array(
+        return array_merge($this->options, [
             ['database', 'd', InputOption::VALUE_OPTIONAL, 'Database instance to use.', 'default'],
             ['safe', 's', InputOption::VALUE_NONE, 'Skip safe environment check.']
-        ));
+        ]);
     }
 }

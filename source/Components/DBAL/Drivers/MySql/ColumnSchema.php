@@ -27,22 +27,22 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $mapping = array(
+    protected $mapping = [
         //Primary sequences
-        'primary'     => array('type' => 'int', 'size' => 11, 'autoIncrement' => true),
-        'bigPrimary'  => array('type' => 'bigint', 'size' => 20, 'autoIncrement' => true),
+        'primary'     => ['type' => 'int', 'size' => 11, 'autoIncrement' => true],
+        'bigPrimary'  => ['type' => 'bigint', 'size' => 20, 'autoIncrement' => true],
 
         //Enum type (mapped via method)
         'enum'        => 'enum',
 
         //Logical types
-        'boolean'     => array('type' => 'tinyint', 'size' => 1),
+        'boolean'     => ['type' => 'tinyint', 'size' => 1],
 
         //Integer types (size can always be changed with size method), longInteger has method alias
         //bigInteger
-        'integer'     => array('type' => 'int', 'size' => 11),
-        'tinyInteger' => array('type' => 'tinyint', 'size' => 4),
-        'bigInteger'  => array('type' => 'bigint', 'size' => 20),
+        'integer'     => ['type' => 'int', 'size' => 11],
+        'tinyInteger' => ['type' => 'tinyint', 'size' => 4],
+        'bigInteger'  => ['type' => 'bigint', 'size' => 20],
 
         //String with specified length (mapped via method)
         'string'      => 'varchar',
@@ -63,10 +63,10 @@ class ColumnSchema extends AbstractColumnSchema
         'datetime'    => 'datetime',
         'date'        => 'date',
         'time'        => 'time',
-        'timestamp'   => array(
+        'timestamp'   => [
             'type'         => 'timestamp',
             'defaultValue' => MySqlDriver::DEFAULT_DATETIME
-        ),
+        ],
 
         //Binary types
         'binary'      => 'blob',
@@ -75,7 +75,7 @@ class ColumnSchema extends AbstractColumnSchema
 
         //Additional types
         'json'        => 'text'
-    );
+    ];
 
     /**
      * Driver specific reverse mapping, this mapping should link database type to one of standard
@@ -85,38 +85,38 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $reverseMapping = array(
-        'primary'     => array(array('type' => 'int', 'autoIncrement' => true)),
-        'bigPrimary'  => array('serial', array('type' => 'bigint', 'autoIncrement' => true)),
-        'enum'        => array('enum'),
-        'boolean'     => array('bool', 'boolean', array('type' => 'tinyint', 'size' => 1)),
-        'integer'     => array('int', 'integer', 'smallint', 'mediumint'),
-        'tinyInteger' => array('tinyint'),
-        'bigInteger'  => array('bigint'),
-        'string'      => array('varchar', 'char'),
-        'text'        => array('text', 'mediumtext'),
-        'tinyText'    => array('tinytext'),
-        'longText'    => array('longtext'),
-        'double'      => array('double'),
-        'float'       => array('float', 'real'),
-        'decimal'     => array('decimal'),
-        'datetime'    => array('datetime'),
-        'date'        => array('date'),
-        'time'        => array('time'),
-        'timestamp'   => array('timestamp'),
-        'binary'      => array('blob', 'binary', 'varbinary'),
-        'tinyBinary'  => array('tinyblob'),
-        'longBinary'  => array('longblob')
-    );
+    protected $reverseMapping = [
+        'primary'     => [['type' => 'int', 'autoIncrement' => true]],
+        'bigPrimary'  => ['serial', ['type' => 'bigint', 'autoIncrement' => true]],
+        'enum'        => ['enum'],
+        'boolean'     => ['bool', 'boolean', ['type' => 'tinyint', 'size' => 1]],
+        'integer'     => ['int', 'integer', 'smallint', 'mediumint'],
+        'tinyInteger' => ['tinyint'],
+        'bigInteger'  => ['bigint'],
+        'string'      => ['varchar', 'char'],
+        'text'        => ['text', 'mediumtext'],
+        'tinyText'    => ['tinytext'],
+        'longText'    => ['longtext'],
+        'double'      => ['double'],
+        'float'       => ['float', 'real'],
+        'decimal'     => ['decimal'],
+        'datetime'    => ['datetime'],
+        'date'        => ['date'],
+        'time'        => ['time'],
+        'timestamp'   => ['timestamp'],
+        'binary'      => ['blob', 'binary', 'varbinary'],
+        'tinyBinary'  => ['tinyblob'],
+        'longBinary'  => ['longblob']
+    ];
 
     /**
      * List of types forbids default value set.
      *
      * @var array
      */
-    protected $forbiddenDefaults = array(
+    protected $forbiddenDefaults = [
         'text', 'mediumtext', 'tinytext', 'longtext', 'blog', 'tinyblob', 'longblob'
-    );
+    ];
 
     /**
      * Field is auto incremental.

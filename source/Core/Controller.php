@@ -60,7 +60,7 @@ class Controller extends Component implements ControllerInterface
      *
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * Method executed before controller action beign called. Should return nothing to let controller
@@ -100,7 +100,7 @@ class Controller extends Component implements ControllerInterface
      * @return mixed
      * @throws ClientException
      */
-    public function callAction($action = '', array $parameters = array())
+    public function callAction($action = '', array $parameters = [])
     {
         if (empty($action))
         {

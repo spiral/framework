@@ -45,7 +45,7 @@ class Tokenizer extends Component
      *
      * @var array
      */
-    protected $tokens = array();
+    protected $tokens = [];
 
     /**
      * PHP block should be isolated while parsing, Keep enabled.
@@ -123,7 +123,7 @@ class Tokenizer extends Component
     public function parse($source)
     {
         //Cleaning list of already parsed tokens
-        $this->tokens = array();
+        $this->tokens = [];
 
         if ($this->isolatePHP)
         {
@@ -226,12 +226,12 @@ class Tokenizer extends Component
      */
     protected function parseToken($content)
     {
-        $token = array(
+        $token = [
             self::TOKEN_NAME       => '',
             self::TOKEN_TYPE       => self::TAG_OPEN,
             self::TOKEN_CONTENT    => '<' . ($content = $this->repairPHP($content)) . '>',
-            self::TOKEN_ATTRIBUTES => array()
-        );
+            self::TOKEN_ATTRIBUTES => []
+        ];
 
         //Some parts of text just looks like tags, but their not
         if (!preg_match('/^\/?[a-z0-9_:\/][a-z 0-9\._\-:\/]*/i', $content))
@@ -300,10 +300,10 @@ class Tokenizer extends Component
                 return;
             }
 
-            $token = array(
+            $token = [
                 self::TOKEN_TYPE    => self::PLAIN_TEXT,
                 self::TOKEN_CONTENT => $this->repairPHP($content)
-            );
+            ];
         }
         else
         {

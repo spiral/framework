@@ -32,7 +32,7 @@ class Indexer extends Component
      *
      * @var array
      */
-    protected $foundUsages = array();
+    protected $foundUsages = [];
 
     /**
      * I18nManager component.
@@ -80,7 +80,7 @@ class Indexer extends Component
      * @param array  $excludes  Skip indexation if keyword met in filename.
      * @return Indexer
      */
-    public function indexDirectory($directory = null, array $excludes = array())
+    public function indexDirectory($directory = null, array $excludes = [])
     {
         $directory = $directory ?: directory('application');
 
@@ -246,7 +246,7 @@ class Indexer extends Component
             //We have to merge both local and parent class messages
             $recursively = $reflection->getConstant('I18N_INHERIT_MESSAGES');
 
-            $bundle = call_user_func(array($reflection->getName(), 'i18nBundle'));
+            $bundle = call_user_func([$reflection->getName(), 'i18nBundle']);
             foreach ($this->fetchStrings($reflection, $recursively) as $string)
             {
                 $this->i18n->get($bundle, $string);
@@ -295,7 +295,7 @@ class Indexer extends Component
             $string = substr($string, 2, -2);
         }
 
-        $bundle = call_user_func(array($function->getClass(), 'i18nBundle'));
+        $bundle = call_user_func([$function->getClass(), 'i18nBundle']);
 
         $this->i18n->get($bundle, $string);
         $this->registerString(
@@ -327,7 +327,7 @@ class Indexer extends Component
             }
         }
 
-        $strings = array();
+        $strings = [];
         array_walk_recursive($defaultProperties, function ($value) use (&$strings)
         {
             if (
@@ -363,25 +363,25 @@ class Indexer extends Component
         {
             self::logger()->info(
                 "'{string}' found in class '{class}'.",
-                array(
+                [
                     'filename' => $this->file->relativePath($filename),
                     'line'     => $line,
                     'bundle'   => $bundle,
                     'string'   => $string,
                     'class'    => $class
-                )
+                ]
             );
         }
         else
         {
             self::logger()->info(
                 "'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.",
-                array(
+                [
                     'filename' => $this->file->relativePath($filename),
                     'line'     => $line,
                     'bundle'   => $bundle,
                     'string'   => $string
-                )
+                ]
             );
         }
 

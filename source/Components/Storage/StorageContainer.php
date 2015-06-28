@@ -54,7 +54,7 @@ class StorageContainer extends Component implements InjectableInterface
      *
      * @var array
      */
-    public $options = array();
+    public $options = [];
 
     /**
      * Storage component.
@@ -450,7 +450,7 @@ class StorageContainer extends Component implements InjectableInterface
      * @param string $message
      * @param array  $context
      */
-    protected function log($message, $context = array())
+    protected function log($message, $context = [])
     {
         StorageManager::logger()->info($message, $context);
     }

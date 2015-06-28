@@ -48,7 +48,7 @@ class ValueHelper
     {
         if (!is_array($haystack))
         {
-            return array();
+            return [];
         }
 
         return array_values(array_filter($haystack, 'is_scalar'));

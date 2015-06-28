@@ -29,21 +29,21 @@ class SchemaBuilder extends Component
      *
      * @var array
      */
-    protected $config = array();
+    protected $config = [];
 
     /**
      * Found document schemas.
      *
      * @var DocumentSchema[]
      */
-    protected $documents = array();
+    protected $documents = [];
 
     /**
      * Collections schemas (associated documents).
      *
      * @var CollectionSchema[]
      */
-    protected $collections = array();
+    protected $collections = [];
 
     /**
      * New ODM Schema reader instance.
@@ -158,7 +158,7 @@ class SchemaBuilder extends Component
     {
         return isset($this->config['mutators'][$abstractType])
             ? $this->config['mutators'][$abstractType]
-            : array();
+            : [];
     }
 
     /**
@@ -168,13 +168,13 @@ class SchemaBuilder extends Component
      */
     public function normalizeSchema()
     {
-        $schema = array();
+        $schema = [];
 
         foreach ($this->collections as $collection)
         {
-            $schema[$collection->getDatabase() . '/' . $collection->getName()] = array(
+            $schema[$collection->getDatabase() . '/' . $collection->getName()] = [
                 ODM::C_DEFINITION => $this->classDefinition($collection->classDefinition())
-            );
+            ];
         }
 
         foreach ($this->documents as $document)
@@ -184,7 +184,7 @@ class SchemaBuilder extends Component
                 continue;
             }
 
-            $documentSchema = array();
+            $documentSchema = [];
             if ($document->getCollection())
             {
                 $documentSchema[ODM::D_COLLECTION] = $document->getCollection();
@@ -199,15 +199,15 @@ class SchemaBuilder extends Component
             $documentSchema[ODM::D_MUTATORS] = $document->getMutators();
             $documentSchema[ODM::D_VALIDATES] = $document->getValidates();
 
-            $documentSchema[ODM::D_AGGREGATIONS] = array();
+            $documentSchema[ODM::D_AGGREGATIONS] = [];
             foreach ($document->getAggregations() as $name => $aggregation)
             {
-                $documentSchema[ODM::D_AGGREGATIONS][$name] = array(
+                $documentSchema[ODM::D_AGGREGATIONS][$name] = [
                     ODM::AGR_TYPE       => $aggregation['type'],
                     ODM::AGR_COLLECTION => $aggregation['collection'],
                     ODM::AGR_DB         => $aggregation['database'],
                     ODM::AGR_QUERY      => $aggregation['query']
-                );
+                ];
             }
 
             $documentSchema[ODM::D_COMPOSITIONS] = array_keys($document->getCompositions());
@@ -239,7 +239,7 @@ class SchemaBuilder extends Component
 
             foreach ($indexes as $index)
             {
-                $options = array();
+                $options = [];
                 if (isset($index[Document::INDEX_OPTIONS]))
                 {
                     $options = $index[Document::INDEX_OPTIONS];
@@ -265,9 +265,9 @@ class SchemaBuilder extends Component
             return $classDefinition;
         }
 
-        return array(
+        return [
             ODM::DEFINITION         => $classDefinition['type'],
             ODM::DEFINITION_OPTIONS => $classDefinition['options']
-        );
+        ];
     }
 }

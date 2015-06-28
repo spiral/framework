@@ -39,7 +39,7 @@ class Container extends Component implements \ArrayAccess
      * @invisible
      * @var array
      */
-    protected $bindings = array();
+    protected $bindings = [];
 
     /**
      * Get default container used in make spiral components and called when getInstance() or make()
@@ -74,7 +74,7 @@ class Container extends Component implements \ArrayAccess
      */
     public function get(
         $alias,
-        $parameters = array(),
+        $parameters = [],
         ReflectionParameter $contextParameter = null,
         $ignoreII = false
     )
@@ -91,7 +91,7 @@ class Container extends Component implements \ArrayAccess
             {
                 //Apparently checking constant is faster than checking interface
                 return call_user_func(
-                    array($injectionManager, 'resolveInjection'),
+                    [$injectionManager, 'resolveInjection'],
                     $reflector,
                     $contextParameter,
                     $this
@@ -180,13 +180,13 @@ class Container extends Component implements \ArrayAccess
      */
     public function resolveArguments(
         \ReflectionFunctionAbstract $reflection,
-        array $parameters = array(),
+        array $parameters = [],
         $userArguments = false
     )
     {
         try
         {
-            $arguments = array();
+            $arguments = [];
             foreach ($reflection->getParameters() as $parameter)
             {
                 if (array_key_exists($parameter->getName(), $parameters))
@@ -207,7 +207,7 @@ class Container extends Component implements \ArrayAccess
                     {
                         $arguments[] = $this->get(
                             $parameter->getClass()->getName(),
-                            array(),
+                            [],
                             $parameter,
                             false
                         );
@@ -267,7 +267,7 @@ class Container extends Component implements \ArrayAccess
     {
         if (is_array($resolver) || $resolver instanceof \Closure)
         {
-            $this->bindings[$alias] = array($resolver, false);
+            $this->bindings[$alias] = [$resolver, false];
 
             return;
         }
@@ -284,7 +284,7 @@ class Container extends Component implements \ArrayAccess
      */
     public function bindSingleton($alias, $resolver)
     {
-        $this->bindings[$alias] = array($resolver, true);
+        $this->bindings[$alias] = [$resolver, true];
     }
 
     /**

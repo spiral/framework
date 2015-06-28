@@ -48,14 +48,14 @@ class FileManager extends Component
      *
      * @var array
      */
-    protected $removeFiles = array();
+    protected $removeFiles = [];
 
     /**
      * Initiating file component, mapping remove files method.
      */
     public function __construct()
     {
-        register_shutdown_function(array($this, 'removeFiles'));
+        register_shutdown_function([$this, 'removeFiles']);
     }
 
     /**
@@ -324,11 +324,11 @@ class FileManager extends Component
      * @param array      $result
      * @return array
      */
-    public function getFiles($directory, $extensions = null, &$result = array())
+    public function getFiles($directory, $extensions = null, &$result = [])
     {
         if (is_string($extensions))
         {
-            $extensions = array($extensions);
+            $extensions = [$extensions];
         }
 
         $directory = $this->normalizePath($directory, true);
@@ -480,7 +480,7 @@ class FileManager extends Component
 
         if ($recursivePermissions)
         {
-            $directories = array(basename($directory));
+            $directories = [basename($directory)];
             $baseDirectory = $directory;
 
             while (!is_dir($baseDirectory = dirname($baseDirectory)))

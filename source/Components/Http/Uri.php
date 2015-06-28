@@ -90,10 +90,10 @@ class Uri implements UriInterface
      * @invisible
      * @var array
      */
-    private $supportedSchemes = array(
+    private $supportedSchemes = [
         'http'  => 80,
         'https' => 443
-    );
+    ];
 
     /**
      * Used to speedup multiple __toString conversions.
@@ -608,7 +608,7 @@ class Uri implements UriInterface
     {
         return preg_replace_callback(
             '/(?:[^a-zA-Z0-9_\-\.~:@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
-            array($this, 'encodeCharacter'),
+            [$this, 'encodeCharacter'],
             $path
         );
     }
@@ -636,7 +636,7 @@ class Uri implements UriInterface
     {
         return preg_replace_callback(
             '/(?:[^a-zA-Z0-9_\-\.~!\$&\'\(\)\*\+,;=%:@\/\?]+|%(?![A-Fa-f0-9]{2}))/',
-            array($this, 'encodeCharacter'),
+            [$this, 'encodeCharacter'],
             $query
         );
     }

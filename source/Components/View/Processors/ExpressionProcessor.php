@@ -20,7 +20,7 @@ class ExpressionProcessor implements ProcessorInterface
      *
      * @var array
      */
-    protected $expressions = array();
+    protected $expressions = [];
 
     /**
      * ViewManager component instance.

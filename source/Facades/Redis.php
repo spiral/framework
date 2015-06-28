@@ -17,10 +17,10 @@ use Spiral\Core\Facade;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  * @method static RedisClient client(string $client = 'default', string $class = null)
- * @method static mixed command(string $method, array $arguments = array())
+ * @method static mixed command(string $method, array $arguments = [])
  * @method static setLogger(LoggerInterface $logger)
  * @method static LoggerInterface logger()
- * @method static RedisManager make(array $parameters = array())
+ * @method static RedisManager make(array $parameters = [])
  * @method static RedisManager getInstance()
  *
  * @method static mixed del(array $keys)

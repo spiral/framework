@@ -24,7 +24,7 @@ class StreamWrapper
      *
      * @var array
      */
-    private static $uris = array();
+    private static $uris = [];
 
     /**
      * Stream context.
@@ -52,14 +52,14 @@ class StreamWrapper
      *
      * @var array
      */
-    private static $modes = array(
+    private static $modes = [
         'r'   => 33060,
         'rb'  => 33060,
         'r+'  => 33206,
         'rb+' => 33206,
         'w'   => 33188,
         'wb'  => 33188
-    );
+    ];
 
     /**
      * Check if StreamInterface ended.
@@ -192,7 +192,7 @@ class StreamWrapper
             }
         }
 
-        return array(
+        return [
             'dev'     => 0,
             'ino'     => 0,
             'mode'    => self::$modes[$mode],
@@ -206,7 +206,7 @@ class StreamWrapper
             'ctime'   => 0,
             'blksize' => 0,
             'blocks'  => 0
-        );
+        ];
     }
 
     /**

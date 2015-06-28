@@ -35,12 +35,12 @@ class ModelCommand extends InspectCommand
      *
      * @var array
      */
-    protected $warnings = array(
+    protected $warnings = [
         LogLevel::INFO      => '{warning}',
         LogLevel::CRITICAL  => '<fg=red>{warning}</fg=red>',
         LogLevel::WARNING   => '<fg=yellow>{warning}</fg=yellow>',
         LogLevel::EMERGENCY => '<error>{warning}</error>',
-    );
+    ];
 
     /**
      * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
@@ -48,9 +48,9 @@ class ModelCommand extends InspectCommand
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['model', InputArgument::REQUIRED, 'Give detailed report for specified model.']
-    );
+    ];
 
     /**
      * Inspecting existed models.
@@ -62,20 +62,20 @@ class ModelCommand extends InspectCommand
 
         $inspection = $inspector->getInspection(str_replace('/', '\\', $this->argument('model')));
 
-        $table = $this->table(array(
+        $table = $this->table([
             'Field', 'Safety Level', 'Fillable', 'Filtered', 'Validated', 'Hidden'
-        ));
+        ]);
 
         foreach ($inspection->getFields() as $field)
         {
-            $table->addRow(array(
+            $table->addRow([
                 $field->getName(),
                 $this->safetyLevels[$field->safetyLevel()],
                 $field->isFillable() ? 'yes' : self::GREEN_NO,
                 $field->isFiltered() ? self::GREEN_YES : self::RED_NO,
                 $field->isValidated() ? self::GREEN_YES : 'no',
                 $field->isHidden() ? self::GREEN_YES : ($field->isBlacklisted() ? self::RED_NO : self::NO)
-            ));
+            ]);
         }
 
         $table->render();
@@ -94,25 +94,25 @@ class ModelCommand extends InspectCommand
         $warnings = $inspection->getWarnings();
         if (!empty($warnings))
         {
-            $table = $this->table(array("Field", "Warnings"));
+            $table = $this->table(["Field", "Warnings"]);
 
             $this->writeln("\nFollowing warning were raised:");
 
             $countWarnings = count($warnings);
             foreach ($warnings as $field => $fieldWarnings)
             {
-                $coloredWarnings = array();
+                $coloredWarnings = [];
                 foreach ($fieldWarnings as $warning)
                 {
-                    $coloredWarnings[] = interpolate($this->warnings[$warning[0]], array(
+                    $coloredWarnings[] = interpolate($this->warnings[$warning[0]], [
                         'warning' => $warning[1]
-                    ));
+                    ]);
                 }
 
-                $table->addRow(array(
+                $table->addRow([
                     $field,
                     join("\n", $coloredWarnings)
-                ));
+                ]);
 
                 if ((bool)--$countWarnings)
                 {

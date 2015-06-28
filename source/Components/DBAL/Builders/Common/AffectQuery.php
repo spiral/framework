@@ -34,7 +34,7 @@ abstract class AffectQuery extends QueryBuilder
      *
      * @var array
      */
-    protected $orderBy = array();
+    protected $orderBy = [];
 
     /**
      * Current limit value.
@@ -56,7 +56,7 @@ abstract class AffectQuery extends QueryBuilder
         Database $database,
         QueryCompiler $compiler,
         $table = '',
-        array $where = array()
+        array $where = []
     )
     {
         parent::__construct($database, $compiler);
@@ -75,7 +75,7 @@ abstract class AffectQuery extends QueryBuilder
      */
     public function orderBy($identifier, $direction = 'ASC')
     {
-        $this->orderBy[] = array($identifier, $direction);
+        $this->orderBy[] = [$identifier, $direction];
 
         return $this;
     }

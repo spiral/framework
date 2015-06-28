@@ -25,7 +25,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      * @invisible
      * @var array
      */
-    protected $defaultDefinition = array(
+    protected $defaultDefinition = [
         ActiveRecord::PIVOT_TABLE       => '{name:singular}_map',
         ActiveRecord::INNER_KEY         => '{record:primaryKey}',
         ActiveRecord::OUTER_KEY         => '{outer:primaryKey}',
@@ -35,7 +35,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
         ActiveRecord::CREATE_PIVOT      => true
-    );
+    ];
 
     /**
      * Create all required relation columns, indexes and constraints.
@@ -94,7 +94,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
     {
         foreach ($this->getOuterRecordSchemas() as $record)
         {
-            $record->addRelation($name, array(
+            $record->addRelation($name, [
                 ActiveRecord::MANY_TO_MANY      => $this->recordSchema->getClass(),
                 ActiveRecord::PIVOT_TABLE       => $this->definition[ActiveRecord::PIVOT_TABLE],
                 ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
@@ -103,7 +103,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
                 ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
                 ActiveRecord::MORPH_KEY         => $this->definition[ActiveRecord::MORPH_KEY],
                 ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT]
-            ));
+            ]);
         }
     }
 }

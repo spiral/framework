@@ -52,21 +52,21 @@ class Node
      *
      * @var array
      */
-    public $options = array();
+    public $options = [];
 
     /**
      * Set of child nodes being used during rendering.
      *
      * @var string[]|Node[]
      */
-    protected $nodes = array();
+    protected $nodes = [];
 
     /**
      * Nodes being parsed but not used in rendering.
      *
      * @var string[]|Node[]
      */
-    protected $skippedNodes = array();
+    protected $skippedNodes = [];
 
     /**
      * Parent node to be extended after processing the current view.
@@ -88,8 +88,8 @@ class Node
     public function __construct(
         SupervisorInterface $supervisor,
         $name = 'root',
-        $source = array(),
-        $options = array()
+        $source = [],
+        $options = []
     )
     {
         $this->supervisor = $supervisor;
@@ -151,10 +151,10 @@ class Node
         $behaviour = null;
 
         //Current active token
-        $current = array();
+        $current = [];
 
         //Content to represent full tag declaration (including body)
-        $content = array();
+        $content = [];
 
         //Some blocks can be named as parent. We have to make sure we closing the correct one
         $tokenLevel = 0;
@@ -178,7 +178,7 @@ class Node
                     {
                         if ($tokenType == Tokenizer::TAG_SHORT)
                         {
-                            $this->registerNode($behaviour, array());
+                            $this->registerNode($behaviour, []);
                             continue;
                         }
 
@@ -200,8 +200,8 @@ class Node
                         $chunks = explode($matches[0][$index], $token[Tokenizer::TOKEN_CONTENT]);
                         $this->nodes[] = array_shift($chunks);
 
-                        $node = new static($this->supervisor, $name, array(), $this->options);
-                        $node->nodes = array($matches['default'][$index]);
+                        $node = new static($this->supervisor, $name, [], $this->options);
+                        $node->nodes = [$matches['default'][$index]];
                         $this->nodes[] = $node;
 
                         $token[Tokenizer::TOKEN_CONTENT] = join($matches[0][$index], $chunks);
@@ -259,8 +259,8 @@ class Node
                             //Closing current token
                             $this->registerNode($behaviour, $content);
 
-                            $current = array();
-                            $content = array();
+                            $current = [];
+                            $content = [];
                         }
                         else
                         {
@@ -294,12 +294,12 @@ class Node
                 {
                     if ($value instanceof Behaviour)
                     {
-                        $node = new static($this->supervisor, $attribute, array(), $value->options);
+                        $node = new static($this->supervisor, $attribute, [], $value->options);
                     }
                     else
                     {
-                        $node = new static($this->supervisor, $attribute, array(), $this->options);
-                        $node->nodes = array($value);
+                        $node = new static($this->supervisor, $attribute, [], $this->options);
+                        $node->nodes = [$value];
                     }
 
                     $this->nodes[] = $node;
@@ -324,7 +324,7 @@ class Node
                 foreach ($behaviour->attributes as $attribute => $value)
                 {
                     $node = new static($this->supervisor, $attribute);
-                    $node->nodes = array($value);
+                    $node->nodes = [$value];
 
                     $behaviour->contextNode->nodes[] = $node;
                 }
@@ -361,7 +361,7 @@ class Node
      */
     public function getNodes()
     {
-        $result = array();
+        $result = [];
         foreach ($this->nodes as $node)
         {
             if ($node instanceof Node)
@@ -443,7 +443,7 @@ class Node
      * @param array $compiled Nodes already compiled (in case of aliasing).
      * @return string
      */
-    public function compile(Node $parent = null, &$compiled = array())
+    public function compile(Node $parent = null, &$compiled = [])
     {
         $result = '';
         foreach ($this->nodes as $node)
@@ -492,10 +492,10 @@ class Node
         {
             foreach ($matches[0] as $id => $replace)
             {
-                $include = $matches['include'][$id] ? explode(',', $matches['include'][$id]) : array();
-                $exclude = $matches['exclude'][$id] ? explode(',', $matches['exclude'][$id]) : array();
+                $include = $matches['include'][$id] ? explode(',', $matches['include'][$id]) : [];
+                $exclude = $matches['exclude'][$id] ? explode(',', $matches['exclude'][$id]) : [];
 
-                $dynamicNodes = array();
+                $dynamicNodes = [];
                 foreach ($this->skippedNodes as $node)
                 {
                     if (

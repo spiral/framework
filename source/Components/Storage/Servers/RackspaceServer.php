@@ -40,13 +40,13 @@ class RackspaceServer extends StorageServer
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'server'     => 'https://auth.api.rackspacecloud.com/v1.0',
         'authServer' => 'https://identity.api.rackspacecloud.com/v2.0/tokens',
         'username'   => '',
         'apiKey'     => '',
         'cache'      => true
-    );
+    ];
 
     /**
      * Cache component to remember connection.
@@ -68,14 +68,14 @@ class RackspaceServer extends StorageServer
      *
      * @var string
      */
-    protected $authToken = array();
+    protected $authToken = [];
 
     /**
      * All fetched rackspace regions, some operations can be performed only inside one region.
      *
      * @var array
      */
-    protected $regions = array();
+    protected $regions = [];
 
     /**
      * Every server represent one virtual storage which can be either local, remote or cloud based.
@@ -180,10 +180,10 @@ class RackspaceServer extends StorageServer
                 'PUT',
                 $container,
                 $name,
-                array(
+                [
                     'Content-Type' => $mimetype,
                     'Etag'         => md5_file($this->castFilename($origin))
-                )
+                ]
             );
 
             $this->client->send($request->withBody($this->castStream($origin)));
@@ -259,10 +259,10 @@ class RackspaceServer extends StorageServer
                 'PUT',
                 $container,
                 $newname,
-                array(
+                [
                     'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($oldname),
                     'Content-Length' => 0
-                )
+                ]
             ));
         }
         catch (ClientException $exception)
@@ -339,10 +339,10 @@ class RackspaceServer extends StorageServer
                 'PUT',
                 $destination,
                 $name,
-                array(
+                [
                     'X-Copy-From'    => '/' . $container->options['container'] . '/' . rawurlencode($name),
                     'Content-Length' => 0
-                )
+                ]
             ));
         }
         catch (ClientException $exception)
@@ -375,18 +375,18 @@ class RackspaceServer extends StorageServer
         $request = new Request(
             'POST',
             $this->options['authServer'],
-            array(
+            [
                 'Content-Type' => 'application/json'
-            ),
+            ],
             json_encode(
-                array(
-                    'auth' => array(
-                        'RAX-KSKEY:apiKeyCredentials' => array(
+                [
+                    'auth' => [
+                        'RAX-KSKEY:apiKeyCredentials' => [
                             'username' => $this->options['username'],
                             'apiKey'   => $this->options['apiKey']
-                        )
-                    )
-                )
+                        ]
+                    ]
+                ]
             )
         );
 
@@ -492,13 +492,13 @@ class RackspaceServer extends StorageServer
      * @param array            $headers   Request headers.
      * @return RequestInterface
      */
-    protected function buildRequest($method, StorageContainer $container, $name, array $headers = array())
+    protected function buildRequest($method, StorageContainer $container, $name, array $headers = [])
     {
         //Adding auth headers
-        $headers += array(
+        $headers += [
             'X-Auth-Token' => $this->authToken,
             'Date'         => gmdate('D, d M Y H:i:s T')
-        );
+        ];
 
         return new Request($method, $this->buildUri($container, $name), $headers);
     }

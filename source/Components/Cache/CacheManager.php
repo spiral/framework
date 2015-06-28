@@ -83,7 +83,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
      * @return CacheStore
      * @throws CacheException
      */
-    public function store($store = null, array $options = array())
+    public function store($store = null, array $options = [])
     {
         $store = $store ?: $this->config['store'];
 
@@ -100,7 +100,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
         benchmark('cache::store', $store);
         $this->stores[$store] = $this->container->get(
             $this->config['stores'][$store]['class'],
-            array('cache' => $this),
+            ['cache' => $this],
             null,
             true
         );
@@ -141,9 +141,9 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
             return $cacheManager->store();
         }
 
-        return $container->get($class->getName(), array(
+        return $container->get($class->getName(), [
             'cache' => $cacheManager
-        ), null, true);
+        ], null, true);
     }
 
     /**
@@ -153,8 +153,8 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
      * @param array  $arguments
      * @return mixed
      */
-    public function __call($method, array $arguments = array())
+    public function __call($method, array $arguments = [])
     {
-        return call_user_func_array(array($this->store(), $method), $arguments);
+        return call_user_func_array([$this->store(), $method], $arguments);
     }
 }

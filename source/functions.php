@@ -109,7 +109,7 @@ if (!function_exists('benchmark'))
     function benchmark($record)
     {
         return call_user_func_array(
-            array('Spiral\Components\Debug\Debugger', 'benchmark'),
+            ['Spiral\Components\Debug\Debugger', 'benchmark'],
             func_get_args()
         );
     }
@@ -137,7 +137,7 @@ if (!function_exists('l'))
         $arguments = func_get_args();
         array_unshift($arguments, Translator::DEFAULT_BUNDLE);
 
-        return call_user_func_array(array(Translator::getInstance(), 'get'), $arguments);
+        return call_user_func_array([Translator::getInstance(), 'get'], $arguments);
     }
 }
 

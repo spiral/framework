@@ -66,7 +66,7 @@ class CookieManager extends Component implements MiddlewareInterface
      *
      * @var array
      */
-    protected $exclude = array(CsrfFilter::COOKIE, SessionStarter::COOKIE);
+    protected $exclude = [CsrfFilter::COOKIE, SessionStarter::COOKIE];
 
     /**
      * Encrypter component.
@@ -80,7 +80,7 @@ class CookieManager extends Component implements MiddlewareInterface
      *
      * @var Cookie[]
      */
-    protected $scheduled = array();
+    protected $scheduled = [];
 
     /**
      * Middleware constructing.
@@ -212,7 +212,7 @@ class CookieManager extends Component implements MiddlewareInterface
             $cookies[] = $this->encodeCookie($cookie)->packHeader();
         }
 
-        $this->scheduled = array();
+        $this->scheduled = [];
 
         return $response->withHeader('Set-Cookie', $cookies);
     }
@@ -231,7 +231,7 @@ class CookieManager extends Component implements MiddlewareInterface
             {
                 if (is_array($cookie))
                 {
-                    return array_map(array($this, 'decodeCookie'), $cookie);
+                    return array_map([$this, 'decodeCookie'], $cookie);
                 }
 
                 return $this->getEncrypter()->decrypt($cookie);

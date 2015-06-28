@@ -35,16 +35,16 @@ class UmlCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['filename', InputArgument::REQUIRED, 'Output filename.'],
-    );
+    ];
 
     /**
      * Update schema and documentation.
      */
     public function perform()
     {
-        $umlExporter = UmlExporter::make(array('builder' => $this->odm->schemaBuilder()));
+        $umlExporter = UmlExporter::make(['builder' => $this->odm->schemaBuilder()]);
         $umlExporter->render($this->argument('filename'));
 
         $this->writeln("<info>UML schema successfully created:</info> {$this->argument('filename')}");

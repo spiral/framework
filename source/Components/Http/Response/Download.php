@@ -23,7 +23,7 @@ class Download extends Response
      * @param int    $status
      * @param array  $headers
      */
-    public function __construct($filename, $publicName = null, $status = 200, array $headers = array())
+    public function __construct($filename, $publicName = null, $status = 200, array $headers = [])
     {
         if (!$publicName)
         {
@@ -31,7 +31,7 @@ class Download extends Response
         }
 
         //Forcing default set of headers
-        $headers += array(
+        $headers += [
             'Content-Disposition'       => 'attachment; filename="' . addcslashes($publicName, '"') . '"',
             'Content-Transfer-Encoding' => 'binary',
             'Content-Type'              => 'application/octet-stream',
@@ -39,7 +39,7 @@ class Download extends Response
             'Expires'                   => '0',
             'Cache-Control'             => 'no-cache, must-revalidate',
             'Pragma'                    => 'public'
-        );
+        ];
 
         parent::__construct(new Stream($filename, 'rb'), $status, $headers);
     }

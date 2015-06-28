@@ -41,7 +41,7 @@ abstract class MorphedRelationSchema extends RelationSchema
      */
     public function getOuterRecordSchemas()
     {
-        $entities = array();
+        $entities = [];
         foreach ($this->ormSchema->getRecordSchemas() as $record)
         {
             if ($record->getReflection()->isSubclassOf($this->target))
@@ -103,7 +103,7 @@ abstract class MorphedRelationSchema extends RelationSchema
         $definition = parent::normalizeDefinition();
 
         //Packing targets
-        $definition[static::RELATION_TYPE] = array();
+        $definition[static::RELATION_TYPE] = [];
         foreach ($this->getOuterRecordSchemas() as $record)
         {
             $definition[static::RELATION_TYPE][$record->getRoleName()] = $record->getClass();

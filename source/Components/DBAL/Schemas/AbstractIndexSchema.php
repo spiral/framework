@@ -46,7 +46,7 @@ abstract class AbstractIndexSchema extends Component
      *
      * @var array
      */
-    protected $columns = array();
+    protected $columns = [];
 
     /**
      * Instance on IndexSchema represent one table index - name, type and involved columns. Attention,
@@ -193,7 +193,7 @@ abstract class AbstractIndexSchema extends Component
      */
     public function sqlStatement($includeTable = true)
     {
-        $statement = array();
+        $statement = [];
         $statement[] = $this->type . ($this->type == self::UNIQUE ? ' INDEX' : '');
         $statement[] = $this->getName(true);
 
@@ -203,7 +203,7 @@ abstract class AbstractIndexSchema extends Component
         }
 
         $statement[] = '(' . join(', ', array_map(
-                array($this->table->getDriver(), 'identifier'),
+                [$this->table->getDriver(), 'identifier'],
                 $this->columns
             )) . ')';
 

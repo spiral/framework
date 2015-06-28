@@ -56,7 +56,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @var array|Document[]
      */
-    protected $documents = array();
+    protected $documents = [];
 
     /**
      * Set of document operations performed on compositor level, operations will include things like
@@ -65,7 +65,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @var array
      */
-    protected $operations = array();
+    protected $operations = [];
 
     /**
      * Indication that composition data were changed without using atomic operations, this flag will
@@ -87,7 +87,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @var array
      */
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * New instance of Compositor. Compositor used to perform various atomic operations and manipulations
@@ -103,7 +103,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     {
         $this->parent = $parent;
         $this->odm = $odm;
-        $this->documents = is_array($data) ? $data : array();
+        $this->documents = is_array($data) ? $data : [];
         if (!$this->classDefinition = $classDefinition)
         {
             throw new ODMException(
@@ -178,7 +178,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      */
     public function serializeData()
     {
-        $result = array();
+        $result = [];
         foreach ($this->documents as $document)
         {
             $result[] = $document instanceof CompositableInterface
@@ -196,7 +196,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      */
     public function publicFields()
     {
-        $result = array();
+        $result = [];
         foreach ($this as $document)
         {
             $result[] = $document->publicFields();
@@ -216,14 +216,14 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     {
         if (!$this->hasUpdates())
         {
-            return array();
+            return [];
         }
 
         if ($this->solidState)
         {
-            return array(Document::ATOMIC_SET => array(
+            return [Document::ATOMIC_SET => [
                 $container => $this->serializeData()
-            ));
+            ]];
         }
 
         if ($this->changedDirectly)
@@ -235,9 +235,9 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
         }
 
         //Attention, you HAVE to disable solid stable to use atomic operations in sub objects
-        $atomics = array();
+        $atomics = [];
 
-        $handledDocuments = array();
+        $handledDocuments = [];
         foreach ($this->operations as $operation => $items)
         {
             if ($operation != 'pull')
@@ -306,7 +306,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      */
     public function flushUpdates()
     {
-        $this->operations = array();
+        $this->operations = [];
         $this->changedDirectly = false;
 
         foreach ($this->documents as $document)
@@ -325,7 +325,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      */
     public function defaultValue()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -343,7 +343,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
             return;
         }
 
-        $this->documents = array();
+        $this->documents = [];
 
         //Filling documents
         foreach ($data as $item)
@@ -359,7 +359,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      * @return Document
      * @throws ODMException
      */
-    public function create(array $fields = array())
+    public function create(array $fields = [])
     {
         if (!$this->solidState)
         {
@@ -369,10 +369,10 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
         }
 
         $this->changedDirectly = true;
-        $this->documents[] = $document = call_user_func(array(
+        $this->documents[] = $document = call_user_func([
             $this->odm->defineClass($fields, $this->classDefinition),
             'create'
-        ), $fields, $this->odm)->embed($this);
+        ], $fields, $this->odm)->embed($this);
 
         return $document;
     }
@@ -385,7 +385,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     public function clear()
     {
         $this->solidState = $this->changedDirectly = true;
-        $this->documents = array();
+        $this->documents = [];
 
         return $this;
     }
@@ -409,7 +409,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      */
     protected function validate()
     {
-        $this->errors = array();
+        $this->errors = [];
         foreach ($this->documents as $offset => $document)
         {
             $document = $this->getDocument($offset);
@@ -461,7 +461,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
         if (!$document instanceof Document)
         {
             $class = $this->odm->defineClass($this->documents[$offset], $this->classDefinition);
-            $this->documents[$offset] = $document = new $class($document, $this, array(), $this->odm);
+            $this->documents[$offset] = $document = new $class($document, $this, [], $this->odm);
         }
 
         return $document;
@@ -474,7 +474,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      * @param array $query
      * @return array|Document[]
      */
-    public function find($query = array())
+    public function find($query = [])
     {
         if ($query instanceof Document)
         {
@@ -482,7 +482,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
             $query = $query->serializeData();
         }
 
-        $result = array();
+        $result = [];
         foreach ($this->documents as $offset => $document)
         {
             //We have to pass document thought model construction to ensure default values
@@ -505,7 +505,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      * @param array $query
      * @return null|Document
      */
-    public function findOne($query = array())
+    public function findOne($query = [])
     {
         if (!$documents = $this->find($query))
         {
@@ -778,10 +778,10 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     {
         $this->validate();
 
-        return (object)array(
+        return (object)[
             'documents' => $this->serializeData(),
             'atomics'   => $this->buildAtomics('composition'),
             'errors'    => $this->getErrors()
-        );
+        ];
     }
 }

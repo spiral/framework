@@ -47,7 +47,7 @@ class FunctionUsage extends Component
      *
      * @var Argument[]
      */
-    protected $arguments = array();
+    protected $arguments = [];
 
     /**
      * Function open token ID.

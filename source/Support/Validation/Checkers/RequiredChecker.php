@@ -20,12 +20,12 @@ class RequiredChecker extends Checker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "with"       => "[[Field '{field}' should not be empty.]]",
         "withAll"    => "[[Field '{field}' should not be empty.]]",
         "without"    => "[[Field '{field}' should not be empty.]]",
         "withoutAll" => "[[Field '{field}' should not be empty.]]",
-    );
+    ];
 
     /**
      * Check if field not empty but only if any of listed fields presented or not empty.

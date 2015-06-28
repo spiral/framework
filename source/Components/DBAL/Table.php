@@ -27,7 +27,7 @@ use Spiral\Core\Component;
  * @method SelectQuery paginate($limit = 50, $pageParameter = 'page', $fetchCount = true, $request = null)
  * @method SelectQuery where($identifier, $variousA = null, $variousB = null, $variousC = null)
  * @method SelectQuery andWhere($identifier, $variousA = null, $variousB = null, $variousC = null)
- * @method SelectQuery orWhere($identifier, $variousA = array(), $variousB = null, $variousC = null)
+ * @method SelectQuery orWhere($identifier, $variousA = [], $variousB = null, $variousC = null)
  * @method SelectQuery join(string $table, mixed $on = null)
  * @method SelectQuery innerJoin(string $table, mixed $on = null)
  * @method SelectQuery rightJoin(string $table, mixed $on = null)
@@ -93,7 +93,7 @@ class Table extends Component implements \JsonSerializable, \IteratorAggregate, 
      */
     public function getColumns()
     {
-        $columns = array();
+        $columns = [];
         foreach ($this->schema()->getColumns() as $column)
         {
             $columns[$column->getName()] = $column->abstractType();
@@ -133,7 +133,7 @@ class Table extends Component implements \JsonSerializable, \IteratorAggregate, 
      * @param array $rowset Associated array (key=>value).
      * @return mixed
      */
-    public function insert(array $rowset = array())
+    public function insert(array $rowset = [])
     {
         return $this->database->insert($this->name)->values($rowset)->run();
     }
@@ -149,7 +149,7 @@ class Table extends Component implements \JsonSerializable, \IteratorAggregate, 
      * @param array $rowsets Array of rowsets.
      * @return mixed
      */
-    public function batchInsert(array $columns = array(), array $rowsets = array())
+    public function batchInsert(array $columns = [], array $rowsets = [])
     {
         return $this->database->insert($this->name)->columns($columns)->values($rowsets)->run();
     }
@@ -173,7 +173,7 @@ class Table extends Component implements \JsonSerializable, \IteratorAggregate, 
      * @param array $where Initial set of where rules specified as array.
      * @return DeleteQuery
      */
-    public function delete(array $where = array())
+    public function delete(array $where = [])
     {
         return $this->database->delete($this->name, $where);
     }
@@ -186,7 +186,7 @@ class Table extends Component implements \JsonSerializable, \IteratorAggregate, 
      * @param array $where  Initial set of where rules specified as array.
      * @return UpdateQuery
      */
-    public function update(array $values = array(), array $where = array())
+    public function update(array $values = [], array $where = [])
     {
         return $this->database->update($this->name, $values, $where);
     }
@@ -243,6 +243,6 @@ class Table extends Component implements \JsonSerializable, \IteratorAggregate, 
      */
     public function __call($method, array $arguments)
     {
-        return call_user_func_array(array($this->select(), $method), $arguments);
+        return call_user_func_array([$this->select(), $method], $arguments);
     }
 }

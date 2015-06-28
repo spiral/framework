@@ -19,9 +19,9 @@ class MixedChecker extends Checker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "cardNumber" => "[[Field '{field}' is not valid card number.]]"
-    );
+    ];
 
     /**
      * Validate credit card number by Luhn algorithm.

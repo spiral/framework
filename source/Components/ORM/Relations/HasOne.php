@@ -27,7 +27,7 @@ class HasOne extends Relation
 
         if (!$this->parent->isLoaded())
         {
-            return $this->data = new $target(array(), $this->orm);
+            return $this->data = new $target([], $this->orm);
         }
 
         if ($this->data === null)

@@ -26,7 +26,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      *
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * Indication that data is updated.
@@ -48,7 +48,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      *
      * @var array
      */
-    protected $operations = array();
+    protected $operations = [];
 
     /**
      * Parent object.
@@ -69,12 +69,12 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      *
      * @var array
      */
-    protected $types = array(
+    protected $types = [
         'int'     => 'intval',
         'float'   => 'floatval',
-        'string'  => array('Spiral\Helpers\ValueHelper', 'castString'),
+        'string'  => ['Spiral\Helpers\ValueHelper', 'castString'],
         'MongoId' => 'mongoID'
-    );
+    ];
 
     /**
      * New Compositable instance. No type specified to keep it compatible with AccessorInterface.
@@ -88,7 +88,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     public function __construct($data = null, $parent = null, $type = self::DETECT_TYPE, ODM $odm = null)
     {
         $this->parent = $parent;
-        $this->data = is_array($data) ? $data : array();
+        $this->data = is_array($data) ? $data : [];
         $this->type = $type;
 
         if ($this->type == self::DETECT_TYPE)
@@ -186,23 +186,23 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     {
         if (!$this->hasUpdates())
         {
-            return array();
+            return [];
         }
 
         if (!$this->hasUpdates())
         {
-            return array();
+            return [];
         }
 
         if ($this->solidState)
         {
-            return array(Document::ATOMIC_SET => array($container => $this->serializeData()));
+            return [Document::ATOMIC_SET => [$container => $this->serializeData()]];
         }
 
-        $atomics = array();
+        $atomics = [];
         foreach ($this->operations as $operation => $value)
         {
-            $atomics = array('$' . $operation => array($container => $value));
+            $atomics = ['$' . $operation => [$container => $value]];
         }
 
         return $atomics;
@@ -224,7 +224,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     public function flushUpdates()
     {
         $this->updated = false;
-        $this->operations = array();
+        $this->operations = [];
     }
 
     /**
@@ -267,7 +267,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
             return;
         }
 
-        $this->data = array();
+        $this->data = [];
         foreach ($data as $value)
         {
             if (($value = $this->filterValue($value)) !== null)
@@ -285,7 +285,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     public function clear()
     {
         $this->solidState = $this->updated = true;
-        $this->data = array();
+        $this->data = [];
 
         return $this;
     }
@@ -488,11 +488,11 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'data'    => $this->serializeData(),
             'type'    => $this->type,
             'atomics' => $this->buildAtomics('scalarArray')
 
-        );
+        ];
     }
 }

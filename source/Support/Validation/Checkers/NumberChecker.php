@@ -19,11 +19,11 @@ class NumberChecker extends Checker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "range"  => "[[Field '{field}' should be in range of {0}-{1}.]]",
         "higher" => "[[Field '{field}' should be higher than {0}.]]",
         "lower"  => "[[Field '{field}' should be lower than {0}.]]"
-    );
+    ];
 
     /**
      * Checks value in range including borders. Both borders included into range. Can accept both

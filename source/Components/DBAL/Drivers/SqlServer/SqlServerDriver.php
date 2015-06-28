@@ -79,11 +79,11 @@ class SqlServerDriver extends Driver
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         PDO::ATTR_CASE              => PDO::CASE_NATURAL,
         PDO::ATTR_ERRMODE           => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_STRINGIFY_FETCHES => false
-    );
+    ];
 
     /**
      * Getting SQLServer version. Required for better LIMIT/OFFSET syntax.
@@ -117,7 +117,7 @@ class SqlServerDriver extends Driver
      */
     public function hasTable($name)
     {
-        return (bool)$this->query(self::TABLE_EXISTS_QUERY, array($name))->fetchColumn();
+        return (bool)$this->query(self::TABLE_EXISTS_QUERY, [$name])->fetchColumn();
     }
 
     /**
@@ -127,7 +127,7 @@ class SqlServerDriver extends Driver
      */
     public function tableNames()
     {
-        $tables = array();
+        $tables = [];
         foreach ($this->query(self::FETCH_TABLES_QUERY)->fetchMode(PDO::FETCH_NUM) as $row)
         {
             $tables[] = $row[0];

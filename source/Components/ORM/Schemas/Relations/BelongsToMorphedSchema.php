@@ -25,12 +25,12 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
      * @invisible
      * @var array
      */
-    protected $defaultDefinition = array(
+    protected $defaultDefinition = [
         ActiveRecord::OUTER_KEY => '{outer:primaryKey}',
         ActiveRecord::INNER_KEY => '{name:singular}_{definition:OUTER_KEY}',
         ActiveRecord::MORPH_KEY => '{name:singular}_type',
         ActiveRecord::NULLABLE  => true
-    );
+    ];
 
     /**
      * Create all required relation columns, indexes and constraints.
@@ -79,13 +79,13 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
 
         foreach ($this->getOuterRecordSchemas() as $record)
         {
-            $record->addRelation($name, array(
+            $record->addRelation($name, [
                 $type                   => $this->recordSchema->getClass(),
                 ActiveRecord::OUTER_KEY => $this->definition[ActiveRecord::INNER_KEY],
                 ActiveRecord::INNER_KEY => $this->definition[ActiveRecord::OUTER_KEY],
                 ActiveRecord::MORPH_KEY => $this->definition[ActiveRecord::MORPH_KEY],
                 ActiveRecord::NULLABLE  => $this->definition[ActiveRecord::NULLABLE]
-            ));
+            ]);
         }
     }
 }

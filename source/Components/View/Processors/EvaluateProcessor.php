@@ -21,11 +21,11 @@ class EvaluateProcessor implements ProcessorInterface
      *
      * @var array
      */
-    protected $options = array(
-        'flags' => array(
+    protected $options = [
+        'flags' => [
             '/*compile*/', '#compile', '#php-compile'
-        )
-    );
+        ]
+    ];
 
     /**
      * View manager component.
@@ -92,8 +92,8 @@ class EvaluateProcessor implements ProcessorInterface
         $source = $this->isolator->isolatePHP($source);
 
         //Restoring only evaluator blocks
-        $evaluatorBlocks = array();
-        $phpBlocks = array();
+        $evaluatorBlocks = [];
+        $phpBlocks = [];
 
         foreach ($this->isolator->getBlocks() as $id => $phpBlock)
         {

@@ -70,7 +70,7 @@ class LayeredCompiler extends Component implements CompilerInterface
      *
      * @var array|ProcessorInterface[]
      */
-    protected $processors = array();
+    protected $processors = [];
 
     /**
      * Instance of view compiler. Compilers used to pre-process view files for faster rendering in
@@ -93,7 +93,7 @@ class LayeredCompiler extends Component implements CompilerInterface
         $input = '',
         $output = '',
         Container $container = null,
-        array $processors = array()
+        array $processors = []
     )
     {
         $this->viewManager = $manager;
@@ -130,11 +130,11 @@ class LayeredCompiler extends Component implements CompilerInterface
 
         return $this->processors[$name] = $this->container->get(
             $config['class'],
-            array(
+            [
                 'compiler'    => $this,
                 'viewManager' => $this->viewManager,
                 'options'     => $config
-            )
+            ]
         );
     }
 

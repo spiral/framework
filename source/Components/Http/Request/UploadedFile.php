@@ -289,7 +289,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public static function normalizeFiles($files)
     {
-        $result = array();
+        $result = [];
 
         foreach ($files as $key => $value)
         {
@@ -351,16 +351,16 @@ class UploadedFile implements UploadedFileInterface
      */
     private static function normalizeNestedFiles(array $files)
     {
-        $result = array();
+        $result = [];
         foreach (array_keys($files['tmp_name']) as $key)
         {
-            $result[$key] = self::createUploadedFile(array(
+            $result[$key] = self::createUploadedFile([
                 'tmp_name' => $files['tmp_name'][$key],
                 'size'     => $files['size'][$key],
                 'error'    => $files['error'][$key],
                 'name'     => $files['name'][$key],
                 'type'     => $files['type'][$key]
-            ));
+            ]);
         }
 
         return $result;

@@ -19,9 +19,9 @@ use Spiral\Core\Facade;
  * @method static RouteInterface[] getRoutes()
  * @method static RouteInterface getRoute($route)
  * @method static RouteInterface|null activeRoute()
- * @method static string url($route, array $parameters = array())
- * @method static Redirect redirect($route, array $parameters = array())
- * @method static Router make($parameters = array(), Container $container = null)
+ * @method static string url($route, array $parameters = [])
+ * @method static Redirect redirect($route, array $parameters = [])
+ * @method static Router make($parameters = [], Container $container = null)
  */
 class Router extends Facade
 {

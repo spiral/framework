@@ -21,10 +21,10 @@ class I18nProcessor implements ProcessorInterface
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'prefix'  => 'view-',
         'pattern' => '/\[\[(.*?)\]\]/s'
-    );
+    ];
 
     /**
      * Current view namespace, this namespace is not identical to view rendering namespaces, this is
@@ -74,10 +74,10 @@ class I18nProcessor implements ProcessorInterface
     public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
         $this->namespace = ($namespace != ViewManager::DEFAULT_NAMESPACE ? $namespace . '-' : '');
-        $this->namespace .= $this->options['prefix'] . str_replace(array('/', '\\'), '-', $view);
+        $this->namespace .= $this->options['prefix'] . str_replace(['/', '\\'], '-', $view);
 
         //Doing replacement
-        $source = preg_replace_callback($this->options['pattern'], array($this, 'replace'), $source);
+        $source = preg_replace_callback($this->options['pattern'], [$this, 'replace'], $source);
 
         return $source;
     }

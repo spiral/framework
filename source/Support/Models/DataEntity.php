@@ -34,27 +34,27 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      *
      * @var array
      */
-    public static $mutatorAliases = array(
-        'escape'      => array('Spiral\Helpers\StringHelper', 'escape'),
-        'string'      => array('Spiral\Helpers\ValueHelper', 'castString'),
-        'boolean'     => array('Spiral\Helpers\ValueHelper', 'castBoolean'),
-        'scalarArray' => array('Spiral\Helpers\ValueHelper', 'scalarArray'),
+    public static $mutatorAliases = [
+        'escape'      => ['Spiral\Helpers\StringHelper', 'escape'],
+        'string'      => ['Spiral\Helpers\ValueHelper', 'castString'],
+        'boolean'     => ['Spiral\Helpers\ValueHelper', 'castBoolean'],
+        'scalarArray' => ['Spiral\Helpers\ValueHelper', 'scalarArray'],
         'timestamp'   => 'Spiral\Support\Models\Accessors\Timestamp'
-    );
+    ];
 
     /**
      * Indication that model was already initiated.
      *
      * @var array
      */
-    protected static $initiatedModels = array();
+    protected static $initiatedModels = [];
 
     /**
      * Cache of error messages ordered by their definition parent.
      *
      * @var array
      */
-    protected static $messagesCache = array();
+    protected static $messagesCache = [];
 
     /**
      * Fields to apply filters and validations, this is primary model data, which can be set using
@@ -62,14 +62,14 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      *
      * @var array
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * List of secured fields, such fields can not be set using setFields() method (only directly).
      *
      * @var array
      */
-    protected $secured = array();
+    protected $secured = [];
 
     /**
      * Set of fields which can be assigned using setFields() method, if property is empty every field
@@ -78,14 +78,14 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      *
      * @var array
      */
-    protected $fillable = array();
+    protected $fillable = [];
 
     /**
      * List of hidden fields can not be fetched using publicFields() method (only directly).
      *
      * @var array
      */
-    protected $hidden = array();
+    protected $hidden = [];
 
     /**
      * Validator instance will be used to check model fields.
@@ -141,28 +141,28 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      *
      * @var array
      */
-    protected $validates = array();
+    protected $validates = [];
 
     /**
      * Validation and model errors.
      *
      * @var array
      */
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * Field getters, will be executed when field are received.
      *
      * @var array
      */
-    protected $getters = array();
+    protected $getters = [];
 
     /**
      * Field setters, called when field assigned by setField() or setFields().
      *
      * @var array
      */
-    protected $setters = array();
+    protected $setters = [];
 
     /**
      * Accessors. By using accessor some model value can be mocked up with class "representative"
@@ -172,7 +172,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      *
      * @var array
      */
-    protected $accessors = array();
+    protected $accessors = [];
 
     /**
      * Register new filter alias. Filter aliases used by getters and setters.
@@ -444,7 +444,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      */
     public function getFields($filter = true)
     {
-        $result = array();
+        $result = [];
         foreach ($this->fields as $name => &$field)
         {
             $result[$name] = $this->getField($name, true);
@@ -472,7 +472,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      * @param array|\Traversable $fields
      * @return static
      */
-    public function setFields($fields = array())
+    public function setFields($fields = [])
     {
         if (!is_array($fields) && !$fields instanceof \Traversable)
         {
@@ -528,10 +528,10 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
             return $this->validator->setData($this->fields);
         }
 
-        return $this->validator = Validator::make(array(
+        return $this->validator = Validator::make([
             'data'      => $this->fields,
             'validates' => $this->validates
-        ));
+        ]);
     }
 
     /**
@@ -566,7 +566,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
             $this->validationRequired = false;
 
             //Cleaning memory
-            $this->validator->setData(array());
+            $this->validator->setData([]);
             $this->errors = $this->event('validated', $this->errors);
         }
 
@@ -608,7 +608,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     public function getErrors($reset = false)
     {
         $this->validate();
-        $errors = array();
+        $errors = [];
         foreach ($this->errors as $field => $error)
         {
             if (
@@ -625,7 +625,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
 
         if ($reset)
         {
-            $this->errors = array();
+            $this->errors = [];
         }
 
         return $errors;
@@ -664,7 +664,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
         {
             if (substr($method, 0, 4) === 'init' && $method != 'initialize')
             {
-                forward_static_call(array('static', $method), $options);
+                forward_static_call(['static', $method], $options);
             }
         }
 
@@ -693,7 +693,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      */
     public function __destruct()
     {
-        $this->fields = array();
+        $this->fields = [];
         $this->validator = null;
     }
 

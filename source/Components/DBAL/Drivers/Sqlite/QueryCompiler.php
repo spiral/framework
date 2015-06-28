@@ -38,7 +38,7 @@ class QueryCompiler extends BaseQueryCompiler
         {
             if (count($statement) == 1)
             {
-                $selectColumns = array();
+                $selectColumns = [];
                 foreach ($columns as $column)
                 {
                     $selectColumns[] = "? AS {$this->quote($column)}";
@@ -71,9 +71,9 @@ class QueryCompiler extends BaseQueryCompiler
      */
     public function delete(
         $table,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
@@ -83,13 +83,13 @@ class QueryCompiler extends BaseQueryCompiler
         }
 
         $selection = self::select(
-            array($table),
+            [$table],
             false,
-            array('rowid'),
+            ['rowid'],
             $joins,
             $where,
-            array(),
-            array(),
+            [],
+            [],
             $orderBy,
             $limit,
             0
@@ -114,9 +114,9 @@ class QueryCompiler extends BaseQueryCompiler
     public function update(
         $table,
         array $values,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
@@ -126,13 +126,13 @@ class QueryCompiler extends BaseQueryCompiler
         }
 
         $selection = self::select(
-            array($table),
+            [$table],
             false,
-            array('rowid'),
+            ['rowid'],
             $joins,
             $where,
-            array(),
-            array(),
+            [],
+            [],
             $orderBy,
             $limit,
             0

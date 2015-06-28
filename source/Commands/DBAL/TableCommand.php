@@ -36,10 +36,10 @@ class TableCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['db', InputArgument::REQUIRED, 'Database name.'],
         ['table', InputArgument::REQUIRED, 'Table name.']
-    );
+    ];
 
     /**
      * Get information about one specific table.
@@ -61,13 +61,13 @@ class TableCommand extends Command
             "Columns of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:"
         );
 
-        $table = $this->table(array(
+        $table = $this->table([
             'Column:',
             'Database Type:',
             'Abstract Type:',
             'PHP Type:',
             'Default Value:'
-        ));
+        ]);
 
         foreach ($schema->getColumns() as $column)
         {
@@ -91,7 +91,7 @@ class TableCommand extends Command
                 $name = "<fg=magenta>{$name}</fg=magenta>";
             }
 
-            if (in_array($abstractType, array('primary', 'bigPrimary')))
+            if (in_array($abstractType, ['primary', 'bigPrimary']))
             {
                 $abstractType = "<fg=magenta>{$abstractType}</fg=magenta>";
             }
@@ -101,13 +101,13 @@ class TableCommand extends Command
                 $defaultValue = "<info>{$defaultValue}</info>";
             }
 
-            $table->addRow(array(
+            $table->addRow([
                 $name,
                 $type,
                 $abstractType,
                 $column->phpType(),
                 $defaultValue ?: "<comment>---</comment>"
-            ));
+            ]);
         }
 
         $table->render();
@@ -118,19 +118,19 @@ class TableCommand extends Command
                 "\nIndexes of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:"
             );
 
-            $table = $this->table(array(
+            $table = $this->table([
                 'Name:',
                 'Type:',
                 'Columns:'
-            ));
+            ]);
 
             foreach ($schema->getIndexes() as $index)
             {
-                $table->addRow(array(
+                $table->addRow([
                     $index->getName(),
                     $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
                     join(", ", $index->getColumns())
-                ));
+                ]);
             }
             $table->render();
         }
@@ -140,25 +140,25 @@ class TableCommand extends Command
                 "\nForeign keys of <comment>{$this->argument('db')}.{$this->argument('table')}</comment>:"
             );
 
-            $table = $this->table(array(
+            $table = $this->table([
                 'Name:',
                 'Column:',
                 'Foreign Table:',
                 'Foreign Column:',
                 'On Delete:',
                 'On Update:'
-            ));
+            ]);
 
             foreach ($schema->getForeigns() as $reference)
             {
-                $table->addRow(array(
+                $table->addRow([
                     $reference->getName(),
                     $reference->getColumn(),
                     $reference->getForeignTable(),
                     $reference->getForeignKey(),
                     $reference->getDeleteRule(),
                     $reference->getUpdateRule()
-                ));
+                ]);
             }
             $table->render();
         }

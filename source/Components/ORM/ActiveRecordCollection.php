@@ -12,7 +12,7 @@ use Spiral\Core\Component;
 
 class ActiveRecordCollection extends Component
 {
-    protected $entities = array();
+    protected $entities = [];
 
     protected $class = '';
 

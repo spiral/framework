@@ -41,15 +41,15 @@ class HasOneLoader extends Loader
 
         $selector->leftJoin(
             $definition[Relation::OUTER_TABLE] . ' AS ' . $this->options['tableAlias'],
-            array($outerKey => $innerKey)
+            [$outerKey => $innerKey]
         );
 
         if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::MORPH_KEY];
-            $selector->onWhere(array(
+            $selector->onWhere([
                 $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
-            ));
+            ]);
         }
     }
 
@@ -90,9 +90,9 @@ class HasOneLoader extends Loader
         if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::MORPH_KEY];
-            $selector->where(array(
+            $selector->where([
                 $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
-            ));
+            ]);
         }
 
         return $selector;

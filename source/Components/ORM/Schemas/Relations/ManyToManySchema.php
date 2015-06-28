@@ -30,7 +30,7 @@ class ManyToManySchema extends RelationSchema
      * @invisible
      * @var array
      */
-    protected $defaultDefinition = array(
+    protected $defaultDefinition = [
         ActiveRecord::INNER_KEY         => '{record:primaryKey}',
         ActiveRecord::OUTER_KEY         => '{outer:primaryKey}',
         ActiveRecord::THOUGHT_INNER_KEY => '{record:roleName}_{definition:INNER_KEY}',
@@ -38,7 +38,7 @@ class ManyToManySchema extends RelationSchema
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
         ActiveRecord::CREATE_PIVOT      => false
-    );
+    ];
 
     /**
      * Mount default values to relation definition.
@@ -66,10 +66,10 @@ class ManyToManySchema extends RelationSchema
         }
 
         //Generating pivot table name
-        $names = array(
+        $names = [
             $this->recordSchema->getRoleName(),
             $this->getOuterRecordSchema()->getRoleName()
-        );
+        ];
 
         asort($names);
 
@@ -132,7 +132,7 @@ class ManyToManySchema extends RelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        $this->getOuterRecordSchema()->addRelation($name, array(
+        $this->getOuterRecordSchema()->addRelation($name, [
             ActiveRecord::MANY_TO_MANY      => $this->recordSchema->getClass(),
             ActiveRecord::PIVOT_TABLE       => $this->definition[ActiveRecord::PIVOT_TABLE],
             ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
@@ -142,6 +142,6 @@ class ManyToManySchema extends RelationSchema
             ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
             ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
             ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT]
-        ));
+        ]);
     }
 }

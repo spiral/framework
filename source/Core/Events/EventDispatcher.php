@@ -18,7 +18,7 @@ class EventDispatcher extends Component implements DispatcherInterface
      *
      * @var array
      */
-    protected static $dispatchers = array();
+    protected static $dispatchers = [];
 
     /**
      * Event listeners, use addHandler, removeHandler for adding new handlers and raiseEvent to
@@ -26,7 +26,7 @@ class EventDispatcher extends Component implements DispatcherInterface
      *
      * @var array
      */
-    protected $listeners = array();
+    protected $listeners = [];
 
     /**
      * All registered listeners will be performed in same order they were registered.
@@ -39,7 +39,7 @@ class EventDispatcher extends Component implements DispatcherInterface
     {
         if (!isset($this->listeners[$event]))
         {
-            $this->listeners[$event] = array();
+            $this->listeners[$event] = [];
         }
 
         $this->listeners[$event][] = $listener;
@@ -94,7 +94,7 @@ class EventDispatcher extends Component implements DispatcherInterface
             return $this->listeners[$event];
         }
 
-        return array();
+        return [];
     }
 
     /**

@@ -85,9 +85,9 @@ class Parameter implements ParameterInterface
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'statement' => $this->sqlStatement(),
             'value'     => $this->value
-        );
+        ];
     }
 }

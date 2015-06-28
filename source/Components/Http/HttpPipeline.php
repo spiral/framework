@@ -29,7 +29,7 @@ class HttpPipeline extends Component
      *
      * @var array|MiddlewareInterface[]
      */
-    protected $middlewares = array();
+    protected $middlewares = [];
 
     /**
      * Final endpoint has to be called, this is "the deepest" part of pipeline. It's not necessary
@@ -46,7 +46,7 @@ class HttpPipeline extends Component
      * @param Container             $container Container is required to create request scope.
      * @param MiddlewareInterface[] $middleware
      */
-    public function __construct(Container $container, array $middleware = array())
+    public function __construct(Container $container, array $middleware = [])
     {
         $this->container = $container;
         $this->middlewares = $middleware;
@@ -142,9 +142,9 @@ class HttpPipeline extends Component
         {
             $reflection = new \ReflectionFunction($this->target);
             $response = $reflection->invokeArgs(
-                $this->container->resolveArguments($reflection, array(
+                $this->container->resolveArguments($reflection, [
                     'request' => $request
-                ))
+                ])
             );
         }
         else
@@ -201,9 +201,9 @@ class HttpPipeline extends Component
                 $code = $response['status'];
             }
 
-            return new Response(json_encode($response), $code, array(
+            return new Response(json_encode($response), $code, [
                 'Content-Type' => 'application/json'
-            ));
+            ]);
         }
 
         return new Response($response . $plainOutput);

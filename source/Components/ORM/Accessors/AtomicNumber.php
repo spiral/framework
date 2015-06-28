@@ -184,9 +184,9 @@ class AtomicNumber implements ORMAccessor
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'value' => $this->value,
             'delta' => $this->delta
-        );
+        ];
     }
 }

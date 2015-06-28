@@ -64,7 +64,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
 
     protected $countColumns = 0;
 
-    protected $columns = array();
+    protected $columns = [];
 
     /**
      * Cache lifetime. Selector will cache parsed structure in opposite to SelectBuilder, this will
@@ -96,7 +96,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         array $schema,
         ORM $orm,
         Database $database,
-        array $query = array(),
+        array $query = [],
         Loader $loader = null
     )
     {
@@ -121,7 +121,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
      * @param array        $options
      * @return static
      */
-    public function with($relation, $options = array())
+    public function with($relation, $options = [])
     {
         if (is_array($relation))
         {
@@ -167,13 +167,13 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         $this->buildQuery();
 
         $statement = $compiler->select(
-            array($this->loader->getTable() . ' AS ' . $this->loader->getTableAlias()),
+            [$this->loader->getTable() . ' AS ' . $this->loader->getTableAlias()],
             false, //todo: check if required
-            !empty($this->columns) ? $this->columns : array('*'),
+            !empty($this->columns) ? $this->columns : ['*'],
             $this->joins,
             $this->whereTokens,
             $this->havingTokens,
-            array()
+            []
         //$this->orderBy,
         //$this->limit,
         //$this->offset
@@ -258,13 +258,13 @@ class Selector extends QueryBuilder implements \IteratorAggregate
     protected function logCounts($dataCount, $rowsCount)
     {
         $logLevel = 'debug';
-        $logLevels = array(
+        $logLevels = [
             1000 => 'critical',
             500  => 'alert',
             100  => 'notice',
             10   => 'warning',
             1    => 'debug'
-        );
+        ];
 
         $dataRatio = $rowsCount / $dataCount;
         if ($dataRatio == 1)

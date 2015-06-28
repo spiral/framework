@@ -22,7 +22,7 @@ class FileElement extends NamespaceElement
      *
      * @var BaseElement[]
      */
-    protected $elements = array();
+    protected $elements = [];
 
     /**
      * FileManager component.
@@ -94,7 +94,7 @@ class FileElement extends NamespaceElement
      */
     public function createDeclaration($indentLevel = 0)
     {
-        $result = array(self::PHP_OPEN, trim($this->renderComment($indentLevel)));
+        $result = [self::PHP_OPEN, trim($this->renderComment($indentLevel))];
 
         if ($this->name)
         {

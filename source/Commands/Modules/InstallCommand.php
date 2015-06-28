@@ -37,9 +37,9 @@ class InstallCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['module', InputArgument::OPTIONAL, 'Module to be installed.']
-    );
+    ];
 
     /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions()
@@ -47,10 +47,10 @@ class InstallCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['all', 'a', InputOption::VALUE_NONE, 'Install all non installed modules.', null],
         ['force', 'f', InputOption::VALUE_NONE, 'Force modules installation (reinstall).', null],
-    );
+    ];
 
     /**
      * Mount available modules and update their resources.

@@ -51,7 +51,7 @@ class Response extends HttpMessage implements ResponseInterface
      * @invisible
      * @var array
      */
-    protected $reasonPhrases = array(
+    protected $reasonPhrases = [
         //Technical
         100 => "Continue",
         101 => "Switching Protocols",
@@ -133,7 +133,7 @@ class Response extends HttpMessage implements ResponseInterface
         511 => "Network Authentication Required",
         598 => "Network read timeout error",
         599 => "Network connect timeout error"
-    );
+    ];
 
     /**
      * The response Status-Code.
@@ -156,7 +156,7 @@ class Response extends HttpMessage implements ResponseInterface
      * @param int                             $status
      * @param array                           $headers
      */
-    public function __construct($content = '', $status = 200, array $headers = array())
+    public function __construct($content = '', $status = 200, array $headers = [])
     {
         if (is_string($content))
         {

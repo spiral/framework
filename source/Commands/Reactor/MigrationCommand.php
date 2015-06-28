@@ -34,9 +34,9 @@ class MigrationCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['name', InputArgument::REQUIRED, 'Migration name.']
-    );
+    ];
 
     /**
      * Render and register new migration file.
@@ -47,7 +47,7 @@ class MigrationCommand extends Command
         $filename = $repository->getFilename($this->argument('name'), '', true);
 
         //Migration creator
-        $creator = Creators\MigrationCreator::make(array('name' => $this->argument('name')));
+        $creator = Creators\MigrationCreator::make(['name' => $this->argument('name')]);
 
         foreach ($this->option('create') as $table)
         {
@@ -72,7 +72,7 @@ class MigrationCommand extends Command
      */
     protected function getOptions()
     {
-        return array(
+        return [
             [
                 'create',
                 null,
@@ -91,6 +91,6 @@ class MigrationCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Optional comment to add as class header.'
             ]
-        );
+        ];
     }
 }

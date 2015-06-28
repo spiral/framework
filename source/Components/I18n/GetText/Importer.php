@@ -96,7 +96,7 @@ class Importer extends LocalizationImporter
                     if (!is_array($buffer))
                     {
                         $token = $buffer;
-                        $buffer = array();
+                        $buffer = [];
                     }
 
                     //Plurals

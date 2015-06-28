@@ -33,10 +33,10 @@ class KeyCommand extends Command
      */
     public function perform()
     {
-        $configWriter = ConfigWriter::make(array(
+        $configWriter = ConfigWriter::make([
             'name'   => $this->core->getEnvironment() . '/encrypter',
             'method' => ConfigWriter::MERGE_REPLACE
-        ));
+        ]);
 
         //Generating key
         $key = StringHelper::random(32);

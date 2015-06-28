@@ -23,9 +23,9 @@ class XcacheStore extends CacheStore
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'prefix' => 'spiral'
-    );
+    ];
 
     /**
      * Cache prefix.

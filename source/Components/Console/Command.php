@@ -65,7 +65,7 @@ abstract class Command extends BaseCommand
      *
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * Command arguments specified in Symphony format. For more complex definitions redefine
@@ -73,7 +73,7 @@ abstract class Command extends BaseCommand
      *
      * @var array
      */
-    protected $arguments = array();
+    protected $arguments = [];
 
     /**
      * OutputInterface is the interface implemented by all Output classes.
@@ -106,12 +106,12 @@ abstract class Command extends BaseCommand
 
         foreach ($this->getOptions() as $option)
         {
-            call_user_func_array(array($this, 'addOption'), $option);
+            call_user_func_array([$this, 'addOption'], $option);
         }
 
         foreach ($this->getArguments() as $argument)
         {
-            call_user_func_array(array($this, 'addArgument'), $argument);
+            call_user_func_array([$this, 'addArgument'], $argument);
         }
     }
 
@@ -244,7 +244,7 @@ abstract class Command extends BaseCommand
      * @param string $style
      * @return Table
      */
-    public function table(array $headers, $rows = array(), $style = 'default')
+    public function table(array $headers, $rows = [], $style = 'default')
     {
         return (new Table($this->output))->setHeaders($headers)->setRows($rows)->setStyle($style);
     }

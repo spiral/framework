@@ -33,7 +33,7 @@ class NamespaceImport extends Import
      *
      * @var array
      */
-    protected static $aliases = array();
+    protected static $aliases = [];
 
     /**
      * Namespace import used to declare local node namespaces binded to specified view namespace
@@ -104,7 +104,7 @@ class NamespaceImport extends Import
 
         $directories = $manager->getNamespaces()[$this->namespace];
 
-        $aliases = array();
+        $aliases = [];
         foreach ($directories as $lookupDirectory)
         {
             $targetDirectory = $file->normalizePath($lookupDirectory . '/' . $this->directory);
@@ -123,8 +123,8 @@ class NamespaceImport extends Import
                     $name = substr($name, 2, -1 * (strlen($file->extension($name)) + 1));
                     $filename = substr($filename, 2, -1 * (strlen($file->extension($filename)) + 1));
 
-                    $name = str_replace(array('/', '\\'), $separator, $name);
-                    $filename = str_replace(array('/', '\\'), $separator, $filename);
+                    $name = str_replace(['/', '\\'], $separator, $name);
+                    $filename = str_replace(['/', '\\'], $separator, $filename);
 
                     //Registering alias
                     $aliases[$this->outerNamespace . ':' . $name] = $this->namespace . ':' . $filename;

@@ -32,9 +32,9 @@ class ReplayCommand extends BaseCommand
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['all', 'a', InputOption::VALUE_NONE, 'Replay all migrations.']
-    );
+    ];
 
     /**
      * Performing one or multiple migrations.
@@ -46,8 +46,8 @@ class ReplayCommand extends BaseCommand
             return;
         }
 
-        $rollback = array('--database' => $this->option('database'), '--safe' => true);
-        $migrate = array('--database' => $this->option('database'), '--safe' => true);
+        $rollback = ['--database' => $this->option('database'), '--safe' => true];
+        $migrate = ['--database' => $this->option('database'), '--safe' => true];
 
         if ($this->option('all'))
         {

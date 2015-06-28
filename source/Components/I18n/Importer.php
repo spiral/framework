@@ -28,7 +28,7 @@ abstract class Importer extends Component
      *
      * @var array
      */
-    protected $bundles = array();
+    protected $bundles = [];
     /**
      * I18n component.
      *
@@ -55,7 +55,7 @@ abstract class Importer extends Component
      *
      * @var array
      */
-    protected $i18nConfig = array();
+    protected $i18nConfig = [];
 
     /**
      * New indexer instance.

@@ -35,13 +35,13 @@ class UpdateCommand extends Command
         $this->writeln("Updating ORM and ODM schemas and virtual documentations...");
         $this->writeln("");
 
-        $this->console->command('orm:update', array(), $this->output);
-        $this->console->command('odm:update', array(), $this->output);
+        $this->console->command('orm:update', [], $this->output);
+        $this->console->command('odm:update', [], $this->output);
         $this->writeln("");
 
         //Inspecting
-        $this->console->command('inspect', array(
+        $this->console->command('inspect', [
             '--short' => $this->output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE
-        ), $this->output);
+        ], $this->output);
     }
 }

@@ -35,9 +35,9 @@ class ExportCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['filename', InputArgument::REQUIRED, 'Output filename.'],
-    );
+    ];
 
     /**
      * Command options specified in Symphony format. For more complex definitions redefine getOptions()
@@ -45,10 +45,10 @@ class ExportCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['language', 'l', InputOption::VALUE_OPTIONAL, 'Source language.', 'en'],
         ['prefix', 'p', InputOption::VALUE_OPTIONAL, 'Only bundles starts with prefix.', '']
-    );
+    ];
 
     /**
      * Exporting to GetText format.

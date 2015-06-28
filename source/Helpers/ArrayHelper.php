@@ -101,7 +101,7 @@ class ArrayHelper
             return;
         }
 
-        $array = array();
+        $array = [];
 
         reset($arrayA);
         reset($arrayB);

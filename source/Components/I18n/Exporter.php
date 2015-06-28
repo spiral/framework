@@ -28,7 +28,7 @@ abstract class Exporter extends Component
      *
      * @var array
      */
-    protected $bundles = array();
+    protected $bundles = [];
 
     /**
      * I18nManager component.
@@ -49,7 +49,7 @@ abstract class Exporter extends Component
      *
      * @var array
      */
-    protected $i18nConfig = array();
+    protected $i18nConfig = [];
 
     /**
      * New indexer instance.
@@ -90,7 +90,7 @@ abstract class Exporter extends Component
             {
                 if (!isset($this->bundles[$bundle]))
                 {
-                    $this->bundles[$bundle] = array();
+                    $this->bundles[$bundle] = [];
                 }
 
                 //Merging with values from default (primary) language
@@ -110,7 +110,7 @@ abstract class Exporter extends Component
      */
     protected function loadBundles($language, $prefix = '')
     {
-        $bundles = array();
+        $bundles = [];
 
         $files = $this->file->getFiles(
             $this->i18nConfig['languages'][$language]['dataFolder'],

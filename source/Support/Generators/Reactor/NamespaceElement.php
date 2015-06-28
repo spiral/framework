@@ -15,14 +15,14 @@ class NamespaceElement extends BaseElement
      *
      * @var ClassElement[]
      */
-    protected $classes = array();
+    protected $classes = [];
 
     /**
      * Namespace uses.
      *
      * @var array
      */
-    protected $uses = array();
+    protected $uses = [];
 
     /**
      * Add a new class declaration to namespace.
@@ -86,7 +86,7 @@ class NamespaceElement extends BaseElement
      */
     public function createDeclaration($indentLevel = 0)
     {
-        $result = array($this->renderComment($indentLevel));
+        $result = [$this->renderComment($indentLevel)];
 
         $result[] = 'namespace ' . trim($this->name, '\\');
         $result[] = "{";

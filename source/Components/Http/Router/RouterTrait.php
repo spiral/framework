@@ -17,7 +17,7 @@ trait RouterTrait
      *
      * @var RouteInterface[]
      */
-    protected $routes = array();
+    protected $routes = [];
 
     /**
      * Router middleware used by HttpDispatcher and modules to perform URI based routing with defined
@@ -49,7 +49,7 @@ trait RouterTrait
      */
     protected function createRouter()
     {
-        return Router::make(array('routes' => $this->routes));
+        return Router::make(['routes' => $this->routes]);
     }
 
     /**
@@ -112,7 +112,7 @@ trait RouterTrait
      * @param array           $defaults
      * @return Route
      */
-    public function route($pattern, $target = null, array $defaults = array())
+    public function route($pattern, $target = null, array $defaults = [])
     {
         if (is_string($target))
         {

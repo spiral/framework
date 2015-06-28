@@ -63,14 +63,14 @@ class ViewManager extends Component
      *
      * @var array
      */
-    protected $namespaces = array();
+    protected $namespaces = [];
 
     /**
      * Variables for pre-processing and cache definition.
      *
      * @var array
      */
-    protected $staticVariables = array();
+    protected $staticVariables = [];
 
     /**
      * Constructing view component and initiating view namespaces, namespaces are used to find view
@@ -136,7 +136,7 @@ class ViewManager extends Component
     {
         if (!isset($this->namespaces[$namespace]))
         {
-            $this->namespaces[$namespace] = array();
+            $this->namespaces[$namespace] = [];
         }
 
         $this->namespaces[$namespace][] = $directory;
@@ -186,16 +186,16 @@ class ViewManager extends Component
     {
         foreach ($this->config['staticVariables'] as $variable => $provider)
         {
-            $this->staticVariables[$variable] = call_user_func(array(
+            $this->staticVariables[$variable] = call_user_func([
                 $this->container->get($provider[0]),
                 $provider[1]
-            ));
+            ]);
         }
 
         $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . '.' . self::CACHE_EXTENSION;
 
         return $this->cacheDirectory() . '/'
-        . $namespace . '-' . trim(str_replace(array('\\', '/'), '-', $view), '-')
+        . $namespace . '-' . trim(str_replace(['\\', '/'], '-', $view), '-')
         . $postfix;
     }
 
@@ -319,14 +319,14 @@ class ViewManager extends Component
         /**
          * @var CompilerInterface $compiler
          */
-        $compiler = $this->container->get($this->config['engines'][$engine]['compiler'], array(
+        $compiler = $this->container->get($this->config['engines'][$engine]['compiler'], [
                 'manager'   => $this,
                 'source'    => $this->file->read($input),
                 'namespace' => $namespace,
                 'view'      => $view,
                 'input'     => $input,
                 'output'    => $output,
-            ) + $this->config['engines'][$engine]);
+            ] + $this->config['engines'][$engine]);
 
         return $compiler->compile();
     }
@@ -349,7 +349,7 @@ class ViewManager extends Component
      *                     in view processors.
      * @return ViewInterface
      */
-    public function get($view, array $data = array())
+    public function get($view, array $data = [])
     {
         $namespace = self::DEFAULT_NAMESPACE;
         if (strpos($view, ':'))
@@ -387,7 +387,7 @@ class ViewManager extends Component
      *                     in view processors.
      * @return string
      */
-    public function render($view, array $data = array())
+    public function render($view, array $data = [])
     {
         return $this->get($view, $data)->render();
     }

@@ -78,13 +78,13 @@ abstract class Driver extends Component
      *
      * @var array
      */
-    protected $config = array(
+    protected $config = [
         'connection' => '',
         'username'   => '',
         'password'   => '',
         'profiling'  => true,
-        'options'    => array()
-    );
+        'options'    => []
+    ];
 
     /**
      * Database name (fetched from connection string). In some cases can contain empty string (SQLite).
@@ -98,11 +98,11 @@ abstract class Driver extends Component
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         PDO::ATTR_CASE              => PDO::CASE_NATURAL,
         PDO::ATTR_ERRMODE           => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_STRINGIFY_FETCHES => false
-    );
+    ];
 
     /**
      * Container.
@@ -134,7 +134,7 @@ abstract class Driver extends Component
      * @param array     $config
      * @param Container $container
      */
-    public function __construct(array $config = array(), Container $container)
+    public function __construct(array $config = [], Container $container)
     {
         $this->config = $config + $this->config;
         $this->container = $container;
@@ -283,7 +283,7 @@ abstract class Driver extends Component
      */
     public function prepareParameters(array $parameters)
     {
-        $result = array();
+        $result = [];
         foreach ($parameters as $parameter)
         {
             if ($parameter instanceof ParameterInterface)
@@ -323,7 +323,7 @@ abstract class Driver extends Component
      * @param array  $preparedParameters Processed parameters will be saved into this array.
      * @return PDOStatement
      */
-    public function statement($query, array $parameters = array(), &$preparedParameters = null)
+    public function statement($query, array $parameters = [], &$preparedParameters = null)
     {
         $preparedParameters = $parameters = $this->prepareParameters($parameters);
 
@@ -338,11 +338,11 @@ abstract class Driver extends Component
             $pdoStatement = $this->getPDO()->prepare($query);
             $pdoStatement->execute($parameters);
 
-            $this->event('statement', array(
+            $this->event('statement', [
                 'statement'  => $pdoStatement,
                 'query'      => $query,
                 'parameters' => $parameters
-            ));
+            ]);
 
             if ($this->config['profiling'] && isset($builtQuery))
             {
@@ -375,12 +375,12 @@ abstract class Driver extends Component
      * @return QueryResult
      * @throws \PDOException
      */
-    public function query($query, array $parameters = array(), &$preparedParameters = null)
+    public function query($query, array $parameters = [], &$preparedParameters = null)
     {
-        return $this->container->get(static::QUERY_RESULT, array(
+        return $this->container->get(static::QUERY_RESULT, [
             'statement'  => $this->statement($query, $parameters, $preparedParameters),
             'parameters' => $preparedParameters
-        ));
+        ]);
     }
 
     /**
@@ -572,11 +572,11 @@ abstract class Driver extends Component
     {
         return $this->container->get(
             static::SCHEMA_TABLE,
-            array(
+            [
                 'driver'      => $this,
                 'name'        => $table,
                 'tablePrefix' => $tablePrefix
-            )
+            ]
         );
     }
 
@@ -645,10 +645,10 @@ abstract class Driver extends Component
     {
         return $this->container->get(
             static::QUERY_COMPILER,
-            array(
+            [
                 'driver'      => $this,
                 'tablePrefix' => $tablePrefix
-            )
+            ]
         );
     }
 
@@ -659,12 +659,12 @@ abstract class Driver extends Component
      * @param array    $parameters Initial builder parameters.
      * @return InsertQuery
      */
-    public function insertBuilder(Database $database, array $parameters = array())
+    public function insertBuilder(Database $database, array $parameters = [])
     {
-        return InsertQuery::make(array(
+        return InsertQuery::make([
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters, $this->container);
+            ] + $parameters, $this->container);
     }
 
     /**
@@ -674,12 +674,12 @@ abstract class Driver extends Component
      * @param array    $parameters Initial builder parameters.
      * @return SelectQuery
      */
-    public function selectBuilder(Database $database, array $parameters = array())
+    public function selectBuilder(Database $database, array $parameters = [])
     {
-        return SelectQuery::make(array(
+        return SelectQuery::make([
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters, $this->container);
+            ] + $parameters, $this->container);
     }
 
     /**
@@ -689,12 +689,12 @@ abstract class Driver extends Component
      * @param array    $parameters Initial builder parameters.
      * @return DeleteQuery
      */
-    public function deleteBuilder(Database $database, array $parameters = array())
+    public function deleteBuilder(Database $database, array $parameters = [])
     {
-        return DeleteQuery::make(array(
+        return DeleteQuery::make([
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters, $this->container);
+            ] + $parameters, $this->container);
     }
 
     /**
@@ -704,12 +704,12 @@ abstract class Driver extends Component
      * @param array    $parameters Initial builder parameters.
      * @return UpdateQuery
      */
-    public function updateBuilder(Database $database, array $parameters = array())
+    public function updateBuilder(Database $database, array $parameters = [])
     {
-        return UpdateQuery::make(array(
+        return UpdateQuery::make([
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters, $this->container);
+            ] + $parameters, $this->container);
     }
 
     /**
@@ -719,11 +719,11 @@ abstract class Driver extends Component
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'connection' => $this->config['connection'],
             'connected'  => $this->isConnected(),
             'database'   => $this->getDatabaseName(),
             'options'    => $this->options
-        );
+        ];
     }
 }

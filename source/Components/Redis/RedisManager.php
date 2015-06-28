@@ -166,26 +166,26 @@ class RedisManager extends Component implements InjectionManagerInterface
     /**
      * Copying set of redis constants due same name were used.
      */
-    const AFTER = 'after';
-    const BEFORE = 'before';
-    const OPT_SERIALIZER = 1;
-    const OPT_PREFIX = 2;
-    const OPT_READ_TIMEOUT = 3;
-    const OPT_SCAN = 4;
-    const SERIALIZER_NONE = 0;
-    const SERIALIZER_PHP = 1;
+    const AFTER               = 'after';
+    const BEFORE              = 'before';
+    const OPT_SERIALIZER      = 1;
+    const OPT_PREFIX          = 2;
+    const OPT_READ_TIMEOUT    = 3;
+    const OPT_SCAN            = 4;
+    const SERIALIZER_NONE     = 0;
+    const SERIALIZER_PHP      = 1;
     const SERIALIZER_IGBINARY = 2;
-    const ATOMIC = 0;
-    const MULTI = 1;
-    const PIPELINE = 2;
-    const REDIS_NOT_FOUND = 0;
-    const REDIS_STRING = 1;
-    const REDIS_SET = 2;
-    const REDIS_LIST = 3;
-    const REDIS_ZSET = 4;
-    const REDIS_HASH = 5;
-    const SCAN_NORETRY = 0;
-    const SCAN_RETRY = 1;
+    const ATOMIC              = 0;
+    const MULTI               = 1;
+    const PIPELINE            = 2;
+    const REDIS_NOT_FOUND     = 0;
+    const REDIS_STRING        = 1;
+    const REDIS_SET           = 2;
+    const REDIS_LIST          = 3;
+    const REDIS_ZSET          = 4;
+    const REDIS_HASH          = 5;
+    const SCAN_NORETRY        = 0;
+    const SCAN_RETRY          = 1;
 
     /**
      * Container instance.
@@ -202,7 +202,7 @@ class RedisManager extends Component implements InjectionManagerInterface
      *
      * @var RedisClient[]
      */
-    protected $clients = array();
+    protected $clients = [];
 
     /**
      * Redis facade initialization.
@@ -226,7 +226,7 @@ class RedisManager extends Component implements InjectionManagerInterface
      * @return RedisClient
      * @throws RedisException
      */
-    public function client($client = 'default', array $config = array())
+    public function client($client = 'default', array $config = [])
     {
         if (isset($this->config['aliases'][$client]))
         {
@@ -255,10 +255,10 @@ class RedisManager extends Component implements InjectionManagerInterface
 
         $this->clients[$client] = $this->container->get(
             RedisClient::class,
-            array(
+            [
                 'parameters' => $config['servers'],
-                'options'    => isset($config['options']) ? $config['options'] : array(),
-            ),
+                'options'    => isset($config['options']) ? $config['options'] : [],
+            ],
             null,
             true
         );
@@ -297,9 +297,9 @@ class RedisManager extends Component implements InjectionManagerInterface
      * @param array  $arguments Command arguments.
      * @return mixed
      */
-    public function command($method, array $arguments = array())
+    public function command($method, array $arguments = [])
     {
-        return call_user_func_array(array($this->client(), $method), $arguments);
+        return call_user_func_array([$this->client(), $method], $arguments);
     }
 
     /**

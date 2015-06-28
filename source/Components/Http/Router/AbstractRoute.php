@@ -39,7 +39,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @var array
      */
-    protected $middlewares = array();
+    protected $middlewares = [];
 
     /**
      * Route pattern includes simplified regular expressing later compiled to real regexp. Pattern
@@ -55,14 +55,14 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @var array
      */
-    protected $methods = array();
+    protected $methods = [];
 
     /**
      * Default set of values to fill route matches and target pattern (if specified as pattern).
      *
      * @var array
      */
-    protected $defaults = array();
+    protected $defaults = [];
 
     /**
      * If true route will be matched with URI host in addition to path. BasePath will be ignored.
@@ -77,7 +77,7 @@ abstract class AbstractRoute implements RouteInterface
      * @invisible
      * @var array
      */
-    protected $compiled = array();
+    protected $compiled = [];
 
     /**
      * Result of regular expression. Matched can be used to fill target controller pattern or send
@@ -85,7 +85,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @var array
      */
-    protected $matches = array();
+    protected $matches = [];
 
     /**
      * Get route name. Name is requires to correctly identify route inside router stack (to generate
@@ -192,14 +192,14 @@ abstract class AbstractRoute implements RouteInterface
      */
     protected function compile()
     {
-        $replaces = array(
+        $replaces = [
             '/' => '\\/',
             '(' => '(?:',
             ')' => ')?',
             '.' => '\.'
-        );
+        ];
 
-        $options = array();
+        $options = [];
         if (preg_match_all('/<(\w+):?(.*?)?>/', $this->pattern, $matches))
         {
             $variables = array_combine($matches[1], $matches[2]);
@@ -212,11 +212,11 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $this->pattern);
-        $this->compiled = array(
+        $this->compiled = [
             'pattern'  => '/^' . strtr($template, $replaces) . '$/u',
             'template' => stripslashes(str_replace('?', '', $template)),
             'options'  => array_fill_keys($options, null)
-        );
+        ];
     }
 
     /**
@@ -287,9 +287,9 @@ abstract class AbstractRoute implements RouteInterface
      * @param array     $middlewareAliases
      * @return HttpPipeline
      */
-    protected function getPipeline(Container $container, array $middlewareAliases = array())
+    protected function getPipeline(Container $container, array $middlewareAliases = [])
     {
-        $middlewares = array();
+        $middlewares = [];
         foreach ($this->middlewares as $middleware)
         {
             //Resolving middleware aliases
@@ -309,7 +309,7 @@ abstract class AbstractRoute implements RouteInterface
      * @param string $basePath
      * @return string
      */
-    public function createURL(array $parameters = array(), $basePath = '/')
+    public function createURL(array $parameters = [], $basePath = '/')
     {
         if (empty($this->compiled))
         {
@@ -321,7 +321,7 @@ abstract class AbstractRoute implements RouteInterface
         //Rendering URL
         $url = interpolate(
             $this->compiled['template'],
-            array_map(array('Spiral\Helpers\UrlHelper', 'slug'), $parameters),
+            array_map(['Spiral\Helpers\UrlHelper', 'slug'], $parameters),
             '<',
             '>'
         );
@@ -336,12 +336,12 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         //Kicking empty blocks
-        return $basePath . strtr($url, array(
+        return $basePath . strtr($url, [
             '()'  => '',
             '(/)' => '',
             '('   => '',
             ')'   => '',
             '//'  => '/',
-        )) . $query;
+        ]) . $query;
     }
 }

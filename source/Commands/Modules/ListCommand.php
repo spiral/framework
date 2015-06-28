@@ -38,7 +38,7 @@ class ListCommand extends Command
      *
      * @var array
      */
-    protected $composer = array();
+    protected $composer = [];
 
     /**
      * Get list of all available modules.
@@ -55,25 +55,25 @@ class ListCommand extends Command
             return;
         }
 
-        $table = $this->table(array(
+        $table = $this->table([
             'Module:',
             'Version:',
             'Status:',
             'Size:',
             'Location:',
             'Description:'
-        ));
+        ]);
 
         foreach ($modules as $module)
         {
-            $table->addRow(array(
+            $table->addRow([
                 $module->getName(),
                 $this->getVersion($module->getName()),
                 $module->isInstalled() ? self::INTALLED : self::NOT_INSTALLED,
                 StringHelper::formatBytes($module->getSize()),
                 $this->file->relativePath($module->getLocation()),
                 wordwrap($module->getDescription())
-            ));
+            ]);
         }
 
         $table->render();

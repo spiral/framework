@@ -45,11 +45,11 @@ class Dumper extends Component
      *
      * @var array
      */
-    private $styles = array(
+    private $styles = [
         'maxLevel'  => 10,
         'container' => 'background-color: white; font-family: monospace;',
         'indent'    => '&middot;    ',
-        'styles'    => array(
+        'styles'    => [
             'common'           => 'black',
             'name'             => 'black',
             'indent'           => 'gray',
@@ -69,8 +69,8 @@ class Dumper extends Component
             'access-public'    => '#8dc17d',
             'access-private'   => '#c18c7d',
             'access-protected' => '#7d95c1'
-        )
-    );
+        ]
+    ];
 
     /**
      * Debugger instance.

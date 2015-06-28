@@ -39,7 +39,7 @@ class Router extends Component implements MiddlewareInterface
      *
      * @var RouteInterface[]
      */
-    protected $routes = array();
+    protected $routes = [];
 
     /**
      * Set of route specific middlewares aliases by short string name. This technique allows developer
@@ -47,7 +47,7 @@ class Router extends Component implements MiddlewareInterface
      *
      * @var array|MiddlewareInterface[]|callable[]
      */
-    protected $middlewareAliases = array();
+    protected $middlewareAliases = [];
 
     /**
      * Base path fetched automatically from request attribute "activePath" which is populated by
@@ -77,8 +77,8 @@ class Router extends Component implements MiddlewareInterface
      */
     public function __construct(
         Container $container,
-        array $routes = array(),
-        array $primaryRoute = array()
+        array $routes = [],
+        array $primaryRoute = []
     )
     {
         $this->container = $container;
@@ -239,7 +239,7 @@ class Router extends Component implements MiddlewareInterface
      * @return string
      * @throws RouterException
      */
-    public function url($route, array $parameters = array())
+    public function url($route, array $parameters = [])
     {
         if (!isset($this->routes[$route]))
         {
@@ -277,7 +277,7 @@ class Router extends Component implements MiddlewareInterface
      * @param array  $parameters Route parameters including controller name, action and etc.
      * @return Redirect
      */
-    public function redirect($route, array $parameters = array())
+    public function redirect($route, array $parameters = [])
     {
         return new Redirect($this->url($route, $parameters));
     }

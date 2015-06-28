@@ -24,10 +24,10 @@ class FileStore extends CacheStore
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'directory' => null,
         'extension' => 'cache'
-    );
+    ];
 
     /**
      * File component.
@@ -121,7 +121,7 @@ class FileStore extends CacheStore
     {
         return $this->file->write(
             $this->buildFilename($name),
-            serialize(array(time() + $lifetime, $data))
+            serialize([time() + $lifetime, $data])
         );
     }
 
@@ -137,7 +137,7 @@ class FileStore extends CacheStore
     {
         return $this->file->write(
             $this->buildFilename($name),
-            serialize(array(0, $data))
+            serialize([0, $data])
         );
     }
 
@@ -190,7 +190,7 @@ class FileStore extends CacheStore
     {
         $files = $this->file->getFiles(
             $this->options['directory'],
-            array($this->options['extension'])
+            [$this->options['extension']]
         );
 
         foreach ($files as $filename)

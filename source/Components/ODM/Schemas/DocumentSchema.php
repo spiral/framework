@@ -90,7 +90,7 @@ class DocumentSchema extends ModelSchema
         }
 
         return $this->propertiesCache[$property] = call_user_func(
-            array($this->getClass(), 'describeProperty'),
+            [$this->getClass(), 'describeProperty'],
             $this,
             $property,
             $value
@@ -150,7 +150,7 @@ class DocumentSchema extends ModelSchema
         //We should select only embedded fields, no aggregations
         $schema = $this->getSchema();
 
-        $fields = array();
+        $fields = [];
         foreach ($schema as $field => $type)
         {
             if (
@@ -184,7 +184,7 @@ class DocumentSchema extends ModelSchema
         //Default values.
         foreach ($this->getFields() as $field => $type)
         {
-            $resolved = array();
+            $resolved = [];
 
             if (
                 is_array($type)
@@ -206,10 +206,10 @@ class DocumentSchema extends ModelSchema
             if (isset($resolved['accessor']))
             {
                 //Ensuring type for accessor
-                $resolved['accessor'] = array(
+                $resolved['accessor'] = [
                     $resolved['accessor'],
                     is_array($type) ? $type[0] : $type
-                );
+                ];
             }
 
             foreach ($resolved as $mutator => $filter)
@@ -225,10 +225,10 @@ class DocumentSchema extends ModelSchema
         foreach ($this->getCompositions() as $field => $composition)
         {
             //Composition::ONE has to be resolved little bit different way due model inheritance
-            $mutators['accessor'][$field] = array(
+            $mutators['accessor'][$field] = [
                 $composition['type'] == ODM::CMP_MANY ? SchemaBuilder::COMPOSITOR : ODM::CMP_ONE,
                 $composition['classDefinition']
-            );
+            ];
         }
 
         return $mutators;
@@ -256,7 +256,7 @@ class DocumentSchema extends ModelSchema
         $accessors = $this->getAccessors();
         foreach ($this->getFields() as $field => $type)
         {
-            $default = is_array($type) ? array() : null;
+            $default = is_array($type) ? [] : null;
 
             if (array_key_exists($field, $defaults))
             {
@@ -319,16 +319,16 @@ class DocumentSchema extends ModelSchema
     {
         $fields = $this->getFields();
 
-        $compositions = array();
+        $compositions = [];
         foreach ($fields as $field => $type)
         {
             if (is_string($type) && $foreignDocument = $this->builder->getDocument($type))
             {
-                $compositions[$field] = array(
+                $compositions[$field] = [
                     'type'            => ODM::CMP_ONE,
                     'class'           => $type,
                     'classDefinition' => $foreignDocument->classDefinition()
-                );
+                ];
                 continue;
             }
 
@@ -342,11 +342,11 @@ class DocumentSchema extends ModelSchema
                         $reflection = new \ReflectionClass($type);
                         if ($reflection->implementsInterface(SchemaBuilder::COMPOSITABLE))
                         {
-                            $compositions[$field] = array(
+                            $compositions[$field] = [
                                 'type'            => ODM::CMP_ONE,
                                 'class'           => $type,
                                 'classDefinition' => $type
-                            );
+                            ];
                         }
                     }
                 }
@@ -362,11 +362,11 @@ class DocumentSchema extends ModelSchema
             if (is_string($class) && $foreignDocument = $this->builder->getDocument($class))
             {
                 //Rename type to represent real model name
-                $compositions[$field] = array(
+                $compositions[$field] = [
                     'type'            => ODM::CMP_MANY,
                     'class'           => $class,
                     'classDefinition' => $foreignDocument->classDefinition()
-                );
+                ];
             }
         }
 
@@ -383,7 +383,7 @@ class DocumentSchema extends ModelSchema
     {
         $schema = $this->getSchema();
 
-        $aggregations = array();
+        $aggregations = [];
         foreach ($schema as $field => $options)
         {
             if (
@@ -419,13 +419,13 @@ class DocumentSchema extends ModelSchema
                 );
             }
 
-            $aggregations[$field] = array(
+            $aggregations[$field] = [
                 'type'       => isset($options[Document::ONE]) ? Document::ONE : Document::MANY,
                 'class'      => $class,
                 'collection' => $externalDocument->getCollection(),
                 'database'   => $externalDocument->getDatabase(),
                 'query'      => array_pop($options)
-            );
+            ];
         }
 
         return $aggregations;
@@ -440,7 +440,7 @@ class DocumentSchema extends ModelSchema
     {
         if (!$this->getCollection())
         {
-            return array();
+            return [];
         }
 
         return $this->property('indexes', true);
@@ -461,7 +461,7 @@ class DocumentSchema extends ModelSchema
      */
     public function getChildren()
     {
-        $result = array();
+        $result = [];
         foreach ($this->builder->getDocumentSchemas() as $schema)
         {
             if ($schema->reflection->isSubclassOf($this->class))
@@ -524,7 +524,7 @@ class DocumentSchema extends ModelSchema
      */
     public function classDefinition()
     {
-        $classes = array();
+        $classes = [];
         foreach ($this->builder->getDocumentSchemas() as $documentSchema)
         {
             if (
@@ -546,17 +546,17 @@ class DocumentSchema extends ModelSchema
 
         if ($this->reflection->getConstant('DEFINITION') == Document::DEFINITION_LOGICAL)
         {
-            return array(
+            return [
                 'type'    => Document::DEFINITION_LOGICAL,
-                'options' => array($this->primaryClass(), 'defineClass')
-            );
+                'options' => [$this->primaryClass(), 'defineClass']
+            ];
         }
         else
         {
-            $defineClass = array(
+            $defineClass = [
                 'type'    => Document::DEFINITION_FIELDS,
-                'options' => array()
-            );
+                'options' => []
+            ];
 
             /**
              * We should order classes by inheritance levels. Primary model should go last.
@@ -572,7 +572,7 @@ class DocumentSchema extends ModelSchema
             $classes = array_flip($classes);
 
             //Array of fields can be found in any model
-            $commonFields = array();
+            $commonFields = [];
 
             foreach ($classes as $class => &$fields)
             {

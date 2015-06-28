@@ -25,7 +25,7 @@ class ModelInspection extends Component
      *
      * @var FieldInspection[]
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * New model inspection instance.
@@ -55,7 +55,7 @@ class ModelInspection extends Component
      */
     public function inspect(array $blacklist)
     {
-        $this->fields = array();
+        $this->fields = [];
 
         foreach ($this->schema->getFields() as $field => $type)
         {
@@ -81,7 +81,7 @@ class ModelInspection extends Component
             $fillable = false;
         }
 
-        if ($this->schema->getFillable() != array())
+        if ($this->schema->getFillable() != [])
         {
             $fillable = in_array($field, $this->schema->getFillable());
         }
@@ -170,7 +170,7 @@ class ModelInspection extends Component
      */
     public function getWarnings()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->fields as $field)
         {

@@ -46,19 +46,19 @@ class Logger extends AbstractLogger
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'all'        => '{date}: [{level}] {message}',
         'level'      => '{date}: {message}',
         'dateFormat' => 'H:i:s d.m.Y',
         'oldPostfix' => '.old'
-    );
+    ];
 
     /**
      * All created or registered loggers.
      *
      * @var array
      */
-    protected static $loggers = array();
+    protected static $loggers = [];
 
     /**
      * If enabled all debug messages will be additionally collected in Logger::$logMessages array for
@@ -76,7 +76,7 @@ class Logger extends AbstractLogger
      *
      * @var array
      */
-    protected static $logMessages = array();
+    protected static $logMessages = [];
 
     /**
      * Logging container name, usually defined by component alias or class name.
@@ -93,7 +93,7 @@ class Logger extends AbstractLogger
      *
      * @var array
      */
-    protected $fileHandlers = array();
+    protected $fileHandlers = [];
 
     /**
      * Logger request ID, can be enabled by changing log message format (include {reqID}), this value
@@ -170,7 +170,7 @@ class Logger extends AbstractLogger
      */
     public function setFileHandler($level, $filename, $filesize = 2097152)
     {
-        $this->fileHandlers[$level] = array($filename, $filesize);
+        $this->fileHandlers[$level] = [$filename, $filesize];
 
         return $this;
     }
@@ -184,25 +184,25 @@ class Logger extends AbstractLogger
      * @param array  $context
      * @return static
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $message = interpolate($message, $context);
         if (self::$memoryLogging)
         {
-            self::$logMessages[] = array(
+            self::$logMessages[] = [
                 self::MESSAGE_CONTAINER => $this->name,
                 self::MESSAGE_TIMESTAMP => microtime(true),
                 self::MESSAGE_LEVEL     => $level,
                 self::MESSAGE_BODY      => $message,
                 self::MESSAGE_CONTEXT   => $context
-            );
+            ];
         }
 
-        $handled = $this->event('message', array(
+        $handled = $this->event('message', [
             'message' => $message,
             'name'    => $this->name,
             'level'   => $level
-        ));
+        ]);
 
         if (empty($handled))
         {
@@ -226,12 +226,12 @@ class Logger extends AbstractLogger
 
         $message = interpolate(
             $format,
-            array(
+            [
                 'message' => $message,
                 'level'   => $level,
                 'date'    => date($this->options['dateFormat'], time()),
                 'reqID'   => self::$reqID
-            )
+            ]
         );
 
         $files = FileManager::getInstance();

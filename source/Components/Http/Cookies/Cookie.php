@@ -238,9 +238,9 @@ class Cookie
      */
     public function packHeader()
     {
-        $header = array(
+        $header = [
             rawurlencode($this->name) . '=' . rawurlencode($this->value)
-        );
+        ];
 
         if ($this->lifetime !== null)
         {

@@ -53,18 +53,18 @@ class StorageAccessor extends AbstractStorageAccessor implements ODMAccessor
     {
         if (!$this->hasUpdates())
         {
-            return array();
+            return [];
         }
 
         if (!empty($this->address) && empty($this->storageObject))
         {
             //Object detached
-            return array('$set' => array($container => ''));
+            return ['$set' => [$container => '']];
         }
 
-        return array('$set' => array(
+        return ['$set' => [
             $container => $this->storageObject->getAddress()
-        ));
+        ]];
     }
 
     /**

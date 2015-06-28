@@ -30,7 +30,7 @@ abstract class Checker
      *
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * Validator instance, can be used for complex and composite validations.
@@ -49,12 +49,12 @@ abstract class Checker
      * @param Validator $validator Validator instance initiated validation session.
      * @return mixed
      */
-    public function check($method, $value, array $arguments = array(), Validator $validator = null)
+    public function check($method, $value, array $arguments = [], Validator $validator = null)
     {
         array_unshift($arguments, $value);
 
         $this->validator = $validator;
-        $result = call_user_func_array(array($this, $method), $arguments);
+        $result = call_user_func_array([$this, $method], $arguments);
         $this->validator = null;
 
         return $result;

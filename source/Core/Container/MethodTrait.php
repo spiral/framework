@@ -22,7 +22,7 @@ trait MethodTrait
      */
     protected function callFunction(
         $method = '',
-        array $parameters = array(),
+        array $parameters = [],
         Container $container = null
     )
     {

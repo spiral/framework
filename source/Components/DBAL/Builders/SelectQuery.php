@@ -37,7 +37,7 @@ class SelectQuery extends QueryBuilder implements
      *
      * @var array
      */
-    protected $fromTables = array();
+    protected $fromTables = [];
 
     /**
      * Flag to indicate that query is distinct.
@@ -51,7 +51,7 @@ class SelectQuery extends QueryBuilder implements
      *
      * @var array
      */
-    protected $columns = array('*');
+    protected $columns = ['*'];
 
     /**
      * Array of columns or/and expressions to be used to generate ORDER BY statement. Every orderBy
@@ -59,14 +59,14 @@ class SelectQuery extends QueryBuilder implements
      *
      * @var array
      */
-    protected $orderBy = array();
+    protected $orderBy = [];
 
     /**
      * Column names or expressions to group by.
      *
      * @var array
      */
-    protected $groupBy = array();
+    protected $groupBy = [];
 
     /**
      * Cache lifetime. Can be set at any moment and will change behaviour os run() method, if set -
@@ -90,7 +90,7 @@ class SelectQuery extends QueryBuilder implements
      *
      * @var array
      */
-    protected $unions = array();
+    protected $unions = [];
 
     /**
      * SelectBuilder used to generate SELECT query statements, it can as to directly fetch data from
@@ -104,8 +104,8 @@ class SelectQuery extends QueryBuilder implements
     public function __construct(
         Database $database,
         QueryCompiler $compiler,
-        array $from = array(),
-        array $columns = array()
+        array $from = [],
+        array $columns = []
     )
     {
         parent::__construct($database, $compiler);
@@ -207,12 +207,12 @@ class SelectQuery extends QueryBuilder implements
         {
             foreach ($identifier as $expression => $direction)
             {
-                $this->orderBy[] = array($expression, $direction);
+                $this->orderBy[] = [$expression, $direction];
             }
         }
         else
         {
-            $this->orderBy[] = array($identifier, $direction);
+            $this->orderBy[] = [$identifier, $direction];
         }
 
         return $this;
@@ -228,7 +228,7 @@ class SelectQuery extends QueryBuilder implements
      */
     public function union(SqlFragmentInterface $query)
     {
-        $this->unions[] = array($query, '');
+        $this->unions[] = [$query, ''];
 
         return $this;
     }
@@ -243,7 +243,7 @@ class SelectQuery extends QueryBuilder implements
      */
     public function unionAll(SqlFragmentInterface $query)
     {
-        $this->unions[] = array($query, 'ALL');
+        $this->unions[] = [$query, 'ALL'];
 
         return $this;
     }
@@ -346,11 +346,11 @@ class SelectQuery extends QueryBuilder implements
      */
     public function count()
     {
-        $backup = array($this->columns, $this->orderBy, $this->groupBy, $this->limit, $this->offset);
-        $this->columns = array('COUNT(*)');
+        $backup = [$this->columns, $this->orderBy, $this->groupBy, $this->limit, $this->offset];
+        $this->columns = ['COUNT(*)'];
 
         //Can not be used with COUNT()
-        $this->orderBy = $this->groupBy = array();
+        $this->orderBy = $this->groupBy = [];
         $this->limit = $this->offset = 0;
 
         $result = $this->run(false)->fetchColumn();
@@ -373,12 +373,12 @@ class SelectQuery extends QueryBuilder implements
     {
         $columns = $this->columns;
 
-        if (!in_array($method = strtoupper($method), array('AVG', 'MIN', 'MAX', 'SUM')))
+        if (!in_array($method = strtoupper($method), ['AVG', 'MIN', 'MAX', 'SUM']))
         {
             throw new DBALException("Unknown aggregation method '{$method}'.");
         }
 
-        $this->columns = array("{$method}(" . join(", ", $arguments) . ")");
+        $this->columns = ["{$method}(" . join(", ", $arguments) . ")"];
 
         $result = $this->run(false)->fetchColumn();
         $this->columns = $columns;

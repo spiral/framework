@@ -26,12 +26,12 @@ class ManyThoughtSchema extends RelationSchema
      * @invisible
      * @var array
      */
-    protected $defaultDefinition = array(
+    protected $defaultDefinition = [
         ActiveRecord::INNER_KEY         => '{record:primaryKey}',
         ActiveRecord::OUTER_KEY         => '{outer:primaryKey}',
         ActiveRecord::THOUGHT_INNER_KEY => '{record:roleName}_{definition:INNER_KEY}',
         ActiveRecord::THOUGHT_OUTER_KEY => '{outer:roleName}_{definition:OUTER_KEY}'
-    );
+    ];
 
     /**
      * Create all required relation columns, indexes and constraints.
@@ -58,12 +58,12 @@ class ManyThoughtSchema extends RelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        $this->getOuterRecordSchema()->addRelation($name, array(
+        $this->getOuterRecordSchema()->addRelation($name, [
             ActiveRecord::MANY_THOUGHT      => $this->recordSchema->getClass(),
             ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
             ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
             ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
             ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY]
-        ));
+        ]);
     }
 }

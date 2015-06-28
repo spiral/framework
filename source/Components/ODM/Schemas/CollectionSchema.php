@@ -42,7 +42,7 @@ class CollectionSchema extends Component
      *
      * @var array
      */
-    protected $classDefinition = array();
+    protected $classDefinition = [];
 
     /**
      * Primary collection class (first class in extend chain).

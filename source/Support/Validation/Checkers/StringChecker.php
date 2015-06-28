@@ -19,13 +19,13 @@ class StringChecker extends Checker
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         "regexp"  => "[[Field '{field}' does not match required pattern.]]",
         "shorter" => "[[Field length '{field}' should be shorter or equal to {0}.]]",
         "longer"  => "[[Field length '{field}' should be longer or equal to {0}.]]",
         "exactly" => "[[Field length '{field}' should be exactly equal to {0}.]]",
         "range"   => "[[Field length '{field}' should be in range of {0}-{1}.]]"
-    );
+    ];
 
     /**
      * Checks string using regular expression. Using preg_math as validation method.

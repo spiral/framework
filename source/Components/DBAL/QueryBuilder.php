@@ -36,7 +36,7 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
      *
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * QueryBuilder class is parent for all existed DBAL query builders. Every QueryBuilder will have
@@ -108,7 +108,7 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
      */
     public function getParameters()
     {
-        $parameters = array();
+        $parameters = [];
         foreach ($this->parameters as $parameter)
         {
             if ($parameter instanceof QueryBuilder)
@@ -182,11 +182,11 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
             $queryString = "[ERROR: {$exception->getMessage()}]";
         }
 
-        $debugInfo = array(
+        $debugInfo = [
             'statement' => $queryString,
             'compiler'  => get_class($this->compiler),
             'database'  => $this->database
-        );
+        ];
 
         return (object)$debugInfo;
     }

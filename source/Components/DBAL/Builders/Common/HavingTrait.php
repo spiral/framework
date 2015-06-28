@@ -19,7 +19,7 @@ trait HavingTrait
      * @see WhereTrait
      * @var array
      */
-    protected $havingTokens = array();
+    protected $havingTokens = [];
 
     /**
      * Helper methods used to processed user input in where methods to internal where token, method
@@ -37,7 +37,7 @@ trait HavingTrait
     abstract protected function whereToken(
         $joiner,
         array $parameters,
-        &$tokens = array(),
+        &$tokens = [],
         $catchParameters = true
     );
 
@@ -259,7 +259,7 @@ trait HavingTrait
      * @return static
      * @throws DBALException
      */
-    public function orHaving($identifier, $variousA = array(), $variousB = null, $variousC = null)
+    public function orHaving($identifier, $variousA = [], $variousB = null, $variousC = null)
     {
         $this->whereToken('OR', func_get_args(), $this->havingTokens);
 

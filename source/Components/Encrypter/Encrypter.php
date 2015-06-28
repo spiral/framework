@@ -197,11 +197,11 @@ class Encrypter extends Component
             $vector
         );
 
-        $result = json_encode(array(
+        $result = json_encode([
             self::IV        => ($vector = bin2hex($vector)),
             self::DATA      => $encrypted,
             self::SIGNATURE => $this->makeSignature($encrypted, $vector)
-        ));
+        ]);
 
         return base64_encode($result);
     }

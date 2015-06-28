@@ -41,7 +41,7 @@ class ModuleManager extends Component
      *
      * @var array
      */
-    protected $modules = array();
+    protected $modules = [];
 
     /**
      * Modules component is always initiated and used to support external packages. Constructing
@@ -104,7 +104,7 @@ class ModuleManager extends Component
      */
     public function findModules()
     {
-        $definitions = array();
+        $definitions = [];
 
         //Delayed and not included to constructor dependencies to speed up application.
         $classes = Tokenizer::getInstance($this->container)->getClasses(
@@ -118,7 +118,7 @@ class ModuleManager extends Component
                 continue;
             }
 
-            $definition = call_user_func(array($module['name'], 'getDefinition'));
+            $definition = call_user_func([$module['name'], 'getDefinition']);
             $definitions[$definition->getName()] = $definition;
         }
 
@@ -139,11 +139,11 @@ class ModuleManager extends Component
      */
     public function registerModule(Definition $definition)
     {
-        $this->modules[$definition->getName()] = array(
+        $this->modules[$definition->getName()] = [
             'class'     => $definition->getClass(),
             'bootstrap' => $definition->getInstaller()->isBootstrappable(),
             'bindings'  => $definition->getInstaller()->getBindings()
-        );
+        ];
 
         //Updating modules configuration config
         $this->updateConfig();
@@ -172,10 +172,10 @@ class ModuleManager extends Component
 
         //Updating configuration
         $config = ConfigWriter::make(
-            array(
+            [
                 'name'   => 'modules',
                 'method' => ConfigWriter::OVERWRITE
-            ),
+            ],
             $this->container
         );
 

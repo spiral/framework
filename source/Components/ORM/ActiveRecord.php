@@ -97,7 +97,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * @var array
      */
-    protected static $schemaCache = array();
+    protected static $schemaCache = [];
 
     /**
      * Table associated with ActiveRecord. Spiral will guess table name automatically based on class
@@ -121,14 +121,14 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * @var array
      */
-    protected $schema = array();
+    protected $schema = [];
 
     /**
      * TODO: DOCS
      *
      * @var array
      */
-    protected $indexes = array();
+    protected $indexes = [];
 
     /**
      * Default values associated with record fields. This default values will be combined with values
@@ -136,7 +136,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * @var array
      */
-    protected $defaults = array();
+    protected $defaults = [];
 
     /**
      * ActiveRecord marked with solid state flag will be saved entirely without generating simplified
@@ -151,17 +151,17 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * @var array
      */
-    protected $updates = array();
+    protected $updates = [];
 
     /**
      * Constructed set of relations.
      *
      * @var Relation[]
      */
-    protected $relations = array();
+    protected $relations = [];
 
     //todo: add parent container?
-    public function __construct($data = array(), ORM $orm = null)
+    public function __construct($data = [], ORM $orm = null)
     {
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();
         if (!isset(self::$schemaCache[$class = get_class($this)]))
@@ -174,7 +174,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $this->schema = self::$schemaCache[$class];
 
         //Merging with default values
-        $this->fields = (is_array($data) ? $data : array()) + $this->schema[ORM::E_COLUMNS];
+        $this->fields = (is_array($data) ? $data : []) + $this->schema[ORM::E_COLUMNS];
 
         foreach ($this->schema[ORM::E_RELATIONS] as $relation => $definition)
         {
@@ -389,10 +389,10 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     {
         if (!$this->hasUpdates() && !$this->solidState)
         {
-            return array();
+            return [];
         }
 
-        $updates = array();
+        $updates = [];
         foreach ($this->fields as $name => $field)
         {
             if ($field instanceof ORMAccessor && ($this->solidState || $field->hasUpdates()))
@@ -459,7 +459,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function flushUpdates()
     {
-        $this->updates = array();
+        $this->updates = [];
 
         foreach ($this->fields as $value)
         {
@@ -500,10 +500,10 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             return $this->validator->setData($this->fields);
         }
 
-        return $this->validator = Validator::make(array(
+        return $this->validator = Validator::make([
             'data'      => $this->fields,
             'validates' => $this->schema[ORM::E_VALIDATES]
-        ));
+        ]);
     }
 
     /**
@@ -517,7 +517,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     public function getErrors($reset = false)
     {
         $this->validate();
-        $errors = array();
+        $errors = [];
         foreach ($this->errors as $field => $error)
         {
             if (
@@ -534,7 +534,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         if ($reset)
         {
-            $this->errors = array();
+            $this->errors = [];
         }
 
         return $errors;
@@ -593,11 +593,11 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         $schema = $orm->getSchema(get_called_class());
 
-        return Selector::make(array(
+        return Selector::make([
             'schema'   => $schema,
             'database' => $dbal->db($schema[ORM::E_DB]),
             'orm'      => $orm
-        ));
+        ]);
     }
 
     /**
@@ -652,7 +652,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
             static::dbalTable($this->orm, $this->dbalDatabase())->update(
                 $this->compileUpdates(),
-                array($primaryKey => $this->primaryKey())
+                [$primaryKey => $this->primaryKey()]
             )->run();
 
             $this->event('updated');
@@ -676,9 +676,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         {
             if (!empty($this->schema[ORM::E_PRIMARY_KEY]))
             {
-                static::dbalTable($this->orm, $this->dbalDatabase())->delete(array(
+                static::dbalTable($this->orm, $this->dbalDatabase())->delete([
                     $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
-                ))->run();
+                ])->run();
             }
             else
             {
@@ -701,7 +701,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @param array $fields Model fields to set, will be passed thought filters.
      * @return static
      */
-    public static function create($fields = array())
+    public static function create($fields = [])
     {
         /**
          * @var ActiveRecord $class
@@ -721,7 +721,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @param array $scope
      * @return array
      */
-    protected static function getScope($scope = array())
+    protected static function getScope($scope = [])
     {
         //Traits
         static::initialize();
@@ -729,10 +729,10 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         if (EventDispatcher::hasDispatcher(static::class))
         {
             //Do we need it?
-            $scope = self::dispatcher()->fire('scope', array(
+            $scope = self::dispatcher()->fire('scope', [
                 'scope' => $scope,
                 'model' => get_called_class()
-            ))['scope'];
+            ])['scope'];
         }
 
         return $scope;
@@ -744,7 +744,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @param mixed $query Fields and conditions to filter by.
      * @return Selector|static[]
      */
-    public static function find(array $query = array())
+    public static function find(array $query = [])
     {
         return static::ormSelector();
     }
@@ -757,7 +757,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @param array $query Fields and conditions to filter by.
      * @return static
      */
-    public static function findOne(array $query = array())
+    public static function findOne(array $query = [])
     {
         return static::find($query)->findOne();
     }
@@ -775,11 +775,11 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'table'  => $this->schema[ORM::E_DB] . '/' . $this->schema[ORM::E_TABLE],
             'fields' => $this->getFields(),
             'errors' => $this->getErrors()
-        );
+        ];
     }
 
     /**
@@ -787,6 +787,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public static function clearSchemaCache()
     {
-        self::$schemaCache = array();
+        self::$schemaCache = [];
     }
 }

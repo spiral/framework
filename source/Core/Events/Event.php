@@ -29,7 +29,7 @@ class Event
      *
      * @var array
      */
-    public $passedThough = array();
+    public $passedThough = [];
 
     /**
      * Indication that event chain were stopped by one of handlers.

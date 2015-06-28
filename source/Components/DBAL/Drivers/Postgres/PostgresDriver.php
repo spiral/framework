@@ -79,7 +79,7 @@ class PostgresDriver extends Driver
      *
      * @var array
      */
-    protected $primaryKeys = array();
+    protected $primaryKeys = [];
 
     /**
      * Driver instances responsible for all database low level operations which can be DBMS specific
@@ -90,7 +90,7 @@ class PostgresDriver extends Driver
      * @param RuntimeCacheInterface $runtime
      */
     public function __construct(
-        array $config = array(),
+        array $config = [],
         Container $container,
         RuntimeCacheInterface $runtime
     )
@@ -167,7 +167,7 @@ class PostgresDriver extends Driver
      */
     public function hasTable($name)
     {
-        return (bool)$this->query(self::TABLE_EXISTS_QUERY, array($name))->fetchColumn();
+        return (bool)$this->query(self::TABLE_EXISTS_QUERY, [$name])->fetchColumn();
     }
 
     /**
@@ -178,7 +178,7 @@ class PostgresDriver extends Driver
      */
     public function tableNames()
     {
-        $tables = array();
+        $tables = [];
         foreach ($this->query(static::FETCH_TABLES_QUERY) as $row)
         {
             $tables[] = $row['table_name'];
@@ -196,11 +196,11 @@ class PostgresDriver extends Driver
      * @param array    $parameters Initial builder parameters.
      * @return InsertQuery
      */
-    public function insertBuilder(Database $database, array $parameters = array())
+    public function insertBuilder(Database $database, array $parameters = [])
     {
-        return InsertQuery::make(array(
+        return InsertQuery::make([
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ) + $parameters, $this->container);
+            ] + $parameters, $this->container);
     }
 }

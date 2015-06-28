@@ -29,7 +29,7 @@ class TableSchema extends AbstractTableSchema
                     ON (
                         object_name(object_id) = table_name AND sysColumns.name = COLUMN_NAME
                   ) WHERE table_name = ?';
-        foreach ($this->driver->query($query, array($this->name)) as $column)
+        foreach ($this->driver->query($query, [$this->name]) as $column)
         {
             $this->registerColumn($column['COLUMN_NAME'], $column);
         }
@@ -55,8 +55,8 @@ class TableSchema extends AbstractTableSchema
                   WHERE t.name = ?
                   ORDER BY indexes.name, indexes.index_id, columns.index_column_id";
 
-        $indexes = array();
-        foreach ($this->driver->query($query, array($this->name)) as $index)
+        $indexes = [];
+        foreach ($this->driver->query($query, [$this->name]) as $index)
         {
             if ($index['isPrimary'])
             {
@@ -81,7 +81,7 @@ class TableSchema extends AbstractTableSchema
      */
     protected function loadReferences()
     {
-        foreach ($this->driver->query("sp_fkeys @fktable_name = ?", array($this->name)) as
+        foreach ($this->driver->query("sp_fkeys @fktable_name = ?", [$this->name]) as
                  $reference)
         {
             $this->registerReference($reference['FK_NAME'], $reference);
@@ -113,18 +113,18 @@ class TableSchema extends AbstractTableSchema
         //Renaming is separate operation
         if ($column->getName() != $dbColumn->getName())
         {
-            $this->driver->statement("sp_rename ?, ?, 'COLUMN'", array(
+            $this->driver->statement("sp_rename ?, ?, 'COLUMN'", [
                 $this->getName() . '.' . $dbColumn->getName(),
                 $column->getName()
-            ));
+            ]);
 
             $column->setName($dbColumn->getName());
         }
 
         //In SQLServer we have to drop ALL related indexes and foreign keys while
         //applying type change... yeah...
-        $indexesBackup = array();
-        $foreignBackup = array();
+        $indexesBackup = [];
+        $foreignBackup = [];
         foreach ($this->indexes as $index)
         {
             if (in_array($column->getName(), $index->getColumns()))
@@ -151,10 +151,10 @@ class TableSchema extends AbstractTableSchema
 
         foreach ($column->alterOperations($dbColumn) as $operation)
         {
-            $query = interpolate('ALTER TABLE {table} {operation}', array(
+            $query = interpolate('ALTER TABLE {table} {operation}', [
                 'table'     => $this->getName(true),
                 'operation' => $operation
-            ));
+            ]);
 
             $this->driver->statement($query);
         }

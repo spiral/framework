@@ -40,7 +40,7 @@ abstract class BaseElement extends Component
      *
      * @var array
      */
-    protected $docComment = array();
+    protected $docComment = [];
 
     /**
      * Constructing a new element under a given name.
@@ -84,7 +84,7 @@ abstract class BaseElement extends Component
      */
     public function setComment($docComment, $append = false)
     {
-        $append || $this->docComment = array();
+        $append || $this->docComment = [];
         if (!is_array($docComment))
         {
             $docComment = explode("\n", StringHelper::normalizeEndings($docComment));
@@ -155,7 +155,7 @@ abstract class BaseElement extends Component
             return "";
         }
 
-        $result = array("", "/**");
+        $result = ["", "/**"];
         foreach ($this->docComment as $comment)
         {
             $result[] = " * " . $comment;

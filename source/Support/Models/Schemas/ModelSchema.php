@@ -31,7 +31,7 @@ abstract class ModelSchema extends Component
      * @invisible
      * @var array
      */
-    protected $propertiesCache = array();
+    protected $propertiesCache = [];
 
     /**
      * Class reflection.
@@ -142,7 +142,7 @@ abstract class ModelSchema extends Component
      */
     public function getMethods()
     {
-        $methods = array();
+        $methods = [];
 
         foreach ($this->reflection->getMethods() as $method)
         {
@@ -164,11 +164,11 @@ abstract class ModelSchema extends Component
      */
     public function getMutators()
     {
-        $mutators = array(
-            'getter'   => array(),
-            'setter'   => array(),
-            'accessor' => array()
-        );
+        $mutators = [
+            'getter'   => [],
+            'setter'   => [],
+            'accessor' => []
+        ];
 
         foreach ($this->property('getters', true) as $field => $filter)
         {

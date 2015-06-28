@@ -45,11 +45,11 @@ class MySqlDriver extends Driver
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         PDO::ATTR_CASE               => PDO::CASE_NATURAL,
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES "UTF8"'
-    );
+    ];
 
     /**
      * Query to check table existence.
@@ -67,7 +67,7 @@ class MySqlDriver extends Driver
      */
     public function hasTable($name)
     {
-        return (bool)$this->query(self::TABLE_EXISTS_QUERY, array($this->databaseName, $name))
+        return (bool)$this->query(self::TABLE_EXISTS_QUERY, [$this->databaseName, $name])
             ->fetchColumn();
     }
 
@@ -78,7 +78,7 @@ class MySqlDriver extends Driver
      */
     public function tableNames()
     {
-        $tables = array();
+        $tables = [];
         foreach ($this->query('SHOW TABLES')->fetchMode(PDO::FETCH_NUM) as $row)
         {
             $tables[] = $row[0];

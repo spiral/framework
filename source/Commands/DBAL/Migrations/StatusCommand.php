@@ -41,19 +41,19 @@ class StatusCommand extends BaseCommand
             throw new MigrationException("Migrator is not configured.");
         }
 
-        $table = $this->table(array('Migration:', 'Filename:', 'Created at', 'Performed at'));
+        $table = $this->table(['Migration:', 'Filename:', 'Created at', 'Performed at']);
         foreach ($this->getMigrator()->getMigrations() as $migration)
         {
             $timePerformed = $migration['performed']
                 ? '<info>' . date('Y-m-d H:i:s', $migration['performed']) . '</info>'
                 : self::NOT_PERFORMED;
 
-            $table->addRow(array(
+            $table->addRow([
                 $migration['name'],
                 $migration['filename'],
                 date('Y-m-d H:i:s', $migration['timestamp']),
                 $timePerformed
-            ));
+            ]);
         }
 
         $table->render();

@@ -32,7 +32,7 @@ class QueryResult extends BaseQueryResult
      * @param PDOStatement $statement
      * @param array        $parameters
      */
-    public function __construct(PDOStatement $statement, array $parameters = array())
+    public function __construct(PDOStatement $statement, array $parameters = [])
     {
         parent::__construct($statement, $parameters);
 
@@ -82,7 +82,7 @@ class QueryResult extends BaseQueryResult
             return parent::fetchAll($mode);
         }
 
-        $result = array();
+        $result = [];
         while ($rowset = $this->fetch($mode))
         {
             $result[] = $rowset;

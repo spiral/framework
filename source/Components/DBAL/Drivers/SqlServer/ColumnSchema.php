@@ -25,10 +25,10 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $mapping = array(
+    protected $mapping = [
         //Primary sequences
-        'primary'     => array('type' => 'int', 'identity' => true),
-        'bigPrimary'  => array('type' => 'bigint', 'identity' => true),
+        'primary'     => ['type' => 'int', 'identity' => true],
+        'bigPrimary'  => ['type' => 'bigint', 'identity' => true],
 
         //Enum type (mapped via method)
         'enum'        => 'enum',
@@ -46,9 +46,9 @@ class ColumnSchema extends AbstractColumnSchema
         'string'      => 'varchar',
 
         //Generic types
-        'text'        => array('type' => 'varchar', 'size' => 0),
-        'tinyText'    => array('type' => 'varchar', 'size' => 0),
-        'longText'    => array('type' => 'varchar', 'size' => 0),
+        'text'        => ['type' => 'varchar', 'size' => 0],
+        'tinyText'    => ['type' => 'varchar', 'size' => 0],
+        'longText'    => ['type' => 'varchar', 'size' => 0],
 
         //Real types
         'double'      => 'float',
@@ -64,13 +64,13 @@ class ColumnSchema extends AbstractColumnSchema
         'timestamp'   => 'datetime',
 
         //Binary types
-        'binary'      => array('type' => 'varbinary', 'size' => 0),
-        'tinyBinary'  => array('type' => 'varbinary', 'size' => 0),
-        'longBinary'  => array('type' => 'varbinary', 'size' => 0),
+        'binary'      => ['type' => 'varbinary', 'size' => 0],
+        'tinyBinary'  => ['type' => 'varbinary', 'size' => 0],
+        'longBinary'  => ['type' => 'varbinary', 'size' => 0],
 
         //Additional types
-        'json'        => array('type' => 'varchar', 'size' => 0)
-    );
+        'json'        => ['type' => 'varchar', 'size' => 0]
+    ];
 
     /**
      * Driver specific reverse mapping, this mapping should link database type to one of standard
@@ -80,24 +80,24 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $reverseMapping = array(
-        'primary'     => array(array('type' => 'int', 'identity' => true)),
-        'bigPrimary'  => array(array('type' => 'bigint', 'identity' => true)),
-        'enum'        => array('enum'),
-        'boolean'     => array('bit'),
-        'integer'     => array('int'),
-        'tinyInteger' => array('tinyint', 'smallint'),
-        'bigInteger'  => array('bigint'),
-        'text'        => array(array('type' => 'varchar', 'size' => 0)),
-        'string'      => array('varchar', 'char'),
-        'double'      => array('float'),
-        'float'       => array('real'),
-        'decimal'     => array('decimal'),
-        'timestamp'   => array('datetime'),
-        'date'        => array('date'),
-        'time'        => array('time'),
-        'binary'      => array('varbinary'),
-    );
+    protected $reverseMapping = [
+        'primary'     => [['type' => 'int', 'identity' => true]],
+        'bigPrimary'  => [['type' => 'bigint', 'identity' => true]],
+        'enum'        => ['enum'],
+        'boolean'     => ['bit'],
+        'integer'     => ['int'],
+        'tinyInteger' => ['tinyint', 'smallint'],
+        'bigInteger'  => ['bigint'],
+        'text'        => [['type' => 'varchar', 'size' => 0]],
+        'string'      => ['varchar', 'char'],
+        'double'      => ['float'],
+        'float'       => ['real'],
+        'decimal'     => ['decimal'],
+        'timestamp'   => ['datetime'],
+        'date'        => ['date'],
+        'time'        => ['time'],
+        'binary'      => ['varbinary'],
+    ];
 
     /**
      * If field table identity.
@@ -179,9 +179,9 @@ class ColumnSchema extends AbstractColumnSchema
         if (!empty($schema['default_object_id']))
         {
             $this->defaultConstraint = $tableDriver->query(
-                "SELECT name FROM sys.default_constraints WHERE object_id = ?", array(
+                "SELECT name FROM sys.default_constraints WHERE object_id = ?", [
                 $schema['default_object_id']
-            ))->fetchColumn();
+            ])->fetchColumn();
         }
 
         //Potential enum
@@ -194,10 +194,10 @@ class ColumnSchema extends AbstractColumnSchema
                         ON o.object_id = [c].constid
                       WHERE type_desc = 'CHECK_CONSTRAINT' AND parent_object_id = ? AND [c].colid = ?";
 
-            $constraints = $tableDriver->query($query, array(
+            $constraints = $tableDriver->query($query, [
                 $schema['object_id'],
                 $schema['column_id']
-            ));
+            ]);
 
             foreach ($constraints as $checkConstraint)
             {
@@ -314,7 +314,7 @@ class ColumnSchema extends AbstractColumnSchema
     {
         if ($enum || $this->abstractType() != 'enum')
         {
-            $statement = array($this->getName(true), $this->type);
+            $statement = [$this->getName(true), $this->type];
 
             if ($this->precision)
             {
@@ -345,7 +345,7 @@ class ColumnSchema extends AbstractColumnSchema
         }
 
         //We have add constraint for enum type
-        $enumValues = array();
+        $enumValues = [];
         foreach ($this->enumValues as $value)
         {
             $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);
@@ -388,23 +388,23 @@ class ColumnSchema extends AbstractColumnSchema
      */
     public function alterOperations(AbstractColumnSchema $original)
     {
-        $operations = array();
+        $operations = [];
 
-        $typeDefinition = array(
+        $typeDefinition = [
             $this->type,
             $this->size,
             $this->precision,
             $this->scale,
             $this->nullable
-        );
+        ];
 
-        $originalType = array(
+        $originalType = [
             $original->type,
             $original->size,
             $original->precision,
             $original->scale,
             $original->nullable
-        );
+        ];
 
         if ($typeDefinition != $originalType)
         {
@@ -449,18 +449,18 @@ class ColumnSchema extends AbstractColumnSchema
 
             $operations[] = interpolate(
                 "ADD CONSTRAINT {constraint} DEFAULT {default} FOR {column}",
-                array(
+                [
                     'constraint' => $this->table->getDriver()->identifier($this->defaultConstraint),
                     'column'     => $this->getName(true),
                     'default'    => $this->prepareDefault()
-                )
+                ]
             );
         }
 
         //Constraint should be already removed it this moment (see doColumnChange in TableSchema)
         if ($this->abstractType() == 'enum')
         {
-            $enumValues = array();
+            $enumValues = [];
             foreach ($this->enumValues as $value)
             {
                 $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);

@@ -64,7 +64,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * @var array|MiddlewareInterface[]|callable[]
      */
-    protected $middlewares = array();
+    protected $middlewares = [];
 
     /**
      * Endpoints is a set of middleware or callback used to handle some application parts separately
@@ -81,7 +81,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * @var array|MiddlewareInterface[]
      */
-    protected $endpoints = array();
+    protected $endpoints = [];
 
     /**
      * New HttpDispatcher instance.
@@ -171,11 +171,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         return $this->container->get(
             $router,
-            array(
+            [
                 'container'    => $this->container,
                 'routes'       => $this->routes,
                 'primaryRoute' => $this->config['router']['primaryRoute']
-            )
+            ]
         );
     }
 
@@ -189,11 +189,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
     {
         if (empty($this->request))
         {
-            $this->request = Request::castRequest(array(
+            $this->request = Request::castRequest([
                 'basePath'     => $this->config['basePath'],
                 'activePath'   => $this->config['basePath'],
                 'exposeErrors' => $this->config['exposeErrors']
-            ));
+            ]);
         }
 
         return $this->request;
@@ -354,14 +354,14 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
             self::logger()->warning(
                 "{scheme}://{host}{path} caused the error {code} ({message}) by client {remote}.",
-                array(
+                [
                     'scheme'  => $uri->getScheme(),
                     'host'    => $uri->getHost(),
                     'path'    => $uri->getPath(),
                     'code'    => $exception->getCode(),
                     'message' => $exception->getMessage() ?: '-not specified-',
                     'remote'  => InputManager::getInstance($this->container)->getRemoteAddress()
-                )
+                ]
             );
 
             $this->dispatch($this->errorResponse($exception->getCode()));
@@ -378,10 +378,10 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         if ($this->request->getHeaderLine('Accept') == 'application/json')
         {
-            $content = array('status' => 500) + $snapshot->packException();
-            $this->dispatch(new Response(json_encode($content), 500, array(
+            $content = ['status' => 500] + $snapshot->packException();
+            $this->dispatch(new Response(json_encode($content), 500, [
                 'Content-Type' => 'application/json'
-            )));
+            ]));
 
             return;
         }
@@ -404,11 +404,11 @@ class HttpDispatcher extends Component implements DispatcherInterface
 
         if ($this->request->getHeaderLine('Accept') == 'application/json')
         {
-            $content = array('status' => $code);
+            $content = ['status' => $code];
 
-            return new Response(json_encode($content), $code, array(
+            return new Response(json_encode($content), $code, [
                 'Content-Type' => 'application/json'
-            ));
+            ]);
         }
 
         if (isset($this->config['httpErrors'][$code]))
@@ -416,7 +416,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
             //We can render some content
             $content = ViewManager::getInstance($this->container)->render(
                 $this->config['httpErrors'][$code],
-                array('request' => $this->request)
+                ['request' => $this->request]
             );
         }
 

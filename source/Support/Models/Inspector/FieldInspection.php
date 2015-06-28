@@ -67,11 +67,11 @@ class FieldInspection extends Component
      *
      * @var array
      */
-    protected $messages = array(
+    protected $messages = [
         'blacklisted'   => 'Field is blacklisted but visible in publicFields().',
         'unsafe'        => 'Field is fillable but no validations or filters provided.',
         'noValidations' => 'Field is fillable but no validations provided (has filters).',
-    );
+    ];
 
     /**
      * New field inspection.
@@ -211,21 +211,21 @@ class FieldInspection extends Component
      */
     public function getWarnings()
     {
-        $errors = array();
+        $errors = [];
         if ($this->isBlacklisted())
         {
-            $errors[] = array(LogLevel::WARNING, $this->messages['blacklisted']);
+            $errors[] = [LogLevel::WARNING, $this->messages['blacklisted']];
         }
 
         if ($this->isFillable())
         {
             if (!$this->isFiltered() && !$this->isValidated())
             {
-                $errors[] = array(LogLevel::CRITICAL, $this->messages['unsafe']);
+                $errors[] = [LogLevel::CRITICAL, $this->messages['unsafe']];
             }
             elseif (!$this->isValidated())
             {
-                $errors[] = array(LogLevel::WARNING, $this->messages['noValidations']);
+                $errors[] = [LogLevel::WARNING, $this->messages['noValidations']];
             }
         }
 

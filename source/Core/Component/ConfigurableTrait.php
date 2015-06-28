@@ -15,7 +15,7 @@ trait ConfigurableTrait
      *
      * @var array
      */
-    protected $config = array();
+    protected $config = [];
 
     /**
      * Current component configuration.

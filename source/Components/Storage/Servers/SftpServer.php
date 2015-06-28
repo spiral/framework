@@ -30,9 +30,9 @@ class SftpServer extends StorageServer
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'host'       => '',
-        'methods'    => array(),
+        'methods'    => [],
         'port'       => 22,
         'home'       => '/',
 
@@ -47,7 +47,7 @@ class SftpServer extends StorageServer
         'publicKey'  => '',
         'privateKey' => '',
         'secret'     => null
-    );
+    ];
 
     /**
      * SFTP connection resource.

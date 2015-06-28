@@ -26,7 +26,7 @@ abstract class StorageServer implements StorageServerInterface
      *
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * File component.

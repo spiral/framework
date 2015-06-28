@@ -12,8 +12,8 @@ $dumper = Dumper::getInstance();
 /**
  * Code highlighting styles.
  */
-$tokenizer->setHighlightingStyles(array(
-    'color: #C26230; font-weight: bold;' => array(
+$tokenizer->setHighlightingStyles([
+    'color: #C26230; font-weight: bold;' => [
         T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED, T_CLASS,
         T_NEW, T_FINAL, T_ABSTRACT, T_IMPLEMENTS, T_CONST,
         T_ECHO, T_CASE, T_FUNCTION, T_GOTO, T_INCLUDE,
@@ -22,29 +22,29 @@ $tokenizer->setHighlightingStyles(array(
         T_IF, T_ELSE, T_ELSEIF, T_TRY, T_CATCH, T_CLONE,
         T_WHILE, T_FOR, T_DO, T_UNSET, T_FOREACH, T_RETURN,
         T_EXIT, T_EXTENDS
-    ),
-    'color: black; font: weight: bold;'  => array(
+    ],
+    'color: black; font: weight: bold;'  => [
         T_OPEN_TAG, T_CLOSE_TAG, T_OPEN_TAG_WITH_ECHO
-    ),
-    'color: #BC9458;'                    => array(
+    ],
+    'color: #BC9458;'                    => [
         T_COMMENT, T_DOC_COMMENT
-    ),
-    'color: #A5C261;'                    => array(
+    ],
+    'color: #A5C261;'                    => [
         T_CONSTANT_ENCAPSED_STRING, T_ENCAPSED_AND_WHITESPACE, T_DNUMBER, T_LNUMBER
-    ),
-    'color: #D0D0FF;'                    => array(
+    ],
+    'color: #D0D0FF;'                    => [
         T_VARIABLE
-    )
-));
+    ]
+]);
 
 /**
  * Variable dumping styles.
  */
-$dumper->setStyles(array(
+$dumper->setStyles([
     'maxLevel'  => 10,
     'container' => 'background-color: #232323;',
     'indent'    => '&middot;    ',
-    'styles'    => array(
+    'styles'    => [
         'common'           => '#E6E1DC',
         'name'             => '#E6E1DC',
         'indent'           => 'gray',
@@ -64,8 +64,8 @@ $dumper->setStyles(array(
         'access-public'    => '#8dc17d',
         'access-private'   => '#c18c7d',
         'access-protected' => '#7d95c1'
-    )
-));
+    ]
+]);
 
 ?>
 <!DOCTYPE html>
@@ -365,7 +365,7 @@ $dumper->setStyles(array(
                                 . '</span>' . $trace['type'] . $function;
                         }
 
-                        $arguments = array();
+                        $arguments = [];
 
                         if (isset($trace['args']))
                         {
@@ -427,13 +427,13 @@ $dumper->setStyles(array(
 
     <div class="environment">
         <?php
-        $variables = array(
+        $variables = [
             'GET'     => '_GET',
             'POST'    => '_POST',
             'COOKIES' => '_COOKIE',
             'SESSION' => '_SESSION',
             'SERVER'  => '_SERVER',
-        );
+        ];
 
         foreach ($variables as $name => $variable)
         {

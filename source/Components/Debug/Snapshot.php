@@ -79,7 +79,7 @@ class Snapshot extends Component
         FileManager $fileManager,
         ViewManager $viewManager,
         $view = '',
-        array $config = array()
+        array $config = []
     )
     {
         $this->exception = $exception;
@@ -110,7 +110,7 @@ class Snapshot extends Component
      * @param string $shortName Exception short name.
      * @return string
      */
-    protected function getFilename(array $config = array(), $shortName)
+    protected function getFilename(array $config = [], $shortName)
     {
         $name = date($config['timeFormat'], time()) . '-' . $shortName . '.html';
 
@@ -213,9 +213,9 @@ class Snapshot extends Component
             return $this->snapshot;
         }
 
-        return $this->snapshot = $this->viewManager->render($this->view, array(
+        return $this->snapshot = $this->viewManager->render($this->view, [
             'exception' => $this
-        ));
+        ]);
     }
 
     /**
@@ -225,14 +225,14 @@ class Snapshot extends Component
      */
     public function packException()
     {
-        return array(
+        return [
             'error'    => $this->getMessage(),
-            'location' => array(
+            'location' => [
                 'file' => $this->getFile(),
                 'line' => $this->getLine()
-            ),
+            ],
             'trace'    => $this->getTrace()
-        );
+        ];
     }
 
     /**

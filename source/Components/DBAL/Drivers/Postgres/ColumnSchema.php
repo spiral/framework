@@ -26,10 +26,10 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $mapping = array(
+    protected $mapping = [
         //Primary sequences
-        'primary'     => array('type' => 'serial', 'autoIncrement' => true),
-        'bigPrimary'  => array('type' => 'bigserial', 'autoIncrement' => true),
+        'primary'     => ['type' => 'serial', 'autoIncrement' => true],
+        'bigPrimary'  => ['type' => 'bigserial', 'autoIncrement' => true],
 
         //Enum type (mapped via method)
         'enum'        => 'enum',
@@ -71,7 +71,7 @@ class ColumnSchema extends AbstractColumnSchema
 
         //Additional types
         'json'        => 'json'
-    );
+    ];
 
     /**
      * Driver specific reverse mapping, this mapping should link database type to one of standard
@@ -81,25 +81,25 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $reverseMapping = array(
-        'primary'     => array('serial'),
-        'bigPrimary'  => array('bigserial'),
-        'enum'        => array('enum'),
-        'boolean'     => array('boolean'),
-        'integer'     => array('int', 'integer', 'int4'),
-        'tinyInteger' => array('smallint'),
-        'bigInteger'  => array('bigint', 'int8'),
-        'string'      => array('character varying', 'character'),
-        'text'        => array('text'),
-        'double'      => array('double precision'),
-        'float'       => array('real', 'money'),
-        'decimal'     => array('numeric'),
-        'date'        => array('date'),
-        'time'        => array('time', 'time with time zone', 'time without time zone'),
-        'timestamp'   => array('timestamp', 'timestamp with time zone', 'timestamp without time zone'),
-        'binary'      => array('bytea'),
-        'json'        => array('json')
-    );
+    protected $reverseMapping = [
+        'primary'     => ['serial'],
+        'bigPrimary'  => ['bigserial'],
+        'enum'        => ['enum'],
+        'boolean'     => ['boolean'],
+        'integer'     => ['int', 'integer', 'int4'],
+        'tinyInteger' => ['smallint'],
+        'bigInteger'  => ['bigint', 'int8'],
+        'string'      => ['character varying', 'character'],
+        'text'        => ['text'],
+        'double'      => ['double precision'],
+        'float'       => ['real', 'money'],
+        'decimal'     => ['numeric'],
+        'date'        => ['date'],
+        'time'        => ['time', 'time with time zone', 'time without time zone'],
+        'timestamp'   => ['timestamp', 'timestamp with time zone', 'timestamp without time zone'],
+        'binary'      => ['bytea'],
+        'json'        => ['json']
+    ];
 
     /**
      * Field is auto incremental.
@@ -129,7 +129,7 @@ class ColumnSchema extends AbstractColumnSchema
         $this->nullable = $schema['is_nullable'] == 'YES';
 
         if (
-            in_array($this->type, array('int', 'bigint', 'integer'))
+            in_array($this->type, ['int', 'bigint', 'integer'])
             && preg_match("/nextval(.*)/", $this->defaultValue)
         )
         {
@@ -193,7 +193,7 @@ class ColumnSchema extends AbstractColumnSchema
                       WHERE conrelid = ? AND contype = 'c' AND consrc LIKE ?";
 
             $constraints = $this->table->getDriver()
-                ->query($query, array($schema['tableOID'], '(' . $this->name . '%'));
+                ->query($query, [$schema['tableOID'], '(' . $this->name . '%']);
 
             foreach ($constraints as $constraint)
             {
@@ -371,7 +371,7 @@ class ColumnSchema extends AbstractColumnSchema
         }
 
         //We have add constraint for enum type
-        $enumValues = array();
+        $enumValues = [];
         foreach ($this->enumValues as $value)
         {
             $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);
@@ -407,10 +407,10 @@ class ColumnSchema extends AbstractColumnSchema
      */
     public function alterOperations(AbstractColumnSchema $original)
     {
-        $operations = array();
+        $operations = [];
 
-        $typeDefinition = array($this->type, $this->size, $this->precision, $this->scale);
-        $originalType = array($original->type, $original->size, $original->precision, $original->scale);
+        $typeDefinition = [$this->type, $this->size, $this->precision, $this->scale];
+        $originalType = [$original->type, $original->size, $original->precision, $original->scale];
 
         if ($typeDefinition != $originalType)
         {
@@ -469,7 +469,7 @@ class ColumnSchema extends AbstractColumnSchema
 
         if ($this->abstractType() == 'enum')
         {
-            $enumValues = array();
+            $enumValues = [];
             foreach ($this->enumValues as $value)
             {
                 $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);

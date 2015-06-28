@@ -35,7 +35,7 @@ class QueryCompiler extends Component
      *
      * @var array
      */
-    protected $aliases = array();
+    protected $aliases = [];
 
     /**
      * QueryCompiler is low level SQL compiler which used by different query builders to generate
@@ -123,7 +123,7 @@ class QueryCompiler extends Component
         }
 
         //No aliases can be collected there
-        $identifier = array_map(array($this->driver, 'identifier'), $identifier);
+        $identifier = array_map([$this->driver, 'identifier'], $identifier);
 
         return join('.', $identifier);
     }
@@ -181,14 +181,14 @@ class QueryCompiler extends Component
         array $from,
         $distinct,
         array $columns,
-        array $joins = array(),
-        array $where = array(),
-        array $having = array(),
-        array $groupBy = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $having = [],
+        array $groupBy = [],
+        array $orderBy = [],
         $limit = 0,
         $offset = 0,
-        array $unions = array()
+        array $unions = []
     )
     {
         //This statement parts should be processed first to define set of table and column aliases
@@ -246,9 +246,9 @@ class QueryCompiler extends Component
      */
     public function delete(
         $table,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
@@ -283,9 +283,9 @@ class QueryCompiler extends Component
     public function update(
         $table,
         array $values,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
@@ -362,7 +362,7 @@ class QueryCompiler extends Component
      */
     public function columns(array $columns)
     {
-        return wordwrap(join(', ', array_map(array($this, 'quote'), $columns)), 180);
+        return wordwrap(join(', ', array_map([$this, 'quote'], $columns)), 180);
     }
 
     /**

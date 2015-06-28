@@ -26,16 +26,16 @@ class MemcacheStore extends CacheStore
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'prefix'        => 'spiral',
-        'options'       => array(),
-        'defaultServer' => array(
+        'options'       => [],
+        'defaultServer' => [
             'host'       => 'localhost',
             'port'       => 11211,
             'persistent' => true,
             'weight'     => 1
-        )
-    );
+        ]
+    ];
 
     /**
      * Maximum expiration time you can set. http://www.php.net/manual/ru/memcache.set.php
@@ -68,7 +68,7 @@ class MemcacheStore extends CacheStore
      *
      * @var array
      */
-    protected $servers = array();
+    protected $servers = [];
 
     /**
      * Cache prefix.

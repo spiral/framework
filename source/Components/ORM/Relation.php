@@ -29,7 +29,7 @@ abstract class Relation
      *
      * @var array
      */
-    protected $definition = array();
+    protected $definition = [];
 
     /**
      * Target model to be loaded.
@@ -38,7 +38,7 @@ abstract class Relation
      */
     protected $target = '';
 
-    protected $data = array();
+    protected $data = [];
 
     public function __construct(ORM $orm, ActiveRecord $parent = null, array $definition, $data = null)
     {
@@ -68,11 +68,11 @@ abstract class Relation
 
     public function getSelector()
     {
-        $selector = Selector::make(array(
+        $selector = Selector::make([
             'schema'   => $this->orm->getSchema($this->getTarget()),
             'database' => $this->parent->dbalDatabase(),
             'orm'      => $this->orm
-        ));
+        ]);
 
         return $selector;
     }

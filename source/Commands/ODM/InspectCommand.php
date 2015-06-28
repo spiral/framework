@@ -39,8 +39,8 @@ class InspectCommand extends BaseInspectCommand
             $schemaBuilder = $this->odm->schemaBuilder();
         }
 
-        return Inspector::make(array(
+        return Inspector::make([
             'schemas' => $schemaBuilder->getDocumentSchemas()
-        ));
+        ]);
     }
 }

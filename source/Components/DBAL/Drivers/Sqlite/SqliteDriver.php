@@ -60,7 +60,7 @@ class SqliteDriver extends Driver
      *
      * @param array $config
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         parent::__construct($config);
 
@@ -76,7 +76,7 @@ class SqliteDriver extends Driver
      */
     public function hasTable($name)
     {
-        return (bool)$this->query(self::TABLE_EXISTS_QUERY, array($name))->fetchColumn();
+        return (bool)$this->query(self::TABLE_EXISTS_QUERY, [$name])->fetchColumn();
     }
 
     /**
@@ -86,7 +86,7 @@ class SqliteDriver extends Driver
      */
     public function tableNames()
     {
-        $tables = array();
+        $tables = [];
         foreach ($this->query(static::FETCH_TABLES_QUERY) as $table)
         {
             if ($table['name'] != 'sqlite_sequence')

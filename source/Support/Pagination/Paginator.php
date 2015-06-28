@@ -25,7 +25,7 @@ class Paginator extends Component
      *
      * @var array
      */
-    protected $queryData = array();
+    protected $queryData = [];
 
     /**
      * Name of parameter in request query is used to store the current page number. By default, the
@@ -422,9 +422,9 @@ class Paginator extends Component
             return $path . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
         }
 
-        return $path . '?' . http_build_query($this->getQuery() + array(
+        return $path . '?' . http_build_query($this->getQuery() + [
                 $this->pageParameter => $number
-            )) . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
+            ]) . ($this->uri->getFragment() ? '#' . $this->uri->getFragment() : '');
     }
 
     /**
@@ -444,7 +444,7 @@ class Paginator extends Component
         $firstPage = max($this->getCurrentPage() - $interval, 1);
         $lastPage = min($this->getCurrentPage() + $interval, $this->countPages);
 
-        $result = array();
+        $result = [];
 
         //First page was not included
         if ($firstPage != 1)

@@ -36,7 +36,7 @@ class Loader extends Component
      *
      * @var array
      */
-    protected $classes = array();
+    protected $classes = [];
 
     /**
      * Name of loadmap file to use.
@@ -52,7 +52,7 @@ class Loader extends Component
      *
      * @var array
      */
-    protected $loadmap = array();
+    protected $loadmap = [];
 
     /**
      * Loader state.
@@ -86,10 +86,10 @@ class Loader extends Component
         {
             if ((!$this->loadmap = $this->runtime->loadData($this->name)) || !is_array($this->loadmap))
             {
-                $this->loadmap = array();
+                $this->loadmap = [];
             }
 
-            spl_autoload_register(array($this, 'loadClass'), true, true);
+            spl_autoload_register([$this, 'loadClass'], true, true);
             $this->enabled = true;
         }
 
@@ -103,7 +103,7 @@ class Loader extends Component
      */
     public function disable()
     {
-        $this->enabled && spl_autoload_unregister(array($this, 'loadClass'));
+        $this->enabled && spl_autoload_unregister([$this, 'loadClass']);
         $this->enabled = false;
 
         return $this;
@@ -131,7 +131,7 @@ class Loader extends Component
         {
             if ((!$this->loadmap = $this->runtime->loadData($name)) || !is_array($this->loadmap))
             {
-                $this->loadmap = array();
+                $this->loadmap = [];
             }
         }
 
@@ -231,7 +231,7 @@ class Loader extends Component
      *
      * @param array $loadmap
      */
-    public function setLoadmap($loadmap = array())
+    public function setLoadmap($loadmap = [])
     {
         $this->loadmap = $loadmap;
 

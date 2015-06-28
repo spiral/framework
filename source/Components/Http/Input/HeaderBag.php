@@ -74,7 +74,7 @@ class HeaderBag extends InputBag
      */
     public function fetch(array $keys, $fill = false, $filler = null, $implode = ',')
     {
-        $keys = array_map(array($this, 'normalize'), $keys);
+        $keys = array_map([$this, 'normalize'], $keys);
 
         $values = parent::fetch($keys, $fill, $filler);
 

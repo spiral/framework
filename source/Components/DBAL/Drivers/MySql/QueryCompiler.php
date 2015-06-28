@@ -25,13 +25,13 @@ class QueryCompiler extends BaseQueryCompiler
      */
     public function delete(
         $table,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
-        $statement = parent::delete($table, $joins, $where, array(), 0) . ' ';
+        $statement = parent::delete($table, $joins, $where, [], 0) . ' ';
 
         //MySQL support delete limit, offset and order in update statements.
         if (!empty($orderBy))
@@ -62,13 +62,13 @@ class QueryCompiler extends BaseQueryCompiler
     public function update(
         $table,
         array $values,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
-        $statement = parent::update($table, $values, $joins, $where, array(), 0) . ' ';
+        $statement = parent::update($table, $values, $joins, $where, [], 0) . ' ';
 
         //MySQL support update limit, offset and order in update statements.
         if (!empty($orderBy))

@@ -35,9 +35,9 @@ class DatabasesCommand extends Command
      *
      * @var array
      */
-    protected $arguments = array(
+    protected $arguments = [
         ['db', InputArgument::OPTIONAL, 'Database name.']
-    );
+    ];
 
     /**
      * Get list of databases, tables and connection status.
@@ -46,7 +46,7 @@ class DatabasesCommand extends Command
     {
         if ($this->argument('db'))
         {
-            $databases = array($this->argument('db'));
+            $databases = [$this->argument('db')];
         }
         else
         {
@@ -60,7 +60,7 @@ class DatabasesCommand extends Command
             return;
         }
 
-        $grid = $this->table(array(
+        $grid = $this->table([
             'Name (ID):',
             'Database:',
             'Driver:',
@@ -68,19 +68,19 @@ class DatabasesCommand extends Command
             'Status:',
             'Table Name:',
             'Count Records:'
-        ));
+        ]);
 
         foreach ($databases as $database)
         {
             $database = $this->dbal->db($database);
             $driver = $database->getDriver();
 
-            $header = array(
+            $header = [
                 $database->getName(),
                 $database->getDriver()->getDatabaseName(),
                 $driver::DRIVER_NAME,
                 $database->getPrefix() ?: "<comment>---</comment>"
-            );
+            ];
 
             try
             {
@@ -88,11 +88,11 @@ class DatabasesCommand extends Command
             }
             catch (\Exception $exception)
             {
-                $grid->addRow(array_merge($header, array(
+                $grid->addRow(array_merge($header, [
                     "<error>{$exception->getMessage()}</error>",
                     "<comment>---</comment>",
                     "<comment>---</comment>"
-                )));
+                ]));
 
                 if ($database->getName() != end($databases))
                 {
@@ -106,16 +106,16 @@ class DatabasesCommand extends Command
             {
                 $grid->addRow(array_merge(
                     $header,
-                    array(
+                    [
                         $table->getName(),
                         number_format($table->count())
-                    )
+                    ]
                 ));
 
-                $header = array("", "", "", "", "");
+                $header = ["", "", "", "", ""];
             }
 
-            $header[1] && $grid->addRow(array_merge($header, array("no tables", "no records")));
+            $header[1] && $grid->addRow(array_merge($header, ["no tables", "no records"]));
             if ($database->getName() != end($databases))
             {
                 $grid->addRow(new TableSeparator());

@@ -65,7 +65,7 @@ class ServerBag extends InputBag
      */
     public function fetch(array $keys, $fill = false, $filler = null)
     {
-        $keys = array_map(array($this, 'normalize'), $keys);
+        $keys = array_map([$this, 'normalize'], $keys);
 
         return parent::fetch($keys, $fill, $filler);
     }

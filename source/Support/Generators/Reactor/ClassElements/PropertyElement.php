@@ -169,9 +169,9 @@ class PropertyElement extends BaseElement
      */
     public function createDeclaration($indentLevel = 0, $position = 0)
     {
-        $result = array(
+        $result = [
             !$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel)
-        );
+        ];
 
         $property = $this->access . ' ' . ($this->static ? 'static ' : '') . '$' . $this->name;
 

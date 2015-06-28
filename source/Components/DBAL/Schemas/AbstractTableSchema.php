@@ -88,7 +88,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @var array
      */
-    protected $primaryKeys = array();
+    protected $primaryKeys = [];
 
     /**
      * Column names fetched from database table and used to build primary index. Primary index can
@@ -97,7 +97,7 @@ abstract class AbstractTableSchema extends Component
      * @invisible
      * @var array
      */
-    protected $dbPrimaryKeys = array();
+    protected $dbPrimaryKeys = [];
 
     /**
      * ColumnSchema(s) describing table columns, represents desired table structure to be applied
@@ -105,7 +105,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @var AbstractColumnSchema[]
      */
-    protected $columns = array();
+    protected $columns = [];
 
     /**
      * ColumnSchema(s) fetched from database (if table exists), this schemas used as column references
@@ -114,7 +114,7 @@ abstract class AbstractTableSchema extends Component
      * @invisible
      * @var AbstractColumnSchema[]
      */
-    protected $dbColumns = array();
+    protected $dbColumns = [];
 
     /**
      * IndexSchema(s) used to described desired table indexes, this schemas will be synced with
@@ -122,7 +122,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @var AbstractIndexSchema[]
      */
-    protected $indexes = array();
+    protected $indexes = [];
 
     /**
      * IndexSchema(s) fetched from database, this indexes used as references to build table diff.
@@ -130,7 +130,7 @@ abstract class AbstractTableSchema extends Component
      * @invisible
      * @var AbstractIndexSchema[]
      */
-    protected $dbIndexes = array();
+    protected $dbIndexes = [];
 
     /**
      * ReferenceSchema(s) used to define table foreign key references, this schemas will be applied
@@ -139,7 +139,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @var AbstractReferenceSchema[]
      */
-    protected $references = array();
+    protected $references = [];
 
     /**
      * ReferenceSchema(s) fetched from database and used to build table diff.
@@ -147,7 +147,7 @@ abstract class AbstractTableSchema extends Component
      * @invisible
      * @var AbstractReferenceSchema[]
      */
-    protected $dbReferences = array();
+    protected $dbReferences = [];
 
     /**
      * Table schema instance used both for reading and writing table schema in database. TableSchema
@@ -378,7 +378,7 @@ abstract class AbstractTableSchema extends Component
      */
     public function __call($type, array $arguments)
     {
-        return call_user_func_array(array($this->column($arguments[0]), $type), array_slice($arguments, 1));
+        return call_user_func_array([$this->column($arguments[0]), $type], array_slice($arguments, 1));
     }
 
     /**
@@ -412,7 +412,7 @@ abstract class AbstractTableSchema extends Component
      * @param mixed|array $columns Column #1 or columns list array.
      * @return bool
      */
-    public function hasIndex(array $columns = array())
+    public function hasIndex(array $columns = [])
     {
         $columns = is_array($columns) ? $columns : func_get_args();
 
@@ -431,7 +431,7 @@ abstract class AbstractTableSchema extends Component
      * @param mixed|array $columns Column #1 or columns list array.
      * @return bool
      */
-    public function hasUnique(array $columns = array())
+    public function hasUnique(array $columns = [])
     {
         $columns = is_array($columns) ? $columns : func_get_args();
 
@@ -712,7 +712,7 @@ abstract class AbstractTableSchema extends Component
      */
     public function alteredColumns()
     {
-        $altered = array();
+        $altered = [];
         foreach ($this->columns as $column => $schema)
         {
             if (!isset($this->dbColumns[$column]))
@@ -747,7 +747,7 @@ abstract class AbstractTableSchema extends Component
      */
     public function alteredIndexes()
     {
-        $altered = array();
+        $altered = [];
         foreach ($this->indexes as $index => $schema)
         {
             if (!isset($this->dbIndexes[$index]))
@@ -782,7 +782,7 @@ abstract class AbstractTableSchema extends Component
      */
     public function alteredReferences()
     {
-        $altered = array();
+        $altered = [];
         foreach ($this->references as $constraint => $schema)
         {
             if (!isset($this->dbReferences[$constraint]))
@@ -819,7 +819,7 @@ abstract class AbstractTableSchema extends Component
      */
     public function getDependencies()
     {
-        $tables = array();
+        $tables = [];
 
         foreach ($this->getForeigns() as $foreign)
         {
@@ -839,10 +839,10 @@ abstract class AbstractTableSchema extends Component
     {
         if ($this->isExists())
         {
-            $this->driver->statement(interpolate(static::RENAME_STATEMENT, array(
+            $this->driver->statement(interpolate(static::RENAME_STATEMENT, [
                 'table' => $this->getName(true),
                 'name'  => $this->driver->identifier($this->tablePrefix . $name)
-            )));
+            ]));
         }
 
         $this->name = $this->tablePrefix . $name;
@@ -856,19 +856,19 @@ abstract class AbstractTableSchema extends Component
     {
         if (!$this->isExists())
         {
-            $this->columns = $this->dbColumns = $this->primaryKeys = $this->dbPrimaryKeys = array();
-            $this->indexes = $this->dbIndexes = $this->references = $this->dbReferences = array();
+            $this->columns = $this->dbColumns = $this->primaryKeys = $this->dbPrimaryKeys = [];
+            $this->indexes = $this->dbIndexes = $this->references = $this->dbReferences = [];
 
             return;
         }
 
-        $this->driver->statement(interpolate("DROP TABLE {table}", array(
+        $this->driver->statement(interpolate("DROP TABLE {table}", [
             'table' => $this->getName(true)
-        )));
+        ]));
 
         $this->exists = false;
-        $this->columns = $this->dbColumns = $this->primaryKeys = $this->dbPrimaryKeys = array();
-        $this->indexes = $this->dbIndexes = $this->references = $this->dbReferences = array();
+        $this->columns = $this->dbColumns = $this->primaryKeys = $this->dbPrimaryKeys = [];
+        $this->indexes = $this->dbIndexes = $this->references = $this->dbReferences = [];
     }
 
     /**
@@ -895,21 +895,21 @@ abstract class AbstractTableSchema extends Component
         $references = $this->references;
 
         //Required due renames
-        $this->columns = $this->dbColumns = array();
+        $this->columns = $this->dbColumns = [];
         foreach ($columns as $column)
         {
             $this->columns[$column->getName()] = $column;
             $this->dbColumns[$column->getName()] = clone $column;
         }
 
-        $this->indexes = $this->dbIndexes = array();
+        $this->indexes = $this->dbIndexes = [];
         foreach ($indexes as $index)
         {
             $this->indexes[$index->getName()] = $index;
             $this->dbIndexes[$index->getName()] = clone $index;
         }
 
-        $this->references = $this->dbReferences = array();
+        $this->references = $this->dbReferences = [];
         foreach ($references as $reference)
         {
             $this->references[$reference->getName()] = $reference;
@@ -927,10 +927,10 @@ abstract class AbstractTableSchema extends Component
      */
     protected function createSchema($execute = true)
     {
-        $statement = array();
+        $statement = [];
         $statement[] = "CREATE TABLE {$this->getName(true)} (";
 
-        $inner = array();
+        $inner = [];
 
         //Columns
         foreach ($this->columns as $column)
@@ -940,7 +940,7 @@ abstract class AbstractTableSchema extends Component
 
         //Primary key
         $inner[] = 'PRIMARY KEY (' . join(', ', array_map(
-                array($this->driver, 'identifier'),
+                [$this->driver, 'identifier'],
                 $this->primaryKeys
             )) . ')';
 
@@ -1012,10 +1012,10 @@ abstract class AbstractTableSchema extends Component
                 {
                     self::logger()->info(
                         "Dropping column [{statement}] from table {table}.",
-                        array(
+                        [
                             'statement' => $dbColumn->sqlStatement(),
                             'table'     => $this->getName(true)
-                        )
+                        ]
                     );
 
                     $this->doColumnDrop($dbColumn);
@@ -1026,10 +1026,10 @@ abstract class AbstractTableSchema extends Component
                 {
                     self::logger()->info(
                         "Adding column [{statement}] into table {table}.",
-                        array(
+                        [
                             'statement' => $schema->sqlStatement(),
                             'table'     => $this->getName(true)
-                        )
+                        ]
                     );
 
                     $this->doColumnAdd($schema);
@@ -1039,11 +1039,11 @@ abstract class AbstractTableSchema extends Component
                 //Altering
                 self::logger()->info(
                     "Altering column [{statement}] to [{new}] in table {table}.",
-                    array(
+                    [
                         'statement' => $dbColumn->sqlStatement(),
                         'new'       => $schema->sqlStatement(),
                         'table'     => $this->getName(true)
-                    )
+                    ]
                 );
 
                 $this->doColumnChange($schema, $dbColumn);
@@ -1057,10 +1057,10 @@ abstract class AbstractTableSchema extends Component
                 {
                     self::logger()->info(
                         "Dropping index [{statement}] from table {table}.",
-                        array(
+                        [
                             'statement' => $dbIndex->sqlStatement(true),
                             'table'     => $this->getName(true)
-                        )
+                        ]
                     );
 
                     $this->doIndexDrop($dbIndex);
@@ -1071,10 +1071,10 @@ abstract class AbstractTableSchema extends Component
                 {
                     self::logger()->info(
                         "Adding index [{statement}] into table {table}.",
-                        array(
+                        [
                             'statement' => $schema->sqlStatement(false),
                             'table'     => $this->getName(true)
-                        )
+                        ]
                     );
 
                     $this->doIndexAdd($schema);
@@ -1084,11 +1084,11 @@ abstract class AbstractTableSchema extends Component
                 //Altering
                 self::logger()->info(
                     "Altering index [{statement}] to [{new}] in table {table}.",
-                    array(
+                    [
                         'statement' => $dbIndex->sqlStatement(false),
                         'new'       => $schema->sqlStatement(false),
                         'table'     => $this->getName(true)
-                    )
+                    ]
                 );
 
                 $this->doIndexChange($schema, $dbIndex);
@@ -1102,10 +1102,10 @@ abstract class AbstractTableSchema extends Component
                 {
                     self::logger()->info(
                         "Dropping foreign key [{statement}] in table {table}.",
-                        array(
+                        [
                             'statement' => $dbForeign->sqlStatement(),
                             'table'     => $this->getName(true)
-                        )
+                        ]
                     );
 
                     $this->doForeignDrop($this->dbReferences[$name]);
@@ -1116,10 +1116,10 @@ abstract class AbstractTableSchema extends Component
                 {
                     self::logger()->info(
                         "Adding foreign key [{statement}] into table {table}.",
-                        array(
+                        [
                             'statement' => $schema->sqlStatement(),
                             'table'     => $this->getName(true)
-                        )
+                        ]
                     );
 
                     $this->doForeignAdd($schema);
@@ -1129,11 +1129,11 @@ abstract class AbstractTableSchema extends Component
                 //Altering
                 self::logger()->info(
                     "Altering foreign key [{statement}] to [{new}] in table {table}.",
-                    array(
+                    [
                         'statement' => $dbForeign->sqlStatement(),
                         'new'       => $schema->sqlStatement(),
                         'table'     => $this->getName(true)
-                    )
+                    ]
                 );
 
                 $this->doForeignChange($schema, $dbForeign);

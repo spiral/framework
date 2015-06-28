@@ -30,7 +30,7 @@ use Spiral\Core\Facade;
  * @method static array|ResponseInterface perform(ServerRequestInterface $request)
  * @method static void dispatch(\Psr\Http\Message\ResponseInterface $response)
  * @method static void handleException(Snapshot $snapshot)
- * @method static HttpDispatcher make($parameters = array(), Container $container = null)
+ * @method static HttpDispatcher make($parameters = [], Container $container = null)
  * @method static HttpDispatcher getInstance(Container $container = null)
  * @method static void setLogger(LoggerInterface $logger)
  * @method static LoggerInterface|Logger logger()
@@ -41,7 +41,7 @@ use Spiral\Core\Facade;
  * @method static array setConfig(array $config)
  * @method static Router getRouter()
  * @method static void addRoute(RouteInterface $route)
- * @method static Route route($pattern, $target = null, array $defaults = array())
+ * @method static Route route($pattern, $target = null, array $defaults = [])
  */
 class Http extends Facade
 {

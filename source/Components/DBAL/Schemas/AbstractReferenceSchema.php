@@ -245,7 +245,7 @@ abstract class AbstractReferenceSchema extends Component
      */
     public function sqlStatement()
     {
-        $statement = array();
+        $statement = [];
 
         $statement[] = 'CONSTRAINT';
         $statement[] = $this->getName(true);

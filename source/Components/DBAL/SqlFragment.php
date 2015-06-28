@@ -59,8 +59,8 @@ class SqlFragment implements SqlFragmentInterface
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'statement' => $this->sqlStatement()
-        );
+        ];
     }
 }

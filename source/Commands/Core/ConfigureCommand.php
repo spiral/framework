@@ -35,9 +35,9 @@ class ConfigureCommand extends Command
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['key', 'k', InputOption::VALUE_NONE, 'Generate new encryption key.']
-    );
+    ];
 
     /**
      * Configuring spiral application.
@@ -70,23 +70,23 @@ class ConfigureCommand extends Command
         }
 
         $this->writeln("\n<info>Updating configuration cache.</info>");
-        $this->console->command('core:touch', array(), $this->output);
+        $this->console->command('core:touch', [], $this->output);
 
         //Installing modules
         $this->writeln("\n<info>Installing all available modules.</info>");
-        $this->console->command('modules:install', array('--all' => true), $this->output);
+        $this->console->command('modules:install', ['--all' => true], $this->output);
 
         //Updating modules
         $this->writeln("\n<info>Updating existed modules.</info>");
-        $this->console->command('modules:update', array(), $this->output);
+        $this->console->command('modules:update', [], $this->output);
 
         //Updating commands cache
         $this->writeln("\n<info>Re-indexing available console commands.</info>");
-        $this->console->command('console:refresh', array(), $this->output);
+        $this->console->command('console:refresh', [], $this->output);
 
         //Indexing i18n usages
         $this->writeln("\n<info>Creating initial i18n bundles cache.</info>");
-        $this->console->command('i18n:index', array(), $this->output);
+        $this->console->command('i18n:index', [], $this->output);
 
         //Initiating view cache
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
@@ -98,12 +98,12 @@ class ConfigureCommand extends Command
             $this->writeln("");
         }
 
-        $this->console->command('view:cache', array(), $this->output);
+        $this->console->command('view:cache', [], $this->output);
 
         if ($this->option('key'))
         {
             $this->writeln("");
-            $this->console->command('core:key', array(), $this->output);
+            $this->console->command('core:key', [], $this->output);
         }
 
         $this->writeln("\n<info>Application configured.</info>");

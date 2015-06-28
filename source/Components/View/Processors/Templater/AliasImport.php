@@ -75,8 +75,8 @@ class AliasImport extends Import
      */
     public function generateAliases(ViewManager $manager, FileManager $file, $separator = '.')
     {
-        return array(
+        return [
             $this->alias => $this->namespace . ':' . $this->view
-        );
+        ];
     }
 }

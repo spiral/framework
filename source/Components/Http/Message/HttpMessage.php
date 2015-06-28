@@ -38,7 +38,7 @@ abstract class HttpMessage extends Component implements MessageInterface
      *
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * Normalized (lowercased) set of header names. Required to correctly preserve header lookup.
@@ -46,7 +46,7 @@ abstract class HttpMessage extends Component implements MessageInterface
      * @invisible
      * @var array
      */
-    protected $normalizedHeaders = array();
+    protected $normalizedHeaders = [];
 
     /**
      * Message body.
@@ -63,8 +63,8 @@ abstract class HttpMessage extends Component implements MessageInterface
      */
     protected function normalizeHeaders(array $headers)
     {
-        $filteredHeaders = array();
-        $normalizedNames = array();
+        $filteredHeaders = [];
+        $normalizedNames = [];
 
         foreach ($headers as $header => $value)
         {
@@ -79,7 +79,7 @@ abstract class HttpMessage extends Component implements MessageInterface
             }
 
             $normalizedNames[strtolower($header)] = $header;
-            $filteredHeaders[$header] = !is_array($value) ? array($value) : $value;
+            $filteredHeaders[$header] = !is_array($value) ? [$value] : $value;
         }
 
         return [$filteredHeaders, $normalizedNames];
@@ -179,12 +179,12 @@ abstract class HttpMessage extends Component implements MessageInterface
     {
         if (!$this->hasHeader($name))
         {
-            return array();
+            return [];
         }
 
         $values = $this->headers[$this->normalizedHeaders[strtolower($name)]];
 
-        return is_array($values) ? $values : array($values);
+        return is_array($values) ? $values : [$values];
     }
 
     /**
@@ -248,7 +248,7 @@ abstract class HttpMessage extends Component implements MessageInterface
 
         if (!is_array($value))
         {
-            $value = array($value);
+            $value = [$value];
         }
 
         $message = clone $this;
@@ -290,7 +290,7 @@ abstract class HttpMessage extends Component implements MessageInterface
 
         if (!is_array($value))
         {
-            $value = array($value);
+            $value = [$value];
         }
 
         if (!isset($this->headers[$name]))

@@ -46,7 +46,7 @@ class Validator extends Component
      *
      * @var array
      */
-    protected $emptyConditions = array(
+    protected $emptyConditions = [
         "notEmpty",
         "required",
         "type::notEmpty",
@@ -54,7 +54,7 @@ class Validator extends Component
         "required::without",
         "required::withAll",
         "required::withoutAll"
-    );
+    ];
 
     /**
      * Default message to apply as error when rule validation failed, has lowest priority and will
@@ -87,7 +87,7 @@ class Validator extends Component
      *
      * @var array
      */
-    protected static $checkers = array(
+    protected static $checkers = [
         "type"     => 'Spiral\Support\Validation\Checkers\TypeChecker',
         "required" => 'Spiral\Support\Validation\Checkers\RequiredChecker',
         "number"   => 'Spiral\Support\Validation\Checkers\NumberChecker',
@@ -96,7 +96,7 @@ class Validator extends Component
         "string"   => 'Spiral\Support\Validation\Checkers\StringChecker',
         "file"     => 'Spiral\Support\Validation\Checkers\FileChecker',
         "image"    => 'Spiral\Support\Validation\Checkers\ImageChecker'
-    );
+    ];
 
     /**
      * Short aliases between validation condition and checker method or external class, or external
@@ -104,7 +104,7 @@ class Validator extends Component
      *
      * @var array
      */
-    protected static $aliases = array(
+    protected static $aliases = [
         "notEmpty"   => "type::notEmpty",
         "required"   => "type::notEmpty",
 
@@ -133,7 +133,7 @@ class Validator extends Component
         "resource"   => "is_resource",
         "scalar"     => "is_scalar",
         "string"     => "is_string"
-    );
+    ];
 
     /**
      * Flag if validation was already applied for provided fields.
@@ -181,14 +181,14 @@ class Validator extends Component
      *
      * @var array
      */
-    protected $validates = array();
+    protected $validates = [];
 
     /**
      * Data to be validated. Nothing else to say.
      *
      * @var array|\ArrayAccess
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * Error messages collected during validating input data, by default one field associated with
@@ -196,7 +196,7 @@ class Validator extends Component
      *
      * @var array
      */
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * If true (set by default), validator will stop checking field rules after first fail. This is
@@ -278,7 +278,7 @@ class Validator extends Component
         $this->validated = false;
 
         $this->data = $data;
-        $this->errors = array();
+        $this->errors = [];
 
         return $this;
     }
@@ -369,7 +369,7 @@ class Validator extends Component
      */
     protected function validate()
     {
-        $this->errors = array();
+        $this->errors = [];
 
         foreach ($this->validates as $field => $rules)
         {
@@ -494,7 +494,7 @@ class Validator extends Component
 
             self::logger()->error(
                 "Condition '{condition}' failed with '{exception}' while checking '{field}' field.",
-                compact('condition', 'field') + array('exception' => $exception->getMessage())
+                compact('condition', 'field') + ['exception' => $exception->getMessage()]
             );
 
             return false;
@@ -541,7 +541,7 @@ class Validator extends Component
      * @param mixed  $condition Condition definition (will be converted to string to interpolate).
      * @param array  $arguments Additional condition arguments.
      */
-    protected function addMessage($field, $message, $condition, array $arguments = array())
+    protected function addMessage($field, $message, $condition, array $arguments = [])
     {
         if (is_array($condition))
         {
@@ -597,7 +597,7 @@ class Validator extends Component
      */
     public function addError($field, $message)
     {
-        $this->addMessage($field, $message, static::FORCED_ERROR, array());
+        $this->addMessage($field, $message, static::FORCED_ERROR, []);
     }
 
     /**

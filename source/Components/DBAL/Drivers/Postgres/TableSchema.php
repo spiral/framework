@@ -41,16 +41,16 @@ class TableSchema extends AbstractTableSchema
     {
         //Required for constraints fetch
         $tableOID = $this->driver
-            ->query("SELECT oid FROM pg_class WHERE relname = ?", array($this->name))
+            ->query("SELECT oid FROM pg_class WHERE relname = ?", [$this->name])
             ->fetchColumn();
 
         //Collecting all candidates
-        $this->sequenceName = array();
+        $this->sequenceName = [];
         $query = "SELECT * FROM information_schema.columns
                   JOIN pg_type ON (pg_type.typname = columns.udt_name)
                   WHERE table_name = ?";
 
-        $columns = $this->driver->query($query, array($this->name))->bind('column_name', $columnName);
+        $columns = $this->driver->query($query, [$this->name])->bind('column_name', $columnName);
 
         foreach ($columns as $column)
         {
@@ -63,7 +63,7 @@ class TableSchema extends AbstractTableSchema
                 $this->sequenceName[$columnName] = $matches[1];
             }
 
-            $this->registerColumn($columnName, $column + array('tableOID' => $tableOID));
+            $this->registerColumn($columnName, $column + ['tableOID' => $tableOID]);
         }
     }
 
@@ -74,14 +74,14 @@ class TableSchema extends AbstractTableSchema
     protected function loadIndexes()
     {
         $query = "SELECT * FROM pg_indexes WHERE schemaname = 'public' AND tablename = ?";
-        foreach ($this->driver->query($query, array($this->name)) as $index)
+        foreach ($this->driver->query($query, [$this->name]) as $index)
         {
             $index = $this->registerIndex($index['indexname'], $index['indexdef']);
 
             $conType = $this->driver
-                ->query("SELECT contype FROM pg_constraint WHERE conname = ?", array(
+                ->query("SELECT contype FROM pg_constraint WHERE conname = ?", [
                     $index->getName()
-                ))
+                ])
                 ->fetchColumn();
 
             if ($conType == 'p')
@@ -127,7 +127,7 @@ class TableSchema extends AbstractTableSchema
                       ON rc.constraint_name = tc.constraint_name
                   WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name=?";
 
-        foreach ($this->driver->query($query, array($this->name)) as $reference)
+        foreach ($this->driver->query($query, [$this->name]) as $reference)
         {
             $this->registerReference($reference['constraint_name'], $reference);
         }
@@ -150,11 +150,11 @@ class TableSchema extends AbstractTableSchema
         {
             $this->driver->statement(
                 interpolate('ALTER TABLE {table} RENAME COLUMN {original} TO {column}',
-                    array(
+                    [
                         'table'    => $this->getName(true),
                         'column'   => $column->getName(true),
                         'original' => $dbColumn->getName(true)
-                    )
+                    ]
                 )
             );
 
@@ -168,10 +168,10 @@ class TableSchema extends AbstractTableSchema
         }
 
         //Postgres columns should be altered using set of operations
-        $query = interpolate('ALTER TABLE {table} {operations}', array(
+        $query = interpolate('ALTER TABLE {table} {operations}', [
             'table'      => $this->getName(true),
             'operations' => trim(join(', ', $operations), ', ')
-        ));
+        ]);
 
         $this->driver->statement($query);
     }

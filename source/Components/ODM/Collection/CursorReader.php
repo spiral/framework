@@ -37,7 +37,7 @@ class CursorReader implements \Iterator
      *
      * @var array
      */
-    protected $schema = array();
+    protected $schema = [];
 
     /**
      * CursorReader is wrapper at top of MongoCursor used to correctly resolve data type of result.
@@ -53,7 +53,7 @@ class CursorReader implements \Iterator
         \MongoCursor $cursor,
         ODM $odm,
         array $schema,
-        array $sort = array(),
+        array $sort = [],
         $limit = null,
         $offset = null
     )
@@ -83,7 +83,7 @@ class CursorReader implements \Iterator
         $class = $this->odm->defineClass($fields, $this->schema[ODM::C_DEFINITION]);
 
         //No IoC here due unpredictable consequences
-        return new $class($fields, null, array(), $this->odm);
+        return new $class($fields, null, [], $this->odm);
     }
 
     /**
@@ -97,7 +97,7 @@ class CursorReader implements \Iterator
     public function fields(array $fields)
     {
         $this->cursor->fields($fields);
-        $this->schema = array();
+        $this->schema = [];
 
         return $this;
     }
@@ -186,7 +186,7 @@ class CursorReader implements \Iterator
      */
     public function __call($method, array $arguments)
     {
-        $result = call_user_func_array(array($this->cursor, $method), $arguments);
+        $result = call_user_func_array([$this->cursor, $method], $arguments);
         if ($result === $this->cursor)
         {
             return $this;

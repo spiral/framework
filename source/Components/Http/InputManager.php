@@ -61,43 +61,43 @@ class InputManager extends Component
      * @invisible
      * @var array
      */
-    protected $bagAssociations = array(
-        'headers'    => array(
+    protected $bagAssociations = [
+        'headers'    => [
             'class'  => 'Spiral\Components\Http\Input\HeaderBag',
             'source' => 'getHeaders'
-        ),
-        'data'       => array(
+        ],
+        'data'       => [
             'class'  => 'Spiral\Components\Http\Input\InputBag',
             'source' => 'getParsedBody'
-        ),
-        'query'      => array(
+        ],
+        'query'      => [
             'class'  => 'Spiral\Components\Http\Input\InputBag',
             'source' => 'getQueryParams'
-        ),
-        'cookies'    => array(
+        ],
+        'cookies'    => [
             'class'  => 'Spiral\Components\Http\Input\InputBag',
             'source' => 'getCookieParams'
-        ),
-        'files'      => array(
+        ],
+        'files'      => [
             'class'  => 'Spiral\Components\Http\Input\FileBag',
             'source' => 'getUploadedFiles'
-        ),
-        'server'     => array(
+        ],
+        'server'     => [
             'class'  => 'Spiral\Components\Http\Input\ServerBag',
             'source' => 'getServerParams'
-        ),
-        'attributes' => array(
+        ],
+        'attributes' => [
             'class'  => 'Spiral\Components\Http\Input\InputBag',
             'source' => 'getAttributes'
-        )
-    );
+        ]
+    ];
 
     /**
      * Already constructed input bag instances.
      *
      * @var array|InputBag[]
      */
-    protected $bagInstances = array();
+    protected $bagInstances = [];
 
     /**
      * Instance of InputManager. Input manager responsible for simplifying access to
@@ -125,7 +125,7 @@ class InputManager extends Component
                 $this->request = null;
 
                 //Our parameter bags has expired
-                $this->bagInstances = array();
+                $this->bagInstances = [];
             }
         }
 
@@ -152,10 +152,10 @@ class InputManager extends Component
 
         $class = $this->bagAssociations[$name]['class'];
 
-        $data = call_user_func(array(
+        $data = call_user_func([
             $this->getRequest(),
             $this->bagAssociations[$name]['source']
-        ));
+        ]);
 
         return $this->bagInstances[$name] = new $class($data);
     }

@@ -36,37 +36,37 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'separator'   => '.',
-        'prefixes'    => array(
-            Node::TYPE_BLOCK  => array('block:', 'section:'),
-            Node::TYPE_EXTEND => array('extends:'),
+        'prefixes'    => [
+            Node::TYPE_BLOCK  => ['block:', 'section:'],
+            Node::TYPE_EXTEND => ['extends:'],
 
-        ),
-        self::IMPORTS => array(
-            'alias'     => array(
+        ],
+        self::IMPORTS => [
+            'alias'     => [
                 'class' => 'Spiral\Components\View\Processors\Templater\AliasImport',
-                'path'  => array('path'),
-                'alias' => array('as')
-            ),
-            'namespace' => array(
+                'path'  => ['path'],
+                'alias' => ['as']
+            ],
+            'namespace' => [
                 'class' => 'Spiral\Components\View\Processors\Templater\NamespaceImport',
-                'path'  => array('path'),
-                'name'  => array('name')
-            )
-        ),
-        'context'     => array(
-            'namespace' => array('view:namespace', 'node:namespace'),
-            'view'      => array('view::parent', 'node:parent'),
-        ),
-    );
+                'path'  => ['path'],
+                'name'  => ['name']
+            ]
+        ],
+        'context'     => [
+            'namespace' => ['view:namespace', 'node:namespace'],
+            'view'      => ['view::parent', 'node:parent'],
+        ],
+    ];
 
     /**
      * Parsed and cached view sources to speed up rendering.
      *
      * @var array
      */
-    protected $cache = array();
+    protected $cache = [];
 
     /**
      * LayeredCompiler instance.
@@ -165,7 +165,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         $attributes = isset($token[Tokenizer::TOKEN_ATTRIBUTES])
             ? $token[Tokenizer::TOKEN_ATTRIBUTES]
-            : array();
+            : [];
 
         $behaviour = $this->createBehaviour($node, $token, $attributes);
         if ($behaviour instanceof Behaviour)
@@ -209,7 +209,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
             if (isset($aliases[$tokenName]))
             {
-                $includeLocation = $this->fetchLocation($aliases[$tokenName], array(), $node->options);
+                $includeLocation = $this->fetchLocation($aliases[$tokenName], [], $node->options);
                 break;
             }
         }
@@ -250,12 +250,12 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             //There is no need to force exception if import not loaded, but we can log it
             $this->viewManager->logger()->error(
                 "{message} in {file} at line {line} defined by '{tokenName}'",
-                array(
+                [
                     'message'   => $exception->getMessage(),
                     'file'      => $exception->getFile(),
                     'line'      => $exception->getLine(),
                     'tokenName' => $tokenName
-                )
+                ]
             );
 
             return $token;
@@ -325,7 +325,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 $location = $this->fetchLocation($name, $attributes, $node->options);
 
                 //Token describes extended syntax
-                $behaviour = new Behaviour($name, Node::TYPE_EXTEND, $attributes, array());
+                $behaviour = new Behaviour($name, Node::TYPE_EXTEND, $attributes, []);
 
                 //Loading parent node content (namespace either forced, or same as in original node)
                 $content = $this->loadContent(
@@ -335,7 +335,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                     $node->options
                 );
 
-                $options = $location + array(self::IMPORTS => array());
+                $options = $location + [self::IMPORTS => []];
 
                 $behaviour->contextNode = new Node($this, 'root', $content, $options);
 
@@ -371,7 +371,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         $tokenName = $token[Tokenizer::TOKEN_NAME];
         $importOptions = $this->options[self::IMPORTS][$tokenName];
 
-        $options = array();
+        $options = [];
         foreach ($importOptions as $option => $keywords)
         {
             if (is_array($keywords))
@@ -391,9 +391,9 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             /**
              * @var Import $import
              */
-            $import = $this->container->get($importOptions['class'], array(
+            $import = $this->container->get($importOptions['class'], [
                     'level' => $node->getLevel(),
-                ) + ($options + $node->options)
+                ] + ($options + $node->options)
             );
 
             //Trying to generate all possible import values

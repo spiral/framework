@@ -58,14 +58,14 @@ class QueryCompiler extends BaseQueryCompiler
         array $from,
         $distinct,
         array $columns,
-        array $joins = array(),
-        array $where = array(),
-        array $having = array(),
-        array $groupBy = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $having = [],
+        array $groupBy = [],
+        array $orderBy = [],
         $limit = 0,
         $offset = 0,
-        array $unions = array()
+        array $unions = []
     )
     {
         if (!$limit && !$offset || ($this->driver->getServerVersion() >= 12 && $orderBy))
@@ -121,7 +121,7 @@ class QueryCompiler extends BaseQueryCompiler
             $where,
             $having,
             $groupBy,
-            array(),
+            [],
             0,
             0,
             $unions
@@ -146,9 +146,9 @@ class QueryCompiler extends BaseQueryCompiler
      */
     public function delete(
         $table,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
@@ -158,13 +158,13 @@ class QueryCompiler extends BaseQueryCompiler
         }
 
         $cte = "WITH cte AS (" . self::select(
-                array($table),
+                [$table],
                 false,
-                array('*'),
+                ['*'],
                 $joins,
                 $where,
-                array(),
-                array(),
+                [],
+                [],
                 $orderBy,
                 $limit,
                 0
@@ -190,9 +190,9 @@ class QueryCompiler extends BaseQueryCompiler
     public function update(
         $table,
         array $values,
-        array $joins = array(),
-        array $where = array(),
-        array $orderBy = array(),
+        array $joins = [],
+        array $where = [],
+        array $orderBy = [],
         $limit = 0
     )
     {
@@ -202,13 +202,13 @@ class QueryCompiler extends BaseQueryCompiler
         }
 
         $cte = "WITH cte AS (" . self::select(
-                array($table),
+                [$table],
                 false,
                 array_keys($values),
                 $joins,
                 $where,
-                array(),
-                array(),
+                [],
+                [],
                 $orderBy,
                 $limit,
                 0

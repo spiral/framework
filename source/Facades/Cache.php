@@ -15,9 +15,9 @@ use Spiral\Core\Facade;
 
 /**
  * @method static mixed storeOptions($adapter)
- * @method static CacheStore store($store = null, array $options = array())
+ * @method static CacheStore store($store = null, array $options = [])
  * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter, Container $container)
- * @method static CacheManager make($parameters = array(), Container $container = null)
+ * @method static CacheManager make($parameters = [], Container $container = null)
  * @method static CacheManager getInstance(Container $container = null)
  * @method static array getConfig()
  * @method static array setConfig(array $config)

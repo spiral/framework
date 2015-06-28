@@ -103,10 +103,10 @@ class Timestamp extends BaseTimestamp implements ODMAccessor
     {
         if (!$this->hasUpdates())
         {
-            return array();
+            return [];
         }
 
-        return array(Document::ATOMIC_SET => array($container => $this->serializeData()));
+        return [Document::ATOMIC_SET => [$container => $this->serializeData()]];
     }
 
     /**

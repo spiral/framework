@@ -75,7 +75,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      *
      * @var array
      */
-    protected $commands = array();
+    protected $commands = [];
 
     /**
      * ConsoleDispatcher.
@@ -102,7 +102,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
 
         if (!is_array($this->commands))
         {
-            $this->commands = array();
+            $this->commands = [];
         }
     }
 
@@ -152,7 +152,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      */
     public function findCommands()
     {
-        $this->commands = array();
+        $this->commands = [];
 
         $classes = $this->tokenizer->getClasses(
             'Symfony\Component\Console\Command\Command',
@@ -208,7 +208,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      * @return CommandOutput
      * @throws \Exception
      */
-    public function command($command, $parameters = array(), OutputInterface $output = null)
+    public function command($command, $parameters = [], OutputInterface $output = null)
     {
         $code = $this->getApplication()->find($command)->run(
             is_object($parameters) ? $parameters : new ArrayInput(compact('command') + $parameters),

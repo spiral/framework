@@ -23,7 +23,7 @@ class TableSchema extends AbstractTableSchema
     {
         $tableSQL = $this->driver->query(
             "SELECT sql FROM sqlite_master WHERE type = 'table' and name = ?",
-            array($this->name)
+            [$this->name]
         )->fetchColumn();
 
         /**
@@ -117,10 +117,10 @@ class TableSchema extends AbstractTableSchema
                     if (!$schema)
                     {
                         self::logger()->info(
-                            "Dropping index [{statement}] from table {table}.", array(
+                            "Dropping index [{statement}] from table {table}.", [
                             'statement' => $dbIndex->sqlStatement(true),
                             'table'     => $this->getName(true)
-                        ));
+                        ]);
 
                         $this->doIndexDrop($dbIndex);
                         continue;
@@ -129,10 +129,10 @@ class TableSchema extends AbstractTableSchema
                     if (!$dbIndex)
                     {
                         self::logger()->info(
-                            "Adding index [{statement}] into table {table}.", array(
+                            "Adding index [{statement}] into table {table}.", [
                             'statement' => $schema->sqlStatement(false),
                             'table'     => $this->getName(true)
-                        ));
+                        ]);
 
                         $this->doIndexAdd($schema);
                         continue;
@@ -140,11 +140,11 @@ class TableSchema extends AbstractTableSchema
 
                     //Altering
                     self::logger()->info(
-                        "Altering index [{statement}] to [{new}] in table {table}.", array(
+                        "Altering index [{statement}] to [{new}] in table {table}.", [
                         'statement' => $dbIndex->sqlStatement(false),
                         'new'       => $schema->sqlStatement(false),
                         'table'     => $this->getName(true)
-                    ));
+                    ]);
 
                     $this->doIndexChange($schema, $dbIndex);
                 }
@@ -152,9 +152,9 @@ class TableSchema extends AbstractTableSchema
             else
             {
                 self::logger()->info(
-                    "Rebuilding table {table} to apply required modifications.", array(
+                    "Rebuilding table {table} to apply required modifications.", [
                     'table' => $this->getName(true)
-                ));
+                ]);
 
                 //To be renamed later
                 $tableName = $this->name;
@@ -163,13 +163,13 @@ class TableSchema extends AbstractTableSchema
 
                 //SQLite index names are global
                 $indexes = $this->indexes;
-                $this->indexes = array();
+                $this->indexes = [];
 
                 //Creating temporary table
                 $this->createSchema();
 
                 //Mapping columns
-                $mapping = array();
+                $mapping = [];
                 foreach ($this->columns as $name => $schema)
                 {
                     if (isset($this->dbColumns[$name]))
@@ -181,23 +181,23 @@ class TableSchema extends AbstractTableSchema
                 self::logger()->info(
                     "Migrating table data from {source} to {table} "
                     . "with columns mappings ({columns}) => ({target}).",
-                    array(
+                    [
                         'source'  => $this->driver->identifier($tableName),
                         'table'   => $this->getName(true),
                         'columns' => join(', ', $mapping),
                         'target'  => join(', ', array_keys($mapping))
-                    )
+                    ]
                 );
 
                 //http://stackoverflow.com/questions/4007014/alter-column-in-sqlite
                 $query = interpolate(
                     "INSERT INTO {table} ({target}) SELECT {columns} FROM {source}",
-                    array(
+                    [
                         'source'  => $this->driver->identifier($tableName),
                         'table'   => $this->getName(true),
                         'columns' => join(', ', $mapping),
                         'target'  => join(', ', array_keys($mapping))
-                    )
+                    ]
                 );
 
                 $this->driver->statement($query);

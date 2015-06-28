@@ -38,10 +38,10 @@ class InsertQuery extends BaseInsertQuery
         if ($primary = $driver->getPrimary($this->database->getPrefix() . $this->table))
         {
             self::logger()->debug(
-                "Primary key '{sequence}' automatically resolved for table '{table}'.", array(
+                "Primary key '{sequence}' automatically resolved for table '{table}'.", [
                 'table'    => $this->table,
                 'sequence' => $primary
-            ));
+            ]);
         }
 
         $compiler = !empty($compiler) ? $compiler : $this->compiler;

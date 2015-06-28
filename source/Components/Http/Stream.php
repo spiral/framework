@@ -37,7 +37,7 @@ class Stream implements StreamInterface
      * @see stream_get_meta_data()
      * @var array
      */
-    protected $metadata = array();
+    protected $metadata = [];
 
     /**
      * Create new Stream instance based on provided stream resource or uri (including filenames).
@@ -118,7 +118,7 @@ class Stream implements StreamInterface
     {
         $resource = $this->resource;
         $this->resource = null;
-        $this->metadata = array();
+        $this->metadata = [];
 
         return $resource;
     }

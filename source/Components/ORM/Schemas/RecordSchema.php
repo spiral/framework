@@ -60,14 +60,14 @@ class RecordSchema extends ModelSchema
      *
      * @var array
      */
-    protected $relations = array();
+    protected $relations = [];
 
     /**
      * Column names associated with their default values.
      *
      * @var array
      */
-    protected $columns = array();
+    protected $columns = [];
 
     /**
      * New RecordSchema instance, schema responsible for detecting relationships, columns and indexes.
@@ -161,7 +161,7 @@ class RecordSchema extends ModelSchema
         }
 
         return $this->propertiesCache[$property] = call_user_func(
-            array($this->getClass(), 'describeProperty'),
+            [$this->getClass(), 'describeProperty'],
             $this,
             $property,
             $value
@@ -251,7 +251,7 @@ class RecordSchema extends ModelSchema
      */
     public function getFields()
     {
-        $result = array();
+        $result = [];
         foreach ($this->tableSchema->getColumns() as $column)
         {
             $result[$column->getName()] = $column->phpType();
@@ -274,7 +274,7 @@ class RecordSchema extends ModelSchema
         {
             $type = $column->abstractType();
 
-            $resolved = array();
+            $resolved = [];
             if ($filter = $this->ormSchema->getMutators($type))
             {
                 $resolved += $filter;
@@ -287,7 +287,7 @@ class RecordSchema extends ModelSchema
             if (isset($resolved['accessor']))
             {
                 //Ensuring type for accessor
-                $resolved['accessor'] = array($resolved['accessor'], $type);
+                $resolved['accessor'] = [$resolved['accessor'], $type];
             }
 
             foreach ($resolved as $mutator => $filter)
@@ -390,14 +390,14 @@ class RecordSchema extends ModelSchema
 
         $type = $matches['type'];
 
-        $options = array();
+        $options = [];
         if (!empty($matches['options']))
         {
             $options = array_map('trim', explode(',', $matches['options']));
         }
 
         //DBAL will handle the rest of declaration
-        call_user_func_array(array($column, $type), $options);
+        call_user_func_array([$column, $type], $options);
 
         $default = $column->getDefaultValue();
 
@@ -517,7 +517,7 @@ class RecordSchema extends ModelSchema
     protected function castIndex(array $definition)
     {
         $type = null;
-        $columns = array();
+        $columns = [];
 
         foreach ($definition as $chunk)
         {
@@ -583,10 +583,10 @@ class RecordSchema extends ModelSchema
         {
             self::logger()->warning(
                 "Unable to create relation '{class}'.'{name}', connection already exists.",
-                array(
+                [
                     'name'  => $name,
                     'class' => $this->getClass()
-                ));
+                ]);
 
             return;
         }

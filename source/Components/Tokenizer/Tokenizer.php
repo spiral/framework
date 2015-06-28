@@ -72,14 +72,14 @@ class Tokenizer extends Component
      *
      * @var array
      */
-    protected $highlighting = array();
+    protected $highlighting = [];
 
     /**
      * Cache of already processed file reflections, used to speed up lookup.
      *
      * @var array
      */
-    protected $cache = array();
+    protected $cache = [];
 
     /**
      * Tokenizer used by spiral to fetch list of available classes, their declarations and locations.
@@ -87,10 +87,10 @@ class Tokenizer extends Component
      * ability to perform simple PHP code highlighting which can be used in ExceptionResponses and
      * snapshots.
      *
-     * @param ConfiguratorInterface   $configurator
+     * @param ConfiguratorInterface $configurator
      * @param RuntimeCacheInterface $runtime
-     * @param FileManager             $file
-     * @param Loader                  $loader
+     * @param FileManager           $file
+     * @param Loader                $loader
      */
     public function __construct(
         ConfiguratorInterface $configurator,
@@ -165,7 +165,7 @@ class Tokenizer extends Component
                 {
                     if (strpos($token[self::CODE], "\n"))
                     {
-                        $lines = array();
+                        $lines = [];
                         foreach (explode("\n", $token[self::CODE]) as $line)
                         {
                             $lines[] = '<span style="' . $style . '">'
@@ -226,7 +226,7 @@ class Tokenizer extends Component
 
             if (!is_array($token))
             {
-                $token = array($token, $token, $line);
+                $token = [$token, $token, $line];
             }
 
             unset($token);
@@ -252,7 +252,7 @@ class Tokenizer extends Component
      */
     public function getClasses($parent = null, $namespace = null, $postfix = '', $debug = false)
     {
-        $result = array();
+        $result = [];
         $namespace = ltrim($namespace, '\\');
 
         if (!empty($parent) && (is_object($parent) || is_string($parent)))
@@ -269,7 +269,7 @@ class Tokenizer extends Component
         //Disabling caching during lookup
         foreach ($this->config['directories'] as $directory)
         {
-            foreach ($this->file->getFiles($directory, array('php')) as $filename)
+            foreach ($this->file->getFiles($directory, ['php']) as $filename)
             {
                 $filename = $this->file->normalizePath($filename);
                 foreach ($this->config['exclude'] as $exclude)
@@ -286,9 +286,9 @@ class Tokenizer extends Component
                 {
                     self::logger()->warning(
                         "File '{filename}' has includes and will be excluded from analysis.",
-                        array(
+                        [
                             'filename' => $this->file->relativePath($filename)
-                        )
+                        ]
                     );
 
                     continue;
@@ -332,11 +332,11 @@ class Tokenizer extends Component
                             }
                         }
 
-                        $result[$class] = array(
+                        $result[$class] = [
                             'name'     => $reflection->getName(),
                             'filename' => $filename,
                             'abstract' => $reflection->isAbstract()
-                        );
+                        ];
 
                         if ($debug)
                         {
@@ -350,11 +350,11 @@ class Tokenizer extends Component
                     {
                         self::logger()->error(
                             "Unable to resolve class '{class}', error \"{message}\".",
-                            array(
+                            [
                                 'filename' => $this->file->relativePath($filename),
                                 'class'    => $class,
                                 'message'  => $exception->getMessage()
-                            )
+                            ]
                         );
                     }
                 }
@@ -426,9 +426,9 @@ class Tokenizer extends Component
         {
             $reflectionFile = new ReflectionFile($filename, $this);
 
-            $this->cache[$filename] = array(
+            $this->cache[$filename] = [
                     'md5' => $this->file->md5($filename)
-                ) + $reflectionFile->exportSchema();
+                ] + $reflectionFile->exportSchema();
 
             $this->runtime->saveData('tokenizer-reflections', $this->cache);
         }

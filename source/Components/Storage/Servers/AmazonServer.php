@@ -27,12 +27,12 @@ class AmazonServer extends StorageServer
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         'server'    => 'https://s3.amazonaws.com',
         'timeout'   => 0,
         'accessKey' => '',
         'secretKey' => ''
-    );
+    ];
 
     /**
      * Guzzle client.
@@ -129,14 +129,14 @@ class AmazonServer extends StorageServer
             'PUT',
             $container,
             $name,
-            array(
+            [
                 'Content-MD5'  => base64_encode(md5_file($this->castFilename($origin), true)),
                 'Content-Type' => $mimetype
-            ),
-            array(
+            ],
+            [
                 'Acl'          => $container->options['public'] ? 'public-read' : 'private',
                 'Content-Type' => $mimetype
-            )
+            ]
         );
 
         return $this->client->send(
@@ -197,11 +197,11 @@ class AmazonServer extends StorageServer
                 'PUT',
                 $container,
                 $newname,
-                array(),
-                array(
+                [],
+                [
                     'Acl'         => $container->options['public'] ? 'public-read' : 'private',
                     'Copy-Source' => $this->buildUri($container, $oldname)->getPath()
-                )
+                ]
             ));
         }
         catch (ClientException $exception)
@@ -251,11 +251,11 @@ class AmazonServer extends StorageServer
                 'PUT',
                 $destination,
                 $name,
-                array(),
-                array(
+                [],
+                [
                     'Acl'         => $destination->options['public'] ? 'public-read' : 'private',
                     'Copy-Source' => $this->buildUri($container, $name)->getPath()
-                )
+                ]
             ));
         }
         catch (ClientException $exception)
@@ -300,15 +300,15 @@ class AmazonServer extends StorageServer
         $method,
         StorageContainer $container,
         $name,
-        array $headers = array(),
-        array $commands = array()
+        array $headers = [],
+        array $commands = []
     )
     {
-        $headers += array(
+        $headers += [
             'Date'         => gmdate('D, d M Y H:i:s T'),
             'Content-MD5'  => '',
             'Content-Type' => ''
-        );
+        ];
 
         $packedCommands = $this->packCommands($commands);
 
@@ -326,7 +326,7 @@ class AmazonServer extends StorageServer
      */
     protected function packCommands(array $commands)
     {
-        $headers = array();
+        $headers = [];
         foreach ($commands as $command => $value)
         {
             $headers['X-Amz-' . $command] = $value;
@@ -343,16 +343,16 @@ class AmazonServer extends StorageServer
      *                                         packCommands() method for more information.
      * @return RequestInterface
      */
-    protected function signRequest(RequestInterface $request, array $packedCommands = array())
+    protected function signRequest(RequestInterface $request, array $packedCommands = [])
     {
-        $signature = array(
+        $signature = [
             $request->getMethod(),
             $request->getHeaderLine('Content-MD5'),
             $request->getHeaderLine('Content-Type'),
             $request->getHeaderLine('Date')
-        );
+        ];
 
-        $normalizedCommands = array();
+        $normalizedCommands = [];
         foreach ($packedCommands as $command => $value)
         {
             if (!empty($value))

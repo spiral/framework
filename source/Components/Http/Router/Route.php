@@ -78,7 +78,7 @@ class Route extends AbstractRoute
      * @param string|callable $target  Route target.
      * @param array           $defaults
      */
-    public function __construct($name, $pattern, $target, array $defaults = array())
+    public function __construct($name, $pattern, $target, array $defaults = [])
     {
         $this->name = $name;
         $this->pattern = $pattern;
@@ -98,7 +98,7 @@ class Route extends AbstractRoute
     public function perform(
         ServerRequestInterface $request,
         Container $container,
-        array $middlewareAliases = array()
+        array $middlewareAliases = []
     )
     {
         return $this->getPipeline($container, $middlewareAliases)

@@ -99,7 +99,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @var array
      */
-    protected static $schemaCache = array();
+    protected static $schemaCache = [];
 
     /**
      * Parent object (composition owner).
@@ -130,7 +130,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @var array
      */
-    protected $secured = array('_id');
+    protected $secured = ['_id'];
 
     /**
      * Object fields, sub objects and relationships.
@@ -159,7 +159,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @var array
      */
-    protected $schema = array();
+    protected $schema = [];
 
     /**
      * Default values associated with document fields. Every default value will be passed thought
@@ -167,7 +167,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @var array
      */
-    protected $defaults = array();
+    protected $defaults = [];
 
     /**
      * Set of indexes to be created for associated collection. Use self::INDEX_OPTIONS or @options
@@ -182,7 +182,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @link http://php.net/manual/en/mongocollection.ensureindex.php
      * @var array
      */
-    protected $indexes = array();
+    protected $indexes = [];
 
     /**
      * Documents marked with solid state flag will be saved entirely without generating separate
@@ -198,7 +198,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @var array
      */
-    protected $updates = array();
+    protected $updates = [];
 
     /**
      * Set of atomic operation has to be performed to save document into database. Atomic operation
@@ -207,7 +207,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @var array
      */
-    protected $atomics = array();
+    protected $atomics = [];
 
     /**
      * Create new Document instance, schema will be automatically loaded and cached. Note that fields
@@ -219,7 +219,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param mixed                 $options
      * @param ODM                   $odm    ODM component, will be received from container if not provided.
      */
-    public function __construct($data = array(), $parent = null, $options = null, ODM $odm = null)
+    public function __construct($data = [], $parent = null, $options = null, ODM $odm = null)
     {
         $this->parent = $parent;
         $this->odm = !empty($odm) ? $odm : ODM::getInstance();
@@ -239,7 +239,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             $this->fields = $data
                 ? array_replace_recursive(
                     $this->schema[ODM::D_DEFAULTS],
-                    is_array($data) ? $data : array()
+                    is_array($data) ? $data : []
                 )
                 : $this->schema[ODM::D_DEFAULTS];
         }
@@ -443,7 +443,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public function publicFields()
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->fields as $field => $value)
         {
@@ -651,17 +651,17 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     {
         if (!$this->hasUpdates() && !$this->solidState)
         {
-            return array();
+            return [];
         }
 
         if ($this->solidState)
         {
             if (!empty($container))
             {
-                return array(self::ATOMIC_SET => array($container => $this->getFields()));
+                return [self::ATOMIC_SET => [$container => $this->getFields()]];
             }
 
-            $atomics = array(self::ATOMIC_SET => $this->getFields());
+            $atomics = [self::ATOMIC_SET => $this->getFields()];
             unset($atomics[self::ATOMIC_SET]['_id']);
 
             return $atomics;
@@ -673,7 +673,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         }
         else
         {
-            $atomics = array();
+            $atomics = [];
 
             foreach ($this->atomics as $atomic => $fields)
             {
@@ -776,7 +776,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public function flushUpdates()
     {
-        $this->updates = $this->atomics = array();
+        $this->updates = $this->atomics = [];
 
         foreach ($this->fields as $value)
         {
@@ -801,10 +801,10 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             return $this->validator->setData($this->fields);
         }
 
-        return $this->validator = Validator::make(array(
+        return $this->validator = Validator::make([
             'data'      => $this->fields,
             'validates' => $this->schema[ODM::D_VALIDATES]
-        ));
+        ]);
     }
 
     /**
@@ -845,7 +845,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     public function getErrors($reset = false)
     {
         $this->validate();
-        $errors = array();
+        $errors = [];
         foreach ($this->errors as $field => $error)
         {
             if (
@@ -862,7 +862,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
 
         if ($reset)
         {
-            $this->errors = array();
+            $this->errors = [];
         }
 
         return $errors;
@@ -875,7 +875,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param array $schema Forced document schema.
      * @return Collection
      */
-    public static function odmCollection(ODM $odm = null, array $schema = array())
+    public static function odmCollection(ODM $odm = null, array $schema = [])
     {
         $odm = !empty($odm) ? $odm : ODM::getInstance();
         $schema = !empty($schema) ? $schema : $odm->getSchema(get_called_class());
@@ -934,7 +934,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             $this->event('updating');
 
             static::odmCollection($this->odm, $this->schema)->update(
-                array('_id' => $this->primaryKey()),
+                ['_id' => $this->primaryKey()],
                 $this->buildAtomics()
             );
 
@@ -962,9 +962,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
         }
 
         $this->event('deleting');
-        $this->primaryKey() && static::odmCollection($this->odm, $this->schema)->remove(array(
+        $this->primaryKey() && static::odmCollection($this->odm, $this->schema)->remove([
             '_id' => $this->primaryKey()
-        ));
+        ]);
 
         $this->fields = $this->schema[ODM::D_DEFAULTS];
         $this->event('deleted');
@@ -978,12 +978,12 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param ODM   $odm    ODM component, will be received from Container if not provided.
      * @return static
      */
-    public static function create($fields = array(), ODM $odm = null)
+    public static function create($fields = [], ODM $odm = null)
     {
         /**
          * @var Document $class
          */
-        $class = new static(array(), null, array(), $odm);
+        $class = new static([], null, [], $odm);
 
         //Forcing validation (empty set of fields is not valid set of fields)
         $class->validationRequired = true;
@@ -998,15 +998,15 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param array $scope
      * @return array
      */
-    protected static function getScope($scope = array())
+    protected static function getScope($scope = [])
     {
         static::initialize();
         if (EventDispatcher::hasDispatcher(static::class))
         {
-            $scope = self::dispatcher()->fire('scope', array(
+            $scope = self::dispatcher()->fire('scope', [
                 'scope' => $scope,
                 'model' => get_called_class()
-            ))['scope'];
+            ])['scope'];
         }
 
         return $scope;
@@ -1020,7 +1020,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param mixed $query Fields and conditions to filter by.
      * @return Collection|static[]
      */
-    public static function find(array $query = array())
+    public static function find(array $query = [])
     {
         return static::odmCollection()->query(self::getScope($query));
     }
@@ -1031,7 +1031,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param array $query Fields and conditions to filter by.
      * @return static
      */
-    public static function findOne(array $query = array())
+    public static function findOne(array $query = [])
     {
         return static::find($query)->findOne();
     }
@@ -1052,7 +1052,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             return null;
         }
 
-        return static::findOne(array('_id' => $mongoID));
+        return static::findOne(['_id' => $mongoID]);
     }
 
     /**
@@ -1064,19 +1064,19 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     {
         if (empty($this->collection))
         {
-            return (object)array(
+            return (object)[
                 'fields'  => $this->getFields(),
                 'atomics' => $this->buildAtomics(),
                 'errors'  => $this->getErrors()
-            );
+            ];
         }
 
-        return (object)array(
+        return (object)[
             'collection' => $this->database . '/' . $this->collection,
             'fields'     => $this->getFields(),
             'atomics'    => $this->buildAtomics(),
             'errors'     => $this->getErrors()
-        );
+        ];
     }
 
     /**
@@ -1084,6 +1084,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public static function clearSchemaCache()
     {
-        self::$schemaCache = array();
+        self::$schemaCache = [];
     }
 }

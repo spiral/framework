@@ -18,7 +18,7 @@ trait JoinTrait
      *
      * @var array
      */
-    protected $joins = array();
+    protected $joins = [];
 
     /**
      * Name of last join, next on() or orOn() method calls will attached conditions to that join.
@@ -59,9 +59,9 @@ trait JoinTrait
      */
     public function join($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = array('type' => 'INNER', 'on' => array());
+        $this->joins[$this->currentJoin = $table] = ['type' => 'INNER', 'on' => []];
 
-        return call_user_func_array(array($this, 'on'), array_slice(func_get_args(), 1));
+        return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
 
     /**
@@ -96,9 +96,9 @@ trait JoinTrait
      */
     public function innerJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = array('type' => 'RIGHT', 'on' => array());
+        $this->joins[$this->currentJoin = $table] = ['type' => 'RIGHT', 'on' => []];
 
-        return call_user_func_array(array($this, 'on'), array_slice(func_get_args(), 1));
+        return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
 
     /**
@@ -133,9 +133,9 @@ trait JoinTrait
      */
     public function rightJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = array('type' => 'RIGHT', 'on' => array());
+        $this->joins[$this->currentJoin = $table] = ['type' => 'RIGHT', 'on' => []];
 
-        return call_user_func_array(array($this, 'on'), array_slice(func_get_args(), 1));
+        return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
 
     /**
@@ -170,9 +170,9 @@ trait JoinTrait
      */
     public function leftJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = array('type' => 'LEFT', 'on' => array());
+        $this->joins[$this->currentJoin = $table] = ['type' => 'LEFT', 'on' => []];
 
-        return call_user_func_array(array($this, 'on'), array_slice(func_get_args(), 1));
+        return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
 
     /**
@@ -207,9 +207,9 @@ trait JoinTrait
      */
     public function fullJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = array('type' => 'LEFT', 'on' => array());
+        $this->joins[$this->currentJoin = $table] = ['type' => 'LEFT', 'on' => []];
 
-        return call_user_func_array(array($this, 'on'), array_slice(func_get_args(), 1));
+        return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
 
     /**
@@ -485,7 +485,7 @@ trait JoinTrait
     abstract protected function whereToken(
         $joiner,
         array $parameters,
-        &$tokens = array(),
+        &$tokens = [],
         $dataParameters = true
     );
 }

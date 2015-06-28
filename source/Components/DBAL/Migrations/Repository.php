@@ -79,15 +79,15 @@ class Repository extends Component
      */
     public function getMigrations()
     {
-        $migrations = array();
+        $migrations = [];
 
-        foreach ($this->file->getFiles($this->directory, array('php')) as $filename)
+        foreach ($this->file->getFiles($this->directory, ['php']) as $filename)
         {
             $reflection = $this->tokenizer->fileReflection($filename);
-            $migrations[] = $this->parseFilename(basename($filename)) + array(
+            $migrations[] = $this->parseFilename(basename($filename)) + [
                     'class'    => $reflection->getClasses()[0],
                     'filename' => basename($filename)
-                );
+                ];
         }
 
         return $migrations;
@@ -131,11 +131,11 @@ class Repository extends Component
     {
         $name = StringHelper::urlSlug($name, '_');
 
-        $filename = interpolate(self::FILENAME_FORMAT, array(
+        $filename = interpolate(self::FILENAME_FORMAT, [
             'timestamp' => date('Ymd_His'),
             'chunk'     => $chunk,
             'name'      => $name
-        ));
+        ]);
 
         return ($path ? $this->directory . '/' : '') . $filename;
     }
@@ -154,10 +154,10 @@ class Repository extends Component
             'Ymd_His', $filename[0] . '_' . $filename[1]
         )->getTimestamp();
 
-        return array(
+        return [
             'name'      => join('_', array_slice($filename, 2)),
             'timestamp' => $timestamp
-        );
+        ];
     }
 
     /**

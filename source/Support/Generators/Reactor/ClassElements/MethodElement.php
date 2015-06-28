@@ -33,14 +33,14 @@ class MethodElement extends BaseElement
      *
      * @var ParameterElement[]
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * Source code lines (optional).
      *
      * @var array
      */
-    protected $source = array();
+    protected $source = [];
 
     /**
      * Method access level (private, protected and public).
@@ -163,7 +163,7 @@ class MethodElement extends BaseElement
     {
         if (!$append)
         {
-            $this->source = array();
+            $this->source = [];
         }
 
         if (is_array($source))
@@ -229,12 +229,12 @@ class MethodElement extends BaseElement
      */
     public function createDeclaration($indentLevel = 0, $position = 0)
     {
-        $result = array(
+        $result = [
             !$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel)
-        );
+        ];
 
         //Parameters
-        $parameters = array();
+        $parameters = [];
         foreach ($this->parameters as $parameter)
         {
             $parameters[] = $parameter->createDeclaration();

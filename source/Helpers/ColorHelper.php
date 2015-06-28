@@ -36,7 +36,7 @@ class ColorHelper
     {
         $hex = str_split($hex, round(strlen($hex) / 3));
 
-        return array(hexdec($hex[0]), hexdec($hex[1]), hexdec($hex[2]));
+        return [hexdec($hex[0]), hexdec($hex[1]), hexdec($hex[2])];
     }
 
     /**
@@ -106,7 +106,7 @@ class ColorHelper
             }
         }
 
-        return array($hue, $saturation, $lightness);
+        return [$hue, $saturation, $lightness];
     }
 
     /**

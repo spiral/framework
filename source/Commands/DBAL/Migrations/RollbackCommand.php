@@ -32,9 +32,9 @@ class RollbackCommand extends BaseCommand
      *
      * @var array
      */
-    protected $options = array(
+    protected $options = [
         ['all', 'a', InputOption::VALUE_NONE, 'Rollback all executed migrations.']
-    );
+    ];
 
     /**
      * Performing one or multiple migrations.

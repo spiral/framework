@@ -25,10 +25,10 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $mapping = array(
+    protected $mapping = [
         //Primary sequences
-        'primary'     => array('type' => 'integer', 'primaryKey' => true),
-        'bigPrimary'  => array('type' => 'integer', 'primaryKey' => true),
+        'primary'     => ['type' => 'integer', 'primaryKey' => true],
+        'bigPrimary'  => ['type' => 'integer', 'primaryKey' => true],
 
         //Enum type (mapped via method)
         'enum'        => 'enum',
@@ -70,7 +70,7 @@ class ColumnSchema extends AbstractColumnSchema
 
         //Additional types
         'json'        => 'text'
-    );
+    ];
 
     /**
      * Driver specific reverse mapping, this mapping should link database type to one of standard
@@ -82,23 +82,23 @@ class ColumnSchema extends AbstractColumnSchema
      * @invisible
      * @var array
      */
-    protected $reverseMapping = array(
-        'primary'     => array(array('type' => 'integer', 'primaryKey' => true)),
-        'enum'        => array('enum'),
-        'boolean'     => array('boolean'),
-        'integer'     => array('int', 'integer', 'smallint', 'mediumint'),
-        'tinyInteger' => array('tinyint'),
-        'bigInteger'  => array('bigint'),
-        'text'        => array('text', 'string'),
-        'double'      => array('double'),
-        'float'       => array('real'),
-        'decimal'     => array('numeric'),
-        'datetime'    => array('datetime'),
-        'date'        => array('date'),
-        'time'        => array('time'),
-        'timestamp'   => array('timestamp'),
-        'binary'      => array('blob')
-    );
+    protected $reverseMapping = [
+        'primary'     => [['type' => 'integer', 'primaryKey' => true]],
+        'enum'        => ['enum'],
+        'boolean'     => ['boolean'],
+        'integer'     => ['int', 'integer', 'smallint', 'mediumint'],
+        'tinyInteger' => ['tinyint'],
+        'bigInteger'  => ['bigint'],
+        'text'        => ['text', 'string'],
+        'double'      => ['double'],
+        'float'       => ['real'],
+        'decimal'     => ['numeric'],
+        'datetime'    => ['datetime'],
+        'date'        => ['date'],
+        'time'        => ['time'],
+        'timestamp'   => ['timestamp'],
+        'binary'      => ['blob']
+    ];
 
     /**
      * Is column primary key.
@@ -207,7 +207,7 @@ class ColumnSchema extends AbstractColumnSchema
             return $statement;
         }
 
-        $enumValues = array();
+        $enumValues = [];
         foreach ($this->enumValues as $value)
         {
             $enumValues[] = $this->table->getDriver()->getPDO()->quote($value);

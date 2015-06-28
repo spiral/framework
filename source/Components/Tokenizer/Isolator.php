@@ -18,7 +18,7 @@ class Isolator extends Component
      *
      * @var array
      */
-    protected $phpBlocks = array();
+    protected $phpBlocks = [];
 
     /**
      * Isolated prefix and postfix. Use any values that will not corrupt HTML or other source.
@@ -35,7 +35,7 @@ class Isolator extends Component
      *
      * @var array
      */
-    protected $patterns = array();
+    protected $patterns = [];
 
     /**
      * Revert replaces, will contain list of existing and replaced tags (unique set), so output
@@ -44,7 +44,7 @@ class Isolator extends Component
      *
      * @var array
      */
-    protected $replaces = array();
+    protected $replaces = [];
 
     /**
      * Short tags will automatically be replaced to solve the issue with short_tags = off.
@@ -81,7 +81,7 @@ class Isolator extends Component
      */
     protected function addPattern($tag, $regexp = null, $replace = "<?php /*%s*/")
     {
-        $this->patterns[$tag] = array('regexp' => $regexp, 'replace' => $replace);
+        $this->patterns[$tag] = ['regexp' => $regexp, 'replace' => $replace];
     }
 
     /**
@@ -179,7 +179,7 @@ class Isolator extends Component
         $source = $this->replaceTags($source);
         $tokens = token_get_all($source);
 
-        $this->phpBlocks = array();
+        $this->phpBlocks = [];
         $phpBlock = false;
         $blockID = 0;
 
@@ -258,7 +258,7 @@ class Isolator extends Component
     {
         return preg_replace_callback(
             '/' . preg_quote($this->prefix) . '(?P<id>[0-9]+)' . preg_quote($this->postfix) . '/',
-            array($this, 'getBlock'),
+            [$this, 'getBlock'],
             $source
         );
     }

@@ -20,18 +20,18 @@ use Spiral\Support\Pagination\PaginatorTrait;
  * @method bool setReadPreference($read_preference, $tags)
  * @method array drop()
  * @method array validate($validate)
- * @method bool|array insert($array_of_fields_OR_object, $options = array())
- * @method mixed batchInsert($documents, $options = array())
- * @method bool update($old_array_of_fields_OR_object, $new_array_of_fields_OR_object, $options = array())
- * @method bool|array remove($array_of_fields_OR_object, $options = array())
- * @method bool ensureIndex($key_OR_array_of_keys, $options = array())
+ * @method bool|array insert($array_of_fields_OR_object, $options = [])
+ * @method mixed batchInsert($documents, $options = [])
+ * @method bool update($old_array_of_fields_OR_object, $new_array_of_fields_OR_object, $options = [])
+ * @method bool|array remove($array_of_fields_OR_object, $options = [])
+ * @method bool ensureIndex($key_OR_array_of_keys, $options = [])
  * @method array deleteIndex($string_OR_array_of_keys)
  * @method array deleteIndexes()
  * @method array getIndexInfo()
- * @method save($array_of_fields_OR_object, $options = array())
+ * @method save($array_of_fields_OR_object, $options = [])
  * @method array createDBRef($array_with_id_fields_OR_MongoID)
  * @method array getDBRef($reference)
- * @method array group($keys_or_MongoCode, $initial_value, $array_OR_MongoCode, $options = array())
+ * @method array group($keys_or_MongoCode, $initial_value, $array_OR_MongoCode, $options = [])
  * @method bool|array distinct($key, $query)
  * @method array aggregate(array $pipeline, array $op, array $pipelineOperators)
  */
@@ -83,7 +83,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      *
      * @var array
      */
-    protected $schema = array();
+    protected $schema = [];
 
     /**
      * Fields and conditions to query by.
@@ -91,14 +91,14 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @link http://docs.mongodb.org/manual/tutorial/query-documents/
      * @var array
      */
-    protected $query = array();
+    protected $query = [];
 
     /**
      * Fields to sort.
      *
      * @var array
      */
-    protected $sort = array();
+    protected $sort = [];
 
     /**
      * New ODM collection instance, ODM collection used to perform queries to MongoDatabase and
@@ -110,7 +110,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param string $name     Collection name.
      * @param array  $query    Fields and conditions to query by.
      */
-    public function __construct(ODM $odm, $database, $name, array $query = array())
+    public function __construct(ODM $odm, $database, $name, array $query = [])
     {
         $this->odm = $odm;
 
@@ -167,7 +167,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param array $query Fields and conditions to query by.
      * @return static
      */
-    public function query(array $query = array())
+    public function query(array $query = [])
     {
         array_walk_recursive($query, function (&$value)
         {
@@ -190,7 +190,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param array $query Fields and conditions to query by.
      * @return static
      */
-    public function where(array $query = array())
+    public function where(array $query = [])
     {
         return $this->query($query);
     }
@@ -230,7 +230,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param bool  $plainResult If true no documents to will be created.
      * @return \MongoCursor
      */
-    public function createCursor($query = array(), $fields = array(), $plainResult = false)
+    public function createCursor($query = [], $fields = [], $plainResult = false)
     {
         $this->query($query);
         $this->doPagination();
@@ -239,7 +239,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
             $this->mongoCollection()->find($this->query, $fields),
             $this->odm,
             !empty($fields) || $plainResult
-                ? array()
+                ? []
                 : $this->odm->getSchema($this->database . '/' . $this->name),
             $this->sort,
             $this->limit,
@@ -258,10 +258,10 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
             return $cursorReader;
         }
 
-        $queryInfo = array(
+        $queryInfo = [
             'query' => $this->query,
             'sort'  => $this->sort
-        );
+        ];
 
         if (!empty($this->limit))
         {
@@ -280,11 +280,11 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
 
         self::logger()->debug(
             "{database}/{collection}: " . json_encode($queryInfo, JSON_PRETTY_PRINT),
-            array(
+            [
                 'collection' => $this->name,
                 'database'   => $this->database,
                 'queryInfo'  => $queryInfo
-            ));
+            ]);
 
         return $cursorReader;
     }
@@ -295,7 +295,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param array $query Fields and conditions to query by.
      * @return static
      */
-    public function find(array $query = array())
+    public function find(array $query = [])
     {
         return $this->query($query);
     }
@@ -308,7 +308,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      *                      returned.
      * @return Document|array
      */
-    public function findOne(array $query = array(), array $fields = array())
+    public function findOne(array $query = [], array $fields = [])
     {
         return $this->createCursor($query, $fields)->limit(1)->getNext();
     }
@@ -320,7 +320,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      */
     public function fetchDocuments()
     {
-        $result = array();
+        $result = [];
         foreach ($this->createCursor() as $document)
         {
             $result[] = $document;
@@ -335,10 +335,10 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param array $fields Fields of the results to return.
      * @return array
      */
-    public function fetchFields($fields = array())
+    public function fetchFields($fields = [])
     {
-        $result = array();
-        foreach ($this->createCursor(array(), $fields, true) as $document)
+        $result = [];
+        foreach ($this->createCursor([], $fields, true) as $document)
         {
             $result[] = $document;
         }
@@ -403,9 +403,9 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      * @param array  $arguments Method arguments.
      * @return mixed
      */
-    public function __call($method, array $arguments = array())
+    public function __call($method, array $arguments = [])
     {
-        return call_user_func_array(array($this->mongoCollection(), $method), $arguments);
+        return call_user_func_array([$this->mongoCollection(), $method], $arguments);
     }
 
     /**
@@ -414,7 +414,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
     public function __destruct()
     {
         $this->odm = $this->paginator = null;
-        $this->query = array();
+        $this->query = [];
     }
 
     /**
@@ -424,12 +424,12 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
      */
     public function __debugInfo()
     {
-        return (object)array(
+        return (object)[
             'collection' => $this->database . '/' . $this->name,
             'query'      => $this->query,
             'limit'      => $this->limit,
             'offset'     => $this->offset,
             'sort'       => $this->sort
-        );
+        ];
     }
 }

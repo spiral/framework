@@ -26,18 +26,18 @@ class UmlExporter extends Component
      *
      * @var array
      */
-    protected $access = array(
+    protected $access = [
         BaseElement::ACCESS_PUBLIC    => '+',
         BaseElement::ACCESS_PRIVATE   => '-',
         BaseElement::ACCESS_PROTECTED => '#'
-    );
+    ];
 
     /**
      * We are going to generate UML by lines.
      *
      * @var array
      */
-    protected $lines = array();
+    protected $lines = [];
 
     /**
      * ODM documents schema.
@@ -117,7 +117,7 @@ class UmlExporter extends Component
         //Methods
         foreach ($entity->getMethods() as $method)
         {
-            $parameters = array();
+            $parameters = [];
             foreach ($method->getParameters() as $parameter)
             {
                 $parameters[] = ($parameter->getType() ? $parameter->getType() . ' ' : '')

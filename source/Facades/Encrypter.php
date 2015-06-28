@@ -21,7 +21,7 @@ use Spiral\Components\Encrypter\Encrypter as EncrypterComponent;
  * @method static string makeSignature($string, $salt = null)
  * @method static string encrypt($data)
  * @method static mixed decrypt($packed)
- * @method static EncrypterComponent make($parameters = array(), Container $container = null)
+ * @method static EncrypterComponent make($parameters = [], Container $container = null)
  * @method static EncrypterComponent getInstance(Container $container = null)
  * @method static array getConfig()
  * @method static array setConfig(array $config)

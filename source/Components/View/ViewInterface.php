@@ -25,7 +25,7 @@ interface ViewInterface
         $filename,
         $namespace = '',
         $view = '',
-        array $data = array()
+        array $data = []
     );
 
     /**

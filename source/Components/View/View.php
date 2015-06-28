@@ -39,7 +39,7 @@ class View extends Component implements ViewInterface
      *
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * View instance binded to specified view file (file has to be already pre-processed).
@@ -56,7 +56,7 @@ class View extends Component implements ViewInterface
         $filename,
         $namespace = '',
         $view = '',
-        array $data = array()
+        array $data = []
     )
     {
         $this->filename = $filename;
@@ -76,7 +76,7 @@ class View extends Component implements ViewInterface
      * @param Container $container
      * @return mixed|static
      */
-    public static function make($parameters = array(), Container $container = null)
+    public static function make($parameters = [], Container $container = null)
     {
         if (empty($container))
         {
@@ -86,7 +86,7 @@ class View extends Component implements ViewInterface
         if (is_string($parameters))
         {
             return call_user_func_array(
-                array(ViewManager::getInstance($container), 'get'), func_get_args()
+                [ViewManager::getInstance($container), 'get'], func_get_args()
             );
         }
 

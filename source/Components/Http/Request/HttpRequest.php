@@ -64,7 +64,7 @@ class HttpRequest extends HttpMessage implements RequestInterface
      * @invisible
      * @var array
      */
-    private $allowedMethods = array(
+    private $allowedMethods = [
         'CONNECT',
         'DELETE',
         'GET',
@@ -74,7 +74,7 @@ class HttpRequest extends HttpMessage implements RequestInterface
         'POST',
         'PUT',
         'TRACE'
-    );
+    ];
 
     /**
      * New Request instance.
@@ -88,7 +88,7 @@ class HttpRequest extends HttpMessage implements RequestInterface
         $method = null,
         $uri = null,
         $body = 'php://memory',
-        array $headers = array()
+        array $headers = []
     )
     {
         if (!empty($method) && !in_array(strtoupper($method), $this->allowedMethods))
@@ -137,7 +137,7 @@ class HttpRequest extends HttpMessage implements RequestInterface
         $result = $this->headers;
         if (!$this->hasHeader('host') && (!empty($this->uri) && $this->uri->getHost()))
         {
-            $headers['Host'] = array($this->getUriHost());
+            $headers['Host'] = [$this->getUriHost()];
         }
 
         return $result;
@@ -163,10 +163,10 @@ class HttpRequest extends HttpMessage implements RequestInterface
         {
             if (strtolower($name) == 'host' && (!empty($this->uri) && $this->uri->getHost()))
             {
-                return array($this->getUriHost());
+                return [$this->getUriHost()];
             }
 
-            return array();
+            return [];
         }
 
         return parent::getHeader($name);

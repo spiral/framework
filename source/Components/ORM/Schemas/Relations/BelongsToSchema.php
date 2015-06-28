@@ -30,13 +30,13 @@ class BelongsToSchema extends RelationSchema
      * @invisible
      * @var array
      */
-    protected $defaultDefinition = array(
+    protected $defaultDefinition = [
         ActiveRecord::OUTER_KEY         => '{outer:primaryKey}',
         ActiveRecord::INNER_KEY         => '{name:singular}_{definition:OUTER_KEY}',
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
         ActiveRecord::NULLABLE          => true
-    );
+    ];
 
     /**
      * Create all required relation columns, indexes and constraints.
@@ -79,13 +79,13 @@ class BelongsToSchema extends RelationSchema
             );
         }
 
-        $this->getOuterRecordSchema()->addRelation($name, array(
+        $this->getOuterRecordSchema()->addRelation($name, [
             $type                           => $this->recordSchema->getClass(),
             ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
             ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
             ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
             ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
             ActiveRecord::NULLABLE          => $this->definition[ActiveRecord::NULLABLE]
-        ));
+        ]);
     }
 }

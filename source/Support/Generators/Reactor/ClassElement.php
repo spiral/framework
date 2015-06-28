@@ -25,21 +25,21 @@ class ClassElement extends BaseElement
      *
      * @var array
      */
-    protected $interfaces = array();
+    protected $interfaces = [];
 
     /**
      * Properties and their default values declared in this class.
      *
      * @var PropertyElement[]
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * Constants and their values declared in this class.
      *
      * @var array
      */
-    protected $constants = array();
+    protected $constants = [];
 
     /**
      * Public static and non-static methods declared in this class. Method can include source code
@@ -47,7 +47,7 @@ class ClassElement extends BaseElement
      *
      * @var MethodElement[]
      */
-    protected $methods = array();
+    protected $methods = [];
 
     /**
      * Name of the parent class which is being extended.
@@ -270,7 +270,7 @@ class ClassElement extends BaseElement
      * @param array  $parameters List of parameters or parameters associated with their docComment.
      * @return MethodElement
      */
-    public function method($name, $docType = null, array $parameters = array())
+    public function method($name, $docType = null, array $parameters = [])
     {
         if (!$this->hasMethod($name))
         {
@@ -336,7 +336,7 @@ class ClassElement extends BaseElement
      */
     public function createDeclaration($indentLevel = 0)
     {
-        $result = array($this->renderComment($indentLevel));
+        $result = [$this->renderComment($indentLevel)];
 
         $header = 'class ' . $this->name . ($this->parent ? ' extends ' . $this->parent : '');
 
@@ -421,7 +421,7 @@ class ClassElement extends BaseElement
         }
 
         //Methods
-        $this->methods = array();
+        $this->methods = [];
         foreach ($reflection->getMethods() as $method)
         {
             if (!$parentMethods && $reflection->getParentClass())
@@ -443,11 +443,11 @@ class ClassElement extends BaseElement
      */
     public function flushSchema()
     {
-        $this->properties = array();
-        $this->constants = array();
-        $this->methods = array();
-        $this->docComment = array();
-        $this->parent = array();
-        $this->interfaces = array();
+        $this->properties = [];
+        $this->constants = [];
+        $this->methods = [];
+        $this->docComment = [];
+        $this->parent = [];
+        $this->interfaces = [];
     }
 }

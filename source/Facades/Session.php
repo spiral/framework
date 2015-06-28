@@ -35,7 +35,7 @@ use Spiral\Core\Facade;
  * @method static void offsetSet($offset, $value)
  * @method static void offsetUnset($offset)
  * @method static \Traversable getIterator()
- * @method static SessionStore make($parameters = array(), Container $container = null)
+ * @method static SessionStore make($parameters = [], Container $container = null)
  * @method static SessionStore getInstance(Container $container = null)
  * @method static array getConfig()
  * @method static array setConfig(array $config)

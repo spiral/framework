@@ -46,12 +46,12 @@ abstract class Module extends Component implements ModuleInterface
 
         $composer = json_decode($file->read($composer), true);
 
-        return Definition::make(array(
+        return Definition::make([
             'class'        => get_called_class(),
             'name'         => $composer['name'],
             'description'  => isset($composer['description']) ? $composer['description'] : '',
             'dependencies' => isset($composer['require']) ? array_keys($composer['require']) : ''
-        ));
+        ]);
     }
 
     /**
@@ -64,6 +64,6 @@ abstract class Module extends Component implements ModuleInterface
      */
     public static function getInstaller(Definition $definition)
     {
-        return Installer::make(array('moduleDirectory' => $definition->getLocation()));
+        return Installer::make(['moduleDirectory' => $definition->getLocation()]);
     }
 }

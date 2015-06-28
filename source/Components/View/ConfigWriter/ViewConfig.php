@@ -27,21 +27,21 @@ class ViewConfig extends ConfigWriter
      *
      * @var array
      */
-    protected $namespaces = array();
+    protected $namespaces = [];
 
     /**
      * View engines to be registered in view config.
      *
      * @var array
      */
-    protected $engines = array();
+    protected $engines = [];
 
     /**
      * View processors has to be registered and their location in chain.
      *
      * @var array
      */
-    protected $processors = array();
+    protected $processors = [];
 
     /**
      * Base directory for registered namespaces.
@@ -117,13 +117,13 @@ class ViewConfig extends ConfigWriter
      * @param string $view
      * @param array  $options
      */
-    public function registerEngine($name, array $extensions, $compiler, $view, array $options = array())
+    public function registerEngine($name, array $extensions, $compiler, $view, array $options = [])
     {
-        $this->engines[$name] = array(
+        $this->engines[$name] = [
                 'extensions' => $extensions,
                 'compiler'   => $compiler,
                 'view'       => $view
-            ) + $options;
+            ] + $options;
     }
 
     /**
@@ -134,11 +134,11 @@ class ViewConfig extends ConfigWriter
      * @param string $class
      * @param array  $options
      */
-    public function registerProcessor($processor, $class, $options = array())
+    public function registerProcessor($processor, $class, $options = [])
     {
-        $this->processors[$processor] = array(
+        $this->processors[$processor] = [
                 'class' => $class,
-            ) + $options;
+            ] + $options;
     }
 
     /**

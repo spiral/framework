@@ -12,8 +12,8 @@ $dumper = Dumper::getInstance();
 /**
  * Code highlighting styles.
  */
-$tokenizer->setHighlightingStyles(array(
-    'color: blue; font-weight: bold;'   => array(
+$tokenizer->setHighlightingStyles([
+    'color: blue; font-weight: bold;'   => [
         T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED, T_CLASS,
         T_NEW, T_FINAL, T_ABSTRACT, T_IMPLEMENTS, T_CONST,
         T_ECHO, T_CASE, T_FUNCTION, T_GOTO, T_INCLUDE,
@@ -22,32 +22,32 @@ $tokenizer->setHighlightingStyles(array(
         T_IF, T_ELSE, T_ELSEIF, T_TRY, T_CATCH, T_CLONE,
         T_WHILE, T_FOR, T_DO, T_UNSET, T_FOREACH, T_RETURN,
         T_EXIT, T_EXTENDS
-    ),
-    'color: blue'                       => array(
+    ],
+    'color: blue'                       => [
         T_DNUMBER, T_LNUMBER
-    ),
-    'color: black; font: weight: bold;' => array(
+    ],
+    'color: black; font: weight: bold;' => [
         T_OPEN_TAG, T_CLOSE_TAG, T_OPEN_TAG_WITH_ECHO
-    ),
-    'color: gray;'                      => array(
+    ],
+    'color: gray;'                      => [
         T_COMMENT, T_DOC_COMMENT
-    ),
-    'color: green; font-weight: bold;'  => array(
+    ],
+    'color: green; font-weight: bold;'  => [
         T_CONSTANT_ENCAPSED_STRING, T_ENCAPSED_AND_WHITESPACE
-    ),
-    'color: #660000;'                   => array(
+    ],
+    'color: #660000;'                   => [
         T_VARIABLE
-    )
-));
+    ]
+]);
 
 /**
  * Variable dumping styles.
  */
-$dumper->setStyles(array(
+$dumper->setStyles([
     'maxLevel'  => 10,
     'container' => 'background-color: white;',
     'indent'    => '&middot;    ',
-    'styles'    => array(
+    'styles'    => [
         'common'           => 'black',
         'name'             => 'black',
         'indent'           => 'gray',
@@ -67,8 +67,8 @@ $dumper->setStyles(array(
         'access-public'    => '#8dc17d',
         'access-private'   => '#c18c7d',
         'access-protected' => '#7d95c1'
-    )
-));
+    ]
+]);
 
 ?>
 <!DOCTYPE html>
@@ -357,7 +357,7 @@ $dumper->setStyles(array(
                                 . '</span>' . $trace['type'] . $function;
                         }
 
-                        $arguments = array();
+                        $arguments = [];
 
                         if (isset($trace['args']))
                         {
@@ -419,13 +419,13 @@ $dumper->setStyles(array(
 
     <div class="environment">
         <?php
-        $variables = array(
+        $variables = [
             'GET'     => '_GET',
             'POST'    => '_POST',
             'COOKIES' => '_COOKIE',
             'SESSION' => '_SESSION',
             'SERVER'  => '_SERVER',
-        );
+        ];
 
         foreach ($variables as $name => $variable)
         {
@@ -439,7 +439,7 @@ $dumper->setStyles(array(
                 ?>
                 <div class="container">
                     <div class="title"
-                         onclick="toggleBlock('dump-<?php echo $name?>')">
+                        onclick="toggleBlock('dump-<?php echo $name?>')">
                         <?php echo $name?> (<?php echo count($GLOBALS[$variable]) ?>)
                     </div>
                     <div class="dump" id="dump-<?php echo $name?>" style="display: none;">
