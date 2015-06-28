@@ -37,7 +37,7 @@ abstract class Module extends Component implements ModuleInterface
 
         if (!$file->exists($composer))
         {
-            if (!$file->exists($composer = basename($moduleDirectory) . '/composer.json'))
+            if (!$file->exists($composer = dirname($moduleDirectory) . '/composer.json'))
             {
                 //Source directory is one level higher
                 throw new ModuleException("Unable to locate composer.json file.");

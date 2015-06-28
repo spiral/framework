@@ -97,7 +97,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         'view'      => 'Spiral\Components\View\ViewManager',
         'redis'     => 'Spiral\Components\Redis\RedisManager',
         'encrypter' => 'Spiral\Components\Encrypter\Encrypter',
-        'image'     => 'Spiral\Components\Image\ImageManager',
         'storage'   => 'Spiral\Components\Storage\StorageManager',
         'dbal'      => 'Spiral\Components\DBAL\DatabaseManager',
         'orm'       => 'Spiral\Components\ORM\ORM',
@@ -109,7 +108,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         'request'   => 'Psr\Http\Message\ServerRequestInterface',
 
         //External components
-        'guzzle'    => 'Spiral\Components\Guzzle\HttpClient'
+        'guzzle'    => 'Spiral\Components\Guzzle\HttpClient',
+
+        //Pre-bundled, but supplied as external module
+        'image'     => 'Spiral\Components\Image\ImageManager',
     );
 
     /**
