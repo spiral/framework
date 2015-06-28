@@ -263,12 +263,7 @@ class Validator extends Component
         $this->validates = $validates;
         $this->interpolateNames = $interpolateNames;
 
-        if (empty($container))
-        {
-            $container = Container::getInstance();
-        }
-
-        $this->container = $container;
+        $this->container = $container ?: Container::getInstance();
     }
 
     /**

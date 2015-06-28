@@ -24,7 +24,7 @@ use Spiral\Support\Pagination\PaginatorTrait;
  * @method mixed batchInsert($documents, $options = array())
  * @method bool update($old_array_of_fields_OR_object, $new_array_of_fields_OR_object, $options = array())
  * @method bool|array remove($array_of_fields_OR_object, $options = array())
- * @method bool ensureIndex($key_OR_array_of_keys, $options)
+ * @method bool ensureIndex($key_OR_array_of_keys, $options = array())
  * @method array deleteIndex($string_OR_array_of_keys)
  * @method array deleteIndexes()
  * @method array getIndexInfo()

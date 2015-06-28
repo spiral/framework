@@ -84,6 +84,11 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     const REMOVE_ID_UNDERSCORE = true;
 
     /**
+     * Chunk to hold index options.
+     */
+    const INDEX_OPTIONS = '@options';
+
+    /**
      * ODM component.
      *
      * @var ODM
@@ -164,6 +169,20 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @var array
      */
     protected $defaults = array();
+
+    /**
+     * Set of indexes to be created for associated collection. Use self::INDEX_OPTIONS or @options
+     * for additional parameters.
+     *
+     * Example:
+     *  protected $indexes = array(
+     *      ['email' => 1, '@options' => ['unique' => true]],
+     *      ['name' => 1]
+     * );
+     *
+     * @var array
+     */
+    protected $indexes = array();
 
     /**
      * Documents marked with solid state flag will be saved entirely without generating separate

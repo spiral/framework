@@ -432,6 +432,21 @@ class DocumentSchema extends ModelSchema
     }
 
     /**
+     * Get all declared document indexes.
+     *
+     * @return array
+     */
+    public function getIndexes()
+    {
+        if (!$this->getCollection())
+        {
+            return array();
+        }
+
+        return $this->property('indexes', true);
+    }
+
+    /**
      * Get all possible children (sub models) for this document.
      *
      * Example:

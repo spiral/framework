@@ -220,6 +220,38 @@ class SchemaBuilder extends Component
     }
 
     /**
+     * Create all required collection indexes.
+     *
+     * @param ODM $odm ODM component is required as source for databases and collections.
+     */
+    public function createIndexes(ODM $odm)
+    {
+        foreach ($this->getDocumentSchemas() as $document)
+        {
+            if (!$indexes = $document->getIndexes())
+            {
+                continue;
+            }
+
+            $collection = $odm->db($document->getDatabase())->odmCollection(
+                $document->getCollection()
+            );
+
+            foreach ($indexes as $index)
+            {
+                $options = array();
+                if (isset($index[Document::INDEX_OPTIONS]))
+                {
+                    $options = $index[Document::INDEX_OPTIONS];
+                    unset($index[Document::INDEX_OPTIONS]);
+                }
+
+                $collection->ensureIndex($index, $options);
+            }
+        }
+    }
+
+    /**
      * Normalizing class detection definition.
      *
      * @param mixed $classDefinition
