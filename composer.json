@@ -16,9 +16,10 @@
     "psr/log": "*",
     "psr/http-message": "*",
     "predis/predis": "~1.0",
-    "symfony/console": "2.6.4",
+    "symfony/console": "~2.0",
+    "symfony/process": "~2.0",
     "nesbot/carbon": "dev-master",
-    "doctrine/inflector": "~1.0@dev",
+    "doctrine/inflector": "1.0.1",
     "guzzlehttp/guzzle": "~6.0"
   },
   "autoload": {
