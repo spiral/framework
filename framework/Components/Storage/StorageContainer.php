@@ -190,16 +190,18 @@ class StorageContainer extends Component implements InjectableInterface
      * Upload storage object using given filename or stream. Method can return false in case of failed
      * upload or thrown custom exception if needed.
      *
-     * @param string                                       $name   Given storage object name.
-     * @param string|StreamInterface|UploadedFileInterface $origin Local filename or stream to use
-     *                                                             for creation.
+     * @param string                                                     $name   Given storage object
+     *                                                                           name.
+     * @param string|StreamInterface|UploadedFileInterface|StorageObject $origin Local filename or
+     *                                                                           stream to use for
+     *                                                                           creation.
      * @return StorageObject
      */
     public function put($name, $origin)
     {
         $this->log("Uploading to '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        if ($origin instanceof UploadedFileInterface)
+        if ($origin instanceof UploadedFileInterface || $origin instanceof StorageObject)
         {
             //Known simplification for UploadedFile
             $origin = $origin->getStream();

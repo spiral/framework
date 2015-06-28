@@ -8,92 +8,56 @@
  */
 namespace Spiral\Components\Image;
 
+use Intervention\Image\ImageManager as BaseImageManager;
 use Psr\Http\Message\StreamInterface;
-use Spiral\Core\Component;
-use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use Spiral\Components\Storage\StorageObject;
+use Spiral\Core\Component\SingletonTrait;
+use Spiral\Core\Configurator;
 
-class ImageManager extends Component
+class ImageManager extends BaseImageManager
 {
-    use Component\SingletonTrait, Component\ConfigurableTrait;
+    /**
+     * Component traits.
+     */
+    use  SingletonTrait;
 
     /**
-     * Declares to IoC that component instance should be treated as singleton.
+     * This class is singleton.
      */
     const SINGLETON = __CLASS__;
 
     /**
-     * Container instance.
+     * Constructing image manager.
      *
-     * @invisible
-     * @var Container
+     * @param Configurator $configurator
      */
-    protected $container = null;
-
-    /**
-     * New image component instance.
-     *
-     * @param ConfiguratorInterface $configurator
-     * @param Container             $container
-     */
-    public function __construct(ConfiguratorInterface $configurator, Container $container)
+    public function __construct(Configurator $configurator)
     {
-        $this->config = $configurator->getConfig('image');
-        $this->container = $container;
+        parent::__construct($configurator->getConfig('image'));
     }
 
     /**
-     * Current component configuration.
+     * Initiates an Image instance from different input types, method is altered in spiral to
+     * support PSR7 streams and UploadedFileInterface. This might be changed in future if library
+     * author will support PSR7 by himself.
      *
-     * @return array
+     * @param mixed|StreamInterface|UploadedFileInterface|StorageObject $data
+     * @return \Intervention\Image\Image
      */
-    public function getConfig()
+    public function make($data)
     {
-        return $this->config;
+        return parent::make($data);
     }
 
     /**
-     * Update config with new values, new configuration will be merged with old one.
+     * Initiates an Image instance from different input types, alias for make method.
      *
-     * @param array $config
-     * @return array
+     * @param  mixed $data
+     * @return \Intervention\Image\Image
      */
-    public function setConfig(array $config)
+    public function open($data)
     {
-        return $this->config = $config + $this->config;
-    }
-
-    /**
-     * Open existed filename and create ImageObject based on it, ImageObject->isSupported() method
-     * can be used to verify that file is supported and can be processed. ImageObject preferred to
-     * be used for processing existed images, rather that creating new.
-     *
-     * @param string $filename Local image filename.
-     * @return ImageObject
-     */
-    public function open($filename)
-    {
-        return ImageObject::make(compact('filename'), $this->container);
-    }
-
-    /**
-     * Image processor represents operations associated with one specific image file, all processing
-     * operation (resize, crop and etc) described via operations sequence and perform on image save,
-     * every ImageObject will have it's own processor.
-     *
-     * Every processor will implement set of pre-defined operations, however additional operations
-     * can be supported by processor and extend default set of image manipulations.
-     *
-     * @param string $filename Local image filename.
-     * @param string $type     Forced processor id.
-     * @return ProcessorInterface
-     */
-    public function imageProcessor($filename, $type = '')
-    {
-        $type = $type ?: $this->config['processor'];
-        $options = $this->config['processors'][$type];
-
-        return $this->container->get($options['class'], compact('filename', 'options'));
+        return $this->make($data);
     }
 }
