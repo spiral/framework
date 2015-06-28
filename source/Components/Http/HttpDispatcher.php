@@ -355,7 +355,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
                     'path'    => $uri->getPath(),
                     'code'    => $exception->getCode(),
                     'message' => $exception->getMessage() ?: '-not specified-',
-                    'remote'  => InputManager::getInstance($this->container)->getRemoteAddr()
+                    'remote'  => InputManager::getInstance($this->container)->getRemoteAddress()
                 )
             );
 
