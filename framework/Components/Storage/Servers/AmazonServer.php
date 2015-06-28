@@ -152,7 +152,7 @@ class AmazonServer extends StorageServer
      *
      * @param StorageContainer $container Container instance.
      * @param string           $name      Storage object name.
-     * @return StreamInterface|null
+     * @return StreamInterface|false
      * @throws ClientException
      * @throws ServerException
      */

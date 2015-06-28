@@ -20,7 +20,6 @@ use Spiral\Core\Facade;
  * @method static mixed command(string $method, array $arguments = array())
  * @method static setLogger(LoggerInterface $logger)
  * @method static LoggerInterface logger()
- * @method static string getAlias()
  * @method static RedisManager make(array $parameters = array())
  * @method static RedisManager getInstance()
  *

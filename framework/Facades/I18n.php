@@ -11,23 +11,6 @@ namespace Spiral\Facades;
 use Spiral\Components\I18n\Translator;
 use Spiral\Core\Facade;
 
-/**
- * @method static bool setTimezone(string $timezone)
- * @method static string getTimezone()
- * @method static setLanguage(string $language)
- * @method static string getLanguage()
- * @method static loadBundle(string $bundle)
- * @method static saveBundle(string $bundle)
- * @method static string normalize(string $string)
- * @method static string get(string $bundle, string $string)
- * @method static string set(string $bundle, string $string, string $translation = '')
- * @method static string pluralize(string $phrase, int $number, bool $numberFormat = true)
- * @method static string getAlias()
- * @method static Translator make(array $parameters = array())
- * @method static Translator getInstance()
- * @method static array getConfig()
- * @method static array setConfig(array $config)
- */
 class I18n extends Facade
 {
     /**
