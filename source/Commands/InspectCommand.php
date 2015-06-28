@@ -66,29 +66,6 @@ class InspectCommand extends Command
     ];
 
     /**
-     * Get inspector instance.
-     *
-     * @return Inspector
-     */
-    protected function getInspector()
-    {
-        $odmBuilder = !empty(\Spiral\Commands\ODM\UpdateCommand::$schemaBuilder)
-            ? \Spiral\Commands\ODM\UpdateCommand::$schemaBuilder
-            : $this->odm->schemaBuilder();
-
-        $ormBuilder = !empty(\Spiral\Commands\ORM\UpdateCommand::$schemaBuilder)
-            ? \Spiral\Commands\ORM\UpdateCommand::$schemaBuilder
-            : $this->orm->schemaBuilder();
-
-        return Inspector::make([
-            'schemas' => array_merge(
-                $odmBuilder->getDocumentSchemas(),
-                $ormBuilder->getRecordSchemas()
-            )
-        ]);
-    }
-
-    /**
      * Inspecting existed models.
      */
     public function perform()
@@ -135,5 +112,28 @@ class InspectCommand extends Command
         ));
 
         return;
+    }
+
+    /**
+     * Get inspector instance.
+     *
+     * @return Inspector
+     */
+    protected function getInspector()
+    {
+        $odmBuilder = !empty(\Spiral\Commands\ODM\UpdateCommand::$schemaBuilder)
+            ? \Spiral\Commands\ODM\UpdateCommand::$schemaBuilder
+            : $this->odm->schemaBuilder();
+
+        $ormBuilder = !empty(\Spiral\Commands\ORM\UpdateCommand::$schemaBuilder)
+            ? \Spiral\Commands\ORM\UpdateCommand::$schemaBuilder
+            : $this->orm->schemaBuilder();
+
+        return Inspector::make([
+            'schemas' => array_merge(
+                $odmBuilder->getDocumentSchemas(),
+                $ormBuilder->getRecordSchemas()
+            )
+        ]);
     }
 }

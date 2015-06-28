@@ -27,18 +27,15 @@ abstract class BaseCommand extends Command
     private $migrator = null;
 
     /**
-     * Getting migrator instance.
+     * Helper method used to display query.
      *
-     * @return Migrator
+     * @param Event $event
      */
-    protected function getMigrator()
+    public function displayQuery(Event $event)
     {
-        if ($this->migrator)
-        {
-            return $this->migrator;
-        }
-
-        return $this->migrator = $this->dbal->getMigrator($this->option('database'));
+        $query = DatabaseManager::interpolateQuery($event->context['query'], $event->context['parameters']);
+        $this->writeln("<comment>#</comment> $query");
+        $event->stopPropagation();
     }
 
     /**
@@ -69,6 +66,21 @@ abstract class BaseCommand extends Command
     }
 
     /**
+     * Getting migrator instance.
+     *
+     * @return Migrator
+     */
+    protected function getMigrator()
+    {
+        if ($this->migrator)
+        {
+            return $this->migrator;
+        }
+
+        return $this->migrator = $this->dbal->getMigrator($this->option('database'));
+    }
+
+    /**
      * Executes the current command.
      * This method is not abstract because you can use this class as a concrete class. In this case,
      * instead of defining the execute() method, you set the code to execute by passing a Closure to
@@ -95,18 +107,6 @@ abstract class BaseCommand extends Command
         $this->callFunction('perform', compact('input', 'output'));
 
         $driver->dispatcher()->removeListener('statement', [$this, 'displayQuery']);
-    }
-
-    /**
-     * Helper method used to display query.
-     *
-     * @param Event $event
-     */
-    public function displayQuery(Event $event)
-    {
-        $query = DatabaseManager::interpolateQuery($event->context['query'], $event->context['parameters']);
-        $this->writeln("<comment>#</comment> $query");
-        $event->stopPropagation();
     }
 
     /**
