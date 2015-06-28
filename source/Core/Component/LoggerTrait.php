@@ -9,7 +9,6 @@
 namespace Spiral\Core\Component;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Components\Debug\Debugger;
 use Spiral\Components\Debug\Logger;
 use Spiral\Core\Container;
 

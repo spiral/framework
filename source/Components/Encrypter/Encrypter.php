@@ -10,7 +10,6 @@ namespace Spiral\Components\Encrypter;
 
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\CoreInterface;
 
 class Encrypter extends Component
 {

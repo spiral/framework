@@ -19,7 +19,6 @@ use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Session\Http\SessionStarter;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Facades\Cookies;
 
 class CookieManager extends Component implements MiddlewareInterface
 {

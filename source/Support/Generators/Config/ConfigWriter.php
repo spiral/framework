@@ -12,7 +12,6 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Core;
-use Spiral\Core\CoreInterface;
 
 class ConfigWriter extends Component
 {

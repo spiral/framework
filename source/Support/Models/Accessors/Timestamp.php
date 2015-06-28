@@ -9,7 +9,6 @@
 namespace Spiral\Support\Models\Accessors;
 
 use Carbon\Carbon;
-use Spiral\Core\Core;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\AccessorTrait;
 

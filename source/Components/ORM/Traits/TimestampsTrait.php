@@ -8,8 +8,6 @@
  */
 namespace Spiral\Components\ORM\Traits;
 
-use Spiral\Components\DBAL\Database;
-use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Core\Events\DispatcherInterface;
 use Spiral\Core\Events\Event;

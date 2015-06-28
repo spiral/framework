@@ -9,7 +9,6 @@
 namespace Spiral\Core\Component;
 
 use Spiral\Core\Container;
-use Spiral\Core\CoreException;
 
 trait SingletonTrait
 {

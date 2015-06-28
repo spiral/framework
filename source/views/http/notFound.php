@@ -5,7 +5,7 @@
     /**
      * Expecting error to happen inside request scope declared by HttpDispatcher in perform() method.
      *
-     * @var \Spiral\Components\Http\Request\Uri $uri
+     * @var \Spiral\Components\Http\Uri $uri
      */
     $uri = \Spiral\Core\Container::getInstance()->get('request')->getUri();
     ?>

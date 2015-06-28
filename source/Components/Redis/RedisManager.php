@@ -12,7 +12,6 @@ use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\InjectionManagerInterface;
-use Spiral\Core\CoreInterface;
 
 /**
  * @method mixed del(array $keys)

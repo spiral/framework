@@ -10,7 +10,6 @@ namespace Spiral\Components\Storage\Servers;
 
 use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\Files\StreamWrapper;
 use Spiral\Components\Http\Stream;
 use Spiral\Components\ODM\MongoDatabase;
 use Spiral\Components\ODM\ODM;

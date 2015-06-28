@@ -30,7 +30,6 @@ use Spiral\Components;
  * @property Components\DBAL\DatabaseManager          $dbal
  * @property Components\ODM\ODM                       $odm
  * @property Components\ORM\ORM                       $orm
- * @property Components\Guzzle\HttpClient           $guzzle
  *
  * @property \Psr\Http\Message\ServerRequestInterface $request
  * @property Components\Http\Cookies\CookieManager    $cookies

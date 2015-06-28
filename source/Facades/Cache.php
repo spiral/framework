@@ -8,7 +8,6 @@
  */
 namespace Spiral\Facades;
 
-use Psr\Log\LoggerInterface;
 use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\Cache\CacheStore;
 use Spiral\Core\Container;

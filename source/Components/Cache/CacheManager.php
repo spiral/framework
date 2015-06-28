@@ -11,7 +11,6 @@ namespace Spiral\Components\Cache;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
 
 /**
  * @method bool has(string $name)

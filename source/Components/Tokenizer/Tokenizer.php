@@ -11,7 +11,6 @@ namespace Spiral\Components\Tokenizer;
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\Core;
 use ReflectionClass;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Events\Event;

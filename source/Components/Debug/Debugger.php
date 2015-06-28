@@ -11,9 +11,7 @@ namespace Spiral\Components\Debug;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
 use Exception;
-use Spiral\Core\CoreInterface;
 use Spiral\Core\Dispatcher\ClientException;
 
 class Debugger extends Component

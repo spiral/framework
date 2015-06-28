@@ -12,7 +12,6 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
 
 class ViewManager extends Component
 {

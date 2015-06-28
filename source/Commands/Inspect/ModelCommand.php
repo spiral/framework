@@ -12,7 +12,6 @@ use Psr\Log\LogLevel;
 use Spiral\Commands\InspectCommand;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ModelCommand extends InspectCommand

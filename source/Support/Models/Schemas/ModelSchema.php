@@ -8,7 +8,6 @@
  */
 namespace Spiral\Support\Models\Schemas;
 
-use Spiral\Components\I18n\Translator;
 use Spiral\Core\Component;
 
 abstract class ModelSchema extends Component

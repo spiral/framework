@@ -12,7 +12,6 @@ use Spiral\Components\ORM\Exporters\DocumentationExporter;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
-use Spiral\Facades\Log;
 
 class ORM extends Component
 {

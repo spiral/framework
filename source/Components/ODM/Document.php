@@ -8,7 +8,6 @@
  */
 namespace Spiral\Components\ODM;
 
-use Carbon\Carbon;
 use Spiral\Components\I18n\Translator;
 use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\AccessorInterface;

@@ -10,8 +10,6 @@ namespace Spiral\Components\I18n;
 
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\CoreInterface;
-
 use Spiral\Core\RuntimeCacheInterface;
 use Spiral\Helpers\StringHelper;
 

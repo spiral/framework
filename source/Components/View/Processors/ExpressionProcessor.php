@@ -12,7 +12,6 @@ use Spiral\Components\View\LayeredCompiler;
 use Spiral\Components\View\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
-use Spiral\Core\Component\SingletonTrait;
 
 class ExpressionProcessor implements ProcessorInterface
 {

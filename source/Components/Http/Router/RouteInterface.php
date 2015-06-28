@@ -10,7 +10,6 @@ namespace Spiral\Components\Http\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
 
 interface RouteInterface
 {

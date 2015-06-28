@@ -11,7 +11,6 @@ namespace Spiral\Components\Session;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
 
 class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
 {

@@ -14,7 +14,6 @@ use Spiral\Components\DBAL\Driver;
 use PDO;
 use Spiral\Components\DBAL\Drivers\Postgres\Builders\InsertQuery;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\RuntimeCacheInterface;
 

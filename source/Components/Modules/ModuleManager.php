@@ -13,7 +13,6 @@ use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
 use Spiral\Core\CoreException;
 use Spiral\Support\Generators\Config\ConfigWriter;
 
