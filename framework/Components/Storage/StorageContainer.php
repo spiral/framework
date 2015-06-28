@@ -326,7 +326,7 @@ class StorageContainer extends Component implements InjectableInterface
      *
      * @param StorageContainer $destination Destination container (under same server).
      * @param string           $name        Storage object name.
-     * @return bool
+     * @return StorageObject
      * @throws StorageException
      */
     public function copy(StorageContainer $destination, $name)

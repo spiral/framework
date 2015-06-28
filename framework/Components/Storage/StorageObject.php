@@ -236,7 +236,7 @@ class StorageObject extends Component
      * Method will return new instance of StorageObject associated with copied data.
      *
      * @param StorageContainer $destination Destination container (under same server).
-     * @return bool
+     * @return StorageObject
      * @throws StorageException
      */
     public function copy($destination)
@@ -258,10 +258,8 @@ class StorageObject extends Component
      * Replace object to another internal (under same server) container, this operation may not
      * require file download and can be performed remotely.
      *
-     * Method will return replaced storage object address.
-     *
      * @param StorageContainer $destination Destination container (under same server).
-     * @return string
+     * @return StorageObject
      * @throws StorageException
      */
     public function replace($destination)
