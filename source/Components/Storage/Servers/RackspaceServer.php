@@ -20,11 +20,16 @@ use Spiral\Components\Files\FileManager;
 use Spiral\Components\Http\Uri;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
-use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageServer;
+use Spiral\Core\Component\LoggerTrait;
 
 class RackspaceServer extends StorageServer
 {
+    /**
+     * Some warnings.
+     */
+    use LoggerTrait;
+
     /**
      * Default cache lifetime is 24 hours.
      */
@@ -320,7 +325,7 @@ class RackspaceServer extends StorageServer
     {
         if ($container->options['region'] != $destination->options['region'])
         {
-            StorageManager::logger()->warning(
+            self::logger()->warning(
                 "Copying between regions are not allowed by Rackspace and performed using local buffer."
             );
 

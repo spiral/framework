@@ -11,6 +11,7 @@ namespace Spiral\Components\Storage;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Http\Stream;
 use Spiral\Core\Component;
 use Spiral\Core\Container\InjectableInterface;
 
@@ -205,6 +206,11 @@ class StorageContainer extends Component implements InjectableInterface
         {
             //Known simplification for UploadedFile
             $origin = $origin->getStream();
+        }
+
+        if (is_resource($origin))
+        {
+            $origin = new Stream($origin);
         }
 
         benchmark("{$this->server}::upload", $this->buildAddress($name));
@@ -435,7 +441,7 @@ class StorageContainer extends Component implements InjectableInterface
             $stream->detach() && $this->delete($name);
         }
 
-        return $this->buildAddress($name);
+        return $destination->buildAddress($name);
     }
 
     /**
