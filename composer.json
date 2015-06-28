@@ -23,10 +23,10 @@
   },
   "autoload": {
     "files": [
-      "framework/functions.php"
+      "source/functions.php"
     ],
     "psr-4": {
-      "Spiral\\": "framework/",
+      "Spiral\\": "source/",
       "Spiral\\Tests\\": "tests/"
     }
   }
