@@ -68,7 +68,7 @@ class StorageObject extends Component
     {
         $this->storage = $storage;
 
-        if (empty($container))
+        if (!empty($container))
         {
             //We already know address and name
             $this->address = $address;
@@ -168,7 +168,7 @@ class StorageObject extends Component
     {
         if (empty($this->name))
         {
-            return '';
+            throw new StorageException("Unable to allocate filename for unassigned storage object.");
         }
 
         return $this->container->allocateFilename($this->name);
@@ -185,7 +185,7 @@ class StorageObject extends Component
     {
         if (empty($this->name))
         {
-            return '';
+            throw new StorageException("Unable to get stream for unassigned storage object.");
         }
 
         return $this->container->getStream($this->name);
