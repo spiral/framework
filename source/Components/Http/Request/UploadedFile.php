@@ -10,10 +10,8 @@ namespace Spiral\Components\Http\Request;
 
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Http\Stream;
 use Spiral\Core\Core;
-use Symfony\Component\Process\Exception\RuntimeException;
 
 class UploadedFile implements UploadedFileInterface
 {
@@ -121,6 +119,11 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getStream()
     {
+        if ($this->error)
+        {
+            throw new \RuntimeException("Unable to get stream for errored file.");
+        }
+
         if ($this->isMoved)
         {
             throw new \RuntimeException("File was moved and not available anymore.");
@@ -168,6 +171,11 @@ class UploadedFile implements UploadedFileInterface
      */
     public function moveTo($targetPath)
     {
+        if ($this->error)
+        {
+            throw new \RuntimeException("Unable to move errored file.");
+        }
+
         if ($this->isMoved)
         {
             throw new \RuntimeException("File was moved and not available anymore.");
@@ -179,7 +187,7 @@ class UploadedFile implements UploadedFileInterface
 
             if (!$destination = fopen($targetPath, 'wb+'))
             {
-                throw new RuntimeException("An error occurred while moving uploaded file.");
+                throw new \RuntimeException("An error occurred while moving uploaded file.");
             }
 
             $stream->rewind();
@@ -197,7 +205,7 @@ class UploadedFile implements UploadedFileInterface
 
         if (move_uploaded_file($this->path, $targetPath) === false)
         {
-            throw new RuntimeException("An error occurred while moving uploaded file.");
+            throw new \RuntimeException("An error occurred while moving uploaded file.");
         }
 
         $this->isMoved = true;

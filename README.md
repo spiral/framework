@@ -19,4 +19,3 @@ Currently in development:
 - ORM Abstract and Parent classes handling
 - ORM Virtual Documentation generation
 - ORM UML export (only classes export done at the moment)
-- Storage Component PSR7 update with guzzle and backend

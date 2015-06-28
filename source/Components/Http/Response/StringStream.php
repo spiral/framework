@@ -9,7 +9,6 @@
 namespace Spiral\Components\Http\Response;
 
 use Psr\Http\Message\StreamInterface;
-use Symfony\Component\Process\Exception\RuntimeException;
 
 class StringStream implements StreamInterface
 {
@@ -136,7 +135,7 @@ class StringStream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        throw new RuntimeException("StringStream not seekable.");
+        throw new \RuntimeException("StringStream not seekable.");
     }
 
     /**
@@ -151,7 +150,7 @@ class StringStream implements StreamInterface
      */
     public function rewind()
     {
-        throw new RuntimeException("StringStream not seekable.");
+        throw new \RuntimeException("StringStream not seekable.");
     }
 
     /**

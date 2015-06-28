@@ -12,9 +12,9 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Message\HttpMessage;
+use Spiral\Components\Http\Stream;
 use Spiral\Components\Http\Uri;
 use Spiral\Core\Component;
-use Spiral\Support\Streams\Stream\Stream;
 
 /**
  * Representation of an outgoing, client-side request.
