@@ -191,13 +191,12 @@ abstract class AbstractColumnSchema extends Component
     protected $type = '';
 
     /**
-     * Defines if column value can be set to null. Attention, this flag is false by default, which
-     * means that you can't alter tables with existed data without providing default value or setting
-     * this flag to true.
+     * Defines if column value can be set to null. Attention, this flag is true by default, which
+     * means that you can alter tables with existed data.
      *
      * @var bool
      */
-    protected $nullable = false;
+    protected $nullable = true;
 
     /**
      * Default column value, can not be applied to some datatypes (for example to primary keys), should

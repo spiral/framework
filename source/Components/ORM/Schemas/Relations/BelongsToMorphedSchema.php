@@ -49,6 +49,7 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
 
         $morphKey = $innerSchema->column($this->definition[ActiveRecord::MORPH_KEY]);
         $morphKey->string(static::TYPE_COLUMN_SIZE);
+        $morphKey->nullable($this->definition[ActiveRecord::NULLABLE]);
 
         $innerKey = $innerSchema->column($this->getInnerKey());
         $innerKey->type($this->getOuterKeyType());
