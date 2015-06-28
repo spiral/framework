@@ -13,7 +13,6 @@ use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\Cache\CacheStore;
 use Spiral\Core\Facade;
 
-
 class Cache extends Facade
 {
     /**

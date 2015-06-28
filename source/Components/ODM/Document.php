@@ -180,6 +180,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *      ['name' => 1]
      * );
      *
+     * @link http://php.net/manual/en/mongocollection.ensureindex.php
      * @var array
      */
     protected $indexes = array();
