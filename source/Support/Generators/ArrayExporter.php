@@ -57,16 +57,16 @@ class ArrayExporter extends Component
 
             if ($value == [])
             {
-                $result[] = $name . "array()";
+                $result[] = $name . "[]";
                 continue;
             }
 
             //Sub-array
-            $result[] = $name . "array({$subIndent}" . $this->export(
+            $result[] = $name . "[{$subIndent}" . $this->export(
                     $value,
                     $indent,
                     $level + 1
-                ) . "{$keyIndent})";
+                ) . "{$keyIndent}]";
         }
 
         if ($level !== 0)
@@ -75,7 +75,7 @@ class ArrayExporter extends Component
         }
         else
         {
-            return "array({$keyIndent}" . join(",{$keyIndent}", $result) . "\n)";
+            return "[{$keyIndent}" . join(",{$keyIndent}", $result) . "\n]";
         }
     }
 
