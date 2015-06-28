@@ -8,11 +8,17 @@
  */
 namespace Spiral\Facades;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
+use Spiral\Components\Http\Input\InputBag;
+use Spiral\Components\Http\InputManager;
+use Spiral\Core\Container;
 use Spiral\Core\Facade;
 
 /**
+ * @method static ServerRequestInterface getRequest()
+ * @method static InputBag getBag($name)
  * @method static mixed header($name, $default = null, $implode = ',')
  * @method static mixed data($name, $default = null)
  * @method static mixed post($name, $default = null)
@@ -27,6 +33,8 @@ use Spiral\Core\Facade;
  * @method static bool isSecure()
  * @method static bool isAjax()
  * @method static string|null getRemoteAddress()
+ * @method static InputManager make($parameters = array(), Container $container = null)
+ * @method static InputManager getInstance(Container $container = null)
  */
 class Input extends Facade
 {

@@ -11,8 +11,19 @@ namespace Spiral\Facades;
 use Psr\Log\LoggerInterface;
 use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\Cache\CacheStore;
+use Spiral\Core\Container;
 use Spiral\Core\Facade;
 
+/**
+ * @method static mixed storeOptions($adapter)
+ * @method static CacheStore store($store = null, array $options = array())
+ * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter, Container $container)
+ * @method static CacheManager make($parameters = array(), Container $container = null)
+ * @method static CacheManager getInstance(Container $container = null)
+ * @method static array getConfig()
+ * @method static array setConfig(array $config)
+
+ */
 class Cache extends Facade
 {
     /**

@@ -8,10 +8,36 @@
  */
 namespace Spiral\Facades;
 
-use Psr\Log\LoggerInterface;
 use Spiral\Components\Files\FileManager;
+use Spiral\Core\Container;
 use Spiral\Core\Facade;
 
+/**
+ * @method static bool read($filename)
+ * @method static bool write($filename, $data, $mode = null, $ensureDirectory = false, $append = false)
+ * @method static bool append($filename, $data, $mode = null, $ensureDirectory = false)
+ * @method static bool move($filename, $destination)
+ * @method static bool copy($filename, $destination)
+ * @method static bool delete($filename)
+ * @method static bool touch($filename)
+ * @method static bool exists($filename)
+ * @method static int size($filename)
+ * @method static bool extension($filename)
+ * @method static bool md5($filename)
+ * @method static int timeUpdated($filename)
+ * @method static bool isUploaded($file, $local = true)
+ * @method static void clearCache($filename = null)
+ * @method static int getPermissions($filename, $clearCache = true)
+ * @method static bool setPermissions($filename, $mode, $clearCache = true)
+ * @method static array getFiles($directory, $extensions = null, &$result = array())
+ * @method static string tempFilename($extension = '', $directory = null, $prefix = 'sp')
+ * @method static string relativePath($location, $relativeTo = null)
+ * @method static string normalizePath($path, $directory = false)
+ * @method static bool ensureDirectory($directory, $mode = 511, $recursivePermissions = true)
+ * @method static void removeFiles()
+ * @method static FileManager make($parameters = array(), Container $container = null)
+ * @method static FileManager getInstance(Container $container = null)
+ */
 class File extends Facade
 {
     /**
