@@ -110,7 +110,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
         //External components
         'guzzle'    => 'Spiral\Components\Guzzle\HttpClient',
 
-        //Pre-bundled, but supplied as external module
+        //Pre-bundled, but supplied as external modules with common class
         'image'     => 'Spiral\Components\Image\ImageManager',
     );
 
