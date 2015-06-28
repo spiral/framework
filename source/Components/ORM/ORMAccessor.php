@@ -26,8 +26,7 @@ interface ORMAccessor extends AccessorInterface
     public function flushUpdates();
 
     /**
-     * Get array of changed or created fields for specified Entity or accessor. Following method will
-     * be executed only while model updating.
+     * Get new field value to be send to database.
      *
      * @param string $field Name of field where model/accessor stored into.
      * @return mixed

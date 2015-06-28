@@ -9,19 +9,22 @@
 namespace Spiral\Components\ORM\Accessors;
 
 use Spiral\Components\DBAL\Driver;
-use Spiral\Components\ODM\Document;
 use Spiral\Components\ORM\ORMAccessor;
+use Spiral\Components\Storage\Accessors\StorageAccessor as AbstractStorageAccessor;
 
-abstract class JsonDocument extends Document implements ORMAccessor
+class StorageAccessor extends AbstractStorageAccessor implements ORMAccessor
 {
     /**
-     * Serialize object data for saving into database. No getters will be applied here.
+     * Accessors can be used to mock different model values using "representative" class, like
+     * DateTime for timestamps.
      *
-     * @return mixed
+     * @param mixed  $data    Data to mock.
+     * @param object $parent
+     * @param mixed  $options Implementation specific options.
      */
-    public function serializeData()
+    public function __construct($data = null, $parent = null, $options = null)
     {
-        return json_encode(parent::serializeData());
+        parent::__construct($data, $parent, $options);
     }
 
     /**
@@ -43,22 +46,6 @@ abstract class JsonDocument extends Document implements ORMAccessor
      */
     public function defaultValue(Driver $driver)
     {
-        return $this->serializeData();
-    }
-
-    /**
-     * Update accessor mocked data.
-     *
-     * @param mixed $data
-     * @return static
-     */
-    public function setData($data)
-    {
-        if (is_string($data))
-        {
-            $data = json_decode($data);
-        }
-
-        return parent::setData($data);
+        return '';
     }
 }
