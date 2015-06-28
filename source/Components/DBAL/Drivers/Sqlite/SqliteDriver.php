@@ -9,6 +9,7 @@
 namespace Spiral\Components\DBAL\Drivers\Sqlite;
 
 use Spiral\Components\DBAL\Driver;
+use Spiral\Core\Container;
 
 class SqliteDriver extends Driver
 {
@@ -58,11 +59,12 @@ class SqliteDriver extends Driver
      * Driver instances responsible for all database low level operations which can be DBMS
      * specific - such as connection preparation, custom table/column/index/reference schemas and etc.
      *
-     * @param array $config
+     * @param array     $config
+     * @param Container $container
      */
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], Container $container)
     {
-        parent::__construct($config);
+        parent::__construct($config, $container);
 
         //Removing "sqlite:"
         $this->databaseName = substr($this->config['connection'], 7);
