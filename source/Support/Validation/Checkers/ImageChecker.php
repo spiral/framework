@@ -9,11 +9,16 @@
 namespace Spiral\Support\Validation\Checkers;
 
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\Image\ImageManager;
-use Spiral\Components\Image\ImageObject;
 
 class ImageChecker extends FileChecker
 {
+    /**
+     * Getimagesize constants.
+     */
+    const WIDTH      = 0;
+    const HEIGHT     = 1;
+    const IMAGE_TYPE = 2;
+
     /**
      * Set of default error messages associated with their check methods organized by method name.
      * Will be returned by the checker to replace the default validator message. Can have placeholders
@@ -29,56 +34,45 @@ class ImageChecker extends FileChecker
     );
 
     /**
-     * Previously opened ImageObjects. This is used to speed up the script while applying multiple
-     * rules to one image.
+     * All known image types. This type will be associated with value from getimagesize() and can be
+     * retrieved via ImageObject->type()
      *
-     * @var ImageObject[]
+     * @var array
      */
-    static protected $imageCache = array();
-
-    /**
-     * Image component.
-     *
-     * @var ImageManager
-     */
-    protected $image = null;
+    protected $imageTypes = array(
+        'null', 'gif', 'jpeg', 'png', 'swf', 'psd', 'bmp', 'tiff',
+        'tiff', 'jpc', 'jp2', 'jpx', 'jb2', 'swc', 'iff', 'wbmp', 'xbm'
+    );
 
     /**
      * New instance of image checker. Image checker depends on the Image and File components.
      *
-     * @param FileManager  $file
-     * @param ImageManager $image
+     * @param FileManager $file
      */
-    public function __construct(FileManager $file, ImageManager $image)
+    public function __construct(FileManager $file)
     {
-        $this->image = $image;
         $this->file = $file;
     }
 
     /**
-     * Helper function to get ImageObject from a non specified input. Can accept both local filename
-     * or uploaded file array. To validate the file array as a local file (without checking for
-     * is_uploaded_file()), array must have the field "local" filled in. This trick can be used with
-     * some of the more complex validators or file processors.
+     * Helper function to fetch image information from specified file or stream.
      *
      * @param string|array $file Local filename or file array.
-     * @return ImageObject|bool
+     * @return array
      */
     protected function getImage($file)
     {
         $filename = $this->getFilename($file);
-        if (isset(self::$imageCache[$filename]))
+
+        try
         {
-            return self::$imageCache[$filename];
+            return getimagesize($filename);
+        }
+        catch (\Exception $exception)
+        {
         }
 
-        $image = $this->image->open($filename);
-        if (!$image->isSupported())
-        {
-            return false;
-        }
-
-        return self::$imageCache[$filename] = $image;
+        return false;
     }
 
     /**
@@ -101,7 +95,7 @@ class ImageChecker extends FileChecker
             $types = array_slice(func_get_args(), 1);
         }
 
-        return in_array($image->getType(), $types);
+        return in_array($this->imageTypes[$image[self::IMAGE_TYPE]], $types);
     }
 
     /**
@@ -130,12 +124,12 @@ class ImageChecker extends FileChecker
             return false;
         }
 
-        if ($image->getWidth() >= $width)
+        if ($image[self::WIDTH] >= $width)
         {
             return false;
         }
 
-        if ($height && $image->getHeight() >= $height)
+        if ($height && $image[self::HEIGHT] >= $height)
         {
             return false;
         }
@@ -158,24 +152,16 @@ class ImageChecker extends FileChecker
             return false;
         }
 
-        if ($image->getWidth() < $width)
+        if ($image[self::WIDTH] < $width)
         {
             return false;
         }
 
-        if ($height && $image->getHeight() < $height)
+        if ($height && $image[self::HEIGHT] < $height)
         {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Will erase all ImageObjects created for validation from memory.
-     */
-    public static function cleanCache()
-    {
-        self::$imageCache = array();
     }
 }

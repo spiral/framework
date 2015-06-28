@@ -11,6 +11,7 @@ namespace Spiral\Support\Validation\Checkers;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\Files\StreamWrapper;
+use Spiral\Components\Storage\StorageObject;
 use Spiral\Support\Validation\Checker;
 
 class FileChecker extends Checker
@@ -55,7 +56,7 @@ class FileChecker extends Checker
      */
     protected function getFilename($file, $onlyUploaded = true)
     {
-        if ($file instanceof UploadedFileInterface)
+        if ($file instanceof UploadedFileInterface | $file instanceof StorageObject)
         {
             if ($file->getError())
             {

@@ -132,6 +132,7 @@ class ConfigWriter extends Component
      * Read configuration file from some specified directory (application or module config folder).
      *
      * @param string $directory Director where config should be located.
+     * @return ConfigWriter
      * @throws ConfigWriterException
      */
     public function readConfig($directory)
@@ -148,6 +149,8 @@ class ConfigWriter extends Component
         }
 
         $this->setConfig(require $filename)->readHeader($filename);
+
+        return $this;
     }
 
     /**
