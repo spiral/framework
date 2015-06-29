@@ -9,9 +9,10 @@
 namespace Spiral\Components\Storage;
 
 use Psr\Http\Message\StreamInterface;
+use Spiral\Components\Files\StreamContainerInterface;
 use Spiral\Core\Component;
 
-class StorageObject extends Component
+class StorageObject extends Component implements StreamContainerInterface
 {
     /**
      * Full object address. Address used to identify associated container using container prefix,

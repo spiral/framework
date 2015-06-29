@@ -11,6 +11,7 @@ namespace Spiral\Components\Storage;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Files\StreamContainerInterface;
 use Spiral\Components\Http\Stream;
 use Spiral\Core\Component;
 use Spiral\Core\Container\InjectableInterface;
@@ -191,18 +192,23 @@ class StorageContainer extends Component implements InjectableInterface
      * Upload storage object using given filename or stream. Method can return false in case of failed
      * upload or thrown custom exception if needed.
      *
-     * @param string                                                     $name   Given storage object
-     *                                                                           name.
-     * @param string|StreamInterface|UploadedFileInterface|StorageObject $origin Local filename or
-     *                                                                           stream to use for
-     *                                                                           creation.
+     * @param string                                                                $name   Given
+     *                                                                                      storage
+     *                                                                                      object
+     *                                                                                      name.
+     * @param string|StreamInterface|UploadedFileInterface|StreamContainerInterface $origin Local
+     *                                                                                      filename
+     *                                                                                      or
+     *                                                                                      stream
+     *                                                                                      to use for
+     *                                                                                      creation.
      * @return StorageObject
      */
     public function put($name, $origin)
     {
         $this->log("Uploading to '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
-        if ($origin instanceof UploadedFileInterface || $origin instanceof StorageObject)
+        if ($origin instanceof UploadedFileInterface || $origin instanceof StreamContainerInterface)
         {
             //Known simplification for UploadedFile
             $origin = $origin->getStream();

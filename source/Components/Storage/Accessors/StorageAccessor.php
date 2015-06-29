@@ -10,6 +10,7 @@ namespace Spiral\Components\Storage\Accessors;
 
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Spiral\Components\Files\StreamContainerInterface;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
 use Spiral\Components\Storage\StorageManager;
@@ -29,7 +30,7 @@ use Spiral\Support\Models\AccessorInterface;
  * @method StorageObject copy($destination)
  * @method static replace($destination)
  */
-abstract class StorageAccessor implements AccessorInterface
+abstract class StorageAccessor implements AccessorInterface, StreamContainerInterface
 {
     /**
      * Some warnings.
