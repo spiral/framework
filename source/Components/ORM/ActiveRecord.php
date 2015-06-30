@@ -591,13 +591,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         //Traits
         static::initialize();
 
-        $schema = $orm->getSchema(get_called_class());
+        $schema = $orm->getSchema($class = get_called_class());
 
-        return Selector::make([
-            'schema'   => $schema,
-            'database' => $dbal->db($schema[ORM::E_DB]),
-            'orm'      => $orm
-        ]);
+        return new Selector($class, $orm, $dbal->db($schema[ORM::E_DB]));
     }
 
     /**

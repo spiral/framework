@@ -113,7 +113,7 @@ abstract class Loader
      *
      * @var Loader[]
      */
-    public $loaders = [];
+    protected $loaders = [];
 
     public function __construct(
         $container,
@@ -145,15 +145,9 @@ abstract class Loader
         $this->countColumns = count($this->schema[ORM::E_COLUMNS]);
     }
 
-    /**
-     * Reference key (from parent object) required to speed up data normalization.
-     *
-     * @return string
-     */
-    public function getReferenceKey()
+    public function getAlias()
     {
-        //Fairly simple logic
-        return $this->relationDefinition[ActiveRecord::INNER_KEY];
+        return $this->options['alias'];
     }
 
     public function getReferenceName(array $data)
@@ -241,17 +235,6 @@ abstract class Loader
         return $this->addLoader($relation);
     }
 
-
-    public function getTable()
-    {
-        return $this->schema[ORM::E_TABLE];
-    }
-
-    public function getAlias()
-    {
-        return $this->options['alias'];
-    }
-
     /**
      * Update loader options.
      *
@@ -265,9 +248,53 @@ abstract class Loader
         return $this;
     }
 
+    /**
+     * Reference key (from parent object) required to speed up data normalization.
+     *
+     * @return string
+     */
+    public function getReferenceKey()
+    {
+        //Fairly simple logic
+        return $this->relationDefinition[ActiveRecord::INNER_KEY];
+    }
+
+    public function getTable()
+    {
+        return $this->schema[ORM::E_TABLE];
+    }
+
+    /**
+     * @param Database $database
+     * @return Selector[]
+     */
+    public function getPostSelectors(Database $database)
+    {
+        $selectors = [];
+        foreach ($this->loaders as $loader)
+        {
+            if ($loader->options['method'] == Selector::POSTLOAD)
+            {
+                $selectors[] = $loader->createSelector($database);
+            }
+            else
+            {
+                $selectors = array_merge($selectors, $loader->getPostSelectors($database));
+            }
+        }
+
+        return $selectors;
+    }
+
     public function createSelector(Database $database)
     {
-        $selector = new Selector($this->schema, $this->orm, $database, [], $this);
+        $selector = new Selector(
+            $this->relationDefinition[static::RELATION_TYPE],
+            $this->orm,
+            $database,
+            [],
+            $this
+        );
 
         $this->offset = $selector->registerColumns(
             $this->getAlias(),
@@ -307,73 +334,12 @@ abstract class Loader
     abstract protected function clarifyQuery(Selector $selector);
 
     /**
-     * @param Database $database
-     * @return Selector[]
+     * Parser provided query result to fetch model fields and resolve nested loaders.
+     *
+     * @param QueryResult $result
+     * @param int         $rowsCount
+     * @return array
      */
-    public function getPostSelectors(Database $database)
-    {
-        $selectors = [];
-        foreach ($this->loaders as $loader)
-        {
-            if ($loader->options['method'] == Selector::POSTLOAD)
-            {
-                $selectors[] = $loader->createSelector($database);
-            }
-            else
-            {
-                $selectors = array_merge($selectors, $loader->getPostSelectors($database));
-            }
-        }
-
-        return $selectors;
-    }
-
-
-    protected function fetchData(array $row)
-    {
-        $row = array_slice($row, $this->offset, $this->countColumns);
-
-        //Populating keys
-        return array_combine($this->columns, $row);
-    }
-
-    protected function checkDuplicate(array &$data)
-    {
-        if (isset($this->schema[ORM::E_PRIMARY_KEY]))
-        {
-            $primaryKey = $this->schema[ORM::E_PRIMARY_KEY];
-
-            if (isset($this->duplicates[$data[$primaryKey]]))
-            {
-                //Duplicate is presented, let's reduplicate
-                $data = $this->duplicates[$data[$primaryKey]];
-
-                return true;
-            }
-
-            $this->duplicates[$data[$primaryKey]] = &$data;
-        }
-        else
-        {
-            /**
-             * It is recommended to use primary keys in every model as it will speed up deduplication.
-             */
-            $serialization = serialize($data);
-            if (isset($this->duplicates[$serialization]))
-            {
-                //Duplicate is presented, let's reduplicate
-                $data = $this->duplicates[$serialization];
-
-                //Duplicate is presented
-                return true;
-            }
-
-            $this->duplicates[$serialization] = &$data;
-        }
-
-        return false;
-    }
-
     public function parseResult(QueryResult $result, &$rowsCount)
     {
         foreach ($result as $row)
@@ -385,21 +351,38 @@ abstract class Loader
         return $this->result;
     }
 
+    /**
+     * Get built loader result. Result data can be altered by nested loaders (inload and postload),
+     * so we have to run all post loaders before using this method result.
+     *
+     * @return array
+     */
     public function getResult()
     {
         return $this->result;
     }
 
+    /**
+     * Parse single result row, should fetch related model fields and run nested loader parsers.
+     *
+     * @param array $row
+     * @return mixed
+     */
     abstract public function parseRow(array $row);
 
-    protected function registerReferences(array &$data)
+    /**
+     * Helper method used to fetch named fields from query result, will automatically calculate data
+     * offset and resolve field aliases.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function fetchData(array $row)
     {
-        foreach ($this->referenceKeys as $key)
-        {
-            //Adding reference
-            $this->references[$key . '::' . $data[$key]] = &$data;
-            $this->aggregatedReferences[$key][$data[$key]][] = &$data;
-        }
+        $row = array_slice($row, $this->offset, $this->countColumns);
+
+        //Populating keys
+        return array_combine($this->columns, $row);
     }
 
     public function getAggregatedKeys($key)
@@ -453,6 +436,54 @@ abstract class Loader
         }
     }
 
+
+    protected function checkDuplicate(array &$data)
+    {
+        if (isset($this->schema[ORM::E_PRIMARY_KEY]))
+        {
+            $primaryKey = $this->schema[ORM::E_PRIMARY_KEY];
+
+            if (isset($this->duplicates[$data[$primaryKey]]))
+            {
+                //Duplicate is presented, let's reduplicate (will update reference)
+                $data = $this->duplicates[$data[$primaryKey]];
+
+                return true;
+            }
+
+            $this->duplicates[$data[$primaryKey]] = &$data;
+        }
+        else
+        {
+            /**
+             * It is recommended to use primary keys in every model as it will speed up deduplication.
+             */
+            $serialization = serialize($data);
+            if (isset($this->duplicates[$serialization]))
+            {
+                //Duplicate is presented, let's reduplicate
+                $data = $this->duplicates[$serialization];
+
+                //Duplicate is presented
+                return true;
+            }
+
+            $this->duplicates[$serialization] = &$data;
+        }
+
+        return false;
+    }
+
+    protected function registerReferences(array &$data)
+    {
+        foreach ($this->referenceKeys as $key)
+        {
+            //Adding reference
+            $this->references[$key . '::' . $data[$key]] = &$data;
+            $this->aggregatedReferences[$key][$data[$key]][] = &$data;
+        }
+    }
+
     protected function parseNested(array $row)
     {
         foreach ($this->loaders as $loader)
@@ -464,14 +495,27 @@ abstract class Loader
         }
     }
 
+    /**
+     * Clean loader data.
+     */
     public function clean()
     {
         $this->duplicates = [];
         $this->references = [];
+        $this->aggregatedReferences = [];
         $this->result = [];
+
         foreach ($this->loaders as $loader)
         {
             $loader->clean();
         }
+    }
+
+    /**
+     * Destruct loader.
+     */
+    public function __destruct()
+    {
+        $this->clean();
     }
 }
