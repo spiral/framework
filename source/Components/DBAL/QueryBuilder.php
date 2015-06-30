@@ -67,7 +67,12 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
             $parameter = new Parameter($parameter);
         }
 
-        if ($parameter instanceof SqlFragmentInterface && !$parameter instanceof ParameterInterface)
+        if
+        (
+            $parameter instanceof SqlFragmentInterface
+            && !$parameter instanceof ParameterInterface
+            && !$parameter instanceof QueryBuilder
+        )
         {
             return $parameter;
         }
@@ -109,6 +114,7 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     public function getParameters()
     {
         $parameters = [];
+
         foreach ($this->parameters as $parameter)
         {
             if ($parameter instanceof QueryBuilder)

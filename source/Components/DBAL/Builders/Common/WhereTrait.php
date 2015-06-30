@@ -276,7 +276,7 @@ trait WhereTrait
         $dataParameters = true
     )
     {
-        list($identifier, $variousA, $variousB, $variousC) = $parameters + array_fill(0, 5, null);
+        list($identifier, $valueA, $valueB, $valueC) = $parameters + array_fill(0, 5, null);
 
         //Complex query is provided
         if (is_array($identifier))
@@ -306,50 +306,59 @@ trait WhereTrait
         switch (count($parameters))
         {
             case 1:
-                //A single token
+                //A single token, usually sub query
                 $tokens[] = [$joiner, $identifier];
                 break;
             case 2:
                 //Simple condition
-                $tokens[] = [$joiner, [
-                    $identifier,
-                    '=',
-                    //Check if sql fragment
-                    $dataParameters
-                        ? $this->addParameter($variousA)
-                        : $this->wrapExpression($variousA)
-                ]];
+                $tokens[] = [
+                    $joiner,
+                    [
+                        $identifier,
+                        '=',
+                        //Check if sql fragment
+                        $dataParameters
+                            ? $this->addParameter($valueA)
+                            : $this->wrapExpression($valueA)
+                    ]
+                ];
                 break;
             case 3:
                 //Operator is specified
-                $tokens[] = [$joiner, [
-                    $identifier,
-                    strtoupper($variousA),
-                    $dataParameters
-                        ? $this->addParameter($variousB)
-                        : $this->wrapExpression($variousB)
-                ]];
+                $tokens[] = [
+                    $joiner,
+                    [
+                        $identifier,
+                        strtoupper($valueA),
+                        $dataParameters
+                            ? $this->addParameter($valueB)
+                            : $this->wrapExpression($valueB)
+                    ]
+                ];
                 break;
             case 4:
                 //BETWEEN or NOT BETWEEN
-                $variousA = strtoupper($variousA);
-                if (!in_array($variousA, ['BETWEEN', 'NOT BETWEEN']))
+                $valueA = strtoupper($valueA);
+                if (!in_array($valueA, ['BETWEEN', 'NOT BETWEEN']))
                 {
                     throw new DBALException(
                         'Only "BETWEEN" or "NOT BETWEEN" can define second comparasions value.'
                     );
                 }
 
-                $tokens[] = [$joiner, [
-                    $identifier,
-                    strtoupper($variousA),
-                    $dataParameters
-                        ? $this->addParameter($variousB)
-                        : $this->wrapExpression($variousB),
-                    $dataParameters
-                        ? $this->addParameter($variousC)
-                        : $this->wrapExpression($variousC)
-                ]];
+                $tokens[] = [
+                    $joiner,
+                    [
+                        $identifier,
+                        strtoupper($valueA),
+                        $dataParameters
+                            ? $this->addParameter($valueB)
+                            : $this->wrapExpression($valueB),
+                        $dataParameters
+                            ? $this->addParameter($valueC)
+                            : $this->wrapExpression($valueC)
+                    ]
+                ];
         }
 
         return $tokens;

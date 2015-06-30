@@ -20,10 +20,7 @@ use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Support\Pagination\PaginableInterface;
 use Spiral\Support\Pagination\PaginatorTrait;
 
-class SelectQuery extends QueryBuilder implements
-    PaginableInterface,
-    \IteratorAggregate,
-    \JsonSerializable
+class SelectQuery extends QueryBuilder implements PaginableInterface, \IteratorAggregate, \JsonSerializable
 {
     /**
      * Select builder uses where, join traits and can be paginated.
