@@ -27,8 +27,16 @@ class ColumnSchema extends AbstractColumnSchema
      */
     protected $mapping = [
         //Primary sequences
-        'primary'     => ['type' => 'int', 'identity' => true],
-        'bigPrimary'  => ['type' => 'bigint', 'identity' => true],
+        'primary'     => [
+            'type'     => 'int',
+            'identity' => true,
+            'nullable' => false
+        ],
+        'bigPrimary'  => [
+            'type'     => 'bigint',
+            'identity' => true,
+            'nullable' => false
+        ],
 
         //Enum type (mapped via method)
         'enum'        => 'enum',

@@ -455,7 +455,7 @@ abstract class Driver extends Component
         }
         else
         {
-            $this->savepointRelease($this->transactionLevel);
+            $this->savepointRelease($this->transactionLevel + 1);
         }
 
         return true;
@@ -478,7 +478,7 @@ abstract class Driver extends Component
         }
         else
         {
-            $this->savepointRollback($this->transactionLevel);
+            $this->savepointRollback($this->transactionLevel + 1);
         }
 
         return true;
@@ -504,7 +504,7 @@ abstract class Driver extends Component
     protected function savepointCreate($name)
     {
         self::logger()->info("Creating savepoint '{$name}'.");
-        $this->statement("SAVEPOINT SVP{$name}");
+        $this->statement("SAVEPOINT " . $this->identifier("SVP{$name}"));
     }
 
     /**
@@ -516,7 +516,7 @@ abstract class Driver extends Component
     protected function savepointRelease($name)
     {
         self::logger()->info("Releasing savepoint '{$name}'.");
-        $this->statement("RELEASE SAVEPOINT SVP{$name}");
+        $this->statement("RELEASE SAVEPOINT " . $this->identifier("SVP{$name}"));
     }
 
     /**
@@ -528,7 +528,7 @@ abstract class Driver extends Component
     protected function savepointRollback($name)
     {
         self::logger()->info("Rolling back savepoint '{$name}'.");
-        $this->statement("ROLLBACK TO SAVEPOINT SVP{$name}");
+        $this->statement("ROLLBACK TO SAVEPOINT " . $this->identifier("SVP{$name}"));
     }
 
     /**

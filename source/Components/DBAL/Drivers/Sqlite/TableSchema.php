@@ -203,11 +203,12 @@ class TableSchema extends AbstractTableSchema
                 $this->driver->statement($query);
 
                 //Dropping original table
-                $this->driver->statement('DROP TABLE ' . $this->driver->identifier($tableName));
+                $this->driver->statement(
+                    'DROP TABLE ' . $this->driver->identifier($tableName)
+                );
 
-                //Renaming!
-                $this->rename($tableName);
-                $this->name = $tableName;
+                //Renaming (without prefix)
+                $this->rename(substr($tableName, strlen($this->tablePrefix)));
 
                 //Restoring indexes, we can create them now
                 $this->indexes = $indexes;

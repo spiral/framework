@@ -28,8 +28,8 @@ class ColumnSchema extends AbstractColumnSchema
      */
     protected $mapping = [
         //Primary sequences
-        'primary'     => ['type' => 'serial', 'autoIncrement' => true],
-        'bigPrimary'  => ['type' => 'bigserial', 'autoIncrement' => true],
+        'primary'     => ['type' => 'serial', 'autoIncrement' => true, 'nullable' => false],
+        'bigPrimary'  => ['type' => 'bigserial', 'autoIncrement' => true, 'nullable' => false],
 
         //Enum type (mapped via method)
         'enum'        => 'enum',

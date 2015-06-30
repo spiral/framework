@@ -255,15 +255,8 @@ abstract class AbstractReferenceSchema extends Component
         $statement[] = 'REFERENCES ' . $this->table->getDriver()->identifier($this->foreignTable);
         $statement[] = '(' . $this->table->getDriver()->identifier($this->foreignKey) . ')';
 
-        if ($this->deleteRule != self::NO_ACTION)
-        {
-            $statement[] = "ON DELETE {$this->deleteRule}";
-        }
-
-        if ($this->updateRule != self::NO_ACTION)
-        {
-            $statement[] = "ON UPDATE {$this->updateRule}";
-        }
+        $statement[] = "ON DELETE {$this->deleteRule}";
+        $statement[] = "ON UPDATE {$this->updateRule}";
 
         return join(' ', $statement);
     }
