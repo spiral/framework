@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Storage\Accessors;
+namespace Spiral\Support\Models\Accessors;
 
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -25,7 +25,6 @@ use Spiral\Support\Models\AccessorInterface;
  * @method bool exists()
  * @method int|bool getSize()
  * @method string localFilename()
- * @method StreamInterface getStream()
  * @method static rename($newname)
  * @method StorageObject copy($destination)
  * @method static replace($destination)
@@ -249,5 +248,22 @@ abstract class StorageAccessor implements AccessorInterface, StreamContainerInte
         }
 
         return $result;
+    }
+
+    /**
+     * Get associated stream.
+     *
+     * @return StreamInterface
+     */
+    public function getStream()
+    {
+        if (!$this->isAssociated())
+        {
+            throw new StorageException(
+                "Unable to call decorated StorageObject, no instance assigned to accessor."
+            );
+        }
+
+        return $this->storageObject->getStream();
     }
 }

@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM\Accessors;
 
 use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ORM\ORMAccessor;
-use Spiral\Components\Storage\Accessors\StorageAccessor as AbstractStorageAccessor;
+use Spiral\Support\Models\Accessors\StorageAccessor as AbstractStorageAccessor;
 
 class StorageAccessor extends AbstractStorageAccessor implements ORMAccessor
 {

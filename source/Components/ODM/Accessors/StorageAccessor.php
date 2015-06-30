@@ -14,7 +14,7 @@ use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageObject;
-use Spiral\Components\Storage\Accessors\StorageAccessor as AbstractStorageAccessor;
+use Spiral\Support\Models\Accessors\StorageAccessor as AbstractStorageAccessor;
 
 /**
  * @method string getName()
