@@ -82,8 +82,8 @@ abstract class Loader
      * @var array
      */
     protected $options = [
-        'method'     => null,
-        'tableAlias' => null
+        'method' => null,
+        'alias'  => null
     ];
 
     /**
@@ -134,11 +134,11 @@ abstract class Loader
 
         if ($this->parent instanceof Selector\Loaders\RootLoader)
         {
-            $this->options['tableAlias'] = $container;
+            $this->options['alias'] = $container;
         }
         else
         {
-            $this->options['tableAlias'] = $this->parent->getTableAlias() . '_' . $container;
+            $this->options['alias'] = $this->parent->getAlias() . '_' . $container;
         }
 
         $this->columns = array_keys($this->schema[ORM::E_COLUMNS]);
@@ -247,9 +247,9 @@ abstract class Loader
         return $this->schema[ORM::E_TABLE];
     }
 
-    public function getTableAlias()
+    public function getAlias()
     {
-        return $this->options['tableAlias'];
+        return $this->options['alias'];
     }
 
     /**
@@ -270,7 +270,7 @@ abstract class Loader
         $selector = new Selector($this->schema, $this->orm, $database, [], $this);
 
         $this->offset = $selector->registerColumns(
-            $this->getTableAlias(),
+            $this->getAlias(),
             array_keys($this->schema[ORM::E_COLUMNS])
         );
 
@@ -291,7 +291,7 @@ abstract class Loader
 
         //Mounting columns
         $this->offset = $selector->registerColumns(
-            $this->getTableAlias(),
+            $this->getAlias(),
             array_keys($this->schema[ORM::E_COLUMNS])
         );
 

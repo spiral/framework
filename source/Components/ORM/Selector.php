@@ -166,7 +166,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         $this->buildQuery();
 
         $statement = $compiler->select(
-            [$this->loader->getTable() . ' AS ' . $this->loader->getTableAlias()],
+            [$this->loader->getTable() . ' AS ' . $this->loader->getAlias()],
             false, //todo: check if required
             !empty($this->columns) ? $this->columns : ['*'],
             $this->joins,

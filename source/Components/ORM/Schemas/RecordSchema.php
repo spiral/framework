@@ -229,19 +229,24 @@ class RecordSchema extends ModelSchema
      */
     public function getDefaults()
     {
-        //We have to reiterate columns as schema can be altered while relation creation
+        //We have to reiterate columns as schema can be altered while relation creation,
+        //plus we always have to keep original columns order (this is very important)
+        $defaults = [];
         foreach ($this->tableSchema->getColumns() as $column)
         {
             if (!array_key_exists($column->getName(), $this->columns))
             {
-                $this->columns[$column->getName()] = $this->prepareDefault(
+                $defaults[$column->getName()] = $this->prepareDefault(
                     $column->getName(),
                     $column->getDefaultValue()
                 );
+                continue;
             }
+
+            $defaults[$column->getName()] = $this->columns[$column->getName()];
         }
 
-        return $this->columns;
+        return $defaults;
     }
 
     /**

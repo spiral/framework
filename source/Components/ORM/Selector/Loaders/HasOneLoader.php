@@ -34,19 +34,19 @@ class HasOneLoader extends Loader
         //Relation definition
         $definition = $this->relationDefinition;
 
-        $outerKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::OUTER_KEY];
+        $outerKey = $this->getAlias() . '.' . $definition[ActiveRecord::OUTER_KEY];
 
         //Inner key has to be build based on parent table
-        $innerKey = $this->parent->getTableAlias() . '.' . $definition[ActiveRecord::INNER_KEY];
+        $innerKey = $this->parent->getAlias() . '.' . $definition[ActiveRecord::INNER_KEY];
 
         $selector->leftJoin(
-            $definition[Relation::OUTER_TABLE] . ' AS ' . $this->options['tableAlias'],
+            $definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(),
             [$outerKey => $innerKey]
         );
 
         if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
         {
-            $morphKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::MORPH_KEY];
+            $morphKey = $this->getAlias() . '.' . $definition[ActiveRecord::MORPH_KEY];
             $selector->onWhere([
                 $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
             ]);
@@ -82,14 +82,14 @@ class HasOneLoader extends Loader
 
         //Adding condition
         $selector->where(
-            $this->getTableAlias() . '.' . $definition[ActiveRecord::OUTER_KEY],
+            $this->getAlias() . '.' . $definition[ActiveRecord::OUTER_KEY],
             'IN',
             array_unique($this->parent->getAggregatedKeys($this->getReferenceKey()))
         );
 
         if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
         {
-            $morphKey = $this->options['tableAlias'] . '.' . $definition[ActiveRecord::MORPH_KEY];
+            $morphKey = $this->getAlias() . '.' . $definition[ActiveRecord::MORPH_KEY];
             $selector->where([
                 $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
             ]);

@@ -28,7 +28,7 @@ class RootLoader extends Loader
         $this->options['method'] = Selector::INLOAD;
 
         //Primary table will be named under it's declared table name by default (without prefix)
-        $this->options['tableAlias'] = $schema[ORM::E_TABLE];
+        $this->options['alias'] = $schema[ORM::E_TABLE];
     }
 
     public function clarifySelector(Selector $selector)
