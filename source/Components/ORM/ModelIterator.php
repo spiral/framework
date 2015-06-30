@@ -6,14 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Support\Models;
+namespace Spiral\Components\ORM;
 
 use Spiral\Core\Component;
 
 /**
  * TODO: NOT FINISHED YET.
  */
-class EntityIterator extends Component implements \Iterator
+class ModelIterator extends Component implements \Iterator
 {
     protected $class = '';
     protected $data = [];

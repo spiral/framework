@@ -8,7 +8,7 @@
  */
 namespace Spiral\Support\Models;
 
-class EntityCollection extends EntityIterator
+class ModelCollection extends ModelIterator
 {
     //find, remove and etc
 }

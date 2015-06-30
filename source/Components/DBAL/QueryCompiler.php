@@ -73,12 +73,15 @@ class QueryCompiler extends Component
         {
             list($identifier, $alias) = explode($matches[0], $identifier);
 
-            if ($table || strpos($identifier, '.') === false)
+            $quoted = $this->quote($identifier, $table) . $matches[0] . $this->driver->identifier($alias);
+            if ($table && strpos($identifier, '.') === false)
             {
+                //We have to apply operation post factum to prevent self aliasing (name AS name
+                //when db has prefix, expected: prefix_name as name)
                 $this->aliases[$alias] = $identifier;
             }
 
-            return $this->quote($identifier, $table) . $matches[0] . $this->driver->identifier($alias);
+            return $quoted;
         }
 
         if (strpos($identifier, '(') || strpos($identifier, ' '))
@@ -106,7 +109,7 @@ class QueryCompiler extends Component
 
         if (strpos($identifier, '.') === false)
         {
-            if ($table || !isset($this->aliases[$identifier]))
+            if ($table && !isset($this->aliases[$identifier]))
             {
                 $identifier = $this->tablePrefix . $identifier;
             }
