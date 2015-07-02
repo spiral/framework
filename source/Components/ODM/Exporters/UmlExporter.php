@@ -68,6 +68,27 @@ class UmlExporter extends Component
     }
 
     /**
+     * Render UML classes diagram to specified file, all found Documents with their fields, methods
+     * and compositions will be used to generate such UML.
+     *
+     * @param string $filename
+     * @return bool
+     */
+    public function render($filename)
+    {
+        $this->line('@startuml');
+
+        foreach ($this->builder->getDocumentSchemas() as $document)
+        {
+            $this->renderDocument($document);
+        }
+
+        $this->line('@enduml');
+
+        return $this->file->write($filename, join("\n", $this->lines));
+    }
+
+    /**
      * Add new line to UML diagram with specified indent.
      *
      * @param string $line
@@ -107,7 +128,14 @@ class UmlExporter extends Component
 
         $className = $this->normalizeName($document->getClass());
 
-        $this->line("class $className { ");
+        if ($document->isAbstract())
+        {
+            $this->line("abstract class $className { ");
+        }
+        else
+        {
+            $this->line("class $className { ");
+        }
 
         //Document fields
         foreach ($document->getFields() as $field => $type)
@@ -194,26 +222,5 @@ class UmlExporter extends Component
                 )->line('');
             }
         }
-    }
-
-    /**
-     * Render UML classes diagram to specified file, all found Documents with their fields, methods
-     * and compositions will be used to generate such UML.
-     *
-     * @param string $filename
-     * @return bool
-     */
-    public function render($filename)
-    {
-        $this->line('@startuml');
-
-        foreach ($this->builder->getDocumentSchemas() as $document)
-        {
-            $this->renderDocument($document);
-        }
-
-        $this->line('@enduml');
-
-        return $this->file->write($filename, join("\n", $this->lines));
     }
 }
