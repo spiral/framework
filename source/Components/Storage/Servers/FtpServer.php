@@ -10,7 +10,6 @@ namespace Spiral\Components\Storage\Servers;
 
 use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\Http\Stream;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageException;
 use Spiral\Components\Storage\StorageServer;
@@ -153,7 +152,7 @@ class FtpServer extends StorageServer
             return false;
         }
 
-        return new Stream($filename);
+        return \GuzzleHttp\Psr7\stream_for(fopen($filename, 'rb'));
     }
 
     /**

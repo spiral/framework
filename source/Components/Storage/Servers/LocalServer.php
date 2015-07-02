@@ -97,7 +97,7 @@ class LocalServer extends StorageServer
         }
 
         //Getting readonly stream
-        return new Stream($this->allocateFilename($container, $name));
+        return \GuzzleHttp\Psr7\stream_for(fopen($this->allocateFilename($container, $name), 'rb'));
     }
 
     /**

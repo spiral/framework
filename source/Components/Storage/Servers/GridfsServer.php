@@ -10,7 +10,6 @@ namespace Spiral\Components\Storage\Servers;
 
 use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\Http\Stream;
 use Spiral\Components\ODM\MongoDatabase;
 use Spiral\Components\ODM\ODM;
 use Spiral\Components\Storage\StorageContainer;
@@ -142,7 +141,7 @@ class GridfsServer extends StorageServer
             return false;
         }
 
-        return new Stream($file->getResource());
+        return \GuzzleHttp\Psr7\stream_for($file->getResource());
     }
 
     /**
