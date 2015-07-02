@@ -760,8 +760,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
     public static function findByID($id = null)
     {
-        //TODO: implement
-        // return static::findOne(array('_id' => $id));
+        return static::findOne(['_id' => $id]);
     }
 
     /**

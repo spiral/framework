@@ -164,5 +164,5 @@ class RedisClient extends Client implements InjectableInterface
      * InjectionFactory will receive requested class or interface reflection and reflection linked
      * to parameter in constructor or method used to declare injection.
      */
-    const INJECTION_MANAGER = 'Spiral\Components\Redis\RedisManager';
+    const INJECTION_MANAGER = RedisManager::class;
 }

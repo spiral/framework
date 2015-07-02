@@ -143,13 +143,13 @@ class ODM extends Component implements Container\InjectionManagerInterface
      * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(
+    public function resolveInjection(
         \ReflectionClass $class,
         \ReflectionParameter $parameter,
         Container $container
     )
     {
-        return self::getInstance($container)->db($parameter->getName());
+        return $this->db($parameter->getName());
     }
 
     /**

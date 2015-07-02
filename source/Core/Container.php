@@ -91,7 +91,7 @@ class Container extends Component implements \ArrayAccess
             {
                 //Apparently checking constant is faster than checking interface
                 return call_user_func(
-                    [$injectionManager, 'resolveInjection'],
+                    [$this->get($injectionManager), 'resolveInjection'],
                     $reflector,
                     $contextParameter,
                     $this

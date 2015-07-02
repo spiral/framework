@@ -151,12 +151,6 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         return $this;
     }
 
-    protected function buildQuery()
-    {
-        //TODO: reliable way to fix it!
-        $this->loader->clarifySelector($this);
-    }
-
     /**
      * Get or render SQL statement.
      *
@@ -172,7 +166,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
             $compiler = $this->database->getDriver()->queryCompiler($this->database->getPrefix());
         }
 
-        $this->buildQuery();
+        $this->loader->clarifySelector($this);
 
         return $compiler->select(
             [$this->loader->getTable() . ' AS ' . $this->loader->getAlias()],

@@ -155,13 +155,13 @@ class StorageManager extends Component implements Container\InjectionManagerInte
      * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(
+    public function resolveInjection(
         \ReflectionClass $class,
         \ReflectionParameter $parameter,
         Container $container
     )
     {
-        return self::getInstance($container)->container($parameter->getName());
+        return $this->container($parameter->getName());
     }
 
     /**

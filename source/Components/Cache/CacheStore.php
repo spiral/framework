@@ -22,7 +22,7 @@ abstract class CacheStore extends Component implements StoreInterface, Injectabl
      * InjectionFactory will receive requested class or interface reflection and reflection linked
      * to parameter in constructor or method used to declare injection.
      */
-    const INJECTION_MANAGER = 'Spiral\Components\Cache\CacheManager';
+    const INJECTION_MANAGER = CacheManager::class;
 
     /**
      * Internal store name.

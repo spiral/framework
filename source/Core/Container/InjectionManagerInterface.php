@@ -25,7 +25,7 @@ interface InjectionManagerInterface
      * @param Container            $container
      * @return mixed
      */
-    public static function resolveInjection(
+    public function resolveInjection(
         \ReflectionClass $class,
         \ReflectionParameter $parameter,
         Container $container

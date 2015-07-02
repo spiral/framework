@@ -35,7 +35,7 @@ class Database extends Component implements InjectableInterface
      * InjectionFactory will receive requested class or interface reflection and reflection linked
      * to parameter in constructor or method used to declare injection.
      */
-    const INJECTION_MANAGER = 'Spiral\Components\DBAL\DatabaseManager';
+    const INJECTION_MANAGER = DatabaseManager::class;
 
     /**
      * Transaction isolation level 'SERIALIZABLE'.

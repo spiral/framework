@@ -27,7 +27,7 @@ class StorageContainer extends Component implements InjectableInterface
      * InjectionFactory will receive requested class or interface reflection and reflection linked
      * to parameter in constructor or method used to declare injection.
      */
-    const INJECTION_MANAGER = 'Spiral\Components\Storage\StorageManager';
+    const INJECTION_MANAGER = StorageManager::class;
 
     /**
      * Address prefix will be attached to all container objects to generate unique object address.
