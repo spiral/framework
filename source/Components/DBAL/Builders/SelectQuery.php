@@ -282,7 +282,8 @@ class SelectQuery extends QueryBuilder implements PaginableInterface, \IteratorA
      */
     public function getParameters()
     {
-        $parameters = parent::getParameters();
+        //Join parameters always goes first
+        $parameters = array_merge($this->getJoinParameters(), parent::getParameters());
 
         foreach ($this->unions as $union)
         {

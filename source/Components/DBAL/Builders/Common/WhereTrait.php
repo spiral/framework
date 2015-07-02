@@ -261,11 +261,12 @@ trait WhereTrait
      * support all different combinations, closures and nested queries. Additionally i can be used
      * not only for where but for having and join tokens.
      *
-     * @param string $joiner          Boolean joiner (AND|OR).
-     * @param array  $parameters      Set of parameters collected from where functions.
-     * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $dataParameters  If true every found parameter will passed thought addParameter()
-     *                                method, if false every parameter will be converted to identifier.
+     * @param string        $joiner           Boolean joiner (AND|OR).
+     * @param array         $parameters       Set of parameters collected from where functions.
+     * @param array         $tokens           Array to aggregate compiled tokens.
+     * @param \Closure|null $parameterWrapper Callback or closure used to handle all catched
+     *                                        parameters, by default $this->addParameter will be used.
+     *
      * @return array
      * @throws DBALException
      */
@@ -273,16 +274,24 @@ trait WhereTrait
         $joiner,
         array $parameters,
         &$tokens = [],
-        $dataParameters = true
+        $parameterWrapper = null
     )
     {
+        if (empty($parameterWrapper))
+        {
+            $parameterWrapper = function ($parameter)
+            {
+                return $this->addParameter($parameter);
+            };
+        }
+
         list($identifier, $valueA, $valueB, $valueC) = $parameters + array_fill(0, 5, null);
 
         //Complex query is provided
         if (is_array($identifier))
         {
             $tokens[] = [$joiner, '('];
-            $this->parseWhere($identifier, DatabaseManager::TOKEN_AND, $tokens, $dataParameters);
+            $this->parseWhere($identifier, DatabaseManager::TOKEN_AND, $tokens, $parameterWrapper);
             $tokens[] = ['', ')'];
 
             return $tokens;
@@ -291,16 +300,16 @@ trait WhereTrait
         if ($identifier instanceof \Closure)
         {
             $tokens[] = [$joiner, '('];
-            call_user_func($identifier, $this, $joiner, $dataParameters);
+            call_user_func($identifier, $this, $joiner, $parameterWrapper);
             $tokens[] = ['', ')'];
 
             return $tokens;
         }
 
-        if ($identifier instanceof QueryBuilder && $dataParameters)
+        if ($identifier instanceof QueryBuilder)
         {
             //This will copy all parameters from QueryBuilder
-            $this->addParameter($identifier);
+            $parameterWrapper($identifier);
         }
 
         switch (count($parameters))
@@ -317,9 +326,7 @@ trait WhereTrait
                         $identifier,
                         '=',
                         //Check if sql fragment
-                        $dataParameters
-                            ? $this->addParameter($valueA)
-                            : $this->wrapExpression($valueA)
+                        $parameterWrapper($valueA)
                     ]
                 ];
                 break;
@@ -330,9 +337,7 @@ trait WhereTrait
                     [
                         $identifier,
                         strtoupper($valueA),
-                        $dataParameters
-                            ? $this->addParameter($valueB)
-                            : $this->wrapExpression($valueB)
+                        $parameterWrapper($valueB)
                     ]
                 ];
                 break;
@@ -351,33 +356,13 @@ trait WhereTrait
                     [
                         $identifier,
                         strtoupper($valueA),
-                        $dataParameters
-                            ? $this->addParameter($valueB)
-                            : $this->wrapExpression($valueB),
-                        $dataParameters
-                            ? $this->addParameter($valueC)
-                            : $this->wrapExpression($valueC)
+                        $parameterWrapper($valueB),
+                        $parameterWrapper($valueC)
                     ]
                 ];
         }
 
         return $tokens;
-    }
-
-    /**
-     * Automatically convert parameter to identifier.
-     *
-     * @param string $parameter
-     * @return SqlExpression
-     */
-    protected function wrapExpression($parameter)
-    {
-        if (!$parameter instanceof SqlFragmentInterface)
-        {
-            return new SqlExpression($parameter);
-        }
-
-        return $parameter;
     }
 
     /**
@@ -413,15 +398,15 @@ trait WhereTrait
      *      ]
      * ]);
      *
-     * @param array  $where           Array of where conditions.
-     * @param string $grouping        Parent grouping token (OR, AND)
-     * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $dataParameters  If true every found parameter will passed thought addParameter()
-     *                                method, if false every parameter will be converted to identifier.
+     * @param array    $where            Array of where conditions.
+     * @param string   $grouping         Parent grouping token (OR, AND)
+     * @param array    $tokens           Array to aggregate compiled tokens.
+     * @param \Closure $parameterWrapper Callback or closure used to handle all catched parameters,
+     *                                   by default $this->addParameter will be used.
      * @return array
      * @throws DBALException
      */
-    protected function parseWhere(array $where, $grouping, &$tokens, $dataParameters = true)
+    protected function parseWhere(array $where, $grouping, &$tokens, $parameterWrapper)
     {
         foreach ($where as $name => $value)
         {
@@ -434,7 +419,7 @@ trait WhereTrait
 
                 foreach ($value as $subWhere)
                 {
-                    $this->parseWhere($subWhere, strtoupper($name), $tokens, $dataParameters);
+                    $this->parseWhere($subWhere, strtoupper($name), $tokens, $parameterWrapper);
                 }
 
                 $tokens[] = ['', ')'];
@@ -446,13 +431,7 @@ trait WhereTrait
                 //Simple association
                 $tokens[] = [
                     $grouping == DatabaseManager::TOKEN_AND ? 'AND' : 'OR',
-                    [
-                        $name,
-                        '=',
-                        $dataParameters
-                            ? $this->addParameter($value)
-                            : $this->wrapExpression($value)
-                    ]
+                    [$name, '=', $parameterWrapper($value)]
                 ];
                 continue;
             }
@@ -481,27 +460,23 @@ trait WhereTrait
                     }
 
                     //One complex operation
-                    $tokens[] = [$innerJoiner, [
-                        $name,
-                        $key,
-                        $dataParameters
-                            ? $this->addParameter($subValue)
-                            : $this->wrapExpression($subValue[0]),
-                        $dataParameters
-                            ? $this->addParameter($subValue[1])
-                            : $this->wrapExpression($subValue[1])
-                    ]];
+                    $tokens[] = [
+                        $innerJoiner,
+                        [
+                            $name,
+                            $key,
+                            $parameterWrapper($subValue[0]),
+                            $parameterWrapper($subValue[1])
+                        ]
+                    ];
                 }
                 else
                 {
                     //One complex operation
-                    $tokens[] = [$innerJoiner, [
-                        $name,
-                        $key,
-                        $dataParameters
-                            ? $this->addParameter($subValue)
-                            : $this->wrapExpression($subValue)
-                    ]];
+                    $tokens[] = [
+                        $innerJoiner,
+                        [$name, $key, $parameterWrapper($subValue)]
+                    ];
                 }
             }
 

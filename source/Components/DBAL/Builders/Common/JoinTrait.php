@@ -9,6 +9,11 @@
 namespace Spiral\Components\DBAL\Builders\Common;
 
 use Spiral\Components\DBAL\DBALException;
+use Spiral\Components\DBAL\Parameter;
+use Spiral\Components\DBAL\ParameterInterface;
+use Spiral\Components\DBAL\QueryBuilder;
+use Spiral\Components\DBAL\SqlFragment;
+use Spiral\Components\DBAL\SqlFragmentInterface;
 
 trait JoinTrait
 {
@@ -21,11 +26,43 @@ trait JoinTrait
     protected $joins = [];
 
     /**
+     * Join parameters has to be stored separately from other query parameters as they have their
+     * own order.
+     *
+     * @var array
+     */
+    protected $joinParameters = [];
+
+    /**
      * Name of last join, next on() or orOn() method calls will attached conditions to that join.
      *
      * @var string
      */
     protected $currentJoin = null;
+
+    /**
+     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
+     * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
+     *
+     * @return array
+     */
+    protected function getJoinParameters()
+    {
+        $parameters = [];
+
+        foreach ($this->joinParameters as $parameter)
+        {
+            if ($parameter instanceof QueryBuilder)
+            {
+                $parameters = array_merge($parameters, $parameter->getParameters());
+                continue;
+            }
+
+            $parameters[] = $parameter;
+        }
+
+        return $parameters;
+    }
 
     /**
      * Register new INNER table join, all future on() method calls will associate conditions to this
@@ -245,7 +282,12 @@ trait JoinTrait
      */
     public function on($on = null, $operator = null, $identifier = null)
     {
-        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], false);
+        $this->whereToken(
+            'AND',
+            func_get_args(),
+            $this->joins[$this->currentJoin]['on'],
+            $this->expressionWrapper()
+        );
 
         return $this;
     }
@@ -284,7 +326,12 @@ trait JoinTrait
      */
     public function andOn($on = null, $operator = null, $identifier = null)
     {
-        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], false);
+        $this->whereToken(
+            'AND',
+            func_get_args(),
+            $this->joins[$this->currentJoin]['on'],
+            $this->expressionWrapper()
+        );
 
         return $this;
     }
@@ -344,7 +391,12 @@ trait JoinTrait
      */
     public function orOn($on = null, $operator = null, $identifier = null)
     {
-        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], false);
+        $this->whereToken(
+            'AND',
+            func_get_args(),
+            $this->joins[$this->currentJoin]['on'],
+            $this->expressionWrapper()
+        );
 
         return $this;
     }
@@ -384,7 +436,12 @@ trait JoinTrait
      */
     public function onWhere($on = null, $operator = null, $value = null)
     {
-        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], true);
+        $this->whereToken(
+            'AND',
+            func_get_args(),
+            $this->joins[$this->currentJoin]['on'],
+            $this->onParameterWrapper()
+        );
 
         return $this;
     }
@@ -424,7 +481,12 @@ trait JoinTrait
      */
     public function andOnWhere($on = null, $operator = null, $value = null)
     {
-        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], true);
+        $this->whereToken(
+            'AND',
+            func_get_args(),
+            $this->joins[$this->currentJoin]['on'],
+            $this->onParameterWrapper()
+        );
 
         return $this;
     }
@@ -464,7 +526,12 @@ trait JoinTrait
      */
     public function orOnWhere($on = null, $operator = null, $value = null)
     {
-        $this->whereToken('AND', func_get_args(), $this->joins[$this->currentJoin]['on'], true);
+        $this->whereToken(
+            'AND',
+            func_get_args(),
+            $this->joins[$this->currentJoin]['on'],
+            $this->onParameterWrapper()
+        );
 
         return $this;
     }
@@ -474,11 +541,12 @@ trait JoinTrait
      * support all different combinations, closures and nested queries. Additionally i can be used
      * not only for where but for having and join tokens.
      *
-     * @param string $joiner          Boolean joiner (AND|OR).
-     * @param array  $parameters      Set of parameters collected from where functions.
-     * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $dataParameters  If true every found parameter will passed thought addParameter()
-     *                                method, if false every parameter will be converted to identifier.
+     * @param string        $joiner           Boolean joiner (AND|OR).
+     * @param array         $parameters       Set of parameters collected from where functions.
+     * @param array         $tokens           Array to aggregate compiled tokens.
+     * @param \Closure|null $parameterWrapper Callback or closure used to handle all catched
+     *                                        parameters, by default $this->addParameter will be used.
+     *
      * @return array
      * @throws DBALException
      */
@@ -486,6 +554,56 @@ trait JoinTrait
         $joiner,
         array $parameters,
         &$tokens = [],
-        $dataParameters = true
+        $parameterWrapper = null
     );
+
+    /**
+     * Parameter wrapper used to convert all found parameters to valid sql expressions. Used in join
+     * on functions.
+     *
+     * @return \Closure
+     */
+    private function expressionWrapper()
+    {
+        return function ($parameter)
+        {
+            if (!$parameter instanceof SqlFragmentInterface)
+            {
+                return new SqlFragment($parameter);
+            }
+
+            return $parameter;
+        };
+    }
+
+    /**
+     * Used to wrap and collect parameters used in join where conditions, this parameters stored
+     * separately from other parameters.
+     *
+     * @return \Closure
+     */
+    private function onParameterWrapper()
+    {
+        return function ($parameter)
+        {
+            if (!$parameter instanceof ParameterInterface && is_array($parameter))
+            {
+                $parameter = new Parameter($parameter);
+            }
+
+            if
+            (
+                $parameter instanceof SqlFragmentInterface
+                && !$parameter instanceof ParameterInterface
+                && !$parameter instanceof QueryBuilder
+            )
+            {
+                return $parameter;
+            }
+
+            $this->joinParameters[] = $parameter;
+
+            return $parameter;
+        };
+    }
 }

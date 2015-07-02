@@ -12,6 +12,7 @@ use Spiral\Components\Cache\StoreInterface;
 use Spiral\Components\DBAL\Builders\Common\HavingTrait;
 use Spiral\Components\DBAL\Builders\Common\JoinTrait;
 use Spiral\Components\DBAL\Builders\Common\WhereTrait;
+use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Components\ORM\Selector\Loader;
@@ -171,6 +172,33 @@ class Selector extends QueryBuilder implements \IteratorAggregate
             []
         //$this->limit,
         //$this->offset
+        );
+    }
+
+
+    /**
+     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
+     * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        //Join parameters always goes first
+        return array_merge($this->getJoinParameters(), parent::getParameters());
+    }
+
+    /**
+     * Get interpolated (populated with parameters) SQL which will be run against database, please
+     * use this method for debugging purposes only.
+     *
+     * @return string
+     */
+    public function queryString()
+    {
+        return DatabaseManager::interpolateQuery(
+            $this->sqlStatement(),
+            $this->loader->dbalDatabase()->getDriver()->prepareParameters($this->getParameters())
         );
     }
 
