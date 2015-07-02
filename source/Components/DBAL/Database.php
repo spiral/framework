@@ -10,7 +10,7 @@ namespace Spiral\Components\DBAL;
 
 use Spiral\Components\Cache\CacheException;
 use Spiral\Components\Cache\CacheManager;
-use Spiral\Components\Cache\CacheStore;
+use Spiral\Components\Cache\StoreInterface;
 use Spiral\Components\DBAL\Builders\DeleteQuery;
 use Spiral\Components\DBAL\Builders\InsertQuery;
 use Spiral\Components\DBAL\Builders\SelectQuery;
@@ -132,7 +132,6 @@ class Database extends Component implements InjectableInterface
      * @var string
      */
     protected $tablePrefix = '';
-
 
     /**
      * New Database instance. Database class is high level abstraction at top of Driver. Multiple
@@ -264,11 +263,12 @@ class Database extends Component implements InjectableInterface
      * Run select type SQL statement with prepare parameters against connected PDO instance. Result
      * will be cached for desired lifetime and presented by CachedResult data reader.
      *
-     * @param int        $lifetime   Cache lifetime in seconds.
-     * @param string     $query      SQL statement with parameter placeholders.
-     * @param array      $parameters Parameters to be binded into query.
-     * @param string     $key        Cache key to be used to store query result.
-     * @param CacheStore $store      Cache store to store result in, if null default store will be used.
+     * @param int            $lifetime   Cache lifetime in seconds.
+     * @param string         $query      SQL statement with parameter placeholders.
+     * @param array          $parameters Parameters to be binded into query.
+     * @param string         $key        Cache key to be used to store query result.
+     * @param StoreInterface $store      Cache store to store result in, if null default store will
+     *                                   be used.
      * @return CachedResult
      * @throws CacheException
      */
@@ -277,7 +277,7 @@ class Database extends Component implements InjectableInterface
         $query,
         array $parameters = [],
         $key = '',
-        CacheStore $store = null
+        StoreInterface $store = null
     )
     {
         $store = !empty($store) ? $store : CacheManager::getInstance($this->container)->store();

@@ -80,7 +80,7 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
      *
      * @param string $store   Keep null, empty or not specified to get default cache adapter.
      * @param array  $options Custom store options to set or replace.
-     * @return CacheStore
+     * @return StoreInterface
      * @throws CacheException
      */
     public function store($store = null, array $options = [])

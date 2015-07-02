@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
-use Spiral\Components\Cache\CacheStore;
+use Spiral\Components\Cache\StoreInterface;
 use Spiral\Components\DBAL\Builders\Common\HavingTrait;
 use Spiral\Components\DBAL\Builders\Common\JoinTrait;
 use Spiral\Components\DBAL\Builders\Common\WhereTrait;
@@ -74,7 +74,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
     /**
      * Cache store to be used for caching. Default cache store will be used if nothing was specified.
      *
-     * @var CacheStore
+     * @var StoreInterface
      */
     protected $cacheStore = null;
 
@@ -109,14 +109,14 @@ class Selector extends QueryBuilder implements \IteratorAggregate
      *
      * Attention, ORM will cache fetched models structure, but not queries by itself.
      *
-     * @param int        $lifetime Cache lifetime in seconds.
-     * @param string     $key      Cache key to be used, if none provided spiral will generate key
-     *                             based on generated SQL.
-     * @param CacheStore $store    Cache store to be used, default store will be used if nothing
-     *                             was specified.
+     * @param int            $lifetime Cache lifetime in seconds.
+     * @param string         $key      Cache key to be used, if none provided spiral will generate
+     *                                 key based on generated SQL.
+     * @param StoreInterface $store    Cache store to be used, default store will be used if nothing
+     *                                 was specified.
      * @return static
      */
-    public function cache($lifetime, $key = '', CacheStore $store = null)
+    public function cache($lifetime, $key = '', StoreInterface $store = null)
     {
         $this->cacheLifetime = $lifetime;
         $this->cacheKey = $key;

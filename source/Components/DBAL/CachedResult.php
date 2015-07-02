@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\DBAL;
 
-use Spiral\Components\Cache\CacheStore;
+use Spiral\Components\Cache\StoreInterface;
 use PDO;
 
 class CachedResult extends QueryResult
@@ -16,7 +16,7 @@ class CachedResult extends QueryResult
     /**
      * CacheStore class used to store query result.
      *
-     * @var CacheStore
+     * @var StoreInterface
      */
     protected $store = null;
 
@@ -62,14 +62,14 @@ class CachedResult extends QueryResult
      * CacheStore for desired lifetime. Due no PDOStatement involved in this class some functionality
      * (like fetch modes) can be limited.
      *
-     * @param CacheStore $store      CacheStore class used to store query result.
-     * @param array      $cacheID    Unique query cache id.
-     * @param string     $query      SQL statement with parameter placeholders.
-     * @param array      $parameters Parameters to be binded into query.
-     * @param array      $data       Resulted rowset (fetched using ASSOC mode).
+     * @param StoreInterface $store      CacheStore class used to store query result.
+     * @param array          $cacheID    Unique query cache id.
+     * @param string         $query      SQL statement with parameter placeholders.
+     * @param array          $parameters Parameters to be binded into query.
+     * @param array          $data       Resulted rowset (fetched using ASSOC mode).
      */
     public function __construct(
-        CacheStore $store,
+        StoreInterface $store,
         $cacheID,
         $query,
         array $parameters = [],

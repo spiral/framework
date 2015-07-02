@@ -9,14 +9,14 @@
 namespace Spiral\Components\Session\Handlers;
 
 use Spiral\Components\Cache\CacheManager;
-use Spiral\Components\Cache\CacheStore;
+use Spiral\Components\Cache\StoreInterface;
 
 class CacheHandler implements \SessionHandlerInterface
 {
     /**
      * Cache store should be used to store sessions.
      *
-     * @var CacheStore
+     * @var StoreInterface
      */
     protected $store = '';
 

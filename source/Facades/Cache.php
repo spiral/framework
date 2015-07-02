@@ -9,13 +9,13 @@
 namespace Spiral\Facades;
 
 use Spiral\Components\Cache\CacheManager;
-use Spiral\Components\Cache\CacheStore;
+use Spiral\Components\Cache\StoreInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Facade;
 
 /**
  * @method static mixed storeOptions($adapter)
- * @method static CacheStore store($store = null, array $options = [])
+ * @method static StoreInterface store($store = null, array $options = [])
  * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter, Container $container)
  * @method static CacheManager make($parameters = [], Container $container = null)
  * @method static CacheManager getInstance(Container $container = null)
