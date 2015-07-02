@@ -262,6 +262,48 @@ abstract class AbstractSelectQuery extends QueryBuilder
     }
 
     /**
+     * Run QueryBuilder statement against parent database. Method will be overloaded by child builder
+     * to return correct value.
+     *
+     * @param bool $paginate True is pagination should be applied.
+     * @return QueryResult
+     */
+    public function run($paginate = true)
+    {
+        $backup = [$this->limit, $this->offset];
+
+        if ($paginate)
+        {
+            $this->doPagination();
+        }
+        else
+        {
+            //We have to flush limit and offset values when pagination is not required.
+            $this->limit = $this->offset = 0;
+        }
+
+        if (!empty($this->cacheLifetime))
+        {
+            $result = $this->database->cached(
+                $this->cacheLifetime,
+                $this->sqlStatement(),
+                $this->getParameters(),
+                $this->cacheKey,
+                $this->cacheStore
+            );
+        }
+        else
+        {
+            $result = $this->database->query($this->sqlStatement(), $this->getParameters());
+        }
+
+        //Restoring limit and offset values
+        list($this->limit, $this->offset) = $backup;
+
+        return $result;
+    }
+
+    /**
      * Retrieve an external iterator, SelectBuilder will return QueryResult as iterator.
      *
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php

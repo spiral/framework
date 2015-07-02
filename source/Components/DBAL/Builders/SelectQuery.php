@@ -117,29 +117,4 @@ class SelectQuery extends AbstractSelectQuery
             $this->unions
         );
     }
-
-    /**
-     * Run QueryBuilder statement against parent database. Method will be overloaded by child builder
-     * to return correct value.
-     *
-     * @param bool $paginate True is pagination should be applied.
-     * @return QueryResult
-     */
-    public function run($paginate = true)
-    {
-        $paginate && $this->doPagination();
-
-        if (!empty($this->cacheLifetime))
-        {
-            return $this->database->cached(
-                $this->cacheLifetime,
-                $this->sqlStatement(),
-                $this->getParameters(),
-                $this->cacheKey,
-                $this->cacheStore
-            );
-        }
-
-        return $this->database->query($this->sqlStatement(), $this->getParameters());
-    }
 }
