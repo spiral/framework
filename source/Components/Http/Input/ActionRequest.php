@@ -22,15 +22,15 @@ abstract class ActionRequest extends DataEntity
      * Examples:
      * string::post               - field name will be used to perform post lookup
      * int::query(name)           - int field will be fetched from query variable under name "name".
-     * object::file              - field name will be used to perform files lookup
-     * string::cookie            - field name will be used to perform cookies lookup
+     * object::file               - field name will be used to perform files lookup
+     * string::cookie             - field name will be used to perform cookies lookup
      * string::header(User-Agent) - value of User-Agent header, casted to string.
      *
      * Schema example:
      * protected $schema = [
      *      'name'      => 'string::post',
      *      'amount'    => 'float::post',
-     *      'sessionID' => 'string::cookie'
+     *      'sessionID' => 'string::cookie(session)'
      * ];
      *
      * @var array
