@@ -115,7 +115,8 @@ abstract class AbstractColumnSchema extends Component
         'bigint'         => 'bigInteger',
         'incremental'    => 'primary',
         'bigIncremental' => 'bigPrimary',
-        'bool'           => 'boolean'
+        'bool' => 'boolean',
+        'blob' => 'binary'
     ];
 
     /**
