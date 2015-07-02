@@ -194,8 +194,8 @@ abstract class AbstractRoute implements RouteInterface
     {
         $replaces = [
             '/' => '\\/',
-            '(' => '(?:',
-            ')' => ')?',
+            '[' => '(?:',
+            ']' => ')?',
             '.' => '\.'
         ];
 
@@ -337,10 +337,10 @@ abstract class AbstractRoute implements RouteInterface
 
         //Kicking empty blocks
         return $basePath . strtr($url, [
-            '()'  => '',
-            '(/)' => '',
-            '('   => '',
-            ')'   => '',
+            '[]'  => '',
+            '[/]' => '',
+            '['   => '',
+            ']'   => '',
             '//'  => '/',
         ]) . $query;
     }

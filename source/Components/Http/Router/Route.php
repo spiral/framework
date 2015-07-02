@@ -46,21 +46,21 @@ class Route extends AbstractRoute
      *      $this->http->route('account/<action>', 'Controllers\AccountController::<action>');
      *
      * Optional segments:
-     *      $this->http->route('profile(/<id>)', 'Controllers\UserController::showProfile');
+     *      $this->http->route('profile[/<id>]', 'Controllers\UserController::showProfile');
      *
      * This route will react on URL's like /profile/ and /profile/someSegment/
      *
      * To determinate your own pattern for segment use construction <segmentName:pattern>
-     *      $this->http->route('profile(/<id:\d+>)', 'Controllers\UserController::showProfile');
+     *      $this->http->route('profile[/<id:\d+>]', 'Controllers\UserController::showProfile');
      *
      * Will react only on /profile/ and /profile/1384978/
      *
      * You can use custom pattern for controller and action segments.
-     * $this->http->route('users(/<action:edit|save|open>)', 'Controllers\UserController::<action>');
+     * $this->http->route('users[/<action:edit|save|open>]', 'Controllers\UserController::<action>');
      *
      * Routes can be applied to URI host.
      * $this->http->route(
-     *      '<username>.domain.com(/<action>(/<id>))',
+     *      '<username>.domain.com[/<action>[/<id>]]',
      *      'Controllers\UserController::<action>'
      * )->useHost();
      *
@@ -71,7 +71,7 @@ class Route extends AbstractRoute
      * });
      *
      * Or be associated with middleware:
-     * $this->http->route('/something(/<value>)', new MyMiddleware());
+     * $this->http->route('/something[/<value>]', new MyMiddleware());
      *
      * @param string          $name    Route name.
      * @param string          $pattern Route pattern.
