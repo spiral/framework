@@ -22,6 +22,8 @@ class Selector extends AbstractSelectQuery
     const INLOAD   = 1;
     const POSTLOAD = 2;
 
+    protected $model = '';
+
     /**
      * ORM component. Used to access related schemas.
      *
@@ -41,7 +43,6 @@ class Selector extends AbstractSelectQuery
 
     protected $countColumns = 0;
 
-    protected $model = '';
 
     public function __construct(
         $model,
@@ -54,15 +55,19 @@ class Selector extends AbstractSelectQuery
         $this->orm = $orm;
 
         //Flushing columns
-        $this->columns = [];
-        $this->modelColumns = [];
+        $this->columns = $this->modelColumns = [];
 
         //We aways need primary loader
-        $this->loader = !empty($loader)
-            ? $loader
-            : new RootLoader($orm->getSchema($model), $this->orm);
+        if (empty($this->loader = $loader))
+        {
+            $this->loader = new RootLoader($orm->getSchema($model), $this->orm);
+        }
 
-        $this->database = $this->loader->dbalDatabase();
+        $database = $this->loader->dbalDatabase();
+        parent::__construct(
+            $database,
+            $database->getDriver()->queryCompiler($database->getPrefix())
+        );
     }
 
     /**
@@ -101,14 +106,7 @@ class Selector extends AbstractSelectQuery
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        if (empty($compiler))
-        {
-            //In cases where compiled does not provided externally we can get compiler from related
-            //database, external compilers are good for testing
-            $compiler = $this->database->getDriver()->queryCompiler(
-                $this->database->getPrefix()
-            );
-        }
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
 
         $this->loader->clarifySelector($this);
 
@@ -215,16 +213,6 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
-     * Alias for getIterator() method.
-     *
-     * @return ModelIterator
-     */
-    public function all()
-    {
-        return $this->getIterator();
-    }
-
-    /**
      * Helper method used to verify that spiral performed optimal processing on fetched result set.
      * If query is too complex or has a lot of inload queries system may spend much more time building
      * valid data tree.
@@ -274,8 +262,7 @@ class Selector extends AbstractSelectQuery
      */
     public function registerColumns($tableAlias, array $columns)
     {
-        $offset = count($this->columns);
-
+        $offset = count($this->modelColumns);
         foreach ($columns as $column)
         {
             $this->modelColumns[] = $tableAlias . '.' . $column . ' AS c' . (++$this->countColumns);

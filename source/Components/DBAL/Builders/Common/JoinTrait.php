@@ -31,7 +31,7 @@ trait JoinTrait
      *
      * @var array
      */
-    protected $joinParameters = [];
+    protected $onParameters = [];
 
     /**
      * Name of last join, next on() or orOn() method calls will attached conditions to that join.
@@ -46,11 +46,11 @@ trait JoinTrait
      *
      * @return array
      */
-    protected function getJoinParameters()
+    protected function getOnParameters()
     {
         $parameters = [];
 
-        foreach ($this->joinParameters as $parameter)
+        foreach ($this->onParameters as $parameter)
         {
             if ($parameter instanceof QueryBuilder)
             {
@@ -604,7 +604,7 @@ trait JoinTrait
                 return $parameter;
             }
 
-            $this->joinParameters[] = $parameter;
+            $this->onParameters[] = $parameter;
 
             return $parameter;
         };

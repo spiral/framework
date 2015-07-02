@@ -56,6 +56,7 @@ class HasOneLoader extends Loader
     public function parseRow(array $row)
     {
         $data = $this->fetchData($row);
+
         if (!$referenceName = $this->getReferenceName($data))
         {
             //Relation not loaded

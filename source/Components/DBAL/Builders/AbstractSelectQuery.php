@@ -202,7 +202,7 @@ abstract class AbstractSelectQuery extends QueryBuilder
     public function getParameters()
     {
         //Join parameters always goes first
-        return array_merge($this->getJoinParameters(), parent::getParameters());
+        return array_merge($this->getOnParameters(), parent::getParameters());
     }
 
     /**
