@@ -190,11 +190,15 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      * method.
      *
      * @param string $field   Field name.
-     * @param string $mutator Mutator type (setters, getters, accessors).
+     * @param string $mutator Mutator type (setter, getter, accessor).
      * @return mixed|null
      */
     protected function getMutator($field, $mutator)
     {
+        //We do support 3 mutators: getter, setter and accessor, all of them can be
+        //referenced to valid field name by adding "s" at the end
+        $mutator = $mutator . 's';
+
         if (isset($this->{$mutator}[$field]))
         {
             $filter = $this->{$mutator}[$field];
