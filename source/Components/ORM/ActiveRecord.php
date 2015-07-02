@@ -167,7 +167,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         if (!isset(self::$schemaCache[$class = get_class($this)]))
         {
             static::initialize();
-            self::$schemaCache[$class] = $this->orm->getSchema(get_class($this));
+            self::$schemaCache[$class] = $this->orm->getSchema($class);
         }
 
         //Prepared document schema

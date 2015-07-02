@@ -80,11 +80,20 @@ class HasOneLoader extends Loader
         //Relation definition
         $definition = $this->relationDefinition;
 
+        //Aggregated keys
+        $aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey());
+
+        if (empty($aggregatedKeys))
+        {
+            //Nothing to postload, no parents
+            return null;
+        }
+
         //Adding condition
         $selector->where(
             $this->getAlias() . '.' . $definition[ActiveRecord::OUTER_KEY],
             'IN',
-            array_unique($this->parent->getAggregatedKeys($this->getReferenceKey()))
+            array_unique($aggregatedKeys)
         );
 
         if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))

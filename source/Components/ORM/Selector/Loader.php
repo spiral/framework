@@ -275,7 +275,12 @@ abstract class Loader
         {
             if ($loader->options['method'] == Selector::POSTLOAD)
             {
-                $selectors[] = $loader->createSelector($database);
+                $selector = $loader->createSelector($database);
+
+                if (!empty($selector))
+                {
+                    $selectors[] = $selector;
+                }
             }
             else
             {

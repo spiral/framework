@@ -163,7 +163,9 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         {
             //In cases where compiled does not provided externally we can get compiler from related
             //database, external compilers are good for testing
-            $compiler = $this->database->getDriver()->queryCompiler($this->database->getPrefix());
+            $compiler = $this->database->getDriver()->queryCompiler(
+                $this->database->getPrefix()
+            );
         }
 
         $this->loader->clarifySelector($this);
@@ -188,7 +190,11 @@ class Selector extends QueryBuilder implements \IteratorAggregate
      */
     public function fetchData()
     {
+        $parameters = $this->parameters;
+        $this->parameters = [];
+
         $statement = $this->sqlStatement();
+        $this->parameters = array_merge($this->parameters, $parameters);
 
         if (!empty($this->lifetime))
         {
@@ -197,6 +203,9 @@ class Selector extends QueryBuilder implements \IteratorAggregate
 
             if ($cacheStore->has($cacheIdentifier))
             {
+                //TODO: make it better
+                $this->parameters = $parameters;
+
                 //We are going to store parsed result, not queries
                 return $cacheStore->get($cacheIdentifier);
             }
@@ -231,6 +240,8 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         {
             $cacheStore->set($cacheIdentifier, $data, $this->lifetime);
         }
+
+        $this->parameters = $parameters;
 
         return $data;
     }
