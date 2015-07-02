@@ -22,15 +22,15 @@ class MySqlDriver extends Driver
      * Class names should be used to create schema instances to describe specified driver table. Schema
      * realizations are driver specific and allows both schema reading and writing (migrations).
      */
-    const SCHEMA_TABLE     = 'Spiral\Components\DBAL\Drivers\MySql\TableSchema';
-    const SCHEMA_COLUMN    = 'Spiral\Components\DBAL\Drivers\MySql\ColumnSchema';
-    const SCHEMA_INDEX     = 'Spiral\Components\DBAL\Drivers\MySql\IndexSchema';
-    const SCHEMA_REFERENCE = 'Spiral\Components\DBAL\Drivers\MySql\ReferenceSchema';
+    const SCHEMA_TABLE     = TableSchema::class;
+    const SCHEMA_COLUMN    = ColumnSchema::class;
+    const SCHEMA_INDEX     = IndexSchema::class;
+    const SCHEMA_REFERENCE = ReferenceSchema::class;
 
     /**
      * Class name should be used to represent driver specific QueryGrammar.
      */
-    const QUERY_COMPILER = 'Spiral\Components\DBAL\Drivers\MySql\QueryCompiler';
+    const QUERY_COMPILER = QueryCompiler::class;
 
     /**
      * Statement should be used for ColumnSchema to indicate that default datetime value should be

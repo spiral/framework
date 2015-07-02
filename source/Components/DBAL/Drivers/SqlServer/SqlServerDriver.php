@@ -19,23 +19,24 @@ class SqlServerDriver extends Driver
     const DRIVER_NAME = 'SQLServer';
 
     /**
-     * Class names should be used to create schema instances to describe specified driver table.
-     * Schema realizations are driver specific and allows both schema reading and writing (migrations).
+     * Class names should be used to create schema instances to describe specified driver table. Schema
+     * realizations are driver specific and allows both schema reading and writing (migrations).
      */
-    const SCHEMA_TABLE     = 'Spiral\Components\DBAL\Drivers\SqlServer\TableSchema';
-    const SCHEMA_COLUMN    = 'Spiral\Components\DBAL\Drivers\SqlServer\ColumnSchema';
-    const SCHEMA_INDEX     = 'Spiral\Components\DBAL\Drivers\SqlServer\IndexSchema';
-    const SCHEMA_REFERENCE = 'Spiral\Components\DBAL\Drivers\SqlServer\ReferenceSchema';
+    const SCHEMA_TABLE     = TableSchema::class;
+    const SCHEMA_COLUMN    = ColumnSchema::class;
+    const SCHEMA_INDEX     = IndexSchema::class;
+    const SCHEMA_REFERENCE = ReferenceSchema::class;
+
 
     /**
      * Class name should be used to represent single query rowset.
      */
-    const QUERY_RESULT = 'Spiral\Components\DBAL\Drivers\SqlServer\QueryResult';
+    const QUERY_RESULT = QueryResult::class;
 
     /**
      * Class name should be used to represent driver specific QueryGrammar.
      */
-    const QUERY_COMPILER = 'Spiral\Components\DBAL\Drivers\SqlServer\QueryCompiler';
+    const QUERY_COMPILER = QueryCompiler::class;
 
     /**
      * DateTime format should be used to perform automatic conversion of DateTime objects.

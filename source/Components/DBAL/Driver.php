@@ -45,12 +45,12 @@ abstract class Driver extends Component
     /**
      * Class name should be used to represent single query rowset.
      */
-    const QUERY_RESULT = 'Spiral\Components\DBAL\QueryResult';
+    const QUERY_RESULT = QueryResult::class;
 
     /**
      * Class name should be used to represent driver specific QueryCompiler.
      */
-    const QUERY_COMPILER = 'Spiral\Components\DBAL\QueryCompiler';
+    const QUERY_COMPILER = QueryCompiler::class;
 
     /**
      * DateTime format should be used to perform automatic conversion of DateTime objects.
