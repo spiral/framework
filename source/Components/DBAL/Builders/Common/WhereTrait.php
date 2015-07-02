@@ -279,10 +279,7 @@ trait WhereTrait
     {
         if (empty($parameterWrapper))
         {
-            $parameterWrapper = function ($parameter)
-            {
-                return $this->addParameter($parameter);
-            };
+            $parameterWrapper = $this->whereParameterWrapper();
         }
 
         list($identifier, $valueA, $valueB, $valueC) = $parameters + array_fill(0, 5, null);
@@ -363,6 +360,20 @@ trait WhereTrait
         }
 
         return $tokens;
+    }
+
+    /**
+     * Used to wrap and collect parameters used in where conditions, by default this parameters will
+     * be passed though addParameter() method of current query builder.
+     *
+     * @return \Closure
+     */
+    protected function whereParameterWrapper()
+    {
+        return function ($parameter)
+        {
+            return $this->addParameter($parameter);
+        };
     }
 
     /**

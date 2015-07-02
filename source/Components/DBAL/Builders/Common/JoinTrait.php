@@ -286,7 +286,7 @@ trait JoinTrait
             'AND',
             func_get_args(),
             $this->joins[$this->currentJoin]['on'],
-            $this->expressionWrapper()
+            $this->onParameterWrapper()
         );
 
         return $this;
@@ -330,7 +330,7 @@ trait JoinTrait
             'AND',
             func_get_args(),
             $this->joins[$this->currentJoin]['on'],
-            $this->expressionWrapper()
+            $this->onParameterWrapper()
         );
 
         return $this;
@@ -395,7 +395,7 @@ trait JoinTrait
             'AND',
             func_get_args(),
             $this->joins[$this->currentJoin]['on'],
-            $this->expressionWrapper()
+            $this->onParameterWrapper()
         );
 
         return $this;
@@ -440,7 +440,7 @@ trait JoinTrait
             'AND',
             func_get_args(),
             $this->joins[$this->currentJoin]['on'],
-            $this->onParameterWrapper()
+            $this->onWhereParameterWrapper()
         );
 
         return $this;
@@ -485,7 +485,7 @@ trait JoinTrait
             'AND',
             func_get_args(),
             $this->joins[$this->currentJoin]['on'],
-            $this->onParameterWrapper()
+            $this->onWhereParameterWrapper()
         );
 
         return $this;
@@ -530,7 +530,7 @@ trait JoinTrait
             'AND',
             func_get_args(),
             $this->joins[$this->currentJoin]['on'],
-            $this->onParameterWrapper()
+            $this->onWhereParameterWrapper()
         );
 
         return $this;
@@ -563,7 +563,7 @@ trait JoinTrait
      *
      * @return \Closure
      */
-    private function expressionWrapper()
+    protected function onParameterWrapper()
     {
         return function ($parameter)
         {
@@ -580,9 +580,12 @@ trait JoinTrait
      * Used to wrap and collect parameters used in join where conditions, this parameters stored
      * separately from other parameters.
      *
+     * Method follows same logic as addParameter() method of QueryBuilder with exception of where
+     * parameters stored into.
+     *
      * @return \Closure
      */
-    private function onParameterWrapper()
+    protected function onWhereParameterWrapper()
     {
         return function ($parameter)
         {
