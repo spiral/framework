@@ -236,6 +236,7 @@ class SchemaBuilder extends Component
             {
                 if ($entity->getTableSchema() == $table && !$entity->isActiveSchema())
                 {
+                    //What is going on here?
                     //TODO: BABDBAD!
                 }
             }
@@ -333,6 +334,7 @@ class SchemaBuilder extends Component
             $recordSchema[ORM::E_VALIDATES] = $record->getValidates();
 
             //Relations
+            $recordSchema[ORM::E_RELATIONS] = [];
             foreach ($record->getRelations() as $name => $relation)
             {
                 $recordSchema[ORM::E_RELATIONS][$name] = $relation->normalizeSchema();

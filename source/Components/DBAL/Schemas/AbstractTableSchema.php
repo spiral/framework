@@ -939,10 +939,13 @@ abstract class AbstractTableSchema extends Component
         }
 
         //Primary key
-        $inner[] = 'PRIMARY KEY (' . join(', ', array_map(
-                [$this->driver, 'identifier'],
-                $this->primaryKeys
-            )) . ')';
+        if (!empty($this->primaryKeys))
+        {
+            $inner[] = 'PRIMARY KEY (' . join(', ', array_map(
+                    [$this->driver, 'identifier'],
+                    $this->primaryKeys
+                )) . ')';
+        }
 
         //Constraints
         foreach ($this->references as $reference)

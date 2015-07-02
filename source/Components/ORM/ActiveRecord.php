@@ -185,6 +185,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             }
         }
 
+        //TODO: Build different definition of non loaded model, do not apply any rules here,
+        //TODO: this is not odm model
         if ((!$this->primaryKey()) || !is_array($data))
         {
             $this->solidState(true)->validationRequired = true;
@@ -231,12 +233,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function isLoaded()
     {
-        if (empty($this->schema[ORM::E_PRIMARY_KEY]))
-        {
-            //Always loaded, technically...
-            return true;
-        }
-
         return (bool)$this->primaryKey();
     }
 

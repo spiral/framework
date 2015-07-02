@@ -310,10 +310,15 @@ class RecordSchema extends ModelSchema
     /**
      * Name of first primary key (usually sequence).
      *
-     * @return string
+     * @return string|null
      */
     public function getPrimaryKey()
     {
+        if (empty($this->tableSchema->getPrimaryKeys()))
+        {
+            return null;
+        }
+
         return array_slice($this->tableSchema->getPrimaryKeys(), 0, 1)[0];
     }
 
