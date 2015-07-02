@@ -9,7 +9,6 @@
 namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\Builders\AbstractSelectQuery;
-use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
@@ -18,6 +17,8 @@ use Spiral\Facades\Cache;
 
 class Selector extends AbstractSelectQuery
 {
+    use Component\LoggerTrait;
+
     const INLOAD   = 1;
     const POSTLOAD = 2;
 
@@ -36,6 +37,8 @@ class Selector extends AbstractSelectQuery
      */
     protected $loader = null;
 
+    protected $modelColumns = [];
+
     protected $countColumns = 0;
 
     protected $model = '';
@@ -52,11 +55,14 @@ class Selector extends AbstractSelectQuery
 
         //Flushing columns
         $this->columns = [];
+        $this->modelColumns = [];
 
         //We aways need primary loader
         $this->loader = !empty($loader)
             ? $loader
             : new RootLoader($orm->getSchema($model), $this->orm);
+
+        $this->database = $this->loader->dbalDatabase();
     }
 
     /**
@@ -99,8 +105,8 @@ class Selector extends AbstractSelectQuery
         {
             //In cases where compiled does not provided externally we can get compiler from related
             //database, external compilers are good for testing
-            $compiler = $this->loader->dbalDatabase()->getDriver()->queryCompiler(
-                $this->loader->dbalDatabase()->getPrefix()
+            $compiler = $this->database->getDriver()->queryCompiler(
+                $this->database->getPrefix()
             );
         }
 
@@ -108,29 +114,31 @@ class Selector extends AbstractSelectQuery
 
         return $compiler->select(
             [$this->loader->getTable() . ' AS ' . $this->loader->getAlias()],
-            false, //todo: check if required
-            !empty($this->columns) ? $this->columns : ['*'],
+            $this->distinct,
+            $this->getColumns(),
             $this->joins,
             $this->whereTokens,
             $this->havingTokens,
-            []
-        //$this->limit,
-        //$this->offset
+            $this->groupBy,
+            $this->orderBy,
+            $this->limit,
+            $this->offset
         );
     }
 
-    /**
-     * Get interpolated (populated with parameters) SQL which will be run against database, please
-     * use this method for debugging purposes only.
-     *
-     * @return string
-     */
-    public function queryString()
+    protected function getColumns()
     {
-        return DatabaseManager::interpolateQuery(
-            $this->sqlStatement(),
-            $this->loader->dbalDatabase()->getDriver()->prepareParameters($this->getParameters())
-        );
+        if (!empty($this->columns))
+        {
+            return $this->columns;
+        }
+
+        if (!empty($this->modelColumns))
+        {
+            return $this->modelColumns;
+        }
+
+        return ['*'];
     }
 
     /**
@@ -161,7 +169,7 @@ class Selector extends AbstractSelectQuery
             }
         }
 
-        $result = $this->loader->dbalDatabase()->query($statement, $this->getParameters());
+        $result = $this->database->query($statement, $this->getParameters());
 
         //In many cases (too many inloads, too complex queries) parsing may take significant amount
         //of time, so we better profile it
@@ -270,7 +278,7 @@ class Selector extends AbstractSelectQuery
 
         foreach ($columns as $column)
         {
-            $this->columns[] = $tableAlias . '.' . $column . ' AS c' . (++$this->countColumns);
+            $this->modelColumns[] = $tableAlias . '.' . $column . ' AS c' . (++$this->countColumns);
         }
 
         return $offset;

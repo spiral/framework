@@ -15,6 +15,7 @@ use Spiral\Components\DBAL\Builders\Common\WhereTrait;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryResult;
+use Spiral\Components\DBAL\SqlExpression;
 use Spiral\Support\Pagination\PaginatorTrait;
 
 /**
@@ -247,7 +248,12 @@ abstract class AbstractSelectQuery extends QueryBuilder
             throw new DBALException("Unknown aggregation method '{$method}'.");
         }
 
-        $this->columns = ["{$method}(" . join(", ", $arguments) . ")"];
+        if (!isset($arguments[0]) || count($arguments) > 1)
+        {
+            throw new DBALException("Aggregation methods can support exactly one column.");
+        }
+
+        $this->columns = ["{$method}({$arguments[0]})"];
 
         $result = $this->run(false)->fetchColumn();
         $this->columns = $columns;

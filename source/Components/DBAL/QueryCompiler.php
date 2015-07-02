@@ -111,6 +111,7 @@ class QueryCompiler extends Component
         {
             if ($table && !isset($this->aliases[$identifier]))
             {
+                $this->aliases[$this->tablePrefix . $identifier] = $identifier;
                 $identifier = $this->tablePrefix . $identifier;
             }
 
@@ -120,7 +121,7 @@ class QueryCompiler extends Component
         $identifier = explode('.', $identifier);
 
         //Expecting first element be table name
-        if ($table && !isset($this->aliases[$identifier[0]]))
+        if (!isset($this->aliases[$identifier[0]]))
         {
             $identifier[0] = $this->tablePrefix . $identifier[0];
         }

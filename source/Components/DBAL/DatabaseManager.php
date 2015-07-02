@@ -217,7 +217,7 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
                 case "integer":
                     return $parameter = $parameter + 0;
                 case "NULL":
-                    return $parameter = 'null';
+                    return $parameter = 'NULL';
                 case "double":
                     return $parameter = sprintf('%F', $parameter);
                 case "string":

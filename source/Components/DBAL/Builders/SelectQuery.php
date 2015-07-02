@@ -11,6 +11,7 @@ namespace Spiral\Components\DBAL\Builders;
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
+use Spiral\Components\DBAL\QueryResult;
 
 class SelectQuery extends AbstractSelectQuery
 {
@@ -71,7 +72,6 @@ class SelectQuery extends AbstractSelectQuery
         return $this;
     }
 
-
     /**
      * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
      * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
@@ -116,5 +116,30 @@ class SelectQuery extends AbstractSelectQuery
             $this->offset,
             $this->unions
         );
+    }
+
+    /**
+     * Run QueryBuilder statement against parent database. Method will be overloaded by child builder
+     * to return correct value.
+     *
+     * @param bool $paginate True is pagination should be applied.
+     * @return QueryResult
+     */
+    public function run($paginate = true)
+    {
+        $paginate && $this->doPagination();
+
+        if (!empty($this->cacheLifetime))
+        {
+            return $this->database->cached(
+                $this->cacheLifetime,
+                $this->sqlStatement(),
+                $this->getParameters(),
+                $this->cacheKey,
+                $this->cacheStore
+            );
+        }
+
+        return $this->database->query($this->sqlStatement(), $this->getParameters());
     }
 }
