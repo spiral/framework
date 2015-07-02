@@ -107,8 +107,7 @@ class DocumentationExporter extends Component
      */
     protected function renderDocument(DocumentSchema $document)
     {
-        $name = $document->getShortName();
-        $model = ClassElement::make(compact('name'));
+        $model = new ClassElement($name = $document->getShortName());
 
         //This name should be used in static methods, as ODM allows to store all class children in
         //one collection
@@ -250,9 +249,7 @@ class DocumentationExporter extends Component
             }
         }
 
-        return NamespaceElement::make([
-            'name' => $document->getNamespace()
-        ])->addClass($model);
+        return (new NamespaceElement($document->getNamespace()))->addClass($model);
     }
 
 
@@ -267,7 +264,7 @@ class DocumentationExporter extends Component
     {
         $name = $this->collectionClass($collection->primaryDocument(), false);
 
-        $class = ClassElement::make(compact('name'))->cloneSchema(SchemaBuilder::COLLECTION);
+        $class = (new ClassElement($name))->cloneSchema(SchemaBuilder::COLLECTION);
         $class->removeConstant('SINGLETON');
         $class->setParent(false);
 
@@ -294,7 +291,7 @@ class DocumentationExporter extends Component
     {
         $name = $this->compositorClass($document->primaryDocument(), false);
 
-        $class = ClassElement::make(compact('name'))->cloneSchema(SchemaBuilder::COMPOSITOR);
+        $class = (new ClassElement($name))->cloneSchema(SchemaBuilder::COMPOSITOR);
         $class->setParent(false)->setInterfaces([]);
 
         foreach ($class->getProperties() as $property)
@@ -330,7 +327,7 @@ class DocumentationExporter extends Component
             $phpFile->addElement($this->renderDocument($document));
         }
 
-        $virtualNamespace = NamespaceElement::make(['name' => self::VIRTUAL_NAMESPACE]);
+        $virtualNamespace = new NamespaceElement(self::VIRTUAL_NAMESPACE);
         $virtualNamespace->setUses([
             'Spiral\Components\ODM\ODM',
             'Spiral\Support\Pagination\Paginator',

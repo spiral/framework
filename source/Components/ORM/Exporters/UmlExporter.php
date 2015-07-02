@@ -93,15 +93,15 @@ class UmlExporter extends Component
     /**
      * Add entity schema to UML.
      *
-     * @param RecordSchema $entity
+     * @param RecordSchema $record
      */
-    protected function renderEntity(RecordSchema $entity)
+    protected function renderRecord(RecordSchema $record)
     {
-        $className = $this->normalizeName($entity->getClass());
+        $className = $this->normalizeName($record->getClass());
         $this->line("class $className { ");
 
         //Document fields
-        foreach ($entity->getFields() as $field => $type)
+        foreach ($record->getFields() as $field => $type)
         {
             if (is_array($type))
             {
@@ -115,7 +115,7 @@ class UmlExporter extends Component
         }
 
         //Methods
-        foreach ($entity->getMethods() as $method)
+        foreach ($record->getMethods() as $method)
         {
             $parameters = [];
             foreach ($method->getParameters() as $parameter)
@@ -133,6 +133,9 @@ class UmlExporter extends Component
         }
 
         $this->line('}')->line('');
+
+        //Relations
+
         //TODO: Complete relations
     }
 
@@ -149,7 +152,7 @@ class UmlExporter extends Component
 
         foreach ($this->builder->getRecordSchemas() as $entity)
         {
-            $this->renderEntity($entity);
+            $this->renderRecord($entity);
         }
 
         $this->line('@enduml');

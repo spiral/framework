@@ -40,7 +40,6 @@ class DocumentationExporter extends Component
         'Do not modify content of this file as it will be erased every schema update.'
     ];
 
-
     /**
      * New instance of documentation exporter. Reactor classes will be used to create such documentation.
      *
@@ -60,8 +59,7 @@ class DocumentationExporter extends Component
      */
     protected function renderRecord(RecordSchema $record)
     {
-        $name = $record->getShortName();
-        $model = ClassElement::make(compact('name'));
+        $model = new ClassElement($name = $record->getShortName());
 
         //Accessors
         foreach ($record->getAccessors() as $name => $accessor)
@@ -89,9 +87,7 @@ class DocumentationExporter extends Component
             $model->property($field, '@var ' . $type);
         }
 
-        return NamespaceElement::make([
-            'name' => $record->getNamespace()
-        ])->addClass($model);
+        return (new NamespaceElement($record->getNamespace()))->addClass($model);
     }
 
     /**

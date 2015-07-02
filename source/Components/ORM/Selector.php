@@ -12,7 +12,6 @@ use Spiral\Components\Cache\StoreInterface;
 use Spiral\Components\DBAL\Builders\Common\HavingTrait;
 use Spiral\Components\DBAL\Builders\Common\JoinTrait;
 use Spiral\Components\DBAL\Builders\Common\WhereTrait;
-use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Components\ORM\Selector\Loader;
@@ -134,6 +133,8 @@ class Selector extends QueryBuilder implements \IteratorAggregate
 
             return $this;
         }
+
+        //TODO: Cross-db loaders
 
         //Nested loader
         $loader = $this->loader->addLoader($relation, $options);
