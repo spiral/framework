@@ -397,7 +397,7 @@ class Validator extends Component
                     $field,
                     $condition,
                     $this->getField($field),
-                    $arguments = $this->fetchArguments($rule)
+                    $arguments = is_string($rule) ? [] : $this->fetchArguments($rule)
                 );
 
                 if ($result instanceof Checker)
@@ -407,7 +407,7 @@ class Validator extends Component
                     {
                         $this->addMessage(
                             $field,
-                            $this->fetchMessage($rule, $message),
+                            is_string($rule) ? $message : $this->fetchMessage($rule, $message),
                             $condition,
                             $arguments
                         );
@@ -429,11 +429,14 @@ class Validator extends Component
                     break;
                 }
 
+                //Default message
+                $message = $this->i18nMessage($this->defaultMessage);
+
                 //Recording error message
                 $this->addMessage(
                     $field,
-                    $this->fetchMessage($rule, $this->i18nMessage($this->defaultMessage)),
-                    $rule[0],
+                    is_string($rule) ? $message : $this->fetchMessage($rule, $message),
+                    $condition,
                     $arguments
                 );
             }
