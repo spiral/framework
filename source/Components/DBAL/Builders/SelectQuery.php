@@ -11,7 +11,6 @@ namespace Spiral\Components\DBAL\Builders;
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
-use Spiral\Components\DBAL\QueryResult;
 
 class SelectQuery extends AbstractSelectQuery
 {

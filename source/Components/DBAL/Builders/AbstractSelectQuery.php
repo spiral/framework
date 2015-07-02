@@ -15,11 +15,10 @@ use Spiral\Components\DBAL\Builders\Common\WhereTrait;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryResult;
-use Spiral\Components\DBAL\SqlExpression;
 use Spiral\Support\Pagination\PaginatorTrait;
 
 /**
- * AbstractSelectQuery provided basic functionality for any select query without query building,
+ * BasicSelectQuery provides basic functionality for any select query without query building,
  * unions and ability to specify source tables. This class used as parent for DBAL\SelectQuery and
  * for ORM\Selector.
  *
@@ -212,12 +211,13 @@ abstract class AbstractSelectQuery extends QueryBuilder
      * incorrectly. Attention, you can't really use count() methods with united queries (at least
      * without tweaking every united query).
      *
+     * @param string $column
      * @return int
      */
-    public function count()
+    public function count($column = '*')
     {
         $backup = [$this->columns, $this->orderBy, $this->groupBy, $this->limit, $this->offset];
-        $this->columns = ['COUNT(*)'];
+        $this->columns = ["COUNT({$column})"];
 
         //Can not be used with COUNT()
         $this->orderBy = $this->groupBy = [];
