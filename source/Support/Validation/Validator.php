@@ -160,22 +160,25 @@ class Validator extends Component
      * designed rules like "notEmpty", "required", "requiredWith" and etc.
      *
      * Examples:
-     * "status" => array(
+     * "status" => [
      *      ["notEmpty"],
      *      ["string::shorter", 10, "error" => "Your string is too short."],
      *      [["MyClass","myMethod"], "error" => "Custom validation failed."]
-     * ),
-     * "email" => array(
+     * [,
+     * "email" => [
      *      ["notEmpty", "error" => "Please enter your email address."],
      *      ["email", "error" => "Email is not valid."]
-     * ),
-     * "pin" => array(
+     * [,
+     * "pin" => [
      *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your
      *                                                   pin, please skip this field."]
-     * ),
-     * "flag" => array(
-     *      ["notEmpty"], ["boolean"]
-     * )
+     * [,
+     * "flag" => ["notEmpty", "boolean"]
+     *
+     * In cases where you don't need custom message or check parameters you can use simplified
+     * rule syntax:
+     *
+     * "flag" => ["notEmpty", "boolean"]
      *
      * P.S. "$validates" is common name for validation rules property in validator and modes.
      *
@@ -226,22 +229,25 @@ class Validator extends Component
      * designed rules like "notEmpty", "required", "requiredWith" and etc.
      *
      * Examples:
-     * "status" => array(
+     * "status" => [
      *      ["notEmpty"],
      *      ["string::shorter", 10, "error" => "Your string is too short."],
      *      [["MyClass","myMethod"], "error" => "Custom validation failed."]
-     * ),
-     * "email" => array(
+     * [,
+     * "email" => [
      *      ["notEmpty", "error" => "Please enter your email address."],
      *      ["email", "error" => "Email is not valid."]
-     * ),
-     * "pin" => array(
+     * [,
+     * "pin" => [
      *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your
      *                                                   pin, please skip this field."]
-     * ),
-     * "flag" => array(
-     *      ["notEmpty"], ["boolean"]
-     * )
+     * [,
+     * "flag" => ["notEmpty", "boolean"]
+     *
+     * In cases where you don't need custom message or check parameters you can use simplified
+     * rule syntax:
+     *
+     * "flag" => ["notEmpty", "boolean"]
      *
      * @param array|\ArrayAccess $data             Data to be validated.
      * @param array              $validates        Validation rules.
@@ -380,7 +386,7 @@ class Validator extends Component
                     continue;
                 }
 
-                $condition = $rule[0];
+                $condition = is_string($rule) ? $rule : $rule[0];
                 if (empty($this->data[$field]) && !in_array($condition, $this->emptyConditions))
                 {
                     //There is no need to validate empty field except for special conditions
@@ -635,22 +641,25 @@ class Validator extends Component
      * designed rules like "notEmpty", "required", "requiredWith" and etc.
      *
      * Examples:
-     * "status" => array(
+     * "status" => [
      *      ["notEmpty"],
      *      ["string::shorter", 10, "error" => "Your string is too short."],
      *      [["MyClass","myMethod"], "error" => "Custom validation failed."]
-     * ),
-     * "email" => array(
+     * [,
+     * "email" => [
      *      ["notEmpty", "error" => "Please enter your email address."],
      *      ["email", "error" => "Email is not valid."]
-     * ),
-     * "pin" => array(
+     * [,
+     * "pin" => [
      *      ["string::regexp", "/[0-9]{5}/", "error" => "Invalid pin format, if you don't know your
      *                                                   pin, please skip this field."]
-     * ),
-     * "flag" => array(
-     *      ["notEmpty"], ["boolean"]
-     * )
+     * [,
+     * "flag" => ["notEmpty", "boolean"]
+     *
+     * In cases where you don't need custom message or check parameters you can use simplified
+     * rule syntax:
+     *
+     * "flag" => ["notEmpty", "boolean"]
      *
      * @param array|\ArrayAccess $data      Data to be validated.
      * @param array              $validates Validation rules.
