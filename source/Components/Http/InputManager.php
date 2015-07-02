@@ -320,13 +320,23 @@ class InputManager extends Component
     }
 
     /**
-     * Check if request was made using XmlHttpRequest
+     * Check if request was made using XmlHttpRequest.
      *
      * @return bool
      */
     public function isAjax()
     {
         return strtolower($this->getRequest()->getHeaderLine('X-Requested-With')) == 'xmlhttprequest';
+    }
+
+    /**
+     * Client requesting json response by Accept header.
+     *
+     * @return bool
+     */
+    public function isJsonExpected()
+    {
+        return $this->getRequest()->getHeaderLine('Accept') == 'application/json';
     }
 
     /**

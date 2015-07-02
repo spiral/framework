@@ -67,11 +67,11 @@ class Controller extends Component implements ControllerInterface
      * execute action itself. Any returned result will prevent action execution and will be returned
      * from callAction.
      *
-     * @param string $method    Method name (normalized via reflection).
-     * @param array  $arguments Method arguments.
+     * @param \ReflectionMethod $method    Method reflection.
+     * @param array             $arguments Method arguments.
      * @return mixed
      */
-    protected function beforeAction($method, array $arguments)
+    protected function beforeAction(\ReflectionMethod $method, array $arguments)
     {
         return null;
     }
@@ -80,12 +80,12 @@ class Controller extends Component implements ControllerInterface
      * Method executed after controller action beign called. Original or altered result should be
      * returned.
      *
-     * @param string $method    Method name (normalized via reflection).
-     * @param array  $arguments Method arguments.
-     * @param mixed  $result    Method result (plain output not included).
+     * @param \ReflectionMethod $method    Method reflection.
+     * @param array             $arguments Method arguments.
+     * @param mixed             $result    Method result (plain output not included).
      * @return mixed
      */
-    protected function afterAction($method, array $arguments, $result)
+    protected function afterAction(\ReflectionMethod $method, array $arguments, $result)
     {
         return $result;
     }
@@ -142,7 +142,7 @@ class Controller extends Component implements ControllerInterface
 
         $action = $reflection->getName();
 
-        if (($result = $this->beforeAction($action, $arguments)) !== null)
+        if (($result = $this->beforeAction($reflection, $arguments)) !== null)
         {
             //Got filtered.
             return $result;
@@ -152,7 +152,7 @@ class Controller extends Component implements ControllerInterface
         $result = $reflection->invokeArgs($this, $arguments);
         benchmark(get_called_class(), $action);
 
-        return $this->afterAction($action, $arguments, $result);
+        return $this->afterAction($reflection, $arguments, $result);
     }
 
     /**
