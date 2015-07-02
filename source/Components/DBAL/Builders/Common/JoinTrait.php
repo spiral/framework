@@ -12,7 +12,7 @@ use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\Parameter;
 use Spiral\Components\DBAL\ParameterInterface;
 use Spiral\Components\DBAL\QueryBuilder;
-use Spiral\Components\DBAL\SqlFragment;
+use Spiral\Components\DBAL\SqlExpression;
 use Spiral\Components\DBAL\SqlFragmentInterface;
 
 trait JoinTrait
@@ -569,7 +569,7 @@ trait JoinTrait
         {
             if (!$parameter instanceof SqlFragmentInterface)
             {
-                return new SqlFragment($parameter);
+                return new SqlExpression($parameter);
             }
 
             return $parameter;
