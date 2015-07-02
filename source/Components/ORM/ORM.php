@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
@@ -33,6 +34,13 @@ class ORM extends Component
     protected $core = null;
 
     /**
+     * DatabaseManager.
+     *
+     * @var DatabaseManager
+     */
+    protected $dbal = null;
+
+    /**
      * Container instance.
      *
      * @invisible
@@ -51,15 +59,37 @@ class ORM extends Component
     /**
      * ORM component instance.
      *
-     * @param CoreInterface $core
-     * @param Container     $container
+     * @param CoreInterface   $core
+     * @param DatabaseManager $dbal
+     * @param Container       $container
      */
-    public function __construct(CoreInterface $core, Container $container)
+    public function __construct(CoreInterface $core, DatabaseManager $dbal, Container $container)
     {
         $this->core = $core;
+        $this->dbal = $dbal;
         $this->container = $container;
 
         $this->config = $core->getConfig('orm');
+    }
+
+    /**
+     * Change associated DatabaseManager.
+     *
+     * @param DatabaseManager $dbal
+     */
+    public function setDBAL(DatabaseManager $dbal)
+    {
+        $this->dbal = $dbal;
+    }
+
+    /**
+     * Most of classes with ORM access will need DatabaseManager as well.
+     *
+     * @return DatabaseManager
+     */
+    public function getDBAL()
+    {
+        return $this->dbal;
     }
 
     /**
@@ -106,7 +136,8 @@ class ORM extends Component
     public function schemaBuilder()
     {
         return SchemaBuilder::make([
-            'config' => $this->config
+            'config' => $this->config,
+            'dbal'   => $this->dbal
         ], $this->container);
     }
 

@@ -68,11 +68,8 @@ abstract class Relation
 
     public function getSelector()
     {
-        $selector = Selector::make([
-            'schema'   => $this->orm->getSchema($this->getTarget()),
-            'database' => $this->parent->dbalDatabase(),
-            'orm'      => $this->orm
-        ]);
+        //database is not nesessary right
+        $selector = new Selector($this->getTarget(), $this->orm, $this->orm->getDBAL());
 
         return $selector;
     }

@@ -39,13 +39,6 @@ class Selector extends QueryBuilder implements \IteratorAggregate
     protected $orm = null;
 
     /**
-     * Database instance to fetch data from.
-     *
-     * @var Database
-     */
-    protected $database = null;
-
-    /**
      * REWRITE
      *
      * @var Loader
@@ -83,15 +76,12 @@ class Selector extends QueryBuilder implements \IteratorAggregate
     public function __construct(
         $model,
         ORM $orm,
-        Database $database,
         array $query = [],
         Loader $loader = null
     )
     {
         $this->model = $model;
-
         $this->orm = $orm;
-        $this->database = $database;
 
         //Flushing columns
         $this->columns = [];
@@ -163,8 +153,8 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         {
             //In cases where compiled does not provided externally we can get compiler from related
             //database, external compilers are good for testing
-            $compiler = $this->database->getDriver()->queryCompiler(
-                $this->database->getPrefix()
+            $compiler = $this->loader->dbalDatabase()->getDriver()->queryCompiler(
+                $this->loader->dbalDatabase()->getPrefix()
             );
         }
 
@@ -211,7 +201,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
             }
         }
 
-        $result = $this->database->query($statement, $this->getParameters());
+        $result = $this->loader->dbalDatabase()->query($statement, $this->getParameters());
 
         //In many cases (too many inloads, too complex queries) parsing may take significant amount
         //of time, so we better profile it
@@ -226,7 +216,7 @@ class Selector extends QueryBuilder implements \IteratorAggregate
         $result->close();
 
         //Looking for post selectors
-        foreach ($this->loader->getPostSelectors($this->database) as $selector)
+        foreach ($this->loader->getPostSelectors() as $selector)
         {
             //Fetching data from post selectors, due loaders are still linked together
             $selector->fetchData();

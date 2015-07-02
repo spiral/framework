@@ -540,15 +540,11 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * Get instance of DBAL\Database associated with specified record. This is not static method which
      * if used by Relations to find appropriate database.
      *
-     * @param DatabaseManager $dbal   DatabaseManager instance, will be received from container if not
-     *                                provided.
      * @return Database
      */
-    public function dbalDatabase(DatabaseManager $dbal = null)
+    public function dbalDatabase()
     {
-        $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
-
-        return $dbal->db($this->schema[ORM::E_DB]);
+        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
     }
 
     /**
@@ -561,12 +557,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     public static function dbalTable(ORM $orm = null, Database $database = null)
     {
         $orm = !empty($orm) ? $orm : ORM::getInstance();
-        $schema = $orm->getSchema(get_called_class());
+        $schema = $orm->getSchema(static::class);
 
-        if (empty($database))
-        {
-            $database = DatabaseManager::getInstance()->db($schema[ORM::E_DB]);
-        }
+        $database = !empty($database) ? $database : $orm->getDBAL()->db($schema[ORM::E_DB]);
 
         return $database->table($schema[ORM::E_TABLE]);
     }
@@ -575,21 +568,15 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * Get associated orm Selector. Selectors used to build complex related queries and fetch
      * models from database.
      *
-     * @param ORM             $orm  ORM component, will be received from container if not provided.
-     * @param DatabaseManager $dbal DatabaseManager instance, will be received from container if not provided.
+     * @param ORM $orm ORM component, will be received from container if not provided.
      * @return Selector
      */
-    public static function ormSelector(ORM $orm = null, DatabaseManager $dbal = null)
+    public static function ormSelector(ORM $orm = null)
     {
-        $orm = !empty($orm) ? $orm : ORM::getInstance();
-        $dbal = !empty($dbal) ? $dbal : DatabaseManager::getInstance();
-
         //Traits
         static::initialize();
 
-        $schema = $orm->getSchema($class = get_called_class());
-
-        return new Selector($class, $orm, $dbal->db($schema[ORM::E_DB]));
+        return new Selector(static::class, !empty($orm) ? $orm : ORM::getInstance());
     }
 
     /**

@@ -73,9 +73,9 @@ class HasOneLoader extends Loader
         $this->parseNested($row);
     }
 
-    public function createSelector(Database $database)
+    public function createSelector()
     {
-        $selector = parent::createSelector($database);
+        $selector = parent::createSelector();
 
         //Relation definition
         $definition = $this->relationDefinition;

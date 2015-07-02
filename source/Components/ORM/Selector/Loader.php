@@ -145,6 +145,11 @@ abstract class Loader
         $this->countColumns = count($this->schema[ORM::E_COLUMNS]);
     }
 
+    public function dbalDatabase()
+    {
+        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
+    }
+
     public function getAlias()
     {
         return $this->options['alias'];
@@ -265,17 +270,16 @@ abstract class Loader
     }
 
     /**
-     * @param Database $database
      * @return Selector[]
      */
-    public function getPostSelectors(Database $database)
+    public function getPostSelectors()
     {
         $selectors = [];
         foreach ($this->loaders as $loader)
         {
             if ($loader->options['method'] == Selector::POSTLOAD)
             {
-                $selector = $loader->createSelector($database);
+                $selector = $loader->createSelector();
 
                 if (!empty($selector))
                 {
@@ -284,19 +288,18 @@ abstract class Loader
             }
             else
             {
-                $selectors = array_merge($selectors, $loader->getPostSelectors($database));
+                $selectors = array_merge($selectors, $loader->getPostSelectors());
             }
         }
 
         return $selectors;
     }
 
-    public function createSelector(Database $database)
+    public function createSelector()
     {
         $selector = new Selector(
             $this->relationDefinition[static::RELATION_TYPE],
             $this->orm,
-            $database,
             [],
             $this
         );

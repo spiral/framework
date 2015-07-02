@@ -84,13 +84,14 @@ class SchemaBuilder extends Component
      * @param array           $config
      * @param Tokenizer       $tokenizer
      * @param DatabaseManager $dbal
-     * @param Container       $contaner
+     * @param Container       $container
      */
     public function __construct(
         array $config,
         Tokenizer $tokenizer,
         DatabaseManager $dbal,
-        Container $container)
+        Container $container
+    )
     {
         $this->config = $config;
         $this->dbal = $dbal;
