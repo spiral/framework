@@ -105,6 +105,14 @@ abstract class Loader implements LoaderInterface
     protected $loaders = [];
 
     /**
+     * Helper structure used to prevent data duplication when LEFT JOIN multiplies parent records.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $duplicates = [];
+
+    /**
      * List of keys has to be stored as data references. This set of keys is required by inner loader(s)
      * to quickly compile nested data.
      *
@@ -118,8 +126,12 @@ abstract class Loader implements LoaderInterface
 
     protected $aggregatedReferences = [];
 
-    protected $duplicates = [];
 
+    /**
+     * Result of data normalization.
+     *
+     * @var array
+     */
     protected $result = [];
 
 
@@ -362,7 +374,7 @@ abstract class Loader implements LoaderInterface
     abstract protected function clarifySelector(Selector $selector);
 
     /**
-     * Run post selection queries to clarify featched model data. Usually many conditions will be
+     * Run post selection queries to clarify fetched model data. Usually many conditions will be
      * fetched from there. Additionally this method may be used to create relations to external
      * source of data (ODM, elasticSearch and etc).
      */
@@ -455,9 +467,52 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
+     * In many cases (for example if you have inload of HAS_MANY relation) model data can be spreaded
+     * by many result rows (duplicated). To prevent wrong data linking we have to deduplicate such
+     * records.
+     *
+     * Method will return true if data wasn't handled before and this is first occurence and false
+     * in opposite case.
+     *
+     * @param array $data Reference to parsed record, reference will be pointed to valid and existed
+     *                    data segment if such data was already parsed.
+     * @return bool
+     */
+    protected function deduplicate(array &$data)
+    {
+        if (isset($this->schema[ORM::E_PRIMARY_KEY]))
+        {
+            //We can use model id as de-duplication criteria
+            $criteria = $data[$this->schema[ORM::E_PRIMARY_KEY]];
+        }
+        else
+        {
+            //It is recommended to use primary keys in every model as it will speed up de-duplication.
+            $criteria = serialize($data);
+        }
+
+        if (isset($this->duplicates[$criteria]))
+        {
+            //Duplicate is presented, let's reduplicate
+            $data = $this->duplicates[$criteria];
+
+            //Duplicate is presented
+            return false;
+        }
+
+        //Let's remember record to prevent future duplicates
+        $this->duplicates[$criteria] = &$data;
+
+        return true;
+    }
+
+    /**
      * Reference key (from parent object) required to speed up data normalization. In most of cases
      * this is primary key of parent model.
      *
+     * For example HAS_ONE relation will request parent to collect INNER_KEY as quick reference.
+     *
+     * @see fetchReferenceCriteria()
      * @return string
      */
     public function getReferenceKey()
@@ -466,35 +521,125 @@ abstract class Loader implements LoaderInterface
         return $this->definition[ActiveRecord::INNER_KEY];
     }
 
-    //-------------------
-
-    public function getReferenceName(array $data)
+    /**
+     * Fetch criteria (value) to be used for data construction. Usually this value points to OUTER_KEY
+     * of relation.
+     *
+     * @see getReferenceKey()
+     * @param array $data
+     * @return mixed
+     */
+    public function fetchReferenceCriteria(array $data)
     {
         if (!isset($data[$this->definition[ActiveRecord::OUTER_KEY]]))
         {
             return null;
         }
 
-        //Fairly simple logic
-        return $this->definition[ActiveRecord::INNER_KEY] . '::' . $data[$this->definition[ActiveRecord::OUTER_KEY]];
+        return $data[$this->definition[ActiveRecord::OUTER_KEY]];
     }
 
-
-    public function getAggregatedKeys($key)
+    /**
+     * Create internal references to structure segments based on requested keys. For example, if we
+     * have request for "id" as reference key, every record will create following records:
+     * $this->referenced['id::ID_VALUE'] = ITEM
+     * $this->aggregatedReferences[id][ID_VALUE] = ITEM
+     *
+     * Make sure you collecting references only on first record occurrence, make sure that
+     * deduplicate() method result is true.
+     *
+     * @see deduplicate()
+     * @param array $data
+     */
+    protected function collectReferences(array &$data)
     {
-        //TODO: DISABLE WHEN NOT REQUIRED
+        foreach ($this->referenceKeys as $key)
+        {
+            //Adding reference(s)
+            $this->references[$key . '::' . $data[$key]] = &$data;
+            $this->aggregatedReferences[$key][$data[$key]][] = &$data;
+        }
+    }
 
-        if (!isset($this->aggregatedReferences[$key]))
+    /**
+     * Get list of unique keys aggregated by loader while data parsing. This list used by sub-loaders
+     * in situations where data has to be loader with POSTLOAD method (usually this value will go
+     * directly to WHERE IN statement).
+     *
+     * @param string $referenceKey
+     * @return array
+     */
+    public function getAggregatedKeys($referenceKey)
+    {
+        if (!isset($this->aggregatedReferences[$referenceKey]))
         {
             return [];
         }
 
-        return array_keys($this->aggregatedReferences[$key]);
+        return array_keys($this->aggregatedReferences[$referenceKey]);
     }
 
-    public function registerNestedParent($container, $key, $value, &$data)
+    /**
+     * Mount model data to parent loader under specified container, using reference key (inner key)
+     * and reference criteria (outer key value).
+     *
+     * Example:
+     * $this->parent->mount('profile', 'id', 1, [
+     *      'id' => 100,
+     *      'user_id' => 1,
+     *      ...
+     * ]);
+     *
+     * In this example "id" argument is inner key of "user" model and it's linked to outer key
+     * "user_id" in "profile" model, which defines reference criteria as 1.
+     *
+     * @param string $container
+     * @param string $key
+     * @param mixed  $criteria
+     * @param array  $data
+     * @param bool   $multiple If true all mounted records will added to array.
+     */
+    public function mount($container, $key, $criteria, array &$data, $multiple = false)
     {
-        foreach ($this->aggregatedReferences[$key][$value] as &$subset)
+        $reference = $key . '::' . $criteria;
+
+        if (!isset($this->references[$reference]))
+        {
+            //Nothing to do
+            return;
+        }
+
+        if ($multiple)
+        {
+            $this->references[$reference][$container][] = &$data;
+
+            return;
+        }
+
+        if (!isset($this->references[$reference][$container]))
+        {
+            /**
+             * There is very tricky spot where you have to be careful (i spend 2 hours for debugging).
+             * If you will reassign references it will loose previous references and some sets of
+             * data will be broken.
+             */
+            $this->references[$reference][$container] = &$data;
+        }
+    }
+
+    /**
+     * This method should be used only with POSTLOAD loaders, it will mount provided data to all
+     * matched records. Primary example: mounting parent model data to many children data (when
+     * children data loaded in separate query).
+     *
+     * @param string $container
+     * @param string $key
+     * @param mixed  $criteria
+     * @param array  $data
+     */
+    public function mountOuter($container, $key, $criteria, array &$data)
+    {
+        foreach ($this->aggregatedReferences[$key][$criteria] as &$subset)
         {
             if (!isset($subset[$container]))
             {
@@ -504,83 +649,6 @@ abstract class Loader implements LoaderInterface
             unset($subset);
         }
     }
-
-    public function registerNested($referenceName, $container, array &$data, $multiple = false)
-    {
-        if (!isset($this->references[$referenceName]))
-        {
-            //Nothing to do
-            return;
-        }
-
-        if ($multiple)
-        {
-            $this->references[$referenceName][$container][] = &$data;
-        }
-        else
-        {
-            if (!isset($this->references[$referenceName][$container]))
-            {
-                /**
-                 * There is very tricky spot where you have to be careful (i spend 2 hours for debugging).
-                 * If you will reassign references it will loose previous references and some sets of
-                 * data will be broken.
-                 */
-                $this->references[$referenceName][$container] = &$data;
-            }
-        }
-    }
-
-
-    protected function checkDuplicate(array &$data)
-    {
-        if (isset($this->schema[ORM::E_PRIMARY_KEY]))
-        {
-            $primaryKey = $this->schema[ORM::E_PRIMARY_KEY];
-
-            if (isset($this->duplicates[$data[$primaryKey]]))
-            {
-                //Duplicate is presented, let's reduplicate (will update reference)
-                $data = $this->duplicates[$data[$primaryKey]];
-
-                return true;
-            }
-
-            $this->duplicates[$data[$primaryKey]] = &$data;
-        }
-        else
-        {
-            /**
-             * It is recommended to use primary keys in every model as it will speed up de-duplication.
-             */
-            $serialization = serialize($data);
-            if (isset($this->duplicates[$serialization]))
-            {
-                //Duplicate is presented, let's reduplicate
-                $data = $this->duplicates[$serialization];
-
-                //Duplicate is presented
-                return true;
-            }
-
-            $this->duplicates[$serialization] = &$data;
-        }
-
-        return false;
-    }
-
-    protected function registerReferences(array &$data)
-    {
-        foreach ($this->referenceKeys as $key)
-        {
-            //Adding reference
-            $this->references[$key . '::' . $data[$key]] = &$data;
-            $this->aggregatedReferences[$key][$data[$key]][] = &$data;
-        }
-    }
-
-
-    //-------------------------------------
 
     /**
      * Clean loader data.

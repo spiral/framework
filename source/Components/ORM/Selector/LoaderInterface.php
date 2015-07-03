@@ -28,7 +28,7 @@ interface LoaderInterface
     public function configureSelector(Selector $selector);
 
     /**
-     * Run post selection queries to clarify featched model data. Usually many conditions will be
+     * Run post selection queries to clarify fetched model data. Usually many conditions will be
      * fetched from there. Additionally this method may be used to create relations to external
      * source of data (ODM, elasticSearch and etc).
      */

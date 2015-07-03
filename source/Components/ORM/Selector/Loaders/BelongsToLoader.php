@@ -33,30 +33,33 @@ class BelongsToLoader extends HasOneLoader
     {
         $data = $this->fetchData($row);
 
-        if (!$referenceName = $this->getReferenceName($data))
+        if (!$referenceCriteria = $this->fetchReferenceCriteria($data))
         {
             //Relation not loaded
             return;
         }
 
-        if (!$this->checkDuplicate($data))
+        if ($this->deduplicate($data))
         {
             //Clarifying parent dataset
-            $this->registerReferences($data);
+            $this->collectReferences($data);
         }
-
-        //TODO! bug with results from outer query
 
         if ($this->options['method'] == Selector::INLOAD)
         {
-            $this->parent->registerNested($referenceName, $this->container, $data);
+            $this->parent->mount(
+                $this->container,
+                $this->getReferenceKey(),
+                $referenceCriteria,
+                $data
+            );
         }
         else
         {
-            $this->parent->registerNestedParent(
+            $this->parent->mountOuter(
                 $this->container,
-                $this->definition[ActiveRecord::INNER_KEY],
-                $data[$this->definition[ActiveRecord::OUTER_KEY]],
+                $this->getReferenceKey(),
+                $referenceCriteria,
                 $data
             );
         }

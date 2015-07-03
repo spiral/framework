@@ -8,7 +8,6 @@
  */
 namespace Spiral\Components\ORM\Selector\Loaders;
 
-use Spiral\Components\DBAL\Database;
 use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\Relation;
@@ -27,6 +26,9 @@ class HasOneLoader extends Loader
      */
     const LOAD_METHOD = Selector::INLOAD;
 
+    /**
+     * Internal constant used to decide nested aggregation level.
+     */
     const MULTIPLE = false;
 
     /**
@@ -114,18 +116,25 @@ class HasOneLoader extends Loader
 
         $data = $this->fetchData($row);
 
-        if (!$referenceName = $this->getReferenceName($data))
+        if (!$referenceCriteria = $this->fetchReferenceCriteria($data))
         {
             //Relation not loaded
             return;
         }
 
         //WHAT IF?
-        if (!$this->checkDuplicate($data))
+        if ($this->deduplicate($data))
         {
             //Clarifying parent dataset
-            $this->registerReferences($data);
-            $this->parent->registerNested($referenceName, $this->container, $data, static::MULTIPLE);
+            $this->collectReferences($data);
+
+            $this->parent->mount(
+                $this->container,
+                $this->getReferenceKey(),
+                $referenceCriteria,
+                $data,
+                static::MULTIPLE
+            );
         }
 
         $this->parseNested($row);
