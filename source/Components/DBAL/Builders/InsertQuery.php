@@ -159,6 +159,6 @@ class InsertQuery extends QueryBuilder
     {
         $compiler = !empty($compiler) ? $compiler : $this->compiler;
 
-        return $compiler->insert($this->table, $this->columns, $this->parameters);
+        return $compiler->resetAliases()->insert($this->table, $this->columns, $this->parameters);
     }
 }

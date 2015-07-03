@@ -131,7 +131,11 @@ class Selector extends AbstractSelectQuery
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+        if (empty($compiler))
+        {
+            //We have to reset aliases if we own this compiler
+            $compiler = $this->compiler->resetAliases();
+        }
 
         //Primary loader may add custom conditions to select query
         $this->loader->clarifySelector($this);
@@ -162,12 +166,13 @@ class Selector extends AbstractSelectQuery
 
     /**
      * Set columns should be fetched as result of SELECT query. Columns can be provided with specified
-     * alias (AS construction). QueryResult will be returned as result.
+     * alias (AS construction). QueryResult will be returned as result. No post loaders will be
+     * executed.
      *
      * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
      * @return QueryResult
      */
-    public function fetchColumns($columns)
+    public function fetchColumns($columns = ['*'])
     {
         $this->columns = $this->fetchIdentifiers(func_get_args());
 

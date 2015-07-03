@@ -36,7 +36,7 @@ class DeleteQuery extends AffectQuery
     {
         $compiler = !empty($compiler) ? $compiler : $this->compiler;
 
-        return $compiler->delete(
+        return $compiler->resetAliases()->delete(
             $this->table,
             $this->joins,
             $this->whereTokens,

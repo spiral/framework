@@ -137,7 +137,7 @@ class UpdateQuery extends AffectQuery
             throw new DBALException("Update values should be specified.");
         }
 
-        return $compiler->update(
+        return $compiler->resetAliases()->update(
             $this->table,
             $this->values,
             $this->joins,

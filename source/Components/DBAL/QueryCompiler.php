@@ -52,6 +52,18 @@ class QueryCompiler extends Component
     }
 
     /**
+     * Reset QueryCompiler aliases cache.
+     *
+     * @return static
+     */
+    public function resetAliases()
+    {
+        $this->aliases = [];
+
+        return $this;
+    }
+
+    /**
      * Quote database table or column keyword according to driver rules, method can automatically
      * detect table names, SQL functions and used aliases (via keywords AS), last argument can be used
      * to collect such aliases.

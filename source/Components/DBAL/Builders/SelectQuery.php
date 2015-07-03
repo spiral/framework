@@ -129,7 +129,10 @@ class SelectQuery extends AbstractSelectQuery
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+        if (empty($compiler))
+        {
+            $compiler = $this->compiler->resetAliases();
+        }
 
         return $compiler->select(
             $this->fromTables,
