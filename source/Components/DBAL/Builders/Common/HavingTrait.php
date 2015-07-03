@@ -9,6 +9,10 @@
 namespace Spiral\Components\DBAL\Builders\Common;
 
 use Spiral\Components\DBAL\DBALException;
+use Spiral\Components\DBAL\Parameter;
+use Spiral\Components\DBAL\ParameterInterface;
+use Spiral\Components\DBAL\QueryBuilder;
+use Spiral\Components\DBAL\SqlFragmentInterface;
 
 trait HavingTrait
 {
@@ -22,15 +26,48 @@ trait HavingTrait
     protected $havingTokens = [];
 
     /**
+     * Having parameters has to be stored separately from other query parameters as they have their
+     * own order.
+     *
+     * @var array
+     */
+    protected $havingParameters = [];
+
+    /**
+     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
+     * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
+     *
+     * @return array
+     */
+    protected function getHavingParameters()
+    {
+        $parameters = [];
+
+        foreach ($this->havingParameters as $parameter)
+        {
+            if ($parameter instanceof QueryBuilder)
+            {
+                $parameters = array_merge($parameters, $parameter->getParameters());
+                continue;
+            }
+
+            $parameters[] = $parameter;
+        }
+
+        return $parameters;
+    }
+
+    /**
      * Helper methods used to processed user input in where methods to internal where token, method
      * support all different combinations, closures and nested queries. Additionally i can be used
      * not only for where but for having and join tokens.
      *
-     * @param string $joiner          Boolean joiner (AND|OR).
-     * @param array  $parameters      Set of parameters collected from where functions.
-     * @param array  $tokens          Array to aggregate compiled tokens.
-     * @param bool   $catchParameters If true every found parameter will passed thought addParameter()
-     *                                method.
+     * @param string        $joiner           Boolean joiner (AND|OR).
+     * @param array         $parameters       Set of parameters collected from where functions.
+     * @param array         $tokens           Array to aggregate compiled tokens.
+     * @param \Closure|null $parameterWrapper Callback or closure used to handle all catched
+     *                                        parameters, by default $this->addParameter will be used.
+     *
      * @return array
      * @throws DBALException
      */
@@ -38,7 +75,7 @@ trait HavingTrait
         $joiner,
         array $parameters,
         &$tokens = [],
-        $catchParameters = true
+        callable $parameterWrapper = null
     );
 
     /**
@@ -264,5 +301,36 @@ trait HavingTrait
         $this->whereToken('OR', func_get_args(), $this->havingTokens);
 
         return $this;
+    }
+
+    /**
+     * Parameter wrapper used to convert all found parameters to valid sql expressions. Used in join
+     * on functions.
+     *
+     * @return \Closure
+     */
+    protected function havingParameterWrapper()
+    {
+        return function ($parameter)
+        {
+            if (!$parameter instanceof ParameterInterface && is_array($parameter))
+            {
+                $parameter = new Parameter($parameter);
+            }
+
+            if
+            (
+                $parameter instanceof SqlFragmentInterface
+                && !$parameter instanceof ParameterInterface
+                && !$parameter instanceof QueryBuilder
+            )
+            {
+                return $parameter;
+            }
+
+            $this->havingParameters[] = $parameter;
+
+            return $parameter;
+        };
     }
 }

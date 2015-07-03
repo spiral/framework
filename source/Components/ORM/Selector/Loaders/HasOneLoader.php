@@ -32,7 +32,7 @@ class HasOneLoader extends Loader
     protected function clarifyQuery(Selector $selector)
     {
         //Relation definition
-        $definition = $this->relationDefinition;
+        $definition = $this->definition;
 
         $outerKey = $this->getAlias() . '.' . $definition[ActiveRecord::OUTER_KEY];
 
@@ -44,7 +44,7 @@ class HasOneLoader extends Loader
             [$outerKey => $innerKey]
         );
 
-        if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
+        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->getAlias() . '.' . $definition[ActiveRecord::MORPH_KEY];
             $selector->onWhere([
@@ -79,7 +79,7 @@ class HasOneLoader extends Loader
         $selector = parent::createSelector();
 
         //Relation definition
-        $definition = $this->relationDefinition;
+        $definition = $this->definition;
 
         //Aggregated keys
         $aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey());
@@ -97,7 +97,7 @@ class HasOneLoader extends Loader
             array_unique($aggregatedKeys)
         );
 
-        if (!empty($this->relationDefinition[ActiveRecord::MORPH_KEY]))
+        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->getAlias() . '.' . $definition[ActiveRecord::MORPH_KEY];
             $selector->where([

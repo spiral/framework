@@ -554,7 +554,7 @@ trait JoinTrait
         $joiner,
         array $parameters,
         &$tokens = [],
-        $parameterWrapper = null
+        callable $parameterWrapper = null
     );
 
     /**

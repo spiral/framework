@@ -69,7 +69,7 @@ abstract class Relation
     public function getSelector()
     {
         //database is not nesessary right
-        $selector = new Selector($this->getTarget(), $this->orm, $this->orm->getDBAL());
+        $selector = new Selector(!empty($orm) ? $orm : ORM::getInstance(), $this->getTarget());
 
         return $selector;
     }

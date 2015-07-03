@@ -28,15 +28,12 @@ abstract class Loader
     const LOAD_METHOD = null;
 
     /**
-     * Loaders associated with relation type.
+     * ORM component is required to fetch all required model schemas.
      *
-     * @var array
+     * @invisible
+     * @var ORM
      */
-    protected static $loaderClasses = [
-        ActiveRecord::HAS_ONE    => 'Spiral\Components\ORM\Selector\Loaders\HasOneLoader',
-        ActiveRecord::HAS_MANY   => 'Spiral\Components\ORM\Selector\Loaders\HasManyLoader',
-        ActiveRecord::BELONGS_TO => 'Spiral\Components\ORM\Selector\Loaders\BelongsToLoader'
-    ];
+    protected $orm = null;
 
     /**
      * Container related to parent loader.
@@ -50,23 +47,7 @@ abstract class Loader
      *
      * @var array
      */
-    protected $relationDefinition = [];
-
-    /**
-     * ORM component is required to fetch all required model schemas.
-     *
-     * @invisible
-     * @var ORM
-     */
-    protected $orm = null;
-
-    /**
-     * Related model schema.
-     *
-     * @invisible
-     * @var array
-     */
-    protected $schema = [];
+    protected $definition = [];
 
     /**
      * Parent loader.
@@ -77,14 +58,29 @@ abstract class Loader
     protected $parent = null;
 
     /**
+     * Related model schema.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $schema = [];
+
+    /**
      * Loader options usually used while declaring joins and etc.
      *
      * @var array
      */
     protected $options = [
         'method' => null,
-        'alias'  => null
+        'alias' => null,
+        'load'  => true
     ];
+
+    protected $columns = [];
+
+    protected $offset = 0;
+
+    protected $countColumns = 0;
 
     /**
      * List of keys has to be stored as data references. This set of keys is required by inner loader(s)
@@ -94,11 +90,6 @@ abstract class Loader
      */
     protected $referenceKeys = [];
 
-    protected $columns = [];
-
-    protected $offset = 0;
-
-    protected $countColumns = 0;
 
     protected $references = [];
 
@@ -116,21 +107,29 @@ abstract class Loader
     protected $loaders = [];
 
     public function __construct(
-        $container,
-        array $relationDefinition = [],
         ORM $orm,
-        Loader $parent = null
+        $container,
+        array $definition = [],
+        Loader $parent
     )
     {
-        $this->container = $container;
-        $this->relationDefinition = $relationDefinition;
         $this->orm = $orm;
 
-        $this->schema = $orm->getSchema($relationDefinition[static::RELATION_TYPE]);
+        $this->container = $container;
+        $this->definition = $definition;
         $this->parent = $parent;
+
+        //Related model schema
+        $this->schema = $orm->getSchema($this->getTarget());
 
         //Compiling options
         $this->options['method'] = static::LOAD_METHOD;
+
+        //We have to force post-load if parent loader database is different
+        if ($parent->dbalDatabase() != $this->dbalDatabase())
+        {
+            $this->options['method'] = Selector::POSTLOAD;
+        }
 
         if ($this->parent instanceof Selector\Loaders\RootLoader)
         {
@@ -145,27 +144,55 @@ abstract class Loader
         $this->countColumns = count($this->schema[ORM::E_COLUMNS]);
     }
 
-    public function dbalDatabase()
+    /**
+     * Get model class loader references to.
+     *
+     * @return string
+     */
+    protected function getTarget()
     {
-        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
+        return $this->definition[static::RELATION_TYPE];
     }
 
+    /**
+     * Table name loader relates to.
+     *
+     * @return mixed
+     */
+    public function getTable()
+    {
+        return $this->schema[ORM::E_TABLE];
+    }
+
+    /**
+     * Table alias to be used in query.
+     *
+     * @return string
+     */
     public function getAlias()
     {
         return $this->options['alias'];
     }
 
+    /**
+     * Instance of Dbal\Database data should be loaded from.
+     *
+     * @return Database
+     */
+    public function dbalDatabase()
+    {
+        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
+    }
+
     public function getReferenceName(array $data)
     {
-        $definition = $this->relationDefinition;
-
-        if (!isset($data[$definition[ActiveRecord::OUTER_KEY]]))
+        if (!isset($data[$this->definition[ActiveRecord::OUTER_KEY]]))
         {
             return null;
         }
 
         //Fairly simple logic
-        return $definition[ActiveRecord::INNER_KEY] . '::' . $data[$definition[ActiveRecord::OUTER_KEY]];
+        return $this->definition[ActiveRecord::INNER_KEY] . '::' . $data[$this->definition[ActiveRecord::OUTER_KEY]];
     }
 
     /**
@@ -204,16 +231,10 @@ abstract class Loader
 
         $relationOptions = $this->schema[ORM::E_RELATIONS][$relation];
 
-        //Adding loader
-        $loader = self::$loaderClasses[$relationOptions[ORM::R_TYPE]];
-
-        /**
-         * @var Loader $loader
-         */
-        $loader = new $loader(
+        $loader = $this->orm->getLoader(
+            $relationOptions[ORM::R_TYPE],
             $relation,
             $relationOptions[ORM::R_DEFINITION],
-            $this->orm,
             $this
         );
 
@@ -261,12 +282,7 @@ abstract class Loader
     public function getReferenceKey()
     {
         //Fairly simple logic
-        return $this->relationDefinition[ActiveRecord::INNER_KEY];
-    }
-
-    public function getTable()
-    {
-        return $this->schema[ORM::E_TABLE];
+        return $this->definition[ActiveRecord::INNER_KEY];
     }
 
     /**
@@ -298,9 +314,8 @@ abstract class Loader
     public function createSelector()
     {
         $selector = new Selector(
-            $this->relationDefinition[static::RELATION_TYPE],
+            $this->definition[static::RELATION_TYPE],
             $this->orm,
-            [],
             $this
         );
 

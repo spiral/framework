@@ -9,6 +9,7 @@
 namespace Spiral\Support\Pagination;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Container;
 
 trait PaginatorTrait
 {
@@ -104,7 +105,8 @@ trait PaginatorTrait
      *                                              fetch count from associated object.
      * @param string                 $pageParameter Name of parameter in request query which is used
      *                                              to store the current page number. "page" by default.
-     * @param ServerRequestInterface $request       Source of page number.
+     * @param ServerRequestInterface $request       Source of page number. Will be fetched from
+     *                                              container if nothing else if provided.
      * @return static
      */
     public function paginate(
@@ -114,12 +116,9 @@ trait PaginatorTrait
         ServerRequestInterface $request = null
     )
     {
-
-        $arguments = compact('pageParameter');
-
-        if (!empty($request))
+        if (empty($request))
         {
-            $arguments['request'] = $request;
+            $request = Container::getInstance()->get('Psr\Http\Message\ServerRequestInterface');
         }
 
         $this->paginator = new Paginator($pageParameter, $request);

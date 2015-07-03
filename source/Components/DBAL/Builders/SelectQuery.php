@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\DBAL\Builders;
 
+use Spiral\Components\DBAL\Builders\Common\AbstractSelectQuery;
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
@@ -55,6 +56,34 @@ class SelectQuery extends AbstractSelectQuery
         {
             $this->columns = $this->fetchIdentifiers($columns);
         }
+    }
+
+    /**
+     * Set columns should be fetched as result of SELECT query. Columns can be provided with specified
+     * alias (AS construction).
+     *
+     * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
+     * @return static
+     */
+    public function columns($columns)
+    {
+        $this->columns = $this->fetchIdentifiers(func_get_args());
+
+        return $this;
+    }
+
+    /**
+     * Alias for columns() method. Set columns should be fetched as result of SELECT query. Columns
+     * can be provided with specified alias (AS construction).
+     *
+     * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
+     * @return static
+     */
+    public function select($columns)
+    {
+        $this->columns = $this->fetchIdentifiers(func_get_args());
+
+        return $this;
     }
 
     /**

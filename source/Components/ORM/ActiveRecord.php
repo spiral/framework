@@ -540,11 +540,15 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * Get instance of DBAL\Database associated with specified record. This is not static method which
      * if used by Relations to find appropriate database.
      *
+     * @param ORM $orm ORM component, will be received from container if not provided.
      * @return Database
      */
-    public function dbalDatabase()
+    public static function dbalDatabase(ORM $orm = null)
     {
-        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
+        $orm = !empty($orm) ? $orm : ORM::getInstance();
+        $schema = $orm->getSchema(static::class);
+
+        return $orm->getDBAL()->db($schema[ORM::E_DB]);
     }
 
     /**
@@ -559,6 +563,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $orm = !empty($orm) ? $orm : ORM::getInstance();
         $schema = $orm->getSchema(static::class);
 
+        //We can bypass dbalDatabase() method here.
         $database = !empty($database) ? $database : $orm->getDBAL()->db($schema[ORM::E_DB]);
 
         return $database->table($schema[ORM::E_TABLE]);
@@ -614,7 +619,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             //We will need to support models with primary keys in future
             unset($this->fields[$primaryKey]);
 
-            $lastID = static::dbalTable($this->orm, $this->dbalDatabase())->insert(
+            $lastID = static::dbalTable($this->orm)->insert(
                 $this->fields = $this->serializeData()
             );
 
@@ -629,7 +634,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         {
             $this->event('updating');
 
-            static::dbalTable($this->orm, $this->dbalDatabase())->update(
+            static::dbalTable($this->orm)->update(
                 $this->compileUpdates(),
                 [$primaryKey => $this->primaryKey()]
             )->run();
@@ -655,13 +660,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         {
             if (!empty($this->schema[ORM::E_PRIMARY_KEY]))
             {
-                static::dbalTable($this->orm, $this->dbalDatabase())->delete([
+                static::dbalTable($this->orm)->delete([
                     $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
                 ])->run();
             }
             else
             {
-                static::dbalTable($this->orm, $this->dbalDatabase())->delete(
+                static::dbalTable($this->orm)->delete(
                     $this->serializeData()
                 )->run();
             }
@@ -725,7 +730,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public static function find(array $query = [])
     {
-        return static::ormSelector();
+        return static::ormSelector()->where($query);
     }
 
     /**

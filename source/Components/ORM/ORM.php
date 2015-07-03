@@ -10,6 +10,7 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
+use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
@@ -115,16 +116,32 @@ class ORM extends Component
     }
 
 
-    public function getRelation(
-        ActiveRecord $parent = null,
-        $type,
-        array $definition,
-        $data = []
-    )
-    {
-        $class = $this->config['relations'][$type]['class'];
+    //    public function getRelation(
+    //        ActiveRecord $parent = null,
+    //        $type,
+    //        array $definition,
+    //        $data = []
+    //    )
+    //    {
+    //        $class = $this->config['relations'][$type]['class'];
+    //
+    //        return new $class($this, $parent, $definition, $data);
+    //    }
 
-        return new $class($this, $parent, $definition, $data);
+    /**
+     * Get instance of Loader associated with relation type and relation defitition.
+     *
+     * @param int    $type       Relation type.
+     * @param string $container  Container related to parent loader.
+     * @param array  $definition Relation definition.
+     * @param Loader $parent     Parent loader (if presented).
+     * @return Loader
+     */
+    public function getLoader($type, $container, array $definition, Loader $parent = null)
+    {
+        $class = $this->config['relations'][$type]['loader'];
+
+        return new $class($this, $container, $definition, $parent);
     }
 
     /**

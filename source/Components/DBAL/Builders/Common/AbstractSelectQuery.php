@@ -6,15 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\DBAL\Builders;
+namespace Spiral\Components\DBAL\Builders\Common;
 
 use Spiral\Components\Cache\StoreInterface;
-use Spiral\Components\DBAL\Builders\Common\HavingTrait;
-use Spiral\Components\DBAL\Builders\Common\JoinTrait;
-use Spiral\Components\DBAL\Builders\Common\WhereTrait;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryResult;
+use Spiral\Support\Pagination\PaginableInterface;
 use Spiral\Support\Pagination\PaginatorTrait;
 
 /**
@@ -27,7 +25,10 @@ use Spiral\Support\Pagination\PaginatorTrait;
  * @method int max($identifier) Perform aggregation based on column or expression value.
  * @method int sum($identifier) Perform aggregation based on column or expression value.
  */
-abstract class AbstractSelectQuery extends QueryBuilder
+abstract class AbstractSelectQuery extends QueryBuilder implements
+    \IteratorAggregate,
+    \JsonSerializable,
+    PaginableInterface
 {
     /**
      * Select builder uses where, join traits and can be paginated.
@@ -121,34 +122,6 @@ abstract class AbstractSelectQuery extends QueryBuilder
     }
 
     /**
-     * Set columns should be fetched as result of SELECT query. Columns can be provided with specified
-     * alias (AS construction).
-     *
-     * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
-     * @return static
-     */
-    public function columns($columns)
-    {
-        $this->columns = $this->fetchIdentifiers(func_get_args());
-
-        return $this;
-    }
-
-    /**
-     * Alias for columns() method. Set columns should be fetched as result of SELECT query. Columns
-     * can be provided with specified alias (AS construction).
-     *
-     * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
-     * @return static
-     */
-    public function select($columns)
-    {
-        $this->columns = $this->fetchIdentifiers(func_get_args());
-
-        return $this;
-    }
-
-    /**
      * Specify grouping identifier or expression for select query.
      *
      * @param string $identifier
@@ -201,8 +174,12 @@ abstract class AbstractSelectQuery extends QueryBuilder
      */
     public function getParameters()
     {
-        //Join parameters always goes first
-        return array_merge($this->getOnParameters(), parent::getParameters());
+        //Join parameters always goes first, having parameters always going last
+        return array_merge(
+            $this->getOnParameters(),
+            parent::getParameters(),
+            $this->getHavingParameters()
+        );
     }
 
     /**
@@ -312,6 +289,37 @@ abstract class AbstractSelectQuery extends QueryBuilder
     public function getIterator()
     {
         return $this->run();
+    }
+
+    /**
+     * Iterate thought result chunks defined by limit value.
+     *
+     * Example:
+     * $select->chunked(100, function(QueryResult $result)
+     * {
+     *      dump($result);
+     * });
+     *
+     * @param int      $limit
+     * @param callable $function
+     */
+    public function chunked($limit, callable $function)
+    {
+        //Count items
+        $count = $this->count();
+        $offset = 0;
+
+        $this->limit($limit);
+        while ($offset + $limit <= $count)
+        {
+            if (call_user_func($function, $this->offset($offset)->getIterator()) === false)
+            {
+                //Stop iteration
+                return;
+            }
+
+            $offset += $limit;
+        }
     }
 
     /**

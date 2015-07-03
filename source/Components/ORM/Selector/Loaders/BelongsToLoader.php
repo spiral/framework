@@ -60,8 +60,8 @@ class BelongsToLoader extends HasOneLoader
         {
             $this->parent->registerNestedParent(
                 $this->container,
-                $this->relationDefinition[ActiveRecord::INNER_KEY],
-                $data[$this->relationDefinition[ActiveRecord::OUTER_KEY]],
+                $this->definition[ActiveRecord::INNER_KEY],
+                $data[$this->definition[ActiveRecord::OUTER_KEY]],
                 $data
             );
         }

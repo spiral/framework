@@ -274,7 +274,7 @@ trait WhereTrait
         $joiner,
         array $parameters,
         &$tokens = [],
-        $parameterWrapper = null
+        callable $parameterWrapper = null
     )
     {
         if (empty($parameterWrapper))
@@ -417,7 +417,7 @@ trait WhereTrait
      * @return array
      * @throws DBALException
      */
-    protected function parseWhere(array $where, $grouping, &$tokens, $parameterWrapper)
+    protected function parseWhere(array $where, $grouping, &$tokens, callable $parameterWrapper)
     {
         foreach ($where as $name => $value)
         {
