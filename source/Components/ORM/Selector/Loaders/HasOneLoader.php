@@ -114,20 +114,19 @@ class HasOneLoader extends Loader
             return;
         }
 
-        //WHAT IF?
-        if ($this->deduplicate($data))
+        if ($unique = $this->deduplicate($data))
         {
             //Clarifying parent dataset
             $this->collectReferences($data);
-
-            $this->parent->mount(
-                $this->container,
-                $this->getReferenceKey(),
-                $referenceCriteria,
-                $data,
-                static::MULTIPLE
-            );
         }
+
+        $this->parent->mount(
+            $this->container,
+            $this->getReferenceKey(),
+            $referenceCriteria,
+            $data,
+            static::MULTIPLE
+        );
 
         $this->parseNested($row);
     }

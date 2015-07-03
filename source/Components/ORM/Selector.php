@@ -102,14 +102,14 @@ class Selector extends AbstractSelectQuery
      * @param array        $options
      * @return static
      */
-    public function with($relation, $options = [])
+    public function with($relation, $options = [], $forceOptions = [])
     {
         if (is_array($relation))
         {
             foreach ($relation as $name => $options)
             {
                 //Multiple relations or relation with addition load options
-                $this->with($name, $options);
+                $this->with($name, $options, $forceOptions);
             }
 
             return $this;
@@ -118,7 +118,7 @@ class Selector extends AbstractSelectQuery
         //TODO: Cross-db loaders
 
         //Nested loader
-        $loader = $this->loader->loader($relation, $options);
+        $loader = $this->loader->loader($relation, $options, $forceOptions);
 
         return $this;
     }

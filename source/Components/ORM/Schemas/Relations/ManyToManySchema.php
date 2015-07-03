@@ -112,18 +112,19 @@ class ManyToManySchema extends RelationSchema
         $outerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
         $outerKey->type($this->getOuterKeyType());
 
-        //Complex index
-        $pivotTable->unique(
-            $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
-            $this->definition[ActiveRecord::THOUGHT_OUTER_KEY]
-        );
-
         if ($this->definition[ActiveRecord::CONSTRAINT] && empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
+            //Complex index
+            $pivotTable->unique(
+                $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
+                $this->definition[ActiveRecord::THOUGHT_OUTER_KEY]
+            );
+
             $foreignKey = $innerKey->foreign(
                 $this->recordSchema->getTable(),
                 $this->recordSchema->getPrimaryKey()
             );
+
             $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
 
@@ -131,6 +132,7 @@ class ManyToManySchema extends RelationSchema
                 $this->getOuterRecordSchema()->getTable(),
                 $this->getOuterRecordSchema()->getPrimaryKey()
             );
+
             $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
         }

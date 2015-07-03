@@ -10,6 +10,7 @@ namespace Spiral\Components\ORM\Schemas\Relations;
 
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\ORM\ActiveRecord;
+use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\MorphedRelationSchema;
 
@@ -74,7 +75,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
 
         $pivotTable = $this->getPivotSchema();
 
-        $pivotTable->bigPrimary('id');
+        $pivotTable->bigPrimary(ORM::PIVOT_PRIMARY_KEY);
 
         $localKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
         $localKey->type($this->getInnerKeyType());
@@ -88,9 +89,9 @@ class ManyToMorphedSchema extends MorphedRelationSchema
 
         //Complex index
         $pivotTable->unique(
-            $this->definition[ActiveRecord::INNER_KEY],
+            $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
             $this->definition[ActiveRecord::MORPH_KEY],
-            $this->definition[ActiveRecord::OUTER_KEY]
+            $this->definition[ActiveRecord::THOUGHT_OUTER_KEY]
         );
 
         if ($this->definition[ActiveRecord::CONSTRAINT])

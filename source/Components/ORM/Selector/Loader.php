@@ -272,16 +272,17 @@ abstract class Loader implements LoaderInterface
      * @param array  $options
      * @return Loader
      */
-    public function loader($relation, array $options = [])
+    public function loader($relation, array $options = [], $forceOptions = [])
     {
         if (($position = strpos($relation, '.')) !== false)
         {
             $parentRelation = substr($relation, 0, $position);
 
             //Recursively
-            return $this->loader($parentRelation)->loader(
+            return $this->loader($parentRelation, [], $forceOptions)->loader(
                 substr($relation, $position + 1),
-                $options
+                $options,
+                $forceOptions
             );
         }
 
@@ -296,7 +297,7 @@ abstract class Loader implements LoaderInterface
 
         if (isset($this->loaders[$relation]))
         {
-            $this->loaders[$relation]->setOptions($options);
+            $this->loaders[$relation]->setOptions($forceOptions + $options);
 
             return $this->loaders[$relation];
         }
@@ -310,7 +311,7 @@ abstract class Loader implements LoaderInterface
             $this
         );
 
-        $loader->setOptions($options);
+        $loader->setOptions($forceOptions + $options);
         $this->loaders[$relation] = $loader;
 
         if ($referenceKey = $loader->getReferenceKey())
@@ -631,7 +632,13 @@ abstract class Loader implements LoaderInterface
      * @param array  $data
      * @param bool   $multiple If true all mounted records will added to array.
      */
-    public function mount($container, $key, $criteria, array &$data, $multiple = false)
+    public function mount(
+        $container,
+        $key,
+        $criteria,
+        array &$data,
+        $multiple = false
+    )
     {
         $reference = $key . '::' . $criteria;
 
@@ -643,6 +650,14 @@ abstract class Loader implements LoaderInterface
 
         if ($multiple)
         {
+            if (
+                isset($this->references[$reference][$container])
+                && in_array($data, $this->references[$reference][$container])
+            )
+            {
+                return;
+            }
+
             $this->references[$reference][$container][] = &$data;
 
             return;
@@ -668,11 +683,36 @@ abstract class Loader implements LoaderInterface
      * @param string $key
      * @param mixed  $criteria
      * @param array  $data
+     * @param bool   $multiple If true all mounted records will added to array.
      */
-    public function mountOuter($container, $key, $criteria, array &$data)
+    public function mountOuter(
+        $container,
+        $key,
+        $criteria,
+        array &$data,
+        $multiple = false
+    )
     {
         foreach ($this->aggregatedReferences[$key][$criteria] as &$subset)
         {
+            if ($multiple)
+            {
+                if (
+                    isset($subset[$container])
+                    && in_array($data, $subset[$container])
+                )
+                {
+                    unset($subset);
+
+                    continue;
+                }
+
+                $subset[$container][] = &$data;
+                unset($subset);
+
+                continue;
+            }
+
             if (!isset($subset[$container]))
             {
                 $subset[$container] = &$data;

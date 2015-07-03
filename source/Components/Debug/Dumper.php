@@ -46,7 +46,7 @@ class Dumper extends Component
      * @var array
      */
     private $styles = [
-        'maxLevel'  => 10,
+        'maxLevel' => 12,
         'container' => 'background-color: white; font-family: monospace;',
         'indent'    => '&middot;    ',
         'styles'    => [
