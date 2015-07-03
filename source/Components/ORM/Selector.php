@@ -268,19 +268,17 @@ class Selector extends AbstractSelectQuery
      * Generate set of columns required to represent desired model and it's relations. Do not use
      * this method by your own. Method will return columns offset.
      *
-     * @param Loader $loader  Loader which requested columns to be added. We only need loader table
-     *                        alias, but we want full class to make sure no-one will use this method
-     *                        when they don't need to.
+     * @param string $table Source table name.
      * @param array  $columns Original set of model columns.
      * @return int
      */
-    public function registerColumns(Loader $loader, array $columns)
+    public function registerColumns($table, array $columns)
     {
         $offset = count($this->registeredColumns);
         foreach ($columns as $column)
         {
             $columnAlias = 'c' . (++$this->countColumns);
-            $this->registeredColumns[] = $loader->getAlias() . '.' . $column . ' AS ' . $columnAlias;
+            $this->registeredColumns[] = $table . '.' . $column . ' AS ' . $columnAlias;
         }
 
         return $offset;
@@ -314,7 +312,7 @@ class Selector extends AbstractSelectQuery
 
         foreach ($logLevels as $ratio => $logLevel)
         {
-            if ($dataRatio > $ratio)
+            if ($dataRatio >= $ratio)
             {
                 break;
             }

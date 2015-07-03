@@ -46,7 +46,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const HAS_MANY           = 102;
     const BELONGS_TO         = 103;
     const MANY_TO_MANY       = 104;
-    const MANY_THOUGHT       = 105;
     const BELONGS_TO_MORPHED = 108;
     const MANY_TO_MORPHED    = 109;
 
@@ -59,12 +58,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const THOUGHT_TABLE     = 904;
     const PIVOT_TABLE       = 904;
     const VIA_TABLE         = 904;
-    const THOUGHT_INNER_KEY = 905;
-    const THOUGHT_OUTER_KEY = 906;
-    const WHERE             = 907;
-    const WHERE_PIVOT       = 908;
-    const PREFILL_FIELDS    = 909;
-    const PREFILL_PIVOT     = 910;
+    const PIVOT_COLUMNS     = 905;
+    const THOUGHT_INNER_KEY = 906;
+    const THOUGHT_OUTER_KEY = 907;
+    const WHERE             = 908;
+    const WHERE_PIVOT       = 909;
+    const PREFILL_FIELDS    = 910;
+    const PREFILL_PIVOT     = 911;
 
     /**
      * Additional constants used to control relation schema creation.

@@ -8,7 +8,9 @@
  */
 namespace Spiral\Components\ORM\Schemas\Relations;
 
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\ORM\ActiveRecord;
+use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\RelationSchema;
 
@@ -37,7 +39,8 @@ class ManyToManySchema extends RelationSchema
         ActiveRecord::THOUGHT_OUTER_KEY => '{outer:roleName}_{definition:OUTER_KEY}',
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
-        ActiveRecord::CREATE_PIVOT      => false
+        ActiveRecord::CREATE_PIVOT  => true,
+        ActiveRecord::PIVOT_COLUMNS => []
     ];
 
     /**
@@ -58,7 +61,7 @@ class ManyToManySchema extends RelationSchema
      *
      * @return string
      */
-    public function getPivotTableName()
+    protected function getPivotTableName()
     {
         if (isset($this->definition[ActiveRecord::PIVOT_TABLE]))
         {
@@ -77,6 +80,19 @@ class ManyToManySchema extends RelationSchema
     }
 
     /**
+     * Pivot table schema.
+     *
+     * @return AbstractTableSchema
+     */
+    protected function getPivotSchema()
+    {
+        return $this->schemaBuilder->declareTable(
+            $this->recordSchema->getDatabase(),
+            $this->getPivotTableName()
+        );
+    }
+
+    /**
      * Create all required relation columns, indexes and constraints.
      */
     public function buildSchema()
@@ -86,12 +102,9 @@ class ManyToManySchema extends RelationSchema
             return;
         }
 
-        $pivotTable = $this->ormSchema->declareTable(
-            $this->recordSchema->getDatabase(),
-            $this->getPivotTableName()
-        );
+        $pivotTable = $this->getPivotSchema();
 
-        $pivotTable->bigPrimary('id');
+        $pivotTable->bigPrimary(ORM::PIVOT_PRIMARY_KEY);
 
         $innerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
         $innerKey->type($this->getInnerKeyType());
@@ -143,5 +156,25 @@ class ManyToManySchema extends RelationSchema
             ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
             ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT]
         ]);
+    }
+
+    /**
+     * Normalize relation options.
+     *
+     * @return array
+     */
+    protected function normalizeDefinition()
+    {
+        $definition = parent::normalizeDefinition();
+
+        //Let's include pivot table columns
+        $definition[ActiveRecord::PIVOT_COLUMNS] = [];
+
+        foreach ($this->getPivotSchema()->getColumns() as $column)
+        {
+            $definition[ActiveRecord::PIVOT_COLUMNS][] = $column->getName();
+        }
+
+        return $definition;
     }
 }

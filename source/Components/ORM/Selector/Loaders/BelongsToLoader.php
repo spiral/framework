@@ -32,7 +32,6 @@ class BelongsToLoader extends HasOneLoader
     public function parseRow(array $row)
     {
         $data = $this->fetchData($row);
-
         if (!$referenceCriteria = $this->fetchReferenceCriteria($data))
         {
             //Relation not loaded

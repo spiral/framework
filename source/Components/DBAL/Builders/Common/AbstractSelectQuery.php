@@ -306,9 +306,9 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      * Return false from inner function to stop chunking.
      *
      * @param int      $limit
-     * @param callable $function
+     * @param callable $callback
      */
-    public function chunked($limit, callable $function)
+    public function chunked($limit, callable $callback)
     {
         //Count items
         $count = $this->count();
@@ -317,7 +317,14 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
         $this->limit($limit);
         while ($offset + $limit <= $count)
         {
-            if (call_user_func($function, $this->offset($offset)->getIterator(), $count) === false)
+            $result = call_user_func(
+                $callback,
+                $this->offset($offset)->getIterator(),
+                $offset,
+                $count
+            );
+
+            if ($result === false)
             {
                 //Stop iteration
                 return;

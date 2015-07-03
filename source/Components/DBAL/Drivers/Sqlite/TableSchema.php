@@ -94,8 +94,11 @@ class TableSchema extends AbstractTableSchema
     {
         if ($this->primaryKeys != $this->dbPrimaryKeys)
         {
+            dumP(array_keys($this->columns), 2);
+            dump($this->primaryKeys, 2);
+            dumP($this->dbPrimaryKeys, 2);
             throw new SchemaBuilderException(
-                "Primary keys can not be changed for already exists table."
+                "Primary keys can not be changed for already exists table ({$this->getName()})."
             );
         }
 

@@ -37,9 +37,7 @@ class SchemaBuilder extends Component
         ActiveRecord::HAS_MANY           => 'Spiral\Components\ORM\Schemas\Relations\HasManySchema',
 
         ActiveRecord::MANY_TO_MANY       => 'Spiral\Components\ORM\Schemas\Relations\ManyToManySchema',
-        ActiveRecord::MANY_TO_MORPHED    => 'Spiral\Components\ORM\Schemas\Relations\ManyToMorphedSchema',
-
-        ActiveRecord::MANY_THOUGHT       => 'Spiral\Components\ORM\Schemas\Relations\ManyThoughtSchema',
+        ActiveRecord::MANY_TO_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\ManyToMorphedSchema'
     ];
 
     /**
@@ -267,6 +265,9 @@ class SchemaBuilder extends Component
         reset($definition);
         $type = key($definition);
 
+        //$relationship=$this->orm
+
+        //TODO: HAS TO BE RETRIEVED USING ORM
         if (!isset($this->relationships[$type]))
         {
             throw new ORMException("Undefined relationship type {$type}.");
@@ -276,10 +277,10 @@ class SchemaBuilder extends Component
          * @var RelationSchema $relationship
          */
         $relationship = $this->container->get($this->relationships[$type], [
-            'ormSchema'    => $this,
-            'recordSchema' => $recordSchema,
-            'name'         => $name,
-            'definition'   => $definition
+            'schemaBuilder' => $this,
+            'recordSchema'  => $recordSchema,
+            'name'          => $name,
+            'definition'    => $definition
         ]);
 
         if ($relationship->hasEquivalent())

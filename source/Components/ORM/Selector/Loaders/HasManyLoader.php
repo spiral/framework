@@ -23,5 +23,8 @@ class HasManyLoader extends HasOneLoader
      */
     const LOAD_METHOD = Selector::POSTLOAD;
 
+    /**
+     * Internal loader constant used to decide nested aggregation level.
+     */
     const MULTIPLE = true;
 }

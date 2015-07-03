@@ -77,12 +77,10 @@ class RootLoader extends Loader
     {
         //Fetching only required part of resulted row
         $data = $this->fetchData($row);
-
         if ($this->deduplicate($data))
         {
             //Yes, this is reference, i'm using this method to build data tree using nested parsers
             $this->result[] = &$data;
-
             $this->collectReferences($data);
         }
 

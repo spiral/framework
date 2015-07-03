@@ -10,6 +10,8 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
+use Spiral\Components\ORM\Schemas\RecordSchema;
+use Spiral\Components\ORM\Schemas\RelationSchemaInterface;
 use Spiral\Components\ORM\Selector\LoaderInterface;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
@@ -124,6 +126,8 @@ class ORM extends Component
     }
 
 
+
+
     //    public function getRelation(
     //        ActiveRecord $parent = null,
     //        $type,
@@ -218,4 +222,14 @@ class ORM extends Component
     const R_TYPE       = 0;
     const R_TABLE      = 1;
     const R_DEFINITION = 2;
+
+    /**
+     * Key to be used as primary for pivot tables.
+     */
+    const PIVOT_PRIMARY_KEY = 'id';
+
+    /**
+     * Pivot table location in ActiveRecord data.
+     */
+    const PIVOT_DATA = '@pivot';
 }

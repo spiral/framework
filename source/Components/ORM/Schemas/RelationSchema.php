@@ -40,7 +40,7 @@ abstract class RelationSchema implements RelationSchemaInterface
      * @invisible
      * @var SchemaBuilder
      */
-    protected $ormSchema = null;
+    protected $schemaBuilder = null;
 
     /**
      * Associated active record schema.
@@ -86,19 +86,19 @@ abstract class RelationSchema implements RelationSchemaInterface
     /**
      * New RelationSchema instance.
      *
-     * @param SchemaBuilder $ormSchema
+     * @param SchemaBuilder $schemaBuilder
      * @param RecordSchema  $recordSchema
      * @param string        $name
      * @param array         $definition
      */
     public function __construct(
-        SchemaBuilder $ormSchema,
+        SchemaBuilder $schemaBuilder,
         RecordSchema $recordSchema,
         $name,
         array $definition
     )
     {
-        $this->ormSchema = $ormSchema;
+        $this->schemaBuilder = $schemaBuilder;
         $this->recordSchema = $recordSchema;
 
         $this->name = $name;
@@ -224,7 +224,7 @@ abstract class RelationSchema implements RelationSchemaInterface
      */
     protected function getOuterRecordSchema()
     {
-        return $this->ormSchema->getRecordSchema($this->target);
+        return $this->schemaBuilder->getRecordSchema($this->target);
     }
 
     /**

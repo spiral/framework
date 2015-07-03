@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM\Schemas\Relations;
 
+use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\MorphedRelationSchema;
@@ -38,6 +39,19 @@ class ManyToMorphedSchema extends MorphedRelationSchema
     ];
 
     /**
+     * Pivot table schema.
+     *
+     * @return AbstractTableSchema
+     */
+    protected function getPivotSchema()
+    {
+        return $this->schemaBuilder->declareTable(
+            $this->recordSchema->getDatabase(),
+            $this->definition[ActiveRecord::PIVOT_TABLE]
+        );
+    }
+
+    /**
      * Create all required relation columns, indexes and constraints.
      */
     public function buildSchema()
@@ -48,10 +62,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
             return;
         }
 
-        $pivotTable = $this->ormSchema->declareTable(
-            $this->recordSchema->getDatabase(),
-            $this->definition[ActiveRecord::PIVOT_TABLE]
-        );
+        $pivotTable = $this->getPivotSchema();
 
         $pivotTable->bigPrimary('id');
 
@@ -105,5 +116,25 @@ class ManyToMorphedSchema extends MorphedRelationSchema
                 ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT]
             ]);
         }
+    }
+
+    /**
+     * Normalize relation options.
+     *
+     * @return array
+     */
+    protected function normalizeDefinition()
+    {
+        $definition = parent::normalizeDefinition();
+
+        //Let's include pivot table columns
+        $definition[ActiveRecord::PIVOT_COLUMNS] = [];
+
+        foreach ($this->getPivotSchema()->getColumns() as $column)
+        {
+            $definition[ActiveRecord::PIVOT_COLUMNS][] = $column->getName();
+        }
+
+        return $definition;
     }
 }

@@ -120,12 +120,19 @@ abstract class Loader implements LoaderInterface
      */
     protected $referenceKeys = [];
 
-    //----------------------------
-
+    /**
+     * Array of collected references.
+     *
+     * @var array
+     */
     protected $references = [];
 
+    /**
+     * References aggregated by it's reference key and stored as multidimensional array.
+     *
+     * @var array
+     */
     protected $aggregatedReferences = [];
-
 
     /**
      * Result of data normalization.
@@ -134,9 +141,14 @@ abstract class Loader implements LoaderInterface
      */
     protected $result = [];
 
-
-    //-------------------------------
-
+    /**
+     * New instance of ORM loader.
+     *
+     * @param ORM    $orm
+     * @param string $container
+     * @param array  $definition
+     * @param Loader $parent
+     */
     public function __construct(
         ORM $orm,
         $container,
@@ -318,12 +330,17 @@ abstract class Loader implements LoaderInterface
      * Create selector to be executed as post load, usually such selector use aggregated values
      * and IN where syntax.
      *
-     * @return Selector
+     * @return Selector|null
      */
     public function createSelector()
     {
+        if (!$this->isLoadable())
+        {
+            return null;
+        }
+
         $selector = new Selector($this->definition[static::RELATION_TYPE], $this->orm, $this);
-        $this->columnsOffset = $selector->registerColumns($this, $this->columns);
+        $this->configureColumns($selector);
 
         foreach ($this->loaders as $loader)
         {
@@ -347,11 +364,7 @@ abstract class Loader implements LoaderInterface
 
         if (!$this->configured)
         {
-            //Mounting columns
-            if ($this->isLoadable())
-            {
-                $this->columnsOffset = $selector->registerColumns($this, $this->columns);
-            }
+            $this->configureColumns($selector);
 
             //Inload conditions and etc
             $this->clarifySelector($selector);
@@ -363,6 +376,24 @@ abstract class Loader implements LoaderInterface
         {
             $loader->configureSelector($selector);
         }
+    }
+
+    /**
+     * Configure columns required for loader data selection.
+     *
+     * @param Selector $selector
+     */
+    protected function configureColumns(Selector $selector)
+    {
+        if (!$this->isLoadable())
+        {
+            return;
+        }
+
+        $this->columnsOffset = $selector->registerColumns(
+            $this->getAlias(),
+            $this->columns
+        );
     }
 
     /**
@@ -460,10 +491,10 @@ abstract class Loader implements LoaderInterface
      */
     protected function fetchData(array $row)
     {
-        $row = array_slice($row, $this->columnsOffset, count($this->columns));
-
-        //Populating keys
-        return array_combine($this->columns, $row);
+        return array_combine(
+            $this->columns,
+            array_slice($row, $this->columnsOffset, count($this->columns))
+        );
     }
 
     /**
@@ -474,8 +505,9 @@ abstract class Loader implements LoaderInterface
      * Method will return true if data wasn't handled before and this is first occurence and false
      * in opposite case.
      *
-     * @param array $data Reference to parsed record, reference will be pointed to valid and existed
-     *                    data segment if such data was already parsed.
+     * @param array $data                   Reference to parsed record, reference will be pointed to
+     *                                      valid and existed data segment if such data was already
+     *                                      parsed.
      * @return bool
      */
     protected function deduplicate(array &$data)
