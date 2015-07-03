@@ -68,13 +68,14 @@ class QueryCompiler extends Component
      * detect table names, SQL functions and used aliases (via keywords AS), last argument can be used
      * to collect such aliases.
      *
-     * @param string $identifier Identifier can include simple column operations and functions,
-     *                           having "." in it will automatically force table prefix to first value.
-     * @param bool   $table      Set to true to let quote method know that identified is related to
-     *                           table name.
+     * @param string $identifier  Identifier can include simple column operations and functions,
+     *                            having "." in it will automatically force table prefix to first value.
+     * @param bool   $table       Set to true to let quote method know that identified is related to
+     *                            table name.
+     * @param bool   $forceTable  In some cases we have to force prefix.
      * @return mixed|string
      */
-    public function quote($identifier, $table = false)
+    public function quote($identifier, $table = false, $forceTable = false)
     {
         if ($identifier instanceof SqlFragmentInterface)
         {
@@ -85,7 +86,14 @@ class QueryCompiler extends Component
         {
             list($identifier, $alias) = explode($matches[0], $identifier);
 
-            $quoted = $this->quote($identifier, $table) . $matches[0] . $this->driver->identifier($alias);
+            /**
+             * We can't do looped aliases, so let's force table prefix for identifier if we aliasing
+             * table name at this moment.
+             */
+            $quoted = $this->quote($identifier, $table, $table)
+                . $matches[0]
+                . $this->driver->identifier($alias);
+
             if ($table && strpos($identifier, '.') === false)
             {
                 //We have to apply operation post factum to prevent self aliasing (name AS name
@@ -121,9 +129,13 @@ class QueryCompiler extends Component
 
         if (strpos($identifier, '.') === false)
         {
-            if ($table && !isset($this->aliases[$identifier]))
+            if (($table && !isset($this->aliases[$identifier])) || $forceTable)
             {
-                $this->aliases[$this->tablePrefix . $identifier] = $identifier;
+                if (!isset($this->aliases[$this->tablePrefix . $identifier]))
+                {
+                    $this->aliases[$this->tablePrefix . $identifier] = $identifier;
+                }
+
                 $identifier = $this->tablePrefix . $identifier;
             }
 

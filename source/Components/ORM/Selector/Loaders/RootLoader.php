@@ -28,7 +28,6 @@ class RootLoader extends Loader
         $this->options['alias'] = $this->schema[ORM::E_TABLE];
 
         $this->columns = array_keys($this->schema[ORM::E_COLUMNS]);
-        $this->countColumns = count($this->columns);
     }
 
     public function clarifySelector(Selector $selector)

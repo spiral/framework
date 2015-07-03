@@ -102,26 +102,26 @@ class Selector extends AbstractSelectQuery
      * @param array        $options
      * @return static
      */
-    //    public function with($relation, $options = [])
-    //    {
-    //        if (is_array($relation))
-    //        {
-    //            foreach ($relation as $name => $options)
-    //            {
-    //                //Multiple relations or relation with addition load options
-    //                $this->with($name, $options);
-    //            }
-    //
-    //            return $this;
-    //        }
-    //
-    //        //TODO: Cross-db loaders
-    //
-    //        //Nested loader
-    //        $loader = $this->loader->addLoader($relation, $options);
-    //
-    //        return $this;
-    //    }
+    public function with($relation, $options = [])
+    {
+        if (is_array($relation))
+        {
+            foreach ($relation as $name => $options)
+            {
+                //Multiple relations or relation with addition load options
+                $this->with($name, $options);
+            }
+
+            return $this;
+        }
+
+        //TODO: Cross-db loaders
+
+        //Nested loader
+        $loader = $this->loader->loader($relation, $options);
+
+        return $this;
+    }
 
     /**
      * Get or render SQL statement.

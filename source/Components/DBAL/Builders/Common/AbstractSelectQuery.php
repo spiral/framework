@@ -295,7 +295,7 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      * Iterate thought result chunks defined by limit value.
      *
      * Example:
-     * $select->chunked(100, function(QueryResult $result)
+     * $select->chunked(100, function(QueryResult $result, $count)
      * {
      *      dump($result);
      * });
@@ -314,7 +314,7 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
         $this->limit($limit);
         while ($offset + $limit <= $count)
         {
-            if (call_user_func($function, $this->offset($offset)->getIterator()) === false)
+            if (call_user_func($function, $this->offset($offset)->getIterator(), $count) === false)
             {
                 //Stop iteration
                 return;

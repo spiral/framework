@@ -76,11 +76,21 @@ abstract class Loader
         'load'  => true
     ];
 
+    protected $clarified = false;
+
+    /**
+     * Set of columns has to be fetched from resulted query.
+     *
+     * @var array
+     */
     protected $columns = [];
 
-    protected $offset = 0;
-
-    protected $countColumns = 0;
+    /**
+     * Columns offset in resulted query row.
+     *
+     * @var int
+     */
+    protected $columnsOffset = 0;
 
     /**
      * List of keys has to be stored as data references. This set of keys is required by inner loader(s)
@@ -141,7 +151,6 @@ abstract class Loader
         }
 
         $this->columns = array_keys($this->schema[ORM::E_COLUMNS]);
-        $this->countColumns = count($this->schema[ORM::E_COLUMNS]);
     }
 
     /**
@@ -182,17 +191,6 @@ abstract class Loader
     public function dbalDatabase()
     {
         return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
-    }
-
-    public function getReferenceName(array $data)
-    {
-        if (!isset($data[$this->definition[ActiveRecord::OUTER_KEY]]))
-        {
-            return null;
-        }
-
-        //Fairly simple logic
-        return $this->definition[ActiveRecord::INNER_KEY] . '::' . $data[$this->definition[ActiveRecord::OUTER_KEY]];
     }
 
     /**
@@ -265,16 +263,6 @@ abstract class Loader
         return $this;
     }
 
-    /**
-     * Reference key (from parent object) required to speed up data normalization.
-     *
-     * @return string
-     */
-    public function getReferenceKey()
-    {
-        //Fairly simple logic
-        return $this->definition[ActiveRecord::INNER_KEY];
-    }
 
     /**
      * @return Selector[]
@@ -304,13 +292,8 @@ abstract class Loader
 
     public function createSelector()
     {
-        $selector = new Selector(
-            $this->definition[static::RELATION_TYPE],
-            $this->orm,
-            $this
-        );
-
-        $this->offset = $selector->registerColumns($this, $this->columns);
+        $selector = new Selector($this->definition[static::RELATION_TYPE], $this->orm, $this);
+        $this->columnsOffset = $selector->registerColumns($this, $this->columns);
 
         foreach ($this->loaders as $loader)
         {
@@ -322,7 +305,7 @@ abstract class Loader
 
     public function clarifySelector(Selector $selector)
     {
-        if ($this->options['method'] != Selector::INLOAD)
+        if ($this->clarified || $this->options['method'] != Selector::INLOAD)
         {
             return;
         }
@@ -330,11 +313,13 @@ abstract class Loader
         //Mounting columns
         if ($this->options['load'])
         {
-            $this->offset = $selector->registerColumns($this, $this->columns);
+            $this->columnsOffset = $selector->registerColumns($this, $this->columns);
         }
 
         //Inload conditions and etc
         $this->clarifyQuery($selector);
+
+        $this->clarified = true;
 
         foreach ($this->loaders as $loader)
         {
@@ -363,6 +348,14 @@ abstract class Loader
     }
 
     /**
+     * Parse single result row, should fetch related model fields and run nested loader parsers.
+     *
+     * @param array $row
+     * @return mixed
+     */
+    abstract public function parseRow(array $row);
+
+    /**
      * Get built loader result. Result data can be altered by nested loaders (inload and postload),
      * so we have to run all post loaders before using this method result.
      *
@@ -374,14 +367,6 @@ abstract class Loader
     }
 
     /**
-     * Parse single result row, should fetch related model fields and run nested loader parsers.
-     *
-     * @param array $row
-     * @return mixed
-     */
-    abstract public function parseRow(array $row);
-
-    /**
      * Helper method used to fetch named fields from query result, will automatically calculate data
      * offset and resolve field aliases.
      *
@@ -390,11 +375,35 @@ abstract class Loader
      */
     protected function fetchData(array $row)
     {
-        $row = array_slice($row, $this->offset, $this->countColumns);
+        $row = array_slice($row, $this->columnsOffset, count($this->columns));
 
         //Populating keys
         return array_combine($this->columns, $row);
     }
+
+
+    /**
+     * Reference key (from parent object) required to speed up data normalization.
+     *
+     * @return string
+     */
+    public function getReferenceKey()
+    {
+        //Fairly simple logic
+        return $this->definition[ActiveRecord::INNER_KEY];
+    }
+
+    public function getReferenceName(array $data)
+    {
+        if (!isset($data[$this->definition[ActiveRecord::OUTER_KEY]]))
+        {
+            return null;
+        }
+
+        //Fairly simple logic
+        return $this->definition[ActiveRecord::INNER_KEY] . '::' . $data[$this->definition[ActiveRecord::OUTER_KEY]];
+    }
+
 
     public function getAggregatedKeys($key)
     {

@@ -55,6 +55,13 @@ class HasOneLoader extends Loader
 
     public function parseRow(array $row)
     {
+        if (!$this->options['load'])
+        {
+            $this->parseNested($row);
+
+            return;
+        }
+
         $data = $this->fetchData($row);
 
         if (!$referenceName = $this->getReferenceName($data))
