@@ -263,6 +263,16 @@ abstract class Loader
         return $this;
     }
 
+    public function isLoaded()
+    {
+        if (!empty($this->parent) && !$this->parent->isLoaded())
+        {
+            return false;
+        }
+
+        return $this->options['load'];
+    }
+
 
     /**
      * @return Selector[]
@@ -311,7 +321,7 @@ abstract class Loader
         }
 
         //Mounting columns
-        if ($this->options['load'])
+        if ($this->isLoaded())
         {
             $this->columnsOffset = $selector->registerColumns($this, $this->columns);
         }

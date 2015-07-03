@@ -188,6 +188,9 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      * incorrectly. Attention, you can't really use count() methods with united queries (at least
      * without tweaking every united query).
      *
+     * Attention: count() method can and will return wrong results if you trying to count complex
+     * sql query with joins and etc.
+     *
      * @param string $column
      * @return int
      */
