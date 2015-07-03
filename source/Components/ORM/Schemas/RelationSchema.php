@@ -160,10 +160,9 @@ abstract class RelationSchema implements RelationSchemaInterface
         ];
 
         $proposed = [
-            ActiveRecord::OUTER_KEY     => 'OUTER_KEY',
-            ActiveRecord::INNER_KEY     => 'INNER_KEY',
-            ActiveRecord::THOUGHT_TABLE => 'THOUGHT',
-            ActiveRecord::PIVOT_TABLE   => 'PIVOT_TABLE'
+            ActiveRecord::OUTER_KEY   => 'OUTER_KEY',
+            ActiveRecord::INNER_KEY   => 'INNER_KEY',
+            ActiveRecord::PIVOT_TABLE => 'PIVOT_TABLE'
         ];
 
         foreach ($proposed as $property => $alias)

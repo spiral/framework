@@ -61,7 +61,7 @@ class ManyToManySchema extends RelationSchema
      *
      * @return string
      */
-    protected function getPivotTableName()
+    public function getPivotTableName()
     {
         if (isset($this->definition[ActiveRecord::PIVOT_TABLE]))
         {
@@ -84,7 +84,7 @@ class ManyToManySchema extends RelationSchema
      *
      * @return AbstractTableSchema
      */
-    protected function getPivotSchema()
+    public function getPivotSchema()
     {
         return $this->schemaBuilder->declareTable(
             $this->recordSchema->getDatabase(),

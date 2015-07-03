@@ -39,11 +39,21 @@ class ManyToMorphedSchema extends MorphedRelationSchema
     ];
 
     /**
+     * Pivot table name.
+     *
+     * @return string
+     */
+    public function getPivotTableName()
+    {
+        return $this->definition[ActiveRecord::PIVOT_TABLE];
+    }
+
+    /**
      * Pivot table schema.
      *
      * @return AbstractTableSchema
      */
-    protected function getPivotSchema()
+    public function getPivotSchema()
     {
         return $this->schemaBuilder->declareTable(
             $this->recordSchema->getDatabase(),

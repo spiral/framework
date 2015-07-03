@@ -55,9 +55,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const OUTER_KEY         = 901;
     const INNER_KEY         = 902;
     const MORPH_KEY         = 903;
-    const THOUGHT_TABLE     = 904;
     const PIVOT_TABLE       = 904;
-    const VIA_TABLE         = 904;
     const PIVOT_COLUMNS     = 905;
     const THOUGHT_INNER_KEY = 906;
     const THOUGHT_OUTER_KEY = 907;
