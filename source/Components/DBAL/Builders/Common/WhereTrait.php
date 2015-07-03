@@ -284,6 +284,12 @@ trait WhereTrait
 
         list($identifier, $valueA, $valueB, $valueC) = $parameters + array_fill(0, 5, null);
 
+        if (empty($identifier))
+        {
+            //Nothing to do
+            return $tokens;
+        }
+
         //Complex query is provided
         if (is_array($identifier))
         {

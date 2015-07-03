@@ -196,18 +196,20 @@ abstract class Loader
     }
 
     /**
+     *
+     * @todo: rewrite
      * @param string $relation
      * @param array  $options
      * @return Loader
      */
-    public function addLoader($relation, array $options = [])
+    public function loader($relation, array $options = [])
     {
         if (($position = strpos($relation, '.')) !== false)
         {
             $parentRelation = substr($relation, 0, $position);
 
             //Recursively
-            return $this->getLoader($parentRelation)->addLoader(
+            return $this->loader($parentRelation)->loader(
                 substr($relation, $position + 1),
                 $options
             );
@@ -248,17 +250,6 @@ abstract class Loader
         }
 
         return $loader;
-    }
-
-    /**
-     * Simple alias for addLoader().
-     *
-     * @param string $relation
-     * @return Loader
-     */
-    public function getLoader($relation)
-    {
-        return $this->addLoader($relation);
     }
 
     /**
@@ -319,10 +310,7 @@ abstract class Loader
             $this
         );
 
-        $this->offset = $selector->registerColumns(
-            $this->getAlias(),
-            array_keys($this->schema[ORM::E_COLUMNS])
-        );
+        $this->offset = $selector->registerColumns($this, $this->columns);
 
         foreach ($this->loaders as $loader)
         {
@@ -340,10 +328,10 @@ abstract class Loader
         }
 
         //Mounting columns
-        $this->offset = $selector->registerColumns(
-            $this->getAlias(),
-            array_keys($this->schema[ORM::E_COLUMNS])
-        );
+        if ($this->options['load'])
+        {
+            $this->offset = $selector->registerColumns($this, $this->columns);
+        }
 
         //Inload conditions and etc
         $this->clarifyQuery($selector);

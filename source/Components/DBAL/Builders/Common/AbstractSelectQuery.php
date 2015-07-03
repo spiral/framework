@@ -300,6 +300,8 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      *      dump($result);
      * });
      *
+     * Return false from inner function to stop chunking.
+     *
      * @param int      $limit
      * @param callable $function
      */

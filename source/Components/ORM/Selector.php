@@ -85,7 +85,7 @@ class Selector extends AbstractSelectQuery
         //We aways need primary loader
         if (empty($this->loader = $loader))
         {
-            $this->loader = new RootLoader($orm->getSchema($class), $this->orm);
+            $this->loader = new RootLoader($class, $this->orm);
         }
 
         $database = $this->loader->dbalDatabase();

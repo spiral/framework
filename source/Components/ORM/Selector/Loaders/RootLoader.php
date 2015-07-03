@@ -16,19 +16,19 @@ class RootLoader extends Loader
 {
     const LOAD_METHOD = Selector::INLOAD;
 
-    public function __construct(array $schema, ORM $orm, Loader $parent = null)
+    public function __construct($class, ORM $orm, Loader $parent = null)
     {
-        $this->schema = $schema;
         $this->orm = $orm;
-
-        $this->columns = array_keys($this->schema[ORM::E_COLUMNS]);
-        $this->countColumns = count($this->columns);
+        $this->schema = $orm->getSchema($class);
 
         //No need for aliases
         $this->options['method'] = Selector::INLOAD;
 
         //Primary table will be named under it's declared table name by default (without prefix)
-        $this->options['alias'] = $schema[ORM::E_TABLE];
+        $this->options['alias'] = $this->schema[ORM::E_TABLE];
+
+        $this->columns = array_keys($this->schema[ORM::E_COLUMNS]);
+        $this->countColumns = count($this->columns);
     }
 
     public function clarifySelector(Selector $selector)
