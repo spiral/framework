@@ -121,18 +121,11 @@ abstract class Loader implements LoaderInterface
     protected $referenceKeys = [];
 
     /**
-     * Array of collected references.
-     *
-     * @var array
-     */
-    protected $references = [];
-
-    /**
      * References aggregated by it's reference key and stored as multidimensional array.
      *
      * @var array
      */
-    protected $aggregatedReferences = [];
+    protected $references = [];
 
     /**
      * Result of data normalization.
@@ -575,8 +568,7 @@ abstract class Loader implements LoaderInterface
     /**
      * Create internal references to structure segments based on requested keys. For example, if we
      * have request for "id" as reference key, every record will create following records:
-     * $this->referenced['id::ID_VALUE'] = ITEM
-     * $this->aggregatedReferences[id][ID_VALUE] = ITEM
+     * $this->references[id][ID_VALUE] = ITEM
      *
      * Make sure you collecting references only on first record occurrence, make sure that
      * deduplicate() method result is true.
@@ -589,8 +581,7 @@ abstract class Loader implements LoaderInterface
         foreach ($this->referenceKeys as $key)
         {
             //Adding reference(s)
-            $this->references[$key . '::' . $data[$key]] = &$data;
-            $this->aggregatedReferences[$key][$data[$key]][] = &$data;
+            $this->references[$key][$data[$key]][] = &$data;
         }
     }
 
@@ -604,12 +595,12 @@ abstract class Loader implements LoaderInterface
      */
     public function getAggregatedKeys($referenceKey)
     {
-        if (!isset($this->aggregatedReferences[$referenceKey]))
+        if (!isset($this->references[$referenceKey]))
         {
             return [];
         }
 
-        return array_keys($this->aggregatedReferences[$referenceKey]);
+        return array_keys($this->references[$referenceKey]);
     }
 
     /**
@@ -640,60 +631,7 @@ abstract class Loader implements LoaderInterface
         $multiple = false
     )
     {
-        $reference = $key . '::' . $criteria;
-
-        if (!isset($this->references[$reference]))
-        {
-            //Nothing to do
-            return;
-        }
-
-        if ($multiple)
-        {
-            if (
-                isset($this->references[$reference][$container])
-                && in_array($data, $this->references[$reference][$container])
-            )
-            {
-                return;
-            }
-
-            $this->references[$reference][$container][] = &$data;
-
-            return;
-        }
-
-        if (!isset($this->references[$reference][$container]))
-        {
-            /**
-             * There is very tricky spot where you have to be careful (i spend 2 hours for debugging).
-             * If you will reassign references it will loose previous references and some sets of
-             * data will be broken.
-             */
-            $this->references[$reference][$container] = &$data;
-        }
-    }
-
-    /**
-     * This method should be used only with POSTLOAD loaders, it will mount provided data to all
-     * matched records. Primary example: mounting parent model data to many children data (when
-     * children data loaded in separate query).
-     *
-     * @param string $container
-     * @param string $key
-     * @param mixed  $criteria
-     * @param array  $data
-     * @param bool   $multiple If true all mounted records will added to array.
-     */
-    public function mountOuter(
-        $container,
-        $key,
-        $criteria,
-        array &$data,
-        $multiple = false
-    )
-    {
-        foreach ($this->aggregatedReferences[$key][$criteria] as &$subset)
+        foreach ($this->references[$key][$criteria] as &$subset)
         {
             if ($multiple)
             {
@@ -732,7 +670,7 @@ abstract class Loader implements LoaderInterface
     {
         $this->duplicates = [];
         $this->references = [];
-        $this->aggregatedReferences = [];
+        $this->references = [];
         $this->result = [];
 
         if ($reconfigure)

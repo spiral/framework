@@ -250,26 +250,13 @@ class ManyToManyLoader extends Loader
             $this->collectReferences($data);
         }
 
-        if ($this->options['method'] == Selector::INLOAD)
-        {
-            $this->parent->mount(
-                $this->container,
-                $this->getReferenceKey(),
-                $referenceCriteria,
-                $data,
-                true
-            );
-        }
-        else
-        {
-            $this->parent->mountOuter(
-                $this->container,
-                $this->getReferenceKey(),
-                $referenceCriteria,
-                $data,
-                true
-            );
-        }
+        $this->parent->mount(
+            $this->container,
+            $this->getReferenceKey(),
+            $referenceCriteria,
+            $data,
+            true
+        );
 
         $this->parseNested($row);
     }
@@ -308,36 +295,5 @@ class ManyToManyLoader extends Loader
         $this->duplicates[$criteria] = &$data;
 
         return true;
-    }
-
-    /**
-     * Mount model data to parent loader under specified container, using reference key (inner key)
-     * and reference criteria (outer key value).
-     *
-     * Example:
-     * $this->parent->mount('profile', 'id', 1, [
-     *      'id' => 100,
-     *      'user_id' => 1,
-     *      ...
-     * ]);
-     *
-     * In this example "id" argument is inner key of "user" model and it's linked to outer key
-     * "user_id" in "profile" model, which defines reference criteria as 1.
-     *
-     * @param string $container
-     * @param string $key
-     * @param mixed  $criteria
-     * @param array  $data
-     * @param bool   $multiple If true all mounted records will added to array.
-     */
-    public function mount(
-        $container,
-        $key,
-        $criteria,
-        array &$data,
-        $multiple = false
-    )
-    {
-        $this->mountOuter($container, $key, $criteria, $data, $multiple);
     }
 }

@@ -44,24 +44,12 @@ class BelongsToLoader extends HasOneLoader
             $this->collectReferences($data);
         }
 
-        if ($this->options['method'] == Selector::INLOAD)
-        {
-            $this->parent->mount(
-                $this->container,
-                $this->getReferenceKey(),
-                $referenceCriteria,
-                $data
-            );
-        }
-        else
-        {
-            $this->parent->mountOuter(
-                $this->container,
-                $this->getReferenceKey(),
-                $referenceCriteria,
-                $data
-            );
-        }
+        $this->parent->mount(
+            $this->container,
+            $this->getReferenceKey(),
+            $referenceCriteria,
+            $data
+        );
 
         $this->parseNested($row);
     }
