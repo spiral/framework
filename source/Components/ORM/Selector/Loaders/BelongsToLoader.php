@@ -24,16 +24,11 @@ class BelongsToLoader extends HasOneLoader
     const LOAD_METHOD = Selector::POSTLOAD;
 
     /**
-     * Reference key (from parent object) required to speed up data normalization.
+     * Parse single result row, should fetch related model fields and run nested loader parsers.
      *
-     * @return string
-    //     */
-    //    public function getReferenceKey()
-    //    {
-    //        //No reference key is needed
-    //        return null;
-    //    }
-
+     * @param array $row
+     * @return mixed
+     */
     public function parseRow(array $row)
     {
         $data = $this->fetchData($row);

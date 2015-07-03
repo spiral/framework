@@ -239,7 +239,7 @@ class Logger extends AbstractLogger
         {
             if ($files->size($filename) > $filesize)
             {
-                $files->move($filename, $filename . $this->options['rotatePostfix']);
+                $files->move($filename, $filename . $this->options['oldPostfix']);
             }
         }
 

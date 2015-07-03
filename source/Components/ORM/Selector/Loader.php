@@ -15,7 +15,7 @@ use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Selector;
 
-abstract class Loader
+abstract class Loader implements LoaderInterface
 {
     /**
      * Relation type is required to correctly resolve foreign model.
@@ -76,7 +76,12 @@ abstract class Loader
         'load'  => true
     ];
 
-    protected $clarified = false;
+    /**
+     * Loader already configured selector, no need to do it twice.
+     *
+     * @var bool
+     */
+    protected $configured = false;
 
     /**
      * Set of columns has to be fetched from resulted query.
@@ -93,6 +98,13 @@ abstract class Loader
     protected $columnsOffset = 0;
 
     /**
+     * Inner loaders.
+     *
+     * @var LoaderInterface[]
+     */
+    protected $loaders = [];
+
+    /**
      * List of keys has to be stored as data references. This set of keys is required by inner loader(s)
      * to quickly compile nested data.
      *
@@ -100,6 +112,7 @@ abstract class Loader
      */
     protected $referenceKeys = [];
 
+    //----------------------------
 
     protected $references = [];
 
@@ -109,12 +122,8 @@ abstract class Loader
 
     protected $result = [];
 
-    /**
-     * Sub loaders.
-     *
-     * @var Loader[]
-     */
-    protected $loaders = [];
+
+    //-------------------------------
 
     public function __construct(
         ORM $orm,
@@ -135,9 +144,9 @@ abstract class Loader
         //Compiling options
         $this->options['method'] = static::LOAD_METHOD;
 
-        //We have to force post-load if parent loader database is different
         if ($parent->dbalDatabase() != $this->dbalDatabase())
         {
+            //We have to force post-load if parent loader database is different
             $this->options['method'] = Selector::POSTLOAD;
         }
 
@@ -194,6 +203,45 @@ abstract class Loader
     }
 
     /**
+     * Indicates that loader columns should be included into query statement. Used in cases
+     * where relation is joined for conditional purposes only.
+     *
+     * @return bool
+     */
+    public function isLoadable()
+    {
+        if (!empty($this->parent) && !$this->parent->isLoadable())
+        {
+            return false;
+        }
+
+        return $this->options['load'];
+    }
+
+    /**
+     * Update loader options.
+     *
+     * @param array $options
+     * @return static
+     */
+    public function setOptions(array $options = [])
+    {
+        $this->options = $options + $this->options;
+
+        return $this;
+    }
+
+    /**
+     * Receive loader options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
      *
      * @todo: rewrite
      * @param string $relation
@@ -241,9 +289,13 @@ abstract class Loader
         $loader->setOptions($options);
         $this->loaders[$relation] = $loader;
 
-        if ($loader->getReferenceKey())
+        if ($referenceKey = $loader->getReferenceKey())
         {
-            $this->referenceKeys[] = $loader->getReferenceKey();
+            /**
+             * Inner loader requested parent to pre-collect some keys so it can build tree using
+             * references without looking up for correct record every time.
+             */
+            $this->referenceKeys[] = $referenceKey;
             $this->referenceKeys = array_unique($this->referenceKeys);
         }
 
@@ -251,55 +303,11 @@ abstract class Loader
     }
 
     /**
-     * Update loader options.
+     * Create selector to be executed as post load, usually such selector use aggregated values
+     * and IN where syntax.
      *
-     * @param array $options
-     * @return static
+     * @return Selector
      */
-    public function setOptions(array $options = [])
-    {
-        $this->options = $options + $this->options;
-
-        return $this;
-    }
-
-    public function isLoaded()
-    {
-        if (!empty($this->parent) && !$this->parent->isLoaded())
-        {
-            return false;
-        }
-
-        return $this->options['load'];
-    }
-
-
-    /**
-     * @return Selector[]
-     */
-    public function getPostSelectors()
-    {
-        $selectors = [];
-        foreach ($this->loaders as $loader)
-        {
-            if ($loader->options['method'] == Selector::POSTLOAD)
-            {
-                $selector = $loader->createSelector();
-
-                if (!empty($selector))
-                {
-                    $selectors[] = $selector;
-                }
-            }
-            else
-            {
-                $selectors = array_merge($selectors, $loader->getPostSelectors());
-            }
-        }
-
-        return $selectors;
-    }
-
     public function createSelector()
     {
         $selector = new Selector($this->definition[static::RELATION_TYPE], $this->orm, $this);
@@ -307,40 +315,78 @@ abstract class Loader
 
         foreach ($this->loaders as $loader)
         {
-            $loader->clarifySelector($selector);
+            $loader->configureSelector($selector);
         }
 
         return $selector;
     }
 
-    public function clarifySelector(Selector $selector)
+    /**
+     * Clarify parent selection.
+     *
+     * @param Selector $selector
+     */
+    public function configureSelector(Selector $selector)
     {
-        if ($this->clarified || $this->options['method'] != Selector::INLOAD)
+        if ($this->options['method'] !== Selector::INLOAD)
         {
             return;
         }
 
-        //Mounting columns
-        if ($this->isLoaded())
+        if (!$this->configured)
         {
-            $this->columnsOffset = $selector->registerColumns($this, $this->columns);
+            //Mounting columns
+            if ($this->isLoadable())
+            {
+                $this->columnsOffset = $selector->registerColumns($this, $this->columns);
+            }
+
+            //Inload conditions and etc
+            $this->clarifySelector($selector);
+
+            $this->configured = true;
         }
-
-        //Inload conditions and etc
-        $this->clarifyQuery($selector);
-
-        $this->clarified = true;
 
         foreach ($this->loaders as $loader)
         {
-            $loader->clarifySelector($selector);
+            $loader->configureSelector($selector);
         }
     }
 
-    abstract protected function clarifyQuery(Selector $selector);
+    /**
+     * ORM Loader specific method used to clarify selector conditions, join and columns with
+     * loader specific information.
+     *
+     * @param Selector $selector
+     */
+    abstract protected function clarifySelector(Selector $selector);
 
     /**
-     * Parser provided query result to fetch model fields and resolve nested loaders.
+     * Run post selection queries to clarify featched model data. Usually many conditions will be
+     * fetched from there. Additionally this method may be used to create relations to external
+     * source of data (ODM, elasticSearch and etc).
+     */
+    public function postLoad()
+    {
+        foreach ($this->loaders as $loader)
+        {
+            if ($loader instanceof Loader && $loader->options['method'] == Selector::POSTLOAD)
+            {
+                if (!empty($selector = $loader->createSelector()))
+                {
+                    //Data will be automatically linked via references
+                    $selector->fetchData();
+                }
+            }
+            else
+            {
+                $loader->postLoad();
+            }
+        }
+    }
+
+    /**
+     * Parse provided query result to fetch model fields and resolve nested loaders.
      *
      * @param QueryResult $result
      * @param int         $rowsCount
@@ -364,6 +410,23 @@ abstract class Loader
      * @return mixed
      */
     abstract public function parseRow(array $row);
+
+    /**
+     * Send row data to nested loaders for parsing (used in cases where nested loaded requested
+     * using INLOAD method).
+     *
+     * @param array $row
+     */
+    protected function parseNested(array $row)
+    {
+        foreach ($this->loaders as $loader)
+        {
+            if ($loader instanceof Loader && $loader->options['method'] == Selector::INLOAD)
+            {
+                $loader->parseRow($row);
+            }
+        }
+    }
 
     /**
      * Get built loader result. Result data can be altered by nested loaders (inload and postload),
@@ -391,9 +454,9 @@ abstract class Loader
         return array_combine($this->columns, $row);
     }
 
-
     /**
-     * Reference key (from parent object) required to speed up data normalization.
+     * Reference key (from parent object) required to speed up data normalization. In most of cases
+     * this is primary key of parent model.
      *
      * @return string
      */
@@ -402,6 +465,8 @@ abstract class Loader
         //Fairly simple logic
         return $this->definition[ActiveRecord::INNER_KEY];
     }
+
+    //-------------------
 
     public function getReferenceName(array $data)
     {
@@ -486,7 +551,7 @@ abstract class Loader
         else
         {
             /**
-             * It is recommended to use primary keys in every model as it will speed up deduplication.
+             * It is recommended to use primary keys in every model as it will speed up de-duplication.
              */
             $serialization = serialize($data);
             if (isset($this->duplicates[$serialization]))
@@ -514,30 +579,32 @@ abstract class Loader
         }
     }
 
-    protected function parseNested(array $row)
-    {
-        foreach ($this->loaders as $loader)
-        {
-            if ($loader->options['method'] == Selector::INLOAD)
-            {
-                $loader->parseRow($row);
-            }
-        }
-    }
+
+    //-------------------------------------
 
     /**
      * Clean loader data.
+     *
+     * @param bool $reconfigure Use this flag to reset configured flag to force query clarification
+     *                          on next query creation.
      */
-    public function clean()
+    public function clean($reconfigure = false)
     {
         $this->duplicates = [];
         $this->references = [];
         $this->aggregatedReferences = [];
         $this->result = [];
 
+        if ($reconfigure)
+        {
+            $this->configured = false;
+        }
+
         foreach ($this->loaders as $loader)
         {
-            $loader->clean();
+            //POSTLOAD created unique Selector every time, meaning we will have to flush flag
+            //indicates that associated selector was configured
+            $loader->clean($reconfigure || $this->options['method'] == Selector::POSTLOAD);
         }
     }
 

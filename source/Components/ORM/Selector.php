@@ -123,6 +123,9 @@ class Selector extends AbstractSelectQuery
         return $this;
     }
 
+    //TODO: INLOAD
+    //TODO: POSTLOAD
+
     /**
      * Get or render SQL statement.
      *
@@ -138,7 +141,7 @@ class Selector extends AbstractSelectQuery
         }
 
         //Primary loader may add custom conditions to select query
-        $this->loader->clarifySelector($this);
+        $this->loader->configureSelector($this);
 
         return $compiler->select(
             [$this->loader->getTable() . ' AS ' . $this->loader->getAlias()],
@@ -220,12 +223,8 @@ class Selector extends AbstractSelectQuery
         //Moved out of benchmark to see memory usage
         $result->close();
 
-        //Looking for post selectors (external queries used to compile valid data set)
-        foreach ($this->loader->getPostSelectors() as $selector)
-        {
-            //Fetching data from post selectors, due loaders are still linked together
-            $selector->fetchData();
-        }
+        //Executing post-loading
+        $this->loader->postLoad();
 
         //We have to fetch result again after post-loader were executed
         $data = $this->loader->getResult();
@@ -238,11 +237,6 @@ class Selector extends AbstractSelectQuery
 
         return $data;
     }
-
-
-
-    //TODO: INLOAD
-    //TODO: POSTLOAD
 
     //TODO: UPDATE
     //TODO: BLA BLA

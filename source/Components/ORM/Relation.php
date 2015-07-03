@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
-abstract class Relation
+abstract class Relation implements RelationInerface
 {
     /**
      * Internal relation type used to resolve outer table name.

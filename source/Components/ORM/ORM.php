@@ -10,10 +10,12 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
-use Spiral\Components\ORM\Selector\Loader;
+use Spiral\Components\ORM\Selector\LoaderInterface;
 use Spiral\Core\Component;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\RuntimeCacheInterface;
 
 class ORM extends Component
 {
@@ -32,7 +34,7 @@ class ORM extends Component
      *
      * @var CoreInterface
      */
-    protected $core = null;
+    protected $runtime = null;
 
     /**
      * DatabaseManager.
@@ -60,17 +62,23 @@ class ORM extends Component
     /**
      * ORM component instance.
      *
-     * @param CoreInterface   $core
-     * @param DatabaseManager $dbal
-     * @param Container       $container
+     * @param ConfiguratorInterface $configurator
+     * @param RuntimeCacheInterface $runtime
+     * @param DatabaseManager       $dbal
+     * @param Container             $container
      */
-    public function __construct(CoreInterface $core, DatabaseManager $dbal, Container $container)
+    public function __construct(
+        ConfiguratorInterface $configurator,
+        RuntimeCacheInterface $runtime,
+        DatabaseManager $dbal,
+        Container $container
+    )
     {
-        $this->core = $core;
+        $this->runtime = $runtime;
         $this->dbal = $dbal;
         $this->container = $container;
 
-        $this->config = $core->getConfig('orm');
+        $this->config = $configurator->getConfig('orm');
     }
 
     /**
@@ -104,7 +112,7 @@ class ORM extends Component
     {
         if ($this->schema === null)
         {
-            $this->schema = $this->core->loadData('ormSchema');
+            $this->schema = $this->runtime->loadData('ormSchema');
         }
 
         if (!isset($this->schema[$item]) && $update)
@@ -131,16 +139,17 @@ class ORM extends Component
     /**
      * Get instance of Loader associated with relation type and relation defitition.
      *
-     * @param int    $type       Relation type.
-     * @param string $container  Container related to parent loader.
-     * @param array  $definition Relation definition.
-     * @param Loader $parent     Parent loader (if presented).
-     * @return Loader
+     * @param int             $type       Relation type.
+     * @param string          $container  Container related to parent loader.
+     * @param array           $definition Relation definition.
+     * @param LoaderInterface $parent     Parent loader (if presented).
+     * @return LoaderInterface
      */
-    public function getLoader($type, $container, array $definition, Loader $parent = null)
+    public function getLoader($type, $container, array $definition, LoaderInterface $parent = null)
     {
         $class = $this->config['relations'][$type]['loader'];
 
+        //TODO: we may need add container here, due some loaders may have external requiments
         return new $class($this, $container, $definition, $parent);
     }
 
@@ -183,7 +192,7 @@ class ORM extends Component
         ActiveRecord::clearSchemaCache();
 
         //Saving
-        $this->core->saveData('ormSchema', $this->schema);
+        $this->runtime->saveData('ormSchema', $this->schema);
 
         return $builder;
     }

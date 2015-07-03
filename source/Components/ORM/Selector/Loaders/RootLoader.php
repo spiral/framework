@@ -14,8 +14,18 @@ use Spiral\Components\ORM\Selector\Loader;
 
 class RootLoader extends Loader
 {
+    /**
+     * RootLoader always work via INLOAD.
+     */
     const LOAD_METHOD = Selector::INLOAD;
 
+    /**
+     * RootLoader used to represent ORM model table directly.
+     *
+     * @param ORM    $class
+     * @param ORM    $orm
+     * @param Loader $parent
+     */
     public function __construct($class, ORM $orm, Loader $parent = null)
     {
         $this->orm = $orm;
@@ -30,7 +40,12 @@ class RootLoader extends Loader
         $this->columns = array_keys($this->schema[ORM::E_COLUMNS]);
     }
 
-    public function clarifySelector(Selector $selector)
+    /**
+     * Configure selector options.
+     *
+     * @param Selector $selector
+     */
+    public function configureSelector(Selector $selector)
     {
         if (empty($this->loaders))
         {
@@ -38,14 +53,26 @@ class RootLoader extends Loader
             return;
         }
 
-        parent::clarifySelector($selector);
+        parent::configureSelector($selector);
     }
 
-    protected function clarifyQuery(Selector $selector)
+    /**
+     * ORM Loader specific method used to clarify selector conditions, join and columns with
+     * loader specific information.
+     *
+     * @param Selector $selector
+     */
+    protected function clarifySelector(Selector $selector)
     {
         //Nothing to do
     }
 
+    /**
+     * Parse single result row, should fetch related model fields and run nested loader parsers.
+     *
+     * @param array $row
+     * @return mixed
+     */
     public function parseRow(array $row)
     {
         //Fetching only required part of resulted row
@@ -53,7 +80,9 @@ class RootLoader extends Loader
 
         if (!$this->checkDuplicate($data))
         {
+            //Yes, this is reference, i'm using this method to build data tree using nested parsers
             $this->result[] = &$data;
+
             $this->registerReferences($data);
         }
 

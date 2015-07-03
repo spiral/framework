@@ -29,56 +29,12 @@ class HasOneLoader extends Loader
 
     const MULTIPLE = false;
 
-    protected function clarifyQuery(Selector $selector)
-    {
-        //Relation definition
-        $definition = $this->definition;
-
-        $outerKey = $this->getAlias() . '.' . $definition[ActiveRecord::OUTER_KEY];
-
-        //Inner key has to be build based on parent table
-        $innerKey = $this->parent->getAlias() . '.' . $definition[ActiveRecord::INNER_KEY];
-
-        $selector->leftJoin(
-            $definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(),
-            [$outerKey => $innerKey]
-        );
-
-        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
-        {
-            $morphKey = $this->getAlias() . '.' . $definition[ActiveRecord::MORPH_KEY];
-            $selector->onWhere([
-                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
-            ]);
-        }
-    }
-
-    public function parseRow(array $row)
-    {
-        if (!$this->isLoaded())
-        {
-            return;
-        }
-
-        $data = $this->fetchData($row);
-
-        if (!$referenceName = $this->getReferenceName($data))
-        {
-            //Relation not loaded
-            return;
-        }
-
-        //WHAT IF?
-        if (!$this->checkDuplicate($data))
-        {
-            //Clarifying parent dataset
-            $this->registerReferences($data);
-            $this->parent->registerNested($referenceName, $this->container, $data, static::MULTIPLE);
-        }
-
-        $this->parseNested($row);
-    }
-
+    /**
+     * Create selector to be executed as post load, usually such selector use aggregated values
+     * and IN where syntax.
+     *
+     * @return Selector
+     */
     public function createSelector()
     {
         $selector = parent::createSelector();
@@ -111,5 +67,67 @@ class HasOneLoader extends Loader
         }
 
         return $selector;
+    }
+
+    /**
+     * ORM Loader specific method used to clarify selector conditions, join and columns with
+     * loader specific information.
+     *
+     * @param Selector $selector
+     */
+    protected function clarifySelector(Selector $selector)
+    {
+        //Relation definition
+        $definition = $this->definition;
+
+        $outerKey = $this->getAlias() . '.' . $definition[ActiveRecord::OUTER_KEY];
+
+        //Inner key has to be build based on parent table
+        $innerKey = $this->parent->getAlias() . '.' . $definition[ActiveRecord::INNER_KEY];
+
+        $selector->leftJoin(
+            $definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(),
+            [$outerKey => $innerKey]
+        );
+
+        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
+        {
+            $morphKey = $this->getAlias() . '.' . $definition[ActiveRecord::MORPH_KEY];
+            $selector->onWhere([
+                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
+            ]);
+        }
+    }
+
+    /**
+     * Parse single result row, should fetch related model fields and run nested loader parsers.
+     *
+     * @param array $row
+     * @return mixed
+     */
+    public function parseRow(array $row)
+    {
+        if (!$this->isLoadable())
+        {
+            return;
+        }
+
+        $data = $this->fetchData($row);
+
+        if (!$referenceName = $this->getReferenceName($data))
+        {
+            //Relation not loaded
+            return;
+        }
+
+        //WHAT IF?
+        if (!$this->checkDuplicate($data))
+        {
+            //Clarifying parent dataset
+            $this->registerReferences($data);
+            $this->parent->registerNested($referenceName, $this->container, $data, static::MULTIPLE);
+        }
+
+        $this->parseNested($row);
     }
 }

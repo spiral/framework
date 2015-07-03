@@ -17,7 +17,7 @@ use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Container;
 
-abstract class RelationSchema
+abstract class RelationSchema implements RelationSchemaInterface
 {
     /**
      * Relation type.
