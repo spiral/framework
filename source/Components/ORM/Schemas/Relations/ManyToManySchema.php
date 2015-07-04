@@ -106,11 +106,17 @@ class ManyToManySchema extends RelationSchema
 
         $pivotTable->bigPrimary(ORM::PIVOT_PRIMARY_KEY);
 
-        $innerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
-        $innerKey->type($this->getInnerKeyType());
-
         $outerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
         $outerKey->type($this->getOuterKeyType());
+
+        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
+        {
+            $morphKey = $pivotTable->column($this->definition[ActiveRecord::MORPH_KEY]);
+            $morphKey->string(static::TYPE_COLUMN_SIZE);
+        }
+
+        $innerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
+        $innerKey->type($this->getInnerKeyType());
 
         if ($this->definition[ActiveRecord::CONSTRAINT] && empty($this->definition[ActiveRecord::MORPH_KEY]))
         {

@@ -675,7 +675,6 @@ abstract class Loader implements LoaderInterface
                 )
                 {
                     unset($subset);
-
                     continue;
                 }
 
@@ -685,7 +684,11 @@ abstract class Loader implements LoaderInterface
                 continue;
             }
 
-            if (!isset($subset[$container]))
+            if (isset($subset[$container]))
+            {
+                $subset[$container] = $data;
+            }
+            else
             {
                 $subset[$container] = &$data;
             }
