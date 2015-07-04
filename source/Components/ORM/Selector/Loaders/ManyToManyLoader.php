@@ -27,6 +27,11 @@ class ManyToManyLoader extends Loader
     const LOAD_METHOD = Selector::POSTLOAD;
 
     /**
+     * Internal loader constant used to decide nested aggregation level.
+     */
+    const MULTIPLE = true;
+
+    /**
      * Set of pivot table columns has to be fetched from resulted query.
      *
      * @var array
@@ -220,45 +225,6 @@ class ManyToManyLoader extends Loader
         }
 
         return $data[ORM::PIVOT_DATA][$this->definition[ActiveRecord::THOUGHT_INNER_KEY]];
-    }
-
-    /**
-     * Parse single result row, should fetch related model fields and run nested loader parsers.
-     *
-     * @param array $row
-     * @return mixed
-     */
-    public function parseRow(array $row)
-    {
-        if (!$this->isLoadable())
-        {
-            return;
-        }
-
-        $data = $this->fetchData($row);
-
-        if (!$referenceCriteria = $this->fetchReferenceCriteria($data))
-        {
-            //Relation not loaded
-            return;
-        }
-
-        //We have to check deduplication based on pivot table data
-        if ($unique = $this->deduplicate($data))
-        {
-            //Clarifying parent dataset
-            $this->collectReferences($data);
-        }
-
-        $this->parent->mount(
-            $this->container,
-            $this->getReferenceKey(),
-            $referenceCriteria,
-            $data,
-            true
-        );
-
-        $this->parseNested($row);
     }
 
     /**

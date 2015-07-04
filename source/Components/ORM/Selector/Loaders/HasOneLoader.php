@@ -93,41 +93,4 @@ class HasOneLoader extends Loader
             $selector->onWhere([$morphKey => $this->parent->schema[ORM::E_ROLE_NAME]]);
         }
     }
-
-    /**
-     * Parse single result row, should fetch related model fields and run nested loader parsers.
-     *
-     * @param array $row
-     * @return mixed
-     */
-    public function parseRow(array $row)
-    {
-        if (!$this->isLoadable())
-        {
-            return;
-        }
-
-        $data = $this->fetchData($row);
-        if (!$referenceCriteria = $this->fetchReferenceCriteria($data))
-        {
-            //Relation not loaded
-            return;
-        }
-
-        if ($unique = $this->deduplicate($data))
-        {
-            //Clarifying parent dataset
-            $this->collectReferences($data);
-        }
-
-        $this->parent->mount(
-            $this->container,
-            $this->getReferenceKey(),
-            $referenceCriteria,
-            $data,
-            static::MULTIPLE
-        );
-
-        $this->parseNested($row);
-    }
 }

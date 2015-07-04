@@ -28,6 +28,11 @@ abstract class Loader implements LoaderInterface
     const LOAD_METHOD = null;
 
     /**
+     * Internal loader constant used to decide nested aggregation level.
+     */
+    const MULTIPLE = false;
+
+    /**
      * ORM component is required to fetch all required model schemas.
      *
      * @invisible
@@ -446,7 +451,36 @@ abstract class Loader implements LoaderInterface
      * @param array $row
      * @return mixed
      */
-    abstract public function parseRow(array $row);
+    public function parseRow(array $row)
+    {
+        if (!$this->isLoadable())
+        {
+            return;
+        }
+
+        $data = $this->fetchData($row);
+        if (!$referenceCriteria = $this->fetchReferenceCriteria($data))
+        {
+            //Relation not loaded
+            return;
+        }
+
+        if ($unique = $this->deduplicate($data))
+        {
+            //Clarifying parent dataset
+            $this->collectReferences($data);
+        }
+
+        $this->parent->mount(
+            $this->container,
+            $this->getReferenceKey(),
+            $referenceCriteria,
+            $data,
+            static::MULTIPLE
+        );
+
+        $this->parseNested($row);
+    }
 
     /**
      * Send row data to nested loaders for parsing (used in cases where nested loaded requested

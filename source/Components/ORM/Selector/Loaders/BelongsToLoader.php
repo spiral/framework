@@ -22,35 +22,4 @@ class BelongsToLoader extends HasOneLoader
      * Default load method (inload or postload).
      */
     const LOAD_METHOD = Selector::POSTLOAD;
-
-    /**
-     * Parse single result row, should fetch related model fields and run nested loader parsers.
-     *
-     * @param array $row
-     * @return mixed
-     */
-    public function parseRow(array $row)
-    {
-        $data = $this->fetchData($row);
-        if (!$referenceCriteria = $this->fetchReferenceCriteria($data))
-        {
-            //Relation not loaded
-            return;
-        }
-
-        if ($this->deduplicate($data))
-        {
-            //Clarifying parent dataset
-            $this->collectReferences($data);
-        }
-
-        $this->parent->mount(
-            $this->container,
-            $this->getReferenceKey(),
-            $referenceCriteria,
-            $data
-        );
-
-        $this->parseNested($row);
-    }
 }
