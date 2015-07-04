@@ -145,13 +145,13 @@ class PostgresDriver extends Driver
 
         $this->primaryKeys[$table] = $this->tableSchema($table)->getPrimaryKeys();
 
-        if (count($this->primaryKeys[$table]) > 2)
-        {
-            //Compound keys are not supported
-            $this->primaryKeys[$table] = null;
-        }
+        $this->primaryKeys[$table] = null;
 
-        $this->primaryKeys[$table] = $this->primaryKeys[$table][0];
+        if (count($this->primaryKeys[$table]) === 1)
+        {
+            //We do support only single primary key
+            $this->primaryKeys[$table] = $this->primaryKeys[$table][0];
+        }
 
         //Caching
         $this->runtime->saveData($this->getDatabaseName() . '-primary', $this->primaryKeys);
@@ -198,9 +198,12 @@ class PostgresDriver extends Driver
      */
     public function insertBuilder(Database $database, array $parameters = [])
     {
-        return InsertQuery::make([
+        return InsertQuery::make(
+            [
                 'database' => $database,
                 'compiler' => $this->queryCompiler($database->getPrefix())
-            ] + $parameters, $this->container);
+            ] + $parameters,
+            $this->container
+        );
     }
 }
