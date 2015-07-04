@@ -242,7 +242,9 @@ class ManyToManyLoader extends Loader
      */
     protected function deduplicate(array &$data)
     {
-        $criteria = $data[ORM::PIVOT_DATA][ORM::PIVOT_PRIMARY_KEY];
+        $criteria = $data[ORM::PIVOT_DATA][$this->definition[ActiveRecord::THOUGHT_INNER_KEY]]
+            . '.' . $data[ORM::PIVOT_DATA][$this->definition[ActiveRecord::THOUGHT_OUTER_KEY]];
+
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $criteria .= ':' . $data[ORM::PIVOT_DATA][$this->definition[ActiveRecord::MORPH_KEY]];

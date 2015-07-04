@@ -104,8 +104,6 @@ class ManyToManySchema extends RelationSchema
 
         $pivotTable = $this->getPivotSchema();
 
-        $pivotTable->bigPrimary(ORM::PIVOT_PRIMARY_KEY);
-
         $outerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
         $outerKey->type($this->getOuterKeyType());
 

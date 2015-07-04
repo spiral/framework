@@ -75,8 +75,6 @@ class ManyToMorphedSchema extends MorphedRelationSchema
 
         $pivotTable = $this->getPivotSchema();
 
-        $pivotTable->bigPrimary(ORM::PIVOT_PRIMARY_KEY);
-
         $localKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
         $localKey->type($this->getInnerKeyType());
         $localKey->index();

@@ -224,11 +224,6 @@ class ORM extends Component
     const R_DEFINITION = 2;
 
     /**
-     * Key to be used as primary for pivot tables.
-     */
-    const PIVOT_PRIMARY_KEY = 'id';
-
-    /**
      * Pivot table location in ActiveRecord data.
      */
     const PIVOT_DATA = '@pivot';
