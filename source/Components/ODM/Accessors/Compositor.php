@@ -593,7 +593,6 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
         }
 
         $this->changedDirectly = true;
-
         if (is_null($offset))
         {
             $this->documents[] = $value;

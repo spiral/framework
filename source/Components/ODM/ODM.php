@@ -83,7 +83,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
      * Spiral MongoDatabase is layer at top of MongoClient ans MongoDB, it has all MongoDB features
      * plus ability to be injected.
      *
-     * @param string $database Client ID.
+     * @param string $database Database name (internal).
      * @param array  $config   Connection options, only required for databases not listed in ODM config.
      * @return MongoDatabase
      * @throws ODMException
@@ -196,7 +196,7 @@ class ODM extends Component implements Container\InjectionManagerInterface
     {
         $builder = $this->schemaBuilder();
 
-        //Creating all required indexes
+        //Create all required indexes
         $builder->createIndexes($this);
 
         if (!empty($this->config['documentation']))
@@ -208,6 +208,8 @@ class ODM extends Component implements Container\InjectionManagerInterface
         }
 
         $this->schema = $this->event('schema', $builder->normalizeSchema());
+
+        //We have to flush schema cache after schema udpate, just in case
         Document::clearSchemaCache();
 
         //Saving

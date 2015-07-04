@@ -217,7 +217,8 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @param array                 $data   Document fields, filters will not be applied for this fields.
      * @param CompositableInterface $parent Parent document or compositor.
      * @param mixed                 $options
-     * @param ODM                   $odm    ODM component, will be received from container if not provided.
+     * @param ODM                   $odm    ODM component, will be received from container if not
+     *                                      provided.
      */
     public function __construct($data = [], $parent = null, $options = null, ODM $odm = null)
     {
