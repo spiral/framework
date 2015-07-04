@@ -465,7 +465,7 @@ abstract class Loader implements LoaderInterface
             return;
         }
 
-        if ($unique = $this->deduplicate($data))
+        if ($this->deduplicate($data))
         {
             //Clarifying parent dataset
             $this->collectReferences($data);
