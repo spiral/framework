@@ -193,6 +193,18 @@ abstract class Driver extends Component
     }
 
     /**
+     * Force driver to connect.
+     *
+     * @return bool
+     */
+    public function connect()
+    {
+        $this->getPDO();
+
+        return $this->isConnected();
+    }
+
+    /**
      * Check if PDO already constructed and ready for use.
      *
      * @return bool
