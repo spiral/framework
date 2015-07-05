@@ -32,6 +32,7 @@ class ReflectionFile extends Component
         '{',
         '}',
         ';',
+        T_PAAMAYIM_NEKUDOTAYIM,
         T_NAMESPACE,
         T_STRING,
         T_CLASS,
@@ -212,6 +213,16 @@ class ReflectionFile extends Component
 
             if (in_array($token[self::TOKEN_TYPE], [T_CLASS, T_TRAIT, T_INTERFACE]))
             {
+                if (
+                    $this->tokens[$TID][self::TOKEN_TYPE] == T_CLASS
+                    && isset($this->tokens[$TID - 1])
+                    && $this->tokens[$TID - 1][self::TOKEN_TYPE] == T_PAAMAYIM_NEKUDOTAYIM
+                )
+                {
+                    //PHP5.5 ClassName::class constant
+                    continue;
+                }
+
                 $this->handleDeclaration($TID, $token[self::TOKEN_TYPE]);
             }
 

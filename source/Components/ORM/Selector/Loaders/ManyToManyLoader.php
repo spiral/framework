@@ -139,12 +139,26 @@ class ManyToManyLoader extends Loader
             $pivotOuterKey => $outerKey
         ]);
 
+        if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
+        {
+            $selector->onWhere(
+                $this->castWhere($this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias())
+            );
+        }
+
         //Adding condition
         $selector->where(
             $this->getPivotAlias() . '.' . $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
             'IN',
             array_unique($aggregatedKeys)
         );
+
+        if (!empty($this->definition[ActiveRecord::WHERE]))
+        {
+            $selector->where(
+                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
+            );
+        }
 
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
@@ -175,10 +189,24 @@ class ManyToManyLoader extends Loader
             $pivotInnerKey => $innerKey
         ]);
 
+        if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
+        {
+            $selector->onWhere(
+                $this->castWhere($this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias())
+            );
+        }
+
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->getPivotAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY];
             $selector->onWhere([$morphKey => $this->parent->schema[ORM::E_ROLE_NAME]]);
+        }
+
+        if (!empty($this->definition[ActiveRecord::WHERE]))
+        {
+            $selector->onWhere(
+                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
+            );
         }
 
         $selector->leftJoin(

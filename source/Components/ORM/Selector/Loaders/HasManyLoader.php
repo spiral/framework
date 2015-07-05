@@ -27,4 +27,44 @@ class HasManyLoader extends HasOneLoader
      * Internal loader constant used to decide nested aggregation level.
      */
     const MULTIPLE = true;
+
+    /**
+     * Create selector to be executed as post load, usually such selector use aggregated values
+     * and IN where syntax.
+     *
+     * @return Selector
+     */
+    public function createSelector()
+    {
+        if (empty($selector = parent::createSelector()))
+        {
+            return null;
+        }
+
+        if (!empty($this->definition[ActiveRecord::WHERE]))
+        {
+            $selector->where(
+                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
+            );
+        }
+
+        return $selector;
+    }
+
+    /**
+     * ORM Loader specific method used to clarify selector conditions, join and columns with
+     * loader specific information.
+     *
+     * @param Selector $selector
+     */
+    protected function clarifySelector(Selector $selector)
+    {
+        parent::clarifySelector($selector);
+        if (!empty($this->definition[ActiveRecord::WHERE]))
+        {
+            $selector->onWhere(
+                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
+            );
+        }
+    }
 }

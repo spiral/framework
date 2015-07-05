@@ -1034,7 +1034,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public static function findOne(array $query = [])
     {
-        return static::find($query)->findOne();
+        return static::find(self::getScope($query))->findOne();
     }
 
     /**

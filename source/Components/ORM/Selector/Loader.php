@@ -708,6 +708,35 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
+     * Internal method to mount valid table alias to all where conditions.
+     *
+     * @param array  $where
+     * @param string $tableAlias
+     * @return array
+     */
+    protected function castWhere(array $where, $tableAlias)
+    {
+        $result = [];
+
+        foreach ($where as $column => $value)
+        {
+            if (is_string($column) && !is_int($column))
+            {
+                $column = str_replace('{?}', $tableAlias, $column);
+            }
+
+            if (is_array($value))
+            {
+                $value = $this->castWhere($value, $tableAlias);
+            }
+
+            $result[$column] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
      * Clean loader data.
      *
      * @param bool $reconfigure Use this flag to reset configured flag to force query clarification
