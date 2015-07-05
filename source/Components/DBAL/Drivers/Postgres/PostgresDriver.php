@@ -9,10 +9,12 @@
 namespace Spiral\Components\DBAL\Drivers\Postgres;
 
 use Spiral\Components\DBAL\Database;
+use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\Driver;
 use PDO;
 use Spiral\Components\DBAL\Drivers\Postgres\Builders\InsertQuery;
+use Spiral\Components\DBAL\ParameterInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\RuntimeCacheInterface;
@@ -112,6 +114,28 @@ class PostgresDriver extends Driver
         $pdo->exec("SET NAMES 'UTF-8'");
 
         return $pdo;
+    }
+
+    /**
+     * Driver specific PDOStatement parameters preparation.
+     *
+     * @param array $parameters
+     * @return array
+     */
+    public function prepareParameters(array $parameters)
+    {
+        $result = parent::prepareParameters($parameters);
+
+        array_walk_recursive($result, function (&$value)
+        {
+            if (is_bool($value))
+            {
+                //PDO casts boolean as string, Postgres can't understand it, let's cast it as int
+                $value = (int)$value;
+            }
+        });
+
+        return $result;
     }
 
     /**

@@ -61,7 +61,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const THOUGHT_OUTER_KEY = 907; //Pivot table options
     const WHERE             = 908; //Where conditions
     const WHERE_PIVOT       = 909; //Where pivot conditions
-    const PREFILL_FIELDS    = 910; //This is for relation create/add method
 
     /**
      * Additional constants used to control relation schema creation.

@@ -235,7 +235,6 @@ class ORM extends Component
 
         //Saving
         $this->runtime->saveData('ormSchema', $this->schema);
-        dumP($this->schema);
 
         return $builder;
     }

@@ -30,7 +30,6 @@ class HasManySchema extends HasOneSchema
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
         ActiveRecord::NULLABLE          => true,
-        ActiveRecord::WHERE             => [],
-        ActiveRecord::PREFILL_FIELDS    => []
+        ActiveRecord::WHERE => []
     ];
 }

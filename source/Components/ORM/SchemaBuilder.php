@@ -119,6 +119,7 @@ class SchemaBuilder extends Component
 
             if (is_array($inverted))
             {
+                //TODO: THINK ABOUT IT
                 //[TYPE, NAME]
                 $relation->revertRelation($inverted[1], $inverted[0]);
             }

@@ -348,6 +348,8 @@ abstract class Driver extends Component
             }
 
             $pdoStatement = $this->getPDO()->prepare($query);
+
+            //Configuring statement binded parameters
             $pdoStatement->execute($parameters);
 
             $this->event('statement', [
