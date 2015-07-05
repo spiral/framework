@@ -72,7 +72,9 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * Aggregation types. Use appropriate type to declare reference to one or to many.
      *
      * Example:
-     * 'items' => array(self::MANY => 'Models\Database\Item', array('parentID' => 'key::_id'))
+     * 'items' => [self::MANY => 'Models\Database\Item', [
+     *      'parentID' => 'key::_id'
+     * ]]
      */
     const MANY = 778;
     const ONE  = 899;
@@ -139,20 +141,20 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * _id          => MongoId       //Column, expected type MongoId
      * value        => string        //Column, expected type string
-     * values       => array(string) //Column, array of strings, will be represented using ScalarArray
+     * values       => [string]      //Column, array of strings, will be represented using ScalarArray
      *
      * Compositions:
      * subDocument  => DocumentClass        //Structure represented by document type DocumentClass
-     * subDocuments => array(DocumentClass) //Array of documents type DocumentClass
+     * subDocuments => [DocumentClass]      //Array of documents type DocumentClass
      *
      * Aggregations:
-     * relationship => array(
-     *      self::MANY => DocumentClass, array(someID => key::_id, key => value...)
-     * ) //Reference to many DocumentClass
+     * relationship => [self::MANY => DocumentClass, [
+     *          someID => key::_id, key => value...
+     * ]] //Reference to many DocumentClass
      *
-     * relationship => array(
-     *      self::ONE => DocumentClass, array(someID => key::_id, key => value...)
-     * ) //Reference to one DocumentClass
+     * relationship => [self::ONE => DocumentClass, [
+     *          someID => key::_id, key => value...
+     * ]] //Reference to one DocumentClass
      *
      * Schema will be extended in child document classes, additionally ODM will set some default
      * filters based on values in ODM configuration and field type.
@@ -174,10 +176,10 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * for additional parameters.
      *
      * Example:
-     *  protected $indexes = array(
+     *  protected $indexes = [
      *      ['email' => 1, '@options' => ['unique' => true]],
      *      ['name' => 1]
-     * );
+     * ];
      *
      * @link http://php.net/manual/en/mongocollection.ensureindex.php
      * @var array

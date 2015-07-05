@@ -43,7 +43,12 @@ class HasOneSchema extends RelationSchema
         $outerKey = $outerSchema->column($this->getOuterKey());
         $outerKey->type($this->getInnerKeyType());
         $outerKey->nullable($this->isNullable());
-        $outerKey->index();
+
+        //We need index only when relation is not polymorphic
+        if (empty($this->definition[ActiveRecord::MORPH_KEY]))
+        {
+            $outerKey->index();
+        }
 
         if (
             !$this->definition[ActiveRecord::CONSTRAINT]
