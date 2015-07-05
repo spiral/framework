@@ -51,7 +51,9 @@ class HasOneLoader extends Loader
         }
 
         //Aggregated keys (example: all parent ids)
-        $aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey());
+        $aggregatedKeys = $this->parent->getAggregatedKeys(
+            $this->getReferenceKey()
+        );
 
         if (empty($aggregatedKeys))
         {
@@ -69,7 +71,9 @@ class HasOneLoader extends Loader
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->getAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY];
-            $selector->where([$morphKey => $this->parent->schema[ORM::E_ROLE_NAME]]);
+            $selector->where([
+                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
+            ]);
         }
 
         return $selector;
@@ -88,15 +92,16 @@ class HasOneLoader extends Loader
         //Inner key has to be build based on parent table
         $innerKey = $this->parent->getAlias() . '.' . $this->definition[ActiveRecord::INNER_KEY];
 
-        $selector->leftJoin(
-            $this->definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(),
-            [$outerKey => $innerKey]
-        );
+        $selector->leftJoin($this->definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(), [
+            $outerKey => $innerKey
+        ]);
 
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->getAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY];
-            $selector->onWhere([$morphKey => $this->parent->schema[ORM::E_ROLE_NAME]]);
+            $selector->onWhere([
+                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
+            ]);
         }
     }
 }

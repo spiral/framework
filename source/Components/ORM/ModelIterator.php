@@ -15,18 +15,21 @@ use Spiral\Core\Component;
  */
 class ModelIterator extends Component implements \Iterator
 {
+    protected $orm = null;
+
     protected $class = '';
     protected $data = [];
 
 
-    protected $orm = null;
     protected $position = 0;
 
-    public function __construct($class, array $data, ORM $orm)
+    public function __construct(ORM $orm, $class, array $data)
     {
-        $this->class = $class;
-        $this->data = $data;
         $this->orm = $orm;
+
+        $this->class = $class;
+
+        $this->data = $data;
     }
 
     public function count()

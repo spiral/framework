@@ -43,9 +43,9 @@ class HasManyLoader extends HasOneLoader
 
         if (!empty($this->definition[ActiveRecord::WHERE]))
         {
-            $selector->where(
-                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
-            );
+            $selector->where($this->prepareWhere(
+                $this->definition[ActiveRecord::WHERE], $this->getAlias()
+            ));
         }
 
         return $selector;
@@ -60,11 +60,12 @@ class HasManyLoader extends HasOneLoader
     protected function clarifySelector(Selector $selector)
     {
         parent::clarifySelector($selector);
+
         if (!empty($this->definition[ActiveRecord::WHERE]))
         {
-            $selector->onWhere(
-                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
-            );
+            $selector->onWhere($this->prepareWhere(
+                $this->definition[ActiveRecord::WHERE], $this->getAlias()
+            ));
         }
     }
 }

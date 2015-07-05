@@ -115,35 +115,62 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
-     * TODO: Write description
      *
-     * @param string|array $relation
-     * @param array        $options
+     *
+     * @param string   $relation    Relation name, or chain of relations separated by .
+     * @param array    $options     Loader options (will be applied to last chain loader only).
+     * @param int|null $chainMethod INLOAD, POSTLOAD, JOIN_ONLY method forced for all loaders in this
+     *                              chain.
      * @return static
      */
-    public function with($relation, $options = [], $forceOptions = [])
+    public function with($relation, array $options = [], $chainMethod = null)
     {
         if (is_array($relation))
         {
             foreach ($relation as $name => $options)
             {
                 //Multiple relations or relation with addition load options
-                $this->with($name, $options, $forceOptions);
+                $this->with($name, $options, $chainMethod);
             }
 
             return $this;
         }
 
-        //TODO: Cross-db loaders
-
         //Nested loader
-        $loader = $this->loader->loader($relation, $options, $forceOptions);
+        $this->loader->loader($relation, $options, $chainMethod);
 
         return $this;
     }
 
-    //TODO: INLOAD
-    //TODO: POSTLOAD
+    /**
+     * @param string $relation Relation name, or chain of relations separated by .
+     * @param array  $options  Loader options (will be applied to last chain loader only).
+     * @return static
+     */
+    public function inload($relation, array $options = [])
+    {
+        return $this->with($relation, $options, self::INLOAD);
+    }
+
+    /**
+     * @param string $relation Relation name, or chain of relations separated by .
+     * @param array  $options  Loader options (will be applied to last chain loader only).
+     * @return static
+     */
+    public function quickJoin($relation, array $options = [])
+    {
+        return $this->with($relation, $options, self::JOIN_ONLY);
+    }
+
+    /**
+     * @param string $relation Relation name, or chain of relations separated by .
+     * @param array  $options  Loader options (will be applied to last chain loader only).
+     * @return static
+     */
+    public function postload($relation, array $options = [])
+    {
+        return $this->with($relation, $options, self::POSTLOAD);
+    }
 
     /**
      * Get or render SQL statement.
@@ -183,7 +210,7 @@ class Selector extends AbstractSelectQuery
      */
     public function getIterator()
     {
-        return new ModelIterator($this->class, $this->fetchData(), $this->orm);
+        return new ModelIterator($this->orm, $this->class, $this->fetchData());
     }
 
     /**

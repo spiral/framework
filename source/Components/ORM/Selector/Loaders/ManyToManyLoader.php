@@ -135,13 +135,15 @@ class ManyToManyLoader extends Loader
 
         if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
         {
-            $selector->onWhere(
-                $this->castWhere($this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias())
-            );
+            $selector->onWhere($this->prepareWhere(
+                $this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias()
+            ));
         }
 
         //Aggregated keys (example: all parent ids)
-        $aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey());
+        $aggregatedKeys = $this->parent->getAggregatedKeys(
+            $this->getReferenceKey()
+        );
 
         if (empty($aggregatedKeys))
         {
@@ -158,15 +160,17 @@ class ManyToManyLoader extends Loader
 
         if (!empty($this->definition[ActiveRecord::WHERE]))
         {
-            $selector->where(
-                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
-            );
+            $selector->where($this->prepareWhere(
+                $this->definition[ActiveRecord::WHERE], $this->getAlias()
+            ));
         }
 
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->getPivotAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY];
-            $selector->where([$morphKey => $this->parent->schema[ORM::E_ROLE_NAME]]);
+            $selector->where([
+                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
+            ]);
         }
 
         return $selector;
@@ -194,29 +198,29 @@ class ManyToManyLoader extends Loader
 
         if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
         {
-            $selector->onWhere(
-                $this->castWhere($this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias())
-            );
+            $selector->onWhere($this->prepareWhere(
+                $this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias()
+            ));
         }
 
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $this->getPivotAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY];
-            $selector->onWhere([$morphKey => $this->parent->schema[ORM::E_ROLE_NAME]]);
+            $selector->onWhere([
+                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
+            ]);
         }
 
         if (!empty($this->definition[ActiveRecord::WHERE]))
         {
-            $selector->onWhere(
-                $this->castWhere($this->definition[ActiveRecord::WHERE], $this->getAlias())
-            );
+            $selector->onWhere($this->prepareWhere(
+                $this->definition[ActiveRecord::WHERE], $this->getAlias()
+            ));
         }
 
-        $selector->leftJoin(
-            $this->definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(), [
-                $outerKey => $pivotOuterKey
-            ]
-        );
+        $selector->leftJoin($this->definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(), [
+            $outerKey => $pivotOuterKey
+        ]);
     }
 
     /**
