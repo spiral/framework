@@ -43,7 +43,7 @@ class SqlServerDriver extends Driver
      *
      * @var string
      */
-    const DATETIME = 'Y-m-d\TH:i:s';
+    const DATETIME = 'Y-m-d\TH:i:s.000';
 
     /**
      * Default datetime value.

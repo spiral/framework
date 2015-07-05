@@ -68,7 +68,7 @@ class QueryCompiler extends BaseQueryCompiler
         }
         elseif (empty($joins))
         {
-            return parent::update($table, $joins, $where);
+            return parent::update($table, $columns, $joins, $where);
         }
 
         return parent::update($table, $columns) . " WHERE {$this->quote('rowid')} IN (\n"
