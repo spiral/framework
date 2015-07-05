@@ -490,13 +490,15 @@ class Selector extends AbstractSelectQuery
     {
         $statement = $this->sqlStatement();
 
-        if (!empty($this->lifetime))
+        if (!empty($this->cacheLifetime))
         {
             $cacheKey = $this->cacheKey ?: md5(serialize([$statement, $this->getParameters()]));
             $cacheStore = $this->cacheStore ?: Cache::getInstance()->store();
 
             if ($cacheStore->has($cacheKey))
             {
+                self::logger()->debug("Selector result fetched from cache.");
+
                 //We are going to store parsed result, not queries
                 return $cacheStore->get($cacheKey);
             }
@@ -525,9 +527,9 @@ class Selector extends AbstractSelectQuery
         $data = $this->loader->getResult();
         $this->loader->clean();
 
-        if (!empty($this->lifetime) && !empty($cacheStore) && !empty($cacheKey))
+        if (!empty($this->cacheLifetime) && !empty($cacheStore) && !empty($cacheKey))
         {
-            $cacheStore->set($cacheKey, $data, $this->lifetime);
+            $cacheStore->set($cacheKey, $data, $this->cacheLifetime);
         }
 
         return $data;
