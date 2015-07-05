@@ -14,6 +14,94 @@ use Spiral\Components\DBAL\QueryCompiler as BaseQueryCompiler;
 class QueryCompiler extends BaseQueryCompiler
 {
     /**
+     * Compile delete query statement. Table name, joins and where tokens are required.
+     *
+     * @param string $table
+     * @param array  $joins
+     * @param array  $where
+     * @return string
+     */
+    public function delete($table, array $joins = [], array $where = [])
+    {
+        if (empty($joins))
+        {
+            return parent::delete($table, $joins, $where);
+        }
+
+        //Situation is little bit more complex when we have joins
+        $statement = parent::delete($table);
+
+        //We have to rebuild where tokens
+        $whereTokens = [];
+
+        //Converting JOINS into USING tables
+        $usingTables = [];
+        foreach ($joins as $table => $join)
+        {
+            $usingTables[] = $this->quote($table, true, true);
+            $whereTokens = array_merge($whereTokens, $join['on']);
+        }
+
+        $statement .= "\nUSING " . join(', ', $usingTables);
+
+        $whereTokens[] = ['AND', '('];
+        $whereTokens = array_merge($whereTokens, $where);
+        $whereTokens[] = ['', ')'];
+
+        if (!empty($whereTokens))
+        {
+            $statement .= "\nWHERE " . $this->where($whereTokens);
+        }
+
+        return rtrim($statement);
+    }
+
+    /**
+     * Compile update query statement. Table name, set of values (associated with column names), joins
+     * and where tokens are required.
+     *
+     * @param string $table
+     * @param array  $columns
+     * @param array  $joins
+     * @param array  $where
+     * @return string
+     */
+    public function update($table, array $columns, array $joins = [], array $where = [])
+    {
+        if (empty($joins))
+        {
+            return parent::update($table, $columns, $joins, $where);
+        }
+
+        $statement = 'UPDATE ' . $this->quote($table, true, true);
+
+        //We have to rebuild where tokens
+        $whereTokens = [];
+
+        //Converting JOINS into FROM tables
+        $fromTables = [];
+        foreach ($joins as $table => $join)
+        {
+            $fromTables[] = $this->quote($table, true, true);
+            $whereTokens = array_merge($whereTokens, $join['on']);
+        }
+
+        $statement .= "\nSET" . $this->prepareColumns($columns);
+        $statement .= "\nFROM " . join(', ', $fromTables);
+
+        $whereTokens[] = ['AND', '('];
+        $whereTokens = array_merge($whereTokens, $where);
+        $whereTokens[] = ['', ')'];
+
+        if (!empty($whereTokens))
+        {
+            $statement .= "\nWHERE " . $this->where($whereTokens);
+        }
+
+        return rtrim($statement);
+    }
+
+    /**
      * Compile insert query statement. Table name (without prefix), columns and list of rowsets is
      * required.
      *
@@ -29,91 +117,6 @@ class QueryCompiler extends BaseQueryCompiler
     {
         return parent::insert($table, $columns, $rowsets)
         . (!empty($primaryKey) ? ' RETURNING ' . $this->quote($primaryKey) : '');
-    }
-
-    /**
-     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit
-     * and order are required. PostgresSQL requires nested query for ordering and limits.
-     *
-     * @link http://www.postgresql.org/message-id/1291109101.26137.35.camel@pcd12478
-     * @param string $table
-     * @param array  $joins
-     * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
-     * @return string
-     * @throws DBALException
-     */
-    public function delete(
-        $table,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
-    {
-        if (empty($orderBy) && empty($limit))
-        {
-            return parent::delete($table, $joins, $where);
-        }
-
-        $selection = self::select(
-            [$table],
-            false,
-            ['ctid'],
-            $joins,
-            $where,
-            [],
-            [],
-            $orderBy,
-            $limit,
-            0
-        );
-
-        return self::delete($table) . " WHERE {$this->quote('ctid')} = any(array($selection))";
-    }
-
-    /**
-     * Compile update query statement. Table name, set of values (associated with column names),
-     * joins and where tokens, order by tokens and limit are required. Default query compiler will
-     * not compile limit and order by, it has to be done on driver compiler level.
-     *
-     * @param string $table
-     * @param array  $values
-     * @param array  $joins
-     * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
-     * @return string
-     */
-    public function update(
-        $table,
-        array $values,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
-    {
-        if (empty($orderBy) && empty($limit))
-        {
-            return parent::update($table, $values, $joins, $where);
-        }
-
-        $selection = self::select(
-            [$table],
-            false,
-            ['ctid'],
-            $joins,
-            $where,
-            [],
-            [],
-            $orderBy,
-            $limit,
-            0
-        );
-
-        return self::update($table, $values) . " WHERE {$this->quote('ctid')} = any(array($selection))";
     }
 
     /**

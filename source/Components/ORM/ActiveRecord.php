@@ -953,6 +953,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         return true;
     }
 
+    //TODO: push method
+
     /**
      * Delete record from database. Attention, if your model does not have primary key result of
      * this method can be pretty dramatic as it will remove every record from associated table with

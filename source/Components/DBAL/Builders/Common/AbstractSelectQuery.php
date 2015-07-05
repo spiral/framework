@@ -11,6 +11,7 @@ namespace Spiral\Components\DBAL\Builders\Common;
 use Spiral\Components\Cache\StoreInterface;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
+use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Components\DBAL\QueryResult;
 use Spiral\Support\Pagination\PaginableInterface;
 use Spiral\Support\Pagination\PaginatorTrait;
@@ -167,19 +168,21 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
     }
 
     /**
-     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
-     * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
+     * Get ordered list of builder parameters.
      *
+     * @param QueryCompiler $compiler
      * @return array
      */
-    public function getParameters()
+    public function getParameters(QueryCompiler $compiler = null)
     {
-        //Join parameters always goes first, having parameters always going last
-        return array_merge(
-            $this->getOnParameters(),
-            parent::getParameters(),
-            $this->getHavingParameters()
-        );
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+
+        return $this->expandParameters($compiler->prepareParameters(
+            QueryCompiler::SELECT_QUERY,
+            $this->whereParameters,
+            $this->onParameters,
+            $this->havingParameters
+        ));
     }
 
     /**

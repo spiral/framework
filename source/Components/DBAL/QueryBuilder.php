@@ -32,13 +32,6 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     protected $compiler = null;
 
     /**
-     * Binded query parameters.
-     *
-     * @var array
-     */
-    protected $parameters = [];
-
-    /**
      * QueryBuilder class is parent for all existed DBAL query builders. Every QueryBuilder will have
      * attached QueryGrammar instance provided by driver and responsible for building queries based
      * on provided tokens. Additionally QueryBuilder have common mechanism to register query params,
@@ -51,35 +44,6 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     {
         $this->database = $database;
         $this->compiler = $compiler;
-    }
-
-    /**
-     * Registering query parameters. Array parameters will be converted to Parameter object to correctly
-     * resolve placeholders.
-     *
-     * @param mixed $parameter
-     * @return mixed
-     */
-    protected function addParameter($parameter)
-    {
-        if (!$parameter instanceof ParameterInterface && is_array($parameter))
-        {
-            $parameter = new Parameter($parameter);
-        }
-
-        if
-        (
-            $parameter instanceof SqlFragmentInterface
-            && !$parameter instanceof ParameterInterface
-            && !$parameter instanceof QueryBuilder
-        )
-        {
-            return $parameter;
-        }
-
-        $this->parameters[] = $parameter;
-
-        return $parameter;
     }
 
     /**
@@ -107,27 +71,35 @@ abstract class QueryBuilder extends Component implements SqlFragmentInterface
     }
 
     /**
-     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
+     * Expand all QueryBuilder parameters to create flatten list.
      *
+     * @param array $parameters
      * @return array
      */
-    public function getParameters()
+    protected function expandParameters(array $parameters)
     {
-        $parameters = [];
-
-        foreach ($this->parameters as $parameter)
+        $result = [];
+        foreach ($parameters as $parameter)
         {
             if ($parameter instanceof QueryBuilder)
             {
-                $parameters = array_merge($parameters, $parameter->getParameters());
+                $result = array_merge($result, $parameter->getParameters());
                 continue;
             }
 
-            $parameters[] = $parameter;
+            $result[] = $parameter;
         }
 
-        return $parameters;
+        return $result;
     }
+
+    /**
+     * Get ordered list of builder parameters.
+     *
+     * @param QueryCompiler $compiler
+     * @return array
+     */
+    abstract public function getParameters(QueryCompiler $compiler = null);
 
     /**
      * Get or render SQL statement.

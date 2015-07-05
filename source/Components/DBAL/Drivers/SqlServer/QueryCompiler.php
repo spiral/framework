@@ -68,21 +68,12 @@ class QueryCompiler extends BaseQueryCompiler
         array $unions = []
     )
     {
-        if (!$limit && !$offset || ($this->driver->getServerVersion() >= 12 && $orderBy))
+        if (
+            empty($limit) && empty($offset)
+            || ($this->driver->getServerVersion() >= 12 && !empty($orderBy))
+        )
         {
-            return parent::select(
-                $from,
-                $distinct,
-                $columns
-                , $joins,
-                $where,
-                $having,
-                $groupBy,
-                $orderBy,
-                $limit,
-                $offset,
-                $unions
-            );
+            return call_user_func_array(['parent', 'select'], func_get_args());
         }
 
         if ($this->driver->getServerVersion() >= 12)
@@ -132,89 +123,82 @@ class QueryCompiler extends BaseQueryCompiler
     }
 
     /**
-     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and
-     * order are required. PostgresSQL requires nested query for ordering and limits.
+     * Compile delete query statement. Table name, joins and where tokens are required.
      *
-     * @link http://stackoverflow.com/questions/3439110/sql-server-update-a-table-by-using-order-by
      * @param string $table
      * @param array  $joins
      * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
      * @return string
-     * @throws DBALException
      */
-    public function delete(
-        $table,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
+    public function delete($table, array $joins = [], array $where = [])
     {
-        if (empty($orderBy) && empty($limit))
+        $alias = $table;
+        if (preg_match('/ as /i', $alias, $matches))
         {
-            return parent::delete($table, $joins, $where);
+            list(, $alias) = explode($matches[0], $table);
+        }
+        else
+        {
+            $alias = $this->tablePrefix . $alias;
         }
 
-        $cte = "WITH cte AS (" . self::select(
-                [$table],
-                false,
-                ['*'],
-                $joins,
-                $where,
-                [],
-                [],
-                $orderBy,
-                $limit,
-                0
-            ) . ") ";
+        $statement = "DELETE " . $this->quote($alias) . " FROM " . $this->quote($table, true);
 
-        return $cte . self::delete(new SqlFragment("cte"));
+        if (!empty($joins))
+        {
+            $statement .= $this->joins($joins) . ' ';
+        }
+
+        if (!empty($where))
+        {
+            $statement .= "\nWHERE " . $this->where($where);
+        }
+
+        return rtrim($statement);
     }
 
     /**
-     * Compile update query statement. Table name, set of values (associated with column names),
-     * joins and where tokens, order by tokens and limit are required. Default query compiler will
-     * not compile limit and order by, it has to be done on driver compiler level.
+     * Compile update query statement. Table name, set of values (associated with column names), joins
+     * and where tokens are required.
      *
-     * @link http://stackoverflow.com/questions/3439110/sql-server-update-a-table-by-using-order-by
      * @param string $table
-     * @param array  $values
+     * @param array  $columns
      * @param array  $joins
      * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
      * @return string
      */
-    public function update(
-        $table,
-        array $values,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
+    public function update($table, array $columns, array $joins = [], array $where = [])
     {
-        if (empty($orderBy) && empty($limit))
+        $alias = $table;
+        if (preg_match('/ as /i', $alias, $matches))
         {
-            return parent::update($table, $values, $joins, $where);
+            list(, $alias) = explode($matches[0], $table);
+        }
+        else
+        {
+            $table = "{$table} AS {$table}";
         }
 
-        $cte = "WITH cte AS (" . self::select(
-                [$table],
-                false,
-                array_keys($values),
-                $joins,
-                $where,
-                [],
-                [],
-                $orderBy,
-                $limit,
-                0
-            ) . ") ";
+        //This is required to prepare alias
+        $table = $this->quote($table, true, true);
 
-        return $cte . self::update(new SqlFragment("cte"), $values);
+        $statement = "UPDATE " . $this->quote($alias);
+
+        //We have to compile JOINs first
+        $joinsStatement = '';
+        if (!empty($joins))
+        {
+            $joinsStatement = $this->joins($joins);
+        }
+
+        $statement .= "\nSET" . $this->prepareColumns($columns) . "\nFROM " . $table . $joinsStatement;
+
+        if (!empty($where))
+        {
+            $statement .= "\nWHERE " . $this->where($where);
+        }
+
+        return rtrim($statement);
     }
 
     /**

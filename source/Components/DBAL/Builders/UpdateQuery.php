@@ -24,7 +24,7 @@ class UpdateQuery extends AffectQuery
      *
      * @var array
      */
-    protected $values = [];
+    protected $columns = [];
 
     /**
      * AffectQuery is query builder used to compile affection (delete, update) queries for one
@@ -45,7 +45,7 @@ class UpdateQuery extends AffectQuery
     )
     {
         parent::__construct($database, $compiler, $table, $where);
-        $this->values = $values;
+        $this->columns = $values;
     }
 
     /**
@@ -70,7 +70,7 @@ class UpdateQuery extends AffectQuery
      */
     public function values(array $values)
     {
-        $this->values = $values;
+        $this->columns = $values;
 
         return $this;
     }
@@ -84,28 +84,29 @@ class UpdateQuery extends AffectQuery
      */
     public function set($column, $value)
     {
-        $this->values[$column] = $value;
+        $this->columns[$column] = $value;
 
         return $this;
     }
 
     /**
-     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
-     * UpdateBuilder will compile parameters based on values and nested queries.
+     * Get ordered list of builder parameters.
      *
+     * @param QueryCompiler $compiler
      * @return array
      */
-    public function getParameters()
+    public function getParameters(QueryCompiler $compiler = null)
     {
-        $parameters = [];
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
 
-        foreach ($this->values as $value)
+        $values = [];
+        foreach ($this->columns as $value)
         {
             if ($value instanceof QueryBuilder)
             {
                 foreach ($value->getParameters() as $parameter)
                 {
-                    $parameters[] = $parameter;
+                    $values[] = $parameter;
                 }
                 continue;
             }
@@ -115,11 +116,17 @@ class UpdateQuery extends AffectQuery
                 continue;
             }
 
-            $parameters[] = $value;
+            $values[] = $value;
         }
 
         //Join and where parameters are going after values
-        return array_merge($parameters, $this->parameters);
+        return $this->expandParameters($compiler->prepareParameters(
+            QueryCompiler::UPDATE_QUERY,
+            $this->whereParameters,
+            $this->onParameters,
+            [],
+            $values
+        ));
     }
 
     /**
@@ -130,20 +137,13 @@ class UpdateQuery extends AffectQuery
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+        $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
 
-        if (empty($this->values))
+        if (empty($this->columns))
         {
             throw new DBALException("Update values should be specified.");
         }
 
-        return $compiler->resetAliases()->update(
-            $this->table,
-            $this->values,
-            $this->joins,
-            $this->whereTokens,
-            $this->orderBy,
-            $this->limit
-        );
+        return $compiler->update($this->table, $this->columns, $this->joins, $this->whereTokens);
     }
 }

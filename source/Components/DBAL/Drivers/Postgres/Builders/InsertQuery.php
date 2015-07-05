@@ -46,7 +46,7 @@ class InsertQuery extends BaseInsertQuery
 
         $compiler = !empty($compiler) ? $compiler : $this->compiler;
 
-        return $compiler->insert($this->table, $this->columns, $this->parameters, $primary);
+        return $compiler->insert($this->table, $this->columns, $this->values, $primary);
     }
 
     /**

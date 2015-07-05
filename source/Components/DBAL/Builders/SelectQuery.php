@@ -101,20 +101,23 @@ class SelectQuery extends AbstractSelectQuery
     }
 
     /**
-     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
-     * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
+     * Get ordered list of builder parameters.
      *
+     * @param QueryCompiler $compiler
      * @return array
      */
-    public function getParameters()
+    public function getParameters(QueryCompiler $compiler = null)
     {
-        $parameters = parent::getParameters();
+        $parameters = parent::getParameters(
+            $compiler = !empty($compiler) ? $compiler : $this->compiler
+        );
 
+        //Unions always located at the end of query.
         foreach ($this->unions as $union)
         {
             if ($union[0] instanceof QueryBuilder)
             {
-                $parameters = array_merge($parameters, $union[0]->getParameters());
+                $parameters = array_merge($parameters, $union[0]->getParameters($compiler));
             }
         }
 
@@ -129,10 +132,7 @@ class SelectQuery extends AbstractSelectQuery
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        if (empty($compiler))
-        {
-            $compiler = $this->compiler->resetAliases();
-        }
+        $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
 
         return $compiler->select(
             $this->fromTables,

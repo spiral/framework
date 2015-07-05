@@ -27,6 +27,23 @@ class DeleteQuery extends AffectQuery
     }
 
     /**
+     * Get ordered list of builder parameters.
+     *
+     * @param QueryCompiler $compiler
+     * @return array
+     */
+    public function getParameters(QueryCompiler $compiler = null)
+    {
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+
+        return $this->expandParameters($compiler->prepareParameters(
+            QueryCompiler::DELETE_QUERY,
+            $this->whereParameters,
+            $this->onParameters
+        ));
+    }
+
+    /**
      * Get or render SQL statement.
      *
      * @param QueryCompiler $compiler
@@ -34,14 +51,8 @@ class DeleteQuery extends AffectQuery
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+        $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
 
-        return $compiler->resetAliases()->delete(
-            $this->table,
-            $this->joins,
-            $this->whereTokens,
-            $this->orderBy,
-            $this->limit
-        );
+        return $compiler->delete($this->table, $this->joins, $this->whereTokens);
     }
 }

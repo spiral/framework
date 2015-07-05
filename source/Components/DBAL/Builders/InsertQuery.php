@@ -30,6 +30,13 @@ class InsertQuery extends QueryBuilder
     protected $columns = [];
 
     /**
+     * Parameters to be inserted.
+     *
+     * @var array
+     */
+    protected $values = [];
+
+    /**
      * InsertQuery is query builder used to compile insert query into one associated table. It support
      * as single as batch rowsets.
      *
@@ -116,13 +123,13 @@ class InsertQuery extends QueryBuilder
         if (!$multiple)
         {
             $this->columns = array_keys($values);
-            $this->parameters[] = new Parameter(array_values($values));
+            $this->values[] = new Parameter(array_values($values));
         }
         else
         {
             foreach ($values as $rowset)
             {
-                $this->parameters[] = new Parameter(array_values($rowset));
+                $this->values[] = new Parameter(array_values($rowset));
             }
         }
 
@@ -134,7 +141,26 @@ class InsertQuery extends QueryBuilder
      */
     public function flushValues()
     {
-        $this->parameters = [];
+        $this->values = [];
+    }
+
+    /**
+     * Get ordered list of builder parameters.
+     *
+     * @param QueryCompiler $compiler
+     * @return array
+     */
+    public function getParameters(QueryCompiler $compiler = null)
+    {
+        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+
+        return $this->expandParameters($compiler->prepareParameters(
+            QueryCompiler::INSERT_QUERY,
+            [],
+            [],
+            [],
+            $this->values
+        ));
     }
 
     /**
@@ -157,8 +183,8 @@ class InsertQuery extends QueryBuilder
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        $compiler = !empty($compiler) ? $compiler : $this->compiler;
+        $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
 
-        return $compiler->resetAliases()->insert($this->table, $this->columns, $this->parameters);
+        return $compiler->insert($this->table, $this->columns, $this->values);
     }
 }

@@ -8,40 +8,70 @@
  */
 namespace Spiral\Components\DBAL\Drivers\MySql;
 
+use Spiral\Components\DBAL\Builders\SelectQuery;
 use Spiral\Components\DBAL\QueryCompiler as BaseQueryCompiler;
+use Spiral\Components\DBAL\SqlFragmentInterface;
 
 class QueryCompiler extends BaseQueryCompiler
 {
     /**
-     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and
-     * order are required. MySQL support delete limit and order.
+     * Create valid list of parameters (valid order) based on query type.
+     *
+     * @param int   $type Query type.
+     * @param array $where
+     * @param array $joins
+     * @param array $having
+     * @param array $columns
+     * @return array
+     */
+    public function prepareParameters(
+        $type,
+        array $where = [],
+        $joins = [],
+        array $having = [],
+        array $columns = []
+    )
+    {
+        if ($type == self::UPDATE_QUERY)
+        {
+            //Where statement has pretty specific order
+            return array_merge($joins, $columns, $where);
+        }
+
+        return parent::prepareParameters($type, $where, $joins, $having, $columns);
+    }
+
+    /**
+     * Compile delete query statement. Table name, joins and where tokens are required.
      *
      * @param string $table
      * @param array  $joins
      * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
      * @return string
      */
-    public function delete(
-        $table,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
+    public function delete($table, array $joins = [], array $where = [])
     {
-        $statement = parent::delete($table, $joins, $where, [], 0) . ' ';
-
-        //MySQL support delete limit, offset and order in update statements.
-        if (!empty($orderBy))
+        $alias = $table;
+        if (preg_match('/ as /i', $alias, $matches))
         {
-            $statement .= $this->orderBy($orderBy) . ' ';
+            list(, $alias) = explode($matches[0], $table);
+        }
+        else
+        {
+            $table = "{$table} AS {$table}";
         }
 
-        if (!empty($limit))
+        $statement = 'DELETE ' . $this->quote($alias) . ".*\n"
+            . 'FROM ' . $this->quote($table, true, true) . ' ';
+
+        if (!empty($joins))
         {
-            $statement .= $this->limit($limit, 0) . ' ';
+            $statement .= $this->joins($joins) . ' ';
+        }
+
+        if (!empty($where))
+        {
+            $statement .= "\nWHERE " . $this->where($where);
         }
 
         return rtrim($statement);
@@ -49,36 +79,43 @@ class QueryCompiler extends BaseQueryCompiler
 
     /**
      * Compile update query statement. Table name, set of values (associated with column names), joins
-     * and where tokens, order by tokens and limit are required. MySQL support update limit and order.
+     * and where tokens are required.
      *
      * @param string $table
-     * @param array  $values
+     * @param array  $columns
      * @param array  $joins
      * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
      * @return string
      */
-    public function update(
-        $table,
-        array $values,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
+    public function update($table, array $columns, array $joins = [], array $where = [])
     {
-        $statement = parent::update($table, $values, $joins, $where, [], 0) . ' ';
-
-        //MySQL support update limit, offset and order in update statements.
-        if (!empty($orderBy))
+        if (empty($joins))
         {
-            $statement .= $this->orderBy($orderBy) . ' ';
+            return parent::update($table, $columns, $joins, $where);
         }
 
-        if (!empty($limit))
+        $alias = $table;
+        if (preg_match('/ as /i', $alias, $matches))
         {
-            $statement .= $this->limit($limit, 0) . ' ';
+            list(, $alias) = explode($matches[0], $table);
+        }
+        else
+        {
+            $table = "{$table} AS {$table}";
+        }
+
+        $statement = "UPDATE " . $this->quote($table, true, true);
+
+        if (!empty($joins))
+        {
+            $statement .= $this->joins($joins) . "\n";
+        }
+
+        $statement .= "\nSET" . $this->prepareColumns($columns, $alias);
+
+        if (!empty($where))
+        {
+            $statement .= "\nWHERE " . $this->where($where);
         }
 
         return rtrim($statement);

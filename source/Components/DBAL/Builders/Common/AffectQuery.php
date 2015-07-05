@@ -29,21 +29,6 @@ abstract class AffectQuery extends QueryBuilder
     protected $table = '';
 
     /**
-     * Array of columns or/and expressions to be used to generate ORDER BY statement. Every orderBy
-     * token should include correct identifier (or expression) and sorting direction (ASC, DESC).
-     *
-     * @var array
-     */
-    protected $orderBy = [];
-
-    /**
-     * Current limit value.
-     *
-     * @var int
-     */
-    protected $limit = 0;
-
-    /**
      * AffectQuery is query builder used to compile affection (delete, update) queries for one
      * associated table.
      *
@@ -66,34 +51,6 @@ abstract class AffectQuery extends QueryBuilder
     }
 
     /**
-     * Reasonable only if limit of offset values specified, will affect matched records in specified
-     * order.
-     *
-     * @param string $identifier Column or expression of SQLFragment.
-     * @param string $direction  Sorting direction, ASC|DESC.
-     * @return static
-     */
-    public function orderBy($identifier, $direction = 'ASC')
-    {
-        $this->orderBy[] = [$identifier, $direction];
-
-        return $this;
-    }
-
-    /**
-     * Set number of rows should be affected.
-     *
-     * @param int $limit
-     * @return static
-     */
-    public function limit($limit = 0)
-    {
-        $this->limit = $limit;
-
-        return $this;
-    }
-
-    /**
      * Run QueryBuilder statement against parent database. Method will be overloaded by child builder
      * to return correct value. Affect query builder will return count affected rows.
      *
@@ -101,7 +58,7 @@ abstract class AffectQuery extends QueryBuilder
      */
     public function run()
     {
-        if (empty($this->whereTokens) && empty($this->limit) && empty($this->joins))
+        if (empty($this->whereTokens))
         {
             self::logger()->warning(
                 "Affect query performed without any condition or search limitation, "

@@ -10,7 +10,10 @@ namespace Spiral\Components\DBAL\Builders\Common;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\DBALException;
+use Spiral\Components\DBAL\Parameter;
+use Spiral\Components\DBAL\ParameterInterface;
 use Spiral\Components\DBAL\QueryBuilder;
+use Spiral\Components\DBAL\SqlFragmentInterface;
 
 trait WhereTrait
 {
@@ -25,13 +28,11 @@ trait WhereTrait
     protected $whereTokens = [];
 
     /**
-     * Registering query parameters. Array parameters will be converted to Parameter object to
-     * correctly resolve placeholders.
+     * Binded query WHERE parameters.
      *
-     * @param mixed $parameter
-     * @return mixed
+     * @var array
      */
-    abstract protected function addParameter($parameter);
+    protected $whereParameters = [];
 
     /**
      * Add where condition to statement. Where condition will be specified with AND boolean joiner.
@@ -376,7 +377,24 @@ trait WhereTrait
     {
         return function ($parameter)
         {
-            return $this->addParameter($parameter);
+            if (!$parameter instanceof ParameterInterface && is_array($parameter))
+            {
+                $parameter = new Parameter($parameter);
+            }
+
+            if
+            (
+                $parameter instanceof SqlFragmentInterface
+                && !$parameter instanceof ParameterInterface
+                && !$parameter instanceof QueryBuilder
+            )
+            {
+                return $parameter;
+            }
+
+            $this->whereParameters[] = $parameter;
+
+            return $parameter;
         };
     }
 

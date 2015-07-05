@@ -41,30 +41,6 @@ trait JoinTrait
     protected $currentJoin = null;
 
     /**
-     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
-     * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
-     *
-     * @return array
-     */
-    protected function getOnParameters()
-    {
-        $parameters = [];
-
-        foreach ($this->onParameters as $parameter)
-        {
-            if ($parameter instanceof QueryBuilder)
-            {
-                $parameters = array_merge($parameters, $parameter->getParameters());
-                continue;
-            }
-
-            $parameters[] = $parameter;
-        }
-
-        return $parameters;
-    }
-
-    /**
      * Register new INNER table join, all future on() method calls will associate conditions to this
      * join.
      *

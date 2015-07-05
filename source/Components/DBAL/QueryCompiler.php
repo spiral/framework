@@ -14,6 +14,14 @@ use Spiral\Core\Component;
 class QueryCompiler extends Component
 {
     /**
+     * Query types for parameter ordering.
+     */
+    const SELECT_QUERY = 'select';
+    const UPDATE_QUERY = 'update';
+    const DELETE_QUERY = 'delete';
+    const INSERT_QUERY = 'insert';
+
+    /**
      * Parent driver instance, driver used only for identifier() methods but can be required in other
      * cases.
      *
@@ -157,6 +165,27 @@ class QueryCompiler extends Component
     }
 
     /**
+     * Create valid list of parameters (valid order) based on query type.
+     *
+     * @param int   $type Query type.
+     * @param array $where
+     * @param array $joins
+     * @param array $having
+     * @param array $columns
+     * @return array
+     */
+    public function prepareParameters(
+        $type,
+        array $where = [],
+        $joins = [],
+        array $having = [],
+        array $columns = []
+    )
+    {
+        return array_merge($columns, $joins, $where, $having);
+    }
+
+    /**
      * Compile insert query statement. Table name (without prefix), columns and list of rowsets is
      * required.
      *
@@ -261,31 +290,17 @@ class QueryCompiler extends Component
     }
 
     /**
-     * Compile delete query statement. Table name, joins and where tokens, order by tokens, limit and
-     * order are required. Default query compiler will not compile limit and order by, it has to be
-     * done on driver compiler level.
+     * Compile delete query statement. Table name, joins and where tokens are required. Joins not
+     * supported by default.
      *
      * @param string $table
      * @param array  $joins
      * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
      * @return string
      */
-    public function delete(
-        $table,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
+    public function delete($table, array $joins = [], array $where = [])
     {
-        $statement = 'DELETE FROM ' . $this->quote($table, true) . ' ';
-
-        if (!empty($joins))
-        {
-            $statement .= $this->joins($joins) . ' ';
-        }
+        $statement = 'DELETE FROM ' . $this->quote($table, true);
 
         if (!empty($where))
         {
@@ -297,29 +312,37 @@ class QueryCompiler extends Component
 
     /**
      * Compile update query statement. Table name, set of values (associated with column names), joins
-     * and where tokens, order by tokens and limit are required. Default query compiler will not compile
-     * limit and order by, it has to be done on driver compiler level.
+     * and where tokens are required. Joins not supported by default.
      *
      * @param string $table
-     * @param array  $values
+     * @param array  $columns
      * @param array  $joins
      * @param array  $where
-     * @param array  $orderBy
-     * @param int    $limit
      * @return string
      */
-    public function update(
-        $table,
-        array $values,
-        array $joins = [],
-        array $where = [],
-        array $orderBy = [],
-        $limit = 0
-    )
+    public function update($table, array $columns, array $joins = [], array $where = [])
     {
-        $statement = 'UPDATE ' . $this->quote($table, true) . "\nSET";
+        $statement = 'UPDATE ' . $this->quote($table, true, true) . "\n";
+        $statement .= "SET" . $this->prepareColumns($columns);
 
-        foreach ($values as $column => &$value)
+        if (!empty($where))
+        {
+            $statement .= "\nWHERE " . $this->where($where);
+        }
+
+        return rtrim($statement);
+    }
+
+    /**
+     * Prepare columns to be used in UPDATE statement.
+     *
+     * @param array  $columns
+     * @param string $tableAlias Forced table alias for updated columns.
+     * @return array
+     */
+    protected function prepareColumns(array $columns, $tableAlias = '')
+    {
+        foreach ($columns as $column => &$value)
         {
             if ($value instanceof SelectQuery)
             {
@@ -334,24 +357,17 @@ class QueryCompiler extends Component
                 $value = '?';
             }
 
+            if (strpos($column, '.') === false && !empty($tableAlias))
+            {
+                $column = $tableAlias . '.' . $column;
+            }
+
             $value = ' ' . $this->quote($column) . ' = ' . $value;
 
             unset($value);
         }
 
-        $statement .= join(', ', $values) . ' ';
-
-        if (!empty($joins))
-        {
-            $statement .= $this->joins($joins) . ' ';
-        }
-
-        if (!empty($where))
-        {
-            $statement .= "\nWHERE " . $this->where($where);
-        }
-
-        return rtrim($statement);
+        return join(", ", $columns);
     }
 
     /**

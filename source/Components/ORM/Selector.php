@@ -10,8 +10,11 @@ namespace Spiral\Components\ORM;
 
 use Psr\Log\LogLevel;
 use Spiral\Components\DBAL\Builders\Common\AbstractSelectQuery;
+use Spiral\Components\DBAL\ParameterInterface;
+use Spiral\Components\DBAL\QueryBuilder;
 use Spiral\Components\DBAL\QueryCompiler;
 use Spiral\Components\DBAL\QueryResult;
+use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
 use Spiral\Core\Component;
@@ -306,11 +309,8 @@ class Selector extends AbstractSelectQuery
      */
     public function sqlStatement(QueryCompiler $compiler = null)
     {
-        if (empty($compiler))
-        {
-            //We have to reset aliases if we own this compiler
-            $compiler = $this->compiler->resetAliases();
-        }
+        //We have to reset aliases if we own this compiler
+        $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
 
         //Primary loader may add custom conditions to select query
         $this->loader->configureSelector($this);
@@ -533,8 +533,109 @@ class Selector extends AbstractSelectQuery
         return $data;
     }
 
-    //TODO: UPDATE
-    //TODO: BLA BLA
+    /**
+     * Update all matched records with provided columns set.
+     *
+     * @param array $columns
+     * @return int
+     */
+    public function update(array $columns)
+    {
+        if (!empty($this->havingTokens))
+        {
+            throw new ORMException("Unable to build udpate statement with non empty having tokens.");
+        }
+
+        $statement = $this->updateStatement($columns);
+
+        $normalized = [];
+        foreach ($columns as $value)
+        {
+            if ($value instanceof QueryBuilder)
+            {
+                foreach ($value->getParameters() as $parameter)
+                {
+                    $normalized[] = $parameter;
+                }
+
+                continue;
+            }
+
+            if ($value instanceof SqlFragmentInterface && !$value instanceof ParameterInterface)
+            {
+                continue;
+            }
+
+            $normalized[] = $value;
+        }
+
+        return $this->database->execute($statement, $this->compiler->prepareParameters(
+            QueryCompiler::UPDATE_QUERY,
+            $this->whereParameters,
+            $this->onParameters,
+            [],
+            $normalized
+        ));
+    }
+
+    /**
+     * Get update statement based on specified relations and conditions.
+     *
+     * @param array         $columns
+     * @param QueryCompiler $compiler
+     * @return string
+     *
+     */
+    protected function updateStatement(array $columns, QueryCompiler $compiler = null)
+    {
+        $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
+        $this->loader->configureSelector($this);
+
+        return $compiler->update(
+            $this->loader->getTable() . ' AS ' . $this->loader->getAlias(),
+            $columns,
+            $this->joins,
+            $this->whereTokens
+        );
+    }
+
+    /**
+     * Delete all matched records and return count of affected rows.
+     *
+     * @return int
+     * @throws ORMException
+     */
+    public function delete()
+    {
+        if (!empty($this->havingTokens))
+        {
+            throw new ORMException("Unable to build delete statement with non empty having tokens.");
+        }
+
+        return $this->database->execute($this->deleteStatement(), $this->compiler->prepareParameters(
+            QueryCompiler::DELETE_QUERY,
+            $this->whereParameters,
+            $this->onParameters
+        ));
+    }
+
+    /**
+     * Get delete statement based on specified relations and conditions.
+     *
+     * @param QueryCompiler $compiler
+     * @return string
+     */
+    protected function deleteStatement(QueryCompiler $compiler = null)
+    {
+        $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
+        $this->loader->configureSelector($this);
+
+        return $compiler->delete(
+            $this->loader->getTable() . ' AS ' . $this->loader->getAlias(),
+            $this->joins,
+            $this->whereTokens
+        );
+    }
 
     /**
      * Selector query columns can be specified multiple ways:

@@ -34,30 +34,6 @@ trait HavingTrait
     protected $havingParameters = [];
 
     /**
-     * Get query binder parameters. Method can be overloaded to perform some parameters manipulations.
-     * SelectBuilder will merge it's own parameters with parameters defined in UNION queries.
-     *
-     * @return array
-     */
-    protected function getHavingParameters()
-    {
-        $parameters = [];
-
-        foreach ($this->havingParameters as $parameter)
-        {
-            if ($parameter instanceof QueryBuilder)
-            {
-                $parameters = array_merge($parameters, $parameter->getParameters());
-                continue;
-            }
-
-            $parameters[] = $parameter;
-        }
-
-        return $parameters;
-    }
-
-    /**
      * Helper methods used to processed user input in where methods to internal where token, method
      * support all different combinations, closures and nested queries. Additionally i can be used
      * not only for where but for having and join tokens.
@@ -65,7 +41,7 @@ trait HavingTrait
      * @param string        $joiner           Boolean joiner (AND|OR).
      * @param array         $parameters       Set of parameters collected from where functions.
      * @param array         $tokens           Array to aggregate compiled tokens.
-     * @param \Closure|null $parameterWrapper Callback or closure used to handle all catched
+     * @param \Closure|null $wrapper          Callback or closure used to handle all catched
      *                                        parameters, by default $this->addParameter will be used.
      *
      * @return array
@@ -75,7 +51,7 @@ trait HavingTrait
         $joiner,
         array $parameters,
         &$tokens = [],
-        callable $parameterWrapper = null
+        callable $wrapper = null
     );
 
     /**
@@ -304,7 +280,7 @@ trait HavingTrait
     }
 
     /**
-     * Parameter wrapper used to convert all found parameters to valid sql expressions. Used in join
+     * Parameter wrapper used to convert all found parameters to valid sql expressions. Used in having
      * on functions.
      *
      * @return \Closure
