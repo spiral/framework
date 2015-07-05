@@ -252,10 +252,22 @@ abstract class Loader implements LoaderInterface
      *
      * @param array $options
      * @return static
+     * @throws ORMException
      */
     public function setOptions(array $options = [])
     {
         $this->options = $options + $this->options;
+
+        if (
+            $this->options['method'] == Selector::INLOAD
+            && !empty($this->parent)
+            && $this->parent->getDatabase() != $this->getDatabase()
+        )
+        {
+            throw new ORMException(
+                "Unable to use inload method for tables located in different databases."
+            );
+        }
 
         return $this;
     }
@@ -357,7 +369,7 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
-     * Clarify parent selection.
+     * Clarify parent selection conditions.
      *
      * @param Selector $selector
      */

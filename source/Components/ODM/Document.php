@@ -500,7 +500,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
             $query = array_merge($query, $arguments[0]);
         }
 
-        $collection = static::odmCollection($aggregation, $this->odm)->query($query);
+        $collection = static::odmCollection($this->odm, $aggregation)->query($query);
         if ($aggregation[ODM::AGR_TYPE] == self::ONE)
         {
             return $collection->findOne();
@@ -976,26 +976,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
-     * Get default search scope.
-     *
-     * @param array $scope
-     * @return array
-     */
-    protected static function getScope($scope = [])
-    {
-        static::initialize();
-        if (EventDispatcher::hasDispatcher(static::class))
-        {
-            $scope = self::dispatcher()->fire('scope', [
-                'scope' => $scope,
-                'model' => get_called_class()
-            ])['scope'];
-        }
-
-        return $scope;
-    }
-
-    /**
      * Select multiple documents from associated collection. Attention, due ODM architecture, find
      * method can return any of Document types stored in collection, even if find called from specified
      * class. You have to solve it manually by overwrite this method in your class.
@@ -1005,7 +985,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public static function find(array $query = [])
     {
-        return static::odmCollection()->query(self::getScope($query));
+        return static::odmCollection()->query($query);
     }
 
     /**
@@ -1016,7 +996,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public static function findOne(array $query = [])
     {
-        return static::find(self::getScope($query))->findOne();
+        return static::find($query)->findOne();
     }
 
     /**

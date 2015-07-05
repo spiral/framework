@@ -982,29 +982,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
-     * Get default search scope.
-     *
-     * @param array $scope
-     * @return array
-     */
-    protected static function getScope($scope = [])
-    {
-        //Traits
-        static::initialize();
-
-        if (EventDispatcher::hasDispatcher(static::class))
-        {
-            //Do we need it?
-            $scope = self::dispatcher()->fire('scope', [
-                'scope' => $scope,
-                'model' => get_called_class()
-            ])['scope'];
-        }
-
-        return $scope;
-    }
-
-    /**
      * Get ORM selector used to build complex SQL queries to fetch model and it's relations.
      *
      * @param mixed $query Fields and conditions to filter by.

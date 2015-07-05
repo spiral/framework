@@ -34,7 +34,7 @@ interface LoaderInterface
     public function setOptions(array $options = []);
 
     /**
-     * Configure selector options.
+     * Configure selector conditions.
      *
      * @param Selector $selector
      */
