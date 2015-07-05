@@ -63,7 +63,8 @@ class Selector extends AbstractSelectQuery
     protected $orm = null;
 
     /**
-     * REWRITE
+     * Loader is responsible for configuring selection query, pre-loading inner relations and
+     * mapping data.
      *
      * @var Loader
      */
@@ -115,8 +116,38 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
+     * Pre-load model relations. System will pick most optimal way of data pre-loading based on
+     * relation (INLOAD - related tables will be joined to query, POSTLOAD - related data will
+     * be loaded using separate query).
      *
+     * Use options to specify custom settings for relation loading.
+     * You can request to pre-load one relation or chain of relations, in this case options will
+     * be applied to last relation in chain.
      *
+     * Joined tables will automatically receive alias which is identical to their relation name,
+     * sub relations will be separated by _. You can change such alias using "alias" index of
+     * options array.
+     *
+     * Examples:
+     * //Table "profiles" will be joined to query under "profile" alias
+     * User::find()->with('profile')->where('profile.value', $value);
+     *
+     * //Table "profiles" will be joined to query under "my_alias" alias
+     * User::find()->with('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
+     *
+     * //Table "statistics" will be joined to query under "profile_statistics" alias
+     * User::find()->with('profile.statistics');
+     *
+     * //Table "statistics" will be joined to query under "stats" alias
+     * User::find()->with('profile.statistics', ['alias' => 'stats']);
+     *
+     * Attention, in some cases you can't use aliases in where condition as system may include
+     * relation data using external query, use "inload" or "quickJoin" methods to ensure that related
+     * table is joined into query.
+     *
+     * @see inload()
+     * @see postload()
+     * @see quickJoin()
      * @param string   $relation    Relation name, or chain of relations separated by .
      * @param array    $options     Loader options (will be applied to last chain loader only).
      * @param int|null $chainMethod INLOAD, POSTLOAD, JOIN_ONLY method forced for all loaders in this
@@ -143,6 +174,32 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
+     * Pre-load model relations using table joining.
+     *
+     * Use options to specify custom settings for relation loading.
+     * You can request to pre-load one relation or chain of relations, in this case options will
+     * be applied to last relation in chain.
+     *
+     * Joined tables will automatically receive alias which is identical to their relation name,
+     * sub relations will be separated by _. You can change such alias using "alias" index of
+     * options array.
+     *
+     * Examples:
+     * //Table "profiles" will be joined to query under "profile" alias
+     * User::find()->inload('profile')->where('profile.value', $value);
+     *
+     * //Table "profiles" will be joined to query under "my_alias" alias
+     * User::find()->inload('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
+     *
+     * //Table "statistics" will be joined to query under "profile_statistics" alias
+     * User::find()->inload('profile.statistics');
+     *
+     * //Table "statistics" will be joined to query under "stats" alias
+     * User::find()->inload('profile.statistics', ['alias' => 'stats']);
+     *
+     * @see with()
+     * @see postload()
+     * @see quickJoin()
      * @param string $relation Relation name, or chain of relations separated by .
      * @param array  $options  Loader options (will be applied to last chain loader only).
      * @return static
@@ -153,6 +210,35 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
+     * Include model relations data into query using table joining but do not load resulted data.
+     * This method usually used in combination with WHERE statements.
+     *
+     * Use options to specify custom settings for relation loading.
+     * You can request to pre-load one relation or chain of relations, in this case options will
+     * be applied to last relation in chain.
+     *
+     * Joined tables will automatically receive alias which is identical to their relation name,
+     * sub relations will be separated by _. You can change such alias using "alias" index of
+     * options array.
+     *
+     * Examples:
+     * //Table "profiles" will be joined to query under "profile" alias
+     * User::find()->quickJoin('profile')->where('profile.value', $value);
+     *
+     * //Table "profiles" will be joined to query under "my_alias" alias
+     * User::find()->quickJoin('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
+     *
+     * //Table "statistics" will be joined to query under "profile_statistics" alias
+     * User::find()->quickJoin('profile.statistics');
+     *
+     * //Table "statistics" will be joined to query under "stats" alias
+     * User::find()->quickJoin('profile.statistics', ['alias' => 'stats']);
+     *
+     * Method is not identical to join(), as it will configure all conditions automatically.
+     *
+     * @see with()
+     * @see postload()
+     * @see quickJoin()
      * @param string $relation Relation name, or chain of relations separated by .
      * @param array  $options  Loader options (will be applied to last chain loader only).
      * @return static
@@ -163,6 +249,31 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
+     * Pre-load model relations using separate queries.
+     *
+     * Use options to specify custom settings for relation loading.
+     * You can request to pre-load one relation or chain of relations, in this case options will
+     * be applied to last relation in chain.
+     *
+     * Examples:
+     * User::find()->postload('posts.comments');
+     *
+     * Following construction will create 3 separate query:
+     * 1) Get current model data.
+     * 2) Load posts
+     * 3) Load comments
+     *
+     * Example SQL (simplified):
+     * SELECT * FROM users;
+     * SELECT * FROM posts WHERE user_id IN(user_ids);
+     * SELECT * FROM comments WHERE post_id IN(post_ids);
+     *
+     * Attention, you will not be able to create WHERE statement for relations loaded using POSTLOAD
+     * method.
+     *
+     * @see with()
+     * @see inload()
+     * @see quickJoin()
      * @param string $relation Relation name, or chain of relations separated by .
      * @param array  $options  Loader options (will be applied to last chain loader only).
      * @return static

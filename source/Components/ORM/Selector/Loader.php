@@ -292,7 +292,7 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
-     *
+     * Pre-load data on inner relation or relation chain.
      *
      * @param string   $relation    Relation name, or chain of relations separated by .
      * @param array    $options     Loader options (will be applied to last chain loader only).
