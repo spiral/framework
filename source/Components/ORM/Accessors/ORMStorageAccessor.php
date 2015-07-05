@@ -10,9 +10,9 @@ namespace Spiral\Components\ORM\Accessors;
 
 use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ORM\ORMAccessor;
-use Spiral\Support\Models\Accessors\StorageAccessor as AbstractStorageAccessor;
+use Spiral\Support\Models\Accessors\StorageAccessor;
 
-class StorageAccessor extends AbstractStorageAccessor implements ORMAccessor
+class ORMStorageAccessor extends StorageAccessor implements ORMAccessor
 {
     /**
      * Accessors can be used to mock different model values using "representative" class, like

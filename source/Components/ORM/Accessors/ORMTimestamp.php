@@ -13,7 +13,7 @@ use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ORM\ORMAccessor;
 use Spiral\Support\Models\Accessors\Timestamp as BaseTimestamp;
 
-class Timestamp extends BaseTimestamp implements ORMAccessor
+class ORMTimestamp extends BaseTimestamp implements ORMAccessor
 {
     /**
      * Original value.

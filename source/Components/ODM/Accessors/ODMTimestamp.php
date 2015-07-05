@@ -15,7 +15,7 @@ use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
 use Spiral\Support\Models\Accessors\Timestamp as BaseTimestamp;
 
-class Timestamp extends BaseTimestamp implements ODMAccessor
+class ODMTimestamp extends BaseTimestamp implements ODMAccessor
 {
     /**
      * Original value.

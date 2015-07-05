@@ -14,7 +14,7 @@ use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageObject;
-use Spiral\Support\Models\Accessors\StorageAccessor as AbstractStorageAccessor;
+use Spiral\Support\Models\Accessors\StorageAccessor;
 
 /**
  * @method string getName()
@@ -28,7 +28,7 @@ use Spiral\Support\Models\Accessors\StorageAccessor as AbstractStorageAccessor;
  * @method StorageObject copy($destination)
  * @method static replace($destination)
  */
-class StorageAccessor extends AbstractStorageAccessor implements ODMAccessor
+class ODMStorageAccessor extends StorageAccessor implements ODMAccessor
 {
     /**
      * New Compositable instance. No type specified to keep it compatible with AccessorInterface.

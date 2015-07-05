@@ -131,7 +131,7 @@ class AtomicNumber implements ORMAccessor
      * @param float|int $delta
      * @return static
      */
-    public function inc($delta)
+    public function inc($delta = 1)
     {
         $this->value += $delta;
         $this->delta += $delta;
@@ -145,7 +145,7 @@ class AtomicNumber implements ORMAccessor
      * @param float|int $delta
      * @return static
      */
-    public function add($delta)
+    public function add($delta = 1)
     {
         $this->value += $delta;
         $this->delta += $delta;
@@ -159,7 +159,7 @@ class AtomicNumber implements ORMAccessor
      * @param float|int $delta
      * @return static
      */
-    public function dec($delta)
+    public function dec($delta = 1)
     {
         $this->value -= $delta;
         $this->delta -= $delta;

@@ -178,6 +178,16 @@ abstract class StorageAccessor implements AccessorInterface, StreamContainerInte
     }
 
     /**
+     * Check if storage object has associated data.
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->address);
+    }
+
+    /**
      * Associated storage object with accessor (or update existed) using specified container, object
      * can be created as empty, using local filename, via Stream or using UploadedFile.
      *
