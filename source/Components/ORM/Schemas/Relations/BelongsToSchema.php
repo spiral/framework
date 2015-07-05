@@ -40,50 +40,65 @@ class BelongsToSchema extends RelationSchema
     ];
 
     /**
-     * Create all required relation columns, indexes and constraints.
-     */
-    public function buildSchema()
-    {
-        $innerSchema = $this->recordSchema->getTableSchema();
-
-        $innerKey = $innerSchema->column($this->getInnerKey());
-        $innerKey->type($this->getOuterKeyType());
-        $innerKey->nullable($this->isNullable());
-        $innerKey->index();
-
-        //We have to define constraint only if it was requested (by default)
-        if ($this->definition[ActiveRecord::CONSTRAINT] && !$this->isOuterDatabase())
-        {
-            $foreignKey = $innerKey->foreign($this->getOuterTable(), $this->getOuterKey());
-            $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-            $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-        }
-    }
-
-    /**
-     * Create reverted relations in outer model or models.
+     * Inverse relation.
      *
-     * @param string $name Relation name.
-     * @param int    $type Back relation type, can be required some cases.
      * @throws ORMException
      */
-    public function revertRelation($name, $type = null)
+    public function inverseRelation()
     {
-        if (empty($type))
+        if (
+            !is_array($this->definition[ActiveRecord::INVERSE])
+            || !isset($this->definition[ActiveRecord::INVERSE][1])
+        )
         {
             throw new ORMException(
-                "Unable to revert BELONG_TO relation ({$this->recordSchema}), " .
+                "Unable to revert BELONG_TO relation ({$this->model}.{$this->name}), " .
                 "back relation type is missing."
             );
         }
 
-        $this->getOuterRecordSchema()->addRelation($name, [
-            $type                           => $this->recordSchema->getClass(),
-            ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
-            ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
-            ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
-            ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
-            ActiveRecord::NULLABLE          => $this->definition[ActiveRecord::NULLABLE]
-        ]);
+        $inversed = $this->definition[ActiveRecord::INVERSE];
+
+        $this->getOuterModel()->addRelation(
+            $inversed[1],
+            [
+                $inversed[0]                    => $this->model->getClass(),
+                ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
+                ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
+                ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
+                ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
+                ActiveRecord::NULLABLE          => $this->definition[ActiveRecord::NULLABLE]
+            ]
+        );
+    }
+
+    /**
+     * Create all required relation columns, indexes and constraints.
+     */
+    public function buildSchema()
+    {
+        $innerTable = $this->model->getTableSchema();
+
+        //Inner key type should match outer key type
+        $innerKey = $innerTable->column($this->getInnerKey());
+        $innerKey->type($this->getOuterKeyType());
+        $innerKey->nullable($this->isNullable());
+
+        //We can safely add index, it will not be created if outer model has passive schema
+        $innerKey->index();
+
+        if (!$this->isConstrained())
+        {
+            return;
+        }
+
+        //We are allowed to add foreign key, it will not be created if outer table has passive schema
+        $foreignKey = $innerKey->foreign(
+            $this->getOuterModel()->getTable(),
+            $this->getOuterKey()
+        );
+
+        $foreignKey->onDelete($this->getConstraintAction());
+        $foreignKey->onUpdate($this->getConstraintAction());
     }
 }

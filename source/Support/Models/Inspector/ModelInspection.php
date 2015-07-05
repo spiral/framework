@@ -9,14 +9,14 @@
 namespace Spiral\Support\Models\Inspector;
 
 use Spiral\Core\Component;
-use Spiral\Support\Models\Schemas\ModelSchema;
+use Spiral\Support\Models\Schemas\DataEntitySchema;
 
 class ModelInspection extends Component
 {
     /**
      * Model schema.
      *
-     * @var ModelSchema
+     * @var DataEntitySchema
      */
     protected $schema = null;
 
@@ -30,9 +30,9 @@ class ModelInspection extends Component
     /**
      * New model inspection instance.
      *
-     * @param ModelSchema $schema
+     * @param DataEntitySchema $schema
      */
-    public function __construct(ModelSchema $schema)
+    public function __construct(DataEntitySchema $schema)
     {
         $this->schema = $schema;
     }
@@ -40,7 +40,7 @@ class ModelInspection extends Component
     /**
      * Get associated model schema.
      *
-     * @return ModelSchema
+     * @return DataEntitySchema
      */
     public function getSchema()
     {

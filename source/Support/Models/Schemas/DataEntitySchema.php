@@ -9,13 +9,14 @@
 namespace Spiral\Support\Models\Schemas;
 
 use Spiral\Core\Component;
+use Spiral\Support\Models\DataEntity;
 
-abstract class ModelSchema extends Component
+abstract class DataEntitySchema extends Component
 {
     /**
      * Base model class.
      */
-    const BASE_CLASS = 'Spiral\Support\Models\DataEntity';
+    const BASE_CLASS = DataEntity::class;
 
     /**
      * Entity model reflection.

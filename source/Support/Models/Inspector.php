@@ -11,7 +11,7 @@ namespace Spiral\Support\Models;
 use Spiral\Core\Component;
 use Spiral\Support\Models\Inspector\InspectorException;
 use Spiral\Support\Models\Inspector\ModelInspection;
-use Spiral\Support\Models\Schemas\ModelSchema;
+use Spiral\Support\Models\Schemas\DataEntitySchema;
 
 class Inspector extends Component
 {
@@ -41,7 +41,7 @@ class Inspector extends Component
      * New DataEntities inspector. Inspector will check secured and hidden fields, validations and
      * filters to ensure that client will always see what he has to see.
      *
-     * @param ModelSchema[] $schemas
+     * @param DataEntitySchema[] $schemas
      */
     public function __construct(array $schemas)
     {

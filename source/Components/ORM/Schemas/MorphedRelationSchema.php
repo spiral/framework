@@ -21,25 +21,15 @@ abstract class MorphedRelationSchema extends RelationSchema
      */
     public function isOuterDatabase()
     {
-        foreach ($this->getOuterRecords() as $record)
+        foreach ($this->getOuterModels() as $record)
         {
-            if ($this->recordSchema->getDatabase() != $record->getDatabase())
+            if ($this->model->getDatabase() != $record->getDatabase())
             {
                 return true;
             }
         }
 
         return false;
-    }
-
-    /**
-     * Get morph key name.
-     *
-     * @return string
-     */
-    public function getMorphKey()
-    {
-        return $this->definition[ActiveRecord::MORPH_KEY];
     }
 
     /**
@@ -51,7 +41,7 @@ abstract class MorphedRelationSchema extends RelationSchema
     {
         $options = parent::definitionOptions();
 
-        foreach ($this->schemaBuilder->getRecordSchemas() as $record)
+        foreach ($this->builder->getModelSchemas() as $record)
         {
             if ($record->getReflection()->isSubclassOf($this->target))
             {
@@ -65,26 +55,6 @@ abstract class MorphedRelationSchema extends RelationSchema
     }
 
     /**
-     * Get all relation target classes.
-     *
-     * @return RecordSchema[]
-     */
-    public function getOuterRecords()
-    {
-        $entities = [];
-        foreach ($this->schemaBuilder->getRecordSchemas() as $record)
-        {
-            if ($record->getReflection()->isSubclassOf($this->target))
-            {
-                //One model will be enough
-                $entities[] = $record;
-            }
-        }
-
-        return $entities;
-    }
-
-    /**
      * Abstract type needed to represent outer key (excluding primary keys).
      *
      * @return null|string
@@ -92,7 +62,7 @@ abstract class MorphedRelationSchema extends RelationSchema
     public function getOuterKeyType()
     {
         $outerKeyType = null;
-        foreach ($this->getOuterRecords() as $record)
+        foreach ($this->getOuterModels() as $record)
         {
             if (!$record->getTableSchema()->hasColumn($this->getOuterKey()))
             {
@@ -124,6 +94,36 @@ abstract class MorphedRelationSchema extends RelationSchema
     }
 
     /**
+     * Get all relation target classes.
+     *
+     * @return ModelSchema[]
+     */
+    public function getOuterModels()
+    {
+        $entities = [];
+        foreach ($this->builder->getModelSchemas() as $record)
+        {
+            if ($record->getReflection()->isSubclassOf($this->target))
+            {
+                //One model will be enough
+                $entities[] = $record;
+            }
+        }
+
+        return $entities;
+    }
+
+    /**
+     * Get morph key name.
+     *
+     * @return string
+     */
+    public function getMorphKey()
+    {
+        return $this->definition[ActiveRecord::MORPH_KEY];
+    }
+
+    /**
      * Normalize relation options.
      *
      * @return array
@@ -134,7 +134,7 @@ abstract class MorphedRelationSchema extends RelationSchema
 
         //Packing targets
         $definition[static::RELATION_TYPE] = [];
-        foreach ($this->getOuterRecords() as $record)
+        foreach ($this->getOuterModels() as $record)
         {
             $definition[static::RELATION_TYPE][$record->getRoleName()] = $record->getClass();
         }

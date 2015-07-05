@@ -9,9 +9,20 @@
 namespace Spiral\Components\ORM\Schemas;
 
 use Spiral\Components\ORM\ORMException;
+use Spiral\Components\ORM\SchemaBuilder;
 
 interface RelationSchemaInterface
 {
+    /**
+     * New RelationSchema instance.
+     *
+     * @param SchemaBuilder $builder
+     * @param ModelSchema   $model
+     * @param string        $name
+     * @param array         $definition
+     */
+    public function __construct(SchemaBuilder $builder, ModelSchema $model, $name, array $definition);
+
     /**
      * Relation name.
      *
@@ -27,13 +38,6 @@ interface RelationSchemaInterface
     public function getType();
 
     /**
-     * Relation definition (declared in model schema).
-     *
-     * @return array
-     */
-    public function getDefinition();
-
-    /**
      * Check if relationship has equivalent based on declared definition, default behaviour will
      * select polymorphic equivalent if target declared as interface.
      *
@@ -47,23 +51,26 @@ interface RelationSchemaInterface
      * @return array
      * @throws ORMException
      */
-    public function getEquivalentDefinition();
+    public function createEquivalent();
 
     /**
      * Relation definition contains request to be reverted.
      *
      * @return bool
      */
-    public function hasInvertedRelation();
+    public function isInversable();
 
     /**
-     * Create reverted relations in outer model or models.
+     * Inverse relation.
      *
-     * @param string $name Relation name.
-     * @param int    $type Back relation type, can be required some cases.
      * @throws ORMException
      */
-    public function revertRelation($name, $type = null);
+    public function inverseRelation();
+
+    /**
+     * Create all required relation columns, indexes and constraints.
+     */
+    public function buildSchema();
 
     /**
      * Pack relation data into normalized structured to be used in cached ORM schema.

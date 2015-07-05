@@ -18,9 +18,9 @@ use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Component;
 use Spiral\Support\Models\DataEntity;
-use Spiral\Support\Models\Schemas\ModelSchema;
+use Spiral\Support\Models\Schemas\DataEntitySchema;
 
-class RecordSchema extends ModelSchema
+class ModelSchema extends DataEntitySchema
 {
     /**
      * Logging.
@@ -45,7 +45,7 @@ class RecordSchema extends ModelSchema
      * @invisible
      * @var SchemaBuilder
      */
-    protected $schemaBuilder = null;
+    protected $builder = null;
 
     /**
      * Table schema used to fetch information about declared or fetched columns. Empty if model is
@@ -79,12 +79,12 @@ class RecordSchema extends ModelSchema
     public function __construct($class, SchemaBuilder $schemaBuilder)
     {
         $this->class = $class;
-        $this->schemaBuilder = $schemaBuilder;
+        $this->builder = $schemaBuilder;
 
         $this->reflection = new \ReflectionClass($class);
 
         //Linked table
-        $this->tableSchema = $this->schemaBuilder->declareTable($this->getDatabase(), $this->getTable());
+        $this->tableSchema = $this->builder->table($this->getDatabase(), $this->getTable());
 
         //Casting table columns, indexes, foreign keys and etc
         $this->castTableSchema();
@@ -111,6 +111,39 @@ class RecordSchema extends ModelSchema
     public function isActiveSchema()
     {
         return $this->reflection->getConstant('ACTIVE_SCHEMA');
+    }
+
+    /**
+     * Get database model data should be stored in.
+     *
+     * @return mixed
+     */
+    public function getDatabase()
+    {
+        return $this->property('database');
+    }
+
+
+    /**
+     * Get table name associated with model.
+     *
+     * @return mixed
+     */
+    public function getTable()
+    {
+        $table = $this->property('table');
+
+        if (empty($table))
+        {
+            //We can guess table name
+            $table = $this->reflection->getShortName();
+            $table = Inflector::tableize($table);
+
+            //Table names are plural by default
+            return Inflector::pluralize($table);
+        }
+
+        return $table;
     }
 
     /**
@@ -153,7 +186,7 @@ class RecordSchema extends ModelSchema
             if (is_array($value))
             {
                 $value = array_merge(
-                    $this->schemaBuilder->recordSchema($parentClass)->property($property, true),
+                    $this->builder->modelSchema($parentClass)->property($property, true),
                     $value
                 );
             }
@@ -165,38 +198,6 @@ class RecordSchema extends ModelSchema
             $property,
             $value
         );
-    }
-
-    /**
-     * Get table name associated with model.
-     *
-     * @return mixed
-     */
-    public function getTable()
-    {
-        $table = $this->property('table');
-
-        if (empty($table))
-        {
-            //We can guess table name
-            $table = $this->reflection->getShortName();
-            $table = Inflector::tableize($table);
-
-            //Table names are plural by default
-            return Inflector::pluralize($table);
-        }
-
-        return $table;
-    }
-
-    /**
-     * Get database model data should be stored in.
-     *
-     * @return mixed
-     */
-    public function getDatabase()
-    {
-        return $this->property('database');
     }
 
     /**
@@ -279,11 +280,11 @@ class RecordSchema extends ModelSchema
             $type = $column->abstractType();
 
             $resolved = [];
-            if ($filter = $this->schemaBuilder->getMutators($type))
+            if ($filter = $this->builder->getMutators($type))
             {
                 $resolved += $filter;
             }
-            elseif ($filter = $this->schemaBuilder->getMutators('php:' . $column->phpType()))
+            elseif ($filter = $this->builder->getMutators('php:' . $column->phpType()))
             {
                 $resolved += $filter;
             }
@@ -318,6 +319,7 @@ class RecordSchema extends ModelSchema
             return null;
         }
 
+        //Spiral ORM can work only with singular primary keys for now
         return array_slice($this->tableSchema->getPrimaryKeys(), 0, 1)[0];
     }
 
@@ -595,15 +597,17 @@ class RecordSchema extends ModelSchema
                 [
                     'name'  => $name,
                     'class' => $this->getClass()
-                ]);
+                ]
+            );
 
             return;
         }
 
-        $relationship = $this->schemaBuilder->relationSchema($this, $name, $definition);
+        $relation = $this->builder->relationSchema($this, $name, $definition);
 
         //Initiating required columns, foreign keys and indexes
-        $relationship->buildSchema($this);
-        $this->relations[$name] = $relationship;
+        $relation->buildSchema();
+
+        $this->relations[$name] = $relation;
     }
 }

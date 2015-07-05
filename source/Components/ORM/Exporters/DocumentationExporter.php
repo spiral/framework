@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM\Exporters;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\ORM\SchemaBuilder;
-use Spiral\Components\ORM\Schemas\RecordSchema;
+use Spiral\Components\ORM\Schemas\ModelSchema;
 use Spiral\Core\Component;
 use Spiral\Support\Generators\Reactor\ClassElement;
 use Spiral\Support\Generators\Reactor\FileElement;
@@ -54,17 +54,17 @@ class DocumentationExporter extends Component
      * Get virtual documentation for ActiveRecord model. Will render all model fields, methods,
      * relations and etc.
      *
-     * @param RecordSchema $record
+     * @param ModelSchema $model
      * @return NamespaceElement
      */
-    protected function renderRecord(RecordSchema $record)
+    protected function renderRecord(ModelSchema $model)
     {
-        $model = new ClassElement($name = $record->getShortName());
+        $export = new ClassElement($name = $model->getShortName());
 
         //Accessors
-        foreach ($record->getAccessors() as $name => $accessor)
+        foreach ($model->getAccessors() as $name => $accessor)
         {
-            if ($model->hasProperty($name))
+            if ($export->hasProperty($name))
             {
                 continue;
             }
@@ -74,20 +74,20 @@ class DocumentationExporter extends Component
                 $accessor = $accessor[0];
             }
 
-            $model->property($name, '@var \\' . $accessor);
+            $export->property($name, '@var \\' . $accessor);
         }
 
-        foreach ($record->getFields() as $field => $type)
+        foreach ($model->getFields() as $field => $type)
         {
-            if ($model->hasProperty($field))
+            if ($export->hasProperty($field))
             {
                 continue;
             }
 
-            $model->property($field, '@var ' . $type);
+            $export->property($field, '@var ' . $type);
         }
 
-        return (new NamespaceElement($record->getNamespace()))->addClass($model);
+        return (new NamespaceElement($model->getNamespace()))->addClass($export);
     }
 
     /**
@@ -100,7 +100,7 @@ class DocumentationExporter extends Component
     {
         $phpFile = FileElement::make()->setComment($this->header);
 
-        foreach ($this->builder->getRecordSchemas() as $record)
+        foreach ($this->builder->getModelSchemas() as $record)
         {
             if ($record->isAbstract())
             {

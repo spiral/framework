@@ -107,7 +107,7 @@ class DocumentationExporter extends Component
      */
     protected function renderDocument(DocumentSchema $document)
     {
-        $model = new ClassElement($name = $document->getShortName());
+        $export = new ClassElement($name = $document->getShortName());
 
         //This name should be used in static methods, as ODM allows to store all class children in
         //one collection
@@ -116,7 +116,7 @@ class DocumentationExporter extends Component
         //Static collection methods
         if ($document->getCollection())
         {
-            $model->method(
+            $export->method(
                 'find',
                 [
                     '@param array $query',
@@ -124,7 +124,7 @@ class DocumentationExporter extends Component
                 ], ['query']
             )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
 
-            $model->method(
+            $export->method(
                 'findOne',
                 [
                     '@param array $query',
@@ -133,7 +133,7 @@ class DocumentationExporter extends Component
                 ['query']
             )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
 
-            $model->method(
+            $export->method(
                 'findByID',
                 [
                     '@param mixed $mongoID',
@@ -144,7 +144,7 @@ class DocumentationExporter extends Component
         }
 
         //Document creation method
-        $model->method(
+        $export->method(
             'create',
             [
                 '@param array $fields',
@@ -163,14 +163,14 @@ class DocumentationExporter extends Component
 
             if ($composition['type'] == ODM::CMP_ONE)
             {
-                $model->property($name, '@var \\' . $composited->getClass());
+                $export->property($name, '@var \\' . $composited->getClass());
             }
             else
             {
                 $compositorClass = $this->compositorClass($composited);
 
                 $this->compositors[$composited->getClass()] = $composited;
-                $model->property(
+                $export->property(
                     $name,
                     '@var \\' . $composited->getClass() . '[]|' . $compositorClass
                 );
@@ -180,7 +180,7 @@ class DocumentationExporter extends Component
         //Accessors
         foreach ($document->getAccessors() as $name => $accessor)
         {
-            if ($model->hasProperty($name))
+            if ($export->hasProperty($name))
             {
                 continue;
             }
@@ -190,12 +190,12 @@ class DocumentationExporter extends Component
                 $accessor = $accessor[0];
             }
 
-            $model->property($name, '@var \\' . $accessor);
+            $export->property($name, '@var \\' . $accessor);
         }
 
         foreach ($document->getFields() as $field => $type)
         {
-            if ($model->hasProperty($field))
+            if ($export->hasProperty($field))
             {
                 continue;
             }
@@ -213,7 +213,7 @@ class DocumentationExporter extends Component
                 $type = '\\' . $type;
             }
 
-            $model->property($field, '@var ' . $type . ($isArray ? '[]' : ''));
+            $export->property($field, '@var ' . $type . ($isArray ? '[]' : ''));
         }
 
         //Aggregations
@@ -226,7 +226,7 @@ class DocumentationExporter extends Component
 
             if ($aggregation['type'] == Document::ONE)
             {
-                $model->method(
+                $export->method(
                     $name,
                     [
                         '@param array $query',
@@ -238,7 +238,7 @@ class DocumentationExporter extends Component
             else
             {
                 $collectionClass = $this->collectionClass($aggregated);
-                $model->method(
+                $export->method(
                     $name,
                     [
                         '@param array $query',
@@ -249,7 +249,7 @@ class DocumentationExporter extends Component
             }
         }
 
-        return (new NamespaceElement($document->getNamespace()))->addClass($model);
+        return (new NamespaceElement($document->getNamespace()))->addClass($export);
     }
 
 

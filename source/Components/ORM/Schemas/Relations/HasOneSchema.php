@@ -34,53 +34,58 @@ class HasOneSchema extends RelationSchema
     ];
 
     /**
+     * Inverse relation.
+     *
+     * @throws ORMException
+     */
+    public function inverseRelation()
+    {
+        $this->getOuterModel()->addRelation(
+            $this->definition[ActiveRecord::INVERSE],
+            [
+                ActiveRecord::BELONGS_TO        => $this->model->getClass(),
+                ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
+                ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
+                ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
+                ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
+                ActiveRecord::NULLABLE          => $this->definition[ActiveRecord::NULLABLE]
+            ]
+        );
+    }
+
+    /**
      * Create all required relation columns, indexes and constraints.
      */
     public function buildSchema()
     {
-        $outerSchema = $this->getOuterRecordSchema()->getTableSchema();
+        $outerTable = $this->getOuterModel()->getTableSchema();
 
-        $outerKey = $outerSchema->column($this->getOuterKey());
+        //Outer key type should be matched with inner key type
+        $outerKey = $outerTable->column($this->getOuterKey());
         $outerKey->type($this->getInnerKeyType());
         $outerKey->nullable($this->isNullable());
 
-        //We need index only when relation is not polymorphic
-        if (empty($this->definition[ActiveRecord::MORPH_KEY]))
+        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
-            $outerKey->index();
-        }
-
-        if (
-            !$this->definition[ActiveRecord::CONSTRAINT]
-            || !empty($this->definition[ActiveRecord::MORPH_KEY])
-            || $this->isOuterDatabase()
-        )
-        {
-            //We don't need to build anything if relation is morphed or no constrain is required
+            //We are not going to configure polymorphic relations here
             return;
         }
 
-        $foreignKey = $outerKey->foreign($this->recordSchema->getTable(), $this->getInnerKey());
-        $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-        $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-    }
+        //We can safely add index, it will not be created if outer model has passive schema
+        $outerKey->index();
 
-    /**
-     * Create reverted relations in outer model or models.
-     *
-     * @param string $name Relation name.
-     * @param int    $type Back relation type, can be required some cases.
-     * @throws ORMException
-     */
-    public function revertRelation($name, $type = null)
-    {
-        $this->getOuterRecordSchema()->addRelation($name, [
-            ActiveRecord::BELONGS_TO        => $this->recordSchema->getClass(),
-            ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
-            ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
-            ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
-            ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
-            ActiveRecord::NULLABLE          => $this->definition[ActiveRecord::NULLABLE]
-        ]);
+        if (!$this->isConstrained())
+        {
+            return;
+        }
+
+        //We are allowed to add foreign key, it will not be created if outer table has passive schema
+        $foreignKey = $outerKey->foreign(
+            $this->model->getTable(),
+            $this->getInnerKey()
+        );
+
+        $foreignKey->onDelete($this->getConstraintAction());
+        $foreignKey->onUpdate($this->getConstraintAction());
     }
 }

@@ -45,15 +45,38 @@ class ManyToManySchema extends RelationSchema
     ];
 
     /**
+     * Inverse relation.
+     *
+     * @throws ORMException
+     */
+    public function inverseRelation()
+    {
+        $this->getOuterModel()->addRelation(
+            $this->definition[ActiveRecord::INVERSE],
+            [
+                ActiveRecord::MANY_TO_MANY      => $this->model->getClass(),
+                ActiveRecord::PIVOT_TABLE       => $this->definition[ActiveRecord::PIVOT_TABLE],
+                ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
+                ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
+                ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
+                ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
+                ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
+                ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
+                ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT],
+                ActiveRecord::PIVOT_COLUMNS     => $this->definition[ActiveRecord::PIVOT_COLUMNS]
+            ]
+        );
+    }
+
+    /**
      * Mount default values to relation definition.
      */
     protected function clarifyDefinition()
     {
         parent::clarifyDefinition();
-
         if (empty($this->definition[ActiveRecord::PIVOT_TABLE]))
         {
-            $this->definition[ActiveRecord::PIVOT_TABLE] = $this->getPivotTableName();
+            $this->definition[ActiveRecord::PIVOT_TABLE] = $this->getPivotTable();
         }
 
         if ($this->isOuterDatabase())
@@ -67,7 +90,7 @@ class ManyToManySchema extends RelationSchema
      *
      * @return string
      */
-    public function getPivotTableName()
+    public function getPivotTable()
     {
         if (isset($this->definition[ActiveRecord::PIVOT_TABLE]))
         {
@@ -75,11 +98,7 @@ class ManyToManySchema extends RelationSchema
         }
 
         //Generating pivot table name
-        $names = [
-            $this->recordSchema->getRoleName(),
-            $this->getOuterRecordSchema()->getRoleName()
-        ];
-
+        $names = [$this->model->getRoleName(), $this->getOuterModel()->getRoleName()];
         asort($names);
 
         return join('_', $names) . '_map';
@@ -92,10 +111,7 @@ class ManyToManySchema extends RelationSchema
      */
     public function getPivotSchema()
     {
-        return $this->schemaBuilder->declareTable(
-            $this->recordSchema->getDatabase(),
-            $this->getPivotTableName()
-        );
+        return $this->builder->table($this->model->getDatabase(), $this->getPivotTable());
     }
 
     /**
@@ -105,6 +121,7 @@ class ManyToManySchema extends RelationSchema
     {
         if (!$this->definition[ActiveRecord::CREATE_PIVOT])
         {
+            //We are working purely with pivot table in this relation
             return;
         }
 
@@ -116,7 +133,7 @@ class ManyToManySchema extends RelationSchema
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $morphKey = $pivotTable->column($this->definition[ActiveRecord::MORPH_KEY]);
-            $morphKey->string(static::TYPE_COLUMN_SIZE);
+            $morphKey->string(static::MORPH_COLUMN_SIZE);
         }
 
         $innerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
@@ -128,56 +145,33 @@ class ManyToManySchema extends RelationSchema
             $this->castColumn($pivotTable->column($column), $definition);
         }
 
-        if (
-            $this->definition[ActiveRecord::CONSTRAINT]
-            && empty($this->definition[ActiveRecord::MORPH_KEY])
-        )
+        if (!$this->isConstrained() || !empty($this->definition[ActiveRecord::MORPH_KEY]))
         {
-            //Complex index
-            $pivotTable->unique(
-                $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
-                $this->definition[ActiveRecord::THOUGHT_OUTER_KEY]
-            );
-
-            $foreignKey = $innerKey->foreign(
-                $this->recordSchema->getTable(),
-                $this->recordSchema->getPrimaryKey()
-            );
-
-            $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-            $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-
-            $foreignKey = $outerKey->foreign(
-                $this->getOuterRecordSchema()->getTable(),
-                $this->getOuterRecordSchema()->getPrimaryKey()
-            );
-
-            $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-            $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
+            //Either not need to create constraint or it was created in polymorphic relation
+            return;
         }
-    }
 
-    /**
-     * Create reverted relations in outer model or models.
-     *
-     * @param string $name Relation name.
-     * @param int    $type Back relation type, can be required some cases.
-     * @throws ORMException
-     */
-    public function revertRelation($name, $type = null)
-    {
-        $this->getOuterRecordSchema()->addRelation($name, [
-            ActiveRecord::MANY_TO_MANY      => $this->recordSchema->getClass(),
-            ActiveRecord::PIVOT_TABLE       => $this->definition[ActiveRecord::PIVOT_TABLE],
-            ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
-            ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
-            ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
-            ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
-            ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
-            ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
-            ActiveRecord::CREATE_PIVOT  => $this->definition[ActiveRecord::CREATE_PIVOT],
-            ActiveRecord::PIVOT_COLUMNS => $this->definition[ActiveRecord::PIVOT_COLUMNS]
-        ]);
+        //Complex index
+        $pivotTable->unique(
+            $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
+            $this->definition[ActiveRecord::THOUGHT_OUTER_KEY]
+        );
+
+        $foreignKey = $innerKey->foreign(
+            $this->model->getTable(),
+            $this->model->getPrimaryKey()
+        );
+
+        $foreignKey->onDelete($this->getConstraintAction());
+        $foreignKey->onUpdate($this->getConstraintAction());
+
+        $foreignKey = $outerKey->foreign(
+            $this->getOuterModel()->getTable(),
+            $this->getOuterModel()->getPrimaryKey()
+        );
+
+        $foreignKey->onDelete($this->getConstraintAction());
+        $foreignKey->onUpdate($this->getConstraintAction());
     }
 
     /**

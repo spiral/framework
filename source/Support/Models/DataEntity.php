@@ -11,7 +11,7 @@ namespace Spiral\Support\Models;
 use Spiral\Components\I18n\Translator;
 use Spiral\Components\I18n\LocalizableTrait;
 use Spiral\Core\Component;
-use Spiral\Support\Models\Schemas\ModelSchema;
+use Spiral\Support\Models\Schemas\DataEntitySchema;
 use Spiral\Support\Validation\Validator;
 
 abstract class DataEntity extends Component implements \JsonSerializable, \IteratorAggregate, \ArrayAccess
@@ -683,12 +683,12 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      * sends SCHEMA_ANALYSIS option to trait initializers. Method can be used to create custom filters,
      * schema values and etc.
      *
-     * @param ModelSchema $schema
+     * @param DataEntitySchema $schema
      * @param string      $property Model property name.
      * @param mixed       $value    Model property value, will be provided in an inherited form.
      * @return mixed
      */
-    public static function describeProperty(ModelSchema $schema, $property, $value)
+    public static function describeProperty(DataEntitySchema $schema, $property, $value)
     {
         static::initialize(self::SCHEMA_ANALYSIS);
 

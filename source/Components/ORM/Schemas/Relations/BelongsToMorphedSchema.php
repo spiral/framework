@@ -33,25 +33,59 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
     ];
 
     /**
+     * Inverse relation.
+     *
+     * @throws ORMException
+     */
+    public function inverseRelation()
+    {
+        if (
+            !is_array($this->definition[ActiveRecord::INVERSE])
+            || !isset($this->definition[ActiveRecord::INVERSE][1])
+        )
+        {
+            throw new ORMException(
+                "Unable to revert BELONG_TO_MORPHED relation ({$this->model}.{$this->name}), " .
+                "back relation type is missing."
+            );
+        }
+
+        $inversed = $this->definition[ActiveRecord::INVERSE];
+        foreach ($this->getOuterModels() as $record)
+        {
+            $record->addRelation(
+                $inversed[1],
+                [
+                    $inversed[0]            => $this->model->getClass(),
+                    ActiveRecord::OUTER_KEY => $this->definition[ActiveRecord::INNER_KEY],
+                    ActiveRecord::INNER_KEY => $this->definition[ActiveRecord::OUTER_KEY],
+                    ActiveRecord::MORPH_KEY => $this->definition[ActiveRecord::MORPH_KEY],
+                    ActiveRecord::NULLABLE  => $this->definition[ActiveRecord::NULLABLE]
+                ]
+            );
+        }
+    }
+
+    /**
      * Create all required relation columns, indexes and constraints.
      *
      * @throws ORMException
      */
     public function buildSchema()
     {
-        if (!$this->getOuterRecords())
+        if (!$this->getOuterModels())
         {
             //No targets found, no need to generate anything
             return;
         }
 
-        $innerSchema = $this->recordSchema->getTableSchema();
+        $innerSchema = $this->model->getTableSchema();
 
         /**
          * Morph key contains parent type, nullable by default.
          */
         $morphKey = $innerSchema->column($this->getMorphKey());
-        $morphKey->string(static::TYPE_COLUMN_SIZE);
+        $morphKey->string(static::MORPH_COLUMN_SIZE);
         $morphKey->nullable($this->isNullable());
 
         /**
@@ -63,34 +97,5 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
 
         //Required index
         $innerSchema->index($this->getMorphKey(), $this->getInnerKey());
-    }
-
-    /**
-     * Create reverted relations in outer model or models.
-     *
-     * @param string $name Relation name.
-     * @param int    $type Back relation type, can be required some cases.
-     * @throws ORMException
-     */
-    public function revertRelation($name, $type = null)
-    {
-        if (empty($type))
-        {
-            throw new ORMException(
-                "Unable to revert BELONG_TO relation ({$this->recordSchema}), " .
-                "back relation type is missing."
-            );
-        }
-
-        foreach ($this->getOuterRecords() as $record)
-        {
-            $record->addRelation($name, [
-                $type                   => $this->recordSchema->getClass(),
-                ActiveRecord::OUTER_KEY => $this->definition[ActiveRecord::INNER_KEY],
-                ActiveRecord::INNER_KEY => $this->definition[ActiveRecord::OUTER_KEY],
-                ActiveRecord::MORPH_KEY => $this->definition[ActiveRecord::MORPH_KEY],
-                ActiveRecord::NULLABLE  => $this->definition[ActiveRecord::NULLABLE]
-            ]);
-        }
     }
 }

@@ -40,7 +40,7 @@ class InspectCommand extends BaseInspectCommand
         }
 
         return Inspector::make([
-            'schemas' => $schemaBuilder->getRecordSchemas()
+            'schemas' => $schemaBuilder->getModelSchemas()
         ]);
     }
 }

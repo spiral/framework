@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
-use Spiral\Components\ORM\Schemas\RecordSchema;
+use Spiral\Components\ORM\Schemas\ModelSchema;
 use Spiral\Components\ORM\Schemas\RelationSchemaInterface;
 use Spiral\Components\ORM\Selector\LoaderInterface;
 use Spiral\Core\Component;
@@ -174,7 +174,7 @@ class ORM extends Component
      *
      * @param mixed         $type
      * @param SchemaBuilder $schemaBuilder
-     * @param RecordSchema  $recordSchema
+     * @param ModelSchema   $model
      * @param string        $name
      * @param array         $definition
      * @return RelationSchemaInterface
@@ -182,7 +182,7 @@ class ORM extends Component
     public function relationSchema(
         $type,
         SchemaBuilder $schemaBuilder,
-        RecordSchema $recordSchema,
+        ModelSchema $model,
         $name,
         array $definition
     )
@@ -192,10 +192,9 @@ class ORM extends Component
             throw new ORMException("Undefined relation schema '{$type}'.");
         }
 
-        return $this->container->get(
-            $this->config['relations'][$type]['schema'],
-            compact('schemaBuilder', 'recordSchema', 'name', 'definition')
-        );
+        $class = $this->config['relations'][$type]['schema'];
+
+        return new $class($schemaBuilder, $model, $name, $definition);
     }
 
     /**

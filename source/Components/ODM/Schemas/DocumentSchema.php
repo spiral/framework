@@ -14,9 +14,9 @@ use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
 use Spiral\Components\ODM\SchemaBuilder;
 use Spiral\Support\Models\DataEntity;
-use Spiral\Support\Models\Schemas\ModelSchema;
+use Spiral\Support\Models\Schemas\DataEntitySchema;
 
-class DocumentSchema extends ModelSchema
+class DocumentSchema extends DataEntitySchema
 {
     /**
      * Base model class.

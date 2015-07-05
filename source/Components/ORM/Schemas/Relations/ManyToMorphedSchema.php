@@ -42,12 +42,38 @@ class ManyToMorphedSchema extends MorphedRelationSchema
     ];
 
     /**
+     * Inverse relation.
+     *
+     * @throws ORMException
+     */
+    public function inverseRelation()
+    {
+        foreach ($this->getOuterModels() as $record)
+        {
+            $record->addRelation(
+                $this->definition[ActiveRecord::INVERSE],
+                [
+                    ActiveRecord::MANY_TO_MANY      => $this->model->getClass(),
+                    ActiveRecord::PIVOT_TABLE       => $this->definition[ActiveRecord::PIVOT_TABLE],
+                    ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
+                    ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
+                    ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
+                    ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
+                    ActiveRecord::MORPH_KEY         => $this->definition[ActiveRecord::MORPH_KEY],
+                    ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT],
+                    ActiveRecord::PIVOT_COLUMNS     => $this->definition[ActiveRecord::PIVOT_COLUMNS],
+                    ActiveRecord::WHERE_PIVOT       => $this->definition[ActiveRecord::WHERE_PIVOT]
+                ]
+            );
+        }
+    }
+
+    /**
      * Mount default values to relation definition.
      */
     protected function clarifyDefinition()
     {
         parent::clarifyDefinition();
-
         if ($this->isOuterDatabase())
         {
             throw new ORMException("Many-to-Many relation can not point to outer database data.");
@@ -59,7 +85,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      *
      * @return string
      */
-    public function getPivotTableName()
+    public function getPivotTable()
     {
         return $this->definition[ActiveRecord::PIVOT_TABLE];
     }
@@ -71,10 +97,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function getPivotSchema()
     {
-        return $this->schemaBuilder->declareTable(
-            $this->recordSchema->getDatabase(),
-            $this->definition[ActiveRecord::PIVOT_TABLE]
-        );
+        return $this->builder->table($this->model->getDatabase(), $this->getPivotTable());
     }
 
     /**
@@ -82,7 +105,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (!$this->getOuterRecords() || !$this->definition[ActiveRecord::CREATE_PIVOT])
+        if (!$this->getOuterModels() || !$this->definition[ActiveRecord::CREATE_PIVOT])
         {
             //No targets found, no need to generate anything
             return;
@@ -95,7 +118,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
         $localKey->index();
 
         $morphKey = $pivotTable->column($this->getMorphKey());
-        $morphKey->string(static::TYPE_COLUMN_SIZE);
+        $morphKey->string(static::MORPH_COLUMN_SIZE);
 
         $outerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
         $outerKey->type($this->getOuterKeyType());
@@ -113,41 +136,15 @@ class ManyToMorphedSchema extends MorphedRelationSchema
             $this->definition[ActiveRecord::THOUGHT_OUTER_KEY]
         );
 
-        if ($this->definition[ActiveRecord::CONSTRAINT])
+        if ($this->isConstrained())
         {
             $foreignKey = $localKey->foreign(
-                $this->recordSchema->getTable(),
-                $this->recordSchema->getPrimaryKey()
+                $this->model->getTable(),
+                $this->model->getPrimaryKey()
             );
 
-            $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-            $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
-        }
-    }
-
-    /**
-     * Create reverted relations in outer model or models.
-     *
-     * @param string $name Relation name.
-     * @param int    $type Back relation type, can be required some cases.
-     * @throws ORMException
-     */
-    public function revertRelation($name, $type = null)
-    {
-        foreach ($this->getOuterRecords() as $record)
-        {
-            $record->addRelation($name, [
-                ActiveRecord::MANY_TO_MANY      => $this->recordSchema->getClass(),
-                ActiveRecord::PIVOT_TABLE       => $this->definition[ActiveRecord::PIVOT_TABLE],
-                ActiveRecord::OUTER_KEY         => $this->definition[ActiveRecord::INNER_KEY],
-                ActiveRecord::INNER_KEY         => $this->definition[ActiveRecord::OUTER_KEY],
-                ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
-                ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
-                ActiveRecord::MORPH_KEY         => $this->definition[ActiveRecord::MORPH_KEY],
-                ActiveRecord::CREATE_PIVOT  => $this->definition[ActiveRecord::CREATE_PIVOT],
-                ActiveRecord::PIVOT_COLUMNS => $this->definition[ActiveRecord::PIVOT_COLUMNS],
-                ActiveRecord::WHERE_PIVOT   => $this->definition[ActiveRecord::WHERE_PIVOT]
-            ]);
+            $foreignKey->onDelete($this->getConstraintAction());
+            $foreignKey->onUpdate($this->getConstraintAction());
         }
     }
 

@@ -24,8 +24,27 @@ class Selector extends AbstractSelectQuery
      */
     use Component\LoggerTrait;
 
-    const INLOAD   = 1;
-    const POSTLOAD = 2;
+    /**
+     *
+     */
+    const INLOAD    = 1;
+    const POSTLOAD  = 2;
+    const JOIN_ONLY = 3;
+
+    /**
+     * Relation between count records / count rows and type of log message to be raised. Log message
+     * will be raised only if amount of loaded rows higher than count records in normalized data tree.
+     *
+     * @var array
+     */
+    protected $logLevels = [
+        1000 => LogLevel::CRITICAL,
+        500  => LogLevel::ALERT,
+        100  => LogLevel::NOTICE,
+        10   => LogLevel::WARNING,
+        1    => LogLevel::DEBUG,
+        0    => LogLevel::DEBUG
+    ];
 
     /**
      * Class name used to define schema. Following class name will be used in ModelIterator to
@@ -164,7 +183,7 @@ class Selector extends AbstractSelectQuery
      */
     public function getIterator()
     {
-        return new ModelIterator($this->class, $this->fetchData());
+        return new ModelIterator($this->class, $this->fetchData(), $this->orm);
     }
 
     /**
@@ -194,22 +213,19 @@ class Selector extends AbstractSelectQuery
 
         if (!empty($this->lifetime))
         {
-            $cacheIdentifier = md5(serialize([$statement, $this->getParameters()]));
+            $cacheKey = $this->cacheKey ?: md5(serialize([$statement, $this->getParameters()]));
             $cacheStore = $this->cacheStore ?: Cache::getInstance()->store();
 
-            if ($cacheStore->has($cacheIdentifier))
+            if ($cacheStore->has($cacheKey))
             {
                 //We are going to store parsed result, not queries
-                return $cacheStore->get($cacheIdentifier);
+                return $cacheStore->get($cacheKey);
             }
         }
 
         //We are bypassing run() method here to prevent query caching, we will prefer to cache
         //parsed data rather that database response
-        $result = $this->database->query(
-            $statement,
-            $this->getParameters()
-        );
+        $result = $this->database->query($statement, $this->getParameters());
 
         //In many cases (too many inloads, too complex queries) parsing may take significant amount
         //of time, so we better profile it
@@ -230,9 +246,9 @@ class Selector extends AbstractSelectQuery
         $data = $this->loader->getResult();
         $this->loader->clean();
 
-        if (!empty($this->lifetime) && !empty($cacheStore) && !empty($cacheIdentifier))
+        if (!empty($this->lifetime) && !empty($cacheStore) && !empty($cacheKey))
         {
-            $cacheStore->set($cacheIdentifier, $data, $this->lifetime);
+            $cacheStore->set($cacheKey, $data, $this->lifetime);
         }
 
         return $data;
@@ -294,15 +310,6 @@ class Selector extends AbstractSelectQuery
      */
     protected function checkCounts($dataCount, $rowsCount)
     {
-        $logLevel = LogLevel::DEBUG;
-        $logLevels = [
-            1000 => LogLevel::CRITICAL,
-            500  => LogLevel::ALERT,
-            100  => LogLevel::NOTICE,
-            10   => LogLevel::WARNING,
-            1    => LogLevel::DEBUG
-        ];
-
         $dataRatio = $rowsCount / $dataCount;
         if ($dataRatio == 1)
         {
@@ -310,7 +317,8 @@ class Selector extends AbstractSelectQuery
             return;
         }
 
-        foreach ($logLevels as $ratio => $logLevel)
+        $logLevel = $this->logLevels[0];
+        foreach ($this->logLevels as $ratio => $logLevel)
         {
             if ($dataRatio >= $ratio)
             {
