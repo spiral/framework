@@ -144,6 +144,19 @@ abstract class RelationSchema implements RelationSchemaInterface
     }
 
     /**
+     * Check if relation points to model data from another database. We should not be creating
+     * foreign keys in this case.
+     *
+     * @return bool
+     */
+    public function isOuterDatabase()
+    {
+        $outerDatabase = $this->schemaBuilder->recordSchema($this->getTarget())->getDatabase();
+
+        return $this->recordSchema->getDatabase() != $outerDatabase;
+    }
+
+    /**
      * Option string used to populate definition template if no user value provided.
      *
      * @return array

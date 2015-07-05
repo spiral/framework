@@ -52,7 +52,7 @@ class BelongsToSchema extends RelationSchema
         $innerKey->index();
 
         //We have to define constraint only if it was requested (by default)
-        if ($this->definition[ActiveRecord::CONSTRAINT])
+        if ($this->definition[ActiveRecord::CONSTRAINT] && !$this->isOuterDatabase())
         {
             $foreignKey = $innerKey->foreign($this->getOuterTable(), $this->getOuterKey());
             $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);

@@ -39,7 +39,7 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (!$this->getOuterRecordSchemas())
+        if (!$this->getOuterRecords())
         {
             //No targets found, no need to generate anything
             return;
@@ -82,7 +82,7 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
             );
         }
 
-        foreach ($this->getOuterRecordSchemas() as $record)
+        foreach ($this->getOuterRecords() as $record)
         {
             $record->addRelation($name, [
                 $type                   => $this->recordSchema->getClass(),

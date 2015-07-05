@@ -55,6 +55,11 @@ class ManyToManySchema extends RelationSchema
         {
             $this->definition[ActiveRecord::PIVOT_TABLE] = $this->getPivotTableName();
         }
+
+        if ($this->isOuterDatabase())
+        {
+            throw new ORMException("Many-to-Many relation can not point to outer database data.");
+        }
     }
 
     /**

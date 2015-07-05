@@ -53,6 +53,7 @@ class HasOneSchema extends RelationSchema
         if (
             !$this->definition[ActiveRecord::CONSTRAINT]
             || !empty($this->definition[ActiveRecord::MORPH_KEY])
+            || $this->isOuterDatabase()
         )
         {
             //We don't need to build anything if relation is morphed or no constrain is required

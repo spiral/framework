@@ -42,6 +42,19 @@ class ManyToMorphedSchema extends MorphedRelationSchema
     ];
 
     /**
+     * Mount default values to relation definition.
+     */
+    protected function clarifyDefinition()
+    {
+        parent::clarifyDefinition();
+
+        if ($this->isOuterDatabase())
+        {
+            throw new ORMException("Many-to-Many relation can not point to outer database data.");
+        }
+    }
+
+    /**
      * Pivot table name.
      *
      * @return string
@@ -69,7 +82,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function buildSchema()
     {
-        if (!$this->getOuterRecordSchemas() || !$this->definition[ActiveRecord::CREATE_PIVOT])
+        if (!$this->getOuterRecords() || !$this->definition[ActiveRecord::CREATE_PIVOT])
         {
             //No targets found, no need to generate anything
             return;
@@ -121,7 +134,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      */
     public function revertRelation($name, $type = null)
     {
-        foreach ($this->getOuterRecordSchemas() as $record)
+        foreach ($this->getOuterRecords() as $record)
         {
             $record->addRelation($name, [
                 ActiveRecord::MANY_TO_MANY      => $this->recordSchema->getClass(),

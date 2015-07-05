@@ -14,6 +14,25 @@ use Spiral\Components\ORM\ORMException;
 abstract class MorphedRelationSchema extends RelationSchema
 {
     /**
+     * Check if relation points to model data from another database. We should not be creating
+     * foreign keys in this case.
+     *
+     * @return bool
+     */
+    public function isOuterDatabase()
+    {
+        foreach ($this->getOuterRecords() as $record)
+        {
+            if ($this->recordSchema->getDatabase() != $record->getDatabase())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get morph key name.
      *
      * @return string
@@ -50,7 +69,7 @@ abstract class MorphedRelationSchema extends RelationSchema
      *
      * @return RecordSchema[]
      */
-    public function getOuterRecordSchemas()
+    public function getOuterRecords()
     {
         $entities = [];
         foreach ($this->schemaBuilder->getRecordSchemas() as $record)
@@ -73,7 +92,7 @@ abstract class MorphedRelationSchema extends RelationSchema
     public function getOuterKeyType()
     {
         $outerKeyType = null;
-        foreach ($this->getOuterRecordSchemas() as $record)
+        foreach ($this->getOuterRecords() as $record)
         {
             if (!$record->getTableSchema()->hasColumn($this->getOuterKey()))
             {
@@ -115,7 +134,7 @@ abstract class MorphedRelationSchema extends RelationSchema
 
         //Packing targets
         $definition[static::RELATION_TYPE] = [];
-        foreach ($this->getOuterRecordSchemas() as $record)
+        foreach ($this->getOuterRecords() as $record)
         {
             $definition[static::RELATION_TYPE][$record->getRoleName()] = $record->getClass();
         }
