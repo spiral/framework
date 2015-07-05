@@ -393,6 +393,8 @@ class ModelSchema extends DataEntitySchema
             );
         }
 
+        //We forcing all columns to be NOT NULL by default, DEFAULT value should fix potential problems
+        $column->nullable(false);
         if (!empty($matches['nullable']))
         {
             //No need to force NOT NULL as this is default column state

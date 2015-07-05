@@ -433,6 +433,7 @@ abstract class RelationSchema implements RelationSchemaInterface
             );
         }
 
+        $column->nullable(false);
         if (!empty($matches['nullable']))
         {
             //No need to force NOT NULL as this is default column state

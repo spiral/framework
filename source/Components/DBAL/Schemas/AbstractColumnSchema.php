@@ -721,35 +721,43 @@ abstract class AbstractColumnSchema extends Component
      */
     public function compare(AbstractColumnSchema $dbColumn)
     {
-        if ($this != $dbColumn)
+        if ($this == $dbColumn)
         {
-            $columnVars = get_object_vars($this);
-            $dbColumnVars = get_object_vars($dbColumn);
+            return true;
+        }
+        $columnVars = get_object_vars($this);
+        $dbColumnVars = get_object_vars($dbColumn);
 
-            $difference = [];
+        $difference = [];
 
-            foreach ($columnVars as $name => $value)
+        foreach ($columnVars as $name => $value)
+        {
+            //Default values has to compared via type-casted value
+            if ($name == 'defaultValue')
             {
-                //Default values has to compared via type-casted value
-                if ($name == 'defaultValue' && $this->getDefaultValue() != $dbColumn->getDefaultValue())
+                if ($this->getDefaultValue() != $dbColumn->getDefaultValue())
                 {
-                    $difference[] = $name;
-                    continue;
+                    //We have to compare casted default values
+                    $difference[] = $name . ' ('
+                        . $dbColumn->getDefaultValue() . ' => ' . $this->getDefaultValue()
+                        . ')';
                 }
 
-                if ($value != $dbColumnVars[$name])
-                {
-                    $difference[] = $name;
-                }
+                continue;
             }
 
-            self::logger()->debug("Column '{name}' has changed attributes: {difference}.", [
-                'name'       => $this->name,
-                'difference' => join(', ', $difference)
-            ]);
+            if ($value != $dbColumnVars[$name])
+            {
+                $difference[] = $name;
+            }
         }
 
-        return $this == $dbColumn;
+        self::logger()->debug("Column '{name}' has changed attributes: {difference}.", [
+            'name'       => $this->name,
+            'difference' => join(', ', $difference)
+        ]);
+
+        return empty($difference);
     }
 
     /**
