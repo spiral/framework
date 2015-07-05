@@ -454,7 +454,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
         $result = [];
         foreach ($this->fields as $name => &$field)
         {
-            $result[$name] = $this->getField($name, true);
+            $result[$name] = $this->getField($name, $filter);
         }
 
         return $result;
@@ -684,8 +684,8 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      * schema values and etc.
      *
      * @param DataEntitySchema $schema
-     * @param string      $property Model property name.
-     * @param mixed       $value    Model property value, will be provided in an inherited form.
+     * @param string           $property Model property name.
+     * @param mixed            $value    Model property value, will be provided in an inherited form.
      * @return mixed
      */
     public static function describeProperty(DataEntitySchema $schema, $property, $value)
