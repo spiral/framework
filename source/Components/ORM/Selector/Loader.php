@@ -140,19 +140,16 @@ abstract class Loader implements LoaderInterface
     protected $result = [];
 
     /**
-     * New instance of ORM loader.
+     * New instance of ORM Loader. Loader can always load additional components using
+     * ORM->getContainer().
      *
      * @param ORM    $orm
-     * @param string $container
-     * @param array  $definition
-     * @param Loader $parent
+     * @param string $container  Location in parent loaded where data should be attached.
+     * @param array  $definition Definition compiled by relation relation schema and stored in ORM
+     *                           cache.
+     * @param Loader $parent     Parent loader if presented.
      */
-    public function __construct(
-        ORM $orm,
-        $container,
-        array $definition = [],
-        Loader $parent = null
-    )
+    public function __construct(ORM $orm, $container, array $definition = [], Loader $parent = null)
     {
         $this->orm = $orm;
 

@@ -20,16 +20,21 @@ class RootLoader extends Loader
     const LOAD_METHOD = Selector::INLOAD;
 
     /**
-     * RootLoader used to represent ORM model table directly.
+     * New instance of ORM Loader. Loader can always load additional components using
+     * ORM->getContainer().
      *
-     * @param ORM    $class
+     * For root loader model schema should proved as loader definition.
+     *
      * @param ORM    $orm
-     * @param Loader $parent
+     * @param string $container  Location in parent loaded where data should be attached.
+     * @param array  $definition Definition compiled by relation relation schema and stored in ORM
+     *                           cache.
+     * @param Loader $parent     Parent loader if presented.
      */
-    public function __construct($class, ORM $orm, Loader $parent = null)
+    public function __construct(ORM $orm, $container, array $definition = [], Loader $parent = null)
     {
         $this->orm = $orm;
-        $this->schema = $orm->getSchema($class);
+        $this->schema = $definition;
 
         //No need for aliases
         $this->options['method'] = Selector::INLOAD;

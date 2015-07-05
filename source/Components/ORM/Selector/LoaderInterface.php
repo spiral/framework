@@ -8,10 +8,23 @@
  */
 namespace Spiral\Components\ORM\Selector;
 
+use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\Selector;
 
 interface LoaderInterface
 {
+    /**
+     * New instance of ORM Loader. Loader can always load additional components using
+     * ORM->getContainer().
+     *
+     * @param ORM    $orm
+     * @param string $container  Location in parent loaded where data should be attached.
+     * @param array  $definition Definition compiled by relation relation schema and stored in ORM
+     *                           cache.
+     * @param Loader $parent     Parent loader if presented.
+     */
+    public function __construct(ORM $orm, $container, array $definition = [], Loader $parent = null);
+
     /**
      * Update loader options.
      *

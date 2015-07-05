@@ -46,19 +46,16 @@ class ManyToManyLoader extends Loader
     protected $pivotColumnsOffset = 0;
 
     /**
-     * New instance of ORM loader.
+     * New instance of ORM Loader. Loader can always load additional components using
+     * ORM->getContainer().
      *
      * @param ORM    $orm
-     * @param string $container
-     * @param array  $definition
-     * @param Loader $parent
+     * @param string $container  Location in parent loaded where data should be attached.
+     * @param array  $definition Definition compiled by relation relation schema and stored in ORM
+     *                           cache.
+     * @param Loader $parent     Parent loader if presented.
      */
-    public function __construct(
-        ORM $orm,
-        $container,
-        array $definition = [],
-        Loader $parent
-    )
+    public function __construct(ORM $orm, $container, array $definition = [], Loader $parent = null)
     {
         parent::__construct($orm, $container, $definition, $parent);
         $this->pivotColumns = $this->definition[ActiveRecord::PIVOT_COLUMNS];

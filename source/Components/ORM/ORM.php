@@ -165,6 +165,10 @@ class ORM extends Component
         ], $this->container);
     }
 
+    public function relation()
+    {
+    }
+
     /**
      * Instance of relation schema with specified type.
      *
@@ -211,13 +215,9 @@ class ORM extends Component
             throw new ORMException("Undefined relation loader '{$type}'.");
         }
 
-        return $this->container->get($this->config['relations'][$type]['loader'], [
-                'orm'        => $this,
-                'container'  => $container,
-                'definition' => $definition,
-                'parent'     => $parent
-            ]
-        );
+        $class = $this->config['relations'][$type]['loader'];
+
+        return new $class($this, $container, $definition, $parent);
     }
 
     /**
