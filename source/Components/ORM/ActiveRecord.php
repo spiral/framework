@@ -688,7 +688,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
     public function __call($method, array $arguments)
     {
-        return $this->getRelation($method)->getSelector($arguments);
+        return $this->getRelation($method);
     }
 
     /**
@@ -928,6 +928,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
                 $this->fields[$primaryKey] = $lastID;
             }
 
+            $this->loaded = true;
             $this->event('saved');
         }
         elseif ($this->solidState || $this->hasUpdates())
@@ -948,7 +949,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
-     * Delete record from database.
+     * Delete record from database. Attention, if your model does not have primary key result of
+     * this method can be pretty dramatic as it will remove every record from associated table with
+     * same set of field.
      *
      * Events: deleting, deleted will be raised.
      */
@@ -962,6 +965,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         }
 
         $this->fields = $this->schema[ORM::E_COLUMNS];
+        $this->loaded = false;
+
         $this->event('deleted');
     }
 
