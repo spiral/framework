@@ -104,6 +104,17 @@ class ORM extends Component
     }
 
     /**
+     * Get associated Container, can be used inside custom relations and loaders to load additional
+     * components.
+     *
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * Get schema for specified document class or collection.
      *
      * @param string $item   Document class or collection name (including database).
