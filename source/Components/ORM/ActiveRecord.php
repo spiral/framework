@@ -418,6 +418,14 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     protected $loaded = false;
 
     /**
+     * Populated when model loaded using many-to-many connection.
+     *
+     * @see getPivot();
+     * @var array
+     */
+    protected $pivotData = [];
+
+    /**
      * TODO: DOCS
      *
      * @var array
@@ -455,13 +463,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     protected $updates = [];
 
     /**
-     * Constructed set of relations.
+     * Constructed and pre-cached set of relations.
      *
      * @var Relation[]
      */
     protected $relations = [];
 
-    public function __construct($data = [], $loaded = false, ORM $orm = null)
+    public function __construct(array $data = [], $loaded = false, ORM $orm = null)
     {
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();
         $this->loaded = $loaded;
@@ -475,17 +483,23 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         //Prepared document schema
         $this->schema = self::$schemaCache[$class];
 
-        //Merging with default values
-        $this->fields = (is_array($data) ? $data : []) + $this->schema[ORM::E_COLUMNS];
+        if (isset($data[ORM::PIVOT_DATA]))
+        {
+            $this->pivotData = $data[ORM::PIVOT_DATA];
+            unset($data[ORM::PIVOT_DATA]);
+        }
 
         foreach ($this->schema[ORM::E_RELATIONS] as $relation => $definition)
         {
-            if (isset($this->fields[$relation]))
+            if (isset($data[$relation]))
             {
-                $this->relations[$relation] = $this->fields[$relation];
-                unset($this->fields[$relation]);
+                $this->relations[$relation] = $data[$relation];
+                unset($data[$relation]);
             }
         }
+
+        //Merging with default values
+        $this->fields = $data + $this->schema[ORM::E_COLUMNS];
 
         if (!$this->isLoaded())
         {
@@ -545,6 +559,16 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     public function isLoaded()
     {
         return $this->loaded;
+    }
+
+    /**
+     * Get relation pivot data, only populated when model loaded under many-to-many relation.
+     *
+     * @return array
+     */
+    public function getPivot()
+    {
+        return $this->pivotData;
     }
 
     /**
