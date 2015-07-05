@@ -44,6 +44,12 @@ class HasOneLoader extends Loader
             return null;
         }
 
+        if (empty($this->parent))
+        {
+            //No need for where conditions
+            return $selector;
+        }
+
         //Aggregated keys (example: all parent ids)
         $aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey());
 

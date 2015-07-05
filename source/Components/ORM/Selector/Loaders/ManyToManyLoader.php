@@ -117,15 +117,6 @@ class ManyToManyLoader extends Loader
             return null;
         }
 
-        //Aggregated keys (example: all parent ids)
-        $aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey());
-
-        if (empty($aggregatedKeys))
-        {
-            //Nothing to postload, no parents
-            return null;
-        }
-
         $pivotTable = $this->definition[ActiveRecord::PIVOT_TABLE];
 
         $outerKey = $this->getAlias() . '.' . $this->definition[ActiveRecord::OUTER_KEY];
@@ -136,11 +127,26 @@ class ManyToManyLoader extends Loader
             $pivotOuterKey => $outerKey
         ]);
 
+        if (empty($this->parent))
+        {
+            //No need for clarification
+            return $selector;
+        }
+
         if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
         {
             $selector->onWhere(
                 $this->castWhere($this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias())
             );
+        }
+
+        //Aggregated keys (example: all parent ids)
+        $aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey());
+
+        if (empty($aggregatedKeys))
+        {
+            //Nothing to postload, no parents
+            return null;
         }
 
         //Adding condition
