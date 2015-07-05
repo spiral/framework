@@ -18,12 +18,15 @@ class ModelIterator extends Component implements \Iterator
     protected $class = '';
     protected $data = [];
 
+
+    protected $orm = null;
     protected $position = 0;
 
-    public function __construct($class, array $data)
+    public function __construct($class, array $data, ORM $orm)
     {
         $this->class = $class;
         $this->data = $data;
+        $this->orm = $orm;
     }
 
     public function count()
@@ -49,7 +52,7 @@ class ModelIterator extends Component implements \Iterator
 
         $class = $this->class;
 
-        return $this->data[$this->position] = new $class($data);
+        return $this->data[$this->position] = new $class($data, true, $this->orm);
     }
 
     /**

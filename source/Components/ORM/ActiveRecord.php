@@ -65,7 +65,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     /**
      * Additional constants used to control relation schema creation.
      */
-    const BACK_REF          = 1001;
     const INVERSE           = 1001;
     const CONSTRAINT        = 1002;
     const CONSTRAINT_ACTION = 1003;
@@ -163,8 +162,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     protected $relations = [];
 
-    //todo: add parent container?
-    public function __construct($data = [], ORM $orm = null, $loaded = false)
+    public function __construct($data = [], $loaded = false, ORM $orm = null)
     {
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();
         $this->loaded = $loaded;

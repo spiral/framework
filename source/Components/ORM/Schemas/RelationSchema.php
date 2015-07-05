@@ -433,7 +433,7 @@ abstract class RelationSchema implements RelationSchemaInterface
      */
     public function hasInvertedRelation()
     {
-        return isset($this->definition[ActiveRecord::BACK_REF]);
+        return isset($this->definition[ActiveRecord::INVERSE]);
     }
 
     /**
@@ -461,7 +461,7 @@ abstract class RelationSchema implements RelationSchemaInterface
             $definition[ActiveRecord::CONSTRAINT],
             $definition[ActiveRecord::CONSTRAINT_ACTION],
             $definition[ActiveRecord::CREATE_PIVOT],
-            $definition[ActiveRecord::BACK_REF],
+            $definition[ActiveRecord::INVERSE],
             $definition[ActiveRecord::CONSTRAINT_ACTION]
         );
 

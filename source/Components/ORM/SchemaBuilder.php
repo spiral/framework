@@ -115,7 +115,7 @@ class SchemaBuilder extends Component
          */
         foreach ($invertRelations as $relation)
         {
-            $inverted = $relation->getDefinition()[ActiveRecord::BACK_REF];
+            $inverted = $relation->getDefinition()[ActiveRecord::INVERSE];
 
             if (is_array($inverted))
             {

@@ -708,7 +708,8 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
-     * Internal method to mount valid table alias to all where conditions.
+     * Internal method to mount valid table alias to all where conditions. Will replace all {table}
+     * occurrences with real table alias.
      *
      * @param array  $where
      * @param string $tableAlias
@@ -722,7 +723,7 @@ abstract class Loader implements LoaderInterface
         {
             if (is_string($column) && !is_int($column))
             {
-                $column = str_replace('{?}', $tableAlias, $column);
+                $column = str_replace('{table}', $tableAlias, $column);
             }
 
             if (is_array($value))
