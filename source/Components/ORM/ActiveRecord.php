@@ -1032,6 +1032,22 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
+     * Alias for find method. Get ORM selector used to build complex SQL queries to fetch model and
+     * it's relations. Use second argument to specify relations to be loaded.
+     *
+     * Example:
+     * User::select(['status'=>'active'], ['profile']);
+     *
+     * @param array $where Selection WHERE statement.
+     * @param array $load  Array or relations to be loaded.
+     * @return Selector|static[]
+     */
+    public static function select(array $where = [], array $load = [])
+    {
+        return static::find($where, $load);
+    }
+
+    /**
      * Fetch one record from database or return null. Use second argument to specify relations to be
      * loaded.
      *

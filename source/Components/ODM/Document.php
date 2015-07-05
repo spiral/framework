@@ -989,6 +989,20 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
+     * Alias for find method. Select multiple documents from associated collection. Attention, due
+     * ODM architecture, find method can return any of Document types stored in collection, even if
+     * find called from specified class. You have to solve it manually by overwrite this method in
+     * your class.
+     *
+     * @param mixed $query Fields and conditions to filter by.
+     * @return Collection|static[]
+     */
+    public static function select(array $query = [])
+    {
+        return static::find($query);
+    }
+
+    /**
      * Select one document from collection.
      *
      * @param array $query  Fields and conditions to filter by.
