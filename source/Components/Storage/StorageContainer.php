@@ -162,7 +162,7 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function exists($name)
     {
-        $this->log("Checking existence of '{$this->buildAddress($name)}' at '{$this->server}'.");
+        $this->log("Check existence of '{$this->buildAddress($name)}' at '{$this->server}'.");
 
         benchmark("{$this->server}::exists", $this->buildAddress($name));
         $result = (bool)$this->getServer()->exists($this, $name);
@@ -179,7 +179,7 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function getSize($name)
     {
-        $this->log("Getting size of '{$this->buildAddress($name)}' at '{$this->server}'.");
+        $this->log("Get size of '{$this->buildAddress($name)}' at '{$this->server}'.");
 
         benchmark("{$this->server}::size", $this->buildAddress($name));
         $size = $this->getServer()->getSize($this, $name);
@@ -206,7 +206,7 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function put($name, $origin)
     {
-        $this->log("Uploading to '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        $this->log("Update to '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
         if ($origin instanceof UploadedFileInterface || $origin instanceof StreamContainerInterface)
         {
@@ -244,7 +244,7 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function allocateFilename($name)
     {
-        $this->log("Getting local filename of '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        $this->log("Get local filename of '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
         benchmark("{$this->server}::filename", $this->buildAddress($name));
         if (!$filename = $this->getServer()->allocateFilename($this, $name))
@@ -269,7 +269,7 @@ class StorageContainer extends Component implements InjectableInterface
      */
     public function getStream($name)
     {
-        $this->log("Getting stream for '{$this->buildAddress($name)}' at '{$this->server}' server.");
+        $this->log("Get stream for '{$this->buildAddress($name)}' at '{$this->server}' server.");
 
         benchmark("{$this->server}::stream", $this->buildAddress($name));
         if (!$stream = $this->getServer()->getStream($this, $name))
@@ -300,7 +300,7 @@ class StorageContainer extends Component implements InjectableInterface
         }
 
         $this->log(
-            "Renaming '{$this->buildAddress($oldname)}' to '{$this->buildAddress($newname)}' "
+            "Rename '{$this->buildAddress($oldname)}' to '{$this->buildAddress($newname)}' "
             . "at '{$this->server}' server."
         );
 
@@ -354,7 +354,7 @@ class StorageContainer extends Component implements InjectableInterface
         if ($this->server == $destination->server)
         {
             $this->log(
-                "Internal copying of '{$this->buildAddress($name)}' "
+                "Internal copy of '{$this->buildAddress($name)}' "
                 . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
             );
 
@@ -371,7 +371,7 @@ class StorageContainer extends Component implements InjectableInterface
         else
         {
             $this->log(
-                "External copying of '{$this->server}'.'{$this->buildAddress($name)}' "
+                "External copy of '{$this->server}'.'{$this->buildAddress($name)}' "
                 . "to '{$destination->server}'.'{$destination->buildAddress($name)}'."
             );
 
@@ -412,7 +412,7 @@ class StorageContainer extends Component implements InjectableInterface
         if ($this->server == $destination->server)
         {
             $this->log(
-                "Internal moving '{$this->buildAddress($name)}' "
+                "Internal move '{$this->buildAddress($name)}' "
                 . "to '{$destination->buildAddress($name)}' at '{$this->server}' server."
             );
 
@@ -429,7 +429,7 @@ class StorageContainer extends Component implements InjectableInterface
         else
         {
             $this->log(
-                "External moving '{$this->server}'.'{$this->buildAddress($name)}'"
+                "External move '{$this->server}'.'{$this->buildAddress($name)}'"
                 . " to '{$destination->server}'.'{$destination->buildAddress($name)}'."
             );
 
