@@ -15,5 +15,4 @@ Guide: https://github.com/spiral-php/guide
 
 Currently in development:
 - ORM Relations Mapping
-- ORM Abstract and Parent classes handling
 - ORM Virtual Documentation generation
