@@ -109,6 +109,12 @@ abstract class AbstractReferenceSchema extends Component
             $name = $this->table->getName() . '_foreign_' . $this->column . '_' . uniqid();
         }
 
+        if (strlen($name) > 64)
+        {
+            //Many dbs has limitations on identifier length
+            $name = md5($name);
+        }
+
         return $quoted ? $this->table->getDriver()->identifier($name) : $name;
     }
 

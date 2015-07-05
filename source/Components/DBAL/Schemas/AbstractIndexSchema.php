@@ -90,6 +90,12 @@ abstract class AbstractIndexSchema extends Component
             $name = $this->table->getName() . '_index_' . join('_', $this->columns) . '_' . uniqid();
         }
 
+        if (strlen($name) > 64)
+        {
+            //Many dbs has limitations on identifier length
+            $name = md5($name);
+        }
+
         return $quoted ? $this->table->getDriver()->identifier($name) : $name;
     }
 

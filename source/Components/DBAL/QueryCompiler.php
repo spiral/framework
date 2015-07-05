@@ -182,7 +182,7 @@ class QueryCompiler extends Component
         }
 
         return "INSERT INTO {$this->quote($table, true)} ({$this->columns($columns)})\n"
-        . "VALUES " . join(', ', $rowsets);
+        . "VALUES\n" . join(",\n", $rowsets);
     }
 
     /**

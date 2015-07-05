@@ -849,6 +849,18 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
+     * Get associated orm Selector. Selectors used to build complex related queries and fetch
+     * models from database.
+     *
+     * @param ORM $orm ORM component, will be received from container if not provided.
+     * @return Selector
+     */
+    public static function ormSelector(ORM $orm = null)
+    {
+        return new Selector(static::class, !empty($orm) ? $orm : ORM::getInstance());
+    }
+
+    /**
      * Save record fields to associated table. Model has to be valid to be saved, in
      * other scenario method will return false, model errors can be found in getErrors() method.
      *
