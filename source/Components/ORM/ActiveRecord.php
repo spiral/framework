@@ -28,8 +28,12 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
     /**
      * Set this constant to false to disable automatic column, index and foreign keys creation.
+     *
      * By default entities will read schema from database, so you can connect your ORM model to
      * already existed table.
+     *
+     * Attention, orm update will fail if any external model requested changed in table linked to
+     * ActiveRecord with ACTIVE_SCHEMA = false.
      */
     const ACTIVE_SCHEMA = true;
 
@@ -331,13 +335,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const BELONGS_TO = 103;
 
     /**
-     * Model has one children model.
-     *
-     * Example:
-     * protected $schema = [
-     *      ...
-     *
-     * ];
+     * TODO: WRITE COMMENT
      */
     const MANY_TO_MANY = 104;
 
@@ -426,14 +424,14 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     protected $pivotData = [];
 
     /**
-     * TODO: DOCS
+     * TODO: WRITE COMMENT
      *
      * @var array
      */
     protected $schema = [];
 
     /**
-     * TODO: DOCS
+     * TODO: WRITE COMMENT
      *
      * @var array
      */

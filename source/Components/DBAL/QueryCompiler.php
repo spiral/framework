@@ -375,7 +375,7 @@ class QueryCompiler extends Component
     {
         foreach ($tables as &$table)
         {
-            $table = $this->quote($table, true);
+            $table = $this->quote($table, true, true);
             unset($table);
         }
 
@@ -405,7 +405,7 @@ class QueryCompiler extends Component
         $statement = '';
         foreach ($joins as $table => $join)
         {
-            $statement .= "\n" . $join['type'] . ' JOIN ' . $this->quote($table, true);
+            $statement .= "\n" . $join['type'] . ' JOIN ' . $this->quote($table, true, true);
 
             if (!empty($join['on']))
             {
@@ -470,7 +470,7 @@ class QueryCompiler extends Component
 
             if ($context instanceof SelectQuery)
             {
-                $statement .= $joiner . ' (' . $context . ') ';
+                $statement .= $joiner . ' (' . $context->sqlStatement($this) . ') ';
                 continue;
             }
 

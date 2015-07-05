@@ -233,27 +233,59 @@ class SchemaBuilder extends Component
     }
 
     /**
-     * Perform schema reflection to database(s). All declared tables will created or altered.
+     * Perform schema reflection to database(s). All declared tables will created or altered. Only
+     * tables linked to non abstract models and model with active schema parameter will be executed.
      *
-     * TODO: REWRITE
+     * Schema builder will thrown an exception if table linked to model with disabled schema has
+     * changed columns, however indexes and foreign keys will not cause such exception.
+     *
+     * @throws ORMException
      */
     public function executeSchema()
     {
-        foreach ($this->tables as $table)
-        {
-            //TODO: IS ABSTRACT
-            foreach ($this->models as $entity)
-            {
-                if ($entity->getTableSchema() == $table && !$entity->isActiveSchema())
-                {
-                    //What is going on here?
-                    //TODO: BABDBAD!
-                }
-            }
-        }
-
         foreach ($this->getTables(true) as $table)
         {
+            foreach ($this->models as $model)
+            {
+                if ($model->getTableSchema() != $table)
+                {
+                    continue;
+                }
+
+                if ($model->isAbstract())
+                {
+                    //Model is abstract, meaning we are not going to perform any table related
+                    //operation
+                    continue 2;
+                }
+
+                if ($model->isActiveSchema())
+                {
+                    //Model has active schema, we are good
+                    break;
+                }
+
+                //We have to thrown an exception if model with ACTIVE_SCHEMA = false requested
+                //any column change (for example via external relation)
+                if (!empty($columns = $table->alteredColumns()))
+                {
+                    $names = [];
+                    foreach ($columns as $column)
+                    {
+                        $names[] = $column->getName(true);
+                    }
+
+                    $names = join(', ', $names);
+
+                    throw new ORMException(
+                        "Unable to alter '{$table->getName()}' columns ({$names}), "
+                        . "associated model stated ACTIVE_SCHEMA = false."
+                    );
+                }
+
+                continue 2;
+            }
+
             $table->save();
         }
     }

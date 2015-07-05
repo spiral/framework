@@ -130,16 +130,16 @@ class Selector extends AbstractSelectQuery
      *
      * Examples:
      * //Table "profiles" will be joined to query under "profile" alias
-     * User::find()->with('profile')->where('profile.value', $value);
+     * User::find()->load('profile')->where('profile.value', $value);
      *
      * //Table "profiles" will be joined to query under "my_alias" alias
-     * User::find()->with('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
+     * User::find()->load('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
      *
      * //Table "statistics" will be joined to query under "profile_statistics" alias
-     * User::find()->with('profile.statistics');
+     * User::find()->load('profile.statistics');
      *
      * //Table "statistics" will be joined to query under "stats" alias
-     * User::find()->with('profile.statistics', ['alias' => 'stats']);
+     * User::find()->load('profile.statistics', ['alias' => 'stats']);
      *
      * Attention, in some cases you can't use aliases in where condition as system may include
      * relation data using external query, use "inload" or "quickJoin" methods to ensure that related
@@ -147,21 +147,21 @@ class Selector extends AbstractSelectQuery
      *
      * @see inload()
      * @see postload()
-     * @see quickJoin()
+     * @see with()
      * @param string   $relation    Relation name, or chain of relations separated by .
      * @param array    $options     Loader options (will be applied to last chain loader only).
      * @param int|null $chainMethod INLOAD, POSTLOAD, JOIN_ONLY method forced for all loaders in this
      *                              chain.
      * @return static
      */
-    public function with($relation, array $options = [], $chainMethod = null)
+    public function load($relation, array $options = [], $chainMethod = null)
     {
         if (is_array($relation))
         {
             foreach ($relation as $name => $options)
             {
                 //Multiple relations or relation with addition load options
-                $this->with($name, $options, $chainMethod);
+                $this->load($name, $options, $chainMethod);
             }
 
             return $this;
@@ -174,7 +174,8 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
-     * Pre-load model relations using table joining.
+     * Pre-load model relations using table joining. If you don't need loaded data and using it
+     * for WHERE statement only - use with() method.
      *
      * Use options to specify custom settings for relation loading.
      * You can request to pre-load one relation or chain of relations, in this case options will
@@ -197,16 +198,16 @@ class Selector extends AbstractSelectQuery
      * //Table "statistics" will be joined to query under "stats" alias
      * User::find()->inload('profile.statistics', ['alias' => 'stats']);
      *
-     * @see with()
+     * @see load()
      * @see postload()
-     * @see quickJoin()
+     * @see with()
      * @param string $relation Relation name, or chain of relations separated by .
      * @param array  $options  Loader options (will be applied to last chain loader only).
      * @return static
      */
     public function inload($relation, array $options = [])
     {
-        return $this->with($relation, $options, self::INLOAD);
+        return $this->load($relation, $options, self::INLOAD);
     }
 
     /**
@@ -223,29 +224,29 @@ class Selector extends AbstractSelectQuery
      *
      * Examples:
      * //Table "profiles" will be joined to query under "profile" alias
-     * User::find()->quickJoin('profile')->where('profile.value', $value);
+     * User::find()->with('profile')->where('profile.value', $value);
      *
      * //Table "profiles" will be joined to query under "my_alias" alias
-     * User::find()->quickJoin('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
+     * User::find()->with('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
      *
      * //Table "statistics" will be joined to query under "profile_statistics" alias
-     * User::find()->quickJoin('profile.statistics');
+     * User::find()->with('profile.statistics');
      *
      * //Table "statistics" will be joined to query under "stats" alias
-     * User::find()->quickJoin('profile.statistics', ['alias' => 'stats']);
+     * User::find()->with('profile.statistics', ['alias' => 'stats']);
      *
      * Method is not identical to join(), as it will configure all conditions automatically.
      *
-     * @see with()
+     * @see load()
+     * @see inload()
      * @see postload()
-     * @see quickJoin()
      * @param string $relation Relation name, or chain of relations separated by .
      * @param array  $options  Loader options (will be applied to last chain loader only).
      * @return static
      */
-    public function quickJoin($relation, array $options = [])
+    public function with($relation, array $options = [])
     {
-        return $this->with($relation, $options, self::JOIN_ONLY);
+        return $this->load($relation, $options, self::JOIN_ONLY);
     }
 
     /**
@@ -271,16 +272,23 @@ class Selector extends AbstractSelectQuery
      * Attention, you will not be able to create WHERE statement for relations loaded using POSTLOAD
      * method.
      *
-     * @see with()
+     * @see load()
      * @see inload()
-     * @see quickJoin()
+     * @see with()
      * @param string $relation Relation name, or chain of relations separated by .
      * @param array  $options  Loader options (will be applied to last chain loader only).
      * @return static
      */
     public function postload($relation, array $options = [])
     {
-        return $this->with($relation, $options, self::POSTLOAD);
+        return $this->load($relation, $options, self::POSTLOAD);
+    }
+
+    public function has($relation, $valueA = null, $valueB = null)
+    {
+        //TODO: WAIT FOR RELATION
+
+        return $this;
     }
 
     /**
