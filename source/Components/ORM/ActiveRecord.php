@@ -40,12 +40,19 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const FORCE_VALIDATION = true;
 
     /**
-     * TODO EXAMPLES AND DESCRIPTIONS!!!!
+     * Relation types using model schema.
+     *
+     * @todo: write more description or give link to documentation
      */
-    const HAS_ONE            = 101;
-    const HAS_MANY           = 102;
-    const BELONGS_TO         = 103;
-    const MANY_TO_MANY       = 104;
+    const HAS_ONE      = 101;
+    const HAS_MANY     = 102;
+    const BELONGS_TO   = 103;
+    const MANY_TO_MANY = 104;
+
+    /**
+     * This is internal relation types, in most of cases relation like that will be created
+     * automatically when relation detect that target is interface and not real class.
+     */
     const BELONGS_TO_MORPHED = 108;
     const MANY_TO_MORPHED    = 109;
 
@@ -65,17 +72,17 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     /**
      * Additional constants used to control relation schema creation.
      */
-    const INVERSE           = 1001;
-    const CONSTRAINT        = 1002;
-    const CONSTRAINT_ACTION = 1003;
-    const CREATE_PIVOT      = 1004;
-    const NULLABLE          = 1005;
+    const INVERSE           = 1001; //Relation should be inverted to parent model
+    const CONSTRAINT        = 1002; //Relation should create foreign keys (default)
+    const CONSTRAINT_ACTION = 1003; //Default relation foreign key delete/update action (CASCADE)
+    const CREATE_PIVOT      = 1004; //Many-to-Many should create pivot table automatically (default)
+    const NULLABLE          = 1005; //Relation can be nullable (default)
 
     /**
      * Constants used to declare index type. See documentation for indexes property.
      */
-    const INDEX  = 1000;
-    const UNIQUE = 2000;
+    const INDEX  = 1000;            //Default index type
+    const UNIQUE = 2000;            //Unique index definition
 
     /**
      * Already fetched schemas from ORM. Yes, ORM ActiveRecord is really similar to ODM. Original ORM
