@@ -170,7 +170,8 @@ class ManyToManySchema extends RelationSchema
             ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
             ActiveRecord::CONSTRAINT        => $this->definition[ActiveRecord::CONSTRAINT],
             ActiveRecord::CONSTRAINT_ACTION => $this->definition[ActiveRecord::CONSTRAINT_ACTION],
-            ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT]
+            ActiveRecord::CREATE_PIVOT  => $this->definition[ActiveRecord::CREATE_PIVOT],
+            ActiveRecord::PIVOT_COLUMNS => $this->definition[ActiveRecord::PIVOT_COLUMNS]
         ]);
     }
 

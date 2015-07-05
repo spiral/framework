@@ -131,7 +131,8 @@ class ManyToMorphedSchema extends MorphedRelationSchema
                 ActiveRecord::THOUGHT_INNER_KEY => $this->definition[ActiveRecord::THOUGHT_OUTER_KEY],
                 ActiveRecord::THOUGHT_OUTER_KEY => $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
                 ActiveRecord::MORPH_KEY         => $this->definition[ActiveRecord::MORPH_KEY],
-                ActiveRecord::CREATE_PIVOT      => $this->definition[ActiveRecord::CREATE_PIVOT]
+                ActiveRecord::CREATE_PIVOT  => $this->definition[ActiveRecord::CREATE_PIVOT],
+                ActiveRecord::PIVOT_COLUMNS => $this->definition[ActiveRecord::PIVOT_COLUMNS]
             ]);
         }
     }
