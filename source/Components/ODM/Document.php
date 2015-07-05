@@ -88,18 +88,18 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     const INDEX_OPTIONS = '@options';
 
     /**
-     * ODM component.
-     *
-     * @var ODM
-     */
-    protected $odm = null;
-
-    /**
      * Already fetched schemas from ODM.
      *
      * @var array
      */
     protected static $schemaCache = [];
+
+    /**
+     * ODM component.
+     *
+     * @var ODM
+     */
+    protected $odm = null;
 
     /**
      * Parent object (composition owner).
@@ -313,26 +313,6 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     public function isEmbedded()
     {
         return (bool)$this->parent;
-    }
-
-    /**
-     * Collection name associated with document.
-     *
-     * @return string
-     */
-    public function getCollection()
-    {
-        return $this->collection;
-    }
-
-    /**
-     * Database name/id associated with document.
-     *
-     * @return string
-     */
-    public function getDatabase()
-    {
-        return $this->database;
     }
 
     /**

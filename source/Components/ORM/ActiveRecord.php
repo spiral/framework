@@ -79,13 +79,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const UNIQUE = 2000;
 
     /**
-     * ORM component.
-     *
-     * @var ORM
-     */
-    protected $orm = null;
-
-    /**
      * Already fetched schemas from ORM. Yes, ORM ActiveRecord is really similar to ODM. Original ORM
      * was written long time ago before ODM and solutions i put to ORM was later used for ODM, while
      * "great transition" (tm) ODM was significantly updated and now ODM drive updates for ORM,
@@ -94,6 +87,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @var array
      */
     protected static $schemaCache = [];
+
+    /**
+     * ORM component.
+     *
+     * @var ORM
+     */
+    protected $orm = null;
 
     /**
      * Table associated with ActiveRecord. Spiral will guess table name automatically based on class
@@ -111,6 +111,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @var string
      */
     protected $database = 'default';
+
+    /**
+     * Indication that model data was successfully fetched from database.
+     *
+     * @var bool
+     */
+    protected $loaded = false;
 
     /**
      * TODO: DOCS
@@ -157,9 +164,11 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     protected $relations = [];
 
     //todo: add parent container?
-    public function __construct($data = [], ORM $orm = null)
+    public function __construct($data = [], ORM $orm = null, $loaded = false)
     {
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();
+        $this->loaded = $loaded;
+
         if (!isset(self::$schemaCache[$class = get_class($this)]))
         {
             static::initialize();
@@ -181,10 +190,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             }
         }
 
-        //TODO: Build different definition of non loaded model, do not apply any rules here,
-        //TODO: this is not odm model
-        if ((!$this->primaryKey()) || !is_array($data))
+        if (!$this->isLoaded())
         {
+            //Non loaded models should be in solid state by default and require initial validation
             $this->solidState(true)->validationRequired = true;
         }
     }
@@ -193,9 +201,12 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * Change record solid state flag value. Record marked with solid state flag will be saved
      * entirely without generating simplified update operations with only changed fields.
      *
+     * Attention, you have to carefully use forceUpdate flag with models without primary keys.
+     *
      * @param bool $solidState  Solid state flag value.
      * @param bool $forceUpdate Mark all fields as changed to force update later.
      * @return static
+     * @throws ORMException
      */
     public function solidState($solidState, $forceUpdate = false)
     {
@@ -203,7 +214,14 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         if ($forceUpdate)
         {
-            $this->updates = $this->schema[ORM::E_COLUMNS];
+            if ($this->schema[ORM::E_PRIMARY_KEY])
+            {
+                $this->updates = $this->getCriteria();
+            }
+            else
+            {
+                $this->updates = $this->schema[ORM::E_COLUMNS];
+            }
         }
 
         return $this;
@@ -223,33 +241,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
-     * Is model were fetched from databases or recently created? Usually checks primary key value.
+     * Is model were fetched from databases or recently created?
      *
      * @return bool
      */
     public function isLoaded()
     {
-        return (bool)$this->primaryKey();
-    }
-
-    /**
-     * Table name associated with record.
-     *
-     * @return string
-     */
-    public function getTable()
-    {
-        return $this->table;
-    }
-
-    /**
-     * Database name/id associated with record.
-     *
-     * @return string
-     */
-    public function getDatabase()
-    {
-        return $this->database;
+        return $this->loaded;
     }
 
     /**
@@ -311,7 +309,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         //Constructing relation
         if (!isset($this->schema[ORM::E_RELATIONS][$name]))
         {
-            throw new ORMException("Undefined relation {$name} in model {$this->getAlias()}.");
+            throw new ORMException("Undefined relation {$name} in model " . static::class . ".");
         }
 
         $relation = $this->schema[ORM::E_RELATIONS][$name];
@@ -533,21 +531,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
-     * Get instance of DBAL\Database associated with specified record. This is not static method which
-     * if used by Relations to find appropriate database.
-     *
-     * @param ORM $orm ORM component, will be received from container if not provided.
-     * @return Database
-     */
-    public static function dbalDatabase(ORM $orm = null)
-    {
-        $orm = !empty($orm) ? $orm : ORM::getInstance();
-        $schema = $orm->getSchema(static::class);
-
-        return $orm->getDBAL()->db($schema[ORM::E_DB]);
-    }
-
-    /**
      * Get instance of DBAL\Table associated with specified record.
      *
      * @param ORM      $orm      ORM component, will be received from container if not provided.
@@ -556,6 +539,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public static function dbalTable(ORM $orm = null, Database $database = null)
     {
+        /**
+         * We can always get instance of ORM component from global scope.
+         */
         $orm = !empty($orm) ? $orm : ORM::getInstance();
         $schema = $orm->getSchema(static::class);
 
@@ -563,21 +549,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $database = !empty($database) ? $database : $orm->getDBAL()->db($schema[ORM::E_DB]);
 
         return $database->table($schema[ORM::E_TABLE]);
-    }
-
-    /**
-     * Get associated orm Selector. Selectors used to build complex related queries and fetch
-     * models from database.
-     *
-     * @param ORM $orm ORM component, will be received from container if not provided.
-     * @return Selector
-     */
-    public static function ormSelector(ORM $orm = null)
-    {
-        //Traits
-        static::initialize();
-
-        return new Selector(static::class, !empty($orm) ? $orm : ORM::getInstance());
     }
 
     /**
@@ -632,7 +603,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
             static::dbalTable($this->orm)->update(
                 $this->compileUpdates(),
-                [$primaryKey => $this->primaryKey()]
+                $this->getCriteria()
             )->run();
 
             $this->event('updated');
@@ -654,22 +625,28 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         if ($this->isLoaded())
         {
-            if (!empty($this->schema[ORM::E_PRIMARY_KEY]))
-            {
-                static::dbalTable($this->orm)->delete([
-                    $this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()
-                ])->run();
-            }
-            else
-            {
-                static::dbalTable($this->orm)->delete(
-                    $this->serializeData()
-                )->run();
-            }
+            static::dbalTable($this->orm)->delete($this->getCriteria())->run();
         }
 
         $this->fields = $this->schema[ORM::E_COLUMNS];
         $this->event('deleted');
+    }
+
+    /**
+     * Get where condition to fetch current model from database, in cases where primary key is not
+     * provided full model data will be used as where condition.
+     *
+     * @return array
+     */
+    protected function getCriteria()
+    {
+        if (!empty($this->schema[ORM::E_PRIMARY_KEY]))
+        {
+            return [$this->schema[ORM::E_PRIMARY_KEY] => $this->primaryKey()];
+        }
+
+        //We have to serialize model data
+        return $this->updates + $this->serializeData();
     }
 
     /**
