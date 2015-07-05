@@ -124,16 +124,11 @@ class DatabaseManager extends Component implements Container\InjectionManagerInt
 
         benchmark('dbal::database', $database);
 
-        $this->databases[$database] = $this->container->get(
-            Database::class,
-            [
-                'name'        => $database,
-                'driver'      => $driver,
-                'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
-            ],
-            null,
-            true
-        );
+        $this->databases[$database] = $this->container->get(Database::class, [
+            'name'        => $database,
+            'driver'      => $driver,
+            'tablePrefix' => isset($config['tablePrefix']) ? $config['tablePrefix'] : ''
+        ], null, true);
 
         benchmark('dbal::database', $database);
 

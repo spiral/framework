@@ -47,16 +47,13 @@ class BelongsToSchema extends RelationSchema
 
         $innerKey = $innerSchema->column($this->getInnerKey());
         $innerKey->type($this->getOuterKeyType());
-        $innerKey->nullable($this->definition[ActiveRecord::NULLABLE]);
+        $innerKey->nullable($this->isNullable());
         $innerKey->index();
 
+        //We have to define constraint only if it was requested (by default)
         if ($this->definition[ActiveRecord::CONSTRAINT])
         {
-            $foreignKey = $innerKey->foreign(
-                $this->getOuterTable(),
-                $this->getOuterKey()
-            );
-
+            $foreignKey = $innerKey->foreign($this->getOuterTable(), $this->getOuterKey());
             $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
         }

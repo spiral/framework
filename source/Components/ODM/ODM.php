@@ -114,16 +114,11 @@ class ODM extends Component implements Container\InjectionManagerInterface
 
         benchmark('odm::database', $database);
 
-        $this->databases[$database] = $this->container->get(
-            MongoDatabase::class,
-            [
-                'name'   => $database,
-                'config' => $config,
-                'odm'    => $this
-            ],
-            null,
-            true
-        );
+        $this->databases[$database] = $this->container->get(MongoDatabase::class, [
+            'name'   => $database,
+            'config' => $config,
+            'odm'    => $this
+        ], null, true);
 
         benchmark('odm::database', $database);
 

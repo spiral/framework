@@ -223,17 +223,32 @@ abstract class RelationSchema implements RelationSchemaInterface
      */
     protected function getOuterRecordSchema()
     {
-        return $this->schemaBuilder->getRecordSchema($this->target);
+        return $this->schemaBuilder->recordSchema($this->target);
     }
 
     /**
-     * Relation definition.
+     * Relation definition (declared in model schema).
      *
      * @return array
      */
     public function getDefinition()
     {
         return $this->definition;
+    }
+
+    /**
+     * Many relations can be nullable (has no parent) by default, to simplify schema creation.
+     *
+     * @return bool
+     */
+    public function isNullable()
+    {
+        if (array_key_exists(ActiveRecord::NULLABLE, $this->definition))
+        {
+            return $this->definition[ActiveRecord::NULLABLE];
+        }
+
+        return false;
     }
 
     /**
@@ -333,6 +348,45 @@ abstract class RelationSchema implements RelationSchemaInterface
             default:
                 return $column->abstractType();
         }
+    }
+
+    /**
+     * Simplified method to cast column by provided definition.
+     *
+     * @param AbstractColumnSchema $column
+     * @param string               $definition
+     */
+    protected function castColumn(AbstractColumnSchema $column, $definition)
+    {
+        $validType = preg_match(
+            '/(?P<type>[a-z]+)(?: *\((?P<options>[^\)]+)\))?(?: *, *(?P<nullable>null(?:able)?))?/i',
+            $definition,
+            $matches
+        );
+
+        //Parsing definition
+        if (!$validType)
+        {
+            throw new ORMException(
+                "Unable to parse definition of pivot column {$this->getName()}.'{$column->getName()}'."
+            );
+        }
+
+        if (!empty($matches['nullable']))
+        {
+            //No need to force NOT NULL as this is default column state
+            $column->nullable(true);
+        }
+
+        $type = $matches['type'];
+
+        $options = [];
+        if (!empty($matches['options']))
+        {
+            $options = array_map('trim', explode(',', $matches['options']));
+        }
+
+        call_user_func_array([$column, $type], $options);
     }
 
     /**

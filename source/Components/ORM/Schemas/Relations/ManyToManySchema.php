@@ -10,7 +10,6 @@ namespace Spiral\Components\ORM\Schemas\Relations;
 
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\ORM\ActiveRecord;
-use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\RelationSchema;
 
@@ -40,7 +39,9 @@ class ManyToManySchema extends RelationSchema
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
         ActiveRecord::CREATE_PIVOT  => true,
-        ActiveRecord::PIVOT_COLUMNS => []
+        ActiveRecord::PIVOT_COLUMNS => [],
+        ActiveRecord::WHERE_PIVOT   => [],
+        ActiveRecord::WHERE         => []
     ];
 
     /**
@@ -116,7 +117,16 @@ class ManyToManySchema extends RelationSchema
         $innerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_INNER_KEY]);
         $innerKey->type($this->getInnerKeyType());
 
-        if ($this->definition[ActiveRecord::CONSTRAINT] && empty($this->definition[ActiveRecord::MORPH_KEY]))
+        //Additional pivot columns
+        foreach ($this->definition[ActiveRecord::PIVOT_COLUMNS] as $column => $definition)
+        {
+            $this->castColumn($pivotTable->column($column), $definition);
+        }
+
+        if (
+            $this->definition[ActiveRecord::CONSTRAINT]
+            && empty($this->definition[ActiveRecord::MORPH_KEY])
+        )
         {
             //Complex index
             $pivotTable->unique(
@@ -175,7 +185,6 @@ class ManyToManySchema extends RelationSchema
 
         //Let's include pivot table columns
         $definition[ActiveRecord::PIVOT_COLUMNS] = [];
-
         foreach ($this->getPivotSchema()->getColumns() as $column)
         {
             $definition[ActiveRecord::PIVOT_COLUMNS][] = $column->getName();

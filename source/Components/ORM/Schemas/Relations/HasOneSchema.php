@@ -38,23 +38,23 @@ class HasOneSchema extends RelationSchema
      */
     public function buildSchema()
     {
-        if (!$this->definition[ActiveRecord::CONSTRAINT] || !empty($this->definition[ActiveRecord::MORPH_KEY]))
-        {
-            return;
-        }
-
         $outerSchema = $this->getOuterRecordSchema()->getTableSchema();
 
         $outerKey = $outerSchema->column($this->getOuterKey());
         $outerKey->type($this->getInnerKeyType());
-        $outerKey->nullable($this->definition[ActiveRecord::NULLABLE]);
+        $outerKey->nullable($this->isNullable());
         $outerKey->index();
 
-        $foreignKey = $outerKey->foreign(
-            $this->recordSchema->getTable(),
-            $this->getInnerKey()
-        );
+        if (
+            !$this->definition[ActiveRecord::CONSTRAINT]
+            || !empty($this->definition[ActiveRecord::MORPH_KEY])
+        )
+        {
+            //We don't need to build anything if relation is morphed or no constrain is required
+            return;
+        }
 
+        $foreignKey = $outerKey->foreign($this->recordSchema->getTable(), $this->getInnerKey());
         $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
         $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
     }

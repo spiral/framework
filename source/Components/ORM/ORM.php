@@ -141,23 +141,6 @@ class ORM extends Component
     //    }
 
     /**
-     * Get instance of Loader associated with relation type and relation defitition.
-     *
-     * @param int             $type       Relation type.
-     * @param string          $container  Container related to parent loader.
-     * @param array           $definition Relation definition.
-     * @param LoaderInterface $parent     Parent loader (if presented).
-     * @return LoaderInterface
-     */
-    public function getLoader($type, $container, array $definition, LoaderInterface $parent = null)
-    {
-        $class = $this->config['relations'][$type]['loader'];
-
-        //TODO: we may need add container here, due some loaders may have external requiments
-        return new $class($this, $container, $definition, $parent);
-    }
-
-    /**
      * Get ORM schema reader. Schema will detect all declared entities, their tables, columns,
      * relationships and etc.
      *
@@ -167,8 +150,63 @@ class ORM extends Component
     {
         return SchemaBuilder::make([
             'config' => $this->config,
-            'dbal'   => $this->dbal
+            'orm' => $this
         ], $this->container);
+    }
+
+    /**
+     * Instance of relation schema with specified type.
+     *
+     * @param mixed         $type
+     * @param SchemaBuilder $schemaBuilder
+     * @param RecordSchema  $recordSchema
+     * @param string        $name
+     * @param array         $definition
+     * @return RelationSchemaInterface
+     */
+    public function relationSchema(
+        $type,
+        SchemaBuilder $schemaBuilder,
+        RecordSchema $recordSchema,
+        $name,
+        array $definition
+    )
+    {
+        if (!isset($this->config['relations'][$type]['schema']))
+        {
+            throw new ORMException("Undefined relation schema '{$type}'.");
+        }
+
+        return $this->container->get(
+            $this->config['relations'][$type]['schema'],
+            compact('schemaBuilder', 'recordSchema', 'name', 'definition')
+        );
+    }
+
+    /**
+     * Get instance of Loader associated with relation type and relation definition.
+     *
+     * @param int             $type       Relation type.
+     * @param string          $container  Container related to parent loader.
+     * @param array           $definition Relation definition.
+     * @param LoaderInterface $parent     Parent loader (if presented).
+     * @return LoaderInterface
+     * @throws ORMException
+     */
+    public function relationLoader($type, $container, array $definition, LoaderInterface $parent = null)
+    {
+        if (!isset($this->config['relations'][$type]['schema']))
+        {
+            throw new ORMException("Undefined relation loader '{$type}'.");
+        }
+
+        return $this->container->get($this->config['relations'][$type]['loader'], [
+                'orm'        => $this,
+                'container'  => $container,
+                'definition' => $definition,
+                'parent'     => $parent
+            ]
+        );
     }
 
     /**
@@ -197,6 +235,7 @@ class ORM extends Component
 
         //Saving
         $this->runtime->saveData('ormSchema', $this->schema);
+        dumP($this->schema);
 
         return $builder;
     }

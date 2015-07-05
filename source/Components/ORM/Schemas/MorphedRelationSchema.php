@@ -8,10 +8,21 @@
  */
 namespace Spiral\Components\ORM\Schemas;
 
+use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORMException;
 
 abstract class MorphedRelationSchema extends RelationSchema
 {
+    /**
+     * Get morph key name.
+     *
+     * @return string
+     */
+    public function getMorphKey()
+    {
+        return $this->definition[ActiveRecord::MORPH_KEY];
+    }
+
     /**
      * Option string used to populate definition template if no user value provided.
      *

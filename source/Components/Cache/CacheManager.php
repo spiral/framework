@@ -98,12 +98,11 @@ class CacheManager extends Component implements Container\InjectionManagerInterf
         }
 
         benchmark('cache::store', $store);
-        $this->stores[$store] = $this->container->get(
-            $this->config['stores'][$store]['class'],
-            ['cache' => $this],
-            null,
-            true
-        );
+
+        $this->stores[$store] = $this->container->get($this->config['stores'][$store]['class'], [
+            'cache' => $this
+        ], null, true);
+
         benchmark('cache::store', $store);
 
         if ($store == $this->config['store'] && !$this->stores[$store]->isAvailable())

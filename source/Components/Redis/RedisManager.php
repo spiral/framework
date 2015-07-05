@@ -253,15 +253,10 @@ class RedisManager extends Component implements InjectionManagerInterface
         //Creating client
         benchmark('redis::client', $client);
 
-        $this->clients[$client] = $this->container->get(
-            RedisClient::class,
-            [
-                'parameters' => $config['servers'],
-                'options'    => isset($config['options']) ? $config['options'] : [],
-            ],
-            null,
-            true
-        );
+        $this->clients[$client] = $this->container->get(RedisClient::class, [
+            'parameters' => $config['servers'],
+            'options'    => isset($config['options']) ? $config['options'] : [],
+        ], null, true);
 
         benchmark('redis::client', $client);
 

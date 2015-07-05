@@ -151,7 +151,7 @@ abstract class Loader implements LoaderInterface
         ORM $orm,
         $container,
         array $definition = [],
-        Loader $parent
+        Loader $parent = null
     )
     {
         $this->orm = $orm;
@@ -166,7 +166,7 @@ abstract class Loader implements LoaderInterface
         //Compiling options
         $this->options['method'] = static::LOAD_METHOD;
 
-        if ($parent->dbalDatabase() != $this->dbalDatabase())
+        if (!empty($parent) && $parent->getDatabase() != $this->getDatabase())
         {
             //We have to force post-load if parent loader database is different
             $this->options['method'] = Selector::POSTLOAD;
@@ -202,6 +202,16 @@ abstract class Loader implements LoaderInterface
     public function getTable()
     {
         return $this->schema[ORM::E_TABLE];
+    }
+
+    /**
+     * Database name loader relates to.
+     *
+     * @return mixed
+     */
+    public function getDatabase()
+    {
+        return $this->schema[ORM::E_DB];
     }
 
     /**
@@ -302,7 +312,7 @@ abstract class Loader implements LoaderInterface
 
         $relationOptions = $this->schema[ORM::E_RELATIONS][$relation];
 
-        $loader = $this->orm->getLoader(
+        $loader = $this->orm->relationLoader(
             $relationOptions[ORM::R_TYPE],
             $relation,
             $relationOptions[ORM::R_DEFINITION],

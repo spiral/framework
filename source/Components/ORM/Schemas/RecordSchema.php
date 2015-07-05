@@ -45,7 +45,7 @@ class RecordSchema extends ModelSchema
      * @invisible
      * @var SchemaBuilder
      */
-    protected $ormSchema = null;
+    protected $schemaBuilder = null;
 
     /**
      * Table schema used to fetch information about declared or fetched columns. Empty if model is
@@ -58,7 +58,7 @@ class RecordSchema extends ModelSchema
     /**
      * Model relationships.
      *
-     * @var array
+     * @var RelationSchemaInterface[]
      */
     protected $relations = [];
 
@@ -73,19 +73,18 @@ class RecordSchema extends ModelSchema
      * New RecordSchema instance, schema responsible for detecting relationships, columns and indexes.
      * This class is really similar to DocumentSchema and can be merged into common parent in future.
      *
-     * @param string        $class     Class name.
-     * @param SchemaBuilder $ormSchema Parent ORM schema (all other documents).
+     * @param string        $class         Class name.
+     * @param SchemaBuilder $schemaBuilder Parent ORM schema (all other documents).
      */
-    public function __construct($class, SchemaBuilder $ormSchema)
+    public function __construct($class, SchemaBuilder $schemaBuilder)
     {
         $this->class = $class;
-        $this->ormSchema = $ormSchema;
+        $this->schemaBuilder = $schemaBuilder;
+
         $this->reflection = new \ReflectionClass($class);
 
-        $this->tableSchema = $this->ormSchema->declareTable(
-            $this->getDatabase(),
-            $this->getTable()
-        );
+        //Linked table
+        $this->tableSchema = $this->schemaBuilder->declareTable($this->getDatabase(), $this->getTable());
 
         //Casting table columns, indexes, foreign keys and etc
         $this->castTableSchema();
@@ -154,7 +153,7 @@ class RecordSchema extends ModelSchema
             if (is_array($value))
             {
                 $value = array_merge(
-                    $this->ormSchema->getRecordSchema($parentClass)->property($property, true),
+                    $this->schemaBuilder->recordSchema($parentClass)->property($property, true),
                     $value
                 );
             }
@@ -280,11 +279,11 @@ class RecordSchema extends ModelSchema
             $type = $column->abstractType();
 
             $resolved = [];
-            if ($filter = $this->ormSchema->getMutators($type))
+            if ($filter = $this->schemaBuilder->getMutators($type))
             {
                 $resolved += $filter;
             }
-            elseif ($filter = $this->ormSchema->getMutators('php:' . $column->phpType()))
+            elseif ($filter = $this->schemaBuilder->getMutators('php:' . $column->phpType()))
             {
                 $resolved += $filter;
             }
@@ -388,7 +387,7 @@ class RecordSchema extends ModelSchema
         if (!$validType)
         {
             throw new ORMException(
-                "Unable to parse definition of  column {$this->getClass()}.'{$column->getName()}'."
+                "Unable to parse definition of column {$this->getClass()}.'{$column->getName()}'."
             );
         }
 
@@ -574,7 +573,7 @@ class RecordSchema extends ModelSchema
     /**
      * Get all declared model relations.
      *
-     * @return RelationSchema[]
+     * @return RelationSchemaInterface[]
      */
     public function getRelations()
     {
@@ -601,7 +600,7 @@ class RecordSchema extends ModelSchema
             return;
         }
 
-        $relationship = $this->ormSchema->relationSchema($this, $name, $definition);
+        $relationship = $this->schemaBuilder->relationSchema($this, $name, $definition);
 
         //Initiating required columns, foreign keys and indexes
         $relationship->buildSchema($this);

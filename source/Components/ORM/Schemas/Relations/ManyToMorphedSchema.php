@@ -10,7 +10,6 @@ namespace Spiral\Components\ORM\Schemas\Relations;
 
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\ORM\ActiveRecord;
-use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Schemas\MorphedRelationSchema;
 
@@ -36,7 +35,10 @@ class ManyToMorphedSchema extends MorphedRelationSchema
         ActiveRecord::MORPH_KEY         => '{name:singular}_type',
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
-        ActiveRecord::CREATE_PIVOT      => true
+        ActiveRecord::CREATE_PIVOT  => true,
+        ActiveRecord::PIVOT_COLUMNS => [],
+        ActiveRecord::WHERE_PIVOT   => [],
+        ActiveRecord::WHERE         => []
     ];
 
     /**
@@ -79,11 +81,17 @@ class ManyToMorphedSchema extends MorphedRelationSchema
         $localKey->type($this->getInnerKeyType());
         $localKey->index();
 
-        $morphKey = $pivotTable->column($this->definition[ActiveRecord::MORPH_KEY]);
+        $morphKey = $pivotTable->column($this->getMorphKey());
         $morphKey->string(static::TYPE_COLUMN_SIZE);
 
         $outerKey = $pivotTable->column($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
         $outerKey->type($this->getOuterKeyType());
+
+        //Additional pivot columns
+        foreach ($this->definition[ActiveRecord::PIVOT_COLUMNS] as $column => $definition)
+        {
+            $this->castColumn($pivotTable->column($column), $definition);
+        }
 
         //Complex index
         $pivotTable->unique(
@@ -98,6 +106,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
                 $this->recordSchema->getTable(),
                 $this->recordSchema->getPrimaryKey()
             );
+
             $foreignKey->onDelete($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
             $foreignKey->onUpdate($this->definition[ActiveRecord::CONSTRAINT_ACTION]);
         }
@@ -138,7 +147,6 @@ class ManyToMorphedSchema extends MorphedRelationSchema
 
         //Let's include pivot table columns
         $definition[ActiveRecord::PIVOT_COLUMNS] = [];
-
         foreach ($this->getPivotSchema()->getColumns() as $column)
         {
             $definition[ActiveRecord::PIVOT_COLUMNS][] = $column->getName();

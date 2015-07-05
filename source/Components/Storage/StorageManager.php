@@ -78,12 +78,9 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         foreach ($this->config['containers'] as $name => $container)
         {
             //Controllable injection implemented
-            $this->containers[$name] = $this->container->get(
-                StorageContainer::class,
-                $container + ['storage' => $this],
-                null,
-                true
-            );
+            $this->containers[$name] = $this->container->get(StorageContainer::class, $container + [
+                    'storage' => $this
+                ], null, true);
         }
     }
 
@@ -112,12 +109,9 @@ class StorageManager extends Component implements Container\InjectionManagerInte
         );
 
         //Controllable injection implemented
-        return $this->containers[$name] = $this->container->get(
-            StorageContainer::class,
-            compact('prefix', 'server', 'options') + ['storage' => $this],
-            null,
-            true
-        );
+        return $this->containers[$name] = $this->container->get(StorageContainer::class, [
+                'storage' => $this
+            ] + compact('prefix', 'server', 'options'), null, true);
     }
 
     /**

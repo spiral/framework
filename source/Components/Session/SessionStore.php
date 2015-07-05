@@ -177,12 +177,10 @@ class SessionStore extends Component implements \ArrayAccess, \IteratorAggregate
             if ($defaultHandler != self::NATIVE_HANDLER)
             {
                 $config = $this->config['handlers'][$this->config['handler']];
-                $handler = $this->handler = $this->container->get(
-                    $config['class'],
-                    ['options' => $config, 'lifetime' => $this->config['lifetime']],
-                    null,
-                    true
-                );
+                $handler = $this->handler = $this->container->get($config['class'], [
+                    'options'  => $config,
+                    'lifetime' => $this->config['lifetime']
+                ], null, true);
             }
         }
 

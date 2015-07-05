@@ -12,33 +12,19 @@ use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Schemas\AbstractTableSchema;
 use Spiral\Components\ORM\Schemas\RecordSchema;
 use Spiral\Components\ORM\Schemas\RelationSchema;
+use Spiral\Components\ORM\Schemas\RelationSchemaInterface;
 use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
+use Spiral\Support\Models\DataEntity;
 
 class SchemaBuilder extends Component
 {
     /**
      * ORM class names.
      */
-    const DATA_ENTITY   = 'Spiral\Components\DataEntity';
-    const ACTIVE_RECORD = 'Spiral\Components\ORM\ActiveRecord';
-
-    /**
-     * Mapping used to link relationship definition to relationship schemas.
-     *
-     * @var array
-     */
-    protected $relationships = [
-        ActiveRecord::BELONGS_TO         => 'Spiral\Components\ORM\Schemas\Relations\BelongsToSchema',
-        ActiveRecord::BELONGS_TO_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\BelongsToMorphedSchema',
-
-        ActiveRecord::HAS_ONE            => 'Spiral\Components\ORM\Schemas\Relations\HasOneSchema',
-        ActiveRecord::HAS_MANY           => 'Spiral\Components\ORM\Schemas\Relations\HasManySchema',
-
-        ActiveRecord::MANY_TO_MANY       => 'Spiral\Components\ORM\Schemas\Relations\ManyToManySchema',
-        ActiveRecord::MANY_TO_MORPHED => 'Spiral\Components\ORM\Schemas\Relations\ManyToMorphedSchema'
-    ];
+    const DATA_ENTITY   = DataEntity::class;
+    const ACTIVE_RECORD = ActiveRecord::class;
 
     /**
      * Schema generating configuration.
@@ -48,11 +34,11 @@ class SchemaBuilder extends Component
     protected $config = [];
 
     /**
-     * DatabaseManager instance.
+     * ORM component instance.
      *
-     * @var DatabaseManager
+     * @var ORM
      */
-    protected $dbal = null;
+    protected $orm = null;
 
     /**
      * Container.
@@ -79,20 +65,20 @@ class SchemaBuilder extends Component
     /**
      * New ORM Schema reader instance.
      *
-     * @param array           $config
-     * @param Tokenizer       $tokenizer
-     * @param DatabaseManager $dbal
-     * @param Container       $container
+     * @param array     $config
+     * @param Tokenizer $tokenizer
+     * @param ORM       $orm
+     * @param Container $container
      */
     public function __construct(
         array $config,
         Tokenizer $tokenizer,
-        DatabaseManager $dbal,
+        ORM $orm,
         Container $container
     )
     {
         $this->config = $config;
-        $this->dbal = $dbal;
+        $this->orm = $orm;
         $this->container = $container;
 
         foreach ($tokenizer->getClasses(self::ACTIVE_RECORD) as $class => $definition)
@@ -102,15 +88,12 @@ class SchemaBuilder extends Component
                 continue;
             }
 
-            $this->records[$class] = RecordSchema::make([
-                'class'     => $class,
-                'ormSchema' => $this
-            ], $this->container);
+            $this->records[$class] = new RecordSchema($class, $this);
         }
 
         //TODO: error with nested relations based on non declared auto key
 
-        $relations = [];
+        $invertRelations = [];
         foreach ($this->records as $record)
         {
             if (!$record->isAbstract())
@@ -121,29 +104,50 @@ class SchemaBuilder extends Component
                 {
                     if ($relation->hasInvertedRelation())
                     {
-                        $relations[] = $relation;
+                        $invertRelations[] = $relation;
                     }
                 }
             }
         }
 
         /**
-         * @var RelationSchema $relation
+         * @var RelationSchemaInterface $relation
          */
-        foreach ($relations as $relation)
+        foreach ($invertRelations as $relation)
         {
-            $backReference = $relation->getDefinition()[ActiveRecord::BACK_REF];
+            $inverted = $relation->getDefinition()[ActiveRecord::BACK_REF];
 
-            if (is_array($backReference))
+            if (is_array($inverted))
             {
                 //[TYPE, NAME]
-                $relation->revertRelation($backReference[1], $backReference[0]);
+                $relation->revertRelation($inverted[1], $inverted[0]);
             }
             else
             {
-                $relation->revertRelation($backReference);
+                $relation->revertRelation($inverted);
             }
         }
+    }
+
+    /**
+     * Get RecordSchema by class name.
+     *
+     * @param string $class Class name.
+     * @return null|RecordSchema
+     */
+    public function recordSchema($class)
+    {
+        if ($class == self::ACTIVE_RECORD)
+        {
+            return new RecordSchema(self::ACTIVE_RECORD, $this);
+        }
+
+        if (!isset($this->records[$class]))
+        {
+            return null;
+        }
+
+        return $this->records[$class];
     }
 
     /**
@@ -157,27 +161,16 @@ class SchemaBuilder extends Component
     }
 
     /**
-     * Get RecordSchema by class name.
+     * Get mutators for column with specified abstract or column type.
      *
-     * @param string $class Class name.
-     * @return null|RecordSchema
+     * @param string $abstractType Column type.
+     * @return array
      */
-    public function getRecordSchema($class)
+    public function getMutators($abstractType)
     {
-        if ($class == self::ACTIVE_RECORD)
-        {
-            return RecordSchema::make([
-                'class'     => self::ACTIVE_RECORD,
-                'ormSchema' => $this
-            ], $this->container);
-        }
-
-        if (!isset($this->records[$class]))
-        {
-            return null;
-        }
-
-        return $this->records[$class];
+        return isset($this->config['mutators'][$abstractType])
+            ? $this->config['mutators'][$abstractType]
+            : [];
     }
 
     /**
@@ -194,9 +187,9 @@ class SchemaBuilder extends Component
             return $this->tables[$database . '/' . $table];
         }
 
-        $table = $this->dbal->db($database)->table($table)->schema();
+        $schema = $this->orm->getDBAL()->db($database)->table($table)->schema();
 
-        return $this->tables[$database . '/' . $table->getName()] = $table;
+        return $this->tables[$database . '/' . $table] = $schema;
     }
 
     /**
@@ -224,7 +217,44 @@ class SchemaBuilder extends Component
     }
 
     /**
+     * Get appropriate relation schema based on provided definition.
+     *
+     * @param RecordSchema $recordSchema
+     * @param string       $name
+     * @param array        $definition
+     * @return RelationSchema
+     */
+    public function relationSchema(RecordSchema $recordSchema, $name, array $definition)
+    {
+        if (empty($definition))
+        {
+            throw new ORMException("Relation definition can not be empty.");
+        }
+
+        reset($definition);
+        $type = key($definition);
+
+        /**
+         * @var RelationSchema $relation
+         */
+        $relation = $this->orm->relationSchema($type, $this, $recordSchema, $name, $definition);
+
+        if ($relation->hasEquivalent())
+        {
+            return $this->relationSchema(
+                $recordSchema,
+                $name,
+                $relation->getEquivalentDefinition()
+            );
+        }
+
+        return $relation;
+    }
+
+    /**
      * Perform schema reflection to database(s). All declared tables will created or altered.
+     *
+     * TODO: REWRITE
      */
     public function executeSchema()
     {
@@ -245,63 +275,6 @@ class SchemaBuilder extends Component
         {
             $table->save();
         }
-    }
-
-    /**
-     * Get appropriate relation schema based on provided definition.
-     *
-     * @param RecordSchema $recordSchema
-     * @param string       $name
-     * @param array        $definition
-     * @return RelationSchema
-     */
-    public function relationSchema(RecordSchema $recordSchema, $name, array $definition)
-    {
-        if (empty($definition))
-        {
-            throw new ORMException("Relation definition can not be empty.");
-        }
-
-        reset($definition);
-        $type = key($definition);
-
-        //$relationship=$this->orm
-
-        //TODO: HAS TO BE RETRIEVED USING ORM
-        if (!isset($this->relationships[$type]))
-        {
-            throw new ORMException("Undefined relationship type {$type}.");
-        }
-
-        /**
-         * @var RelationSchema $relationship
-         */
-        $relationship = $this->container->get($this->relationships[$type], [
-            'schemaBuilder' => $this,
-            'recordSchema'  => $recordSchema,
-            'name'          => $name,
-            'definition'    => $definition
-        ]);
-
-        if ($relationship->hasEquivalent())
-        {
-            return $this->relationSchema($recordSchema, $name, $relationship->getEquivalentDefinition());
-        }
-
-        return $relationship;
-    }
-
-    /**
-     * Get mutators for column with specified abstract or column type.
-     *
-     * @param string $abstractType Column type.
-     * @return array
-     */
-    public function getMutators($abstractType)
-    {
-        return isset($this->config['mutators'][$abstractType])
-            ? $this->config['mutators'][$abstractType]
-            : [];
     }
 
     /**

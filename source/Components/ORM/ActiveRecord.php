@@ -52,17 +52,16 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     /**
      * Constants used to declare relation schemas.
      */
-    const OUTER_KEY         = 901;
-    const INNER_KEY         = 902;
-    const MORPH_KEY         = 903;
-    const PIVOT_TABLE       = 904;
-    const PIVOT_COLUMNS     = 905;
-    const THOUGHT_INNER_KEY = 906;
-    const THOUGHT_OUTER_KEY = 907;
-    const WHERE             = 908;
-    const WHERE_PIVOT       = 909;
-    const PREFILL_FIELDS    = 910;
-    const PREFILL_PIVOT     = 911;
+    const OUTER_KEY         = 901; //Outer key name
+    const INNER_KEY         = 902; //Inner key name
+    const MORPH_KEY         = 903; //Morph key name
+    const PIVOT_TABLE       = 904; //Pivot table name
+    const PIVOT_COLUMNS     = 905; //Pre-defined pivot table columns
+    const THOUGHT_INNER_KEY = 906; //Pivot table options
+    const THOUGHT_OUTER_KEY = 907; //Pivot table options
+    const WHERE             = 908; //Where conditions
+    const WHERE_PIVOT       = 909; //Where pivot conditions
+    const PREFILL_FIELDS    = 910; //This is for relation create/add method
 
     /**
      * Additional constants used to control relation schema creation.

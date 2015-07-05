@@ -47,18 +47,22 @@ class BelongsToMorphedSchema extends MorphedRelationSchema
 
         $innerSchema = $this->recordSchema->getTableSchema();
 
-        $morphKey = $innerSchema->column($this->definition[ActiveRecord::MORPH_KEY]);
+        /**
+         * Morph key contains parent type, nullable by default.
+         */
+        $morphKey = $innerSchema->column($this->getMorphKey());
         $morphKey->string(static::TYPE_COLUMN_SIZE);
-        $morphKey->nullable($this->definition[ActiveRecord::NULLABLE]);
+        $morphKey->nullable($this->isNullable());
 
+        /**
+         * Inner key contains link to parent outer key (usually id), nullable by default.
+         */
         $innerKey = $innerSchema->column($this->getInnerKey());
         $innerKey->type($this->getOuterKeyType());
-        $innerKey->nullable($this->definition[ActiveRecord::NULLABLE]);
+        $innerKey->nullable($this->isNullable());
 
-        $innerSchema->index(
-            $this->definition[ActiveRecord::MORPH_KEY],
-            $this->definition[ActiveRecord::INNER_KEY]
-        );
+        //Required index
+        $innerSchema->index($this->getMorphKey(), $this->getInnerKey());
     }
 
     /**
