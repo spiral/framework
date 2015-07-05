@@ -75,7 +75,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ...,
      *      'profile' => [
      *          self::HAS_ONE    => 'Models\Profile',
-     *          self::CONSTRAINT => false //No foreign keys will be created
+     *          self::CONSTRAINT => false               //No foreign keys will be created
      *      ]
      * ];
      *
@@ -105,8 +105,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ...,
      *      'profile' => [
      *          self::HAS_ONE => 'Models\Profile',
-     *          self::INVERSE => 'parent_user'      //Will create BELONGS_TO relation in Profile
-     *                                              //model
+     *          self::INVERSE => 'parent_user'        //Will create BELONGS_TO relation in Profile
+     *                                                //model
      *      ]
      * ];
      *
@@ -130,7 +130,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'posts' => [
-     *          self::HAS_ONE   => 'Models\Post',
+     *          self::HAS_MANY  => 'Models\Post',
      *          self::INNER_KEY => 'internal_key'       //Column in "users" table
      *      ]
      * ];
@@ -140,7 +140,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'posts' => [
-     *          self::HAS_ONE   => 'Models\Post',
+     *          self::HAS_MANY  => 'Models\Post',
      *          self::OUTER_KEY => 'parent_user_id'     //Column in "posts" table
      *      ]
      * ];
@@ -149,8 +149,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'posts' => [
-     *          self::HAS_ONE    => 'Models\Post',
-     *          self::CONSTRAINT => false //No foreign keys will be created
+     *          self::HAS_MANY   => 'Models\Post',
+     *          self::CONSTRAINT => false               //No foreign keys will be created
      *      ]
      * ];
      *
@@ -158,7 +158,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'posts' => [
-     *          self::HAS_ONE           => 'Models\Post',
+     *          self::HAS_MANY          => 'Models\Post',
      *          self::CONSTRAINT_ACTION => 'NO ACTION' //We can also use different types, but make
      *                                                 //sure they are supported by your database
      *      ]
@@ -170,8 +170,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'posts' => [
-     *          self::HAS_ONE  => 'Models\Post',
-     *          self::NULLABLE => false                //Post should always have associated user
+     *          self::HAS_MANY  => 'Models\Post',
+     *          self::NULLABLE  => false                //Post should always have associated user
      *      ]
      * ];
      *
@@ -179,8 +179,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'publicPosts' => [
-     *          self::HAS_ONE  => 'Models\Post',
-     *          self::WHERE => [
+     *          self::HAS_MANY  => 'Models\Post',
+     *          self::WHERE     => [
      *              '{table}.status' => 'public'      //Relates to only public posts, {table} is
      *                                                //required to be included into where condition
      *                                                //to build valid where or on where statement.
@@ -192,13 +192,26 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'posts' => [
-     *          self::HAS_ONE => 'Models\Post',
+     *          self::HAS_MANY => 'Models\Post',
      *          self::INVERSE => 'author'             //Will create BELONGS_TO relation in Post
      *                                                //model
      *      ]
      * ];
      *
      * Attention, WHERE conditions will be not be inversed!
+     * You can also use MORPH_KEY option if you want to state that relation points to morphed
+     * model (see BELONGS_TO morph section documentation):
+     * protected $schema = [
+     *      ...,
+     *      'approvedComments' => [
+     *          self::HAS_MANY   => 'Models\Comment',
+     *          self::MORPH_KEY => 'target_type'
+     *          self::WHERE     => [
+     *              '{table}.status' => 'approved'    //Only approved model comments
+     *          ]
+     *      ]
+     * ];
+     *
      *
      * By default this relation will be preloaded using POSTLOAD method (executed as separate query).
      */
@@ -225,13 +238,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ]
      * ];
      *
-     * By default inner key will be named as parent_model_role_name_{inner_key} (Example: User model
+     * By default outer key will be named as parent_model_role_name_{inner_key} (Example: User model
      * + id as primary key will create inner key named "user_id"), we can redefine it:
      * protected $schema = [
      *      ...,
      *      'author' => [
-     *          self::BELONGS_TO   => 'Models\Post',
-     *          self::INNER_KEY    => 'parent_user_id'     //Column in "posts" table
+     *          self::BELONGS_TO   => 'Models\User',
+     *          self::INNER_KEY    => 'parent_user_id'     //Column in "comments" table
      *      ]
      * ];
      *
@@ -239,8 +252,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * protected $schema = [
      *      ...,
      *      'author' => [
-     *          self::HAS_ONE    => 'Models\User',
-     *          self::CONSTRAINT => false //No foreign keys will be created
+     *          self::BELONGS_TO => 'Models\User',
+     *          self::CONSTRAINT => false                  //No foreign keys will be created
      *      ]
      * ];
      *
@@ -249,8 +262,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ...,
      *      'author' => [
      *          self::BELONGS_TO        => 'Models\User',
-     *          self::CONSTRAINT_ACTION => 'NO ACTION' //We can also use different types, but make
-     *                                                 //sure they are supported by your database
+     *          self::CONSTRAINT_ACTION => 'NO ACTION'    //We can also use different types, but make
+     *                                                    //sure they are supported by your database
      *      ]
      * ];
      *
@@ -297,6 +310,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *          self::BELONGS_TO => 'Models\CommentableInterface'
      *      ]
      * ];
+     *
+     * By default morph key will be named as relation_name_type: "target_type".
      *
      * System will automatically create inner key and morph key to support such relation. You can
      * define custom morph key via MORPH_KEY option. The most efficient way to use polymorphic
