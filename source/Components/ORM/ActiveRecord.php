@@ -467,6 +467,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     protected $relations = [];
 
+    /**
+     * New instance of ActiveRecord.
+     *
+     * @param array $data
+     * @param bool  $loaded
+     * @param ORM   $orm
+     */
     public function __construct(array $data = [], $loaded = false, ORM $orm = null)
     {
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();
@@ -1009,32 +1016,60 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
-     * Get ORM selector used to build complex SQL queries to fetch model and it's relations.
+     * Get ORM selector used to build complex SQL queries to fetch model and it's relations. Use
+     * second argument to specify relations to be loaded.
      *
-     * @param mixed $query Fields and conditions to filter by.
+     * Example:
+     * User::find(['status'=>'active'], ['profile']);
+     *
+     * @param array $where Selection WHERE statement.
+     * @param array $load  Array or relations to be loaded.
      * @return Selector|static[]
      */
-    public static function find(array $query = [])
+    public static function find(array $where = [], array $load = [])
     {
-        return static::ormSelector()->where($query);
+        return static::ormSelector()->load($load)->find($where);
     }
 
     /**
-     * Select one record from collection.
+     * Fetch one record from database or return null. Use second argument to specify relations to be
+     * loaded.
      *
-     * TODO: Add WITH parameter
+     * Example:
+     * User::findOne(['name'=>'Wolfy-J'], ['profile'], ['id'=>'DESC']);
      *
-     * @param array $query Fields and conditions to filter by.
-     * @return static
+     * @param array $where   Selection WHERE statement.
+     * @param array $load    Array or relations to be loaded. You can't use INLOAD or JOIN_ONLY methods
+     *                       with findOne.
+     * @param array $orderBy Sort by conditions.
+     * @return static|null
      */
-    public static function findOne(array $query = [])
+    public static function findOne(array $where = [], array $load = [], array $orderBy = [])
     {
-        return static::find($query)->findOne();
+        $selector = static::find($where, $load);
+
+        foreach ($orderBy as $column => $direction)
+        {
+            $selector->orderBy($column, $direction);
+        }
+
+        return $selector->findOne();
     }
 
-    public static function findByID($id = null)
+    /**
+     * Fetch one record from database by primary key value.
+     *
+     * Example:
+     * User::findByID(1, ['profile']);
+     *
+     * @param mixed $id      Primary key.
+     * @param array $load    Array or relations to be loaded. You can't use INLOAD or JOIN_ONLY methods
+     *                       with findOne.
+     * @return static|null
+     */
+    public static function findByID($id = null, array $load = [])
     {
-        return static::findOne(['_id' => $id]);
+        return static::ormSelector()->load($load)->findByID($id);
     }
 
     /**

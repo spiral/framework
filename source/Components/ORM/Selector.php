@@ -160,8 +160,16 @@ class Selector extends AbstractSelectQuery
         {
             foreach ($relation as $name => $options)
             {
-                //Multiple relations or relation with addition load options
-                $this->load($name, $options, $chainMethod);
+                if (is_string($options))
+                {
+                    //Array of relation names
+                    $this->load($options, [], $chainMethod);
+                }
+                else
+                {
+                    //Multiple relations or relation with addition load options
+                    $this->load($name, $options, $chainMethod);
+                }
             }
 
             return $this;
@@ -197,6 +205,9 @@ class Selector extends AbstractSelectQuery
      *
      * //Table "statistics" will be joined to query under "stats" alias
      * User::find()->inload('profile.statistics', ['alias' => 'stats']);
+     *
+     * Attention, you will not be able to paginate results if you joined HAS_MANY or MANY_TO_MANY
+     * relation!
      *
      * @see load()
      * @see postload()
@@ -236,6 +247,9 @@ class Selector extends AbstractSelectQuery
      * User::find()->with('profile.statistics', ['alias' => 'stats']);
      *
      * Method is not identical to join(), as it will configure all conditions automatically.
+     *
+     * Attention, you will not be able to paginate results if you joined HAS_MANY or MANY_TO_MANY
+     * relation!
      *
      * @see load()
      * @see inload()
@@ -284,13 +298,6 @@ class Selector extends AbstractSelectQuery
         return $this->load($relation, $options, self::POSTLOAD);
     }
 
-    public function has($relation, $valueA = null, $valueB = null)
-    {
-        //TODO: WAIT FOR RELATION
-
-        return $this;
-    }
-
     /**
      * Get or render SQL statement.
      *
@@ -330,6 +337,132 @@ class Selector extends AbstractSelectQuery
     public function getIterator()
     {
         return new ModelIterator($this->orm, $this->class, $this->fetchData());
+    }
+
+    /**
+     * Add where condition to statement (alias for where method). Where condition will be specified
+     * with AND boolean joiner. Method supports nested queries and array based (mongo like) where
+     * conditions. Every provided parameter will be automatically escaped in generated query.
+     *
+     * Examples:
+     * 1) Simple token/nested query or expression
+     * $selector->find(new SQLFragment('(SELECT count(*) from `table`)'));
+     *
+     * 2) Simple assessment (= or IN)
+     * $selector->find('column', $value);
+     * $selector->find('column', array(1, 2, 3));
+     * $selector->find('column', new SQLFragment('CONCAT(columnA, columnB)'));
+     *
+     * 3) Assessment with specified operator (operator will be converted to uppercase automatically)
+     * $selector->find('column', '=', $value);
+     * $selector->find('column', 'IN', array(1, 2, 3));
+     * $selector->find('column', 'LIKE', $string);
+     * $selector->find('column', 'IN', new SQLFragment('(SELECT id from `table` limit 1)'));
+     *
+     * 4) Between and not between statements
+     * $selector->find('column', 'between', 1, 10);
+     * $selector->find('column', 'not between', 1, 10);
+     * $selector->find('column', 'not between', new SQLFragment('MIN(price)'), $maximum);
+     *
+     * 5) Closure with nested conditions
+     * $selector->find(function(Selector $select){
+     *      $selector->find("name", "Wolfy-J")->orWhere("balance", ">", 100)
+     * });
+     *
+     * 6) Array based condition
+     * $selector->find(["column" => 1]);
+     * $selector->find(["column" => [">" => 1, "<" => 10]]);
+     * $selector->find([
+     *      "@or" => [
+     *          ["id" => 1],
+     *          ["column" => ["like" => "name"]]
+     *      ]
+     * ]);
+     * $selector->find([
+     *      '@or' => [
+     *          ["id" => 1],
+     *          ["id" => 2],
+     *          ["id" => 3],
+     *          ["id" => 4],
+     *          ["id" => 5],
+     *      ],
+     *      "column" => [
+     *          "like" => "name"
+     *      ],
+     *      'x'      => [
+     *          '>' => 1,
+     *          '<' => 10
+     *      ]
+     * ]);
+     *
+     * You can read more about complex where statements in official documentation or look mongo
+     * queries examples.
+     *
+     * @see parseWhere()
+     * @see whereToken()
+     * @param string|mixed $identifier Column or expression.
+     * @param mixed        $variousA   Operator or value.
+     * @param mixed        $variousB   Value is operator specified.
+     * @param mixed        $variousC   Specified only in between statements.
+     * @return static
+     */
+    public function find($identifier, $variousA = null, $variousB = null, $variousC = null)
+    {
+        return call_user_func_array([
+            $this, 'where'
+        ], func_get_args());
+    }
+
+    /**
+     * Fetch one model from database. Attention, LIMIT statement will be used, meaning you can't
+     * join HAS_MANY or MANY_TO_MANY relations using INLOAD (inload) or JOIN_ONLY (with) methods.
+     *
+     * @param array $where Selection WHERE statement.
+     * @return ActiveRecord|null
+     */
+    public function findOne(array $where = [])
+    {
+        if (!empty($where))
+        {
+            $this->where($where);
+        }
+
+        $data = $this->limit(1)->fetchData();
+        if (empty($data))
+        {
+            return null;
+        }
+
+        $class = $this->class;
+
+        return new $class($data[0], true, $this->orm);
+    }
+
+    /**
+     * Fetch one model from database using it's primary key. You can use INLOAD and JOIN_ONLY loaders
+     * with HAS_MANY or MANY_TO_MANY relations with this method as no limit used.
+     *
+     * @param mixed $id Primary key value.
+     * @return ActiveRecord|null
+     * @throws ORMException
+     */
+    public function findByID($id)
+    {
+        $primaryKey = $this->loader->getPrimaryKey();
+        if (empty($primaryKey))
+        {
+            throw new ORMException("Unable to fetch data by primary key, no primary key found.");
+        }
+
+        $data = $this->where($primaryKey, $id)->fetchData();
+        if (empty($data))
+        {
+            return null;
+        }
+
+        $class = $this->class;
+
+        return new $class($data[0], true, $this->orm);
     }
 
     /**

@@ -11,8 +11,6 @@ namespace Spiral\Components\DBAL\Builders\Common;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryBuilder;
-use Spiral\Components\DBAL\SqlFragmentInterface;
-use Spiral\Components\DBAL\SqlExpression;
 
 trait WhereTrait
 {

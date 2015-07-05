@@ -991,10 +991,11 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     /**
      * Select one document from collection.
      *
-     * @param array $query Fields and conditions to filter by.
+     * @param array $query  Fields and conditions to filter by.
+     * @param array $sortBy Sorting.
      * @return static
      */
-    public static function findOne(array $query = [])
+    public static function findOne(array $query = [], array $sortBy = [])
     {
         return static::find($query)->findOne();
     }

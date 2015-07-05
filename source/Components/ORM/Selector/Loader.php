@@ -221,6 +221,21 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
+     * Get primary key name related to loader model.
+     *
+     * @return string|null
+     */
+    public function getPrimaryKey()
+    {
+        if (!isset($this->schema[ORM::E_PRIMARY_KEY]))
+        {
+            return null;
+        }
+
+        return $this->getAlias() . '.' . $this->schema[ORM::E_PRIMARY_KEY];
+    }
+
+    /**
      * Instance of Dbal\Database data should be loaded from.
      *
      * @return Database

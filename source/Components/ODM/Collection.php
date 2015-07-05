@@ -290,7 +290,7 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
     }
 
     /**
-     * Send collection query to fetch multiple ODM Documents.
+     * Send collection query to fetch multiple ODM Documents. Alias for where() and query() methods.
      *
      * @param array $query Fields and conditions to query by.
      * @return static
@@ -303,14 +303,12 @@ class Collection extends Component implements \IteratorAggregate, PaginableInter
     /**
      * Select one document or it's fields from collection.
      *
-     * @param array $query  Fields and conditions to query by.
-     * @param array $fields Fields of the results to return. If not provided Document object will be
-     *                      returned.
+     * @param array $query Fields and conditions to query by.
      * @return Document|array
      */
-    public function findOne(array $query = [], array $fields = [])
+    public function findOne(array $query = [])
     {
-        return $this->createCursor($query, $fields)->limit(1)->getNext();
+        return $this->createCursor($query)->limit(1)->getNext();
     }
 
     /**
