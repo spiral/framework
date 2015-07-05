@@ -14,5 +14,5 @@ Base application with modules, views and routing: https://github.com/spiral-php/
 Guide: https://github.com/spiral-php/guide
 
 Currently in development:
-- ORM Relations Mapping
+- ORM Model relation classes (pre-loading, eager loading, schema building, all done)
 - ORM Virtual Documentation generation
