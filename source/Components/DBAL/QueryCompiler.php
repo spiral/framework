@@ -263,8 +263,9 @@ class QueryCompiler extends Component
         $groupBy = $groupBy ? $this->groupBy($groupBy) . ' ' : '';
 
         //Initial statement have predictable order
-        $statement = rtrim("SELECT\n{$distinct}{$columns}"
-                . "\nFROM {$from} {$joins}{$where}{$groupBy}{$having}") . ' ';
+        $statement = rtrim(
+                "SELECT\n{$distinct}{$columns}" . "\nFROM {$from} {$joins}{$where}{$groupBy}{$having}"
+            ) . ' ';
 
         if (empty($unions) && !empty($orderBy))
         {
@@ -322,8 +323,8 @@ class QueryCompiler extends Component
      */
     public function update($table, array $columns, array $joins = [], array $where = [])
     {
-        $statement = 'UPDATE ' . $this->quote($table, true, true) . "\n";
-        $statement .= "SET" . $this->prepareColumns($columns);
+        $statement = "UPDATE " . $this->quote($table, true, true);
+        $statement .= "\nSET" . $this->prepareColumns($columns);
 
         if (!empty($where))
         {
@@ -425,7 +426,7 @@ class QueryCompiler extends Component
 
             if (!empty($join['on']))
             {
-                $statement .= ' ON ' . $this->where($join['on']);
+                $statement .= " ON " . $this->where($join['on']);
             }
         }
 

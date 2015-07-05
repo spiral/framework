@@ -108,7 +108,7 @@ class QueryCompiler extends BaseQueryCompiler
 
         if (!empty($joins))
         {
-            $statement .= $this->joins($joins) . "\n";
+            $statement .= $this->joins($joins);
         }
 
         $statement .= "\nSET" . $this->prepareColumns($columns, $alias);
