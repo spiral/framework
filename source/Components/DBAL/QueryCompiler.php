@@ -251,7 +251,7 @@ class QueryCompiler extends Component
         $from = $this->tables($from);
         $joins = $joins ? $this->joins($joins) . ' ' : '';
 
-        $distinct = $distinct ? $this->distinct($distinct) . ' ' : '';
+        $distinct = $distinct ? ' ' . $this->distinct($distinct) . ' ' : '';
         $columns = $this->columns($columns);
 
         //Conditions
@@ -263,7 +263,7 @@ class QueryCompiler extends Component
 
         //Initial statement have predictable order
         $statement = rtrim(
-                "SELECT\n{$distinct}{$columns}" . "\nFROM {$from} {$joins}{$where}{$groupBy}{$having}"
+                "SELECT{$distinct}\n{$columns}" . "\nFROM {$from} {$joins}{$where}{$groupBy}{$having}"
             ) . ' ';
 
         if (empty($unions) && !empty($orderBy))
@@ -378,7 +378,7 @@ class QueryCompiler extends Component
      */
     protected function distinct($distinct)
     {
-        return 'DISTINCT';
+        return "DISTINCT";
     }
 
     /**

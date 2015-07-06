@@ -127,6 +127,6 @@ class QueryCompiler extends BaseQueryCompiler
      */
     protected function distinct($distinct)
     {
-        return 'DISTINCT' . (is_string($distinct) ? '(' . $this->quote($distinct) . ')' : '');
+        return "DISTINCT" . (is_string($distinct) ? '(' . $this->quote($distinct) . ')' : '');
     }
 }

@@ -11,11 +11,6 @@ namespace Spiral\Components\ORM;
 abstract class Relation implements RelationInerface
 {
     /**
-     * Internal relation type used to resolve outer table name.
-     */
-    const OUTER_TABLE = 1;
-
-    /**
      * Relation type.
      */
     const RELATION_TYPE = ActiveRecord::HAS_ONE;

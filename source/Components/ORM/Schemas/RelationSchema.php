@@ -463,13 +463,7 @@ abstract class RelationSchema implements RelationSchemaInterface
      */
     protected function normalizeDefinition()
     {
-        $outerTable = null;
-        if (!empty($this->getOuterModel()))
-        {
-            $outerTable = $this->getOuterModel()->getTable();
-        }
-
-        $definition = [Relation::OUTER_TABLE => $outerTable] + $this->definition;
+        $definition = $this->definition;
 
         //Unnecessary fields.
         unset(

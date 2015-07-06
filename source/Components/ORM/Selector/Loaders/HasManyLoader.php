@@ -47,6 +47,7 @@ class HasManyLoader extends HasOneLoader
                 $this->definition[ActiveRecord::WHERE],
                 $this->getAlias()
             ));
+            //TODO: custom where?
         }
 
         return $selector;
@@ -67,6 +68,7 @@ class HasManyLoader extends HasOneLoader
             $selector->onWhere($this->prepareWhere(
                 $this->definition[ActiveRecord::WHERE], $this->getAlias()
             ));
+            //TODO: custom where?
         }
     }
 }

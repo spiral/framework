@@ -52,7 +52,7 @@ class RootLoader extends Loader
      */
     public function configureSelector(Selector $selector)
     {
-        if (empty($this->loaders))
+        if (empty($this->loaders) && empty($this->joiners))
         {
             //No need to create any aliases
             return;

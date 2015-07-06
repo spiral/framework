@@ -41,6 +41,14 @@ abstract class Loader implements LoaderInterface
     protected $orm = null;
 
     /**
+     * Related model schema.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $schema = [];
+
+    /**
      * Container related to parent loader.
      *
      * @var string
@@ -63,21 +71,14 @@ abstract class Loader implements LoaderInterface
     protected $parent = null;
 
     /**
-     * Related model schema.
-     *
-     * @invisible
-     * @var array
-     */
-    protected $schema = [];
-
-    /**
      * Loader options usually used while declaring joins and etc.
      *
      * @var array
      */
     protected $options = [
         'method' => null,
-        'alias' => null
+        'alias' => null,
+        'where' => null
     ];
 
     /**
@@ -107,6 +108,13 @@ abstract class Loader implements LoaderInterface
      * @var LoaderInterface[]
      */
     protected $loaders = [];
+
+    /**
+     * Loaders used purely for conditional purposes.
+     *
+     * @var Loader[]
+     */
+    protected $joiners = [];
 
     /**
      * Helper structure used to prevent data duplication when LEFT JOIN multiplies parent records.
@@ -152,12 +160,12 @@ abstract class Loader implements LoaderInterface
     {
         $this->orm = $orm;
 
+        //Related model schema
+        $this->schema = $orm->getSchema($definition[static::RELATION_TYPE]);
+
         $this->container = $container;
         $this->definition = $definition;
         $this->parent = $parent;
-
-        //Related model schema
-        $this->schema = $orm->getSchema($this->getTarget());
 
         //Compiling options
         $this->options['method'] = static::LOAD_METHOD;
@@ -168,26 +176,7 @@ abstract class Loader implements LoaderInterface
             $this->options['method'] = Selector::POSTLOAD;
         }
 
-        if ($this->parent instanceof Selector\Loaders\RootLoader)
-        {
-            $this->options['alias'] = $container;
-        }
-        else
-        {
-            $this->options['alias'] = $this->parent->getAlias() . '_' . $container;
-        }
-
         $this->columns = array_keys($this->schema[ORM::E_COLUMNS]);
-    }
-
-    /**
-     * Get model class loader references to.
-     *
-     * @return string
-     */
-    protected function getTarget()
-    {
-        return $this->definition[static::RELATION_TYPE];
     }
 
     /**
@@ -211,13 +200,43 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
+     * Instance of Dbal\Database data should be loaded from.
+     *
+     * @return Database
+     */
+    public function dbalDatabase()
+    {
+        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
+    }
+
+    /**
      * Table alias to be used in query.
      *
      * @return string
      */
     public function getAlias()
     {
-        return $this->options['alias'];
+        if (!empty($this->options['alias']))
+        {
+            return $this->options['alias'];
+        }
+
+        if ($this->parent instanceof Selector\Loaders\RootLoader)
+        {
+            $alias = $this->container;
+        }
+        else
+        {
+            $alias = $this->parent->getAlias() . '_' . $this->container;
+        }
+
+        if ($this->options['method'] == Selector::INLOAD)
+        {
+            //We have to prefix all INLOADs to prevent collision with joiners
+            $alias .= '_data';
+        }
+
+        return $alias;
     }
 
     /**
@@ -235,30 +254,35 @@ abstract class Loader implements LoaderInterface
         return $this->getAlias() . '.' . $this->schema[ORM::E_PRIMARY_KEY];
     }
 
-    /**
-     * Instance of Dbal\Database data should be loaded from.
-     *
-     * @return Database
-     */
-    public function dbalDatabase()
+
+    protected function getKey($key)
     {
-        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
+        if (!isset($this->definition[$key]))
+        {
+            return null;
+        }
+
+        return $this->getAlias() . '.' . $this->definition[$key];
+    }
+
+    protected function getParentKey()
+    {
+        return $this->parent->getAlias() . '.' . $this->definition[ActiveRecord::INNER_KEY];
     }
 
     /**
-     * Indicates that loader columns should be included into query statement. Used in cases
-     * where relation is joined for conditional purposes only (JOIN_ONLY method).
+     * Indicates that loader columns should be included into query statement.
      *
      * @return bool
      */
-    public function isLoadable()
+    public function isLoaded()
     {
-        if (!empty($this->parent) && !$this->parent->isLoadable())
+        if (!empty($this->parent) && !$this->parent->isLoaded())
         {
             return false;
         }
 
-        return $this->options['method'] !== Selector::JOIN_ONLY;
+        return $this->options['method'] !== Selector::JOIN;
     }
 
     /**
@@ -268,21 +292,17 @@ abstract class Loader implements LoaderInterface
      */
     protected function isJoined()
     {
-        return in_array($this->options['method'], [Selector::INLOAD, Selector::JOIN_ONLY]);
+        return in_array($this->options['method'], [Selector::INLOAD, Selector::JOIN]);
     }
 
     /**
-     * Join type depends on requiment to load data.
+     * Join type.
      *
      * @return string
      */
-    protected function isInnerJoin()
+    protected function joinType()
     {
-        return $this->options['method'] == Selector::JOIN_ONLY;
-    }
-
-    protected function join(Selector $selector, $table, array $on)
-    {
+        return $this->options['method'] == Selector::JOIN ? 'INNER' : 'LEFT';
     }
 
     /**
@@ -310,36 +330,28 @@ abstract class Loader implements LoaderInterface
         return $this;
     }
 
-    /**
-     * Receive loader options.
-     *
-     * @return array
-     */
-    public function getOptions()
+    protected function createLoader()
     {
-        return $this->options;
+        //MOVE PART OF CODE FROM LOADER AND JOINER
     }
 
     /**
      * Pre-load data on inner relation or relation chain.
      *
-     * @param string   $relation    Relation name, or chain of relations separated by .
-     * @param array    $options     Loader options (will be applied to last chain loader only).
-     * @param int|null $chainMethod INLOAD, POSTLOAD, JOIN_ONLY method forced for all loaders in this
-     *                              chain.
+     * @param string $relation Relation name, or chain of relations separated by .
+     * @param array  $options  Loader options (will be applied to last chain loader only).
      * @return LoaderInterface
      */
-    public function loader($relation, array $options = [], $chainMethod = null)
+    public function loader($relation, array $options = [])
     {
         if (($position = strpos($relation, '.')) !== false)
         {
             $parentRelation = substr($relation, 0, $position);
 
             //Recursively (will work only with ORM loaders).
-            return $this->loader($parentRelation, [], $chainMethod)->loader(
+            return $this->loader($parentRelation, [])->loader(
                 substr($relation, $position + 1),
-                $options,
-                $chainMethod
+                $options
             );
         }
 
@@ -388,14 +400,51 @@ abstract class Loader implements LoaderInterface
         return $loader;
     }
 
-    public function detachedLoader($relation, array $options = [], $chainMethod = null)
+    /**
+     * Pre-load data on inner relation or relation chain.
+     *
+     * @param string $relation Relation name, or chain of relations separated by .
+     * @param array  $options  Loader options (will be applied to last chain loader only).
+     * @return Loader
+     */
+    public function joiner($relation, array $options = [])
     {
-        $loader = $this->loader($relation, $options, $chainMethod);
+        //We have to force joining method for full chain
+        $options['method'] = Selector::JOIN;
 
-        //Detaching (TODO: CHANGE)
-        unset($this->loaders[$relation]);
+        if (($position = strpos($relation, '.')) !== false)
+        {
+            $parentRelation = substr($relation, 0, $position);
 
-        return $loader;
+            //Recursively (will work only with ORM loaders).
+            return $this->joiner($parentRelation, [])->joiner(
+                substr($relation, $position + 1),
+                $options
+            );
+        }
+
+        if (!isset($this->schema[ORM::E_RELATIONS][$relation]))
+        {
+            $container = $this->container ?: $this->schema[ORM::E_ROLE_NAME];
+            throw new ORMException("Undefined relation '{$relation}' under '{$container}'.");
+        }
+
+        if (isset($this->joiners[$relation]))
+        {
+            //Updating existed joiner options
+            return $this->joiners[$relation]->setOptions($options);
+        }
+
+        $relationOptions = $this->schema[ORM::E_RELATIONS][$relation];
+
+        $joiner = $this->orm->relationLoader(
+            $relationOptions[ORM::R_TYPE],
+            $relation,
+            $relationOptions[ORM::R_DEFINITION],
+            $this
+        );
+
+        return $this->joiners[$relation] = $joiner->setOptions($options);
     }
 
     /**
@@ -406,7 +455,7 @@ abstract class Loader implements LoaderInterface
      */
     public function createSelector()
     {
-        if (!$this->isLoadable())
+        if (!$this->isLoaded())
         {
             return null;
         }
@@ -417,6 +466,11 @@ abstract class Loader implements LoaderInterface
         foreach ($this->loaders as $loader)
         {
             $loader->configureSelector($selector);
+        }
+
+        foreach ($this->joiners as $joiner)
+        {
+            $joiner->configureSelector($selector);
         }
 
         return $selector;
@@ -434,7 +488,7 @@ abstract class Loader implements LoaderInterface
             return;
         }
 
-        if (!$this->configured && $this->options['method'] != Selector::SUB_QUERY)
+        if (!$this->configured)
         {
             $this->configureColumns($selector);
 
@@ -444,9 +498,14 @@ abstract class Loader implements LoaderInterface
             $this->configured = true;
         }
 
-        foreach ($this->loaders as $loader)
+        foreach ($this->loaders as $joiners)
         {
-            $loader->configureSelector($selector);
+            $joiners->configureSelector($selector);
+        }
+
+        foreach ($this->joiners as $joiner)
+        {
+            $joiner->configureSelector($selector);
         }
     }
 
@@ -457,7 +516,7 @@ abstract class Loader implements LoaderInterface
      */
     protected function configureColumns(Selector $selector)
     {
-        if (!$this->isLoadable())
+        if (!$this->isLoaded())
         {
             return;
         }
@@ -481,14 +540,11 @@ abstract class Loader implements LoaderInterface
      * fetched from there. Additionally this method may be used to create relations to external
      * source of data (ODM, elasticSearch and etc).
      */
-    public function postLoad()
+    public function postload()
     {
         foreach ($this->loaders as $loader)
         {
-            if (
-                $loader instanceof Loader
-                && $loader->options['method'] === Selector::POSTLOAD
-            )
+            if ($loader instanceof Loader && !$loader->isJoined())
             {
                 if (!empty($selector = $loader->createSelector()))
                 {
@@ -529,7 +585,7 @@ abstract class Loader implements LoaderInterface
      */
     public function parseRow(array $row)
     {
-        if (!$this->isLoadable())
+        if (!$this->isLoaded())
         {
             return;
         }
@@ -568,7 +624,7 @@ abstract class Loader implements LoaderInterface
     {
         foreach ($this->loaders as $loader)
         {
-            if ($loader instanceof Loader && $loader->isJoined())
+            if ($loader instanceof Loader && $loader->isJoined() && $loader->isLoaded())
             {
                 $loader->parseRow($row);
             }
@@ -710,7 +766,7 @@ abstract class Loader implements LoaderInterface
             return [];
         }
 
-        return array_keys($this->references[$referenceKey]);
+        return array_unique(array_keys($this->references[$referenceKey]));
     }
 
     /**
@@ -745,10 +801,7 @@ abstract class Loader implements LoaderInterface
         {
             if ($multiple)
             {
-                if (
-                    isset($subset[$container])
-                    && in_array($data, $subset[$container])
-                )
+                if (isset($subset[$container]) && in_array($data, $subset[$container]))
                 {
                     unset($subset);
                     continue;
@@ -783,6 +836,8 @@ abstract class Loader implements LoaderInterface
      */
     protected function prepareWhere(array $where, $tableAlias)
     {
+        //TODO: reuse?
+
         $result = [];
 
         foreach ($where as $column => $value)
@@ -812,7 +867,6 @@ abstract class Loader implements LoaderInterface
     public function clean($reconfigure = false)
     {
         $this->duplicates = [];
-        $this->references = [];
         $this->references = [];
         $this->result = [];
 

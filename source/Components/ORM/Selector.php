@@ -20,9 +20,6 @@ use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
 use Spiral\Core\Component;
 
-/**
- * @method static include ($relation, array $options = []) Alias for inload() method.
- */
 class Selector extends AbstractSelectQuery
 {
     /**
@@ -31,12 +28,11 @@ class Selector extends AbstractSelectQuery
     use Component\LoggerTrait;
 
     /**
-     * Loading methods. See load(), with(), postload(), inload() methods.
+     * Loading methods. See load() and with() methods.
      */
-    const INLOAD    = 1;
-    const POSTLOAD  = 2;
-    const JOIN_ONLY = 3;
-    const SUB_QUERY = 4; //Do not use this constant by your own
+    const INLOAD   = 1;
+    const POSTLOAD = 2;
+    const JOIN     = 3;
 
     /**
      * Relation between count records / count rows and type of log message to be raised. Log message
@@ -112,7 +108,11 @@ class Selector extends AbstractSelectQuery
         //We aways need primary loader
         if (empty($this->loader = $loader))
         {
-            $this->loader = new RootLoader($this->orm, null, $this->orm->getSchema($class));
+            $this->loader = new RootLoader(
+                $this->orm,
+                null,
+                $this->orm->getSchema($class)
+            );
         }
 
         $database = $this->loader->dbalDatabase();
@@ -123,45 +123,41 @@ class Selector extends AbstractSelectQuery
     }
 
     /**
-     * Pre-load model relations. System will pick most optimal way of data pre-loading based on
-     * relation (INLOAD - related tables will be joined to query, POSTLOAD - related data will
-     * be loaded using separate query).
+     * Set columns should be fetched as result of SELECT query. Columns can be provided with specified
+     * alias (AS construction). QueryResult will be returned as result. No post loaders will be
+     * executed.
      *
-     * Use options to specify custom settings for relation loading.
-     * You can request to pre-load one relation or chain of relations, in this case options will
-     * be applied to last relation in chain.
-     *
-     * Joined tables will automatically receive alias which is identical to their relation name,
-     * sub relations will be separated by _. You can change such alias using "alias" index of
-     * options array.
-     *
-     * Examples:
-     * //Table "profiles" will be joined to query under "profile" alias
-     * User::find()->load('profile')->where('profile.value', $value);
-     *
-     * //Table "profiles" will be joined to query under "my_alias" alias
-     * User::find()->load('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
-     *
-     * //Table "statistics" will be joined to query under "profile_statistics" alias
-     * User::find()->load('profile.statistics');
-     *
-     * //Table "statistics" will be joined to query under "stats" alias
-     * User::find()->load('profile.statistics', ['alias' => 'stats']);
-     *
-     * Attention, in some cases you can't use aliases in where condition as system may include
-     * relation data using external query, use "inload" or "quickJoin" methods to ensure that related
-     * table is joined into query.
-     *
-     * @see inload()
-     * @see postload()
-     * @see with()
-     * @param string   $relation    Relation name, or chain of relations separated by .
-     * @param array    $options     Loader options (will be applied to last chain loader only).
-     * @param int|null $chainMethod INLOAD, POSTLOAD, JOIN_ONLY method forced for all loaders in this
-     *                              chain.
+     * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
      * @return static
      */
-    public function load($relation, array $options = [], $chainMethod = null)
+    public function columns($columns = ['*'])
+    {
+        $this->columns = $this->fetchIdentifiers(func_get_args());
+
+        return $this;
+    }
+
+    /**
+     * Generate set of columns required to represent desired model and it's relations. Do not use
+     * this method by your own. Method will return columns offset.
+     *
+     * @param string $table   Source table name.
+     * @param array  $columns Original set of model columns.
+     * @return int
+     */
+    public function registerColumns($table, array $columns)
+    {
+        $offset = count($this->registeredColumns);
+        foreach ($columns as $column)
+        {
+            $columnAlias = 'c' . (++$this->countColumns);
+            $this->registeredColumns[] = $table . '.' . $column . ' AS ' . $columnAlias;
+        }
+
+        return $offset;
+    }
+
+    public function with($relation, array $options = [])
     {
         if (is_array($relation))
         {
@@ -170,12 +166,39 @@ class Selector extends AbstractSelectQuery
                 if (is_string($options))
                 {
                     //Array of relation names
-                    $this->load($options, [], $chainMethod);
+                    $this->with($options, []);
                 }
                 else
                 {
                     //Multiple relations or relation with addition load options
-                    $this->load($name, $options, $chainMethod);
+                    $this->with($name, $options);
+                }
+            }
+
+            return $this;
+        }
+
+        //Defining joiner
+        $this->loader->joiner($relation, $options);
+
+        return $this;
+    }
+
+    public function load($relation, array $options = [])
+    {
+        if (is_array($relation))
+        {
+            foreach ($relation as $name => $subOption)
+            {
+                if (is_string($subOption))
+                {
+                    //Array of relation names
+                    $this->load($subOption, $options);
+                }
+                else
+                {
+                    //Multiple relations or relation with addition load options
+                    $this->load($name, $subOption + $options);
                 }
             }
 
@@ -183,109 +206,7 @@ class Selector extends AbstractSelectQuery
         }
 
         //Nested loader
-        $this->loader->loader($relation, $options, $chainMethod);
-
-        return $this;
-    }
-
-    /**
-     * Pre-load model relations using table joining. If you don't need loaded data and using it
-     * for WHERE statement only - use with() method.
-     *
-     * Use options to specify custom settings for relation loading.
-     * You can request to pre-load one relation or chain of relations, in this case options will
-     * be applied to last relation in chain.
-     *
-     * Joined tables will automatically receive alias which is identical to their relation name,
-     * sub relations will be separated by _. You can change such alias using "alias" index of
-     * options array.
-     *
-     * Examples:
-     * //Table "profiles" will be joined to query under "profile" alias
-     * User::find()->inload('profile')->where('profile.value', $value);
-     *
-     * //Table "profiles" will be joined to query under "my_alias" alias
-     * User::find()->inload('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
-     *
-     * //Table "statistics" will be joined to query under "profile_statistics" alias
-     * User::find()->inload('profile.statistics');
-     *
-     * //Table "statistics" will be joined to query under "stats" alias
-     * User::find()->inload('profile.statistics', ['alias' => 'stats']);
-     *
-     * Attention, you will not be able to paginate results if you joined HAS_MANY or MANY_TO_MANY
-     * relation!
-     *
-     * Method has magic alias "include".
-     *
-     * @see load()
-     * @see postload()
-     * @see with()
-     * @param string $relation Relation name, or chain of relations separated by .
-     * @param array  $options  Loader options (will be applied to last chain loader only).
-     * @return static
-     */
-    public function inload($relation, array $options = [])
-    {
-        return $this->load($relation, $options, self::INLOAD);
-    }
-
-    /**
-     * Include model relations data into query using table joining but do not load resulted data.
-     * This method usually used in combination with WHERE statements.
-     *
-     * Attention, children table will be joined using INNER JOIN method.
-     *
-     * Use options to specify custom settings for relation loading.
-     * You can request to pre-load one relation or chain of relations, in this case options will
-     * be applied to last relation in chain.
-     *
-     * Joined tables will automatically receive alias which is identical to their relation name,
-     * sub relations will be separated by _. You can change such alias using "alias" index of
-     * options array.
-     *
-     * Examples:
-     * //Table "profiles" will be joined to query under "profile" alias
-     * User::find()->with('profile')->where('profile.value', $value);
-     *
-     * //Table "profiles" will be joined to query under "my_alias" alias
-     * User::find()->with('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
-     *
-     * //Table "statistics" will be joined to query under "profile_statistics" alias, only
-     * users with existed statistics will be found
-     * User::find()->with('profile.statistics');
-     *
-     * //Table "statistics" will be joined to query under "stats" alias
-     * User::find()->with('profile.statistics', ['alias' => 'stats']);
-     *
-     * Method is not identical to join(), as it will configure all conditions automatically.
-     *
-     * Attention, you will not be able to paginate results if you joined HAS_MANY or MANY_TO_MANY
-     * relation!
-     *
-     * @see load()
-     * @see inload()
-     * @see postload()
-     * @param string $relation Relation name, or chain of relations separated by .
-     * @param array  $options  Loader options (will be applied to last chain loader only).
-     * @return static
-     */
-    public function with($relation, array $options = [])
-    {
-        return $this->load($relation, $options, self::JOIN_ONLY);
-    }
-
-    public function has($relation)
-    {
-        $loader = $this->loader->detachedLoader($relation, [], self::SUB_QUERY);
-
-        /**
-         * @var Loader $loader
-         */
-        $selector = $loader->createSelector();
-        $selector->columns = ['COUNT(*)'];
-
-        $this->where($selector, '>', 0);
+        $this->loader->loader($relation, $options);
 
         return $this;
     }
@@ -304,10 +225,15 @@ class Selector extends AbstractSelectQuery
         //Primary loader may add custom conditions to select query
         $this->loader->configureSelector($this);
 
+        if (empty($columns = $this->columns))
+        {
+            $columns = !empty($this->registeredColumns) ? $this->registeredColumns : ['*'];
+        }
+
         return $compiler->select(
             [$this->loader->getTable() . ' AS ' . $this->loader->getAlias()],
             $this->distinct,
-            $this->getColumns(),
+            $columns,
             $this->joins,
             $this->whereTokens,
             $this->havingTokens,
@@ -321,10 +247,15 @@ class Selector extends AbstractSelectQuery
     /**
      * We have to redefine selector iterator and result or selection is set of models not columns.
      *
-     * @return ModelIterator
+     * @return ModelIterator|QueryResult
      */
     public function getIterator()
     {
+        if (!empty($this->columns))
+        {
+            return $this->run();
+        }
+
         return new ModelIterator($this->orm, $this->class, $this->fetchData());
     }
 
@@ -438,13 +369,13 @@ class Selector extends AbstractSelectQuery
     public function findByID($id)
     {
         $primaryKey = $this->loader->getPrimaryKey();
+
         if (empty($primaryKey))
         {
             throw new ORMException("Unable to fetch data by primary key, no primary key found.");
         }
 
-        $data = $this->where($primaryKey, $id)->fetchData();
-        if (empty($data))
+        if (empty($data = $this->where($primaryKey, $id)->fetchData()))
         {
             return null;
         }
@@ -452,21 +383,6 @@ class Selector extends AbstractSelectQuery
         $class = $this->class;
 
         return new $class($data[0], true, $this->orm);
-    }
-
-    /**
-     * Set columns should be fetched as result of SELECT query. Columns can be provided with specified
-     * alias (AS construction). QueryResult will be returned as result. No post loaders will be
-     * executed.
-     *
-     * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
-     * @return QueryResult
-     */
-    public function fetchColumns($columns = ['*'])
-    {
-        $this->columns = $this->fetchIdentifiers(func_get_args());
-
-        return $this->run();
     }
 
     /**
@@ -510,7 +426,7 @@ class Selector extends AbstractSelectQuery
         $result->close();
 
         //Executing post-loading
-        $this->loader->postLoad();
+        $this->loader->postload();
 
         //We have to fetch result again after post-loader were executed
         $data = $this->loader->getResult();
@@ -522,6 +438,39 @@ class Selector extends AbstractSelectQuery
         }
 
         return $data;
+    }
+
+    /**
+     * Helper method used to verify that spiral performed optimal processing on fetched result set.
+     * If query is too complex or has a lot of inload queries system may spend much more time building
+     * valid data tree.
+     *
+     * @param int $dataCount
+     * @param int $rowsCount
+     */
+    protected function checkCounts($dataCount, $rowsCount)
+    {
+        $dataRatio = $rowsCount / $dataCount;
+        if ($dataRatio == 1)
+        {
+            //No need to log it, everything seems fine
+            return;
+        }
+
+        $logLevel = $this->logLevels[0];
+        foreach ($this->logLevels as $ratio => $logLevel)
+        {
+            if ($dataRatio >= $ratio)
+            {
+                break;
+            }
+        }
+
+        self::logger()->log(
+            $logLevel,
+            "Query resulted with {rowsCount} row(s) grouped into {dataCount} records.",
+            compact('dataCount', 'rowsCount')
+        );
     }
 
     /**
@@ -626,99 +575,5 @@ class Selector extends AbstractSelectQuery
             $this->joins,
             $this->whereTokens
         );
-    }
-
-    /**
-     * Selector query columns can be specified multiple ways:
-     * 1) Using registered columns (provided by loaders)
-     * 2) Using user specified columns
-     * 3) Automatically using aggregation
-     *
-     * @return array
-     */
-    protected function getColumns()
-    {
-        if (!empty($this->columns))
-        {
-            return $this->columns;
-        }
-
-        if (!empty($this->registeredColumns))
-        {
-            return $this->registeredColumns;
-        }
-
-        return ['*'];
-    }
-
-    /**
-     * Generate set of columns required to represent desired model and it's relations. Do not use
-     * this method by your own. Method will return columns offset.
-     *
-     * @param string $table Source table name.
-     * @param array  $columns Original set of model columns.
-     * @return int
-     */
-    public function registerColumns($table, array $columns)
-    {
-        $offset = count($this->registeredColumns);
-        foreach ($columns as $column)
-        {
-            $columnAlias = 'c' . (++$this->countColumns);
-            $this->registeredColumns[] = $table . '.' . $column . ' AS ' . $columnAlias;
-        }
-
-        return $offset;
-    }
-
-    /**
-     * Helper method used to verify that spiral performed optimal processing on fetched result set.
-     * If query is too complex or has a lot of inload queries system may spend much more time building
-     * valid data tree.
-     *
-     * @param int $dataCount
-     * @param int $rowsCount
-     */
-    protected function checkCounts($dataCount, $rowsCount)
-    {
-        $dataRatio = $rowsCount / $dataCount;
-        if ($dataRatio == 1)
-        {
-            //No need to log it, everything seems fine
-            return;
-        }
-
-        $logLevel = $this->logLevels[0];
-        foreach ($this->logLevels as $ratio => $logLevel)
-        {
-            if ($dataRatio >= $ratio)
-            {
-                break;
-            }
-        }
-
-        self::logger()->log(
-            $logLevel,
-            "Query resulted with {rowsCount} row(s) grouped into {dataCount} records.",
-            compact('dataCount', 'rowsCount')
-        );
-    }
-
-    /**
-     * Magic methods to call aggregation methods or magic selector methods (include).
-     *
-     * @param string $method
-     * @param array  $arguments
-     * @return mixed
-     */
-    public function __call($method, $arguments)
-    {
-        if ($method == 'include')
-        {
-            //This can be changed in future to look better
-            return call_user_func_array([$this, 'inload'], $arguments);
-        }
-
-        return parent::__call($method, $arguments);
     }
 }

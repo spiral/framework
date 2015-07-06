@@ -45,7 +45,7 @@ interface LoaderInterface
      * fetched from there. Additionally this method may be used to create relations to external
      * source of data (ODM, elasticSearch and etc).
      */
-    public function postLoad();
+    public function postload();
 
     /**
      * Reference key (from parent object) required to speed up data normalization. In most of cases

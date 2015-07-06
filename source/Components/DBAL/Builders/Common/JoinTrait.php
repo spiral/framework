@@ -41,24 +41,24 @@ trait JoinTrait
     protected $currentJoin = null;
 
     /**
-     * Register new INNER table join, all future on() method calls will associate conditions to this
+     * Register new table join, all future on() method calls will associate conditions to this
      * join.
      *
      * Examples:
-     * $select->join('info', 'userID', 'users.id')->columns('info.balance');
-     * $select->join('info', 'userID', '=', 'users.id')->columns('info.balance');
-     * $select->join('info', ['userID' => 'users.id'])->columns('info.balance');
+     * $select->join('LEFT', 'info', 'userID', 'users.id')->columns('info.balance');
+     * $select->join('LEFT', 'info', 'userID', '=', 'users.id')->columns('info.balance');
+     * $select->join('LEFT', 'info', ['userID' => 'users.id'])->columns('info.balance');
      *
-     * $select->join('info', function($select) {
+     * $select->join('LEFT', 'info', function($select) {
      *      $select->on('userID', 'users.id')->orOn('userID', 'users.masterID');
      * })->columns('info.balance');
      *
      * Aliases can be also used:
-     * $select->join('info as i', 'i.userID', 'users.id')->columns('i.balance');
-     * $select->join('info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
-     * $select->join('info as i', ['i.userID' => 'users.id'])->columns('i.balance');
+     * $select->join('LEFT', 'info as i', 'i.userID', 'users.id')->columns('i.balance');
+     * $select->join('LEFT', 'info as i', 'i.userID', '=', 'users.id')->columns('i.balance');
+     * $select->join('LEFT', 'info as i', ['i.userID' => 'users.id'])->columns('i.balance');
      *
-     * $select->join('info as i', function($select) {
+     * $select->join('LEFT', 'info as i', function($select) {
      *      $select->on('i.userID', 'users.id')->orOn('i.userID', 'users.masterID');
      * })->columns('i.balance');
      *
@@ -66,15 +66,19 @@ trait JoinTrait
      * and aggregations.
      *
      * @link http://www.w3schools.com/sql/sql_join_inner.asp
+     * @param string $type Join type. Allowed values, LEFT, RIGHT, INNER and etc.
      * @param string $table Joined table name (without prefix), can have defined alias.
      * @param mixed  $on    Where parameters, closure of array of where conditions.
      * @return static
      */
-    public function join($table, $on = null)
+    public function join($type, $table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = ['type' => 'INNER', 'on' => []];
+        $this->joins[$this->currentJoin = $table] = [
+            'type' => strtoupper($type),
+            'on'   => []
+        ];
 
-        return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
+        return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 2));
     }
 
     /**
@@ -109,7 +113,10 @@ trait JoinTrait
      */
     public function innerJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = ['type' => 'INNER', 'on' => []];
+        $this->joins[$this->currentJoin = $table] = [
+            'type' => 'INNER',
+            'on'   => []
+        ];
 
         return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
@@ -146,7 +153,10 @@ trait JoinTrait
      */
     public function rightJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = ['type' => 'RIGHT', 'on' => []];
+        $this->joins[$this->currentJoin = $table] = [
+            'type' => 'RIGHT',
+            'on'   => []
+        ];
 
         return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
@@ -183,7 +193,10 @@ trait JoinTrait
      */
     public function leftJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = ['type' => 'LEFT', 'on' => []];
+        $this->joins[$this->currentJoin = $table] = [
+            'type' => 'LEFT',
+            'on'   => []
+        ];
 
         return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
@@ -220,7 +233,10 @@ trait JoinTrait
      */
     public function fullJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = ['type' => 'LEFT', 'on' => []];
+        $this->joins[$this->currentJoin = $table] = [
+            'type' => 'LEFT',
+            'on'   => []
+        ];
 
         return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }

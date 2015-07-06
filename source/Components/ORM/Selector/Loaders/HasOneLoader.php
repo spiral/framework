@@ -8,7 +8,6 @@
  */
 namespace Spiral\Components\ORM\Selector\Loaders;
 
-use Spiral\Components\DBAL\SqlExpression;
 use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\Relation;
@@ -51,42 +50,20 @@ class HasOneLoader extends Loader
             return $selector;
         }
 
-        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
+        if (!empty($morphKey = $this->getKey(ActiveRecord::MORPH_KEY)))
         {
-            $morphKey = $this->getAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY];
-            $selector->where([
-                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
-            ]);
-        }
-
-        if ($this->options['method'] == Selector::SUB_QUERY)
-        {
-            $outerKey = $this->getAlias() . '.' . $this->definition[ActiveRecord::OUTER_KEY];
-
-            //Inner key has to be build based on parent table
-            $innerKey = $this->parent->getAlias() . '.' . $this->definition[ActiveRecord::INNER_KEY];
-
-            //Sub queries places their conditions in where statement
-            return $selector->where(new SqlExpression($innerKey), new SqlExpression($outerKey));
+            $selector->where($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
         }
 
         //Aggregated keys (example: all parent ids)
-        $aggregatedKeys = $this->parent->getAggregatedKeys(
-            $this->getReferenceKey()
-        );
-
-        if (empty($aggregatedKeys))
+        if (empty($aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey())))
         {
             //Nothing to postload, no parents
             return null;
         }
 
         //Adding condition
-        $selector->where(
-            $this->getAlias() . '.' . $this->definition[ActiveRecord::OUTER_KEY],
-            'IN',
-            array_unique($aggregatedKeys)
-        );
+        $selector->where($this->getKey(ActiveRecord::OUTER_KEY), 'IN', $aggregatedKeys);
 
         return $selector;
     }
@@ -99,35 +76,13 @@ class HasOneLoader extends Loader
      */
     protected function clarifySelector(Selector $selector)
     {
-        $outerKey = $this->getAlias() . '.' . $this->definition[ActiveRecord::OUTER_KEY];
+        $selector->join($this->joinType(), $this->getTable() . ' AS ' . $this->getAlias(), [
+            $this->getKey(ActiveRecord::OUTER_KEY) => $this->getParentKey()
+        ]);
 
-        //Inner key has to be build based on parent table
-        $innerKey = $this->parent->getAlias() . '.' . $this->definition[ActiveRecord::INNER_KEY];
-
-        if ($this->isInnerJoin())
+        if (!empty($morphKey = $this->getKey(ActiveRecord::MORPH_KEY)))
         {
-            $selector->innerJoin($this->definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(),
-                [
-                    $outerKey => $innerKey
-                ]
-            );
-        }
-        else
-        {
-            //todo: optimize
-            $selector->leftJoin($this->definition[Relation::OUTER_TABLE] . ' AS ' . $this->getAlias(),
-                [
-                    $outerKey => $innerKey
-                ]
-            );
-        }
-
-        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
-        {
-            $morphKey = $this->getAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY];
-            $selector->onWhere([
-                $morphKey => $this->parent->schema[ORM::E_ROLE_NAME]
-            ]);
+            $selector->onWhere($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
         }
     }
 }
