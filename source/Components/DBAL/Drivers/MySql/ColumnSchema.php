@@ -200,6 +200,23 @@ class ColumnSchema extends AbstractColumnSchema
     }
 
     /**
+     * Get column default value, value will be automatically converted to appropriate internal type.
+     *
+     * @return mixed
+     */
+    public function getDefaultValue()
+    {
+        $defaultValue = parent::getDefaultValue();
+
+        if (in_array($this->type, $this->forbiddenDefaults))
+        {
+            return null;
+        }
+
+        return $defaultValue;
+    }
+
+    /**
      * Prepare default value to be used in sql statements, string values will be quoted.
      *
      * @return string
@@ -226,6 +243,10 @@ class ColumnSchema extends AbstractColumnSchema
         {
             //Flushing default value for forbidden types
             $this->defaultValue = null;
+
+            self::logger()->warning("Default value is not allowed for MySQL type '{type}'.", [
+                'type' => $this->type
+            ]);
         }
 
         $statement = parent::sqlStatement();
