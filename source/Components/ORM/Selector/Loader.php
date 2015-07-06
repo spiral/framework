@@ -266,9 +266,23 @@ abstract class Loader implements LoaderInterface
      *
      * @return bool
      */
-    public function isJoined()
+    protected function isJoined()
     {
         return in_array($this->options['method'], [Selector::INLOAD, Selector::JOIN_ONLY]);
+    }
+
+    /**
+     * Join type depends on requiment to load data.
+     *
+     * @return string
+     */
+    protected function isInnerJoin()
+    {
+        return $this->options['method'] == Selector::JOIN_ONLY;
+    }
+
+    protected function join(Selector $selector, $table, array $on)
+    {
     }
 
     /**
@@ -374,6 +388,16 @@ abstract class Loader implements LoaderInterface
         return $loader;
     }
 
+    public function detachedLoader($relation, array $options = [], $chainMethod = null)
+    {
+        $loader = $this->loader($relation, $options, $chainMethod);
+
+        //Detaching (TODO: CHANGE)
+        unset($this->loaders[$relation]);
+
+        return $loader;
+    }
+
     /**
      * Create selector to be executed as post load, usually such selector use aggregated values
      * and IN where syntax.
@@ -410,7 +434,7 @@ abstract class Loader implements LoaderInterface
             return;
         }
 
-        if (!$this->configured)
+        if (!$this->configured && $this->options['method'] != Selector::SUB_QUERY)
         {
             $this->configureColumns($selector);
 

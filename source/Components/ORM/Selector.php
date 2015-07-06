@@ -36,6 +36,7 @@ class Selector extends AbstractSelectQuery
     const INLOAD    = 1;
     const POSTLOAD  = 2;
     const JOIN_ONLY = 3;
+    const SUB_QUERY = 4; //Do not use this constant by your own
 
     /**
      * Relation between count records / count rows and type of log message to be raised. Log message
@@ -233,6 +234,8 @@ class Selector extends AbstractSelectQuery
      * Include model relations data into query using table joining but do not load resulted data.
      * This method usually used in combination with WHERE statements.
      *
+     * Attention, children table will be joined using INNER JOIN method.
+     *
      * Use options to specify custom settings for relation loading.
      * You can request to pre-load one relation or chain of relations, in this case options will
      * be applied to last relation in chain.
@@ -248,7 +251,8 @@ class Selector extends AbstractSelectQuery
      * //Table "profiles" will be joined to query under "my_alias" alias
      * User::find()->with('profile', ['alias' => 'my_alias'])->where('my_alias.value', $value);
      *
-     * //Table "statistics" will be joined to query under "profile_statistics" alias
+     * //Table "statistics" will be joined to query under "profile_statistics" alias, only
+     * users with existed statistics will be found
      * User::find()->with('profile.statistics');
      *
      * //Table "statistics" will be joined to query under "stats" alias
@@ -271,39 +275,19 @@ class Selector extends AbstractSelectQuery
         return $this->load($relation, $options, self::JOIN_ONLY);
     }
 
-    /**
-     * Pre-load model relations using separate queries.
-     *
-     * Use options to specify custom settings for relation loading.
-     * You can request to pre-load one relation or chain of relations, in this case options will
-     * be applied to last relation in chain.
-     *
-     * Examples:
-     * User::find()->postload('posts.comments');
-     *
-     * Following construction will create 3 separate query:
-     * 1) Get current model data.
-     * 2) Load posts
-     * 3) Load comments
-     *
-     * Example SQL (simplified):
-     * SELECT * FROM users;
-     * SELECT * FROM posts WHERE user_id IN(user_ids);
-     * SELECT * FROM comments WHERE post_id IN(post_ids);
-     *
-     * Attention, you will not be able to create WHERE statement for relations loaded using POSTLOAD
-     * method.
-     *
-     * @see load()
-     * @see inload()
-     * @see with()
-     * @param string $relation Relation name, or chain of relations separated by .
-     * @param array  $options  Loader options (will be applied to last chain loader only).
-     * @return static
-     */
-    public function postload($relation, array $options = [])
+    public function has($relation)
     {
-        return $this->load($relation, $options, self::POSTLOAD);
+        $loader = $this->loader->detachedLoader($relation, [], self::SUB_QUERY);
+
+        /**
+         * @var Loader $loader
+         */
+        $selector = $loader->createSelector();
+        $selector->columns = ['COUNT(*)'];
+
+        $this->where($selector, '>', 0);
+
+        return $this;
     }
 
     /**

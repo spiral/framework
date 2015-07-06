@@ -44,7 +44,8 @@ class HasManyLoader extends HasOneLoader
         if (!empty($this->definition[ActiveRecord::WHERE]))
         {
             $selector->where($this->prepareWhere(
-                $this->definition[ActiveRecord::WHERE], $this->getAlias()
+                $this->definition[ActiveRecord::WHERE],
+                $this->getAlias()
             ));
         }
 

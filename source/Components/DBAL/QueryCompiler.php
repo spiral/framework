@@ -8,7 +8,6 @@
  */
 namespace Spiral\Components\DBAL;
 
-use Spiral\Components\DBAL\Builders\SelectQuery;
 use Spiral\Core\Component;
 
 class QueryCompiler extends Component
@@ -345,7 +344,7 @@ class QueryCompiler extends Component
     {
         foreach ($columns as $column => &$value)
         {
-            if ($value instanceof SelectQuery)
+            if ($value instanceof QueryBuilder)
             {
                 $value = '(' . $value->sqlStatement($this) . ')';
             }
@@ -485,7 +484,7 @@ class QueryCompiler extends Component
                 continue;
             }
 
-            if ($context instanceof SelectQuery)
+            if ($context instanceof QueryBuilder)
             {
                 $statement .= $joiner . ' (' . $context->sqlStatement($this) . ') ';
                 continue;
@@ -499,9 +498,13 @@ class QueryCompiler extends Component
             }
 
             list($identifier, $operator, $value) = $context;
-            if ($identifier instanceof SqlFragmentInterface)
+            if ($identifier instanceof QueryBuilder)
             {
                 $identifier = '(' . $identifier->sqlStatement($this) . ')';
+            }
+            elseif ($identifier instanceof SqlFragmentInterface)
+            {
+                $identifier = $identifier->sqlStatement($this);
             }
             else
             {
@@ -532,7 +535,7 @@ class QueryCompiler extends Component
                 $operator = 'IN';
             }
 
-            if ($value instanceof SelectQuery)
+            if ($value instanceof QueryBuilder)
             {
                 $value = ' (' . $value . ') ';
             }

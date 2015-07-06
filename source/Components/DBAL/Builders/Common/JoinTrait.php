@@ -109,7 +109,7 @@ trait JoinTrait
      */
     public function innerJoin($table, $on = null)
     {
-        $this->joins[$this->currentJoin = $table] = ['type' => 'RIGHT', 'on' => []];
+        $this->joins[$this->currentJoin = $table] = ['type' => 'INNER', 'on' => []];
 
         return call_user_func_array([$this, 'on'], array_slice(func_get_args(), 1));
     }
