@@ -17,6 +17,7 @@ class LayeredCompiler extends Component implements CompilerInterface
     /**
      * Instance of ViewManager component.
      *
+     * @invisible
      * @var ViewManager
      */
     protected $viewManager = null;
@@ -128,8 +129,7 @@ class LayeredCompiler extends Component implements CompilerInterface
 
         $config = $this->processors[$name];
 
-        return $this->processors[$name] = $this->container->get(
-            $config['class'],
+        return $this->processors[$name] = $this->container->get($config['class'],
             [
                 'compiler'    => $this,
                 'viewManager' => $this->viewManager,

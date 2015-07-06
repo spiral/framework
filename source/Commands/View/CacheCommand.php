@@ -76,6 +76,11 @@ class CacheCommand extends Command
                     }
                     else
                     {
+                        if ($view != 'panel')
+                        {
+                            continue;
+                        }
+
                         $this->view->getFilename($namespace, $view, true, true);
                     }
                 }

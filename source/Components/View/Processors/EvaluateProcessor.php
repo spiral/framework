@@ -66,10 +66,13 @@ class EvaluateProcessor implements ProcessorInterface
     )
     {
         $this->viewManager = $viewManager;
-        $this->file = $file;
 
         $this->options = $options + $this->options;
+
+        $isolator = $isolator ?: new Isolator();
         $this->isolator = $isolator->shortTags(true);
+
+        $this->file = $file ?: FileManager::getInstance();
     }
 
     /**
@@ -88,6 +91,8 @@ class EvaluateProcessor implements ProcessorInterface
      */
     public function processSource($source, $namespace, $view, $input = '', $output = '')
     {
+        $this->isolator->setBlocks([]);
+
         //Real php source code isolation
         $source = $this->isolator->isolatePHP($source);
 
@@ -114,7 +119,7 @@ class EvaluateProcessor implements ProcessorInterface
         $this->isolator->setBlocks($phpBlocks);
 
         //We can use eval() but with temp file error handling will be more complete
-        $filename = $this->viewManager->cachedFilename($namespace, $view . '-evaluator');
+        $filename = $this->viewManager->cachedFilename($namespace, $view . '-evaluator-' . uniqid());
         $this->file->write($filename, $source, FileManager::RUNTIME, true);
 
         try
@@ -131,6 +136,8 @@ class EvaluateProcessor implements ProcessorInterface
         $this->file->delete($filename);
 
         //Let's back php source
-        return $this->isolator->repairPHP($source);
+        $source = $this->isolator->repairPHP($source);
+
+        return $source;
     }
 }

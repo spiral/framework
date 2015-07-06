@@ -57,7 +57,7 @@ class I18nProcessor implements ProcessorInterface
     )
     {
         $this->options = $options + $this->options;
-        $this->i18n = $i18n;
+        $this->i18n = $i18n ?: Translator::getInstance();
     }
 
     /**

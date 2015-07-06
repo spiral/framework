@@ -327,7 +327,7 @@ class ViewManager extends Component
                 'input'     => $input,
                 'output'    => $output,
             ] + $this->config['engines'][$engine]);
-
+        dump($compiler);
         return $compiler->compile();
     }
 

@@ -111,15 +111,16 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         LayeredCompiler $compiler,
         array $options,
         FileManager $file = null,
-        Container $container = null)
+        Container $container = null
+    )
     {
         $this->viewManager = $viewManager;
         $this->compiler = $compiler;
 
         $this->options = $options + $this->options;
-        $this->file = $file;
 
-        $this->container = $container;
+        $this->file = $file ?: FileManager::getInstance();
+        $this->container = $container ?: Container::getInstance();
     }
 
     /**

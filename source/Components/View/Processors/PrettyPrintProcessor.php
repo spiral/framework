@@ -39,7 +39,7 @@ class PrettyPrintProcessor implements ProcessorInterface
         Isolator $isolator = null
     )
     {
-        $this->isolator = $isolator;
+        $this->isolator = $isolator ?: new Isolator();
     }
 
     /**

@@ -31,7 +31,7 @@ class Selector extends AbstractSelectQuery
     use Component\LoggerTrait;
 
     /**
-     *
+     * Loading methods. See load(), with(), postload(), inload() methods.
      */
     const INLOAD    = 1;
     const POSTLOAD  = 2;
