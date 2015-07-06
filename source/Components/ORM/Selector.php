@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM;
 
 use Psr\Log\LogLevel;
+use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\DBAL\Builders\Common\AbstractSelectQuery;
 use Spiral\Components\DBAL\ParameterInterface;
 use Spiral\Components\DBAL\QueryBuilder;
@@ -18,7 +19,6 @@ use Spiral\Components\DBAL\SqlFragmentInterface;
 use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
 use Spiral\Core\Component;
-use Spiral\Facades\Cache;
 
 class Selector extends AbstractSelectQuery
 {
@@ -493,7 +493,7 @@ class Selector extends AbstractSelectQuery
         if (!empty($this->cacheLifetime))
         {
             $cacheKey = $this->cacheKey ?: md5(serialize([$statement, $this->getParameters()]));
-            $cacheStore = $this->cacheStore ?: Cache::getInstance()->store();
+            $cacheStore = $this->cacheStore ?: CacheManager::getInstance()->store();
 
             if ($cacheStore->has($cacheKey))
             {
