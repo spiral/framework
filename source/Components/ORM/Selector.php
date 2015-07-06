@@ -20,6 +20,9 @@ use Spiral\Components\ORM\Selector\Loader;
 use Spiral\Components\ORM\Selector\Loaders\RootLoader;
 use Spiral\Core\Component;
 
+/**
+ * @method static include ($relation, array $options = []) Alias for inload() method.
+ */
 class Selector extends AbstractSelectQuery
 {
     /**
@@ -211,6 +214,8 @@ class Selector extends AbstractSelectQuery
      *
      * Attention, you will not be able to paginate results if you joined HAS_MANY or MANY_TO_MANY
      * relation!
+     *
+     * Method has magic alias "include".
      *
      * @see load()
      * @see postload()
@@ -713,5 +718,23 @@ class Selector extends AbstractSelectQuery
             "Query resulted with {rowsCount} row(s) grouped into {dataCount} records.",
             compact('dataCount', 'rowsCount')
         );
+    }
+
+    /**
+     * Magic methods to call aggregation methods or magic selector methods (include).
+     *
+     * @param string $method
+     * @param array  $arguments
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        if ($method == 'include')
+        {
+            //This can be changed in future to look better
+            return call_user_func_array([$this, 'inload'], $arguments);
+        }
+
+        return parent::__call($method, $arguments);
     }
 }

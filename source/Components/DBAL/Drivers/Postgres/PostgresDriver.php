@@ -169,12 +169,14 @@ class PostgresDriver extends Driver
 
         $this->primaryKeys[$table] = $this->tableSchema($table)->getPrimaryKeys();
 
-        $this->primaryKeys[$table] = null;
-
         if (count($this->primaryKeys[$table]) === 1)
         {
             //We do support only single primary key
             $this->primaryKeys[$table] = $this->primaryKeys[$table][0];
+        }
+        else
+        {
+            $this->primaryKeys[$table] = null;
         }
 
         //Caching
