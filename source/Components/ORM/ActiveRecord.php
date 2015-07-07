@@ -640,38 +640,12 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         $relation = $this->schema[ORM::E_RELATIONS][$name];
 
-        return $this->relations[$name] = $this->orm->getRelation(
-            $this,
+        return $this->relations[$name] = $this->orm->relation(
             $relation[ORM::R_TYPE],
+            $this,
             $relation[ORM::R_DEFINITION],
             $data
         );
-    }
-
-    /**
-     * Set value to one of field. Setter filter can be disabled by providing last argument.
-     *
-     * @param string $name   Field name.
-     * @param mixed  $value  Value to set.
-     * @param bool   $filter If false no filter will be applied.
-     */
-    public function setField($name, $value, $filter = true)
-    {
-        if (!array_key_exists($name, $this->fields))
-        {
-            //TODO: Check relations
-            throw new ORMException("Undefined field '{$name}'.");
-        }
-
-        $original = isset($this->fields[$name]) ? $this->fields[$name] : null;
-        parent::setField($name, $value, $filter);
-
-        if (!array_key_exists($name, $this->updates))
-        {
-            $this->updates[$name] = $original instanceof AccessorInterface
-                ? $original->serializeData()
-                : $original;
-        }
     }
 
     /**

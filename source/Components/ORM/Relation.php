@@ -8,13 +8,20 @@
  */
 namespace Spiral\Components\ORM;
 
-abstract class Relation implements RelationInerface
+abstract class Relation implements RelationInterface
 {
+    const NO_DATA = -1;
+
     /**
      * Relation type.
      */
     const RELATION_TYPE = ActiveRecord::HAS_ONE;
-
+    /**
+     * ORM component.
+     *
+     * @invisible
+     * @var ORM
+     */
     protected $orm = null;
 
     protected $parent = null;
@@ -26,51 +33,22 @@ abstract class Relation implements RelationInerface
      */
     protected $definition = [];
 
-    /**
-     * Target model to be loaded.
-     *
-     * @var string
-     */
-    protected $target = '';
-
     protected $data = [];
 
-    public function __construct(ORM $orm, ActiveRecord $parent = null, array $definition, $data = null)
+    public function __construct(ORM $orm, ActiveRecord $parent, array $definition, $data = null)
     {
         $this->orm = $orm;
         $this->parent = $parent;
         $this->definition = $definition;
-        $this->target = $definition[static::RELATION_TYPE];
         $this->data = $data;
     }
 
-    /**
-     * Get relation target model class name.
-     *
-     * @return string
-     */
-    public function getTarget()
+    protected function createSelector()
     {
-        return $this->target;
+        return new Selector($this->definition[static::RELATION_TYPE], $this->orm);
     }
 
-    protected function loadData()
-    {
-        $selector = $this->getSelector();
-
-        dump($selector);
-    }
-
-    public function getSelector()
-    {
-        //database is not nesessary right
-        $selector = new Selector(!empty($orm) ? $orm : ORM::getInstance(), $this->getTarget());
-
-        return $selector;
-    }
-
-    /**
-     * @return mixed
-     */
     abstract public function getContent();
+
+    abstract protected function loadData();
 }

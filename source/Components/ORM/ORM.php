@@ -136,21 +136,6 @@ class ORM extends Component
         return $this->schema[$item];
     }
 
-
-
-
-    //    public function getRelation(
-    //        ActiveRecord $parent = null,
-    //        $type,
-    //        array $definition,
-    //        $data = []
-    //    )
-    //    {
-    //        $class = $this->config['relations'][$type]['class'];
-    //
-    //        return new $class($this, $parent, $definition, $data);
-    //    }
-
     /**
      * Get ORM schema reader. Schema will detect all declared entities, their tables, columns,
      * relationships and etc.
@@ -165,8 +150,25 @@ class ORM extends Component
         ], $this->container);
     }
 
-    public function relation()
+    /**
+     * Instance of ActiveRecord relation accessor.
+     *
+     * @param int          $type
+     * @param ActiveRecord $parent
+     * @param array        $definition
+     * @param array        $data
+     * @return mixed
+     */
+    public function relation($type, ActiveRecord $parent, $definition, $data = null)
     {
+        if (!isset($this->config['relations'][$type]['class']))
+        {
+            throw new ORMException("Undefined relation type '{$type}'.");
+        }
+
+        $class = $this->config['relations'][$type]['class'];
+
+        return new $class($this, $parent, $definition, $data);
     }
 
     /**

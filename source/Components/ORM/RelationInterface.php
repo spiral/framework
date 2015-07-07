@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
-interface RelationInerface
+interface RelationInterface
 {
-
+    public function __construct(ORM $orm, ActiveRecord $parent, array $definition, $data = null);
 }

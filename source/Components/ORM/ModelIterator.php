@@ -15,6 +15,11 @@ use Spiral\Core\Component;
  */
 class ModelIterator extends Component implements \Iterator
 {
+    /**
+     *
+     * @invisible
+     * @var ORM
+     */
     protected $orm = null;
 
     protected $class = '';
@@ -36,6 +41,8 @@ class ModelIterator extends Component implements \Iterator
     {
         return count($this->data);
     }
+
+    //-------------------------------------------------
 
     /**
      * Return the current document.

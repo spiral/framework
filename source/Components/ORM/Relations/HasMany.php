@@ -9,12 +9,12 @@
 namespace Spiral\Components\ORM\Relations;
 
 use Spiral\Components\ORM\ActiveRecord;
+use Spiral\Components\ORM\ModelIterator;
 use Spiral\Components\ORM\Relation;
-use Spiral\Components\ORM\Selector;
 
-class HasOne extends Relation
+class HasMany extends Relation
 {
-    const RELATION_TYPE = ActiveRecord::HAS_ONE;
+    const RELATION_TYPE = ActiveRecord::HAS_MANY;
 
     /**
      * @return mixed
@@ -27,23 +27,17 @@ class HasOne extends Relation
         }
 
         $class = $this->definition[static::RELATION_TYPE];
-        if (!$this->parent->isLoaded())
-        {
-            return $this->data = new $class([], false, $this->orm);
-        }
-
+        //        if (!$this->parent->isLoaded())
+        //        {
+        //            return $this->data = new $targetClass([], false, $this->orm);
+        //        }
+        //
         if ($this->data === null)
         {
             $this->loadData();
         }
 
-        if ($this->data === null)
-        {
-            //optimize
-            return null;
-        }
-
-        return $this->data = new $class($this->data, true, $this->orm);
+        return $this->data = new ModelIterator($this->orm, $class, $this->data);
     }
 
     protected function loadData()
