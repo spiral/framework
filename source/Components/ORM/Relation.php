@@ -16,6 +16,9 @@ abstract class Relation implements RelationInterface
      * Relation type.
      */
     const RELATION_TYPE = ActiveRecord::HAS_ONE;
+
+    const MULTIPLE = false;
+
     /**
      * ORM component.
      *
@@ -43,12 +46,55 @@ abstract class Relation implements RelationInterface
         $this->data = $data;
     }
 
+    protected function getClass()
+    {
+        return $this->definition[static::RELATION_TYPE];
+    }
+
     protected function createSelector()
     {
         return new Selector($this->definition[static::RELATION_TYPE], $this->orm);
     }
 
-    abstract public function getContent();
+    public function getContent()
+    {
+        if (is_object($this->data))
+        {
+            return $this->data;
+        }
 
-    abstract protected function loadData();
+        if (empty($this->data) && empty($this->loadData()))
+        {
+            //Can not be loaded
+            return static::MULTIPLE ? [] : null;
+        }
+
+        if (static::MULTIPLE)
+        {
+            return $this->data = new ModelIterator($this->orm, $this->getClass(), $this->data);
+        }
+
+        return $this->data = $this->orm->construct($this->getClass(), $this->data);
+    }
+
+    protected function loadData()
+    {
+        if (!$this->parent->isLoaded())
+        {
+            return null;
+        }
+
+        if (static::MULTIPLE)
+        {
+            return $this->data = $this->createSelector()->fetchData();
+        }
+
+        $data = $this->createSelector()->fetchData();
+        if (isset($data[0]))
+        {
+            return $this->data = $data[0];
+        }
+
+        return null;
+    }
 }

@@ -13,7 +13,7 @@ use Spiral\Core\Component;
 /**
  * TODO: NOT FINISHED YET.
  */
-class ModelIterator extends Component implements \Iterator
+class ModelIterator extends Component implements \Iterator, \Countable
 {
     /**
      *
@@ -62,7 +62,7 @@ class ModelIterator extends Component implements \Iterator
 
         $class = $this->class;
 
-        return $this->data[$this->position] = new $class($data, true, $this->orm);
+        return $this->data[$this->position] = $this->orm->construct($class, $data);
     }
 
     /**

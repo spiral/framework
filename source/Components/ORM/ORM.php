@@ -61,6 +61,9 @@ class ORM extends Component
      */
     protected $schema = null;
 
+
+    protected $entityCache = [];
+
     /**
      * ORM component instance.
      *
@@ -219,6 +222,26 @@ class ORM extends Component
         $class = $this->config['relations'][$type]['loader'];
 
         return new $class($this, $container, $definition, $parent);
+    }
+
+    public function construct($class, array $data)
+    {
+        if (!$this->config['entityCache']['enabled'])
+        {
+            //Entity cache is disabled
+            return new $class($data, !empty($data), $this);
+        }
+
+        //TODO: Implement caching
+        return new $class($data, !empty($data), $this);
+    }
+
+    /**
+     * Flush content of entity cache.
+     */
+    public function flushCache()
+    {
+        $this->entityCache = [];
     }
 
     /**

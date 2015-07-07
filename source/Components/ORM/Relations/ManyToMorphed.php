@@ -8,11 +8,7 @@
  */
 namespace Spiral\Components\ORM\Relations;
 
-use Spiral\Components\ORM\ActiveRecord;
-
-class HasMany extends HasOne
+class ManyToMorphed
 {
-    const RELATION_TYPE = ActiveRecord::HAS_MANY;
 
-    const MULTIPLE = true;
 }

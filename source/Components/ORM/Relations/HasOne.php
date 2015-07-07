@@ -16,42 +16,31 @@ class HasOne extends Relation
 {
     const RELATION_TYPE = ActiveRecord::HAS_ONE;
 
-    /**
-     * @return mixed
-     */
-    public function getContent()
+    protected function createSelector()
     {
-        if (is_object($this->data))
+        $selector = parent::createSelector();
+
+        if (isset($this->definition[ActiveRecord::MORPH_KEY]))
         {
-            return $this->data;
+            $selector->where($this->definition[ActiveRecord::MORPH_KEY], $this->parent->getRoleName());
         }
 
-        $class = $this->definition[static::RELATION_TYPE];
-        if (!$this->parent->isLoaded())
-        {
-            return $this->data = new $class([], false, $this->orm);
-        }
+        $selector->where(
+            $this->definition[ActiveRecord::OUTER_KEY],
+            $this->parent->getField($this->definition[ActiveRecord::INNER_KEY], false)
+        );
 
-        if ($this->data === null)
-        {
-            $this->loadData();
-        }
-
-        if ($this->data === null)
-        {
-            //optimize
-            return null;
-        }
-
-        return $this->data = new $class($this->data, true, $this->orm);
+        return $selector;
     }
 
-    protected function loadData()
+    public function getContent()
     {
-        $selector = $this->createSelector();
+        if (!$this->parent->isLoaded())
+        {
+            //Empty object
+            return static::MULTIPLE ? [] : $this->orm->construct($this->getClass(), []);
+        }
 
-        //We have to configure where conditions
-
-        dump($selector);
+        return parent::getContent();
     }
 }
