@@ -78,6 +78,7 @@ abstract class Loader implements LoaderInterface
     protected $options = [
         'method' => null,
         'alias' => null,
+        'using' => null,
         'where' => null
     ];
 
@@ -216,6 +217,12 @@ abstract class Loader implements LoaderInterface
      */
     public function getAlias()
     {
+        if (!empty($this->options['using']))
+        {
+            //We are using another relation (presumably defined by with() to load data).
+            return $this->options['using'];
+        }
+
         if (!empty($this->options['alias']))
         {
             return $this->options['alias'];
@@ -302,6 +309,11 @@ abstract class Loader implements LoaderInterface
      */
     protected function isJoined()
     {
+        if (!empty($this->options['using']))
+        {
+            return true;
+        }
+
         return in_array($this->options['method'], [Selector::INLOAD, Selector::JOIN]);
     }
 
@@ -490,7 +502,7 @@ abstract class Loader implements LoaderInterface
      */
     public function configureSelector(Selector $selector, $loaders = true, $joiners = true)
     {
-        if ($this->options['method'] === Selector::POSTLOAD)
+        if (!$this->isJoined())
         {
             return;
         }
@@ -500,7 +512,10 @@ abstract class Loader implements LoaderInterface
             $this->configureColumns($selector);
 
             //Inload conditions and etc
-            $this->clarifySelector($selector);
+            if (empty($this->options['using']))
+            {
+                $this->clarifySelector($selector);
+            }
 
             $this->configured = true;
         }
@@ -796,13 +811,7 @@ abstract class Loader implements LoaderInterface
      * @param array  $data
      * @param bool   $multiple If true all mounted records will added to array.
      */
-    public function mount(
-        $container,
-        $key,
-        $criteria,
-        array &$data,
-        $multiple = false
-    )
+    public function mount($container, $key, $criteria, array &$data, $multiple = false)
     {
         foreach ($this->references[$key][$criteria] as &$subset)
         {
