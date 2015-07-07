@@ -10,7 +10,6 @@ namespace Spiral\Components\ORM\Selector\Loaders;
 
 use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
-use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 use Spiral\Components\ORM\Selector\Loader;
 
@@ -50,10 +49,8 @@ class HasOneLoader extends Loader
             return $selector;
         }
 
-        if (!empty($morphKey = $this->getKey(ActiveRecord::MORPH_KEY)))
-        {
-            $selector->where($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
-        }
+        //Mounting where conditions
+        $this->mountConditions($selector);
 
         //Aggregated keys (example: all parent ids)
         if (empty($aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey())))
@@ -80,9 +77,29 @@ class HasOneLoader extends Loader
             $this->getKey(ActiveRecord::OUTER_KEY) => $this->getParentKey()
         ]);
 
+        $this->mountConditions($selector);
+    }
+
+    /**
+     * Set morph key and additional where conditions to selector.
+     *
+     * @param Selector $selector
+     * @return Selector
+     */
+    protected function mountConditions(Selector $selector)
+    {
         if (!empty($morphKey = $this->getKey(ActiveRecord::MORPH_KEY)))
         {
-            $selector->onWhere($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
+            if ($this->isJoined())
+            {
+                $selector->onWhere($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
+            }
+            else
+            {
+                $selector->where($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
+            }
         }
+
+        return $selector;
     }
 }

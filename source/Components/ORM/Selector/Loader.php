@@ -406,7 +406,7 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
-     * Pre-load data on inner relation or relation chain.
+     * Create sub-loader to be used as query filter.
      *
      * @param string $relation Relation name, or chain of relations separated by .
      * @param array  $options  Loader options (will be applied to last chain loader only).
@@ -831,38 +831,6 @@ abstract class Loader implements LoaderInterface
 
             unset($subset);
         }
-    }
-
-    /**
-     * Internal method to mount valid table alias to all where conditions. Will replace all {table}
-     * occurrences with real table alias.
-     *
-     * @param array  $where
-     * @param string $tableAlias
-     * @return array
-     */
-    protected function prepareWhere(array $where, $tableAlias)
-    {
-        //TODO: reuse?
-
-        $result = [];
-
-        foreach ($where as $column => $value)
-        {
-            if (is_string($column) && !is_int($column))
-            {
-                $column = str_replace('{table}', $tableAlias, $column);
-            }
-
-            if (is_array($value))
-            {
-                $value = $this->prepareWhere($value, $tableAlias);
-            }
-
-            $result[$column] = $value;
-        }
-
-        return $result;
     }
 
     /**

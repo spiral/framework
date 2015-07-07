@@ -29,46 +29,30 @@ class HasManyLoader extends HasOneLoader
     const MULTIPLE = true;
 
     /**
-     * Create selector to be executed as post load, usually such selector use aggregated values
-     * and IN where syntax.
-     *
-     * @return Selector
-     */
-    public function createSelector()
-    {
-        if (empty($selector = parent::createSelector()))
-        {
-            return null;
-        }
-
-        if (!empty($this->definition[ActiveRecord::WHERE]))
-        {
-            $selector->where($this->prepareWhere(
-                $this->definition[ActiveRecord::WHERE],
-                $this->getAlias()
-            ));
-            //TODO: custom where?
-        }
-
-        return $selector;
-    }
-
-    /**
-     * ORM Loader specific method used to clarify selector conditions, join and columns with
-     * loader specific information.
+     * Set morph key and additional where conditions to selector.
      *
      * @param Selector $selector
+     * @return Selector
      */
-    protected function clarifySelector(Selector $selector)
+    protected function mountConditions(Selector $selector)
     {
-        parent::clarifySelector($selector);
+        $selector = parent::mountConditions($selector);
+
+        //Let's use where decorator to set conditions, it will automatically route tokens to valid
+        //destination (JOIN or WHERE)
+        $router = new Selector\WhereDecorator(
+            $selector,
+            $this->isJoined() ? 'onWhere' : 'where',
+            $this->getAlias()
+        );
 
         if (!empty($this->definition[ActiveRecord::WHERE]))
         {
-            $selector->onWhere($this->prepareWhere(
-                $this->definition[ActiveRecord::WHERE], $this->getAlias()
-            ));
-            //TODO: custom where?
+            //Relation WHERE conditions
+            $router->where($this->definition[ActiveRecord::WHERE]);
         }
+
+        //User specified WHERE conditions
+        !empty($this->options['where']) && $router->where($this->options['where']);
     }
 }

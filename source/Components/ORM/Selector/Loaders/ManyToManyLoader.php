@@ -10,7 +10,6 @@ namespace Spiral\Components\ORM\Selector\Loaders;
 
 use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
-use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 use Spiral\Components\ORM\Selector\Loader;
 
@@ -81,6 +80,12 @@ class ManyToManyLoader extends Loader
         return $this->getAlias() . '_pivot';
     }
 
+    /**
+     * Key related to pivot table.
+     *
+     * @param string $key
+     * @return null|string
+     */
     public function getPivotKey($key)
     {
         if (!isset($this->definition[$key]))
@@ -129,28 +134,18 @@ class ManyToManyLoader extends Loader
 
         //Pivot table joining (INNER)
         $pivotOuterKey = $this->getPivotKey(ActiveRecord::THOUGHT_OUTER_KEY);
-
         $selector->innerJoin($this->getPivotTable() . ' AS ' . $this->getPivotAlias(), [
             $pivotOuterKey => $this->getKey(ActiveRecord::OUTER_KEY)
         ]);
+
+        $this->mountPivotConditions($selector);
 
         if (empty($this->parent))
         {
             return $selector;
         }
 
-        if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
-        {
-            //TODO: RETHINK
-            $selector->onWhere($this->prepareWhere(
-                $this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias()
-            ));
-        }
-
-        if (!empty($morphKey = $this->getPivotKey(ActiveRecord::MORPH_KEY)))
-        {
-            $selector->where($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
-        }
+        $this->mountConditions($selector);
 
         //Aggregated keys (example: all parent ids)
         if (empty($aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey())))
@@ -161,14 +156,6 @@ class ManyToManyLoader extends Loader
 
         //Adding condition
         $selector->where($this->getPivotKey(ActiveRecord::THOUGHT_INNER_KEY), 'IN', $aggregatedKeys);
-
-        if (!empty($this->definition[ActiveRecord::WHERE]))
-        {
-            //TODO: RETHINK
-            $selector->where($this->prepareWhere(
-                $this->definition[ActiveRecord::WHERE], $this->getAlias()
-            ));
-        }
 
         return $selector;
     }
@@ -185,31 +172,66 @@ class ManyToManyLoader extends Loader
             $this->getPivotKey(ActiveRecord::THOUGHT_INNER_KEY) => $this->getParentKey()
         ]);
 
-        if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
-        {
-            $selector->onWhere($this->prepareWhere(
-                $this->definition[ActiveRecord::WHERE_PIVOT], $this->getPivotAlias()
-            ));
-        }
-
-        if (!empty($morphKey = $this->getPivotKey(ActiveRecord::MORPH_KEY)))
-        {
-            $selector->onWhere($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
-        }
-
-        if (!empty($this->definition[ActiveRecord::WHERE]))
-        {
-            //TODO: RETHINK
-            $selector->onWhere($this->prepareWhere(
-                $this->definition[ActiveRecord::WHERE], $this->getAlias()
-            ));
-        }
+        $this->mountPivotConditions($selector);
 
         $pivotOuterKey = $this->getPivotKey(ActiveRecord::THOUGHT_OUTER_KEY);
-
         $selector->join($this->joinType(), $this->getTable() . ' AS ' . $this->getAlias(), [
             $pivotOuterKey => $this->getKey(ActiveRecord::OUTER_KEY)
         ]);
+
+        $this->mountConditions($selector);
+    }
+
+    /**
+     * Mounting pivot table conditions including user defined and morph key.
+     *
+     * @param Selector $selector
+     * @return Selector
+     */
+    protected function mountPivotConditions(Selector $selector)
+    {
+        //We have to route all conditions to ON statement
+        $router = new Selector\WhereDecorator($selector, 'onWhere', $this->getPivotAlias());
+
+        if (!empty($morphKey = $this->getPivotKey(ActiveRecord::MORPH_KEY)))
+        {
+            $router->where($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
+        }
+
+        if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
+        {
+            //Relation WHERE conditions
+            $router->where($this->definition[ActiveRecord::WHERE_PIVOT]);
+        }
+
+        //User specified WHERE conditions
+        !empty($this->options['wherePivot']) && $router->where($this->options['wherePivot']);
+    }
+
+    /**
+     * Set relational and user conditions.
+     *
+     * @param Selector $selector
+     * @return Selector
+     */
+    protected function mountConditions(Selector $selector)
+    {
+        //Let's use where decorator to set conditions, it will automatically route tokens to valid
+        //destination (JOIN or WHERE)
+        $router = new Selector\WhereDecorator(
+            $selector,
+            $this->isJoined() ? 'onWhere' : 'where',
+            $this->getAlias()
+        );
+
+        if (!empty($this->definition[ActiveRecord::WHERE]))
+        {
+            //Relation WHERE conditions
+            $router->where($this->definition[ActiveRecord::WHERE]);
+        }
+
+        //User specified WHERE conditions
+        !empty($this->options['where']) && $router->where($this->options['where']);
     }
 
     /**
