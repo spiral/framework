@@ -529,7 +529,7 @@ class Selector extends AbstractSelectQuery
     protected function updateStatement(array $columns, QueryCompiler $compiler = null)
     {
         $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
-        $this->loader->configureSelector($this);
+        $this->loader->configureSelector($this, false);
 
         return $compiler->update(
             $this->loader->getTable() . ' AS ' . $this->loader->getAlias(),
@@ -568,7 +568,7 @@ class Selector extends AbstractSelectQuery
     protected function deleteStatement(QueryCompiler $compiler = null)
     {
         $compiler = !empty($compiler) ? $compiler : $this->compiler->resetAliases();
-        $this->loader->configureSelector($this);
+        $this->loader->configureSelector($this, false);
 
         return $compiler->delete(
             $this->loader->getTable() . ' AS ' . $this->loader->getAlias(),

@@ -254,7 +254,12 @@ abstract class Loader implements LoaderInterface
         return $this->getAlias() . '.' . $this->schema[ORM::E_PRIMARY_KEY];
     }
 
-
+    /**
+     * Get aliased key of requested type.
+     *
+     * @param string $key
+     * @return string|null
+     */
     protected function getKey($key)
     {
         if (!isset($this->definition[$key]))
@@ -265,6 +270,11 @@ abstract class Loader implements LoaderInterface
         return $this->getAlias() . '.' . $this->definition[$key];
     }
 
+    /**
+     * Receive aliases key pointing to parent criteria (OUTER KEY).
+     *
+     * @return string
+     */
     protected function getParentKey()
     {
         return $this->parent->getAlias() . '.' . $this->definition[ActiveRecord::INNER_KEY];
@@ -296,7 +306,7 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
-     * Join type.
+     * Join type depends on how we going to use joined data.
      *
      * @return string
      */
@@ -328,11 +338,6 @@ abstract class Loader implements LoaderInterface
         }
 
         return $this;
-    }
-
-    protected function createLoader()
-    {
-        //MOVE PART OF CODE FROM LOADER AND JOINER
     }
 
     /**
@@ -479,9 +484,11 @@ abstract class Loader implements LoaderInterface
     /**
      * Clarify parent selection conditions.
      *
+     * @param bool $loaders Configure sub loaders.
+     * @param bool $joiners Configure joiners.
      * @param Selector $selector
      */
-    public function configureSelector(Selector $selector)
+    public function configureSelector(Selector $selector, $loaders = true, $joiners = true)
     {
         if ($this->options['method'] === Selector::POSTLOAD)
         {
@@ -815,7 +822,7 @@ abstract class Loader implements LoaderInterface
 
             if (isset($subset[$container]))
             {
-                $subset[$container] = $data;
+                $data = &$subset[$container];
             }
             else
             {
