@@ -157,6 +157,41 @@ class Selector extends AbstractSelectQuery
         return $offset;
     }
 
+    /**
+     * Include relation or relation chain into select query to be used for filtering purposes. Relation
+     * data will be joined using INNER method which will skip parent records without associated child.
+     *
+     * By default all joined tables will be aliases under their relation name, sub relations will
+     * include name of their parent. You can specify your own alias using "alias" option.
+     *
+     * Do not forget to set DISTINCT flag while including HAS_MANY and MANY_TO_MANY relations.
+     * Examples:
+     *
+     * //Find all users with comments
+     * User::find()->with('comments');
+     *
+     * //Find all users with approved comments
+     * User::find()->with('comments')->where('comments.approved', true);
+     *
+     * //Find all users with posts which have approved comments
+     * User::find()->with('posts.comments')->where('posts_comments.approved', true);
+     *
+     * //Custom join alias
+     * $user->with('posts.comments', ['alias' => 'comments'])->where('comments.approved', true);
+     *
+     * //If you joining MANY_TO_MANY relation you will be able to use pivot table as relation alias
+     * //plus "_pivot" postfix. Let's load all users with approved tags.
+     * $user->with('tags')->where('tags_pivot.approved', true);
+     *
+     * //You can also use custom alias for pivot table as well
+     * User::find()->with('tags', ['pivotAlias' => 'tags_connection'])
+     *             ->where('tags_connection.approved', false);
+     *
+     * @see load()
+     * @param string $relation
+     * @param array  $options
+     * @return static
+     */
     public function with($relation, array $options = [])
     {
         if (is_array($relation))
@@ -184,6 +219,68 @@ class Selector extends AbstractSelectQuery
         return $this;
     }
 
+    /**
+     * Pre-load relation data or sub-relation data. This method will load relation data in a most
+     * efficient way (sometimes additional query, sometimes using LEFT JOIN). You can safely use
+     * this method in combination with with() method.
+     *
+     * //Select users and load their comments (will cast 2 queries)
+     * User::find()->with('comments');
+     *
+     * //You can load chain of relations - select user and load their comments and post related to
+     * //comment
+     * User::find()->with('comments.post');
+     *
+     * //We can also specify custom where conditions on data loading, let's load only public comments.
+     * User::find()->load('comments', [
+     *      'where' => ['{@}.status' => 'public']
+     * ]);
+     *
+     * Please note "{@}" string in column name, this one is required to prevent collisions
+     * and it will be automatically replaced with valid table alias of comments table.
+     *
+     * //In case where your loaded relation is MANY_TO_MANY you can also specify pivot table conditions,
+     * //let's pre-load all approved user tags
+     * User::find()->load('tags', [
+     *      'wherePivot' => ['{@}.approved' => true]
+     * ]);
+     *
+     * //In most of cases you don't need to worry about how data was loaded, using external query or
+     * //left join, however if you want to change such behaviour you can force load method to INLOAD
+     * User::find()->load('tags', [
+     *      'method'     => Selector::INLOAD,
+     *      'wherePivot' => ['{@}.approved' => true]
+     * ]);
+     *
+     * Attention, you will not be able to correctly paginate in this case.
+     * You can easily combine with() and load() methods together.
+     *
+     * //Load all users with approved comments and pre-load all their comments
+     * User::find()->with('comments')->where('comments.approved', true)
+     *             ->load('comments');
+     *
+     * //You can also use custom conditions in this case, let's find all users with approved comments
+     * //and pre-load such approved comments
+     * User::find()->with('comments')->where('comments.approved', true)
+     *             ->load('comments', [
+     *                  'where' => ['{@}.approved' => true]
+     *              ]);
+     *
+     * //As you might notice previous construction will create 2 queries, however we can simplify
+     * //this construction to use already joined table as source of data for relation via "using"
+     * //keyword
+     * User::find()->with('comments')->where('comments.approved', true)
+     *             ->load('comments', ['using' => 'comments']);
+     *
+     * //You will get only one query with INNER JOIN, to better understand this example let's use
+     * //custom alias for comments in with() method.
+     * User::find()->with('comments', ['alias' => 'comm'])->where('comm.approved', true)
+     *             ->load('comments', ['using' => 'comm']);
+     *
+     * @param string $relation
+     * @param array  $options
+     * @return static
+     */
     public function load($relation, array $options = [])
     {
         if (is_array($relation))

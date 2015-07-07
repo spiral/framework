@@ -77,6 +77,11 @@ class ManyToManyLoader extends Loader
      */
     protected function getPivotAlias()
     {
+        if (!empty($this->options['pivotAlias']))
+        {
+            return $this->options['pivotAlias'];
+        }
+
         return $this->getAlias() . '_pivot';
     }
 

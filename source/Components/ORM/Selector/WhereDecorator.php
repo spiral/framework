@@ -69,7 +69,7 @@ class WhereDecorator
     }
 
     /**
-     * Helper function used to replace {table} alias with actual table name.
+     * Helper function used to replace {@} alias with actual table name.
      *
      * @param mixed $where
      * @return mixed
@@ -78,7 +78,7 @@ class WhereDecorator
     {
         if (is_string($where))
         {
-            return str_replace('{table}', $this->alias, $where);
+            return str_replace('{@}', $this->alias, $where);
         }
 
         if (!is_array($where))
@@ -91,7 +91,7 @@ class WhereDecorator
         {
             if (is_string($column) && !is_int($column))
             {
-                $column = str_replace('{table}', $this->alias, $column);
+                $column = str_replace('{@}', $this->alias, $column);
             }
 
             $result[$column] = !is_array($value) ? $value : $this->prepare($value, $this->alias);
