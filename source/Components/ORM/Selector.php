@@ -161,6 +161,8 @@ class Selector extends AbstractSelectQuery
      * Include relation or relation chain into select query to be used for filtering purposes. Relation
      * data will be joined using INNER method which will skip parent records without associated child.
      *
+     * Attention, with() method WILL NOT load relation data, it will only make it accessible in query.
+     *
      * By default all joined tables will be aliases under their relation name, sub relations will
      * include name of their parent. You can specify your own alias using "alias" option.
      *
@@ -253,7 +255,6 @@ class Selector extends AbstractSelectQuery
      * ]);
      *
      * Attention, you will not be able to correctly paginate in this case.
-     * You can easily combine with() and load() methods together.
      *
      * //Load all users with approved comments and pre-load all their comments
      * User::find()->with('comments')->where('comments.approved', true)
@@ -277,6 +278,7 @@ class Selector extends AbstractSelectQuery
      * User::find()->with('comments', ['alias' => 'comm'])->where('comm.approved', true)
      *             ->load('comments', ['using' => 'comm']);
      *
+     * @see with()
      * @param string $relation
      * @param array  $options
      * @return static
