@@ -11,7 +11,7 @@ namespace Spiral\Components\View;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
-class View extends Component implements ViewInterface
+class View implements ViewInterface
 {
     /**
      * View filename, usually cached.
@@ -19,6 +19,13 @@ class View extends Component implements ViewInterface
      * @var string
      */
     protected $filename = '';
+
+    /**
+     * Runtime data has to be passed to view.
+     *
+     * @var array
+     */
+    protected $data = [];
 
     /**
      * View namespace.
@@ -35,62 +42,22 @@ class View extends Component implements ViewInterface
     protected $view = '';
 
     /**
-     * Runtime data has to be passed to view.
-     *
-     * @var array
-     */
-    protected $data = [];
-
-    /**
      * View instance binded to specified view file (file has to be already pre-processed).
      *
-     * @param ViewManager $manager    ViewManager component.
-     * @param string      $filename   Compiled view file.
-     * @param string      $namespace  View namespace.
-     * @param string      $view       View name.
-     * @param array       $data       Runtime data passed by controller or model, should be injected
-     *                                into view.
+     * @param ViewManager $viewManager ViewManager component.
+     * @param string      $filename    Compiled view file.
+     * @param array       $data        Runtime data passed by controller or model, should be injected
+     *                                 into view.
+     * @param string      $namespace   View namespace.
+     * @param string      $view        View name.
      */
-    public function __construct(
-        ViewManager $manager,
-        $filename,
-        $namespace = '',
-        $view = '',
-        array $data = []
-    )
+    public function __construct(ViewManager $viewManager, $filename, array $data = [], $namespace, $view)
     {
         $this->filename = $filename;
+        $this->data = $data;
+
         $this->namespace = $namespace;
         $this->view = $view;
-        $this->data = $data;
-    }
-
-    /**
-     * New instance of view class.
-     *
-     * Example:
-     * View::make('namespace:view');
-     * View::make('namespace:view', ['name' => 'value']);
-     *
-     * @param array     $parameters
-     * @param Container $container
-     * @return mixed|static
-     */
-    public static function make($parameters = [], Container $container = null)
-    {
-        if (empty($container))
-        {
-            $container = Container::getInstance();
-        }
-
-        if (is_string($parameters))
-        {
-            return call_user_func_array(
-                [ViewManager::getInstance($container), 'get'], func_get_args()
-            );
-        }
-
-        return parent::make($parameters, $container);
     }
 
     /**
@@ -107,11 +74,13 @@ class View extends Component implements ViewInterface
     public function render()
     {
         !empty($this->view) && benchmark('view::render', $this->namespace . ':' . $this->view);
-        ob_start();
 
+        //RENDERING PROCESS
+        ob_start();
         extract($this->data, EXTR_OVERWRITE);
         include $this->filename;
         $result = ob_get_clean();
+        //END RENDERING PROCESS
 
         !empty($this->view) && benchmark('view::render', $this->namespace . ':' . $this->view);
 

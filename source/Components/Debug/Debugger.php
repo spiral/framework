@@ -131,7 +131,7 @@ class Debugger extends Component
     {
         $snapshot = Snapshot::make([
             'exception' => $exception,
-            'view'      => $this->config['backtrace']['view'],
+            'viewName' => $this->config['backtrace']['view'],
             'config'    => $this->config['backtrace']['snapshots']
         ]);
 

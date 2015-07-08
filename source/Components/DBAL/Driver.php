@@ -134,7 +134,7 @@ abstract class Driver extends Component
      * @param array     $config
      * @param Container $container
      */
-    public function __construct(array $config = [], Container $container)
+    public function __construct(array $config, Container $container)
     {
         $this->config = $config + $this->config;
         $this->container = $container;

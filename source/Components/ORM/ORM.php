@@ -106,6 +106,12 @@ class ORM extends Component
         return $this->dbal;
     }
 
+    //todo: start using this method
+    public function getDatabase($database)
+    {
+        return $this->dbal->db($database);
+    }
+
     /**
      * Get associated Container, can be used inside custom relations and loaders to load additional
      * components.

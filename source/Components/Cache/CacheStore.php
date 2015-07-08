@@ -14,6 +14,11 @@ use Spiral\Core\Container\InjectableInterface;
 abstract class CacheStore extends Component implements StoreInterface, InjectableInterface
 {
     /**
+     * Internal store name.
+     */
+    const STORE = '';
+
+    /**
      * InjectableInterface declares to spiral Container that requested interface or class should
      * not be resolved using default mechanism. Following interface does not require any methods,
      * however class or other interface which inherits InjectableInterface should declare constant
@@ -23,11 +28,6 @@ abstract class CacheStore extends Component implements StoreInterface, Injectabl
      * to parameter in constructor or method used to declare injection.
      */
     const INJECTION_MANAGER = CacheManager::class;
-
-    /**
-     * Internal store name.
-     */
-    const STORE = '';
 
     /**
      * Default store options.

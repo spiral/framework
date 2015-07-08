@@ -52,7 +52,7 @@ class SnapshotTest extends TestCase
 
         $snapshot = $debug->handleException(new \ErrorException('Snapshot Test'), false);
 
-        $this->assertNull($snapshot->getSnapshotFilename());
+        $this->assertNull($snapshot->getFilename());
 
         //But we still should be able to render it
         $this->assertNotEmpty($snapshot->renderSnapshot());
@@ -60,54 +60,54 @@ class SnapshotTest extends TestCase
 
     public function testFileSnapshot()
     {
-        $debug = $this->debuggerComponent(array(
-            'loggers'   => array(
-                'containers' => array()
-            ),
-            'backtrace' => array(
+        $debug = $this->debuggerComponent([
+            'loggers'   => [
+                'containers' => []
+            ],
+            'backtrace' => [
                 'view'      => 'spiral:exception',
-                'snapshots' => array(
+                'snapshots' => [
                     'enabled'    => true,
                     'timeFormat' => 'd.m.Y-Hi.s',
                     'directory'  => directory('runtime')
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
 
         $snapshot = $debug->handleException(new \ErrorException('Snapshot Test'), false);
 
-        $this->assertNotEmpty($snapshot->getSnapshotFilename());
-        $this->assertFileExists($snapshot->getSnapshotFilename());
+        $this->assertNotEmpty($snapshot->getFilename());
+        $this->assertFileExists($snapshot->getFilename());
 
         //But we still should be able to render it
         $this->assertNotEmpty($snapshot->renderSnapshot());
 
         $this->assertSame(
             $snapshot->renderSnapshot(),
-            file_get_contents($snapshot->getSnapshotFilename())
+            file_get_contents($snapshot->getFilename())
         );
 
         //Should always contain exception name
-        $this->assertTrue(strpos($snapshot->getSnapshotFilename(), 'ErrorException') !== false);
+        $this->assertTrue(strpos($snapshot->getFilename(), 'ErrorException') !== false);
     }
 
-    protected function debuggerComponent(array $config = array())
+    protected function debuggerComponent(array $config = [])
     {
         if (empty($config))
         {
-            $config = array(
-                'loggers'   => array(
-                    'containers' => array()
-                ),
-                'backtrace' => array(
+            $config = [
+                'loggers'   => [
+                    'containers' => []
+                ],
+                'backtrace' => [
                     'view'      => 'spiral:exception',
-                    'snapshots' => array(
+                    'snapshots' => [
                         'enabled'    => false,
                         'timeFormat' => 'd.m.Y-Hi.s',
                         'directory'  => directory('runtime')
-                    )
-                )
-            );
+                    ]
+                ]
+            ];
         }
 
         return new Debugger(
@@ -115,30 +115,30 @@ class SnapshotTest extends TestCase
         );
     }
 
-    protected function viewManager(array $config = array())
+    protected function viewManager(array $config = [])
     {
         if (empty($config))
         {
-            $config = array(
-                'namespaces'      => array(
-                    'spiral' => array(
+            $config = [
+                'namespaces'      => [
+                    'spiral' => [
                         directory('framework') . '/views'
-                    )
-                ),
-                'caching'         => array(
+                    ]
+                ],
+                'caching'         => [
                     'enabled'   => false,
                     'directory' => directory('runtime')
-                ),
-                'staticVariables' => array(),
-                'engines'         => array(
-                    'default' => array(
-                        'extensions' => array('php'),
+                ],
+                'staticVariables' => [],
+                'engines'         => [
+                    'default' => [
+                        'extensions' => ['php'],
                         'compiler'   => 'Spiral\Components\View\LayeredCompiler',
                         'view'       => 'Spiral\Components\View\View',
-                        'processors' => array()
-                    )
-                )
-            );
+                        'processors' => []
+                    ]
+                ]
+            ];
         }
 
         return new ViewManager(
@@ -155,14 +155,14 @@ class SnapshotTest extends TestCase
      * @return Tokenizer
      * @throws \Spiral\Core\CoreException
      */
-    protected function tokenizerComponent(array $config = array())
+    protected function tokenizerComponent(array $config = [])
     {
         if (empty($config))
         {
-            $config = array(
-                'directories' => array(__DIR__),
-                'exclude'     => array('XX')
-            );
+            $config = [
+                'directories' => [__DIR__],
+                'exclude'     => ['XX']
+            ];
         }
 
         return new Tokenizer(

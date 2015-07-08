@@ -99,7 +99,7 @@ class ViewConfig extends ConfigWriter
      *
      * @param string $namespace View namespace.
      * @param string $directory Directory name relative to modules directory.
-     * @return ViewConfig
+     * @return static
      */
     public function registerNamespace($namespace, $directory = 'views')
     {
@@ -145,11 +145,13 @@ class ViewConfig extends ConfigWriter
      * Read configuration file from some specified directory (application or module config folder).
      *
      * @param string $directory Director where config should be located.
+     * @return static
      * @throws ConfigWriterException
      */
     public function readConfig($directory)
     {
         //No need to read module view config
+        return $this;
     }
 
     /**

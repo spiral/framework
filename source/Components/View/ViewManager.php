@@ -66,11 +66,11 @@ class ViewManager extends Component
     protected $namespaces = [];
 
     /**
-     * Variables for pre-processing and cache definition.
+     * Variables used on compilation stage to define cached filename.
      *
      * @var array
      */
-    protected $staticVariables = [];
+    protected $dependencies = [];
 
     /**
      * Constructing view component and initiating view namespaces, namespaces are used to find view
@@ -87,11 +87,23 @@ class ViewManager extends Component
     )
     {
         $this->config = $configurator->getConfig('views');
+
         $this->container = $container;
         $this->file = $file;
 
         //Mounting namespaces from config and external modules
         $this->namespaces = $this->config['namespaces'];
+    }
+
+    /**
+     * Instance of container used to load compilers and view class. Requested by compilers to
+     * perform some specific operations.
+     *
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     /**
@@ -115,17 +127,6 @@ class ViewManager extends Component
     }
 
     /**
-     * Update view namespaces.
-     *
-     * @param array $namespaces
-     * @return array
-     */
-    public function setNamespaces(array $namespaces)
-    {
-        return $this->namespaces = $namespaces;
-    }
-
-    /**
      * Add view namespace directory.
      *
      * @param string $namespace
@@ -145,17 +146,15 @@ class ViewManager extends Component
     }
 
     /**
-     * Get static variable by names.
+     * Get view dependency variable by names.
      *
      * @param string $name
      * @param mixed  $default
      * @return string
      */
-    public function getVariable($name, $default = null)
+    public function getDependency($name, $default = null)
     {
-        return array_key_exists($name, $this->staticVariables) ?
-            $this->staticVariables[$name]
-            : $default;
+        return array_key_exists($name, $this->dependencies) ? $this->dependencies[$name] : $default;
     }
 
     /**
@@ -167,36 +166,9 @@ class ViewManager extends Component
      * @param string $value
      * @return string
      */
-    public function setVariable($name, $value)
+    public function setDependency($name, $value)
     {
-        $this->staticVariables[$name] = $value;
-    }
-
-    /**
-     * Cached filename depends only on view name and provided set of "staticVariables", changing this
-     * set system can cache some view content on file system level. For example view component can
-     * set language variable, which will be rendering another view every time language changed and
-     * allow to cache translated texts.
-     *
-     * @param string $namespace View namespace.
-     * @param string $view      View filename, without php included.
-     * @return string
-     */
-    public function cachedFilename($namespace, $view)
-    {
-        foreach ($this->config['staticVariables'] as $variable => $provider)
-        {
-            $this->staticVariables[$variable] = call_user_func([
-                $this->container->get($provider[0]),
-                $provider[1]
-            ]);
-        }
-
-        $postfix = '-' . hash('crc32b', join(',', $this->staticVariables)) . '.' . self::CACHE_EXTENSION;
-
-        return $this->cacheDirectory() . '/'
-        . $namespace . '-' . trim(str_replace(['\\', '/'], '-', $view), '-')
-        . $postfix;
+        $this->dependencies[$name] = $value;
     }
 
     /**
@@ -226,9 +198,9 @@ class ViewManager extends Component
             {
                 foreach ($options['extensions'] as $extension)
                 {
-                    if ($this->file->exists($directory . '/' . $view . '.' . $extension))
+                    if ($this->file->exists($candidate = $directory . '/' . $view . '.' . $extension))
                     {
-                        return $this->file->normalizePath($directory . '/' . $view . '.' . $extension);
+                        return $this->file->normalizePath($candidate);
                     }
                 }
             }
@@ -238,15 +210,42 @@ class ViewManager extends Component
     }
 
     /**
+     * Cached filename depends only on view name and provided set of "staticVariables", changing this
+     * set system can cache some view content on file system level. For example view component can
+     * set language variable, which will be rendering another view every time language changed and
+     * allow to cache translated texts.
+     *
+     * @param string $namespace View namespace.
+     * @param string $viewName  View filename, without php included.
+     * @return string
+     */
+    public function cacheFilename($namespace, $viewName)
+    {
+        foreach ($this->config['dependencies'] as $variable => $provider)
+        {
+            $this->dependencies[$variable] = call_user_func([
+                $this->container->get($provider[0]),
+                $provider[1]
+            ]);
+        }
+
+        $postfix = '-' . hash('crc32b', join(',', $this->dependencies)) . '.' . self::CACHE_EXTENSION;
+
+        return $this->cacheDirectory() . '/'
+        . $namespace . '-' . trim(str_replace(['\\', '/'], '-', $viewName), '-')
+        . $postfix;
+    }
+
+    /**
      * Check if compiled view cache expired and has to be re-rendered. You can disable view cache
      * by altering view config (this will slow your application dramatically but will simplyfy
      * development).
      *
      * @param string $viewFilename
-     * @param string $cachedFilename
+     * @param string $cacheFilename
      * @return bool
      */
-    protected function isExpired($viewFilename, $cachedFilename)
+    protected function isExpired($viewFilename, $cacheFilename)
     {
         if (!$this->config['caching']['enabled'])
         {
@@ -254,12 +253,12 @@ class ViewManager extends Component
             return true;
         }
 
-        if (!$this->file->exists($cachedFilename))
+        if (!$this->file->exists($cacheFilename))
         {
             return true;
         }
 
-        return $this->file->timeUpdated($cachedFilename) < $this->file->timeUpdated($viewFilename);
+        return $this->file->timeUpdated($cacheFilename) < $this->file->timeUpdated($viewFilename);
     }
 
     /**
@@ -288,14 +287,17 @@ class ViewManager extends Component
         if ($compile && !empty($this->config['engines'][$engine]['compiler']))
         {
             //Cached filename
-            $cacheFilename = $this->cachedFilename($namespace, $view);
+            $cacheFilename = $this->cacheFilename($namespace, $view);
 
             if ($resetCache || $this->isExpired($viewFilename, $cacheFilename))
             {
-                $compiled = $this->compile($engine, $namespace, $view, $viewFilename, $cacheFilename);
-
                 //Saving compilation result to filename
-                $this->file->write($cacheFilename, $compiled, FileManager::RUNTIME, true);
+                $this->file->write(
+                    $cacheFilename,
+                    $this->compile($engine, $this->file->read($viewFilename), $namespace, $view),
+                    FileManager::RUNTIME,
+                    true
+                );
             }
 
             return $cacheFilename;
@@ -305,30 +307,37 @@ class ViewManager extends Component
     }
 
     /**
+     * Get instance of CompilerInterface associated with provided source and view name.
+     *
+     * @param string $engine
+     * @param string $source    Input view source.
+     * @param string $namespace View namespace.
+     * @param string $view      View filename, without php included.
+     * @return CompilerInterface
+     */
+    public function compiler($engine, $source, $namespace, $view)
+    {
+        return $this->container->get($this->config['engines'][$engine]['compiler'], [
+            'viewManager' => $this,
+            'source'      => $source,
+            'namespace'   => $namespace,
+            'view'        => $view,
+            'config'      => $this->config['engines'][$engine]
+        ]);
+    }
+
+    /**
      * Generate view cache using defined compiler.
      *
      * @param string $engine
+     * @param string $source Input view source.
      * @param string $namespace View namespace.
      * @param string $view      View filename, without php included.
-     * @param string $input     Input view filename.
-     * @param string $output    Output filename.,
      * @return bool|string
      */
-    protected function compile($engine, $namespace, $view, $input, $output)
+    protected function compile($engine, $source, $namespace, $view)
     {
-        /**
-         * @var CompilerInterface $compiler
-         */
-        $compiler = $this->container->get($this->config['engines'][$engine]['compiler'], [
-                'manager'   => $this,
-                'source'    => $this->file->read($input),
-                'namespace' => $namespace,
-                'view'      => $view,
-                'input'     => $input,
-                'output'    => $output,
-            ] + $this->config['engines'][$engine]);
-
-        return $compiler->compile();
+        return $this->compiler($engine, $source, $namespace, $view)->compile();
     }
 
     /**
@@ -363,7 +372,7 @@ class ViewManager extends Component
         //View representer
         $renderer = $this->config['engines'][$engine]['view'];
 
-        return new $renderer($this, $filename, $namespace, $view, $data);
+        return new $renderer($this, $filename, $data, $namespace, $view);
     }
 
     /**

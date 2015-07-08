@@ -19,6 +19,11 @@ use Spiral\Core\Dispatcher\ClientException;
 class Snapshot extends Component
 {
     /**
+     * Snapshot filename pattern.
+     */
+    const SNAPSHOT_FILENAME = '{directory}/{timestamp}-{exception}.html';
+
+    /**
      * Exception response content is always Exception object handled in Debugger::handleException
      * method.
      *
@@ -27,15 +32,17 @@ class Snapshot extends Component
     protected $exception = null;
 
     /**
-     * FileManager used to save snaphots.
+     * FileManager used to save snapshots.
      *
+     * @invisible
      * @var FileManager
      */
-    protected $fileManager = null;
+    protected $file = null;
 
     /**
      * ViewManager used to render snapshots.
      *
+     * @invisible
      * @var ViewManager
      */
     protected $viewManager = null;
@@ -47,7 +54,7 @@ class Snapshot extends Component
      *
      * @var string
      */
-    protected $view = '';
+    protected $viewName = '';
 
     /**
      * Rendered backtrace view, can be used in to save into file, send by email or show to client.
@@ -61,7 +68,7 @@ class Snapshot extends Component
      *
      * @var string|null
      */
-    protected $snapshotFilename = null;
+    protected $filename = null;
 
     /**
      * Create new ExceptionResponse object. Object usually generated in Debug::handleException()
@@ -69,33 +76,38 @@ class Snapshot extends Component
      * error.
      *
      * @param Exception   $exception
-     * @param FileManager $fileManager
      * @param ViewManager $viewManager
-     * @param string      $view   View should be used to render backtrace.
-     * @param array       $config Options to render and store error snapshots.
+     * @param FileManager $file
+     * @param string      $viewName View should be used to render backtrace.
+     * @param array       $config   Options to render and store error snapshots.
      */
     public function __construct(
         Exception $exception,
-        FileManager $fileManager,
         ViewManager $viewManager,
-        $view = '',
+        FileManager $file,
+        $viewName = '',
         array $config = []
     )
     {
         $this->exception = $exception;
 
-        $this->fileManager = $fileManager;
+        $this->file = $file;
         $this->viewManager = $viewManager;
 
-        $this->view = $view;
+        $this->viewName = $viewName;
 
         if (!empty($config['enabled']) && !($exception instanceof ClientException))
         {
             $reflection = new \ReflectionObject($exception);
-            $this->snapshotFilename = $this->getFilename($config, $reflection->getShortName());
 
-            $this->fileManager->write(
-                $this->snapshotFilename,
+            $this->filename = interpolate(static::SNAPSHOT_FILENAME, [
+                'directory' => $config['directory'],
+                'timestamp' => date($config['timeFormat'], time()),
+                'exception' => $reflection->getShortName()
+            ]);
+
+            $this->file->write(
+                $this->filename,
                 $this->renderSnapshot(),
                 FileManager::RUNTIME,
                 true
@@ -104,27 +116,13 @@ class Snapshot extends Component
     }
 
     /**
-     * Create snapshot filename based on provided config.
-     *
-     * @param array  $config
-     * @param string $shortName Exception short name.
-     * @return string
-     */
-    protected function getFilename(array $config = [], $shortName)
-    {
-        $name = date($config['timeFormat'], time()) . '-' . $shortName . '.html';
-
-        return $config['directory'] . '/' . $name;
-    }
-
-    /**
      * Get location where snapshot is stored into.
      *
      * @return string|null
      */
-    public function getSnapshotFilename()
+    public function getFilename()
     {
-        return $this->snapshotFilename;
+        return $this->filename;
     }
 
     /**
@@ -144,7 +142,9 @@ class Snapshot extends Component
      */
     public function getFile()
     {
-        return $this->fileManager->normalizePath($this->exception->getFile());
+        return $this->file->normalizePath(
+            $this->exception->getFile()
+        );
     }
 
     /**
@@ -197,8 +197,12 @@ class Snapshot extends Component
      */
     public function getMessage()
     {
-        return $this->getClass() . ': ' . $this->exception->getMessage()
-        . ' in ' . $this->getFile() . ' at line ' . $this->getLine();
+        return interpolate("{exception}: {message} in {file} at line {line}", [
+            'exception' => $this->getClass(),
+            'message'   => $this->exception->getMessage(),
+            'file'      => $this->getFile(),
+            'line'      => $this->getLine()
+        ]);
     }
 
     /**
@@ -208,12 +212,12 @@ class Snapshot extends Component
      */
     public function renderSnapshot()
     {
-        if ($this->snapshot || !$this->view)
+        if ($this->snapshot || !$this->viewName)
         {
             return $this->snapshot;
         }
 
-        return $this->snapshot = $this->viewManager->render($this->view, [
+        return $this->snapshot = $this->viewManager->render($this->viewName, [
             'exception' => $this
         ]);
     }
