@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\View\Compiler;
 
+use Spiral\Components\Files\FileManager;
 use Spiral\Components\View\CompilerInterface;
 use Spiral\Components\View\ViewManager;
 
@@ -78,6 +79,19 @@ class Compiler implements CompilerInterface
         $this->view = $view;
     }
 
+    public function getCopy($namespace, $view)
+    {
+        $compiler = clone $this;
+
+        $compiler->namespace = $namespace;
+        $compiler->view = $view;
+
+        $compiler->source = $this->viewManager->getSource($namespace, $view);
+        $compiler->processors = [];
+
+        return $compiler;
+    }
+
     /**
      * Active namespace.
      *
@@ -96,6 +110,11 @@ class Compiler implements CompilerInterface
     public function getView()
     {
         return $this->view;
+    }
+
+    public function getSource()
+    {
+        return $this->source;
     }
 
     /**

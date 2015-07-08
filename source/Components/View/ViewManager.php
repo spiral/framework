@@ -306,6 +306,11 @@ class ViewManager extends Component
         return $viewFilename;
     }
 
+    public function getSource($namespace, $view)
+    {
+        return $this->file->read($this->findView($namespace, $view));
+    }
+
     /**
      * Get instance of CompilerInterface associated with provided source and view name.
      *
