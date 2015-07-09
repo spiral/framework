@@ -6,14 +6,18 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Core;
+namespace Spiral\Tests;
 
-interface RuntimeCacheInterface
+use Spiral\Core\RuntimeCacheInterface;
+
+class RuntimeCache implements RuntimeCacheInterface
 {
     /**
-     * Extension to use to runtime data and configuration cache files.
+     * Data to be stored or loaded.s
+     *
+     * @var array
      */
-    const RUNTIME_EXTENSION = 'php';
+    protected $data = [];
 
     /**
      * Load data previously saved to application cache, if file is not exists null will be returned.
@@ -23,7 +27,15 @@ interface RuntimeCacheInterface
      * @param string $directory Application cache directory will be used by default.
      * @return mixed|array
      */
-    public function loadData($name, $directory = null);
+    public function loadData($name, $directory = null)
+    {
+        if (!isset($this->data[$directory . $name]))
+        {
+            return null;
+        }
+
+        return $this->data[$directory . $name];
+    }
 
     /**
      * Save runtime data to application cache, previously saved file can be removed or rewritten at
@@ -40,5 +52,8 @@ interface RuntimeCacheInterface
      * @param mixed  $data      Data to be stored, any format supported by var_export().
      * @param string $directory Application cache directory will be used by default.
      */
-    public function saveData($name, $data, $directory = null);
+    public function saveData($name, $data, $directory = null)
+    {
+        $this->data[$directory . $name] = $data;
+    }
 }
