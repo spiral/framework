@@ -107,15 +107,17 @@ class SnapshotTest extends TestCase
     {
         $this->loader = new Loader(new RuntimeCache());
 
-        Container::getInstance()->bind('view', $this->getViewManager());
-        Container::getInstance()->bind('tokenizer', $this->getTokenizer());
+        Container::getInstance()->bind(ViewManager::class, $this->getViewManager());
+        Container::getInstance()->bind(Tokenizer::class, $this->getTokenizer());
+        Container::getInstance()->bind(Debugger::class, $this->getDebugger());
     }
 
 
     protected function tearDown()
     {
-        Container::getInstance()->removeBinding('view');
-        Container::getInstance()->removeBinding('tokenizer');
+        Container::getInstance()->removeBinding(ViewManager::class);
+        Container::getInstance()->removeBinding(Tokenizer::class);
+        Container::getInstance()->removeBinding(Debugger::class);
 
         $this->loader->disable();
         $this->loader = null;

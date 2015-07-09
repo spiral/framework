@@ -27,7 +27,7 @@ class Tokenizer extends Component
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = 'tokenizer';
+    const SINGLETON = __CLASS__;
 
     /**
      * Token array constants.

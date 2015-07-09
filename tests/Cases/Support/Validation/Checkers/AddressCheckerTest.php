@@ -20,7 +20,7 @@ class AddressCheckerTest extends TestCase
     protected function setUp()
     {
         Container::getInstance()->bind(
-            'i18n',
+            Translator::class,
             new Translator(new Configurator([
                 'i18n' => [
                     'default'   => 'en',
@@ -38,7 +38,7 @@ class AddressCheckerTest extends TestCase
 
     protected function tearDown()
     {
-        Container::getInstance()->removeBinding('i18n');
+        Container::getInstance()->removeBinding(Translator::class);
     }
 
     public function testEmail()
