@@ -8,6 +8,8 @@
  */
 namespace Spiral\Components\Debug;
 
+use Spiral\Components\Files\FileManager;
+use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
@@ -40,13 +42,21 @@ class Debugger extends Component
     protected static $benchmarks = [];
 
     /**
+     * Container instance is required to resolve dependencies.
+     *
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
      * Constructing debug component. Debug is one of primary spiral component and will be available
      * for use in any environment and any application point. This is first initiated component in
      * application.
      *
      * @param ConfiguratorInterface $configurator
+     * @param Container             $container
      */
-    public function __construct(ConfiguratorInterface $configurator)
+    public function __construct(ConfiguratorInterface $configurator, Container $container)
     {
         $this->config = $configurator->getConfig('debug');
     }
@@ -129,11 +139,12 @@ class Debugger extends Component
      */
     public function handleException(Exception $exception, $logException = true)
     {
-        $snapshot = Snapshot::make([
-            'exception' => $exception,
-            'viewName' => $this->config['backtrace']['view'],
-            'config'    => $this->config['backtrace']['snapshots']
-        ]);
+        //We are requesting viewManager using container here to performance reasons
+        $snapshot = new Snapshot(
+            $exception,
+            ViewManager::getInstance($this->container),
+            $this->config['backtrace']['view']
+        );
 
         if ($exception instanceof ClientException)
         {
@@ -141,14 +152,29 @@ class Debugger extends Component
             return $snapshot;
         }
 
-        //Letting subscribers know...
-        $this->event('snapshot', $snapshot);
-
         //Error message should be added to log only for non http exceptions
         if ($logException)
         {
             self::logger()->error($snapshot->getMessage());
         }
+
+        $filename = null;
+        if ($this->config['backtrace']['snapshots']['enabled'])
+        {
+            $filename = interpolate($this->config['backtrace']['snapshots']['filename'], [
+                'timestamp' => date($this->config['backtrace']['snapshots']['timeFormat'], time()),
+                'exception' => $snapshot->getName()
+            ]);
+
+            //We can save it now
+            FileManager::getInstance($this->container)->write(
+                $filename,
+                $snapshot->renderSnapshot()
+            );
+        }
+
+        //Letting subscribers know...
+        $this->event('snapshot', compact('snapshot', 'filename'));
 
         return $snapshot;
     }
