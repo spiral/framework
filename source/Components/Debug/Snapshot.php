@@ -120,7 +120,7 @@ class Snapshot extends Component
      *
      * @return string|null
      */
-    public function getFilename()
+    public function getSnaphotFilename()
     {
         return $this->filename;
     }

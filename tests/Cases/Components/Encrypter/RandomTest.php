@@ -15,6 +15,17 @@ use Spiral\Tests\MemoryCore;
 
 class RandomTest extends TestCase
 {
+    /**
+     * @param array $config
+     * @return Encrypter
+     */
+    protected function getEncrypter($config = ['key' => '1234567890123456'])
+    {
+        return new Encrypter(
+            new Configurator(['encrypter' => $config])
+        );
+    }
+
     public function testRandom()
     {
         $encrypter = $this->getEncrypter();
@@ -27,18 +38,5 @@ class RandomTest extends TestCase
             $this->assertNotContains($random, $previousRandoms);
             $previousRandoms[] = $random;
         }
-    }
-
-    /**
-     * Configured encrypter component.
-     *
-     * @param array $config
-     * @return Encrypter
-     */
-    protected function getEncrypter($config = ['key' => '1234567890123456'])
-    {
-        return new Encrypter(
-            new Configurator(['encrypter' => $config])
-        );
     }
 }
