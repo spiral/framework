@@ -306,6 +306,13 @@ class ViewManager extends Component
         return $viewFilename;
     }
 
+    /**
+     * Get source of non compiled view file.
+     *
+     * @param string $namespace
+     * @param string $view
+     * @return string
+     */
     public function getSource($namespace, $view)
     {
         return $this->file->read($this->findView($namespace, $view));

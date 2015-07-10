@@ -79,19 +79,6 @@ class Compiler implements CompilerInterface
         $this->view = $view;
     }
 
-    public function getCopy($namespace, $view)
-    {
-        $compiler = clone $this;
-
-        $compiler->namespace = $namespace;
-        $compiler->view = $view;
-
-        $compiler->source = $this->viewManager->getSource($namespace, $view);
-        $compiler->processors = [];
-
-        return $compiler;
-    }
-
     /**
      * Active namespace.
      *
@@ -112,9 +99,38 @@ class Compiler implements CompilerInterface
         return $this->view;
     }
 
+    /**
+     * Get non compiled view source.
+     *
+     * @return string
+     */
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * Clone method used to create separate instance of Compiler using same settings but associated
+     * with another view.
+     *
+     * @param string $namespace
+     * @param string $view
+     * @return Compiler
+     */
+    public function cloneCompiler($namespace, $view)
+    {
+        $compiler = clone $this;
+
+        $compiler->namespace = $namespace;
+        $compiler->view = $view;
+
+        //We are getting new view source
+        $compiler->source = $this->viewManager->getSource($namespace, $view);
+
+        //Processors has to be regenerated to flush content
+        $compiler->processors = [];
+
+        return $compiler;
     }
 
     /**

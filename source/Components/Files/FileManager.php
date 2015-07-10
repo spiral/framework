@@ -62,7 +62,7 @@ class FileManager extends Component
      * A simple alias for file_get_contents, no real reason for using it, only to keep code clean.
      *
      * @param string $filename
-     * @return bool
+     * @return string
      */
     public function read($filename)
     {

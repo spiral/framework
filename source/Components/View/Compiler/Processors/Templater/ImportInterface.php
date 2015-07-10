@@ -8,6 +8,10 @@
  */
 namespace Spiral\Components\View\Compiler\Processors\Templater;
 
+/**
+ * ImportInterface used by templater to defined what tags should be treated as includes and how to
+ * resolve their view or namespace.
+ */
 interface ImportInterface
 {
 

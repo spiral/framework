@@ -46,7 +46,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     protected $viewManager = null;
 
     /**
-     * Compiler.
+     * Associated compiler.
      *
      * @var Compiler
      */
@@ -107,6 +107,14 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         return $root->compile();
     }
 
+    /**
+     * Define html tag behaviour based on supervisor syntax settings.
+     *
+     * @param array $token
+     * @param array $content
+     * @param Node  $node
+     * @return mixed|BehaviourInterface
+     */
     public function getBehaviour(array $token, array $content, Node $node)
     {
         if (!empty($type = $this->tokenType($token, $name, $node)))
@@ -197,7 +205,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
     public function getNode($name, $view)
     {
-        $compiler = $this->compiler->getCopy('default', $view);
+        $compiler = $this->compiler->cloneCompiler('default', $view);
 
         //We have to pre-compile view
         $source = $compiler->getSource();
