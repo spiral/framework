@@ -57,14 +57,14 @@ class ExtendsBehaviour implements BehaviourInterface
      *
      * @return ImporterInterface[]
      */
-    public function getImports()
+    public function getImporters()
     {
         /**
          * @var TemplateProcessor $templater
          */
         $templater = $this->parent->getSupervisor();
 
-        return $templater->getImports();
+        return $templater->getImporters();
     }
 
     /**

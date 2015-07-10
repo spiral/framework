@@ -8,80 +8,83 @@
  */
 namespace Spiral\Components\View\Compiler\Processors\Templater\Behaviours;
 
+use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
-use Spiral\Components\View\Compiler\Processors\Templater\SupervisorInterface;
 use Spiral\Support\Html\Tokenizer;
 
 class IncludeBehaviour implements BehaviourInterface
 {
-    protected static $index = 0;
+    /**
+     * Associated templater.
+     *
+     * @var TemplateProcessor
+     */
+    protected $templater = null;
 
-    protected $supervisor = null;
+    /**
+     * View namespace to be imported.
+     *
+     * @var string
+     */
+    protected $namespace = '';
 
-    protected $attributes = [];
+    /**
+     * View to be imported.
+     *
+     * @var string
+     */
+    protected $view = '';
 
+    /**
+     * Import context includes everything between opening and closing tag.
+     *
+     * @var array
+     */
     protected $context = [];
 
-    protected $name = '';
+    /**
+     * User able to define custom attributes while importing element, this attributes will be treated
+     * as node blocks.
+     *
+     * @var array
+     */
+    protected $attributes = [];
 
-    public function __construct(SupervisorInterface $supervisor, $name, array $context, array $attributes = [])
+    /**
+     * Include behaviour mount external view source and inner block under parent Node, it will
+     * additionally keep import context (everything between opening and closing tag) and tag
+     * attributes as node sblocks.
+     *
+     * @param TemplateProcessor $templater
+     * @param string            $namespace
+     * @param string            $view
+     * @param array             $context
+     * @param array             $attributes
+     */
+    public function __construct(
+        TemplateProcessor $templater,
+        $namespace,
+        $view,
+        array $context,
+        array $attributes = []
+    )
     {
-        $this->supervisor = $supervisor;
+        $this->templater = $templater;
+
+        $this->namespace = $namespace;
+        $this->view = $view;
+
         $this->context = $context;
         $this->attributes = $attributes;
-        $this->name = $name;
-    }
-
-    protected function getUniqueID()
-    {
-        return md5(self::$index++);
-    }
-
-    public function getNode()
-    {
-        $included = new Node($this->supervisor, $this->getUniqueID());
-
-        //Change that
-        $included->handleBehaviour(
-            new ExtendsBehaviour($this->supervisor->getNode($this->name, $this->name), [])
-        );
-
-        $included->registerBlock('context', [], [$this->getContext()]);
-
-        foreach ($this->getAttributes() as $attribute => $value)
-        {
-            //We should replace attribute value
-            $included->registerBlock($attribute, [], [$value]);
-        }
-
-        //TODO: Create mixed supervisor here OR add something
-        //TODO: or something else?
-        //TODO: we can do custom supervisor inside specific block
-
-        //dump($this->supervisor->uses);
-
-        $compiled = [];
-        $outerBlocks = [];
-        $compiled = $included->compile($compiled, $outerBlocks);
-
-        $compiled = $this->supervisor->mountOuterBlocks($compiled, $outerBlocks);
-
-        return new Node($this->supervisor, $this->getUniqueID(), $compiled);
     }
 
     /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
+     * Pack node context (everything between open and close tag).
+     *
      * @return string
      */
-    public function getContext()
+    public function packContext()
     {
         $context = '';
 
@@ -93,11 +96,39 @@ class IncludeBehaviour implements BehaviourInterface
         return $context;
     }
 
-    public function __debugInfo()
+    /**
+     * Create imported node to be included into parent container (node).
+     *
+     * @return Node
+     */
+    public function createNode()
     {
-        return (object)[
-            'attributes' => $this->attributes,
-            'context'    => $this->getContext()
-        ];
+        //We have to extend included node first
+        $node = new Node($this->templater, $this->templater->uniqueName());
+
+        //Let's exclude node content
+        $node->handleBehaviour(new ExtendsBehaviour(
+            $this->templater->createNode($this->namespace, $this->view),
+            []
+        ));
+
+        //Let's register user defined blocks (context and attributes) as plain text
+        $node->registerBlock('context', [], [$this->packContext()]);
+        foreach ($this->attributes as $attribute => $value)
+        {
+            $node->registerBlock($attribute, [], [$value]);
+        }
+
+        //We now have to compile node content to pass it's body to parent node
+        $content = $node->compile($compiled, $outerBlocks);
+
+        //Some blocks (usually user attributes) can be exported to template using non default
+        //rendering technique, for example every "extra" attribute can be passed to specific
+        //template location.
+        $content = $this->templater->exportBlocks($content, $outerBlocks);
+
+        //Create combined templater
+
+        return new Node($this->templater, $this->templater->uniqueName(), $content);
     }
 }

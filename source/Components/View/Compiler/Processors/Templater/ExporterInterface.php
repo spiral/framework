@@ -14,5 +14,19 @@ namespace Spiral\Components\View\Compiler\Processors\Templater;
  */
 interface ExporterInterface
 {
+    /**
+     * Exported has to export (obviously) specified blocks into content. Every exporter should
+     * defined it's own pattern to initiate export.
+     *
+     * @param string $content
+     * @param array  $blocks
+     */
+    public function __construct($content, array $blocks);
 
+    /**
+     * Create content with mounted blocks (if any).
+     *
+     * @return string
+     */
+    public function mountBlocks();
 }

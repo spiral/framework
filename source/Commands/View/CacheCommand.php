@@ -50,7 +50,7 @@ class CacheCommand extends Command
                 $this->writeln("Rendering views in namespace '<comment>{$namespace}</comment>'.");
             }
 
-            foreach ($views as $view)
+            foreach ($views as $view => $engine)
             {
                 if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
                 {

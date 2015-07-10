@@ -8,8 +8,8 @@
  */
 namespace Spiral\Components\View\Compiler\Processors\Templater;
 
+use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
-use Spiral\Components\View\ViewManager;
 
 /**
  * ImportInterface used by templater to defined what tags should be treated as includes and how to
@@ -20,9 +20,33 @@ interface ImporterInterface
     /**
      * New instance of importer.
      *
-     * @param ViewManager       $viewManager
+     * @param Compiler $compiler
      * @param TemplateProcessor $templater
      * @param array             $options
      */
-    public function __construct(ViewManager $viewManager, TemplateProcessor $templater, array $options);
+    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $options);
+
+    /**
+     * Check if element (tag) has to be imported.
+     *
+     * @param string $element
+     * @return bool
+     */
+    public function isImported($element);
+
+    /**
+     * Get imported element namespace.
+     *
+     * @param string $element
+     * @return string
+     */
+    public function getNamespace($element);
+
+    /**
+     * Get imported element view name.
+     *
+     * @param string $element
+     * @return string
+     */
+    public function getView($element);
 }

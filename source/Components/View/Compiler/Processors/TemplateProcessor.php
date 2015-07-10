@@ -14,6 +14,10 @@ use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\BlockBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendsBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\IncludeBehaviour;
+use Spiral\Components\View\Compiler\Processors\Templater\ExporterInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\Exporters\AttributeExporter;
+use Spiral\Components\View\Compiler\Processors\Templater\Exporters\JsonExporter;
+use Spiral\Components\View\Compiler\Processors\Templater\Exporters\PHPExporter;
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Importers\AliasedImporter;
 use Spiral\Components\View\Compiler\Processors\Templater\Importers\BundleImporter;
@@ -23,6 +27,7 @@ use Spiral\Components\View\Compiler\Processors\Templater\Importers\NativeImporte
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
 use Spiral\Components\View\Compiler\Processors\Templater\SupervisorInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
+use Spiral\Components\View\ViewException;
 use Spiral\Components\View\ViewManager;
 use Spiral\Support\Html\Tokenizer;
 
@@ -80,18 +85,18 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         'keywords'    => [
             'namespace' => ['view:namespace', 'node:namespace'],
             'view'      => ['view:parent', 'node:parent']
+        ],
+        'exporters'   => [
+            AttributeExporter::class,
+            JsonExporter::class,
+            PHPExporter::class
         ]
     ];
 
     /**
-     * Set of active templater imports used to resolve if specified tag should be treated as
+     * Set of active templater importers used to resolve if specified tag should be treated as
      * include from foreign view.
      *
-     * @var ImporterInterface[]
-     */
-    public $imports = [];
-
-    /**
      * @var ImporterInterface[]
      */
     protected $importers = [];
@@ -119,7 +124,14 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     public function process($source)
     {
-        $root = new Node($this, '@root', $source);
+        try
+        {
+            $root = new Node($this, '@root', $source);
+        }
+        catch (TemplaterException $exception)
+        {
+            throw $this->clarifyException($exception);
+        }
 
         return $root->compile();
     }
@@ -140,9 +152,9 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      *
      * @return ImporterInterface[]
      */
-    public function getImports()
+    public function getImporters()
     {
-        return $this->imports;
+        return $this->importers;
     }
 
     /**
@@ -169,50 +181,44 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             case self::TYPE_EXTENDS:
                 list($namespace, $view) = $this->fetchLocation($name, $token);
                 $extends = new ExtendsBehaviour(
-                    $this->createNode($namespace, $view, $token),
+                    $this->createNode($namespace, $view, '', $token),
                     $attributes
                 );
 
                 //We have to combine parent imports with local one
-                $this->imports = $extends->getImports();
+                $this->importers = $extends->getImporters();
 
                 //Sending command to extend parent
                 return $extends;
                 break;
             case self::TYPE_USE:
                 $this->registerImport($attributes, $token);
-                //REGISTER USE
-
-                array_unshift($this->imports, [
-                    $token[Tokenizer::TOKEN_ATTRIBUTES]['path'],
-                    $token[Tokenizer::TOKEN_ATTRIBUTES]['as']
-                ]);
 
                 //No need to include use tag into source
                 return BehaviourInterface::SKIP_TOKEN;
                 break;
         }
 
-        if ($name == 'include')
+        //We now have to decide if element points to external view to be imported
+        foreach ($this->importers as $importer)
         {
-            foreach ($this->imports as $alias)
+            if ($importer->isImported($name))
             {
-                if ($name == $alias[1])
+                if ($importer instanceof NativeImporter)
                 {
-                    $name = $alias[0];
+                    //Native importer tells us to treat this element as simple html
                     break;
                 }
+
+                return new IncludeBehaviour(
+                    $this,
+                    $importer->getNamespace($name),
+                    $importer->getView($name),
+                    $content,
+                    $token[Tokenizer::TOKEN_ATTRIBUTES]
+                );
             }
-
-            return new IncludeBehaviour(
-                $this,
-                $name,
-                $content,
-                $token[Tokenizer::TOKEN_ATTRIBUTES]
-            );
         }
-
-        //Includes has to handled separately
 
         return BehaviourInterface::SIMPLE_TAG;
     }
@@ -252,7 +258,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      * @param array  $token
      * @return array
      */
-    protected function fetchLocation($name, array $token = [])
+    public function fetchLocation($name, array $token = [])
     {
         $namespace = $this->compiler->getNamespace();
         $view = str_replace($this->options['separator'], '/', $name);
@@ -294,13 +300,20 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      *
      * @param string $namespace
      * @param string $view
-     * @param string $name
-     * @param array  $token
+     * @param string $name  If not specified unique name will be used.
+     * @param array  $token Token are required only for clarifying location of exceptions.
      * @return Node
      */
     public function createNode($namespace, $view, $name = '', array $token = [])
     {
-        $compiler = $this->compiler->createCompiler($namespace, $view);
+        try
+        {
+            $compiler = $this->compiler->createCompiler($namespace, $view);
+        }
+        catch (ViewException $exception)
+        {
+            throw $this->clarifyException($exception, $token);
+        }
 
         //We have to pre-compile view
         $source = $compiler->getSource();
@@ -319,12 +332,21 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         if (empty($processor))
         {
-            throw new TemplaterException("Invalid processors chain.");
+            throw $this->clarifyException(
+                new TemplaterException("Invalid processors chain.", $token),
+                $token
+            );
         }
 
-        return new Node($processor, $name, $source);
+        return new Node($processor, !empty($name) ? $name : $this->uniqueName(), $source);
     }
 
+    /**
+     * Register new imported defined in view code.
+     *
+     * @param array $attributes
+     * @param array $token
+     */
     protected function registerImport(array $attributes, array $token = [])
     {
         $importer = null;
@@ -339,19 +361,71 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         if (empty($importer))
         {
-            throw new TemplaterException("Undefined importer type.");
+            throw $this->clarifyException(
+                new TemplaterException("Undefined importer type.", $token),
+                $token
+            );
         }
 
-        $this->importers[] = new $importer($this->viewManager, $this, $attributes);
+        //Last import has higher priority than first import
+        array_unshift($this->importers, new $importer($this->compiler, $this, $attributes));
     }
 
-    public function getNode($name, $view)
+    /**
+     * Some blocks (usually user attributes) can be exported to template using non default rendering
+     * technique, for example every "extra" attribute can be passed to specific template location.
+     *
+     * @param string $content
+     * @param array  $blocks
+     * @return string
+     */
+    public function exportBlocks($content, array $blocks)
     {
-        $compiler = $this->compiler->createCompiler('default', $view);
+        foreach ($this->options['exporters'] as $exporter)
+        {
+            /**
+             * @var ExporterInterface $exporter
+             */
+            $exporter = new $exporter($content, $blocks);
 
-        //We have to pre-compile view
+            //Exporting
+            $content = $exporter->mountBlocks();
+        }
+
+        return $content;
+    }
+
+    /**
+     * Clarify exception location to point to place where token was located. Only view exceptions
+     * can be clarified.
+     *
+     * @param ViewException $exception
+     * @param array         $token
+     * @return ViewException
+     */
+    protected function clarifyException(ViewException $exception, array $token = [])
+    {
+        if (empty($token) && $exception instanceof TemplaterException)
+        {
+            $token = $exception->getToken();
+        }
+
+        if (empty($token))
+        {
+            //Exception location can not be clarified
+            return $exception;
+        }
+
+        //We need separate compiler
+        $compiler = $this->compiler->createCompiler(
+            $this->compiler->getNamespace(),
+            $this->compiler->getView()
+        );
+
+        //We now can find file exception got raised
         $source = $compiler->getSource();
 
+        //We have to process view source to make sure that it has same state as at moment of error
         foreach ($compiler->getProcessors() as $processor)
         {
             if ($processor instanceof self)
@@ -363,44 +437,30 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             $source = $processor->process($source);
         }
 
-        if (empty($processor))
+        //We will need only first tag line
+        $target = explode("\n", $token[Tokenizer::TOKEN_CONTENT])[0];
+
+        //Let's try to locate place where exception was used
+        $lines = explode("\n", $source);
+
+        foreach ($lines as $number => $line)
         {
-            throw new TemplaterException("Invalid processors chain.");
-        }
-
-        return new Node($processor, $name, $source);
-    }
-
-
-    public function mountOuterBlocks($content, array $blocks)
-    {
-
-        //TODO: CHANGE IT, ADD MORE CLASSES
-
-        if (preg_match_all(
-            '/ node:attributes(=[\'"]'
-            . '(?:include:(?P<include>[a-z_\-,]+))?\|?'
-            . '(?:exclude:(?P<exclude>[a-z_\-,]+))?[\'"])?/i',
-            $content,
-            $matches
-        ))
-        {
-            foreach ($matches[0] as $id => $replace)
+            dump(htmlspecialchars($line), 2);
+            if (strpos($line, $target) !== false)
             {
-                //$include = $matches['include'][$id] ? explode(',', $matches['include'][$id]) : [];
-                //$exclude = $matches['exclude'][$id] ? explode(',', $matches['exclude'][$id]) : [];
+                //We found where token were used
+                $exception->setLocation(
+                    $this->viewManager->findView(
+                        $this->compiler->getNamespace(),
+                        $this->compiler->getView()
+                    ),
+                    $number + 1
+                );
 
-                //Rendering (yes, we can render this part during collecting, 5 lines to top), but i
-                //want to do it like this, cos it will be more flexible to add more features in future
-                foreach ($blocks as $name => $value)
-                {
-                    $blocks[$name] = $name . '="' . $value . '"';
-                }
-
-                $content = str_replace($replace, $blocks ? ' ' . join(' ', $blocks) : '', $content);
+                return $exception;
             }
         }
 
-        return $content;
+        return $exception;
     }
 }

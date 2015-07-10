@@ -134,7 +134,8 @@ class Node
 
                     case Tokenizer::TAG_CLOSE:
                         throw new TemplaterException(
-                            "Unpaired close tag '{$token[Tokenizer::TOKEN_NAME]}'."
+                            "Unpaired close tag '{$token[Tokenizer::TOKEN_NAME]}'.",
+                            $token
                         );
                         break;
                     case Tokenizer::PLAIN_TEXT:
@@ -258,7 +259,7 @@ class Node
 
         if ($behaviour instanceof IncludeBehaviour)
         {
-            $this->nodes[] = $behaviour->getNode();
+            $this->nodes[] = $behaviour->createNode();
         }
     }
 
@@ -403,6 +404,9 @@ class Node
      */
     public function compile(&$compiled = [], &$outerBlocks = [])
     {
+        $compiled = is_array($compiled) ? $compiled : [];
+        $outerBlocks = is_array($outerBlocks) ? $outerBlocks : [];
+
         //We have to pre-compile outer nodes first
         foreach ($this->outerBlocks as $node)
         {

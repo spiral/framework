@@ -210,7 +210,8 @@ class ViewManager extends Component
     }
 
     /**
-     * Get all views located in specified namespace.
+     * Get all views located in specified namespace. Will return list of view names associated with
+     * appropriate engine.
      *
      * @param string $namespace
      * @return array
@@ -225,27 +226,29 @@ class ViewManager extends Component
                 $extension = $this->file->extension($filename);
 
                 //Let's check if we have any engine to handle this type of file
-                $hasEngine = false;
+                $foundEngine = false;
                 foreach ($this->config['engines'] as $engine => $options)
                 {
                     if (in_array($extension, $options['extensions']))
                     {
-                        $hasEngine = true;
+                        $foundEngine = $engine;
                     }
                 }
 
-                if (!$hasEngine)
+                if (empty($foundEngine))
                 {
                     //Not view file
                     continue;
                 }
 
                 //We can fetch view name (2 will remove ./)
-                $result[] = substr(
+                $view = substr(
                     $this->file->relativePath($filename, $directory),
                     2,
                     -1 * strlen($extension) - 1
                 );
+
+                $result[$view] = $foundEngine;
             }
         }
 
