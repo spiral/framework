@@ -68,6 +68,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      * @var array
      */
     protected $options = [
+        'strictMode' => false,
         'separator'   => '.',
         'nsSeparator' => ':',
         'prefixes'    => [
@@ -112,6 +113,10 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     {
         $this->viewManager = $viewManager;
         $this->compiler = $compiler;
+        $this->options = $options + $this->options;
+
+        //Enable or disable exceptions on corrupted HTML
+        Node::strictMode($this->options['strictMode']);
     }
 
     /**
@@ -445,7 +450,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         foreach ($lines as $number => $line)
         {
-            dump(htmlspecialchars($line), 2);
             if (strpos($line, $target) !== false)
             {
                 //We found where token were used

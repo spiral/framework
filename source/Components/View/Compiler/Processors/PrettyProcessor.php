@@ -25,6 +25,7 @@ class PrettyProcessor implements ProcessorInterface
      */
     public function __construct(ViewManager $viewManager, Compiler $compiler, array $options)
     {
+        //Nothing to configure
     }
 
     /**

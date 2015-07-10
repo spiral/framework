@@ -26,6 +26,13 @@ class Node
     const SHORT_TAGS = '/\${(?P<name>[a-z0-9_\.\-]+)(?: *\| *(?P<default>[^}]+) *)?}/i';
 
     /**
+     * Strict mode will force an exception every time unpaired close tag will be met.
+     *
+     * @var bool
+     */
+    protected static $strictMode = false;
+
+    /**
      * NodeSupervisor is responsible for resolve tag behaviours.
      *
      * @invisible
@@ -81,6 +88,16 @@ class Node
     }
 
     /**
+     * In strict mode every unpaired close tag or other html error will raise an templater exception.
+     *
+     * @param bool $strictMode
+     */
+    public static function strictMode($strictMode = true)
+    {
+        self::$strictMode = $strictMode;
+    }
+
+    /**
      * Get associated node supervisor.
      *
      * @return SupervisorInterface
@@ -133,10 +150,13 @@ class Node
                         break;
 
                     case Tokenizer::TAG_CLOSE:
-                        throw new TemplaterException(
-                            "Unpaired close tag '{$token[Tokenizer::TOKEN_NAME]}'.",
-                            $token
-                        );
+                        if (self::$strictMode)
+                        {
+                            throw new TemplaterException(
+                                "Unpaired close tag '{$token[Tokenizer::TOKEN_NAME]}'.",
+                                $token
+                            );
+                        }
                         break;
                     case Tokenizer::PLAIN_TEXT:
                         //Everything outside any tag
