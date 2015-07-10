@@ -37,6 +37,8 @@ class Node
 
     protected $extended = false;
 
+    protected $outer = false;
+
     /**
      * Set of child nodes being used during rendering.
      *
@@ -56,6 +58,16 @@ class Node
         }
 
         $this->parseTokens($source);
+    }
+
+    public function getSupervisor()
+    {
+        return $this->supervisor;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     protected function parseTokens(array $tokens)
@@ -106,8 +118,6 @@ class Node
             {
                 if ($tokenType == Tokenizer::TAG_OPEN)
                 {
-                    //There is a block with the same name as parent one, we have to make sure we are
-                    //closing correct block
                     $activeContent[] = $token;
                     $activeLevel++;
                 }
@@ -117,7 +127,6 @@ class Node
                     {
                         //Closing current token
                         $this->registerToken($activeToken, $activeContent, $token);
-
                         $activeToken = $activeContent = [];
                     }
                     else
@@ -125,6 +134,11 @@ class Node
                         $activeContent[] = $token;
                         $activeLevel--;
                     }
+                }
+                else
+                {
+                    //Short tag with same name (used to call for parent content)s
+                    $activeContent[] = $token;
                 }
 
                 continue;
@@ -229,6 +243,7 @@ class Node
     public function registerBlock($name, $content, $parsed = [])
     {
         $node = new Node($this->supervisor, $name, $content);
+
         if (!empty($parsed))
         {
             $node->nodes = $parsed;
@@ -243,7 +258,11 @@ class Node
 
         if (empty($parent = $this->findBlock($name)))
         {
-            //New blocks can not be registered outside parent scope
+            //New blocks can not be registered outside parent scope should not be rendered but need
+            //to know
+            $node->outer = true;
+            array_unshift($this->nodes, $node);
+
             return;
         }
 
@@ -255,7 +274,6 @@ class Node
     {
         if (!empty($inner = $node->findBlock($this->name)))
         {
-
             //This construction allows child block use parent content
             $inner->nodes = $this->nodes;
         }
@@ -310,7 +328,10 @@ class Node
                 $compiled[$node->name] = $node->compile($compiled);
             }
 
-            $result .= $compiled[$node->name];
+            if (!$node->outer)
+            {
+                $result .= $compiled[$node->name];
+            }
         }
 
         // return $this->compileDynamicNodes($result);

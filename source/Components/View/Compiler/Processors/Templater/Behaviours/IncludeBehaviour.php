@@ -15,6 +15,8 @@ use Spiral\Support\Html\Tokenizer;
 
 class IncludeBehaviour implements BehaviourInterface
 {
+    protected static $index = 0;
+
     protected $supervisor = null;
 
     protected $attributes = [];
@@ -31,26 +33,39 @@ class IncludeBehaviour implements BehaviourInterface
         $this->name = $name;
     }
 
+    protected function getUniqueID()
+    {
+        return md5(self::$index++);
+    }
+
+    protected function getIncludedContent()
+    {
+        $included = new Node($this->supervisor, $this->getUniqueID());
+    }
+
     public function getNode()
     {
-        $node = new Node($this->supervisor, uniqid());
+        $included = new Node($this->supervisor, $this->getUniqueID());
 
-        //Change that
-        $node->handleBehaviour(
+        //        //Change that
+        $included->handleBehaviour(
             new ExtendBehaviour(
-                new Node($this->supervisor, '', $this->supervisor->getSource($this->name)),
+                $this->supervisor->getNode($this->name, $this->name),
                 []
             )
         );
 
-        $node->registerBlock('context', [], [$this->getContext()]);
+        $included->registerBlock('context', [], [$this->context]);
 
         foreach ($this->getAttributes() as $attribute => $value)
         {
-            $node->registerBlock($attribute, [], [$value]);
+            $included->registerBlock($attribute, [], [$value]);
         }
 
-        return new Node($this->supervisor, uniqid(), $node->compile());
+        //TODO: Create mixed supervisor here OR add something
+        //TODO: or something else?
+        //TODO: we can do custom supervisor inside specific block
+        return new Node($this->supervisor, $this->getUniqueID(), $included->compile());
     }
 
     /**

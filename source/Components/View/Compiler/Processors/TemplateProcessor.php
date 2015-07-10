@@ -14,8 +14,10 @@ use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\BlockBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\IncludeBehaviour;
+use Spiral\Components\View\Compiler\Processors\Templater\Contexts\ImportContext;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
 use Spiral\Components\View\Compiler\Processors\Templater\NodeSupervisor;
+use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
 use Spiral\Components\View\ViewManager;
 use Spiral\Support\Html\Tokenizer;
 
@@ -57,6 +59,9 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
         'use'       => ['use', 'import']
     ];
 
+    //RENAME
+    public $uses = [];
+
     /**
      * New processors instance with options specified in view config.
      *
@@ -83,11 +88,6 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
 
         echo "\n\n\n\n\n\n\n\n";
 
-        //dump($root);
-
-        //$tokens = Tokenizer::parseSource($source);
-
-        // dumP($tokens);
         if (strpos('exception', $this->compiler->getView()) !== false)
         {
             //TODO: remove later
@@ -99,7 +99,7 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
 
     public function getBehaviour(array $token, array $content, Node $node)
     {
-        if (!empty($type = $this->tokenType($token, $name)))
+        if (!empty($type = $this->tokenType($token, $name, $node)))
         {
             switch ($type)
             {
@@ -107,11 +107,16 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
                     return new BlockBehaviour($name);
                     break;
                 case self::TYPE_EXTENDS:
-                    return new ExtendBehaviour(new Node(
-                        $this,
-                        '',
-                        $this->getSource($name)
-                    ), $token[Tokenizer::TOKEN_ATTRIBUTES]);
+                    $node = $this->getNode($name, $name);
+
+                    //TODO: Optimize
+                    $this->uses = $node->getSupervisor()->uses;
+
+                    return new ExtendBehaviour(
+                        $node,
+                        $token[Tokenizer::TOKEN_ATTRIBUTES]
+                    );
+
                     break;
                 case self::TYPE_INCLUDE:
                     return new IncludeBehaviour(
@@ -120,6 +125,14 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
                         $content,
                         $token[Tokenizer::TOKEN_ATTRIBUTES]
                     );
+
+                    break;
+                case self::TYPE_USE:
+                    array_unshift($this->uses, [
+                        $token[Tokenizer::TOKEN_ATTRIBUTES]['path']
+                        => $token[Tokenizer::TOKEN_ATTRIBUTES]['as']
+                    ]);
+
                     break;
             }
 
@@ -129,7 +142,7 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
         return BehaviourInterface::SIMPLE_TAG;
     }
 
-    protected function tokenType($token, &$name)
+    protected function tokenType($token, &$name, Node $context)
     {
         $name = $token[Tokenizer::TOKEN_NAME];
         foreach ($this->options['prefixes'] as $type => $prefixes)
@@ -162,12 +175,13 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
         return null;
     }
 
-    public function getSource($view)
+    public function getNode($name, $view)
     {
         $compiler = $this->compiler->getCopy('default', $view);
 
         //We have to pre-compile view
         $source = $compiler->getSource();
+
         foreach ($compiler->getProcessors() as $processor)
         {
             if ($processor instanceof self)
@@ -179,6 +193,11 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
             $source = $processor->process($source);
         }
 
-        return $source;
+        if (empty($processor))
+        {
+            throw new TemplaterException("Invalid processors chain.");
+        }
+
+        return new Node($processor, $name, $source);
     }
 }
