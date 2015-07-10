@@ -8,9 +8,9 @@
  */
 namespace Spiral\Components\View\Compiler\Processors\Templater\Contexts;
 
-use Spiral\Components\View\Compiler\Processors\Templater\NodeContextInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\ImportInterface;
 
-class ImportContext implements NodeContextInterface
+class AliasedImport implements ImportInterface
 {
     protected $path = '';
     protected $alias = '';

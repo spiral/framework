@@ -10,7 +10,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Behaviours;
 
 use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
-use Spiral\Components\View\Compiler\Processors\Templater\NodeSupervisor;
+use Spiral\Components\View\Compiler\Processors\Templater\NodeSupervisorInterface;
 use Spiral\Support\Html\Tokenizer;
 
 class IncludeBehaviour implements BehaviourInterface
@@ -25,7 +25,7 @@ class IncludeBehaviour implements BehaviourInterface
 
     protected $name = '';
 
-    public function __construct(NodeSupervisor $supervisor, $name, array $context, array $attributes = [])
+    public function __construct(NodeSupervisorInterface $supervisor, $name, array $context, array $attributes = [])
     {
         $this->supervisor = $supervisor;
         $this->context = $context;
@@ -38,34 +38,36 @@ class IncludeBehaviour implements BehaviourInterface
         return md5(self::$index++);
     }
 
-    protected function getIncludedContent()
-    {
-        $included = new Node($this->supervisor, $this->getUniqueID());
-    }
-
     public function getNode()
     {
         $included = new Node($this->supervisor, $this->getUniqueID());
 
-        //        //Change that
+        //Change that
         $included->handleBehaviour(
-            new ExtendBehaviour(
-                $this->supervisor->getNode($this->name, $this->name),
-                []
-            )
+            new ExtendBehaviour($this->supervisor->getNode($this->name, $this->name), [])
         );
 
-        $included->registerBlock('context', [], [$this->context]);
+        $included->registerBlock('context', [], [$this->getContext()]);
 
         foreach ($this->getAttributes() as $attribute => $value)
         {
+            //We should replace attribute value
             $included->registerBlock($attribute, [], [$value]);
         }
 
         //TODO: Create mixed supervisor here OR add something
         //TODO: or something else?
         //TODO: we can do custom supervisor inside specific block
-        return new Node($this->supervisor, $this->getUniqueID(), $included->compile());
+
+        //dump($this->supervisor->uses);
+
+        $compiled = [];
+        $outerBlocks = [];
+        $compiled = $included->compile($compiled, $outerBlocks);
+
+        $compiled = $this->supervisor->mountOuterBlocks($compiled, $outerBlocks);
+
+        return new Node($this->supervisor, $this->getUniqueID(), $compiled);
     }
 
     /**

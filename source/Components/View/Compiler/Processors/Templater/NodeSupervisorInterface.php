@@ -8,7 +8,10 @@
  */
 namespace Spiral\Components\View\Compiler\Processors\Templater;
 
-interface NodeContextInterface
+interface NodeSupervisorInterface
 {
+    public function getBehaviour(array $token, array $content, Node $node);
 
+
+    public function mountOuterBlocks($content, array $blocks);
 }

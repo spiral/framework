@@ -8,7 +8,7 @@
  */
 namespace Spiral\Components\View\Compiler\Processors\Templater;
 
-interface NodeSupervisor
+interface ImportInterface
 {
-    public function getBehaviour(array $token, array $content, Node $node);
+
 }

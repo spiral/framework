@@ -21,10 +21,15 @@ class Node
     const CONTEXT_BLOCK = 'context';
 
     /**
+     * Short tags expression, usually used inside attributes and etc.
+     */
+    const SHORT_TAGS = '/\${(?P<name>[a-z0-9_\.\-]+)(?: *\| *(?P<default>[^}]+) *)?}/i';
+
+    /**
      * NodeSupervisor is responsible for resolve tag behaviours.
      *
      * @invisible
-     * @var NodeSupervisor
+     * @var NodeSupervisorInterface
      */
     protected $supervisor = null;
 
@@ -35,9 +40,13 @@ class Node
      */
     protected $name = '';
 
+    /**
+     * Indication that node extended parent layout/node, meaning custom blocks can not be rendered
+     * outside defined parent layout.
+     *
+     * @var bool
+     */
     protected $extended = false;
-
-    protected $outer = false;
 
     /**
      * Set of child nodes being used during rendering.
@@ -46,7 +55,15 @@ class Node
      */
     protected $nodes = [];
 
-    public function __construct(NodeSupervisor $supervisor, $name, $source = [])
+    /**
+     * Set of blocks defined outside parent scope (parent layout blocks), blocks like either dynamic
+     * or used for internal template reasons. They should not be rendered in plain HTML.
+     *
+     * @var Node[]
+     */
+    protected $outerBlocks = [];
+
+    public function __construct(NodeSupervisorInterface $supervisor, $name, $source = [])
     {
         $this->supervisor = $supervisor;
 
@@ -260,8 +277,10 @@ class Node
         {
             //New blocks can not be registered outside parent scope should not be rendered but need
             //to know
-            $node->outer = true;
-            array_unshift($this->nodes, $node);
+            //$node->outer = true;
+            //array_unshift($this->nodes, $node);
+
+            $this->outerBlocks[] = $node;
 
             return;
         }
@@ -281,38 +300,66 @@ class Node
         $this->nodes = $node->nodes;
     }
 
-    protected function registerContent(array $content)
+    protected function registerContent($content)
     {
-        if ($this->extended)
+        if ($this->extended || empty($content))
         {
             //No blocks or text can exists outside parent template
             return;
         }
 
-        $plainContent = '';
-        foreach ($content as $token)
+        if (is_array($content))
         {
-            $plainContent .= $token[Tokenizer::TOKEN_CONTENT];
+            $plainContent = '';
+            foreach ($content as $token)
+            {
+                $plainContent .= $token[Tokenizer::TOKEN_CONTENT];
+            }
+
+            $content = $plainContent;
         }
 
-        if (empty($plainContent))
+        //Looking for short tag definitions
+        if (preg_match(self::SHORT_TAGS, $content, $matches))
         {
+            $chunks = explode($matches[0], $content);
+
+            //We expecting first chunk to be string
+            $this->registerContent(array_shift($chunks));
+
+            $this->registerBlock(
+                $matches['name'],
+                isset($matches['default']) ? $matches['default'] : ''
+            );
+
+            //Rest of content
+            $this->registerContent(join($matches[0], $chunks));
+
             return;
         }
 
-        //TODO: parse short token tags!!
         if (is_string(end($this->nodes)))
         {
-            $this->nodes[key($this->nodes)] .= $plainContent;
+            $this->nodes[key($this->nodes)] .= $content;
 
             return;
         }
 
-        $this->nodes[] = $plainContent;
+        $this->nodes[] = $content;
     }
 
-    public function compile(&$compiled = [])
+    public function compile(&$compiled = [], &$outerBlocks = [])
     {
+        //We have to pre-compile outer nodes first
+        foreach ($this->outerBlocks as $node)
+        {
+            if ($node instanceof self && !array_key_exists($node->name, $compiled))
+            {
+                //Node was never compiled
+                $outerBlocks[$node->name] = $compiled[$node->name] = $node->compile($compiled);
+            }
+        }
+
         $result = '';
         foreach ($this->nodes as $node)
         {
@@ -328,13 +375,8 @@ class Node
                 $compiled[$node->name] = $node->compile($compiled);
             }
 
-            if (!$node->outer)
-            {
-                $result .= $compiled[$node->name];
-            }
+            $result .= $compiled[$node->name];
         }
-
-        // return $this->compileDynamicNodes($result);
 
         return $result;
     }

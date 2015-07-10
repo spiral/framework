@@ -14,14 +14,14 @@ use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\BlockBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\IncludeBehaviour;
-use Spiral\Components\View\Compiler\Processors\Templater\Contexts\ImportContext;
+use Spiral\Components\View\Compiler\Processors\Templater\Contexts\AliasedImport;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
-use Spiral\Components\View\Compiler\Processors\Templater\NodeSupervisor;
+use Spiral\Components\View\Compiler\Processors\Templater\NodeSupervisorInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
 use Spiral\Components\View\ViewManager;
 use Spiral\Support\Html\Tokenizer;
 
-class TemplateProcessor implements ProcessorInterface, NodeSupervisor
+class TemplateProcessor implements ProcessorInterface, NodeSupervisorInterface
 {
     /**
      * Primary token types supported by spiral.
@@ -119,6 +119,16 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
 
                     break;
                 case self::TYPE_INCLUDE:
+
+                    foreach ($this->uses as $alias)
+                    {
+                        if ($name == $alias[1])
+                        {
+                            $name = $alias[0];
+                            break;
+                        }
+                    }
+
                     return new IncludeBehaviour(
                         $this,
                         $name,
@@ -129,8 +139,8 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
                     break;
                 case self::TYPE_USE:
                     array_unshift($this->uses, [
-                        $token[Tokenizer::TOKEN_ATTRIBUTES]['path']
-                        => $token[Tokenizer::TOKEN_ATTRIBUTES]['as']
+                        $token[Tokenizer::TOKEN_ATTRIBUTES]['path'],
+                        $token[Tokenizer::TOKEN_ATTRIBUTES]['as']
                     ]);
 
                     break;
@@ -199,5 +209,36 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisor
         }
 
         return new Node($processor, $name, $source);
+    }
+
+    public function mountOuterBlocks($content, array $blocks)
+    {
+        //TODO: CHANGE IT, ADD MORE CLASSES
+
+        if (preg_match_all(
+            '/ node:attributes(=[\'"]'
+            . '(?:include:(?P<include>[a-z_\-,]+))?\|?'
+            . '(?:exclude:(?P<exclude>[a-z_\-,]+))?[\'"])?/i',
+            $content,
+            $matches
+        ))
+        {
+            foreach ($matches[0] as $id => $replace)
+            {
+                //$include = $matches['include'][$id] ? explode(',', $matches['include'][$id]) : [];
+                //$exclude = $matches['exclude'][$id] ? explode(',', $matches['exclude'][$id]) : [];
+
+                //Rendering (yes, we can render this part during collecting, 5 lines to top), but i
+                //want to do it like this, cos it will be more flexible to add more features in future
+                foreach ($blocks as $name => $value)
+                {
+                    $blocks[$name] = $name . '="' . $value . '"';
+                }
+
+                $content = str_replace($replace, $blocks ? ' ' . join(' ', $blocks) : '', $content);
+            }
+        }
+
+        return $content;
     }
 }
