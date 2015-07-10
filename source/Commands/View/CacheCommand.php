@@ -33,56 +33,44 @@ class CacheCommand extends Command
      */
     public function perform()
     {
+        /**
+         * @var FormatterHelper $formatter
+         */
+        $formatter = $this->getHelper('formatter');
+
         foreach ($this->view->getNamespaces() as $namespace => $directories)
         {
-            //Reverted to treat priority
-            $directories = array_reverse($directories);
+            if (empty($views = $this->view->getViews($namespace)))
+            {
+                continue;
+            }
 
             if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
             {
                 $this->writeln("Rendering views in namespace '<comment>{$namespace}</comment>'.");
             }
 
-            /**
-             * @var FormatterHelper $formatter
-             */
-            $formatter = $this->getHelper('formatter');
-            foreach ($directories as $directory)
+            foreach ($views as $view)
             {
-                $viewFiles = $this->file->getFiles($directory);
-                foreach ($viewFiles as $filename)
+                if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
                 {
-                    //View name (removing extension and ./)
-                    $view = substr(
-                        $this->file->relativePath($filename, $directory),
-                        2,
-                        -1 * (strlen($this->file->extension($filename)) + 1)
-                    );
+                    $this->write($formatter->formatSection($namespace, $view . ", ", 'fg=cyan'));
 
-                    if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
-                    {
-                        $this->write($formatter->formatSection($namespace, $view . ", ", 'fg=cyan'));
+                    $start = microtime(true);
+                    $this->view->getFilename($namespace, $view, true, true);
+                    $elapsed = number_format((microtime(true) - $start) * 1000);
 
-                        $start = microtime(true);
-                        $this->view->getFilename($namespace, $view, true, true);
-                        $elapsed = number_format((microtime(true) - $start) * 1000);
+                    $this->writeln("<comment>{$elapsed}</comment> ms");
+                }
+                elseif ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
+                {
+                    $this->view->getFilename($namespace, $view, true, true);
+                    $this->writeln($formatter->formatSection($namespace, $view, 'fg=cyan'));
+                }
+                else
+                {
 
-                        $this->writeln("<comment>{$elapsed}</comment> ms");
-                    }
-                    elseif ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
-                    {
-                        $this->view->getFilename($namespace, $view, true, true);
-                        $this->writeln($formatter->formatSection($namespace, $view, 'fg=cyan'));
-                    }
-                    else
-                    {
-                        if ($view != 'panel')
-                        {
-                            continue;
-                        }
-
-                        $this->view->getFilename($namespace, $view, true, true);
-                    }
+                    $this->view->getFilename($namespace, $view, true, true);
                 }
             }
         }

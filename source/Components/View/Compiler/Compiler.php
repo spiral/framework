@@ -117,7 +117,7 @@ class Compiler implements CompilerInterface
      * @param string $view
      * @return Compiler
      */
-    public function cloneCompiler($namespace, $view)
+    public function createCompiler($namespace, $view)
     {
         $compiler = clone $this;
 

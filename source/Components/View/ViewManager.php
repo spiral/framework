@@ -210,6 +210,49 @@ class ViewManager extends Component
     }
 
     /**
+     * Get all views located in specified namespace.
+     *
+     * @param string $namespace
+     * @return array
+     */
+    public function getViews($namespace)
+    {
+        $result = [];
+        foreach ($this->namespaces[$namespace] as $directory)
+        {
+            foreach ($this->file->getFiles($directory) as $filename)
+            {
+                $extension = $this->file->extension($filename);
+
+                //Let's check if we have any engine to handle this type of file
+                $hasEngine = false;
+                foreach ($this->config['engines'] as $engine => $options)
+                {
+                    if (in_array($extension, $options['extensions']))
+                    {
+                        $hasEngine = true;
+                    }
+                }
+
+                if (!$hasEngine)
+                {
+                    //Not view file
+                    continue;
+                }
+
+                //We can fetch view name (2 will remove ./)
+                $result[] = substr(
+                    $this->file->relativePath($filename, $directory),
+                    2,
+                    -1 * strlen($extension) - 1
+                );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Cached filename depends only on view name and provided set of "staticVariables", changing this
      * set system can cache some view content on file system level. For example view component can
      * set language variable, which will be rendering another view every time language changed and

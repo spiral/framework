@@ -44,7 +44,7 @@ class IncludeBehaviour implements BehaviourInterface
 
         //Change that
         $included->handleBehaviour(
-            new ExtendBehaviour($this->supervisor->getNode($this->name, $this->name), [])
+            new ExtendsBehaviour($this->supervisor->getNode($this->name, $this->name), [])
         );
 
         $included->registerBlock('context', [], [$this->getContext()]);

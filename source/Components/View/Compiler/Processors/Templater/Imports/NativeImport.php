@@ -10,7 +10,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 
-class DefinitiveImporter implements ImporterInterface
+class NativeImporter implements ImporterInterface
 {
 
 }

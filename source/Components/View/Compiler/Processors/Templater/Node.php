@@ -9,7 +9,7 @@
 namespace Spiral\Components\View\Compiler\Processors\Templater;
 
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\BlockBehaviour;
-use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendBehaviour;
+use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendsBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\IncludeBehaviour;
 use Spiral\Support\Html\Tokenizer;
 
@@ -231,7 +231,7 @@ class Node
      */
     public function handleBehaviour(BehaviourInterface $behaviour, array $content = [])
     {
-        if ($behaviour instanceof ExtendBehaviour)
+        if ($behaviour instanceof ExtendsBehaviour)
         {
             //We have to copy nodes from parent (?)
             $this->nodes = $behaviour->getParent()->nodes;
@@ -240,9 +240,9 @@ class Node
             //bit different way
             $this->extended = true;
 
-            foreach ($behaviour->getAttributes() as $attributes => $value)
+            foreach ($behaviour->getBlocks() as $block => $blockContent)
             {
-                $this->registerBlock($attributes, $value);
+                $this->registerBlock($block, $blockContent);
             }
 
             return;

@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\View\Compiler\Processors\Templater\Contexts;
+namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 
-use Spiral\Components\View\Compiler\Processors\Templater\ImportInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 
-class NamespaceImport implements ImportInterface
+class NamespaceImporter implements ImporterInterface
 {
 
 }
