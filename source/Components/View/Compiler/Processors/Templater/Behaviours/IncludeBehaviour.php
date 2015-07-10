@@ -10,7 +10,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Behaviours;
 
 use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
-use Spiral\Components\View\Compiler\Processors\Templater\NodeSupervisorInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\SupervisorInterface;
 use Spiral\Support\Html\Tokenizer;
 
 class IncludeBehaviour implements BehaviourInterface
@@ -25,7 +25,7 @@ class IncludeBehaviour implements BehaviourInterface
 
     protected $name = '';
 
-    public function __construct(NodeSupervisorInterface $supervisor, $name, array $context, array $attributes = [])
+    public function __construct(SupervisorInterface $supervisor, $name, array $context, array $attributes = [])
     {
         $this->supervisor = $supervisor;
         $this->context = $context;

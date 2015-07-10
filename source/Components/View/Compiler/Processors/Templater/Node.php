@@ -29,7 +29,7 @@ class Node
      * NodeSupervisor is responsible for resolve tag behaviours.
      *
      * @invisible
-     * @var NodeSupervisorInterface
+     * @var SupervisorInterface
      */
     protected $supervisor = null;
 
@@ -63,30 +63,48 @@ class Node
      */
     protected $outerBlocks = [];
 
-    public function __construct(NodeSupervisorInterface $supervisor, $name, $source = [])
+    /**
+     * New instance of html Node, usual node represent replaceable part of template. Node by itself
+     * are not defining html syntax required to specify blocks, syntax definition is relayed to
+     * Supervisor.
+     *
+     * @param SupervisorInterface $supervisor
+     * @param string              $name
+     * @param string|array        $source String content or array of html tokens.
+     */
+    public function __construct(SupervisorInterface $supervisor, $name, $source = [])
     {
         $this->supervisor = $supervisor;
-
         $this->name = $name;
 
-        if (is_string($source))
-        {
-            $source = Tokenizer::parseSource($source);
-        }
-
-        $this->parseTokens($source);
+        $this->parseTokens(is_string($source) ? Tokenizer::parseSource($source) : $source);
     }
 
+    /**
+     * Get associated node supervisor.
+     *
+     * @return SupervisorInterface
+     */
     public function getSupervisor()
     {
         return $this->supervisor;
     }
 
+    /**
+     * Get associated node name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Parse set of tokens provided by html Tokenizer and create blocks or other control constructions.
+     *
+     * @param array $tokens
+     */
     protected function parseTokens(array $tokens)
     {
         //Current active token
@@ -169,6 +187,14 @@ class Node
         $this->registerContent($activeContent);
     }
 
+    /**
+     * Once token content is correctly aggregated we can pass it to supervisor to check what we
+     * actually should be doing with this token.
+     *
+     * @param array $token
+     * @param array $content
+     * @param array $closeToken
+     */
     protected function registerToken(array $token, array $content = [], array $closeToken = [])
     {
         $behaviour = $this->supervisor->getBehaviour($token, $content, $this);
@@ -197,6 +223,12 @@ class Node
         $this->handleBehaviour($behaviour, $content);
     }
 
+    /**
+     * Once supervisor defined custom token behaviour we can process it's content accordingly.
+     *
+     * @param BehaviourInterface $behaviour
+     * @param array              $content
+     */
     public function handleBehaviour(BehaviourInterface $behaviour, array $content = [])
     {
         if ($behaviour instanceof ExtendBehaviour)
@@ -231,7 +263,7 @@ class Node
     }
 
     /**
-     * Find a children node by name.
+     * Find a children node by name. Will perform recursive search.
      *
      * @param string $name
      * @return Node|null
@@ -257,13 +289,21 @@ class Node
         return null;
     }
 
-    public function registerBlock($name, $content, $parsed = [])
+    /**
+     * Create new block under current node. If node extends parent block will ether replace parent
+     * content or will be added as outer block.
+     *
+     * @param string       $name
+     * @param string|array $source     String content or array of html tokens.
+     * @param array        $forceNodes Used to redefine node content and bypass token parsing.
+     */
+    public function registerBlock($name, $source, $forceNodes = [])
     {
-        $node = new Node($this->supervisor, $name, $content);
+        $node = new Node($this->supervisor, $name, $source);
 
-        if (!empty($parsed))
+        if (!empty($forceNodes))
         {
-            $node->nodes = $parsed;
+            $node->nodes = $forceNodes;
         }
 
         if (!$this->extended)
@@ -275,11 +315,6 @@ class Node
 
         if (empty($parent = $this->findBlock($name)))
         {
-            //New blocks can not be registered outside parent scope should not be rendered but need
-            //to know
-            //$node->outer = true;
-            //array_unshift($this->nodes, $node);
-
             $this->outerBlocks[] = $node;
 
             return;
@@ -289,6 +324,12 @@ class Node
         $parent->replace($node);
     }
 
+    /**
+     * Replace node content with content provided by external node, external node can still use
+     * content of parent block by defining internal section under parent name.
+     *
+     * @param Node $node
+     */
     protected function replace(Node $node)
     {
         if (!empty($inner = $node->findBlock($this->name)))

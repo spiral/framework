@@ -16,12 +16,12 @@ use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendBehavi
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\IncludeBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Contexts\AliasedImport;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
-use Spiral\Components\View\Compiler\Processors\Templater\NodeSupervisorInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\SupervisorInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
 use Spiral\Components\View\ViewManager;
 use Spiral\Support\Html\Tokenizer;
 
-class TemplateProcessor implements ProcessorInterface, NodeSupervisorInterface
+class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 {
     /**
      * Primary token types supported by spiral.
@@ -30,6 +30,13 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisorInterface
     const TYPE_EXTENDS = 'extends';
     const TYPE_USE     = 'use';
     const TYPE_INCLUDE = 'include';
+
+    /**
+     * Used to create unique node names when required.
+     *
+     * @var int
+     */
+    protected static $index = 0;
 
     /**
      * View manager.
@@ -76,6 +83,17 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisorInterface
     }
 
     /**
+     * Get unique node name, unique names are required in some cases to correctly process includes
+     * and etc.
+     *
+     * @return string
+     */
+    public function uniqueName()
+    {
+        return md5(self::$index++);
+    }
+
+    /**
      * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
@@ -85,14 +103,6 @@ class TemplateProcessor implements ProcessorInterface, NodeSupervisorInterface
     public function process($source)
     {
         $root = new Node($this, 'root', $source);
-
-        echo "\n\n\n\n\n\n\n\n";
-
-        if (strpos('exception', $this->compiler->getView()) !== false)
-        {
-            //TODO: remove later
-            return $source;
-        }
 
         return $root->compile();
     }
