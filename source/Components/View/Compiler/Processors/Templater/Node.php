@@ -341,6 +341,11 @@ class Node
         $this->nodes = $node->nodes;
     }
 
+    /**
+     * Register string node content.
+     *
+     * @param string|array $content String content or html tokens.
+     */
     protected function registerContent($content)
     {
         if ($this->extended || empty($content))
@@ -389,6 +394,13 @@ class Node
         $this->nodes[] = $content;
     }
 
+    /**
+     * Compile node content.
+     *
+     * @param array $compiled
+     * @param array $outerBlocks All outer blocks will be aggregated in this array.
+     * @return string
+     */
     public function compile(&$compiled = [], &$outerBlocks = [])
     {
         //We have to pre-compile outer nodes first
