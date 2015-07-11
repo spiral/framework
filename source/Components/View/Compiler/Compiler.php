@@ -80,6 +80,16 @@ class Compiler implements CompilerInterface
     }
 
     /**
+     * Get associated view manager.
+     *
+     * @return ViewManager
+     */
+    public function getViewManager()
+    {
+        return $this->viewManager;
+    }
+
+    /**
      * Active namespace.
      *
      * @return string

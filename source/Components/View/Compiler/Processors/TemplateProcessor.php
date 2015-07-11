@@ -151,6 +151,26 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     }
 
     /**
+     * Get string or character used to separate view directories.
+     *
+     * @return string
+     */
+    public function getSeparator()
+    {
+        return $this->options['separator'];
+    }
+
+    /**
+     * Get string or character used to separate view and it's namespace.
+     *
+     * @return string
+     */
+    public function getNSSeparator()
+    {
+        return $this->options['nsSeparator'];
+    }
+
+    /**
      * Active templater imports.
      *
      * @return ImporterInterface[]

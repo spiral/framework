@@ -218,6 +218,11 @@ class ViewManager extends Component
      */
     public function getViews($namespace)
     {
+        if (!isset($this->namespaces[$namespace]))
+        {
+            throw new ViewException("Invalid view namespace '{$namespace}'.");
+        }
+
         $result = [];
         foreach ($this->namespaces[$namespace] as $directory)
         {
