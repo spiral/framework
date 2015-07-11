@@ -37,7 +37,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     const TYPE_BLOCK = 'block';
     const TYPE_EXTENDS = 'extends';
-    const TYPE_USE = 'use';
+    const TYPE_USE   = 'use';
     const TYPE_INCLUDE = 'include';
 
     /**

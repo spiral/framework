@@ -137,7 +137,6 @@ class IncludeBehaviour implements BehaviourInterface
          * @var ImporterInterface $importer
          */
         $includeTemplater = $include->getSupervisor();
-
         foreach (array_reverse($includeTemplater->getImporters()) as $importer)
         {
             if ($importer->isDefinitive())
