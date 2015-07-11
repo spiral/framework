@@ -57,6 +57,11 @@ class AliasedImporter implements ImporterInterface
             [Tokenizer::TOKEN_ATTRIBUTES => $options]
         );
 
+        if ($this->namespace == 'self')
+        {
+            $this->namespace = $compiler->getNamespace();
+        }
+
         $this->alias = $options['as'];
         $this->definitive = array_key_exists('definitive', $options);
     }
