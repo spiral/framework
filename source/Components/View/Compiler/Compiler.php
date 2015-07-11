@@ -110,6 +110,16 @@ class Compiler implements CompilerInterface
     }
 
     /**
+     * Get filename of non compiled view file.
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->viewManager->findView($this->namespace, $this->view);
+    }
+
+    /**
      * Clone method used to create separate instance of Compiler using same settings but associated
      * with another view.
      *
@@ -117,7 +127,7 @@ class Compiler implements CompilerInterface
      * @param string $view
      * @return Compiler
      */
-    public function createCompiler($namespace, $view)
+    public function cloneCompiler($namespace, $view)
     {
         $compiler = clone $this;
 
@@ -145,12 +155,12 @@ class Compiler implements CompilerInterface
             return $this->processors;
         }
 
-        foreach ($this->config['processors'] as $name => $processor)
+        foreach ($this->config['processors'] as $processor => $options)
         {
-            $this->processors[$name] = $this->viewManager->getContainer()->get($processor['class'], [
+            $this->processors[] = $this->viewManager->getContainer()->get($processor, [
                 'viewManager' => $this->viewManager,
                 'compiler'    => $this,
-                'options'     => $processor
+                'options'     => $options
             ]);
         }
 

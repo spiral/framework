@@ -21,7 +21,6 @@ use Spiral\Components\View\Compiler\Processors\Templater\Exporters\PHPExporter;
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Importers\AliasedImporter;
 use Spiral\Components\View\Compiler\Processors\Templater\Importers\BundleImporter;
-use Spiral\Components\View\Compiler\Processors\Templater\Importers\DefinitiveImporter;
 use Spiral\Components\View\Compiler\Processors\Templater\Importers\NamespaceImporter;
 use Spiral\Components\View\Compiler\Processors\Templater\Importers\NativeImporter;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
@@ -36,9 +35,9 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * Primary token types supported by spiral.
      */
-    const TYPE_BLOCK   = 'block';
+    const TYPE_BLOCK = 'block';
     const TYPE_EXTENDS = 'extends';
-    const TYPE_USE     = 'use';
+    const TYPE_USE = 'use';
     const TYPE_INCLUDE = 'include';
 
     /**
@@ -68,7 +67,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      * @var array
      */
     protected $options = [
-        'strictMode' => false,
+        'strictMode'  => false,
         'separator'   => '.',
         'nsSeparator' => ':',
         'prefixes'    => [
@@ -80,8 +79,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             AliasedImporter::class    => ['path', 'as'],
             NamespaceImporter::class  => ['path', 'namespace'],
             BundleImporter::class     => ['bundle'],
-            NativeImporter::class     => ['native'],
-            DefinitiveImporter::class => ['path', 'internal']
+            NativeImporter::class     => ['native']
         ],
         'keywords'    => [
             'namespace' => ['view:namespace', 'node:namespace'],
@@ -209,6 +207,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         {
             if ($importer->isImported($name))
             {
+                dump($importer);
                 if ($importer instanceof NativeImporter)
                 {
                     //Native importer tells us to treat this element as simple html
@@ -313,7 +312,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     {
         try
         {
-            $compiler = $this->compiler->createCompiler($namespace, $view);
+            $compiler = $this->compiler->cloneCompiler($namespace, $view);
         }
         catch (ViewException $exception)
         {
@@ -422,7 +421,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         }
 
         //We need separate compiler
-        $compiler = $this->compiler->createCompiler(
+        $compiler = $this->compiler->cloneCompiler(
             $this->compiler->getNamespace(),
             $this->compiler->getView()
         );
@@ -453,13 +452,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             if (strpos($line, $target) !== false)
             {
                 //We found where token were used
-                $exception->setLocation(
-                    $this->viewManager->findView(
-                        $this->compiler->getNamespace(),
-                        $this->compiler->getView()
-                    ),
-                    $number + 1
-                );
+                $exception->setLocation($this->compiler->getFilename(), $number + 1);
 
                 return $exception;
             }

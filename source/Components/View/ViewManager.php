@@ -111,7 +111,7 @@ class ViewManager extends Component
      *
      * @return string
      */
-    public function cacheDirectory()
+    public function getCacheDirectory()
     {
         return $this->config['caching']['directory'];
     }
@@ -277,7 +277,7 @@ class ViewManager extends Component
 
         $postfix = '-' . hash('crc32b', join(',', $this->dependencies)) . '.' . self::CACHE_EXTENSION;
 
-        return $this->cacheDirectory() . '/'
+        return $this->getCacheDirectory() . '/'
         . $namespace . '-' . trim(str_replace(['\\', '/'], '-', $viewName), '-')
         . $postfix;
     }
