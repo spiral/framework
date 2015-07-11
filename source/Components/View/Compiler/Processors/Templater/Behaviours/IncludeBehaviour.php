@@ -10,6 +10,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Behaviours;
 
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
 use Spiral\Support\Html\Tokenizer;
 
@@ -108,7 +109,7 @@ class IncludeBehaviour implements BehaviourInterface
 
         //Let's exclude node content
         $node->handleBehaviour(new ExtendsBehaviour(
-            $this->templater->createNode($this->namespace, $this->view),
+            $include = $this->templater->createNode($this->namespace, $this->view),
             []
         ));
 
@@ -127,8 +128,24 @@ class IncludeBehaviour implements BehaviourInterface
         //template location.
         $content = $this->templater->exportBlocks($content, $outerBlocks);
 
-        //Create combined templater
+        //Some imports may define in-context imports (definitive imports), we can process them
+        //using new combined templater
+        $templater = clone $this->templater;
 
-        return new Node($this->templater, $this->templater->uniqueName(), $content);
+        /**
+         * @var TemplateProcessor $includeTemplater
+         * @var ImporterInterface $importer
+         */
+        $includeTemplater = $include->getSupervisor();
+
+        foreach (array_reverse($includeTemplater->getImporters()) as $importer)
+        {
+            if ($importer->isDefinitive())
+            {
+                $templater->addImporter($importer);
+            }
+        }
+
+        return new Node($templater, $templater->uniqueName(), $content);
     }
 }

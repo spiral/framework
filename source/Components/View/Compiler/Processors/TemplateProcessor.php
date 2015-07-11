@@ -76,10 +76,10 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             self::TYPE_USE     => ['use']
         ],
         'imports'     => [
-            AliasedImporter::class    => ['path', 'as'],
-            NamespaceImporter::class  => ['path', 'namespace'],
-            BundleImporter::class     => ['bundle'],
-            NativeImporter::class     => ['native']
+            AliasedImporter::class   => ['path', 'as'],
+            NamespaceImporter::class => ['path', 'namespace'],
+            BundleImporter::class    => ['bundle'],
+            NativeImporter::class    => ['native']
         ],
         'keywords'    => [
             'namespace' => ['view:namespace', 'node:namespace'],
@@ -195,7 +195,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                 return $extends;
                 break;
             case self::TYPE_USE:
-                $this->registerImport($attributes, $token);
+                $this->registerImporter($attributes, $token);
 
                 //No need to include use tag into source
                 return BehaviourInterface::SKIP_TOKEN;
@@ -207,7 +207,6 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         {
             if ($importer->isImported($name))
             {
-                dump($importer);
                 if ($importer instanceof NativeImporter)
                 {
                     //Native importer tells us to treat this element as simple html
@@ -346,12 +345,12 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     }
 
     /**
-     * Register new imported defined in view code.
+     * Helper method used to parse and register new importer defined in view code.
      *
      * @param array $attributes
      * @param array $token
      */
-    protected function registerImport(array $attributes, array $token = [])
+    protected function registerImporter(array $attributes, array $token = [])
     {
         $importer = null;
         foreach ($this->options['imports'] as $class => $keywords)
@@ -372,7 +371,17 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         }
 
         //Last import has higher priority than first import
-        array_unshift($this->importers, new $importer($this->compiler, $this, $attributes));
+        $this->addImporter(new $importer($this->compiler, $this, $attributes));
+    }
+
+    /**
+     * Add new importer.
+     *
+     * @param ImporterInterface $importer
+     */
+    public function addImporter(ImporterInterface $importer)
+    {
+        array_unshift($this->importers, $importer);
     }
 
     /**
