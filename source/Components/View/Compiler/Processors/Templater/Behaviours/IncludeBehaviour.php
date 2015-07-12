@@ -45,6 +45,13 @@ class IncludeBehaviour implements BehaviourInterface
     protected $context = [];
 
     /**
+     * Context token.
+     *
+     * @var array
+     */
+    protected $token = [];
+
+    /**
      * User able to define custom attributes while importing element, this attributes will be treated
      * as node blocks.
      *
@@ -61,14 +68,14 @@ class IncludeBehaviour implements BehaviourInterface
      * @param string            $namespace
      * @param string            $view
      * @param array             $context
-     * @param array             $attributes
+     * @param array             $token
      */
     public function __construct(
         TemplateProcessor $templater,
         $namespace,
         $view,
         array $context,
-        array $attributes = []
+        array $token = []
     )
     {
         $this->templater = $templater;
@@ -77,7 +84,9 @@ class IncludeBehaviour implements BehaviourInterface
         $this->view = $view;
 
         $this->context = $context;
-        $this->attributes = $attributes;
+
+        $this->token = $token;
+        $this->attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
     }
 
     /**
@@ -109,7 +118,7 @@ class IncludeBehaviour implements BehaviourInterface
 
         //Let's exclude node content
         $node->handleBehaviour(new ExtendsBehaviour(
-            $include = $this->templater->createNode($this->namespace, $this->view),
+            $include = $this->templater->createNode($this->namespace, $this->view, '', $this->token),
             []
         ));
 

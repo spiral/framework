@@ -218,7 +218,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
                     $importer->getNamespace($name),
                     $importer->getView($name),
                     $content,
-                    $token[Tokenizer::TOKEN_ATTRIBUTES]
+                    $token
                 );
             }
         }

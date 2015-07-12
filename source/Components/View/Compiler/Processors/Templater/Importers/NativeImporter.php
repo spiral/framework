@@ -60,6 +60,12 @@ class NativeImporter implements ImporterInterface
      */
     public function isImported($element)
     {
+        if ($this->element == '*')
+        {
+            //To disable every importer, you can still define more importers after that
+            return true;
+        }
+
         return strtolower($element) == strtolower($this->element);
     }
 
