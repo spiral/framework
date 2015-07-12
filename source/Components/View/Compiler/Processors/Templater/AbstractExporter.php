@@ -30,7 +30,9 @@ abstract class AbstractExporter implements ExporterInterface
      * to specify list of elements to be included or excluded from exporting. In addition you can
      * use custom prefix for some of your elements.
      *
-     * Pattern: include:element,elementB;exclude:elementC,elementD;prefix:data;
+     * Pattern: include:element,elementB;exclude:elementC,elementD,patten-*;prefix:my-prefix;
+     * Prefix will allow you to match some attributes to specific spot, use exclude pattern (with star)
+     * to remove attributes like that from other places.
      *
      * Attention: some processors may require Evaluator processor to be executed after Templater.
      *
@@ -106,6 +108,22 @@ abstract class AbstractExporter implements ExporterInterface
                 if (in_array($name, $exclude))
                 {
                     unset($blocks[$name]);
+                }
+
+                foreach ($exclude as $pattern)
+                {
+                    if (strpos($pattern, '*') === false)
+                    {
+                        //Not pattern
+                        continue;
+                    }
+
+                    $pattern = '/^' . str_replace('*', '.+', $pattern) . '/i';
+
+                    if (preg_match($pattern, $name))
+                    {
+                        unset($blocks[$name]);
+                    }
                 }
             }
         }

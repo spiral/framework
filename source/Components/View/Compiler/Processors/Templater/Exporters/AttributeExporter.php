@@ -27,7 +27,7 @@ class AttributeExporter extends AbstractExporter
             //We have to sort from longest to shortest
             uasort($matches[0], function ($replaceA, $replaceB)
             {
-                return strcmp($replaceB, $replaceA);
+                return strlen($replaceB) - strlen($replaceA);
             });
 
             dump($matches);
