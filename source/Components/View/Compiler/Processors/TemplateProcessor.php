@@ -37,7 +37,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     const TYPE_BLOCK = 'block';
     const TYPE_EXTENDS = 'extends';
-    const TYPE_USE = 'use';
+    const TYPE_USE   = 'use';
     const TYPE_INCLUDE = 'include';
 
     /**
@@ -148,6 +148,26 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     public function uniqueName()
     {
         return md5(self::$index++);
+    }
+
+    /**
+     * Get string or character used to separate view directories.
+     *
+     * @return string
+     */
+    public function getSeparator()
+    {
+        return $this->options['separator'];
+    }
+
+    /**
+     * Get string or character used to separate view and it's namespace.
+     *
+     * @return string
+     */
+    public function getNSSeparator()
+    {
+        return $this->options['nsSeparator'];
     }
 
     /**
