@@ -107,6 +107,16 @@ class ViewManager extends Component
     }
 
     /**
+     * Get associated file manager.
+     *
+     * @return FileManager
+     */
+    public function getFileManager()
+    {
+        return $this->file;
+    }
+
+    /**
      * Current view cache directory.
      *
      * @return string
