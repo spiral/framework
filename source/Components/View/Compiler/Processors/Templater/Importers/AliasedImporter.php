@@ -48,13 +48,15 @@ class AliasedImporter implements ImporterInterface
      *
      * @param Compiler          $compiler
      * @param TemplateProcessor $templater
-     * @param array             $options
+     * @param array             $token
      */
-    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $options)
+    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token)
     {
+        $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+
         list($this->namespace, $this->view) = $templater->fetchLocation(
-            $options['path'],
-            [Tokenizer::TOKEN_ATTRIBUTES => $options]
+            $attributes['path'],
+            $token
         );
 
         if ($this->namespace == 'self')
@@ -62,8 +64,8 @@ class AliasedImporter implements ImporterInterface
             $this->namespace = $compiler->getNamespace();
         }
 
-        $this->alias = $options['as'];
-        $this->definitive = array_key_exists('definitive', $options);
+        $this->alias = $attributes['as'];
+        $this->definitive = array_key_exists('definitive', $attributes);
     }
 
     /**

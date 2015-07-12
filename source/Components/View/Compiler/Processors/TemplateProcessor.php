@@ -391,7 +391,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         }
 
         //Last import has higher priority than first import
-        $this->addImporter(new $importer($this->compiler, $this, $attributes));
+        $this->addImporter(new $importer($this->compiler, $this, $token));
     }
 
     /**

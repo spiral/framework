@@ -22,9 +22,9 @@ interface ImporterInterface
      *
      * @param Compiler $compiler
      * @param TemplateProcessor $templater
-     * @param array             $options
+     * @param array             $token
      */
-    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $options);
+    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token);
 
     /**
      * Definitive imports allows developer to create custom element aliases in a scope of element

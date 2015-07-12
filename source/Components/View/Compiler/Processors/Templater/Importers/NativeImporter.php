@@ -11,6 +11,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
+use Spiral\Support\Html\Tokenizer;
 
 class NativeImporter implements ImporterInterface
 {
@@ -33,12 +34,14 @@ class NativeImporter implements ImporterInterface
      *
      * @param Compiler          $compiler
      * @param TemplateProcessor $templater
-     * @param array             $options
+     * @param array             $token
      */
-    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $options)
+    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token)
     {
-        $this->element = $options['native'];
-        $this->definitive = array_key_exists('definitive', $options);
+        $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+
+        $this->element = $attributes['native'];
+        $this->definitive = array_key_exists('definitive', $attributes);
     }
 
     /**

@@ -11,6 +11,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\ViewManager;
 use Spiral\Support\Html\Tokenizer;
@@ -53,6 +54,13 @@ class NamespaceImporter implements ImporterInterface
     protected $aliases = [];
 
     /**
+     * Token context.
+     *
+     * @var array
+     */
+    protected $token = [];
+
+    /**
      * Is importer definitive.
      *
      * @var bool
@@ -64,20 +72,22 @@ class NamespaceImporter implements ImporterInterface
      *
      * @param Compiler          $compiler
      * @param TemplateProcessor $templater
-     * @param array             $options
+     * @param array             $token
      */
-    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $options)
+    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token)
     {
-        if (strpos($options['path'], $templater->getNSSeparator()) !== false)
+        $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+
+        if (strpos($attributes['path'], $templater->getNSSeparator()) !== false)
         {
             list($this->namespace, $this->directory) = $templater->fetchLocation(
-                $options['path'],
-                [Tokenizer::TOKEN_ATTRIBUTES => $options]
+                $attributes['path'],
+                $token
             );
         }
         else
         {
-            $this->namespace = $options['path'];
+            $this->namespace = $attributes['path'];
         }
 
         if ($this->namespace == 'self')
@@ -86,9 +96,10 @@ class NamespaceImporter implements ImporterInterface
         }
 
         $this->directory = rtrim($this->directory, '/*');
+        $this->token = $token;
 
-        $this->outerNamespace = $options['namespace'];
-        $this->definitive = array_key_exists('definitive', $options);
+        $this->outerNamespace = $attributes['namespace'];
+        $this->definitive = array_key_exists('definitive', $attributes);
 
         $this->buildAliases($compiler->getViewManager(), $templater);
     }
@@ -107,8 +118,20 @@ class NamespaceImporter implements ImporterInterface
 
             return;
         }
+        try
+        {
+            $views = $viewManager->getViews($this->namespace);
+        }
+        catch (ViewException $exception)
+        {
+            throw new TemplaterException(
+                $exception->getMessage(),
+                $this->token,
+                $exception->getCode(),
+                $exception
+            );
+        }
 
-        $views = $viewManager->getViews($this->namespace);
         foreach ($views as $view => $engine)
         {
             if (!empty($this->directory) && strpos($view, $this->directory) === false)
@@ -129,8 +152,9 @@ class NamespaceImporter implements ImporterInterface
 
         if (empty($this->aliases))
         {
-            throw new ViewException(
-                "No views were found under directory '{$this->directory}' in namespace '{$this->namespace}'."
+            throw new TemplaterException(
+                "No views were found under directory '{$this->directory}' in namespace '{$this->namespace}'.",
+                $this->token
             );
         }
 

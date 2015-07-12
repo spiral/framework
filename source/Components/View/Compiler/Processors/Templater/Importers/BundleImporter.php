@@ -10,32 +10,47 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 
 use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
+use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendsBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\Node;
+use Spiral\Support\Html\Tokenizer;
 
 class BundleImporter implements ImporterInterface
 {
     /**
-     * Imported view namespace.
+     * Bundle view namespace.
      *
      * @var string
      */
     protected $namespace = '';
 
     /**
-     * Imported view.
+     * Bundle view name.
      *
      * @var string
      */
     protected $view = '';
 
     /**
-     * Element alias (can be plain html tag name).
+     * Bundle prefix (will be assigned to every element).
      *
      * @var string
      */
-    protected $alias = '';
+    protected $prefix = '';
 
-    protected $prefix='';
+    /**
+     * Importers fetched from view bundle.
+     *
+     * @var ImporterInterface[]
+     */
+    protected $importers = [];
+
+    /**
+     * Context token to catch errors.
+     *
+     * @var array
+     */
+    protected $token = [];
 
     /**
      * Is importer definitive.
@@ -49,24 +64,61 @@ class BundleImporter implements ImporterInterface
      *
      * @param Compiler          $compiler
      * @param TemplateProcessor $templater
-     * @param array             $options
+     * @param array             $token
      */
-    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $options)
+    public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token)
     {
-        dump($options);
-
-        //        list($this->namespace, $this->view) = $templater->fetchLocation(
-        //            $options['path'],
-        //            [Tokenizer::TOKEN_ATTRIBUTES => $options]
-        //        );
+        $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+        list($this->namespace, $this->view) = $templater->fetchLocation(
+            $attributes['bundle'],
+            $token
+        );
 
         if ($this->namespace == 'self')
         {
-            //        $this->namespace = $compiler->getNamespace();
+            $this->namespace = $compiler->getNamespace();
         }
 
-        //        $this->alias = $options['namespace'];
-              $this->definitive = array_key_exists('definitive', $options);
+        if (!empty($attributes['prefix']))
+        {
+            $this->prefix = $attributes['prefix'];
+        }
+
+        if (!empty($attributes['namespace']))
+        {
+            //Alternative prefix definition
+            $this->prefix = $templater->getNSSeparator() . $attributes['namespace'];
+        }
+
+        $this->token = $token;
+        $this->definitive = array_key_exists('definitive', $attributes);
+
+        $this->buildAliases($templater);
+    }
+
+    /**
+     * Aliases generated based on provided view bundle file.
+     *
+     * @param TemplateProcessor $templater
+     */
+    protected function buildAliases(TemplateProcessor $templater)
+    {
+        //We need node for our view to parse imports
+        $node = new Node($templater, $templater->uniqueName());
+
+        //Let's exclude node content
+        $node->handleBehaviour(new ExtendsBehaviour(
+            $include = $templater->createNode($this->namespace, $this->view, '', $this->token),
+            []
+        ));
+
+        /**
+         * @var TemplateProcessor $includeTemplater
+         */
+        $includeTemplater = $include->getSupervisor();
+
+        //We can fetch all importers from our bundle view
+        $this->importers = $includeTemplater->getImporters();
     }
 
     /**
@@ -88,7 +140,22 @@ class BundleImporter implements ImporterInterface
      */
     public function isImported($element)
     {
+        if ($this->prefix && strpos($element, $this->prefix) === false)
+        {
+            //Prefix used to filter bundle elements
+            return false;
+        }
 
+        $element = substr($element, strlen($this->prefix));
+        foreach ($this->importers as $importer)
+        {
+            if ($importer->isImported($element))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -99,7 +166,16 @@ class BundleImporter implements ImporterInterface
      */
     public function getNamespace($element)
     {
+        $element = substr($element, strlen($this->prefix));
+        foreach ($this->importers as $importer)
+        {
+            if ($importer->isImported($element))
+            {
+                return $importer->getNamespace($element);
+            }
+        }
 
+        return null;
     }
 
     /**
@@ -110,6 +186,15 @@ class BundleImporter implements ImporterInterface
      */
     public function getView($element)
     {
+        $element = substr($element, strlen($this->prefix));
+        foreach ($this->importers as $importer)
+        {
+            if ($importer->isImported($element))
+            {
+                return $importer->getView($element);
+            }
+        }
 
+        return null;
     }
 }
