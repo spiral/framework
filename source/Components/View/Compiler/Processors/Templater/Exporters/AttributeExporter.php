@@ -30,8 +30,6 @@ class AttributeExporter extends AbstractExporter
                 return strlen($replaceB) - strlen($replaceA);
             });
 
-            dump($matches);
-
             foreach ($matches[0] as $id => $replace)
             {
                 $blocks = [];
