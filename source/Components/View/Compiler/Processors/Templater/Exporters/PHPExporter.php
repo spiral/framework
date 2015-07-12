@@ -22,8 +22,7 @@ class PHPExporter extends AbstractExporter
      */
     public function mountBlocks()
     {
-        //TODO: NOT IMPLEMENTED YET
-
+        //TODO: Not implemented yet
         return $this->content;
     }
 }
