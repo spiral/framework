@@ -11,8 +11,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Exporters;
 use Spiral\Components\View\Compiler\Processors\Templater\AbstractExporter;
 
 /**
- * Will export specified (or all) import attributes into valid PHP array. Evaluator processor is
- * required to be installed after TemplaterProcessor.
+ * Will export specified (or all) import attributes into valid PHP array.
  */
 class PHPExporter extends AbstractExporter
 {
