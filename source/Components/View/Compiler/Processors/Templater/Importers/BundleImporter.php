@@ -32,13 +32,6 @@ class BundleImporter implements ImporterInterface
     protected $view = '';
 
     /**
-     * Bundle prefix (will be assigned to every element).
-     *
-     * @var string
-     */
-    protected $prefix = '';
-
-    /**
      * Importers fetched from view bundle.
      *
      * @var ImporterInterface[]
@@ -77,17 +70,6 @@ class BundleImporter implements ImporterInterface
         if ($this->namespace == 'self')
         {
             $this->namespace = $compiler->getNamespace();
-        }
-
-        if (!empty($attributes['prefix']))
-        {
-            $this->prefix = $attributes['prefix'];
-        }
-
-        if (!empty($attributes['namespace']))
-        {
-            //Alternative prefix definition
-            $this->prefix = $templater->getNSSeparator() . $attributes['namespace'];
         }
 
         $this->token = $token;
@@ -140,13 +122,6 @@ class BundleImporter implements ImporterInterface
      */
     public function isImported($element)
     {
-        if ($this->prefix && strpos($element, $this->prefix) === false)
-        {
-            //Prefix used to filter bundle elements
-            return false;
-        }
-
-        $element = substr($element, strlen($this->prefix));
         foreach ($this->importers as $importer)
         {
             if ($importer->isImported($element))
@@ -166,7 +141,6 @@ class BundleImporter implements ImporterInterface
      */
     public function getNamespace($element)
     {
-        $element = substr($element, strlen($this->prefix));
         foreach ($this->importers as $importer)
         {
             if ($importer->isImported($element))
@@ -186,7 +160,6 @@ class BundleImporter implements ImporterInterface
      */
     public function getView($element)
     {
-        $element = substr($element, strlen($this->prefix));
         foreach ($this->importers as $importer)
         {
             if ($importer->isImported($element))
