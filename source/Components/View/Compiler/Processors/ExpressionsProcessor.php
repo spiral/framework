@@ -20,9 +20,17 @@ class ExpressionsProcessor implements ProcessorInterface
      * @var array
      */
     protected $expressions = [
+        //Export value of view dependency by it's name
         'dependency' => [
             'pattern'  => '/@\\{(?P<name>[a-z0-9_\\.\\-]+)(?: *\\| *(?P<default>[^}]+))?}/i',
             'callback' => ['self', 'dependency']
+        ],
+        //Create variable based on provided PHP code, will erase PHP braces and echo,
+        //this expression should be used only inside evaluator code, expression should be executed
+        //before Templater
+        'variable'   => [
+            'pattern'  => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*)\s*=\s*phpVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
+            'callback' => ['self', 'phpVariable']
         ]
     ];
 
@@ -76,5 +84,23 @@ class ExpressionsProcessor implements ProcessorInterface
             $matches['name'],
             !empty($matches['default']) ? $matches['default'] : ''
         );
+    }
+
+    /**
+     * Export value or expressions of template block to evaluator variable which can be used to build
+     * php expressions.
+     *
+     * @param array $matches
+     * @return string
+     */
+    public function phpVariable(array $matches)
+    {
+        if (!empty($matches[1]))
+        {
+            return '//This code is commented';
+        }
+
+        return "ob_start(); ?>$matches[3]<?php #compile
+        \$$matches[2] = \$this->fetchPHP(\$isolator->repairPHP(trim(ob_get_clean())));";
     }
 }

@@ -38,23 +38,13 @@ class EvaluateProcessor implements ProcessorInterface
     protected $file = null;
 
     /**
-     * Internal expressions processor used to replace some common evaluator constructions
-     *
-     * @var ExpressionsProcessor
-     */
-    protected $expressionsProcessor = null;
-
-    /**
      * Processor options.
      *
      * @var array
      */
     protected $options = [
-        'flags'       => [
+        'flags' => [
             '/*compile*/', '#compile', '#php-compile'
-        ],
-        'expressions' => [
-            //TODO: Implement and test
         ]
     ];
 
@@ -79,12 +69,6 @@ class EvaluateProcessor implements ProcessorInterface
 
         $this->file = !empty($file) ? $file : FileManager::getInstance(
             $this->viewManager->getContainer()
-        );
-
-        $this->expressionsProcessor = new ExpressionsProcessor(
-            $viewManager,
-            $compiler,
-            $this->options['expressions']
         );
     }
 
@@ -126,9 +110,6 @@ class EvaluateProcessor implements ProcessorInterface
         $source = $isolator->setBlocks($evaluatorBlocks)->repairPHP($source);
         $isolator->setBlocks($phpBlocks);
 
-        //Let's run expressions processor before evaluating
-        $source = $this->expressionsProcessor->process($source);
-
         $filename = $this->viewManager->cacheFilename(
             $this->compiler->getNamespace(),
             $this->compiler->getView() . '-evaluator-' . spl_object_hash($this)
@@ -150,5 +131,38 @@ class EvaluateProcessor implements ProcessorInterface
         }
 
         return $isolator->repairPHP($source);
+    }
+
+    /**
+     * Extract php source from php block (no echos). Used to convert php blocks provided by templater
+     * to local variables.
+     *
+     * @param string $phpBlock
+     * @return string
+     */
+    static public function fetchPHP($phpBlock)
+    {
+        if (strpos($phpBlock, '<?') !== 0)
+        {
+            return var_export($phpBlock, true);
+        }
+
+        $phpBlock = trim(substr($phpBlock, 2, -2));
+        if (substr($phpBlock, 0, 3) == 'php')
+        {
+            $phpBlock = trim(substr($phpBlock, 3));
+        }
+
+        if (substr($phpBlock, 0, 1) == '=')
+        {
+            $phpBlock = substr($phpBlock, 1);
+        }
+
+        if (substr($phpBlock, 0, 4) == 'echo')
+        {
+            $phpBlock = substr($phpBlock, 4);
+        }
+
+        return trim($phpBlock, '; ');
     }
 }
