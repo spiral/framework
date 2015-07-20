@@ -28,9 +28,15 @@ class ExpressionsProcessor implements ProcessorInterface
         //Create variable based on provided PHP code, will erase PHP braces and echo,
         //this expression should be used only inside evaluator code, expression should be executed
         //before Templater
-        'variable'   => [
+        'fetchVariable'   => [
             'pattern'  => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*)\s*=\s*phpVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
-            'callback' => ['self', 'phpVariable']
+            'callback' => ['self', 'fetchVariable']
+        ],
+        //Used to create php variable related to some php block, will always contain valid php code,
+        //this expressions should be used only in compiled php
+        'createVariable'   => [
+            'pattern'  => '/(?:(\/\/)\s*)?createVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
+            'callback' => ['self', 'createVariable']
         ]
     ];
 
@@ -93,7 +99,7 @@ class ExpressionsProcessor implements ProcessorInterface
      * @param array $matches
      * @return string
      */
-    public function phpVariable(array $matches)
+    public function fetchVariable(array $matches)
     {
         if (!empty($matches[1]))
         {
@@ -102,5 +108,22 @@ class ExpressionsProcessor implements ProcessorInterface
 
         return "ob_start(); ?>$matches[3]<?php #compile
         \$$matches[2] = \$this->fetchPHP(\$isolator->repairPHP(trim(ob_get_clean())));";
+    }
+
+    /**
+     * Create php variable based on provided block.
+     *
+     * @param array $matches
+     * @return string
+     */
+    public function createVariable(array $matches)
+    {
+        if (!empty($matches[1]))
+        {
+            return '//This code is commented';
+        }
+
+        return "ob_start(); ?>$matches[3]<?php #compile
+        echo '<?php \$$matches[2] = ' . \$this->fetchPHP(\$isolator->repairPHP(trim(ob_get_clean()))) . '; ?>';";
     }
 }
