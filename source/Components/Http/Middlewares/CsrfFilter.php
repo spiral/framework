@@ -84,8 +84,8 @@ class CsrfFilter implements MiddlewareInterface
                     self::COOKIE,
                     $token,
                     self::LIFETIME,
-                    null,
-                    $request->getAttribute('cookieDomain', null)
+                    $request->getAttribute('basePath'),
+                    $request->getAttribute('cookieDomain')
                 )->packHeader()
             );
         }

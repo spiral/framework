@@ -135,8 +135,8 @@ class SessionStarter implements MiddlewareInterface
                         self::COOKIE,
                         $store->getID(),
                         $store->getConfig()['lifetime'],
-                        null,
-                        $request->getAttribute('cookieDomain', null)
+                        $request->getAttribute('basePath'),
+                        $request->getAttribute('cookieDomain')
                     )->packHeader()
                 );
             }
