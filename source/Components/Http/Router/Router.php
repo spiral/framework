@@ -14,6 +14,7 @@ use Spiral\Components\Http\MiddlewareInterface;
 use Spiral\Components\Http\Response\Redirect;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
+use Spiral\Core\Dispatcher\ClientException;
 
 class Router extends Component implements MiddlewareInterface
 {
@@ -137,7 +138,7 @@ class Router extends Component implements MiddlewareInterface
         $this->activePath = $request->getAttribute('activePath', $this->activePath);
         if (!$this->activeRoute = $this->findRoute($request, $this->activePath))
         {
-            throw new RouterException("No routes matched given request.");
+            throw new ClientException(ClientException::NOT_FOUND);
         }
 
         //Executing found route
