@@ -185,11 +185,13 @@ class Compiler implements CompilerInterface
     public function compile()
     {
         $source = $this->source;
-        foreach ($this->getProcessors() as $name => $processor)
+        foreach ($this->getProcessors() as $processor)
         {
-            benchmark('view::' . $name, $this->namespace . ':' . $this->view);
+            $reflection = new \ReflectionClass($processor);
+
+            benchmark('view::' . $reflection->getShortName(), $this->namespace . ':' . $this->view);
             $source = $processor->process($source);
-            benchmark('view::' . $name, $this->namespace . ':' . $this->view);
+            benchmark('view::' . $reflection->getShortName(), $this->namespace . ':' . $this->view);
         }
 
         return $source;
