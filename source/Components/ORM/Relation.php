@@ -66,12 +66,17 @@ abstract class Relation implements RelationInterface
         if (empty($this->data) && empty($this->loadData()))
         {
             //Can not be loaded
+            //TODO: DO not return empty array
             return static::MULTIPLE ? [] : null;
         }
 
         if (static::MULTIPLE)
         {
-            return $this->data = new ModelIterator($this->orm, $this->getClass(), $this->data);
+            return $this->data = new ModelIterator(
+                $this->orm,
+                $this->getClass(),
+                $this->data
+            );
         }
 
         return $this->data = $this->orm->construct($this->getClass(), $this->data);
@@ -96,5 +101,14 @@ abstract class Relation implements RelationInterface
         }
 
         return null;
+    }
+
+    public function setData($data)
+    {
+        echo 1;
+    }
+
+    public function save()
+    {
     }
 }

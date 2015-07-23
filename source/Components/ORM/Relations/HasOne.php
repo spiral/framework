@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM\Relations;
 
 use Spiral\Components\ORM\ActiveRecord;
+use Spiral\Components\ORM\ModelIterator;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 
@@ -22,7 +23,10 @@ class HasOne extends Relation
 
         if (isset($this->definition[ActiveRecord::MORPH_KEY]))
         {
-            $selector->where($this->definition[ActiveRecord::MORPH_KEY], $this->parent->getRoleName());
+            $selector->where(
+                $this->definition[ActiveRecord::MORPH_KEY],
+                $this->parent->getRoleName()
+            );
         }
 
         $selector->where(
@@ -35,10 +39,15 @@ class HasOne extends Relation
 
     public function getContent()
     {
-        if (!$this->parent->isLoaded())
+        if (empty($this->data) && !$this->parent->isLoaded())
         {
+            if (static::MULTIPLE)
+            {
+                return $this->data = new ModelIterator($this->orm, $this->getClass(), []);
+            }
+
             //Empty object
-            return static::MULTIPLE ? [] : $this->orm->construct($this->getClass(), []);
+            return $this->data = $this->orm->construct($this->getClass(), []);
         }
 
         return parent::getContent();

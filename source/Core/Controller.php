@@ -40,20 +40,20 @@ use Spiral\Components;
 class Controller extends Component implements ControllerInterface
 {
     /**
+     * Action prefix will be assigned to every provided action. Useful when you need methods like
+     * "new", "list" and etc.
+     *
+     * @var string
+     */
+    const ACTION_PREFIX = '';
+
+    /**
      * Default action to run. This action will be performed if dispatcher didn't specified another
      * action to run.
      *
      * @var string
      */
     protected $defaultAction = 'index';
-
-    /**
-     * Action prefix will be assigned to every provided action. Useful when you need methods like
-     * "new", "list" and etc.
-     *
-     * @var string
-     */
-    protected $actionPrefix = '';
 
     /**
      * Last set of parameters passed to callAction method,
@@ -107,7 +107,7 @@ class Controller extends Component implements ControllerInterface
             $action = $this->defaultAction;
         }
 
-        $action = $this->actionPrefix . $action;
+        $action = static::ACTION_PREFIX . $action;
         if (!method_exists($this, $action))
         {
             throw new ClientException(ClientException::NOT_FOUND);
@@ -122,7 +122,7 @@ class Controller extends Component implements ControllerInterface
             || $reflection->getDeclaringClass()->getName() == __CLASS__
         )
         {
-            throw new ClientException(ClientException::NOT_FOUND, "Action is not allowed");
+            throw new ClientException(ClientException::NOT_FOUND, "Action is not allowed.");
         }
 
         $this->parameters = $parameters;
@@ -135,7 +135,7 @@ class Controller extends Component implements ControllerInterface
             if (!array_key_exists($parameter->getPosition(), $arguments) && !$parameter->isOptional())
             {
                 throw new ClientException(
-                    ClientException::BAD_DATA, "Missing parameter '{$parameter->name}'"
+                    ClientException::BAD_DATA, "Missing parameter '{$parameter->name}'."
                 );
             }
         }

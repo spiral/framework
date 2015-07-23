@@ -9,11 +9,8 @@
 namespace Spiral\Components\ORM;
 
 use Spiral\Components\DBAL\Database;
-use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
-use Spiral\Core\Events\EventDispatcher;
-use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
@@ -506,6 +503,11 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         }
     }
 
+    /**
+     * Role name used in morphed relations to detect outer model table and class.
+     *
+     * @return string
+     */
     public function getRoleName()
     {
         return $this->schema[ORM::E_ROLE_NAME];
@@ -513,6 +515,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
     public function setContext(array $context)
     {
+        //TODO: implement later
     }
 
     /**

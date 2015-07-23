@@ -42,6 +42,11 @@ class ModelIterator extends Component implements \Iterator, \Countable
         return count($this->data);
     }
 
+    public function add(ActiveRecord $record)
+    {
+        $this->data[] = $record;
+    }
+
     //-------------------------------------------------
 
     /**
