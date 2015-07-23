@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Support\Models\DataEntity;
 
-abstract class Relation implements RelationInterface
+abstract class Relation implements RelationInterface, \Countable, \IteratorAggregate
 {
     /**
      * Relation type.
@@ -174,6 +174,38 @@ abstract class Relation implements RelationInterface
     protected function createSelector()
     {
         return new Selector($this->getClass(), $this->orm);
+    }
+
+    /**
+     * Bypassing call to created selector.
+     *
+     * @param string $method
+     * @param array  $arguments
+     * @return mixed
+     */
+    public function __call($method, array $arguments)
+    {
+        return call_user_func_array([$this->createIterator(), $method], $arguments);
+    }
+
+    /**
+     * Bypassing count call, required for implementing Countable interface.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->createSelector()->count();
+    }
+
+    /**
+     * Bypassing getIterator call, required for implementing IteratorAggregate interface.
+     *
+     * @return ActiveRecord[]|ModelIterator
+     */
+    public function getIterator()
+    {
+        return $this->createSelector()->getIterator();
     }
 
     /**

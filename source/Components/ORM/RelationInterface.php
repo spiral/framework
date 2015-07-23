@@ -54,6 +54,15 @@ interface RelationInterface
      */
     public function getData();
 
+    /**
+     * Set relation data (called via __set method of parent ActiveRecord).
+     *
+     * Example:
+     * $user->profile = new Profile();
+     *
+     * @param mixed $data
+     * @throws ORMException
+     */
     public function setData($data);
 
     /**
