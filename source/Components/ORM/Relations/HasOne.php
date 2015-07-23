@@ -15,8 +15,17 @@ use Spiral\Components\ORM\Selector;
 
 class HasOne extends Relation
 {
+    /**
+     * Relation type.
+     */
     const RELATION_TYPE = ActiveRecord::HAS_ONE;
 
+    /**
+     * Internal ORM relation method used to create valid selector used to pre-load relation data or
+     * create custom query based on relation options.
+     *
+     * @return Selector
+     */
     protected function createSelector()
     {
         $selector = parent::createSelector();
@@ -37,19 +46,38 @@ class HasOne extends Relation
         return $selector;
     }
 
-    public function getData()
+    /**
+     * Mount relation keys to parent or children models to ensure their connection.
+     *
+     * @param ActiveRecord $model
+     * @return ActiveRecord
+     */
+    protected function mountRelation(ActiveRecord $model)
     {
-        if (empty($this->data) && !$this->parent->isLoaded())
-        {
-            if (static::MULTIPLE)
-            {
-                return $this->data = new ModelIterator($this->orm, $this->getClass(), []);
-            }
+        //Key in child model
+        $outerKey = $this->definition[ActiveRecord::OUTER_KEY];
 
-            //Empty object
-            return $this->data = $this->orm->construct($this->getClass(), []);
+        //Key in parent model
+        $innerKey = $this->definition[ActiveRecord::INNER_KEY];
+
+        if ($model->getField($outerKey, false) != $this->parent->getField($innerKey, false))
+        {
+            $model->setField($outerKey, $this->parent->getField($innerKey, false), false);
         }
 
-        return parent::getData();
+        if (!isset($this->definition[ActiveRecord::MORPH_KEY]))
+        {
+            //No morph key presented
+            return $model;
+        }
+
+        $morphKey = $this->definition[ActiveRecord::MORPH_KEY];
+
+        if ($model->getField($morphKey) != $this->parent->getRoleName())
+        {
+            $model->setField($morphKey, $this->parent->getRoleName());
+        }
+
+        return $model;
     }
 }

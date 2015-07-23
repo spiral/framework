@@ -172,9 +172,10 @@ class ORM extends Component
      * @param ActiveRecord $parent
      * @param array        $definition
      * @param array        $data
+     * @param bool         $loaded
      * @return mixed
      */
-    public function relation($type, ActiveRecord $parent, $definition, $data = null)
+    public function relation($type, ActiveRecord $parent, $definition, $data = null, $loaded = false)
     {
         if (!isset($this->config['relations'][$type]['class']))
         {
@@ -183,7 +184,7 @@ class ORM extends Component
 
         $class = $this->config['relations'][$type]['class'];
 
-        return new $class($this, $parent, $definition, $data);
+        return new $class($this, $parent, $definition, $data, $loaded);
     }
 
     /**

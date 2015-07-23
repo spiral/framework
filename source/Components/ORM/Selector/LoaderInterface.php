@@ -26,6 +26,13 @@ interface LoaderInterface
     public function __construct(ORM $orm, $container, array $definition = [], Loader $parent = null);
 
     /**
+     * Is loader represent multiple records or one.
+     *
+     * @return bool
+     */
+    public function isMultiple();
+
+    /**
      * Update loader options.
      *
      * @param array $options

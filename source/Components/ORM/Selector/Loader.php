@@ -181,6 +181,16 @@ abstract class Loader implements LoaderInterface
     }
 
     /**
+     * Is loader represent multiple records or one.
+     *
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return static::MULTIPLE;
+    }
+
+    /**
      * Table name loader relates to.
      *
      * @return mixed
@@ -603,7 +613,7 @@ abstract class Loader implements LoaderInterface
      * Parse single result row, should fetch related model fields and run nested loader parsers.
      *
      * @param array $row
-     * @return mixed
+     * @return bool
      */
     public function parseRow(array $row)
     {
@@ -712,6 +722,12 @@ abstract class Loader implements LoaderInterface
 
             //Duplicate is presented
             return false;
+        }
+
+        //Let's force data containers
+        foreach ($this->loaders as $container => $loader)
+        {
+            $data[$container] = $loader->isMultiple() ? [] : null;
         }
 
         //Let's remember record to prevent future duplicates

@@ -42,6 +42,11 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const FORCE_VALIDATION = true;
 
     /**
+     * Indication that model data was deleted.
+     */
+    const DELETED        = 900;
+
+    /**
      * Model has one children model relation. Example: User has one profile.
      *
      * Example:
@@ -365,6 +370,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const CONSTRAINT_ACTION = 1003; //Default relation foreign key delete/update action (CASCADE)
     const CREATE_PIVOT      = 1004; //Many-to-Many should create pivot table automatically (default)
     const NULLABLE          = 1005; //Relation can be nullable (default)
+    const CREATE_INDEXES = 1006; //Indication that relation is allowed to create required indexes
 
     /**
      * Constants used to declare index type. See documentation for indexes property.
@@ -487,7 +493,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         foreach ($this->schema[ORM::E_RELATIONS] as $relation => $definition)
         {
-            if (isset($data[$relation]))
+            if (array_key_exists($relation, $data))
             {
                 $this->relations[$relation] = $data[$relation];
                 unset($data[$relation]);
@@ -569,7 +575,17 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function isLoaded()
     {
-        return $this->loaded;
+        return (bool)$this->loaded && !$this->isDeleted();
+    }
+
+    /**
+     * Indication that model was deleted.
+     *
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return $this->loaded === self::DELETED;
     }
 
     /**
@@ -628,18 +644,20 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * @param string $name
      * @param mixed  $data
+     * @param bool   $loaded
      * @return RelationInterface
      */
-    public function getRelation($name, $data = null)
+    public function getRelation($name, $data = null, $loaded = false)
     {
-        if (!empty($this->relations[$name]))
+        if (array_key_exists($name, $this->relations))
         {
-            if (is_array($this->relations[$name]))
+            if (!is_object($this->relations[$name]))
             {
                 $data = $this->relations[$name];
                 unset($this->relations[$name]);
 
-                return $this->getRelation($name, $data);
+                //Loaded relation
+                return $this->getRelation($name, $data, true);
             }
 
             return $this->relations[$name];
@@ -657,7 +675,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             $relation[ORM::R_TYPE],
             $this,
             $relation[ORM::R_DEFINITION],
-            $data
+            $data,
+            $loaded
         );
     }
 
@@ -996,7 +1015,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             {
                 foreach ($this->relations as $name => $relation)
                 {
-                    if ($relation instanceof RelationInterface && !$relation->saveContent($validate))
+                    if ($relation instanceof RelationInterface && !$relation->saveData($validate))
                     {
                         throw new ORMException("Unable to save relation.");
                     }
@@ -1024,7 +1043,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         }
 
         $this->fields = $this->schema[ORM::E_COLUMNS];
-        $this->loaded = false;
+        $this->loaded = self::DELETED;
 
         $this->event('deleted');
     }
