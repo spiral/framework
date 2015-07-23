@@ -46,6 +46,11 @@ abstract class Relation implements RelationInterface
         $this->data = $data;
     }
 
+    /**
+     * Class name of outer model.
+     *
+     * @return string
+     */
     protected function getClass()
     {
         return $this->definition[static::RELATION_TYPE];
@@ -56,7 +61,7 @@ abstract class Relation implements RelationInterface
         return new Selector($this->definition[static::RELATION_TYPE], $this->orm);
     }
 
-    public function getContent()
+    public function getData()
     {
         if (is_object($this->data))
         {
@@ -108,7 +113,15 @@ abstract class Relation implements RelationInterface
         echo 1;
     }
 
-    public function save()
+    /**
+     * ActiveRecord may ask relation data to be saved, save content will work ONLY for pre-loaded
+     * relation content.
+     *
+     * @param bool $validate
+     * @return bool
+     */
+    public function saveContent($validate = true)
     {
+        return true;
     }
 }

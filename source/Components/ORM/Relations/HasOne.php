@@ -37,7 +37,7 @@ class HasOne extends Relation
         return $selector;
     }
 
-    public function getContent()
+    public function getData()
     {
         if (empty($this->data) && !$this->parent->isLoaded())
         {
@@ -50,6 +50,6 @@ class HasOne extends Relation
             return $this->data = $this->orm->construct($this->getClass(), []);
         }
 
-        return parent::getContent();
+        return parent::getData();
     }
 }

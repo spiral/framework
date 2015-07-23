@@ -11,6 +11,7 @@ namespace Spiral\Components\ORM;
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\Table;
 use Spiral\Components\I18n\Translator;
+use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
 use Spiral\Support\Validation\Validator;
@@ -460,7 +461,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     /**
      * Constructed and pre-cached set of relations.
      *
-     * @var Relation[]
+     * @var RelationInterface[]
      */
     protected $relations = [];
 
@@ -469,7 +470,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();
         $this->loaded = $loaded;
 
-        if (!isset(self::$schemaCache[$class = get_class($this)]))
+        if (!isset(self::$schemaCache[$class = static::class]))
         {
             static::initialize();
             self::$schemaCache[$class] = $this->orm->getSchema($class);
@@ -622,6 +623,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         );
     }
 
+    /**
+     * Get or create model relation by it's name and pre-loaded (optional) set of data.
+     *
+     * @param string $name
+     * @param mixed  $data
+     * @return RelationInterface
+     */
     public function getRelation($name, $data = null)
     {
         if (!empty($this->relations[$name]))
@@ -664,14 +672,61 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     {
         if (isset($this->schema[ORM::E_RELATIONS][$offset]))
         {
-            return $this->getRelation($offset)->getContent();
+            return $this->getRelation($offset)->getData();
         }
 
         return $this->getField($offset, true);
     }
 
+    /**
+     * Set value to one of field. Setter filter can be disabled by providing last argument.
+     *
+     * @param string $name   Field name.
+     * @param mixed  $value  Value to set.
+     * @param bool   $filter If false no filter will be applied (setter or accessor).
+     */
+    public function setField($name, $value, $filter = true)
+    {
+        $original = isset($this->fields[$name]) ? $this->fields[$name] : null;
+        parent::setField($name, $value, $filter);
+
+        if (!array_key_exists($name, $this->updates))
+        {
+            $this->updates[$name] = $original instanceof AccessorInterface
+                ? $original->serializeData()
+                : $original;
+        }
+    }
+
+    /**
+     * Offset to set.
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @param mixed $offset The offset to assign the value to.
+     * @param mixed $value  The value to set.
+     */
+    public function __set($offset, $value)
+    {
+        if (isset($this->schema[ORM::E_RELATIONS][$offset]))
+        {
+            $this->getRelation($offset)->setData($value);
+
+            return;
+        }
+
+        $this->setField($offset, $value, true);
+    }
+
+    /**
+     * Direct access to relation by it's name.
+     *
+     * @param string $method
+     * @param array  $arguments
+     * @return RelationInterface
+     */
     public function __call($method, array $arguments)
     {
+        //TODO: Set arguments method?
         return $this->getRelation($method);
     }
 
@@ -874,15 +929,18 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * Events: saving, saved, updating, updated will be fired.
      *
-     * @param bool $validate Validate record fields before saving, enabled by default. Turning this
-     *                       option off will increase performance but will make saving less secure.
-     *                       You can use it when model data was not modified directly by user. By
-     *                       default value is null which will force document to select behaviour
-     *                       from FORCE_VALIDATION constant.
+     * @param bool $validate  Validate record fields before saving, enabled by default. Turning this
+     *                        option off will increase performance but will make saving less secure.
+     *                        You can use it when model data was not modified directly by user. By
+     *                        default value is null which will force document to select behaviour
+     *                        from FORCE_VALIDATION constant.
+     * @param bool $relations Save all nested relations with valid foreign keys and etc, attention,
+     *                        only pre-loaded or create relations will be saved for performance
+     *                        reasons, no "MANY" relations will be saved. Enabled by default.
      * @return bool
      * @throws ORMException
      */
-    public function save($validate = null)
+    public function save($validate = null, $relations = true)
     {
         if (is_null($validate))
         {
@@ -929,10 +987,25 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
         $this->flushUpdates();
 
+        if ($relations && !empty($this->relations))
+        {
+            //We would like to save all relations under one transaction, so we can easily revert them
+            //all, in future it will be reasonable to save primary model and relations under one
+            //transaction
+            $this->orm->getDatabase($this->schema[ORM::E_DB])->transaction(function () use ($validate)
+            {
+                foreach ($this->relations as $name => $relation)
+                {
+                    if ($relation instanceof RelationInterface && !$relation->saveContent($validate))
+                    {
+                        throw new ORMException("Unable to save relation.");
+                    }
+                }
+            });
+        }
+
         return true;
     }
-
-    //TODO: push method
 
     /**
      * Delete record from database. Attention, if your model does not have primary key result of
