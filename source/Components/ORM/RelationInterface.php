@@ -73,4 +73,12 @@ interface RelationInterface
      * @return bool
      */
     public function saveData($validate = true);
+
+    /**
+     * Get relation data errors (if any).
+     *
+     * @param bool $reset
+     * @return mixed
+     */
+    public function getErrors($reset = false);
 }

@@ -13,7 +13,7 @@ use Spiral\Core\Component;
 /**
  * TODO: NOT FINISHED YET.
  */
-class ModelIterator extends Component implements \Iterator, \Countable
+class ModelIterator extends Component implements \Iterator, \Countable, \JsonSerializable
 {
     /**
      *
@@ -40,6 +40,17 @@ class ModelIterator extends Component implements \Iterator, \Countable
     public function count()
     {
         return count($this->data);
+    }
+
+    public function all()
+    {
+        $result = [];
+        foreach ($this as $item)
+        {
+            $result[] = $item;
+        }
+
+        return $result;
     }
 
     //-------------------------------------------------
@@ -105,5 +116,17 @@ class ModelIterator extends Component implements \Iterator, \Countable
     public function rewind()
     {
         $this->position = 0;
+    }
+
+    /**
+     * (PHP 5 > 5.4.0)
+     * Specify data which should be serialized to JSON.
+     *
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->all();
     }
 }

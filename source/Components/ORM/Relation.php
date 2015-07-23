@@ -10,7 +10,7 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Support\Models\DataEntity;
 
-abstract class Relation implements RelationInterface, \Countable, \IteratorAggregate
+abstract class Relation implements RelationInterface, \Countable, \IteratorAggregate, \JsonSerializable
 {
     /**
      * Relation type.
@@ -319,10 +319,52 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     }
 
     /**
+     * Get relation data errors (if any).
+     *
+     * @param bool $reset
+     * @return mixed
+     */
+    public function getErrors($reset = false)
+    {
+        if (static::MULTIPLE)
+        {
+            /**
+             * @var ActiveRecord[] $data
+             */
+
+            $errors = [];
+            foreach ($data as $position => $model)
+            {
+                if (!$model->isValid())
+                {
+                    $errors[$position] = $model->getErrors(true);
+                }
+            }
+
+            return $errors;
+        }
+
+        return $this->getData()->getErrors($reset);
+    }
+
+    /**
      * Mount relation keys to parent or children models to ensure their connection.
      *
      * @param ActiveRecord $model
      * @return ActiveRecord
      */
     abstract protected function mountRelation(ActiveRecord $model);
+
+
+    /**
+     * (PHP 5 > 5.4.0)
+     * Specify data which should be serialized to JSON.
+     *
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        return $this->createSelector()->jsonSerialize();
+    }
 }
