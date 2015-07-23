@@ -10,38 +10,66 @@ namespace Spiral\Components\ORM;
 
 use Spiral\Core\Component;
 
-/**
- * TODO: NOT FINISHED YET.
- */
 class ModelIterator extends Component implements \Iterator, \Countable, \JsonSerializable
 {
     /**
+     * ORM component used to create model instances.
      *
      * @invisible
      * @var ORM
      */
     protected $orm = null;
 
+    /**
+     * ActiveRecord class.
+     *
+     * @var string
+     */
     protected $class = '';
+
+    /**
+     * Data to be iterated.
+     *
+     * @var array
+     */
     protected $data = [];
 
-
+    /**
+     * Current iterator position.
+     *
+     * @var int
+     */
     protected $position = 0;
 
+    /**
+     * Model Iterator used for lazy data iteration.
+     *
+     * @param ORM    $orm
+     * @param string $class
+     * @param array  $data
+     */
     public function __construct(ORM $orm, $class, array $data)
     {
         $this->orm = $orm;
-
         $this->class = $class;
-
         $this->data = $data;
     }
 
+    /**
+     * Count records.
+     *
+     * @return int
+     */
     public function count()
     {
         return count($this->data);
     }
 
+    /**
+     * Get all active records as array.
+     *
+     * @return ActiveRecord[]
+     */
     public function all()
     {
         $result = [];
@@ -52,8 +80,6 @@ class ModelIterator extends Component implements \Iterator, \Countable, \JsonSer
 
         return $result;
     }
-
-    //-------------------------------------------------
 
     /**
      * Return the current document.
