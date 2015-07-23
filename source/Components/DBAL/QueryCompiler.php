@@ -268,22 +268,22 @@ class QueryCompiler extends Component
 
         if (empty($unions) && !empty($orderBy))
         {
-            $statement .= $this->orderBy($orderBy) . ' ';
+            $statement .= "\n" . $this->orderBy($orderBy);
         }
 
         if (!empty($unions))
         {
-            $statement .= $this->unions($unions) . ' ';
+            $statement .= $this->unions($unions);
         }
 
         if (!empty($unions) && !empty($orderBy))
         {
-            $statement .= $this->orderBy($orderBy) . ' ';
+            $statement .= "\n" . $this->orderBy($orderBy);
         }
 
         if ($limit || $offset)
         {
-            $statement .= $this->limit($limit, $offset);
+            $statement .= "\n" . $this->limit($limit, $offset);
         }
 
         return rtrim($statement);
