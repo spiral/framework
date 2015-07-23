@@ -107,6 +107,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ]
      * ];
      *
+     * Attention, while using NULLABLE relations you have to clearly state default value as NULL.
+     *
      * You can always inverse this relation to create relation in child model:
      * protected $schema = [
      *      ...,
@@ -181,6 +183,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *          self::NULLABLE  => false                //Post should always have associated user
      *      ]
      * ];
+     *
+     * Attention, while using NULLABLE relations you have to clearly state default value as NULL.
      *
      * Has many relation allows you to define custom WHERE condition:
      * protected $schema = [
@@ -277,6 +281,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * To state that child model should always have defined parent let's set NULLABLE option to false.
      * Attention, this option can be applied ONLY while child table is empty! By default NULLABLE
      * flag states true:
+     *
      * protected $schema = [
      *      ...,
      *      'author' => [
@@ -285,6 +290,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ]
      * ];
      *
+     * Attention, while using NULLABLE relations you have to clearly state default value as NULL.
      *
      * You can always inverse this relation to create relation in child model, however you have to
      * specify inversed relation type (HAS_ONE or HAS_MANY) in this case.

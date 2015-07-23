@@ -195,6 +195,7 @@ abstract class Relation implements RelationInterface
      * $user->profile = new Profile();
      *
      * @param mixed $data
+     * @throws ORMException
      */
     public function setData($data)
     {
