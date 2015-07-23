@@ -74,7 +74,7 @@ class CsrfFilter implements MiddlewareInterface
             }
         }
 
-        $response = $next($request->withAttribute('crsfToken', $token));
+        $response = $next($request->withAttribute('csrfToken', $token));
         if ($setCookie && $response instanceof ResponseInterface)
         {
             //Will work even with non spiral responses

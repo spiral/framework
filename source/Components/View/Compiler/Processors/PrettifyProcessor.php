@@ -13,9 +13,19 @@ use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 use Spiral\Helpers\StringHelper;
+use Spiral\Support\Html\Tokenizer;
 
-class PrettyProcessor implements ProcessorInterface
+class PrettifyProcessor implements ProcessorInterface
 {
+    /**
+     * Prettify-options.
+     *
+     * @var array
+     */
+    protected $options = [
+        'normalizeEndings' => true
+    ];
+
     /**
      * New processors instance with options specified in view config.
      *
@@ -25,21 +35,36 @@ class PrettyProcessor implements ProcessorInterface
      */
     public function __construct(ViewManager $viewManager, Compiler $compiler, array $options)
     {
-        //Nothing to configure
+        $this->options = $options + $this->options;
     }
 
     /**
      * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
-     * @param string   $source   View source (code).
-     * @param Isolator $isolator PHP isolator instance.
+     * @param string $source View source (code).
      * @return string
      * @throws \ErrorException
      */
-    public function process($source, Isolator $isolator = null)
+    public function process($source)
     {
-        $isolator = !empty($isolator) ? $isolator : new Isolator();
+        if ($this->options['normalizeEndings'])
+        {
+            $source = $this->normalizeEndings($source);
+        }
+
+        return $source;
+    }
+
+    /**
+     * Remove blank lines.
+     *
+     * @param string $source
+     * @return string
+     */
+    protected function normalizeEndings($source)
+    {
+        $isolator = new Isolator();
 
         //Step #1, \n only
         $source = $isolator->isolatePHP(
