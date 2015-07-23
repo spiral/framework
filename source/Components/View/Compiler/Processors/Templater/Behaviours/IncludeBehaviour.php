@@ -131,7 +131,6 @@ class IncludeBehaviour implements BehaviourInterface
         $content = $this->templater->exportBlocks($content, $outerBlocks);
 
         //Let's not parse complied content without any imports (to prevent collision)
-
         $templater = clone $this->templater;
         $templater->flushImporters();
 
