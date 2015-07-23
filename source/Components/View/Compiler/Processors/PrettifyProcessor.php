@@ -25,7 +25,13 @@ class PrettifyProcessor implements ProcessorInterface
     protected $options = [
         'endings'    => true,
 
-        'indents'    => true,
+        'indents' => [
+            'normalize' => true,
+            'indent'    => '  ',
+            'elements'  => [
+                'head', 'title', 'div', 'p', 'table', 'tbody', 'tr', 'td', 'form', 'script'
+            ]
+        ],
 
         //Trim attributes
         'attributes' => [
@@ -36,7 +42,8 @@ class PrettifyProcessor implements ProcessorInterface
     ];
 
     /**
-     * New processors instance with options specified in view config.
+     * New processors instance with options specified in view config. I wrote this processor just for
+     * fun, there is no real need in it.
      *
      * @param ViewManager $viewManager
      * @param Compiler    $compiler SpiralCompiler instance.
@@ -152,12 +159,17 @@ class PrettifyProcessor implements ProcessorInterface
                 $attributes[] = $attribute . '="' . $value . '"';
             }
 
+            if ($attributes)
+            {
+                $tokenContent .= ' ' . join(' ', $attributes);
+            }
+
             if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_SHORT)
             {
                 $tokenContent .= '/';
             }
 
-            $result .= '<' . $tokenContent . ($attributes ? ' ' . join(' ', $attributes) : '') . '>';
+            $result .= '<' . $tokenContent . '>';
         }
 
         return $result;
