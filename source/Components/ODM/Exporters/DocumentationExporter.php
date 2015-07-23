@@ -120,7 +120,7 @@ class DocumentationExporter extends Component
                 'find',
                 [
                     '@param array $query',
-                    '@return ' . $this->collectionClass($document) . '|' . $primaryDocument . '[]'
+                    '@return ' . $this->collectionClass($document)//TODO: . '|' . $primaryDocument . '[]'
                 ], ['query']
             )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
 
@@ -167,12 +167,13 @@ class DocumentationExporter extends Component
             }
             else
             {
-                $compositorClass = $this->compositorClass($composited);
+                //  $compositorClass = $this->compositorClass($composited);
 
                 $this->compositors[$composited->getClass()] = $composited;
                 $export->property(
                     $name,
-                    '@var \\' . $composited->getClass() . '[]|' . $compositorClass
+                    //  '@var \\' . $composited->getClass() . '[]|' . $compositorClass,
+                    '@var ' . $this->compositorClass($composited) //TODO: test
                 );
             }
         }
@@ -237,12 +238,15 @@ class DocumentationExporter extends Component
             }
             else
             {
-                $collectionClass = $this->collectionClass($aggregated);
+
+                //TODO: test
+                //$collectionClass = $this->collectionClass($aggregated);
                 $export->method(
                     $name,
                     [
                         '@param array $query',
-                        '@return \\' . $aggregated->getClass() . '[]|' . $collectionClass
+                        // '@return \\' . $aggregated->getClass() . '[]|' . $collectionClass,
+                        '@return ' . $this->collectionClass($aggregated)
                     ],
                     ['query']
                 )->parameter('query')->setOptional(true, [])->setType('array');
@@ -274,8 +278,10 @@ class DocumentationExporter extends Component
         }
 
         //Replaces
-        $class->replaceComments("static", $name . '|' . '\\' . $collection->primaryClass() . '[]');
-        $class->replaceComments(SchemaBuilder::DOCUMENT, $collection->primaryClass());
+        //TODO: DO WE NEED TO REPLACE THIS
+        //$class->replaceComments("static", $name . '|' . '\\' . $collection->primaryClass() . '[]');
+        //$class->replaceComments(SchemaBuilder::DOCUMENT, $collection->primaryClass());
+
         $class->replaceComments("Document", '\\' . $collection->primaryClass());
 
         return $class;
@@ -300,8 +306,8 @@ class DocumentationExporter extends Component
         }
 
         //Replaces
-        $class->replaceComments("Compositor", $name);
-        $class->replaceComments(SchemaBuilder::DOCUMENT, $document->primaryClass());
+        //TODO: $class->replaceComments("Compositor", $name);
+        //$class->replaceComments(SchemaBuilder::DOCUMENT, $document->primaryClass());
         $class->replaceComments("Document", '\\' . $document->primaryClass());
 
         return $class;

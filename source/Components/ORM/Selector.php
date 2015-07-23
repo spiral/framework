@@ -356,7 +356,7 @@ class Selector extends AbstractSelectQuery
     /**
      * We have to redefine selector iterator and result or selection is set of models not columns.
      *
-     * @return ModelIterator|QueryResult
+     * @return ModelIterator|QueryResult|ActiveRecord[]
      */
     public function getIterator()
     {
