@@ -314,6 +314,11 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
             }
         }
 
+        if ($namespace == 'self')
+        {
+            $namespace = $this->compiler->getNamespace();
+        }
+
         return [$namespace, $view];
     }
 

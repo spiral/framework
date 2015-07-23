@@ -317,8 +317,9 @@ class Node
      * @param string       $name
      * @param string|array $source     String content or array of html tokens.
      * @param array        $forceNodes Used to redefine node content and bypass token parsing.
+     * @param bool $replace Force block replacement.
      */
-    public function registerBlock($name, $source, $forceNodes = [])
+    public function registerBlock($name, $source, $forceNodes = [], $replace = false)
     {
         $node = new Node($this->supervisor, $name, $source);
 
@@ -327,7 +328,7 @@ class Node
             $node->nodes = $forceNodes;
         }
 
-        if (!$this->extended)
+        if (!$this->extended && !$replace)
         {
             $this->nodes[] = $node;
 

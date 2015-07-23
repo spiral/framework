@@ -21,20 +21,20 @@ class ExpressionsProcessor implements ProcessorInterface
      */
     protected $expressions = [
         //Export value of view dependency by it's name
-        'dependency' => [
+        'dependency'     => [
             'pattern'  => '/@\\{(?P<name>[a-z0-9_\\.\\-]+)(?: *\\| *(?P<default>[^}]+))?}/i',
             'callback' => ['self', 'dependency']
         ],
         //Create variable based on provided PHP code, will erase PHP braces and echo,
         //this expression should be used only inside evaluator code, expression should be executed
         //before Templater
-        'fetchVariable'   => [
-            'pattern'  => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*)\s*=\s*phpVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
+        'fetchVariable'  => [
+            'pattern' => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*)\s*=\s*fetchVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'fetchVariable']
         ],
         //Used to create php variable related to some php block, will always contain valid php code,
         //this expressions should be used only in compiled php
-        'createVariable'   => [
+        'createVariable' => [
             'pattern'  => '/(?:(\/\/)\s*)?createVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'createVariable']
         ]

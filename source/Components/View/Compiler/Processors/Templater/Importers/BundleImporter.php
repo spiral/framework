@@ -60,11 +60,6 @@ class BundleImporter implements ImporterInterface
             $token
         );
 
-        if ($this->namespace == 'self')
-        {
-            $this->namespace = $compiler->getNamespace();
-        }
-
         $this->token = $token;
 
         $this->buildAliases($templater);

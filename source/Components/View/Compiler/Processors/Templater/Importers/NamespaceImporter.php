@@ -84,11 +84,6 @@ class NamespaceImporter implements ImporterInterface
             $this->directory = $attributes['path'];
         }
 
-        if ($this->namespace == 'self')
-        {
-            $this->namespace = $compiler->getNamespace();
-        }
-
         $this->directory = rtrim($this->directory, '/*');
         $this->token = $token;
 

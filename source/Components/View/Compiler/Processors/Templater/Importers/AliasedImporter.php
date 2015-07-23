@@ -52,11 +52,6 @@ class AliasedImporter implements ImporterInterface
             $token
         );
 
-        if ($this->namespace == 'self')
-        {
-            $this->namespace = $compiler->getNamespace();
-        }
-
         $this->alias = $attributes['as'];
     }
 

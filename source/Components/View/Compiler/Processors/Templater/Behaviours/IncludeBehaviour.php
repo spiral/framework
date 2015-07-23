@@ -10,7 +10,6 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Behaviours;
 
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
-use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
 use Spiral\Support\Html\Tokenizer;
 
@@ -113,20 +112,14 @@ class IncludeBehaviour implements BehaviourInterface
      */
     public function createNode()
     {
-        $node = new Node($this->templater, $this->templater->uniqueName());
-
-        //Let's exclude node content
-        $node->handleBehaviour(new ExtendsBehaviour(
-            $include = $this->templater->createNode($this->namespace, $this->view, '', $this->token),
-            []
-        ));
+        $node = $this->templater->createNode($this->namespace, $this->view, '', $this->token);
 
         //Let's register user defined blocks (context and attributes) as placeholders
-        $node->registerBlock('context', [], [$this->createPlaceholder('context', $contextID)]);
+        $node->registerBlock('context', [], [$this->createPlaceholder('context', $contextID)], true);
 
         foreach ($this->attributes as $attribute => $value)
         {
-            $node->registerBlock($attribute, [], [$value]);
+            $node->registerBlock($attribute, [], [$value], true);
         }
 
         //We now have to compile node content to pass it's body to parent node
