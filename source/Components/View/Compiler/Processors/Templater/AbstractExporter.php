@@ -98,7 +98,6 @@ abstract class AbstractExporter implements ExporterInterface
             }
         }
 
-
         if (isset($conditions['exclude']))
         {
             $exclude = explode(',', $conditions['exclude']);

@@ -23,7 +23,16 @@ class PrettifyProcessor implements ProcessorInterface
      * @var array
      */
     protected $options = [
-        'normalizeEndings' => true
+        'endings'    => true,
+
+        'indents'    => true,
+
+        //Trim attributes
+        'attributes' => [
+            'normalize' => true,
+            'trim'      => ['class', 'style', 'id'],
+            'drop'      => ['class', 'style', 'id']
+        ]
     ];
 
     /**
@@ -42,15 +51,27 @@ class PrettifyProcessor implements ProcessorInterface
      * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
-     * @param string $source View source (code).
+     * @param string    $source View source (code).
+     * @param Isolator  $isolator
+     * @param Tokenizer $tokenizer
      * @return string
      * @throws \ErrorException
      */
-    public function process($source)
+    public function process($source, Isolator $isolator = null, Tokenizer $tokenizer = null)
     {
-        if ($this->options['normalizeEndings'])
+        $isolator = !empty($isolator) ? $isolator : new Isolator();
+        $tokenizer = !empty($tokenizer) ? $tokenizer : new Tokenizer();
+
+        if ($this->options['endings'])
         {
-            $source = $this->normalizeEndings($source);
+            //TODO: pass isolator from outside for testing
+            $source = $this->normalizeEndings($source, $isolator);
+        }
+
+        if ($this->options['attributes']['normalize'])
+        {
+            //TODO: pass isolator from outside for testing
+            $source = $this->normalizeAttributes($source, $tokenizer);
         }
 
         return $source;
@@ -59,13 +80,12 @@ class PrettifyProcessor implements ProcessorInterface
     /**
      * Remove blank lines.
      *
-     * @param string $source
+     * @param string   $source
+     * @param Isolator $isolator
      * @return string
      */
-    protected function normalizeEndings($source)
+    protected function normalizeEndings($source, Isolator $isolator)
     {
-        $isolator = new Isolator();
-
         //Step #1, \n only
         $source = $isolator->isolatePHP(
             StringHelper::normalizeEndings($source)
@@ -81,5 +101,65 @@ class PrettifyProcessor implements ProcessorInterface
         });
 
         return $isolator->repairPHP(join("\n", $sourceLines));
+    }
+
+    /**
+     * Normalize attribute values.
+     *
+     * @param string    $source
+     * @param Tokenizer $tokenizer
+     * @return mixed
+     */
+    protected function normalizeAttributes($source, Tokenizer $tokenizer)
+    {
+        $result = '';
+        foreach ($tokenizer->parse($source) as $token)
+        {
+            if (in_array($token[Tokenizer::TOKEN_TYPE], [Tokenizer::PLAIN_TEXT, Tokenizer::TAG_CLOSE]))
+            {
+                $result .= $token[Tokenizer::TOKEN_CONTENT];
+                continue;
+            }
+
+            if (empty($token[Tokenizer::TOKEN_ATTRIBUTES]))
+            {
+                $result .= $token[Tokenizer::TOKEN_CONTENT];
+                continue;
+            }
+
+            $tokenContent = $token[Tokenizer::TOKEN_NAME];
+
+            $attributes = [];
+            foreach ($token[Tokenizer::TOKEN_ATTRIBUTES] as $attribute => $value)
+            {
+                if (in_array($attribute, $this->options['attributes']['trim']))
+                {
+                    $value = trim($value);
+                }
+
+                if (empty($value) && in_array($attribute, $this->options['attributes']['drop']))
+                {
+                    //Empty value
+                    continue;
+                }
+
+                if ($value === null)
+                {
+                    $attributes[] = $attribute;
+                    continue;
+                }
+
+                $attributes[] = $attribute . '="' . $value . '"';
+            }
+
+            if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_SHORT)
+            {
+                $tokenContent .= '/';
+            }
+
+            $result .= '<' . $tokenContent . ($attributes ? ' ' . join(' ', $attributes) : '') . '>';
+        }
+
+        return $result;
     }
 }

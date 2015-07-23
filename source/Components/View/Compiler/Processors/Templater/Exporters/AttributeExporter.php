@@ -35,6 +35,12 @@ class AttributeExporter extends AbstractExporter
                 $blocks = [];
                 foreach ($this->getBlocks($matches[1][$id]) as $name => $value)
                 {
+                    if ($value === null)
+                    {
+                        $blocks[$name] = $name;
+                        continue;
+                    }
+
                     $blocks[$name] = $name . '="' . $value . '"';
                 }
 

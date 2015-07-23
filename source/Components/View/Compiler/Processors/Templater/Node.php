@@ -431,7 +431,7 @@ class Node
      *
      * @param array $compiled
      * @param array $outerBlocks All outer blocks will be aggregated in this array.
-     * @return string
+     * @return string|null
      */
     public function compile(&$compiled = [], &$outerBlocks = [])
     {
@@ -448,10 +448,16 @@ class Node
             }
         }
 
+        if ($this->nodes === [null])
+        {
+            //Valueless attributes
+            return null;
+        }
+
         $result = '';
         foreach ($this->nodes as $node)
         {
-            if (is_string($node))
+            if (is_string($node) || is_null($node))
             {
                 $result .= $node;
                 continue;
