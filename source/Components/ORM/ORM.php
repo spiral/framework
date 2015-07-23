@@ -8,6 +8,7 @@
  */
 namespace Spiral\Components\ORM;
 
+use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\ORM\Exporters\DocumentationExporter;
 use Spiral\Components\ORM\Schemas\ModelSchema;
@@ -106,7 +107,12 @@ class ORM extends Component
         return $this->dbal;
     }
 
-    //todo: start using this method
+    /**
+     * Get database by it's name from DBAL associated with ORM component.
+     *
+     * @param string $database
+     * @return Database
+     */
     public function getDatabase($database)
     {
         return $this->dbal->db($database);

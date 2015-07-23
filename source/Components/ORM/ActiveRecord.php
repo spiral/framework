@@ -851,7 +851,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         $schema = $orm->getSchema(static::class);
 
         //We can bypass dbalDatabase() method here.
-        $database = !empty($database) ? $database : $orm->getDBAL()->db($schema[ORM::E_DB]);
+        $database = !empty($database) ? $database : $orm->getDatabase($schema[ORM::E_DB]);
 
         return $database->table($schema[ORM::E_TABLE]);
     }

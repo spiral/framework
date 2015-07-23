@@ -176,7 +176,7 @@ class SchemaBuilder extends Component
             return $this->tables[$database . '/' . $table];
         }
 
-        $schema = $this->orm->getDBAL()->db($database)->table($table)->schema();
+        $schema = $this->orm->getDatabase($database)->table($table)->schema();
 
         return $this->tables[$database . '/' . $table] = $schema;
     }

@@ -207,7 +207,7 @@ abstract class Loader implements LoaderInterface
      */
     public function dbalDatabase()
     {
-        return $this->orm->getDBAL()->db($this->schema[ORM::E_DB]);
+        return $this->orm->getDatabase($this->schema[ORM::E_DB]);
     }
 
     /**
