@@ -405,6 +405,14 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     }
 
     /**
+     * Remove all importers.
+     */
+    public function flushImporters()
+    {
+        $this->importers = [];
+    }
+
+    /**
      * Some blocks (usually user attributes) can be exported to template using non default rendering
      * technique, for example every "extra" attribute can be passed to specific template location.
      *

@@ -23,13 +23,6 @@ class NativeImporter implements ImporterInterface
     protected $element = '';
 
     /**
-     * Is importer definitive.
-     *
-     * @var bool
-     */
-    protected $definitive = false;
-
-    /**
      * New instance of importer.
      *
      * @param Compiler          $compiler
@@ -41,18 +34,6 @@ class NativeImporter implements ImporterInterface
         $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
 
         $this->element = $attributes['native'];
-        $this->definitive = array_key_exists('definitive', $attributes);
-    }
-
-    /**
-     * Definitive imports allows developer to create custom element aliases in a scope of element
-     * import (sub-tags).
-     *
-     * @return bool
-     */
-    public function isDefinitive()
-    {
-        return $this->definitive;
     }
 
     /**

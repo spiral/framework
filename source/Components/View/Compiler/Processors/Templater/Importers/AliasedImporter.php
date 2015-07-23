@@ -37,13 +37,6 @@ class AliasedImporter implements ImporterInterface
     protected $alias = '';
 
     /**
-     * Is importer definitive.
-     *
-     * @var bool
-     */
-    protected $definitive = false;
-
-    /**
      * New instance of importer.
      *
      * @param Compiler          $compiler
@@ -65,18 +58,6 @@ class AliasedImporter implements ImporterInterface
         }
 
         $this->alias = $attributes['as'];
-        $this->definitive = array_key_exists('definitive', $attributes);
-    }
-
-    /**
-     * Definitive imports allows developer to create custom element aliases in a scope of element
-     * import (sub-tags).
-     *
-     * @return bool
-     */
-    public function isDefinitive()
-    {
-        return $this->definitive;
     }
 
     /**

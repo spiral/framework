@@ -346,6 +346,16 @@ class Node
     }
 
     /**
+     * Add node.
+     *
+     * @param Node $node
+     */
+    public function addNode(Node $node)
+    {
+        $this->nodes[] = $node;
+    }
+
+    /**
      * Replace node content with content provided by external node, external node can still use
      * content of parent block by defining internal section under parent name.
      *

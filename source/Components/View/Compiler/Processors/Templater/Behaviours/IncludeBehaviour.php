@@ -92,9 +92,9 @@ class IncludeBehaviour implements BehaviourInterface
     /**
      * Pack node context (everything between open and close tag).
      *
-     * @return string
+     * @return Node
      */
-    public function packContext()
+    public function getContext()
     {
         $context = '';
 
@@ -103,7 +103,7 @@ class IncludeBehaviour implements BehaviourInterface
             $context .= $token[Tokenizer::TOKEN_CONTENT];
         }
 
-        return $context;
+        return new Node($this->templater, $this->templater->uniqueName(), $context);
     }
 
     /**
@@ -113,7 +113,6 @@ class IncludeBehaviour implements BehaviourInterface
      */
     public function createNode()
     {
-        //We have to extend included node first
         $node = new Node($this->templater, $this->templater->uniqueName());
 
         //Let's exclude node content
@@ -122,8 +121,9 @@ class IncludeBehaviour implements BehaviourInterface
             []
         ));
 
-        //Let's register user defined blocks (context and attributes) as plain text
-        $node->registerBlock('context', [], [$this->packContext()]);
+        //Let's register user defined blocks (context and attributes) as placeholders
+        $node->registerBlock('context', [], [$this->createPlaceholder('context', $contextID)]);
+
         foreach ($this->attributes as $attribute => $value)
         {
             $node->registerBlock($attribute, [], [$value]);
@@ -137,23 +137,33 @@ class IncludeBehaviour implements BehaviourInterface
         //template location.
         $content = $this->templater->exportBlocks($content, $outerBlocks);
 
-        //Some imports may define in-context imports (definitive imports), we can process them
-        //using new combined templater
-        $templater = clone $this->templater;
+        //Let's not parse complied content without any imports (to prevent collision)
 
-        /**
-         * @var TemplateProcessor $includeTemplater
-         * @var ImporterInterface $importer
-         */
-        $includeTemplater = $include->getSupervisor();
-        foreach (array_reverse($includeTemplater->getImporters()) as $importer)
+        $templater = clone $this->templater;
+        $templater->flushImporters();
+
+        $rebuilt = new Node($templater, $templater->uniqueName(), $content);
+
+        //Now we can mount our blocks
+        if ($contextBlock = $rebuilt->findBlock($contextID))
         {
-            if ($importer->isDefinitive())
-            {
-                $templater->addImporter($importer);
-            }
+            $contextBlock->addNode($this->getContext());
         }
 
-        return new Node($templater, $templater->uniqueName(), $content);
+        return $rebuilt;
+    }
+
+    /**
+     * Create placeholder block.
+     *
+     * @param string $name
+     * @param string $blockID
+     * @return string
+     */
+    protected function createPlaceholder($name, &$blockID)
+    {
+        $blockID = $name . '-' . $this->templater->uniqueName();
+
+        return '${' . $blockID . '}';
     }
 }

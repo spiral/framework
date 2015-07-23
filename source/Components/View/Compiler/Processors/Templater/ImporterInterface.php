@@ -27,14 +27,6 @@ interface ImporterInterface
     public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token);
 
     /**
-     * Definitive imports allows developer to create custom element aliases in a scope of element
-     * import (sub-tags).
-     *
-     * @return bool
-     */
-    public function isDefinitive();
-
-    /**
      * Check if element (tag) has to be imported.
      *
      * @param string $element

@@ -46,13 +46,6 @@ class BundleImporter implements ImporterInterface
     protected $token = [];
 
     /**
-     * Is importer definitive.
-     *
-     * @var bool
-     */
-    protected $definitive = false;
-
-    /**
      * New instance of importer.
      *
      * @param Compiler          $compiler
@@ -73,7 +66,6 @@ class BundleImporter implements ImporterInterface
         }
 
         $this->token = $token;
-        $this->definitive = array_key_exists('definitive', $attributes);
 
         $this->buildAliases($templater);
     }
@@ -101,17 +93,6 @@ class BundleImporter implements ImporterInterface
 
         //We can fetch all importers from our bundle view
         $this->importers = $includeTemplater->getImporters();
-    }
-
-    /**
-     * Definitive imports allows developer to create custom element aliases in a scope of element
-     * import (sub-tags).
-     *
-     * @return bool
-     */
-    public function isDefinitive()
-    {
-        return $this->definitive;
     }
 
     /**
