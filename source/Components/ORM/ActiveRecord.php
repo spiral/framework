@@ -441,7 +441,15 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     protected $schema = [];
 
     /**
-     * TODO: WRITE COMMENT
+     * Set of indexes to be created for associated model table, indexes will be created only if
+     * model has enabled ACTIVE_SCHEMA constant.
+     *
+     * Use constants INDEX and UNIQUE to describe indexes, you can also create compound indexes:
+     * protected $indexes = [
+     *      [self::UNIQUE, 'email'],
+     *      [self::INDEX, 'board_id'],
+     *      [self::INDEX, 'board_id', 'check_id']
+     * ];
      *
      * @var array
      */
@@ -638,8 +646,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     protected function isFillable($field)
     {
         //Better replace it with isset later
-        return !in_array($field, $this->schema[ORM::E_SECURED]) &&
-        !(
+        return !in_array($field, $this->schema[ORM::E_SECURED])
+        && !(
             $this->schema[ORM::E_FILLABLE]
             && !in_array($field, $this->schema[ORM::E_FILLABLE])
         );
