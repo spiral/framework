@@ -33,13 +33,13 @@ class HasOne extends Relation
         if (isset($this->definition[ActiveRecord::MORPH_KEY]))
         {
             $selector->where(
-                $this->definition[ActiveRecord::MORPH_KEY],
+                $selector->getPrimaryAlias() . '.' . $this->definition[ActiveRecord::MORPH_KEY],
                 $this->parent->getRoleName()
             );
         }
 
         $selector->where(
-            $this->definition[ActiveRecord::OUTER_KEY],
+            $selector->getPrimaryAlias() . '.' . $this->definition[ActiveRecord::OUTER_KEY],
             $this->parent->getField($this->definition[ActiveRecord::INNER_KEY], false)
         );
 

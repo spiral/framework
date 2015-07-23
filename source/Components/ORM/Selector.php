@@ -93,9 +93,9 @@ class Selector extends AbstractSelectQuery
      * Selector provides SelectQuery like functionality to fetch data from model related table
      * and database.
      *
-     * @param \Spiral\Components\DBAL\Database $class
-     * @param ORM                              $orm
-     * @param Loader                           $loader
+     * @param string $class
+     * @param ORM    $orm
+     * @param Loader $loader
      */
     public function __construct($class, ORM $orm, Loader $loader = null)
     {
@@ -120,6 +120,16 @@ class Selector extends AbstractSelectQuery
             $database,
             $database->getDriver()->queryCompiler($database->getPrefix())
         );
+    }
+
+    /**
+     * Get primary loaded alias.
+     *
+     * @return string
+     */
+    public function getPrimaryAlias()
+    {
+        return $this->loader->getAlias();
     }
 
     /**

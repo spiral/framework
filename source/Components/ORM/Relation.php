@@ -142,12 +142,27 @@ abstract class Relation implements RelationInterface
             return static::MULTIPLE ? [] : null;
         }
 
-        if (static::MULTIPLE)
-        {
-            return $this->data = new ModelIterator($this->orm, $this->getClass(), $this->data);
-        }
+        return $this->data = static::MULTIPLE ? $this->createIterator() : $this->createModel();
+    }
 
-        return $this->data = $this->orm->construct($this->getClass(), $this->data);
+    /**
+     * Convert pre-loaded relation data to model iterator model.
+     *
+     * @return ModelIterator
+     */
+    protected function createIterator()
+    {
+        return new ModelIterator($this->orm, $this->getClass(), $this->data);
+    }
+
+    /**
+     * Convert pre-loaded relation data to active record model .
+     *
+     * @return ActiveRecord
+     */
+    protected function createModel()
+    {
+        return $this->orm->construct($this->getClass(), $this->data);
     }
 
     /**
@@ -158,7 +173,7 @@ abstract class Relation implements RelationInterface
      */
     protected function createSelector()
     {
-        return new Selector($this->definition[static::RELATION_TYPE], $this->orm);
+        return new Selector($this->getClass(), $this->orm);
     }
 
     /**
@@ -206,10 +221,17 @@ abstract class Relation implements RelationInterface
             );
         }
 
-        if (!is_object($data) || get_class($data) != $this->getClass())
+        if (!is_array($allowed = $this->getClass()))
         {
+            $allowed = [$allowed];
+        }
+
+        if (!is_object($data) || !in_array(get_class($data), $allowed))
+        {
+            $allowed = join("', '", $allowed);
+
             throw new ORMException(
-                "Only instance of '{$this->getClass()}' can be assigned to this relation."
+                "Only instances of '{$allowed}' can be assigned to this relation."
             );
         }
 

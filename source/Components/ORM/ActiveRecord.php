@@ -712,7 +712,12 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function setField($name, $value, $filter = true)
     {
-        $original = isset($this->fields[$name]) ? $this->fields[$name] : null;
+        if (!array_key_exists($name, $this->fields))
+        {
+            throw new ORMException("Undefined field '{$name}' in '" . static::class . "'.");
+        }
+
+        $original = $this->fields[$name];
         parent::setField($name, $value, $filter);
 
         if (!array_key_exists($name, $this->updates))
