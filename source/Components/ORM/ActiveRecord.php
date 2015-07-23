@@ -1064,9 +1064,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *                       with findOne.
      * @return static|null
      */
-    public static function findByID($id = null, array $load = [])
+    public static function findByPK($id = null, array $load = [])
     {
-        return static::ormSelector()->load($load)->findByID($id);
+        return static::ormSelector()->load($load)->findByPK($id);
     }
 
     /**

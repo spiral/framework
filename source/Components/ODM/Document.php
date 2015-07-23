@@ -1023,7 +1023,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * @return static
      * @throws ODMException
      */
-    public static function findByID($mongoID = null)
+    public static function findByPK($mongoID = null)
     {
         if (!$mongoID = ODM::mongoID($mongoID))
         {

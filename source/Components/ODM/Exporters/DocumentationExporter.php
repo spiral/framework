@@ -134,7 +134,7 @@ class DocumentationExporter extends Component
             )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
 
             $export->method(
-                'findByID',
+                'findByPK',
                 [
                     '@param mixed $mongoID',
                     '@return ' . $primaryDocument . '|' . $name

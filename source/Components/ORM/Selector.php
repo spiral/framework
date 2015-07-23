@@ -465,7 +465,7 @@ class Selector extends AbstractSelectQuery
      * @return ActiveRecord|null
      * @throws ORMException
      */
-    public function findByID($id)
+    public function findByPK($id)
     {
         $primaryKey = $this->loader->getPrimaryKey();
 
