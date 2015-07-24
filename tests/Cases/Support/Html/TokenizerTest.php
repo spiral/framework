@@ -154,7 +154,7 @@ class TokenizerTest extends TestCase
             Tokenizer::TOKEN_TYPE       => 'open',
             Tokenizer::TOKEN_CONTENT    => '<namespace:span <?= \'style="color: red"\' ?>>',
             Tokenizer::TOKEN_ATTRIBUTES => [
-                '<?= \'style="color: red"\' ?>' => ''
+                '<?= \'style="color: red"\' ?>' => null
             ]
         ], $tokens[29]);
 
@@ -203,10 +203,11 @@ class TokenizerTest extends TestCase
         $this->assertSame([
             Tokenizer::TOKEN_NAME       => 'input',
             Tokenizer::TOKEN_TYPE       => 'short',
-            Tokenizer::TOKEN_CONTENT    => '<input type="checkbox" disabled prefix:attribute="ABC"/>',
+            Tokenizer::TOKEN_CONTENT    => '<input type="checkbox" title="" disabled prefix:attribute="ABC"/>',
             Tokenizer::TOKEN_ATTRIBUTES => [
                 'type'             => 'checkbox',
-                'disabled'         => '',
+                'title'    => '',
+                'disabled' => null,
                 'prefix:attribute' => 'ABC',
             ]
         ], $tokens[45]);

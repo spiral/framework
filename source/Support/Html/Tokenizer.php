@@ -249,7 +249,7 @@ class Tokenizer extends Component
 
         //Parsing arguments, due they already checked for open-close quotas we can use regular expression
         $attribute = '/(?P<name>[a-z0-9_\-\.\:]+)[ \n\t\r]*(?:(?P<equal>=)[ \n\t\r]*'
-            . '(?P<value>[a-z0-9\-]+|\'[^\']+\'|\"[^\"]+\"))?/si';
+            . '(?P<value>[a-z0-9\-]+|\'[^\']+\'|\"[^\"]+\"|\"\"))?/si';
 
         preg_match_all($attribute, $content, $attributes);
 
