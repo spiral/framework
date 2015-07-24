@@ -96,7 +96,10 @@ class PrettifyProcessor implements ProcessorInterface
             return trim($line);
         });
 
-        return $isolator->repairPHP(join("\n", $sourceLines));
+        $source = $isolator->repairPHP(join("\n", $sourceLines));
+        $isolator->reset();
+
+        return $source;
     }
 
     /**

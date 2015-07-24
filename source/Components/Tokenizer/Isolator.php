@@ -293,4 +293,12 @@ class Isolator extends Component
 
         return $this->phpBlocks[$blockID['id']];
     }
+
+    /**
+     * Reset isolator state.
+     */
+    public function reset()
+    {
+        $this->phpBlocks = $this->replaces = [];
+    }
 }
