@@ -34,6 +34,7 @@ class ManyToMorphed implements RelationInterface
     /**
      * Relation definition fetched from ORM schema.
      *
+     * @invisible
      * @var array
      */
     protected $definition = [];

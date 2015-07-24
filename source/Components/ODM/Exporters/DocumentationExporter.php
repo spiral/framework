@@ -24,7 +24,7 @@ class DocumentationExporter extends Component
     /**
      * Namespace to use for virtual collections and compositors.
      */
-    const VIRTUAL_NAMESPACE = '\\virtualClasses\\';
+    const VIRTUAL_NAMESPACE = '\\VirtualClasses\\';
 
     /**
      * ODM documents schema.
@@ -120,7 +120,7 @@ class DocumentationExporter extends Component
                 'find',
                 [
                     '@param array $query',
-                    '@return ' . $this->collectionClass($document)//TODO: . '|' . $primaryDocument . '[]'
+                    '@return ' . $this->collectionClass($document) . '|' . $primaryDocument . '[]'
                 ], ['query']
             )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
 
@@ -167,13 +167,10 @@ class DocumentationExporter extends Component
             }
             else
             {
-                //  $compositorClass = $this->compositorClass($composited);
-
                 $this->compositors[$composited->getClass()] = $composited;
                 $export->property(
                     $name,
-                    //  '@var \\' . $composited->getClass() . '[]|' . $compositorClass,
-                    '@var ' . $this->compositorClass($composited) //TODO: test
+                    '@var \\' . $composited->getClass() . '[]|' . $this->compositorClass($composited)
                 );
             }
         }
@@ -239,14 +236,11 @@ class DocumentationExporter extends Component
             else
             {
 
-                //TODO: test
-                //$collectionClass = $this->collectionClass($aggregated);
                 $export->method(
                     $name,
                     [
                         '@param array $query',
-                        // '@return \\' . $aggregated->getClass() . '[]|' . $collectionClass,
-                        '@return ' . $this->collectionClass($aggregated)
+                        '@return \\' . $aggregated->getClass() . '[]|' . $this->collectionClass($aggregated)
                     ],
                     ['query']
                 )->parameter('query')->setOptional(true, [])->setType('array');
@@ -278,10 +272,7 @@ class DocumentationExporter extends Component
         }
 
         //Replaces
-        //TODO: DO WE NEED TO REPLACE THIS
-        //$class->replaceComments("static", $name . '|' . '\\' . $collection->primaryClass() . '[]');
-        //$class->replaceComments(SchemaBuilder::DOCUMENT, $collection->primaryClass());
-
+        $class->replaceComments(SchemaBuilder::DOCUMENT, $collection->primaryClass());
         $class->replaceComments("Document", '\\' . $collection->primaryClass());
 
         return $class;
@@ -306,8 +297,7 @@ class DocumentationExporter extends Component
         }
 
         //Replaces
-        //TODO: $class->replaceComments("Compositor", $name);
-        //$class->replaceComments(SchemaBuilder::DOCUMENT, $document->primaryClass());
+        $class->replaceComments(SchemaBuilder::DOCUMENT, $document->primaryClass());
         $class->replaceComments("Document", '\\' . $document->primaryClass());
 
         return $class;
@@ -336,10 +326,12 @@ class DocumentationExporter extends Component
         $virtualNamespace = new NamespaceElement(self::VIRTUAL_NAMESPACE);
         $virtualNamespace->setUses([
             'Spiral\Components\ODM\ODM',
+            'Spiral\Components\ODM\MongoDatabase',
+            'Spiral\Components\ODM\Collection\CursorReader',
+            'Spiral\Components\ODM\CompositableInterface',
             'Spiral\Support\Pagination\Paginator',
             'Spiral\Support\Pagination\PaginatorException',
             'Spiral\Components\ODM\ODMException',
-            'Spiral\Components\ODM\CursorReader',
             'Psr\Http\Message\ServerRequestInterface',
             'Psr\Log\LoggerInterface',
             'Spiral\Components\Debug\Logger'

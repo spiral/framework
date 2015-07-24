@@ -41,6 +41,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     /**
      * Relation definition fetched from ORM schema.
      *
+     * @invisible
      * @var array
      */
     protected $definition = [];
