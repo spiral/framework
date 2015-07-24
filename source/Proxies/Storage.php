@@ -15,7 +15,7 @@ use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageObject;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static StorageContainer registerContainer($name, $prefix, $server, array $options = [])
@@ -32,7 +32,7 @@ use Spiral\Core\Proxy;
  * @method static void setLogger(LoggerInterface $logger)
  * @method static LoggerInterface|Logger logger()
  */
-class Storage extends Proxy
+class Storage extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

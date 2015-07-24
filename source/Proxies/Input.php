@@ -14,7 +14,7 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Input\InputBag;
 use Spiral\Components\Http\InputManager;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static ServerRequestInterface getRequest()
@@ -36,7 +36,7 @@ use Spiral\Core\Proxy;
  * @method static InputManager make($parameters = [], Container $container = null)
  * @method static InputManager getInstance(Container $container = null)
  */
-class Input extends Proxy
+class Input extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

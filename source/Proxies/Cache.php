@@ -11,7 +11,7 @@ namespace Spiral\Proxies;
 use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\Cache\StoreInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static mixed storeOptions($adapter)
@@ -23,7 +23,7 @@ use Spiral\Core\Proxy;
  * @method static array setConfig(array $config)
 
  */
-class Cache extends Proxy
+class Cache extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

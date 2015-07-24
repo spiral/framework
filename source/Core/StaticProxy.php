@@ -8,7 +8,7 @@
  */
 namespace Spiral\Core;
 
-class Proxy
+class StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

@@ -11,7 +11,7 @@ namespace Spiral\Proxies;
 use Psr\Log\LoggerInterface;
 use Spiral\Components\Redis\RedisClient;
 use Spiral\Components\Redis\RedisManager;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static array getConfig()
@@ -160,7 +160,7 @@ use Spiral\Core\Proxy;
  * @method static mixed slowlog($subcommand, $argument = null)
  * @method static mixed time()
  */
-class Redis extends Proxy
+class Redis extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

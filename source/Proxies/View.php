@@ -14,7 +14,7 @@ use Spiral\Components\View\ViewInterface;
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Container;
 use Spiral\Core\Events\DispatcherInterface;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static string cacheDirectory()
@@ -38,7 +38,7 @@ use Spiral\Core\Proxy;
  * @method static DispatcherInterface dispatcher()
  * @method static void on($event, $listener)
  */
-class View extends Proxy
+class View extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

@@ -9,19 +9,19 @@
 namespace Spiral\Tests\Cases\Core;
 
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 use Spiral\Support\Tests\TestCase;
 
-class FacadesTest extends TestCase
+class ProxiesTest extends TestCase
 {
     public function testBypassing()
     {
-        Container::getInstance()->bind('facadeTest', $this);
+        Container::getInstance()->bind('proxy', $this);
 
         $this->assertSame('ABC', TestProxy::method('abc'));
         $this->assertSame('XXX', TestProxy::method('xxx'));
 
-        Container::getInstance()->removeBinding('facadeTest');
+        Container::getInstance()->removeBinding('proxy');
     }
 
     public function method($value)
@@ -30,11 +30,14 @@ class FacadesTest extends TestCase
     }
 }
 
-class TestProxy extends Proxy
+/**
+ * @method static method($argument);
+ */
+class TestProxy extends StaticProxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
-    const COMPONENT = 'facadeTest';
+    const COMPONENT = 'proxy';
 }

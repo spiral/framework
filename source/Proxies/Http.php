@@ -20,7 +20,7 @@ use Spiral\Components\Http\Router\RouteInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Events\DispatcherInterface;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static string getBasePath()
@@ -43,7 +43,7 @@ use Spiral\Core\Proxy;
  * @method static void addRoute(RouteInterface $route)
  * @method static Route route($pattern, $target = null, array $defaults = [])
  */
-class Http extends Proxy
+class Http extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

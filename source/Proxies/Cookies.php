@@ -12,7 +12,7 @@ use Spiral\Components\Encrypter\Encrypter as EncrypterComponent;
 use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Cookies\CookieManager;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * Attention, this facade will not work outside CookieManager scope!
@@ -30,7 +30,7 @@ use Spiral\Core\Proxy;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
-class Cookies extends Proxy
+class Cookies extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

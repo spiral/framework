@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 use Spiral\Components\Debug\Logger;
 use Spiral\Components\Session\SessionStore;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static void setID($id)
@@ -42,7 +42,7 @@ use Spiral\Core\Proxy;
  * @method static void setLogger(LoggerInterface $logger)
  * @method static LoggerInterface|Logger logger()
  */
-class Session extends Proxy
+class Session extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

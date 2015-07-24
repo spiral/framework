@@ -11,7 +11,7 @@ namespace Spiral\Proxies;
 use Spiral\Components\Http\Response\Redirect;
 use Spiral\Components\Http\Router\RouteInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static void registerMiddleware($alias, $middleware)
@@ -23,7 +23,7 @@ use Spiral\Core\Proxy;
  * @method static Redirect redirect($route, array $parameters = [])
  * @method static Router make($parameters = [], Container $container = null)
  */
-class Router extends Proxy
+class Router extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

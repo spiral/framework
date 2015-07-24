@@ -14,7 +14,7 @@ use Spiral\Components\DBAL\Driver;
 use Spiral\Components\DBAL\Migrations\Migrator;
 use Spiral\Components\DBAL\Migrations\Repository;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static string defaultTimezone()
@@ -28,7 +28,7 @@ use Spiral\Core\Proxy;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
-class DBAL extends Proxy
+class DBAL extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class

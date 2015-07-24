@@ -11,7 +11,7 @@ namespace Spiral\Proxies;
 use Spiral\Components\I18n\PluralizerInterface;
 use Spiral\Components\I18n\Translator;
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 
 /**
  * @method static void setLanguage($language)
@@ -26,7 +26,7 @@ use Spiral\Core\Proxy;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
-class I18n extends Proxy
+class I18n extends StaticProxy
 {
     /**
      * Facade can statically represent methods of one binded component, such component alias or class

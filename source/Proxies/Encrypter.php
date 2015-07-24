@@ -9,7 +9,7 @@
 namespace Spiral\Proxies;
 
 use Spiral\Core\Container;
-use Spiral\Core\Proxy;
+use Spiral\Core\StaticProxy;
 use Spiral\Components\Encrypter\Encrypter as EncrypterComponent;
 
 /**
@@ -26,7 +26,7 @@ use Spiral\Components\Encrypter\Encrypter as EncrypterComponent;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
-class Encrypter extends Proxy
+class Encrypter extends StaticProxy
 {
     /**
      * Proxy can statically represent methods of one binded component, such component alias or class
