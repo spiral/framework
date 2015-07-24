@@ -65,7 +65,7 @@ class ManyToManyLoader extends Loader
      *
      * @return string
      */
-    protected function getPivotTable()
+    public function getPivotTable()
     {
         return $this->definition[ActiveRecord::PIVOT_TABLE];
     }
@@ -75,7 +75,7 @@ class ManyToManyLoader extends Loader
      *
      * @return string
      */
-    protected function getPivotAlias()
+    public function getPivotAlias()
     {
         if (!empty($this->options['pivotAlias']))
         {
@@ -128,9 +128,10 @@ class ManyToManyLoader extends Loader
      * Create selector to be executed as post load, usually such selector use aggregated values
      * and IN where syntax.
      *
+     * @param string $parentRole
      * @return Selector
      */
-    public function createSelector()
+    public function createSelector($parentRole = '')
     {
         if (empty($selector = parent::createSelector()))
         {
@@ -143,7 +144,7 @@ class ManyToManyLoader extends Loader
             $pivotOuterKey => $this->getKey(ActiveRecord::OUTER_KEY)
         ]);
 
-        $this->mountPivotConditions($selector);
+        $this->mountPivotConditions($selector, $parentRole);
 
         if (empty($this->parent))
         {
@@ -151,6 +152,12 @@ class ManyToManyLoader extends Loader
         }
 
         $this->mountConditions($selector);
+
+        if (empty($this->parent))
+        {
+            //For Many-To-Many loader
+            return $selector;
+        }
 
         //Aggregated keys (example: all parent ids)
         if (empty($aggregatedKeys = $this->parent->getAggregatedKeys($this->getReferenceKey())))
@@ -191,16 +198,20 @@ class ManyToManyLoader extends Loader
      * Mounting pivot table conditions including user defined and morph key.
      *
      * @param Selector $selector
+     * @param string   $parentRole
      * @return Selector
      */
-    protected function mountPivotConditions(Selector $selector)
+    protected function mountPivotConditions(Selector $selector, $parentRole = '')
     {
         //We have to route all conditions to ON statement
         $router = new Selector\WhereDecorator($selector, 'onWhere', $this->getPivotAlias());
 
         if (!empty($morphKey = $this->getPivotKey(ActiveRecord::MORPH_KEY)))
         {
-            $router->where($morphKey, $this->parent->schema[ORM::E_ROLE_NAME]);
+            $router->where(
+                $morphKey,
+                !empty($parentRole) ? $parentRole : $this->parent->schema[ORM::E_ROLE_NAME]
+            );
         }
 
         if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))

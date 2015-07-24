@@ -254,6 +254,16 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
     }
 
     /**
+     * Get model schema.
+     *
+     * @return array
+     */
+    public function odmSchema()
+    {
+        return $this->schema;
+    }
+
+    /**
      * Define class name should be used to represent fields fetched from Mongo collection. This method
      * will be called if Document::DEFINITION constant equal to Document::DEFINITION_LOGICAL.
      *

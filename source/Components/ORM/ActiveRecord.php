@@ -525,6 +525,16 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
+     * Get model schema.
+     *
+     * @return array
+     */
+    public function ormSchema()
+    {
+        return $this->schema;
+    }
+
+    /**
      * Role name used in morphed relations to detect outer model table and class.
      *
      * @return string
@@ -1190,11 +1200,19 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function __debugInfo()
     {
-        return (object)[
-            'table'  => $this->schema[ORM::E_DB] . '/' . $this->schema[ORM::E_TABLE],
-            'fields' => $this->getFields(),
-            'errors' => $this->getErrors()
+        $info = [
+            'table'     => $this->schema[ORM::E_DB] . '/' . $this->schema[ORM::E_TABLE],
+            'pivotData' => $this->pivotData,
+            'fields'    => $this->getFields(),
+            'errors'    => $this->getErrors()
         ];
+
+        if (empty($this->pivotData))
+        {
+            unset($info['pivotData']);
+        }
+
+        return (object)$info;
     }
 
     /**

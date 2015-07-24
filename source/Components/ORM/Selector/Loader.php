@@ -238,7 +238,11 @@ abstract class Loader implements LoaderInterface
             return $this->options['alias'];
         }
 
-        if ($this->parent instanceof Selector\Loaders\RootLoader)
+        if (empty($this->parent))
+        {
+            $alias = $this->getTable();
+        }
+        elseif ($this->parent instanceof Selector\Loaders\RootLoader)
         {
             $alias = $this->container;
         }
@@ -247,7 +251,7 @@ abstract class Loader implements LoaderInterface
             $alias = $this->parent->getAlias() . '_' . $this->container;
         }
 
-        if ($this->options['method'] == Selector::INLOAD)
+        if ($this->options['method'] == Selector::INLOAD && !empty($this->parent))
         {
             //We have to prefix all INLOADs to prevent collision with joiners
             $alias .= '_data';
@@ -514,6 +518,23 @@ abstract class Loader implements LoaderInterface
     {
         if (!$this->isJoined())
         {
+            /**
+             * Sometimes loaded can be used as data source, in this case we have to allow
+             * sub loaded to load data.
+             */
+            if (empty($this->parent))
+            {
+                foreach ($this->loaders as $joiners)
+                {
+                    $joiners->configureSelector($selector);
+                }
+
+                foreach ($this->joiners as $joiner)
+                {
+                    $joiner->configureSelector($selector);
+                }
+            }
+
             return;
         }
 
@@ -522,7 +543,7 @@ abstract class Loader implements LoaderInterface
             $this->configureColumns($selector);
 
             //Inload conditions and etc
-            if (empty($this->options['using']))
+            if (empty($this->options['using']) && !empty($this->parent))
             {
                 $this->clarifySelector($selector);
             }
@@ -619,6 +640,23 @@ abstract class Loader implements LoaderInterface
     {
         if (!$this->isLoaded())
         {
+            return;
+        }
+
+        //Fetching only required part of resulted row
+        $data = $this->fetchData($row);
+
+        if (empty($this->parent))
+        {
+            if ($this->deduplicate($data))
+            {
+                //Yes, this is reference, i'm using this method to build data tree using nested parsers
+                $this->result[] = &$data;
+                $this->collectReferences($data);
+            }
+
+            $this->parseNested($row);
+
             return;
         }
 

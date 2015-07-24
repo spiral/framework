@@ -99,6 +99,7 @@ class ModelIterator extends Component implements \Iterator, \Countable, \JsonSer
 
         $class = $this->class;
 
+        //TODO: Pivot data!
         return $this->data[$this->position] = $this->orm->construct($class, $data);
     }
 

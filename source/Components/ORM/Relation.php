@@ -185,7 +185,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
      */
     public function __call($method, array $arguments)
     {
-        return call_user_func_array([$this->createIterator(), $method], $arguments);
+        return call_user_func_array([$this->createSelector(), $method], $arguments);
     }
 
     /**
@@ -348,13 +348,13 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     }
 
     /**
-     * Mount relation keys to parent or children models to ensure their connection.
+     * Mount relation keys to parent or children models to ensure their connection. Method called
+     * when model requests relation save.
      *
      * @param ActiveRecord $model
      * @return ActiveRecord
      */
     abstract protected function mountRelation(ActiveRecord $model);
-
 
     /**
      * (PHP 5 > 5.4.0)

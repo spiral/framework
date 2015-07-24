@@ -47,7 +47,8 @@ class HasOne extends Relation
     }
 
     /**
-     * Mount relation keys to parent or children models to ensure their connection.
+     * Mount relation keys to parent or children models to ensure their connection. Method called
+     * when model requests relation save.
      *
      * @param ActiveRecord $model
      * @return ActiveRecord

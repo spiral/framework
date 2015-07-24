@@ -71,26 +71,6 @@ class RootLoader extends Loader
     {
         //Nothing to do
     }
-
-    /**
-     * Parse single result row, should fetch related model fields and run nested loader parsers.
-     *
-     * @param array $row
-     * @return mixed
-     */
-    public function parseRow(array $row)
-    {
-        //Fetching only required part of resulted row
-        $data = $this->fetchData($row);
-        if ($this->deduplicate($data))
-        {
-            //Yes, this is reference, i'm using this method to build data tree using nested parsers
-            $this->result[] = &$data;
-            $this->collectReferences($data);
-        }
-
-        $this->parseNested($row);
-    }
 }
 
 
