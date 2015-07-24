@@ -81,4 +81,12 @@ interface RelationInterface
      * @return mixed
      */
     public function getErrors($reset = false);
+
+    /**
+     * Invoke relation with custom arguments.
+     *
+     * @param array $arguments
+     * @return Selector
+     */
+    public function __invoke(array $arguments);
 }

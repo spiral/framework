@@ -74,5 +74,10 @@ class ManyToMany extends Relation
         //Nothing to do, every fetched model should be already linked
         return $model;
     }
+
+    public function link($record, array $pivotData = [])
+    {
+    }
+
     //todo: link, unlink, sync methods
 }

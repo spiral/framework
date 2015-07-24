@@ -190,6 +190,17 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     }
 
     /**
+     * Return selector with pre-specified where conditions.
+     *
+     * @param array $arguments
+     * @return Selector
+     */
+    public function __invoke(array $arguments)
+    {
+        return $this->createSelector()->where($arguments);
+    }
+
+    /**
      * Bypassing count call, required for implementing Countable interface.
      *
      * @return int

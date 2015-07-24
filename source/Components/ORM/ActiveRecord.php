@@ -775,8 +775,9 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function __call($method, array $arguments)
     {
-        //TODO: Set arguments method?
-        return $this->getRelation($method);
+        $relation = $this->getRelation($method);
+
+        return empty($arguments) ? $relation : call_user_func_array($relation, $arguments);
     }
 
     /**
