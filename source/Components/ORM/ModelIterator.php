@@ -156,4 +156,14 @@ class ModelIterator extends Component implements \Iterator, \Countable, \JsonSer
     {
         return $this->all();
     }
+
+    /**
+     * Simplified way to dump information.
+     *
+     * @return ActiveRecord[]
+     */
+    public function __debugInfo()
+    {
+        return $this->all();
+    }
 }
