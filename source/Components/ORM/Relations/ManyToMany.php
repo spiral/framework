@@ -25,6 +25,23 @@ class ManyToMany extends Relation
     const MULTIPLE = true;
 
     /**
+     * Target role name, by default parent role name.
+     *
+     * @var string
+     */
+    protected $roleName = '';
+
+    /**
+     * Force relation role name (for morphed relations only).
+     *
+     * @param string $roleName
+     */
+    public function setRoleName($roleName)
+    {
+        $this->roleName = $roleName;
+    }
+
+    /**
      * Internal ORM relation method used to create valid selector used to pre-load relation data or
      * create custom query based on relation options.
      *
@@ -36,7 +53,10 @@ class ManyToMany extends Relation
         //this type of relation
         $loader = new Selector\Loaders\ManyToManyLoader($this->orm, '', $this->definition);
 
-        return $loader->createSelector($this->parent->getRoleName())->where(
+        //Sometimes we have to force different role name (especially for morphed relations)
+        $roleName = !empty($this->roleName) ? $this->roleName : $this->parent->getRoleName();
+
+        return $loader->createSelector($roleName)->where(
             $loader->getPivotAlias() . '.' . $this->definition[ActiveRecord::THOUGHT_INNER_KEY],
             $this->parent->getField($this->definition[ActiveRecord::INNER_KEY])
         );

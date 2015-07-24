@@ -44,7 +44,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     /**
      * Indication that model data was deleted.
      */
-    const DELETED        = 900;
+    const DELETED         = 900;
 
     /**
      * Model has one children model relation. Example: User has one profile.
@@ -376,7 +376,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     const CONSTRAINT_ACTION = 1003; //Default relation foreign key delete/update action (CASCADE)
     const CREATE_PIVOT      = 1004; //Many-to-Many should create pivot table automatically (default)
     const NULLABLE          = 1005; //Relation can be nullable (default)
-    const CREATE_INDEXES = 1006; //Indication that relation is allowed to create required indexes
+    const CREATE_INDEXES  = 1006; //Indication that relation is allowed to create required indexes
+    const MORPHED_ALIASES = 1007; //Aliases for morphed sub-relations
 
     /**
      * Constants used to declare index type. See documentation for indexes property.

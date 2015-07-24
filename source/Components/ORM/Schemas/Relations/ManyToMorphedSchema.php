@@ -27,6 +27,7 @@ class ManyToMorphedSchema extends MorphedRelationSchema
      * @var array
      */
     protected $defaultDefinition = [
+        ActiveRecord::MORPHED_ALIASES => [],
         ActiveRecord::PIVOT_TABLE       => '{name:singular}_map',
         ActiveRecord::INNER_KEY         => '{record:primaryKey}',
         ActiveRecord::OUTER_KEY         => '{outer:primaryKey}',
@@ -35,10 +36,10 @@ class ManyToMorphedSchema extends MorphedRelationSchema
         ActiveRecord::MORPH_KEY         => '{name:singular}_type',
         ActiveRecord::CONSTRAINT        => true,
         ActiveRecord::CONSTRAINT_ACTION => 'CASCADE',
-        ActiveRecord::CREATE_PIVOT  => true,
-        ActiveRecord::PIVOT_COLUMNS => [],
-        ActiveRecord::WHERE_PIVOT   => [],
-        ActiveRecord::WHERE         => []
+        ActiveRecord::CREATE_PIVOT    => true,
+        ActiveRecord::PIVOT_COLUMNS   => [],
+        ActiveRecord::WHERE_PIVOT     => [],
+        ActiveRecord::WHERE           => []
     ];
 
     /**
@@ -156,6 +157,15 @@ class ManyToMorphedSchema extends MorphedRelationSchema
     protected function normalizeDefinition()
     {
         $definition = parent::normalizeDefinition();
+
+        //Let's fill morphed aliases
+        foreach ($this->getOuterModels() as $model)
+        {
+            if (!in_array($model->getRoleName(), $definition[ActiveRecord::MORPHED_ALIASES]))
+            {
+                $definition[ActiveRecord::MORPHED_ALIASES][$model->getTable()] = $model->getRoleName();
+            }
+        }
 
         //Let's include pivot table columns
         $definition[ActiveRecord::PIVOT_COLUMNS] = [];

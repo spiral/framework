@@ -139,7 +139,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
         if (empty($this->data))
         {
             //Can not be loaded
-            return static::MULTIPLE ? [] : null;
+            return static::MULTIPLE ? new ModelIterator($this->orm, $this->getClass(), []) : null;
         }
 
         return $this->data = static::MULTIPLE ? $this->createIterator() : $this->createModel();
