@@ -6,13 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Psr\Log\LoggerInterface;
 use Spiral\Components\Debug\Logger;
 use Spiral\Components\Session\SessionStore;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static void setID($id)
@@ -42,10 +42,10 @@ use Spiral\Core\Facade;
  * @method static void setLogger(LoggerInterface $logger)
  * @method static LoggerInterface|Logger logger()
  */
-class Session extends Facade
+class Session extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'session';

@@ -91,15 +91,14 @@ class ModelIterator extends Component implements \Iterator, \Countable, \JsonSer
     public function current()
     {
         $data = $this->data[$this->position];
-
-        if (is_object($data))
+        if ($data instanceof ActiveRecord)
         {
+            //Optimize it
             return $data;
         }
 
         $class = $this->class;
 
-        //TODO: Pivot data!
         return $this->data[$this->position] = $this->orm->construct($class, $data);
     }
 

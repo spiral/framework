@@ -6,13 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Spiral\Components\Encrypter\Encrypter as EncrypterComponent;
 use Spiral\Components\Http\Cookies\Cookie;
 use Spiral\Components\Http\Cookies\CookieManager;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * Attention, this facade will not work outside CookieManager scope!
@@ -30,10 +30,10 @@ use Spiral\Core\Facade;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
-class Cookies extends Facade
+class Cookies extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'cookies';

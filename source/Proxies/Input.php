@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -14,7 +14,7 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Components\Http\Input\InputBag;
 use Spiral\Components\Http\InputManager;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static ServerRequestInterface getRequest()
@@ -36,10 +36,10 @@ use Spiral\Core\Facade;
  * @method static InputManager make($parameters = [], Container $container = null)
  * @method static InputManager getInstance(Container $container = null)
  */
-class Input extends Facade
+class Input extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'input';

@@ -6,12 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Spiral\Components\I18n\PluralizerInterface;
 use Spiral\Components\I18n\Translator;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static void setLanguage($language)
@@ -26,7 +26,7 @@ use Spiral\Core\Facade;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
-class I18n extends Facade
+class I18n extends Proxy
 {
     /**
      * Facade can statically represent methods of one binded component, such component alias or class

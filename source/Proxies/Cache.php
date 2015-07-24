@@ -6,12 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Spiral\Components\Cache\CacheManager;
 use Spiral\Components\Cache\StoreInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static mixed storeOptions($adapter)
@@ -23,10 +23,10 @@ use Spiral\Core\Facade;
  * @method static array setConfig(array $config)
 
  */
-class Cache extends Facade
+class Cache extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'cache';

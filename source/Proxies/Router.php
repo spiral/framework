@@ -6,12 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Spiral\Components\Http\Response\Redirect;
 use Spiral\Components\Http\Router\RouteInterface;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static void registerMiddleware($alias, $middleware)
@@ -23,10 +23,10 @@ use Spiral\Core\Facade;
  * @method static Redirect redirect($route, array $parameters = [])
  * @method static Router make($parameters = [], Container $container = null)
  */
-class Router extends Facade
+class Router extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'router';

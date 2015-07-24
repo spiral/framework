@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Psr\Log\LoggerInterface;
 use Spiral\Components\Debug\Logger;
@@ -14,7 +14,7 @@ use Spiral\Components\View\ViewInterface;
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Container;
 use Spiral\Core\Events\DispatcherInterface;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static string cacheDirectory()
@@ -38,10 +38,10 @@ use Spiral\Core\Facade;
  * @method static DispatcherInterface dispatcher()
  * @method static void on($event, $listener)
  */
-class View extends Facade
+class View extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'view';

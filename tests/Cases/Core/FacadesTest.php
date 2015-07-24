@@ -9,7 +9,7 @@
 namespace Spiral\Tests\Cases\Core;
 
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 use Spiral\Support\Tests\TestCase;
 
 class FacadesTest extends TestCase
@@ -18,8 +18,8 @@ class FacadesTest extends TestCase
     {
         Container::getInstance()->bind('facadeTest', $this);
 
-        $this->assertSame('ABC', TestFacade::method('abc'));
-        $this->assertSame('XXX', TestFacade::method('xxx'));
+        $this->assertSame('ABC', TestProxy::method('abc'));
+        $this->assertSame('XXX', TestProxy::method('xxx'));
 
         Container::getInstance()->removeBinding('facadeTest');
     }
@@ -30,7 +30,7 @@ class FacadesTest extends TestCase
     }
 }
 
-class TestFacade extends Facade
+class TestProxy extends Proxy
 {
     /**
      * Facade can statically represent methods of one binded component, such component alias or class

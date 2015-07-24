@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Psr\Log\LoggerInterface;
 use Spiral\Components\Debug\Logger;
@@ -15,7 +15,7 @@ use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageManager;
 use Spiral\Components\Storage\StorageObject;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static StorageContainer registerContainer($name, $prefix, $server, array $options = [])
@@ -32,10 +32,10 @@ use Spiral\Core\Facade;
  * @method static void setLogger(LoggerInterface $logger)
  * @method static LoggerInterface|Logger logger()
  */
-class Storage extends Facade
+class Storage extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'storage';

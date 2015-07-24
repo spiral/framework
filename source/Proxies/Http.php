@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Predis\Response\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,7 +20,7 @@ use Spiral\Components\Http\Router\RouteInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Events\DispatcherInterface;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static string getBasePath()
@@ -43,10 +43,10 @@ use Spiral\Core\Facade;
  * @method static void addRoute(RouteInterface $route)
  * @method static Route route($pattern, $target = null, array $defaults = [])
  */
-class Http extends Facade
+class Http extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'http';

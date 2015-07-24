@@ -134,7 +134,7 @@ class Dumper extends Component
      * rules defined in Debugger::$dumping. Styles can be redefined any moment. You can hide class
      * fields from dumping by using @invisible doc comment option.
      *
-     * This is the oldest spiral function, it was originally written in 2008. :)
+     * This is the oldest spiral function, it was originally written in 2007. :)
      *
      * @param mixed  $variable Value to be dumped.
      * @param string $name     Current variable name (empty if no name).

@@ -8,10 +8,10 @@
  */
 namespace Spiral\Core;
 
-class Facade
+class Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = '';

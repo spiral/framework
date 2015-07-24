@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Spiral\Components\DBAL\Database;
 use Spiral\Components\DBAL\DatabaseManager;
@@ -14,7 +14,7 @@ use Spiral\Components\DBAL\Driver;
 use Spiral\Components\DBAL\Migrations\Migrator;
 use Spiral\Components\DBAL\Migrations\Repository;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static string defaultTimezone()
@@ -28,10 +28,10 @@ use Spiral\Core\Facade;
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  */
-class DBAL extends Facade
+class DBAL extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'dbal';

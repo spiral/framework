@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Facades;
+namespace Spiral\Proxies;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Core\Container;
-use Spiral\Core\Facade;
+use Spiral\Core\Proxy;
 
 /**
  * @method static bool read($filename)
@@ -38,10 +38,10 @@ use Spiral\Core\Facade;
  * @method static FileManager make($parameters = [], Container $container = null)
  * @method static FileManager getInstance(Container $container = null)
  */
-class File extends Facade
+class File extends Proxy
 {
     /**
-     * Facade can statically represent methods of one binded component, such component alias or class
+     * Proxy can statically represent methods of one binded component, such component alias or class
      * name should be defined in bindedComponent constant.
      */
     const COMPONENT = 'file';
