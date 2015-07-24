@@ -175,7 +175,6 @@ abstract class BaseElement extends Component
      */
     abstract public function createDeclaration($indentLevel = 0);
 
-
     /**
      * Apply current indent and tabulation level to string. This method will shift string to the right
      * using an indent string declared in RElement::$indent using $indentLevel argument as a multiplier

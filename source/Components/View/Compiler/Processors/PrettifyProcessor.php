@@ -23,15 +23,8 @@ class PrettifyProcessor implements ProcessorInterface
      * @var array
      */
     protected $options = [
+        //Drop blank lines
         'endings'    => true,
-
-        'indents' => [
-            'normalize' => true,
-            'indent'    => '  ',
-            'elements'  => [
-                'head', 'title', 'div', 'p', 'table', 'tbody', 'tr', 'td', 'form', 'script'
-            ]
-        ],
 
         //Trim attributes
         'attributes' => [
@@ -71,13 +64,11 @@ class PrettifyProcessor implements ProcessorInterface
 
         if ($this->options['endings'])
         {
-            //TODO: pass isolator from outside for testing
             $source = $this->normalizeEndings($source, $isolator);
         }
 
         if ($this->options['attributes']['normalize'])
         {
-            //TODO: pass isolator from outside for testing
             $source = $this->normalizeAttributes($source, $tokenizer);
         }
 
@@ -94,11 +85,9 @@ class PrettifyProcessor implements ProcessorInterface
     protected function normalizeEndings($source, Isolator $isolator)
     {
         //Step #1, \n only
-        $source = $isolator->isolatePHP(
-            StringHelper::normalizeEndings($source)
-        );
+        $source = $isolator->isolatePHP(StringHelper::normalizeEndings($source));
 
-        //Step #2, chunking by lines
+        //Step #2, chunk by lines
         $sourceLines = explode("\n", $source);
 
         //Step #3, no blank lines and html comments (will keep conditional commends)
