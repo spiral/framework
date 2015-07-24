@@ -12,7 +12,11 @@ use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\RelationInterface;
+use Spiral\Components\ORM\Selector;
 
+/**
+ * @todo: add count method to work with pivot table directly
+ */
 class ManyToMorphed implements RelationInterface
 {
     /**
@@ -164,7 +168,24 @@ class ManyToMorphed implements RelationInterface
         return $result;
     }
 
-    protected function getRelation($alias)
+    /**
+     * Invoke relation with custom arguments. Result may vary based on relation logic.
+     *
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __invoke(array $arguments)
+    {
+        return $this;
+    }
+
+    /**
+     * Get sub-relation associated with one of model aliases.
+     *
+     * @param string $alias
+     * @return ManyToMany
+     */
+    protected function subRelation($alias)
     {
         if (isset($this->relations[$alias]))
         {
@@ -173,10 +194,10 @@ class ManyToMorphed implements RelationInterface
 
         if (!isset($this->definition[ActiveRecord::MORPHED_ALIASES][$alias]))
         {
-            throw new ORMException("No such sub-relation '{$alias}'.");
+            throw new ORMException("No such sub-relation or method '{$alias}'.");
         }
 
-        //We have to create custom defintition
+        //We have to create custom definition
         $definition = $this->definition;
 
         $roleName = $this->definition[ActiveRecord::MORPHED_ALIASES][$alias];
@@ -195,19 +216,13 @@ class ManyToMorphed implements RelationInterface
 
     public function __get($alias)
     {
-        return $this->getRelation($alias)->getData();
+        return $this->subRelation($alias)->getData();
     }
 
     public function __call($alias, array $arguments)
     {
         //???
-        return $this->getRelation($alias);
-    }
-
-    //TODO: count method
-    public function count()
-    {
-        return mt_rand(0, 10000);
+        return $this->subRelation($alias);
     }
 
     public function link()

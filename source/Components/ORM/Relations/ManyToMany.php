@@ -75,9 +75,15 @@ class ManyToMany extends Relation
         return $model;
     }
 
-    public function link($record, array $pivotData = [])
+    public function link($model, array $pivotData = [])
     {
     }
 
-    //todo: link, unlink, sync methods
+    public function unlink($model, array $pivotData = [])
+    {
+    }
+
+    public function sync(array $models, array $pivotData = [])
+    {
+    }
 }

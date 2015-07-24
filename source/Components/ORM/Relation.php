@@ -190,10 +190,10 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     }
 
     /**
-     * Return selector with pre-specified where conditions.
+     * Invoke relation with custom arguments. Result may vary based on relation logic.
      *
      * @param array $arguments
-     * @return Selector
+     * @return mixed
      */
     public function __invoke(array $arguments)
     {

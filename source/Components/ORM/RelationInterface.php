@@ -83,10 +83,10 @@ interface RelationInterface
     public function getErrors($reset = false);
 
     /**
-     * Invoke relation with custom arguments.
+     * Invoke relation with custom arguments. Result may vary based on relation logic.
      *
      * @param array $arguments
-     * @return Selector
+     * @return mixed
      */
     public function __invoke(array $arguments);
 }
