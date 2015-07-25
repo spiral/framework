@@ -341,6 +341,14 @@ class ORM extends Component
     }
 
     /**
+     * Destructing.
+     */
+    public function __destruct()
+    {
+        $this->entityCache = [];
+    }
+
+    /**
      * Normalized entity constants.
      */
     const E_ROLE_NAME   = 0;

@@ -462,9 +462,7 @@ class Selector extends AbstractSelectQuery
             return null;
         }
 
-        $class = $this->class;
-
-        return new $class($data[0], true, $this->orm);
+        return $this->orm->construct($this->class, $data[0]);
     }
 
     /**
@@ -489,9 +487,7 @@ class Selector extends AbstractSelectQuery
             return null;
         }
 
-        $class = $this->class;
-
-        return new $class($data[0], true, $this->orm);
+        return $this->orm->construct($this->class, $data[0]);
     }
 
     /**

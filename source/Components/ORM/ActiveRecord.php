@@ -506,13 +506,10 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             unset($data[ORM::PIVOT_DATA]);
         }
 
-        foreach ($this->schema[ORM::E_RELATIONS] as $relation => $definition)
+        foreach (array_intersect_key($data, $this->schema[ORM::E_RELATIONS]) as $name => $relation)
         {
-            if (array_key_exists($relation, $data))
-            {
-                $this->relations[$relation] = $data[$relation];
-                unset($data[$relation]);
-            }
+            $this->relations[$name] = $relation;
+            unset($data[$name]);
         }
 
         //Merging with default values
@@ -545,9 +542,27 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         return $this->schema[ORM::E_ROLE_NAME];
     }
 
-    public function setContext(array $context)
+    public function setContext(array $data)
     {
-        //TODO: implement later
+        //Mounting context pivot data
+        $this->pivotData = isset($data[ORM::PIVOT_DATA]) ? $data[ORM::PIVOT_DATA] : [];
+
+        foreach (array_intersect_key($data, $this->schema[ORM::E_RELATIONS]) as $name => $relation)
+        {
+            if (!isset($this->relations[$name]) || is_array($this->relations[$name]))
+            {
+                $this->relations[$name] = $relation;
+                continue;
+            }
+
+            //We have to reset relation state to update context
+            $this->relations[$name]->reset($relation, true);
+        }
+
+        /**
+         * We are not going to update model fields.
+         */
+
         return $this;
     }
 

@@ -118,11 +118,19 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             return;
         }
 
+        if ($loaded && !empty($this->instance) && $this->instance instanceof ActiveRecord)
+        {
+            //Updating context
+            $this->instance->setContext($data);
+        }
+        else
+        {
+            //Flushing instance
+            $this->instance = null;
+        }
+
         $this->data = $data;
         $this->loaded = $loaded;
-
-        //Flushing instance
-        $this->instance = null;
     }
 
     /**

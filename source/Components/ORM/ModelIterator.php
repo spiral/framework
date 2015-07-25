@@ -35,6 +35,13 @@ class ModelIterator extends Component implements \Iterator, \Countable, \JsonSer
     protected $data = [];
 
     /**
+     * Constructed model instances.
+     *
+     * @var ActiveRecord[]
+     */
+    protected $instances = [];
+
+    /**
      * Current iterator position.
      *
      * @var int
@@ -91,17 +98,13 @@ class ModelIterator extends Component implements \Iterator, \Countable, \JsonSer
     public function current()
     {
         $data = $this->data[$this->position];
-        if ($data instanceof ActiveRecord)
+        if (isset($this->instances[$this->position]))
         {
-            //TODO: Set Instance Context
-
-            //Optimize it
-            return $data;
+            //Update instance context
+            return $this->instances[$this->position]->setContext($data);
         }
 
-        $class = $this->class;
-
-        return $this->data[$this->position] = $this->orm->construct($class, $data);
+        return $this->instances[$this->position] = $this->orm->construct($this->class, $data);
     }
 
     /**

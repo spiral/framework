@@ -75,15 +75,17 @@ class ManyToMorphed implements RelationInterface
     }
 
     /**
-     * Reset relation pre-loaded data.
+     * Reset relation pre-loaded data. By default will flush relation data.
      *
-     * @param array $data
+     * @param mixed $data   Pre-loaded relation data.
+     * @param bool  $loaded Indication that relation data has been loaded.
      */
-    public function reset(array $data = [])
+    public function reset(array $data = [], $loaded = false)
     {
         foreach ($this->relations as $relation)
         {
-            $relation->reset($data, false);
+            //Can be only flushed
+            $relation->reset([], false);
         }
 
         //Dropping relations
