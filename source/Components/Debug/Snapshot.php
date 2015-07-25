@@ -199,7 +199,7 @@ class Snapshot extends Component
      */
     public function __toString()
     {
-        if (Core::isConsole())
+        if (PHP_SAPI === 'cli')
         {
             return (string)$this->exception;
         }
