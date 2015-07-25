@@ -163,29 +163,45 @@ class ManyToMany extends Relation implements \Countable
 
     /**
      * Link or update link for one of multiple related records. You can pass pivotData as additional
-     * arugment
+     * argument or associate it with model id. Attention! This method will not follow WHERE_PIVOT
+     * conditions, you WILL have to specify them by yourself.
      *
+     * Examples:
+     * $user->tags->link(1);
+     * $user->tags->link($tag);
+     * $user->tags->link([1, 2], ['approved' => true]);
+     * $user->tags->link([
+     *      1 => ['approved' => true],
+     *      2 => ['approved' => false]
+     * ]);
+     *
+     * If record already linked it will be updated with provided pivot data, if you disable it by
+     * providing third argument as true.
      *
      * @param mixed $modelID
      * @param array $pivotData
+     * @param bool  $linkOnly If true no updates will be performed.
      * @return int
      */
-    public function link($modelID, array $pivotData = [])
+    public function link($modelID, array $pivotData = [], $linkOnly = false)
     {
         //I need different method here
-        $modelID = $this->prepareIDs($modelID, $inserts, $pivotData);
+        $modelID = $this->prepareIDs($modelID, $pivotRows, $pivotData);
         $existedIDs = $this->hasEach($modelID);
 
         $result = 0;
-        foreach ($inserts as $modelID => $pivotRow)
+        foreach ($pivotRows as $modelID => $pivotRow)
         {
             if (in_array($modelID, $existedIDs))
             {
-                //We can update
-                $result += $this->pivotTable()->update(
-                    $pivotRow,
-                    $this->wherePivot($this->innerKey(), $modelID)
-                )->run();
+                if (!$linkOnly)
+                {
+                    //We can update
+                    $result += $this->pivotTable()->update(
+                        $pivotRow,
+                        $this->wherePivot($this->innerKey(), $modelID)
+                    )->run();
+                }
             }
             else
             {
@@ -311,13 +327,13 @@ class ManyToMany extends Relation implements \Countable
             {
                 if (is_scalar($value))
                 {
-                    $pivotRows = [$value => $this->pivotRow($value, $pivotData)];
+                    $pivotRows[$value] = $this->pivotRow($value, $pivotData);
                     $result[] = $value;
                 }
                 else
                 {
                     //Specified in key => pivotData format.
-                    $pivotRows = [$key => $this->pivotRow($key, $value + $pivotData)];
+                    $pivotRows[$key] = $this->pivotRow($key, $value + $pivotData);
                     $result[] = $key;
                 }
             }
