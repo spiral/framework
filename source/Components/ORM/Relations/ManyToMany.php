@@ -188,7 +188,6 @@ class ManyToMany extends Relation
         dump($modelID);
     }
 
-
     public function sync(array $modelIDs, array $pivotData = [])
     {
     }
