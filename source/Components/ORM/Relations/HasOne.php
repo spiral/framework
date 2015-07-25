@@ -9,6 +9,7 @@
 namespace Spiral\Components\ORM\Relations;
 
 use Spiral\Components\ORM\ActiveRecord;
+use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 
@@ -43,6 +44,21 @@ class HasOne extends Relation
         );
 
         return $selector;
+    }
+
+    /**
+     * Set relation data (called via __set method of parent ActiveRecord).
+     *
+     * Example:
+     * $user->profile = new Profile();
+     *
+     * @param ActiveRecord $instance
+     * @throws ORMException
+     */
+    public function setInstance(ActiveRecord $instance = null)
+    {
+        parent::setInstance($instance);
+        $this->mountRelation($instance);
     }
 
     /**
