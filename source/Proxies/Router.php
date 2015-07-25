@@ -14,6 +14,8 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static void registerMiddleware($alias, $middleware)
  * @method static void addRoute(RouteInterface $route)
  * @method static RouteInterface[] getRoutes()

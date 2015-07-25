@@ -14,6 +14,8 @@ use Spiral\Components\Redis\RedisManager;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static array getConfig()
  * @method static array setConfig(array $config)
  * @method static RedisClient client(string $client = 'default', string $class = null)

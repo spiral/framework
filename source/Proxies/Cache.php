@@ -14,6 +14,8 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static mixed storeOptions($adapter)
  * @method static StoreInterface store($store = null, array $options = [])
  * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter, Container $container)
@@ -21,7 +23,6 @@ use Spiral\Core\StaticProxy;
  * @method static CacheManager getInstance(Container $container = null)
  * @method static array getConfig()
  * @method static array setConfig(array $config)
-
  */
 class Cache extends StaticProxy
 {

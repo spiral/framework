@@ -13,6 +13,8 @@ use Spiral\Core\StaticProxy;
 use Spiral\Components\Encrypter\Encrypter as EncrypterComponent;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static EncrypterComponent setKey($key)
  * @method static string getKey()
  * @method static EncrypterComponent setMethod($method)

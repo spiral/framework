@@ -18,6 +18,8 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static StorageContainer registerContainer($name, $prefix, $server, array $options = [])
  * @method static StorageContainer container($container)
  * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter, Container $container)

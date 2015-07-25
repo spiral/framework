@@ -17,6 +17,8 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static string defaultTimezone()
  * @method static Database db($database = 'default', array $config = [], Driver $driver = null)
  * @method static mixed resolveInjection(\ReflectionClass $class, \ReflectionParameter $parameter, Container $container)

@@ -23,6 +23,8 @@ use Spiral\Core\Events\DispatcherInterface;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static string getBasePath()
  * @method static HttpDispatcher add($path, $endpoint)
  * @method static void start(CoreInterface $core)

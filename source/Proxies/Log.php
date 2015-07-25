@@ -11,6 +11,8 @@ namespace Spiral\Proxies;
 use Spiral\Components\Debug\Debugger;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static emergency($message, array $context = [])
  * @method static alert($message, array $context = [])
  * @method static critical($message, array $context = [])

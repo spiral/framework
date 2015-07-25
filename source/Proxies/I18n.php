@@ -14,6 +14,8 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static void setLanguage($language)
  * @method static string getLanguage()
  * @method static PluralizerInterface getPluralizer($language = '')

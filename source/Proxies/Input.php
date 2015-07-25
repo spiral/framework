@@ -17,6 +17,8 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
+ * DO NOT use StaticProxies!
+ *
  * @method static ServerRequestInterface getRequest()
  * @method static InputBag getBag($name)
  * @method static mixed header($name, $default = null, $implode = ',')
