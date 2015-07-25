@@ -12,6 +12,8 @@ use Spiral\Core\Dispatcher\ClientException;
 use Spiral\Components;
 
 /**
+ * Will be part of spiral application in future not core.
+ *
  * @property Core                                     $core
  * @property Components\Http\HttpDispatcher           $http
  * @property Components\Console\ConsoleDispatcher     $console

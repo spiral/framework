@@ -18,6 +18,8 @@ use Spiral\Components\Http\HttpDispatcher;
 use Spiral\Components\Console\ConsoleDispatcher;
 
 /**
+ * Will be part of spiral application in future not core.
+ *
  * @property Components\Http\HttpDispatcher           $http
  * @property Components\Console\ConsoleDispatcher     $console
  * @property Loader                                   $loader
