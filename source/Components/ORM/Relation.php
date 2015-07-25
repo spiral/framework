@@ -57,6 +57,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     /**
      * Instance of constructed ActiveRecord of ModelIterator.
      *
+     * @invisible
      * @var ActiveRecord|ModelIterator
      */
     protected $instance = null;

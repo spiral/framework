@@ -215,18 +215,6 @@ class ManyToMorphed implements RelationInterface
     }
 
     /**
-     * Instance of DBAL\Table associated with relation pivot table.
-     *
-     * @return \Spiral\Components\DBAL\Table
-     */
-    protected function pivotTable()
-    {
-        return $this->parent->dbalDatabase($this->orm)->table(
-            $this->definition[ActiveRecord::PIVOT_TABLE]
-        );
-    }
-
-    /**
      * Count method will work with pivot table directly.
      *
      * @return int
@@ -299,5 +287,17 @@ class ManyToMorphed implements RelationInterface
         return $this->pivotTable()->delete([
             $this->definition[ActiveRecord::THOUGHT_INNER_KEY] => $this->parent->getField($innerKey)
         ])->run();
+    }
+
+    /**
+     * Instance of DBAL\Table associated with relation pivot table.
+     *
+     * @return \Spiral\Components\DBAL\Table
+     */
+    protected function pivotTable()
+    {
+        return $this->parent->dbalDatabase($this->orm)->table(
+            $this->definition[ActiveRecord::PIVOT_TABLE]
+        );
     }
 }

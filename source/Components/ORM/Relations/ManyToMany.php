@@ -87,18 +87,6 @@ class ManyToMany extends Relation implements \Countable
     }
 
     /**
-     * Instance of DBAL\Table associated with relation pivot table.
-     *
-     * @return \Spiral\Components\DBAL\Table
-     */
-    protected function pivotTable()
-    {
-        return $this->parent->dbalDatabase($this->orm)->table(
-            $this->definition[ActiveRecord::PIVOT_TABLE]
-        );
-    }
-
-    /**
      * Count method will work with pivot table directly.
      *
      * @return int
@@ -108,6 +96,86 @@ class ManyToMany extends Relation implements \Countable
         return $this->pivotTable()->where(
             $this->wherePivot($this->innerKey(), null)
         )->count();
+    }
+
+
+    /**
+     * Check if ActiveRecord(s) associated with this relation. Method can accept one id, array of ids,
+     * or instance of ActiveRecord. In case of multiple ids provided method will return true only
+     * if every model is linked to relation.
+     *
+     * Examples:
+     * $user->tags()->has($tag);
+     * $user->tags()->has([$tagA, $tagB]);
+     * $user->tags()->has(1);
+     * $user->tags()->has([1, 2, 3, 4]);
+     *
+     * @param mixed $modelID
+     * @return bool
+     */
+    public function has($modelID)
+    {
+        $selectQuery = $this->pivotTable()->where(
+            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID))
+        );
+
+        return $selectQuery->count() == count($modelID);
+    }
+
+    public function link($modelID, array $pivotData = [])
+    {
+        $modelID = $this->prepareIDs($modelID);
+
+        dump($modelID);
+    }
+
+    public function sync(array $modelIDs, array $pivotData = [])
+    {
+        //MAGIC IS HERE
+    }
+
+    /**
+     * Method used to unlink one of multiple associated ActiveRecords, method can accept id, list of
+     * ids or instance of ActiveRecord. Method will return count of affected rows.
+     *
+     * Examples:
+     * $user->tags()->unlink($tag);
+     * $user->tags()->unlink([$tagA, $tagB]);
+     * $user->tags()->unlink(1);
+     * $user->tags()->unlink([1, 2, 3, 4]);
+     *
+     * @param mixed $modelID
+     * @return int
+     */
+    public function unlink($modelID)
+    {
+        return $this->pivotTable()->delete(
+            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID))
+        )->run();
+    }
+
+    /**
+     * Unlink every associated record, method will return amount of affected rows.
+     *
+     * @return int
+     */
+    public function unlinkAll()
+    {
+        return $this->pivotTable()->delete(
+            $this->wherePivot($this->innerKey(), null)
+        )->run();
+    }
+
+    /**
+     * Instance of DBAL\Table associated with relation pivot table.
+     *
+     * @return \Spiral\Components\DBAL\Table
+     */
+    protected function pivotTable()
+    {
+        return $this->parent->dbalDatabase($this->orm)->table(
+            $this->definition[ActiveRecord::PIVOT_TABLE]
+        );
     }
 
     /**
@@ -173,71 +241,5 @@ class ManyToMany extends Relation implements \Countable
         }
 
         return $modelID->getField($this->definition[ActiveRecord::OUTER_KEY]);
-    }
-
-    /**
-     * Check if ActiveRecord(s) associated with this relation. Method can accept one id, array of ids,
-     * or instance of ActiveRecord. In case of multiple ids provided method will return true only
-     * if every model is linked to relation.
-     *
-     * Examples:
-     * $user->tags()->has($tag);
-     * $user->tags()->has([$tagA, $tagB]);
-     * $user->tags()->has(1);
-     * $user->tags()->has([1, 2, 3, 4]);
-     *
-     * @param mixed $modelID
-     * @return bool
-     */
-    public function has($modelID)
-    {
-        $selectQuery = $this->pivotTable()->where(
-            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID))
-        );
-
-        return $selectQuery->count() == count($modelID);
-    }
-
-    public function link($modelID, array $pivotData = [])
-    {
-        $modelID = $this->prepareIDs($modelID);
-
-        dump($modelID);
-    }
-
-    public function sync(array $modelIDs, array $pivotData = [])
-    {
-    }
-
-    /**
-     * Method used to unlink one of multiple associated ActiveRecords, method can accept id, list of
-     * ids or instance of ActiveRecord. Method will return count of affected rows.
-     *
-     * Examples:
-     * $user->tags()->unlink($tag);
-     * $user->tags()->unlink([$tagA, $tagB]);
-     * $user->tags()->unlink(1);
-     * $user->tags()->unlink([1, 2, 3, 4]);
-     *
-     * @param mixed $modelID
-     * @return int
-     */
-    public function unlink($modelID)
-    {
-        return $this->pivotTable()->delete(
-            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID))
-        )->run();
-    }
-
-    /**
-     * Unlink every associated record, method will return amount of affected rows.
-     *
-     * @return int
-     */
-    public function unlinkAll()
-    {
-        return $this->pivotTable()->delete(
-            $this->wherePivot($this->innerKey(), null)
-        )->run();
     }
 }
