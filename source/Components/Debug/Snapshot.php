@@ -12,7 +12,6 @@ use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container\ContainerException;
 use Exception;
-use Spiral\Core\Core;
 
 class Snapshot extends Component
 {
