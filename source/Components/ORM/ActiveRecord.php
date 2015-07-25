@@ -435,7 +435,50 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     protected $pivotData = [];
 
     /**
-     * TODO: WRITE COMMENT
+     * Record relations and columns. ActiveRecord schema can be used for multiple purposes - as for
+     * describing model relations in a format listed above, as for declaring related table structure.
+     *
+     * While defining table structure make sure that ACTIVE_SCHEMA constant is set to true. Every
+     * column declaration are similar to dbal migrations declaration.
+     *
+     * Example:
+     * protected $schema = [
+     *      'id'        => 'primary',
+     *      'name'      => 'string',
+     *      'biography' => 'text'
+     * ];
+     *
+     * You can pass additional options for some of your columns:
+     * protected $schema = [
+     *      'pinCode' => 'string(128)',         //String length
+     *      'status'  => 'enum(active,hidden)', //Enum values
+     *      'balance' => 'decimal(10, 2)'       //Decimal size and precision
+     * ];
+     *
+     * Every created column will be stated as NOT NULL with forced default value, if you want to have
+     * nullable columns, specify special data key:
+     * protected $schema = [
+     *      'name'      => 'string,nullable'
+     * ];
+     *
+     * You can easily combine table and relations definition:
+     * protected $schema = [
+     *      //Table schema
+     *      'id'          => 'bigPrimary',
+     *      'name'        => 'string',
+     *      'email'       => 'string',
+     *      'phoneNumber' => 'string(32)',
+     *
+     *      //Relations
+     *      'profile'     => [
+     *          self::HAS_ONE => 'Models\Profile',
+     *          self::INVERSE => 'user'
+     *      ],
+     *      'roles'       => [
+     *          self::MANY_TO_MANY => 'Models\Role',
+     *          self::INVERSE => 'users'
+     *      ]
+     * ];
      *
      * @var array
      */
