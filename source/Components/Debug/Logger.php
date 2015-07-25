@@ -288,7 +288,7 @@ class Logger extends AbstractLogger
      * this behaviour can be redefined via binding "logger" in Container.
      *
      * @param string $name Component alias.
-     * @return mixed|null|object|static
+     * @return mixed|null|self
      */
     public static function getLogger($name)
     {

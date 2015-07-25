@@ -166,7 +166,7 @@ class EventDispatcher extends Component implements DispatcherInterface
      * will be created, this behaviour can be redefined via binding "events" in Container.
      *
      * @param string $name Component alias.
-     * @return mixed|null|object|static
+     * @return self
      */
     public static function getDispatcher($name)
     {

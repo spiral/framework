@@ -357,7 +357,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
      *                                      for.
-     * @return $this
+     * @return $this|self
      */
     public function embed($parent)
     {
@@ -968,7 +968,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param array $fields Model fields to set, will be passed thought filters.
      * @param ODM   $odm    ODM component, will be received from Container if not provided.
-     * @return Document
+     * @return self
      */
     public static function create($fields = [], ODM $odm = null)
     {
@@ -990,7 +990,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * class. You have to solve it manually by overwrite this method in your class.
      *
      * @param mixed $query Fields and conditions to filter by.
-     * @return Collection|Document[]
+     * @return Collection|self[]
      */
     public static function find(array $query = [])
     {
@@ -1004,7 +1004,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * your class.
      *
      * @param mixed $query Fields and conditions to filter by.
-     * @return Collection|Document[]
+     * @return Collection|self[]
      */
     public static function select(array $query = [])
     {
@@ -1016,7 +1016,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param array $query  Fields and conditions to filter by.
      * @param array $sortBy Sorting.
-     * @return Document
+     * @return self
      */
     public static function findOne(array $query = [], array $sortBy = [])
     {
@@ -1029,7 +1029,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param mixed $mongoID Valid MongoId, string value will be automatically converted to MongoId
      *                       object.
-     * @return Document
+     * @return self
      * @throws ODMException
      */
     public static function findByPK($mongoID = null)

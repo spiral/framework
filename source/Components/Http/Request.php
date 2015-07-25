@@ -431,7 +431,7 @@ class Request extends HttpRequest implements ServerRequestInterface
      * be used.
      *
      * @param array $attributes Initial set of attributes.
-     * @return $this
+     * @return self
      */
     public static function castRequest(array $attributes = [])
     {

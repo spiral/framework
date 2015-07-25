@@ -145,7 +145,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
      *                                      for.
-     * @return $this
+     * @return $this|self
      * @throws ODMException
      */
     public function embed($parent)

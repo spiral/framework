@@ -1154,7 +1154,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * You have to save model by yourself!
      *
      * @param array $fields Model fields to set, will be passed thought filters.
-     * @return ActiveRecord
+     * @return self
      */
     public static function create($fields = [])
     {
@@ -1179,7 +1179,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * @param array $where Selection WHERE statement.
      * @param array $load  Array or relations to be loaded.
-     * @return Selector|ActiveRecord[]
+     * @return Selector|self[]
      */
     public static function find(array $where = [], array $load = [])
     {
@@ -1195,7 +1195,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *
      * @param array $where Selection WHERE statement.
      * @param array $load  Array or relations to be loaded.
-     * @return Selector|static[]
+     * @return Selector|self[]
      */
     public static function select(array $where = [], array $load = [])
     {
@@ -1213,7 +1213,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @param array $load    Array or relations to be loaded. You can't use INLOAD or JOIN_ONLY methods
      *                       with findOne.
      * @param array $orderBy Sort by conditions.
-     * @return ActiveRecord|null
+     * @return self|null
      */
     public static function findOne(array $where = [], array $load = [], array $orderBy = [])
     {
@@ -1235,7 +1235,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @param mixed $id      Primary key.
      * @param array $load    Array or relations to be loaded. You can't use INLOAD or JOIN_ONLY methods
      *                       with findOne.
-     * @return ActiveRecord|null
+     * @return self|null
      */
     public static function findByPK($id = null, array $load = [])
     {

@@ -315,7 +315,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
      *
      * @param array $directories Spiral directories should include root, libraries, config and runtime
      *                           directories.
-     * @return $this
+     * @return self|static
      * @throws CoreException
      */
     public static function init(array $directories)
