@@ -62,7 +62,14 @@ class ORM extends Component
      */
     protected $schema = null;
 
-
+    /**
+     * In cases when ORM cache is enabled every constructed instance will be stored here, cache used
+     * mainly to ensure the same instance of object, even if it's accessed from different spots.
+     *
+     * Cache will increase memory consumption.
+     *
+     * @var ActiveRecord[]
+     */
     protected $entityCache = [];
 
     /**
@@ -85,6 +92,32 @@ class ORM extends Component
         $this->container = $container;
 
         $this->config = $configurator->getConfig('orm');
+    }
+
+    /**
+     * Enable or disable entity cache.
+     *
+     * @param bool $enabled
+     * @param int  $maxSize
+     * @return static
+     */
+    public function entityCache($enabled, $maxSize = null)
+    {
+        $this->config['entityCache']['enabled'] = (bool)$enabled;
+        if (!empty($maxSize))
+        {
+            $this->config['entityCache']['maxSize'] = $maxSize;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Flush content of entity cache.
+     */
+    public function flushCache()
+    {
+        $this->entityCache = [];
     }
 
     /**
@@ -237,24 +270,44 @@ class ORM extends Component
         return new $class($this, $container, $definition, $parent);
     }
 
-    public function construct($class, array $data)
+    /**
+     * Construct instance of ActiveRecord or receive it from cache (if enabled).
+     *
+     * @param string $class
+     * @param array  $data
+     * @param bool   $cache
+     * @return ActiveRecord
+     */
+    public function construct($class, array $data = [], $cache = true)
     {
-        if (!$this->config['entityCache']['enabled'])
+        if (!$this->config['entityCache']['enabled'] || !$cache)
         {
             //Entity cache is disabled
             return new $class($data, !empty($data), $this);
         }
 
-        //TODO: Implement caching
-        return new $class($data, !empty($data), $this);
-    }
+        //We have to find object criteria (will work for objects with primary key only)
+        $criteria = null;
+        if (
+            !empty($this->schema[$class][ORM::E_PRIMARY_KEY])
+            && !empty($data[$this->schema[$class][ORM::E_PRIMARY_KEY]])
+        )
+        {
+            $criteria = $class . '.' . $data[$this->schema[$class][ORM::E_PRIMARY_KEY]];
+        }
 
-    /**
-     * Flush content of entity cache.
-     */
-    public function flushCache()
-    {
-        $this->entityCache = [];
+        if (isset($this->entityCache[$criteria]))
+        {
+            //Retrieving reconfigured model from the cache
+            return $this->entityCache[$criteria]->setContext($data);
+        }
+
+        if (count($this->entityCache) > $this->config['entityCache']['maxSize'])
+        {
+            return new $class($data, !empty($data), $this);
+        }
+
+        return $this->entityCache[$criteria] = new $class($data, !empty($data), $this);
     }
 
     /**

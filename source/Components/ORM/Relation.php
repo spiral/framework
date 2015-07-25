@@ -112,8 +112,17 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
      */
     public function reset(array $data = [], $loaded = false)
     {
+        if (!empty($this->data) && $this->data == $data)
+        {
+            //Nothing to do, context is the same
+            return;
+        }
+
         $this->data = $data;
         $this->loaded = $loaded;
+
+        //Flushing instance
+        $this->instance = null;
     }
 
     /**

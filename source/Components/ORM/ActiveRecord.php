@@ -548,6 +548,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     public function setContext(array $context)
     {
         //TODO: implement later
+        return $this;
     }
 
     /**
