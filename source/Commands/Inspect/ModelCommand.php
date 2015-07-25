@@ -53,7 +53,7 @@ class ModelCommand extends InspectCommand
     ];
 
     /**
-     * Inspecting existed models.
+     * Inspecting specific models.
      */
     public function perform()
     {
