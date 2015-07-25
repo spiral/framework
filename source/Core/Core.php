@@ -57,7 +57,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Ru
     /**
      * Spiral Core version.
      */
-    const VERSION = '0.3.0-alpha';
+    const VERSION = '0.9.0b';
 
     /**
      * Extension used for configuration files, ".php" by default.
