@@ -9,6 +9,7 @@
 namespace Spiral\Commands;
 
 use Spiral\Components\Console\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends Command
@@ -27,16 +28,27 @@ class UpdateCommand extends Command
      */
     protected $description = 'Update ORM and ODM schemas and render virtual documentation.';
 
+
+    /**
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
+     *
+     * @var array
+     */
+    protected $arguments = [
+        ['documenter', InputArgument::OPTIONAL, 'IDE tooltips documenter (for ORM and ODM).'],
+    ];
+
     /**
      * Updating schemas.
      */
     public function perform()
     {
-        $this->writeln("Updating ORM and ODM schemas and virtual documentations...");
+        $this->writeln("Updating ORM and ODM schemas and refreshing IDE tooltip helpers...");
         $this->writeln("");
 
-        $this->console->command('orm:update', [], $this->output);
-        $this->console->command('odm:update', [], $this->output);
+        $this->console->command('orm:update', $this->input, $this->output);
+        $this->console->command('odm:update', $this->input, $this->output);
         $this->writeln("");
 
         //Inspecting

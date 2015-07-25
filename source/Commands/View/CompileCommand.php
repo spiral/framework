@@ -12,14 +12,14 @@ use Spiral\Components\Console\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CacheCommand extends Command
+class CompileCommand extends Command
 {
     /**
      * Command name.
      *
      * @var string
      */
-    protected $name = 'view:cache';
+    protected $name = 'view:compile';
 
     /**
      * Short command description.

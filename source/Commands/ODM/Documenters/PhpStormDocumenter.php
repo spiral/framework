@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ODM\Exporters;
+namespace Spiral\Commands\ODM\Documenters;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\ODM\Document;
@@ -14,24 +14,33 @@ use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\SchemaBuilder;
 use Spiral\Components\ODM\Schemas\CollectionSchema;
 use Spiral\Components\ODM\Schemas\DocumentSchema;
-use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Support\Generators\Reactor\ClassElement;
 use Spiral\Support\Generators\Reactor\FileElement;
 use Spiral\Support\Generators\Reactor\NamespaceElement;
 
-class DocumentationExporter extends Component
+/**
+ * Maybe someone will help me write some other documenters? I really love PhpStorm, so i'm not sure
+ * this task worth my time.
+ */
+class PhpStormDocumenter implements DocumenterInterface
 {
-    /**
-     * Namespace to use for virtual collections and compositors.
-     */
-    const VIRTUAL_NAMESPACE = '\\VirtualClasses\\';
-
     /**
      * ODM documents schema.
      *
      * @var SchemaBuilder
      */
     protected $builder = null;
+
+    /**
+     * Documenter options.
+     *
+     * @var array
+     */
+    protected $options = [
+        'filename'  => '/dev/null',
+        'namespace' => '\\VirtualClasses\\'
+    ];
 
     /**
      * Required compositor declarations.
@@ -51,13 +60,16 @@ class DocumentationExporter extends Component
     ];
 
     /**
-     * New instance of documentation exporter. Reactor classes will be used to create such documentation.
+     * Documenters used purely while development to help IDE understand spiral code.
      *
      * @param SchemaBuilder $builder
+     * @param Container     $container
+     * @param array         $options
      */
-    public function __construct(SchemaBuilder $builder)
+    public function __construct(SchemaBuilder $builder, Container $container, array $options = [])
     {
         $this->builder = $builder;
+        $this->options = $options + $this->options;
     }
 
     /**
@@ -75,7 +87,7 @@ class DocumentationExporter extends Component
         $name = explode('\\', $primaryClass);
         $name = end($name);
 
-        return ($namespace ? self::VIRTUAL_NAMESPACE : '')
+        return ($namespace ? $this->options['namespace'] : '')
         . '_CMP_' . $name . '_' . substr(md5($primaryClass), 0, 5);
     }
 
@@ -94,7 +106,7 @@ class DocumentationExporter extends Component
         $name = explode('\\', $primaryClass);
         $name = end($name);
 
-        return ($namespace ? self::VIRTUAL_NAMESPACE : '')
+        return ($namespace ? $this->options['namespace'] : '')
         . '_CL_' . $name . '_' . substr(md5($primaryClass), 0, 5);
     }
 
@@ -304,12 +316,9 @@ class DocumentationExporter extends Component
     }
 
     /**
-     * Render virtual documentation to file. Reactor RPHPFile will be used.
-     *
-     * @param string $filename
-     * @return bool
+     * Render documentation.
      */
-    public function render($filename)
+    public function render()
     {
         $phpFile = FileElement::make()->setComment($this->header);
 
@@ -323,7 +332,7 @@ class DocumentationExporter extends Component
             $phpFile->addElement($this->renderDocument($document));
         }
 
-        $virtualNamespace = new NamespaceElement(self::VIRTUAL_NAMESPACE);
+        $virtualNamespace = new NamespaceElement($this->options['namespace']);
         $virtualNamespace->setUses([
             'Spiral\Components\ODM\ODM',
             'Spiral\Components\ODM\MongoDatabase',
@@ -349,6 +358,6 @@ class DocumentationExporter extends Component
 
         $phpFile->addElement($virtualNamespace);
 
-        return $phpFile->renderFile($filename, FileManager::RUNTIME, true);
+        return $phpFile->renderFile($this->options['filename'], FileManager::RUNTIME, true);
     }
 }

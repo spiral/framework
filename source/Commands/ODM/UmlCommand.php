@@ -9,7 +9,7 @@
 namespace Spiral\Commands\ODM;
 
 use Spiral\Components\Console\Command;
-use Spiral\Components\ODM\Exporters\UmlExporter;
+use Spiral\Commands\ODM\Exporters\UmlExporter;
 
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -44,7 +44,9 @@ class UmlCommand extends Command
      */
     public function perform()
     {
-        $umlExporter = UmlExporter::make(['builder' => $this->odm->schemaBuilder()]);
+        $umlExporter = UmlExporter::make([
+            'builder' => $this->odm->schemaBuilder()
+        ]);
         $umlExporter->render($this->argument('filename'));
 
         $this->writeln("<info>UML schema successfully created:</info> {$this->argument('filename')}");

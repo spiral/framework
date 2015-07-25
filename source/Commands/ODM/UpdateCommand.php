@@ -10,6 +10,7 @@ namespace Spiral\Commands\ODM;
 
 use Spiral\Components\Console\Command;
 use Spiral\Components\ODM\SchemaBuilder;
+use Symfony\Component\Console\Input\InputArgument;
 
 class UpdateCommand extends Command
 {
@@ -35,6 +36,16 @@ class UpdateCommand extends Command
     protected $description = 'Update ODM schema and render virtual documentation.';
 
     /**
+     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
+     * method.
+     *
+     * @var array
+     */
+    protected $arguments = [
+        ['documenter', InputArgument::OPTIONAL, 'IDE tooltips documenter.'],
+    ];
+
+    /**
      * Update schema and documentation.
      */
     public function perform()
@@ -44,8 +55,11 @@ class UpdateCommand extends Command
         $elapsed = benchmark('odm:updating');
 
         $this->writeln(
-            "<info>ODM Schema and virtual documentation successfully updated " .
+            "<info>ODM Schema has been updated " .
             "(<fg=yellow>" . number_format($elapsed, 3) . " s</fg=yellow>).</info>"
         );
+
+        //Documentation
+        $this->console->command('odm:document', $this->input, $this->output);
     }
 }

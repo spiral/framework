@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ODM\Exporters;
+namespace Spiral\Commands\ODM\Exporters;
 
 use Spiral\Components\Files\FileManager;
 use Spiral\Components\ODM\Document;

@@ -98,7 +98,7 @@ class ConfigureCommand extends Command
             $this->writeln("");
         }
 
-        $this->console->command('view:cache', [], $this->output);
+        $this->console->command('view:compile', [], $this->output);
 
         if ($this->option('key'))
         {
