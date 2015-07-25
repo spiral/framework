@@ -992,6 +992,22 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     }
 
     /**
+     * Get instance of DBAL\Database associated with specified model.
+     *
+     * @param ORM $orm ORM component, will be received from container if not provided.
+     * @return Database
+     */
+    public static function dbalDatabase(ORM $orm = null)
+    {
+        /**
+         * We can always get instance of ORM component from global scope.
+         */
+        $orm = !empty($orm) ? $orm : ORM::getInstance();
+
+        return $orm->getDatabase($orm->getSchema(static::class)[ORM::E_DB]);
+    }
+
+    /**
      * Get associated orm Selector. Selectors used to build complex related queries and fetch
      * models from database.
      *
