@@ -80,4 +80,18 @@ class HasOne extends Relation
 
         return $model;
     }
+
+    /**
+     * Create model and configure it's fields with relation data. Attention, you have to validate and
+     * save record by your own.
+     *
+     * @param mixed $fields
+     * @return ActiveRecord
+     */
+    public function create($fields = [])
+    {
+        $model = call_user_func([$this->getClass(), 'create'], $fields);
+
+        return $this->mountRelation($model);
+    }
 }
