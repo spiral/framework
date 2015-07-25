@@ -67,12 +67,28 @@ class BelongsToMorphed extends BelongsTo
      * @param ActiveRecord $instance
      * @throws ORMException
      */
-    public function setInstance(ActiveRecord $instance)
+    public function setInstance(ActiveRecord $instance = null)
     {
         parent::setInstance($instance);
+
+        if (is_null($instance))
+        {
+            return;
+        }
 
         //Forcing morph key
         $morphKey = $this->definition[ActiveRecord::MORPH_KEY];
         $this->parent->setField($morphKey, $instance->getRoleName(), false);
+    }
+
+    /**
+     * Drop relation keys.
+     */
+    protected function dropRelation()
+    {
+        parent::dropRelation();
+
+        $morphKey = $this->definition[ActiveRecord::MORPH_KEY];
+        $this->parent->setField($morphKey, null);
     }
 }

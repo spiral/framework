@@ -27,8 +27,15 @@ class BelongsTo extends HasOne
      * @param ActiveRecord $instance
      * @throws ORMException
      */
-    public function setInstance(ActiveRecord $instance)
+    public function setInstance(ActiveRecord $instance = null)
     {
+        if (is_null($instance))
+        {
+            $this->dropRelation();
+
+            return;
+        }
+
         parent::setInstance($instance);
 
         /**
@@ -52,6 +59,15 @@ class BelongsTo extends HasOne
             //We are going to set relation keys right on assertion
             $this->parent->setField($innerKey, $instance->getField($outerKey, false), false);
         }
+    }
+
+    /**
+     * Drop relation keys.
+     */
+    protected function dropRelation()
+    {
+        $innerKey = $this->definition[ActiveRecord::INNER_KEY];
+        $this->parent->setField($innerKey, null, false);
     }
 
     /**
