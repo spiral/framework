@@ -12,9 +12,15 @@ use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
+use Spiral\Core\Component\LoggerTrait;
 
 class ManyToMany extends Relation implements \Countable
 {
+    /**
+     * For warnings.
+     */
+    use LoggerTrait;
+
     /**
      * Relation type.
      */
@@ -103,6 +109,8 @@ class ManyToMany extends Relation implements \Countable
      * or instance of ActiveRecord. In case of multiple ids provided method will return true only
      * if every model is linked to relation.
      *
+     * Attention, WHERE_PIVOT will not be used by default.
+     *
      * Examples:
      * $user->tags()->has($tag);
      * $user->tags()->has([$tagA, $tagB]);
@@ -110,12 +118,13 @@ class ManyToMany extends Relation implements \Countable
      * $user->tags()->has([1, 2, 3, 4]);
      *
      * @param mixed $modelID
+     * @param bool  $wherePivot Use conditions specified by WHERE_PIVOT, disabled by default.
      * @return bool
      */
-    public function has($modelID)
+    public function has($modelID, $wherePivot = false)
     {
         $selectQuery = $this->pivotTable()->where(
-            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID))
+            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID), $wherePivot)
         );
 
         //We can use hasEach methods there, but this is more optimal way
@@ -132,12 +141,13 @@ class ManyToMany extends Relation implements \Countable
      * $user->tags()->hasEach([1, 2, 3, 4]);
      *
      * @param mixed $modelIDs
+     * @param bool  $wherePivot Use conditions specified by WHERE_PIVOT, disabled by default.
      * @return array
      */
-    public function hasEach($modelIDs)
+    public function hasEach($modelIDs, $wherePivot = false)
     {
         $selectQuery = $this->pivotTable()->where(
-            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelIDs))
+            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelIDs), $wherePivot)
         );
 
         $selectQuery->columns($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
@@ -151,12 +161,45 @@ class ManyToMany extends Relation implements \Countable
         return $result;
     }
 
+    /**
+     * Link or update link for one of multiple related records. You can pass pivotData as additional
+     * arugment
+     *
+     *
+     * @param mixed $modelID
+     * @param array $pivotData
+     * @return int
+     */
     public function link($modelID, array $pivotData = [])
     {
+        //I need different method here
+        $modelID = $this->prepareIDs($modelID, $inserts, $pivotData);
+        $existedIDs = $this->hasEach($modelID);
 
-        $modelID = $this->prepareIDs($modelID);
+        $result = 0;
+        foreach ($inserts as $modelID => $pivotRow)
+        {
+            if (in_array($modelID, $existedIDs))
+            {
+                //We can update
+                $result += $this->pivotTable()->update(
+                    $pivotRow,
+                    $this->wherePivot($this->innerKey(), $modelID)
+                )->run();
+            }
+            else
+            {
+                /**
+                 * In future this statement should be optimized to use batchInsert in cases when
+                 * set of columns for every record is the same.
+                 */
+                $this->pivotTable()->insert($pivotRow);
 
-        dump($modelID);
+                $result++;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -175,19 +218,21 @@ class ManyToMany extends Relation implements \Countable
     public function unlink($modelID)
     {
         return $this->pivotTable()->delete(
-            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID))
+            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID), false)
         )->run();
     }
 
     /**
-     * Unlink every associated record, method will return amount of affected rows.
+     * Unlink every associated record, method will return amount of affected rows. Method will unlink
+     * only records matched WHERE_PIVOT by default. Set wherePivot to false to unlink every record.
      *
+     * @param bool $wherePivot Use conditions specified by WHERE_PIVOT, enabled by default.
      * @return int
      */
-    public function unlinkAll()
+    public function unlinkAll($wherePivot = true)
     {
         return $this->pivotTable()->delete(
-            $this->wherePivot($this->innerKey(), null)
+            $this->wherePivot($this->innerKey(), null, $wherePivot)
         )->run();
     }
 
@@ -208,9 +253,10 @@ class ManyToMany extends Relation implements \Countable
      *
      * @param mixed|array $innerKey
      * @param mixed|array $outerKey
+     * @param bool        $wherePivot Use conditions specified by WHERE_PIVOT, disabled by default.
      * @return array
      */
-    protected function wherePivot($innerKey, $outerKey)
+    protected function wherePivot($innerKey, $outerKey, $wherePivot = false)
     {
         $query = [];
         if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
@@ -225,7 +271,7 @@ class ManyToMany extends Relation implements \Countable
             $query[$this->definition[ActiveRecord::THOUGHT_INNER_KEY]] = $innerKey;
         }
 
-        if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
+        if ($wherePivot && !empty($this->definition[ActiveRecord::WHERE_PIVOT]))
         {
             $query = $query + $this->definition[ActiveRecord::WHERE_PIVOT];
         }
@@ -244,18 +290,39 @@ class ManyToMany extends Relation implements \Countable
      * Helper method to fetch outer key value from provided list.
      *
      * @param mixed $modelID
+     * @param array $pivotRows Automatically constructed pivot rows will be available here for insertion
+     *                         or update.
+     * @param array $pivotData
      * @return mixed
      */
-    protected function prepareIDs($modelID)
+    protected function prepareIDs($modelID, array &$pivotRows = null, array $pivotData = [])
     {
         if (is_scalar($modelID))
         {
+            $pivotRows = [$modelID => $this->pivotRow($modelID, $pivotData)];
+
             return $modelID;
         }
 
         if (is_array($modelID))
         {
-            return array_map([$this, 'prepareIDs'], $modelID);
+            $result = [];
+            foreach ($modelID as $key => $value)
+            {
+                if (is_scalar($value))
+                {
+                    $pivotRows = [$value => $this->pivotRow($value, $pivotData)];
+                    $result[] = $value;
+                }
+                else
+                {
+                    //Specified in key => pivotData format.
+                    $pivotRows = [$key => $this->pivotRow($key, $value + $pivotData)];
+                    $result[] = $key;
+                }
+            }
+
+            return $result;
         }
 
         if (is_object($modelID) && get_class($modelID) != $this->getClass())
@@ -265,6 +332,35 @@ class ManyToMany extends Relation implements \Countable
             );
         }
 
-        return $modelID->getField($this->definition[ActiveRecord::OUTER_KEY]);
+        $modelID = $modelID->getField($this->definition[ActiveRecord::OUTER_KEY]);
+
+        //To be inserted later
+        $pivotRows = [$modelID => $this->pivotRow($modelID, $pivotData)];
+
+        return $modelID;
+    }
+
+    /**
+     * Create data set to be inserted/updated into pivot table.
+     *
+     * @param mixed $outerKey
+     * @param array $pivotData
+     * @return array
+     */
+    protected function pivotRow($outerKey, array $pivotData = [])
+    {
+        $data = [
+            $this->definition[ActiveRecord::THOUGHT_INNER_KEY] => $this->innerKey(),
+            $this->definition[ActiveRecord::THOUGHT_OUTER_KEY] => $outerKey
+        ];
+
+        if (!empty($this->definition[ActiveRecord::MORPH_KEY]))
+        {
+            $data[$this->definition[ActiveRecord::MORPH_KEY]] = !empty($this->roleName)
+                ? $this->roleName
+                : $this->parent->getRoleName();
+        }
+
+        return $data + $pivotData;
     }
 }

@@ -290,17 +290,26 @@ class ManyToMorphed implements RelationInterface
     }
 
     /**
-     * Unlink every associated record, method will return amount of affected rows.
+     * Unlink every associated record, method will return amount of affected rows. Method will unlink
+     * only records matched WHERE_PIVOT by default. Set wherePivot to false to unlink every record.
      *
+     * @param bool $wherePivot Use conditions specified by WHERE_PIVOT, enabled by default.
      * @return int
      */
-    public function unlinkAll()
+    public function unlinkAll($wherePivot = true)
     {
         $innerKey = $this->definition[ActiveRecord::INNER_KEY];
 
-        return $this->pivotTable()->delete([
+        $query = [
             $this->definition[ActiveRecord::THOUGHT_INNER_KEY] => $this->parent->getField($innerKey)
-        ])->run();
+        ];
+
+        if ($wherePivot && !empty($this->definition[ActiveRecord::WHERE_PIVOT]))
+        {
+            $query = $query + $this->definition[ActiveRecord::WHERE_PIVOT];
+        }
+
+        return $this->pivotTable()->delete($query)->run();
     }
 
     /**

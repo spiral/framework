@@ -61,6 +61,32 @@ class DocumentationExporter extends Component
     {
         $export = new ClassElement($name = $model->getShortName());
 
+        $export->method(
+            'find',
+            [
+                '@param array $query',
+                '@return ' . $model->getShortName() . '[]' //todo: selector
+            ], ['query']
+        )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
+
+        $export->method(
+            'findOne',
+            [
+                '@param array $query',
+                '@return ' . $model->getShortName() . '|null'
+            ],
+            ['query']
+        )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
+
+        $export->method(
+            'findByPK',
+            [
+                '@param mixed $mongoID',
+                '@return ' . $model->getShortName() . '|null'
+            ],
+            ['mongoID']
+        )->setStatic(true);
+
         //Accessors
         foreach ($model->getAccessors() as $name => $accessor)
         {
