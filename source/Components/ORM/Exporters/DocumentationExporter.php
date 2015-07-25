@@ -21,7 +21,7 @@ class DocumentationExporter extends Component
     /**
      * Namespace to use for virtual collections and compositors.
      */
-    const VIRTUAL_NAMESPACE = '\\virtualClasses\\';
+    const VIRTUAL_NAMESPACE = '\\VirtualClasses\\';
 
     /**
      * ODM documents schema.
