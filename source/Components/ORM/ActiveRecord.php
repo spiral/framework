@@ -1175,7 +1175,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * second argument to specify relations to be loaded.
      *
      * Example:
-     * User::find(['status'=>'active'], ['profile']);
+     * User::find(['status' => 'active'], ['profile']);
      *
      * @param array $where Selection WHERE statement.
      * @param array $load  Array or relations to be loaded.
@@ -1191,7 +1191,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * it's relations. Use second argument to specify relations to be loaded.
      *
      * Example:
-     * User::select(['status'=>'active'], ['profile']);
+     * User::select(['status' => 'active'], ['profile']);
      *
      * @param array $where Selection WHERE statement.
      * @param array $load  Array or relations to be loaded.
@@ -1207,7 +1207,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * loaded.
      *
      * Example:
-     * User::findOne(['name'=>'Wolfy-J'], ['profile'], ['id'=>'DESC']);
+     * User::findOne(['name' => 'Wolfy-J'], ['profile'], ['id' => 'DESC']);
      *
      * @param array $where   Selection WHERE statement.
      * @param array $load    Array or relations to be loaded. You can't use INLOAD or JOIN_ONLY methods
