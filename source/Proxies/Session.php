@@ -15,7 +15,7 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
- * DO NOT use StaticProxies!
+ * DO NOT use StaticProxies! You better not.
  *
  * @method static void setID($id)
  * @method static string getID($start = true)

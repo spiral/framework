@@ -17,7 +17,7 @@ use Spiral\Core\Events\DispatcherInterface;
 use Spiral\Core\StaticProxy;
 
 /**
- * DO NOT use StaticProxies!
+ * DO NOT use StaticProxies! Do not awake evil!
  *
  * @method static string cacheDirectory()
  * @method static array|null getNamespaces()

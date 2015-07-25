@@ -13,7 +13,7 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
- * DO NOT use StaticProxies!
+ * DO NOT use StaticProxies! Forget about StaticProxies.
  *
  * @method static bool read($filename)
  * @method static bool write($filename, $data, $mode = null, $ensureDirectory = false, $append = false)

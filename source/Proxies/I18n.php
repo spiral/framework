@@ -14,7 +14,7 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
- * DO NOT use StaticProxies!
+ * DO NOT use StaticProxies! You can't trust them!
  *
  * @method static void setLanguage($language)
  * @method static string getLanguage()

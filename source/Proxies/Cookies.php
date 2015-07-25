@@ -15,7 +15,7 @@ use Spiral\Core\Container;
 use Spiral\Core\StaticProxy;
 
 /**
- * DO NOT use StaticProxies!
+ * DO NOT use StaticProxies! They are lying to you!
  * Attention, this facade will not work outside CookieManager scope!
  *
  * @method static void excludeCookie($name)

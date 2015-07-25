@@ -14,7 +14,7 @@ use Spiral\Components\Redis\RedisManager;
 use Spiral\Core\StaticProxy;
 
 /**
- * DO NOT use StaticProxies!
+ * DO NOT use StaticProxies! Your really don't need it.
  *
  * @method static array getConfig()
  * @method static array setConfig(array $config)
