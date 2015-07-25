@@ -64,15 +64,15 @@ class BelongsToMorphed extends BelongsTo
      * Example:
      * $user->profile = new Profile();
      *
-     * @param mixed $data
+     * @param mixed $instance
      * @throws ORMException
      */
-    public function setData($data)
+    public function setInstance($instance)
     {
-        parent::setData($data);
+        parent::setInstance($instance);
 
         //Forcing morph key
         $morphKey = $this->definition[ActiveRecord::MORPH_KEY];
-        $this->parent->setField($morphKey, $data->getRoleName(), false);
+        $this->parent->setField($morphKey, $instance->getRoleName(), false);
     }
 }

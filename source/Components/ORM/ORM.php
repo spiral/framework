@@ -121,6 +121,37 @@ class ORM extends Component
     }
 
     /**
+     * Add ActiveRecord to entity cache (cache limit will be ignored).
+     *
+     * @param ActiveRecord $record
+     * @return ActiveRecord
+     */
+    public function registerEntity(ActiveRecord $record)
+    {
+        if (empty($record->primaryKey()) || !$this->config['entityCache']['enabled'])
+        {
+            return $record;
+        }
+
+        return $this->entityCache[get_class($record) . '.' . $record->primaryKey()] = $record;
+    }
+
+    /**
+     * Remove ActiveRecord model from entity cache.
+     *
+     * @param ActiveRecord $record
+     */
+    public function removeEntity(ActiveRecord $record)
+    {
+        if (empty($record->primaryKey()) || !$this->config['entityCache']['enabled'])
+        {
+            return;
+        }
+
+        unset($this->entityCache[get_class($record) . '.' . $record->primaryKey()]);
+    }
+
+    /**
      * Change associated DatabaseManager.
      *
      * @param DatabaseManager $dbal

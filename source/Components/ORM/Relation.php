@@ -166,7 +166,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             return static::MULTIPLE ? new ModelIterator($this->orm, $this->getClass(), []) : null;
         }
 
-        return $this->instance = static::MULTIPLE ? $this->createIterator() : $this->createModel();
+        return $this->instance = (static::MULTIPLE ? $this->createIterator() : $this->createModel());
     }
 
     /**
@@ -271,15 +271,15 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     }
 
     /**
-     * Set relation data (called via __set method of parent ActiveRecord).
+     * Set relation instance (called via __set method of parent ActiveRecord).
      *
      * Example:
      * $user->profile = new Profile();
      *
-     * @param mixed $data
+     * @param ActiveRecord $instance
      * @throws ORMException
      */
-    public function setData($data)
+    public function setInstance(ActiveRecord $instance)
     {
         if (static::MULTIPLE)
         {
@@ -293,7 +293,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             $allowed = [$allowed];
         }
 
-        if (!is_object($data) || !in_array(get_class($data), $allowed))
+        if (!is_object($instance) || !in_array(get_class($instance), $allowed))
         {
             $allowed = join("', '", $allowed);
 
@@ -302,7 +302,8 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             );
         }
 
-        $this->data = $data;
+        //Entity caching
+        $this->instance = $instance;
         $this->loaded = true;
     }
 
@@ -315,7 +316,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
      */
     public function saveData($validate = true)
     {
-        if (empty($data = $this->getInstance()))
+        if (empty($instance = $this->getInstance()))
         {
             //Nothing to save
             return true;
@@ -324,9 +325,9 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
         if (static::MULTIPLE)
         {
             /**
-             * @var ActiveRecord[] $data
+             * @var ActiveRecord[] $instance
              */
-            foreach ($data as $model)
+            foreach ($instance as $model)
             {
                 if ($model->isDeleted())
                 {
@@ -337,20 +338,29 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
                 {
                     return false;
                 }
+
+                $this->orm->registerEntity($model);
             }
 
             return true;
         }
 
         /**
-         * @var ActiveRecord $data
+         * @var ActiveRecord $instance
          */
-        if ($data->isDeleted())
+        if ($instance->isDeleted())
         {
             return true;
         }
 
-        return $this->mountRelation($data)->save($validate, true);
+        if (!$this->mountRelation($instance)->save($validate, true))
+        {
+            return false;
+        }
+
+        $this->orm->registerEntity($instance);
+
+        return true;
     }
 
     /**

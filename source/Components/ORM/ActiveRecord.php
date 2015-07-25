@@ -774,7 +774,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     {
         if (isset($this->schema[ORM::E_RELATIONS][$offset]))
         {
-            $this->getRelation($offset)->setData($value);
+            $this->getRelation($offset)->setInstance($value);
 
             return;
         }
@@ -1038,6 +1038,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
 
             $this->loaded = true;
             $this->event('saved');
+
+            $this->orm->registerEntity($this);
         }
         elseif ($this->solidState || $this->hasUpdates())
         {

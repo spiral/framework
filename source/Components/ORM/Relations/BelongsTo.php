@@ -24,17 +24,17 @@ class BelongsTo extends HasOne
      * Example:
      * $user->profile = new Profile();
      *
-     * @param mixed $data
+     * @param mixed $instance
      * @throws ORMException
      */
-    public function setData($data)
+    public function setInstance($instance)
     {
-        parent::setData($data);
+        parent::setInstance($instance);
 
         /**
-         * @var ActiveRecord $data
+         * @var ActiveRecord $instance
          */
-        if (!$data->isLoaded())
+        if (!$instance->isLoaded())
         {
             throw new ORMException(
                 "Unable to set 'belongs to' parent, parent has be fetched from database."
@@ -47,10 +47,10 @@ class BelongsTo extends HasOne
         //Key in child model
         $innerKey = $this->definition[ActiveRecord::INNER_KEY];
 
-        if ($this->parent->getField($innerKey, false) != $data->getField($outerKey, false))
+        if ($this->parent->getField($innerKey, false) != $instance->getField($outerKey, false))
         {
             //We are going to set relation keys right on assertion
-            $this->parent->setField($innerKey, $data->getField($outerKey, false), false);
+            $this->parent->setField($innerKey, $instance->getField($outerKey, false), false);
         }
     }
 

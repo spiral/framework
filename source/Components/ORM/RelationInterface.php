@@ -56,15 +56,15 @@ interface RelationInterface
     public function getInstance();
 
     /**
-     * Set relation data (called via __set method of parent ActiveRecord).
+     * Set relation instance (called via __set method of parent ActiveRecord).
      *
      * Example:
      * $user->profile = new Profile();
      *
-     * @param mixed $data
+     * @param ActiveRecord $instance
      * @throws ORMException
      */
-    public function setData($data);
+    public function setInstance(ActiveRecord $instance);
 
     /**
      * ActiveRecord may ask relation data to be saved, save content will work ONLY for pre-loaded
