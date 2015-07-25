@@ -266,13 +266,27 @@ class ManyToMorphed implements RelationInterface
         return $this->nestedRelation($alias);
     }
 
-
+    /**
+     * Link morphed record to relation. Method will bypass request to appropriate nested relation.
+     *
+     * @param ActiveRecord $record
+     * @param array        $pivotData Custom pivot data.
+     * @return int
+     */
     public function link(ActiveRecord $record, array $pivotData = [])
     {
+        return $this->nestedRelation($record->getRoleName())->link($record, $pivotData);
     }
 
+    /**
+     * Unlink morphed record from relation.
+     *
+     * @param ActiveRecord $record
+     * @return int
+     */
     public function unlink(ActiveRecord $record)
     {
+        return $this->nestedRelation($record->getRoleName())->unlink($record);
     }
 
     /**

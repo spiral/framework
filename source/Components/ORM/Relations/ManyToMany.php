@@ -122,16 +122,12 @@ class ManyToMany extends Relation implements \Countable
         return $selectQuery->count() == count($modelID);
     }
 
+
     public function link($modelID, array $pivotData = [])
     {
         $modelID = $this->prepareIDs($modelID);
 
         dump($modelID);
-    }
-
-    public function sync(array $modelIDs, array $pivotData = [])
-    {
-        //MAGIC IS HERE
     }
 
     /**
