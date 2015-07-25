@@ -702,7 +702,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      * @param bool   $loaded
      * @return RelationInterface
      */
-    public function getRelation($name, $data = null, $loaded = false)
+    public function relation($name, $data = null, $loaded = false)
     {
         if (array_key_exists($name, $this->relations))
         {
@@ -712,7 +712,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
                 unset($this->relations[$name]);
 
                 //Loaded relation
-                return $this->getRelation($name, $data, true);
+                return $this->relation($name, $data, true);
             }
 
             return $this->relations[$name];
@@ -746,7 +746,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     {
         if (isset($this->schema[ORM::E_RELATIONS][$offset]))
         {
-            return $this->getRelation($offset)->getInstance();
+            return $this->relation($offset)->getInstance();
         }
 
         return $this->getField($offset, true);
@@ -788,7 +788,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     {
         if (isset($this->schema[ORM::E_RELATIONS][$offset]))
         {
-            $this->getRelation($offset)->setInstance($value);
+            $this->relation($offset)->setInstance($value);
 
             return;
         }
@@ -805,7 +805,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     public function __call($method, array $arguments)
     {
-        $relation = $this->getRelation($method);
+        $relation = $this->relation($method);
 
         return empty($arguments) ? $relation : call_user_func_array($relation, $arguments);
     }
