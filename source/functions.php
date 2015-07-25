@@ -12,6 +12,10 @@ use Spiral\Helpers\StringHelper;
 use Spiral\Components\I18n\Translator;
 use Spiral\Components\Debug\Debugger;
 
+/**
+ * This file will be part of spiral application one day, not core.
+ */
+
 if (!function_exists('directory'))
 {
     /**
