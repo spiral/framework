@@ -10,7 +10,6 @@ namespace Spiral\Components\Storage\Servers;
 
 use Psr\Http\Message\StreamInterface;
 use Spiral\Components\Files\FileManager;
-use Spiral\Components\Http\Stream;
 use Spiral\Components\Storage\StorageContainer;
 use Spiral\Components\Storage\StorageServer;
 

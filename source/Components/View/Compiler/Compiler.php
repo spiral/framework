@@ -8,7 +8,6 @@
  */
 namespace Spiral\Components\View\Compiler;
 
-use Spiral\Components\Files\FileManager;
 use Spiral\Components\View\CompilerInterface;
 use Spiral\Components\View\ViewManager;
 

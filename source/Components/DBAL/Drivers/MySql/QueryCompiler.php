@@ -8,9 +8,7 @@
  */
 namespace Spiral\Components\DBAL\Drivers\MySql;
 
-use Spiral\Components\DBAL\Builders\SelectQuery;
 use Spiral\Components\DBAL\QueryCompiler as BaseQueryCompiler;
-use Spiral\Components\DBAL\SqlFragmentInterface;
 
 class QueryCompiler extends BaseQueryCompiler
 {

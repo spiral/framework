@@ -9,12 +9,10 @@
 namespace Spiral\Components\DBAL\Drivers\Postgres;
 
 use Spiral\Components\DBAL\Database;
-use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\Driver;
 use PDO;
 use Spiral\Components\DBAL\Drivers\Postgres\Builders\InsertQuery;
-use Spiral\Components\DBAL\ParameterInterface;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\RuntimeCacheInterface;

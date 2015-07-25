@@ -13,7 +13,6 @@ use Spiral\Components\DBAL\Schemas\AbstractColumnSchema;
 use Spiral\Components\ORM\ActiveRecord;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
-use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\SchemaBuilder;
 use Spiral\Core\Container;
 

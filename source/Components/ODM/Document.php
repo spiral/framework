@@ -9,7 +9,6 @@
 namespace Spiral\Components\ODM;
 
 use Spiral\Components\I18n\Translator;
-use Spiral\Core\Events\EventDispatcher;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\DatabaseEntityInterface;
 use Spiral\Support\Models\DataEntity;
@@ -1021,7 +1020,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      */
     public static function findOne(array $query = [], array $sortBy = [])
     {
-        return static::find($query)->findOne();
+        return static::find($query)->sort($sortBy)->findOne();
     }
 
     /**

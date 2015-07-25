@@ -11,7 +11,6 @@ namespace Spiral\Components\DBAL\Drivers\Sqlite;
 use Spiral\Components\DBAL\DBALException;
 use Spiral\Components\DBAL\QueryCompiler as BaseQueryCompiler;
 use Spiral\Core\Component\LoggerTrait;
-use Spiral\Helpers\StringHelper;
 
 class QueryCompiler extends BaseQueryCompiler
 {

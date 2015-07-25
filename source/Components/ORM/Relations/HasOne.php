@@ -9,7 +9,6 @@
 namespace Spiral\Components\ORM\Relations;
 
 use Spiral\Components\ORM\ActiveRecord;
-use Spiral\Components\ORM\ModelIterator;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 

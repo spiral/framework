@@ -8,13 +8,11 @@
  */
 namespace Spiral\Components\Debug;
 
-use Spiral\Components\Files\FileManager;
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
 use Spiral\Core\Container\ContainerException;
 use Exception;
 use Spiral\Core\Core;
-use Spiral\Core\Dispatcher\ClientException;
 
 class Snapshot extends Component
 {
