@@ -17,7 +17,7 @@ class DeleteQuery extends AffectQuery
      * Change target table, table name should be provided without postfix.
      *
      * @param string $into Table name without prefix.
-     * @return static
+     * @return $this
      */
     public function table($into)
     {

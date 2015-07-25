@@ -105,7 +105,7 @@ abstract class AbstractIndexSchema extends Component
      * use TableSchema->renameIndex() method.
      *
      * @param string $name New index name.
-     * @return static
+     * @return $this
      */
     public function setName($name)
     {
@@ -128,7 +128,7 @@ abstract class AbstractIndexSchema extends Component
      * Change index type and behaviour to unique/non-unique state.
      *
      * @param bool $unique
-     * @return static
+     * @return $this
      */
     public function unique($unique = true)
     {
@@ -156,7 +156,7 @@ abstract class AbstractIndexSchema extends Component
      * $index->columns(array('key', 'key2'));
      *
      * @param string|array $columns Columns array or comma separated list of parameters.
-     * @return static
+     * @return $this
      */
     public function columns($columns)
     {

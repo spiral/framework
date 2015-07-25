@@ -34,7 +34,7 @@ class TableSchema extends AbstractTableSchema
      * engine change there is no method to retrieve current value.
      *
      * @param string $engine
-     * @return static
+     * @return $this
      */
     public function engine($engine)
     {

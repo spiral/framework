@@ -255,7 +255,7 @@ class ColumnSchema extends AbstractColumnSchema
      * $table->status->enum('active', 'disabled');
      *
      * @param array|array $values Enum values (array or comma separated).
-     * @return static
+     * @return $this
      */
     public function enum($values)
     {

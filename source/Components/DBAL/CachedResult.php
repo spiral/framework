@@ -125,7 +125,7 @@ class CachedResult extends QueryResult
      *
      * @link http://php.net/manual/en/pdostatement.setfetchmode.php
      * @param int $mode The fetch mode must be one of the PDO::FETCH_* constants.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function fetchMode($mode)
@@ -189,7 +189,7 @@ class CachedResult extends QueryResult
      * @link http://www.php.net/manual/en/function.PDOStatement-bindColumn.php
      * @param integer|string $columnID Column number (1 - first column) or name to bind data to.
      * @param mixed          $variable Variable to bind column value to.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function bind($columnID, &$variable)

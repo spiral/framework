@@ -63,7 +63,7 @@ class ClassElement extends BaseElement
      * Set parent class name.
      *
      * @param string $class Class name.
-     * @return static
+     * @return $this
      */
     public function setParent($class)
     {
@@ -86,7 +86,7 @@ class ClassElement extends BaseElement
      * Add a new implemented interface to the class declaration.
      *
      * @param string $interface Interface name.
-     * @return static
+     * @return $this
      */
     public function addInterface($interface)
     {
@@ -102,7 +102,7 @@ class ClassElement extends BaseElement
      * Remove a implemented interface by it's name.
      *
      * @param string $interface Interface name.
-     * @return static
+     * @return $this
      */
     public function removeInterface($interface)
     {
@@ -118,7 +118,7 @@ class ClassElement extends BaseElement
      * Replace the implemented interfaces with a new given list.
      *
      * @param array $interfaces Array of interface names.
-     * @return static
+     * @return $this
      */
     public function setInterfaces(array $interfaces)
     {
@@ -152,7 +152,7 @@ class ClassElement extends BaseElement
      * Remove property from declaration by it's name.
      *
      * @param string $name Property name.
-     * @return static
+     * @return $this
      */
     public function removeProperty($name)
     {
@@ -205,7 +205,7 @@ class ClassElement extends BaseElement
      * Remove constant by name.
      *
      * @param string $name Constant name.
-     * @return static
+     * @return $this
      */
     public function removeConstant($name)
     {
@@ -219,7 +219,7 @@ class ClassElement extends BaseElement
      *
      * @param string $name  Constant name.
      * @param mixed  $value Constant value.
-     * @return static
+     * @return $this
      */
     public function setConstant($name, $value)
     {
@@ -253,7 +253,7 @@ class ClassElement extends BaseElement
      * Remove method from class declaration by name.
      *
      * @param string $name Method name.
-     * @return static
+     * @return $this
      */
     public function removeMethod($name)
     {
@@ -307,7 +307,7 @@ class ClassElement extends BaseElement
      *
      * @param string|array $search  String to find.
      * @param string|array $replace String to replace.
-     * @return static
+     * @return $this
      */
     public function replaceComments($search, $replace)
     {
@@ -384,7 +384,7 @@ class ClassElement extends BaseElement
      * @param string $class         Class to be cloned.
      * @param bool   $parentMethods Set to true to clone methods declared in parent class.
      * @param bool   $flushSchema   Clear current class schema before cloning.
-     * @return static
+     * @return $this
      */
     public function cloneSchema($class, $parentMethods = false, $flushSchema = true)
     {

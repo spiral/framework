@@ -131,7 +131,7 @@ class ConfigWriter extends Component
      * Read configuration file from some specified directory (application or module config folder).
      *
      * @param string $directory Director where config should be located.
-     * @return static
+     * @return $this
      * @throws ConfigWriterException
      */
     public function readConfig($directory)
@@ -156,7 +156,7 @@ class ConfigWriter extends Component
      * Sett configuration data. Can be readed from existed file using readConfig() method.
      *
      * @param array $content Configuration data.
-     * @return static
+     * @return $this
      */
     public function setConfig($content)
     {
@@ -169,7 +169,7 @@ class ConfigWriter extends Component
      * Parse configuration doc headers from existed file.
      *
      * @param string $filename
-     * @return static
+     * @return $this
      */
     protected function readHeader($filename)
     {

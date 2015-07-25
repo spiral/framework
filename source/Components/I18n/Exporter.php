@@ -69,7 +69,7 @@ abstract class Exporter extends Component
      *
      * @param string $language Should be valid language id.
      * @param string $prefix   Only bundle names started with this prefix will be exported.
-     * @return static
+     * @return $this
      * @throws I18nException
      */
     public function loadLanguage($language, $prefix = '')

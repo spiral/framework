@@ -172,7 +172,7 @@ class Installer extends Component
      * on application initialization.
      *
      * @param bool $required
-     * @return static
+     * @return $this
      */
     public function setBootstrappable($required = null)
     {
@@ -198,7 +198,7 @@ class Installer extends Component
      * @param string $destination Destination filename relative to "root" directory.
      * @param string $filename    Source filename relative to modules directory.
      * @param int    $mode        File mode, use File::RUNTIME for publicly accessible files.
-     * @return static
+     * @return $this
      * @throws ModuleException
      */
     public function registerFile($destination = null, $filename, $mode = FileManager::READONLY)
@@ -233,7 +233,7 @@ class Installer extends Component
      * @param string      $destination Destination directory name relative to root directory.
      * @param string|null $directory   Source directory name relative to modules directory.
      * @param int         $mode        File mode, use File::RUNTIME for publicly accessible files.
-     * @return static
+     * @return $this
      */
     public function registerDirectory(
         $destination = null,
@@ -289,7 +289,7 @@ class Installer extends Component
      *
      * @param string                 $alias  Alias where singleton will be attached to.
      * @param string|object|callable Closure to resolve class instance, class instance or class name.
-     * @return static
+     * @return $this
      */
     public function addBinding($alias, $resolver)
     {
@@ -304,7 +304,7 @@ class Installer extends Component
      *
      * @param ConfigWriter $config
      * @param bool         $readConfig Automatically read config data from modules config directory.
-     * @return static
+     * @return $this
      * @throws ModuleException
      */
     public function registerConfig(ConfigWriter $config, $readConfig = true)
@@ -325,7 +325,7 @@ class Installer extends Component
      *
      * @param string $name      Migration name.
      * @param string $migration Migration class name (should be reachable by framework).
-     * @return static
+     * @return $this
      */
     public function registerMigration($name, $migration)
     {

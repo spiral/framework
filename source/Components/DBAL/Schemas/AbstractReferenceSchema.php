@@ -133,7 +133,7 @@ abstract class AbstractReferenceSchema extends Component
      * drivers will automatically create index while registering foreign key.
      *
      * @param string $column In-table column name.
-     * @return static
+     * @return $this
      */
     public function column($column)
     {
@@ -148,7 +148,7 @@ abstract class AbstractReferenceSchema extends Component
      *
      * @param string $table  Foreign table name without prefix.
      * @param string $column Foreign key name (id by default).
-     * @return static
+     * @return $this
      */
     public function references($table, $column = 'id')
     {
@@ -193,7 +193,7 @@ abstract class AbstractReferenceSchema extends Component
      * associations.
      *
      * @param string $rule Possible values: NO ACTION, CASCADE
-     * @return static
+     * @return $this
      */
     public function onDelete($rule = self::NO_ACTION)
     {
@@ -216,7 +216,7 @@ abstract class AbstractReferenceSchema extends Component
      * Set foreign key update behaviour.
      *
      * @param string $rule Possible values: NO ACTION, CASCADE
-     * @return static
+     * @return $this
      */
     public function onUpdate($rule = self::NO_ACTION)
     {

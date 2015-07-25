@@ -61,7 +61,7 @@ class QueryCompiler extends Component
     /**
      * Reset QueryCompiler aliases cache.
      *
-     * @return static
+     * @return $this
      */
     public function resetAliases()
     {

@@ -107,7 +107,7 @@ class ManyToMorphed implements RelationInterface
      *
      * Morphed relation are not allowing direct data access.
      *
-     * @return static
+     * @return $this
      */
     public function getInstance()
     {

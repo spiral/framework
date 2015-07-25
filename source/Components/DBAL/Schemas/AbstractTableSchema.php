@@ -306,7 +306,7 @@ abstract class AbstractTableSchema extends Component
      * on primary indexes like that.
      *
      * @param array|mixed $columns Array or comma separated set of column names.
-     * @return static
+     * @return $this
      */
     public function setPrimaryKeys($columns)
     {
@@ -582,7 +582,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @param string $column Existed or planned column name.
      * @param string $name   New column name.
-     * @return static
+     * @return $this
      */
     public function renameColumn($column, $name)
     {
@@ -603,7 +603,7 @@ abstract class AbstractTableSchema extends Component
      * method call.
      *
      * @param string|array $column
-     * @return static
+     * @return $this
      */
     public function dropColumn($column)
     {
@@ -627,7 +627,7 @@ abstract class AbstractTableSchema extends Component
      *
      * @param string $index Existed index name.
      * @param string $name  New index name.
-     * @return static
+     * @return $this
      */
     public function renameIndex($index, $name)
     {
@@ -649,7 +649,7 @@ abstract class AbstractTableSchema extends Component
      * method to remove index defined by column(s).
      *
      * @param string|array $index
-     * @return static
+     * @return $this
      */
     public function dropIndex($index)
     {
@@ -674,7 +674,7 @@ abstract class AbstractTableSchema extends Component
      * for removal.
      *
      * @param string|array $foreign
-     * @return static
+     * @return $this
      */
     public function dropForeign($foreign)
     {

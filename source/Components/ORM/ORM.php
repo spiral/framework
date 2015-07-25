@@ -99,7 +99,7 @@ class ORM extends Component
      *
      * @param bool $enabled
      * @param int  $maxSize
-     * @return static
+     * @return $this
      */
     public function entityCache($enabled, $maxSize = null)
     {

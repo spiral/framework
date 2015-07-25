@@ -131,7 +131,7 @@ class ViewManager extends Component
      *
      * @param string $namespace
      * @param string $directory
-     * @return static
+     * @return $this
      */
     public function addNamespace($namespace, $directory)
     {

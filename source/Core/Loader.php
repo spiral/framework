@@ -77,7 +77,7 @@ class Loader extends Component
      * Performs auto-loading and core components initializations. All found classes will be saved
      * into loadmap and fetched directly from it next call load request (without performing file lookup).
      *
-     * @return static
+     * @return $this
      * @throws CoreException
      */
     public function enable()
@@ -99,7 +99,7 @@ class Loader extends Component
     /**
      * Disable autoloading classes via \spiral\Loader.
      *
-     * @return static
+     * @return $this
      */
     public function disable()
     {

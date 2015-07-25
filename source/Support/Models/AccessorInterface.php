@@ -26,7 +26,7 @@ interface AccessorInterface extends ValueInterface, \JsonSerializable
      * Embed to another parent.
      *
      * @param object $parent
-     * @return static
+     * @return $this
      */
     public function embed($parent);
 

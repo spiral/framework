@@ -176,7 +176,7 @@ class Database extends Component implements InjectableInterface
      * Change database table prefix.
      *
      * @param string $tablePrefix
-     * @return static
+     * @return $this
      */
     public function setPrefix($tablePrefix)
     {

@@ -33,7 +33,7 @@ class EventDispatcher extends Component implements DispatcherInterface
      *
      * @param string   $event    Event name.
      * @param callback $listener Valid callback or closure.
-     * @return static
+     * @return $this
      */
     public function addListener($event, $listener)
     {
@@ -52,7 +52,7 @@ class EventDispatcher extends Component implements DispatcherInterface
      *
      * @param string   $event    Event name.
      * @param callback $listener Valid callback or closure.
-     * @return static
+     * @return $this
      */
     public function removeListener($event, $listener)
     {

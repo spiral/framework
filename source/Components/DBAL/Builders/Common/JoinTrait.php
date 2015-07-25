@@ -69,7 +69,7 @@ trait JoinTrait
      * @param string $type Join type. Allowed values, LEFT, RIGHT, INNER and etc.
      * @param string $table Joined table name (without prefix), can have defined alias.
      * @param mixed  $on    Where parameters, closure of array of where conditions.
-     * @return static
+     * @return $this
      */
     public function join($type, $table, $on = null)
     {
@@ -109,7 +109,7 @@ trait JoinTrait
      * @link http://www.w3schools.com/sql/sql_join_inner.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
      * @param mixed  $on    Where parameters, closure of array of where conditions.
-     * @return static
+     * @return $this
      */
     public function innerJoin($table, $on = null)
     {
@@ -149,7 +149,7 @@ trait JoinTrait
      * @link http://www.w3schools.com/sql/sql_join_right.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
      * @param mixed  $on    Where parameters, closure of array of where conditions.
-     * @return static
+     * @return $this
      */
     public function rightJoin($table, $on = null)
     {
@@ -189,7 +189,7 @@ trait JoinTrait
      * @link http://www.w3schools.com/sql/sql_join_left.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
      * @param mixed  $on    Where parameters, closure of array of where conditions.
-     * @return static
+     * @return $this
      */
     public function leftJoin($table, $on = null)
     {
@@ -229,7 +229,7 @@ trait JoinTrait
      * @link http://www.w3schools.com/sql/sql_join_left.asp
      * @param string $table Joined table name (without prefix), can have defined alias.
      * @param mixed  $on    Where parameters, closure of array of where conditions.
-     * @return static
+     * @return $this
      */
     public function fullJoin($table, $on = null)
     {
@@ -269,7 +269,7 @@ trait JoinTrait
      * @param mixed $on         Joined column name or SQLFragment, or where array.
      * @param mixed $operator   Foreign column is operator specified.
      * @param mixed $identifier Foreign column.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function on($on = null, $operator = null, $identifier = null)
@@ -313,7 +313,7 @@ trait JoinTrait
      * @param mixed $on         Joined column name or SQLFragment, or where array.
      * @param mixed $operator   Foreign column is operator specified.
      * @param mixed $identifier Foreign column.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function andOn($on = null, $operator = null, $identifier = null)
@@ -378,7 +378,7 @@ trait JoinTrait
      * @param mixed $on         Joined column name or SQLFragment, or where array.
      * @param mixed $operator   Foreign column is operator specified.
      * @param mixed $identifier Foreign column.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function orOn($on = null, $operator = null, $identifier = null)
@@ -423,7 +423,7 @@ trait JoinTrait
      * @param mixed $on       Joined column name or SQLFragment, or where array.
      * @param mixed $operator Foreign column is operator specified.
      * @param mixed $value    Value.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function onWhere($on = null, $operator = null, $value = null)
@@ -468,7 +468,7 @@ trait JoinTrait
      * @param mixed $on       Joined column name or SQLFragment, or where array.
      * @param mixed $operator Foreign column is operator specified.
      * @param mixed $value    Value.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function andOnWhere($on = null, $operator = null, $value = null)
@@ -513,7 +513,7 @@ trait JoinTrait
      * @param mixed $on       Joined column name or SQLFragment, or where array.
      * @param mixed $operator Foreign column is operator specified.
      * @param mixed $value    Value.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function orOnWhere($on = null, $operator = null, $value = null)

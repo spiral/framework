@@ -119,7 +119,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      * will not be forwarded to collection.
      *
      * @param bool $solidState Solid state flag value.
-     * @return static|Document[]
+     * @return $this|Document[]
      */
     public function solidState($solidState)
     {
@@ -145,7 +145,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
      *                                      for.
-     * @return static
+     * @return $this
      * @throws ODMException
      */
     public function embed($parent)
@@ -380,7 +380,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     /**
      * Clearing document composition.
      *
-     * @return static|Document[]
+     * @return $this|Document[]
      */
     public function clear()
     {
@@ -393,7 +393,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
     /**
      * Request validation.
      *
-     * @return static
+     * @return $this
      */
     public function requestValidation()
     {
@@ -630,7 +630,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @param Document $document
      * @param bool     $ignoreState Set to true to reset compositor solid state.
-     * @return static|Document[]
+     * @return $this|Document[]
      * @throws ODMException
      */
     public function push(Document $document, $ignoreState = true)
@@ -666,7 +666,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @param array|Document $query
      * @param bool           $ignoreState Set to true to reset compositor solid state.
-     * @return static|Document[]
+     * @return $this|Document[]
      * @throws ODMException
      */
     public function pull($query, $ignoreState = true)
@@ -714,7 +714,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      *
      * @param Document $document
      * @param bool     $ignoreState Set to true to reset compositor solid state.
-     * @return static|Document[]
+     * @return $this|Document[]
      * @throws ODMException
      */
     public function addToSet(Document $document, $ignoreState = true)

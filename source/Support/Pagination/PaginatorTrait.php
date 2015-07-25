@@ -64,7 +64,7 @@ trait PaginatorTrait
      * Set selection limit.
      *
      * @param int $limit
-     * @return static
+     * @return $this
      */
     public function limit($limit = 0)
     {
@@ -87,7 +87,7 @@ trait PaginatorTrait
      * Set selection offset.
      *
      * @param int $offset
-     * @return static
+     * @return $this
      */
     public function offset($offset = 0)
     {
@@ -107,7 +107,7 @@ trait PaginatorTrait
      *                                              to store the current page number. "page" by default.
      * @param ServerRequestInterface $request       Source of page number. Will be fetched from
      *                                              container if nothing else if provided.
-     * @return static
+     * @return $this
      */
     public function paginate(
         $limit = 25,
@@ -147,7 +147,7 @@ trait PaginatorTrait
     /**
      * Apply pagination to current object. Will be applied only if internal paginator already constructed.
      *
-     * @return static
+     * @return $this
      */
     protected function doPagination()
     {

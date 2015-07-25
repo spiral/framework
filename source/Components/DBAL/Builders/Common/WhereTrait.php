@@ -99,7 +99,7 @@ trait WhereTrait
      * @param mixed        $variousA   Operator or value.
      * @param mixed        $variousB   Value is operator specified.
      * @param mixed        $variousC   Specified only in between statements.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function where($identifier, $variousA = null, $variousB = null, $variousC = null)
@@ -172,7 +172,7 @@ trait WhereTrait
      * @param mixed        $variousA   Operator or value.
      * @param mixed        $variousB   Value is operator specified.
      * @param mixed        $variousC   Specified only in between statements.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function andWhere($identifier, $variousA = null, $variousB = null, $variousC = null)
@@ -245,7 +245,7 @@ trait WhereTrait
      * @param mixed        $variousA   Operator or value.
      * @param mixed        $variousB   Value is operator specified.
      * @param mixed        $variousC   Specified only in between statements.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function orWhere($identifier, $variousA = [], $variousB = null, $variousC = null)

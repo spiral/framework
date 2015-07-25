@@ -24,7 +24,7 @@ abstract class Component
      * @param array     $parameters Named parameters list to use for instance constructing.
      * @param Container $container  Container instance used to resolve dependencies, if not provided
      *                              global container will be used.
-     * @return static
+     * @return $this
      * @throws CoreException
      */
     public static function make($parameters = [], Container $container = null)

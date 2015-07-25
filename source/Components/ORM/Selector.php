@@ -138,7 +138,7 @@ class Selector extends AbstractSelectQuery
      * executed.
      *
      * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
-     * @return static
+     * @return $this
      */
     public function columns($columns = ['*'])
     {
@@ -202,7 +202,7 @@ class Selector extends AbstractSelectQuery
      * @see load()
      * @param string $relation
      * @param array  $options
-     * @return static
+     * @return $this
      */
     public function with($relation, array $options = [])
     {
@@ -291,7 +291,7 @@ class Selector extends AbstractSelectQuery
      * @see with()
      * @param string $relation
      * @param array  $options
-     * @return static
+     * @return $this
      */
     public function load($relation, array $options = [])
     {
@@ -433,7 +433,7 @@ class Selector extends AbstractSelectQuery
      * @param mixed        $variousA   Operator or value.
      * @param mixed        $variousB   Value is operator specified.
      * @param mixed        $variousC   Specified only in between statements.
-     * @return static
+     * @return $this
      */
     public function find($identifier, $variousA = null, $variousB = null, $variousC = null)
     {

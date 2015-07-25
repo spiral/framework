@@ -52,7 +52,7 @@ class UpdateQuery extends AffectQuery
      * Change target table, table name should be provided without postfix.
      *
      * @param string $into Table name without prefix.
-     * @return static
+     * @return $this
      */
     public function table($into)
     {
@@ -66,7 +66,7 @@ class UpdateQuery extends AffectQuery
      * scalar, Parameter or SqlFragment data.
      *
      * @param array $values Array of column names associated with values to be updated.
-     * @return static
+     * @return $this
      */
     public function values(array $values)
     {
@@ -80,7 +80,7 @@ class UpdateQuery extends AffectQuery
      *
      * @param string $column
      * @param mixed  $value Scalar, Parameter or SQLFragment. Can be nested query.
-     * @return static
+     * @return $this
      */
     public function set($column, $value)
     {

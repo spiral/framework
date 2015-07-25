@@ -55,7 +55,7 @@ class InsertQuery extends QueryBuilder
      * Change target table, table name should be provided without postfix.
      *
      * @param string $into Table name without prefix.
-     * @return static
+     * @return $this
      */
     public function into($into)
     {
@@ -74,7 +74,7 @@ class InsertQuery extends QueryBuilder
      * $insert->columns("name, email");
      *
      * @param array|string $columns Array of columns, or comma separated string or multiple parameters.
-     * @return static
+     * @return $this
      */
     public function columns($columns)
     {
@@ -107,7 +107,7 @@ class InsertQuery extends QueryBuilder
      *
      * @param mixed $values Array of values, array of rowsets of multiple parameters represents one
      *                      rowset.
-     * @return static
+     * @return $this
      */
     public function values($values)
     {

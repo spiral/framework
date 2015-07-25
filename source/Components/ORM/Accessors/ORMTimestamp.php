@@ -56,7 +56,7 @@ class ORMTimestamp extends BaseTimestamp implements ORMAccessor
      * Embed to another parent.
      *
      * @param object $parent
-     * @return static
+     * @return $this
      */
     public function embed($parent)
     {
@@ -70,7 +70,7 @@ class ORMTimestamp extends BaseTimestamp implements ORMAccessor
     /**
      * Getting mocked value.
      *
-     * @return static
+     * @return $this
      */
     public function serializeData()
     {
@@ -91,7 +91,7 @@ class ORMTimestamp extends BaseTimestamp implements ORMAccessor
      * Get new field value to be send to database.
      *
      * @param string $field Name of field where model/accessor stored into.
-     * @return static
+     * @return $this
      */
     public function compileUpdates($field = '')
     {

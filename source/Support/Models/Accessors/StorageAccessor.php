@@ -70,7 +70,7 @@ abstract class StorageAccessor implements AccessorInterface, StreamContainerInte
      * Embed to another parent.
      *
      * @param object $parent
-     * @return static
+     * @return $this
      */
     public function embed($parent)
     {

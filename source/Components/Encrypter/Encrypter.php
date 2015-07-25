@@ -66,7 +66,7 @@ class Encrypter extends Component
      * Set the encryption key.
      *
      * @param  string $key
-     * @return static
+     * @return $this
      * @throws EncrypterException
      */
     public function setKey($key)
@@ -90,7 +90,7 @@ class Encrypter extends Component
      * Set the encryption cipher.
      *
      * @param  string $method
-     * @return static
+     * @return $this
      */
     public function setMethod($method)
     {
@@ -103,7 +103,7 @@ class Encrypter extends Component
      * Restore encryption values specified in configuration,
      * key, mode and cipher will be altered.
      *
-     * @return static
+     * @return $this
      * @throws EncrypterException
      */
     public function restoreDefaults()

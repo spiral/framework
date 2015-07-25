@@ -19,7 +19,7 @@ trait SingletonTrait
      *
      * @param Container $container Container instance to resolve object, global container will be used
      *                             if no option provided.
-     * @return static
+     * @return $this
      */
     public static function getInstance(Container $container = null)
     {

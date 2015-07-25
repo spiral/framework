@@ -133,7 +133,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      * be saved as one big set request.
      *
      * @param bool $solidState Solid state flag value.
-     * @return static
+     * @return $this
      */
     public function solidState($solidState)
     {
@@ -280,7 +280,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
     /**
      * Clearing all values.
      *
-     * @return static
+     * @return $this
      */
     public function clear()
     {
@@ -391,7 +391,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      * Alias for atomic operation $push.
      *
      * @param string $value
-     * @return static
+     * @return $this
      */
     public function push($value)
     {
@@ -410,7 +410,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      * Alias for atomic operation $addToSet.
      *
      * @param string $value
-     * @return static
+     * @return $this
      */
     public function addToSet($value)
     {
@@ -429,7 +429,7 @@ class ScalarArray implements ODMAccessor, \IteratorAggregate, \Countable, \Array
      * Alias for atomic operation $pull.
      *
      * @param string $value
-     * @return static
+     * @return $this
      */
     public function pull($value)
     {

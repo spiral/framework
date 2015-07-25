@@ -477,7 +477,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
      * Update multiple non-secured model fields. Event "setFields" raised here.
      *
      * @param array|\Traversable $fields
-     * @return static
+     * @return $this
      */
     public function setFields($fields = [])
     {
@@ -544,7 +544,7 @@ abstract class DataEntity extends Component implements \JsonSerializable, \Itera
     /**
      * Request validation.
      *
-     * @return static
+     * @return $this
      */
     public function requestValidation()
     {

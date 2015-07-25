@@ -173,7 +173,7 @@ abstract class Driver extends Component
      * recommended option on development environment.
      *
      * @param bool $enabled Enable or disable driver profiling.
-     * @return static
+     * @return $this
      */
     public function profiling($enabled = true)
     {
@@ -238,7 +238,7 @@ abstract class Driver extends Component
      * Manually set associated PDO instance.
      *
      * @param PDO $pdo
-     * @return static
+     * @return $this
      */
     public function setPDO(PDO $pdo)
     {
@@ -266,7 +266,7 @@ abstract class Driver extends Component
     /**
      * Disconnect PDO.
      *
-     * @return static
+     * @return $this
      */
     public function disconnect()
     {

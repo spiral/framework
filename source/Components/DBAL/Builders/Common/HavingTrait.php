@@ -120,7 +120,7 @@ trait HavingTrait
      * @param mixed        $variousA   Operator or value.
      * @param mixed        $variousB   Value is operator specified.
      * @param mixed        $variousC   Specified only in between statements.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function having($identifier, $variousA = null, $variousB = null, $variousC = null)
@@ -195,7 +195,7 @@ trait HavingTrait
      * @param mixed        $variousA   Operator or value.
      * @param mixed        $variousB   Value is operator specified.
      * @param mixed        $variousC   Specified only in between statements.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function andHaving($identifier, $variousA = null, $variousB = null, $variousC = null)
@@ -269,7 +269,7 @@ trait HavingTrait
      * @param mixed        $variousA   Operator or value.
      * @param mixed        $variousB   Value is operator specified.
      * @param mixed        $variousC   Specified only in between statements.
-     * @return static
+     * @return $this
      * @throws DBALException
      */
     public function orHaving($identifier, $variousA = [], $variousB = null, $variousC = null)

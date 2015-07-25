@@ -142,7 +142,7 @@ class Paginator extends Component
      *
      * @param string|null $pageParameter New page parameter, page number will be fetched again after
      *                                   it is updated.
-     * @return static
+     * @return $this
      */
     public function setParameter($pageParameter)
     {

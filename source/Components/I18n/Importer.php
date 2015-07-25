@@ -109,7 +109,7 @@ abstract class Importer extends Component
      * Opening file.
      *
      * @param string $filename
-     * @return static
+     * @return $this
      * @throws I18nException
      */
     public function openFile($filename)

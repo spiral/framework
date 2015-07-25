@@ -122,7 +122,7 @@ class HttpDispatcher extends Component implements DispatcherInterface
      *
      * @param string                              $path Http Uri path with / and in lower case.
      * @param string|callable|MiddlewareInterface $endpoint
-     * @return static
+     * @return $this
      */
     public function add($path, $endpoint)
     {

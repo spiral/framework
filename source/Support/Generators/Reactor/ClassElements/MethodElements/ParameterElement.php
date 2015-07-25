@@ -71,7 +71,7 @@ class ParameterElement extends Component
      * Overwrite the parameter's name.
      *
      * @param string $name New parameter name.
-     * @return static
+     * @return $this
      */
     public function setName($name)
     {
@@ -94,7 +94,7 @@ class ParameterElement extends Component
      * Change parameter type.
      *
      * @param string $type Class name or "array".
-     * @return static
+     * @return $this
      */
     public function setType($type)
     {
@@ -117,7 +117,7 @@ class ParameterElement extends Component
      * Flag that parameter should pass by reference.
      *
      * @param bool $passedByReference
-     * @return static
+     * @return $this
      */
     public function setPBR($passedByReference = false)
     {
@@ -151,7 +151,7 @@ class ParameterElement extends Component
      *
      * @param bool  $optional     True if parameter option.
      * @param mixed $defaultValue Parameter default value.
-     * @return static
+     * @return $this
      */
     public function setOptional($optional, $defaultValue = null)
     {

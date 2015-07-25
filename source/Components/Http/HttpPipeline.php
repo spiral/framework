@@ -58,7 +58,7 @@ class HttpPipeline extends Component
      * receive 3 parameters, Request, next closure and context.
      *
      * @param mixed $middleware
-     * @return static
+     * @return $this
      */
     public function add($middleware)
     {
@@ -72,7 +72,7 @@ class HttpPipeline extends Component
      * response data (depends on context). Target should always be specified.
      *
      * @param callable $target
-     * @return static
+     * @return $this
      */
     public function target($target)
     {

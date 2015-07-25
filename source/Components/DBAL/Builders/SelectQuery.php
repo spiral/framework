@@ -63,7 +63,7 @@ class SelectQuery extends AbstractSelectQuery
      * alias (AS construction).
      *
      * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
-     * @return static
+     * @return $this
      */
     public function columns($columns)
     {
@@ -77,7 +77,7 @@ class SelectQuery extends AbstractSelectQuery
      * can be provided with specified alias (AS construction).
      *
      * @param array|string|mixed $columns Array of names, comma separated string or set of parameters.
-     * @return static
+     * @return $this
      */
     public function select($columns)
     {
@@ -91,7 +91,7 @@ class SelectQuery extends AbstractSelectQuery
      * alias (AS construction).
      *
      * @param array|string|mixed $tables Array of names, comma separated string or set of parameters.
-     * @return static
+     * @return $this
      */
     public function from($tables)
     {

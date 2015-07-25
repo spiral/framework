@@ -83,7 +83,7 @@ class AskHelper extends Component
      * Update maxAttempts value.
      *
      * @param int $maxAttempts
-     * @return static
+     * @return $this
      */
     public function maxAttempts($maxAttempts)
     {
@@ -97,7 +97,7 @@ class AskHelper extends Component
      *
      * @param bool $hidden
      * @param bool $fallback Hidden fallback.
-     * @return static
+     * @return $this
      */
     public function hidden($hidden = true, $fallback = true)
     {

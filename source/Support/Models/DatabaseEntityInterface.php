@@ -23,7 +23,7 @@ interface DatabaseEntityInterface
      * Update multiple non-secured model fields.
      *
      * @param array $fields
-     * @return static
+     * @return $this
      */
     public function setFields($fields = []);
 
@@ -51,7 +51,7 @@ interface DatabaseEntityInterface
      * to ensure their type.
      *
      * @param array $fields Model fields to set, will be passed thought filters.
-     * @return static
+     * @return $this
      */
     public static function create($fields = []);
 

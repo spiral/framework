@@ -47,7 +47,7 @@ class FileElement extends NamespaceElement
      * Adding a new reactor element to a file.
      *
      * @param BaseElement $element
-     * @return static
+     * @return $this
      */
     public function addElement(BaseElement $element)
     {
@@ -60,7 +60,7 @@ class FileElement extends NamespaceElement
      * Add a new class declaration to a file.
      *
      * @param ClassElement $class
-     * @return static
+     * @return $this
      */
     public function addClass(ClassElement $class)
     {

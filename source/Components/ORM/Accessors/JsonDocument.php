@@ -50,7 +50,7 @@ abstract class JsonDocument extends Document implements ORMAccessor
      * Update accessor mocked data.
      *
      * @param mixed $data
-     * @return static
+     * @return $this
      */
     public function setData($data)
     {

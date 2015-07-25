@@ -277,7 +277,7 @@ abstract class AbstractColumnSchema extends Component
      * TableSchema->renameColumn(). This is internal method used to rename column inside schema.
      *
      * @param string $name New column name.
-     * @return static
+     * @return $this
      */
     public function setName($name)
     {
@@ -337,7 +337,7 @@ abstract class AbstractColumnSchema extends Component
      * cross type conversions and etc. Try do not change column type without a reason.
      *
      * @param string $type Abstract or virtual type declared in mapping.
-     * @return static
+     * @return $this
      * @throws SchemaBuilderException
      */
     public function type($type)
@@ -463,7 +463,7 @@ abstract class AbstractColumnSchema extends Component
      * Set column nullable.
      *
      * @param bool $nullable
-     * @return static
+     * @return $this
      */
     public function nullable($nullable = true)
     {
@@ -520,7 +520,7 @@ abstract class AbstractColumnSchema extends Component
      * that value should gain current time on row creation, this can be applied only to timestamp fields.
      *
      * @param mixed $value
-     * @return static
+     * @return $this
      */
     public function defaultValue($value)
     {
@@ -541,7 +541,7 @@ abstract class AbstractColumnSchema extends Component
      * integer with auto-increment flag. If you need compound indexes, use
      * TableSchema->setPrimaryKeys(...) method.
      *
-     * @return static
+     * @return $this
      */
     public function primary()
     {
@@ -555,7 +555,7 @@ abstract class AbstractColumnSchema extends Component
      * primary key is integer with auto-increment flag. If you need compound indexes, use
      * TableSchema->setPrimaryKeys(...) method.
      *
-     * @return static
+     * @return $this
      */
     public function bigPrimary()
     {
@@ -574,7 +574,7 @@ abstract class AbstractColumnSchema extends Component
      * $table->status->enum('active', 'disabled');
      *
      * @param array|array $values Enum values (array or comma separated).
-     * @return static
+     * @return $this
      */
     public function enum($values)
     {
@@ -605,7 +605,7 @@ abstract class AbstractColumnSchema extends Component
      *
      * @link http://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
      * @param int $size Max string length. Maximum value is 255.
-     * @return static
+     * @return $this
      */
     public function string($size = 255)
     {
@@ -633,7 +633,7 @@ abstract class AbstractColumnSchema extends Component
      *
      * @param int $precision
      * @param int $scale
-     * @return static
+     * @return $this
      */
     public function decimal($precision, $scale)
     {
@@ -655,7 +655,7 @@ abstract class AbstractColumnSchema extends Component
      *
      * @param string $type      Abstract or virtual type declared in mapping.
      * @param array  $arguments Not used.
-     * @return static
+     * @return $this
      */
     public function __call($type, array $arguments = [])
     {

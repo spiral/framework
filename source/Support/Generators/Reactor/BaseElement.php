@@ -66,7 +66,7 @@ abstract class BaseElement extends Component
      * Overwrite the element's name.
      *
      * @param string $name New element name.
-     * @return static
+     * @return $this
      */
     public function setName($name)
     {
@@ -80,7 +80,7 @@ abstract class BaseElement extends Component
      *
      * @param string|array $docComment
      * @param bool         $append If false, the current doc comment will be erased.
-     * @return static
+     * @return $this
      */
     public function setComment($docComment, $append = false)
     {
@@ -113,7 +113,7 @@ abstract class BaseElement extends Component
      *
      * @param string|array $search  String to find.
      * @param string|array $replace String to replace with.
-     * @return static
+     * @return $this
      */
     public function replaceComments($search, $replace)
     {
@@ -130,7 +130,7 @@ abstract class BaseElement extends Component
      * Performs multiple replacements for every key => value pair.
      *
      * @param array $replaces Associated array (search=>replace).
-     * @return static
+     * @return $this
      */
     public function batchCommentsReplace(array $replaces)
     {

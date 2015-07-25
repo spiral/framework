@@ -56,7 +56,7 @@ class MethodElement extends BaseElement
      * Set access level.
      *
      * @param string $access Public by default.
-     * @return static
+     * @return $this
      */
     public function setAccess($access = self::ACCESS_PUBLIC)
     {
@@ -79,7 +79,7 @@ class MethodElement extends BaseElement
      * Mark method as static/non static.
      *
      * @param bool $static True if property is static.
-     * @return static
+     * @return $this
      */
     public function setStatic($static)
     {
@@ -157,7 +157,7 @@ class MethodElement extends BaseElement
      *
      * @param string|array $source
      * @param bool         $append
-     * @return static
+     * @return $this
      */
     public function setSource($source, $append = false)
     {
@@ -204,7 +204,7 @@ class MethodElement extends BaseElement
      *
      * @param string|array $search  String to find.
      * @param string|array $replace String to replace for.
-     * @return static
+     * @return $this
      */
     public function replaceComments($search, $replace)
     {

@@ -90,7 +90,7 @@ class Isolator extends Component
      * default.
      *
      * @param bool $enable
-     * @return static
+     * @return $this
      */
     public function shortTags($enable)
     {
@@ -239,7 +239,7 @@ class Isolator extends Component
      * Update isolator php blocks.
      *
      * @param array $phpBlocks
-     * @return static
+     * @return $this
      */
     public function setBlocks($phpBlocks)
     {

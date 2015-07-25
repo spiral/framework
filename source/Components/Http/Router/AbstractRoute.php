@@ -113,7 +113,7 @@ abstract class AbstractRoute implements RouteInterface
      * scenario route will be available under old name.
      *
      * @param string $name
-     * @return static
+     * @return $this
      */
     public function name($name)
     {
@@ -126,7 +126,7 @@ abstract class AbstractRoute implements RouteInterface
      * If true (default) route will be matched against path + URI host.
      *
      * @param bool $withHost
-     * @return static
+     * @return $this
      */
     public function useHost($withHost = true)
     {
@@ -143,7 +143,7 @@ abstract class AbstractRoute implements RouteInterface
      * $route->only(['POST', 'PUT']);
      *
      * @param array|string $method
-     * @return static
+     * @return $this
      */
     public function only($method)
     {
@@ -156,7 +156,7 @@ abstract class AbstractRoute implements RouteInterface
      * Set default values (will be merged with current default) to be used in generated target.
      *
      * @param array $default
-     * @return static
+     * @return $this
      */
     public function defaults(array $default)
     {
@@ -176,7 +176,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @param string|MiddlewareInterface|\Closure $middleware Inner middleware alias, instance or
      *                                                        closure.
-     * @return static
+     * @return $this
      */
     public function with($middleware)
     {

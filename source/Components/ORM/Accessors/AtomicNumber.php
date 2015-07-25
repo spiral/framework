@@ -129,7 +129,7 @@ class AtomicNumber implements ORMAccessor
      * Increment numeric value (alias for inc).
      *
      * @param float|int $delta
-     * @return static
+     * @return $this
      */
     public function inc($delta = 1)
     {
@@ -143,7 +143,7 @@ class AtomicNumber implements ORMAccessor
      * Increment numeric value (alias for inc).
      *
      * @param float|int $delta
-     * @return static
+     * @return $this
      */
     public function add($delta = 1)
     {
@@ -157,7 +157,7 @@ class AtomicNumber implements ORMAccessor
      * Decrement numeric value.
      *
      * @param float|int $delta
-     * @return static
+     * @return $this
      */
     public function dec($delta = 1)
     {

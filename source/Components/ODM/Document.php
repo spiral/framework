@@ -281,7 +281,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param bool $solidState  Solid state flag value.
      * @param bool $forceUpdate Mark all fields as changed to force update later.
-     * @return static
+     * @return $this
      */
     public function solidState($solidState, $forceUpdate = false)
     {
@@ -357,7 +357,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param CompositableInterface $parent Parent ODMCompositable object should be copied or prepared
      *                                      for.
-     * @return static
+     * @return $this
      */
     public function embed($parent)
     {
@@ -404,7 +404,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * Update accessor mocked data.
      *
      * @param mixed $data
-     * @return static
+     * @return $this
      */
     public function setData($data)
     {
@@ -591,7 +591,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param string $field
      * @param mixed  $value
-     * @return static
+     * @return $this
      * @throws ODMException
      */
     public function set($field, $value)
@@ -612,7 +612,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param string $field
      * @param string $value
-     * @return static
+     * @return $this
      * @throws ODMException
      */
     public function inc($field, $value)
@@ -968,7 +968,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param array $fields Model fields to set, will be passed thought filters.
      * @param ODM   $odm    ODM component, will be received from Container if not provided.
-     * @return static
+     * @return Document
      */
     public static function create($fields = [], ODM $odm = null)
     {
@@ -990,7 +990,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * class. You have to solve it manually by overwrite this method in your class.
      *
      * @param mixed $query Fields and conditions to filter by.
-     * @return Collection|static[]
+     * @return Collection|Document[]
      */
     public static function find(array $query = [])
     {
@@ -1004,7 +1004,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      * your class.
      *
      * @param mixed $query Fields and conditions to filter by.
-     * @return Collection|static[]
+     * @return Collection|Document[]
      */
     public static function select(array $query = [])
     {
@@ -1016,7 +1016,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param array $query  Fields and conditions to filter by.
      * @param array $sortBy Sorting.
-     * @return static
+     * @return Document
      */
     public static function findOne(array $query = [], array $sortBy = [])
     {
@@ -1029,7 +1029,7 @@ abstract class Document extends DataEntity implements CompositableInterface, Dat
      *
      * @param mixed $mongoID Valid MongoId, string value will be automatically converted to MongoId
      *                       object.
-     * @return static
+     * @return Document
      * @throws ODMException
      */
     public static function findByPK($mongoID = null)

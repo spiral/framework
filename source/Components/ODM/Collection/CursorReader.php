@@ -92,7 +92,7 @@ class CursorReader implements \Iterator
      * @link http://www.php.net/manual/en/mongocursor.fields.php
      * @param array $fields Fields to return (or not return).
      * @throws \MongoCursorException
-     * @return static
+     * @return $this
      */
     public function fields(array $fields)
     {

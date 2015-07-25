@@ -123,7 +123,7 @@ class Tokenizer extends Component
      * ));
      *
      * @param array $highlighting
-     * @return static
+     * @return $this
      */
     public function setHighlightingStyles($highlighting)
     {

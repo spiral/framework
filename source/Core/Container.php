@@ -46,7 +46,7 @@ class Container extends Component implements \ArrayAccess
      * methods of components invoked. Technically this is only one real singleton. SetInstance method
      * is not presented (i feel this way), but possibly can be added in future.
      *
-     * @return static
+     * @return $this
      */
     public static function getInstance()
     {

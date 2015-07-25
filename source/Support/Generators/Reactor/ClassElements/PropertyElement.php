@@ -55,7 +55,7 @@ class PropertyElement extends BaseElement
      * Set access level.
      *
      * @param string $access Public by default.
-     * @return static
+     * @return $this
      */
     public function setAccess($access = self::ACCESS_PUBLIC)
     {
@@ -78,7 +78,7 @@ class PropertyElement extends BaseElement
      * Mark property as static/non static.
      *
      * @param bool $static True if property is static.
-     * @return static
+     * @return $this
      */
     public function setStatic($static)
     {
@@ -113,7 +113,7 @@ class PropertyElement extends BaseElement
      * @param bool  $default      Default value flag (if false, property will be designated as non
      *                            default).
      * @param mixed $defaultValue Property default value (string, array, etc).
-     * @return static
+     * @return $this
      */
     public function setDefault($default, $defaultValue = false)
     {

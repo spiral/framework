@@ -103,7 +103,7 @@ class MongoDatabase extends \MongoDB implements InjectableInterface
      * recommended option on development environment.
      *
      * @param bool $enabled Enable or disable driver profiling.
-     * @return static
+     * @return $this
      */
     public function profiling($enabled = true)
     {

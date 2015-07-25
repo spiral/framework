@@ -32,7 +32,7 @@ class MigrationCreator extends ClassCreator
      * Add code which is required to create and drop table.
      *
      * @param string $table
-     * @return static
+     * @return $this
      */
     public function createTable($table)
     {
@@ -58,7 +58,7 @@ class MigrationCreator extends ClassCreator
      * Add code which is required to alter table.
      *
      * @param string $table
-     * @return static
+     * @return $this
      */
     public function alterTable($table)
     {

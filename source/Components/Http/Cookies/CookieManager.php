@@ -467,7 +467,7 @@ class CookieManager extends Component implements MiddlewareInterface
      * Schedule new cookie instance to be send while dispatching request.
      *
      * @param Cookie $cookie
-     * @return static
+     * @return $this
      */
     public function add(Cookie $cookie)
     {

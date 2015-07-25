@@ -97,7 +97,7 @@ class DirectRoute extends AbstractRoute
      * ]);
      *
      * @param array $controllers
-     * @return static
+     * @return $this
      */
     public function controllers(array $controllers)
     {

@@ -149,7 +149,7 @@ class Logger extends AbstractLogger
      * Change logger options, like date formats, rotations postfixes and etc.
      *
      * @param array $options
-     * @return static
+     * @return $this
      */
     public function setOptions($options)
     {
@@ -166,7 +166,7 @@ class Logger extends AbstractLogger
      * @param string $level    Log level, use Logger::allMessages to log all messages.
      * @param string $filename Log filename.
      * @param int    $filesize Max filesize to perform rotation, 2MB by default.
-     * @return static
+     * @return $this
      */
     public function setFileHandler($level, $filename, $filesize = 2097152)
     {
@@ -182,7 +182,7 @@ class Logger extends AbstractLogger
      * @param mixed  $level
      * @param string $message
      * @param array  $context
-     * @return static
+     * @return $this
      */
     public function log($level, $message, array $context = [])
     {

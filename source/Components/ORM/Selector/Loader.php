@@ -345,7 +345,7 @@ abstract class Loader implements LoaderInterface
      * Update loader options.
      *
      * @param array $options
-     * @return static
+     * @return $this
      * @throws ORMException
      */
     public function setOptions(array $options = [])

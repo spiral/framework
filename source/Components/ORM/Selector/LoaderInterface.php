@@ -36,7 +36,7 @@ interface LoaderInterface
      * Update loader options.
      *
      * @param array $options
-     * @return static
+     * @return $this
      */
     public function setOptions(array $options = []);
 

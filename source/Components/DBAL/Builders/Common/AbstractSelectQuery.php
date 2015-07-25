@@ -97,7 +97,7 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      *                                 key based on generated SQL.
      * @param StoreInterface $store    Cache store to be used, default store will be used if nothing
      *                                 was specified.
-     * @return static
+     * @return $this
      */
     public function cache($lifetime, $key = '', StoreInterface $store = null)
     {
@@ -113,7 +113,7 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      * records from database.
      *
      * @param bool $distinct
-     * @return static
+     * @return $this
      */
     public function distinct($distinct = true)
     {
@@ -126,7 +126,7 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      * Specify grouping identifier or expression for select query.
      *
      * @param string $identifier
-     * @return static
+     * @return $this
      */
     public function groupBy($identifier)
     {
@@ -148,7 +148,7 @@ abstract class AbstractSelectQuery extends QueryBuilder implements
      *
      * @param string|array $identifier Column or expression of SqlFragment.
      * @param string       $direction  Sorting direction, ASC|DESC.
-     * @return static
+     * @return $this
      */
     public function orderBy($identifier, $direction = 'ASC')
     {

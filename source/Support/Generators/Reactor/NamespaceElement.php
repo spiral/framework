@@ -28,7 +28,7 @@ class NamespaceElement extends BaseElement
      * Add a new class declaration to namespace.
      *
      * @param ClassElement $class
-     * @return static
+     * @return $this
      */
     public function addClass(ClassElement $class)
     {
@@ -51,7 +51,7 @@ class NamespaceElement extends BaseElement
      * Add a new class usage to namespace.
      *
      * @param string $class Class name.
-     * @return static
+     * @return $this
      */
     public function addUse($class)
     {
@@ -67,7 +67,7 @@ class NamespaceElement extends BaseElement
      * Replace all used classes with a new given list.
      *
      * @param array $uses
-     * @return static
+     * @return $this
      */
     public function setUses(array $uses)
     {
