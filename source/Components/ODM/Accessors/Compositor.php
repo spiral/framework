@@ -471,7 +471,7 @@ class Compositor implements ODMAccessor, \IteratorAggregate, \Countable, \ArrayA
      * Find composited (nested document) by matched query. Query can be or array of fields, or
      * Document instance.
      *
-     * @param array $query
+     * @param array|Document $query
      * @return array|Document[]
      */
     public function find($query = [])
