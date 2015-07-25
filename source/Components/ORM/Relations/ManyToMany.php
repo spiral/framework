@@ -98,7 +98,6 @@ class ManyToMany extends Relation implements \Countable
         )->count();
     }
 
-
     /**
      * Check if ActiveRecord(s) associated with this relation. Method can accept one id, array of ids,
      * or instance of ActiveRecord. In case of multiple ids provided method will return true only
@@ -119,12 +118,42 @@ class ManyToMany extends Relation implements \Countable
             $this->wherePivot($this->innerKey(), $this->prepareIDs($modelID))
         );
 
+        //We can use hasEach methods there, but this is more optimal way
         return $selectQuery->count() == count($modelID);
     }
 
+    /**
+     * Return only list of ids which are linked.
+     *
+     * Examples:
+     * $user->tags()->hasEach($tag);
+     * $user->tags()->hasEach([$tagA, $tagB]);
+     * $user->tags()->hasEach(1);
+     * $user->tags()->hasEach([1, 2, 3, 4]);
+     *
+     * @param mixed $modelIDs
+     * @return array
+     */
+    public function hasEach($modelIDs)
+    {
+        $selectQuery = $this->pivotTable()->where(
+            $this->wherePivot($this->innerKey(), $this->prepareIDs($modelIDs))
+        );
+
+        $selectQuery->columns($this->definition[ActiveRecord::THOUGHT_OUTER_KEY]);
+
+        $result = [];
+        foreach ($selectQuery->run() as $row)
+        {
+            $result[] = $row[$this->definition[ActiveRecord::THOUGHT_OUTER_KEY]];
+        }
+
+        return $result;
+    }
 
     public function link($modelID, array $pivotData = [])
     {
+
         $modelID = $this->prepareIDs($modelID);
 
         dump($modelID);
