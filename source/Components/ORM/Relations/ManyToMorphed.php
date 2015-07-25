@@ -9,14 +9,12 @@
 namespace Spiral\Components\ORM\Relations;
 
 use Spiral\Components\ORM\ActiveRecord;
+use Spiral\Components\ORM\ModelIterator;
 use Spiral\Components\ORM\ORM;
 use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\RelationInterface;
 use Spiral\Components\ORM\Selector;
 
-/**
- * @todo: add count method to work with pivot table directly
- */
 class ManyToMorphed implements RelationInterface
 {
     /**
@@ -182,12 +180,12 @@ class ManyToMorphed implements RelationInterface
     }
 
     /**
-     * Get sub-relation associated with one of model aliases.
+     * Get nested-relation associated with one of model aliases.
      *
      * @param string $alias
      * @return ManyToMany
      */
-    protected function subRelation($alias)
+    protected function nestedRelation($alias)
     {
         if (isset($this->relations[$alias]))
         {
@@ -216,25 +214,90 @@ class ManyToMorphed implements RelationInterface
         return $this->relations[$alias];
     }
 
+    /**
+     * Instance of DBAL\Table associated with relation pivot table.
+     *
+     * @return \Spiral\Components\DBAL\Table
+     */
+    protected function pivotTable()
+    {
+        return $this->parent->dbalDatabase($this->orm)->table(
+            $this->definition[ActiveRecord::PIVOT_TABLE]
+        );
+    }
 
-    //--------------------------
+    /**
+     * Count method will work with pivot table directly.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        $innerKey = $this->definition[ActiveRecord::INNER_KEY];
 
+        return $this->pivotTable()->where([
+            $this->definition[ActiveRecord::THOUGHT_INNER_KEY] => $this->parent->getField($innerKey)
+        ])->count();
+    }
+
+    /**
+     * Get access to data instance stored in nested relation.
+     *
+     * Example:
+     * $tag->tagged->users;
+     * $tag->tagged->posts;
+     *
+     * @param string $alias
+     * @return ActiveRecord|ModelIterator
+     */
     public function __get($alias)
     {
-        return $this->subRelation($alias)->getInstance();
+        return $this->nestedRelation($alias)->getInstance();
     }
 
+    /**
+     * Get access to sub relation.
+     *
+     * Example:
+     * $tag->tagged->users()->count(); //Without preloading
+     * foreach($tag->tagged->users(["status" => "active"]) as $user)
+     * {
+     * }
+     *
+     * @param string $alias
+     * @param array  $arguments
+     * @return ManyToMany
+     */
     public function __call($alias, array $arguments)
     {
-        //???
-        return $this->subRelation($alias);
+        if (!empty($arguments))
+        {
+            return call_user_func_array($this->nestedRelation($alias), $arguments);
+        }
+
+        return $this->nestedRelation($alias);
     }
 
-    public function link()
+
+    public function link(ActiveRecord $record, array $pivotData = [])
     {
     }
 
-    public function unlink()
+    public function unlink(ActiveRecord $record)
     {
+    }
+
+    /**
+     * Unlink every associated record, method will return amount of affected rows.
+     *
+     * @return int
+     */
+    public function unlinkAll()
+    {
+        $innerKey = $this->definition[ActiveRecord::INNER_KEY];
+
+        return $this->pivotTable()->delete([
+            $this->definition[ActiveRecord::THOUGHT_INNER_KEY] => $this->parent->getField($innerKey)
+        ])->run();
     }
 }

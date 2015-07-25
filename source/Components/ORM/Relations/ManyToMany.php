@@ -13,7 +13,7 @@ use Spiral\Components\ORM\ORMException;
 use Spiral\Components\ORM\Relation;
 use Spiral\Components\ORM\Selector;
 
-class ManyToMany extends Relation
+class ManyToMany extends Relation implements \Countable
 {
     /**
      * Relation type.
@@ -99,6 +99,18 @@ class ManyToMany extends Relation
     }
 
     /**
+     * Count method will work with pivot table directly.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->pivotTable()->where(
+            $this->wherePivot($this->innerKey(), null)
+        )->count();
+    }
+
+    /**
      * Helper method used to create valid WHERE query for delete and update in pivot table.
      *
      * @param mixed|array $innerKey
@@ -118,6 +130,11 @@ class ManyToMany extends Relation
         if (!empty($innerKey))
         {
             $query[$this->definition[ActiveRecord::THOUGHT_INNER_KEY]] = $innerKey;
+        }
+
+        if (!empty($this->definition[ActiveRecord::WHERE_PIVOT]))
+        {
+            $query = $query + $this->definition[ActiveRecord::WHERE_PIVOT];
         }
 
         if (!empty($outerKey))
