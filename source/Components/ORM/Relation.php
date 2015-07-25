@@ -47,13 +47,19 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     protected $definition = [];
 
     /**
-     * Pre-loaded relation data, can be loaded while parent model, or later. Can contain different
-     * set of data (array vs object) due lazy-loading. Real active-record/model iterator will be
-     * constructed at moment of data access.
+     * Pre-loaded relation data, can be loaded while parent model, or later. Real active-record/model
+     * iterator will be constructed at moment of data access.
      *
-     * @var array|mixed|null|Object
+     * @var array|null
      */
     protected $data = [];
+
+    /**
+     * Instance of constructed ActiveRecord of ModelIterator.
+     *
+     * @var ActiveRecord|ModelIterator
+     */
+    protected $instance = null;
 
     /**
      * Indication that relation data has been loaded from databases.
@@ -126,12 +132,12 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
      *
      * @return array|null|DataEntity|DataEntity[]
      */
-    public function getData()
+    public function getInstance()
     {
-        if (is_object($this->data))
+        if (!empty($this->instance))
         {
             //Already constructed
-            return $this->data;
+            return $this->instance;
         }
 
         //Loading data if not already loaded
@@ -143,7 +149,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             return static::MULTIPLE ? new ModelIterator($this->orm, $this->getClass(), []) : null;
         }
 
-        return $this->data = static::MULTIPLE ? $this->createIterator() : $this->createModel();
+        return $this->instance = static::MULTIPLE ? $this->createIterator() : $this->createModel();
     }
 
     /**
@@ -292,7 +298,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
      */
     public function saveData($validate = true)
     {
-        if (empty($data = $this->getData()))
+        if (empty($data = $this->getInstance()))
         {
             //Nothing to save
             return true;
@@ -356,7 +362,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             return $errors;
         }
 
-        return $this->getData()->getErrors($reset);
+        return $this->getInstance()->getErrors($reset);
     }
 
     /**

@@ -39,7 +39,7 @@ class BelongsToMorphed extends BelongsTo
      */
     protected function createModel()
     {
-        return $this->data = $this->orm->construct($this->getMorphedClass(), $this->data);
+        return $this->instance = $this->orm->construct($this->getMorphedClass(), $this->data);
     }
 
     /**

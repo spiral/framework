@@ -716,7 +716,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     {
         if (isset($this->schema[ORM::E_RELATIONS][$offset]))
         {
-            return $this->getRelation($offset)->getData();
+            return $this->getRelation($offset)->getInstance();
         }
 
         return $this->getField($offset, true);

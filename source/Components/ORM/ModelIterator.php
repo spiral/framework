@@ -93,6 +93,8 @@ class ModelIterator extends Component implements \Iterator, \Countable, \JsonSer
         $data = $this->data[$this->position];
         if ($data instanceof ActiveRecord)
         {
+            //TODO: Set Instance Context
+
             //Optimize it
             return $data;
         }

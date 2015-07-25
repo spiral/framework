@@ -109,7 +109,7 @@ class ManyToMorphed implements RelationInterface
      *
      * @return static
      */
-    public function getData()
+    public function getInstance()
     {
         return $this;
     }
@@ -216,7 +216,7 @@ class ManyToMorphed implements RelationInterface
 
     public function __get($alias)
     {
-        return $this->subRelation($alias)->getData();
+        return $this->subRelation($alias)->getInstance();
     }
 
     public function __call($alias, array $arguments)

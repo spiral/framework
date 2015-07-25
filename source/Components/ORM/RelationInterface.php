@@ -52,7 +52,7 @@ interface RelationInterface
      *
      * @return array|null|DataEntity|DataEntity[]
      */
-    public function getData();
+    public function getInstance();
 
     /**
      * Set relation data (called via __set method of parent ActiveRecord).
