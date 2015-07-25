@@ -171,14 +171,17 @@ class ModuleManager extends Component
         }
 
         //Updating configuration
-        $config = ConfigWriter::make(
-            [
-                'name'   => 'modules',
-                'method' => ConfigWriter::OVERWRITE
-            ],
+        $config = ConfigWriter::make([
+            'name'   => 'modules',
+            'method' => ConfigWriter::OVERWRITE
+        ],
             $this->container
         );
 
-        $config->setConfig($this->modules)->writeConfig(directory('config'), FileManager::READONLY);
+        //Little-bit dirty, but it should spiral application environment for now...
+        $config->setConfig($this->modules)->writeConfig(
+            directory('config'),
+            FileManager::READONLY
+        );
     }
 }
