@@ -223,7 +223,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ]
      * ];
      *
-     *
      * By default this relation will be preloaded using POSTLOAD method (executed as separate query).
      */
     const HAS_MANY = 102;
@@ -298,8 +297,8 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      *      ...,
      *      'author' => [
      *          self::BELONGS_TO => 'Models\User',
-     *          self::INVERSE => [self::HAS_MANY, 'posts'] //Will create HAS_MANY relation in User
-     *                                                     //model
+     *          self::INVERSE    => [self::HAS_MANY, 'posts'] //Will create HAS_MANY relation in User
+     *                                                        //model
      *      ]
      * ];
      *
