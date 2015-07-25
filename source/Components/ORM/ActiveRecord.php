@@ -1078,7 +1078,7 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
             {
                 foreach ($this->relations as $name => $relation)
                 {
-                    if ($relation instanceof RelationInterface && !$relation->saveData($validate))
+                    if ($relation instanceof RelationInterface && !$relation->saveInstance($validate))
                     {
                         //Let's record error
                         $this->addError($name, $relation->getErrors());
@@ -1202,7 +1202,6 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
     public static function findOne(array $where = [], array $load = [], array $orderBy = [])
     {
         $selector = static::find($where, $load);
-
         foreach ($orderBy as $column => $direction)
         {
             $selector->orderBy($column, $direction);

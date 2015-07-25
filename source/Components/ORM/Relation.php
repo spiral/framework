@@ -314,7 +314,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
      * @param bool $validate
      * @return bool
      */
-    public function saveData($validate = true)
+    public function saveInstance($validate = true)
     {
         if (empty($instance = $this->getInstance()))
         {

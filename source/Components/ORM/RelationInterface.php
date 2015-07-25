@@ -46,7 +46,6 @@ interface RelationInterface
      */
     public function isLoaded();
 
-
     /**
      * Get relation data (data should be automatically loaded if not pre-loaded already). Result
      * can vary based on relation type and usually represent one model or array of models.
@@ -73,7 +72,7 @@ interface RelationInterface
      * @param bool $validate
      * @return bool
      */
-    public function saveData($validate = true);
+    public function saveInstance($validate = true);
 
     /**
      * Get relation data errors (if any).

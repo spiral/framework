@@ -137,11 +137,11 @@ class ManyToMorphed implements RelationInterface
      * @param bool $validate
      * @return bool
      */
-    public function saveData($validate = true)
+    public function saveInstance($validate = true)
     {
         foreach ($this->relations as $relation)
         {
-            if (!$relation->saveData($validate))
+            if (!$relation->saveInstance($validate))
             {
                 return false;
             }
