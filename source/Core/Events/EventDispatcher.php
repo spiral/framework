@@ -11,6 +11,9 @@ namespace Spiral\Core\Events;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 
+/**
+ * To move to application module.
+ */
 class EventDispatcher extends Component implements DispatcherInterface
 {
     /**
