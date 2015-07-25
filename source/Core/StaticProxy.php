@@ -8,6 +8,10 @@
  */
 namespace Spiral\Core;
 
+/**
+ * One day i will move proxies from core to application files to make it more clean. Same for controller
+ * and etc.
+ */
 class StaticProxy
 {
     /**
