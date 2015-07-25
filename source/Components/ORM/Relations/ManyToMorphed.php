@@ -122,10 +122,10 @@ class ManyToMorphed implements RelationInterface
      * Example:
      * $user->profile = new Profile();
      *
-     * @param mixed $instance
+     * @param ActiveRecord $instance
      * @throws ORMException
      */
-    public function setInstance($instance)
+    public function setInstance(ActiveRecord $instance)
     {
         throw new ORMException("Unable to set data for morphed relation.");
     }
@@ -215,6 +215,9 @@ class ManyToMorphed implements RelationInterface
 
         return $this->relations[$alias];
     }
+
+
+    //--------------------------
 
     public function __get($alias)
     {

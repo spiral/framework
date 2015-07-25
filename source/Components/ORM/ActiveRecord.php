@@ -486,6 +486,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
      */
     protected $relations = [];
 
+    /**
+     * New instance of ActiveRecord.
+     *
+     * @param array $data
+     * @param bool  $loaded
+     * @param ORM   $orm
+     */
     public function __construct(array $data = [], $loaded = false, ORM $orm = null)
     {
         $this->orm = !empty($orm) ? $orm : ORM::getInstance();
@@ -542,6 +549,13 @@ abstract class ActiveRecord extends DataEntity implements DatabaseEntityInterfac
         return $this->schema[ORM::E_ROLE_NAME];
     }
 
+    /**
+     * SetContext method used by iterators and relations to update record context, this is required
+     * due entity cache and ability of one record to be presented in multiple spots.
+     *
+     * @param array $data
+     * @return static
+     */
     public function setContext(array $data)
     {
         //Mounting context pivot data

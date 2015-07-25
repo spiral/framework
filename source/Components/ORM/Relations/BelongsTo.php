@@ -24,10 +24,10 @@ class BelongsTo extends HasOne
      * Example:
      * $user->profile = new Profile();
      *
-     * @param mixed $instance
+     * @param ActiveRecord $instance
      * @throws ORMException
      */
-    public function setInstance($instance)
+    public function setInstance(ActiveRecord $instance)
     {
         parent::setInstance($instance);
 

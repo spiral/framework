@@ -118,12 +118,7 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             return;
         }
 
-        if ($loaded && !empty($this->instance) && $this->instance instanceof ActiveRecord)
-        {
-            //Updating context
-            $this->instance->setContext($data);
-        }
-        else
+        if (!$loaded || !($this->instance instanceof ActiveRecord))
         {
             //Flushing instance
             $this->instance = null;
@@ -153,7 +148,12 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
     {
         if (!empty($this->instance))
         {
-            //Already constructed
+            if ($this->instance instanceof ActiveRecord && !empty($this->data))
+            {
+                $this->instance->setContext($this->data);
+            }
+
+            //Already constructed (but we have to update the context)
             return $this->instance;
         }
 
@@ -376,7 +376,6 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
             /**
              * @var ActiveRecord[] $data
              */
-
             $errors = [];
             foreach ($data as $position => $model)
             {
@@ -410,6 +409,6 @@ abstract class Relation implements RelationInterface, \Countable, \IteratorAggre
      */
     public function jsonSerialize()
     {
-        return $this->createSelector()->jsonSerialize();
+        return $this->getInstance();
     }
 }
