@@ -16,9 +16,3 @@ ini_set('display_errors', true);
 
 //Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
-
-\Spiral\Tests\TestCore::init([
-    'root'        => __DIR__,
-    'libraries'   => dirname(__DIR__) . '/vendor',
-    'application' => __DIR__
-])->setEnvironment('testing');

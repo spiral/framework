@@ -20,7 +20,8 @@
     "symfony/process": "~2.0",
     "nesbot/carbon": "dev-master",
     "doctrine/inflector": "1.0.1",
-    "guzzlehttp/guzzle": "~6.0"
+    "guzzlehttp/guzzle": "~6.0",
+    "spiral/components": "0.9.1a"
   },
   "autoload": {
     "files": [

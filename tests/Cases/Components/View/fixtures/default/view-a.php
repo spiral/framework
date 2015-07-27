@@ -1,1 +1,0 @@
-This is view A in default namespace A.
