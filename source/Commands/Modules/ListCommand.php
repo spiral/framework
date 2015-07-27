@@ -70,7 +70,7 @@ class ListCommand extends Command
                 $module->getName(),
                 $this->getVersion($module->getName()),
                 $module->isInstalled() ? self::INSTALLED : self::NOT_INSTALLED,
-                StringHelper::formatBytes($module->getSize()),
+                StringHelper::bytes($module->getSize()),
                 $this->file->relativePath($module->getLocation()),
                 wordwrap($module->getDescription())
             ]);

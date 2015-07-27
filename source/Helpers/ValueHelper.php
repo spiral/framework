@@ -53,21 +53,4 @@ class ValueHelper
 
         return array_values(array_filter($haystack, 'is_scalar'));
     }
-
-    /**
-     * Will return a real boolean representation for variable (important for MongoDB). This is the
-     * alias for boolval() function. However it's only available in PHP 5.5.
-     *
-     * @param mixed $variable
-     * @return bool
-     */
-    public static function castBoolean($variable)
-    {
-        if (function_exists('boolval'))
-        {
-            return boolval($variable);
-        }
-
-        return (bool)$variable;
-    }
 }

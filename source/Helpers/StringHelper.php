@@ -8,37 +8,11 @@
  */
 namespace Spiral\Helpers;
 
+use Cocur\Slugify\Slugify;
+use Spiral\Core\Container;
+
 class StringHelper
 {
-    /**
-     * This describes character exceptions and aliases for StringHelper::url function. More
-     * characters will be added based on user's request.
-     *
-     * @var array
-     */
-    public static $replaces = [
-        'exceptions' => [
-            '&amp;' => 'and'
-        ],
-        'russian'    => [
-            'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'e',
-            'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm',
-            'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u',
-            'ф' => 'f', 'х' => 'h', 'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sht', 'ъ' => '',
-            'ь' => '', 'ю' => 'yu', 'я' => 'ya', 'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G',
-            'Д' => 'D', 'Е' => 'E', 'Ё' => 'E', 'Ж' => 'Zh', 'З' => 'Z', 'И' => 'I', 'Й' => 'Y',
-            'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O', 'П' => 'P', 'Р' => 'R',
-            'С' => 'S', 'Т' => 'T', 'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'Ts', 'Ч' => 'Ch',
-            'Ш' => 'Sh', 'Щ' => 'Sht', 'Ъ' => '', 'Ь' => '', 'Ю' => 'Yu', 'Я' => 'Ya'
-        ],
-        'german'     => [
-            'ä' => 'a', 'ö' => 'o', 'ü' => 'u', 'ß' => 'b'
-        ],
-        'spanish'    => [
-            'Ñ' => 'N'
-        ]
-    ];
-
     /**
      * Create a random string with desired length.
      *
@@ -47,14 +21,24 @@ class StringHelper
      */
     public static function random($length = 32)
     {
-        $string = openssl_random_pseudo_bytes($length);
-
-        if (empty($string))
+        if (empty($string = openssl_random_pseudo_bytes($length)))
         {
             throw new \RuntimeException("Unable to generate random string.");
         }
 
         return substr(base64_encode($string), 0, $length);
+    }
+
+    /**
+     * Return a URL safe version of a string.
+     *
+     * @param string $string
+     * @param string $separator
+     * @return string
+     */
+    public static function urlSlug($string, $separator = '-')
+    {
+        return Container::getContainer()->get(Slugify::class)->slugify($string, $separator);
     }
 
     /**
@@ -81,28 +65,6 @@ class StringHelper
     }
 
     /**
-     * Convert string to URL supported identifier. Will erase any bad symbols, beginning and ending
-     * characters and double delimiters. This function will use StringHelper::$replaces array to
-     * support non English strings valid for URLs.
-     *
-     * @param string $string    String that will be converted.
-     * @param string $delimiter Segments delimiter, "-" by default.
-     * @return string
-     */
-    public static function urlSlug($string, $delimiter = '-')
-    {
-        foreach (self::$replaces as $exceptions)
-        {
-            $string = str_replace(array_keys($exceptions), array_values($exceptions), $string);
-        }
-
-        $string = preg_replace('/([^a-z0-9_-]|' . $delimiter . ')+/iu', $delimiter, $string);
-
-        //End and start characters
-        return trim($string, $delimiter);
-    }
-
-    /**
      * Shorter string with specified limit. UTF8 encoding will be used to support non English strings.
      *
      * @param string $string
@@ -126,7 +88,7 @@ class StringHelper
      * @param int $decimals The number of decimals include to output. Set to 1 by default.
      * @return string
      */
-    public static function formatBytes($bytes, $decimals = 1)
+    public static function bytes($bytes, $decimals = 1)
     {
         $pows = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         for ($unit = 0; $bytes > 1024; $unit++)

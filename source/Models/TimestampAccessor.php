@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\AccessorTrait;
 
-class Timestamp extends Carbon implements AccessorInterface
+class TimestampAccessor extends Carbon implements AccessorInterface
 {
     /**
      * Some common methods.
