@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
-use Spiral\Support\Html\Tokenizer;
+use Spiral\Support\Html\HtmlTokenizer;
 
 class AliasedImporter implements ImporterInterface
 {
@@ -45,7 +45,7 @@ class AliasedImporter implements ImporterInterface
      */
     public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token)
     {
-        $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+        $attributes = $token[HtmlTokenizer::TOKEN_ATTRIBUTES];
 
         list($this->namespace, $this->view) = $templater->fetchLocation(
             $attributes['path'],

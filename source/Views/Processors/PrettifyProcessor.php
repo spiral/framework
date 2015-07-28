@@ -13,7 +13,7 @@ use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\ProcessorInterface;
 use Spiral\Components\View\ViewManager;
 use Spiral\Helpers\StringHelper;
-use Spiral\Support\Html\Tokenizer;
+use Spiral\Support\Html\HtmlTokenizer;
 
 class PrettifyProcessor implements ProcessorInterface
 {
@@ -53,14 +53,14 @@ class PrettifyProcessor implements ProcessorInterface
      *
      * @param string    $source View source (code).
      * @param Isolator  $isolator
-     * @param Tokenizer $tokenizer
+     * @param HtmlTokenizer $tokenizer
      * @return string
      * @throws \ErrorException
      */
-    public function process($source, Isolator $isolator = null, Tokenizer $tokenizer = null)
+    public function process($source, Isolator $isolator = null, HtmlTokenizer $tokenizer = null)
     {
         $isolator = !empty($isolator) ? $isolator : new Isolator();
-        $tokenizer = !empty($tokenizer) ? $tokenizer : new Tokenizer();
+        $tokenizer = !empty($tokenizer) ? $tokenizer : new HtmlTokenizer();
 
         if ($this->options['endings'])
         {
@@ -106,30 +106,30 @@ class PrettifyProcessor implements ProcessorInterface
      * Normalize attribute values.
      *
      * @param string    $source
-     * @param Tokenizer $tokenizer
+     * @param HtmlTokenizer $tokenizer
      * @return mixed
      */
-    protected function normalizeAttributes($source, Tokenizer $tokenizer)
+    protected function normalizeAttributes($source, HtmlTokenizer $tokenizer)
     {
         $result = '';
         foreach ($tokenizer->parse($source) as $token)
         {
-            if (in_array($token[Tokenizer::TOKEN_TYPE], [Tokenizer::PLAIN_TEXT, Tokenizer::TAG_CLOSE]))
+            if (in_array($token[HtmlTokenizer::TOKEN_TYPE], [HtmlTokenizer::PLAIN_TEXT, HtmlTokenizer::TAG_CLOSE]))
             {
-                $result .= $token[Tokenizer::TOKEN_CONTENT];
+                $result .= $token[HtmlTokenizer::TOKEN_CONTENT];
                 continue;
             }
 
-            if (empty($token[Tokenizer::TOKEN_ATTRIBUTES]))
+            if (empty($token[HtmlTokenizer::TOKEN_ATTRIBUTES]))
             {
-                $result .= $token[Tokenizer::TOKEN_CONTENT];
+                $result .= $token[HtmlTokenizer::TOKEN_CONTENT];
                 continue;
             }
 
-            $tokenContent = $token[Tokenizer::TOKEN_NAME];
+            $tokenContent = $token[HtmlTokenizer::TOKEN_NAME];
 
             $attributes = [];
-            foreach ($token[Tokenizer::TOKEN_ATTRIBUTES] as $attribute => $value)
+            foreach ($token[HtmlTokenizer::TOKEN_ATTRIBUTES] as $attribute => $value)
             {
                 if (in_array($attribute, $this->options['attributes']['trim']))
                 {
@@ -156,7 +156,7 @@ class PrettifyProcessor implements ProcessorInterface
                 $tokenContent .= ' ' . join(' ', $attributes);
             }
 
-            if ($token[Tokenizer::TOKEN_TYPE] == Tokenizer::TAG_SHORT)
+            if ($token[HtmlTokenizer::TOKEN_TYPE] == HtmlTokenizer::TAG_SHORT)
             {
                 $tokenContent .= '/';
             }

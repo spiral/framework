@@ -28,7 +28,7 @@ use Spiral\Components\View\Compiler\Processors\Templater\SupervisorInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\ViewManager;
-use Spiral\Support\Html\Tokenizer;
+use Spiral\Support\Html\HtmlTokenizer;
 
 class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 {
@@ -191,9 +191,9 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     public function getBehaviour(array $token, array $content, Node $node)
     {
         $attributes = [];
-        if (!empty($token[Tokenizer::TOKEN_ATTRIBUTES]))
+        if (!empty($token[HtmlTokenizer::TOKEN_ATTRIBUTES]))
         {
-            $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+            $attributes = $token[HtmlTokenizer::TOKEN_ATTRIBUTES];
         }
 
         switch ($type = $this->tokenType($token, $name))
@@ -255,7 +255,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
      */
     protected function tokenType($token, &$name)
     {
-        $name = $token[Tokenizer::TOKEN_NAME];
+        $name = $token[HtmlTokenizer::TOKEN_NAME];
         foreach ($this->options['prefixes'] as $type => $prefixes)
         {
             foreach ($prefixes as $prefix)
@@ -298,7 +298,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
 
         if (!empty($token))
         {
-            foreach ($token[Tokenizer::TOKEN_ATTRIBUTES] as $attribute => $value)
+            foreach ($token[HtmlTokenizer::TOKEN_ATTRIBUTES] as $attribute => $value)
             {
                 if (in_array($attribute, $this->options['keywords']['namespace']))
                 {
@@ -484,7 +484,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         }
 
         //We will need only first tag line
-        $target = explode("\n", $token[Tokenizer::TOKEN_CONTENT])[0];
+        $target = explode("\n", $token[HtmlTokenizer::TOKEN_CONTENT])[0];
 
         //Let's try to locate place where exception was used
         $lines = explode("\n", $source);

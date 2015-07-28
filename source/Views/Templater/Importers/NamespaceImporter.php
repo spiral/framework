@@ -14,7 +14,7 @@ use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\ViewManager;
-use Spiral\Support\Html\Tokenizer;
+use Spiral\Support\Html\HtmlTokenizer;
 
 class NamespaceImporter implements ImporterInterface
 {
@@ -69,7 +69,7 @@ class NamespaceImporter implements ImporterInterface
      */
     public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token)
     {
-        $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+        $attributes = $token[HtmlTokenizer::TOKEN_ATTRIBUTES];
 
         if (strpos($attributes['path'], $templater->getNSSeparator()) !== false)
         {

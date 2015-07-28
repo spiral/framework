@@ -6,44 +6,26 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Console;
+namespace Spiral\Console;
 
 use Spiral\Core\Component;
 use Spiral\Core\Container;
-use Spiral\Core\Core;
-use Spiral\Core\Loader;
 use Spiral\Components;
-use Symfony\Component\Console\Command\Command as BaseCommand;
+use Spiral\Core\ContainerInterface;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @property Core                                 $core
- * @property Components\Http\HttpDispatcher       $http
- * @property Components\Console\ConsoleDispatcher $console
- * @property Loader                               $loader
- * @property Components\Modules\ModuleManager     $modules
- * @property Components\Files\FileManager         $file
- * @property Components\Debug\Debugger            $debug
- * @property Components\Tokenizer\Tokenizer       $tokenizer
- * @property Components\Cache\CacheManager        $cache
- * @property Components\I18n\Translator           $i18n
- * @property Components\View\ViewManager          $view
- * @property Components\Redis\RedisManager        $redis
- * @property Components\Encrypter\Encrypter       $encrypter
- * @property Components\Image\ImageManager        $image
- * @property Components\Storage\StorageManager    $storage
- * @property Components\DBAL\DatabaseManager      $dbal
- * @property Components\ORM\ORM                   $orm
- * @property Components\ODM\ODM                   $odm
- */
-abstract class Command extends BaseCommand
+abstract class Command extends SymfonyCommand
 {
     /**
-     * Calling method with dependencies.
+     * Associated container.
+     *
+     * @var ContainerInterface
      */
-    use Container\MethodTrait;
+    private $container = null;
 
     /**
      * Command name.
@@ -113,6 +95,33 @@ abstract class Command extends BaseCommand
         {
             call_user_func_array([$this, 'addArgument'], $argument);
         }
+    }
+
+    /**
+     * Sets the application instance for this command.
+     *
+     * @param Application $application An Application instance
+     *
+     * @api
+     */
+    public function setApplication(Application $application = null)
+    {
+        parent::setApplication($application);
+
+        if (!is_null($application) && $application instanceof ConsoleApplication)
+        {
+            $this->container = $application->getContainer();
+        }
+    }
+
+    /**
+     * Command container.
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
     }
 
     /**
@@ -233,7 +242,13 @@ abstract class Command extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->callFunction('perform', compact('input', 'output'));
+        $reflection = new \ReflectionMethod($this, 'perform');
+        $reflection->setAccessible(true);
+
+        return $reflection->invokeArgs($this, $this->container->resolveArguments(
+            $reflection,
+            compact('input', 'output')
+        ));
     }
 
     /**
@@ -257,6 +272,6 @@ abstract class Command extends BaseCommand
      */
     public function __get($name)
     {
-        return Container::getInstance()->get($name);
+        return $this->container->get($name);
     }
 }

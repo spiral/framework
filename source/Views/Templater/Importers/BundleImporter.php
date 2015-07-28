@@ -13,7 +13,7 @@ use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendsBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
-use Spiral\Support\Html\Tokenizer;
+use Spiral\Support\Html\HtmlTokenizer;
 
 class BundleImporter implements ImporterInterface
 {
@@ -54,7 +54,7 @@ class BundleImporter implements ImporterInterface
      */
     public function __construct(Compiler $compiler, TemplateProcessor $templater, array $token)
     {
-        $attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+        $attributes = $token[HtmlTokenizer::TOKEN_ATTRIBUTES];
         list($this->namespace, $this->view) = $templater->fetchLocation(
             $attributes['bundle'],
             $token

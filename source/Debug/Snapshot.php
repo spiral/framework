@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Debug;
+namespace Spiral\Debug;
 
 use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;

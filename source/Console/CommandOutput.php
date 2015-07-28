@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Console;
+namespace Spiral\Console;
 
 use Spiral\Core\Component;
 use Symfony\Component\Console\Output\BufferedOutput;

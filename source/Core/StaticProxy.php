@@ -8,10 +8,6 @@
  */
 namespace Spiral\Core;
 
-/**
- * One day i will move proxies from core to application files to make it more clean. Same for controller
- * and etc.
- */
 class StaticProxy
 {
     /**
@@ -26,12 +22,12 @@ class StaticProxy
      * @param string $method    Method to be called.
      * @param array  $arguments Method arguments.
      * @return mixed
-     * @throws CoreException
+     * @throws ExceptionInterface
      */
     public static function __callStatic($method, array $arguments)
     {
-        return call_user_func_array([
-            Container::getInstance()->get(static::COMPONENT), $method],
+        return call_user_func_array(
+            [Container::getContainer()->get(static::COMPONENT), $method],
             $arguments
         );
     }

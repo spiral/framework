@@ -6,13 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Support\Html;
+namespace Spiral\Helpers;
 
-use Spiral\Components\Files\FileManager;
-use Spiral\Components\Tokenizer\Isolator;
 use Spiral\Core\Component;
+use Spiral\Tokenizer\Isolator;
 
-class Tokenizer extends Component
+class HtmlTokenizer extends Component
 {
     /**
      * Current tokenizer position. Tokenizer is a linear processor (no regular expression is involved).
@@ -98,19 +97,6 @@ class Tokenizer extends Component
         }
 
         return $this->getIsolator()->repairPHP($source);
-    }
-
-    /**
-     * Bypassed Tokenizer creation and immediately returns parsed tokens.
-     *
-     * @param string $source     HTML source.
-     * @param bool   $isolatePHP Should PHP block should be isolated and enabled by default
-     * @param bool   $aspTags    ASP like PHP blocks should be isolated and enabled by default.
-     * @return array
-     */
-    public static function parseSource($source, $isolatePHP = true, $aspTags = true)
-    {
-        return static::make(compact('isolatePHP', 'aspTags'))->parse($source);
     }
 
     /**
@@ -204,18 +190,6 @@ class Tokenizer extends Component
         $this->handleToken(self::PLAIN_TEXT, $buffer);
 
         return $this->tokens;
-    }
-
-    /**
-     * Open and parse file using tokenizer. The same output will be returned as the readSource()
-     * method.
-     *
-     * @param string $filename HTML file.
-     * @return array
-     */
-    public function openFile($filename)
-    {
-        return $this->parse(FileManager::getInstance()->read($filename));
     }
 
     /**

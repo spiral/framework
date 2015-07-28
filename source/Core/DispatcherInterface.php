@@ -8,19 +8,17 @@
  */
 namespace Spiral\Application;
 
-use Spiral\Components\Debug\Snapshot;
+use Spiral\Debug\Snapshot;
 
 interface DispatcherInterface
 {
     /**
-     * Letting dispatcher to control application flow and functionality.
-     *
-     * @param CoreInterface $core
+     * Start dispatcher.
      */
-    public function start(CoreInterface $core);
+    public function start();
 
     /**
-     * Every dispatcher should know how to handle exception snapshot provided by Debugger.
+     * Every dispatcher should know how to handle exception snapshot provided by spiral core.
      *
      * @param Snapshot $snapshot
      * @return mixed

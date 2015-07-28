@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\BlockBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendsBehaviour;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\IncludeBehaviour;
-use Spiral\Support\Html\Tokenizer;
+use Spiral\Support\Html\HtmlTokenizer;
 
 class Node
 {
@@ -84,7 +84,7 @@ class Node
         $this->supervisor = $supervisor;
         $this->name = $name;
 
-        $this->parseTokens(is_string($source) ? Tokenizer::parseSource($source) : $source);
+        $this->parseTokens(is_string($source) ? HtmlTokenizer::parseSource($source) : $source);
     }
 
     /**
@@ -135,30 +135,30 @@ class Node
 
         foreach ($tokens as $token)
         {
-            $tokenType = $token[Tokenizer::TOKEN_TYPE];
+            $tokenType = $token[HtmlTokenizer::TOKEN_TYPE];
 
             if (empty($activeToken))
             {
                 switch ($tokenType)
                 {
-                    case Tokenizer::TAG_SHORT:
+                    case HtmlTokenizer::TAG_SHORT:
                         $this->registerToken($token);
                         break;
 
-                    case Tokenizer::TAG_OPEN:
+                    case HtmlTokenizer::TAG_OPEN:
                         $activeToken = $token;
                         break;
 
-                    case Tokenizer::TAG_CLOSE:
+                    case HtmlTokenizer::TAG_CLOSE:
                         if (self::$strictMode)
                         {
                             throw new TemplaterException(
-                                "Unpaired close tag '{$token[Tokenizer::TOKEN_NAME]}'.",
+                                "Unpaired close tag '{$token[HtmlTokenizer::TOKEN_NAME]}'.",
                                 $token
                             );
                         }
                         break;
-                    case Tokenizer::PLAIN_TEXT:
+                    case HtmlTokenizer::PLAIN_TEXT:
                         //Everything outside any tag
                         $this->registerContent([$token]);
                         break;
@@ -168,16 +168,16 @@ class Node
             }
 
             if (
-                $tokenType != Tokenizer::PLAIN_TEXT
-                && $token[Tokenizer::TOKEN_NAME] == $activeToken[Tokenizer::TOKEN_NAME]
+                $tokenType != HtmlTokenizer::PLAIN_TEXT
+                && $token[HtmlTokenizer::TOKEN_NAME] == $activeToken[HtmlTokenizer::TOKEN_NAME]
             )
             {
-                if ($tokenType == Tokenizer::TAG_OPEN)
+                if ($tokenType == HtmlTokenizer::TAG_OPEN)
                 {
                     $activeContent[] = $token;
                     $activeLevel++;
                 }
-                elseif ($tokenType == Tokenizer::TAG_CLOSE)
+                elseif ($tokenType == HtmlTokenizer::TAG_CLOSE)
                 {
                     if ($activeLevel === 0)
                     {
@@ -391,7 +391,7 @@ class Node
             $plainContent = '';
             foreach ($content as $token)
             {
-                $plainContent .= $token[Tokenizer::TOKEN_CONTENT];
+                $plainContent .= $token[HtmlTokenizer::TOKEN_CONTENT];
             }
 
             $content = $plainContent;

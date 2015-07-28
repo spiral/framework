@@ -6,21 +6,38 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Console;
+namespace Spiral\Console;
 
-use Spiral\Core\Core;
+use Spiral\Core\ContainerInterface;
 use Symfony\Component\Console\Application;
 
 class ConsoleApplication extends Application
 {
     /**
+     * @var null|ContainerInterface
+     */
+    protected $container = null;
+
+    /**
      * Constructor.
      *
-     * @param string $name    The name of the application
-     * @param string $version The version of the application
+     * @param ContainerInterface $container
+     * @param string             $name    The name of the application
+     * @param string             $version The version of the application
      */
-    public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
+    public function __construct(ContainerInterface $container, $name = 'UNKNOWN', $version = 'UNKNOWN')
     {
-        parent::__construct("Spiral Framework Console Toolkit", Core::VERSION);
+        $this->container = $container;
+        parent::__construct("Spiral Framework Console Toolkit");
+    }
+
+    /**
+     * Get associated container.
+     *
+     * @return ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 }

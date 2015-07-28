@@ -6,52 +6,47 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Console;
+namespace Spiral\Console;
 
-use Spiral\Components\Debug\Snapshot;
-use Spiral\Components\Tokenizer\Tokenizer;
-use Spiral\Core\Component;
-use Spiral\Core\Container;
-use Spiral\Core\CoreInterface;
-use Spiral\Core\DispatcherInterface;
+use Spiral\Application\DispatcherInterface;
+use Spiral\Core\ContainerInterface;
+use Spiral\Core\HippocampusInterface;
 use Spiral\Core\Loader;
-use Spiral\Core\RuntimeCacheInterface;
+use Spiral\Core\Singleton;
+use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Debug\Snapshot;
+use Spiral\Tokenizer\TokenizerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConsoleDispatcher extends Component implements DispatcherInterface
+class ConsoleDispatcher extends Singleton implements DispatcherInterface
 {
     /**
-     * Will provide us helper method getInstance().
+     * Configuring.
      */
-    use Component\SingletonTrait, Component\ConfigurableTrait;
+    use ConfigurableTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = __CLASS__;
+    const SINGLETON = self::class;
 
     /**
-     * Tokenizer component.
+     * TokenizerInterface instance.
      *
-     * @var Tokenizer
+     * @var TokenizerInterface
      */
     protected $tokenizer = null;
 
     /**
-     * Console application instance.
-     *
-     * @var ConsoleApplication
-     */
-    protected $application = null;
-
-    /**
      * Runtime cache manager.
      *
-     * @var RuntimeCacheInterface
+     * @invisible
+     * @var HippocampusInterface
      */
     protected $runtime = null;
 
@@ -66,9 +61,16 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      * Container.
      *
      * @invisible
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container = null;
+
+    /**
+     * Console application instance.
+     *
+     * @var ConsoleApplication
+     */
+    protected $application = null;
 
     /**
      * Cached list of all existed commands.
@@ -78,27 +80,26 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     protected $commands = [];
 
     /**
-     * ConsoleDispatcher.
+     * New instance of console dispatcher.
      *
-     * @param Tokenizer             $tokenizer
-     * @param RuntimeCacheInterface $runtime
-     * @param Loader                $loader
-     * @param Container             $container
+     * @param HippocampusInterface $runtime
+     * @param TokenizerInterface   $tokenizer
+     * @param ContainerInterface   $container
+     * @param Loader               $loader
      */
     public function __construct(
-        RuntimeCacheInterface $runtime,
-        Tokenizer $tokenizer,
-        Loader $loader,
-        Container $container
+        HippocampusInterface $runtime,
+        TokenizerInterface $tokenizer,
+        ContainerInterface $container,
+        Loader $loader
     )
     {
         $this->runtime = $runtime;
-        $this->commands = $runtime->loadData('commands');
-
         $this->tokenizer = $tokenizer;
         $this->loader = $loader;
-
         $this->container = $container;
+
+        $this->commands = $runtime->loadData('commands');
 
         if (!is_array($this->commands))
         {
@@ -107,23 +108,21 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     }
 
     /**
-     * ConsoleApplication instance.
+     * Get or create consoleApplication instance.
      *
      * @return ConsoleApplication
      */
-    public function getApplication()
+    public function application()
     {
         if (!empty($this->application))
         {
             return $this->application;
         }
 
-        $this->application = new ConsoleApplication();
+        $this->application = new ConsoleApplication($this->container);
 
-        if (empty($this->commands))
-        {
-            $this->findCommands();
-        }
+        //Commands lookup
+        empty($this->commands) && $this->findCommands();
 
         foreach ($this->commands as $command)
         {
@@ -154,11 +153,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     {
         $this->commands = [];
 
-        $classes = $this->tokenizer->getClasses(
-            'Symfony\Component\Console\Command\Command',
-            null,
-            'Command'
-        );
+        $classes = $this->tokenizer->getClasses(Command::class, null, 'Command');
 
         foreach ($classes as $class)
         {
@@ -184,18 +179,16 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
     }
 
     /**
-     * Letting dispatcher to control application flow and functionality.
-     *
-     * @param CoreInterface $core
+     * Start dispatcher.
      */
-    public function start(CoreInterface $core)
+    public function start()
     {
         $this->loader->setName('loadmap-console');
 
         //Console root directory is not equals to webroot
         chdir(dirname(directory('root')));
 
-        $this->getApplication()->run();
+        $this->application()->run();
     }
 
     /**
@@ -210,7 +203,7 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      */
     public function command($command, $parameters = [], OutputInterface $output = null)
     {
-        $code = $this->getApplication()->find($command)->run(
+        $code = $this->application()->find($command)->run(
             is_object($parameters) ? $parameters : new ArrayInput(compact('command') + $parameters),
             $output = ($output ?: new BufferedOutput())
         );
@@ -226,6 +219,6 @@ class ConsoleDispatcher extends Component implements DispatcherInterface
      */
     public function handleException(Snapshot $snapshot)
     {
-        $this->getApplication()->renderException($snapshot->getException(), new ConsoleOutput());
+        $this->application()->renderException($snapshot->getException(), new ConsoleOutput());
     }
 }

@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Modules;
+namespace Spiral\Modules;
 
-use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
+use Spiral\Files\FilesInterface;
 
 class Definition extends Component
 {
@@ -17,9 +17,9 @@ class Definition extends Component
      * FileManager component.
      *
      * @invisible
-     * @var FileManager
+     * @var FilesInterface
      */
-    protected $file = null;
+    protected $files = null;
 
     /**
      * ModuleManager component.
@@ -88,7 +88,7 @@ class Definition extends Component
         $dependencies = []
     )
     {
-        $this->file = $file;
+        $this->files = $file;
         $this->modules = $modules;
 
         $this->class = $class;
@@ -135,7 +135,7 @@ class Definition extends Component
      */
     public function getLocation()
     {
-        return $this->file->normalizePath(dirname(
+        return $this->files->normalizePath(dirname(
             (new \ReflectionClass($this->class))->getFileName()
         ));
     }
@@ -149,7 +149,7 @@ class Definition extends Component
     public function getSize()
     {
         $totalSize = 0;
-        foreach ($this->file->getFiles($this->getLocation()) as $filename)
+        foreach ($this->files->getFiles($this->getLocation()) as $filename)
         {
             $totalSize += filesize($filename);
         }

@@ -11,7 +11,7 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Behaviours;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\BehaviourInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
-use Spiral\Support\Html\Tokenizer;
+use Spiral\Support\Html\HtmlTokenizer;
 
 class IncludeBehaviour implements BehaviourInterface
 {
@@ -85,7 +85,7 @@ class IncludeBehaviour implements BehaviourInterface
         $this->context = $context;
 
         $this->token = $token;
-        $this->attributes = $token[Tokenizer::TOKEN_ATTRIBUTES];
+        $this->attributes = $token[HtmlTokenizer::TOKEN_ATTRIBUTES];
     }
 
     /**
@@ -99,7 +99,7 @@ class IncludeBehaviour implements BehaviourInterface
 
         foreach ($this->context as $token)
         {
-            $context .= $token[Tokenizer::TOKEN_CONTENT];
+            $context .= $token[HtmlTokenizer::TOKEN_CONTENT];
         }
 
         return new Node($this->templater, $this->templater->uniqueName(), $context);
