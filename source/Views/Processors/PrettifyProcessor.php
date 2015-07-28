@@ -6,14 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\View\Compiler\Processors;
+namespace Spiral\Views\Processors;
 
-use Spiral\Components\Tokenizer\Isolator;
-use Spiral\Components\View\Compiler\Compiler;
-use Spiral\Components\View\Compiler\ProcessorInterface;
-use Spiral\Components\View\ViewManager;
+use Spiral\Helpers\HtmlTokenizer;
 use Spiral\Helpers\StringHelper;
-use Spiral\Support\Html\HtmlTokenizer;
+use Spiral\Tokenizer\Isolator;
+use Spiral\Views\Compiler\Compiler;
+use Spiral\Views\Compiler\ProcessorInterface;
+use Spiral\Views\ViewsInterface;
 
 class PrettifyProcessor implements ProcessorInterface
 {
@@ -35,14 +35,13 @@ class PrettifyProcessor implements ProcessorInterface
     ];
 
     /**
-     * New processors instance with options specified in view config. I wrote this processor just for
-     * fun, there is no real need in it.
+     * New processors instance with options specified in view config.
      *
-     * @param ViewManager $viewManager
-     * @param Compiler    $compiler SpiralCompiler instance.
-     * @param array       $options
+     * @param ViewsInterface $viewFacade
+     * @param Compiler       $compiler SpiralCompiler instance.
+     * @param array          $options
      */
-    public function __construct(ViewManager $viewManager, Compiler $compiler, array $options)
+    public function __construct(ViewsInterface $viewFacade, Compiler $compiler, array $options)
     {
         $this->options = $options + $this->options;
     }
@@ -51,8 +50,8 @@ class PrettifyProcessor implements ProcessorInterface
      * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
      * processors can perform any source manipulations using this code expect final rendering.
      *
-     * @param string    $source View source (code).
-     * @param Isolator  $isolator
+     * @param string   $source View source (code).
+     * @param Isolator $isolator
      * @param HtmlTokenizer $tokenizer
      * @return string
      * @throws \ErrorException
@@ -105,7 +104,7 @@ class PrettifyProcessor implements ProcessorInterface
     /**
      * Normalize attribute values.
      *
-     * @param string    $source
+     * @param string $source
      * @param HtmlTokenizer $tokenizer
      * @return mixed
      */

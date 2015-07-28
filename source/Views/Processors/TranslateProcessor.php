@@ -6,22 +6,15 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\View\Compiler\Processors;
+namespace Spiral\Views\Processors;
 
-use Spiral\Components\I18n\Translator;
-use Spiral\Components\View\Compiler\Compiler;
-use Spiral\Components\View\Compiler\ProcessorInterface;
-use Spiral\Components\View\ViewManager;
+use Spiral\Translator\TranslatorInterface;
+use Spiral\Views\Compiler\Compiler;
+use Spiral\Views\Compiler\ProcessorInterface;
+use Spiral\Views\ViewsInterface;
 
-class I18nProcessor implements ProcessorInterface
+class TranslateProcessor implements ProcessorInterface
 {
-    /**
-     * Active compiler.
-     *
-     * @var Compiler
-     */
-    protected $compiler = null;
-
     /**
      * Processor options.
      *
@@ -33,51 +26,56 @@ class I18nProcessor implements ProcessorInterface
     ];
 
     /**
-     * I18n component instance.
+     * Active compiler.
      *
-     * @var Translator
+     * @var Compiler
      */
-    protected $i18n = null;
+    protected $compiler = null;
 
     /**
-     * Current i18n namespace.
+     * I18n component instance.
+     *
+     * @var TranslatorInterface
+     */
+    protected $translator = null;
+
+    /**
+     * Current translator bundle.
      *
      * @var string
      */
-    protected $i18nNamespace = '';
+    protected $bundle = '';
 
     /**
      * New processors instance with options specified in view config.
      *
-     * @param ViewManager $viewManager
-     * @param Compiler    $compiler SpiralCompiler instance.
-     * @param array       $options
-     * @param Translator  $i18n
+     * @param ViewsInterface      $views
+     * @param Compiler            $compiler Compiler instance.
+     * @param array               $options
+     * @param TranslatorInterface $translator
      */
     public function __construct(
-        ViewManager $viewManager,
+        ViewsInterface $views,
         Compiler $compiler,
         array $options,
-        Translator $i18n = null
+        TranslatorInterface $translator = null
     )
     {
         $this->compiler = $compiler;
         $this->options = $options + $this->options;
 
-        $this->i18n = !empty($i18n) ? $i18n : Translator::getInstance($viewManager->getContainer());
+        $this->translator = !empty($translator) ? $translator : $this->compiler->getContainer()->get(
+            TranslatorInterface::class
+        );
 
-        //Getting i18n namespace value
-        $this->i18nNamespace = $compiler->getNamespace();
-        if (!$this->i18nNamespace == ViewManager::DEFAULT_NAMESPACE)
+        if ($this->compiler->getNamespace() != ViewsInterface::DEFAULT_NAMESPACE)
         {
-            $this->i18nNamespace = '';
+            $this->bundle = $compiler->getNamespace();
         }
 
         //I18n namespace constructed using view name, view namespace and prefix
-        $this->i18nNamespace .= '-' . $this->options['prefix'] . str_replace(
-                ['/', '\\'],
-                '-',
-                $compiler->getView()
+        $this->bundle .= '-' . $this->options['prefix'] . str_replace(
+                ['/', '\\'], '-', $compiler->getView()
             );
     }
 
@@ -101,6 +99,6 @@ class I18nProcessor implements ProcessorInterface
      */
     protected function replace($matches)
     {
-        return $this->i18n->get($this->i18nNamespace, $matches[1]);
+        return $this->translator->translate($this->bundle, $matches[1]);
     }
 }

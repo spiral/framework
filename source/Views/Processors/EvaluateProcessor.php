@@ -6,25 +6,25 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\View\Compiler\Processors;
+namespace Spiral\Views\Processors;
 
-use Spiral\Components\Files\FileManager;
-use Spiral\Components\Tokenizer\Isolator;
-use Spiral\Components\View\Compiler\Compiler;
-use Spiral\Components\View\Compiler\ProcessorInterface;
-use Spiral\Components\View\ViewManager;
+use Spiral\Files\FilesInterface;
+use Spiral\Tokenizer\Isolator;
+use Spiral\Views\Compiler\Compiler;
+use Spiral\Views\Compiler\ProcessorInterface;
+use Spiral\Views\ViewsInterface;
 
 class EvaluateProcessor implements ProcessorInterface
 {
     /**
      * ViewManager component.
      *
-     * @var ViewManager
+     * @var ViewsInterface
      */
-    protected $viewManager = null;
+    protected $views = null;
 
     /**
-     * Active compiler.
+     * Spiral compiler.
      *
      * @var Compiler
      */
@@ -33,9 +33,9 @@ class EvaluateProcessor implements ProcessorInterface
     /**
      * FileManager component.
      *
-     * @var FileManager
+     * @var FilesInterface
      */
-    protected $file = null;
+    protected $files = null;
 
     /**
      * Processor options.
@@ -51,24 +51,25 @@ class EvaluateProcessor implements ProcessorInterface
     /**
      * New processors instance with options specified in view config.
      *
-     * @param ViewManager $viewManager
-     * @param Compiler    $compiler SpiralCompiler instance.
-     * @param array       $options
-     * @param FileManager $file
+     * @param ViewsInterface $views
+     * @param Compiler       $compiler Compiler instance.
+     * @param array          $options
+     * @param FilesInterface $files
      */
     public function __construct(
-        ViewManager $viewManager,
+        ViewsInterface $views,
         Compiler $compiler,
         array $options,
-        FileManager $file = null
+        FilesInterface $files = null
     )
     {
-        $this->viewManager = $viewManager;
+        $this->views = $views;
         $this->compiler = $compiler;
+
         $this->options = $options + $this->options;
 
-        $this->file = !empty($file) ? $file : FileManager::getInstance(
-            $this->viewManager->getContainer()
+        $this->files = !empty($files) ? $files : $this->compiler->getContainer()->get(
+            FilesInterface::class
         );
     }
 
@@ -89,8 +90,7 @@ class EvaluateProcessor implements ProcessorInterface
         $source = $isolator->isolatePHP($source);
 
         //Restoring only evaluator blocks
-        $evaluatorBlocks = [];
-        $phpBlocks = [];
+        $phpBlocks = $evaluateBlocks = [];
 
         foreach ($isolator->getBlocks() as $id => $phpBlock)
         {
@@ -98,8 +98,7 @@ class EvaluateProcessor implements ProcessorInterface
             {
                 if (strpos($phpBlock, $flag) !== false)
                 {
-                    $evaluatorBlocks[$id] = $phpBlock;
-
+                    $evaluateBlocks[$id] = $phpBlock;
                     continue 2;
                 }
             }
@@ -107,23 +106,21 @@ class EvaluateProcessor implements ProcessorInterface
             $phpBlocks[$id] = $phpBlock;
         }
 
-        $source = $isolator->setBlocks($evaluatorBlocks)->repairPHP($source);
+        $source = $isolator->setBlocks($evaluateBlocks)->repairPHP($source);
         $isolator->setBlocks($phpBlocks);
 
-        $filename = $this->viewManager->cacheFilename(
-            $this->compiler->getNamespace(),
-            $this->compiler->getView() . '-evaluator-' . spl_object_hash($this)
-        );
+        //Required to prevent collisions
+        $filename = directory('cache') . "/{$this->uniqueID()}.php";
 
         try
         {
-            $this->file->write($filename, $source, FileManager::RUNTIME, true);
+            $this->files->write($filename, $source, FilesInterface::RUNTIME, true);
 
             ob_start();
             require_once $filename;
             $source = ob_get_clean();
 
-            $this->file->delete($filename);
+            $this->files->delete($filename);
         }
         catch (\ErrorException $exception)
         {
@@ -131,6 +128,16 @@ class EvaluateProcessor implements ProcessorInterface
         }
 
         return $isolator->repairPHP($source);
+    }
+
+    /**
+     * Get evaluation unique id, requried to prevent collisions.
+     *
+     * @return string
+     */
+    protected function uniqueID()
+    {
+        return spl_object_hash($this) . '-' . md5($this->compiler->getFilename());
     }
 
     /**
