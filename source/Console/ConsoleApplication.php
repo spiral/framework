@@ -9,6 +9,7 @@
 namespace Spiral\Console;
 
 use Spiral\Core\ContainerInterface;
+use Spiral\Core\Core;
 use Symfony\Component\Console\Application;
 
 class ConsoleApplication extends Application
@@ -28,7 +29,7 @@ class ConsoleApplication extends Application
     public function __construct(ContainerInterface $container, $name = 'UNKNOWN', $version = 'UNKNOWN')
     {
         $this->container = $container;
-        parent::__construct("Spiral Framework Console Toolkit");
+        parent::__construct("Spiral Framework Console Toolkit", Core::VERSION);
     }
 
     /**

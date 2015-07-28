@@ -183,11 +183,8 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      */
     public function start()
     {
+        //We don't want http pay for greedy console tokenizer
         $this->loader->setName('loadmap-console');
-
-        //Console root directory is not equals to webroot
-        chdir(dirname(directory('root')));
-
         $this->application()->run();
     }
 

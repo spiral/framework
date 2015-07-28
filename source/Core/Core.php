@@ -20,6 +20,11 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
     const SINGLETON = self::class;
 
     /**
+     * Core version.
+     */
+    const VERSION = '0.9.0-alpha';
+
+    /**
      * Bootstrap file name, if not redefined by application.
      */
     const BOOTSTRAP = 'bootstrap.php';
