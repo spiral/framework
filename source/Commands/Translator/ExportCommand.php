@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands\I18n;
+namespace Spiral\Commands\Translator;
 
-use Spiral\Components\Console\Command;
-use Spiral\Components\I18n\GetText\Exporter;
+use Spiral\Console\Command;
+use Spiral\Translator\GetText\GetTextExporter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -59,9 +59,14 @@ class ExportCommand extends Command
             "Exporting '<comment>{$this->option('language')}</comment>' language bundles to PO file."
         );
 
-        $exporter = Exporter::make();
-        $exporter->loadLanguage($this->option('language'), $this->option('prefix'));
-        $exporter->exportBundles($this->argument('filename'));
+        /**
+         * @var GetTextExporter $exporter
+         */
+        $exporter = $this->getContainer()->get(GetTextExporter::class);
+
+        $exporter->load(
+            $this->option('language'), $this->option('prefix')
+        )->export($this->argument('filename'));
 
         $this->writeln("<info>Export completed:</info> {$this->argument('filename')}");
     }

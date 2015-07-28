@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands\I18n;
+namespace Spiral\Commands\Translator;
 
-use Spiral\Components\Console\Command;
-use Spiral\Components\I18n\GetText\Importer;
+use Spiral\Console\Command;
+use Spiral\Translator\GetText\GetTextImporter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -58,19 +58,21 @@ class ImportCommand extends Command
             "Importing PO file '<comment>{$this->argument('filename')}</comment>'."
         );
 
-        $importer = Importer::make();
-        $importer->openFile($this->argument('filename'));
+        /**
+         * @var GetTextImporter $importer
+         */
+        $importer = $this->getContainer()->get(GetTextImporter::class);
 
+        $importer->open($this->argument('filename'));
         if ($this->option('language') != 'auto')
         {
             $importer->setLanguage($this->option('language'));
         }
 
-        $importer->importBundles();
+        $importer->import();
 
         $this->writeln(
-            "<info>Import completed, target language "
-            . "'<comment>{$importer->getLanguage()}</comment>'.</info>"
+            "<info>Import completed, target language '<comment>{$importer->getLanguage()}</comment>'.</info>"
         );
     }
 }

@@ -150,6 +150,16 @@ abstract class Command extends SymfonyCommand
     }
 
     /**
+     * Get associated container.
+     *
+     * @return ContainerInterface
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * Should indicate if command available for console application, method can return false if
      * parent modules not installed
      * and etc.

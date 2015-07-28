@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\I18n\GetText;
+namespace Spiral\Translator\GetText;
 
-use Spiral\Components\I18n\Importer as LocalizationImporter;
+use Spiral\Translator\AbstractImporter;
 
-class Importer extends LocalizationImporter
+class GetTextImporter extends AbstractImporter
 {
     /**
      * Method should read language bundles from specified filename and format them in an appropriate
@@ -23,15 +23,12 @@ class Importer extends LocalizationImporter
      * @param string $filename
      * @return array
      */
-    protected function parseData($filename)
+    protected function parseStrings($filename)
     {
-        //Indexing plural phrases
         $plurals = false;
-
-        $poLines = explode("\n", $this->file->read($filename));
-
         $buffer = '';
-        foreach ($poLines as $line)
+
+        foreach (explode("\n", $this->files->read($filename)) as $line)
         {
             if (strpos($line, '"') === 0)
             {
@@ -64,7 +61,7 @@ class Importer extends LocalizationImporter
                 if (!empty($token) && !empty($bundle))
                 {
                     //Previously read line
-                    $this->bundles[$bundle][$this->i18n->normalize($token)] = is_array($buffer)
+                    $this->bundles[$bundle][$this->normalize($token)] = is_array($buffer)
                         ? $buffer
                         : str_replace('\n', "\n", $buffer);
 
@@ -102,6 +99,7 @@ class Importer extends LocalizationImporter
                     //Plurals
                     $buffer[] = $this->unescape(substr($line, 10));
                 }
+
                 continue;
             }
 
@@ -119,10 +117,22 @@ class Importer extends LocalizationImporter
         //Last line
         if (!empty($bundle) && !empty($token))
         {
-            $this->bundles[$bundle][$this->i18n->normalize($token)] = is_array($buffer)
+            $this->bundles[$bundle][$this->normalize($token)] = is_array($buffer)
                 ? $buffer
                 : str_replace('\n', "\n", $buffer);
         }
+    }
+
+    /**
+     * Normalizes bundle key (string) to prevent data loosing while extra lines or spaces or formatting.
+     * Method will be applied only to keys, final value will be kept untouched.
+     *
+     * @param string $string String to be localized.
+     * @return string
+     */
+    protected function normalize($string)
+    {
+        return preg_replace('/[ \t\n\r]+/', ' ', trim($string));
     }
 
     /**

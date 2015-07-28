@@ -6,39 +6,42 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\I18n\GetText;
+namespace Spiral\Translator\GetText;
 
-use Spiral\Components\I18n\Exporter as LocalicationExporter;
-use Spiral\Components\I18n\I18nException;
+use Spiral\Translator\AbstractExporter;
+use Spiral\Translator\TranslatorException;
 
-class Exporter extends LocalicationExporter
+class GetTextExporter extends AbstractExporter
 {
     /**
-     * Export collected bundles data to specified file using format described by exporter. Language
-     * bundles will be exported using PO format (same format used for GetText), due spiral uses
-     * localization bundles every translation line will be prepended with comment contains bundle id,
-     * while editing PO file, comments should be left untouched otherwise corrupted bundles will be
+     * Export collected bundle strings to specified file using format described by exporter.
+     *
+     * Language bundles will be exported using PO format (same format used for GetText), due spiral
+     * uses localization bundles every translation line will be prepended with comment contains bundle
+     * id, while editing PO file, comments should be left untouched otherwise corrupted bundles will be
      * created. You can use any existed program to edit PO file.
      *
      * @link http://en.wikipedia.org/wiki/Gettext
      * @param string $filename
      * @return mixed
-     * @throws I18nException
+     * @throws TranslatorException
      */
-    public function exportBundles($filename)
+    public function export($filename)
     {
         if (empty($this->language))
         {
-            throw new I18nException("No language specified to be exported.");
+            throw new TranslatorException("No language specified to be exported.");
         }
 
-        $pluralForms = $this->i18n->getPluralizer($this->language)->countForms();
-        $pluralFormula = $this->i18n->getPluralizer($this->language)->getFormula();
+        //Duplicate strings has to be appended with spaces
+        $duplicates = [];
+
+        $pluralForms = $this->translator->getPluralizer($this->language)->countForms();
+        $pluralFormula = $this->translator->getPluralizer($this->language)->getFormula();
 
         /**
          * PO file header.
          */
-        $duplicates = [];
         $output = [];
         $output[] = 'msgid ""';
         $output[] = 'msgstr ""';
@@ -105,7 +108,7 @@ class Exporter extends LocalicationExporter
             }
         }
 
-        return $this->file->write($filename, join("\n", $output));
+        return $this->files->write($filename, join("\n", $output));
     }
 
     /**
