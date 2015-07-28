@@ -8,7 +8,7 @@
  */
 namespace Spiral\Console;
 
-use Spiral\Application\DispatcherInterface;
+use Spiral\Core\DispatcherInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\HippocampusInterface;
 use Spiral\Core\Loader;
