@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\Core;
 
-use Spiral\Components\Console\Command;
+use Spiral\Console\Command;
 use Spiral\Core\Core;
 
 class TouchCommand extends Command
@@ -32,11 +32,10 @@ class TouchCommand extends Command
      */
     public function perform()
     {
-        $configDirectory = $this->file->normalizePath(directory('config'));
-        $configs = $this->file->getFiles($configDirectory, Core::CONFIGS_EXTENSION);
+        $configs = $this->files->getFiles(directory('config'), Core::EXTENSION);
         foreach ($configs as $filename)
         {
-            $this->file->touch($filename);
+            $this->files->touch($filename);
         }
 
         $this->writeln("All config files touched.");

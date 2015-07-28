@@ -32,7 +32,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @property \Spiral\Http\Cookies\CookieManager $cookies
  * @property \Spiral\Database\DatabaseManager   $dbal
  * @property \Spiral\Encrypter\Encrypter        $encrypter
- * @property \Spiral\Http\InputManager          $input
  * @property \Spiral\Files\FileManager          $files
  * @property \Spiral\ODM\ODM                    $odm
  * @property \Spiral\ORM\ORM                    $orm
@@ -183,6 +182,16 @@ abstract class Command extends SymfonyCommand
     }
 
     /**
+     * Check if additional debug information is required.
+     *
+     * @return bool
+     */
+    protected function isVerbose()
+    {
+        return $this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
+    }
+
+    /**
      * Get input option.
      *
      * @param string $name
@@ -285,7 +294,7 @@ abstract class Command extends SymfonyCommand
      * @param string $style
      * @return Table
      */
-    public function table(array $headers, $rows = [], $style = 'default')
+    public function createTable(array $headers, $rows = [], $style = 'default')
     {
         return (new Table($this->output))->setHeaders($headers)->setRows($rows)->setStyle($style);
     }

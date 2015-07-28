@@ -148,6 +148,8 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     /**
      * Use tokenizer to find all available command classes, result will be stored in runtime cache
      * to speed up next console call. Command can be called manually to reindex commands.
+     *
+     * @return array
      */
     public function findCommands()
     {
@@ -166,6 +168,8 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
         }
 
         $this->runtime->saveData('commands', $this->commands);
+
+        return $this->commands;
     }
 
     /**

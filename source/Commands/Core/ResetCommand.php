@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\Core;
 
-use Spiral\Components\Console\Command;
+use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -43,21 +43,17 @@ class ResetCommand extends Command
      */
     public function perform()
     {
-        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
+        $this->isVerbose() && $this->writeln("<info>Clearing application runtime cache:</info>");
+
+        foreach ($this->files->getFiles(directory('cache')) as $filename)
         {
-            $this->writeln("<info>Clearing application runtime cache:</info>");
+            !$this->option('emulate') && $this->files->delete($filename);
+            $this->isVerbose() && $this->writeln($this->files->relativePath(
+                $filename,
+                directory('cache')
+            ));
         }
 
-        foreach ($this->file->getFiles(directory('cache')) as $filename)
-        {
-            !$this->option('emulate') && $this->file->delete($filename);
-
-            if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
-            {
-                $this->writeln($this->file->relativePath($filename, directory('cache')));
-            }
-        }
-
-        $this->writeln("<info>Cache is cleared.</info>");
+        $this->writeln("<info>Runtime cache has been cleared.</info>");
     }
 }

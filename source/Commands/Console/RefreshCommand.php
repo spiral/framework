@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\Console;
 
-use Spiral\Components\Console\Command;
+use Spiral\Console\Command;
 
 class RefreshCommand extends Command
 {
@@ -31,11 +31,7 @@ class RefreshCommand extends Command
      */
     public function perform()
     {
-        $this->console->findCommands();
-        $commands = count($this->console->getCommands());
-
-        $this->writeln(
-            "Console commands re-indexed, <comment>{$commands}</comment> commands found."
-        );
+        $commands = count($this->console->findCommands());
+        $this->writeln("Console commands re-indexed, <comment>{$commands}</comment> commands found.");
     }
 }

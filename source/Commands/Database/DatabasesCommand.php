@@ -6,15 +6,20 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands\DBAL;
+namespace Spiral\Commands\Database;
 
-use Spiral\Components\Console\Command;
+use Spiral\Console\Command;
 
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
 class DatabasesCommand extends Command
 {
+    /**
+     * No information available placeholder.
+     */
+    const SKIP = '<comment>---</comment>';
+
     /**
      * Command name.
      *
@@ -27,7 +32,7 @@ class DatabasesCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Get list of databases, their tables and records count.';
+    protected $description = 'Get list of available databases, their tables and records count.';
 
     /**
      * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
@@ -50,24 +55,19 @@ class DatabasesCommand extends Command
         }
         else
         {
+            //Every available database
             $databases = array_keys($this->dbal->getConfig()['databases']);
         }
 
         if (empty($databases))
         {
-            $this->writeln("No databases found.");
+            $this->writeln("<fg=red>No databases found.</fg=red>");
 
             return;
         }
 
-        $grid = $this->table([
-            'Name (ID):',
-            'Database:',
-            'Driver:',
-            'Prefix:',
-            'Status:',
-            'Table Name:',
-            'Count Records:'
+        $grid = $this->createTable([
+            'Name (ID):', 'Database:', 'Driver:', 'Prefix:', 'Status:', 'Tables:', 'Count Records:'
         ]);
 
         foreach ($databases as $database)
@@ -77,41 +77,33 @@ class DatabasesCommand extends Command
 
             $header = [
                 $database->getName(),
-                $database->getDriver()->getDatabaseName(),
-                $driver::DRIVER_NAME,
-                $database->getPrefix() ?: "<comment>---</comment>"
+                $driver->getDatabaseName(),
+                $driver::NAME,
+                $database->getPrefix() ?: self::SKIP
             ];
 
             try
             {
-                $database->getDriver()->getPDO();
+                $driver->connect();
             }
             catch (\Exception $exception)
             {
                 $grid->addRow(array_merge($header, [
-                    "<error>{$exception->getMessage()}</error>",
-                    "<comment>---</comment>",
-                    "<comment>---</comment>"
+                    "<fg=red>{$exception->getMessage()}</fg=red>", self::SKIP, self::SKIP
                 ]));
 
                 if ($database->getName() != end($databases))
                 {
                     $grid->addRow(new TableSeparator());
                 }
+
                 continue;
             }
 
             $header[] = "<info>connected</info>";
             foreach ($database->getTables() as $table)
             {
-                $grid->addRow(array_merge(
-                    $header,
-                    [
-                        $table->getName(),
-                        number_format($table->count())
-                    ]
-                ));
-
+                $grid->addRow(array_merge($header, [$table->getName(), number_format($table->count())]));
                 $header = ["", "", "", "", ""];
             }
 
