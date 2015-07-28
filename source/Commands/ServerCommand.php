@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands;
 
-use Spiral\Components\Console\Command;
+use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,7 +48,7 @@ class ServerCommand extends Command
      */
     protected $options = [
         ['port', 'p', InputOption::VALUE_OPTIONAL, 'Port number.', 8080],
-        ['timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout to hang out server.', 3600],
+        ['timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout to hang out server.', 36000],
     ];
 
     /**
@@ -58,10 +58,7 @@ class ServerCommand extends Command
     {
         $host = $this->argument('host') . ':' . $this->option('port');
 
-        $this->writeln(
-            "<info>Starting Spiral Development server at <comment>{$host}</comment></info>"
-        );
-
+        $this->writeln("<info>Starting Spiral Development server at <comment>{$host}</comment></info>");
         $this->writeln("Press <comment>Ctrl-C</comment> to quit.");
 
         $process = new Process(
@@ -72,8 +69,7 @@ class ServerCommand extends Command
             $this->option('timeout')
         );
 
-        $output = $this->output;
-        $process->run(function ($type, $data) use ($output)
+        $process->run(function ($type, $data)
         {
             if (Process::ERR != $type)
             {
@@ -81,10 +77,7 @@ class ServerCommand extends Command
                 $type = $data[0];
                 $data = substr($data, 2);
 
-                if ($type == 'S' || $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
-                {
-                    $this->writeln($data);
-                }
+                ($type == 'S' || $this->isVerbose()) && $this->writeln($data);
             }
         });
     }
