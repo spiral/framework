@@ -13,7 +13,7 @@ use Spiral\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
-class DatabasesCommand extends Command
+class ListCommand extends Command
 {
     /**
      * No information available placeholder.
@@ -25,7 +25,7 @@ class DatabasesCommand extends Command
      *
      * @var string
      */
-    protected $name = 'dbal:databases';
+    protected $name = 'db:list';
 
     /**
      * Short command description.

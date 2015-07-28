@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\Core;
 
-use Spiral\Components\Console\Command;
+use Spiral\Console\Command;
 use Spiral\Helpers\StringHelper;
 use Spiral\Support\Generators\Config\ConfigWriter;
 
