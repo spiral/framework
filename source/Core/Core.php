@@ -33,7 +33,7 @@ use Spiral\Http\HttpDispatcher;
  * @property \Spiral\Session\SessionStore       $session
  * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
  * @property \Spiral\Translator\Translator      $i18n
- * @property \Spiral\Views\ViewManager          $view
+ * @property \Spiral\Views\ViewManager          $views
  *
  * @property \Spiral\Redis\RedisManager         $redis
  * @property \Spiral\Image\ImageManager         $image
@@ -99,7 +99,7 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
 
         //Dispatchers
         'console'                               => 'Spiral\Console\ConsoleDispatcher',
-        'http' => 'Spiral\Http\HttpDispatcher',
+        'http'  => 'Spiral\Http\HttpDispatcher',
 
         //Component aliases
         'cache'                                 => 'Spiral\Cache\CacheManager',
@@ -114,7 +114,7 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         'storage'                               => 'Spiral\Storage\StorageManager',
         'tokenizer'                             => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                  => 'Spiral\Translator\Translator',
-        'view' => 'Spiral\Views\ViewManager',
+        'views' => 'Spiral\Views\ViewManager',
 
         //Additional and post binded components
         'redis'                                 => 'Spiral\Redis\RedisManager',

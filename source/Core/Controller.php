@@ -32,7 +32,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  * @property \Spiral\Session\SessionStore       $session
  * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
  * @property \Spiral\Translator\Translator      $i18n
- * @property \Spiral\Views\ViewManager          $view
+ * @property \Spiral\Views\ViewManager          $views
  *
  * @property \Spiral\Redis\RedisManager         $redis
  * @property \Spiral\Image\ImageManager         $image
