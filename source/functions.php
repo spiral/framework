@@ -8,6 +8,7 @@
  */
 use Spiral\Core\Core;
 use Spiral\Debug\Dumper;
+use Spiral\Translator\TranslatorInterface;
 
 if (!function_exists('directory'))
 {
@@ -80,5 +81,59 @@ if (!function_exists('dump'))
     function dump($value, $output = Dumper::DUMP_ECHO, $showStatic = false)
     {
         return Dumper::getInstance()->dump($value, $output, $showStatic);
+    }
+}
+
+if (!function_exists('l'))
+{
+    /**
+     * Translate and format string fetched from bundle, new strings will be automatically registered
+     * in bundle with key identical to string itself. Function support embedded formatting, to
+     * enable it provide arguments to insert after string. This method is indexable and will be
+     * automatically collected to bundles. This function is short alias for I18n::get() method with
+     * forced default bundle id. "L" is legacy name, this function probably better be named as "t".
+     *
+     * Examples:
+     * l('Some Message');
+     * l('Hello %s', $name);
+     *
+     * @param string $string String to be localized, should be sprintf compatible if formatting
+     *                       required.
+     * @return string
+     */
+    function l($string)
+    {
+        $arguments = func_get_args();
+        array_unshift($arguments, TranslatorInterface::DEFAULT_BUNDLE);
+
+        return call_user_func_array(
+            [Core::getContainer()->get(TranslatorInterface::class), 'translate'], $arguments
+        );
+    }
+}
+
+if (!function_exists('p'))
+{
+    /**
+     * Format phase according to formula defined in selected language. Phase should include "%s"
+     * which will be replaced with number provided as second argument. This method is indexable
+     * and will be automatically collected to bundles. This function is short alias for
+     * I18n::pluralize() method.
+     *
+     * Examples:
+     * p("%s user", $users);
+     *
+     * All pluralization phases stored in same bundle defined in i18n config.
+     *
+     * @param string $phrase Pluralization phase.
+     * @param int    $number
+     * @param bool   $numberFormat
+     * @return string
+     */
+    function p($phrase, $number, $numberFormat = true)
+    {
+        return Core::getContainer()->get(TranslatorInterface::class)->pluralize(
+            $phrase, $number, $numberFormat
+        );
     }
 }

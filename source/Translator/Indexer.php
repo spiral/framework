@@ -6,25 +6,20 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\I18n;
+namespace Spiral\Translator;
 
-use Spiral\Components\Files\FileManager;
-use Spiral\Components\Tokenizer\Reflection\FunctionUsage;
-use Spiral\Components\Tokenizer\Reflection\FunctionUsage\Argument;
-use Spiral\Components\Tokenizer\Tokenizer;
 use Spiral\Core\Component;
+use Spiral\Debug\Traits\LoggerTrait;
+use Spiral\Events\Traits\EventsTrait;
+use Spiral\Files\FilesInterface;
+use Spiral\Proxies\I18n;
+use Spiral\Tokenizer\Reflections\FunctionUsage;
+use Spiral\Tokenizer\Tokenizer;
+use Spiral\Translator\Traits\TranslatorTrait;
 
 class Indexer extends Component
 {
-    /**
-     * Logging found usages.
-     */
-    use Component\LoggerTrait, Component\EventsTrait;
-
-    /**
-     * Trait declares I18n messages support.
-     */
-    const LOCALIZABLE_TRAIT = 'Spiral\Components\I18n\LocalizableTrait';
+    use LoggerTrait, EventsTrait;
 
     /**
      * List of found function or message usages grouped by bundle id. Every found usage will be
@@ -32,21 +27,21 @@ class Indexer extends Component
      *
      * @var array
      */
-    protected $foundUsages = [];
+    protected $bundles = [];
 
     /**
      * I18nManager component.
      *
      * @var Translator
      */
-    protected $i18n = null;
+    protected $translator = null;
 
     /**
      * File component.
      *
-     * @var FileManager
+     * @var FilesInterface
      */
-    protected $file = null;
+    protected $files = null;
 
     /**
      * Tokenizer.
@@ -58,23 +53,33 @@ class Indexer extends Component
     /**
      * New indexer instance.
      *
-     * @param Translator  $i18n
-     * @param FileManager $file
-     * @param Tokenizer   $tokenizer
+     * @param Translator     $translator
+     * @param Tokenizer      $tokenizer Yes, it requires specific tokenizer implementation.
+     * @param FilesInterface $file
      */
-    public function __construct(Translator $i18n, FileManager $file, Tokenizer $tokenizer)
+    public function __construct(Translator $translator, Tokenizer $tokenizer, FilesInterface $file)
     {
-        $this->i18n = $i18n;
-        $this->file = $file;
+        $this->translator = $translator;
+        $this->files = $file;
         $this->tokenizer = $tokenizer;
     }
 
     /**
+     * List of all found bundles, strings and their locations.
+     *
+     * @return array
+     */
+    public function getBundles()
+    {
+        return $this->bundles;
+    }
+
+    /**
      * Parse all files in specified directory to find i18n functions and register them with i18n
-     * component. Supported functions: l, p, I18n::get, I18n::pluralize
+     * component. Supported functions: l, p, Translator::translate (proxy),
+     * Translator::pluralize (proxy).
      *
      * Both bundle id and message should be string constants, otherwise usage will not be recorded.
-     * Do not use i18n methods via non-static call.
      *
      * @param string $directory Directory which has to be indexed. Application directory by default.
      * @param array  $excludes  Skip indexation if keyword met in filename.
@@ -82,11 +87,9 @@ class Indexer extends Component
      */
     public function indexDirectory($directory = null, array $excludes = [])
     {
-        $directory = $directory ?: directory('application');
-
-        foreach ($this->file->getFiles($directory, 'php') as $filename)
+        foreach ($this->files->getFiles($directory, 'php') as $filename)
         {
-            $filename = $this->file->normalizePath($filename);
+            $filename = $this->files->normalizePath($filename);
             foreach ($excludes as $exclude)
             {
                 if (strpos($filename, $exclude) !== false)
@@ -95,197 +98,109 @@ class Indexer extends Component
                 }
             }
 
-            $fileReflection = $this->tokenizer->fileReflection($filename);
-            $this->registerFunctions($filename, $fileReflection->functionUsages());
+            $fileReflection = $this->tokenizer->reflectionFile($filename);
+            $this->indexUsages($fileReflection->getFunctionUsages());
         }
 
         return $this;
     }
 
     /**
-     * Register all i18n functions in appropriate bundles.
+     * Register all translator functions in appropriate bundles.
      *
-     * @param FunctionUsage[] $functions
-     * @param string          $filename
+     * @param FunctionUsage[] $usages
      * @throws IndexerException
      */
-    protected function registerFunctions($filename, array $functions)
+    protected function indexUsages(array $usages)
     {
-        foreach ($functions as $function)
+        foreach ($usages as $usage)
         {
-            if (!$function->getClass())
+            $firstArgument = $usage->getArgument(0);
+            if (empty($firstArgument) || $firstArgument->getType() != FunctionUsage\Argument::STRING)
             {
-                if ($function->getFunction() == 'l')
-                {
-                    if (!$function->getArgument(0))
-                    {
-                        //Some arguments missing
-                        continue;
-                    }
-
-                    if ($function->getArgument(0)->getType() != Argument::STRING)
-                    {
-                        continue;
-                    }
-
-                    $this->i18n->get(
-                        Translator::DEFAULT_BUNDLE,
-                        $function->getArgument(0)->stringValue()
-                    );
-
-                    $this->registerString(
-                        $filename,
-                        $function->getLine(),
-                        Translator::DEFAULT_BUNDLE,
-                        $function->getArgument(0)->stringValue());
-                }
-
-                if ($function->getFunction() == 'p')
-                {
-                    if (!$function->getArgument(0))
-                    {
-                        //Some arguments missing
-                        continue;
-                    }
-
-                    if ($function->getArgument(0)->getType() != Argument::STRING)
-                    {
-                        continue;
-                    }
-
-                    $this->i18n->pluralize($function->getArgument(0)->stringValue(), 0);
-                    $this->registerString(
-                        $filename,
-                        $function->getLine(),
-                        $this->i18n->getConfig()['plurals'],
-                        $function->getArgument(0)->stringValue()
-                    );
-                }
+                //Every translation function require first argument to be a string, not expression
+                continue;
             }
 
-            if ($function->getClass() == 'Spiral\Facades\I18n')
+            if (!empty($usage->getClass()) && $usage->getClass() != I18n::class)
             {
-                if ($function->getFunction() == 'get')
+                if ($usage->getFunction() == 'translate')
                 {
-                    if (!$function->getArgument(0) || !$function->getArgument(1))
-                    {
-                        //Some arguments missing
-                        continue;
-                    }
-
-                    if ($function->getArgument(0)->getType() != Argument::STRING)
-                    {
-                        continue;
-                    }
-
-                    if ($function->getArgument(1)->getType() != Argument::STRING)
-                    {
-                        continue;
-                    }
-
-                    //Registering string
-                    $this->i18n->get(
-                        $function->getArgument(0)->stringValue(),
-                        $function->getArgument(1)->stringValue()
-                    );
-
-                    $this->registerString(
-                        $filename,
-                        $function->getLine(),
-                        $function->getArgument(0)->stringValue(),
-                        $function->getArgument(1)->stringValue()
-                    );
+                    //Can be part of TranslatorTrait
+                    $this->indexTraitUsage($usage);
                 }
 
-                if ($function->getFunction() == 'pluralize')
-                {
-                    if (!$function->getArgument(0))
-                    {
-                        //Some arguments missing
-                        continue;
-                    }
-
-                    if ($function->getArgument(0)->getType() != Argument::STRING)
-                    {
-                        continue;
-                    }
-
-                    $this->i18n->pluralize($function->getArgument(0)->stringValue(), 0);
-                    $this->registerString(
-                        $filename,
-                        $function->getLine(),
-                        $this->i18n->getConfig()['plurals'],
-                        $function->getArgument(0)->stringValue()
-                    );
-                }
+                //We are looking for one specific class
+                continue;
             }
 
-            if ($function->getFunction() == 'i18nMessage')
+            if ($usage->getFunction() == 'p' || $usage->getFunction() == 'pluralize')
             {
-                $this->indexMessageFunction($filename, $function);
-            }
-        }
-    }
+                $this->translator->pluralize($firstArgument->stringValue(), 0);
 
-    /**
-     * Will index localization string defined in default values of classes with LocalizableTrait trait.
-     * Strings should have [[ ]]. Method will additionally find all i18nMessage method usages. Only
-     * statically used methods will be indexed!
-     *
-     * @param string $namespace Namespace to collect models from, core namespace by default.
-     * @return Indexer
-     */
-    public function indexClasses($namespace = '')
-    {
-        $classes = $this->tokenizer->getClasses(self::LOCALIZABLE_TRAIT, $namespace);
-        foreach ($classes as $class => $location)
-        {
-            //Indexing class
-            $reflection = new \ReflectionClass($class);
-
-            //We have to merge both local and parent class messages
-            $recursively = $reflection->getConstant('I18N_INHERIT_MESSAGES');
-
-            $bundle = call_user_func([$reflection->getName(), 'i18nBundle']);
-            foreach ($this->fetchStrings($reflection, $recursively) as $string)
-            {
-                $this->i18n->get($bundle, $string);
+                //Registering plural usage
                 $this->registerString(
-                    $location['filename'],
-                    0,
-                    $bundle,
-                    $string,
-                    $reflection->getName()
+                    $usage->getFilename(),
+                    $usage->getLine(),
+                    $this->translator->getConfig()['plurals'],
+                    $firstArgument->stringValue()
+                );
+            }
+
+            if ($usage->getFunction() == 'l')
+            {
+                $this->translator->translate(Translator::DEFAULT_BUNDLE, $firstArgument->stringValue());
+
+                //Translate using default bundle
+                $this->registerString(
+                    $usage->getFilename(),
+                    $usage->getLine(),
+                    Translator::DEFAULT_BUNDLE,
+                    $firstArgument->stringValue()
+                );
+            }
+
+            if ($usage->getFunction() == 'translate')
+            {
+                $secondArgument = $usage->getArgument(1);
+                if (empty($secondArgument) || $secondArgument->getType() != FunctionUsage\Argument::STRING)
+                {
+                    //We can only use static strings
+                    continue;
+                }
+
+                //Registering string
+                $this->translator->translate(
+                    $firstArgument->stringValue(),
+                    $secondArgument->stringValue()
+                );
+
+                //Translate with specified bundle
+                $this->registerString(
+                    $usage->getFilename(),
+                    $usage->getLine(),
+                    $firstArgument->stringValue(),
+                    $secondArgument->stringValue()
                 );
             }
         }
     }
 
     /**
-     * Perform indexation of i18nMessage() method usage. We have to analyze parent class and fetch
-     * it's i18n bundle.
+     * Perform indexation of translate() methods. System will check if this method belongs to
+     * TranslatorTrait.
      *
-     * @param string        $filename
-     * @param FunctionUsage $function
+     * @param FunctionUsage $usage
      */
-    protected function indexMessageFunction($filename, FunctionUsage $function)
+    protected function indexTraitUsage(FunctionUsage $usage)
     {
-        if (!in_array(self::LOCALIZABLE_TRAIT, Tokenizer::getTraits($function->getClass())))
+        if (!in_array(TranslatorTrait::class, $this->tokenizer->getTraits($usage->getClass())))
         {
             return;
         }
 
-        if (!$function->getArgument(0))
-        {
-            return;
-        }
+        $string = $usage->getArgument(0)->stringValue();
 
-        if ($function->getArgument(0)->getType() != Argument::STRING)
-        {
-            return;
-        }
-
-        $string = $function->getArgument(0)->stringValue();
         if (
             substr($string, 0, 2) == Translator::I18N_PREFIX
             || substr($string, -2) == Translator::I18N_POSTFIX
@@ -295,16 +210,46 @@ class Indexer extends Component
             $string = substr($string, 2, -2);
         }
 
-        $bundle = call_user_func([$function->getClass(), 'i18nBundle']);
+        $this->translator->translate($usage->getClass(), $string);
 
-        $this->i18n->get($bundle, $string);
         $this->registerString(
-            $filename,
-            $function->getLine(),
-            $bundle,
+            $usage->getFilename(),
+            $usage->getLine(),
+            $usage->getClass(),
             $string,
-            $function->getClass()
+            $usage->getClass()
         );
+    }
+
+    /**
+     * Will index localization string defined in default values of classes with TranslatorTrait.
+     * Strings should have [[ ]].
+     *
+     * @param string $namespace Namespace to collect models from, core namespace by default.
+     * @return Indexer
+     */
+    public function indexClasses($namespace = '')
+    {
+        $classes = $this->tokenizer->getClasses(TranslatorTrait::class, $namespace);
+        foreach ($classes as $class => $location)
+        {
+            $reflection = new \ReflectionClass($class);
+
+            //We have to merge both local and parent class messages
+            $recursively = $reflection->getConstant('INHERIT_TRANSLATIONS');
+
+            foreach ($this->fetchStrings($reflection, $recursively) as $string)
+            {
+                $this->translator->translate($reflection->getName(), $string);
+                $this->registerString(
+                    $reflection->getFileName(),
+                    $reflection->getStartLine(),
+                    $reflection->getName(),
+                    $string,
+                    $reflection->getName()
+                );
+            }
+        }
     }
 
     /**
@@ -318,7 +263,6 @@ class Indexer extends Component
     protected function fetchStrings(\ReflectionClass $reflection, $recursively = false)
     {
         $defaultProperties = $reflection->getDefaultProperties();
-
         foreach ($reflection->getProperties() as $property)
         {
             if (strpos($property->getDocComment(), "@do-not-index"))
@@ -349,7 +293,7 @@ class Indexer extends Component
     }
 
     /**
-     * Registering new string with specified location and bundle.
+     * Register new string with specified location and bundle.
      *
      * @param string $filename File where string were found.
      * @param string $line     Line string begins on.
@@ -359,48 +303,19 @@ class Indexer extends Component
      */
     protected function registerString($filename, $line, $bundle, $string, $class = '')
     {
+        $payload = compact('filename', 'line', 'bundle', 'string', 'class');
+
         if ($class)
         {
-            self::logger()->info(
-                "'{string}' found in class '{class}'.",
-                [
-                    'filename' => $this->file->relativePath($filename),
-                    'line'     => $line,
-                    'bundle'   => $bundle,
-                    'string'   => $string,
-                    'class'    => $class
-                ]
-            );
+            $this->logger()->info("'{string}' found in class '{class}'.", $payload);
         }
         else
         {
-            self::logger()->info(
-                "'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.",
-                [
-                    'filename' => $this->file->relativePath($filename),
-                    'line'     => $line,
-                    'bundle'   => $bundle,
-                    'string'   => $string
-                ]
+            $this->logger()->info(
+                "'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.", $payload
             );
         }
 
-        $this->foundUsages[$bundle][] = $this->event('string', compact(
-            'filename',
-            'line',
-            'bundle',
-            'string',
-            'class'
-        ));
-    }
-
-    /**
-     * List of all found bundles, strings and their locations.
-     *
-     * @return array
-     */
-    public function foundStrings()
-    {
-        return $this->foundUsages;
+        $this->bundles[$bundle][] = $this->fire('string', $payload);
     }
 }

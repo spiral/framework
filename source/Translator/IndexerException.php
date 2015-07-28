@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\I18n;
+namespace Spiral\Translator;
 
-use Spiral\Core\CoreException;
+use Spiral\Core\ExceptionInterface;
 
-class IndexerException extends CoreException
+class IndexerException extends \RuntimeException implements ExceptionInterface
 {
 
 }
