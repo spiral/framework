@@ -6,12 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Redis;
+namespace Spiral\Redis;
 
-use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\Container;
-use Spiral\Core\Container\InjectionManagerInterface;
+use Spiral\Core\Container\InjectorInterface;
+use Spiral\Core\ContainerInterface;
+use Spiral\Core\Singleton;
+use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
  * @method mixed del(array $keys)
@@ -151,17 +153,22 @@ use Spiral\Core\Container\InjectionManagerInterface;
  * @method mixed slowlog($subcommand, $argument = null)
  * @method mixed time()
  */
-class RedisManager extends Component implements InjectionManagerInterface
+class RedisManager extends Singleton implements InjectorInterface
 {
     /**
-     * Will provide us helper method getInstance().
+     * Some operations should be recorded.
      */
-    use Component\SingletonTrait, Component\ConfigurableTrait;
+    use ConfigurableTrait, BenchmarkTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = __CLASS__;
+    const SINGLETON = self::class;
+
+    /**
+     * Configuration section.
+     */
+    const CONFIG = 'redis';
 
     /**
      * Copying set of redis constants due same name were used.
@@ -191,7 +198,7 @@ class RedisManager extends Component implements InjectionManagerInterface
      * Container instance.
      *
      * @invisible
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container = null;
 
@@ -208,9 +215,9 @@ class RedisManager extends Component implements InjectionManagerInterface
      * Redis facade initialization.
      *
      * @param ConfiguratorInterface $configurator
-     * @param Container             $container
+     * @param ContainerInterface    $container
      */
-    public function __construct(ConfiguratorInterface $configurator, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, ContainerInterface $container)
     {
         $this->config = $configurator->getConfig('redis');
         $this->container = $container;
@@ -251,36 +258,30 @@ class RedisManager extends Component implements InjectionManagerInterface
         }
 
         //Creating client
-        benchmark('redis::client', $client);
-
+        $this->benchmark('client', $client);
         $this->clients[$client] = $this->container->get(RedisClient::class, [
             'parameters' => $config['servers'],
             'options'    => isset($config['options']) ? $config['options'] : [],
-        ], null, true);
+        ]);
 
-        benchmark('redis::client', $client);
+        $this->benchmark('client', $client);
 
         return $this->clients[$client];
     }
 
     /**
-     * InjectionManager will receive requested class or interface reflection and reflection linked
-     * to parameter in constructor or method used to declare dependency.
+     * Injector will receive requested class or interface reflection and reflection linked
+     * to parameter in constructor or method.
      *
-     * This method can return pre-defined instance or create new one based on requested class, parameter
-     * reflection can be used to dynamic class constructing, for example it can define database name
-     * or config section should be used to construct requested instance.
+     * This method can return pre-defined instance or create new one based on requested class. Parameter
+     * reflection can be used for dynamic class constructing, for example it can define database name
+     * or config section to be used to construct requested instance.
      *
      * @param \ReflectionClass     $class
      * @param \ReflectionParameter $parameter
-     * @param Container            $container
      * @return mixed
      */
-    public function resolveInjection(
-        \ReflectionClass $class,
-        \ReflectionParameter $parameter,
-        Container $container
-    )
+    public function createInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
     {
         return $this->client($parameter->getName());
     }

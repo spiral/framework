@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Redis;
+namespace Spiral\Redis;
 
-use Spiral\Core\CoreException;
+use Spiral\Core\ExceptionInterface;
 
-class RedisException extends CoreException
+class RedisException extends \RuntimeException implements ExceptionInterface
 {
 
 }

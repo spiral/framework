@@ -6,10 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Redis;
+namespace Spiral\Redis;
 
 use Predis\Client;
-use Spiral\Core\Container\InjectableInterface;
 
 /**
  * Following methods will be called via magic method and applied to default connection.
@@ -153,16 +152,11 @@ use Spiral\Core\Container\InjectableInterface;
  * @method mixed client($subcommand, $argument = null)
  * @method array command()
  */
-class RedisClient extends Client implements InjectableInterface
+class RedisClient extends Client
 {
     /**
-     * InjectableInterface declares to spiral Container that requested interface or class should
-     * not be resolved using default mechanism. Following interface does not require any methods,
-     * however class or other interface which inherits InjectableInterface should declare constant
-     * named "INJECTION_MANAGER" with name of class responsible for resolving that injection.
-     *
-     * InjectionFactory will receive requested class or interface reflection and reflection linked
-     * to parameter in constructor or method used to declare injection.
+     * This is magick constant used by Spiral Constant, it helps system to resolve controllable injections,
+     * once set - Container will ask specific binding for injection.
      */
-    const INJECTION_MANAGER = RedisManager::class;
+    const INJECTOR = RedisManager::class;
 }

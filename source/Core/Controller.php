@@ -11,6 +11,32 @@ namespace Spiral\Core;
 use Spiral\Core\Container\ArgumentException;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
+/**
+ * Spiral Application specific bindings.
+ *
+ * @property \Spiral\Core\Core                  $core
+ * @property \Spiral\Core\Loader                $loader
+ * @property \Spiral\Modules\ModuleManager      $modules
+ *
+ * @property \Spiral\Console\ConsoleDispatcher  $console
+ * @property \Spiral\Http\HttpDispatcher        $http
+ *
+ * @property \Spiral\Cache\CacheManager         $cache
+ * @property \Spiral\Http\Cookies\CookieManager $cookies
+ * @property \Spiral\Database\DatabaseManager   $dbal
+ * @property \Spiral\Encrypter\Encrypter        $encrypter
+ * @property \Spiral\Http\InputManager          $input
+ * @property \Spiral\Files\FileManager          $files
+ * @property \Spiral\ODM\ODM                    $odm
+ * @property \Spiral\ORM\ORM                    $orm
+ * @property \Spiral\Session\SessionStore       $session
+ * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
+ * @property \Spiral\Translator\Translator      $i18n
+ * @property \Spiral\Views\ViewManager          $view
+ *
+ * @property \Spiral\Redis\RedisManager         $redis
+ * @property \Spiral\Image\ImageManager         $image
+ */
 abstract class Controller extends Component implements ControllerInterface
 {
     /**
