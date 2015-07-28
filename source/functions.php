@@ -8,7 +8,6 @@
  */
 use Spiral\Core\Core;
 use Spiral\Debug\Dumper;
-use Spiral\ODM\ODM;
 
 if (!function_exists('directory'))
 {
@@ -81,20 +80,5 @@ if (!function_exists('dump'))
     function dump($value, $output = Dumper::DUMP_ECHO, $showStatic = false)
     {
         return Dumper::getInstance()->dump($value, $output, $showStatic);
-    }
-}
-
-if (!function_exists('mongoID'))
-{
-    /**
-     * Create valid MongoId object based on string or id provided from client side, this function
-     * can be used as model filter as it will pass MongoId objects without any change.
-     *
-     * @param mixed $mongoID String or MongoId object.
-     * @return \MongoId|null
-     */
-    function mongoID($mongoID)
-    {
-        return ODM::mongoID($mongoID);
     }
 }
