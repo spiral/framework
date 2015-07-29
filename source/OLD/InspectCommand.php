@@ -121,12 +121,12 @@ class InspectCommand extends Command
      */
     protected function getInspector()
     {
-        $odmBuilder = !empty(\Spiral\Commands\ODM\UpdateCommand::$schemaBuilder)
-            ? \Spiral\Commands\ODM\UpdateCommand::$schemaBuilder
+        $odmBuilder = !empty(\Spiral\Commands\ODM\SchemaCommand::$schemaBuilder)
+            ? \Spiral\Commands\ODM\SchemaCommand::$schemaBuilder
             : $this->odm->schemaBuilder();
 
-        $ormBuilder = !empty(\Spiral\Commands\ORM\UpdateCommand::$schemaBuilder)
-            ? \Spiral\Commands\ORM\UpdateCommand::$schemaBuilder
+        $ormBuilder = !empty(\Spiral\Commands\ORM\SchemaCommand::$schemaBuilder)
+            ? \Spiral\Commands\ORM\SchemaCommand::$schemaBuilder
             : $this->orm->schemaBuilder();
 
         return Inspector::make([

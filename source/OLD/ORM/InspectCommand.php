@@ -34,7 +34,7 @@ class InspectCommand extends BaseInspectCommand
      */
     protected function getInspector()
     {
-        if (!$schemaBuilder = UpdateCommand::$schemaBuilder)
+        if (!$schemaBuilder = SchemaCommand::$schemaBuilder)
         {
             $schemaBuilder = $this->orm->schemaBuilder();
         }

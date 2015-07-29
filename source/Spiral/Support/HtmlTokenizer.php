@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Helpers;
+namespace Spiral\Support;
 
 use Spiral\Core\Component;
 use Spiral\Tokenizer\Isolator;
@@ -29,6 +29,7 @@ class HtmlTokenizer extends Component
     const TAG_OPEN   = 'open';
     const TAG_CLOSE  = 'close';
     const TAG_SHORT  = 'short';
+    const TAG_VOID = 'void';
 
     /**
      * Token fields. There are a lot of tokens in HTML (up to 10,000 different ones). It is better to
@@ -38,6 +39,17 @@ class HtmlTokenizer extends Component
     const TOKEN_TYPE       = 1;
     const TOKEN_CONTENT    = 2;
     const TOKEN_ATTRIBUTES = 3;
+
+    /**
+     * List of void tags.
+     *
+     * @link http://www.w3.org/TR/html5/syntax.html#void-elements
+     * @var array
+     */
+    protected $voidTags = [
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta',
+        'param', 'source', 'track', 'wbr'
+    ];
 
     /**
      * Array of parsed tokens. Every token has fields name, type, content and arguments.
@@ -65,22 +77,13 @@ class HtmlTokenizer extends Component
      * This can slow it down but the results are much more reliable. Please don't forget this is
      * tokenizer, not parser.
      *
-     * @param bool $isolatePHP PHP block should be isolated and enabled by default
+     * @param bool     $isolatePHP PHP block should be isolated and enabled by default
+     * @param Isolator $isolator
      */
-    public function __construct($isolatePHP = true)
+    public function __construct($isolatePHP = true, Isolator $isolator = null)
     {
         $this->isolatePHP = $isolatePHP;
-        $this->isolator = new Isolator();
-    }
-
-    /**
-     * Get associated isolator.
-     *
-     * @return Isolator
-     */
-    protected function getIsolator()
-    {
-        return $this->isolator;
+        $this->isolator = !empty($isolator) ? $isolator : new Isolator();
     }
 
     /**
@@ -96,7 +99,7 @@ class HtmlTokenizer extends Component
             return $source;
         }
 
-        return $this->getIsolator()->repairPHP($source);
+        return $this->isolator->repairPHP($source);
     }
 
     /**
@@ -113,7 +116,7 @@ class HtmlTokenizer extends Component
 
         if ($this->isolatePHP)
         {
-            $source = $this->getIsolator()->isolatePHP($source);
+            $source = $this->isolator->isolatePHP($source);
         }
 
         $quotas = '';
@@ -261,6 +264,14 @@ class HtmlTokenizer extends Component
 
         $token[self::TOKEN_NAME] = trim($token[self::TOKEN_NAME]);
 
+        if (
+            $token[self::TOKEN_TYPE] == self::TAG_OPEN
+            && in_array($token[self::TOKEN_NAME], $this->voidTags)
+        )
+        {
+            $token[self::TOKEN_TYPE] = self::TAG_VOID;
+        }
+
         return $token;
     }
 
@@ -290,5 +301,45 @@ class HtmlTokenizer extends Component
         }
 
         $this->tokens[] = $token;
+    }
+
+    /**
+     * Compile token and all it's attributes into string.
+     *
+     * @param array $token
+     * @return string
+     */
+    public function compile(array $token)
+    {
+        if (in_array($token[self::TOKEN_TYPE], [self::PLAIN_TEXT, self::TAG_CLOSE]))
+        {
+            //Nothing to compile
+            return $token[HtmlTokenizer::TOKEN_CONTENT];
+        }
+
+        $result = '';
+        $attributes = [];
+        foreach ($token[self::TOKEN_ATTRIBUTES] as $attribute => $value)
+        {
+            if ($value === null)
+            {
+                $attributes[] = $attribute;
+                continue;
+            }
+
+            $attributes[] = $attribute . '="' . $value . '"';
+        }
+
+        if ($attributes)
+        {
+            $result .= ' ' . join(' ', $attributes);
+        }
+
+        if ($token[HtmlTokenizer::TOKEN_TYPE] == HtmlTokenizer::TAG_SHORT)
+        {
+            $result .= '/';
+        }
+
+        return '<' . $result . '>';
     }
 }

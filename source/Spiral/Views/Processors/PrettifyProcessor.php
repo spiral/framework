@@ -8,7 +8,7 @@
  */
 namespace Spiral\Views\Processors;
 
-use Spiral\Helpers\HtmlTokenizer;
+use Spiral\Support\HtmlTokenizer;
 use Spiral\Helpers\StringHelper;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\Compiler\Compiler;
@@ -113,19 +113,11 @@ class PrettifyProcessor implements ProcessorInterface
         $result = '';
         foreach ($tokenizer->parse($source) as $token)
         {
-            if (in_array($token[HtmlTokenizer::TOKEN_TYPE], [HtmlTokenizer::PLAIN_TEXT, HtmlTokenizer::TAG_CLOSE]))
-            {
-                $result .= $token[HtmlTokenizer::TOKEN_CONTENT];
-                continue;
-            }
-
             if (empty($token[HtmlTokenizer::TOKEN_ATTRIBUTES]))
             {
-                $result .= $token[HtmlTokenizer::TOKEN_CONTENT];
+                $result .= $tokenizer->compile($token);
                 continue;
             }
-
-            $tokenContent = $token[HtmlTokenizer::TOKEN_NAME];
 
             $attributes = [];
             foreach ($token[HtmlTokenizer::TOKEN_ATTRIBUTES] as $attribute => $value)
@@ -141,26 +133,11 @@ class PrettifyProcessor implements ProcessorInterface
                     continue;
                 }
 
-                if ($value === null)
-                {
-                    $attributes[] = $attribute;
-                    continue;
-                }
-
-                $attributes[] = $attribute . '="' . $value . '"';
+                $attributes[] = $value;
             }
 
-            if ($attributes)
-            {
-                $tokenContent .= ' ' . join(' ', $attributes);
-            }
-
-            if ($token[HtmlTokenizer::TOKEN_TYPE] == HtmlTokenizer::TAG_SHORT)
-            {
-                $tokenContent .= '/';
-            }
-
-            $result .= '<' . $tokenContent . '>';
+            $token[HtmlTokenizer::TOKEN_ATTRIBUTES] = $attributes;
+            $result .= $tokenizer->compile($token);
         }
 
         return $result;

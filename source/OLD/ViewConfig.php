@@ -14,6 +14,9 @@ use Spiral\Core\Core;
 use Spiral\Support\Generators\Config\ConfigWriter;
 use Spiral\Support\Generators\Config\ConfigWriterException;
 
+/**
+ * To be used in modules for altering view configs.
+ */
 class ViewConfig extends ConfigWriter
 {
     /**

@@ -54,8 +54,8 @@ class DocumentCommand extends Command
             $documenter = $documenters[$this->odm->getConfig()['documenter']];
         }
 
-        $schemaBuilder = !empty(UpdateCommand::$schemaBuilder)
-            ? UpdateCommand::$schemaBuilder
+        $schemaBuilder = !empty(SchemaCommand::$schemaBuilder)
+            ? SchemaCommand::$schemaBuilder
             : $this->odm->schemaBuilder();
 
         /**

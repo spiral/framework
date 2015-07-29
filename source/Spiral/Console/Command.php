@@ -24,6 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @property \Spiral\Core\Core                  $core
  * @property \Spiral\Core\Loader                $loader
  * @property \Spiral\Modules\ModuleManager      $modules
+ * @property \Spiral\Debug\Debugger             $debugger
  *
  * @property \Spiral\Console\ConsoleDispatcher  $console
  * @property \Spiral\Http\HttpDispatcher        $http

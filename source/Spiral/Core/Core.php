@@ -18,6 +18,7 @@ use Spiral\Http\HttpDispatcher;
  * @property \Spiral\Core\Core                  $core
  * @property \Spiral\Core\Loader                $loader
  * @property \Spiral\Modules\ModuleManager      $modules
+ * @property \Spiral\Debug\Debugger             $debugger
  *
  * @property \Spiral\Console\ConsoleDispatcher  $console
  * @property \Spiral\Http\HttpDispatcher        $http
@@ -96,10 +97,11 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         'core'                                  => 'Spiral\Core\Core',
         'loader'                                => 'Spiral\Core\Loader',
         'modules'                               => 'Spiral\Modules\ModuleManager',
+        'debugger' => 'Spiral\Debug\Debugger',
 
         //Dispatchers
         'console'                               => 'Spiral\Console\ConsoleDispatcher',
-        'http'  => 'Spiral\Http\HttpDispatcher',
+        'http'     => 'Spiral\Http\HttpDispatcher',
 
         //Component aliases
         'cache'                                 => 'Spiral\Cache\CacheManager',
@@ -114,7 +116,7 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         'storage'                               => 'Spiral\Storage\StorageManager',
         'tokenizer'                             => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                  => 'Spiral\Translator\Translator',
-        'views' => 'Spiral\Views\ViewManager',
+        'views'    => 'Spiral\Views\ViewManager',
 
         //Additional and post binded components
         'redis'                                 => 'Spiral\Redis\RedisManager',

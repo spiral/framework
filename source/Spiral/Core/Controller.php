@@ -17,6 +17,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  * @property \Spiral\Core\Core                  $core
  * @property \Spiral\Core\Loader                $loader
  * @property \Spiral\Modules\ModuleManager      $modules
+ * @property \Spiral\Debug\Debugger             $debugger
  *
  * @property \Spiral\Console\ConsoleDispatcher  $console
  * @property \Spiral\Http\HttpDispatcher        $http
