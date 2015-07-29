@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ORM\Traits;
+namespace Spiral\Models\Traits;
 
 use Spiral\Events\DispatcherInterface;
 use Spiral\Events\Event;
@@ -40,7 +40,7 @@ trait TimestampsTrait
      */
     protected static function initTimestamps($options = null)
     {
-        $dispatcher = self::dispatcher();
+        $dispatcher = self::events();
 
         if ($options == DataEntity::SCHEMA_ANALYSIS)
         {
