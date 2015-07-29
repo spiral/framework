@@ -6,10 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Translator;
+namespace Spiral\Translator\Exporters;
 
 use Spiral\Core\Component;
 use Spiral\Files\FilesInterface;
+use Spiral\Translator\ExporterInterface;
+use Spiral\Translator\Translator;
+use Spiral\Translator\TranslatorException;
 
 abstract class AbstractExporter extends Component implements ExporterInterface
 {

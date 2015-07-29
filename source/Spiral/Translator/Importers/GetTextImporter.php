@@ -6,9 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Translator\GetText;
-
-use Spiral\Translator\AbstractImporter;
+namespace Spiral\Translator\Importers;
 
 class GetTextImporter extends AbstractImporter
 {

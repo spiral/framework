@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Modules;
+namespace Spiral\Modules;
 
-use Spiral\Core\CoreException;
+use Spiral\Core\ExceptionInterface;
 
-class ModuleException extends CoreException
+class ModuleException extends \RuntimeException implements ExceptionInterface
 {
 
 }

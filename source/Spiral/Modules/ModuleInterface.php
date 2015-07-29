@@ -8,6 +8,8 @@
  */
 namespace Spiral\Modules;
 
+use Spiral\Core\ContainerInterface;
+
 interface ModuleInterface
 {
     /**
@@ -21,17 +23,20 @@ interface ModuleInterface
      *
      * This method is static as it should be called without constructing module object.
      *
-     * @return Definition
+     * @param ContainerInterface $container
+     * @return DefinitionInterface
      */
-    public static function getDefinition();
+    public static function getDefinition(ContainerInterface $container);
 
     /**
      * Module installer responsible for operations like copying resources, registering configs, view
      * namespaces and declaring that bootstrap() call is required.
+     *
      * This method is static as it should be called without constructing module object.
      *
-     * @param Definition $definition Module definition fetched or generated of composer file.
-     * @return Installer
+     * @param ContainerInterface  $container
+     * @param DefinitionInterface $definition Module definition fetched or generated of composer file.
+     * @return InstallerInterface
      */
-    public static function getInstaller(Definition $definition);
+    public static function getInstaller(ContainerInterface $container, DefinitionInterface $definition);
 }

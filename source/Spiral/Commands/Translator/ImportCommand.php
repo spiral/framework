@@ -9,7 +9,7 @@
 namespace Spiral\Commands\Translator;
 
 use Spiral\Console\Command;
-use Spiral\Translator\GetText\GetTextImporter;
+use Spiral\Translator\Importers\GetTextImporter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

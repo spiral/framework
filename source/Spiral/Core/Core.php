@@ -11,6 +11,7 @@ namespace Spiral\Core;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
+use Spiral\Modules\ModuleManager;
 
 /**
  * Spiral Application specific bindings.
@@ -97,11 +98,11 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         'core'                                  => 'Spiral\Core\Core',
         'loader'                                => 'Spiral\Core\Loader',
         'modules'                               => 'Spiral\Modules\ModuleManager',
-        'debugger' => 'Spiral\Debug\Debugger',
+        'debugger'                              => 'Spiral\Debug\Debugger',
 
         //Dispatchers
         'console'                               => 'Spiral\Console\ConsoleDispatcher',
-        'http'     => 'Spiral\Http\HttpDispatcher',
+        'http'                                  => 'Spiral\Http\HttpDispatcher',
 
         //Component aliases
         'cache'                                 => 'Spiral\Cache\CacheManager',
@@ -116,7 +117,7 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         'storage'                               => 'Spiral\Storage\StorageManager',
         'tokenizer'                             => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                  => 'Spiral\Translator\Translator',
-        'views'    => 'Spiral\Views\ViewManager',
+        'views'                                 => 'Spiral\Views\ViewManager',
 
         //Additional and post binded components
         'redis'                                 => 'Spiral\Redis\RedisManager',
@@ -168,7 +169,7 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
      *
      * @var array
      */
-    protected $autoload = [Loader::class];//, ModuleManager::class];
+    protected $autoload = [Loader::class, ModuleManager::class];
 
     /**
      * Current dispatcher instance response for application flow processing.

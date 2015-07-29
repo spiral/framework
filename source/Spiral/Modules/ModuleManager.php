@@ -8,31 +8,31 @@
  */
 namespace Spiral\Modules;
 
-use Spiral\Components\Files\FileManager;
-use Spiral\Components\Tokenizer\Tokenizer;
-use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container;
+use Spiral\Core\ContainerInterface;
 use Spiral\Core\CoreException;
+use Spiral\Core\Singleton;
 use Spiral\Support\Generators\Config\ConfigWriter;
+use Spiral\Tokenizer\TokenizerInterface;
 
-class ModuleManager extends Component
+class ModuleManager extends Singleton
 {
-    /**
-     * Will provide us helper method getInstance().
-     */
-    use Component\SingletonTrait;
-
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
-    const SINGLETON = __CLASS__;
+    const SINGLETON = self::class;
+
+    /**
+     * Configuration section.
+     */
+    const CONFIG = 'modules';
 
     /**
      * Container instance.
      *
      * @invisible
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container = null;
 
@@ -49,29 +49,23 @@ class ModuleManager extends Component
      * bootstrap() method.
      *
      * @param ConfiguratorInterface $configurator
-     * @param Container             $container
+     * @param ContainerInterface    $container
      * @throws CoreException
      */
-    public function __construct(ConfiguratorInterface $configurator, Container $container)
+    public function __construct(ConfiguratorInterface $configurator, ContainerInterface $container)
     {
+        $this->modules = $configurator->getConfig('modules');
         $this->container = $container;
 
-        $this->modules = $configurator->getConfig('modules');
-        if (!empty($this->modules))
+        foreach ($this->modules as $module)
         {
-            foreach ($this->modules as $module)
+            foreach ($module['bindings'] as $alias => $resolver)
             {
-                foreach ($module['bindings'] as $alias => $resolver)
-                {
-                    $this->container->bind($alias, $resolver);
-                }
-
-                if ($module['bootstrap'])
-                {
-                    //Some modules may request initialization
-                    $this->container->get($module['class'], compact('core'))->bootstrap();
-                }
+                $this->container->bind($alias, $resolver);
             }
+
+            //Some modules may request initialization
+            $module['bootstrap'] && $this->container->get($module['class'])->bootstrap();
         }
     }
 
@@ -100,32 +94,31 @@ class ModuleManager extends Component
      * Find all available modules classes and return their definitions. Definitions will be sorted
      * in order of required dependencies.
      *
+     * @param TokenizerInterface $tokenizer
      * @return Definition[]
      */
-    public function findModules()
+    public function findModules(TokenizerInterface $tokenizer = null)
     {
-        $definitions = [];
-
-        //Delayed and not included to constructor dependencies to speed up application.
-        $classes = Tokenizer::getInstance($this->container)->getClasses(
-            'Spiral\Components\Modules\ModuleInterface'
+        $tokenizer = !empty($tokenizer) ? $tokenizer : $this->container->get(
+            TokenizerInterface::class
         );
 
-        foreach ($classes as $module)
+        $definitions = [];
+        foreach ($tokenizer->getClasses(ModuleInterface::class) as $module)
         {
             if ($module['abstract'])
             {
                 continue;
             }
 
-            $definition = call_user_func([$module['name'], 'getDefinition']);
+            $definition = call_user_func([$module['name'], 'getDefinition'], $this->container);
             $definitions[$definition->getName()] = $definition;
         }
 
         //Sorting based on dependencies
-        uasort($definitions, function (Definition $a, Definition $b)
+        uasort($definitions, function (Definition $moduleA, Definition $moduleB)
         {
-            return !in_array($a->getName(), $b->getDependencies());
+            return !in_array($moduleA->getName(), $moduleB->getDependencies());
         });
 
         return $definitions;
@@ -145,43 +138,43 @@ class ModuleManager extends Component
             'bindings'  => $definition->getInstaller()->getBindings()
         ];
 
-        //Updating modules configuration config
-        $this->updateConfig();
+        //Update modules configuration config
+        //$this->updateConfig();
     }
 
     /**
      * Refresh modules configuration file with only existed modules and their configurations. Should
      * be called every time new module gets registered or removed.
      */
-    protected function updateConfig()
-    {
-        foreach ($this->modules as $name => $module)
-        {
-            try
-            {
-                if (!class_exists($module['class']))
-                {
-                    unset($this->modules[$name]);
-                }
-            }
-            catch (CoreException $exception)
-            {
-                unset($this->modules[$name]);
-            }
-        }
-
-        //Updating configuration
-        $config = ConfigWriter::make([
-            'name'   => 'modules',
-            'method' => ConfigWriter::OVERWRITE
-        ],
-            $this->container
-        );
-
-        //Little-bit dirty, but it should spiral application environment for now...
-        $config->setConfig($this->modules)->writeConfig(
-            directory('config'),
-            FileManager::READONLY
-        );
-    }
+    //    protected function updateConfig()
+    //    {
+    //        foreach ($this->modules as $name => $module)
+    //        {
+    //            try
+    //            {
+    //                if (!class_exists($module['class']))
+    //                {
+    //                    unset($this->modules[$name]);
+    //                }
+    //            }
+    //            catch (CoreException $exception)
+    //            {
+    //                unset($this->modules[$name]);
+    //            }
+    //        }
+    //
+    //        //Updating configuration
+    //        $config = ConfigWriter::make([
+    //            'name'   => 'modules',
+    //            'method' => ConfigWriter::OVERWRITE
+    //        ],
+    //            $this->container
+    //        );
+    //
+    //        //Little-bit dirty, but it should spiral application environment for now...
+    //        $config->setConfig($this->modules)->writeConfig(
+    //            directory('config'),
+    //            FileManager::READONLY
+    //        );
+    //    }
 }

@@ -6,28 +6,20 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Modules;
+namespace Spiral\Modules;
 
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\Files\FileManager;
+use Spiral\Components\Modules\InstallerInterface;
 use Spiral\Core\Component;
 use Spiral\Support\Generators\Config\ConfigWriter;
 
-class Installer extends Component
+class Installer extends Component implements InstallerInterface
 {
     /**
      * Logging!
      */
     use Component\LoggerTrait;
-
-    /**
-     * Methods to resolve file conflicts happen during moving public module files to application root
-     * directory, conflict may happen only if target file was altered or just different than module
-     * declaration (can actually happen if module got updated, should be fixed in future somehow).
-     */
-    const CONFLICTS_NONE      = 0;
-    const CONFLICTS_OVERWRITE = 1;
-    const CONFLICTS_IGNORE    = 2;
 
     /**
      * FileManager component.

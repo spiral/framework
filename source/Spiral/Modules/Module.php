@@ -6,18 +6,25 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\Modules;
+namespace Spiral\Modules;
 
-use Spiral\Components\Files\FileManager;
 use Spiral\Core\Component;
+use Spiral\Core\ContainerInterface;
+use Spiral\Files\FilesInterface;
 
 abstract class Module extends Component implements ModuleInterface
 {
+    /**
+     * Location of composer.json relatively to module class location.
+     */
+    const COMPOSER = '../composer.json';
+
     /**
      * Module bootstrapping. Custom code can be placed here.
      */
     public function bootstrap()
     {
+        //Module specific
     }
 
     /**
@@ -26,28 +33,28 @@ abstract class Module extends Component implements ModuleInterface
      *
      * This method is static as it should be called without constructing module object.
      *
-     * @return Definition
+     * @param ContainerInterface $container
+     * @return DefinitionInterface
      */
-    public static function getDefinition()
+    public static function getDefinition(ContainerInterface $container)
     {
-        $file = FileManager::getInstance();
+        /**
+         * @var FilesInterface $files
+         */
+        $files = $container->get(FilesInterface::class);
+        $directory = dirname((new \ReflectionClass(static::class))->getFileName());
 
-        $moduleDirectory = dirname((new \ReflectionClass(get_called_class()))->getFileName());
-        $composer = $moduleDirectory . '/composer.json';
-
-        if (!$file->exists($composer))
+        if (!$files->exists($composer = $directory . '/' . static::COMPOSER))
         {
-            if (!$file->exists($composer = dirname($moduleDirectory) . '/composer.json'))
-            {
-                //Source directory is one level higher
-                throw new ModuleException("Unable to locate composer.json file.");
-            }
+            //Source directory is one level higher
+            throw new ModuleException("Unable to locate composer.json file.");
         }
 
-        $composer = json_decode($file->read($composer), true);
+        $composer = json_decode($files->read($composer), true);
 
-        return Definition::make([
-            'class'        => get_called_class(),
+        //Let's use default definition
+        return $container->get(Definition::class, [
+            'class'        => static::class,
             'name'         => $composer['name'],
             'description'  => isset($composer['description']) ? $composer['description'] : '',
             'dependencies' => isset($composer['require']) ? array_keys($composer['require']) : ''
@@ -57,13 +64,18 @@ abstract class Module extends Component implements ModuleInterface
     /**
      * Module installer responsible for operations like copying resources, registering configs, view
      * namespaces and declaring that bootstrap() call is required.
+     *
      * This method is static as it should be called without constructing module object.
      *
-     * @param Definition $definition Module definition fetched or generated of composer file.
-     * @return Installer
+     * @param ContainerInterface  $container
+     * @param DefinitionInterface $definition Module definition fetched or generated of composer file.
+     * @return InstallerInterface
      */
-    public static function getInstaller(Definition $definition)
+    public static function getInstaller(ContainerInterface $container, DefinitionInterface $definition)
     {
-        return Installer::make(['moduleDirectory' => $definition->getLocation()]);
+        //Let's create default Installer
+        return $container->get(Installer::class, [
+            'moduleDirectory' => $definition->getLocation()
+        ]);
     }
 }

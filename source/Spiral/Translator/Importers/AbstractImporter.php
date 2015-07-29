@@ -6,11 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Translator;
+namespace Spiral\Translator\Importers;
 
 use Spiral\Core\Component;
 use Spiral\Core\HippocampusInterface;
 use Spiral\Files\FilesInterface;
+use Spiral\Translator\ImporterInterface;
+use Spiral\Translator\Translator;
+use Spiral\Translator\TranslatorException;
 
 abstract class AbstractImporter extends Component implements ImporterInterface
 {

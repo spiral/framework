@@ -6,9 +6,8 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Translator\GetText;
+namespace Spiral\Translator\Exporters;
 
-use Spiral\Translator\AbstractExporter;
 use Spiral\Translator\TranslatorException;
 
 class GetTextExporter extends AbstractExporter

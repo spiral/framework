@@ -8,10 +8,7 @@
  */
 namespace Spiral\Modules;
 
-use Spiral\Core\Component;
-use Spiral\Files\FilesInterface;
-
-class Definition extends Component
+class Definition implements DefinitionInterface
 {
     /**
      * FileManager component.
