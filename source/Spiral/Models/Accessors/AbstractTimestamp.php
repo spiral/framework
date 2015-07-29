@@ -9,9 +9,8 @@
 namespace Spiral\Models\Accessors;
 
 use Carbon\Carbon;
-use Spiral\Models\AccessorInterface;
 
-abstract class AbstractTimestamp extends Carbon implements AccessorInterface
+abstract class AbstractTimestamp extends Carbon
 {
     /**
      * Returns date formatted according to given format. Will use default format if not specified.
