@@ -13,7 +13,7 @@ use Spiral\Components\ODM\Document;
 use Spiral\Components\ODM\ODM;
 use Spiral\Components\ODM\ODMAccessor;
 use Spiral\Components\ODM\ODMException;
-use Spiral\Support\Models\Accessors\TimestampAccessor as BaseTimestamp;
+use Spiral\Support\Models\Accessors\AbstractTimestamp as BaseTimestamp;
 
 class ODMTimestamp extends BaseTimestamp implements ODMAccessor
 {

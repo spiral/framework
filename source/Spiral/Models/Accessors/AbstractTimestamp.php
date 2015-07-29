@@ -6,13 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Support\Models\Accessors;
+namespace Spiral\Models\Accessors;
 
 use Carbon\Carbon;
 use Spiral\Support\Models\AccessorInterface;
 use Spiral\Support\Models\AccessorTrait;
 
-class TimestampAccessor extends Carbon implements AccessorInterface
+class AbstractTimestamp extends Carbon implements AccessorInterface
 {
     /**
      * Some common methods.

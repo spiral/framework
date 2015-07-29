@@ -11,7 +11,7 @@ namespace Spiral\Components\ORM\Accessors;
 use Spiral\Components\DBAL\DatabaseManager;
 use Spiral\Components\DBAL\Driver;
 use Spiral\Components\ORM\ORMAccessor;
-use Spiral\Support\Models\Accessors\TimestampAccessor as BaseTimestamp;
+use Spiral\Support\Models\Accessors\AbstractTimestamp as BaseTimestamp;
 
 class ORMTimestamp extends BaseTimestamp implements ORMAccessor
 {
