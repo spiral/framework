@@ -6,9 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Http\InputBags;
-
-use Spiral\Http\InputBag;
+namespace Spiral\Http\Input;
 
 class HeadersBag extends InputBag
 {

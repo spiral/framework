@@ -13,9 +13,10 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Core\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Singleton;
-use Spiral\Http\InputBags\FilesBag;
-use Spiral\Http\InputBags\HeadersBag;
-use Spiral\Http\InputBags\ServerBag;
+use Spiral\Http\Input\InputBag;
+use Spiral\Http\Input\FilesBag;
+use Spiral\Http\Input\HeadersBag;
+use Spiral\Http\Input\ServerBag;
 
 /**
  * @property HeadersBag $headers

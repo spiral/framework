@@ -6,11 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Http\InputBags;
+namespace Spiral\Http\Input;
 
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Files\Streams\StreamWrapper;
-use Spiral\Http\InputBag;
 
 /**
  * Type hinting.
