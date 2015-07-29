@@ -122,7 +122,7 @@ abstract class Controller extends Component implements ControllerInterface
         if (!method_exists($this, $action))
         {
             throw new ControllerException(
-                "No such controller action {$action}.",
+                "No such action '{$action}'.",
                 ControllerException::BAD_ACTION
             );
         }
@@ -137,7 +137,7 @@ abstract class Controller extends Component implements ControllerInterface
         )
         {
             throw new ControllerException(
-                "Action {$action} can not be executed.",
+                "Action '{$action}' can not be executed.",
                 ControllerException::BAD_ACTION
             );
         }
