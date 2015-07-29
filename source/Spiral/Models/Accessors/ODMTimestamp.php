@@ -6,17 +6,23 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ODM\Accessors;
+namespace Spiral\Models\Accessors;
 
-use Spiral\Components\ODM\CompositableInterface;
-use Spiral\Components\ODM\Document;
-use Spiral\Components\ODM\ODM;
-use Spiral\Components\ODM\ODMAccessor;
-use Spiral\Components\ODM\ODMException;
-use Spiral\Support\Models\Accessors\AbstractTimestamp as BaseTimestamp;
+use Spiral\ODM\CompositableInterface;
+use Spiral\ODM\Document;
+use Spiral\ODM\ODM;
+use Spiral\ODM\ODMAccessor;
+use Spiral\ODM\ODMException;
 
-class ODMTimestamp extends BaseTimestamp implements ODMAccessor
+class ODMTimestamp extends AbstractTimestamp implements ODMAccessor
 {
+    /**
+     * Parent document.
+     *
+     * @var CompositableInterface
+     */
+    protected $parent = null;
+
     /**
      * Original value.
      *
@@ -35,17 +41,17 @@ class ODMTimestamp extends BaseTimestamp implements ODMAccessor
      */
     public function __construct($data = null, $parent = null, $timezone = null, ODM $odm = null)
     {
+        $this->parent = $parent;
         $this->original = $data;
+
         if ($data instanceof \MongoDate)
         {
-            parent::__construct(null, $parent);
             $this->setTimestamp($data->sec);
+
+            return;
         }
-        else
-        {
-            //Date not set
-            parent::__construct($data, $parent);
-        }
+
+        parent::__construct($data, $parent);
     }
 
     /**
@@ -90,7 +96,7 @@ class ODMTimestamp extends BaseTimestamp implements ODMAccessor
      */
     public function setData($data)
     {
-        $this->setTimestamp(self::castTimestamp($data));
+        $this->setTimestamp($this->castTimestamp($data));
     }
 
     /**

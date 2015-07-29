@@ -6,15 +6,22 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\ORM\Accessors;
+namespace Spiral\Models\Accessors;
 
-use Spiral\Components\DBAL\DatabaseManager;
-use Spiral\Components\DBAL\Driver;
-use Spiral\Components\ORM\ORMAccessor;
-use Spiral\Support\Models\Accessors\AbstractTimestamp as BaseTimestamp;
+use Spiral\Database\DatabaseManager;
+use Spiral\Database\Driver;
+use Spiral\ORM\ActiveRecord;
+use Spiral\ORM\ORMAccessor;
 
-class ORMTimestamp extends BaseTimestamp implements ORMAccessor
+class ORMTimestamp extends AbstractTimestamp implements ORMAccessor
 {
+    /**
+     * Parent models.
+     *
+     * @var ActiveRecord
+     */
+    protected $parent = null;
+
     /**
      * Original value.
      *
@@ -32,15 +39,15 @@ class ORMTimestamp extends BaseTimestamp implements ORMAccessor
      */
     public function __construct($data = null, $parent = null, $timezone = null)
     {
+        $this->parent = $parent;
         if ($data instanceof \DateTime)
         {
-            parent::__construct(null, $parent, DatabaseManager::DEFAULT_TIMEZONE);
+            parent::__construct(null, DatabaseManager::DEFAULT_TIMEZONE);
             $this->setTimestamp($data->getTimestamp());
         }
         else
         {
-            //Date not set
-            parent::__construct($data, $parent, DatabaseManager::DEFAULT_TIMEZONE);
+            parent::__construct($data, DatabaseManager::DEFAULT_TIMEZONE);
         }
 
         if ($this->getTimestamp() === false)
@@ -78,27 +85,6 @@ class ORMTimestamp extends BaseTimestamp implements ORMAccessor
     }
 
     /**
-     * Update accessor mocked data.
-     *
-     * @param mixed $data
-     */
-    public function setData($data)
-    {
-        $this->setTimestamp(self::castTimestamp($data));
-    }
-
-    /**
-     * Get new field value to be send to database.
-     *
-     * @param string $field Name of field where model/accessor stored into.
-     * @return $this
-     */
-    public function compileUpdates($field = '')
-    {
-        return $this;
-    }
-
-    /**
      * Accessor default value specific to driver.
      *
      * @param Driver $driver
@@ -125,5 +111,17 @@ class ORMTimestamp extends BaseTimestamp implements ORMAccessor
     public function flushUpdates()
     {
         $this->original = $this->getTimestamp();
+    }
+
+
+    /**
+     * Get new field value to be send to database.
+     *
+     * @param string $field Name of field where model/accessor stored into.
+     * @return $this
+     */
+    public function compileUpdates($field = '')
+    {
+        return $this;
     }
 }

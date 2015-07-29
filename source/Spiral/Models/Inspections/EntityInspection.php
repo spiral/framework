@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Models\Inspector;
+namespace Spiral\Models\Inspections;
 
 use Spiral\Core\Component;
 use Spiral\Models\Schemas\EntitySchema;

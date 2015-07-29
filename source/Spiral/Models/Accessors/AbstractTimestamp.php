@@ -9,41 +9,10 @@
 namespace Spiral\Models\Accessors;
 
 use Carbon\Carbon;
-use Spiral\Support\Models\AccessorInterface;
-use Spiral\Support\Models\AccessorTrait;
+use Spiral\Models\AccessorInterface;
 
-class AbstractTimestamp extends Carbon implements AccessorInterface
+abstract class AbstractTimestamp extends Carbon implements AccessorInterface
 {
-    /**
-     * Some common methods.
-     */
-    use AccessorTrait;
-
-    /**
-     * Accessors can be used to mock different model values using "representative" class, like
-     * DateTime for timestamps.
-     *
-     * @param mixed  $data
-     * @param object $parent
-     * @param mixed  $timezone Source date timezone.
-     */
-    public function __construct($data = null, $parent = null, $timezone = null)
-    {
-        if (is_numeric($data))
-        {
-            parent::__construct();
-            $timezone && $this->setTimezone($timezone);
-            $this->setTimestamp($data);
-        }
-        else
-        {
-            parent::__construct($data, $timezone);
-            is_null($data) && $this->setTimestamp(0);
-        }
-
-        $this->parent = $parent;
-    }
-
     /**
      * Returns date formatted according to given format. Will use default format if not specified.
      *
@@ -57,23 +26,13 @@ class AbstractTimestamp extends Carbon implements AccessorInterface
     }
 
     /**
-     * Getting mocked value.
-     *
-     * @return mixed
-     */
-    public function serializeData()
-    {
-        return $this->timestamp;
-    }
-
-    /**
      * Update accessor mocked data.
      *
      * @param mixed $data
      */
     public function setData($data)
     {
-        $this->setTimestamp(self::castTimestamp($data));
+        $this->setTimestamp($this->castTimestamp($data));
     }
 
     /**
@@ -99,7 +58,7 @@ class AbstractTimestamp extends Carbon implements AccessorInterface
      * @param string $timezone Reference timezone. Will not apply if the input is a valid timestamp.
      * @return int
      */
-    public static function castTimestamp($datetime, $timezone = null)
+    protected function castTimestamp($datetime, $timezone = null)
     {
         if (!is_scalar($datetime))
         {
@@ -114,7 +73,7 @@ class AbstractTimestamp extends Carbon implements AccessorInterface
 
         if (!empty($timezone))
         {
-            return (new self($datetime, null, $timezone))->getTimestamp();
+            return (new Carbon($datetime, null, $timezone))->getTimestamp();
         }
 
         return (int)strtotime($datetime);
