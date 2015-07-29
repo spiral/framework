@@ -214,6 +214,17 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     }
 
     /**
+     * In some cases (client exceptions), snapshot creation will be bypassed.
+     *
+     * @param \Exception $exception
+     * @return mixed
+     */
+    public function handleException(\Exception $exception)
+    {
+        $this->application()->renderException($exception, new ConsoleOutput());
+    }
+
+    /**
      * Every dispatcher should know how to handle exception snapshot provided by spiral core.
      *
      * @param SnapshotInterface $snapshot
@@ -221,6 +232,6 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      */
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
-        $this->application()->renderException($snapshot->getException(), new ConsoleOutput());
+        $this->handleException($snapshot->getException());
     }
 }

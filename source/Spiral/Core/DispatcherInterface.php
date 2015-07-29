@@ -18,6 +18,14 @@ interface DispatcherInterface
     public function start();
 
     /**
+     * In some cases (client exceptions), snapshot creation will be bypassed.
+     *
+     * @param \Exception $exception
+     * @return mixed
+     */
+    public function handleException(\Exception $exception);
+
+    /**
      * Every dispatcher should know how to handle exception snapshot provided by spiral core.
      *
      * @param SnapshotInterface $snapshot

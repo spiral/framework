@@ -9,6 +9,7 @@
 namespace Spiral\Core;
 
 use Spiral\Console\ConsoleDispatcher;
+use Spiral\Debug\SnapshotInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
 use Spiral\Modules\ModuleManager;
@@ -608,17 +609,24 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         restore_error_handler();
         restore_exception_handler();
 
-        //GET SNAPSHOT
+        if ($exception instanceof ClientExceptionInterface)
+        {
+            //Client driven error, no need to create snapshot
+            $this->dispatcher->handleException($exception);
 
-        //        if ($snapshot = $this->debug->handleException($exception))
-        //        {
-        //            if ($snapshot = $this->event('exception', $snapshot))
-        //            {
-        //                $this->dispatchSnapshot($snapshot);
-        //            }
-        //        }
+            return;
+        }
 
-        dumP($exception);
+        /**
+         * @var SnapshotInterface $snapshot
+         */
+        $snapshot = $this->get(SnapshotInterface::class, compact('exception'));
+
+        //Reporting
+        $snapshot->report();
+
+        //Now dispatcher can handle snaphot it's own way
+        $this->dispatcher->handleSnapshot($snapshot);
     }
 
     /**

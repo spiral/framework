@@ -9,6 +9,7 @@
 namespace Spiral\Debug;
 
 use Exception;
+use Spiral\Core\ContainerInterface;
 
 interface SnapshotInterface
 {
@@ -16,9 +17,10 @@ interface SnapshotInterface
      * Snapshot used to report, render and describe exception in user friendly way. Snapshot may
      * require additional dependencies so it should always be constructed using container.
      *
-     * @param Exception $exception
+     * @param Exception          $exception
+     * @param ContainerInterface $container
      */
-    public function __construct(Exception $exception);
+    public function __construct(Exception $exception, ContainerInterface $container);
 
     /**
      * Associated exception.
@@ -71,7 +73,8 @@ interface SnapshotInterface
     public function getMessage();
 
     /**
-     *
+     * Report or store snapshot in known location. Used to store exception information for future
+     * analysis.
      */
     public function report();
 
