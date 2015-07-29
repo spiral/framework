@@ -19,6 +19,7 @@ class ODMTimestamp extends AbstractTimestamp implements ODMAccessor
     /**
      * Parent document.
      *
+     * @invisible
      * @var CompositableInterface
      */
     protected $parent = null;

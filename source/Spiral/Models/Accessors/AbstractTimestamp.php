@@ -77,4 +77,14 @@ abstract class AbstractTimestamp extends Carbon
 
         return (int)strtotime($datetime);
     }
+
+    /**
+     * Simplified form for debugging.
+     *
+     * @return mixed
+     */
+    public function __debugInfo()
+    {
+        return (object)$this->jsonSerialize();
+    }
 }

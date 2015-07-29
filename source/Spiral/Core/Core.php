@@ -91,8 +91,8 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         'Spiral\Storage\StorageInterface'       => 'Spiral\Storage\StorageManager',
         'Spiral\Encrypter\EncrypterInterface'   => 'Spiral\Encrypter\Encrypter',
         'Spiral\Tokenizer\TokenizerInterface'   => 'Spiral\Tokenizer\Tokenizer',
+        'Spiral\Validation\ValidatorInterface'  => 'Spiral\Validation\Validator',
         'Spiral\Translator\TranslatorInterface' => 'Spiral\Translator\Translator',
-        'Spiral\Validation\ValidationInterface' => 'Spiral\Validation\Validator',
 
         //Spiral aliases
         'core'                                  => 'Spiral\Core\Core',

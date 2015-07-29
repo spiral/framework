@@ -18,6 +18,7 @@ class ORMTimestamp extends AbstractTimestamp implements ORMAccessor
     /**
      * Parent models.
      *
+     * @invisible
      * @var ActiveRecord
      */
     protected $parent = null;
