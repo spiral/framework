@@ -88,6 +88,7 @@ class Core extends Container implements ConfiguratorInterface, HippocampusInterf
         'Spiral\Cache\StoreInterface'           => 'Spiral\Cache\CacheStore',
         'Spiral\Files\FilesInterface'           => 'Spiral\Files\FileManager',
         'Spiral\Views\ViewsInterface'           => 'Spiral\Views\ViewManager',
+        'Spiral\Debug\SnapshotInterface'        => 'Spiral\Debug\Snapshot',
         'Spiral\Storage\StorageInterface'       => 'Spiral\Storage\StorageManager',
         'Spiral\Encrypter\EncrypterInterface'   => 'Spiral\Encrypter\Encrypter',
         'Spiral\Tokenizer\TokenizerInterface'   => 'Spiral\Tokenizer\Tokenizer',

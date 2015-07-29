@@ -8,63 +8,39 @@
  */
 namespace Spiral\Debug;
 
-use Spiral\Components\View\ViewManager;
 use Spiral\Core\Component;
-use Spiral\Core\Container\ContainerException;
 use Exception;
 
-class Snapshot extends Component
+class Snapshot extends Component implements SnapshotInterface
 {
     /**
-     * Exception response content is always Exception object handled in Debugger::handleException
-     * method.
+     * Message format.
+     */
+    const MESSAGE = "{exception}: {message} in {file} at line {line}";
+
+    /**
+     * Associated exception.
      *
-     * @var \Exception|null
+     * @var \Exception
      */
     protected $exception = null;
-
-    /**
-     * ViewManager used to render snapshots.
-     *
-     * @invisible
-     * @var ViewManager
-     */
-    protected $viewManager = null;
-
-    /**
-     * View name which going to be used to render exception backtrace, backtrace can be either saved
-     * to specified file or
-     * send to client.
-     *
-     * @var string
-     */
-    protected $view = '';
 
     /**
      * Rendered backtrace view, can be used in to save into file, send by email or show to client.
      *
      * @var string
      */
-    protected $snapshot = '';
+    protected $renderCache = '';
 
     /**
-     * Create new ExceptionResponse object. Object usually generated in Debug::handleException()
-     * method and used to show or to store (if specified) backtrace and environment dump or occurred
-     * error.
+     * Snapshot used to report, render and describe exception in user friendly way. Snapshot may
+     * require additional dependencies so it should always be constructed using container.
      *
-     * @param Exception   $exception
-     * @param ViewManager $viewManager
-     * @param string      $view View should be used to render backtrace.
+     * @param Exception $exception
      */
-    public function __construct(
-        Exception $exception,
-        ViewManager $viewManager,
-        $view = ''
-    )
+    public function __construct(Exception $exception)
     {
         $this->exception = $exception;
-        $this->viewManager = $viewManager;
-        $this->view = $view;
     }
 
     /**
@@ -75,6 +51,16 @@ class Snapshot extends Component
     public function getException()
     {
         return $this->exception;
+    }
+
+    /**
+     * Handled exception class name.
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return get_class($this->exception);
     }
 
     /**
@@ -116,29 +102,7 @@ class Snapshot extends Component
      */
     public function getTrace()
     {
-        if ($this->exception instanceof ContainerException)
-        {
-            //Corrected injection trace
-            return $this->exception->injectionTrace();
-        }
-
         return $this->exception->getTrace();
-    }
-
-    /**
-     * Handled exception class name.
-     *
-     * @return string
-     */
-    public function getClass()
-    {
-        if ($this->exception instanceof ContainerException)
-        {
-            //Corrected injection trace
-            return get_class($this->exception->getPrevious());
-        }
-
-        return get_class($this->exception);
     }
 
     /**
@@ -149,7 +113,7 @@ class Snapshot extends Component
      */
     public function getMessage()
     {
-        return interpolate("{exception}: {message} in {file} at line {line}", [
+        return interpolate(static::MESSAGE, [
             'exception' => $this->getClass(),
             'message'   => $this->exception->getMessage(),
             'file'      => $this->getFile(),
@@ -157,21 +121,8 @@ class Snapshot extends Component
         ]);
     }
 
-    /**
-     * Render exception backtrace and environment snapshot using specified view name.
-     *
-     * @return string
-     */
-    public function renderSnapshot()
+    public function report()
     {
-        if ($this->snapshot || !$this->view)
-        {
-            return $this->snapshot;
-        }
-
-        return $this->snapshot = $this->viewManager->render($this->view, [
-            'exception' => $this
-        ]);
     }
 
     /**
@@ -179,7 +130,7 @@ class Snapshot extends Component
      *
      * @return array
      */
-    public function packException()
+    public function describe()
     {
         return [
             'error'    => $this->getMessage(),
@@ -192,17 +143,11 @@ class Snapshot extends Component
     }
 
     /**
-     * Render snapshot to client.
+     * Render exception snapshot to string.
      *
      * @return string
      */
-    public function __toString()
+    public function render()
     {
-        if (PHP_SAPI === 'cli')
-        {
-            return (string)$this->exception;
-        }
-
-        return $this->renderSnapshot();
     }
 }

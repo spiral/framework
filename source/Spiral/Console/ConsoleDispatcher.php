@@ -15,6 +15,7 @@ use Spiral\Core\Loader;
 use Spiral\Core\Singleton;
 use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Debug\Snapshot;
+use Spiral\Debug\SnapshotInterface;
 use Spiral\Tokenizer\TokenizerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -213,12 +214,12 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     }
 
     /**
-     * Every dispatcher should know how to handle exception snapshot provided by Debugger.
+     * Every dispatcher should know how to handle exception snapshot provided by spiral core.
      *
-     * @param Snapshot $snapshot
+     * @param SnapshotInterface $snapshot
      * @return mixed
      */
-    public function handleException(Snapshot $snapshot)
+    public function handleSnapshot(SnapshotInterface $snapshot)
     {
         $this->application()->renderException($snapshot->getException(), new ConsoleOutput());
     }

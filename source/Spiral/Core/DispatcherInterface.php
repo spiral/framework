@@ -8,6 +8,8 @@
  */
 namespace Spiral\Core;
 
+use Spiral\Debug\SnapshotInterface;
+
 interface DispatcherInterface
 {
     /**
@@ -15,11 +17,11 @@ interface DispatcherInterface
      */
     public function start();
 
-    //    /**
-    //     * Every dispatcher should know how to handle exception snapshot provided by spiral core.
-    //     *
-    //     * @param Snapshot $snapshot
-    //     * @return mixed
-    //     */
-    //    public function handleException(Snapshot $snapshot);
+    /**
+     * Every dispatcher should know how to handle exception snapshot provided by spiral core.
+     *
+     * @param SnapshotInterface $snapshot
+     * @return mixed
+     */
+    public function handleSnapshot(SnapshotInterface $snapshot);
 }
