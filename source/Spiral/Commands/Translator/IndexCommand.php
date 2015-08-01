@@ -14,42 +14,43 @@ use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Index available classes and function calls to fetch every used string translation. Can understand
+ * l, p, translate (trait) function and I18n proxy methods. Only statically calls will be indexes.
+ *
+ * In addition index will find every string specified in default value of model or class which
+ * uses TranslatorTrait. String has to be embraced with [[ ]] in order to be indexed, you can disable
+ * property indexation using @do-not-index doc comment. Translator can merge strings with parent data,
+ * set class constant INHERIT_TRANSLATIONS to true.
+ */
 class IndexCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'i18n:index';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Index all declared translation strings and usages.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
         ['directory', 'd', InputOption::VALUE_OPTIONAL, 'Directory to scan for translate function usages.']
     ];
 
     /**
-     * Running indexation.
+     * Perform command.
      *
      * @param Indexer $indexer
      */
     public function perform(Indexer $indexer)
     {
-        $this->isVerbose() && $indexer->events()->addListener('string', $this->getListener());
-
         $this->writeln("Scanning translate function usages...");
+        $this->isVerbose() && $indexer->events()->listen('string', $this->stringListener());
 
         if ($this->option('directory'))
         {
@@ -57,56 +58,43 @@ class IndexCommand extends Command
         }
         else
         {
-            foreach ($this->tokenizer->getConfig()['directories'] as $directory)
+            foreach ($this->tokenizer->config()['directories'] as $directory)
             {
-                $indexer->indexDirectory($directory, $this->tokenizer->getConfig()['exclude']);
+                $indexer->indexDirectory($directory, $this->tokenizer->config()['exclude']);
             }
         }
 
         $this->writeln("Scanning Translatable classes...");
         $indexer->indexClasses();
 
-        $totalStrings = 0;
-        $bundles = count($indexer->getBundles());
-        foreach ($indexer->getBundles() as $bundle)
-        {
-            $totalStrings += count($bundle);
-        }
-
         $this->writeln(
-            "<info>Strings found: <comment>{$totalStrings}</comment> "
-            . "in <comment>{$bundles}</comment> bundle(s).</info>"
+            "<info>Strings found: <comment>{$indexer->countStrings()}</comment> "
+            . "in <comment>{$indexer->countBundles()}</comment> bundle(s).</info>"
         );
     }
 
     /**
-     * Verbosity listener.
+     * Realtime string highlighter.
      *
-     * @return callable
+     * @return \Closure
      */
-    protected function getListener()
+    private function stringListener()
     {
         return function (ObjectEvent $event)
         {
             $this->writeln("<fg=magenta>{$event->context()['string']}</fg=magenta>");
 
-            if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE)
-            {
-                //This extra information is pretty extra one...
-                return;
-            }
-
             if ($event->context()['class'])
             {
                 $this->writeln("In class <comment>{$event->context()['class']}</comment>");
+
+                return;
             }
-            else
-            {
-                $filename = $this->files->relativePath($event->context()['filename'], directory('root'));
-                $this->writeln(
-                    "In <comment>{$filename}</comment> at line <comment>{$event->context()['line']}</comment>"
-                );
-            }
+
+            $filename = $this->files->relativePath($event->context()['filename'], directory('root'));
+            $this->writeln(
+                "In <comment>{$filename}</comment> at line <comment>{$event->context()['line']}</comment>"
+            );
         };
     }
 }

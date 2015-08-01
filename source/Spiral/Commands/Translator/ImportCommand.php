@@ -13,55 +13,45 @@ use Spiral\Translator\Importers\GetTextImporter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Import language strings from spiral specific PO file (see i18n:export command).
+ */
 class ImportCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'i18n:import';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Import GetText PO file to application bundles.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $arguments = [
         ['filename', InputArgument::REQUIRED, 'Input filename.'],
     ];
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
         ['language', 'l', InputOption::VALUE_OPTIONAL, 'Target language.', 'auto'],
     ];
 
     /**
-     * Exporting to GetText format.
+     * Perform command.
+     *
+     * @param GetTextImporter $importer
      */
-    public function perform()
+    public function perform(GetTextImporter $importer)
     {
         $this->writeln(
             "Importing PO file '<comment>{$this->argument('filename')}</comment>'."
         );
-
-        /**
-         * @var GetTextImporter $importer
-         */
-        $importer = $this->container()->get(GetTextImporter::class);
 
         $importer->open($this->argument('filename'));
         if ($this->option('language') != 'auto')

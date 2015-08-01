@@ -8,35 +8,22 @@
  */
 namespace Spiral\Translator\Exporters;
 
-use Spiral\Translator\TranslatorException;
-
+/**
+ * Export application translation into PO using spiral specific comments and hooks, can be imported
+ * back using GetTextImporter.
+ */
 class GetTextExporter extends AbstractExporter
 {
     /**
-     * Export collected bundle strings to specified file using format described by exporter.
-     *
-     * Language bundles will be exported using PO format (same format used for GetText), due spiral
-     * uses localization bundles every translation line will be prepended with comment contains bundle
-     * id, while editing PO file, comments should be left untouched otherwise corrupted bundles will be
-     * created. You can use any existed program to edit PO file.
-     *
-     * @link http://en.wikipedia.org/wiki/Gettext
-     * @param string $filename
-     * @return mixed
-     * @throws TranslatorException
+     * {@inheritdoc}
      */
-    public function export($filename)
+    public function compile()
     {
-        if (empty($this->language))
-        {
-            throw new TranslatorException("No language specified to be exported.");
-        }
-
         //Duplicate strings has to be appended with spaces
         $duplicates = [];
 
-        $pluralForms = $this->translator->getPluralizer($this->language)->countForms();
-        $pluralFormula = $this->translator->getPluralizer($this->language)->getFormula();
+        $pluralForms = $this->translator->pluralizer($this->getLanguage())->countForms();
+        $pluralFormula = $this->translator->pluralizer($this->getLanguage())->getFormula();
 
         /**
          * PO file header.
@@ -45,8 +32,8 @@ class GetTextExporter extends AbstractExporter
         $output[] = 'msgid ""';
         $output[] = 'msgstr ""';
         $output[] = '"Project-Id-Version: Spiral Framework\n"';
-        $output[] = '"Language-Id: ' . $this->language . '\n"';
-        $output[] = '"Language: ' . $this->language . '\n"';
+        $output[] = '"Language-Id: ' . $this->getLanguage() . '\n"';
+        $output[] = '"Language: ' . $this->getLanguage() . '\n"';
         $output[] = '"MIME-Version: 1.0\n"';
         $output[] = '"Content-Type: text/plain; charset=UTF-8\n"';
         $output[] = '"Content-Type: text/plain; charset=iso-8859-1\n"';
@@ -80,34 +67,29 @@ class GetTextExporter extends AbstractExporter
                 $output[] = '#: ' . $bundle;
                 $output[] = 'msgid "' . addcslashes($line, '"') . '"';
 
-                if (is_array($value))
+                if (!is_array($value))
                 {
-                    //Plural forms
-                    $output[] = 'msgid_plural ' . $this->escape($value[count($value) - 1]);
-
-                    for ($form = 0; $form < $pluralForms; $form++)
-                    {
-                        if (isset($value[$form]))
-                        {
-                            $output[] = 'msgstr[' . $form . '] ' . $this->escape($value[$form]);
-                        }
-                        else
-                        {
-                            $output[] = 'msgstr[' . $form . '] ' . $this->escape($value[count($value) - 1]);
-                        }
-                    }
-                }
-                else
-                {
-                    //We can escape text here, it will be backed to normal state on importing
                     $output[] = 'msgstr ' . $this->escape($value);
+                    $output[] = '';
+                    continue;
                 }
 
-                $output[] = '';
+                //Plural forms
+                $output[] = 'msgid_plural ' . $this->escape($value[count($value) - 1]);
+                for ($form = 0; $form < $pluralForms; $form++)
+                {
+                    if (isset($value[$form]))
+                    {
+                        $output[] = 'msgstr[' . $form . '] ' . $this->escape($value[$form]);
+                        continue;
+                    }
+
+                    $output[] = 'msgstr[' . $form . '] ' . $this->escape($value[count($value) - 1]);
+                }
             }
         }
 
-        return $this->files->write($filename, join("\n", $output));
+        return join("\n", $output);
     }
 
     /**

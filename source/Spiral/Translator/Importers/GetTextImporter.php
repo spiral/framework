@@ -8,25 +8,20 @@
  */
 namespace Spiral\Translator\Importers;
 
+/**
+ * Parse PO file created by GetTextExporter to fetch language and location strings.
+ */
 class GetTextImporter extends AbstractImporter
 {
     /**
-     * Method should read language bundles from specified filename and format them in an appropriate
-     * way. Language has to be automatically detected during parsing, however it can be redefined
-     * manually after.
-     *
-     * GetText PO file will be parsed for language headers, message lines and etc. Spiral expect
-     * bundle id's located in message comments.
-     *
-     * @param string $filename
-     * @return array
+     * {@inheritdoc}
      */
-    protected function parseStrings($filename)
+    protected function parseStrings($source)
     {
         $plurals = false;
         $buffer = '';
 
-        foreach (explode("\n", $this->files->read($filename)) as $line)
+        foreach (explode("\n", $source) as $line)
         {
             if (strpos($line, '"') === 0)
             {
@@ -35,7 +30,7 @@ class GetTextImporter extends AbstractImporter
                 if (strpos($line, 'Language-Id:') === 0)
                 {
                     //Language is a 2 characters string identifier
-                    $this->language = substr($line, 13, 2);
+                    $this->setLanguage(substr($line, 13, 2));
                 }
 
                 continue;

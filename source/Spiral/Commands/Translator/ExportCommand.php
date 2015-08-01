@@ -13,37 +13,30 @@ use Spiral\Translator\Exporters\GetTextExporter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Export specific language into PO file using spiral hooks and PO comments.
+ */
 class ExportCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'i18n:export';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Export specified language to GetText PO file.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $arguments = [
         ['filename', InputArgument::REQUIRED, 'Output filename.'],
     ];
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
         ['language', 'l', InputOption::VALUE_OPTIONAL, 'Source language.', 'en'],
@@ -51,22 +44,19 @@ class ExportCommand extends Command
     ];
 
     /**
-     * Exporting to GetText format.
+     * Perform command.
+     *
+     * @param GetTextExporter $exporter
      */
-    public function perform()
+    public function perform(GetTextExporter $exporter)
     {
         $this->writeln(
             "Exporting '<comment>{$this->option('language')}</comment>' language bundles to PO file."
         );
 
-        /**
-         * @var GetTextExporter $exporter
-         */
-        $exporter = $this->container()->get(GetTextExporter::class);
-
-        $exporter->load(
-            $this->option('language'), $this->option('prefix')
-        )->export($this->argument('filename'));
+        $exporter->load($this->option('language'), $this->option('prefix'))->export(
+            $this->argument('filename')
+        );
 
         $this->writeln("<info>Export completed:</info> {$this->argument('filename')}");
     }
