@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Console;
+namespace Spiral\Console\Helpers;
 
 use Spiral\Core\Component;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -16,58 +16,53 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * AskHelper provides simplified access to QuestionHelper functionality using short methods.
+ */
 class AskHelper extends Component
 {
     /**
      * Default value for max attempts.
      */
-    const MAX_ATTEMPTS = 5;
+    const MAX_ATTEMPTS = 3;
 
     /**
-     * QuestionHelper instance.
-     *
      * @var QuestionHelper
      */
-    protected $helper = null;
+    private $helper = null;
 
     /**
-     * OutputInterface is the interface implemented by all Output classes.
-     *
      * @var OutputInterface
      */
-    protected $output = null;
+    private $output = null;
 
     /**
-     * InputInterface is the interface implemented by all input classes.
-     *
      * @var InputInterface
      */
-    protected $input = null;
+    private $input = null;
 
     /**
      * Default value for max attempts.
      *
      * @var int
      */
-    protected $maxAttempts = 5;
+    private $maxAttempts = self::MAX_ATTEMPTS;
 
     /**
-     * Hidden input.
+     * Mark question as hidden.
      *
      * @var bool
      */
-    protected $hidden = false;
+    private $hidden = false;
 
     /**
      * Sets whether to fallback on non-hidden question if the response can not be hidden.
      *
      * @var bool
      */
-    protected $hiddenFallback = null;
+    private $hiddenFallback = null;
 
     /**
-     * Helper class aggregates set of ask functions.
-     *
      * @param QuestionHelper  $helper Parent command.
      * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
@@ -80,7 +75,7 @@ class AskHelper extends Component
     }
 
     /**
-     * Update maxAttempts value.
+     * Change maxAttempts value.
      *
      * @param int $maxAttempts
      * @return $this
@@ -108,60 +103,62 @@ class AskHelper extends Component
     }
 
     /**
-     * Get user input.
+     * Request user input with specified question and default value.
      *
-     * @param string $question     Question to ask before input.
-     * @param mixed  $defaultValue Default value.
+     * @param string $question
+     * @param mixed  $default
      * @return mixed
      */
-    public function input($question, $defaultValue = null)
+    public function input($question, $default = null)
     {
-        return $this->dispatch(new Question("<question>{$question}</question> ", $defaultValue));
+        return $this->dispatch(new Question("<question>{$question}</question> ", $default));
     }
 
     /**
-     * Get user confirmation.
+     * Request user confirmation of given question.
      *
-     * @param string $question     Question to ask for confirmation.
-     * @param mixed  $defaultValue Default value.
+     * @param string $question
+     * @param mixed  $default
      * @return mixed
      */
-    public function confirm($question, $defaultValue = null)
+    public function confirm($question, $default = null)
     {
         return $this->dispatch(
-            new ConfirmationQuestion("<question>{$question}</question> ", $defaultValue)
+            new ConfirmationQuestion("<question>{$question}</question> ", $default)
         );
     }
 
     /**
-     * Get user selection.
+     * Request user selection from given options list.
      *
-     * @param string $question     Question to ask before input.
-     * @param array  $select       List of selection values.
-     * @param mixed  $defaultValue Default value.
+     * @param string $question
+     * @param array  $options
+     * @param mixed  $default
      * @return mixed
      */
-    public function choice($question, array $select, $defaultValue = null)
+    public function choice($question, array $options, $default = null)
     {
-        $question = new ChoiceQuestion("<question>{$question}</question> ", $select, $defaultValue);
+        $question = new ChoiceQuestion("<question>{$question}</question> ", $options, $default);
 
         return $this->dispatch($question);
     }
 
     /**
-     * Configure question with fluent values and dispatch it.
+     * Configure and dispatch question.
      *
      * @param Question $question
      * @return mixed
      */
-    protected function dispatch(Question $question)
+    private function dispatch(Question $question)
     {
         $question->setMaxAttempts($this->maxAttempts);
+
         if ($this->hidden)
         {
             $question->setHidden($this->hidden)->setHiddenFallback($this->hiddenFallback);
         }
 
+        //Reset options
         $this->maxAttempts = self::MAX_ATTEMPTS;
         $this->hidden = false;
         $this->hiddenFallback = true;

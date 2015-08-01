@@ -8,6 +8,7 @@
  */
 namespace Spiral\Console;
 
+use Spiral\Console\Helpers\AskHelper;
 use Spiral\Core\Container;
 use Spiral\Components;
 use Spiral\Core\ContainerInterface;
@@ -43,6 +44,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class Command extends \Symfony\Component\Console\Command\Command
 {
+    /**
+     * Instance of ask helper.
+     *
+     * @var AskHelper
+     */
+    private $askHelper = null;
+
     /**
      * Command name.
      *
@@ -254,5 +262,24 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     protected function tableHelper(array $headers, $rows = [], $style = 'default')
     {
         return (new Table($this->output))->setHeaders($headers)->setRows($rows)->setStyle($style);
+    }
+
+    /**
+     * Create or use cached instance of AskHelper.
+     *
+     * @return AskHelper
+     */
+    protected function ask()
+    {
+        if (!empty($this->askHelper))
+        {
+            return $this->askHelper;
+        }
+
+        return $this->askHelper = new AskHelper(
+            $this->getHelper('question'),
+            $this->input,
+            $this->output
+        );
     }
 }
