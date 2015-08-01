@@ -66,7 +66,7 @@ class ListCommand extends Command
             return;
         }
 
-        $grid = $this->createTable([
+        $grid = $this->tableHelper([
             'Name (ID):', 'Database:', 'Driver:', 'Prefix:', 'Status:', 'Tables:', 'Count Records:'
         ]);
 

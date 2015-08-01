@@ -11,40 +11,36 @@ namespace Spiral\Commands\Views;
 use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Remove every file located in view cache directory.
+ */
 class ResetCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'views:reset';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Clear view cache for all environments.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
-        ['emulate', 'e', InputOption::VALUE_NONE, 'If set, cache cleaning will be emulated.']
+        ['emulate', 'e', InputOption::VALUE_NONE, 'Only emulate removal.']
     ];
 
     /**
-     * Clear view cache.
+     * Perform command.
      */
     public function perform()
     {
         $this->isVerbose() && $this->writeln("<info>Clearing view cache:</info>");
 
-        $cachedViews = $this->files->getFiles($this->views->getConfig()['caching']['directory']);
+        $cachedViews = $this->files->getFiles($this->views->config()['caching']['directory']);
         foreach ($cachedViews as $filename)
         {
             !$this->option('emulate') && $this->files->delete($filename);

@@ -62,7 +62,7 @@ class ExportCommand extends Command
         /**
          * @var GetTextExporter $exporter
          */
-        $exporter = $this->getContainer()->get(GetTextExporter::class);
+        $exporter = $this->container()->get(GetTextExporter::class);
 
         $exporter->load(
             $this->option('language'), $this->option('prefix')

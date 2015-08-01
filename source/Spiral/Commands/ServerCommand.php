@@ -14,37 +14,30 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
+/**
+ * Create php development server on specified host and port.
+ */
 class ServerCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'server';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Run Spiral Development server on specified host and port.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $arguments = [
         ['host', InputArgument::OPTIONAL, 'Host name.', 'localhost']
     ];
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
         ['port', 'p', InputOption::VALUE_OPTIONAL, 'Port number.', 8080],
@@ -52,17 +45,17 @@ class ServerCommand extends Command
     ];
 
     /**
-     * Running server.
+     * Perform command.
      */
     public function perform()
     {
         $host = $this->argument('host') . ':' . $this->option('port');
 
-        $this->writeln("<info>Starting Spiral Development server at <comment>{$host}</comment></info>");
+        $this->writeln("<info>Spiral Development server started at <comment>{$host}</comment></info>");
         $this->writeln("Press <comment>Ctrl-C</comment> to quit.");
 
         $process = new Process(
-            '"' . PHP_BINARY . '" -S ' . $host . ' "' . directory('framework') . '/server.php"',
+            '"' . PHP_BINARY . '" -S ' . $host . ' "' . directory('framework') . '/../server.php"',
             directory('root'),
             null,
             null,

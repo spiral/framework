@@ -80,7 +80,7 @@ class DescribeCommand extends Command
             "Columns of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
         );
 
-        $columnsTable = $this->createTable([
+        $columnsTable = $this->tableHelper([
             'Column:', 'Database Type:', 'Abstract Type:', 'PHP Type:', 'Default Value:'
         ]);
 
@@ -130,7 +130,7 @@ class DescribeCommand extends Command
                 "\nIndexes of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
             );
 
-            $indexesTable = $this->createTable(['Name:', 'Type:', 'Columns:']);
+            $indexesTable = $this->tableHelper(['Name:', 'Type:', 'Columns:']);
             foreach ($indexes as $index)
             {
                 $indexesTable->addRow([
@@ -148,7 +148,7 @@ class DescribeCommand extends Command
                 "\nForeign keys of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
             );
 
-            $foreignsTable = $this->createTable([
+            $foreignsTable = $this->tableHelper([
                 'Name:', 'Column:', 'Foreign Table:', 'Foreign Column:', 'On Delete:', 'On Update:'
             ]);
 

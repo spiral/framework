@@ -10,24 +10,23 @@ namespace Spiral\Commands\Console;
 
 use Spiral\Console\Command;
 
+/**
+ * Re-index available console commands.
+ */
 class RefreshCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'console:refresh';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Reindex console commands.';
 
     /**
-     * Refresh commands cache.
+     * Perform command.
      */
     public function perform()
     {

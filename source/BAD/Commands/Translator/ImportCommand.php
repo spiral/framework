@@ -61,7 +61,7 @@ class ImportCommand extends Command
         /**
          * @var GetTextImporter $importer
          */
-        $importer = $this->getContainer()->get(GetTextImporter::class);
+        $importer = $this->container()->get(GetTextImporter::class);
 
         $importer->open($this->argument('filename'));
         if ($this->option('language') != 'auto')

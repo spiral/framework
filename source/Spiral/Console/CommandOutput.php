@@ -12,25 +12,22 @@ use Spiral\Core\Component;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Simple command output wrapper. Will be returned from ConsoleDispatcher->command method.
+ */
 class CommandOutput extends Component
 {
     /**
-     * Code returned by command.
-     *
      * @var int
      */
-    protected $code = 0;
+    private $code = 0;
 
     /**
-     * OutputInterface is the interface implemented by all Output classes.
-     *
      * @var OutputInterface
      */
-    protected $output = '';
+    private $output = '';
 
     /**
-     * Helper class to wrap command calls outside console environment.
-     *
      * @param int             $code
      * @param OutputInterface $output
      */
@@ -41,8 +38,6 @@ class CommandOutput extends Component
     }
 
     /**
-     * Get command return code.
-     *
      * @return int
      */
     public function getCode()
@@ -51,8 +46,6 @@ class CommandOutput extends Component
     }
 
     /**
-     * OutputInterface is the interface implemented by all Output classes.
-     *
      * @return OutputInterface|BufferedOutput
      */
     public function getOutput()

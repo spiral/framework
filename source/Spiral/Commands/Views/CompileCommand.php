@@ -11,24 +11,23 @@ namespace Spiral\Commands\Views;
 use Spiral\Console\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 
+/**
+ * Compile every available view file and store result in view cache.
+ */
 class CompileCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'views:compile';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Compile every available view file.';
 
     /**
-     * Compile available view files.
+     * Perform command.
      */
     public function perform()
     {
@@ -36,7 +35,6 @@ class CompileCommand extends Command
          * @var FormatterHelper $formatter
          */
         $formatter = $this->getHelper('formatter');
-
         foreach ($this->views->getNamespaces() as $namespace => $directories)
         {
             if (empty($views = $this->views->getViews($namespace)))
@@ -55,7 +53,7 @@ class CompileCommand extends Command
                 ));
 
                 $start = microtime(true);
-                $this->views->getFilename($namespace, $view, true, true);
+                $this->views->compile($namespace, $view);
                 $elapsed = number_format((microtime(true) - $start) * 1000);
 
                 $this->isVerbose() && $this->writeln("<comment>{$elapsed}</comment> ms");

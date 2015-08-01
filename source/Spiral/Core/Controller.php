@@ -7,13 +7,15 @@
  * @copyright ©2009-2015
  */
 namespace Spiral\Core;
+
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Core\Exceptions\Container\InstanceException;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 
 /**
- * Basic application controller class.
+ * Basic application controller class. Implements method injections and simplified access to
+ * container bindings.
  *
  * @property \Spiral\Core\Core                  $core
  * @property \Spiral\Core\Components\Loader     $loader
@@ -128,7 +130,7 @@ abstract class Controller extends Component implements ControllerInterface
         $result = $reflection->invokeArgs($this, $arguments);
         $this->benchmark($action);
 
-        return $this->postAction($reflection, $arguments, $result);
+        return $this->postAction($result, $reflection, $arguments);
     }
 
     /**
