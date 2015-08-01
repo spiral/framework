@@ -133,6 +133,7 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
 
         .spiral-exception .wrapper .stacktrace .trace .lines div {
             white-space: pre;
+            color: #E6E1DC;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div .number {
