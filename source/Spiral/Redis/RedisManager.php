@@ -8,10 +8,17 @@
  */
 namespace Spiral\Redis;
 
-use Predis\Client;
+use Spiral\Core\ConfiguratorInterface;
+use Spiral\Core\Container\InjectorInterface;
+use Spiral\Core\ContainerInterface;
+use Spiral\Core\Singleton;
+use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Redis\Exceptions\RedisException;
 
 /**
- * Following methods will be called via magic method and applied to default connection.
+ * Provides transparent access to redis database using predis package. In addition can inject instances
+ * or RedisClient.
  *
  * @method mixed del(array $keys)
  * @method mixed dump($key)
@@ -149,14 +156,143 @@ use Predis\Client;
  * @method mixed slaveof($host, $port)
  * @method mixed slowlog($subcommand, $argument = null)
  * @method mixed time()
- * @method mixed client($subcommand, $argument = null)
- * @method array command()
  */
-class RedisClient extends Client
+class RedisManager extends Singleton implements InjectorInterface
 {
     /**
-     * This is magick constant used by Spiral Constant, it helps system to resolve controllable injections,
-     * once set - Container will ask specific binding for injection.
+     * Database connection time has to be recorded.
      */
-    const INJECTOR = RedisManager::class;
+    use ConfigurableTrait, BenchmarkTrait;
+
+    /**
+     * Declares to IoC that component instance should be treated as singleton.
+     */
+    const SINGLETON = self::class;
+
+    /**
+     * Configuration section.
+     */
+    const CONFIG = 'redis';
+
+    /**
+     * Copying set of redis constants due same name were used.
+     */
+    const AFTER               = 'after';
+    const BEFORE              = 'before';
+    const OPT_SERIALIZER      = 1;
+    const OPT_PREFIX          = 2;
+    const OPT_READ_TIMEOUT    = 3;
+    const OPT_SCAN            = 4;
+    const SERIALIZER_NONE     = 0;
+    const SERIALIZER_PHP      = 1;
+    const SERIALIZER_IGBINARY = 2;
+    const ATOMIC              = 0;
+    const MULTI               = 1;
+    const PIPELINE            = 2;
+    const REDIS_NOT_FOUND     = 0;
+    const REDIS_STRING        = 1;
+    const REDIS_SET           = 2;
+    const REDIS_LIST          = 3;
+    const REDIS_ZSET          = 4;
+    const REDIS_HASH          = 5;
+    const SCAN_NORETRY        = 0;
+    const SCAN_RETRY          = 1;
+
+    /**
+     * Cached list of redis clients.
+     *
+     * @var RedisClient[]
+     */
+    private $clients = [];
+
+    /**
+     * @invisible
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
+     * @param ConfiguratorInterface $configurator
+     * @param ContainerInterface    $container
+     */
+    public function __construct(ConfiguratorInterface $configurator, ContainerInterface $container)
+    {
+        $this->config = $configurator->getConfig('redis');
+        $this->container = $container;
+    }
+
+    /**
+     * Create instance of RedisClient with specified settings or fetch existed one.
+     *
+     * @param string $client Keep null to use default client settings.
+     * @param array  $config Custom client options.
+     * @return RedisClient
+     * @throws RedisException
+     */
+    public function client($client = null, array $config = [])
+    {
+        $client = !empty($client) ? $client : $this->config['default'];
+        if (isset($this->config['aliases'][$client]))
+        {
+            $client = $this->config['aliases'][$client];
+        }
+
+        if (isset($this->clients[$client]))
+        {
+            return $this->clients[$client];
+        }
+
+        if (empty($config))
+        {
+            if (!isset($this->config['clients'][$client]))
+            {
+                throw new RedisException(
+                    "Unable to initiate redis client, no presets for '{$client}' found."
+                );
+            }
+
+            $config = $this->config['clients'][$client];
+        }
+
+        $this->benchmark('client', $client);
+        $this->clients[$client] = $this->container->get(RedisClient::class, [
+            'parameters' => $config['servers'],
+            'options'    => isset($config['options']) ? $config['options'] : [],
+        ]);
+        $this->benchmark('client', $client);
+
+        return $this->clients[$client];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
+    {
+        return $this->client($parameter->getName());
+    }
+
+    /**
+     * Execute redis command using default client.
+     *
+     * @param string $method    Redis client command.
+     * @param array  $arguments Command arguments.
+     * @return mixed
+     */
+    public function command($method, array $arguments = [])
+    {
+        return call_user_func_array([$this->client(), $method], $arguments);
+    }
+
+    /**
+     * Bypass to perform method from default redis client.
+     *
+     * @param string $method    Redis client method name.
+     * @param array  $arguments Redis client
+     * @return mixed
+     */
+    public function __call($method, array $arguments)
+    {
+        return $this->command($method, $arguments);
+    }
 }

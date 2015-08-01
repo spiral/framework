@@ -8,14 +8,11 @@
  */
 namespace Spiral\Redis;
 
-use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\Container\InjectorInterface;
-use Spiral\Core\ContainerInterface;
-use Spiral\Core\Singleton;
-use Spiral\Core\Traits\ConfigurableTrait;
-use Spiral\Debug\Traits\BenchmarkTrait;
+use Predis\Client;
 
 /**
+ * Redis client implementation with controllable injection functionality.
+ *
  * @method mixed del(array $keys)
  * @method mixed dump($key)
  * @method mixed exists($key)
@@ -152,161 +149,14 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  * @method mixed slaveof($host, $port)
  * @method mixed slowlog($subcommand, $argument = null)
  * @method mixed time()
+ * @method mixed client($subcommand, $argument = null)
+ * @method array command()
  */
-class RedisManager extends Singleton implements InjectorInterface
+class RedisClient extends Client
 {
     /**
-     * Some operations should be recorded.
+     * This is magick constant used by Spiral Container, it helps system to resolve controllable
+     * injections.
      */
-    use ConfigurableTrait, BenchmarkTrait;
-
-    /**
-     * Declares to IoC that component instance should be treated as singleton.
-     */
-    const SINGLETON = self::class;
-
-    /**
-     * Configuration section.
-     */
-    const CONFIG = 'redis';
-
-    /**
-     * Copying set of redis constants due same name were used.
-     */
-    const AFTER               = 'after';
-    const BEFORE              = 'before';
-    const OPT_SERIALIZER      = 1;
-    const OPT_PREFIX          = 2;
-    const OPT_READ_TIMEOUT    = 3;
-    const OPT_SCAN            = 4;
-    const SERIALIZER_NONE     = 0;
-    const SERIALIZER_PHP      = 1;
-    const SERIALIZER_IGBINARY = 2;
-    const ATOMIC              = 0;
-    const MULTI               = 1;
-    const PIPELINE            = 2;
-    const REDIS_NOT_FOUND     = 0;
-    const REDIS_STRING        = 1;
-    const REDIS_SET           = 2;
-    const REDIS_LIST          = 3;
-    const REDIS_ZSET          = 4;
-    const REDIS_HASH          = 5;
-    const SCAN_NORETRY        = 0;
-    const SCAN_RETRY          = 1;
-
-    /**
-     * Container instance.
-     *
-     * @invisible
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
-     * Redis clients list. Every client build based on provided list of servers and options, component
-     * can have multiple clients created, for example one for cache and one for database purposes.
-     * Client instance will be created on demand.
-     *
-     * @var RedisClient[]
-     */
-    protected $clients = [];
-
-    /**
-     * Redis facade initialization.
-     *
-     * @param ConfiguratorInterface $configurator
-     * @param ContainerInterface    $container
-     */
-    public function __construct(ConfiguratorInterface $configurator, ContainerInterface $container)
-    {
-        $this->config = $configurator->getConfig('redis');
-        $this->container = $container;
-    }
-
-    /**
-     * Get active and connected redis client. Every client build based on provided list of servers
-     * and options, component can have multiple clients created, for example one for cache and one
-     * for database purposes. Client instance will be created on demand.
-     *
-     * @param string $client Client ID.
-     * @param array  $config Client options, required only for new connections (not defined in config).
-     * @return RedisClient
-     * @throws RedisException
-     */
-    public function client($client = 'default', array $config = [])
-    {
-        if (isset($this->config['aliases'][$client]))
-        {
-            $client = $this->config['aliases'][$client];
-        }
-
-        if (isset($this->clients[$client]))
-        {
-            return $this->clients[$client];
-        }
-
-        if (empty($config))
-        {
-            if (!isset($this->config['clients'][$client]))
-            {
-                throw new RedisException(
-                    "Unable to initiate redis client, no presets for '{$client}' found."
-                );
-            }
-
-            $config = $this->config['clients'][$client];
-        }
-
-        //Creating client
-        $this->benchmark('client', $client);
-        $this->clients[$client] = $this->container->get(RedisClient::class, [
-            'parameters' => $config['servers'],
-            'options'    => isset($config['options']) ? $config['options'] : [],
-        ]);
-
-        $this->benchmark('client', $client);
-
-        return $this->clients[$client];
-    }
-
-    /**
-     * Injector will receive requested class or interface reflection and reflection linked
-     * to parameter in constructor or method.
-     *
-     * This method can return pre-defined instance or create new one based on requested class. Parameter
-     * reflection can be used for dynamic class constructing, for example it can define database name
-     * or config section to be used to construct requested instance.
-     *
-     * @param \ReflectionClass     $class
-     * @param \ReflectionParameter $parameter
-     * @return mixed
-     */
-    public function createInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
-    {
-        return $this->client($parameter->getName());
-    }
-
-    /**
-     * Perform method from default redis client.
-     *
-     * @param string $method    Redis client command.
-     * @param array  $arguments Command arguments.
-     * @return mixed
-     */
-    public function command($method, array $arguments = [])
-    {
-        return call_user_func_array([$this->client(), $method], $arguments);
-    }
-
-    /**
-     * Bypass to perform method from default redis client.
-     *
-     * @param string $method    Redis client method name.
-     * @param array  $arguments Redis client
-     * @return mixed
-     */
-    public function __call($method, array $arguments)
-    {
-        return $this->command($method, $arguments);
-    }
+    const INJECTOR = RedisManager::class;
 }
