@@ -315,11 +315,41 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
             $stacktrace = $snapshot->getTrace();
             foreach ($stacktrace as $trace)
             {
+                $arguments = [];
                 if (!isset($trace['file']))
                 {
+                    if (isset($trace['args']))
+                    {
+                        foreach ($trace['args'] as $argument)
+                        {
+                            $type = strtolower(gettype($argument));
+
+                            if (is_numeric($argument))
+                            {
+                                $type = $argument;
+                            }
+                            elseif (is_bool($argument))
+                            {
+                                $type = $argument ? 'true' : 'false';
+                            }
+                            elseif (is_null($argument))
+                            {
+                                $type = 'null';
+                            }
+
+                            if (is_object($argument))
+                            {
+                                $reflection = new ReflectionClass($argument);
+                                $type = $reflection->getShortName();
+                            }
+
+                            $arguments[] = $dumper->style($type, 'value', $type);;
+                        }
+                    }
+
                     ?>
                     <div class="container no-trace" title="See execution chain">
-                        <?= $trace['class'] . $trace['type'] . $trace['function'] ?>(...)
+                        <?= $trace['class'] . $trace['type'] . $trace['function'] ?>(<?= join(', ', $arguments) ?>)
                     </div>
                     <?php
                     continue;
