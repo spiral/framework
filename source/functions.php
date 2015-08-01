@@ -9,6 +9,7 @@
 use Spiral\Core\Core;
 use Spiral\Debug\Dumper;
 use Spiral\Translator\TranslatorInterface;
+use Spiral\Translator\Exceptions\TranslatorException;
 
 if (!function_exists('directory'))
 {
@@ -20,7 +21,7 @@ if (!function_exists('directory'))
      */
     function directory($alias)
     {
-        return Core::getInstance()->directory($alias);
+        return Core::instance()->directory($alias);
     }
 }
 
@@ -78,28 +79,25 @@ if (!function_exists('dump'))
      * @param bool  $showStatic Set true to dump all static object properties.
      * @return null|string
      */
-    function dump($value, $output = Dumper::DUMP_ECHO, $showStatic = false)
+    function dump($value, $output = Dumper::OUTPUT_ECHO, $showStatic = false)
     {
-        return Dumper::getInstance()->dump($value, $output, $showStatic);
+        return Core::container()->get(Dumper::class)->dump($value, $output, $showStatic);
     }
 }
 
 if (!function_exists('l'))
 {
     /**
-     * Translate and format string fetched from bundle, new strings will be automatically registered
-     * in bundle with key identical to string itself. Function support embedded formatting, to
-     * enable it provide arguments to insert after string. This method is indexable and will be
-     * automatically collected to bundles. This function is short alias for I18n::get() method with
-     * forced default bundle id. "L" is legacy name, this function probably better be named as "t".
+     * Translate value using active language. Method must support message interpolation using
+     * interpolate method or sptrinf.
      *
      * Examples:
      * l('Some Message');
      * l('Hello %s', $name);
      *
-     * @param string $string String to be localized, should be sprintf compatible if formatting
-     *                       required.
+     * @param string $string
      * @return string
+     * @throws TranslatorException
      */
     function l($string)
     {
@@ -107,7 +105,7 @@ if (!function_exists('l'))
         array_unshift($arguments, TranslatorInterface::DEFAULT_BUNDLE);
 
         return call_user_func_array(
-            [Core::getContainer()->get(TranslatorInterface::class), 'translate'], $arguments
+            [Core::container()->get(TranslatorInterface::class), 'translate'], $arguments
         );
     }
 }
@@ -115,25 +113,22 @@ if (!function_exists('l'))
 if (!function_exists('p'))
 {
     /**
-     * Format phase according to formula defined in selected language. Phase should include "%s"
-     * which will be replaced with number provided as second argument. This method is indexable
-     * and will be automatically collected to bundles. This function is short alias for
-     * I18n::pluralize() method.
+     * Pluralize string using language pluralization options and specified numeric value. Number
+     * has to be ingested at place of {n} placeholder.
      *
      * Examples:
-     * p("%s user", $users);
+     * p("{n} user", $users);
      *
-     * All pluralization phases stored in same bundle defined in i18n config.
-     *
-     * @param string $phrase Pluralization phase.
+     * @param string $phrase Should include {n} as placeholder.
      * @param int    $number
-     * @param bool   $numberFormat
+     * @param bool   $format Format number.
      * @return string
+     * @throws TranslatorException
      */
-    function p($phrase, $number, $numberFormat = true)
+    function p($phrase, $number, $format = true)
     {
-        return Core::getContainer()->get(TranslatorInterface::class)->pluralize(
-            $phrase, $number, $numberFormat
+        return Core::container()->get(TranslatorInterface::class)->pluralize(
+            $phrase, $number, $format
         );
     }
 }

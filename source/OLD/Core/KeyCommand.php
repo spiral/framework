@@ -34,7 +34,7 @@ class KeyCommand extends Command
     public function perform()
     {
         $configWriter = ConfigWriter::make([
-            'name'   => $this->core->getEnvironment() . '/encrypter',
+            'name'   => $this->core->environment() . '/encrypter',
             'method' => ConfigWriter::MERGE_REPLACE
         ]);
 
@@ -46,7 +46,7 @@ class KeyCommand extends Command
 
         $this->writeln(
             "<info>Encryption key '<comment>{$key}</comment>' "
-            . "set for environment '<comment>{$this->core->getEnvironment()}</comment>'.</info>"
+            . "set for environment '<comment>{$this->core->environment()}</comment>'.</info>"
         );
     }
 }

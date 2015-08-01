@@ -7,15 +7,16 @@
  * @copyright ©2009-2015
  */
 namespace Spiral\Core;
-
-use Spiral\Core\Container\ArgumentException;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Core\Exceptions\Container\InstanceException;
+use Spiral\Core\Exceptions\Container\ArgumentException;
+use Spiral\Core\Exceptions\ControllerException;
 
 /**
- * Spiral Application specific bindings.
+ * Basic application controller class.
  *
  * @property \Spiral\Core\Core                  $core
- * @property \Spiral\Core\Loader                $loader
+ * @property \Spiral\Core\Components\Loader     $loader
  * @property \Spiral\Modules\ModuleManager      $modules
  * @property \Spiral\Debug\Debugger             $debugger
  *
@@ -24,12 +25,9 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  *
  * @property \Spiral\Cache\CacheManager         $cache
  * @property \Spiral\Http\Cookies\CookieManager $cookies
- * @property \Spiral\Database\DatabaseManager   $dbal
  * @property \Spiral\Encrypter\Encrypter        $encrypter
  * @property \Spiral\Http\InputManager          $input
  * @property \Spiral\Files\FileManager          $files
- * @property \Spiral\ODM\ODM                    $odm
- * @property \Spiral\ORM\ORM                    $orm
  * @property \Spiral\Session\SessionStore       $session
  * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
  * @property \Spiral\Translator\Translator      $i18n
@@ -41,78 +39,40 @@ use Spiral\Debug\Traits\BenchmarkTrait;
 abstract class Controller extends Component implements ControllerInterface
 {
     /**
-     * Benchmarking.
+     * To benchmark action execution time.
      */
     use BenchmarkTrait;
 
     /**
-     * Action prefix will be assigned to every provided action. Useful when you need methods like
-     * "new", "list" and etc.
+     * Action method prefix value.
      *
      * @var string
      */
     const ACTION_PREFIX = '';
 
     /**
-     * Default action to run. This action will be performed if dispatcher didn't specified another
-     * action to run.
+     * Default action to run.
      *
      * @var string
      */
     protected $defaultAction = 'index';
 
     /**
-     * Container interface used in callAction.
-     *
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
-     * Last set of parameters passed to callAction method,
+     * Set of parameters passed into callAction method.
      *
      * @var array
      */
     protected $parameters = [];
 
     /**
-     * Method executed before controller action beign called. Should return nothing to let controller
-     * execute action itself. Any returned result will prevent action execution and will be returned
-     * from callAction.
+     * Container instance to be associated as moment of callAction call.
      *
-     * @param \ReflectionMethod $method    Method reflection.
-     * @param array             $arguments Method arguments.
-     * @return mixed
+     * @var ContainerInterface
      */
-    protected function preAction(\ReflectionMethod $method, array $arguments)
-    {
-        return null;
-    }
+    protected $container = null;
 
     /**
-     * Method executed after controller action beign called. Original or altered result should be
-     * returned.
-     *
-     * @param \ReflectionMethod $method    Method reflection.
-     * @param array             $arguments Method arguments.
-     * @param mixed             $result    Method result (plain output not included).
-     * @return mixed
-     */
-    protected function postAction(\ReflectionMethod $method, array $arguments, $result)
-    {
-        return $result;
-    }
-
-    /**
-     * Performing controller action. This method should either return response object or string, or
-     * any other type supported by specified dispatcher. This method can be overwritten in child
-     * controller to force some specific Response or modify output from every controller action.
-     *
-     * @param ContainerInterface $container
-     * @param string             $action     Method name.
-     * @param array              $parameters Set of parameters to populate controller method.
-     * @return mixed
-     * @throws ControllerException
+     * {@inheritdoc}
      */
     public function callAction(ContainerInterface $container, $action = '', array $parameters = [])
     {
@@ -158,14 +118,13 @@ abstract class Controller extends Component implements ControllerInterface
             );
         }
 
-        $action = $reflection->getName();
         if (($result = $this->preAction($reflection, $arguments)) !== null)
         {
             //Got filtered.
             return $result;
         }
 
-        $this->benchmark($action);
+        $this->benchmark($action = $reflection->getName());
         $result = $reflection->invokeArgs($this, $arguments);
         $this->benchmark($action);
 
@@ -173,10 +132,37 @@ abstract class Controller extends Component implements ControllerInterface
     }
 
     /**
-     * Magic access to core bindings.
+     * Executed before action call, can return non empty value to be sent to client.
+     *
+     * @param \ReflectionMethod $method
+     * @param array             $arguments
+     * @return mixed
+     */
+    protected function preAction(\ReflectionMethod $method, array $arguments)
+    {
+        return null;
+    }
+
+    /**
+     * Executed after action with action result to be filtered.
+     *
+     * @param \ReflectionMethod $method
+     * @param array             $arguments
+     * @param mixed             $result
+     * @return mixed
+     */
+    protected function postAction(\ReflectionMethod $method, array $arguments, $result)
+    {
+        return $result;
+    }
+
+    /**
+     * Shortcut to Container get method.
      *
      * @param string $alias
      * @return mixed|null|object
+     * @throws InstanceException
+     * @throws ArgumentException
      */
     public function __get($alias)
     {
