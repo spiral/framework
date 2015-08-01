@@ -57,6 +57,8 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
     ]
 ]);
 
+$dumps = [];
+
 ?>
 <html>
 <head>
@@ -123,7 +125,14 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
 
         .spiral-exception .wrapper .stacktrace .trace .container.no-trace {
             color: #6bbdff;
+        }
 
+        .spiral-exception .wrapper .stacktrace .trace .container.no-trace .arguments span {
+            cursor: pointer;
+        }
+
+        .spiral-exception .wrapper .stacktrace .trace .container.no-trace .arguments span:hover {
+            text-decoration: underline;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .location {
@@ -322,34 +331,54 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
                     {
                         foreach ($trace['args'] as $argument)
                         {
-                            $type = strtolower(gettype($argument));
+                            $display = $type = strtolower(gettype($argument));
 
                             if (is_numeric($argument))
                             {
-                                $type = $argument;
+                                $display = $argument;
                             }
                             elseif (is_bool($argument))
                             {
-                                $type = $argument ? 'true' : 'false';
+                                $display = $argument ? 'true' : 'false';
                             }
                             elseif (is_null($argument))
                             {
-                                $type = 'null';
+                                $display = 'null';
                             }
 
                             if (is_object($argument))
                             {
                                 $reflection = new ReflectionClass($argument);
-                                $type = $reflection->getShortName();
+                                $display = interpolate(
+                                    "<span title=\"{title}\">{class}</span>", [
+                                        'title' => $reflection->getName(),
+                                        'class' => $reflection->getShortName()
+                                    ]
+                                );
                             }
 
-                            $arguments[] = $dumper->style($type, 'value', $type);;
+                            //Colorizing
+                            $display = $dumper->style($display, 'value', $type);
+                            if (!empty($dumpArguments) && !in_array($argument, $dumps))
+                            {
+                                $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                                $display = interpolate(
+                                    "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
+                                    [
+                                        'display' => $display,
+                                        'dumpID'  => count($dumps) - 1
+                                    ]
+                                );
+                            }
+
+                            $arguments[] = $display;
                         }
                     }
 
                     ?>
-                    <div class="container no-trace" title="See execution chain">
-                        <?= $trace['class'] . $trace['type'] . $trace['function'] ?>(<?= join(', ', $arguments) ?>)
+                    <div class="container no-trace">
+                        <?= $trace['class'] . $trace['type'] . $trace['function'] ?>
+                        (<span class="arguments"><?= join(', ', $arguments) ?></span>)
                     </div>
                     <?php
                     continue;
@@ -377,7 +406,6 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
         <div class="chain">
             <div class="calls">
                 <?php
-                $dumps = [];
                 $stacktrace = array_reverse($stacktrace);
                 foreach ($stacktrace as $index => $trace)
                 {
