@@ -144,14 +144,14 @@ abstract class Controller extends Component implements ControllerInterface
     }
 
     /**
-     * Executed after action with action result to be filtered.
+     * Executed after action with action result to be filtered. Must return result in normal flow.
      *
+     * @param mixed             $result
      * @param \ReflectionMethod $method
      * @param array             $arguments
-     * @param mixed             $result
      * @return mixed
      */
-    protected function postAction(\ReflectionMethod $method, array $arguments, $result)
+    protected function postAction($result, \ReflectionMethod $method, array $arguments)
     {
         return $result;
     }
