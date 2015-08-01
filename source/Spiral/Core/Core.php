@@ -118,6 +118,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
 
     /**
      * {@inheritdoc}
+     *
+     * @invisible
      */
     protected $bindings = [
         //Core interface bindings
