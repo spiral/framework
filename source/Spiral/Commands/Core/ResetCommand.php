@@ -12,34 +12,30 @@ use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Remove every file in cache directory or emulate removal.
+ */
 class ResetCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'core:reset';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Reset application runtime cache and invalidate configs.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
-        ['emulate', 'e', InputOption::VALUE_NONE, 'If set, cache cleaning will be emulated.']
+        ['emulate', 'e', InputOption::VALUE_NONE, 'Only emulate removal.']
     ];
 
     /**
-     * Flushing application runtime cache.
+     * Perform command.
      */
     public function perform()
     {
@@ -48,9 +44,9 @@ class ResetCommand extends Command
         foreach ($this->files->getFiles(directory('cache')) as $filename)
         {
             !$this->option('emulate') && $this->files->delete($filename);
+
             $this->isVerbose() && $this->writeln($this->files->relativePath(
-                $filename,
-                directory('cache')
+                $filename, directory('cache')
             ));
         }
 

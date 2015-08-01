@@ -11,29 +11,27 @@ namespace Spiral\Commands\Core;
 use Spiral\Console\Command;
 use Spiral\Core\Core;
 
+/**
+ * Touch every configuration file to force application reset config cache.
+ */
 class TouchCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'core:touch';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Touch configuration files to reset their cached state.';
 
     /**
-     * Updating application environment.
+     * Perform command.
      */
     public function perform()
     {
-        $configs = $this->files->getFiles(directory('config'), Core::EXTENSION);
-        foreach ($configs as $filename)
+        foreach ($this->files->getFiles(directory('config'), Core::EXTENSION) as $filename)
         {
             $this->files->touch($filename);
         }
