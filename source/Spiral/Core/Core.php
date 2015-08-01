@@ -108,6 +108,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      * @var array
      */
     private $directories = [
+        'root'        => null,
+        'public'      => null,
         'libraries'   => null,
         'framework'   => null,
         'application' => null,
@@ -141,6 +143,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Storage\StorageInterface'       => 'Spiral\Storage\StorageManager',
         'Spiral\Storage\BucketInterface'        => 'Spiral\Storage\Entities\StorageBucket',
 
+        'Spiral\Session\StoreInterface'         => 'Spiral\Session\SessionStore',
+
         'Spiral\Encrypter\EncrypterInterface'   => 'Spiral\Encrypter\Encrypter',
         'Spiral\Tokenizer\TokenizerInterface'   => 'Spiral\Tokenizer\Tokenizer',
         'Spiral\Validation\ValidatorInterface'  => 'Spiral\Validation\Validator',
@@ -171,7 +175,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'i18n'                                  => 'Spiral\Translator\Translator',
         'views'                                 => 'Spiral\Views\ViewManager',
 
-        //Additional and post binded components
         'redis'                                 => 'Spiral\Redis\RedisManager',
         'image'                                 => 'Spiral\Image\ImageManager'
     ];
@@ -200,6 +203,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         parent::__construct();
 
         $this->directories = $directories + [
+                'public'  => $directories['root'] . '/webroot',
                 'config'  => $directories['application'] . '/config',
                 'runtime' => $directories['application'] . '/runtime',
                 'cache'   => $directories['application'] . '/runtime/cache'

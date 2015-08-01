@@ -10,6 +10,9 @@ namespace Spiral\Proxies;
 
 use Spiral\Core\StaticProxy;
 
+/**
+ * @todo Complete doc comment.
+ */
 class I18n extends StaticProxy
 {
     /**
