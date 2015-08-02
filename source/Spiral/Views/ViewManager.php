@@ -296,9 +296,16 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
 
         list($namespace, $view) = $this->parsePath($path);
 
+        $compiler = $this->compiler($namespace, $view);
+        if (!empty($compiler) && !$compiler->isCompiled())
+        {
+            //Pre-compile
+            $compiler->compile();
+        }
+
         return $this->container->get($class->getName(), [
             'views'     => $this,
-            'compiler'  => $this->compiler($namespace, $view),
+            'compiler'  => $compiler,
             'namespace' => $namespace,
             'view'      => $view
         ]);
