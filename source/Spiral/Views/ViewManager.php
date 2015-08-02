@@ -50,20 +50,6 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
     const CACHE_CLASS    = 2;
 
     /**
-     * List of already known views, associated with their filenames and engine id.
-     *
-     * @var array
-     */
-    private $associations = [];
-
-    /**
-     * List of already indexed classes to speed up View = view association.
-     *
-     * @var array
-     */
-    protected $classesCache = [];
-
-    /**
      * Namespaces associated with their locations.
      *
      * @var array
@@ -85,56 +71,28 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
 
     /**
      * @invisible
-     * @var HippocampusInterface
-     */
-    protected $memory = null;
-
-    /**
-     * @invisible
      * @var FilesInterface
      */
     protected $files = null;
 
     /**
-     * @invisible
-     * @var TokenizerInterface
-     */
-    protected $tokenizer = null;
-
-    /**
      * @param ConfiguratorInterface $configurator
      * @param ContainerInterface    $container
-     * @param HippocampusInterface  $memory
      * @param FilesInterface        $files
      */
     public function __construct(
         ConfiguratorInterface $configurator,
         ContainerInterface $container,
-        HippocampusInterface $memory,
         FilesInterface $files
     )
     {
         $this->config = $configurator->getConfig(static::CONFIG);
 
         $this->container = $container;
-        $this->memory = $memory;
         $this->files = $files;
-
-        //So we don't need to crawl hard-drive every time
-        $this->associations = $memory->loadData('views');
 
         //Namespaces can be edited in runtime
         $this->namespaces = $this->config['namespaces'];
-    }
-
-    /**
-     * Tokenizer used to create association between view class and view path. Requested on demand.
-     *
-     * @param TokenizerInterface $tokenizer
-     */
-    public function setTokenizer(TokenizerInterface $tokenizer)
-    {
-        $this->tokenizer = $tokenizer;
     }
 
     /**
@@ -196,8 +154,17 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
     {
         list($namespace, $view) = $this->parsePath($path);
 
-        return $this->container->get($this->association($namespace, $view), [
-            'compiler'  => $this->compile($namespace, $view),
+        //Some views have associated compiler
+        $compiler = $this->compiler($namespace, $view, $engine);
+
+        if (!empty($compiler) && !$compiler->isCompiled())
+        {
+            //Pre-compile
+            $compiler->compile();
+        }
+
+        return $this->container->get($this->viewClass($engine, $namespace, $view), [
+            'compiler'  => $compiler,
             'namespace' => $namespace,
             'view'      => $view,
             'data'      => $data
@@ -217,28 +184,18 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
      *
      * @param string $namespace
      * @param string $view
-     * @param bool   $reset Ignore compilation state and reset class association.
-     * @return CompilerInterface
+     * @return CompilerInterface|null
      */
-    public function compile($namespace, $view, $reset = false)
+    public function compile($namespace, $view)
     {
         $compiler = $this->compiler($namespace, $view);
-        if (!empty($compiler) && (!$compiler->isCompiled() || $reset))
-        {
-            $compiler->compile();
-        }
-
-        if (empty($this->associations[$namespace][$view]) || $reset)
-        {
-            $this->association($namespace, $view, true);
-        }
+        !empty($compiler) && $compiler->compile();
 
         return $compiler;
     }
 
     /**
-     * Get list of view names associated with specified namespace. View file will be associated with
-     * parent engine.
+     * Get list of view names associated with their View class.
      *
      * @param string $namespace
      * @return array
@@ -277,7 +234,7 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
                 $filename = substr($filename, 0, -1 - strlen($this->files->extension($filename)));
                 $name = substr($filename, strlen($location) + strlen(FilesInterface::SEPARATOR));
 
-                $result[$name] = $foundEngine;
+                $result[$name] = $this->viewClass($foundEngine, $namespace, $name);
             }
         }
 
@@ -295,13 +252,6 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
      */
     public function getFilename($namespace, $view, &$engine = null)
     {
-        if (isset($this->associations[$namespace][$view]))
-        {
-            $engine = $this->associations[$namespace][$view][self::CACHE_ENGINE];
-
-            return $this->associations[$namespace][$view][self::CACHE_FILENAME];
-        }
-
         if (!isset($this->namespaces[$namespace]))
         {
             throw new ViewException("Undefined view namespace '{$namespace}'.");
@@ -330,53 +280,28 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
      * {@inheritdoc}
      *
      * Create specific View class with associated compiler.
+     *
+     * @throws ViewException
      */
     public function createInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
     {
-        if (empty($class->getConstant('VIEW')))
+        //Looking for association
+        $path = array_search($class->getName(), $this->config['associations']);
+        if ($path === false)
         {
-            throw new InjectionException("Unable to construct View, no path clue provided.");
+            throw new ViewException(
+                "Requested view '{$class->getName()}' does not have any association."
+            );
         }
 
-        $namespace = static::DEFAULT_NAMESPACE;
-        $view = $class->getConstant('VIEW');
+        list($namespace, $view) = $this->parsePath($path);
 
-        if (strpos($view, self::NS_SEPARATOR) !== false)
-        {
-            list($namespace, $view) = explode(self::NS_SEPARATOR, $view);
-        }
-
-        return $this->container->get($class, [
-            'compiler' => $this->compiler($namespace, $view)
+        return $this->container->get($class->getName(), [
+            'views'     => $this,
+            'compiler'  => $this->compiler($namespace, $view),
+            'namespace' => $namespace,
+            'view'      => $view
         ]);
-    }
-
-    /**
-     * Ensure and return name of class associated with specific view namespace and name. Can be
-     * re-setted by providing reset flag with true value.
-     *
-     * @param string $namespace
-     * @param string $view
-     * @param bool   $reset
-     * @return string
-     */
-    private function association($namespace, $view, $reset = false)
-    {
-        if (isset($this->associations[$namespace][$view]) && !$reset)
-        {
-            return $this->associations[$namespace][$view]  [self::CACHE_CLASS];
-        }
-
-        $filename = $this->getFilename($namespace, $view, $engine);
-        $this->associations[$namespace][$view] = [
-            self::CACHE_CLASS    => $class = $this->getClass($engine, $namespace, $view),
-            self::CACHE_ENGINE   => $engine,
-            self::CACHE_FILENAME => $filename
-        ];
-
-        $this->memory->saveData('views', $this->associations);
-
-        return $class;
     }
 
     /**
@@ -384,13 +309,13 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
      *
      * @param string $namespace
      * @param string $view
+     * @param string $engine Selected engine name.
      * @return CompilerInterface|null
      * @throws ContainerException
      */
-    private function compiler($namespace, $view)
+    private function compiler($namespace, $view, &$engine = null)
     {
         $filename = $this->getFilename($namespace, $view, $engine);
-
         if (empty($this->config['engines'][$engine]['compiler']))
         {
             return null;
@@ -413,55 +338,15 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
      * @param string $view
      * @return string
      */
-    private function getClass($engine, $namespace, $view)
+    private function viewClass($engine, $namespace, $view)
     {
-        if (!$this->config['viewAssociations'])
+        $path = $namespace . self::NS_SEPARATOR . $view;
+        if (isset($this->config['associations'][$path]))
         {
-            //Always use default class
-            return $this->config['engines'][$engine]['view'];
-        }
-
-        $path = $view;
-        if ($namespace != self::DEFAULT_NAMESPACE)
-        {
-            $path = $namespace . self::NS_SEPARATOR . $view;
-        }
-
-        if (empty($this->classesCache))
-        {
-            $this->classesCache = $this->tokenizer()->getClasses(View::class);
-        }
-
-        foreach ($this->classesCache as $class => $definition)
-        {
-            if ($definition['abstract'])
-            {
-                continue;
-            }
-
-            if ($class::VIEW == $path)
-            {
-                //We found responsible class
-                return $class;
-            }
+            return $this->config['associations'][$path];
         }
 
         return $this->config['engines'][$engine]['view'];
-    }
-
-    /**
-     * Get associated tokenizer instance.
-     *
-     * @return TokenizerInterface
-     */
-    private function tokenizer()
-    {
-        if (!empty($this->tokenizer))
-        {
-            return $this->tokenizer;
-        }
-
-        return $this->tokenizer = $this->container->get(TokenizerInterface::class);
     }
 
     /**

@@ -12,7 +12,9 @@ use Spiral\Core\Component;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
- * Default view implementation which can work with Compiler based classes.
+ * Default spiral implementation of view class. You can link your custom view implementations via
+ * editing view config section - associations. In additional you can let system create associations
+ * by itself using console command "view:associate".
  */
 class View extends Component implements ViewInterface
 {
@@ -28,11 +30,12 @@ class View extends Component implements ViewInterface
     const INJECTOR = ViewManager::class;
 
     /**
-     * Must point to valid view path.
+     * Associated view name if any. Used by view associator to link views classes to view files.
      */
-    const VIEW = '';
+    protected $view = '';
 
     /**
+     * @invisible
      * @var CompilerInterface
      */
     protected $compiler = null;
