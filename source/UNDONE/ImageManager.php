@@ -21,13 +21,8 @@ use Spiral\Core\ConfiguratorInterface;
 use Spiral\Support\Generators\Config\ConfigWriter;
 use Intervention\Image\ImageManager as InterventionManager;
 
-class ImageManager extends Module
+class ImageManager
 {
-    /**
-     * This is singleton.
-     */
-    use SingletonTrait;
-
     /**
      * Declaring singleton to IoC.
      */
