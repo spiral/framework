@@ -359,15 +359,17 @@ $dumps = [];
 
                             //Colorizing
                             $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments) && !in_array($argument, $dumps))
+                            if (!empty($dumpArguments))
                             {
-                                $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                                if (($dumpID = array_search($argument, $dumps)) === false)
+                                {
+                                    $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                                    $dumpID = count($dumps) - 1;
+                                }
+
                                 $display = interpolate(
                                     "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                                    [
-                                        'display' => $display,
-                                        'dumpID'  => count($dumps) - 1
-                                    ]
+                                    compact('display', 'dumpID')
                                 );
                             }
 
@@ -474,15 +476,17 @@ $dumps = [];
 
                             //Colorizing
                             $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments) && !in_array($argument, $dumps))
+                            if (!empty($dumpArguments))
                             {
-                                $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                                if (($dumpID = array_search($argument, $dumps)) === false)
+                                {
+                                    $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                                    $dumpID = count($dumps) - 1;
+                                }
+
                                 $display = interpolate(
                                     "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                                    [
-                                        'display' => $display,
-                                        'dumpID'  => count($dumps) - 1
-                                    ]
+                                    compact('display', 'dumpID')
                                 );
                             }
 
