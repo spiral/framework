@@ -12,7 +12,3 @@ Spiral was originally built in 2009 for internal projects and has been continuou
 Base application with modules, views and routing: https://github.com/spiral-php/application
 
 Guide: https://github.com/spiral-php/guide
-
-Currently in development:
-- ORM Model relation classes (pre-loading, eager loading, schema building, all done)
-- ORM Virtual Documentation generation
