@@ -13,8 +13,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
  * Default spiral implementation of view class. You can link your custom view implementations via
- * editing view config section - associations. In additional you can let system create associations
- * by itself using console command "view:associate".
+ * editing view config section - associations.
  */
 class View extends Component implements ViewInterface
 {
@@ -22,17 +21,6 @@ class View extends Component implements ViewInterface
      * For render benchmarking.
      */
     use BenchmarkTrait;
-
-    /**
-     * This is magick constant used by Spiral Container, it helps system to resolve controllable
-     * injections.
-     */
-    const INJECTOR = ViewManager::class;
-
-    /**
-     * Associated view name if any. Used by view associator to link views classes to view files.
-     */
-    protected $view = '';
 
     /**
      * @invisible
@@ -55,7 +43,11 @@ class View extends Component implements ViewInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Alter view parameters (should replace existed value).
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @return $this
      */
     public function set($name, $value)
     {
@@ -71,7 +63,7 @@ class View extends Component implements ViewInterface
     {
         //Benchmarking context
         $context = $this->compiler->getNamespace()
-            . ViewsInterface::NS_SEPARATOR
+            . ViewProviderInterface::NS_SEPARATOR
             . $this->compiler->getView();
 
         $this->benchmark('render', $context);

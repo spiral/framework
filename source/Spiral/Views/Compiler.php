@@ -139,7 +139,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
         {
             $reflection = new \ReflectionClass($processor);
 
-            $context = $this->namespace . ViewsInterface::NS_SEPARATOR . $this->view;
+            $context = $this->namespace . ViewProviderInterface::NS_SEPARATOR . $this->view;
 
             $this->benchmark($reflection->getShortName(), $context);
             $source = $processor->process($source);

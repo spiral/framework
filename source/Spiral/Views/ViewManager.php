@@ -12,12 +12,9 @@ use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
-use Spiral\Core\Exceptions\Container\InjectionException;
-use Spiral\Core\HippocampusInterface;
 use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Core\Singleton;
-use Spiral\Tokenizer\TokenizerInterface;
 use Spiral\Views\Exceptions\ViewException;
 
 /**
@@ -25,7 +22,7 @@ use Spiral\Views\Exceptions\ViewException;
  * dependencies. ViewManager support multiple namespaces and namespaces associated with multiple
  * folders.
  */
-class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
+class ViewManager extends Singleton implements ViewProviderInterface
 {
     /**
      * Configuration is required.
@@ -148,9 +145,10 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
     /**
      * {@inheritdoc}
      *
+     * @param string $class Custom view class name.
      * @throws ContainerException
      */
-    public function get($path, array $data = [])
+    public function get($path, array $data = [], $class = null)
     {
         list($namespace, $view) = $this->parsePath($path);
 
@@ -163,12 +161,15 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
             $compiler->compile();
         }
 
-        return $this->container->get($this->viewClass($engine, $namespace, $view), [
-            'compiler'  => $compiler,
-            'namespace' => $namespace,
-            'view'      => $view,
-            'data'      => $data
-        ]);
+        return $this->container->get(
+            !empty($class) ? $class : $this->viewClass($engine, $namespace, $view),
+            [
+                'compiler'  => $compiler,
+                'namespace' => $namespace,
+                'view'      => $view,
+                'data'      => $data
+            ]
+        );
     }
 
     /**
@@ -274,41 +275,6 @@ class ViewManager extends Singleton implements ViewsInterface, InjectorInterface
         }
 
         throw new ViewException("Unable to find view '{$view}' in namespace '{$namespace}'.");
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Create specific View class with associated compiler.
-     *
-     * @throws ViewException
-     */
-    public function createInjection(\ReflectionClass $class, \ReflectionParameter $parameter)
-    {
-        //Looking for association
-        $path = array_search($class->getName(), $this->config['associations']);
-        if ($path === false)
-        {
-            throw new ViewException(
-                "Requested view '{$class->getName()}' does not have any association."
-            );
-        }
-
-        list($namespace, $view) = $this->parsePath($path);
-
-        $compiler = $this->compiler($namespace, $view);
-        if (!empty($compiler) && !$compiler->isCompiled())
-        {
-            //Pre-compile
-            $compiler->compile();
-        }
-
-        return $this->container->get($class->getName(), [
-            'views'     => $this,
-            'compiler'  => $compiler,
-            'namespace' => $namespace,
-            'view'      => $view
-        ]);
     }
 
     /**

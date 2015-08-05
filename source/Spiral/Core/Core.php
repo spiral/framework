@@ -135,10 +135,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Debug\SnapshotInterface'        => 'Spiral\Debug\Snapshot',
 
         'Spiral\Cache\StoreInterface'           => 'Spiral\Cache\CacheStore',
-        'Spiral\Cache\ProviderInterface'        => 'Spiral\Cache\CacheManager',
+        'Spiral\Cache\CacheProviderInterface'   => 'Spiral\Cache\CacheProvider',
 
         'Spiral\Files\FilesInterface'           => 'Spiral\Files\FileManager',
-        'Spiral\Views\ViewsInterface'           => 'Spiral\Views\ViewManager',
+        'Spiral\Views\ViewProviderInterface'    => 'Spiral\Views\ViewManager',
 
         'Spiral\Storage\StorageInterface'       => 'Spiral\Storage\StorageManager',
         'Spiral\Storage\BucketInterface'        => 'Spiral\Storage\Entities\StorageBucket',
