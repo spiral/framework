@@ -90,8 +90,9 @@ class MethodElement extends AbstractElement
             $this->parameters[$name] = new ParameterElement($name);
         }
 
-        if (!empty($type) && !in_array($docComment = "@param {type} \${$name}",
-                $this->docComment)
+        if (
+            !empty($type)
+            && !in_array($docComment = "@param {type} \${$name}", $this->docComment)
         ) {
             $this->docComment[] = $docComment;
         }
