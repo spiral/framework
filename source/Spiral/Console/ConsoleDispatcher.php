@@ -10,9 +10,9 @@ namespace Spiral\Console;
 
 use Spiral\Console\Exceptions\ConsoleException;
 use Spiral\Core\Components\Loader;
+use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
-use Spiral\Core\ContainerInterface;
 use Spiral\Core\HippocampusInterface;
 use Spiral\Core\Singleton;
 use Spiral\Debug\SnapshotInterface;
@@ -152,10 +152,18 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      */
     public function command($command, $parameters = [], OutputInterface $output = null)
     {
-        $code = $this->application()->find($command)->run(
-            is_object($parameters) ? $parameters : new ArrayInput(compact('command') + $parameters),
-            $output = ($output ?: new BufferedOutput())
-        );
+
+        $input = is_object($parameters) ? $parameters : new ArrayInput(compact('command') + $parameters);
+        $output = !empty($output) ? $output : new BufferedOutput();
+
+        $outerOutput = $this->container->replace(OutputInterface::class, $output);
+        $outerInput = $this->container->replace(InputInterface::class, $input);
+
+        //Go
+        $code = $this->application()->find($command)->run($input, $output);
+
+        $this->container->restore($outerInput);
+        $this->container->restore($outerOutput);
 
         return new CommandOutput($code, $output);
     }

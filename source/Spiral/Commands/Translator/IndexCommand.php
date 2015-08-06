@@ -12,7 +12,6 @@ use Spiral\Console\Command;
 use Spiral\Events\ObjectEvent;
 use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can understand

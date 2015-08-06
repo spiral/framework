@@ -10,7 +10,6 @@ namespace Spiral\Commands\Core;
 
 use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remove every file in cache directory or emulate removal.

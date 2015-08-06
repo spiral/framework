@@ -8,10 +8,10 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Debug\Traits\BenchmarkTrait;
-use Spiral\Core\Exceptions\Container\InstanceException;
 use Spiral\Core\Exceptions\Container\ArgumentException;
+use Spiral\Core\Exceptions\Container\InstanceException;
 use Spiral\Core\Exceptions\ControllerException;
+use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
  * Basic application controller class. Implements method injections and simplified access to

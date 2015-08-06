@@ -11,7 +11,6 @@ namespace Spiral\Commands;
 use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 /**
@@ -64,13 +63,10 @@ class ServerCommand extends Command
 
         $process->run(function ($type, $data)
         {
-            if (Process::ERR != $type)
+            if ($type != Process::ERR)
             {
-                //First character contains request type
-                $type = $data[0];
-                $data = substr($data, 2);
-
-                ($type == 'S' || $this->isVerbose()) && $this->writeln($data);
+                //First character contains request type, second is space
+                ($data[0] == 'S' || $this->isVerbose()) && $this->writeln(substr($data, 2));
             }
         });
     }

@@ -8,9 +8,9 @@
  */
 namespace Spiral\Console;
 
+use Spiral\Components;
 use Spiral\Console\Helpers\AskHelper;
 use Spiral\Core\Container;
-use Spiral\Components;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\Container\InstanceException;
@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @property \Spiral\Console\ConsoleDispatcher  $console
  * @property \Spiral\Http\HttpDispatcher        $http
  *
- * @property \Spiral\Cache\CacheManager         $cache
+ * @property \Spiral\Cache\CacheProvider        $cache
  * @property \Spiral\Http\Cookies\CookieManager $cookies
  * @property \Spiral\Encrypter\Encrypter        $encrypter
  * @property \Spiral\Files\FileManager          $files

@@ -8,7 +8,7 @@
  */
 namespace Spiral\Modules\Prototypes;
 
-class Definition 
+class Definition
 {
 
 }

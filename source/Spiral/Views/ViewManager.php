@@ -9,12 +9,11 @@
 namespace Spiral\Views;
 
 use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
+use Spiral\Core\Singleton;
 use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Files\FilesInterface;
-use Spiral\Core\Singleton;
 use Spiral\Views\Exceptions\ViewException;
 
 /**

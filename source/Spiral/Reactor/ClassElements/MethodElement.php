@@ -8,8 +8,8 @@
  */
 namespace Spiral\Reactor\ClassElements;
 
-use Spiral\Reactor\ClassElements\MethodElements\ParameterElement;
 use Spiral\Reactor\AbstractElement;
+use Spiral\Reactor\ClassElements\MethodElements\ParameterElement;
 
 /**
  * Represent class method.
