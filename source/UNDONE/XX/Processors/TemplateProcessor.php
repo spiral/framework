@@ -35,9 +35,9 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
     /**
      * Primary token types supported by spiral.
      */
-    const TYPE_BLOCK = 'block';
+    const TYPE_BLOCK   = 'block';
     const TYPE_EXTENDS = 'extends';
-    const TYPE_USE   = 'use';
+    const TYPE_USE     = 'use';
     const TYPE_INCLUDE = 'include';
 
     /**
@@ -71,7 +71,7 @@ class TemplateProcessor implements ProcessorInterface, SupervisorInterface
         'separator'   => '.',
         'nsSeparator' => ':',
         'prefixes'    => [
-            self::TYPE_BLOCK   => ['block:', 'section:'],
+            self::TYPE_BLOCK   => ['block:', 'section:', 'yield:', 'define:'],
             self::TYPE_EXTENDS => ['extends:'],
             self::TYPE_USE     => ['use']
         ],

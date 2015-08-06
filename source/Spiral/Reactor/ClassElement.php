@@ -81,8 +81,7 @@ class ClassElement extends AbstractElement
      */
     public function addInterface($interface)
     {
-        if (array_search($interface, $this->interfaces) === false)
-        {
+        if (array_search($interface, $this->interfaces) === false) {
             $this->interfaces[] = $interface;
         }
 
@@ -95,8 +94,7 @@ class ClassElement extends AbstractElement
      */
     public function removeInterface($interface)
     {
-        if (($index = array_search($interface, $this->interfaces)) !== false)
-        {
+        if (($index = array_search($interface, $this->interfaces)) !== false) {
             unset($this->interfaces[$index]);
         }
 
@@ -160,8 +158,7 @@ class ClassElement extends AbstractElement
      */
     public function property($name, $docComment = null)
     {
-        if (!$this->hasProperty($name))
-        {
+        if (!$this->hasProperty($name)) {
             $this->properties[$name] = new PropertyElement($name);
         }
 
@@ -208,22 +205,17 @@ class ClassElement extends AbstractElement
      */
     public function method($name, $docComment = null, array $parameters = [])
     {
-        if (!$this->hasMethod($name))
-        {
+        if (!$this->hasMethod($name)) {
             $this->methods[$name] = new MethodElement($name);
         }
 
         !empty($docComment) && $this->methods[$name]->setComment($docComment);
 
-        foreach ($parameters as $parameter => $docComment)
-        {
-            if (is_numeric($parameter))
-            {
+        foreach ($parameters as $parameter => $docComment) {
+            if (is_numeric($parameter)) {
                 //Provided as non associated array
                 $this->methods[$name]->parameter($parameter = $docComment);
-            }
-            else
-            {
+            } else {
                 $this->methods[$name]->parameter($parameter, $docComment);
             }
         }
@@ -266,13 +258,11 @@ class ClassElement extends AbstractElement
     {
         parent::replaceComments($search, $replace);
 
-        foreach ($this->methods as $method)
-        {
+        foreach ($this->methods as $method) {
             $method->replaceComments($search, $replace);
         }
 
-        foreach ($this->properties as $property)
-        {
+        foreach ($this->properties as $property) {
             $property->replaceComments($search, $replace);
         }
 
@@ -289,16 +279,14 @@ class ClassElement extends AbstractElement
         $result = [$this->renderComment($indentLevel)];
         $header = 'class ' . $this->getName() . ($this->parent ? ' extends ' . $this->parent : '');
 
-        if (!empty($this->interfaces))
-        {
+        if (!empty($this->interfaces)) {
             $header .= ' implements \\' . join(', \\', $this->interfaces);
         }
 
         $result[] = $header;
         $result[] = "{";
 
-        foreach ($this->constants as $constant => $value)
-        {
+        foreach ($this->constants as $constant => $value) {
             $result[] = $this->indent(
                 'const ' . $constant . ' = ' . var_export($value, true) . ';',
                 $indentLevel + 1
@@ -306,13 +294,11 @@ class ClassElement extends AbstractElement
         }
 
         $position = 0;
-        foreach ($this->properties as $property)
-        {
+        foreach ($this->properties as $property) {
             $result[] = $property->render($indentLevel + 1, $serializer, $position++);
         }
 
-        foreach ($this->methods as $method)
-        {
+        foreach ($this->methods as $method) {
             $result[] = $method->render($indentLevel + 1, $position++);
         }
 
@@ -349,12 +335,9 @@ class ClassElement extends AbstractElement
             array_merge($this->constants, $reflection->getConstants())
         );
 
-        foreach ($reflection->getProperties() as $property)
-        {
-            if ($ownData && !empty($reflection->getParentClass()))
-            {
-                if ($reflection->getParentClass()->hasProperty($property->getName()))
-                {
+        foreach ($reflection->getProperties() as $property) {
+            if ($ownData && !empty($reflection->getParentClass())) {
+                if ($reflection->getParentClass()->hasProperty($property->getName())) {
                     continue;
                 }
             }
@@ -362,12 +345,9 @@ class ClassElement extends AbstractElement
             $this->property($property->getName())->cloneSchema($property);
         }
 
-        foreach ($reflection->getMethods() as $method)
-        {
-            if ($ownData && !empty($reflection->getParentClass()))
-            {
-                if ($reflection->getParentClass()->hasMethod($method->getName()))
-                {
+        foreach ($reflection->getMethods() as $method) {
+            if ($ownData && !empty($reflection->getParentClass())) {
+                if ($reflection->getParentClass()->hasMethod($method->getName())) {
                     continue;
                 }
             }

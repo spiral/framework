@@ -46,19 +46,14 @@ class GetTextExporter extends AbstractExporter
          * added at the end of it the string (4 dups => 3 spaces), translator can see comment to
          * understand where he can find this line. Extra spaces will be removed during import.
          */
-        foreach ($this->bundles as $bundle => $data)
-        {
-            foreach ($data as $line => $value)
-            {
-                if (isset($duplicates[$line]))
-                {
+        foreach ($this->bundles as $bundle => $data) {
+            foreach ($data as $line => $value) {
+                if (isset($duplicates[$line])) {
                     $duplicates[$line]++;
 
                     //Nobody will see space at right :) and we will remove this space on importing
                     $line = $line . str_repeat(' ', $duplicates[$line] - 1);
-                }
-                else
-                {
+                } else {
                     $duplicates[$line] = 1;
                 }
 
@@ -67,8 +62,7 @@ class GetTextExporter extends AbstractExporter
                 $output[] = '#: ' . $bundle;
                 $output[] = 'msgid "' . addcslashes($line, '"') . '"';
 
-                if (!is_array($value))
-                {
+                if (!is_array($value)) {
                     $output[] = 'msgstr ' . $this->escape($value);
                     $output[] = '';
                     continue;
@@ -76,10 +70,8 @@ class GetTextExporter extends AbstractExporter
 
                 //Plural forms
                 $output[] = 'msgid_plural ' . $this->escape($value[count($value) - 1]);
-                for ($form = 0; $form < $pluralForms; $form++)
-                {
-                    if (isset($value[$form]))
-                    {
+                for ($form = 0; $form < $pluralForms; $form++) {
+                    if (isset($value[$form])) {
                         $output[] = 'msgstr[' . $form . '] ' . $this->escape($value[$form]);
                         continue;
                     }

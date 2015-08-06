@@ -41,6 +41,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @property \Spiral\Redis\RedisManager         $redis
  * @property \Spiral\Image\ImageManager         $image
+ *
+ * @property \Spiral\Database\DatabaseProvider  $dbal
  */
 abstract class Command extends \Symfony\Component\Console\Command\Command
 {
@@ -112,13 +114,11 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
         parent::__construct($this->name);
         $this->setDescription($this->description);
 
-        foreach ($this->defineOptions() as $option)
-        {
+        foreach ($this->defineOptions() as $option) {
             call_user_func_array([$this, 'addOption'], $option);
         }
 
-        foreach ($this->defineArguments() as $argument)
-        {
+        foreach ($this->defineArguments() as $argument) {
             call_user_func_array([$this, 'addArgument'], $argument);
         }
     }
@@ -271,8 +271,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
      */
     protected function ask()
     {
-        if (!empty($this->askHelper))
-        {
+        if (!empty($this->askHelper)) {
             return $this->askHelper;
         }
 

@@ -80,8 +80,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
         ConfiguratorInterface $configurator,
         ContainerInterface $container,
         FilesInterface $files
-    )
-    {
+    ) {
         $this->config = $configurator->getConfig(static::CONFIG);
 
         $this->container = $container;
@@ -131,8 +130,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
      */
     public function getDependencies()
     {
-        foreach ($this->config['dependencies'] as $variable => $provider)
-        {
+        foreach ($this->config['dependencies'] as $variable => $provider) {
             $this->dependencies[$variable] = call_user_func(
                 [$this->container->get($provider[0]), $provider[1]]
             );
@@ -154,8 +152,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
         //Some views have associated compiler
         $compiler = $this->compiler($namespace, $view, $engine);
 
-        if (!empty($compiler) && !$compiler->isCompiled())
-        {
+        if (!empty($compiler) && !$compiler->isCompiled()) {
             //Pre-compile
             $compiler->compile();
         }
@@ -203,29 +200,23 @@ class ViewManager extends Singleton implements ViewProviderInterface
      */
     public function getViews($namespace)
     {
-        if (!isset($this->namespaces[$namespace]))
-        {
+        if (!isset($this->namespaces[$namespace])) {
             throw new ViewException("Invalid view namespace '{$namespace}'.");
         }
 
         $result = [];
-        foreach ($this->namespaces[$namespace] as $location)
-        {
+        foreach ($this->namespaces[$namespace] as $location) {
             $location = $this->files->normalizePath($location);
-            foreach ($this->files->getFiles($location) as $filename)
-            {
+            foreach ($this->files->getFiles($location) as $filename) {
                 $foundEngine = false;
-                foreach ($this->config['engines'] as $engine => $options)
-                {
-                    if (in_array($this->files->extension($filename), $options['extensions']))
-                    {
+                foreach ($this->config['engines'] as $engine => $options) {
+                    if (in_array($this->files->extension($filename), $options['extensions'])) {
                         $foundEngine = $engine;
                         break;
                     }
                 }
 
-                if (empty($foundEngine))
-                {
+                if (empty($foundEngine)) {
                     //No engines found = not view
                     continue;
                 }
@@ -252,21 +243,16 @@ class ViewManager extends Singleton implements ViewProviderInterface
      */
     public function getFilename($namespace, $view, &$engine = null)
     {
-        if (!isset($this->namespaces[$namespace]))
-        {
+        if (!isset($this->namespaces[$namespace])) {
             throw new ViewException("Undefined view namespace '{$namespace}'.");
         }
 
         //This part better be cached one dat
-        foreach ($this->namespaces[$namespace] as $directory)
-        {
-            foreach ($this->config['engines'] as $engine => $options)
-            {
-                foreach ($options['extensions'] as $extension)
-                {
+        foreach ($this->namespaces[$namespace] as $directory) {
+            foreach ($this->config['engines'] as $engine => $options) {
+                foreach ($options['extensions'] as $extension) {
                     $candidate = $directory . FilesInterface::SEPARATOR . $view . '.' . $extension;
-                    if ($this->files->exists($candidate))
-                    {
+                    if ($this->files->exists($candidate)) {
                         return $this->files->normalizePath($candidate);
                     }
                 }
@@ -288,8 +274,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
     private function compiler($namespace, $view, &$engine = null)
     {
         $filename = $this->getFilename($namespace, $view, $engine);
-        if (empty($this->config['engines'][$engine]['compiler']))
-        {
+        if (empty($this->config['engines'][$engine]['compiler'])) {
             return null;
         }
 
@@ -313,8 +298,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
     private function viewClass($engine, $namespace, $view)
     {
         $path = $namespace . self::NS_SEPARATOR . $view;
-        if (isset($this->config['associations'][$path]))
-        {
+        if (isset($this->config['associations'][$path])) {
             return $this->config['associations'][$path];
         }
 
@@ -330,8 +314,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
     private function parsePath($path)
     {
         $namespace = static::DEFAULT_NAMESPACE;
-        if (strpos($path, self::NS_SEPARATOR) !== false)
-        {
+        if (strpos($path, self::NS_SEPARATOR) !== false) {
             return explode(self::NS_SEPARATOR, $path);
         }
 

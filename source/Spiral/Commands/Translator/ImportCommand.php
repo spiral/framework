@@ -54,8 +54,7 @@ class ImportCommand extends Command
         );
 
         $importer->open($this->argument('filename'));
-        if ($this->option('language') != 'auto')
-        {
+        if ($this->option('language') != 'auto') {
             $importer->setLanguage($this->option('language'));
         }
 

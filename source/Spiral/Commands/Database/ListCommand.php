@@ -9,10 +9,12 @@
 namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
-
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * List of every configured database, it's tables and count of records.
+ */
 class ListCommand extends Command
 {
     /**
@@ -21,79 +23,71 @@ class ListCommand extends Command
     const SKIP = '<comment>---</comment>';
 
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'db:list';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Get list of available databases, their tables and records count.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $arguments = [
         ['db', InputArgument::OPTIONAL, 'Database name.']
     ];
 
     /**
-     * Get list of databases, tables and connection status.
+     * Perform command.
      */
     public function perform()
     {
-        if ($this->argument('db'))
-        {
+        if ($this->argument('db')) {
             $databases = [$this->argument('db')];
-        }
-        else
-        {
+        } else {
             //Every available database
-            $databases = array_keys($this->dbal->getConfig()['databases']);
+            $databases = array_keys($this->dbal->config()['databases']);
         }
 
-        if (empty($databases))
-        {
+        if (empty($databases)) {
             $this->writeln("<fg=red>No databases found.</fg=red>");
 
             return;
         }
 
         $grid = $this->tableHelper([
-            'Name (ID):', 'Database:', 'Driver:', 'Prefix:', 'Status:', 'Tables:', 'Count Records:'
+            'Name (ID):',
+            'Database:',
+            'Driver:',
+            'Prefix:',
+            'Status:',
+            'Tables:',
+            'Count Records:'
         ]);
 
-        foreach ($databases as $database)
-        {
+        foreach ($databases as $database) {
             $database = $this->dbal->db($database);
-            $driver = $database->getDriver();
+            $driver = $database->driver();
 
             $header = [
                 $database->getName(),
-                $driver->getDatabaseName(),
-                $driver::NAME,
+                $driver->getSource(),
+                $driver->getType(),
                 $database->getPrefix() ?: self::SKIP
             ];
 
-            try
-            {
+            try {
                 $driver->connect();
-            }
-            catch (\Exception $exception)
-            {
+            } catch (\Exception $exception) {
                 $grid->addRow(array_merge($header, [
-                    "<fg=red>{$exception->getMessage()}</fg=red>", self::SKIP, self::SKIP
+                    "<fg=red>{$exception->getMessage()}</fg=red>",
+                    self::SKIP,
+                    self::SKIP
                 ]));
 
-                if ($database->getName() != end($databases))
-                {
+                if ($database->getName() != end($databases)) {
                     $grid->addRow(new TableSeparator());
                 }
 
@@ -101,15 +95,14 @@ class ListCommand extends Command
             }
 
             $header[] = "<info>connected</info>";
-            foreach ($database->getTables() as $table)
-            {
-                $grid->addRow(array_merge($header, [$table->getName(), number_format($table->count())]));
+            foreach ($database->getTables() as $table) {
+                $grid->addRow(array_merge($header,
+                    [$table->getName(), number_format($table->count())]));
                 $header = ["", "", "", "", ""];
             }
 
             $header[1] && $grid->addRow(array_merge($header, ["no tables", "no records"]));
-            if ($database->getName() != end($databases))
-            {
+            if ($database->getName() != end($databases)) {
                 $grid->addRow(new TableSeparator());
             }
         }

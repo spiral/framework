@@ -8,7 +8,7 @@
  */
 namespace Spiral\Cache\Stores;
 
-use Spiral\Cache\CacheManager;
+use Spiral\Cache\CacheProvider;
 use Spiral\Cache\CacheStore;
 use Spiral\Redis\RedisClient;
 use Spiral\Redis\RedisManager;
@@ -39,10 +39,10 @@ class RedisStore extends CacheStore
     /**
      * {@inheritdoc}
      *
-     * @param CacheManager $cache CacheManager component.
-     * @param RedisManager $redis RedisManager component.
+     * @param CacheProvider $cache CacheManager component.
+     * @param RedisManager  $redis RedisManager component.
      */
-    public function __construct(CacheManager $cache, RedisManager $redis)
+    public function __construct(CacheProvider $cache, RedisManager $redis)
     {
         parent::__construct($cache);
         $this->client = $redis->client($this->options['client']);
@@ -69,8 +69,7 @@ class RedisStore extends CacheStore
      */
     public function get($name)
     {
-        if (is_null($data = $this->client->get($this->prefix . $name)))
-        {
+        if (is_null($data = $this->client->get($this->prefix . $name))) {
             return null;
         }
 
@@ -94,10 +93,7 @@ class RedisStore extends CacheStore
      */
     public function forever($name, $data)
     {
-        $this->client->set(
-            $this->prefix . $name,
-            is_numeric($data) ? $data : serialize($data)
-        );
+        $this->client->set($this->prefix . $name, is_numeric($data) ? $data : serialize($data));
     }
 
     /**

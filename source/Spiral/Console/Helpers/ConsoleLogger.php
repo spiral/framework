@@ -46,13 +46,11 @@ class ConsoleLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = [])
     {
-        if ($this->levels[$level])
-        {
+        if ($this->levels[$level]) {
             $string = \Spiral\interpolate($message, $context);
 
             //Formatting
-            if (!empty($this->formats[$level]))
-            {
+            if (!empty($this->formats[$level])) {
                 $string = \Spiral\interpolate('<{format}>{string}</{format}', [
                     'string' => $string,
                     'format' => $this->formats[$level]

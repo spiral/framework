@@ -59,24 +59,20 @@ abstract class AbstractExporter extends Component implements ExporterInterface
      */
     public function load($language, $prefix = '')
     {
-        if (!isset($this->translator->config()['languages'][$language]))
-        {
+        if (!isset($this->translator->config()['languages'][$language])) {
             throw new ExporterException("Unable to export language '{$language}', no presets found.");
         }
 
         $this->language = $language;
         $this->bundles = $this->loadBundles($language, $prefix);
 
-        if ($this->language == $this->translator->config()['default'])
-        {
+        if ($this->language == $this->translator->config()['default']) {
             return $this;
         }
 
         $defaultBundles = $this->loadBundles($this->translator->config()['default'], $prefix);
-        foreach ($defaultBundles as $bundle => $data)
-        {
-            if (!isset($this->bundles[$bundle]))
-            {
+        foreach ($defaultBundles as $bundle => $data) {
+            if (!isset($this->bundles[$bundle])) {
                 $this->bundles[$bundle] = [];
             }
 
@@ -92,8 +88,7 @@ abstract class AbstractExporter extends Component implements ExporterInterface
      */
     public function export($filename)
     {
-        if (empty($this->language))
-        {
+        if (empty($this->language)) {
             throw new ExporterException("No language specified to be exported.");
         }
 
@@ -131,20 +126,16 @@ abstract class AbstractExporter extends Component implements ExporterInterface
         );
 
         $result = [];
-        foreach ($bundles as $filename)
-        {
-            $bundle = substr(basename($filename), 0, -1 * strlen($this->files->extension($filename)));
-            if (!empty($prefix) && stripos($bundle, $prefix) !== 0)
-            {
+        foreach ($bundles as $filename) {
+            $bundle = substr(basename($filename), 0,
+                -1 * strlen($this->files->extension($filename)));
+            if (!empty($prefix) && stripos($bundle, $prefix) !== 0) {
                 continue;
             }
 
-            try
-            {
+            try {
                 $result[$bundle] = (include $filename);
-            }
-            catch (\Exception $exception)
-            {
+            } catch (\Exception $exception) {
             }
         }
 

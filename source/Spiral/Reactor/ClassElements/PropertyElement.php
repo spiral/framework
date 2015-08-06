@@ -84,8 +84,7 @@ class PropertyElement extends AbstractElement
     public function setDefault($default, $defaultValue = null)
     {
         $this->defaultValue = null;
-        if ($this->default = (bool)$default)
-        {
+        if ($this->default = (bool)$default) {
             $this->defaultValue = $defaultValue;
         }
 
@@ -122,29 +121,24 @@ class PropertyElement extends AbstractElement
 
         $property = $this->access . ' ' . ($this->static ? 'static ' : '') . '$' . $this->getName();
 
-        if (!$this->isDefault())
-        {
+        if (!$this->isDefault()) {
             $result[] = $property . ';';
 
             return $this->join($result, $indentLevel);
         }
 
-        if (is_array($this->defaultValue))
-        {
+        if (is_array($this->defaultValue)) {
             $serializer = !empty($serializer) ? $serializer : new ArraySerializer();
             $value = explode("\n", $serializer->serialize($this->defaultValue, self::INDENT));
 
-            foreach ($value as &$line)
-            {
+            foreach ($value as &$line) {
                 $line = $this->indent($line, $indentLevel);
                 unset($line);
             }
 
             $value[0] = ltrim($value[0]);
             $property .= ' = ' . join("\n", $value);
-        }
-        else
-        {
+        } else {
             $property .= ' = ' . var_export($this->defaultValue, true);
         }
 
@@ -164,25 +158,19 @@ class PropertyElement extends AbstractElement
         $this->setComment($property->getDocComment());
         $this->static = $property->isStatic();
 
-        if ($property->isPrivate())
-        {
+        if ($property->isPrivate()) {
             $this->setAccess(self::ACCESS_PRIVATE);
-        }
-        elseif ($property->isProtected())
-        {
+        } elseif ($property->isProtected()) {
             $this->setAccess(self::ACCESS_PROTECTED);
         }
 
-        if (!$property->isDefault())
-        {
+        if (!$property->isDefault()) {
             return;
         }
 
         $parentDefaults = $property->getDeclaringClass()->getDefaultProperties();
-        foreach ($parentDefaults as $name => $defaultValue)
-        {
-            if ($name == $property->getName())
-            {
+        foreach ($parentDefaults as $name => $defaultValue) {
+            if ($name == $property->getName()) {
                 $this->setDefault(true, $defaultValue);
                 break;
             }

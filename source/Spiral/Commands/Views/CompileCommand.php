@@ -35,10 +35,8 @@ class CompileCommand extends Command
          * @var FormatterHelper $formatter
          */
         $formatter = $this->getHelper('formatter');
-        foreach ($this->views->getNamespaces() as $namespace => $directories)
-        {
-            if (empty($views = $this->views->getViews($namespace)))
-            {
+        foreach ($this->views->getNamespaces() as $namespace => $directories) {
+            if (empty($views = $this->views->getViews($namespace))) {
                 continue;
             }
 
@@ -46,8 +44,7 @@ class CompileCommand extends Command
                 "Compiling views in namespace '<comment>{$namespace}</comment>'."
             );
 
-            foreach ($views as $view => $engine)
-            {
+            foreach ($views as $view => $engine) {
                 $this->isVerbose() && $this->write($formatter->formatSection(
                     $namespace, $view . ", ", 'fg=cyan'
                 ));

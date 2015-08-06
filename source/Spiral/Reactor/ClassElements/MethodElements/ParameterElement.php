@@ -119,8 +119,7 @@ class ParameterElement
     public function setOptional($optional, $defaultValue = null)
     {
         $this->defaultValue = null;
-        if ($this->optional = $optional)
-        {
+        if ($this->optional = $optional) {
             $this->defaultValue = $defaultValue;
         }
 
@@ -151,24 +150,19 @@ class ParameterElement
     public function render()
     {
         $type = '';
-        if ($this->type)
-        {
+        if ($this->type) {
             $type = $this->type ? ($this->type == 'array' ? '' : '\\') . $this->type . " " : "";
         }
 
         $result = $type . ($this->pdb ? '&' : '') . "$" . $this->name;
 
-        if (!$this->optional)
-        {
+        if (!$this->optional) {
             return $result;
         }
 
-        if ($this->defaultValue === [])
-        {
+        if ($this->defaultValue === []) {
             $result .= ' = []';
-        }
-        else
-        {
+        } else {
             $result .= ' = ' . var_export($this->defaultValue, true);
         }
 

@@ -232,20 +232,16 @@ class RedisManager extends Singleton implements InjectorInterface
     public function client($client = null, array $config = [])
     {
         $client = !empty($client) ? $client : $this->config['default'];
-        if (isset($this->config['aliases'][$client]))
-        {
+        if (isset($this->config['aliases'][$client])) {
             $client = $this->config['aliases'][$client];
         }
 
-        if (isset($this->clients[$client]))
-        {
+        if (isset($this->clients[$client])) {
             return $this->clients[$client];
         }
 
-        if (empty($config))
-        {
-            if (!isset($this->config['clients'][$client]))
-            {
+        if (empty($config)) {
+            if (!isset($this->config['clients'][$client])) {
                 throw new RedisException(
                     "Unable to initiate redis client, no presets for '{$client}' found."
                 );

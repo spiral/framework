@@ -29,7 +29,7 @@ use Spiral\Http\HttpDispatcher;
  * @property \Spiral\Console\ConsoleDispatcher  $console
  * @property \Spiral\Http\HttpDispatcher        $http
  *
- * @property \Spiral\Cache\CacheManager         $cache
+ * @property \Spiral\Cache\CacheProvider        $cache
  * @property \Spiral\Http\Cookies\CookieManager $cookies
  * @property \Spiral\Encrypter\Encrypter        $encrypter
  * @property \Spiral\Http\InputManager          $input
@@ -41,6 +41,8 @@ use Spiral\Http\HttpDispatcher;
  *
  * @property \Spiral\Redis\RedisManager         $redis
  * @property \Spiral\Image\ImageManager         $image
+ *
+ * @property \Spiral\Database\DatabaseProvider  $dbal
  */
 class Core extends Container implements CoreInterface, ConfiguratorInterface, HippocampusInterface
 {
@@ -129,41 +131,32 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Core\ConfiguratorInterface'     => 'Spiral\Core\Core',
         'Spiral\Core\HippocampusInterface'      => 'Spiral\Core\Core',
         'Spiral\Core\CoreInterface'             => 'Spiral\Core\Core',
-
         //Instrumental bindings
         'Psr\Log\LoggerInterface'               => 'Spiral\Debug\Logger',
         'Spiral\Debug\SnapshotInterface'        => 'Spiral\Debug\Snapshot',
-
         'Spiral\Cache\StoreInterface'           => 'Spiral\Cache\CacheStore',
         'Spiral\Cache\CacheProviderInterface'   => 'Spiral\Cache\CacheProvider',
-
         'Spiral\Files\FilesInterface'           => 'Spiral\Files\FileManager',
         'Spiral\Views\ViewProviderInterface'    => 'Spiral\Views\ViewManager',
-
         'Spiral\Storage\StorageInterface'       => 'Spiral\Storage\StorageManager',
         'Spiral\Storage\BucketInterface'        => 'Spiral\Storage\Entities\StorageBucket',
-
         'Spiral\Session\StoreInterface'         => 'Spiral\Session\SessionStore',
-
         'Spiral\Encrypter\EncrypterInterface'   => 'Spiral\Encrypter\Encrypter',
         'Spiral\Tokenizer\TokenizerInterface'   => 'Spiral\Tokenizer\Tokenizer',
         'Spiral\Validation\ValidatorInterface'  => 'Spiral\Validation\Validator',
         'Spiral\Translator\TranslatorInterface' => 'Spiral\Translator\Translator',
-
         //Spiral aliases
         'core'                                  => 'Spiral\Core\Core',
         'loader'                                => 'Spiral\Core\Components\Loader',
         'modules'                               => 'Spiral\Modules\ModuleManager',
         'debugger'                              => 'Spiral\Debug\Debugger',
-
         //Dispatchers
         'console'                               => 'Spiral\Console\ConsoleDispatcher',
         'http'                                  => 'Spiral\Http\HttpDispatcher',
-
         //Component aliases
-        'cache'                                 => 'Spiral\Cache\CacheManager',
+        'cache'                                 => 'Spiral\Cache\CacheProvider',
         'cookies'                               => 'Spiral\Http\Cookies\CookieManager',
-        'dbal'                                  => 'Spiral\Database\DatabaseManager',
+        'dbal'                                  => 'Spiral\Database\DatabaseProvider',
         'encrypter'                             => 'Spiral\Encrypter\Encrypter',
         'input'                                 => 'Spiral\Http\InputManager',
         'files'                                 => 'Spiral\Files\FileManager',
@@ -174,7 +167,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'tokenizer'                             => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                  => 'Spiral\Translator\Translator',
         'views'                                 => 'Spiral\Views\ViewManager',
-
         'redis'                                 => 'Spiral\Redis\RedisManager',
         'image'                                 => 'Spiral\Image\ImageManager'
     ];
@@ -209,8 +201,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
                 'cache'   => $directories['application'] . '/runtime/cache'
             ];
 
-        if (empty($this->environment))
-        {
+        if (empty($this->environment)) {
             //This is spiral shortcut to set environment, can be redefined by custom application class.
             $filename = $this->directory('runtime') . '/environment.php';
             $this->setEnvironment(file_exists($filename) ? (require $filename) : self::DEVELOPMENT);
@@ -228,12 +219,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function setTimezone($timezone)
     {
-        try
-        {
+        try {
             date_default_timezone_set($timezone);
-        }
-        catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             throw new CoreException($exception->getMessage(), $exception->getCode(), $exception);
         }
 
@@ -262,8 +250,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     public function setEnvironment($environment, $regenerateID = true)
     {
         $this->environment = $environment;
-        if ($regenerateID)
-        {
+        if ($regenerateID) {
             $this->applicationID = abs(crc32($this->directory('root') . $this->environment));
         }
 
@@ -330,8 +317,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function bootstrap()
     {
-        if (file_exists($this->directory('application') . '/' . static::BOOTSTRAP))
-        {
+        if (file_exists($this->directory('application') . '/' . static::BOOTSTRAP)) {
             //Old Fashion, btw there is very tasty cocktail under same name
             require($this->directory('application') . '/' . static::BOOTSTRAP);
         }
@@ -359,10 +345,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         $cached = str_replace(['/', '\\'], '-', 'config-' . $section);
 
         //Cached configuration
-        if (empty($data = $this->loadData($cached, null, $cachedFilename)))
-        {
-            if (!file_exists($filename))
-            {
+        if (empty($data = $this->loadData($cached, null, $cachedFilename))) {
+            if (!file_exists($filename)) {
                 throw new ConfiguratorException(
                     "Unable to load '{$section}' configuration, file not found."
                 );
@@ -376,8 +360,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
                 $this->directories['config'] . '/' . $this->environment
             );
 
-            if (file_exists($environment))
-            {
+            if (file_exists($environment)) {
                 $data = array_merge($data, (require $environment));
             }
 
@@ -386,13 +369,11 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             return $data;
         }
 
-        if (!file_exists($filename))
-        {
+        if (!file_exists($filename)) {
             throw new CoreException("Unable to load '{$section}' configuration, file not found.");
         }
 
-        if (filemtime($cachedFilename) < filemtime($filename))
-        {
+        if (filemtime($cachedFilename) < filemtime($filename)) {
             //We can afford skipping FilesInterface here
             file_exists($cachedFilename) && unlink($cachedFilename);
 
@@ -403,7 +384,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         return $data;
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -411,17 +391,13 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function loadData($name, $location = null, &$filename = null)
     {
-        if (!file_exists($filename = $this->createFilename($name, $location)))
-        {
+        if (!file_exists($filename = $this->createFilename($name, $location))) {
             return null;
         }
 
-        try
-        {
+        try {
             return (require $filename);
-        }
-        catch (\ErrorException $exception)
-        {
+        } catch (\ErrorException $exception) {
             return null;
         }
     }
@@ -445,8 +421,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function callAction($controller, $action = '', array $parameters = [])
     {
-        if (!class_exists($controller))
-        {
+        if (!class_exists($controller)) {
             throw new ControllerException(
                 "No such controller '{$controller}' found.",
                 ControllerException::NOT_FOUND
@@ -455,8 +430,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
 
         //Initiating controller with all required dependencies
         $controller = $this->get($controller);
-        if (!$controller instanceof ControllerInterface)
-        {
+        if (!$controller instanceof ControllerInterface) {
             throw new ControllerException(
                 "No such controller '{$controller}' found.",
                 ControllerException::NOT_FOUND
@@ -491,8 +465,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         restore_error_handler();
         restore_exception_handler();
 
-        if ($exception instanceof ClientException)
-        {
+        if ($exception instanceof ClientException) {
             //Client driven error, no need to create snapshot
             $this->dispatcher->handleException($exception);
 
@@ -516,8 +489,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function handleShutdown()
     {
-        if ($error = error_get_last())
-        {
+        if ($error = error_get_last()) {
             $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
         }
     }
@@ -546,8 +518,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     {
         $name = str_replace(['/', '\\'], '-', $name);
 
-        if (!empty($location))
-        {
+        if (!empty($location)) {
             return $location . '/' . $name . '.' . static::EXTENSION;
         }
 
@@ -593,8 +564,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         set_exception_handler([$core, 'handleException']);
         register_shutdown_function([$core, 'handleShutdown']);
 
-        foreach ($core->autoload as $module)
-        {
+        foreach ($core->autoload as $module) {
             $core->get($module);
         }
 

@@ -85,12 +85,9 @@ class Indexer extends Component
      */
     public function indexDirectory($directory = null, array $excludes = [])
     {
-        foreach ($this->files->getFiles($directory, 'php') as $filename)
-        {
-            foreach ($excludes as $exclude)
-            {
-                if (strpos($filename, $exclude) !== false)
-                {
+        foreach ($this->files->getFiles($directory, 'php') as $filename) {
+            foreach ($excludes as $exclude) {
+                if (strpos($filename, $exclude) !== false) {
                     continue 2;
                 }
             }
@@ -115,15 +112,13 @@ class Indexer extends Component
     public function indexClasses($namespace = '')
     {
         $classes = $this->tokenizer->getClasses(TranslatorTrait::class, $namespace);
-        foreach ($classes as $class => $location)
-        {
+        foreach ($classes as $class => $location) {
             $reflection = new \ReflectionClass($class);
 
             //We have to merge both local and parent class messages
             $recursively = $reflection->getConstant('INHERIT_TRANSLATIONS');
 
-            foreach ($this->fetchStrings($reflection, $recursively) as $string)
-            {
+            foreach ($this->fetchStrings($reflection, $recursively) as $string) {
                 $this->translator->translate($reflection->getName(), $string);
 
                 $this->register(
@@ -155,8 +150,7 @@ class Indexer extends Component
     public function countStrings()
     {
         $result = 0;
-        foreach ($this->bundles as $bundle)
-        {
+        foreach ($this->bundles as $bundle) {
             $result += count($bundle);
         }
 
@@ -171,19 +165,15 @@ class Indexer extends Component
      */
     private function indexCalls(array $calls)
     {
-        foreach ($calls as $call)
-        {
+        foreach ($calls as $call) {
             $firstArgument = $call->argument(0);
-            if (empty($firstArgument) || $firstArgument->getType() != ReflectionArgument::STRING)
-            {
+            if (empty($firstArgument) || $firstArgument->getType() != ReflectionArgument::STRING) {
                 //Every translation function require first argument to be a string, not expression
                 continue;
             }
 
-            if (!empty($call->getClass()) && $call->getClass() != I18n::class)
-            {
-                if ($call->getName() == 'translate')
-                {
+            if (!empty($call->getClass()) && $call->getClass() != I18n::class) {
+                if ($call->getName() == 'translate') {
                     //Can be part of TranslatorTrait
                     $this->indexTrait($call);
                 }
@@ -192,8 +182,7 @@ class Indexer extends Component
                 continue;
             }
 
-            if ($call->getName() == 'p' || $call->getName() == 'pluralize')
-            {
+            if ($call->getName() == 'p' || $call->getName() == 'pluralize') {
                 $this->translator->pluralize($firstArgument->stringValue(), 0);
 
                 //Registering plural usage
@@ -205,9 +194,9 @@ class Indexer extends Component
                 );
             }
 
-            if ($call->getName() == 'l')
-            {
-                $this->translator->translate(Translator::DEFAULT_BUNDLE, $firstArgument->stringValue());
+            if ($call->getName() == 'l') {
+                $this->translator->translate(Translator::DEFAULT_BUNDLE,
+                    $firstArgument->stringValue());
 
                 //Translate using default bundle
                 $this->register(
@@ -218,11 +207,9 @@ class Indexer extends Component
                 );
             }
 
-            if ($call->getName() == 'translate')
-            {
+            if ($call->getName() == 'translate') {
                 $secondArgument = $call->argument(1);
-                if (empty($secondArgument) || $secondArgument->getType() != ReflectionArgument::STRING)
-                {
+                if (empty($secondArgument) || $secondArgument->getType() != ReflectionArgument::STRING) {
                     //We can only use static strings
                     continue;
                 }
@@ -251,8 +238,7 @@ class Indexer extends Component
      */
     protected function indexTrait(ReflectionCall $call)
     {
-        if (!in_array(TranslatorTrait::class, $this->tokenizer->getTraits($call->getClass())))
-        {
+        if (!in_array(TranslatorTrait::class, $this->tokenizer->getTraits($call->getClass()))) {
             return;
         }
 
@@ -261,8 +247,7 @@ class Indexer extends Component
         if (
             substr($string, 0, 2) == Translator::I18N_PREFIX
             || substr($string, -2) == Translator::I18N_POSTFIX
-        )
-        {
+        ) {
             //This string was defined in class attributes
             $string = substr($string, 2, -2);
         }
@@ -288,29 +273,24 @@ class Indexer extends Component
     private function fetchStrings(\ReflectionClass $reflection, $recursively = false)
     {
         $defaultProperties = $reflection->getDefaultProperties();
-        foreach ($reflection->getProperties() as $property)
-        {
-            if (strpos($property->getDocComment(), "@do-not-index"))
-            {
+        foreach ($reflection->getProperties() as $property) {
+            if (strpos($property->getDocComment(), "@do-not-index")) {
                 unset($defaultProperties[$property->getName()]);
             }
         }
 
         $strings = [];
-        array_walk_recursive($defaultProperties, function ($value) use (&$strings)
-        {
+        array_walk_recursive($defaultProperties, function ($value) use (&$strings) {
             if (
                 is_string($value)
                 && substr($value, 0, 2) == Translator::I18N_PREFIX
                 && substr($value, -2) == Translator::I18N_POSTFIX
-            )
-            {
+            ) {
                 $strings[] = substr($value, 2, -2);
             }
         });
 
-        if ($recursively && $reflection->getParentClass())
-        {
+        if ($recursively && $reflection->getParentClass()) {
             $strings = array_merge($strings, $this->fetchStrings(
                 $reflection->getParentClass(), true)
             );
@@ -333,14 +313,12 @@ class Indexer extends Component
     {
         $payload = compact('filename', 'line', 'bundle', 'string', 'class');
 
-        if ($class)
-        {
+        if ($class) {
             $this->logger()->info("'{string}' found in class '{class}'.", $payload);
-        }
-        else
-        {
+        } else {
             $this->logger()->info(
-                "'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.", $payload
+                "'{string}' found in bundle '{bundle}' used in '{filename}' at line {line}.",
+                $payload
             );
         }
 

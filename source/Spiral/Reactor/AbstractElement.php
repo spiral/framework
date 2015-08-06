@@ -70,8 +70,7 @@ abstract class AbstractElement
      */
     public function setComment($docComment)
     {
-        if (is_array($docComment))
-        {
+        if (is_array($docComment)) {
             $this->docComment = $docComment;
 
             return $this;
@@ -79,12 +78,10 @@ abstract class AbstractElement
 
         $this->docComment = [];
         $docComment = explode("\n", preg_replace('/[\n\r]+/', "\n", $docComment));
-        foreach ($docComment as $line)
-        {
+        foreach ($docComment as $line) {
             //Cutting start spaces
             $line = trim(preg_replace('/[ \*]+/si', ' ', $line));
-            if ($line != '/')
-            {
+            if ($line != '/') {
                 $this->docComment[] = $line;
             }
         }
@@ -101,8 +98,7 @@ abstract class AbstractElement
      */
     public function replaceComments($search, $replace)
     {
-        foreach ($this->docComment as &$comment)
-        {
+        foreach ($this->docComment as &$comment) {
             $comment = str_replace($search, $replace, $comment);
             unset($comment);
         }
@@ -118,8 +114,7 @@ abstract class AbstractElement
      */
     public function batchReplace(array $replaces)
     {
-        foreach ($replaces as $target => $replace)
-        {
+        foreach ($replaces as $target => $replace) {
             $this->replaceComments($target, $replaces);
         }
 
@@ -142,14 +137,12 @@ abstract class AbstractElement
      */
     protected function renderComment($indentLevel = 0)
     {
-        if (!$this->docComment)
-        {
+        if (!$this->docComment) {
             return "";
         }
 
         $result = ["", "/**"];
-        foreach ($this->docComment as $comment)
-        {
+        foreach ($this->docComment as $comment) {
             $result[] = " * " . $comment;
         }
 
@@ -179,8 +172,7 @@ abstract class AbstractElement
      */
     protected function join(array $lines, $indentLevel = 0)
     {
-        foreach ($lines as &$line)
-        {
+        foreach ($lines as &$line) {
             $line = $this->indent($line, $indentLevel);
             unset($line);
         }

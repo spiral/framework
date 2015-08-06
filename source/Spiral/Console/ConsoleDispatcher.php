@@ -79,8 +79,7 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
         HippocampusInterface $memory,
         TokenizerInterface $tokenizer,
         Loader $loader
-    )
-    {
+    ) {
         $this->container = $container;
         $this->memory = $memory;
         $this->tokenizer = $tokenizer;
@@ -88,8 +87,7 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
 
         //Trying to load list of commands from memory cache
         $this->commands = $memory->loadData('commands');
-        if (!is_array($this->commands))
-        {
+        if (!is_array($this->commands)) {
             $this->commands = [];
         }
     }
@@ -101,8 +99,7 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      */
     public function application()
     {
-        if (!empty($this->application))
-        {
+        if (!empty($this->application)) {
             return $this->application;
         }
 
@@ -110,18 +107,13 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
 
         //Commands lookup
         empty($this->commands) && $this->findCommands();
-        foreach ($this->commands as $command)
-        {
-            try
-            {
+        foreach ($this->commands as $command) {
+            try {
                 $command = $this->container->get($command);
-                if (method_exists($command, 'isAvailable') && !$command->isAvailable())
-                {
+                if (method_exists($command, 'isAvailable') && !$command->isAvailable()) {
                     continue;
                 }
-            }
-            catch (\Exception $exception)
-            {
+            } catch (\Exception $exception) {
                 continue;
             }
 
@@ -176,10 +168,8 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     public function findCommands()
     {
         $this->commands = [];
-        foreach ($this->tokenizer->getClasses(SymfonyCommand::class, null, 'Command') as $class)
-        {
-            if ($class['abstract'])
-            {
+        foreach ($this->tokenizer->getClasses(SymfonyCommand::class, null, 'Command') as $class) {
+            if ($class['abstract']) {
                 continue;
             }
 

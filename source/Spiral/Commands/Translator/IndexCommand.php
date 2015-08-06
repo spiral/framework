@@ -38,7 +38,12 @@ class IndexCommand extends Command
      * {@inheritdoc}
      */
     protected $options = [
-        ['directory', 'd', InputOption::VALUE_OPTIONAL, 'Directory to scan for translate function usages.']
+        [
+            'directory',
+            'd',
+            InputOption::VALUE_OPTIONAL,
+            'Directory to scan for translate function usages.'
+        ]
     ];
 
     /**
@@ -51,14 +56,10 @@ class IndexCommand extends Command
         $this->writeln("Scanning translate function usages...");
         $this->isVerbose() && $indexer->events()->listen('string', $this->stringListener());
 
-        if ($this->option('directory'))
-        {
+        if ($this->option('directory')) {
             $indexer->indexDirectory($this->option('directory'));
-        }
-        else
-        {
-            foreach ($this->tokenizer->config()['directories'] as $directory)
-            {
+        } else {
+            foreach ($this->tokenizer->config()['directories'] as $directory) {
                 $indexer->indexDirectory($directory, $this->tokenizer->config()['exclude']);
             }
         }
@@ -79,18 +80,17 @@ class IndexCommand extends Command
      */
     private function stringListener()
     {
-        return function (ObjectEvent $event)
-        {
+        return function (ObjectEvent $event) {
             $this->writeln("<fg=magenta>{$event->context()['string']}</fg=magenta>");
 
-            if ($event->context()['class'])
-            {
+            if ($event->context()['class']) {
                 $this->writeln("In class <comment>{$event->context()['class']}</comment>");
 
                 return;
             }
 
-            $filename = $this->files->relativePath($event->context()['filename'], directory('root'));
+            $filename = $this->files->relativePath($event->context()['filename'],
+                directory('root'));
             $this->writeln(
                 "In <comment>{$filename}</comment> at line <comment>{$event->context()['line']}</comment>"
             );

@@ -61,10 +61,8 @@ class ServerCommand extends Command
             $this->option('timeout')
         );
 
-        $process->run(function ($type, $data)
-        {
-            if ($type != Process::ERR)
-            {
+        $process->run(function ($type, $data) {
+            if ($type != Process::ERR) {
                 //First character contains request type, second is space
                 ($data[0] == 'S' || $this->isVerbose()) && $this->writeln(substr($data, 2));
             }

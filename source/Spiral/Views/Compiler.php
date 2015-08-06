@@ -89,8 +89,13 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
     /**
      * {@inheritdoc}
      */
-    public function __construct(ViewManager $views, FilesInterface $files, $namespace, $view, $filename)
-    {
+    public function __construct(
+        ViewManager $views,
+        FilesInterface $files,
+        $namespace,
+        $view,
+        $filename
+    ) {
         //Our configuration is stored in parent ViewManager config
         $this->config = $views->config()['compiler'];
         $this->config['cache'] = $views->config()['cache'];
@@ -135,8 +140,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
     public function compile()
     {
         $source = $this->getSource();
-        foreach ($this->getProcessors() as $processor)
-        {
+        foreach ($this->getProcessors() as $processor) {
             $reflection = new \ReflectionClass($processor);
 
             $context = $this->namespace . ViewProviderInterface::NS_SEPARATOR . $this->view;
@@ -154,8 +158,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
      */
     public function viewFilename()
     {
-        if (!empty($this->viewFilename))
-        {
+        if (!empty($this->viewFilename)) {
             return $this->viewFilename;
         }
 
@@ -176,13 +179,11 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
      */
     public function isCompiled()
     {
-        if (!$this->config['cache']['enabled'])
-        {
+        if (!$this->config['cache']['enabled']) {
             return false;
         }
 
-        if (!$this->files->exists($viewFilename = $this->viewFilename()))
-        {
+        if (!$this->files->exists($viewFilename = $this->viewFilename())) {
             return false;
         }
 
@@ -207,17 +208,15 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
      */
     public function getProcessors()
     {
-        if (!empty($this->processors))
-        {
+        if (!empty($this->processors)) {
             return $this->processors;
         }
 
-        foreach ($this->config['processors'] as $processor => $options)
-        {
+        foreach ($this->config['processors'] as $processor => $options) {
             $this->processors[] = $this->container->get($processor, [
-                'views'    => $this->views,
+                'views' => $this->views,
                 'compiler' => $this,
-                'options'  => $options
+                'options' => $options
             ]);
         }
 

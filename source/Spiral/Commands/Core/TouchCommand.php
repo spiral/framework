@@ -31,8 +31,7 @@ class TouchCommand extends Command
      */
     public function perform()
     {
-        foreach ($this->files->getFiles(directory('config'), Core::EXTENSION) as $filename)
-        {
+        foreach ($this->files->getFiles(directory('config'), Core::EXTENSION) as $filename) {
             $this->files->touch($filename);
         }
 

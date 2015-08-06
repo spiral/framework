@@ -59,8 +59,7 @@ class NamespaceElement extends AbstractElement
      */
     public function addUse($class)
     {
-        if (array_search($class, $this->uses) === false)
-        {
+        if (array_search($class, $this->uses) === false) {
             $this->uses[] = $class;
         }
 
@@ -84,24 +83,22 @@ class NamespaceElement extends AbstractElement
     {
         $result = [$this->renderComment($indentLevel)];
 
-        if (!empty($this->getName()))
-        {
+        if (!empty($this->getName())) {
             $result[] = 'namespace ' . trim($this->getName(), '\\');
             $result[] = "{";
         }
 
-        foreach ($this->uses as $class)
-        {
-            $result[] = $this->indent('use ' . $class . ';', $indentLevel + !empty($this->getName()) ? 1 : 0);
+        foreach ($this->uses as $class) {
+            $result[] = $this->indent('use ' . $class . ';',
+                $indentLevel + !empty($this->getName()) ? 1 : 0);
         }
 
-        foreach ($this->classes as $class)
-        {
-            $result[] = $class->render($indentLevel + !empty($this->getName()) ? 1 : 0, $serializer);
+        foreach ($this->classes as $class) {
+            $result[] = $class->render($indentLevel + !empty($this->getName()) ? 1 : 0,
+                $serializer);
         }
 
-        if (!empty($this->getName()))
-        {
+        if (!empty($this->getName())) {
             $result[] = '}';
         }
 

@@ -41,8 +41,7 @@ class ResetCommand extends Command
         $this->isVerbose() && $this->writeln("<info>Clearing view cache:</info>");
 
         $cachedViews = $this->files->getFiles($this->views->config()['cache']['directory']);
-        foreach ($cachedViews as $filename)
-        {
+        foreach ($cachedViews as $filename) {
             !$this->option('emulate') && $this->files->delete($filename);
             $this->isVerbose() && $this->writeln($this->files->relativePath(
                 $filename, directory('cache')

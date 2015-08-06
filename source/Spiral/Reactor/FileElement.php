@@ -71,20 +71,17 @@ class FileElement extends NamespaceElement
     {
         $result = [self::PHP_OPEN, trim($this->renderComment($indentLevel))];
 
-        if (!empty($this->getName()))
-        {
+        if (!empty($this->getName())) {
             $result[] = 'namespace ' . $this->getName() . ';';
         }
 
         //Uses
-        foreach ($this->uses as $class)
-        {
+        foreach ($this->uses as $class) {
             $result[] = $this->indent('use ' . $class . ';', $indentLevel);
         }
 
         //Classes
-        foreach ($this->elements as $element)
-        {
+        foreach ($this->elements as $element) {
             $result[] = $element->render($indentLevel, $serializer);
         }
 
@@ -105,8 +102,7 @@ class FileElement extends NamespaceElement
         $mode = FilesInterface::RUNTIME,
         $ensureLocation = false,
         ArraySerializer $exporter = null
-    )
-    {
+    ) {
         return $this->files->write($filename, $this->render(0, $exporter), $mode, $ensureLocation);
     }
 }

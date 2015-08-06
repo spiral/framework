@@ -63,12 +63,15 @@ class AskHelper extends Component
     private $hiddenFallback = null;
 
     /**
-     * @param QuestionHelper  $helper Parent command.
-     * @param InputInterface  $input  An InputInterface instance
+     * @param QuestionHelper $helper  Parent command.
+     * @param InputInterface $input   An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
-    public function __construct(QuestionHelper $helper, InputInterface $input, OutputInterface $output)
-    {
+    public function __construct(
+        QuestionHelper $helper,
+        InputInterface $input,
+        OutputInterface $output
+    ) {
         $this->helper = $helper;
         $this->input = $input;
         $this->output = $output;
@@ -153,8 +156,7 @@ class AskHelper extends Component
     {
         $question->setMaxAttempts($this->maxAttempts);
 
-        if ($this->hidden)
-        {
+        if ($this->hidden) {
             $question->setHidden($this->hidden)->setHiddenFallback($this->hiddenFallback);
         }
 

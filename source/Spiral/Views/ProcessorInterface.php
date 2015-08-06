@@ -6,11 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Views\Compiler;
+namespace Spiral\Views;
 
-use Spiral\Views\Compiler;
 use Spiral\Views\Exceptions\CompilerException;
-use Spiral\Views\ViewManager;
 
 /**
  * View processors used to prepare/compile view source with specific set of operations. Generally

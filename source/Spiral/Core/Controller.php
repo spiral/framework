@@ -25,7 +25,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  * @property \Spiral\Console\ConsoleDispatcher  $console
  * @property \Spiral\Http\HttpDispatcher        $http
  *
- * @property \Spiral\Cache\CacheManager         $cache
+ * @property \Spiral\Cache\CacheProvider        $cache
  * @property \Spiral\Http\Cookies\CookieManager $cookies
  * @property \Spiral\Encrypter\Encrypter        $encrypter
  * @property \Spiral\Http\InputManager          $input
@@ -37,6 +37,8 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  *
  * @property \Spiral\Redis\RedisManager         $redis
  * @property \Spiral\Image\ImageManager         $image
+ *
+ * @property \Spiral\Database\DatabaseProvider  $dbal
  */
 abstract class Controller extends Component implements ControllerInterface
 {
@@ -81,8 +83,7 @@ abstract class Controller extends Component implements ControllerInterface
         //Action should include prefix and be always specified
         $action = static::ACTION_PREFIX . (!empty($action) ? $action : $this->defaultAction);
 
-        if (!method_exists($this, $action))
-        {
+        if (!method_exists($this, $action)) {
             throw new ControllerException(
                 "No such action '{$action}'.",
                 ControllerException::BAD_ACTION
@@ -96,8 +97,7 @@ abstract class Controller extends Component implements ControllerInterface
             || !$reflection->isPublic()
             || !$reflection->isUserDefined()
             || $reflection->getDeclaringClass()->getName() == __CLASS__
-        )
-        {
+        ) {
             throw new ControllerException(
                 "Action '{$action}' can not be executed.",
                 ControllerException::BAD_ACTION
@@ -107,21 +107,17 @@ abstract class Controller extends Component implements ControllerInterface
         $this->container = $container;
         $this->parameters = $parameters;
 
-        try
-        {
+        try {
             //Getting set of arguments should be sent to requested method
             $arguments = $this->container->resolveArguments($reflection, $parameters);
-        }
-        catch (ArgumentException $exception)
-        {
+        } catch (ArgumentException $exception) {
             throw new ControllerException(
                 "Missing/invalid parameter '{$exception->getParameter()->name}'.",
                 ControllerException::BAD_ARGUMENT
             );
         }
 
-        if (($result = $this->preAction($reflection, $arguments)) !== null)
-        {
+        if (($result = $this->preAction($reflection, $arguments)) !== null) {
             //Got filtered.
             return $result;
         }

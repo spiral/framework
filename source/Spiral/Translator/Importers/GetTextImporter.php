@@ -21,14 +21,11 @@ class GetTextImporter extends AbstractImporter
         $plurals = false;
         $buffer = '';
 
-        foreach (explode("\n", $source) as $line)
-        {
-            if (strpos($line, '"') === 0)
-            {
+        foreach (explode("\n", $source) as $line) {
+            if (strpos($line, '"') === 0) {
                 //Meta information
                 $line = substr($line, 1, -1);
-                if (strpos($line, 'Language-Id:') === 0)
-                {
+                if (strpos($line, 'Language-Id:') === 0) {
                     //Language is a 2 characters string identifier
                     $this->setLanguage(substr($line, 13, 2));
                 }
@@ -36,23 +33,19 @@ class GetTextImporter extends AbstractImporter
                 continue;
             }
 
-            if (preg_match('/\#: (.*)/', $line, $matches))
-            {
+            if (preg_match('/\#: (.*)/', $line, $matches)) {
                 //Namespace definition
                 $bundle = $matches[1];
                 continue;
             }
 
-            if (substr($line, 0, 12) == 'msgid_plural')
-            {
+            if (substr($line, 0, 12) == 'msgid_plural') {
                 $plurals = true;
                 continue;
             }
 
-            if (substr($line, 0, 1) == '#' || !trim($line))
-            {
-                if (!empty($token) && !empty($bundle))
-                {
+            if (substr($line, 0, 1) == '#' || !trim($line)) {
+                if (!empty($token) && !empty($bundle)) {
                     //Previously read line
                     $this->bundles[$bundle][$this->normalize($token)] = is_array($buffer)
                         ? $buffer
@@ -66,25 +59,19 @@ class GetTextImporter extends AbstractImporter
                 continue;
             }
 
-            if (substr($line, 0, 5) == 'msgid')
-            {
+            if (substr($line, 0, 5) == 'msgid') {
                 //New token
                 $buffer = $this->unescape(substr($line, 6));
                 continue;
             }
 
-            if (substr($line, 0, 6) == 'msgstr')
-            {
-                if (!$plurals)
-                {
+            if (substr($line, 0, 6) == 'msgstr') {
+                if (!$plurals) {
                     //Leaving token, message is here
                     $token = $buffer;
                     $buffer = $this->unescape(substr($line, 7));
-                }
-                else
-                {
-                    if (!is_array($buffer))
-                    {
+                } else {
+                    if (!is_array($buffer)) {
                         $token = $buffer;
                         $buffer = [];
                     }
@@ -97,19 +84,15 @@ class GetTextImporter extends AbstractImporter
             }
 
             //Multiple lines
-            if (is_array($buffer))
-            {
+            if (is_array($buffer)) {
                 $buffer[count($buffer) - 1] .= $this->unescape($line);
-            }
-            else
-            {
+            } else {
                 $buffer .= $this->unescape($line);
             }
         }
 
         //Last line
-        if (!empty($bundle) && !empty($token))
-        {
+        if (!empty($bundle) && !empty($token)) {
             $this->bundles[$bundle][$this->normalize($token)] = is_array($buffer)
                 ? $buffer
                 : str_replace('\n', "\n", $buffer);
@@ -136,8 +119,7 @@ class GetTextImporter extends AbstractImporter
      */
     protected function unescape($string)
     {
-        if (substr($string, 0, 1) == '"')
-        {
+        if (substr($string, 0, 1) == '"') {
             $string = substr($string, 1, -1);
         }
 

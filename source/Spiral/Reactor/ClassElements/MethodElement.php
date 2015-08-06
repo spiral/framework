@@ -86,13 +86,13 @@ class MethodElement extends AbstractElement
      */
     public function parameter($name, $type = '')
     {
-        if (!isset($this->parameters[$name]))
-        {
+        if (!isset($this->parameters[$name])) {
             $this->parameters[$name] = new ParameterElement($name);
         }
 
-        if (!empty($type) && !in_array($docComment = "@param {type} \${$name}", $this->docComment))
-        {
+        if (!empty($type) && !in_array($docComment = "@param {type} \${$name}",
+                $this->docComment)
+        ) {
             $this->docComment[] = $docComment;
         }
 
@@ -132,8 +132,7 @@ class MethodElement extends AbstractElement
      */
     public function setSource($source)
     {
-        if (is_array($source))
-        {
+        if (is_array($source)) {
             $this->source = $source;
 
             return $this;
@@ -142,19 +141,16 @@ class MethodElement extends AbstractElement
         $lines = explode("\n", preg_replace('/[\n\r]+/', "\n", $source));
         $indentLevel = 0;
 
-        foreach ($lines as $line)
-        {
+        foreach ($lines as $line) {
             //Cutting start spaces
             $line = trim($line);
 
-            if (strpos($line, '}') !== false)
-            {
+            if (strpos($line, '}') !== false) {
                 $indentLevel--;
             }
 
             $this->source[] = $this->indent($line, $indentLevel);
-            if (strpos($line, '{') !== false)
-            {
+            if (strpos($line, '{') !== false) {
                 $indentLevel++;
             }
         }
@@ -176,8 +172,7 @@ class MethodElement extends AbstractElement
     public function replaceComments($search, $replace)
     {
         parent::replaceComments($search, $replace);
-        foreach ($this->parameters as $parameter)
-        {
+        foreach ($this->parameters as $parameter) {
             $parameter->setType(str_replace($search, $replace, $parameter->getType()));
         }
 
@@ -197,8 +192,7 @@ class MethodElement extends AbstractElement
 
         //Parameters
         $parameters = [];
-        foreach ($this->parameters as $parameter)
-        {
+        foreach ($this->parameters as $parameter) {
             $parameters[] = $parameter->render();
         }
 
@@ -209,15 +203,12 @@ class MethodElement extends AbstractElement
         $result[] = '{';
 
         $beginning = true;
-        foreach ($this->source as $line)
-        {
-            if (trim($line))
-            {
+        foreach ($this->source as $line) {
+            if (trim($line)) {
                 $beginning = false;
             }
 
-            if ($beginning && !trim($line))
-            {
+            if ($beginning && !trim($line)) {
                 //Common problem with console creators, they will add blank line at top for code
                 continue;
             }
@@ -240,20 +231,15 @@ class MethodElement extends AbstractElement
         $this->setComment($method->getDocComment());
 
         $this->static = $method->isStatic();
-        if ($method->isPrivate())
-        {
+        if ($method->isPrivate()) {
             $this->setAccess(self::ACCESS_PRIVATE);
-        }
-        elseif ($method->isProtected())
-        {
+        } elseif ($method->isProtected()) {
             $this->setAccess(self::ACCESS_PROTECTED);
         }
 
-        foreach ($method->getParameters() as $reflection)
-        {
+        foreach ($method->getParameters() as $reflection) {
             $parameter = $this->parameter($reflection->getName());
-            if ($reflection->isOptional())
-            {
+            if ($reflection->isOptional()) {
                 $parameter->setOptional(true, $reflection->getDefaultValue());
             }
 

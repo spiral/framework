@@ -34,30 +34,23 @@ class ArraySerializer
 
         $result = [];
         $keyLength = 0;
-        foreach ($array as $name => $value)
-        {
+        foreach ($array as $name => $value) {
             $keyLength = max(strlen(var_export($name, true)), $keyLength);
         }
 
-        foreach ($array as $name => $value)
-        {
-            if ($associated)
-            {
+        foreach ($array as $name => $value) {
+            if ($associated) {
                 $name = str_pad(var_export($name, true), $keyLength, ' ', STR_PAD_RIGHT) . " => ";
-            }
-            else
-            {
+            } else {
                 $name = "";
             }
 
-            if (!is_array($value))
-            {
+            if (!is_array($value)) {
                 $result[] = $this->packValue($name, $value);
                 continue;
             }
 
-            if ($value == [])
-            {
+            if ($value == []) {
                 $result[] = $name . "[]";
                 continue;
             }
@@ -67,12 +60,9 @@ class ArraySerializer
                 . "[{$subIndent}" . $this->serialize($value, $indent, $level + 1) . "{$keyIndent}]";
         }
 
-        if ($level !== 0)
-        {
+        if ($level !== 0) {
             return $result ? join(",$keyIndent", $result) : "";
-        }
-        else
-        {
+        } else {
             return "[{$keyIndent}" . join(",{$keyIndent}", $result) . "\n]";
         }
     }
@@ -87,18 +77,12 @@ class ArraySerializer
      */
     protected function packValue($name, $value)
     {
-        if (is_null($value))
-        {
+        if (is_null($value)) {
             $value = "null";
-        }
-        elseif (is_bool($value))
-        {
+        } elseif (is_bool($value)) {
             $value = ($value ? "true" : "false");
-        }
-        elseif (!is_numeric($value))
-        {
-            if (!is_string($value))
-            {
+        } elseif (!is_numeric($value)) {
+            if (!is_string($value)) {
                 throw new SerializeException("Unable to pack non scalar value.");
             }
 
