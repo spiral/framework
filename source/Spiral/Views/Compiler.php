@@ -123,7 +123,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
      */
     public function getNamespace()
     {
-        return $this->filename;
+        return $this->namespace;
     }
 
     /**

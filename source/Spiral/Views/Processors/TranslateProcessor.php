@@ -8,16 +8,20 @@
  */
 namespace Spiral\Views\Processors;
 
+use Spiral\Core\Container\SaturableInterlace;
 use Spiral\Translator\TranslatorInterface;
-use Spiral\Views\Compiler\Compiler;
-use Spiral\Views\Compiler\ProcessorInterface;
-use Spiral\Views\ViewsInterface;
+use Spiral\Views\Compiler;
+use Spiral\Views\ProcessorInterface;
+use Spiral\Views\ViewManager;
+use Spiral\Views\ViewProviderInterface;
 
-class TranslateProcessor implements ProcessorInterface
+/**
+ * Performs string replacement in view source using translator instance and [[ ]] pattern. Processor
+ * will generate translator bundle name using view name and namespace.
+ */
+class TranslateProcessor implements ProcessorInterface, SaturableInterlace
 {
     /**
-     * Processor options.
-     *
      * @var array
      */
     protected $options = [
@@ -26,50 +30,29 @@ class TranslateProcessor implements ProcessorInterface
     ];
 
     /**
-     * Active compiler.
-     *
      * @var Compiler
      */
     protected $compiler = null;
 
     /**
-     * I18n component instance.
-     *
      * @var TranslatorInterface
      */
     protected $translator = null;
 
     /**
-     * Current translator bundle.
-     *
      * @var string
      */
     protected $bundle = '';
 
     /**
-     * New processors instance with options specified in view config.
-     *
-     * @param ViewsInterface      $views
-     * @param Compiler            $compiler Compiler instance.
-     * @param array               $options
-     * @param TranslatorInterface $translator
+     * {@inheritdoc}
      */
-    public function __construct(
-        ViewsInterface $views,
-        Compiler $compiler,
-        array $options,
-        TranslatorInterface $translator = null
-    )
+    public function __construct(ViewManager $views, Compiler $compiler, array $options)
     {
         $this->compiler = $compiler;
         $this->options = $options + $this->options;
 
-        $this->translator = !empty($translator) ? $translator : $this->compiler->getContainer()->get(
-            TranslatorInterface::class
-        );
-
-        if ($this->compiler->getNamespace() != ViewsInterface::DEFAULT_NAMESPACE)
-        {
+        if ($this->compiler->getNamespace() != ViewProviderInterface::DEFAULT_NAMESPACE) {
             $this->bundle = $compiler->getNamespace();
         }
 
@@ -77,14 +60,20 @@ class TranslateProcessor implements ProcessorInterface
         $this->bundle .= '-' . $this->options['prefix'] . str_replace(
                 ['/', '\\'], '-', $compiler->getView()
             );
+
+        $this->bundle = trim($this->bundle, '-');
     }
 
     /**
-     * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
-     * processors can perform any source manipulations using this code expect final rendering.
-     *
-     * @param string $source View source (code).
-     * @return string
+     * @param TranslatorInterface $translator
+     */
+    public function saturate(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function process($source)
     {
@@ -92,8 +81,6 @@ class TranslateProcessor implements ProcessorInterface
     }
 
     /**
-     * Translation and replacement.
-     *
      * @param array $matches
      * @return string
      */
