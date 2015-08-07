@@ -11,12 +11,16 @@ namespace Spiral\Support;
 use Spiral\Core\Component;
 use Spiral\Tokenizer\Isolator;
 
+/**
+ * Perform html code tokenization. Class used for spiral Templater and can be used for other html
+ * related operations. HtmlTokenizer is pretty slow! Please don't forget that this is tokenizer,
+ * not parser.
+ */
 class HtmlTokenizer extends Component
 {
     /**
      * Current tokenizer position. Tokenizer is a linear processor (no regular expression is involved).
-     * This slows it down, but the results are much more reliable. Please don't forget that this is
-     * tokenizer, not parser.
+     * This slows it down, but the results are much more reliable.
      */
     const POSITION_PLAIN_TEXT = 0x001;
     const POSITION_IN_TAG     = 0x002;
@@ -29,10 +33,10 @@ class HtmlTokenizer extends Component
     const TAG_OPEN   = 'open';
     const TAG_CLOSE  = 'close';
     const TAG_SHORT  = 'short';
-    const TAG_VOID = 'void';
+    const TAG_VOID   = 'void';
 
     /**
-     * Token fields. There are a lot of tokens in HTML (up to 10,000 different ones). It is better to
+     * Token fields. There are a lot of tokens in HTML (up to 10,000 different ones). We better to
      * use numeric keys for array than any text fields or even objects.
      */
     const TOKEN_NAME       = 0;
@@ -47,8 +51,21 @@ class HtmlTokenizer extends Component
      * @var array
      */
     protected $voidTags = [
-        'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta',
-        'param', 'source', 'track', 'wbr'
+        'area',
+        'base',
+        'br',
+        'col',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
+        'track',
+        'wbr'
     ];
 
     /**
@@ -73,10 +90,6 @@ class HtmlTokenizer extends Component
     protected $isolator = null;
 
     /**
-     * New HTML tokenizer object. Tokenizer is linear processor (no regular expression is involved),
-     * This can slow it down but the results are much more reliable. Please don't forget this is
-     * tokenizer, not parser.
-     *
      * @param bool     $isolatePHP PHP block should be isolated and enabled by default
      * @param Isolator $isolator
      */
@@ -87,24 +100,7 @@ class HtmlTokenizer extends Component
     }
 
     /**
-     * Will restore all existing PHP blocks to their original content.
-     *
-     * @param string $source
-     * @return string
-     */
-    protected function repairPHP($source)
-    {
-        if (!$this->isolatePHP)
-        {
-            return $source;
-        }
-
-        return $this->isolator->repairPHP($source);
-    }
-
-    /**
-     * Parser HTML content and return it's tokens. You can use callback function for handling tokens
-     * while parsing.
+     * Parse HTML content and return it's tokens.
      *
      * @param string $source HTML source.
      * @return array
@@ -114,8 +110,7 @@ class HtmlTokenizer extends Component
         //Cleaning list of already parsed tokens
         $this->tokens = [];
 
-        if ($this->isolatePHP)
-        {
+        if ($this->isolatePHP) {
             $source = $this->isolator->isolatePHP($source);
         }
 
@@ -124,20 +119,16 @@ class HtmlTokenizer extends Component
 
         $length = strlen($source);
         $position = self::POSITION_PLAIN_TEXT;
-        for ($pointer = 0; $pointer < $length; $pointer++)
-        {
+        for ($pointer = 0; $pointer < $length; $pointer++) {
             $char = $source[$pointer];
-            switch ($char)
-            {
+            switch ($char) {
                 case '<':
-                    if ($position == self::POSITION_IN_QUOTAS)
-                    {
+                    if ($position == self::POSITION_IN_QUOTAS) {
                         $buffer .= $char;
                         break;
                     }
 
-                    if ($position == self::POSITION_IN_TAG)
-                    {
+                    if ($position == self::POSITION_IN_TAG) {
                         $buffer = '<' . $buffer;
                     }
 
@@ -149,8 +140,7 @@ class HtmlTokenizer extends Component
                     $buffer = '';
                     break;
                 case '>':
-                    if ($position != self::POSITION_IN_TAG)
-                    {
+                    if ($position != self::POSITION_IN_TAG) {
                         $buffer .= $char;
                         break;
                     }
@@ -164,24 +154,19 @@ class HtmlTokenizer extends Component
                     break;
                 case '"':
                 case "'":
-                    if ($position == self::POSITION_IN_TAG)
-                    {
+                    if ($position == self::POSITION_IN_TAG) {
                         //Jumping into argument
                         $position = self::POSITION_IN_QUOTAS;
                         $quotas = $char;
-                    }
-                    elseif ($position == self::POSITION_IN_QUOTAS && $char == $quotas)
-                    {
+                    } elseif ($position == self::POSITION_IN_QUOTAS && $char == $quotas) {
                         //Jumping from argument
                         $position = self::POSITION_IN_TAG;
                         $quotas = '';
                     }
                 default:
                     //Checking for invalid characters in tag name or arguments
-                    if ($position == self::POSITION_IN_TAG)
-                    {
-                        if (!preg_match('/[a-z0-9 \._\-="\':\/\r\n\t]/i', $char))
-                        {
+                    if ($position == self::POSITION_IN_TAG) {
+                        if (!preg_match('/[a-z0-9 \._\-="\':\/\r\n\t]/i', $char)) {
                             $buffer = '<' . $buffer;
                             $position = self::POSITION_PLAIN_TEXT;
                         }
@@ -193,6 +178,41 @@ class HtmlTokenizer extends Component
         $this->handleToken(self::PLAIN_TEXT, $buffer);
 
         return $this->tokens;
+    }
+
+    /**
+     * Compile token and all it's attributes into string.
+     *
+     * @param array $token
+     * @return string
+     */
+    public function compile(array $token)
+    {
+        if (in_array($token[self::TOKEN_TYPE], [self::PLAIN_TEXT, self::TAG_CLOSE])) {
+            //Nothing to compile
+            return $token[HtmlTokenizer::TOKEN_CONTENT];
+        }
+
+        $result = '';
+        $attributes = [];
+        foreach ($token[self::TOKEN_ATTRIBUTES] as $attribute => $value) {
+            if ($value === null) {
+                $attributes[] = $attribute;
+                continue;
+            }
+
+            $attributes[] = $attribute . '="' . $value . '"';
+        }
+
+        if ($attributes) {
+            $result .= ' ' . join(' ', $attributes);
+        }
+
+        if ($token[HtmlTokenizer::TOKEN_TYPE] == HtmlTokenizer::TAG_SHORT) {
+            $result .= '/';
+        }
+
+        return '<' . $result . '>';
     }
 
     /**
@@ -211,8 +231,7 @@ class HtmlTokenizer extends Component
         ];
 
         //Some parts of text just looks like tags, but their not
-        if (!preg_match('/^\/?[a-z0-9_:\/][a-z 0-9\._\-:\/]*/i', $content))
-        {
+        if (!preg_match('/^\/?[a-z0-9_:\/][a-z 0-9\._\-:\/]*/i', $content)) {
             $token[self::TOKEN_TYPE] = self::PLAIN_TEXT;
             unset($token[self::TOKEN_NAME], $token[self::TOKEN_NAME]);
 
@@ -230,32 +249,27 @@ class HtmlTokenizer extends Component
 
         preg_match_all($attribute, $content, $attributes);
 
-        foreach ($attributes['value'] as $index => $value)
-        {
-            if ($value && ($value{0} == "'" || $value{0} == '"'))
-            {
+        foreach ($attributes['value'] as $index => $value) {
+            if ($value && ($value{0} == "'" || $value{0} == '"')) {
                 $value = trim($value, $value{0});
             }
 
             $name = $this->repairPHP($isolator->repairPHP($attributes['name'][$index]));
             $token[self::TOKEN_ATTRIBUTES][$name] = $this->repairPHP($isolator->repairPHP($value));
 
-            if (empty($attributes['equal'][$index]))
-            {
+            if (empty($attributes['equal'][$index])) {
                 $token[self::TOKEN_ATTRIBUTES][$name] = null;
             }
         }
 
         //Fetching name
         $name = current(explode(' ', $content));
-        if ($name{0} == '/')
-        {
+        if ($name{0} == '/') {
             $token[self::TOKEN_TYPE] = self::TAG_CLOSE;
             unset($token[self::TOKEN_ATTRIBUTES]);
         }
 
-        if ($content{strlen($content) - 1} == '/')
-        {
+        if ($content{strlen($content) - 1} == '/') {
             $token[self::TOKEN_TYPE] = self::TAG_SHORT;
         }
 
@@ -267,8 +281,7 @@ class HtmlTokenizer extends Component
         if (
             $token[self::TOKEN_TYPE] == self::TAG_OPEN
             && in_array($token[self::TOKEN_NAME], $this->voidTags)
-        )
-        {
+        ) {
             $token[self::TOKEN_TYPE] = self::TAG_VOID;
         }
 
@@ -283,10 +296,8 @@ class HtmlTokenizer extends Component
      */
     protected function handleToken($tokenType, $content)
     {
-        if ($tokenType == self::PLAIN_TEXT)
-        {
-            if (empty($content))
-            {
+        if ($tokenType == self::PLAIN_TEXT) {
+            if (empty($content)) {
                 return;
             }
 
@@ -294,9 +305,7 @@ class HtmlTokenizer extends Component
                 self::TOKEN_TYPE    => self::PLAIN_TEXT,
                 self::TOKEN_CONTENT => $this->repairPHP($content)
             ];
-        }
-        else
-        {
+        } else {
             $token = $this->parseToken($content);
         }
 
@@ -304,42 +313,17 @@ class HtmlTokenizer extends Component
     }
 
     /**
-     * Compile token and all it's attributes into string.
+     * Will restore all existing PHP blocks to their original content.
      *
-     * @param array $token
+     * @param string $source
      * @return string
      */
-    public function compile(array $token)
+    protected function repairPHP($source)
     {
-        if (in_array($token[self::TOKEN_TYPE], [self::PLAIN_TEXT, self::TAG_CLOSE]))
-        {
-            //Nothing to compile
-            return $token[HtmlTokenizer::TOKEN_CONTENT];
+        if (!$this->isolatePHP) {
+            return $source;
         }
 
-        $result = '';
-        $attributes = [];
-        foreach ($token[self::TOKEN_ATTRIBUTES] as $attribute => $value)
-        {
-            if ($value === null)
-            {
-                $attributes[] = $attribute;
-                continue;
-            }
-
-            $attributes[] = $attribute . '="' . $value . '"';
-        }
-
-        if ($attributes)
-        {
-            $result .= ' ' . join(' ', $attributes);
-        }
-
-        if ($token[HtmlTokenizer::TOKEN_TYPE] == HtmlTokenizer::TAG_SHORT)
-        {
-            $result .= '/';
-        }
-
-        return '<' . $result . '>';
+        return $this->isolator->repairPHP($source);
     }
 }
