@@ -8,11 +8,11 @@
  */
 use Spiral\Core\Core;
 use Spiral\Debug\Dumper;
-use Spiral\Translator\TranslatorInterface;
 use Spiral\Translator\Exceptions\TranslatorException;
+use Spiral\Translator\TranslatorInterface;
 
-if (!function_exists('directory'))
-{
+if (!function_exists('directory')) {
+
     /**
      * Get directory alias value.
      *
@@ -25,8 +25,8 @@ if (!function_exists('directory'))
     }
 }
 
-if (!function_exists('e'))
-{
+if (!function_exists('e')) {
+
     /**
      * Short alias for htmlentities(). This function is identical to htmlspecialchars() in all ways,
      * except with htmlentities(), all characters which have HTML character entity equivalents are
@@ -41,8 +41,8 @@ if (!function_exists('e'))
     }
 }
 
-if (!function_exists('interpolate'))
-{
+if (!function_exists('interpolate')) {
+
     /**
      * Format string using previously named arguments from values array. Arguments that are not found
      * will be skipped without any notification. Extra arguments will be skipped as well.
@@ -66,8 +66,8 @@ if (!function_exists('interpolate'))
     }
 }
 
-if (!function_exists('dump'))
-{
+if (!function_exists('dump')) {
+
     /**
      * Helper function to dump variable into specified destination (output, log or return) using
      * pre-defined dumping styles. This method is fairly slow and should not be used in productions
@@ -85,8 +85,8 @@ if (!function_exists('dump'))
     }
 }
 
-if (!function_exists('l'))
-{
+if (!function_exists('l')) {
+
     /**
      * Translate value using active language. Method must support message interpolation using
      * interpolate method or sptrinf.
@@ -110,8 +110,8 @@ if (!function_exists('l'))
     }
 }
 
-if (!function_exists('p'))
-{
+if (!function_exists('p')) {
+
     /**
      * Pluralize string using language pluralization options and specified numeric value. Number
      * has to be ingested at place of {n} placeholder.

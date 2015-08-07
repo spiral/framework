@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Suppport\Helpers;
+namespace Spiral\Support\Helpers;
 
 /**
  * Set of helper methods to work with variable values and cross type conversions.

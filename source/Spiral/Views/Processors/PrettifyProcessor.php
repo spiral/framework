@@ -8,13 +8,16 @@
  */
 namespace Spiral\Views\Processors;
 
+use Spiral\Support\Helpers\StringHelper;
 use Spiral\Support\HtmlTokenizer;
-use Spiral\Helpers\StringHelper;
 use Spiral\Tokenizer\Isolator;
-use Spiral\Views\Compiler\Compiler;
-use Spiral\Views\Compiler\ProcessorInterface;
-use Spiral\Views\ViewsInterface;
+use Spiral\Views\Compiler;
+use Spiral\Views\ProcessorInterface;
+use Spiral\Views\ViewManager;
 
+/**
+ * Performs few simple operations to make output HTML look better.
+ */
 class PrettifyProcessor implements ProcessorInterface
 {
     /**
@@ -25,7 +28,6 @@ class PrettifyProcessor implements ProcessorInterface
     protected $options = [
         //Drop blank lines
         'endings'    => true,
-
         //Trim attributes
         'attributes' => [
             'normalize' => true,
@@ -35,39 +37,29 @@ class PrettifyProcessor implements ProcessorInterface
     ];
 
     /**
-     * New processors instance with options specified in view config.
-     *
-     * @param ViewsInterface $viewFacade
-     * @param Compiler       $compiler SpiralCompiler instance.
-     * @param array          $options
+     * {@inheritdoc}
      */
-    public function __construct(ViewsInterface $viewFacade, Compiler $compiler, array $options)
+    public function __construct(ViewManager $viewFacade, Compiler $compiler, array $options)
     {
         $this->options = $options + $this->options;
     }
 
     /**
-     * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
-     * processors can perform any source manipulations using this code expect final rendering.
+     * {@inheritdoc}
      *
-     * @param string   $source View source (code).
-     * @param Isolator $isolator
+     * @param Isolator      $isolator
      * @param HtmlTokenizer $tokenizer
-     * @return string
-     * @throws \ErrorException
      */
     public function process($source, Isolator $isolator = null, HtmlTokenizer $tokenizer = null)
     {
         $isolator = !empty($isolator) ? $isolator : new Isolator();
         $tokenizer = !empty($tokenizer) ? $tokenizer : new HtmlTokenizer();
 
-        if ($this->options['endings'])
-        {
+        if ($this->options['endings']) {
             $source = $this->normalizeEndings($source, $isolator);
         }
 
-        if ($this->options['attributes']['normalize'])
-        {
+        if ($this->options['attributes']['normalize']) {
             $source = $this->normalizeAttributes($source, $tokenizer);
         }
 
@@ -90,8 +82,7 @@ class PrettifyProcessor implements ProcessorInterface
         $sourceLines = explode("\n", $source);
 
         //Step #3, no blank lines and html comments (will keep conditional commends)
-        $sourceLines = array_filter($sourceLines, function ($line)
-        {
+        $sourceLines = array_filter($sourceLines, function ($line) {
             return trim($line);
         });
 
@@ -104,31 +95,26 @@ class PrettifyProcessor implements ProcessorInterface
     /**
      * Normalize attribute values.
      *
-     * @param string $source
+     * @param string        $source
      * @param HtmlTokenizer $tokenizer
      * @return mixed
      */
     protected function normalizeAttributes($source, HtmlTokenizer $tokenizer)
     {
         $result = '';
-        foreach ($tokenizer->parse($source) as $token)
-        {
-            if (empty($token[HtmlTokenizer::TOKEN_ATTRIBUTES]))
-            {
+        foreach ($tokenizer->parse($source) as $token) {
+            if (empty($token[HtmlTokenizer::TOKEN_ATTRIBUTES])) {
                 $result .= $tokenizer->compile($token);
                 continue;
             }
 
             $attributes = [];
-            foreach ($token[HtmlTokenizer::TOKEN_ATTRIBUTES] as $attribute => $value)
-            {
-                if (in_array($attribute, $this->options['attributes']['trim']))
-                {
+            foreach ($token[HtmlTokenizer::TOKEN_ATTRIBUTES] as $attribute => $value) {
+                if (in_array($attribute, $this->options['attributes']['trim'])) {
                     $value = trim($value);
                 }
 
-                if (empty($value) && in_array($attribute, $this->options['attributes']['drop']))
-                {
+                if (empty($value) && in_array($attribute, $this->options['attributes']['drop'])) {
                     //Empty value
                     continue;
                 }
