@@ -6,17 +6,19 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Components\View\Compiler\Processors;
+namespace Spiral\Views\Processors;
 
-use Spiral\Components\View\Compiler\Compiler;
-use Spiral\Components\View\Compiler\ProcessorInterface;
-use Spiral\Components\View\ViewManager;
+use Spiral\Views\Compiler;
+use Spiral\Views\ProcessorInterface;
+use Spiral\Views\ViewManager;
 
+/**
+ * Provides set of expression replacements in view source, every expression specified as regex
+ * pattern and replace callback.
+ */
 class ExpressionsProcessor implements ProcessorInterface
 {
     /**
-     * Expressions to be replaced.
-     *
      * @var array
      */
     protected $expressions = [
@@ -29,7 +31,7 @@ class ExpressionsProcessor implements ProcessorInterface
         //this expression should be used only inside evaluator code, expression should be executed
         //before Templater
         'fetchVariable'  => [
-            'pattern' => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*)\s*=\s*fetchVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
+            'pattern'  => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*)\s*=\s*fetchVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'fetchVariable']
         ],
         //Used to create php variable related to some php block, will always contain valid php code,
@@ -41,33 +43,23 @@ class ExpressionsProcessor implements ProcessorInterface
     ];
 
     /**
-     * New processors instance with options specified in view config.
-     *
-     * @param ViewManager $viewManager
-     * @param Compiler    $compiler SpiralCompiler instance.
-     * @param array       $options
+     * {@inheritdoc}
      */
     public function __construct(ViewManager $viewManager, Compiler $compiler, array $options)
     {
         $this->viewManager = $viewManager;
 
-        if (!empty($options['expressions']))
-        {
+        if (!empty($options['expressions'])) {
             $this->expressions = $options['expressions'] + $this->expressions;
         }
     }
 
     /**
-     * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
-     * processors can perform any source manipulations using this code expect final rendering.
-     *
-     * @param string $source View source (code).
-     * @return string
+     * {@inheritdoc}
      */
     public function process($source)
     {
-        foreach ($this->expressions as $expression)
-        {
+        foreach ($this->expressions as $expression) {
             $source = preg_replace_callback(
                 $expression['pattern'],
                 $expression['callback'],
@@ -79,7 +71,7 @@ class ExpressionsProcessor implements ProcessorInterface
     }
 
     /**
-     * Embedded replacer used to set static variable or it's default value.
+     * Mount view dependency value.
      *
      * @param array $matches
      * @return string
@@ -101,8 +93,7 @@ class ExpressionsProcessor implements ProcessorInterface
      */
     public function fetchVariable(array $matches)
     {
-        if (!empty($matches[1]))
-        {
+        if (!empty($matches[1])) {
             return '//This code is commented';
         }
 
@@ -118,12 +109,13 @@ class ExpressionsProcessor implements ProcessorInterface
      */
     public function createVariable(array $matches)
     {
-        if (!empty($matches[1]))
-        {
+        if (!empty($matches[1])) {
             return '//This code is commented';
         }
 
-        return "ob_start(); ?>$matches[3]<?php #compile
-        echo '<?php \$$matches[2] = ' . \$this->fetchPHP(\$isolator->repairPHP(trim(ob_get_clean()))) . '; ?>';";
+        return "ob_start(); ?>$matches[3]<?php #compile\n"
+        . "echo '<?php \$$matches[2] = ' . \$this->fetchPHP("
+        . "\$isolator->repairPHP(trim(ob_get_clean()))"
+        . ") . '; ?>';";
     }
 }

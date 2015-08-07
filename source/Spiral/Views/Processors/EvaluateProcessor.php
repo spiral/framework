@@ -8,79 +8,68 @@
  */
 namespace Spiral\Views\Processors;
 
+use Spiral\Core\Container\SaturableInterlace;
 use Spiral\Files\FilesInterface;
 use Spiral\Tokenizer\Isolator;
-use Spiral\Views\Compiler\Compiler;
-use Spiral\Views\Compiler\ProcessorInterface;
-use Spiral\Views\ViewsInterface;
+use Spiral\Views\Compiler;
+use Spiral\Views\ProcessorInterface;
+use Spiral\Views\ViewManager;
 
-class EvaluateProcessor implements ProcessorInterface
+/**
+ * Evaluates php blocks marked with compilation flag at moment of view code compilation. This processor
+ * is required for spiral toolkit.
+ */
+class EvaluateProcessor implements ProcessorInterface, SaturableInterlace
 {
     /**
-     * ViewManager component.
-     *
-     * @var ViewsInterface
+     * @var ViewManager
      */
     protected $views = null;
 
     /**
-     * Spiral compiler.
-     *
      * @var Compiler
      */
     protected $compiler = null;
 
     /**
-     * FileManager component.
-     *
      * @var FilesInterface
      */
     protected $files = null;
 
     /**
-     * Processor options.
-     *
      * @var array
      */
     protected $options = [
         'flags' => [
-            '/*compile*/', '#compile', '#php-compile'
+            '/*compile*/',
+            '#compile',
+            '#php-compile'
         ]
     ];
 
     /**
-     * New processors instance with options specified in view config.
-     *
-     * @param ViewsInterface $views
-     * @param Compiler       $compiler Compiler instance.
-     * @param array          $options
-     * @param FilesInterface $files
+     * {@inheritdoc}
      */
-    public function __construct(
-        ViewsInterface $views,
-        Compiler $compiler,
-        array $options,
-        FilesInterface $files = null
-    )
+    public function __construct(ViewManager $views, Compiler $compiler, array $options)
     {
         $this->views = $views;
         $this->compiler = $compiler;
 
         $this->options = $options + $this->options;
-
-        $this->files = !empty($files) ? $files : $this->compiler->getContainer()->get(
-            FilesInterface::class
-        );
     }
 
     /**
-     * Performs view code pre-processing. LayeredCompiler will provide view source into processors,
-     * processors can perform any source manipulations using this code expect final rendering.
+     * @param FilesInterface $files
+     */
+    public function saturate(FilesInterface $files)
+    {
+        $this->files = $files;
+    }
+
+    /**
+     * {@inheritdoc}
      *
-     * @param string   $source   View source (code).
-     * @param Isolator $isolator PHP isolator instance.
-     * @return string
-     * @throws \ErrorException
+     * @param Isolator $isolator Custom PHP isolator instance.
      */
     public function process($source, Isolator $isolator = null)
     {
@@ -92,12 +81,9 @@ class EvaluateProcessor implements ProcessorInterface
         //Restoring only evaluator blocks
         $phpBlocks = $evaluateBlocks = [];
 
-        foreach ($isolator->getBlocks() as $id => $phpBlock)
-        {
-            foreach ($this->options['flags'] as $flag)
-            {
-                if (strpos($phpBlock, $flag) !== false)
-                {
+        foreach ($isolator->getBlocks() as $id => $phpBlock) {
+            foreach ($this->options['flags'] as $flag) {
+                if (strpos($phpBlock, $flag) !== false) {
                     $evaluateBlocks[$id] = $phpBlock;
                     continue 2;
                 }
@@ -112,8 +98,7 @@ class EvaluateProcessor implements ProcessorInterface
         //Required to prevent collisions
         $filename = directory('cache') . "/{$this->uniqueID()}.php";
 
-        try
-        {
+        try {
             $this->files->write($filename, $source, FilesInterface::RUNTIME, true);
 
             ob_start();
@@ -121,9 +106,7 @@ class EvaluateProcessor implements ProcessorInterface
             $source = ob_get_clean();
 
             $this->files->delete($filename);
-        }
-        catch (\ErrorException $exception)
-        {
+        } catch (\ErrorException $exception) {
             throw $exception;
         }
 
@@ -137,7 +120,7 @@ class EvaluateProcessor implements ProcessorInterface
      */
     protected function uniqueID()
     {
-        return spl_object_hash($this) . '-' . md5($this->compiler->getFilename());
+        return spl_object_hash($this) . '-' . md5($this->compiler->viewFilename());
     }
 
     /**
@@ -149,24 +132,20 @@ class EvaluateProcessor implements ProcessorInterface
      */
     static public function fetchPHP($phpBlock)
     {
-        if (strpos($phpBlock, '<?') !== 0)
-        {
+        if (strpos($phpBlock, '<?') !== 0) {
             return var_export($phpBlock, true);
         }
 
         $phpBlock = trim(substr($phpBlock, 2, -2));
-        if (substr($phpBlock, 0, 3) == 'php')
-        {
+        if (substr($phpBlock, 0, 3) == 'php') {
             $phpBlock = trim(substr($phpBlock, 3));
         }
 
-        if (substr($phpBlock, 0, 1) == '=')
-        {
+        if (substr($phpBlock, 0, 1) == '=') {
             $phpBlock = substr($phpBlock, 1);
         }
 
-        if (substr($phpBlock, 0, 4) == 'echo')
-        {
+        if (substr($phpBlock, 0, 4) == 'echo') {
             $phpBlock = substr($phpBlock, 4);
         }
 

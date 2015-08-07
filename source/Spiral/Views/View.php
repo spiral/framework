@@ -57,6 +57,19 @@ class View extends Component implements ViewInterface
     }
 
     /**
+     * Set view rendering data. Full dataset will be replaced.
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function setData(array $data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render()
