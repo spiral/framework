@@ -119,7 +119,7 @@ class PrettifyProcessor implements ProcessorInterface
                     continue;
                 }
 
-                $attributes[] = $value;
+                $attributes[$attribute] = $value;
             }
 
             $token[HtmlTokenizer::TOKEN_ATTRIBUTES] = $attributes;

@@ -193,7 +193,7 @@ class HtmlTokenizer extends Component
             return $token[HtmlTokenizer::TOKEN_CONTENT];
         }
 
-        $result = '';
+        $result = $token[HtmlTokenizer::TOKEN_NAME];
         $attributes = [];
         foreach ($token[self::TOKEN_ATTRIBUTES] as $attribute => $value) {
             if ($value === null) {
