@@ -6,11 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Helpers;
+namespace Spiral\Suppport\Helpers;
 
 use Cocur\Slugify\Slugify;
 use Spiral\Core\Container;
 
+/**
+ * Set of helper methods to simplify working with string values.
+ */
 class StringHelper
 {
     /**
@@ -21,8 +24,7 @@ class StringHelper
      */
     public static function random($length = 32)
     {
-        if (empty($string = openssl_random_pseudo_bytes($length)))
-        {
+        if (empty($string = openssl_random_pseudo_bytes($length))) {
             throw new \RuntimeException("Unable to generate random string.");
         }
 
@@ -38,7 +40,7 @@ class StringHelper
      */
     public static function urlSlug($string, $separator = '-')
     {
-        return Container::getContainer()->get(Slugify::class)->slugify($string, $separator);
+        return Container::container()->get(Slugify::class)->slugify($string, $separator);
     }
 
     /**
@@ -51,13 +53,11 @@ class StringHelper
      */
     public static function escape($string, $stripTags = false)
     {
-        if (is_array($string) || is_object($string))
-        {
+        if (is_array($string) || is_object($string)) {
             return '';
         }
 
-        if ($stripTags)
-        {
+        if ($stripTags) {
             $string = strip_tags($string);
         }
 
@@ -73,8 +73,7 @@ class StringHelper
      */
     public static function shorter($string, $limit = 300)
     {
-        if (mb_strlen($string) + 3 > $limit)
-        {
+        if (mb_strlen($string) + 3 > $limit) {
             return trim(mb_substr($string, 0, $limit - 3, 'UTF-8')) . '...';
         }
 
@@ -91,8 +90,7 @@ class StringHelper
     public static function bytes($bytes, $decimals = 1)
     {
         $pows = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        for ($unit = 0; $bytes > 1024; $unit++)
-        {
+        for ($unit = 0; $bytes > 1024; $unit++) {
             $bytes /= 1024;
         }
 
@@ -109,8 +107,7 @@ class StringHelper
      */
     public static function normalizeEndings($string, $joinMultiple = true)
     {
-        if (!$joinMultiple)
-        {
+        if (!$joinMultiple) {
             return str_replace("\r\n", "\n", $string);
         }
 
@@ -143,40 +140,33 @@ class StringHelper
         $lines = explode("\n", $string);
 
         $minIndent = null;
-        foreach ($lines as $line)
-        {
-            if (!trim($line))
-            {
+        foreach ($lines as $line) {
+            if (!trim($line)) {
                 continue;
             }
 
             $line = str_replace("\t", $tabulationCost, $line);
 
             //Getting indent size
-            if (!preg_match("/^( +)/", $line, $matches))
-            {
+            if (!preg_match("/^( +)/", $line, $matches)) {
                 //Some line has no indent
                 return $string;
             }
 
-            if ($minIndent === null)
-            {
+            if ($minIndent === null) {
                 $minIndent = strlen($matches[1]);
             }
 
             $minIndent = min($minIndent, strlen($matches[1]));
         }
 
-        if (is_null($minIndent) || $minIndent === 0)
-        {
+        if (is_null($minIndent) || $minIndent === 0) {
             return $string;
         }
 
         //Fixing indent
-        foreach ($lines as &$line)
-        {
-            if (empty($line))
-            {
+        foreach ($lines as &$line) {
+            if (empty($line)) {
                 continue;
             }
 
@@ -184,8 +174,7 @@ class StringHelper
             preg_match("/^([ \t]+)/", $line, $matches);
             $indent = $matches[1];
 
-            if (!trim($line))
-            {
+            if (!trim($line)) {
                 $line = '';
                 continue;
             }

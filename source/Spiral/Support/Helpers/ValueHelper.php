@@ -6,28 +6,28 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Helpers;
+namespace Spiral\Suppport\Helpers;
 
+/**
+ * Set of helper methods to work with variable values and cross type conversions.
+ */
 class ValueHelper
 {
     /**
-     * Will convert the input variable in any format into a string. This function bypasses the
-     * problem of applying strval() to arrays.
+     * Convert the input variable in any format into a string. This function bypasses the problem of
+     * applying strval() to arrays.
      *
      * @param mixed $variable Input variable. Any format is allowed.
      * @return string
      */
     public static function castString($variable)
     {
-        if (is_array($variable))
-        {
+        if (is_array($variable)) {
             return '';
         }
 
-        if (is_object($variable))
-        {
-            if (method_exists($variable, '__toString'))
-            {
+        if (is_object($variable)) {
+            if (method_exists($variable, '__toString')) {
                 return $variable->__toString();
             }
 
@@ -38,7 +38,7 @@ class ValueHelper
     }
 
     /**
-     * Will filter and return only the scalar values of input haystack. Sub arrays are counted as
+     * Filter and return only the scalar values of input haystack. Sub arrays are counted as
      * non scalar values and will be removed.
      *
      * @param mixed $haystack Filtered array
@@ -46,8 +46,7 @@ class ValueHelper
      */
     public static function scalarArray($haystack)
     {
-        if (!is_array($haystack))
-        {
+        if (!is_array($haystack)) {
             return [];
         }
 
