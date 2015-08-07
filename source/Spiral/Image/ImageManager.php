@@ -89,7 +89,7 @@ class ImageManager extends Singleton
      * @param mixed|UploadedFileInterface|StreamInterface|StreamableInterface $data
      * @return bool
      */
-    public function isImage($data)
+    public function validImage($data)
     {
         try {
             $this->open($data);
