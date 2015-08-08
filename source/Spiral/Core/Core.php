@@ -14,6 +14,7 @@ use Spiral\Core\Exceptions\ClientException;
 use Spiral\Core\Exceptions\ConfiguratorException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
+use Spiral\Core\Exceptions\FatalException;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
@@ -491,7 +492,13 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     public function handleShutdown()
     {
         if (!empty($error = error_get_last())) {
-            $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
+            $this->handleException(new FatalException(
+                $error['message'],
+                $error['type'],
+                0,
+                $error['file'],
+                $error['line']
+            ));
         }
     }
 
