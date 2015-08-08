@@ -453,7 +453,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function handleError($code, $message, $filename = '', $line = 0)
     {
-        ini_set('display_errors', false);
         $this->handleException(new \ErrorException($message, $code, 0, $filename, $line));
     }
 
@@ -493,11 +492,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     {
         if (!empty($error = error_get_last())) {
             $this->handleException(new FatalException(
-                $error['message'],
-                $error['type'],
-                0,
-                $error['file'],
-                $error['line']
+                $error['message'], $error['type'], 0, $error['file'], $error['line']
             ));
         }
     }

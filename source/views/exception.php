@@ -5,32 +5,68 @@
  * @var \Spiral\Core\ContainerInterface $container
  */
 
-$highlighter = new \Spiral\Tokenizer\Hightligher($container->get(\Spiral\Tokenizer\TokenizerInterface::class), [
-    'styles' => [
-        'color: #C26230; font-weight: bold;' => [
-            T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED, T_CLASS,
-            T_NEW, T_FINAL, T_ABSTRACT, T_IMPLEMENTS, T_CONST,
-            T_ECHO, T_CASE, T_FUNCTION, T_GOTO, T_INCLUDE,
-            T_INCLUDE_ONCE, T_REQUIRE, T_REQUIRE_ONCE, T_VAR,
-            T_INSTANCEOF, T_INTERFACE, T_THROW, T_ARRAY,
-            T_IF, T_ELSE, T_ELSEIF, T_TRY, T_CATCH, T_CLONE,
-            T_WHILE, T_FOR, T_DO, T_UNSET, T_FOREACH, T_RETURN,
-            T_EXIT, T_EXTENDS
-        ],
-        'color: black; font: weight: bold;'  => [
-            T_OPEN_TAG, T_CLOSE_TAG, T_OPEN_TAG_WITH_ECHO
-        ],
-        'color: #BC9458;'                    => [
-            T_COMMENT, T_DOC_COMMENT
-        ],
-        'color: #A5C261;'                    => [
-            T_CONSTANT_ENCAPSED_STRING, T_ENCAPSED_AND_WHITESPACE, T_DNUMBER, T_LNUMBER
-        ],
-        'color: #D0D0FF;'                    => [
-            T_VARIABLE
+$highlighter = new \Spiral\Tokenizer\Hightligher($container->get(\Spiral\Tokenizer\TokenizerInterface::class),
+    [
+        'styles' => [
+            'color: #C26230; font-weight: bold;' => [
+                T_STATIC,
+                T_PUBLIC,
+                T_PRIVATE,
+                T_PROTECTED,
+                T_CLASS,
+                T_NEW,
+                T_FINAL,
+                T_ABSTRACT,
+                T_IMPLEMENTS,
+                T_CONST,
+                T_ECHO,
+                T_CASE,
+                T_FUNCTION,
+                T_GOTO,
+                T_INCLUDE,
+                T_INCLUDE_ONCE,
+                T_REQUIRE,
+                T_REQUIRE_ONCE,
+                T_VAR,
+                T_INSTANCEOF,
+                T_INTERFACE,
+                T_THROW,
+                T_ARRAY,
+                T_IF,
+                T_ELSE,
+                T_ELSEIF,
+                T_TRY,
+                T_CATCH,
+                T_CLONE,
+                T_WHILE,
+                T_FOR,
+                T_DO,
+                T_UNSET,
+                T_FOREACH,
+                T_RETURN,
+                T_EXIT,
+                T_EXTENDS
+            ],
+            'color: black; font: weight: bold;'  => [
+                T_OPEN_TAG,
+                T_CLOSE_TAG,
+                T_OPEN_TAG_WITH_ECHO
+            ],
+            'color: #BC9458;'                    => [
+                T_COMMENT,
+                T_DOC_COMMENT
+            ],
+            'color: #A5C261;'                    => [
+                T_CONSTANT_ENCAPSED_STRING,
+                T_ENCAPSED_AND_WHITESPACE,
+                T_DNUMBER,
+                T_LNUMBER
+            ],
+            'color: #D0D0FF;'                    => [
+                T_VARIABLE
+            ]
         ]
-    ]
-]);
+    ]);
 
 $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class), [
     'container' => '<pre style="background-color: #232323; font-family: Monospace;">{dump}</pre>',
@@ -63,7 +99,9 @@ $dumps = [];
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title><?= $snapshot->getMessage() ?></title>
+    <title>
+        <?= $snapshot->getMessage() ?>
+    </title>
     <style>
         body.spiral-exception {
             font-family: Helvetica, sans-serif;
@@ -293,9 +331,9 @@ $dumps = [];
             var dump = document.getElementById('argument-dumper');
             dump.style.display = 'block';
             dump.innerHTML = '<div class="close" onclick="toggle(\'argument-dumper\')"> &cross; close</div> '
-            + '<div class="dump" style="display: block">'
-            + document.getElementById('argument-' + id).innerHTML
-            + '</div>';
+                + '<div class="dump" style="display: block">'
+                + document.getElementById('argument-' + id).innerHTML
+                + '</div>';
 
             window.location.href = "#dumper";
         }
@@ -322,32 +360,22 @@ $dumps = [];
             </div>
             <?php
             $stacktrace = $snapshot->getTrace();
-            foreach ($stacktrace as $trace)
-            {
+            foreach ($stacktrace as $trace) {
                 $arguments = [];
-                if (!isset($trace['file']))
-                {
-                    if (isset($trace['args']))
-                    {
-                        foreach ($trace['args'] as $argument)
-                        {
+                if (!isset($trace['file'])) {
+                    if (isset($trace['args'])) {
+                        foreach ($trace['args'] as $argument) {
                             $display = $type = strtolower(gettype($argument));
 
-                            if (is_numeric($argument))
-                            {
+                            if (is_numeric($argument)) {
                                 $display = $argument;
-                            }
-                            elseif (is_bool($argument))
-                            {
+                            } elseif (is_bool($argument)) {
                                 $display = $argument ? 'true' : 'false';
-                            }
-                            elseif (is_null($argument))
-                            {
+                            } elseif (is_null($argument)) {
                                 $display = 'null';
                             }
 
-                            if (is_object($argument))
-                            {
+                            if (is_object($argument)) {
                                 $reflection = new ReflectionClass($argument);
                                 $display = interpolate(
                                     "<span title=\"{title}\">{class}</span>", [
@@ -359,11 +387,10 @@ $dumps = [];
 
                             //Colorizing
                             $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments))
-                            {
-                                if (($dumpID = array_search($argument, $dumps)) === false)
-                                {
-                                    $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                            if (!empty($dumpArguments)) {
+                                if (($dumpID = array_search($argument, $dumps)) === false) {
+                                    $dumps[] = $dumper->dump($argument,
+                                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
                                     $dumpID = count($dumps) - 1;
                                 }
 
@@ -386,8 +413,7 @@ $dumps = [];
                     continue;
                 }
 
-                if ($trace['file'] == $snapshot->getFile() && $trace['line'] == $snapshot->getLine())
-                {
+                if ($trace['file'] == $snapshot->getFile() && $trace['line'] == $snapshot->getLine()) {
                     //Duplicate
                     continue;
                 }
@@ -401,7 +427,7 @@ $dumps = [];
                         <?= $highlighter->highlight($trace['file'], $trace['line']) ?>
                     </div>
                 </div>
-            <?php
+                <?php
             }
             ?>
         </div>
@@ -409,28 +435,23 @@ $dumps = [];
             <div class="calls">
                 <?php
                 $stacktrace = array_reverse($stacktrace);
-                foreach ($stacktrace as $index => $trace)
-                {
-                    if (!isset($trace['file']) && isset($tracing[$index - 1]['file']))
-                    {
+                foreach ($stacktrace as $index => $trace) {
+                    if (!isset($trace['file']) && isset($tracing[$index - 1]['file'])) {
                         $trace['file'] = $tracing[$index - 1]['file'];
                         $trace['line'] = $tracing[$index - 1]['line'];
                     }
 
-                    if (!isset($tracing[$index + 1]))
-                    {
+                    if (!isset($tracing[$index + 1])) {
                         $trace['file'] = $snapshot->getFile();
                         $trace['line'] = $snapshot->getLine();
                     }
 
-                    if (!isset($trace['function']))
-                    {
+                    if (!isset($trace['function'])) {
                         continue;
                     }
 
                     $function = '<strong>' . $trace['function'] . '</strong>';
-                    if (isset($trace['type']) && isset($trace['class']))
-                    {
+                    if (isset($trace['type']) && isset($trace['class'])) {
                         $reflection = new ReflectionClass($trace['class']);
                         $function = interpolate(
                             "<span title=\"{title}\">{class}</span>{type}{function}",
@@ -444,27 +465,19 @@ $dumps = [];
                     }
 
                     $arguments = [];
-                    if (isset($trace['args']))
-                    {
-                        foreach ($trace['args'] as $argument)
-                        {
+                    if (isset($trace['args'])) {
+                        foreach ($trace['args'] as $argument) {
                             $display = $type = strtolower(gettype($argument));
 
-                            if (is_numeric($argument))
-                            {
+                            if (is_numeric($argument)) {
                                 $display = $argument;
-                            }
-                            elseif (is_bool($argument))
-                            {
+                            } elseif (is_bool($argument)) {
                                 $display = $argument ? 'true' : 'false';
-                            }
-                            elseif (is_null($argument))
-                            {
+                            } elseif (is_null($argument)) {
                                 $display = 'null';
                             }
 
-                            if (is_object($argument))
-                            {
+                            if (is_object($argument)) {
                                 $reflection = new ReflectionClass($argument);
                                 $display = interpolate(
                                     "<span title=\"{title}\">{class}</span>", [
@@ -476,11 +489,10 @@ $dumps = [];
 
                             //Colorizing
                             $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments))
-                            {
-                                if (($dumpID = array_search($argument, $dumps)) === false)
-                                {
-                                    $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                            if (!empty($dumpArguments)) {
+                                if (($dumpID = array_search($argument, $dumps)) === false) {
+                                    $dumps[] = $dumper->dump($argument,
+                                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
                                     $dumpID = count($dumps) - 1;
                                 }
 
@@ -497,14 +509,15 @@ $dumps = [];
                     ?>
                     <div class="call">
                         <div class="function">
-                            <?= $function ?> (<span class="arguments"><?= join(', ', $arguments) ?></span>)
+                            <?= $function ?> (<span class="arguments"><?= join(', ',
+                                    $arguments) ?></span>)
                         </div>
                         <div class="location">
                             <i><?= $trace['file'] ?></i> at
                             <strong>line <?= $trace['line'] ?></strong>
                         </div>
                     </div>
-                <?php
+                    <?php
                 }
                 ?>
             </div>
@@ -524,12 +537,9 @@ $dumps = [];
             'SERVER'  => '_SERVER',
         ];
 
-        foreach ($variables as $name => $variable)
-        {
-            if (!empty($GLOBALS[$variable]))
-            {
-                if ($name == 'SERVER' && isset($_SERVER['PATH']) && is_string($_SERVER['PATH']))
-                {
+        foreach ($variables as $name => $variable) {
+            if (!empty($GLOBALS[$variable])) {
+                if ($name == 'SERVER' && isset($_SERVER['PATH']) && is_string($_SERVER['PATH'])) {
                     $_SERVER['PATH'] = explode(PATH_SEPARATOR, $_SERVER['PATH']);
                 }
 
@@ -539,18 +549,18 @@ $dumps = [];
                         <?= $name ?> (<?= number_format(count($GLOBALS[$variable])) ?>)
                     </div>
                     <div class="dump" id="environment-<?= $name ?>" style="display: none;">
-                        <?= $dumper->dump($GLOBALS[$variable], \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
+                        <?= $dumper->dump($GLOBALS[$variable],
+                            \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
                     </div>
                 </div>
-            <?php
+                <?php
             }
         }
         ?>
     </div>
 
     <?php
-    if (!empty($messages = \Spiral\Debug\Logger::logMessages()))
-    {
+    if (!empty($messages = \Spiral\Debug\Logger::logMessages())) {
         ?>
         <div class="messages">
             <div class="title" onclick="toggle('logger-messages')">
@@ -558,42 +568,42 @@ $dumps = [];
             </div>
             <div class="data" id="logger-messages">
                 <?php
-                foreach (\Spiral\Debug\Logger::logMessages() as $message)
-                {
+                foreach (\Spiral\Debug\Logger::logMessages() as $message) {
                     $channel = $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL];
-                    if (class_exists($channel))
-                    {
+                    if (class_exists($channel)) {
                         $reflection = new ReflectionClass($channel);
                         $channel = $reflection->getShortName();
                     }
                     ?>
                     <div class="message <?= $message[\Spiral\Debug\Logger::MESSAGE_LEVEL] ?>">
-                        <div class="channel" title=" <?= $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL] ?>">
+                        <div class="channel"
+                             title=" <?= $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL] ?>">
                             <?= $channel ?>
                         </div>
-                        <div class="level"><?= $message[\Spiral\Debug\Logger::MESSAGE_LEVEL] ?></div>
+                        <div
+                            class="level"><?= $message[\Spiral\Debug\Logger::MESSAGE_LEVEL] ?></div>
                         <div class="body"><?= $message[\Spiral\Debug\Logger::MESSAGE_BODY] ?></div>
                     </div>
-                <?php
+                    <?php
                 }
                 ?>
             </div>
         </div>
-    <?php
+        <?php
     }
     ?>
     <div class="footer">
         <div class="date"><?= date('r') ?></div>
         <div class="elapsed time">
-            <span>Elapsed:</span> <?= number_format(microtime(true) - SPIRAL_INITIAL_TIME, 3) ?> seconds
+            <span>Elapsed:</span> <?= number_format(microtime(true) - SPIRAL_INITIAL_TIME, 3) ?>
+            seconds
         </div>
         <div class="elapsed memory">
             <span>Memory:</span> <?= number_format(memory_get_peak_usage() / 1024, 2) ?> Kb
         </div>
     </div>
     <?php
-    foreach ($dumps as $argumentID => $dump)
-    {
+    foreach ($dumps as $argumentID => $dump) {
         echo "<div id=\"argument-{$argumentID}\" style=\"display: none\">{$dump}</div>";
     }
     ?>
