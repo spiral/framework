@@ -39,6 +39,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  * @property \Spiral\Image\ImageManager         $image
  *
  * @property \Spiral\Database\DatabaseProvider  $dbal
+ * @property \Spiral\ODM\ODM                    $odm
  */
 abstract class Controller extends Component implements ControllerInterface
 {

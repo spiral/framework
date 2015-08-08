@@ -43,6 +43,7 @@ use Spiral\Http\HttpDispatcher;
  * @property \Spiral\Image\ImageManager         $image
  *
  * @property \Spiral\Database\DatabaseProvider  $dbal
+ * @property \Spiral\ODM\ODM                    $odm
  */
 class Core extends Container implements CoreInterface, ConfiguratorInterface, HippocampusInterface
 {

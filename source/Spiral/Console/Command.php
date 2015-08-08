@@ -43,6 +43,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @property \Spiral\Image\ImageManager         $image
  *
  * @property \Spiral\Database\DatabaseProvider  $dbal
+ * @property \Spiral\ODM\ODM                    $odm
  */
 abstract class Command extends \Symfony\Component\Console\Command\Command
 {
