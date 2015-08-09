@@ -19,27 +19,25 @@ use Spiral\Reactor\ArraySerializer;
 class ConfigSerializer extends ArraySerializer
 {
     /**
-     * Core instance.
-     *
+     * @invisible
      * @var Core
      */
     protected $core = null;
 
     /**
-     * FileManager.
-     *
+     * @invisible
      * @var FilesInterface
      */
-    protected $file = null;
+    protected $files = null;
 
     /**
      * @param Core           $core
-     * @param FilesInterface $file
+     * @param FilesInterface $files
      */
-    public function __construct(Core $core, FilesInterface $file)
+    public function __construct(Core $core, FilesInterface $files)
     {
         $this->core = $core;
-        $this->file = $file;
+        $this->files = $files;
     }
 
     /**
@@ -53,7 +51,7 @@ class ConfigSerializer extends ArraySerializer
 
         $alias = $directory = $hasAlias = false;
         foreach ($this->getDirectories() as $alias => $directory) {
-            if (strpos($this->file->normalizePath($value), $directory) === 0) {
+            if (strpos($this->files->normalizePath($value), $directory) === 0) {
                 //We found directory alias
                 $hasAlias = true;
                 break;
@@ -88,7 +86,7 @@ class ConfigSerializer extends ArraySerializer
         $directories = $this->core->getDirectories();
 
         foreach ($directories as &$directory) {
-            $directory = $this->file->normalizePath($directory);
+            $directory = $this->files->normalizePath($directory);
             unset($directory);
         }
 
