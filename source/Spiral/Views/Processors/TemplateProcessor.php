@@ -12,13 +12,13 @@ use Spiral\Templater\Exceptions\TemplaterException;
 use Spiral\Templater\Exporters\AttributeExporter;
 use Spiral\Templater\HtmlTokenizer;
 use Spiral\Templater\Imports\AliasImport;
+use Spiral\Templater\Imports\BundleImport;
 use Spiral\Templater\Imports\StopImport;
 use Spiral\Templater\Node;
 use Spiral\Templater\Templater;
 use Spiral\Views\Compiler;
 use Spiral\Views\Exceptions\ViewException;
 use Spiral\Views\ProcessorInterface;
-use Spiral\Templater\Imports\BundleImport;
 use Spiral\Views\ViewManager;
 
 /**
@@ -83,6 +83,26 @@ class TemplateProcessor extends Templater implements ProcessorInterface
         $this->compiler = $compiler;
 
         $this->options = $options + $this->options;
+    }
+
+    /**
+     * Associated view manager.
+     *
+     * @return ViewManager
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
+     * Associated compiler.
+     *
+     * @return Compiler
+     */
+    public function getCompiler()
+    {
+        return $this->compiler;
     }
 
     /**
@@ -166,7 +186,6 @@ class TemplateProcessor extends Templater implements ProcessorInterface
 
         //TODO: Compiler imports
 
-
         //Last import has higher priority than first import
         $this->addImport(new $import($this, $token));
     }
@@ -236,18 +255,11 @@ class TemplateProcessor extends Templater implements ProcessorInterface
             return $exception;
         }
 
-        //We want new instance of compiler (for isolation)
-        //todo: check if required, is it similar to get source?
-        $compiler = $this->compiler->reconfigure(
-            $this->compiler->getNamespace(),
-            $this->compiler->getView()
-        );
-
         //We now can find file exception got raised
-        $source = $compiler->getSource();
+        $source = $this->compiler->getSource();
 
         //We have to process view source to make sure that it has same state as at moment of error
-        foreach ($compiler->getProcessors() as $processor) {
+        foreach ($this->compiler->getProcessors() as $processor) {
             if ($processor instanceof self) {
                 //The rest will be handled by TemplateProcessor
                 break;
