@@ -436,12 +436,12 @@ $dumps = [];
                 <?php
                 $stacktrace = array_reverse($stacktrace);
                 foreach ($stacktrace as $index => $trace) {
-                    if (!isset($trace['file']) && isset($tracing[$index - 1]['file'])) {
-                        $trace['file'] = $tracing[$index - 1]['file'];
-                        $trace['line'] = $tracing[$index - 1]['line'];
+                    if (empty($trace['file']) && isset($stacktrace[$index - 1]['file'])) {
+                        $trace['file'] = $stacktrace[$index - 1]['file'];
+                        $trace['line'] = $stacktrace[$index - 1]['line'];
                     }
 
-                    if (!isset($tracing[$index + 1])) {
+                    if (!isset($stacktrace[$index + 1])) {
                         $trace['file'] = $snapshot->getFile();
                         $trace['line'] = $snapshot->getLine();
                     }

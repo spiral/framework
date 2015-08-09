@@ -11,15 +11,14 @@ namespace Spiral\Views\Processors;
 use Spiral\Templater\Exceptions\TemplaterException;
 use Spiral\Templater\Exporters\AttributeExporter;
 use Spiral\Templater\HtmlTokenizer;
+use Spiral\Templater\Imports\AliasImport;
 use Spiral\Templater\Imports\StopImport;
 use Spiral\Templater\Node;
 use Spiral\Templater\Templater;
 use Spiral\Views\Compiler;
 use Spiral\Views\Exceptions\ViewException;
 use Spiral\Views\ProcessorInterface;
-use Spiral\Views\Templater\AliasImport;
-use Spiral\Views\Templater\BundleImport;
-use Spiral\Views\Templater\NamespaceImport;
+use Spiral\Templater\Imports\BundleImport;
 use Spiral\Views\ViewManager;
 
 /**
@@ -51,10 +50,10 @@ class TemplateProcessor extends Templater implements ProcessorInterface
             self::TYPE_IMPORT  => ['use', 'import']
         ],
         'imports'     => [
-            //AliasImport::class     => ['path', 'as'],
+            AliasImport::class  => ['path', 'as'],
             //NamespaceImport::class => ['path', 'namespace'],
-            //BundleImport::class    => ['bundle'],
-            StopImport::class      => ['stop']
+            BundleImport::class => ['bundle'],
+            StopImport::class   => ['stop']
         ],
         'keywords'    => [
             'namespace' => ['view:namespace', 'node:namespace'],
@@ -161,12 +160,15 @@ class TemplateProcessor extends Templater implements ProcessorInterface
 
         if (empty($import)) {
             throw $this->clarifyException(
-                new TemplaterException("Undefined importer type.", $token)
+                new TemplaterException("Undefined import type.", $token)
             );
         }
 
+        //TODO: Compiler imports
+
+
         //Last import has higher priority than first import
-        $this->addImport(new $import($this->compiler, $this, $token));
+        $this->addImport(new $import($this, $token));
     }
 
     /**
@@ -175,6 +177,7 @@ class TemplateProcessor extends Templater implements ProcessorInterface
     protected function getSource($location, Templater &$templater = null, array $token = [])
     {
         try {
+            //We will get new instance of Compiler with it's own Templater
             $compiler = $this->compiler->reconfigure(
                 $location[self::LOCATION_NAMESPACE],
                 $location[self::LOCATION_VIEW]

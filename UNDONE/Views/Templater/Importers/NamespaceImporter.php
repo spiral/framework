@@ -16,7 +16,7 @@ use Spiral\Components\View\ViewException;
 use Spiral\Components\View\ViewManager;
 use Spiral\Support\Html\HtmlTokenizer;
 
-class NamespaceImport implements ImportInterface
+class Na12mespaceImport implements ImportInterface
 {
     /**
      * Aliases generation takes some time, we can cache it.
