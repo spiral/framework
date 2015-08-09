@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Changes application environment by writing custom value into application/data/environment.php
- * Works only with default spiral core.
+ * Works only with default spiral core. Run command without any argument to check current environment.
  */
 class EnvironmentCommand extends Command
 {
@@ -27,13 +27,13 @@ class EnvironmentCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Change application environment (data/environment.php).';
+    protected $description = 'Show/change application environment (data/environment.php).';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['environment', InputArgument::REQUIRED, 'Environment name.']
+        ['environment', InputArgument::OPTIONAL, 'Environment name.']
     ];
 
     /**
@@ -51,9 +51,17 @@ class EnvironmentCommand extends Command
      */
     public function perform()
     {
+        if (empty($this->argument('environment'))) {
+            $this->writeln(
+                "Current application environment: <comment>{$this->core->environment()}</comment>."
+            );
+
+            return;
+        }
+
         //That's easy
         $this->core->saveData('environment', $this->argument('environment'), directory('runtime'));
-        $this->writeln("Environment set to '<comment>{$this->argument('environment')}</comment>'.");
+        $this->writeln("Environment set to <comment>{$this->argument('environment')}</comment>.");
 
         if ($this->isVerbose()) {
             $alteredConfigs = $this->getAlteredConfigs($this->argument('environment'));
