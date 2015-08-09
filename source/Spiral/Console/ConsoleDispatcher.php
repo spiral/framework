@@ -15,6 +15,8 @@ use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\HippocampusInterface;
 use Spiral\Core\Singleton;
+use Spiral\Debug\BenchmarkerInterface;
+use Spiral\Debug\Debugger;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Tokenizer\TokenizerInterface;
 use Symfony\Component\Console\Application;
@@ -128,6 +130,9 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      */
     public function start()
     {
+        //Some console commands utilizes benchmarking, let's help them
+        $this->container->bind(BenchmarkerInterface::class, Debugger::class);
+
         //We don't want http pay for greedy console tokenizer
         $this->loader->setName('loadmap-console');
         $this->application()->run();

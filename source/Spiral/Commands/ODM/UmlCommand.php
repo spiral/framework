@@ -8,47 +8,45 @@
  */
 namespace Spiral\Commands\ODM;
 
-use Spiral\Components\Console\Command;
-use Spiral\Commands\ODM\Exporters\UmlExporter;
-
+use Spiral\Console\Command;
+use Spiral\ODM\UmlExporter;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Exports ODM schema into UML format.
+ */
 class UmlCommand extends Command
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'odm:uml';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Export ODM schema to UML.';
 
     /**
-     * Command arguments specified in Symphony format. For more complex definitions redefine getArguments()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $arguments = [
         ['filename', InputArgument::REQUIRED, 'Output filename.'],
     ];
 
     /**
-     * Update schema and documentation.
+     * Perform command.
      */
     public function perform()
     {
-        $umlExporter = UmlExporter::make([
+        /**
+         * @var UmlExporter $uml
+         */
+        $uml = $this->container->get(UmlExporter::class, [
             'builder' => $this->odm->schemaBuilder()
         ]);
-        $umlExporter->render($this->argument('filename'));
 
-        $this->writeln("<info>UML schema successfully created:</info> {$this->argument('filename')}");
+        $uml->export($this->argument('filename'));
+        $this->writeln("<info>UML schema successfully exported:</info> {$this->argument('filename')}");
     }
 }
