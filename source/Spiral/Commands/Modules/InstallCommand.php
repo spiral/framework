@@ -11,7 +11,7 @@ namespace Spiral\Commands\Modules;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Spiral\Console\Command;
-use Spiral\Console\Helpers\ConsoleFormat;
+use Spiral\Console\Helpers\ConsoleFormatter;
 use Spiral\Debug\Logger;
 use Spiral\Modules\DefinitionInterface;
 use Spiral\Tokenizer\TokenizerInterface;
@@ -126,10 +126,10 @@ class InstallCommand extends Command
      * Installation logger (if needed).
      *
      * @param DefinitionInterface $definition
-     * @return ConsoleFormat
+     * @return ConsoleFormatter
      */
     protected function createLogger(DefinitionInterface $definition)
     {
-        return new ConsoleFormat($this->output, $this->formats, $definition->getName());
+        return new ConsoleFormatter($this->output, $this->formats, $definition->getName());
     }
 }

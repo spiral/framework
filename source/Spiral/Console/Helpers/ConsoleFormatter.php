@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Simple console logger/formatter. Provides ability to disable display only specified set of log
  * messages and use formatting section to prefix every line.
  */
-class ConsoleFormat extends AbstractLogger
+class ConsoleFormatter extends AbstractLogger
 {
     /**
      * LogLevels associated with their formats.
