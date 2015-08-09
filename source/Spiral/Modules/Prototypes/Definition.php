@@ -18,6 +18,12 @@ use Spiral\Modules\ModuleManager;
  * Default implementation of DefinitionInterface, uses composer.json file to read information about
  * module name, dependencies and etc. Module must extend Module prototype in order to work with
  * this Definition (createInstaller method is required).
+ *
+ * Module location (root) directory will be resolved as second parent folder of Module class.
+ *
+ * Example:
+ * Module class:    vendor/package/scr/Namespace/Class.php
+ * Module location: vendor/package/scr
  */
 class Definition implements DefinitionInterface
 {
@@ -113,9 +119,9 @@ class Definition implements DefinitionInterface
      */
     public function getLocation()
     {
-        return $this->files->normalizePath(dirname(
+        return $this->files->normalizePath(dirname(dirname(
             (new \ReflectionClass($this->class))->getFileName()
-        ));
+        )));
     }
 
     /**

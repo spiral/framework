@@ -10,6 +10,7 @@ namespace Spiral\Modules;
 
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\ContainerInterface;
+use Spiral\Core\Core;
 use Spiral\Core\Singleton;
 use Spiral\Tokenizer\TokenizerInterface;
 
@@ -62,6 +63,27 @@ class ModuleManager extends Singleton
     }
 
     /**
+     * Application root directory.
+     *
+     * @return string
+     */
+    public function rootDirectory()
+    {
+        return $this->container->get(Core::class)->directory('root');
+    }
+
+    /**
+     * Public resources (webroot) directory, used by default installer implementation to mount
+     * public files to.
+     *
+     * @return string
+     */
+    public function webrootDirectory()
+    {
+        return $this->container->get(Core::class)->directory('webroot');
+    }
+
+    /**
      * Checking if module was already registered in modules config.
      *
      * @param string $module
@@ -87,7 +109,7 @@ class ModuleManager extends Singleton
      * required dependencies.
      *
      * @param TokenizerInterface $tokenizer
-     * @return Definition[]
+     * @return DefinitionInterface[]
      */
     public function findModules(TokenizerInterface $tokenizer = null)
     {
@@ -105,7 +127,7 @@ class ModuleManager extends Singleton
         }
 
         //Sorting based on dependencies
-        uasort($definitions, function (Definition $moduleA, Definition $moduleB) {
+        uasort($definitions, function (DefinitionInterface $moduleA, DefinitionInterface $moduleB) {
             return !in_array($moduleA->getName(), $moduleB->getDependencies());
         });
 
@@ -122,7 +144,7 @@ class ModuleManager extends Singleton
     {
         $this->modules[$definition->getName()] = [
             'class'     => $definition->getClass(),
-            'bootstrap' => $definition->getInstaller()->isBootstrappable(),
+            'bootstrap' => $definition->getInstaller()->needsBootstrapping(),
             'bindings'  => $definition->getInstaller()->getBindings()
         ];
 

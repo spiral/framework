@@ -18,13 +18,20 @@ use Spiral\Modules\ModuleInterface;
  * Definition information will be resolved using local composer.json file.
  *
  * Define COMPOSER constant in your module with relative path to composer.json file.
+ *
+ * Module location (root) directory will be resolved (by default) as second parent folder of Module
+ * class.
+ *
+ * Example:
+ * Module class:    vendor/package/scr/Namespace/Class.php
+ * Module location: vendor/package/scr
  */
 abstract class Module extends Component implements ModuleInterface
 {
     /**
      * Location of composer.json relatively to module class location.
      */
-    const COMPOSER = '../../composer.json';
+    const COMPOSER = '../composer.json';
 
     /**
      * {@inheritdoc}

@@ -11,7 +11,7 @@ namespace Spiral\Modules\Exceptions;
 /**
  * Error while module installation or update.
  */
-class InstallationException extends ModuleException
+class InstallerException extends ModuleException
 {
 
 }

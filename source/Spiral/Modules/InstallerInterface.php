@@ -8,6 +8,8 @@
  */
 namespace Spiral\Modules;
 
+use Spiral\Modules\Exceptions\InstallerException;
+
 /**
  * IModule installer responsible for operations like copying resources, registering configs, view
  * namespaces and declaring that Module::bootstrap() call is required.
@@ -19,6 +21,7 @@ interface InstallerInterface
      * directory, conflicts may happen only if target file was altered or just different than module
      * declaration.
      */
+    const NONE      = 0;
     const OVERWRITE = 1;
     const IGNORE    = 2;
 
@@ -27,7 +30,7 @@ interface InstallerInterface
      *
      * @return bool
      */
-    public function isBootstrappable();
+    public function needsBootstrapping();
 
     /**
      * Declared module bindings, must be compatible with active container instance and be serializable
@@ -42,7 +45,7 @@ interface InstallerInterface
      * etc.
      *
      * @param int $conflicts Method to resolve file conflicts.
-     * @throws ModuleException
+     * @throws InstallerException
      */
     public function install($conflicts = self::OVERWRITE);
 
@@ -51,6 +54,7 @@ interface InstallerInterface
      * created/altered.
      *
      * @param int $conflicts
+     * @throws InstallerException
      */
     public function update($conflicts = self::OVERWRITE);
 }

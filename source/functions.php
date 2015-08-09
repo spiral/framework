@@ -17,7 +17,7 @@ if (!function_exists('directory')) {
      * Get directory alias value.
      *
      * @param string $alias Directory alias, ie. "framework".
-     * @return null
+     * @return string
      */
     function directory($alias)
     {

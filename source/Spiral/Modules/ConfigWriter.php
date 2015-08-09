@@ -202,7 +202,7 @@ class ConfigWriter extends Component
      */
     public function writeConfig($directory = null, $mode = FilesInterface::READONLY)
     {
-        $directory = !empty($directory) ? $directory : directory('config');
+        $directory = !empty($directory) ? $directory : $this->core->directory('config');
 
         //Target configuration file
         $filename = $this->configFilename($directory, $this->name);
