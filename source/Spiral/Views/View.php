@@ -8,14 +8,14 @@
  */
 namespace Spiral\Views;
 
-use Spiral\Core\Component;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Models\DataEntity;
 
 /**
  * Default spiral implementation of view class. You can link your custom view implementations via
  * editing view config section - associations.
  */
-class View extends Component implements ViewInterface
+class View extends DataEntity implements ViewInterface
 {
     /**
      * For render benchmarking.
@@ -29,44 +29,16 @@ class View extends Component implements ViewInterface
     protected $compiler = null;
 
     /**
-     * @var array
-     */
-    protected $data = [];
-
-    /**
-     * {@inheritdoc}
+     * @param CompilerInterface $compiler
+     * @param array             $data Contract with viewManager.
      */
     public function __construct(CompilerInterface $compiler, array $data = [])
     {
         $this->compiler = $compiler;
-        $this->data = $data;
-    }
+        $this->setFields($data);
 
-    /**
-     * Alter view parameters (should replace existed value).
-     *
-     * @param string $name
-     * @param mixed  $value
-     * @return $this
-     */
-    public function set($name, $value)
-    {
-        $this->data[$name] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Set view rendering data. Full dataset will be replaced.
-     *
-     * @param array $data
-     * @return $this
-     */
-    public function setData(array $data)
-    {
-        $this->data = $data;
-
-        return $this;
+        //Traits
+        self::initialize();
     }
 
     /**
@@ -75,28 +47,27 @@ class View extends Component implements ViewInterface
     public function render()
     {
         //Benchmarking context
-        $context = $this->compiler->getNamespace()
+        $__context__ = $this->compiler->getNamespace()
             . ViewProviderInterface::NS_SEPARATOR
             . $this->compiler->getView();
 
-        $this->benchmark('render', $context);
+        $this->benchmark('render', $__context__);
 
-        $outerBuffer = ob_get_level();
-
+        $__outputLevel__ = ob_get_level();
         ob_start();
-        extract($this->data, EXTR_OVERWRITE);
+
+        extract($this->fields, EXTR_OVERWRITE);
         try {
-            include $this->compiler->compiledFilename();
-        } catch (\Exception $exception) {
-            while (ob_get_level() > $outerBuffer) {
+            require $this->compiler->compiledFilename();
+        } finally {
+            while (ob_get_level() > $__outputLevel__ + 1) {
                 ob_end_clean();
             }
-
-            throw $exception;
         }
 
         $result = ob_get_clean();
-        $this->benchmark('render', $context);
+
+        $this->benchmark('render', $__context__);
 
         return $result;
     }

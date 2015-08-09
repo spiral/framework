@@ -10,7 +10,7 @@ namespace Spiral\Commands\DBAL\Migrations;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class MigrateCommand extends BaseCommand
+class MigrateCommand extends AbstractCommand
 {
     /**
      * Command name.

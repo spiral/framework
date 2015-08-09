@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\DBAL\Migrations;
 
-class InitCommand extends BaseCommand
+class InitCommand extends AbstractCommand
 {
     /**
      * Command name.

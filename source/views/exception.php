@@ -343,7 +343,7 @@ $dumps = [];
 <div class="wrapper">
     <div class="header">
         <?= $snapshot->getClass() ?>:
-        <strong><?= $snapshot->getException()->getMessage() ?></strong>
+        <strong title="You have to catch them all!"><?= $snapshot->getException()->getMessage() ?></strong>
         in <i><?= $snapshot->getFile() ?></i> at <strong>line <?= $snapshot->getLine() ?></strong>
     </div>
 

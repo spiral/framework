@@ -10,14 +10,13 @@ namespace Spiral\Commands\DBAL\Migrations;
 
 use Spiral\Components\Console\Command;
 use Spiral\Components\DBAL\DatabaseManager;
-
 use Spiral\Components\DBAL\Migrations\Migrator;
 use Spiral\Core\Events\Event;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class BaseCommand extends Command
+abstract class AbstractCommand extends Command
 {
     /**
      * Migrator instance.
@@ -27,26 +26,13 @@ abstract class BaseCommand extends Command
     private $migrator = null;
 
     /**
-     * Helper method used to display query.
-     *
-     * @param Event $event
-     */
-    public function displayQuery(Event $event)
-    {
-        $query = DatabaseManager::interpolateQuery($event->context['query'], $event->context['parameters']);
-        $this->writeln("<comment>#</comment> $query");
-        $event->stopPropagation();
-    }
-
-    /**
      * Check if current environment is safe to run migration.
      *
      * @return bool
      */
     protected function checkEnvironment()
     {
-        if ($this->option('safe') || $this->getMigrator()->isSafe())
-        {
+        if ($this->option('safe') || $this->getMigrator()->isSafe()) {
             return true;
         }
 
@@ -55,8 +41,7 @@ abstract class BaseCommand extends Command
             . "is not safe to run migrations.</fg=red>"
         );
 
-        if (!$this->ask->confirm("Do you wish to continue?"))
-        {
+        if (!$this->ask->confirm("Do you wish to continue?")) {
             $this->writeln("<comment>Cancelling operation.</comment>");
 
             return false;
@@ -72,8 +57,7 @@ abstract class BaseCommand extends Command
      */
     protected function getMigrator()
     {
-        if ($this->migrator)
-        {
+        if ($this->migrator) {
             return $this->migrator;
         }
 
@@ -99,8 +83,7 @@ abstract class BaseCommand extends Command
         //Database driver
         $driver = $this->getMigrator()->getDatabase()->getDriver();
 
-        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
-        {
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
             $driver->dispatcher()->addListener('statement', [$this, 'displayQuery']);
         }
 

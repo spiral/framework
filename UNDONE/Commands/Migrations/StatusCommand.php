@@ -10,7 +10,7 @@ namespace Spiral\Commands\DBAL\Migrations;
 
 use Spiral\Components\DBAL\Migrations\MigrationException;
 
-class StatusCommand extends BaseCommand
+class StatusCommand extends AbstractCommand
 {
     /**
      * Text to show if migration is not performed.

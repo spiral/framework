@@ -10,7 +10,7 @@ namespace Spiral\Commands\DBAL\Migrations;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class RollbackCommand extends BaseCommand
+class RollbackCommand extends AbstractCommand
 {
     /**
      * Command name.

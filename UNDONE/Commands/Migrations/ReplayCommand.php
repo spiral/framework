@@ -10,7 +10,7 @@ namespace Spiral\Commands\DBAL\Migrations;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class ReplayCommand extends BaseCommand
+class ReplayCommand extends AbstractCommand
 {
     /**
      * Command name.

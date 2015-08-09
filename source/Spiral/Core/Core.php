@@ -322,6 +322,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     public function bootstrap()
     {
         if (file_exists($this->directory('application') . '/' . static::BOOTSTRAP)) {
+            $application = $this;
             //Old Fashion, btw there is very tasty cocktail under same name
             require($this->directory('application') . '/' . static::BOOTSTRAP);
         }
@@ -506,9 +507,19 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     private function createDispatcher()
     {
-        return $this->get(
-            php_sapi_name() === 'cli' ? ConsoleDispatcher::class : HttpDispatcher::class
-        );
+        if (php_sapi_name() === 'cli') {
+            return $this->get(ConsoleDispatcher::class);
+        }
+
+        if ($this->hasBinding(HttpDispatcher::class)) {
+            return $this->hasBinding(HttpDispatcher::class);
+        }
+
+        //Microseconds :0.
+        $http = new HttpDispatcher($this, $this);
+        $this->bind(HttpDispatcher::SINGLETON, $http);
+
+        return $http;
     }
 
     /**
@@ -546,9 +557,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      *
      * @param array $directories Spiral directories should include root, libraries and application
      *                           directories.
+     * @param bool  $catchErrors
      * @return static
      */
-    public static function init(array $directories)
+    public static function init(array $directories, $catchErrors = true)
     {
         /**
          * @var Core $core
@@ -565,9 +577,11 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             ] + $core->bindings;
 
         //Error and exception handlers
-        set_error_handler([$core, 'handleError']);
-        set_exception_handler([$core, 'handleException']);
-        register_shutdown_function([$core, 'handleShutdown']);
+        if ($catchErrors) {
+            set_error_handler([$core, 'handleError']);
+            set_exception_handler([$core, 'handleException']);
+            register_shutdown_function([$core, 'handleShutdown']);
+        }
 
         foreach ($core->autoload as $module) {
             $core->get($module);
