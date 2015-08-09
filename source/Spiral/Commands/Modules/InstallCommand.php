@@ -118,7 +118,7 @@ class InstallCommand extends Command
         }
 
         if ($countInstalled == 0) {
-            $this->writeln("<info>No available modules found.</info>");
+            $this->writeln("<comment>No available modules were found.</comment>");
         }
     }
 

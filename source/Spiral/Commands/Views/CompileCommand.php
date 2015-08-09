@@ -31,7 +31,7 @@ class CompileCommand extends Command
      */
     public function perform()
     {
-        /**
+       /**
          * @var FormatterHelper $formatter
          */
         $formatter = $this->getHelper('formatter');
@@ -57,6 +57,6 @@ class CompileCommand extends Command
             }
         }
 
-        $this->writeln("<info>View cache successfully generated.</info>");
+        $this->writeln("<info>View cache was successfully generated.</info>");
     }
 }
