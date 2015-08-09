@@ -423,7 +423,7 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
         }
 
         foreach ($this->publicFiles as $file => $definition) {
-            if ($this->files->exists($definition['filename'])) {
+            if (!$this->files->exists($definition['filename'])) {
                 $this->logger()->debug(
                     "Publishing file '[module]{file}'.", compact('file')
                 );
@@ -451,7 +451,7 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
 
             //Copying using write() method to ensure directories and permissions, slower by easier
             $this->files->write(
-                $file,
+                $definition['destination'],
                 $this->files->read($definition['filename']),
                 $definition['mode'],
                 true
