@@ -12,6 +12,7 @@ use Spiral\Core\Core;
 use Spiral\Files\FilesInterface;
 use Spiral\Modules\ConfigSerializer;
 use Spiral\Modules\ConfigWriter;
+use Spiral\Modules\Exceptions\ConfigWriterException;
 use Spiral\Tokenizer\TokenizerInterface;
 use Spiral\Views\ViewManager;
 
@@ -83,13 +84,25 @@ class ViewConfig extends ConfigWriter
      * @param string $namespace View namespace.
      * @param string $directory Directory name relative to module root directory.
      * @return $this
+     * @throws ConfigWriterException
      */
     public function registerNamespace($namespace, $directory = 'views')
     {
         if (!isset($this->namespaces[$namespace])) {
             $this->namespaces[$namespace] = [];
         }
-        $this->namespaces[$namespace][] = $directory;
+
+        $location = $this->files->normalizePath(
+            $this->moduleDirectory . FilesInterface::SEPARATOR . $directory
+        );
+
+        if (!$this->files->exists($location)) {
+            throw new ConfigWriterException(
+                "Unable to register view namespace '{$namespace}', no such directory '{$directory}'."
+            );
+        }
+
+        $this->namespaces[$namespace][] = $location;
 
         return $this;
     }
@@ -143,10 +156,6 @@ class ViewConfig extends ConfigWriter
 
         foreach ($this->namespaces as $namespace => $directories) {
             foreach ($directories as $directory) {
-                $directory = $this->files->normalizePath(
-                    $this->moduleDirectory . FilesInterface::SEPARATOR . $directory
-                );
-
                 $config['namespaces'][$namespace][] = $directory;
             }
 
