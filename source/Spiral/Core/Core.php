@@ -18,6 +18,7 @@ use Spiral\Core\Exceptions\FatalException;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
+use Spiral\Modules\ModuleManager;
 
 /**
  * He made 9 rings... i mean this is default spiral core responsible for many things at the same time.
@@ -183,7 +184,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      *
      * @var array
      */
-    protected $autoload = [Loader::class];
+    protected $autoload = [Loader::class, ModuleManager::class];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must
@@ -347,7 +348,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         $cached = str_replace(['/', '\\'], '-', 'config-' . $section);
 
         //Cached configuration
-        if (empty($data = $this->loadData($cached, null, $cachedFilename))) {
+        if (is_null($data = $this->loadData($cached, null, $cachedFilename))) {
             if (!file_exists($filename)) {
                 throw new ConfiguratorException(
                     "Unable to load '{$section}' configuration, file not found."

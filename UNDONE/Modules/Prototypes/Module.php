@@ -76,6 +76,23 @@ abstract class Module extends Component implements ModuleInterface
         //Let's create default Installer
         return $container->get(Installer::class, [
             'moduleDirectory' => $definition->getLocation()
-        ]);
+        ])
+
+            ;
     }
+
+    /**
+     * Module installer responsible for operations like copying resources, registering configs, view
+     * namespaces and declaring that bootstrap() call is required.
+     *
+     * This method is static as it should be called without constructing module object.
+     *
+     * @param ContainerInterface  $container
+     * @param DefinitionInterface $definition Module definition fetched or generated of composer file.
+     * @return InstallerInterface
+     */
+    public static function getInstaller(
+        ContainerInterface $container,
+        DefinitionInterface $definition
+    );
 }

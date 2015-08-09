@@ -10,6 +10,10 @@ namespace Spiral\Modules;
 
 use Spiral\Core\ContainerInterface;
 
+/**
+ * Describes ability to be located by ModuleManager and installed with custom configs, resources and e
+ * tc.
+ */
 interface ModuleInterface
 {
     /**
@@ -27,16 +31,4 @@ interface ModuleInterface
      * @return DefinitionInterface
      */
     public static function getDefinition(ContainerInterface $container);
-
-    /**
-     * Module installer responsible for operations like copying resources, registering configs, view
-     * namespaces and declaring that bootstrap() call is required.
-     *
-     * This method is static as it should be called without constructing module object.
-     *
-     * @param ContainerInterface  $container
-     * @param DefinitionInterface $definition Module definition fetched or generated of composer file.
-     * @return InstallerInterface
-     */
-    public static function getInstaller(ContainerInterface $container, DefinitionInterface $definition);
 }

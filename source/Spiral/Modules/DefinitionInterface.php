@@ -8,25 +8,28 @@
  */
 namespace Spiral\Modules;
 
+/**
+ * Module definition must provide generic module information such as location, class name, size and
+ * etc. In additional every Definition should know how to create module Installer.
+ */
 interface DefinitionInterface
 {
     /**
-     * Module name, can contain version or other short description, like "Spiral Profiler v1.2.0"
-     * Can be fetched from composer.json, "name" field.
+     * Module name, can contain version or other short description.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Module description, can be automatically fetched from composer.json file, "description" field.
+     * Module description.
      *
      * @return string
      */
     public function getDescription();
 
     /**
-     * Module class name used to fetch installer and register module in configuration.
+     * Module class name.
      *
      * @return string
      */
@@ -63,8 +66,7 @@ interface DefinitionInterface
 
     /**
      * Module installer responsible for operations like copying resources, registering configs, view
-     * namespaces and declaring that bootstrap() call is required. Installer declaration should be
-     * located in Module::getInstaller() method.
+     * namespaces and declaring that Module::bootstrap() call is required.
      *
      * @return InstallerInterface
      */
