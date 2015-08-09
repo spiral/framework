@@ -8,8 +8,8 @@
  */
 namespace Spiral\Views\Processors;
 
-use Spiral\Support\Helpers\StringHelper;
-use Spiral\Support\HtmlTokenizer;
+use Spiral\Support\StringHelper;
+use Spiral\Templater\HtmlTokenizer;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\Compiler;
 use Spiral\Views\ProcessorInterface;

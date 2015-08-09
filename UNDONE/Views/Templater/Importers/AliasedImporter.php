@@ -10,10 +10,10 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 
 use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
-use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\ImportInterface;
 use Spiral\Support\Html\HtmlTokenizer;
 
-class AliasedImporter implements ImporterInterface
+class AliasedImport implements ImportInterface
 {
     /**
      * Imported view namespace.

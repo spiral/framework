@@ -86,7 +86,7 @@ class View extends Component implements ViewInterface
         ob_start();
         extract($this->data, EXTR_OVERWRITE);
         try {
-            include $this->compiler->viewFilename();
+            include $this->compiler->compiledFilename();
         } catch (\Exception $exception) {
             while (ob_get_level() > $outerBuffer) {
                 ob_end_clean();

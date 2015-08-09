@@ -10,13 +10,13 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 
 use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
-use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\ImportInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\TemplaterException;
 use Spiral\Components\View\ViewException;
 use Spiral\Components\View\ViewManager;
 use Spiral\Support\Html\HtmlTokenizer;
 
-class NamespaceImporter implements ImporterInterface
+class NamespaceImport implements ImportInterface
 {
     /**
      * Aliases generation takes some time, we can cache it.

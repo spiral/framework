@@ -11,11 +11,11 @@ namespace Spiral\Components\View\Compiler\Processors\Templater\Importers;
 use Spiral\Components\View\Compiler\Compiler;
 use Spiral\Components\View\Compiler\Processors\TemplateProcessor;
 use Spiral\Components\View\Compiler\Processors\Templater\Behaviours\ExtendsBehaviour;
-use Spiral\Components\View\Compiler\Processors\Templater\ImporterInterface;
+use Spiral\Components\View\Compiler\Processors\Templater\ImportInterface;
 use Spiral\Components\View\Compiler\Processors\Templater\Node;
 use Spiral\Support\Html\HtmlTokenizer;
 
-class BundleImporter implements ImporterInterface
+class BundleImport implements ImportInterface
 {
     /**
      * Bundle view namespace.
@@ -34,7 +34,7 @@ class BundleImporter implements ImporterInterface
     /**
      * Importers fetched from view bundle.
      *
-     * @var ImporterInterface[]
+     * @var ImportInterface[]
      */
     protected $importers = [];
 

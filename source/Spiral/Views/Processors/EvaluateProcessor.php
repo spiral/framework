@@ -120,7 +120,7 @@ class EvaluateProcessor implements ProcessorInterface, SaturableInterlace
      */
     protected function uniqueID()
     {
-        return spl_object_hash($this) . '-' . md5($this->compiler->viewFilename());
+        return spl_object_hash($this) . '-' . md5($this->compiler->compiledFilename());
     }
 
     /**

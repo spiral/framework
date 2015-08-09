@@ -15,7 +15,6 @@ use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
-use Spiral\Views\Compiler\ProcessorInterface;
 
 /**
  * Default spiral compiler implementation. Provides ability to cache compiled views and use set
@@ -53,7 +52,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
      *
      * @var string
      */
-    private $viewFilename = '';
+    private $compiledFilename = '';
 
     /**
      * ViewManager dependencies.
@@ -135,6 +134,16 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
     }
 
     /**
+     * Non compiled view filename.
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function compile()
@@ -150,16 +159,16 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
             $this->benchmark($reflection->getShortName(), $context);
         }
 
-        $this->files->write($this->viewFilename(), $source, FilesInterface::RUNTIME, true);
+        $this->files->write($this->compiledFilename(), $source, FilesInterface::RUNTIME, true);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function viewFilename()
+    public function compiledFilename()
     {
-        if (!empty($this->viewFilename)) {
-            return $this->viewFilename;
+        if (!empty($this->compiledFilename)) {
+            return $this->compiledFilename;
         }
 
         //Escaped view name
@@ -171,7 +180,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
         //Unique cache filename
         $filename = $this->namespace . '-' . $view . $postfix;;
 
-        return $this->viewFilename = $this->config['cache']['directory'] . '/' . $filename;
+        return $this->compiledFilename = $this->config['cache']['directory'] . '/' . $filename;
     }
 
     /**
@@ -183,7 +192,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
             return false;
         }
 
-        if (!$this->files->exists($viewFilename = $this->viewFilename())) {
+        if (!$this->files->exists($viewFilename = $this->compiledFilename())) {
             return false;
         }
 
@@ -214,9 +223,9 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
 
         foreach ($this->config['processors'] as $processor => $options) {
             $this->processors[] = $this->container->get($processor, [
-                'views' => $this->views,
+                'views'    => $this->views,
                 'compiler' => $this,
-                'options' => $options
+                'options'  => $options
             ]);
         }
 
@@ -239,7 +248,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
 
         //Must be the same engine
         $compiler->filename = $this->views->getFilename($namespace, $view);
-        $compiler->viewFilename = '';
+        $compiler->compiledFilename = '';
 
         //Processors has to be regenerated to flush content
         $compiler->processors = [];

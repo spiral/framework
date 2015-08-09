@@ -45,9 +45,9 @@ class ExpressionsProcessor implements ProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct(ViewManager $viewManager, Compiler $compiler, array $options)
+    public function __construct(ViewManager $views, Compiler $compiler, array $options)
     {
-        $this->viewManager = $viewManager;
+        $this->viewManager = $views;
 
         if (!empty($options['expressions'])) {
             $this->expressions = $options['expressions'] + $this->expressions;

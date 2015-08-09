@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Support\Helpers;
+namespace Spiral\Support;
 
 use Cocur\Slugify\Slugify;
 use Spiral\Core\Container;

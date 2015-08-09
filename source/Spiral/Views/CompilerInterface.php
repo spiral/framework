@@ -55,7 +55,7 @@ interface CompilerInterface
      *
      * @return string
      */
-    public function viewFilename();
+    public function compiledFilename();
 
     /**
      * True if view has been already compiled and cached somewhere.
