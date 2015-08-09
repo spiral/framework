@@ -50,7 +50,7 @@ class KeyCommand extends Command
         );
 
         $this->writeln(
-            "<info>Encryption key <comment>{$key}</comment> set for environment "
+            "<info>Encryption key <comment>{$key}</comment> was set for environment "
             . "<comment>{$this->core->environment()}</comment>.</info>"
         );
     }
