@@ -8,14 +8,14 @@
  */
 namespace Spiral\Views;
 
+use Spiral\Core\Component;
 use Spiral\Debug\Traits\BenchmarkTrait;
-use Spiral\Models\DataEntity;
 
 /**
  * Default spiral implementation of view class. You can link your custom view implementations via
  * editing view config section - associations.
  */
-class View extends DataEntity implements ViewInterface
+class View extends Component implements ViewInterface
 {
     /**
      * For render benchmarking.
@@ -29,16 +29,44 @@ class View extends DataEntity implements ViewInterface
     protected $compiler = null;
 
     /**
-     * @param CompilerInterface $compiler
-     * @param array             $data Contract with viewManager.
+     * @var array
+     */
+    protected $data = [];
+
+    /**
+     * {@inheritdoc}
      */
     public function __construct(CompilerInterface $compiler, array $data = [])
     {
         $this->compiler = $compiler;
-        $this->setFields($data);
+        $this->data = $data;
+    }
 
-        //Traits
-        self::initialize();
+    /**
+     * Alter view parameters (should replace existed value).
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @return $this
+     */
+    public function set($name, $value)
+    {
+        $this->data[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set view rendering data. Full dataset will be replaced.
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function setData(array $data)
+    {
+        $this->data = $data;
+
+        return $this;
     }
 
     /**
@@ -56,7 +84,7 @@ class View extends DataEntity implements ViewInterface
         $__outputLevel__ = ob_get_level();
         ob_start();
 
-        extract($this->fields, EXTR_OVERWRITE);
+        extract($this->data, EXTR_OVERWRITE);
         try {
             require $this->compiler->compiledFilename();
         } finally {

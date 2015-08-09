@@ -4,8 +4,8 @@
  * @var \Spiral\Debug\Snapshot          $snapshot
  * @var \Spiral\Core\ContainerInterface $container
  */
-
-$highlighter = new \Spiral\Tokenizer\Hightligher($container->get(\Spiral\Tokenizer\TokenizerInterface::class),
+$highlighter = new \Spiral\Tokenizer\Hightligher(
+    $container->get(\Spiral\Tokenizer\TokenizerInterface::class),
     [
         'styles' => [
             'color: #C26230; font-weight: bold;' => [
@@ -343,7 +343,8 @@ $dumps = [];
 <div class="wrapper">
     <div class="header">
         <?= $snapshot->getClass() ?>:
-        <strong title="You have to catch them all!"><?= $snapshot->getException()->getMessage() ?></strong>
+        <strong
+            title="You have to catch them all!"><?= $snapshot->getException()->getMessage() ?></strong>
         in <i><?= $snapshot->getFile() ?></i> at <strong>line <?= $snapshot->getLine() ?></strong>
     </div>
 
