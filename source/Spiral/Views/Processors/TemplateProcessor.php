@@ -17,10 +17,16 @@ use Spiral\Templater\Templater;
 use Spiral\Views\Compiler;
 use Spiral\Views\Exceptions\ViewException;
 use Spiral\Views\ProcessorInterface;
+use Spiral\Views\Templater\AliasImport;
+use Spiral\Views\Templater\BundleImport;
+use Spiral\Views\Templater\NamespaceImport;
 use Spiral\Views\ViewManager;
 
 /**
- * Extends Templater to convert it into view Processors to be user inside spiral compiler.
+ * {@inheritdoc}
+ *
+ * TemplateProcessor extends Templater to convert it into view Processors to be user inside spiral
+ * compiler. Declares multiple ways (imports) to create view includes.
  */
 class TemplateProcessor extends Templater implements ProcessorInterface
 {
@@ -45,9 +51,9 @@ class TemplateProcessor extends Templater implements ProcessorInterface
             self::TYPE_IMPORT  => ['use', 'import']
         ],
         'imports'     => [
-            AliasedImport::class   => ['path', 'as'],
-            NamespaceImport::class => ['path', 'namespace'],
-            BundleImport::class    => ['bundle'],
+            //AliasImport::class     => ['path', 'as'],
+            //NamespaceImport::class => ['path', 'namespace'],
+            //BundleImport::class    => ['bundle'],
             StopImport::class      => ['stop']
         ],
         'keywords'    => [
