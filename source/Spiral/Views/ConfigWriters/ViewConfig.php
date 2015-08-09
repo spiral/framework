@@ -46,14 +46,14 @@ class ViewConfig extends ConfigWriter
     private $processors = [];
 
     /**
-     * Module root directory.
+     * Base views directory (module root directory).
      *
      * @var string
      */
-    protected $moduleDirectory = '';
+    protected $baseDirectory = '';
 
     /**
-     * @param string             $moduleDirectory
+     * @param string             $baseDirectory
      * @param int                $method
      * @param ConfigSerializer   $serializer
      * @param Core               $core
@@ -61,28 +61,27 @@ class ViewConfig extends ConfigWriter
      * @param TokenizerInterface $tokenizer
      */
     public function __construct(
-        $moduleDirectory,
+        $baseDirectory,
         $method = self::MERGE_FOLLOW,
         ConfigSerializer $serializer,
         Core $core,
         FilesInterface $files,
         TokenizerInterface $tokenizer
     ) {
-        $this->moduleDirectory = $moduleDirectory;
-
+        $this->baseDirectory = $baseDirectory;
         parent::__construct(
             ViewManager::CONFIG, self::MERGE_CUSTOM, $serializer, $core, $files, $tokenizer
         );
     }
 
     /**
-     * Register view namespace linked to module directory.
+     * Register view namespace relatively to base views directory (module root directory).
      *
      * Examples:
      * $viewConfig->registerNamespace('keeper', 'views');
      *
      * @param string $namespace View namespace.
-     * @param string $directory Directory name relative to module root directory.
+     * @param string $directory Directory name relative to base views directory.
      * @return $this
      * @throws ConfigWriterException
      */
@@ -93,7 +92,7 @@ class ViewConfig extends ConfigWriter
         }
 
         $location = $this->files->normalizePath(
-            $this->moduleDirectory . FilesInterface::SEPARATOR . $directory
+            $this->baseDirectory . FilesInterface::SEPARATOR . $directory
         );
 
         if (!$this->files->exists($location)) {
@@ -150,13 +149,19 @@ class ViewConfig extends ConfigWriter
      *
      * Performs logical view config merge.
      */
-    protected function customMerge($config, $original)
+    protected function merge($config, $original)
     {
         $config = $original;
 
         foreach ($this->namespaces as $namespace => $directories) {
             foreach ($directories as $directory) {
                 $config['namespaces'][$namespace][] = $directory;
+            }
+
+            //To filter non unique namespaces
+            foreach ($config['namespaces'][$namespace] as &$directory) {
+                $directory = $this->files->normalizePath($directory);
+                unset($directory);
             }
 
             //Dropping duplicates

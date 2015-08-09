@@ -45,23 +45,25 @@ class ArraySerializer
                 $name = "";
             }
 
+            //Remove double slashes in namespace separators (we can do it due second char is uppercase)
+            $name = preg_replace('/\\\\([A-Z])/', '\1', $name);
+
             if (!is_array($value)) {
                 $result[] = $this->packValue($name, $value);
                 continue;
             }
 
-            if ($value == []) {
+            if ($value === []) {
                 $result[] = $name . "[]";
                 continue;
             }
 
-            //Sub-array
-            $result[] = $name
-                . "[{$subIndent}" . $this->serialize($value, $indent, $level + 1) . "{$keyIndent}]";
+            $subElement = $this->serialize($value, $indent, $level + 1);
+            $result[] = $name . "[{$subIndent}" . $subElement . "{$keyIndent}]";
         }
 
         if ($level !== 0) {
-            return $result ? join(",$keyIndent", $result) : "";
+            return $result ? join(",{$keyIndent}", $result) : "";
         } else {
             return "[{$keyIndent}" . join(",{$keyIndent}", $result) . "\n]";
         }

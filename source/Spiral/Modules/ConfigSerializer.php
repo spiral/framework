@@ -61,8 +61,8 @@ class ConfigSerializer extends ArraySerializer
         if (!$hasAlias) {
             $value = var_export($value, true);
 
-            //Removing slashes in namespace separators (we can do it due second char is uppercase)
-            $value = preg_replace('/\\\\([A-Z])/', '\\$1', $value);
+            //Removing double slashes in namespace separators (we can do it due second char is uppercase)
+            $value = preg_replace('/\\\\([A-Z])/', '\1', $value);
 
             return $name . $value;
         };
