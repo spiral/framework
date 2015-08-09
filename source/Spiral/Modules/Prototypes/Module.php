@@ -17,22 +17,14 @@ use Spiral\Modules\ModuleInterface;
  * Abstract module implementation, uses default implementations of Definition and Installer.
  * Definition information will be resolved using local composer.json file.
  *
- * Define COMPOSER constant in your module with relative path to composer.json file.
- *
- * Module location (root) directory will be resolved (by default) as second parent folder of Module
- * class.
+ * Module location (root) directory will be resolved as composer.json location.
  *
  * Example:
  * Module class:    vendor/package/scr/Namespace/Class.php
- * Module location: vendor/package/scr
+ * Module location: vendor/package
  */
 abstract class Module extends Component implements ModuleInterface
 {
-    /**
-     * Location of composer.json relatively to module class location.
-     */
-    const COMPOSER = '../composer.json';
-
     /**
      * {@inheritdoc}
      */
@@ -46,7 +38,7 @@ abstract class Module extends Component implements ModuleInterface
      */
     public static function getDefinition(ContainerInterface $container)
     {
-        return Definition::fromComposer($container, static::class, static::COMPOSER);
+        return Definition::fromComposer($container, static::class);
     }
 
     /**

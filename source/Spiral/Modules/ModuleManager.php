@@ -78,9 +78,9 @@ class ModuleManager extends Singleton
      *
      * @return string
      */
-    public function webrootDirectory()
+    public function publicDirectory()
     {
-        return $this->container->get(Core::class)->directory('webroot');
+        return $this->container->get(Core::class)->directory('public');
     }
 
     /**

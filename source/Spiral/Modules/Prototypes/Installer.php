@@ -8,10 +8,12 @@
  */
 namespace Spiral\Modules\Prototypes;
 
+use Psr\Log\LoggerAwareInterface;
 use Spiral\Core\Component;
 use Spiral\Database\Exceptions\MigratorException;
 use Spiral\Database\Migrations\MigratorInterface;
 use Spiral\Debug\Traits\LoggerTrait;
+use Spiral\Files\FileManager;
 use Spiral\Files\FilesInterface;
 use Spiral\Modules\ConfigWriter;
 use Spiral\Modules\Exceptions\ConfigWriterException;
@@ -22,8 +24,10 @@ use Spiral\Modules\ModuleManager;
 /**
  * Default spiral installer provides ability to alter application configs, register and update module
  * public files, create migrations and set of required component bindings.
+ *
+ * Installer requires FileManager implementation (relativePath method).
  */
-class Installer extends Component implements InstallerInterface
+class Installer extends Component implements InstallerInterface, LoggerAwareInterface
 {
     /**
      * Installer will log it's installation/update operations.
@@ -77,7 +81,7 @@ class Installer extends Component implements InstallerInterface
 
     /**
      * @invisible
-     * @var FilesInterface
+     * @var FileManager
      */
     protected $files = null;
 
@@ -94,13 +98,13 @@ class Installer extends Component implements InstallerInterface
     protected $migrator = null;
 
     /**
-     * @param FilesInterface    $file
+     * @param FileManager       $file
      * @param ModuleManager     $modules
      * @param MigratorInterface $migrator
      * @param string            $moduleDirectory Module root directory.
      */
     public function __construct(
-        FilesInterface $file,
+        FileManager $file,
         ModuleManager $modules,
         MigratorInterface $migrator,
         $moduleDirectory
@@ -254,27 +258,23 @@ class Installer extends Component implements InstallerInterface
         $destination = '/',
         $mode = FilesInterface::READONLY
     ) {
-
         //Full name
         $source = $this->moduleDirectory . FilesInterface::SEPARATOR . $directory;
         $source = $this->files->normalizePath($source);
 
-        if ($this->files->exists($source)) {
+        if (!$this->files->exists($source)) {
             throw new InstallerException(
-                "Unable to publish directory '{$directory}', no such folder."
+                "Unable to publish directory '{$directory}', no such module location."
             );
         }
 
-        //Inner source directories used as filename prefixes
-        $innerDirectory = substr($source, strlen($this->moduleDirectory));
-        foreach ($this->files->getFiles($directory) as $filename) {
-
+        foreach ($this->files->getFiles($source) as $filename) {
             //Relative filename
-            $filename = substr($filename, strlen($directory));
+            $relative = $this->files->relativePath($filename, $source);
 
             $this->publishFile(
-                $innerDirectory . FilesInterface::SEPARATOR . $filename,
-                $destination . FilesInterface::SEPARATOR . $filename,
+                $this->files->relativePath($filename, $this->moduleDirectory),
+                $destination . FilesInterface::SEPARATOR . $relative,
                 $mode
             );
         }
@@ -314,14 +314,17 @@ class Installer extends Component implements InstallerInterface
 
         if (!$this->files->exists($filename)) {
             throw new InstallerException(
-                "Unable to public file '{$source}'', file not found in module directory."
+                "Unable to public file '{$source}'', file not found in module root directory."
             );
         }
 
-        $this->files[$this->files->normalizePath($destination)] = [
+        $fullDestination = $this->files->normalizePath(
+            $this->modules->publicDirectory() . FilesInterface::SEPARATOR . $destination
+        );
+
+        $this->publicFiles[$this->files->normalizePath($destination)] = [
             'filename'    => $filename,
-            'name'        => $source,
-            'destination' => $this->modules->webrootDirectory() . FilesInterface::SEPARATOR . $destination,
+            'destination' => $fullDestination,
             'hash'        => $this->files->md5($filename),
             'size'        => $this->files->size($filename),
             'mode'        => $mode
@@ -362,18 +365,17 @@ class Installer extends Component implements InstallerInterface
                 continue;
             }
 
-            $conflicts[] = [
+            $conflicts[$file] = [
                 'expected'    => [
-                    'hash' => $definition['md5Hash'],
+                    'hash' => $definition['hash'],
                     'size' => $definition['size']
                 ],
                 'received'    => [
-                    'hash' => $this->files->md5($file['destination']),
-                    'size' => $this->files->size($file['destination'])
+                    'hash' => $this->files->md5($definition['destination']),
+                    'size' => $this->files->size($definition['destination'])
                 ],
-                'source'      => $definition['source'],
-                'name'        => $definition['name'],
-                'destination' => $file['destination']
+                'filename'    => $definition['filename'],
+                'destination' => $definition['destination']
             ];
         }
 
@@ -402,7 +404,7 @@ class Installer extends Component implements InstallerInterface
      */
     public function update($conflicts = self::OVERWRITE)
     {
-        $this->logger()->info("Mounting public module files.");
+        $this->logger()->info("Publishing module files.");
         $this->publishFiles($conflicts);
     }
 
@@ -421,35 +423,28 @@ class Installer extends Component implements InstallerInterface
         }
 
         foreach ($this->publicFiles as $file => $definition) {
-            //Module (relative) filename
-            $name = $definition['name'];
-            $source = $definition['source'];
-
-            //Full path to file destination
-            $destination = $definition['destination'];
-
-            if (!$this->files->exists($file)) {
+            if ($this->files->exists($definition['filename'])) {
                 $this->logger()->debug(
-                    "Publishing file '[module]/{name}' to '{file}'.", compact('name', 'file')
+                    "Publishing file '[module]{file}'.", compact('file')
                 );
             } else {
-                if ($this->files->md5($destination) == $definition['hash']) {
+                if ($this->files->md5($definition['destination']) == $definition['hash']) {
                     $this->logger()->debug(
-                        "Module file '[module]/{name}' already published.", compact('name', 'file')
+                        "Module file '[module]{file}' already published.", compact('file')
                     );
                     continue;
                 }
 
                 if ($conflicts == self::IGNORE) {
-                    self::logger()->warning(
-                        "file '[module]/{name}' already published and different version, ignoring.",
-                        compact('name', 'file')
+                    $this->logger()->warning(
+                        "file '[module]{file}' already published and different version, ignoring.",
+                        compact('file')
                     );
                     continue;
                 } else {
-                    self::logger()->warning(
-                        "Module file '[module]/{name}' already published and different version, overwrite.",
-                        compact('name', 'file')
+                    $this->logger()->warning(
+                        "Module file '[module]{file}' already published and different version, overwriting.",
+                        compact('file')
                     );
                 }
             }
@@ -457,7 +452,7 @@ class Installer extends Component implements InstallerInterface
             //Copying using write() method to ensure directories and permissions, slower by easier
             $this->files->write(
                 $file,
-                $this->files->read($source),
+                $this->files->read($definition['filename']),
                 $definition['mode'],
                 true
             );

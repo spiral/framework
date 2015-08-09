@@ -19,11 +19,11 @@ use Spiral\Modules\ModuleManager;
  * module name, dependencies and etc. Module must extend Module prototype in order to work with
  * this Definition (createInstaller method is required).
  *
- * Module location (root) directory will be resolved as second parent folder of Module class.
+ *  Module location (root) directory will be resolved as composer.json location.
  *
  * Example:
  * Module class:    vendor/package/scr/Namespace/Class.php
- * Module location: vendor/package/scr
+ * Module location: vendor/package
  */
 class Definition implements DefinitionInterface
 {
@@ -43,6 +43,13 @@ class Definition implements DefinitionInterface
     private $class = '';
 
     /**
+     * Root module location.
+     *
+     * @var string
+     */
+    private $location = '';
+
+    /**
      * @var array
      */
     private $dependencies = [];
@@ -52,6 +59,12 @@ class Definition implements DefinitionInterface
      * @var Installer
      */
     private $installer = null;
+
+    /**
+     * @invisible
+     * @var ContainerInterface
+     */
+    protected $container = null;
 
     /**
      * @invisible
@@ -66,14 +79,16 @@ class Definition implements DefinitionInterface
     protected $modules = null;
 
     /**
-     * @param FilesInterface $file
-     * @param ModuleManager  $modules
-     * @param string         $class
-     * @param string         $name
-     * @param string         $description
-     * @param array          $dependencies
+     * @param ContainerInterface $container
+     * @param FilesInterface     $file
+     * @param ModuleManager      $modules
+     * @param string             $class
+     * @param string             $name
+     * @param string             $description
+     * @param array              $dependencies
      */
     public function __construct(
+        ContainerInterface $container,
         FilesInterface $file,
         ModuleManager $modules,
         $class,
@@ -81,6 +96,7 @@ class Definition implements DefinitionInterface
         $description = '',
         $dependencies = []
     ) {
+        $this->container = $container;
         $this->files = $file;
         $this->modules = $modules;
 
@@ -88,6 +104,11 @@ class Definition implements DefinitionInterface
         $this->name = $name;
         $this->description = $description;
         $this->dependencies = $dependencies;
+
+        //By default we will user module class directory
+        $this->location = $this->files->normalizePath(
+            dirname((new \ReflectionClass($this->class))->getFileName())
+        );
     }
 
     /**
@@ -119,9 +140,7 @@ class Definition implements DefinitionInterface
      */
     public function getLocation()
     {
-        return $this->files->normalizePath(dirname(dirname(
-            (new \ReflectionClass($this->class))->getFileName()
-        )));
+        return $this->location;
     }
 
     /**
@@ -162,20 +181,26 @@ class Definition implements DefinitionInterface
             return $this->installer;
         }
 
-        return $this->installer = call_user_func([$this->class, 'getInstaller'], $this);
+        return $this->installer = call_user_func(
+            [$this->class, 'getInstaller'], $this->container, $this
+        );
     }
 
     /**
-     * Create Definition using local composer.json file.
+     * Create Definition using local composer.json file. Root directory will be resolved as location
+     * of composer.json
      *
      * @param ContainerInterface $container
      * @param string             $class    Module class name.
-     * @param string             $composer Relative location of composer file.
+     * @param string             $composer Name of composer file.
      * @return DefinitionInterface
      * @throws ModuleException
      */
-    public static function fromComposer(ContainerInterface $container, $class, $composer)
-    {
+    public static function fromComposer(
+        ContainerInterface $container,
+        $class,
+        $composer = 'composer.json'
+    ) {
         /**
          * We will fill name property little bit later.
          *
@@ -186,13 +211,21 @@ class Definition implements DefinitionInterface
             'name'  => null
         ]);
 
-        //Composer file
-        $composer = $definition->getLocation() . FilesInterface::SEPARATOR . $composer;
-        if (!$definition->files->exists($composer)) {
-            throw new ModuleException("Unable to locate composer.json file.");
+        //Let's look for composer file
+        $location = $definition->location;
+        while (!$definition->files->exists($location . FilesInterface::SEPARATOR . $composer)) {
+            $location = dirname($location);
+            if (empty(trim($location, '\\/.'))) {
+                throw new ModuleException("Unable to locate composer.json file.");
+            }
         }
 
-        $composer = json_decode($definition->files->read($composer), true);
+        //We found root location
+        $definition->location = $definition->files->normalizePath($location);
+        $composer = json_decode(
+            $definition->files->read($location . FilesInterface::SEPARATOR . $composer),
+            true
+        );
 
         $definition->name = $composer['name'];
 
