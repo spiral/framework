@@ -514,7 +514,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         }
 
         if ($this->hasBinding(HttpDispatcher::class)) {
-            return $this->hasBinding(HttpDispatcher::class);
+            return $this->get(HttpDispatcher::class);
         }
 
         //Microseconds :0.
