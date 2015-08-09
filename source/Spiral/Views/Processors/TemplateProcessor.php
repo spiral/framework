@@ -19,6 +19,7 @@ use Spiral\Templater\Templater;
 use Spiral\Views\Compiler;
 use Spiral\Views\Exceptions\ViewException;
 use Spiral\Views\ProcessorInterface;
+use Spiral\Views\Processors\Templater\NamespaceImport;
 use Spiral\Views\ViewManager;
 
 /**
@@ -50,10 +51,10 @@ class TemplateProcessor extends Templater implements ProcessorInterface
             self::TYPE_IMPORT  => ['use', 'import']
         ],
         'imports'     => [
-            AliasImport::class  => ['path', 'as'],
-            //NamespaceImport::class => ['path', 'namespace'],
-            BundleImport::class => ['bundle'],
-            StopImport::class   => ['stop']
+            AliasImport::class     => ['path', 'as'],
+            NamespaceImport::class => ['path', 'namespace'],
+            BundleImport::class    => ['bundle'],
+            StopImport::class      => ['stop']
         ],
         'keywords'    => [
             'namespace' => ['view:namespace', 'node:namespace'],
@@ -183,8 +184,6 @@ class TemplateProcessor extends Templater implements ProcessorInterface
                 new TemplaterException("Undefined import type.", $token)
             );
         }
-
-        //TODO: Compiler imports
 
         //Last import has higher priority than first import
         $this->addImport(new $import($this, $token));

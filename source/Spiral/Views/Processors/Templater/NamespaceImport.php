@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Views\Templater;
+namespace Spiral\Views\Processors\Templater;
 
 use Spiral\Templater\Exceptions\TemplaterException;
 use Spiral\Templater\HtmlTokenizer;
@@ -107,7 +107,7 @@ class NamespaceImport implements ImportInterface
     public function getLocation($element, array $token)
     {
         //Location: [namespace, viewName]
-        return [$this->outerNamespace, $this->aliases[$element]];
+        return [$this->namespace, $this->aliases[$element]];
     }
 
     /**
@@ -145,13 +145,13 @@ class NamespaceImport implements ImportInterface
             }
 
             //Remove directory from view name
-            $view = ltrim(substr($view, strlen($this->directory)), '/');
+            $alias = ltrim(substr($view, strlen($this->directory)), '/');
 
             //Replace path separator (must be normalized) with tag path separator (usually .)
-            $view = str_replace('/', $templater->getOptions()['separator'], $view);
+            $alias = str_replace('/', $templater->getOptions()['separator'], $alias);
 
             //View alias = namespace:view.subView
-            $alias = $this->outerNamespace . $templater->getOptions()['nsSeparator'] . $view;
+            $alias = $this->outerNamespace . $templater->getOptions()['nsSeparator'] . $alias;
 
             $this->aliases[$alias] = $view;
         }
