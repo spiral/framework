@@ -217,7 +217,7 @@ class RedisManager extends Singleton implements InjectorInterface
      */
     public function __construct(ConfiguratorInterface $configurator, ContainerInterface $container)
     {
-        $this->config = $configurator->getConfig('redis');
+        $this->config = $configurator->getConfig(static::CONFIG);
         $this->container = $container;
     }
 

@@ -10,11 +10,13 @@ namespace Spiral\Console;
 
 use Spiral\Console\Exceptions\ConsoleException;
 use Spiral\Core\Components\Loader;
+use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\HippocampusInterface;
 use Spiral\Core\Singleton;
+use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Debug\BenchmarkerInterface;
 use Spiral\Debug\Debugger;
 use Spiral\Debug\SnapshotInterface;
@@ -34,9 +36,20 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ConsoleDispatcher extends Singleton implements DispatcherInterface
 {
     /**
+     * ConsoleDispatcher does not need config for itseft, but some commands (Update for example)
+     * needs configuration source.
+     */
+    use ConfigurableTrait;
+
+    /**
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = self::class;
+
+    /**
+     * Configuration section.
+     */
+    const CONFIG = 'config';
 
     /**
      * @var Application
@@ -66,22 +79,28 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     protected $tokenizer = null;
 
     /**
+     * To prevent mixing of web and console loadmaps.
+     *
      * @var Loader
      */
     protected $loader = null;
 
     /**
-     * @param ContainerInterface   $container
-     * @param HippocampusInterface $memory
-     * @param TokenizerInterface   $tokenizer
-     * @param Loader               $loader
+     * @param ConfiguratorInterface $configurator
+     * @param ContainerInterface    $container
+     * @param HippocampusInterface  $memory
+     * @param TokenizerInterface    $tokenizer
+     * @param Loader                $loader
      */
     public function __construct(
+        ConfiguratorInterface $configurator,
         ContainerInterface $container,
         HippocampusInterface $memory,
         TokenizerInterface $tokenizer,
         Loader $loader
     ) {
+        $this->config = $configurator->getConfig(static::CONFIG);
+
         $this->container = $container;
         $this->memory = $memory;
         $this->tokenizer = $tokenizer;

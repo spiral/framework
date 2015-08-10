@@ -29,6 +29,11 @@ class ImageManager extends Singleton
     const SINGLETON = self::class;
 
     /**
+     * Configuration section.
+     */
+    const CONFIG = 'image';
+
+    /**
      * @var InterventionManager
      */
     protected $intervention = null;
@@ -42,7 +47,7 @@ class ImageManager extends Singleton
         InterventionManager $intervention
     ) {
         $this->intervention = $intervention;
-        $this->intervention->configure($configurator->getConfig('image'));
+        $this->intervention->configure($configurator->getConfig(static::CONFIG));
     }
 
     /**
