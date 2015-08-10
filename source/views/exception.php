@@ -3,6 +3,7 @@
 /**
  * @var \Spiral\Debug\Snapshot          $snapshot
  * @var \Spiral\Core\ContainerInterface $container
+ * @var \Spiral\Debug\Debugger          $debugger
  */
 $highlighter = new \Spiral\Tokenizer\Hightligher(
     $container->get(\Spiral\Tokenizer\TokenizerInterface::class),
@@ -561,7 +562,7 @@ $dumps = [];
     </div>
 
     <?php
-    if (!empty($messages = \Spiral\Debug\Logger::logMessages())) {
+    if (!empty($messages = $debugger->globalMessages())) {
         ?>
         <div class="messages">
             <div class="title" onclick="toggle('logger-messages')">
@@ -569,7 +570,7 @@ $dumps = [];
             </div>
             <div class="data" id="logger-messages">
                 <?php
-                foreach (\Spiral\Debug\Logger::logMessages() as $message) {
+                foreach ($messages as $message) {
                     $channel = $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL];
                     if (class_exists($channel)) {
                         $reflection = new ReflectionClass($channel);
