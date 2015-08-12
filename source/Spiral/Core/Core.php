@@ -10,7 +10,6 @@ namespace Spiral\Core;
 
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Components\Loader;
-use Spiral\Core\Exceptions\ClientException;
 use Spiral\Core\Exceptions\ConfiguratorException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
@@ -469,13 +468,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         restore_error_handler();
         restore_exception_handler();
 
-        if ($exception instanceof ClientException) {
-            //Client driven error, no need to create snapshot
-            $this->dispatcher->handleException($exception);
-
-            return;
-        }
-
         /**
          * @var SnapshotInterface $snapshot
          */
@@ -484,8 +476,12 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         //Reporting
         $snapshot->report();
 
-        //Now dispatcher can handle snapshot it's own way
-        $this->dispatcher->handleSnapshot($snapshot);
+        if (!empty($this->dispatcher)) {
+            //Now dispatcher can handle snapshot it's own way
+            $this->dispatcher->handleSnapshot($snapshot);
+        } else {
+            echo $snapshot;
+        }
 
         exit(170);
     }

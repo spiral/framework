@@ -49,7 +49,7 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     /**
      * Configuration section.
      */
-    const CONFIG = 'config';
+    const CONFIG = 'console';
 
     /**
      * @var Application
@@ -168,7 +168,6 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      */
     public function command($command, $parameters = [], OutputInterface $output = null)
     {
-
         $input = is_object($parameters) ? $parameters : new ArrayInput(compact('command') + $parameters);
         $output = !empty($output) ? $output : new BufferedOutput();
 
@@ -218,16 +217,8 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function handleException(\Exception $exception)
-    {
-        $this->application()->renderException($exception, new ConsoleOutput());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
-        $this->handleException($snapshot->getException());
+        $this->application()->renderException($snapshot->getException(), new ConsoleOutput());
     }
 }

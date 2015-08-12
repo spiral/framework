@@ -8,6 +8,7 @@
  */
 namespace Spiral\Core;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\Container\InstanceException;
 use Spiral\Core\Exceptions\ControllerException;
