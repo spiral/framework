@@ -9,11 +9,12 @@
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
+use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
  * Default spiral implementation of view class. You can link your custom view implementations via
- * editing view config section - associations.
+ * editing view config section - associations. You can use $this->container inside view source.
  */
 class View extends Component implements ViewInterface
 {
@@ -23,21 +24,31 @@ class View extends Component implements ViewInterface
     use BenchmarkTrait;
 
     /**
+     * @var array
+     */
+    protected $data = [];
+
+    /**
+     * @invisible
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
      * @invisible
      * @var CompilerInterface
      */
     protected $compiler = null;
 
     /**
-     * @var array
-     */
-    protected $data = [];
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct(CompilerInterface $compiler, array $data = [])
-    {
+    public function __construct(
+        ContainerInterface $container,
+        CompilerInterface $compiler,
+        array $data = []
+    ) {
+        $this->container = $container;
         $this->compiler = $compiler;
         $this->data = $data;
     }

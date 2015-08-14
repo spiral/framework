@@ -40,8 +40,8 @@ class SchemaCommand extends Command
         self::$schemaBuilder = $builder = $this->orm->updateSchema();
         $elapsed = number_format($this->debugger->benchmark($this, 'update'), 3);
 
-        $countModels = count($builder->getModels());
+        $countModels = count($builder->getRecords());
         $this->write("<info>ORM Schema has been updated: <comment>{$elapsed} s</comment>");
-        $this->writeln(", found models: <comment>{$countModels}</comment></info>");
+        $this->writeln(", found records: <comment>{$countModels}</comment></info>");
     }
 }
