@@ -63,7 +63,7 @@ class EnvironmentCommand extends Command
         $this->core->saveData('environment', $this->argument('environment'), directory('runtime'));
         $this->writeln("Environment set to <comment>{$this->argument('environment')}</comment>.");
 
-        if ($this->isVerbose()) {
+        if ($this->isVerbosing()) {
             $alteredConfigs = $this->getAlteredConfigs($this->argument('environment'));
             if (!empty($alteredConfigs)) {
                 $this->writeln(

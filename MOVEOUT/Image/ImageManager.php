@@ -31,7 +31,7 @@ class ImageManager extends Singleton
     /**
      * Configuration section.
      */
-    const CONFIG = 'image';
+    const CONFIG = 'images';
 
     /**
      * @var InterventionManager

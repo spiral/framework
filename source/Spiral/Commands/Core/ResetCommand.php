@@ -38,12 +38,12 @@ class ResetCommand extends Command
      */
     public function perform()
     {
-        $this->isVerbose() && $this->writeln("<info>Clearing application runtime cache:</info>");
+        $this->isVerbosing() && $this->writeln("<info>Clearing application runtime cache:</info>");
 
         foreach ($this->files->getFiles(directory('cache')) as $filename) {
             !$this->option('emulate') && $this->files->delete($filename);
 
-            $this->isVerbose() && $this->writeln($this->files->relativePath(
+            $this->isVerbosing() && $this->writeln($this->files->relativePath(
                 $filename, directory('cache')
             ));
         }

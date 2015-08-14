@@ -64,7 +64,7 @@ class ServerCommand extends Command
         $process->run(function ($type, $data) {
             if ($type != Process::ERR) {
                 //First character contains request type, second is space
-                ($data[0] == 'S' || $this->isVerbose()) && $this->writeln(substr($data, 2));
+                ($data[0] == 'S' || $this->isVerbosing()) && $this->writeln(substr($data, 2));
             }
         });
     }

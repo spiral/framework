@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Simple console logger/formatter. Provides ability to disable display only specified set of log
- * messages and use formatting section to prefix every line.
+ * messages and use formatting section to prefix every line. This is not real console logger.
  */
 class ConsoleFormatter extends AbstractLogger
 {
@@ -69,7 +69,6 @@ class ConsoleFormatter extends AbstractLogger
         }
 
         $string = \Spiral\interpolate($message, $context);
-
         if (!empty($this->formats[$level])) {
             //Formatting string
             $string = \Spiral\interpolate('<{format}>{string}</{format}>', [

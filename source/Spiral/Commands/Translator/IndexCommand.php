@@ -54,7 +54,7 @@ class IndexCommand extends Command
     public function perform(Indexer $indexer)
     {
         $this->writeln("Scanning translate function usages...");
-        $this->isVerbose() && $indexer->events()->listen('string', $this->stringListener());
+        $this->isVerbosing() && $indexer->events()->listen('string', $this->stringListener());
 
         if ($this->option('directory')) {
             $indexer->indexDirectory($this->option('directory'));

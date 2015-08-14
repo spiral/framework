@@ -226,7 +226,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
      *
      * @return bool
      */
-    protected function isVerbose()
+    protected function isVerbosing()
     {
         return $this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
     }

@@ -11,6 +11,7 @@ namespace Spiral\Commands\Database;
 use Spiral\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 
 /**
  * List of every configured database, it's tables and count of records.
@@ -69,6 +70,7 @@ class ListCommand extends Command
 
         foreach ($databases as $database) {
             $database = $this->dbal->db($database);
+
             $driver = $database->driver();
 
             $header = [
