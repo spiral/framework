@@ -16,6 +16,8 @@ use Spiral\Core\Exceptions\Container\InstanceException;
  * other logic. Service can declare itself as singleton by implementing SingletonInterface and
  * SINGLETON constant pointing to self.
  *
+ * Count service as layer (model) between data entities and various controllers.
+ *
  * You can declare service logic in boot method, which is going to be executed using container.
  *
  * @property \Spiral\Core\Core                  $core
