@@ -39,7 +39,7 @@ trait TimestampsTrait
      *
      * @param bool $analysis DataEntity is being analyzed.
      */
-    protected static function initTimestamps($analysis)
+    protected static function initTimestampsTrait($analysis)
     {
         $dispatcher = self::events();
 
