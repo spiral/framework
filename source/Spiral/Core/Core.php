@@ -442,7 +442,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             );
         }
 
-        return $controller->callAction($this, $action, $parameters);
+        return $controller->callAction($action, $parameters);
     }
 
     /**

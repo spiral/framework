@@ -12,7 +12,6 @@ use Spiral\Core\Component;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Events\Traits\EventsTrait;
 use Spiral\Files\FilesInterface;
-use Spiral\Proxies\I18n;
 use Spiral\Tokenizer\Exceptions\ReflectionException;
 use Spiral\Tokenizer\Exceptions\TokenizerException;
 use Spiral\Tokenizer\Reflections\ReflectionArgument;
@@ -24,7 +23,7 @@ use Spiral\Translator\Traits\TranslatorTrait;
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can understand
- * l, p, translate (trait) function and I18n proxy methods. Only statically calls will be indexes.
+ * l, p and translate (trait) function. Only static calls will be indexes.
  *
  * In addition indexes will find every string specified in default value of model or class which
  * uses TranslatorTrait. String has to be embraced with [[ ]] in order to be indexed, you can disable

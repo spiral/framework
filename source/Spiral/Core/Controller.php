@@ -16,33 +16,8 @@ use Spiral\Debug\Traits\BenchmarkTrait;
 /**
  * Basic application controller class. Implements method injections and simplified access to
  * container bindings.
- *
- * @property \Spiral\Core\Core                  $core
- * @property \Spiral\Core\Components\Loader     $loader
- * @property \Spiral\Modules\ModuleManager      $modules
- * @property \Spiral\Debug\Debugger             $debugger
- *
- * @property \Spiral\Console\ConsoleDispatcher  $console
- * @property \Spiral\Http\HttpDispatcher        $http
- *
- * @property \Spiral\Cache\CacheProvider        $cache
- * @property \Spiral\Http\Cookies\CookieManager $cookies
- * @property \Spiral\Encrypter\Encrypter        $encrypter
- * @property \Spiral\Http\InputManager          $input
- * @property \Spiral\Files\FileManager          $files
- * @property \Spiral\Session\SessionStore       $session
- * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
- * @property \Spiral\Translator\Translator      $i18n
- * @property \Spiral\Views\ViewManager          $views
- *
- * @property \Spiral\Redis\RedisManager         $redis
- * @property \Spiral\Image\ImageManager         $image
- *
- * @property \Spiral\Database\DatabaseProvider  $dbal
- * @property \Spiral\ODM\ODM                    $odm
- * @property \Spiral\ORM\ORM                    $orm
  */
-abstract class Controller extends Component implements ControllerInterface
+abstract class Controller extends Service implements ControllerInterface
 {
     /**
      * To benchmark action execution time.
@@ -64,13 +39,6 @@ abstract class Controller extends Component implements ControllerInterface
     protected $defaultAction = 'index';
 
     /**
-     * Set of parameters passed into callAction method.
-     *
-     * @var array
-     */
-    protected $parameters = [];
-
-    /**
      * Container instance to be associated as moment of callAction call.
      *
      * @var ContainerInterface
@@ -80,7 +48,7 @@ abstract class Controller extends Component implements ControllerInterface
     /**
      * {@inheritdoc}
      */
-    public function callAction(ContainerInterface $container, $action = '', array $parameters = [])
+    public function callAction($action = '', array $parameters = [])
     {
         //Action should include prefix and be always specified
         $action = static::ACTION_PREFIX . (!empty($action) ? $action : $this->defaultAction);
@@ -106,9 +74,6 @@ abstract class Controller extends Component implements ControllerInterface
             );
         }
 
-        $this->container = $container;
-        $this->parameters = $parameters;
-
         try {
             //Getting set of arguments should be sent to requested method
             $arguments = $this->container->resolveArguments($reflection, $parameters);
@@ -119,7 +84,7 @@ abstract class Controller extends Component implements ControllerInterface
             );
         }
 
-        if (($result = $this->preAction($reflection, $arguments)) !== null) {
+        if (($result = $this->preAction($reflection, $arguments, $parameters)) !== null) {
             //Got filtered.
             return $result;
         }
@@ -128,7 +93,7 @@ abstract class Controller extends Component implements ControllerInterface
         $result = $reflection->invokeArgs($this, $arguments);
         $this->benchmark($action);
 
-        return $this->postAction($result, $reflection, $arguments);
+        return $this->postAction($result, $reflection, $arguments, $parameters);
     }
 
     /**
@@ -136,9 +101,10 @@ abstract class Controller extends Component implements ControllerInterface
      *
      * @param \ReflectionMethod $method
      * @param array             $arguments
+     * @param array             $parameters
      * @return mixed
      */
-    protected function preAction(\ReflectionMethod $method, array $arguments)
+    protected function preAction(\ReflectionMethod $method, array $arguments, array $parameters)
     {
         return null;
     }
@@ -149,10 +115,15 @@ abstract class Controller extends Component implements ControllerInterface
      * @param mixed             $result
      * @param \ReflectionMethod $method
      * @param array             $arguments
+     * @param array             $parameters
      * @return mixed
      */
-    protected function postAction($result, \ReflectionMethod $method, array $arguments)
-    {
+    protected function postAction(
+        $result,
+        \ReflectionMethod $method,
+        array $arguments,
+        array $parameters
+    ) {
         return $result;
     }
 
