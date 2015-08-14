@@ -171,16 +171,6 @@ class Indexer extends Component
                 continue;
             }
 
-            if (!empty($call->getClass()) && $call->getClass() != I18n::class) {
-                if ($call->getName() == 'translate') {
-                    //Can be part of TranslatorTrait
-                    $this->indexTrait($call);
-                }
-
-                //We are looking for one specific class
-                continue;
-            }
-
             if ($call->getName() == 'p' || $call->getName() == 'pluralize') {
                 $this->translator->pluralize($firstArgument->stringValue(), 0);
 
