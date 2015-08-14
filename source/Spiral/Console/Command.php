@@ -44,6 +44,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @property \Spiral\Database\DatabaseProvider  $dbal
  * @property \Spiral\ODM\ODM                    $odm
+ * @property \Spiral\ORM\ORM                    $orm
  */
 abstract class Command extends \Symfony\Component\Console\Command\Command
 {

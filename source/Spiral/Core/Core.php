@@ -45,6 +45,7 @@ use Spiral\Modules\ModuleManager;
  *
  * @property \Spiral\Database\DatabaseProvider  $dbal
  * @property \Spiral\ODM\ODM                    $odm
+ * @property \Spiral\ORM\ORM                    $orm
  */
 class Core extends Container implements CoreInterface, ConfiguratorInterface, HippocampusInterface
 {

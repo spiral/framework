@@ -4,38 +4,35 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright Â©2009-2015
+ * @copyright ©2009-2015
  */
 namespace Spiral\Commands\ORM;
 
 use Spiral\Console\Command;
-use Spiral\ORM\SchemaBuilder;
+use Spiral\ORM\Entities\SchemaBuilder;
 
+/**
+ * Performs ORM schema update and stores SchemaBuilder in public static variable for other commands.
+ */
 class SchemaCommand extends Command
 {
     /**
-     * Schema builder instance.
-     *
      * @var SchemaBuilder
      */
     public static $schemaBuilder = null;
 
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'orm:schema';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $description = 'Update ORM schema and related databases.';
+    protected $description = 'Update ORM schema.';
 
     /**
-     * Update schema and documentation.
+     * Perform command.
      */
     public function perform()
     {
@@ -43,8 +40,8 @@ class SchemaCommand extends Command
         self::$schemaBuilder = $builder = $this->orm->updateSchema();
         $elapsed = number_format($this->debugger->benchmark($this, 'update'), 3);
 
-        $countModels = count($builder->getModelSchemas());
-        $this->write("<info>ODM Schema has been updated: <comment>{$elapsed} s</comment>");
-        $this->writeln(", models: <comment>{$countModels}</comment>.</info>");
+        $countModels = count($builder->getModels());
+        $this->write("<info>ORM Schema has been updated: <comment>{$elapsed} s</comment>");
+        $this->writeln(", found models: <comment>{$countModels}</comment></info>");
     }
 }

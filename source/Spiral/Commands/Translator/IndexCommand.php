@@ -9,7 +9,7 @@
 namespace Spiral\Commands\Translator;
 
 use Spiral\Console\Command;
-use Spiral\Events\ObjectEvent;
+use Spiral\Events\Entities\ObjectEvent;
 use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputOption;
 

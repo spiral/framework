@@ -8,7 +8,6 @@
  */
 namespace Spiral\Core;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\Container\InstanceException;
 use Spiral\Core\Exceptions\ControllerException;
@@ -41,6 +40,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  *
  * @property \Spiral\Database\DatabaseProvider  $dbal
  * @property \Spiral\ODM\ODM                    $odm
+ * @property \Spiral\ORM\ORM                    $orm
  */
 abstract class Controller extends Component implements ControllerInterface
 {
