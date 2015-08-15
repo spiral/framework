@@ -13,12 +13,12 @@ use Symfony\Component\Console\Input\InputArgument;
 /**
  * Describe schema and rank of one specified entity.
  */
-class DescribeCommand extends InspectCommand
+class EntityCommand extends InspectCommand
 {
     /**
      * {@inheritdoc}
      */
-    protected $name = 'inspect:describe';
+    protected $name = 'inspect:entity';
 
     /**
      * {@inheritdoc}
