@@ -19,6 +19,9 @@ use Spiral\ODM\DocumentAccessorInterface;
 use Spiral\ODM\ODM;
 use Spiral\ORM\RecordAccessorInterface;
 use Spiral\Storage\BucketInterface;
+use Spiral\Storage\Exceptions\BucketException;
+use Spiral\Storage\Exceptions\ServerException;
+use Spiral\Storage\Exceptions\StorageException;
 use Spiral\Storage\ObjectInterface;
 use Spiral\Storage\StorageInterface;
 
@@ -239,25 +242,23 @@ class StorageAccessor extends Component implements
     }
 
     /**
-     * Associated storage object (or update existed) with specified bucket, object can be created
-     * as empty, using local filename, via Stream or using UploadedFile.
+     * /**
+     * Put object data into specified bucket under provided name. Should support filenames, PSR7
+     * streams and streamable objects. Must create empty object if source empty.
      *
-     * While object creation original filename, name (no extension) or extension can be embedded to
-     * new object name using string interpolation ({name}.{ext}}
-     *
-     * Example (using Facades):
-     * Storage::create('cloud', $id . '-{name}.{ext}', $filename);
-     * Storage::create('cloud', $id . '-upload-{filename}', $filename);
-     *
-     * @param string|BucketInterface                     $bucket    Bucket name, id or instance.
-     * @param string                                     $name      Object name should be used in
-     *                                                              bucket.
-     * @param string|StreamInterface|StreamableInterface $origin    Local filename or Stream.
-     * @return ObjectInterface|bool
+     * @param string|BucketInterface                    $bucket
+     * @param string                                    $name
+     * @param mixed|StreamInterface|StreamableInterface $source
+     * @return $this
+     * @throws StorageException
+     * @throws BucketException
+     * @throws ServerException
      */
-    public function put($bucket, $name, $origin = '')
+    public function put($bucket, $name, $source = '')
     {
-        $this->object = $this->storage()->put($bucket, $name, $origin);
+        $this->object = $this->storage()->put($bucket, $name, $source);
+
+        return $this;
     }
 
     /**
