@@ -34,6 +34,11 @@ abstract class AbstractEntity extends AbstractGenerator
             []
         );
 
+        $this->class->property('hidden', ["Hidden fields.", "", "@var array"])->setDefault(
+            true,
+            []
+        );
+
         $this->class->property('schema', ["Entity schema.", "", "@var array"])->setDefault(
             true,
             $this->schema
