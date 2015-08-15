@@ -32,6 +32,12 @@ use Spiral\Models\DataEntity;
 class RequestFilter extends DataEntity
 {
     /**
+     * @invisible
+     * @var InputManager
+     */
+    private $input = null;
+
+    /**
      * Request filter makes every field settable.
      *
      * @var array
@@ -52,6 +58,8 @@ class RequestFilter extends DataEntity
      */
     final public function __construct(InputManager $input)
     {
+        $this->input = $input;
+
         foreach ($this->schema as $field => $source) {
             list($source, $origin) = $this->parseSource($field, $source);
 
@@ -62,6 +70,17 @@ class RequestFilter extends DataEntity
             //Receiving value as result of InputManager method
             $this->setField($field, call_user_func([$input, $source], $origin), true);
         }
+    }
+
+    /**
+     * Associated InputManager instance. Attention, input manager may not decorate save server
+     * request as while request filter constructing.
+     *
+     * @return InputManager
+     */
+    public function input()
+    {
+        return $this->input;
     }
 
     /**

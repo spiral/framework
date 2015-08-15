@@ -1,0 +1,62 @@
+<?php
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ * @copyright ©2009-2015
+ */
+namespace Spiral\Reactor\Generators;
+
+use Spiral\Reactor\Generators\Prototypes\AbstractGenerator;
+
+/**
+ * Generates entity for RequestFilter.
+ */
+class RequestGenerator extends AbstractGenerator
+{
+    /**
+     * {@inheritdoc}
+     *
+     * Provides ability to perform type mapping (into setters).
+     */
+    protected $options = [
+        'namespace' => '',
+        'postfix'   => '',
+        'directory' => '',
+        'mapping'   => []
+    ];
+
+    /**
+     * @var array
+     */
+    protected $schema = [];
+
+    /**
+     * @var array
+     */
+    protected $setters = [];
+
+    /**
+     * @var array
+     */
+    protected $validates = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generate()
+    {
+        $this->class->property('schema', ["Input schema.", "", "@var array"])->setDefault(
+            true,
+            $this->schema
+        );
+
+        $this->class->property('setters', ["@var array"])->setDefault(true, $this->setters);
+        $this->class->property('validates', ["@var array"])->setDefault(true, $this->validates);
+    }
+
+    public function addField($field, $type, $source = 'data')
+    {
+    }
+}

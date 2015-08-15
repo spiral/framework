@@ -29,25 +29,16 @@ abstract class AbstractEntity extends AbstractGenerator
      */
     public function generate()
     {
-        $this->class->property('fillable', ["Fillable fields.", "", "@var array"])->setDefault(
-            true,
-            []
-        );
+        $this->class->property('fillable', ["@var array"])->setDefault(true, []);
 
-        $this->class->property('hidden', ["Hidden fields.", "", "@var array"])->setDefault(
-            true,
-            []
-        );
+        $this->class->property('hidden', ["@var array"])->setDefault(true, []);
 
         $this->class->property('schema', ["Entity schema.", "", "@var array"])->setDefault(
             true,
             $this->schema
         );
 
-        $this->class->property('validates', ["Field validations.", "", "@var array"])->setDefault(
-            true,
-            $this->validates
-        );
+        $this->class->property('validates', ["@var array"])->setDefault(true, $this->validates);
     }
 
     /**
