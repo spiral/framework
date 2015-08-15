@@ -6,61 +6,57 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Commands\DBAL\Migrations;
+namespace Spiral\Commands\Migrations;
 
+use Spiral\Commands\Migrations\Prototypes\AbstractCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Replay (down, up) one or multiple migrations.
+ */
 class ReplayCommand extends AbstractCommand
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $name = 'migrate:replay';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Replay (down, up) one or multiple migrations.';
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
         ['all', 'a', InputOption::VALUE_NONE, 'Replay all migrations.']
     ];
 
     /**
-     * Performing one or multiple migrations.
+     * Perform command.
      */
     public function perform()
     {
-        if (!$this->checkEnvironment())
-        {
+        if (!$this->verifyEnvironment()) {
+            //Making sure we can safely migrate in this environment
             return;
         }
 
-        $rollback = ['--database' => $this->option('database'), '--safe' => true];
-        $migrate = ['--database' => $this->option('database'), '--safe' => true];
+        $rollback = ['--safe' => true];
+        $migrate = ['--safe' => true];
 
-        if ($this->option('all'))
-        {
+        if ($this->option('all')) {
             $rollback['--all'] = true;
-        }
-        else
-        {
+        } else {
             $migrate['--one'] = true;
         }
 
         $this->writeln("Rolling back executed migration(s).");
         $this->console->command('migrate:rollback', $rollback, $this->output);
+
         $this->writeln("");
+
         $this->writeln("Executing outstanding migration(s).");
         $this->console->command('migrate', $migrate, $this->output);
     }

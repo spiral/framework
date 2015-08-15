@@ -4,32 +4,33 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright Â©2009-2015
+ * @copyright ©2009-2015
  */
-namespace Spiral\Commands\DBAL\Migrations;
+namespace Spiral\Commands\Migrations;
 
+use Spiral\Commands\Migrations\Prototypes\AbstractCommand;
+
+/**
+ * Initiate migrations.
+ */
 class InitCommand extends AbstractCommand
 {
     /**
-     * Command name.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $name = 'migrate:configure';
+    protected $name = 'migrate:init';
 
     /**
-     * Short command description.
-     *
-     * @var string
+     * {@inheritdoc}
      */
     protected $description = 'Configure migrations (create migrations table).';
 
     /**
-     * Initiating migration table.
+     * Perform command.
      */
     public function perform()
     {
-        $this->getMigrator()->configure();
+        $this->migrator()->configure();
         $this->writeln("<info>Migrations table successfully created.</info>");
     }
 }
