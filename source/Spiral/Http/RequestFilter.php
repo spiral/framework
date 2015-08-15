@@ -8,6 +8,8 @@
  */
 namespace Spiral\Http;
 
+use Spiral\Core\Container\SaturableInterface;
+use Spiral\Core\ContainerInterface;
 use Spiral\Http\Exceptions\FilterException;
 use Spiral\Models\DataEntity;
 
@@ -15,7 +17,8 @@ use Spiral\Models\DataEntity;
  * Request filter is data entity which uses input manager to populate it's fields, model can perform
  * input filtering, value routing (query, data, files) and filtering.
  *
- * You can use generic validation rules.
+ * Provides similar init() method as core Service, compatible with saturable interface.
+ * You can use generic validation rules for your input fields.
  *
  * Example schema definition:
  * protected $schema = [
@@ -57,9 +60,10 @@ class RequestFilter extends DataEntity
 
     /**
      * @final For my own reasons (i have some ideas), please use SaturableInterface and init method.
-     * @param InputManager $input
+     * @param InputManager       $input
+     * @param ContainerInterface $container
      */
-    final public function __construct(InputManager $input)
+    final public function __construct(InputManager $input, ContainerInterface $container)
     {
         $this->input = $input;
 
@@ -72,6 +76,19 @@ class RequestFilter extends DataEntity
 
             //Receiving value as result of InputManager method
             $this->setField($field, call_user_func([$input, $source], $origin), true);
+        }
+
+        if (
+            method_exists($this, SaturableInterface::SATURATE_METHOD)
+            && !$this instanceof SaturableInterface
+        ) {
+            $method = new \ReflectionMethod($this, SaturableInterface::SATURATE_METHOD);
+
+            //Executing init method
+            call_user_func_array(
+                [$this, SaturableInterface::SATURATE_METHOD],
+                $container->resolveArguments($method)
+            );
         }
     }
 
