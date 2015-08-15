@@ -136,7 +136,7 @@ class ServiceGenerator extends AbstractService
             "@return $selection"
         ]);
 
-        $find->parameter("where")->setOptional(true, []);
+        $find->parameter("where")->setType('array')->setOptional(true, []);
         $find->setSource("return {$shortClass}::find(\$where);");
 
         /**
