@@ -64,11 +64,17 @@ class Service extends Component
     {
         $this->container = $container;
 
-        if (method_exists($this, 'init') && !$this instanceof SaturableInterface) {
-            $method = new \ReflectionMethod($this, 'init');
+        if (
+            method_exists($this, SaturableInterface::SATURATE_METHOD)
+            && !$this instanceof SaturableInterface
+        ) {
+            $method = new \ReflectionMethod($this, SaturableInterface::SATURATE_METHOD);
 
             //Executing init method
-            call_user_func_array([$this, 'init'], $container->resolveArguments($method));
+            call_user_func_array(
+                [$this, SaturableInterface::SATURATE_METHOD],
+                $container->resolveArguments($method)
+            );
         }
     }
 
