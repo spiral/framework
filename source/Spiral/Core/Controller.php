@@ -55,7 +55,8 @@ abstract class Controller extends Service implements ControllerInterface
         $reflection = new \ReflectionMethod($this, $action);
 
         if (
-            $reflection->isStatic()
+            $reflection->getName() == 'init'
+            || $reflection->isStatic()
             || !$reflection->isPublic()
             || !$reflection->isUserDefined()
             || $reflection->getDeclaringClass()->getName() == __CLASS__

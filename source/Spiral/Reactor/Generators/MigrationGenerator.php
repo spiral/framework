@@ -9,6 +9,8 @@
  */
 namespace Spiral\Reactor\Generators;
 
+use Spiral\Database\Entities\Schemas\AbstractTable;
+use Spiral\Database\Migrations\Migration;
 use Spiral\Reactor\Generators\Prototypes\AbstractGenerator;
 
 /**
@@ -21,8 +23,8 @@ class MigrationGenerator extends AbstractGenerator
      */
     protected function generate()
     {
-        $this->file->addUse('Spiral\Database\Migrations\Migration');
-        $this->file->addUse('Spiral\Database\Entities\Schemas\AbstractTable');
+        $this->file->addUse(Migration::class);
+        $this->file->addUse(AbstractTable::class);
 
         $this->class->setParent('Migration');
         $this->class->method('up', 'Executing migration.');

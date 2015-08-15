@@ -150,8 +150,8 @@ class ParameterElement
     public function render()
     {
         $type = '';
-        if ($this->type) {
-            $type = $this->type ? $this->type . " " : "";
+        if (!empty($this->type)) {
+            $type = $this->type . " ";
         }
 
         $result = $type . ($this->pdb ? '&' : '') . "$" . $this->name;

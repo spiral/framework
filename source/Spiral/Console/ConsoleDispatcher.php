@@ -152,8 +152,8 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
         //Some console commands utilizes benchmarking, let's help them
         $this->container->bind(BenchmarkerInterface::class, Debugger::class);
 
-        //We don't want http pay for greedy console tokenizer
-        $this->loader->setName('loadmap-console');
+        //Let's disable loader in console mode
+        $this->loader->disable();
         $this->application()->run();
     }
 

@@ -9,31 +9,31 @@
 namespace Spiral\Commands\Reactor;
 
 use Spiral\Console\Command;
-use Spiral\Reactor\Generators\ControllerGenerator;
+use Spiral\Reactor\Generators\CommandGenerator;
 use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Generate controller class.
+ * Create new command.
  */
-class ControllerCommand extends Command
+class CommandCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
-    protected $name = 'create:controller';
+    protected $name = 'create:command';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate a new controller class.';
+    protected $description = 'Generate a new command class.';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Controller name.']
+        ['name', InputArgument::REQUIRED, 'Command name.']
     ];
 
     /**
@@ -43,10 +43,10 @@ class ControllerCommand extends Command
      */
     public function perform(Reactor $reactor)
     {
-        $generator = new ControllerGenerator(
+        $generator = new CommandGenerator(
             $this->files,
             $this->argument('name'),
-            $reactor->config()['generators']['controller'],
+            $reactor->config()['generators']['command'],
             $reactor->config()['header']
         );
 
@@ -58,20 +58,13 @@ class ControllerCommand extends Command
             return;
         }
 
-        foreach ($this->option('method') as $method) {
-            $generator->addMethod($method);
+        $generator->setCommand($this->argument('name'));
+        if (!empty($this->option('name'))) {
+            $generator->setCommand($this->option('name'));
         }
 
-        foreach ($this->option('depends') as $service) {
-            if (empty($class = $reactor->findClass('service', $service))) {
-                $this->writeln(
-                    "<fg=red>Unable to locate service class for '{$service}'.</fg=red>"
-                );
-
-                return;
-            }
-
-            $generator->addDependency($service, $class);
+        if (!empty($this->option('description'))) {
+            $generator->setDescription($this->option('description'));
         }
 
         if (!empty($this->option('comment'))) {
@@ -83,7 +76,10 @@ class ControllerCommand extends Command
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Controller successfully created:</info> {$filename}");
+        $this->writeln("<info>Command successfully created:</info> {$filename}");
+
+        //We are have to sleep a little to flush cache
+        $this->writeln("Run '<info>console:refresh</info>' to index created command.");
     }
 
     /**
@@ -93,22 +89,22 @@ class ControllerCommand extends Command
     {
         return [
             [
-                'method',
-                'm',
-                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Pre-create controller method.'
-            ],
-            [
-                'depends',
-                'd',
-                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Add service dependency to controller. Declare dependency in short form.'
-            ],
-            [
                 'comment',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Optional comment to add as class header.'
+            ],
+            [
+                'name',
+                'c',
+                InputOption::VALUE_OPTIONAL,
+                'Command name.'
+            ],
+            [
+                'description',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Command description.'
             ]
         ];
     }

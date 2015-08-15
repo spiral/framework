@@ -62,11 +62,11 @@ class Service extends Component
     {
         $this->container = $container;
 
-        if (method_exists($this, 'boot')) {
-            $method = new \ReflectionMethod($this, 'boot');
+        if (method_exists($this, 'init')) {
+            $method = new \ReflectionMethod($this, 'init');
 
-            //Executing boot method
-            call_user_func_array([$this, 'boot'], $container->resolveArguments($method));
+            //Executing init method
+            call_user_func_array([$this, 'init'], $container->resolveArguments($method));
         }
     }
 

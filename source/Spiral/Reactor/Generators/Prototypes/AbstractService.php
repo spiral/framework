@@ -9,6 +9,7 @@
 namespace Spiral\Reactor\Generators\Prototypes;
 
 use Spiral\Files\FilesInterface;
+use Spiral\Reactor\AbstractElement;
 
 /**
  * Abstract service generation.
@@ -29,8 +30,8 @@ abstract class AbstractService extends AbstractGenerator
     {
         parent::__construct($files, $name, $options, $header);
 
-        //Let's always make boot method first, we can always remove it
-        $this->class->method('boot');
+        //Let's always make init method first, we can always remove it
+        $this->class->method('init');
     }
 
     /**
@@ -87,23 +88,25 @@ abstract class AbstractService extends AbstractGenerator
     protected function renderDependencies()
     {
         if (empty($this->dependencies)) {
-            $this->class->removeMethod('boot');
+            $this->class->removeMethod('init');
 
             return;
         }
 
-        $bootMethod = $this->class->method('boot');
+        $initMethod = $this->class->method('init');
         foreach ($this->dependencies as $name => $dependency) {
             $reflection = new \ReflectionClass($dependency);
 
-            $this->class->property($name, "@var " . $reflection->getShortName());
-
-            $bootMethod->parameter(
+            $this->class->property(
                 $name,
-                $reflection->getShortName()
+                "@var " . $reflection->getShortName()
+            )->setAccess(AbstractElement::ACCESS_PROTECTED)->setDefault(true, null);
+
+            $initMethod->parameter(
+                $name, $reflection->getShortName()
             )->setType($reflection->getShortName());
 
-            $bootMethod->setSource("\$this->$name = $name;", true);
+            $initMethod->setSource("\$this->$name = \$$name;", true);
         }
     }
 }

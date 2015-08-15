@@ -92,7 +92,7 @@ class MethodElement extends AbstractElement
 
         if (
             !empty($type)
-            && !in_array($docComment = "@param {type} \${$name}", $this->docComment)
+            && !in_array($docComment = "@param {$type} \${$name}", $this->docComment)
         ) {
             $this->docComment[] = $docComment;
         }
@@ -254,7 +254,9 @@ class MethodElement extends AbstractElement
             }
 
             $reflection->isArray() && $parameter->setType('array');
-            !empty($reflection->getClass()) && $parameter->setType($reflection->getClass()->getName());
+            if (!empty($reflection->getClass())) {
+                $parameter->setType('\\' . ltrim($reflection->getClass()->getName(), '\\'));
+            }
 
             $parameter->setPBR($reflection->isPassedByReference());
         }

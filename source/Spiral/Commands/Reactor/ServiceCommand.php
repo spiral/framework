@@ -9,20 +9,20 @@
 namespace Spiral\Commands\Reactor;
 
 use Spiral\Console\Command;
-use Spiral\Reactor\Generators\ControllerGenerator;
+use Spiral\Reactor\Generators\ServiceGenerator;
 use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Generate controller class.
+ * Generate service with it's dependecies and associated model.
  */
-class ControllerCommand extends Command
+class ServiceCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
-    protected $name = 'create:controller';
+    protected $name = 'create:service';
 
     /**
      * {@inheritdoc}
@@ -33,7 +33,8 @@ class ControllerCommand extends Command
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Controller name.']
+        ['name', InputArgument::REQUIRED, 'Service name.'],
+        ['entity', InputArgument::OPTIONAL, 'Name of associated entity (ORM or ODM) in short form.']
     ];
 
     /**
@@ -43,10 +44,10 @@ class ControllerCommand extends Command
      */
     public function perform(Reactor $reactor)
     {
-        $generator = new ControllerGenerator(
+        $generator = new ServiceGenerator(
             $this->files,
             $this->argument('name'),
-            $reactor->config()['generators']['controller'],
+            $reactor->config()['generators']['service'],
             $reactor->config()['header']
         );
 
@@ -56,6 +57,22 @@ class ControllerCommand extends Command
             );
 
             return;
+        }
+
+        if (!empty($model = $this->argument('entity'))) {
+            if (empty($class = $reactor->findClass('entity', $model))) {
+                $this->writeln(
+                    "<fg=red>Unable to locate model class for '{$model}'.</fg=red>"
+                );
+
+                return;
+            }
+
+            $generator->associateModel($model, $class);
+        }
+
+        if ($this->option('singleton')) {
+            $generator->makeSingleton();
         }
 
         foreach ($this->option('method') as $method) {
@@ -83,7 +100,7 @@ class ControllerCommand extends Command
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Controller successfully created:</info> {$filename}");
+        $this->writeln("<info>Service successfully created:</info> {$filename}");
     }
 
     /**
@@ -103,6 +120,12 @@ class ControllerCommand extends Command
                 'd',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 'Add service dependency to controller. Declare dependency in short form.'
+            ],
+            [
+                'singleton',
+                's',
+                InputOption::VALUE_NONE,
+                'Mark service as singleton.'
             ],
             [
                 'comment',

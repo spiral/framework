@@ -8,6 +8,7 @@
  */
 namespace Spiral\Reactor\Generators;
 
+use Spiral\Core\Controller;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
 
 /**
@@ -20,7 +21,7 @@ class ControllerGenerator extends AbstractService
      */
     protected function generate()
     {
-        $this->file->addUse('Spiral\Core\Controller');
+        $this->file->addUse(Controller::class);
         $this->class->setParent('Controller');
     }
 }

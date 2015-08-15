@@ -59,6 +59,7 @@ class NamespaceElement extends AbstractElement
      */
     public function addUse($class)
     {
+        $class = ltrim($class, '\\');
         if (array_search($class, $this->uses) === false) {
             $this->uses[] = $class;
         }

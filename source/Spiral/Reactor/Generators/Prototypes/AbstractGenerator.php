@@ -39,12 +39,12 @@ abstract class AbstractGenerator
     /**
      * @var ClassElement
      */
-    public $class = null;
+    protected $class = null;
 
     /**
      * @var FileElement
      */
-    public $file = null;
+    protected $file = null;
 
     /**
      * @param FilesInterface $files
