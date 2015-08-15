@@ -9,7 +9,7 @@
 namespace Spiral\Commands\ODM;
 
 use Spiral\Console\Command;
-use Spiral\ODM\UmlExporter;
+use Spiral\Documeters\ODM\UmlExporter;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**

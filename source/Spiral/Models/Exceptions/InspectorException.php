@@ -11,9 +11,9 @@ namespace Spiral\Models;
 use Spiral\Core\Exceptions\RuntimeException;
 
 /**
- * Generic exception raised by Inspection while analyzing existed models.
+ * Generic exception raised by Inspector while analyzing existed models.
  */
-class InspectionException extends RuntimeException
+class InspectorException extends RuntimeException
 {
 
 }

@@ -157,7 +157,7 @@ class Indexer extends Component
     }
 
     /**
-     * Index translator relation function calls.
+     * Index translator related function calls.
      *
      * @param ReflectionCall[] $calls
      * @throws IndexerException

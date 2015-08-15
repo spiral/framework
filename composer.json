@@ -11,18 +11,10 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "ext-mbstring": "*",
-    "ext-openssl": "*",
-    "psr/log": "*",
-    "psr/http-message": "*",
-    "predis/predis": "~1.0",
     "symfony/console": "~2.0",
     "symfony/process": "~2.0",
     "nesbot/carbon": "dev-master",
-    "doctrine/inflector": "1.0.1",
-    "guzzlehttp/guzzle": "~6.0",
     "spiral/components": "dev-master",
-    "intervention/image": "dev-master"
   },
   "autoload": {
     "files": [

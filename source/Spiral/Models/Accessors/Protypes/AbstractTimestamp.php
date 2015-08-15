@@ -4,11 +4,11 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright Â©2009-2015
+ * @copyright ©2009-2015
  */
-namespace Spiral\Commands\Reactor\Models;
+namespace Spiral\Models\Accessors\Prototypes;
 
-class ORMCommand
+class AbstractTimestamp
 {
 
 }

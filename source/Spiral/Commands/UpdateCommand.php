@@ -32,7 +32,13 @@ class UpdateCommand extends Command
     public function perform()
     {
         foreach ($this->console->config()['updateSequence'] as $command => $options) {
-            $this->console->command($command, $options, $this->output);
+            if (!empty($options['header'])) {
+                $this->writeln($options['header']);
+            }
+            $this->console->command($command, $options['options'], $this->output);
+            if (!empty($options['footer'])) {
+                $this->writeln($options['footer']);
+            }
         }
     }
 }

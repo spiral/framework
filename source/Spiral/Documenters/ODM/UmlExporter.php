@@ -6,10 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\ODM;
+namespace Spiral\Documeters\ODM;
 
 use Spiral\Core\Component;
 use Spiral\Files\FilesInterface;
+use Spiral\ODM\Document;
 use Spiral\ODM\Entities\SchemaBuilder;
 use Spiral\ODM\Entities\Schemas\DocumentSchema;
 use Spiral\Reactor\AbstractElement;

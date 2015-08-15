@@ -12,13 +12,14 @@ use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\Container\InstanceException;
 
 /**
- * Service provides one of the application logic blocks, service must serve to controllers and
+ * Service provides one of the application constructing blocks, service must serve to controllers and
  * other logic. Service can declare itself as singleton by implementing SingletonInterface and
  * SINGLETON constant pointing to self.
  *
  * Count service as layer (model) between data entities and various controllers.
  *
  * You can declare service logic in boot method, which is going to be executed using container.
+ * In addition service can access components binding using string alias.
  *
  * @property \Spiral\Core\Core                  $core
  * @property \Spiral\Core\Components\Loader     $loader

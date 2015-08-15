@@ -10,7 +10,7 @@ namespace Spiral\Commands\Inspect;
 
 use Spiral\Commands\InspectCommand;
 
-class PublicCommand extends InspectCommand
+class ListCommand extends InspectCommand
 {
     /**
      * No magic numbers in code. :/

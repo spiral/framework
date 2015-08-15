@@ -9,7 +9,6 @@
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\Container\ArgumentException;
-use Spiral\Core\Exceptions\Container\InstanceException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
@@ -37,13 +36,6 @@ abstract class Controller extends Service implements ControllerInterface
      * @var string
      */
     protected $defaultAction = 'index';
-
-    /**
-     * Container instance to be associated as moment of callAction call.
-     *
-     * @var ContainerInterface
-     */
-    protected $container = null;
 
     /**
      * {@inheritdoc}
@@ -104,8 +96,11 @@ abstract class Controller extends Service implements ControllerInterface
      * @param array             $parameters
      * @return mixed
      */
-    protected function preAction(\ReflectionMethod $method, array $arguments, array $parameters)
-    {
+    protected function preAction(
+        \ReflectionMethod $method,
+        array $arguments,
+        array $parameters
+    ) {
         return null;
     }
 
@@ -125,18 +120,5 @@ abstract class Controller extends Service implements ControllerInterface
         array $parameters
     ) {
         return $result;
-    }
-
-    /**
-     * Shortcut to Container get method.
-     *
-     * @param string $alias
-     * @return mixed|null|object
-     * @throws InstanceException
-     * @throws ArgumentException
-     */
-    public function __get($alias)
-    {
-        return $this->container->get($alias);
     }
 }
