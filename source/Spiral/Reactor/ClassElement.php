@@ -303,6 +303,11 @@ class ClassElement extends AbstractElement
             );
         }
 
+        if (!empty($this->constants)) {
+            //Blank line
+            $result[] = '';
+        }
+
         $position = 0;
         foreach ($this->properties as $property) {
             $result[] = $property->render($indentLevel + 1, $serializer, $position++);
