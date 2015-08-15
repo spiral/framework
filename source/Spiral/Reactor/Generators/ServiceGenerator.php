@@ -52,33 +52,51 @@ class ServiceGenerator extends AbstractService
             $selection .= "|Collection";
         }
 
+        $this->class->property('errors', [
+            "Last set of errors raised by save method.",
+            "",
+            "@var array"
+        ])->setDefault(true, []);
+
         /**
          * Create new entity method.
          */
         $create = $this->class->method('create');
         $create->setComment([
-            "Create new {$shortClass}. You must save and validate entity by your own.",
+            "Create new {$shortClass}. Method will return false if not saved.",
+            "Creation errors available via getErrors() method.",
             "",
             "@param array|mixed \$fields",
+            "@param array \$errors Will be populated if save fails.",
             "@return {$shortClass}"
         ]);
         $create->parameter('fields')->setOptional(true, []);
-        $create->setSource("return {$shortClass}::create(\$fields);");
+        $create->parameter("errors")->setOptional(true, null)->setPBR(true);
+        $create->setSource("return \$this->save({$shortClass}::create(\$fields), true, \$errors);");
 
         /**
          * Save entity method.
          */
         $save = $this->class->method('save');
         $save->setComment([
-            "Save {$shortClass}. Use {$shortClass}->getError() in case of save failure.",
+            "Save {$shortClass}. Use Service->getErrors() in case of save failure.",
             "",
             "@param {$shortClass} \${$name}",
             "@param bool \$validate",
+            "@param array \$errors Will be populated if save fails.",
             "@return bool"
         ]);
+
         $save->parameter($name)->setType($shortClass);
         $save->parameter("validate")->setOptional(true, true);
-        $save->setSource("return \${$name}->save(\$validate);");
+        $save->parameter("errors")->setOptional(true, null)->setPBR(true);
+        $save->setSource([
+            "if(\${$name}->save(\$validate)) {",
+            "   return true;",
+            "}",
+            "\$this->errors = \$errors = \${$name}->getErrors();",
+            "return false;"
+        ]);
 
         /**
          * Delete entity method.
@@ -118,7 +136,19 @@ class ServiceGenerator extends AbstractService
             "@return $selection"
         ]);
 
-        $find->parameter("where")->setType('array')->setOptional(true, []);
+        $find->parameter("where")->setOptional(true, []);
         $find->setSource("return {$shortClass}::find(\$where);");
+
+        /**
+         * Last save errors.
+         */
+        $errors = $this->class->method('getErrors');
+        $errors->setComment([
+            "Set of error messages raised by last save operation.",
+            "",
+            "@return array"
+        ]);
+
+        $errors->setSource("return \$this->errors;");
     }
 }
