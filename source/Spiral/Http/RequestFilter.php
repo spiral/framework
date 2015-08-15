@@ -37,7 +37,7 @@ class RequestFilter extends DataEntity
     protected $secured = [];
 
     /**
-     * Request schema declares field names, their source and origin name if any. See exaples in class
+     * Request schema declares field names, their source and origin name if any. See examples in class
      * header.
      *
      * @var array
