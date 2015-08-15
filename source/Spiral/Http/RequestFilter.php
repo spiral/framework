@@ -15,6 +15,8 @@ use Spiral\Models\DataEntity;
  * Request filter is data entity which uses input manager to populate it's fields, model can perform
  * input filtering, value routing (query, data, files) and filtering.
  *
+ * You can use generic validation rules.
+ *
  * Example schema definition:
  * protected $schema = [
  *      'name'   => 'post:name',           //identical to "data:name"
