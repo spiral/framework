@@ -24,7 +24,7 @@ class UpdateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Run Spiral Development server on specified host and port.';
+    protected $description = 'Perform application schemas and cache update.';
 
     /**
      * Perform command.
