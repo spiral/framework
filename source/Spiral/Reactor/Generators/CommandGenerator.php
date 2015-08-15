@@ -24,8 +24,11 @@ class CommandGenerator extends AbstractGenerator
         $this->file->addUse(Command::class);
         $this->class->setParent('Command');
 
-        $this->class->property('name', ["Command name.", "", "@var string"]);
-        $this->class->property('description', ["Command description.", "", "@var string"]);
+        $this->class->property('name', ["@var string"])->setDefault(true, "");
+        $this->class->property('description', ["@var string"])->setDefault(true, "");
+
+        $this->class->property('arguments', ["@var string"])->setDefault(true, []);
+        $this->class->property('options', ["@var string"])->setDefault(true, []);
 
         $this->class->method('perform')->setComment("Perform command.");
     }
