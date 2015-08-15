@@ -9,7 +9,7 @@
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
-use Spiral\Core\Container\SaturableInterlace;
+use Spiral\Core\Container\SaturableInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Core\Traits\ConfigurableTrait;
@@ -20,7 +20,7 @@ use Spiral\Files\FilesInterface;
  * Default spiral compiler implementation. Provides ability to cache compiled views and use set
  * of processors to prepare view source.
  */
-class Compiler extends Component implements CompilerInterface, SaturableInterlace
+class Compiler extends Component implements CompilerInterface, SaturableInterface
 {
     /**
      * Configuration and compilation benchmarks.
@@ -112,7 +112,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterlac
     /**
      * @param ContainerInterface $container
      */
-    public function saturate(ContainerInterface $container)
+    public function init(ContainerInterface $container)
     {
         $this->container = $container;
     }

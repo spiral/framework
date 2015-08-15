@@ -8,7 +8,7 @@
  */
 namespace Spiral\Views\Processors;
 
-use Spiral\Core\Container\SaturableInterlace;
+use Spiral\Core\Container\SaturableInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\Compiler;
@@ -19,7 +19,7 @@ use Spiral\Views\ViewManager;
  * Evaluates php blocks marked with compilation flag at moment of view code compilation. This processor
  * is required for spiral toolkit.
  */
-class EvaluateProcessor implements ProcessorInterface, SaturableInterlace
+class EvaluateProcessor implements ProcessorInterface, SaturableInterface
 {
     /**
      * @var ViewManager
@@ -61,7 +61,7 @@ class EvaluateProcessor implements ProcessorInterface, SaturableInterlace
     /**
      * @param FilesInterface $files
      */
-    public function saturate(FilesInterface $files)
+    public function init(FilesInterface $files)
     {
         $this->files = $files;
     }
