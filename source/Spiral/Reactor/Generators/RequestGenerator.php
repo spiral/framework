@@ -9,12 +9,13 @@
 namespace Spiral\Reactor\Generators;
 
 use Spiral\Http\RequestFilter;
-use Spiral\Reactor\Generators\Prototypes\AbstractGenerator;
+use Spiral\Reactor\Generators\Prototypes\AbstractService;
 
 /**
- * Generates entity for RequestFilter.
+ * Generates entity for RequestFilter. Provides ability to generate init method and pre-populate
+ * schema using type mapping.
  */
-class RequestGenerator extends AbstractGenerator
+class RequestGenerator extends AbstractService
 {
     /**
      * {@inheritdoc}

@@ -81,6 +81,19 @@ class ServiceGenerator extends AbstractService
         $save->setSource("return \${$name}->save(\$validate);");
 
         /**
+         * Delete entity method.
+         */
+        $delete = $this->class->method('delete');
+        $delete->setComment([
+            "Delete {$shortClass}.",
+            "",
+            "@param {$shortClass} \${$name}",
+            "@return bool"
+        ]);
+        $delete->parameter($name)->setType($shortClass);
+        $delete->setSource("return \${$name}->delete();");
+
+        /**
          * Find entity by it's primary key.
          */
         $findPrimary = $this->class->method('findByPK');
@@ -107,18 +120,5 @@ class ServiceGenerator extends AbstractService
 
         $find->parameter("where")->setType('array')->setOptional(true, []);
         $find->setSource("return {$shortClass}::find(\$where);");
-
-        /**
-         * Save entity method.
-         */
-        $delete = $this->class->method('save');
-        $delete->setComment([
-            "Delete {$shortClass}.",
-            "",
-            "@param {$shortClass} \${$name}",
-            "@return bool"
-        ]);
-        $delete->parameter($name)->setType($shortClass);
-        $delete->setSource("return \${$name}->delete();");
     }
 }

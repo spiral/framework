@@ -73,7 +73,7 @@ class ServiceCommand extends AbstractCommand
             $generator->associateModel($model, $class);
         }
 
-        if ($this->option('singleton')) {
+        if (!$this->option('mortal')) {
             $generator->makeSingleton();
         }
 
@@ -119,10 +119,10 @@ class ServiceCommand extends AbstractCommand
                 'Add service dependency to controller. Declare dependency in short form.'
             ],
             [
-                'singleton',
+                'mortal',
                 's',
                 InputOption::VALUE_NONE,
-                'Mark service as singleton.'
+                'Do not make service instance SingletonInterface.'
             ],
             [
                 'comment',
