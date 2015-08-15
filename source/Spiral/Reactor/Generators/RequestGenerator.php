@@ -8,6 +8,7 @@
  */
 namespace Spiral\Reactor\Generators;
 
+use Spiral\Http\RequestFilter;
 use Spiral\Reactor\Generators\Prototypes\AbstractGenerator;
 
 /**
@@ -47,6 +48,9 @@ class RequestGenerator extends AbstractGenerator
      */
     public function generate()
     {
+        $this->file->addUse(RequestFilter::class);
+        $this->class->setParent('RequestFilter');
+
         $this->class->property('schema', ["Input schema.", "", "@var array"])->setDefault(
             true,
             $this->schema

@@ -28,6 +28,9 @@ use Spiral\Models\DataEntity;
  * You can declare as source (query, file, post and etc) as source plus origin name (file:files.0).
  * Available sources: uri, path, method, isSecure, isAjax, isJsonExpected, remoteAddress.
  * Plus named sources (bags): header, data, post, query, cookie, file, server, attribute.
+ *
+ * There is possibility that this class and it's schema will behave same way as ORM and ODM models
+ * one day.
  */
 class RequestFilter extends DataEntity
 {
