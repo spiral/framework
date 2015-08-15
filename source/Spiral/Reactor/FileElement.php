@@ -41,6 +41,29 @@ class FileElement extends NamespaceElement
     }
 
     /**
+     * Set file namespace.
+     *
+     * @param string $namespace
+     * @return $this
+     */
+    public function setNamespace($namespace)
+    {
+        $this->setName($namespace);
+
+        return $this;
+    }
+
+    /**
+     * Active file namespace.
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->getName();
+    }
+
+    /**
      * @param ClassElement $class
      * @return $this
      */

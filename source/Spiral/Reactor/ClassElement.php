@@ -9,6 +9,7 @@
 namespace Spiral\Reactor;
 
 use Spiral\Reactor\ClassElements\MethodElement;
+use Spiral\Reactor\ClassElements\PHPConstant;
 use Spiral\Reactor\ClassElements\PropertyElement;
 
 /**
@@ -110,8 +111,8 @@ class ClassElement extends AbstractElement
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param string            $name
+     * @param mixed|PHPConstant $value
      * @return $this
      */
     public function setConstant($name, $value)
@@ -287,8 +288,15 @@ class ClassElement extends AbstractElement
         $result[] = "{";
 
         foreach ($this->constants as $constant => $value) {
+
+            if ($value instanceof PHPConstant) {
+                $value = $value->getValue();
+            } else {
+                $value = var_export($value, true);
+            }
+
             $result[] = $this->indent(
-                'const ' . $constant . ' = ' . var_export($value, true) . ';',
+                'const ' . $constant . ' = ' . $value . ';',
                 $indentLevel + 1
             );
         }

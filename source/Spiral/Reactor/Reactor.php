@@ -8,13 +8,15 @@
  */
 namespace Spiral\Reactor;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Singleton;
 use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Reactor\Exceptions\ReactorException;
 
 /**
- * Provides services to generate/alter (planned) PHP classes with their methods, properties and etc.
+ * Only holds configurations for class generators.
  */
 class Reactor extends Singleton
 {
@@ -50,9 +52,28 @@ class Reactor extends Singleton
     }
 
     /**
-     * @param string $generator
+     * Find full class name using it's configured type and short name. Reaction will automatically
+     * add namespace and postfix. Method will return null if class can not be found.
+     *
+     * @param string $type
+     * @param string $name
+     * @return string|null
+     * @throws ReactorException
      */
-    public function generator($generator)
+    public function findClass($type, $name)
     {
+        if (!isset($this->config['generators'][$type])) {
+            throw new ReactorException("Undefined class type '{$type}'.");
+        }
+
+        $definition = $this->config['generators'][$type];
+
+        $class = $definition['namespace'] . '\\' . Inflector::classify($name) . $definition['postfix'];
+
+        if (!class_exists($class)) {
+            return null;
+        }
+
+        return $class;
     }
 }

@@ -151,7 +151,7 @@ class ParameterElement
     {
         $type = '';
         if ($this->type) {
-            $type = $this->type ? ($this->type == 'array' ? '' : '\\') . $this->type . " " : "";
+            $type = $this->type ? $this->type . " " : "";
         }
 
         $result = $type . ($this->pdb ? '&' : '') . "$" . $this->name;

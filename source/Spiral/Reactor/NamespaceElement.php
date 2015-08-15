@@ -16,12 +16,12 @@ class NamespaceElement extends AbstractElement
     /**
      * @var array
      */
-    private $uses = [];
+    protected $uses = [];
 
     /**
      * @var ClassElement[]
      */
-    private $classes = [];
+    protected $classes = [];
 
     /**
      * @param ClassElement $class

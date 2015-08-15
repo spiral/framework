@@ -129,18 +129,27 @@ class MethodElement extends AbstractElement
      * Replace method source with new value.
      *
      * @param string|array $source
+     * @param bool         $append
      * @return $this
      */
-    public function setSource($source)
+    public function setSource($source, $append = false)
     {
         if (is_array($source)) {
-            $this->source = $source;
+            if ($append) {
+                $this->source = array_merge($this->source, $source);
+            } else {
+                $this->source = $source;
+            }
 
             return $this;
         }
 
         $lines = explode("\n", preg_replace('/[\n\r]+/', "\n", $source));
         $indentLevel = 0;
+
+        if (!$append) {
+            $this->source = [];
+        }
 
         foreach ($lines as $line) {
             //Cutting start spaces
