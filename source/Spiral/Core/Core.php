@@ -39,6 +39,7 @@ use Spiral\Modules\ModuleManager;
  * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
  * @property \Spiral\Translator\Translator      $i18n
  * @property \Spiral\Views\ViewManager          $views
+ * @property \Spiral\Storage\StorageManager     $storage
  *
  * @property \Spiral\Redis\RedisManager         $redis
  * @property \Spiral\Image\ImageManager         $image
