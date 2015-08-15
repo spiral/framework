@@ -40,6 +40,8 @@ class MigrateCommand extends AbstractCommand
     public function perform()
     {
         if ($this->option('quiet') && !$this->migrator()->isConfigured()) {
+            $this->writeln("<comment>Migrator not configured, skipping.</comment>");
+
             //Skipping
             return;
         }
