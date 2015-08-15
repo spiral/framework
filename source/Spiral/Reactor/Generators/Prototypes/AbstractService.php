@@ -8,8 +8,10 @@
  */
 namespace Spiral\Reactor\Generators\Prototypes;
 
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Reactor\AbstractElement;
+use Spiral\Reactor\ClassElements\PHPConstant;
 
 /**
  * Abstract service generation.
@@ -39,11 +41,11 @@ abstract class AbstractService extends AbstractGenerator
      */
     public function makeSingleton()
     {
-        $this->file->addUse('Spiral\Core\SingletonInterface');
+        $this->file->addUse(SingletonInterface::class);
         $this->class->addInterface('SingletonInterface');
 
         //Class pointing to self
-        $this->class->setConstant('SINGLETON', 'self::class');
+        $this->class->setConstant('SINGLETON', new PHPConstant('self::class'));
     }
 
     /**

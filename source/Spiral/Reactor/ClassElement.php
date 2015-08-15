@@ -82,6 +82,7 @@ class ClassElement extends AbstractElement
      */
     public function addInterface($interface)
     {
+        $interface = ltrim($interface, '\\');
         if (array_search($interface, $this->interfaces) === false) {
             $this->interfaces[] = $interface;
         }
@@ -95,6 +96,7 @@ class ClassElement extends AbstractElement
      */
     public function removeInterface($interface)
     {
+        $interface = ltrim($interface, '\\');
         if (($index = array_search($interface, $this->interfaces)) !== false) {
             unset($this->interfaces[$index]);
         }
@@ -281,7 +283,7 @@ class ClassElement extends AbstractElement
         $header = 'class ' . $this->getName() . ($this->parent ? ' extends ' . $this->parent : '');
 
         if (!empty($this->interfaces)) {
-            $header .= ' implements \\' . join(', \\', $this->interfaces);
+            $header .= ' implements ' . join(', ', $this->interfaces);
         }
 
         $result[] = $header;

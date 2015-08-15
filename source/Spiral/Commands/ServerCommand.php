@@ -55,7 +55,7 @@ class ServerCommand extends Command
 
         $process = new Process(
             '"' . PHP_BINARY . '" -S ' . $host . ' "' . directory('framework') . '/../server.php"',
-            directory('root'),
+            directory('public'),
             null,
             null,
             $this->option('timeout')

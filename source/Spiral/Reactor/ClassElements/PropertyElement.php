@@ -19,7 +19,7 @@ class PropertyElement extends AbstractElement
     /**
      * @var string
      */
-    private $access = self::ACCESS_PUBLIC;
+    private $access = self::ACCESS_PROTECTED;
 
     /**
      * @var bool
