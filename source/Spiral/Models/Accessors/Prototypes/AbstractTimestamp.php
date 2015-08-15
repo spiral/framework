@@ -4,13 +4,16 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright Â©2009-2015
+ * @copyright ©2009-2015
  */
-namespace Spiral\Models\Accessors;
+namespace Spiral\Models\Accessors\Prototypes;
 
 use Carbon\Carbon;
 
-abstract class AbstractTimestamp extends Carbon
+/**
+ * Abstract implementation of timestamp accessor using Carbon as base.
+ */
+class AbstractTimestamp extends Carbon
 {
     /**
      * Returns date formatted according to given format. Will use default format if not specified.
@@ -25,9 +28,7 @@ abstract class AbstractTimestamp extends Carbon
     }
 
     /**
-     * Update accessor mocked data.
-     *
-     * @param mixed $data
+     * {@inheritdoc}
      */
     public function setData($data)
     {
@@ -35,11 +36,7 @@ abstract class AbstractTimestamp extends Carbon
     }
 
     /**
-     * (PHP 5 > 5.4.0)
-     * Specify data which should be serialized to JSON.
-     *
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed
+     * {@inheritdoc}
      */
     public function jsonSerialize()
     {
@@ -47,6 +44,14 @@ abstract class AbstractTimestamp extends Carbon
             'date'     => $this->toDateTimeString(),
             'timezone' => $this->timezoneName
         ];
+    }
+
+    /**
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        return (object)$this->jsonSerialize();
     }
 
     /**
@@ -59,32 +64,19 @@ abstract class AbstractTimestamp extends Carbon
      */
     protected function castTimestamp($datetime, $timezone = null)
     {
-        if (!is_scalar($datetime))
-        {
+        if (!is_scalar($datetime)) {
             return 0;
         }
 
-        if (is_numeric($datetime))
-        {
+        if (is_numeric($datetime)) {
             //Nothing to do
             return (int)$datetime;
         }
 
-        if (!empty($timezone))
-        {
+        if (!empty($timezone)) {
             return (new Carbon($datetime, null, $timezone))->getTimestamp();
         }
 
         return (int)strtotime($datetime);
-    }
-
-    /**
-     * Simplified form for debugging.
-     *
-     * @return mixed
-     */
-    public function __debugInfo()
-    {
-        return (object)$this->jsonSerialize();
     }
 }

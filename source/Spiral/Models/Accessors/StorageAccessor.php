@@ -10,16 +10,16 @@ namespace Spiral\Models\Accessors;
 
 use Psr\Http\Message\StreamInterface;
 use Spiral\Core\Component;
-use Spiral\Database\Driver;
+use Spiral\Database\Entities\Driver;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\Streams\StreamableInterface;
+use Spiral\Models\StorageAccessorException;
 use Spiral\ODM\Document;
+use Spiral\ODM\DocumentAccessorInterface;
 use Spiral\ODM\ODM;
-use Spiral\ODM\ODMAccessor;
-use Spiral\ORM\ORMAccessor;
+use Spiral\ORM\RecordAccessorInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\ObjectInterface;
-use Spiral\Storage\StorageException;
 use Spiral\Storage\StorageInterface;
 
 /**
@@ -36,19 +36,15 @@ use Spiral\Storage\StorageInterface;
  * @method static copy($destination)
  * @method static replace($destination)
  */
-class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, StreamableInterface
+class StorageAccessor extends Component implements
+    DocumentAccessorInterface,
+    RecordAccessorInterface,
+    StreamableInterface
 {
     /**
      * Logging warnings.
      */
     use LoggerTrait;
-
-    /**
-     * Storage Component.
-     *
-     * @var StorageInterface
-     */
-    private $storage = null;
 
     /**
      * Original address stored in db.
@@ -65,42 +61,33 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     protected $object = null;
 
     /**
-     * Accessors can be used to mock different model values using "representative" class, like
-     * DateTime for timestamps.
-     *
-     * @param mixed  $data    Data to mock.
-     * @param object $parent
-     * @param mixed  $options Implementation specific options.
-     * @param ODM    $odm     Required to be used as ODM accessor.
+     * @invisible
+     * @var StorageInterface
+     */
+    private $storage = null;
+
+    /**
+     * {@inheritdoc}
      */
     public function __construct($data = null, $parent = null, $options = null, ODM $odm = null)
     {
-        if ($this->address = $data)
-        {
+        if ($this->address = $data) {
             $this->object = $this->storage()->open($this->address);
         }
     }
 
     /**
-     * Storage component.
+     * Set storage manager component, if no component set - global container will be used.
      *
-     * @return StorageInterface
+     * @param StorageInterface $storage
      */
-    private function storage()
+    public function setStorage(StorageInterface $storage)
     {
-        if (!empty($this->storage))
-        {
-            return $this->storage;
-        }
-
-        return $this->storage = self::getContainer()->get(StorageInterface::class);
+        $this->storage = $storage;
     }
 
     /**
-     * Embed to another parent.
-     *
-     * @param object $parent
-     * @return $this
+     * {@inheritdoc}
      */
     public function embed($parent)
     {
@@ -115,36 +102,35 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * Update accessor mocked data.
-     *
-     * @param mixed $data
+     * {@inheritdoc}
      */
     public function setData($data)
     {
-        if (is_string($data))
-        {
+        if (is_string($data)) {
             $this->object = $this->storage()->open($data);
 
             return;
         }
 
-        if ($data instanceof ObjectInterface)
-        {
+        if ($data instanceof ObjectInterface) {
             //Attaching object
             $this->object = $data;
 
             return;
         }
 
-        //Trying to update storage content
-        !empty($this->object) && $this->put($this->getContainer(), $this->getName(), $data);
+        if (empty($this->object)) {
+            throw new StorageAccessorException(
+                "Unable to put data to StorageObject without specifying it's name. Use put method."
+            );
+        }
+
+        //Replacing existed content
+        $this->put($this->getBucket(), $this->getName(), $data);
     }
 
     /**
-     * Serialize accessor mocked value. This is legacy name and used like that to be compatible with
-     * ORM and ODM engines.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function serializeData()
     {
@@ -152,19 +138,15 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * Check if object has any update.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasUpdates()
     {
-        if (empty($this->address) && empty($this->object))
-        {
+        if (empty($this->address) && empty($this->object)) {
             return false;
         }
 
-        if (empty($this->object))
-        {
+        if (empty($this->object)) {
             //Object detached
             return true;
         }
@@ -174,21 +156,17 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * Mark object as successfully updated and flush all existed atomic operations and updates.
+     * {@inheritdoc}
      */
     public function flushUpdates()
     {
-        if (!empty($this->object))
-        {
+        if (!empty($this->object)) {
             $this->address = $this->object->getAddress();
         }
     }
 
     /**
-     * Get new field value to be send to database.
-     *
-     * @param string $field Name of field where model/accessor stored into.
-     * @return mixed
+     * {@inheritdoc}
      */
     public function compileUpdates($field = '')
     {
@@ -196,20 +174,15 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * Get generated and manually set document/object atomic updates.
-     *
-     * @param string $container Name of field or index where document stored into.
-     * @return array
+     * {@inheritdoc}
      */
     public function buildAtomics($container = '')
     {
-        if (!$this->hasUpdates())
-        {
+        if (!$this->hasUpdates()) {
             return [];
         }
 
-        if (!empty($this->address) && empty($this->storageObject))
-        {
+        if (!empty($this->address) && empty($this->storageObject)) {
             //Object detached
             return [Document::ATOMIC_SET => [$container => '']];
         }
@@ -218,10 +191,7 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * Accessor default value specific to driver.
-     *
-     * @param Driver $driver
-     * @return mixed
+     * {@inheritdoc}
      */
     public function defaultValue(Driver $driver = null)
     {
@@ -229,12 +199,7 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
-     *
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     *       which is a value of any type other than a resource.
+     * {@inheritdoc}
      */
     public function jsonSerialize()
     {
@@ -242,9 +207,7 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * Convert accessor to string.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function __toString()
     {
@@ -252,23 +215,23 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
     }
 
     /**
-     * Bypass call to storage object.
+     * Bypass call to mocked storage object.
      *
      * @param string $method
      * @param array  $arguments
      * @return mixed
+     * @throws StorageAccessorException
      */
     public function __call($method, array $arguments)
     {
-        if (!$this->isAssociated())
-        {
-            throw new StorageException(
+        if (!$this->isAssociated()) {
+            throw new StorageAccessorException(
                 "Unable to call decorated StorageObject, no instance has been assigned to accessor."
             );
         }
 
-        if (($result = call_user_func_array([$this->object, $method], $arguments)) === $this->object)
-        {
+        $result = call_user_func_array([$this->object, $method], $arguments);
+        if ($result === $this->object) {
             return $this;
         }
 
@@ -338,16 +301,30 @@ class StorageAccessor extends Component implements ORMAccessor, ODMAccessor, Str
      * Get associated stream.
      *
      * @return StreamInterface
+     * @throws StorageAccessorException
      */
     public function getStream()
     {
-        if (!$this->isAssociated())
-        {
-            throw new StorageException(
+        if (!$this->isAssociated()) {
+            throw new StorageAccessorException(
                 "Unable to call decorated StorageObject, no instance assigned to accessor."
             );
         }
 
         return $this->object->getStream();
+    }
+
+    /**
+     * Storage component. Global container is required!
+     *
+     * @return StorageInterface
+     */
+    private function storage()
+    {
+        if (!empty($this->storage)) {
+            return $this->storage;
+        }
+
+        return $this->storage = self::container()->get(StorageInterface::class);
     }
 }
