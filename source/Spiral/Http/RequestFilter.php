@@ -17,6 +17,8 @@ use Spiral\Models\DataEntity;
  * Request filter is data entity which uses input manager to populate it's fields, model can perform
  * input filtering, value routing (query, data, files) and filtering.
  *
+ * Attention, you can not inherit one request from another at this moment.
+ *
  * Provides similar init() method as core Service, compatible with saturable interface.
  * You can use generic validation rules for your input fields.
  *
