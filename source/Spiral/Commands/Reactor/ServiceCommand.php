@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\Reactor;
 
-use Spiral\Console\Command;
+use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
 use Spiral\Reactor\Generators\ServiceGenerator;
 use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,8 +17,18 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * Generate service with it's dependecies and associated model.
  */
-class ServiceCommand extends Command
+class ServiceCommand extends AbstractCommand
 {
+    /**
+     * Generator class to be used.
+     */
+    const GENERATOR = ServiceGenerator::class;
+
+    /**
+     * Generation type to be used.
+     */
+    const TYPE = 'service';
+
     /**
      * {@inheritdoc}
      */
@@ -27,7 +37,7 @@ class ServiceCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate a new controller class.';
+    protected $description = 'Generate new service.';
 
     /**
      * {@inheritdoc}
@@ -44,18 +54,10 @@ class ServiceCommand extends Command
      */
     public function perform(Reactor $reactor)
     {
-        $generator = new ServiceGenerator(
-            $this->files,
-            $this->argument('name'),
-            $reactor->config()['generators']['service'],
-            $reactor->config()['header']
-        );
-
-        if (!$generator->isUnique()) {
-            $this->writeln(
-                "<fg=red>Class name '{$generator->getClassName()}' is not unique.</fg=red>"
-            );
-
+        /**
+         * @var ServiceGenerator $generator
+         */
+        if (empty($generator = $this->getGenerator())) {
             return;
         }
 
@@ -89,11 +91,6 @@ class ServiceCommand extends Command
             }
 
             $generator->addDependency($service, $class);
-        }
-
-        if (!empty($this->option('comment'))) {
-            //User specified comment
-            $generator->setComment($this->option('comment'));
         }
 
         //Generating

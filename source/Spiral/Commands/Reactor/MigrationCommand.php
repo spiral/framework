@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\Reactor;
 
-use Spiral\Console\Command;
+use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
 use Spiral\Database\Exceptions\MigratorException;
 use Spiral\Database\Migrations\Migrator;
 use Spiral\Reactor\Generators\MigrationGenerator;
@@ -19,8 +19,18 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * Create and register migration class.
  */
-class MigrationCommand extends Command
+class MigrationCommand extends AbstractCommand
 {
+    /**
+     * Generator class to be used.
+     */
+    const GENERATOR = MigrationGenerator::class;
+
+    /**
+     * Generation type to be used.
+     */
+    const TYPE = 'migration';
+
     /**
      * {@inheritdoc}
      */
@@ -29,7 +39,7 @@ class MigrationCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate a new migration class.';
+    protected $description = 'Generate new migration.';
 
     /**
      * {@inheritdoc}
@@ -46,18 +56,10 @@ class MigrationCommand extends Command
      */
     public function perform(Reactor $reactor, Migrator $migrator)
     {
-        $generator = new MigrationGenerator(
-            $this->files,
-            $this->argument('name'),
-            $reactor->config()['generators']['migration'],
-            $reactor->config()['header']
-        );
-
-        if (!$generator->isUnique()) {
-            $this->writeln(
-                "<fg=red>Class name '{$generator->getClassName()}' is not unique.</fg=red>"
-            );
-
+        /**
+         * @var MigrationGenerator $generator
+         */
+        if (empty($generator = $this->getGenerator())) {
             return;
         }
 
@@ -67,11 +69,6 @@ class MigrationCommand extends Command
 
         foreach ($this->option('alter') as $table) {
             $generator->alterTable($table);
-        }
-
-        if (!empty($this->option('comment'))) {
-            //User specified comment
-            $generator->setComment($this->option('comment'));
         }
 
         //Generating

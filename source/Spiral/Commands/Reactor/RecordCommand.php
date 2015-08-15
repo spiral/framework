@@ -9,40 +9,41 @@
 namespace Spiral\Commands\Reactor;
 
 use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
-use Spiral\Reactor\Generators\CommandGenerator;
+use Spiral\Reactor\Exceptions\ReactorException;
+use Spiral\Reactor\Generators\RecordGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Create new command.
+ * Generate ORM record with pre-defined schema and validation placeholders.
  */
-class CommandCommand extends AbstractCommand
+class RecordCommand extends AbstractCommand
 {
     /**
      * Generator class to be used.
      */
-    const GENERATOR = CommandGenerator::class;
+    const GENERATOR = RecordGenerator::class;
 
     /**
      * Generation type to be used.
      */
-    const TYPE = 'command';
+    const TYPE = 'entity';
 
     /**
      * {@inheritdoc}
      */
-    protected $name = 'create:command';
+    protected $name = 'create:record';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate new command.';
+    protected $description = 'Generate new ORM Record.';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Command name.']
+        ['name', InputArgument::REQUIRED, 'Record name.']
     ];
 
     /**
@@ -51,29 +52,26 @@ class CommandCommand extends AbstractCommand
     public function perform()
     {
         /**
-         * @var CommandGenerator $generator
+         * @var RecordGenerator $generator
          */
         if (empty($generator = $this->getGenerator())) {
             return;
         }
 
-        $generator->setCommand($this->argument('name'));
-        if (!empty($this->option('name'))) {
-            $generator->setCommand($this->option('name'));
-        }
+        foreach ($this->option('field') as $field) {
+            if (strpos($field, ':') === false) {
+                throw new ReactorException("Field definition must in 'name:type' form.");
+            }
 
-        if (!empty($this->option('description'))) {
-            $generator->setDescription($this->option('description'));
+            list($name, $type) = explode(':', $field);
+            $generator->addField($name, $type);
         }
 
         //Generating
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Command successfully created:</info> {$filename}");
-
-        //We are have to sleep a little to flush cache
-        $this->writeln("Run '<info>console:refresh</info>' to index created command.");
+        $this->writeln("<info>ORM Record successfully created:</info> {$filename}");
     }
 
     /**
@@ -83,16 +81,10 @@ class CommandCommand extends AbstractCommand
     {
         return [
             [
-                'name',
-                'c',
-                InputOption::VALUE_OPTIONAL,
-                'Command name.'
-            ],
-            [
-                'description',
-                'd',
-                InputOption::VALUE_OPTIONAL,
-                'Command description.'
+                'field',
+                'f',
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Schema field in a format "name:type".'
             ],
             [
                 'comment',

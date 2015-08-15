@@ -8,7 +8,7 @@
  */
 namespace Spiral\Commands\Reactor;
 
-use Spiral\Console\Command;
+use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
 use Spiral\Reactor\Generators\ControllerGenerator;
 use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,8 +17,18 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * Generate controller class.
  */
-class ControllerCommand extends Command
+class ControllerCommand extends AbstractCommand
 {
+    /**
+     * Generator class to be used.
+     */
+    const GENERATOR = ControllerGenerator::class;
+
+    /**
+     * Generation type to be used.
+     */
+    const TYPE = 'controller';
+
     /**
      * {@inheritdoc}
      */
@@ -27,7 +37,7 @@ class ControllerCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate a new controller class.';
+    protected $description = 'Generate new controller.';
 
     /**
      * {@inheritdoc}
@@ -43,18 +53,10 @@ class ControllerCommand extends Command
      */
     public function perform(Reactor $reactor)
     {
-        $generator = new ControllerGenerator(
-            $this->files,
-            $this->argument('name'),
-            $reactor->config()['generators']['controller'],
-            $reactor->config()['header']
-        );
-
-        if (!$generator->isUnique()) {
-            $this->writeln(
-                "<fg=red>Class name '{$generator->getClassName()}' is not unique.</fg=red>"
-            );
-
+        /**
+         * @var ControllerGenerator $generator
+         */
+        if (empty($generator = $this->getGenerator())) {
             return;
         }
 
@@ -72,11 +74,6 @@ class ControllerCommand extends Command
             }
 
             $generator->addDependency($service, $class);
-        }
-
-        if (!empty($this->option('comment'))) {
-            //User specified comment
-            $generator->setComment($this->option('comment'));
         }
 
         //Generating
