@@ -20,7 +20,8 @@ use Spiral\Http\HttpDispatcher;
 use Spiral\Modules\ModuleManager;
 
 /**
- * He made 9 rings... i mean this is default spiral core responsible for many things at the same time.
+ * He made 9 rings... i mean this is default spiral core responsible for many things at the same
+ * time.
  *
  * @property \Spiral\Core\Core                  $core
  * @property \Spiral\Core\Components\Loader     $loader
@@ -42,7 +43,7 @@ use Spiral\Modules\ModuleManager;
  * @property \Spiral\Storage\StorageManager     $storage
  *
  * @property \Spiral\Redis\RedisManager         $redis
- * @property \Spiral\Image\ImageManager         $image
+ * @property \Spiral\Image\ImageManager         $images
  *
  * @property \Spiral\Database\DatabaseProvider  $dbal
  * @property \Spiral\ODM\ODM                    $odm
@@ -74,9 +75,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      * Some environment constants to use to produce more clean code with less magic values.
      */
     const DEVELOPMENT = 'development';
-    const PRODUCTION  = 'production';
-    const STAGING     = 'staging';
-    const TESTING     = 'testing';
+    const PRODUCTION = 'production';
+    const STAGING = 'staging';
+    const TESTING = 'testing';
 
     /**
      * Every application should have defined timezone.
@@ -171,9 +172,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'storage'                                      => 'Spiral\Storage\StorageManager',
         'tokenizer'                                    => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                         => 'Spiral\Translator\Translator',
-        'views'                                        => 'Spiral\Views\ViewManager',
-        'redis'                                        => 'Spiral\Redis\RedisManager',
-        'image'                                        => 'Spiral\Image\ImageManager'
+        'views'                                        => 'Spiral\Views\ViewManager'
     ];
 
     /**
@@ -521,8 +520,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     }
 
     /**
-     * Get extension to use for runtime data or configuration cache, all file in cache directory will
-     * additionally get applicationID postfix.
+     * Get extension to use for runtime data or configuration cache, all file in cache directory
+     * will additionally get applicationID postfix.
      *
      * @param string $name     Runtime data file name (without extension).
      * @param string $location Location to store data in.

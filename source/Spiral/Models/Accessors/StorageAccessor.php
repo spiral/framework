@@ -13,7 +13,7 @@ use Spiral\Core\Component;
 use Spiral\Database\Entities\Driver;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\Streams\StreamableInterface;
-use Spiral\Models\StorageAccessorException;
+use Spiral\Models\Exceptions\StorageAccessorException;
 use Spiral\ODM\Document;
 use Spiral\ODM\DocumentAccessorInterface;
 use Spiral\ODM\ODM;

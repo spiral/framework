@@ -12,6 +12,7 @@ namespace Spiral\Models;
 use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Models\Exceptions\InspectorException;
 use Spiral\Models\Inspections\EntityInspection;
 use Spiral\Models\Reflections\ReflectionEntity;
 

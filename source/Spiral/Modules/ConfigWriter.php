@@ -17,8 +17,8 @@ use Spiral\Reactor\Exceptions\SerializeException;
 use Spiral\Tokenizer\TokenizerInterface;
 
 /**
- * ConfigWriter classes dedicated to simplify operations with configuration files stored in application
- * directory. They can work only with physically stored configs.
+ * ConfigWriter classes dedicated to simplify operations with configuration files stored in
+ * application directory. They can work only with physically stored configs.
  *
  * At this moment config writer can:
  * - merge config content with user specified data
@@ -108,7 +108,8 @@ class ConfigWriter extends Component
 
     /**
      * @param string             $name
-     * @param int                $method How writer should merge existed and requested config contents.
+     * @param int                $method How writer should merge existed and requested config
+     *                                   contents.
      * @param ConfigSerializer   $serializer
      * @param Core               $core
      * @param FilesInterface     $files
@@ -193,11 +194,12 @@ class ConfigWriter extends Component
 
     /**
      * Export configuration data to final directory (application configs directory by default). If
-     * configuration file already exists it's content will be merged with new configuration data using
-     * merge method.
+     * configuration file already exists it's content will be merged with new configuration data
+     * using merge method.
      *
      * @param string $directory Destination config directory, application directory by default.
-     * @param int    $mode      File mode, use FilesInterface::RUNTIME for publicly accessible files.
+     * @param int    $mode      File mode, use FilesInterface::RUNTIME for publicly accessible
+     *                          files.
      * @return bool
      */
     public function writeConfig($directory = null, $mode = FilesInterface::READONLY)
