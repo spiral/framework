@@ -546,7 +546,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public static function instance()
     {
-        return self::container()->get(static::class);
+        return self::container()->get(self::class);
     }
 
     /**
