@@ -96,6 +96,70 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
 
 $dumps = [];
 
+if (empty($dumpArguments)) {
+    $dumpArguments = false;
+}
+
+if (!function_exists('exception_dump_arguments')) {
+    /**
+     * Format arguments and create data dumps.
+     *
+     * @param array                $arguments
+     * @param bool|string          $dumpArguments
+     * @param \Spiral\Debug\Dumper $dumper
+     * @param array                $dumps
+     * @return array
+     */
+    function exception_dump_arguments(
+        array $arguments,
+        $dumpArguments,
+        \Spiral\Debug\Dumper $dumper,
+        &$dumps
+    ) {
+        $result = [];
+        foreach ($arguments as $argument) {
+            $display = $type = strtolower(gettype($argument));
+
+            if (is_numeric($argument)) {
+                $display = $argument;
+            } elseif (is_bool($argument)) {
+                $display = $argument ? 'true' : 'false';
+            } elseif (is_null($argument)) {
+                $display = 'null';
+            }
+
+            if (is_object($argument)) {
+                $reflection = new ReflectionClass($argument);
+                $display = interpolate(
+                    "<span title=\"{title}\">{class}</span>", [
+                        'title' => $reflection->getName(),
+                        'class' => $reflection->getShortName()
+                    ]
+                );
+            }
+
+            //Colorizing
+            $display = $dumper->style($display, 'value', $type);
+            if (!empty($dumpArguments)) {
+                if (($dumpID = array_search($argument, $dumps)) === false) {
+                    $dumps[] = $dumper->dump($argument,
+                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                    $dumpID = count($dumps) - 1;
+                }
+
+                $display = interpolate(
+                    "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
+                    compact('display', 'dumpID')
+                );
+            }
+
+            $result[] = $display;
+        }
+
+        return $result;
+    }
+}
+
 ?>
 <html>
 <head>
@@ -177,6 +241,16 @@ $dumps = [];
         .spiral-exception .wrapper .stacktrace .trace .location {
             color: #6bbdff;
             margin-bottom: 5px;
+        }
+
+        .spiral-exception .wrapper .stacktrace .trace .location .arguments span:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .spiral-exception .wrapper .stacktrace .trace .location em {
+            color: #a1a1a1;
+            font-style: normal;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div {
@@ -351,79 +425,60 @@ $dumps = [];
 
     <div class="stacktrace">
         <div class="trace">
-            <div class="container">
-                <div class="location">
-                    <i><?= $snapshot->getFile() ?></i> at
-                    <strong>line <?= $snapshot->getLine() ?></strong>
-                </div>
-                <div class="lines">
-                    <?= $highlighter->highlight($snapshot->getFile(), $snapshot->getLine()) ?>
-                </div>
-            </div>
             <?php
             $stacktrace = $snapshot->getTrace();
+
+            //Let's merge data of first trace (our error handler and real error location)
+            if ($stacktrace[0]['function'] == 'handleError') {
+                $handler = array_shift($stacktrace);
+                $stacktrace[0] = $stacktrace[0] + $handler;
+            }
+
+            //If endpoint was described
+            $endpoint = false;
             foreach ($stacktrace as $trace) {
+
                 $arguments = [];
+                if (isset($trace['args'])) {
+                    $arguments = exception_dump_arguments(
+                        $trace['args'], $dumpArguments, $dumper, $dumps
+                    );
+                }
+
+                $function = '<strong>' . $trace['function'] . '</strong>';
+                if (isset($trace['type']) && isset($trace['class'])) {
+                    $reflection = new ReflectionClass($trace['class']);
+                    $function = interpolate(
+                        "<span title=\"{title}\">{class}</span>{type}{function}",
+                        [
+                            'title'    => $reflection->getName(),
+                            'class'    => $reflection->getShortName(),
+                            'type'     => $trace['type'],
+                            'function' => $function
+                        ]
+                    );
+                }
+
                 if (!isset($trace['file'])) {
-                    if (isset($trace['args'])) {
-                        foreach ($trace['args'] as $argument) {
-                            $display = $type = strtolower(gettype($argument));
-
-                            if (is_numeric($argument)) {
-                                $display = $argument;
-                            } elseif (is_bool($argument)) {
-                                $display = $argument ? 'true' : 'false';
-                            } elseif (is_null($argument)) {
-                                $display = 'null';
-                            }
-
-                            if (is_object($argument)) {
-                                $reflection = new ReflectionClass($argument);
-                                $display = interpolate(
-                                    "<span title=\"{title}\">{class}</span>", [
-                                        'title' => $reflection->getName(),
-                                        'class' => $reflection->getShortName()
-                                    ]
-                                );
-                            }
-
-                            //Colorizing
-                            $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments)) {
-                                if (($dumpID = array_search($argument, $dumps)) === false) {
-                                    $dumps[] = $dumper->dump($argument,
-                                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
-                                    $dumpID = count($dumps) - 1;
-                                }
-
-                                $display = interpolate(
-                                    "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                                    compact('display', 'dumpID')
-                                );
-                            }
-
-                            $arguments[] = $display;
-                        }
-                    }
-
                     ?>
                     <div class="container no-trace">
-                        <?= $trace['class'] . $trace['type'] . $trace['function'] ?>
-                        (<span class="arguments"><?= join(', ', $arguments) ?></span>)
+                        <?= $function ?>(<span class="arguments"><?
+                            echo join(', ', $arguments) ?></span>)
                     </div>
                     <?php
                     continue;
                 }
 
-                if ($trace['file'] == $snapshot->getFile() && $trace['line'] == $snapshot->getLine()) {
-                    //Duplicate
-                    continue;
-                }
 
                 ?>
                 <div class="container">
                     <div class="location">
-                        <i><?= $trace['file'] ?></i> at <strong>line <?= $trace['line'] ?></strong>
+                        <?= $function ?>(<span class="arguments"><?
+                            echo join(', ', $arguments) ?></span>)
+                        <em>
+                            In <?= $trace['file'] ?> at
+                            <strong>line <?= $trace['line'] ?></strong>
+                        </em>
                     </div>
                     <div class="lines">
                         <?= $highlighter->highlight($trace['file'], $trace['line']) ?>
@@ -437,6 +492,7 @@ $dumps = [];
             <div class="calls">
                 <?php
                 $stacktrace = array_reverse($stacktrace);
+
                 foreach ($stacktrace as $index => $trace) {
                     if (empty($trace['file']) && isset($stacktrace[$index - 1]['file'])) {
                         $trace['file'] = $stacktrace[$index - 1]['file'];
@@ -468,51 +524,16 @@ $dumps = [];
 
                     $arguments = [];
                     if (isset($trace['args'])) {
-                        foreach ($trace['args'] as $argument) {
-                            $display = $type = strtolower(gettype($argument));
-
-                            if (is_numeric($argument)) {
-                                $display = $argument;
-                            } elseif (is_bool($argument)) {
-                                $display = $argument ? 'true' : 'false';
-                            } elseif (is_null($argument)) {
-                                $display = 'null';
-                            }
-
-                            if (is_object($argument)) {
-                                $reflection = new ReflectionClass($argument);
-                                $display = interpolate(
-                                    "<span title=\"{title}\">{class}</span>", [
-                                        'title' => $reflection->getName(),
-                                        'class' => $reflection->getShortName()
-                                    ]
-                                );
-                            }
-
-                            //Colorizing
-                            $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments)) {
-                                if (($dumpID = array_search($argument, $dumps)) === false) {
-                                    $dumps[] = $dumper->dump($argument,
-                                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
-                                    $dumpID = count($dumps) - 1;
-                                }
-
-                                $display = interpolate(
-                                    "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                                    compact('display', 'dumpID')
-                                );
-                            }
-
-                            $arguments[] = $display;
-                        }
+                        $arguments = exception_dump_arguments(
+                            $trace['args'], $dumpArguments, $dumper, $dumps
+                        );
                     }
 
                     ?>
                     <div class="call">
                         <div class="function">
-                            <?= $function ?> (<span class="arguments"><?= join(', ',
-                                    $arguments) ?></span>)
+                            <?= $function ?>(<span class="arguments"><?
+                                echo join(', ', $arguments) ?></span>)
                         </div>
                         <div class="location">
                             <i><?= $trace['file'] ?></i> at
