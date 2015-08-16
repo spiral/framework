@@ -30,8 +30,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Used as application dispatcher in console mode. Can execute automatically locate and execute every
- * available Symfony command.
+ * Used as application dispatcher in console mode. Can execute automatically locate and execute
+ * every available Symfony command.
  */
 class ConsoleDispatcher extends Singleton implements DispatcherInterface
 {
@@ -50,6 +50,11 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      * Configuration section.
      */
     const CONFIG = 'console';
+
+    /**
+     * Undefined response code for command (errors).
+     */
+    const CODE_UNDEFINED = 102;
 
     /**
      * @var Application
@@ -175,10 +180,15 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
         $outerInput = $this->container->replace(InputInterface::class, $input);
 
         //Go
-        $code = $this->application()->find($command)->run($input, $output);
-
-        $this->container->restore($outerInput);
-        $this->container->restore($outerOutput);
+        $code = self::CODE_UNDEFINED;
+        try {
+            $code = $this->application()->find($command)->run($input, $output);
+        } catch (\Exception $exception) {
+            $this->application->renderException($exception, $output);
+        } finally {
+            $this->container->restore($outerInput);
+            $this->container->restore($outerOutput);
+        }
 
         return new CommandOutput($code, $output);
     }

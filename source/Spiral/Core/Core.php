@@ -23,31 +23,34 @@ use Spiral\Modules\ModuleManager;
  * He made 9 rings... i mean this is default spiral core responsible for many things at the same
  * time.
  *
- * @property \Spiral\Core\Core                  $core
- * @property \Spiral\Core\Components\Loader     $loader
- * @property \Spiral\Modules\ModuleManager      $modules
- * @property \Spiral\Debug\Debugger             $debugger
+ * @property \Spiral\Core\Core                        $core
+ * @property \Spiral\Core\Components\Loader           $loader
+ * @property \Spiral\Modules\ModuleManager            $modules
+ * @property \Spiral\Debug\Debugger                   $debugger
  *
- * @property \Spiral\Console\ConsoleDispatcher  $console
- * @property \Spiral\Http\HttpDispatcher        $http
+ * @property \Spiral\Console\ConsoleDispatcher        $console
+ * @property \Spiral\Http\HttpDispatcher              $http
  *
- * @property \Spiral\Cache\CacheProvider        $cache
- * @property \Spiral\Http\Cookies\CookieManager $cookies
- * @property \Spiral\Encrypter\Encrypter        $encrypter
- * @property \Spiral\Http\InputManager          $input
- * @property \Spiral\Files\FileManager          $files
- * @property \Spiral\Session\SessionStore       $session
- * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
- * @property \Spiral\Translator\Translator      $i18n
- * @property \Spiral\Views\ViewManager          $views
- * @property \Spiral\Storage\StorageManager     $storage
+ * @property \Spiral\Cache\CacheProvider              $cache
+ * @property \Spiral\Encrypter\Encrypter              $encrypter
+ * @property \Spiral\Http\InputManager                $input
+ * @property \Spiral\Files\FileManager                $files
+ * @property \Spiral\Session\SessionStore             $session
+ * @property \Spiral\Tokenizer\Tokenizer              $tokenizer
+ * @property \Spiral\Translator\Translator            $i18n
+ * @property \Spiral\Views\ViewManager                $views
+ * @property \Spiral\Storage\StorageManager           $storage
  *
- * @property \Spiral\Redis\RedisManager         $redis
- * @property \Spiral\Image\ImageManager         $images
+ * @property \Spiral\Redis\RedisManager               $redis
+ * @property \Spiral\Image\ImageManager               $images
  *
- * @property \Spiral\Database\DatabaseProvider  $dbal
- * @property \Spiral\ODM\ODM                    $odm
- * @property \Spiral\ORM\ORM                    $orm
+ * @property \Spiral\Database\DatabaseProvider        $dbal
+ * @property \Spiral\ODM\ODM                          $odm
+ * @property \Spiral\ORM\ORM                          $orm
+ *
+ * @property \Spiral\Http\Cookies\CookieManager       $cookies Scope depended.
+ * @property \Spiral\Http\Routing\Router              $router  Scope depended.
+ * @property \Psr\Http\Message\ServerRequestInterface $request Scope depended.
  */
 class Core extends Container implements CoreInterface, ConfiguratorInterface, HippocampusInterface
 {
@@ -150,6 +153,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Tokenizer\TokenizerInterface'          => 'Spiral\Tokenizer\Tokenizer',
         'Spiral\Validation\ValidatorInterface'         => 'Spiral\Validation\Validator',
         'Spiral\Translator\TranslatorInterface'        => 'Spiral\Translator\Translator',
+        'Spiral\Database\DatabaseProviderInterface'    => 'Spiral\Database\DatabaseProvider',
         'Spiral\Database\Migrations\MigratorInterface' => 'Spiral\Database\Migrations\Migrator',
         //Spiral aliases
         'core'                                         => 'Spiral\Core\Core',
@@ -161,7 +165,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'http'                                         => 'Spiral\Http\HttpDispatcher',
         //Component aliases
         'cache'                                        => 'Spiral\Cache\CacheProvider',
-        'cookies'                                      => 'Spiral\Http\Cookies\CookieManager',
         'dbal'                                         => 'Spiral\Database\DatabaseProvider',
         'encrypter'                                    => 'Spiral\Encrypter\Encrypter',
         'input'                                        => 'Spiral\Http\InputManager',
@@ -172,7 +175,11 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'storage'                                      => 'Spiral\Storage\StorageManager',
         'tokenizer'                                    => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                         => 'Spiral\Translator\Translator',
-        'views'                                        => 'Spiral\Views\ViewManager'
+        'views'                                        => 'Spiral\Views\ViewManager',
+        //Scope dependend aliases
+        'cookies'                                      => 'Spiral\Http\Cookies\CookieManager',
+        'router'                                       => 'Spiral\Http\Routing\Router',
+        'request'                                      => 'Psr\Http\Message\ServerRequestInterface'
     ];
 
     /**

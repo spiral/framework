@@ -22,30 +22,33 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Basic application command class. Implements method injections and simplified access to
  * container bindings.
  *
- * @property \Spiral\Core\Core                  $core
- * @property \Spiral\Core\Components\Loader     $loader
- * @property \Spiral\Modules\ModuleManager      $modules
- * @property \Spiral\Debug\Debugger             $debugger
+ * @property \Spiral\Core\Core                        $core
+ * @property \Spiral\Core\Components\Loader           $loader
+ * @property \Spiral\Modules\ModuleManager            $modules
+ * @property \Spiral\Debug\Debugger                   $debugger
  *
- * @property \Spiral\Console\ConsoleDispatcher  $console
- * @property \Spiral\Http\HttpDispatcher        $http
+ * @property \Spiral\Console\ConsoleDispatcher        $console
+ * @property \Spiral\Http\HttpDispatcher              $http
  *
- * @property \Spiral\Cache\CacheProvider        $cache
- * @property \Spiral\Http\Cookies\CookieManager $cookies
- * @property \Spiral\Encrypter\Encrypter        $encrypter
- * @property \Spiral\Files\FileManager          $files
- * @property \Spiral\Session\SessionStore       $session
- * @property \Spiral\Tokenizer\Tokenizer        $tokenizer
- * @property \Spiral\Translator\Translator      $i18n
- * @property \Spiral\Views\ViewManager          $views
- * @property \Spiral\Storage\StorageManager     $storage
+ * @property \Spiral\Cache\CacheProvider              $cache
+ * @property \Spiral\Encrypter\Encrypter              $encrypter
+ * @property \Spiral\Files\FileManager                $files
+ * @property \Spiral\Session\SessionStore             $session
+ * @property \Spiral\Tokenizer\Tokenizer              $tokenizer
+ * @property \Spiral\Translator\Translator            $i18n
+ * @property \Spiral\Views\ViewManager                $views
+ * @property \Spiral\Storage\StorageManager           $storage
  *
- * @property \Spiral\Redis\RedisManager         $redis
- * @property \Spiral\Image\ImageManager         $images
+ * @property \Spiral\Redis\RedisManager               $redis
+ * @property \Spiral\Image\ImageManager               $images
  *
- * @property \Spiral\Database\DatabaseProvider  $dbal
- * @property \Spiral\ODM\ODM                    $odm
- * @property \Spiral\ORM\ORM                    $orm
+ * @property \Spiral\Database\DatabaseProvider        $dbal
+ * @property \Spiral\ODM\ODM                          $odm
+ * @property \Spiral\ORM\ORM                          $orm
+ *
+ * @property \Spiral\Http\Cookies\CookieManager       $cookies Scope depended.
+ * @property \Spiral\Http\Routing\Router              $router  Scope depended.
+ * @property \Psr\Http\Message\ServerRequestInterface $request Scope depended.
  */
 abstract class Command extends \Symfony\Component\Console\Command\Command
 {
