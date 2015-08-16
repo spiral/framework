@@ -457,7 +457,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function handleError($code, $message, $filename = '', $line = 0)
     {
-        $this->handleException(new \ErrorException($message, $code, 0, $filename, $line));
+        throw new \ErrorException($message, $code, 0, $filename, $line);
     }
 
     /**
@@ -465,7 +465,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      *
      * @param \Exception $exception
      */
-    public function handleException(\Exception $exception)
+    public function handleException($exception)
     {
         restore_error_handler();
         restore_exception_handler();
@@ -484,8 +484,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         } else {
             echo $snapshot;
         }
-
-        exit(170);
     }
 
     /**

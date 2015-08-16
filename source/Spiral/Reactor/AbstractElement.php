@@ -66,17 +66,25 @@ abstract class AbstractElement
      * Replace element DocComment, comment can be provided in a form of array or string.
      *
      * @param string|array $docComment
+     * @param bool         $append
      * @return $this
      */
-    public function setComment($docComment)
+    public function setComment($docComment, $append = false)
     {
         if (is_array($docComment)) {
-            $this->docComment = $docComment;
+            if (!$append) {
+                $this->docComment = $docComment;
+            } else {
+                $this->docComment = array_merge($this->docComment, $docComment);
+            }
 
             return $this;
         }
 
-        $this->docComment = [];
+        if (!$append) {
+            $this->docComment = [];
+        }
+
         $docComment = explode("\n", preg_replace('/[\n\r]+/', "\n", $docComment));
         foreach ($docComment as $line) {
             //Cutting start spaces
@@ -87,6 +95,16 @@ abstract class AbstractElement
         }
 
         return $this;
+    }
+
+    /**
+     * Get docComment lines.
+     *
+     * @return array
+     */
+    public function getComment()
+    {
+        return $this->docComment;
     }
 
     /**

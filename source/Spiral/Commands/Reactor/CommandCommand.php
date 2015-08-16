@@ -70,7 +70,7 @@ class CommandCommand extends AbstractCommand
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Command successfully created:</info> {$filename}");
+        $this->writeln("<info>Command was successfully created:</info> {$filename}");
 
         //We are have to sleep a little to flush cache
         $this->writeln("Run '<info>console:refresh</info>' to index created command.");

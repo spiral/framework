@@ -17,6 +17,11 @@ use Symfony\Component\Console\Input\InputArgument;
 class DocumentCommand extends RecordCommand
 {
     /**
+     * Success message. To be used by DocumentCommand.
+     */
+    const SUCCESS_MESSAGE = 'ODM Document was successfully created:';
+
+    /**
      * Generator class to be used.
      */
     const GENERATOR = DocumentGenerator::class;

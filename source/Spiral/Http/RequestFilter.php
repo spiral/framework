@@ -106,6 +106,18 @@ class RequestFilter extends DataEntity
     }
 
     /**
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        return (object)[
+            'schema' => $this->schema,
+            'fields' => $this->getFields(),
+            'errors' => $this->getErrors()
+        ];
+    }
+
+    /**
      * Fetch source name and origin from schema definition.
      *
      * @param string $field

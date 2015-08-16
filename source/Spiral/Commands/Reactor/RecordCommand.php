@@ -20,6 +20,11 @@ use Symfony\Component\Console\Input\InputOption;
 class RecordCommand extends AbstractCommand
 {
     /**
+     * Success message. To be used by DocumentCommand.
+     */
+    const SUCCESS_MESSAGE = 'ORM Record was successfully created:';
+
+    /**
      * Generator class to be used.
      */
     const GENERATOR = RecordGenerator::class;
@@ -71,7 +76,7 @@ class RecordCommand extends AbstractCommand
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>ORM Record successfully created:</info> {$filename}");
+        $this->writeln("<info>" . static::SUCCESS_MESSAGE . "</info> {$filename}");
     }
 
     /**
