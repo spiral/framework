@@ -181,7 +181,7 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
      * @return $this
      * @throws ConfigWriterException
      */
-    public function registerConfig(ConfigWriter $config, $load = true, $directory = '/configs')
+    public function registerConfig(ConfigWriter $config, $load = true, $directory = '/config')
     {
         if ($load) {
             //Trying to load config data from module files
