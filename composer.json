@@ -14,7 +14,7 @@
     "symfony/console": "~2.0",
     "symfony/process": "~2.0",
     "nesbot/carbon": "dev-master",
-    "spiral/components": "dev-master",
+    "spiral/components": "dev-master"
   },
   "autoload": {
     "files": [
