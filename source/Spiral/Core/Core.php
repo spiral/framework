@@ -444,6 +444,18 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
 
         return $controller->callAction($action, $parameters);
     }
+    
+    /**
+     * Handle php shutdown and search for fatal errors.
+     */
+    public function handleShutdown()
+    {
+        if (!empty($error = error_get_last())) {
+            $this->handleException(new FatalException(
+                $error['message'], $error['type'], 0, $error['file'], $error['line']
+            ));
+        }
+    }
 
     /**
      * Convert application error into exception.
@@ -482,18 +494,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             $this->dispatcher->handleSnapshot($snapshot);
         } else {
             echo $snapshot;
-        }
-    }
-
-    /**
-     * Handle php shutdown and search for fatal errors.
-     */
-    public function handleShutdown()
-    {
-        if (!empty($error = error_get_last())) {
-            $this->handleException(new FatalException(
-                $error['message'], $error['type'], 0, $error['file'], $error['line']
-            ));
         }
     }
 
@@ -575,9 +575,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
 
         //Error and exception handlers
         if ($catchErrors) {
+            register_shutdown_function([$core, 'handleShutdown']);
             set_error_handler([$core, 'handleError']);
             set_exception_handler([$core, 'handleException']);
-            register_shutdown_function([$core, 'handleShutdown']);
         }
 
         foreach ($core->autoload as $module) {
