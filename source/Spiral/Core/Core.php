@@ -324,7 +324,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     {
         if (file_exists($this->directory('application') . '/' . static::BOOTSTRAP)) {
             $application = $this;
-            //Old Fashion, btw there is very tasty cocktail under same name
+            //Old Fashion, btw there is very tasty cocktail under the same name
             require($this->directory('application') . '/' . static::BOOTSTRAP);
         }
     }
@@ -587,7 +587,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             $core->get($module);
         }
 
-        //Bootstrapping
+        //Bootstrapping our application
         $core->bootstrap();
 
         return $core;
