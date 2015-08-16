@@ -159,7 +159,7 @@ class TemplaterTest extends TestCase
                         'Spiral\Views\Processors\TemplateProcessor' => []
                     ]
                 ],
-                'associations' => [
+                'classes' => [
 
                 ]
             ];

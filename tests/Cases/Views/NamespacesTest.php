@@ -72,7 +72,7 @@ class NamespacesTest extends TestCase
 
                     ]
                 ],
-                'associations' => [
+                'classes' => [
 
                 ]
             ];
