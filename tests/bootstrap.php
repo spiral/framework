@@ -6,7 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-define('SPIRAL_INITIAL_TIME', microtime(true));
+if (!defined('SPIRAL_INITIAL_TIME')) {
+    define('SPIRAL_INITIAL_TIME', microtime(true));
+}
+
+iF (!defined('TEST_ROOT')) {
+    define('TEST_ROOT', __DIR__);
+}
 
 /**
  * Error reporting.
@@ -16,9 +22,3 @@ ini_set('display_errors', true);
 
 //Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
-
-\Spiral\Tests\TestCore::init([
-    'root'        => __DIR__,
-    'libraries'   => dirname(__DIR__) . '/vendor',
-    'application' => __DIR__
-])->setEnvironment('testing');
