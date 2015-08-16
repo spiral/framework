@@ -78,49 +78,22 @@ abstract class Controller extends Service implements ControllerInterface
             );
         }
 
-        if (($result = $this->preAction($reflection, $arguments, $parameters)) !== null) {
-            //Got filtered.
-            return $result;
-        }
+        //Executing our action
+        return $this->executeAction($reflection, $arguments, $parameters);
+    }
 
-        $this->benchmark($action = $reflection->getName());
-        $result = $reflection->invokeArgs($this, $arguments);
+    /**
+     * @param \ReflectionMethod $method
+     * @param array             $arguments
+     * @param array             $parameters
+     * @return mixed
+     */
+    protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
+    {
+        $this->benchmark($action = $method->getName());
+        $result = $method->invokeArgs($this, $arguments);
         $this->benchmark($action);
 
-        return $this->postAction($result, $reflection, $arguments, $parameters);
-    }
-
-    /**
-     * Executed before action call, can return non empty value to be sent to client.
-     *
-     * @param \ReflectionMethod $method
-     * @param array             $arguments
-     * @param array             $parameters
-     * @return mixed
-     */
-    protected function preAction(
-        \ReflectionMethod $method,
-        array $arguments,
-        array $parameters
-    ) {
-        return null;
-    }
-
-    /**
-     * Executed after action with action result to be filtered. Must return result in normal flow.
-     *
-     * @param mixed             $result
-     * @param \ReflectionMethod $method
-     * @param array             $arguments
-     * @param array             $parameters
-     * @return mixed
-     */
-    protected function postAction(
-        $result,
-        \ReflectionMethod $method,
-        array $arguments,
-        array $parameters
-    ) {
         return $result;
     }
 }
