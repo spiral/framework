@@ -66,7 +66,7 @@ class MigrateCommand extends AbstractCommand
         }
 
         if (!$found) {
-            $this->writeln("<fg=red>No outstanding migrations were found.</fg=red>");
+            $this->writeln("<fg=yellow>No outstanding migrations were found.</fg=yellow>");
         }
     }
 }
