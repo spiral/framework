@@ -6,7 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-define('SPIRAL_INITIAL_TIME', microtime(true));
+if (!defined('SPIRAL_INITIAL_TIME')) {
+    define('SPIRAL_INITIAL_TIME', microtime(true));
+}
+
+iF (!defined('TEST_ROOT')) {
+    define('TEST_ROOT', __DIR__);
+}
 
 /**
  * Error reporting.

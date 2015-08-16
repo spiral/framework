@@ -6,13 +6,15 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Tests\Cases\Components\View;
+namespace Spiral\Tests\Cases\Views;
 
 use Spiral\Core\Configurator;
 use Spiral\Core\Container;
+use Spiral\Core\Core;
 use Spiral\Files\FileManager;
 use Spiral\Support\StringHelper;
 use Spiral\Tests\TestCase;
+use Spiral\Tests\TestCore;
 use Spiral\Views\ViewManager;
 
 class TemplaterTest extends TestCase
@@ -107,7 +109,7 @@ class TemplaterTest extends TestCase
     protected function tearDown()
     {
         $file = new FileManager();
-        foreach ($file->getFiles(directory('runtime')) as $filename) {
+        foreach ($file->getFiles($this->spiralCore()->directory('runtime')) as $filename) {
             $file->delete($filename);
         }
     }
@@ -120,7 +122,9 @@ class TemplaterTest extends TestCase
      */
     protected function render($view)
     {
-        $lines = explode("\n", StringHelper::normalizeEndings($this->viewManager()->render($view)));
+        $lines = explode("\n", StringHelper::normalizeEndings(
+            $this->viewManager()->render($view)
+        ));
 
         return array_values(array_map('trim', array_filter($lines, 'trim')));
     }
@@ -135,15 +139,14 @@ class TemplaterTest extends TestCase
             $config = [
                 'cache'        => [
                     'enabled'   => false,
-                    'directory' => directory('runtime')
+                    'directory' => $this->spiralCore()->directory('runtime')
                 ],
                 'namespaces'   => [
                     'default'   => [
-                        __DIR__ . '/fixtures/default/',
-                        __DIR__ . '/fixtures/default-b/',
+                        __DIR__ . '/fixtures/templater/default/'
                     ],
                     'namespace' => [
-                        __DIR__ . '/fixtures/namespace/',
+                        __DIR__ . '/fixtures/templater/namespace/',
                     ]
                 ],
                 'dependencies' => [],
@@ -159,12 +162,27 @@ class TemplaterTest extends TestCase
                         'Spiral\Views\Processors\TemplateProcessor' => []
                     ]
                 ],
-                'classes' => [
+                'classes'      => [
 
                 ]
             ];
         }
 
-        return new ViewManager(new Configurator($config), new Container(), new FileManager());
+        return new ViewManager(
+            new Configurator($config),
+            $this->spiralCore(),
+            new FileManager()
+        );
+    }
+
+    /**
+     * @return Core
+     */
+    protected function spiralCore()
+    {
+        return new Core([
+            'root'        => TEST_ROOT,
+            'application' => TEST_ROOT
+        ]);
     }
 }
