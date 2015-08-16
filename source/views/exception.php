@@ -105,27 +105,25 @@ if (!function_exists('exception_dump_arguments')) {
      * Format arguments and create data dumps.
      *
      * @param array                $arguments
-     * @param bool|string          $dumpArguments
      * @param \Spiral\Debug\Dumper $dumper
      * @param array                $dumps
      * @return array
      */
-    function exception_dump_arguments(
-        array $arguments,
-        $dumpArguments,
-        \Spiral\Debug\Dumper $dumper,
-        &$dumps
-    ) {
+    function exception_dump_arguments(array $arguments, \Spiral\Debug\Dumper $dumper, &$dumps)
+    {
         $result = [];
         foreach ($arguments as $argument) {
             $display = $type = strtolower(gettype($argument));
 
             if (is_numeric($argument)) {
-                $display = $argument;
+                $result[] = $argument;
+                continue;
             } elseif (is_bool($argument)) {
-                $display = $argument ? 'true' : 'false';
+                $result[] = $dumper->style($argument ? 'true' : 'false', 'value', $type);
+                continue;
             } elseif (is_null($argument)) {
-                $display = 'null';
+                $result[] = $dumper->style('null', 'value', $type);
+                continue;
             }
 
             if (is_object($argument)) {
@@ -140,17 +138,15 @@ if (!function_exists('exception_dump_arguments')) {
 
             //Colorizing
             $display = $dumper->style($display, 'value', $type);
-            if (!empty($dumpArguments)) {
-                if (($dumpID = array_search($argument, $dumps)) === false) {
-                    $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
-                    $dumpID = count($dumps) - 1;
-                }
-
-                $display = interpolate(
-                    "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                    compact('display', 'dumpID')
-                );
+            if (($dumpID = array_search($argument, $dumps)) === false) {
+                $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                $dumpID = count($dumps) - 1;
             }
+
+            $display = interpolate(
+                "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
+                compact('display', 'dumpID')
+            );
 
             $result[] = $display;
         }
@@ -214,7 +210,7 @@ if (!function_exists('exception_dump_arguments')) {
         .spiral-exception .wrapper .stacktrace .trace {
             font-family: Monospace;
             float: left;
-            width: 70%;
+            width: 60%;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container {
@@ -272,7 +268,7 @@ if (!function_exists('exception_dump_arguments')) {
         }
 
         .spiral-exception .wrapper .stacktrace .chain {
-            width: 30%;
+            width: 40%;
             float: right;
         }
 
@@ -305,15 +301,21 @@ if (!function_exists('exception_dump_arguments')) {
 
         .spiral-exception .wrapper .stacktrace .chain .dumper {
             padding-left: 5px;
+            padding-bottom: 5px;
             display: none;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .dumper .close {
             text-align: right;
+            padding: 2px;
             color: #fff;
             cursor: pointer;
             font-size: 12px;
-            margin-bottom: 2px;
+            background-color: #232323;
+        }
+
+        .spiral-exception .wrapper .stacktrace .chain .dumper .close:hover {
+            background-color: #2c2c2c;
         }
 
         .spiral-exception .wrapper .environment .container {
@@ -440,7 +442,7 @@ if (!function_exists('exception_dump_arguments')) {
                 $arguments = [];
                 if (isset($trace['args'])) {
                     $arguments = exception_dump_arguments(
-                        $trace['args'], $dumpArguments, $dumper, $dumps
+                        $trace['args'], $dumper, $dumps
                     );
                 }
 
@@ -488,6 +490,9 @@ if (!function_exists('exception_dump_arguments')) {
             ?>
         </div>
         <div class="chain">
+            <a name="dumper"></a>
+
+            <div class="dumper" id="argument-dumper"></div>
             <div class="calls">
                 <?php
                 $stacktrace = array_reverse($stacktrace);
@@ -524,7 +529,7 @@ if (!function_exists('exception_dump_arguments')) {
                     $arguments = [];
                     if (isset($trace['args'])) {
                         $arguments = exception_dump_arguments(
-                            $trace['args'], $dumpArguments, $dumper, $dumps
+                            $trace['args'], $dumper, $dumps
                         );
                     }
 
@@ -543,9 +548,6 @@ if (!function_exists('exception_dump_arguments')) {
                 }
                 ?>
             </div>
-            <a name="dumper"></a>
-
-            <div class="dumper" id="argument-dumper"></div>
         </div>
     </div>
 
