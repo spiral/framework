@@ -85,12 +85,12 @@ class View extends Component implements ViewInterface
      */
     public function render()
     {
-        //Benchmarking context
-        $__context__ = $this->compiler->getNamespace()
+        $__benchmark__ = $this->benchmark(
+            'render',
+            $this->compiler->getNamespace()
             . ViewProviderInterface::NS_SEPARATOR
-            . $this->compiler->getView();
-
-        $this->benchmark('render', $__context__);
+            . $this->compiler->getView()
+        );
 
         $__outputLevel__ = ob_get_level();
         ob_start();
@@ -106,7 +106,7 @@ class View extends Component implements ViewInterface
 
         $result = ob_get_clean();
 
-        $this->benchmark('render', $__context__);
+        $this->benchmark($__benchmark__);
 
         return $result;
     }

@@ -36,9 +36,9 @@ class SchemaCommand extends Command
      */
     public function perform()
     {
-        $this->debugger->benchmark($this, 'update');
+        $benchmark = $this->debugger->benchmark($this, 'update');
         self::$schemaBuilder = $builder = $this->odm->updateSchema();
-        $elapsed = number_format($this->debugger->benchmark($this, 'update'), 3);
+        $elapsed = number_format($this->debugger->benchmark($this, $benchmark), 3);
 
         $countModels = count($builder->getDocuments());
         $this->write("<info>ODM Schema has been updated: <comment>{$elapsed} s</comment>");

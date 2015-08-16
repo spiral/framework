@@ -90,9 +90,9 @@ abstract class Controller extends Service implements ControllerInterface
      */
     protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
     {
-        $this->benchmark($action = $method->getName());
+        $benchmark = $this->benchmark($action = $method->getName());
         $result = $method->invokeArgs($this, $arguments);
-        $this->benchmark($action);
+        $this->benchmark($benchmark);
 
         return $result;
     }

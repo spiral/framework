@@ -49,7 +49,7 @@ class SchemaCommand extends Command
      */
     public function perform()
     {
-        $this->debugger->benchmark($this, 'update');
+        $benchmark = $this->debugger->benchmark($this, 'update');
         $builder = $this->orm->schemaBuilder();
 
         if ($this->isVerbosing()) {
@@ -62,7 +62,7 @@ class SchemaCommand extends Command
         }
 
         self::$schemaBuilder = $this->orm->updateSchema($builder);
-        $elapsed = number_format($this->debugger->benchmark($this, 'update'), 3);
+        $elapsed = number_format($this->debugger->benchmark($this, $benchmark), 3);
 
         $countModels = count($builder->getRecords());
         $this->write("<info>ORM Schema has been updated: <comment>{$elapsed} s</comment>");

@@ -154,9 +154,9 @@ class Compiler extends Component implements CompilerInterface, SaturableInterfac
 
             $context = $this->namespace . ViewProviderInterface::NS_SEPARATOR . $this->view;
 
-            $this->benchmark($reflection->getShortName(), $context);
+            $benchmark = $this->benchmark($reflection->getShortName(), $context);
             $source = $processor->process($source);
-            $this->benchmark($reflection->getShortName(), $context);
+            $this->benchmark($benchmark);
         }
 
         $this->files->write($this->compiledFilename(), $source, FilesInterface::RUNTIME, true);
