@@ -63,16 +63,23 @@ class ServiceGenerator extends AbstractService
          */
         $create = $this->class->method('create');
         $create->setComment([
-            "Create new {$shortClass}. Method will return false if not saved.",
+            "Create new {$shortClass}. Method will return false if save failed.",
             "Creation errors available via getErrors() method.",
             "",
-            "@param array|mixed \$fields",
-            "@param array \$errors Will be populated if save fails.",
-            "@return {$shortClass}"
+            "@param array|\\Traversable \$fields",
+            "@param array              \$errors Will be populated if save fails.",
+            "@return {$shortClass}|bool"
         ]);
         $create->parameter('fields')->setOptional(true, []);
         $create->parameter("errors")->setOptional(true, null)->setPBR(true);
-        $create->setSource("return \$this->save({$shortClass}::create(\$fields), true, \$errors);");
+        $create->setSource([
+            "\${$name} = {$shortClass}::create(\$fields);",
+            "if (!\$this->save(\${$name}, true, \$errors)) {",
+            "   return false;",
+            "}",
+            "",
+            "return \${$name};"
+        ]);
 
         /**
          * Save entity method.
