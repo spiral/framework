@@ -8,6 +8,7 @@
  */
 namespace Spiral\Core;
 
+use Spiral\Core\Container\SaturableInterface;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Debug\Traits\BenchmarkTrait;
@@ -55,7 +56,7 @@ abstract class Controller extends Service implements ControllerInterface
         $reflection = new \ReflectionMethod($this, $action);
 
         if (
-            $reflection->getName() == 'init'
+            $reflection->getName() == SaturableInterface::SATURATE_METHOD
             || $reflection->isStatic()
             || !$reflection->isPublic()
             || !$reflection->isUserDefined()
