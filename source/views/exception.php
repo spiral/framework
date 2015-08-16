@@ -142,8 +142,7 @@ if (!function_exists('exception_dump_arguments')) {
             $display = $dumper->style($display, 'value', $type);
             if (!empty($dumpArguments)) {
                 if (($dumpID = array_search($argument, $dumps)) === false) {
-                    $dumps[] = $dumper->dump($argument,
-                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
+                    $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
                     $dumpID = count($dumps) - 1;
                 }
 
