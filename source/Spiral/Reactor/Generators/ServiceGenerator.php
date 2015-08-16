@@ -75,7 +75,7 @@ class ServiceGenerator extends AbstractService
         $create->setSource([
             "\${$name} = {$shortClass}::create(\$fields);",
             "if (!\$this->save(\${$name}, true, \$errors)) {",
-            "   return false;",
+            "    return false;",
             "}",
             "",
             "return \${$name};"
@@ -98,8 +98,8 @@ class ServiceGenerator extends AbstractService
         $save->parameter("validate")->setOptional(true, true);
         $save->parameter("errors")->setOptional(true, null)->setPBR(true);
         $save->setSource([
-            "if(\${$name}->save(\$validate)) {",
-            "   return true;",
+            "if (\${$name}->save(\$validate)) {",
+            "    return true;",
             "}",
             "\$this->errors = \$errors = \${$name}->getErrors();",
             "return false;"
