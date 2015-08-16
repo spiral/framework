@@ -298,8 +298,8 @@ class ViewManager extends Singleton implements ViewProviderInterface
     private function viewClass($engine, $namespace, $view)
     {
         $path = $namespace . self::NS_SEPARATOR . $view;
-        if (isset($this->config['associations'][$path])) {
-            return $this->config['associations'][$path];
+        if (isset($this->config['classes'][$path])) {
+            return $this->config['classes'][$path];
         }
 
         return $this->config['engines'][$engine]['view'];
