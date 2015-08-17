@@ -10,6 +10,7 @@ namespace Spiral\Documenters;
 
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\Component;
+use Spiral\Documenters\Exceptions\DocumenterException;
 use Spiral\Files\FilesInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\Reactor\AbstractElement;
@@ -24,11 +25,18 @@ use Spiral\Reactor\NamespaceElement;
 abstract class VirtualDocumenter extends Component
 {
     /**
+     * Count classes being created.
+     *
+     * @var int
+     */
+    private $countClasses = 0;
+
+    /**
      * Namespaces aggregate entities and helper classes.
      *
      * @var NamespaceElement[]
      */
-    private $namespaces = [];
+    protected $namespaces = [];
 
     /**
      * Helper classes used to describe collections, selectors and etc, basically everything
@@ -76,6 +84,16 @@ abstract class VirtualDocumenter extends Component
     public function render($filename)
     {
         return $this->file->renderTo($filename, FilesInterface::RUNTIME, true);
+    }
+
+    /**
+     * Count classes being created.
+     *
+     * @return int
+     */
+    public function countClasses()
+    {
+        return $this->countClasses;
     }
 
     /**
@@ -131,6 +149,14 @@ abstract class VirtualDocumenter extends Component
             $getter->setComment("@return {$type}");
         }
 
+        foreach ($entity->getAccessors() as $name => $accessor) {
+            if (is_array($accessor)) {
+                $accessor = $accessor[0];
+            }
+
+            $element->property($name, '@var \\' . $accessor);
+        }
+
         return $element;
     }
 
@@ -150,7 +176,7 @@ abstract class VirtualDocumenter extends Component
         $namespace = trim($this->documenter->config()['namespace'], '\\');
 
         if (isset($this->helpers[$type . '.' . $name])) {
-            return $namespace . '\\' . $this->helpers[$type . '.' . $name]->getName();
+            return '\\' . $namespace . '\\' . $this->helpers[$type . '.' . $name]->getName();
         }
 
         if (!method_exists($this, $renderer = 'render' . ucfirst($type))) {
@@ -165,7 +191,7 @@ abstract class VirtualDocumenter extends Component
         //Let's add element into virtual namespace
         $this->addClass($element, $this->documenter->config()['namespace']);
 
-        return $namespace . '\\' . $element->getName();
+        return '\\' . $namespace . '\\' . $element->getName();
     }
 
     /**
@@ -182,6 +208,7 @@ abstract class VirtualDocumenter extends Component
         }
 
         $this->namespaces[$namespace]->addClass($element);
+        $this->countClasses++;
     }
 
     /**
@@ -198,6 +225,6 @@ abstract class VirtualDocumenter extends Component
     {
         $chunks = is_array($chunks) ? $chunks : func_get_args();
 
-        return '_' . Inflector::classify(join('-', $chunks));
+        return '_' . Inflector::classify(str_replace('\\', '', join('-', $chunks)));
     }
 }

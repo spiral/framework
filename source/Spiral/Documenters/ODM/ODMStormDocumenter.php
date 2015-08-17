@@ -8,11 +8,25 @@
  */
 namespace Spiral\Documenters\ODM;
 
-use Spiral\Documenters\DocumenterException;
+use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Documenters\Documenter;
+use Spiral\Documenters\Exceptions\DocumenterException;
 use Spiral\Documenters\VirtualDocumenter;
+use Spiral\Files\FilesInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
+use Spiral\ODM\Document;
+use Spiral\ODM\Entities\Collection;
+use Spiral\ODM\Entities\Compositor;
+use Spiral\ODM\Entities\DocumentCursor;
 use Spiral\ODM\Entities\SchemaBuilder;
 use Spiral\ODM\Entities\Schemas\DocumentSchema;
+use Spiral\ODM\Exceptions\CompositorException;
+use Spiral\ODM\Exceptions\DefinitionException;
+use Spiral\ODM\Exceptions\ODMException;
+use Spiral\ODM\ODM;
+use Spiral\Pagination\Exceptions\PaginationException;
+use Spiral\Reactor\AbstractElement;
+use Spiral\Reactor\ClassElement;
 
 /**
  * Generate virtual documentation for ODM classes. Works just fine in PHPStorm.
@@ -20,13 +34,30 @@ use Spiral\ODM\Entities\Schemas\DocumentSchema;
 class ODMStormDocumenter extends VirtualDocumenter
 {
     /**
-     * Generates virtual documentation based on provided schema.
-     *
-     * @param SchemaBuilder $builder
+     * @var SchemaBuilder
      */
-    public function generate(SchemaBuilder $builder)
+    protected $builder = null;
+
+    /**
+     * @param Documenter     $documenter
+     * @param FilesInterface $files
+     * @param SchemaBuilder  $builder
+     */
+    public function __construct(
+        Documenter $documenter,
+        FilesInterface $files,
+        SchemaBuilder $builder
+    ) {
+        parent::__construct($documenter, $files);
+        $this->builder = $builder;
+    }
+
+    /**
+     * Generates virtual documentation based on provided schema.
+     */
+    public function document()
     {
-        foreach ($builder->getDocuments() as $document) {
+        foreach ($this->builder->getDocuments() as $document) {
             if ($document->isAbstract()) {
                 continue;
             }
@@ -36,6 +67,21 @@ class ODMStormDocumenter extends VirtualDocumenter
                 $this->renderEntity($document),
                 $document->getNamespaceName()
             );
+        }
+
+        //Let's add some uses to virtual namespace
+        if (!empty($this->namespaces[$this->documenter->config()['namespace']])) {
+            $namespace = $this->namespaces[$this->documenter->config()['namespace']];
+
+            //Required uses
+            $namespace->setUses([
+                DocumentCursor::class,
+                CompositorException::class,
+                DefinitionException::class,
+                ODMException::class,
+                ServerRequestInterface::class,
+                PaginationException::class
+            ]);
         }
     }
 
@@ -55,6 +101,177 @@ class ODMStormDocumenter extends VirtualDocumenter
             $element->property('_id', '\\MongoId');
         }
 
+        //Element Document must have defined create method
+        $element->method(
+            'create',
+            ['@param array|\Traversable $fields', '@return ' . $entity->getShortName()],
+            ['fields']
+        )->setStatic(true)->parameter('fields')->setOptional(true, []);
+
+        //Document has collection, let's clarify static methods
+        if (!empty($entity->getCollection())) {
+            $parent = $entity->getName();
+            $return = $entity->getShortName();
+            if ($entity->getParent(true) != $entity) {
+                //Document parent (related to same collection)
+                $parent = $entity->getParent(true)->getName();
+                $return = $entity->getShortName() . '|\\' . $parent;
+            }
+
+            $find = $this->helper('collection', $parent)
+                . '|' . $this->helper('cursor', $parent)
+                . '|\\' . $parent . '[]';
+
+            //Static collection methods
+            $element->method(
+                'find',
+                [
+                    '@param array $query',
+                    '@return ' . $find
+                ],
+                ['query']
+            )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
+
+            $element->method(
+                'findOne', ['@param array $query', '@return ' . $return], ['query']
+            )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
+
+            $element->method(
+                'findByPK', ['@param mixed $mongoID', '@return ' . $return], ['mongoID']
+            )->setStatic(true);
+        }
+
+        //Composition (we only need to handle MANY compositions)
+        foreach ($entity->getCompositions() as $name => $composition) {
+            if ($composition['type'] == ODM::CMP_ONE) {
+                continue;
+            }
+
+            //We are going to create helper compositor class
+            $class = $composition['class'];
+            $element->property(
+                $name, '@var ' . $this->helper('compositor', $class) . '|\\' . $class . '[]'
+            );
+        }
+
+        //Aggregations
+        foreach ($entity->getAggregations() as $name => $aggregation) {
+            $aggregated = $this->builder->document($aggregation['class']);
+            $parent = $aggregated->getParent(true)->getName();
+
+            if ($aggregation['type'] == Document::ONE) {
+                //Simple ONE aggregation
+                $element->method($name, ['@return \\' . $parent]);
+            } else {
+                $find = $this->helper('collection', $parent)
+                    . '|' . $this->helper('cursor', $parent)
+                    . '|\\' . $parent . '[]';
+
+                $element->method(
+                    $name, ['@param array $query', '@return ' . $find], ['query']
+                )->parameter('query')->setOptional(true, [])->setType('array');
+            }
+        }
+
         return $element;
+    }
+
+    /**
+     * @param string $name
+     * @return ClassElement
+     */
+    protected function renderCollection($name)
+    {
+        $element = new ClassElement($this->createName($name, 'collection'));
+        $element->cloneSchema(Collection::class)->setComment("Virtual Collection for {$name}.");
+
+        $element->setParent(false)->setInterfaces([]);
+        $this->cleanElement($element);
+
+        //Mounting our class
+        $element->replaceComments('DocumentCursor', $this->helper('cursor', $name));
+        $element->replaceComments(Document::class, $name);
+        $element->replaceComments("Document", '\\' . $name);
+        $element->replaceComments("@return \$this", '@return $this|\\' . $name . '[]');
+
+        //Additional clarification
+        $element->replaceComments(
+            $this->helper('cursor', $name),
+            $this->helper('cursor', $name) . '|DocumentCursor'
+        );
+
+        return $element;
+    }
+
+    /**
+     * @param string $name
+     * @return ClassElement
+     */
+    protected function renderCursor($name)
+    {
+        $element = new ClassElement($this->createName($name, 'cursor'));
+        $element->cloneSchema(DocumentCursor::class)->setComment("Virtual Cursor for {$name}.");
+
+        $element->setParent(false)->setInterfaces([]);
+        $this->cleanElement($element);
+
+        $element->replaceComments(Document::class, $name);
+        $element->replaceComments("Document", '\\' . $name);
+        $element->replaceComments("@return \$this", '@return $this|\\' . $name . '[]');
+
+        return $element;
+    }
+
+    /**
+     * @param string $name
+     * @return ClassElement
+     */
+    protected function renderCompositor($name)
+    {
+        $element = new ClassElement($this->createName($name, 'compositor'));
+        $element->cloneSchema(Compositor::class)->setComment("Virtual Compositor for {$name}.");
+
+        $element->setParent(false)->setInterfaces([]);
+        $this->cleanElement($element);
+
+        //Mounting our class
+        $element->replaceComments(Document::class, $name);
+        $element->replaceComments("Document", '\\' . $name);
+        $element->replaceComments("@return \$this", '@return $this|\\' . $name . '[]');
+
+        return $element;
+    }
+
+    /**
+     * Remove unnesessary element methods.
+     *
+     * @param ClassElement $element
+     */
+    private function cleanElement(ClassElement $element)
+    {
+        foreach ($element->getProperties() as $property) {
+            $element->removeProperty($property->getName());
+        }
+
+        foreach ($element->getConstants() as $constant => $value) {
+            $element->removeConstant($constant);
+        }
+
+        foreach ($element->getMethods() as $method) {
+            //Remove all static, protected or magic methods
+            if (
+                $method->isStatic()
+                || $method->getAccess() != AbstractElement::ACCESS_PUBLIC
+                || substr($method->getName(), 0, 2) == '__'
+            ) {
+                $element->removeMethod($method->getName());
+            }
+
+            $comment = join("\n", $method->getComment());
+            if (strpos($comment, "Document") === false && strpos($comment, "\$this") === false) {
+                //We don't need methods not related to retrieving documents
+                $element->removeMethod($method->getName());
+            }
+        }
     }
 }
