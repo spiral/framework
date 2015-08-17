@@ -36,7 +36,7 @@ class Documenter extends Singleton
     /**
      * Configuration section.
      */
-    const CONFIG = 'reactor';
+    const CONFIG = 'documenters';
 
     /**
      * @param ConfiguratorInterface $configurator
