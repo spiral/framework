@@ -98,7 +98,7 @@ class ODMStormDocumenter extends VirtualDocumenter
 
         //Invalid methods
         if (!empty($entity->getFields()['_id'])) {
-            $element->property('_id', '\\MongoId');
+            $element->property('_id', '\\MongoId')->setAccess(AbstractElement::ACCESS_PUBLIC);
         }
 
         //Element Document must have defined create method
@@ -151,6 +151,10 @@ class ODMStormDocumenter extends VirtualDocumenter
             $class = $composition['class'];
             $element->property(
                 $name, '@var ' . $this->helper('compositor', $class) . '|\\' . $class . '[]'
+            );
+
+            $element->method('get' . ucfirst($name))->setComment(
+                '@return ' . $this->helper('compositor', $class) . '|\\' . $class . '[]'
             );
         }
 
@@ -233,6 +237,7 @@ class ODMStormDocumenter extends VirtualDocumenter
 
         $element->setParent(false)->setInterfaces([]);
         $this->cleanElement($element);
+        $element->removeMethod('getParent');
 
         //Mounting our class
         $element->replaceComments(Document::class, $name);

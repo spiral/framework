@@ -10,7 +10,9 @@
 namespace Spiral\Commands\Documenters;
 
 use Spiral\Console\Command;
+use Spiral\Documenters\Documenter;
 use Spiral\Documenters\ODM\ODMStormDocumenter;
+use Spiral\Documenters\ORM\ORMStormDocumenter;
 
 /**
  * Provides virtual documentation (shade classes) for PHPStorm for both
@@ -29,8 +31,10 @@ class PHPStormCommand extends Command
 
     /**
      * Perform command.
+     *
+     * @param Documenter $documenter
      */
-    public function perform()
+    public function perform(Documenter $documenter)
     {
         if ($this->container->hasBinding(\Spiral\ODM\Entities\SchemaBuilder::class)) {
             $odmBuilder = $this->container->get(\Spiral\ODM\Entities\SchemaBuilder::class);
@@ -52,8 +56,24 @@ class PHPStormCommand extends Command
         ]);
 
         $odmDocumenter->document();
+        $odmDocumenter->render($documenter->config()['phpstorm']['odm']);
+
         $this->writeln(
             "<comment>ODM virtual documentation were created:</comment> {$odmDocumenter->countClasses()} classes"
+        );
+
+        /**
+         * @var ODMStormDocumenter $odmDocumenter
+         */
+        $ormDocumenter = $this->container->get(ORMStormDocumenter::class, [
+            'builder' => $ormBuilder
+        ]);
+
+        $ormDocumenter->document();
+        $ormDocumenter->render($documenter->config()['phpstorm']['orm']);
+
+        $this->writeln(
+            "<comment>ORM virtual documentation were created:</comment> {$ormDocumenter->countClasses()} classes"
         );
     }
 }
