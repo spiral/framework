@@ -19,12 +19,12 @@ class InspectCommand extends Command
     /**
      * Visual constants.
      */
-    const YES       = 'yes';
-    const NO        = 'no';
-    const RED_YES   = '<fg=red>yes</fg=red>';
-    const RED_NO    = '<fg=red>no</fg=red>';
+    const YES = 'yes';
+    const NO = 'no';
+    const RED_YES = '<fg=red>yes</fg=red>';
+    const RED_NO = '<fg=red>no</fg=red>';
     const GREEN_YES = '<fg=green>yes</fg=green>';
-    const GREEN_NO  = '<fg=green>no</fg=green>';
+    const GREEN_NO = '<fg=green>no</fg=green>';
 
     /**
      * Description for different rank levels, rank level multiplied by 100 in this table.
@@ -106,13 +106,17 @@ class InspectCommand extends Command
      */
     protected function getInspector()
     {
-        $odmBuilder = !empty(\Spiral\Commands\ODM\SchemaCommand::$schemaBuilder)
-            ? \Spiral\Commands\ODM\SchemaCommand::$schemaBuilder
-            : $this->odm->schemaBuilder();
+        if ($this->container->hasBinding(\Spiral\ODM\Entities\SchemaBuilder::class)) {
+            $odmBuilder = $this->container->get(\Spiral\ODM\Entities\SchemaBuilder::class);
+        } else {
+            $odmBuilder = $this->odm->schemaBuilder();
+        }
 
-        $ormBuilder = !empty(\Spiral\Commands\ORM\SchemaCommand::$schemaBuilder)
-            ? \Spiral\Commands\ORM\SchemaCommand::$schemaBuilder
-            : $this->orm->schemaBuilder();
+        if ($this->container->hasBinding(\Spiral\ORM\Entities\SchemaBuilder::class)) {
+            $ormBuilder = $this->container->get(\Spiral\ORM\Entities\SchemaBuilder::class);
+        } else {
+            $ormBuilder = $this->orm->schemaBuilder();
+        }
 
         return $this->container->get(Inspector::class, [
             'entities' => array_merge(

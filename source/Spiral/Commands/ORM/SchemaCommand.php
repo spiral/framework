@@ -11,18 +11,12 @@ namespace Spiral\Commands\ORM;
 use Psr\Log\LogLevel;
 use Spiral\Console\Command;
 use Spiral\Console\Helpers\ConsoleFormatter;
-use Spiral\ORM\Entities\SchemaBuilder;
 
 /**
- * Performs ORM schema update and stores SchemaBuilder in public static variable for other commands.
+ * Performs ORM schema update and binds schema builder in container.
  */
 class SchemaCommand extends Command
 {
-    /**
-     * @var SchemaBuilder
-     */
-    public static $schemaBuilder = null;
-
     /**
      * {@inheritdoc}
      */
@@ -51,6 +45,7 @@ class SchemaCommand extends Command
     {
         $benchmark = $this->debugger->benchmark($this, 'update');
         $builder = $this->orm->schemaBuilder();
+        $this->container->bind(get_class($builder), $builder);
 
         if ($this->isVerbosing()) {
             foreach ($builder->getTables() as $table) {
@@ -61,7 +56,7 @@ class SchemaCommand extends Command
             }
         }
 
-        self::$schemaBuilder = $this->orm->updateSchema($builder);
+        $this->orm->updateSchema($builder);
         $elapsed = number_format($this->debugger->benchmark($this, $benchmark), 3);
 
         $countModels = count($builder->getRecords());
