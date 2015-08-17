@@ -53,7 +53,7 @@ class PHPStormCommand extends Command
 
         $odmDocumenter->document();
         $this->writeln(
-            "<info>ODM virtual documentation were created:</info> {$odmDocumenter->countClasses()} classes"
+            "<comment>ODM virtual documentation were created:</comment> {$odmDocumenter->countClasses()} classes"
         );
     }
 }
