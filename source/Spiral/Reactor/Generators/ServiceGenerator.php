@@ -14,6 +14,7 @@ use Spiral\ODM\Entities\Collection;
 use Spiral\ORM\Entities\Selector;
 use Spiral\ORM\Record;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
+use Spiral\Validation\ValidatesInterface;
 
 /**
  * Generate service class and some of it's methods. Allows to create singleton services. In future
@@ -39,6 +40,7 @@ class ServiceGenerator extends AbstractService
     public function associateModel($name, $class)
     {
         $this->file->addUse($class);
+        $this->file->addUse(ValidatesInterface::class);
 
         $reflection = new \ReflectionClass($class);
         $shortClass = $reflection->getShortName();
@@ -52,33 +54,23 @@ class ServiceGenerator extends AbstractService
             $selection .= "|Collection";
         }
 
-        $this->class->property('errors', [
-            "Last set of errors raised by save method.",
-            "",
-            "@var array"
-        ])->setDefault(true, []);
-
         /**
          * Create new entity method.
          */
         $create = $this->class->method('create');
         $create->setComment([
             "Create new {$shortClass}. Method will return false if save failed.",
-            "Creation errors available via getErrors() method.",
             "",
-            "@param array|\\Traversable \$fields",
-            "@param array              \$errors Will be populated if save fails.",
+            "@param array|\\Traversable \$fields Must be valid if ValidatesInterface.",
+            "@param bool                \$validate",
+            "@param array               \$errors Will be populated if save fails.",
             "@return {$shortClass}|bool"
         ]);
         $create->parameter('fields')->setOptional(true, []);
+        $create->parameter("validate")->setOptional(true, true);
         $create->parameter("errors")->setOptional(true, null)->setPBR(true);
         $create->setSource([
-            "\${$name} = {$shortClass}::create(\$fields);",
-            "if (!\$this->save(\${$name}, true, \$errors)) {",
-            "    return false;",
-            "}",
-            "",
-            "return \${$name};"
+            "return \$this->save(new {$shortClass}(), \$fields, \$validate, \$errors);"
         ]);
 
         /**
@@ -86,22 +78,34 @@ class ServiceGenerator extends AbstractService
          */
         $save = $this->class->method('save');
         $save->setComment([
-            "Save {$shortClass}. Use Service->getErrors() in case of save failure.",
+            "Update {$shortClass} fields (if any provided) and save entity with given set of fields.",
+            "You can replace fields with custom RequestFilter class.",
             "",
             "@param {$shortClass} \${$name}",
-            "@param bool \$validate",
-            "@param array \$errors Will be populated if save fails.",
+            "@param array|\\Traversable \$fields Must be valid if ValidatesInterface.",
+            "@param bool  \$validate",
+            "@param array \$errors               Will be populated if save fails.",
             "@return bool"
         ]);
 
         $save->parameter($name)->setType($shortClass);
+        $save->parameter("fields")->setOptional(true, []);
         $save->parameter("validate")->setOptional(true, true);
         $save->parameter("errors")->setOptional(true, null)->setPBR(true);
         $save->setSource([
+            "if (!empty(\$fields) && \$fields instanceof ValidatesInterface && !\$fields->isValid()) {",
+            "    \$errors = \$fields->getErrors();",
+            "",
+            "    return false;",
+            "}",
+            "",
+            "!empty(\$fields) && \${$name}->setFields(\$fields);",
             "if (\${$name}->save(\$validate)) {",
             "    return true;",
             "}",
-            "\$this->errors = \$errors = \${$name}->getErrors();",
+            "",
+            "\$errors = \${$name}->getErrors();",
+            "",
             "return false;"
         ]);
 
@@ -145,17 +149,5 @@ class ServiceGenerator extends AbstractService
 
         $find->parameter("where")->setType('array')->setOptional(true, []);
         $find->setSource("return {$shortClass}::find(\$where);");
-
-        /**
-         * Last save errors.
-         */
-        $errors = $this->class->method('getErrors');
-        $errors->setComment([
-            "Set of error messages raised by last save operation.",
-            "",
-            "@return array"
-        ]);
-
-        $errors->setSource("return \$this->errors;");
     }
 }

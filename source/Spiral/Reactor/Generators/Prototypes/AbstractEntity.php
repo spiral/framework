@@ -30,7 +30,6 @@ abstract class AbstractEntity extends AbstractGenerator
     public function generate()
     {
         $this->class->property('fillable', ["@var array"])->setDefault(true, []);
-
         $this->class->property('hidden', ["@var array"])->setDefault(true, []);
 
         $this->class->property('schema', ["Entity schema.", "", "@var array"])->setDefault(
@@ -39,6 +38,10 @@ abstract class AbstractEntity extends AbstractGenerator
         );
 
         $this->class->property('validates', ["@var array"])->setDefault(true, $this->validates);
+
+        //Both ORM and ODM has indexes and defaults property
+        $this->class->property('defaults', ["@var array"])->setDefault(true, []);
+        $this->class->property('indexes', ["@var array"])->setDefault(true, []);
     }
 
     /**

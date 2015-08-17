@@ -10,6 +10,7 @@ namespace Spiral\Reactor\Generators;
 
 use Spiral\Files\FilesInterface;
 use Spiral\Http\RequestFilter;
+use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
 
 /**
@@ -107,6 +108,26 @@ class RequestGenerator extends AbstractService
         $this->types[$field] = !empty($definition['type']) ? $definition['type'] : $type;
 
         $this->updateProperties();
+    }
+
+    /**
+     * Generate set of fields for given entity, only fillable fields will be added.
+     *
+     * @param ReflectionEntity $entity
+     */
+    public function followEntity(ReflectionEntity $entity)
+    {
+        foreach ($entity->getFillable() as $field) {
+            $type = $entity->getFields()[$field];
+
+            //Let's use data by default
+            $this->addField($field, $type, 'data');
+
+            if (!empty($entity->getValidates()[$field])) {
+                //Let's use validation declared in entity
+                $this->validates[$field] = $entity->getValidates()[$field];
+            }
+        }
     }
 
     /**
