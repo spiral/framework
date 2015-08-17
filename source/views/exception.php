@@ -96,11 +96,6 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
 
 $dumps = [];
 
-if (empty($dumpArguments)) {
-    $dumpArguments = false;
-}
-
-
 /**
  * Format arguments and create data dumps.
  *
