@@ -411,12 +411,14 @@ if (!function_exists('exception_dump_arguments')) {
                 + document.getElementById('argument-' + id).innerHTML
                 + '</div>';
 
-            window.location.href = "#dumper";
+            window.location.href = "#dump-top";
         }
     </script>
 </head>
 <body class="spiral-exception">
+<a name="dump-top"></a>
 <div class="wrapper">
+    <a name="dump-top"></a>
     <div class="header">
         <?= $snapshot->getClass() ?>:
         <strong
@@ -490,8 +492,6 @@ if (!function_exists('exception_dump_arguments')) {
             ?>
         </div>
         <div class="chain">
-            <a name="dumper"></a>
-
             <div class="dumper" id="argument-dumper"></div>
             <div class="calls">
                 <?php
