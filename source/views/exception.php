@@ -100,60 +100,57 @@ if (empty($dumpArguments)) {
     $dumpArguments = false;
 }
 
-if (!function_exists('exception_dump_arguments')) {
-    /**
-     * Format arguments and create data dumps.
-     *
-     * @param array                $arguments
-     * @param \Spiral\Debug\Dumper $dumper
-     * @param array                $dumps
-     * @return array
-     */
-    function exception_dump_arguments(array $arguments, \Spiral\Debug\Dumper $dumper, &$dumps)
-    {
-        $result = [];
-        foreach ($arguments as $argument) {
-            $display = $type = strtolower(gettype($argument));
 
-            if (is_numeric($argument)) {
-                $result[] = $argument;
-                continue;
-            } elseif (is_bool($argument)) {
-                $result[] = $dumper->style($argument ? 'true' : 'false', 'value', $type);
-                continue;
-            } elseif (is_null($argument)) {
-                $result[] = $dumper->style('null', 'value', $type);
-                continue;
-            }
+/**
+ * Format arguments and create data dumps.
+ *
+ * @param array $arguments
+ * @return array
+ */
+$argumenter = function (array $arguments) use ($dumper, &$dumps) {
+    $result = [];
+    foreach ($arguments as $argument) {
+        $display = $type = strtolower(gettype($argument));
 
-            if (is_object($argument)) {
-                $reflection = new ReflectionClass($argument);
-                $display = interpolate(
-                    "<span title=\"{title}\">{class}</span>", [
-                        'title' => $reflection->getName(),
-                        'class' => $reflection->getShortName()
-                    ]
-                );
-            }
-
-            //Colorizing
-            $display = $dumper->style($display, 'value', $type);
-            if (($dumpID = array_search($argument, $dumps)) === false) {
-                $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
-                $dumpID = count($dumps) - 1;
-            }
-
-            $display = interpolate(
-                "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                compact('display', 'dumpID')
-            );
-
-            $result[] = $display;
+        if (is_numeric($argument)) {
+            $result[] = $dumper->style($argument, 'value', $type);
+            continue;
+        } elseif (is_bool($argument)) {
+            $result[] = $dumper->style($argument ? 'true' : 'false', 'value', $type);
+            continue;
+        } elseif (is_null($argument)) {
+            $result[] = $dumper->style('null', 'value', $type);
+            continue;
         }
 
-        return $result;
+        if (is_object($argument)) {
+            $reflection = new ReflectionClass($argument);
+            $display = interpolate(
+                "<span title=\"{title}\">{class}</span>", [
+                    'title' => $reflection->getName(),
+                    'class' => $reflection->getShortName()
+                ]
+            );
+        }
+
+        //Colorizing
+        $display = $dumper->style($display, 'value', $type);
+        if (($dumpID = array_search($argument, $dumps)) === false) {
+            $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+            $dumpID = count($dumps) - 1;
+        }
+
+        $display = interpolate(
+            "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
+            compact('display', 'dumpID')
+        );
+
+        $result[] = $display;
     }
+
+    return $result;
 }
+
 
 ?>
 <html>
@@ -417,8 +414,10 @@ if (!function_exists('exception_dump_arguments')) {
 </head>
 <body class="spiral-exception">
 <a name="dump-top"></a>
+
 <div class="wrapper">
     <a name="dump-top"></a>
+
     <div class="header">
         <?= $snapshot->getClass() ?>:
         <strong
@@ -443,9 +442,7 @@ if (!function_exists('exception_dump_arguments')) {
 
                 $arguments = [];
                 if (isset($trace['args'])) {
-                    $arguments = exception_dump_arguments(
-                        $trace['args'], $dumper, $dumps
-                    );
+                    $arguments = $argumenter($trace['args']);
                 }
 
                 $function = '<strong>' . $trace['function'] . '</strong>';
@@ -528,9 +525,7 @@ if (!function_exists('exception_dump_arguments')) {
 
                     $arguments = [];
                     if (isset($trace['args'])) {
-                        $arguments = exception_dump_arguments(
-                            $trace['args'], $dumper, $dumps
-                        );
+                        $arguments = $argumenter($trace['args']);
                     }
 
                     ?>
