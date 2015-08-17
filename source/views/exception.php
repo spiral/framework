@@ -136,7 +136,7 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
         }
 
         $display = interpolate(
-            "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
+            "<span onclick=\"_da({dumpID})\">{display}</span>",
             compact('display', 'dumpID')
         );
 
@@ -395,7 +395,7 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
             var block = document.getElementById(id);
             block.style.display = (block.style.display == 'none' ? 'block' : 'none');
         }
-        function dumpArgument(id) {
+        function _da(id) {
             var dump = document.getElementById('argument-dumper');
             dump.style.display = 'block';
             dump.innerHTML = '<div class="close" onclick="toggle(\'argument-dumper\')"> &cross; close</div> '
