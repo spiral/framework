@@ -590,7 +590,7 @@ if (!function_exists('exception_dump_arguments')) {
             <div class="title" onclick="toggle('logger-messages')">
                 Logger Messages (<?= number_format(count($messages)) ?>)
             </div>
-            <div class="data" id="logger-messages">
+            <div class="data" id="logger-messages" style="display: none;">
                 <?php
                 foreach ($messages as $message) {
                     $channel = $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL];
