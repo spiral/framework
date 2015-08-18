@@ -43,9 +43,7 @@ class ControllerCommand extends AbstractCommand
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Controller name.'],
-        ['service', InputArgument::REQUIRED, 'DataEntity server to pass calls to.'],
-        ['request', InputArgument::REQUIRED, 'RequestFilter to be used for field updates.']
+        ['name', InputArgument::REQUIRED, 'Controller name.']
     ];
 
     /**
@@ -60,6 +58,32 @@ class ControllerCommand extends AbstractCommand
          */
         if (empty($generator = $this->getGenerator())) {
             return;
+        }
+
+        if (!empty($service = $this->option('service'))) {
+            if (empty($serviceClass = $reactor->findClass('service', $service))) {
+                $this->writeln(
+                    "<fg=red>Unable to locate service class for '{$service}'.</fg=red>"
+                );
+
+                return;
+            }
+
+            //Pre-generate methods using data entity service
+            if (!empty($request = $this->option('request'))) {
+                if (empty($requestClass = $reactor->findClass('request', $request))) {
+                    $this->writeln(
+                        "<fg=red>Unable to locate request class for '{$request}'.</fg=red>"
+                    );
+
+                    return;
+                }
+
+                //Use request instead of POST data to create and update data entity
+                $generator->createCRUD($service, $serviceClass, $request, $requestClass);
+            } else {
+                $generator->createCRUD($service, $serviceClass);
+            }
         }
 
         foreach ($this->option('method') as $method) {
@@ -96,6 +120,18 @@ class ControllerCommand extends AbstractCommand
                 'm',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 'Pre-create controller method.'
+            ],
+            [
+                'service',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Generate set of CRUD operations for given entity service.'
+            ],
+            [
+                'request',
+                'r',
+                InputOption::VALUE_OPTIONAL,
+                'RequestFilter to be used for update/create operations.'
             ],
             [
                 'depends',

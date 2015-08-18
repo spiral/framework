@@ -8,6 +8,7 @@
  */
 namespace Spiral\Reactor\Generators\Prototypes;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Reactor\AbstractElement;
@@ -70,7 +71,7 @@ abstract class AbstractService extends AbstractGenerator
      */
     public function addDependency($name, $dependency)
     {
-        $this->dependencies[$name] = $dependency;
+        $this->dependencies[Inflector::pluralize($name)] = $dependency;
         $this->file->addUse($dependency);
     }
 
@@ -100,8 +101,7 @@ abstract class AbstractService extends AbstractGenerator
             $reflection = new \ReflectionClass($dependency);
 
             $this->class->property(
-                $name,
-                "@var " . $reflection->getShortName()
+                $name, "@var " . $reflection->getShortName()
             )->setAccess(AbstractElement::ACCESS_PROTECTED)->setDefault(true, null);
 
             $initMethod->parameter(

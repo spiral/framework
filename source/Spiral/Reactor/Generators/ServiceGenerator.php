@@ -59,18 +59,14 @@ class ServiceGenerator extends AbstractService
          */
         $create = $this->class->method('create');
         $create->setComment([
-            "Create new {$shortClass}. Method will return false if save failed.",
+            "Create new {$shortClass}. You must save entity using save method..",
             "",
-            "@param array|\\Traversable \$fields Must be valid if ValidatesInterface.",
-            "@param bool                \$validate",
-            "@param array               \$errors Will be populated if save fails.",
-            "@return {$shortClass}|bool"
+            "@param array|\\Traversable \$fields Initial set of fields.",
+            "@return {$shortClass}"
         ]);
         $create->parameter('fields')->setOptional(true, []);
-        $create->parameter("validate")->setOptional(true, true);
-        $create->parameter("errors")->setOptional(true, null)->setPBR(true);
         $create->setSource([
-            "return \$this->save(new {$shortClass}(), \$fields, \$validate, \$errors);"
+            "return {$shortClass}::create(\$fields);"
         ]);
 
         /**
@@ -78,28 +74,18 @@ class ServiceGenerator extends AbstractService
          */
         $save = $this->class->method('save');
         $save->setComment([
-            "Update {$shortClass} fields (if any provided) and save entity with given set of fields.",
-            "You can replace fields with custom RequestFilter class.",
+            "Save {$shortClass} instance.",
             "",
             "@param {$shortClass} \${$name}",
-            "@param array|\\Traversable \$fields Must be valid if ValidatesInterface.",
             "@param bool  \$validate",
-            "@param array \$errors               Will be populated if save fails.",
+            "@param array \$errors Will be populated if save fails.",
             "@return bool"
         ]);
 
         $save->parameter($name)->setType($shortClass);
-        $save->parameter("fields")->setOptional(true, []);
         $save->parameter("validate")->setOptional(true, true);
         $save->parameter("errors")->setOptional(true, null)->setPBR(true);
         $save->setSource([
-            "if (!empty(\$fields) && \$fields instanceof ValidatesInterface && !\$fields->isValid()) {",
-            "    \$errors = \$fields->getErrors();",
-            "",
-            "    return false;",
-            "}",
-            "",
-            "!empty(\$fields) && \${$name}->setFields(\$fields);",
             "if (\${$name}->save(\$validate)) {",
             "    return true;",
             "}",

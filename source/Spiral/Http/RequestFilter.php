@@ -36,6 +36,8 @@ use Spiral\Models\DataEntity;
  *
  * There is possibility that this class and it's schema will behave same way as ORM and ODM models
  * one day.
+ *
+ * @todo Replace errors.
  */
 class RequestFilter extends DataEntity
 {
@@ -53,8 +55,8 @@ class RequestFilter extends DataEntity
     protected $secured = [];
 
     /**
-     * Request schema declares field names, their source and origin name if any. See examples in class
-     * header.
+     * Request schema declares field names, their source and origin name if any. See examples in
+     * class header.
      *
      * @var array
      */
@@ -103,6 +105,18 @@ class RequestFilter extends DataEntity
     public function input()
     {
         return $this->input;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getErrors($reset = false)
+    {
+        $errors = parent::getErrors($reset);
+
+        //De-mapping
+
+        return $errors;
     }
 
     /**
