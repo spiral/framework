@@ -464,7 +464,6 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
                     continue;
                 }
 
-
                 ?>
                 <div class="container">
                     <div class="location">

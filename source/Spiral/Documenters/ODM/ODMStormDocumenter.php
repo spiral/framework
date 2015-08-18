@@ -186,22 +186,22 @@ class ODMStormDocumenter extends VirtualDocumenter
      */
     protected function renderCollection($name)
     {
-        $element = new ClassElement($this->createName($name, 'collection'));
+        $element = new ClassElement($elementName = $this->createName($name, 'collection'));
         $element->cloneSchema(Collection::class)->setComment("Virtual Collection for {$name}.");
 
-        $element->setParent(false)->setInterfaces([]);
+        $element->setParent('\\' . Collection::class)->setInterfaces([]);
         $this->cleanElement($element);
 
         //Mounting our class
         $element->replaceComments('DocumentCursor', $this->helper('cursor', $name));
         $element->replaceComments(Document::class, $name);
         $element->replaceComments("Document", '\\' . $name);
-        $element->replaceComments("@return \$this", '@return $this|\\' . $name . '[]');
+        $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         //Additional clarification
         $element->replaceComments(
             $this->helper('cursor', $name),
-            $this->helper('cursor', $name) . '|DocumentCursor'
+            $this->helper('cursor', $name)
         );
 
         return $element;
@@ -213,15 +213,15 @@ class ODMStormDocumenter extends VirtualDocumenter
      */
     protected function renderCursor($name)
     {
-        $element = new ClassElement($this->createName($name, 'cursor'));
+        $element = new ClassElement($elementName = $this->createName($name, 'cursor'));
         $element->cloneSchema(DocumentCursor::class)->setComment("Virtual Cursor for {$name}.");
 
-        $element->setParent(false)->setInterfaces([]);
+        $element->setParent('\\' . DocumentCursor::class)->setInterfaces([]);
         $this->cleanElement($element);
 
         $element->replaceComments(Document::class, $name);
         $element->replaceComments("Document", '\\' . $name);
-        $element->replaceComments("@return \$this", '@return $this|\\' . $name . '[]');
+        $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         return $element;
     }
@@ -232,17 +232,17 @@ class ODMStormDocumenter extends VirtualDocumenter
      */
     protected function renderCompositor($name)
     {
-        $element = new ClassElement($this->createName($name, 'compositor'));
+        $element = new ClassElement($elementName = $this->createName($name, 'compositor'));
         $element->cloneSchema(Compositor::class)->setComment("Virtual Compositor for {$name}.");
 
-        $element->setParent(false)->setInterfaces([]);
+        $element->setParent('\\' . Compositor::class)->setInterfaces([]);
         $this->cleanElement($element);
         $element->removeMethod('getParent');
 
         //Mounting our class
         $element->replaceComments(Document::class, $name);
         $element->replaceComments("Document", '\\' . $name);
-        $element->replaceComments("@return \$this", '@return $this|\\' . $name . '[]');
+        $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         return $element;
     }

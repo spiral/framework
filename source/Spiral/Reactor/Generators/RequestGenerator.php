@@ -89,24 +89,27 @@ class RequestGenerator extends AbstractService
             return;
         }
 
-        $definition = $this->options['mapping'][$type];
+        if (!is_array($type)) {
+            $definition = $this->options['mapping'][$type];
 
-        //Source can depend on type
-        $source = $definition['source'];
-        $this->schema[$field] = $source . ':' . ($origin ? $origin : $field);
+            //Source can depend on type
+            $source = $definition['source'];
+            $this->schema[$field] = $source . ':' . ($origin ? $origin : $field);
 
-        if (!empty($definition['setter'])) {
-            //Pre-defined setter
-            $this->setters[$field] = $definition['setter'];
-        }
+            if (!empty($definition['setter'])) {
+                //Pre-defined setter
+                $this->setters[$field] = $definition['setter'];
+            }
 
-        if (!empty($definition['validates'])) {
-            //Pre-defined validation
-            $this->validates[$field] = $definition['validates'];
+            if (!empty($definition['validates'])) {
+                //Pre-defined validation
+                $this->validates[$field] = $definition['validates'];
+            }
+        } else {
+            $type = $type[0] . '[]';
         }
 
         $this->types[$field] = !empty($definition['type']) ? $definition['type'] : $type;
-
         $this->updateProperties();
     }
 
@@ -125,7 +128,11 @@ class RequestGenerator extends AbstractService
 
             if (!empty($entity->getValidates()[$field])) {
                 //Let's use validation declared in entity
-                $this->validates[$field] = $entity->getValidates()[$field];
+
+                if ($entity->getValidates()[$field] != ['notEmpty']) {
+                    //We are only going to use default entity validation if
+                    $this->validates[$field] = $entity->getValidates()[$field];
+                }
             }
         }
     }

@@ -143,8 +143,6 @@ abstract class VirtualDocumenter extends Component
                 $setter->parameter($field)->setType($classType);
             }
 
-            $getter->parameter('default')->setOptional(true, null);
-
             $setter->setComment("@return \$this", true);
             $getter->setComment("@return {$type}");
         }
