@@ -87,6 +87,38 @@ abstract class AbstractEntity extends AbstractGenerator
     }
 
     /**
+     * @param boolean $showIndexes
+     */
+    public function setShowIndexes($showIndexes)
+    {
+        $this->showIndexes = $showIndexes;
+    }
+
+    /**
+     * @param boolean $showFillable
+     */
+    public function setShowFillable($showFillable)
+    {
+        $this->showFillable = $showFillable;
+    }
+
+    /**
+     * @param boolean $showHidden
+     */
+    public function setShowHidden($showHidden)
+    {
+        $this->showHidden = $showHidden;
+    }
+
+    /**
+     * @param boolean $showDefaults
+     */
+    public function setShowDefaults($showDefaults)
+    {
+        $this->showDefaults = $showDefaults;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render($mode = FilesInterface::READONLY, $ensureDirectory = true)

@@ -64,8 +64,7 @@ class ODMStormDocumenter extends VirtualDocumenter
 
             //Render class and put it under entity name
             $this->addClass(
-                $this->renderEntity($document),
-                $document->getNamespaceName()
+                $this->renderEntity($document), $document->getNamespaceName()
             );
         }
 
@@ -132,12 +131,19 @@ class ODMStormDocumenter extends VirtualDocumenter
                 ['query']
             )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
 
-            $element->method(
-                'findOne', ['@param array $query', '@return ' . $return], ['query']
-            )->setStatic(true)->parameter('query')->setOptional(true, [])->setType('array');
+            $findOne = $element->method(
+                'findOne', [
+                '@param array $query',
+                '@param array $sortBy',
+                '@return ' . $return . '|null'
+            ], ['query', 'sortBy']
+            )->setStatic(true);
+
+            $findOne->parameter('query')->setOptional(true, [])->setType('array');
+            $findOne->parameter('sortBy')->setOptional(true, [])->setType('array');
 
             $element->method(
-                'findByPK', ['@param mixed $mongoID', '@return ' . $return], ['mongoID']
+                'findByPK', ['@param mixed $mongoID', '@return ' . $return . '|null'], ['mongoID']
             )->setStatic(true);
         }
 

@@ -153,6 +153,9 @@ abstract class VirtualDocumenter extends Component
             }
 
             $element->property($name, '@var \\' . $accessor);
+            $element->method('get' . Inflector::classify($name))->setComment(
+                "@return \\" . $accessor
+            );
         }
 
         return $element;

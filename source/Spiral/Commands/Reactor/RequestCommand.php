@@ -75,11 +75,6 @@ class RequestCommand extends AbstractCommand
             return;
         }
 
-        foreach ($this->option('field') as $field) {
-            list($field, $type, $source, $origin) = $this->parseField($field);
-            $generator->addField($field, $type, $source, $origin);
-        }
-
         if (!empty($entity = $this->argument('entity'))) {
             if (empty($class = $reactor->findClass('entity', $entity))) {
                 $this->writeln(
@@ -90,6 +85,11 @@ class RequestCommand extends AbstractCommand
             }
 
             $generator->followEntity($this->getEntityReflection($class));
+        }
+
+        foreach ($this->option('field') as $field) {
+            list($field, $type, $source, $origin) = $this->parseField($field);
+            $generator->addField($field, $type, $source, $origin);
         }
 
         //Generating

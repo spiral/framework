@@ -72,6 +72,11 @@ class RecordCommand extends AbstractCommand
             $generator->addField($name, $type);
         }
 
+        $generator->setShowFillable($this->option('fillable'));
+        $generator->setShowHidden($this->option('hidden'));
+        $generator->setShowDefaults($this->option('defaults'));
+        $generator->setShowIndexes($this->option('indexes'));
+
         //Generating
         $generator->render();
 
@@ -96,7 +101,32 @@ class RecordCommand extends AbstractCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Optional comment to add as class header.'
-            ]
+            ],
+            [
+                'fillable',
+                's',
+                 InputOption::VALUE_NONE,
+                'Render fillable property.'
+            ],
+            [
+                'hidden',
+                'x',
+                 InputOption::VALUE_NONE,
+                'Render hidden property.'
+            ],
+            [
+                'defaults',
+                'd',
+                 InputOption::VALUE_NONE,
+                'Render defaults property.'
+            ],
+            [
+                'indexes',
+                'i',
+                 InputOption::VALUE_NONE,
+                'Render indexes property.'
+            ],
+
         ];
     }
 }
