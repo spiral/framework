@@ -20,6 +20,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\ORM\Entities\RecordIterator;
 use Spiral\ORM\Entities\SchemaBuilder;
+use Spiral\ORM\Entities\Schemas\MorphedSchema;
 use Spiral\ORM\Entities\Schemas\RecordSchema;
 use Spiral\ORM\Entities\Schemas\RelationSchema;
 use Spiral\ORM\Entities\Selector;
@@ -158,19 +159,7 @@ class ORMStormDocumenter extends VirtualDocumenter
                 continue;
             }
 
-            if (in_array($relation->getType(), [Record::HAS_ONE, Record::BELONGS_TO])) {
-                //Simple relations
-                $property = $element->property($relation->getName())->setAccess(
-                    AbstractElement::ACCESS_PUBLIC
-                );
-
-                $return = "\\" . $relation->getTarget();
-                if ($relation->isNullable()) {
-                    $return .= "|null";
-                }
-
-                $property->setComment("@var {$return}");
-            }
+            $this->renderRelation($entity, $element, $relation);
         }
 
         return $element;
@@ -191,7 +180,7 @@ class ORMStormDocumenter extends VirtualDocumenter
         //Mounting our class
         $element->replaceComments(
             'RecordIterator',
-            $this->helper('iterator', $name) . '|\\{$name}[]'
+            $this->helper('iterator', $name) . "|\\{$name}[]"
         );
 
         $element->replaceComments(Record::class, $name);
@@ -213,12 +202,74 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $element->setParent('\\' . RecordIterator::class)->setInterfaces([]);
 
-
         $element->replaceComments(Record::class, $name);
         $element->replaceComments("Record", '\\' . $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         return $element;
+    }
+
+    /**
+     * @param RecordSchema   $entity
+     * @param ClassElement   $element
+     * @param RelationSchema $relation
+     */
+    protected function renderRelation(
+        RecordSchema $entity,
+        ClassElement $element,
+        RelationSchema $relation
+    ) {
+        if ($relation instanceof MorphedSchema) {
+            //Render separately
+            return;
+        }
+
+        $related = '\\' . $relation->getTarget() . ($relation->isMultiple() ? '[]' : '');
+        if ($relation->isNullable() && !$relation->isMultiple()) {
+            $related .= '|null';
+        }
+
+        if ($relation->isMultiple()) {
+            $related .= '|' . $this->helper('iterator', $relation->getTarget());
+        }
+
+        $element->property($relation->getName())->setComment(
+            "@var {$related}"
+        )->setAccess(AbstractElement::ACCESS_PUBLIC);
+
+        if (!isset($this->builder->config()['relations'][$relation->getType()]['class'])) {
+            //Undefined relation class
+            return;
+        }
+
+        //Rendering relation method
+        $relationElement = new ClassElement(
+            $elementName = $this->createName($entity->getName(), $relation->getTarget(), 'relation')
+        );
+
+        //Clone schema from appropriate relation
+        $relationClass = $this->builder->config()['relations'][$relation->getType()]['class'];
+        $relationElement->cloneSchema($relationClass);
+        $this->cleanElement($relationElement);
+        $relationElement->setParent('\\' . $relationClass)->setInterfaces([]);
+
+        $name = $relation->getTarget();
+
+        $relationElement->replaceComments(
+            'RecordIterator',
+            $this->helper('iterator', $name) . "|\\{$name}[]"
+        );
+
+        $relationElement->replaceComments(Record::class, $name);
+        $relationElement->replaceComments("Record", '\\' . $name);
+        $relationElement->replaceComments("Selector", $this->helper('selector', $name));
+
+        $relationElement->replaceComments(
+            "@return \$this", "@return \$this|{$elementName}|\\{$name}[]"
+        );
+
+        $fullName = $this->addClass($relationElement);
+        $element->method($relation->getName(), "@return {$fullName}");
     }
 
     /**

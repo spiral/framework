@@ -199,10 +199,15 @@ abstract class VirtualDocumenter extends Component
      * Add new ClassElement into file under specified namespace.
      *
      * @param ClassElement $element
-     * @param string       $namespace
+     * @param string       $namespace Virtual namespace by default.
+     * @return string
      */
-    protected function addClass(ClassElement $element, $namespace)
+    protected function addClass(ClassElement $element, $namespace = null)
     {
+        if (is_null($namespace)) {
+            $namespace = $this->documenter->config()['namespace'];
+        }
+
         if (!isset($this->namespaces[$namespace])) {
             $this->namespaces[$namespace] = new NamespaceElement(trim($namespace, '\\'));
             $this->file->addNamespace($this->namespaces[$namespace]);
@@ -210,6 +215,8 @@ abstract class VirtualDocumenter extends Component
 
         $this->namespaces[$namespace]->addClass($element);
         $this->countClasses++;
+
+        return '\\' . trim($namespace, '\\') . '\\' . $element->getName();
     }
 
     /**
