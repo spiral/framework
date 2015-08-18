@@ -199,16 +199,14 @@ class ODMStormDocumenter extends VirtualDocumenter
         $this->cleanElement($element);
 
         //Mounting our class
-        $element->replaceComments('DocumentCursor', $this->helper('cursor', $name));
+        $element->replaceComments(
+            'DocumentCursor',
+            $this->helper('cursor', $name) . '|\\{$name}[]'
+        );
+
         $element->replaceComments(Document::class, $name);
         $element->replaceComments("Document", '\\' . $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
-
-        //Additional clarification
-        $element->replaceComments(
-            $this->helper('cursor', $name),
-            $this->helper('cursor', $name)
-        );
 
         return $element;
     }

@@ -78,7 +78,9 @@ abstract class AbstractEntity extends AbstractGenerator
         $this->schema[$field] = $type;
 
         //We can force validations for all our fields
-        $this->validates[$field] = ['notEmpty'];
+        if (!in_array($type, ['primary', 'bigPrimary', 'MongoId'])) {
+            $this->validates[$field] = ['notEmpty'];
+        }
 
         $this->class->property('schema')->setDefault(true, $this->schema);
         $this->class->property('validates')->setDefault(true, $this->validates);
