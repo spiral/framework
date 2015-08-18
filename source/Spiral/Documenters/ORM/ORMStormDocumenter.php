@@ -21,6 +21,7 @@ use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\ORM\Entities\RecordIterator;
 use Spiral\ORM\Entities\SchemaBuilder;
 use Spiral\ORM\Entities\Schemas\RecordSchema;
+use Spiral\ORM\Entities\Schemas\RelationSchema;
 use Spiral\ORM\Entities\Selector;
 use Spiral\ORM\Exceptions\ORMException;
 use Spiral\ORM\Exceptions\SelectorException;
@@ -149,6 +150,28 @@ class ORMStormDocumenter extends VirtualDocumenter
         )->setStatic(true);
 
         $findByPK->parameter('load')->setOptional(true, [])->setType('array');
+
+        //The most fun part, rendering relations!
+        foreach ($entity->getRelations() as $relation) {
+            if (!$relation instanceof RelationSchema) {
+                //Only ORM relations for now
+                continue;
+            }
+
+            if (in_array($relation->getType(), [Record::HAS_ONE, Record::BELONGS_TO])) {
+                //Simple relations
+                $property = $element->property($relation->getName())->setAccess(
+                    AbstractElement::ACCESS_PUBLIC
+                );
+
+                $return = "\\" . $relation->getTarget();
+                if ($relation->isNullable()) {
+                    $return .= "|null";
+                }
+
+                $property->setComment("@var {$return}");
+            }
+        }
 
         return $element;
     }
