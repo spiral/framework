@@ -56,7 +56,7 @@ abstract class AbstractService extends AbstractGenerator
      */
     public function addMethod($method)
     {
-        $this->class->method($method)->setComment("");
+        $this->class->method($method);
 
         return $this;
     }

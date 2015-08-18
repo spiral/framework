@@ -110,13 +110,13 @@ class ServiceCommand extends AbstractCommand
                 'method',
                 'm',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Pre-create controller method.'
+                'Pre-create service method.'
             ],
             [
                 'depends',
                 'd',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Add service dependency to controller. Declare dependency in short form.'
+                'Add service dependency. Declare dependency in short form.'
             ],
             [
                 'mortal',

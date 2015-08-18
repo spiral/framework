@@ -226,9 +226,13 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param OutputInterface $output
      */
-    public function handleSnapshot(SnapshotInterface $snapshot)
+    public function handleSnapshot(SnapshotInterface $snapshot, OutputInterface $output = null)
     {
-        $this->application()->renderException($snapshot->getException(), new ConsoleOutput());
+        //If no output provided we are probably handling fatal exception, let's verbose
+        $output = !empty($output) ? $output : new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
+        $this->application()->renderException($snapshot->getException(), $output);
     }
 }

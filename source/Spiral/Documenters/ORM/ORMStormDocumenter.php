@@ -9,6 +9,7 @@
 
 namespace Spiral\Documenters\ORM;
 
+use Doctrine\Common\Inflector\Inflector;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Cache\StoreInterface;
 use Spiral\Database\Exceptions\BuilderException;
@@ -19,9 +20,10 @@ use Spiral\Documenters\VirtualDocumenter;
 use Spiral\Files\FilesInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\ORM\Entities\RecordIterator;
+use Spiral\ORM\Entities\Relations\ManyToMany;
 use Spiral\ORM\Entities\SchemaBuilder;
-use Spiral\ORM\Entities\Schemas\MorphedSchema;
 use Spiral\ORM\Entities\Schemas\RecordSchema;
+use Spiral\ORM\Entities\Schemas\Relations\ManyToMorphedSchema;
 use Spiral\ORM\Entities\Schemas\RelationSchema;
 use Spiral\ORM\Entities\Selector;
 use Spiral\ORM\Exceptions\ORMException;
@@ -219,8 +221,10 @@ class ORMStormDocumenter extends VirtualDocumenter
         ClassElement $element,
         RelationSchema $relation
     ) {
-        if ($relation instanceof MorphedSchema) {
+        if ($relation instanceof ManyToMorphedSchema) {
             //Render separately
+            $this->renderManyToMorphedRelation($entity, $element, $relation);
+
             return;
         }
 
@@ -255,10 +259,17 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $name = $relation->getTarget();
 
-        $relationElement->replaceComments(
-            'RecordIterator',
-            $this->helper('iterator', $name) . "|\\{$name}[]"
-        );
+        if ($relation->isMultiple()) {
+            $relationElement->replaceComments(
+                'Record|Record[]|RecordIterator',
+                $this->helper('iterator', $name) . "|\\{$name}[]"
+            );
+        } else {
+            $relationElement->replaceComments(
+                'Record|Record[]|RecordIterator',
+                "\\{$name}"
+            );
+        }
 
         $relationElement->replaceComments(Record::class, $name);
         $relationElement->replaceComments("Record", '\\' . $name);
@@ -270,6 +281,91 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $fullName = $this->addClass($relationElement);
         $element->method($relation->getName(), "@return {$fullName}");
+    }
+
+    /**
+     * @param RecordSchema        $entity
+     * @param ClassElement        $element
+     * @param ManyToMorphedSchema $relation
+     */
+    protected function renderManyToMorphedRelation(
+        RecordSchema $entity,
+        ClassElement $element,
+        ManyToMorphedSchema $relation
+    ) {
+        //Rendering relation method
+        $relationElement = new ClassElement(
+            $elementName = $this->createName($entity->getName(), $relation->getTarget(), 'relation')
+        );
+
+        //Clone schema from appropriate relation
+        $relationClass = $this->builder->config()['relations'][$relation->getType()]['class'];
+        $relationElement->cloneSchema($relationClass);
+        $this->cleanElement($relationElement);
+        $relationElement->setParent('\\' . $relationClass)->setInterfaces([]);
+
+        //Let's render sub relations
+        foreach ($relation->outerRecords() as $record) {
+            $related = '\\' . $record->getName() . '[]';
+            if ($relation->isMultiple()) {
+                $related .= '|' . $this->helper('iterator', $record->getName());
+            }
+
+            $name = Inflector::pluralize($record->getRole());
+            $relationElement->property($name, "@var {$related}")->setAccess(
+                AbstractElement::ACCESS_PUBLIC
+            );
+
+            //Nested relation
+            $relationElement->method($name, [
+                "@return " . $this->renderNestedMany($record)
+            ]);
+        }
+
+        $name = $relation->getTarget();
+        $relationElement->replaceComments(Record::class, $name);
+        $relationElement->replaceComments("Record", '\\' . $name);
+
+        $fullName = $this->addClass($relationElement);
+
+        $element->property($relation->getName(), "@var {$fullName}")->setAccess(
+            AbstractElement::ACCESS_PUBLIC
+        );
+
+        $element->method($relation->getName(), "@return {$fullName}");
+    }
+
+    /**
+     * @param RecordSchema $record
+     * @return string
+     */
+    protected function renderNestedMany(RecordSchema $record)
+    {
+        $relationElement = new ClassElement(
+            $elementName = $this->createName($record->getName(), 'nested', 'relation')
+        );
+
+        //Clone schema from appropriate relation
+        $relationElement->cloneSchema($relationClass = ManyToMany::class);
+        $this->cleanElement($relationElement);
+        $relationElement->setParent('\\' . $relationClass)->setInterfaces([]);
+
+        $name = $record->getName();
+
+        $relationElement->replaceComments(
+            'Record|Record[]|RecordIterator',
+            $this->helper('iterator', $name) . "|\\{$name}[]"
+        );
+
+        $relationElement->replaceComments(Record::class, $name);
+        $relationElement->replaceComments("Record", '\\' . $name);
+        $relationElement->replaceComments("Selector", $this->helper('selector', $name));
+
+        $relationElement->replaceComments(
+            "@return \$this", "@return \$this|{$elementName}|\\{$name}[]"
+        );
+
+        return $this->addClass($relationElement);
     }
 
     /**

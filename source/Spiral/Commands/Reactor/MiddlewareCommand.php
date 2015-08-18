@@ -6,46 +6,45 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
+
 namespace Spiral\Commands\Reactor;
 
 use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
-use Spiral\Reactor\Generators\ControllerGenerator;
+use Spiral\Reactor\Generators\MiddlewareGenerator;
 use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Generate controller class.
+ * Generate empty http middleware.
  */
-class ControllerCommand extends AbstractCommand
+class MiddlewareCommand extends AbstractCommand
 {
     /**
      * Generator class to be used.
      */
-    const GENERATOR = ControllerGenerator::class;
+    const GENERATOR = MiddlewareGenerator::class;
 
     /**
      * Generation type to be used.
      */
-    const TYPE = 'controller';
+    const TYPE = 'middleware';
 
     /**
      * {@inheritdoc}
      */
-    protected $name = 'create:controller';
+    protected $name = 'create:middleware';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate new controller.';
+    protected $description = 'Generate new http middleware.';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Controller name.'],
-        ['service', InputArgument::REQUIRED, 'DataEntity server to pass calls to.'],
-        ['request', InputArgument::REQUIRED, 'RequestFilter to be used for field updates.']
+        ['name', InputArgument::REQUIRED, 'Middleware name.'],
     ];
 
     /**
@@ -56,14 +55,10 @@ class ControllerCommand extends AbstractCommand
     public function perform(Reactor $reactor)
     {
         /**
-         * @var ControllerGenerator $generator
+         * @var MiddlewareGenerator $generator
          */
         if (empty($generator = $this->getGenerator())) {
             return;
-        }
-
-        foreach ($this->option('method') as $method) {
-            $generator->addMethod($method);
         }
 
         foreach ($this->option('depends') as $service) {
@@ -82,7 +77,8 @@ class ControllerCommand extends AbstractCommand
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Controller was successfully created:</info> {$filename}");
+        $this->writeln("<info>Http middleware was successfully created:</info> {$filename}");
+        $this->writeln("You register your middleware by assigning it to Route or via http config.");
     }
 
     /**
@@ -92,16 +88,10 @@ class ControllerCommand extends AbstractCommand
     {
         return [
             [
-                'method',
-                'm',
-                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Pre-create controller method.'
-            ],
-            [
                 'depends',
                 'd',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Add service dependency to controller. Declare dependency in short form.'
+                'Add service dependency to middleware. Declare dependency in short form.'
             ],
             [
                 'comment',
