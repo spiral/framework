@@ -102,13 +102,11 @@ class View extends Component implements ViewInterface
             while (ob_get_level() > $__outputLevel__ + 1) {
                 ob_end_clean();
             }
+
+            $this->benchmark($__benchmark__);
         }
 
-        $result = ob_get_clean();
-
-        $this->benchmark($__benchmark__);
-
-        return $result;
+        return ob_get_clean();
     }
 
     /**

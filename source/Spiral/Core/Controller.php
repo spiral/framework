@@ -93,9 +93,11 @@ abstract class Controller extends Service implements ControllerInterface
         $benchmark = $this->benchmark($action = $method->getName());
 
         //Executing target controller action using Container
-        $result = $method->invokeArgs($this, $arguments);
-
-        $this->benchmark($benchmark);
+        try {
+            $result = $method->invokeArgs($this, $arguments);
+        } finally {
+            $this->benchmark($benchmark);
+        }
 
         return $result;
     }
