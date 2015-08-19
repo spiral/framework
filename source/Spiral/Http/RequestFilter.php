@@ -112,9 +112,18 @@ class RequestFilter extends DataEntity
      */
     public function getErrors($reset = false)
     {
-        $errors = parent::getErrors($reset);
-
         //De-mapping
+        $errors = [];
+        foreach (parent::getErrors($reset) as $field => $errorSet) {
+            list(, $origin) = $this->parseSource($field, $this->schema[$field]);
+
+            if ($field == $origin || strpos($origin, '.') === false) {
+                $errors[$field] = $errorSet;
+            } else {
+                //Let's recreate original structure
+                $this->dotSet($errors, $origin, $errorSet);
+            }
+        }
 
         return $errors;
     }
@@ -145,5 +154,22 @@ class RequestFilter extends DataEntity
         }
 
         return explode(':', $source);
+    }
+
+    /**
+     * Set element using dot notation.
+     *
+     * @param array  $array
+     * @param string $path
+     * @param mixed  $value
+     */
+    private function dotSet(array &$array, $path, $value)
+    {
+        $step = explode('.', $path);
+        while ($name = array_shift($step)) {
+            $array = &$array[$name];
+        }
+
+        $array = $value;
     }
 }
