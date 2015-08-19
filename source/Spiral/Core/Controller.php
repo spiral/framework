@@ -91,8 +91,13 @@ abstract class Controller extends Service implements ControllerInterface
     protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
     {
         $benchmark = $this->benchmark($action = $method->getName());
-        $result = $method->invokeArgs($this, $arguments);
-        $this->benchmark($benchmark);
+
+        //Executing target controller action using Container
+        try {
+            $result = $method->invokeArgs($this, $arguments);
+        } finally {
+            $this->benchmark($benchmark);
+        }
 
         return $result;
     }

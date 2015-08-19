@@ -9,18 +9,12 @@
 namespace Spiral\Commands\ODM;
 
 use Spiral\Console\Command;
-use Spiral\ODM\Entities\SchemaBuilder;
 
 /**
- * Performs ODM schema update and stores SchemaBuilder in public static variable for other commands.
+ * Performs ODM schema update and binds SchemaBuilder in container.
  */
 class SchemaCommand extends Command
 {
-    /**
-     * @var SchemaBuilder
-     */
-    public static $schemaBuilder = null;
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +31,8 @@ class SchemaCommand extends Command
     public function perform()
     {
         $benchmark = $this->debugger->benchmark($this, 'update');
-        self::$schemaBuilder = $builder = $this->odm->updateSchema();
+        $builder = $this->odm->updateSchema();
+        $this->container->bind(get_class($builder), $builder);
         $elapsed = number_format($this->debugger->benchmark($this, $benchmark), 3);
 
         $countModels = count($builder->getDocuments());

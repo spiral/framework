@@ -34,7 +34,7 @@ class TemplateProcessor extends Templater implements ProcessorInterface
      * Location constants.
      */
     const LOCATION_NAMESPACE = 0;
-    const LOCATION_VIEW      = 1;
+    const LOCATION_VIEW = 1;
 
     /**
      * {@inheritdoc}
@@ -48,7 +48,7 @@ class TemplateProcessor extends Templater implements ProcessorInterface
         'prefixes'    => [
             self::TYPE_BLOCK   => ['block:', 'section:', 'yield:', 'define:'],
             self::TYPE_EXTENDS => ['extends:'],
-            self::TYPE_IMPORT  => ['use', 'import']
+            self::TYPE_IMPORT  => ['use', 'import', 'templater:use', 'template:use']
         ],
         'imports'     => [
             AliasImport::class     => ['path', 'as'],

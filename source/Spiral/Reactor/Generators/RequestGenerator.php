@@ -10,6 +10,7 @@ namespace Spiral\Reactor\Generators;
 
 use Spiral\Files\FilesInterface;
 use Spiral\Http\RequestFilter;
+use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
 
 /**
@@ -88,25 +89,52 @@ class RequestGenerator extends AbstractService
             return;
         }
 
-        $definition = $this->options['mapping'][$type];
+        if (!is_array($type)) {
+            $definition = $this->options['mapping'][$type];
 
-        //Source can depend on type
-        $source = $definition['source'];
-        $this->schema[$field] = $source . ':' . ($origin ? $origin : $field);
+            //Source can depend on type
+            $source = $definition['source'];
+            $this->schema[$field] = $source . ':' . ($origin ? $origin : $field);
 
-        if (!empty($definition['setter'])) {
-            //Pre-defined setter
-            $this->setters[$field] = $definition['setter'];
-        }
+            if (!empty($definition['setter'])) {
+                //Pre-defined setter
+                $this->setters[$field] = $definition['setter'];
+            }
 
-        if (!empty($definition['validates'])) {
-            //Pre-defined validation
-            $this->validates[$field] = $definition['validates'];
+            if (!empty($definition['validates'])) {
+                //Pre-defined validation
+                $this->validates[$field] = $definition['validates'];
+            }
+        } else {
+            $type = $type[0] . '[]';
         }
 
         $this->types[$field] = !empty($definition['type']) ? $definition['type'] : $type;
-
         $this->updateProperties();
+    }
+
+    /**
+     * Generate set of fields for given entity, only fillable fields will be added.
+     *
+     * @param ReflectionEntity $entity
+     */
+    public function followEntity(ReflectionEntity $entity)
+    {
+        foreach ($entity->getFillable() as $field) {
+            $type = $entity->getFields()[$field];
+
+            //Let's use data by default
+            $this->addField($field, $type, 'data');
+
+            if (!empty($entity->getValidates()[$field])) {
+                //Let's use validation declared in entity
+
+                if ($entity->getValidates()[$field] != ['notEmpty']) {
+                    //We are only going to use default entity validation if
+                    $this->validates[$field] = $entity->getValidates()[$field];
+                }
+            }
+        }
     }
 
     /**

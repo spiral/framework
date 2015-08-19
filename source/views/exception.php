@@ -96,6 +96,57 @@ $dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class
 
 $dumps = [];
 
+/**
+ * Format arguments and create data dumps.
+ *
+ * @param array $arguments
+ * @return array
+ */
+$argumenter = function (array $arguments) use ($dumper, &$dumps) {
+    $result = [];
+    foreach ($arguments as $argument) {
+        $display = $type = strtolower(gettype($argument));
+
+        if (is_numeric($argument)) {
+            $result[] = $dumper->style($argument, 'value', $type);
+            continue;
+        } elseif (is_bool($argument)) {
+            $result[] = $dumper->style($argument ? 'true' : 'false', 'value', $type);
+            continue;
+        } elseif (is_null($argument)) {
+            $result[] = $dumper->style('null', 'value', $type);
+            continue;
+        }
+
+        if (is_object($argument)) {
+            $reflection = new ReflectionClass($argument);
+            $display = interpolate(
+                "<span title=\"{title}\">{class}</span>", [
+                    'title' => $reflection->getName(),
+                    'class' => $reflection->getShortName()
+                ]
+            );
+        }
+
+        //Colorizing
+        $display = $dumper->style($display, 'value', $type);
+        if (($dumpID = array_search($argument, $dumps)) === false) {
+            $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
+            $dumpID = count($dumps) - 1;
+        }
+
+        $display = interpolate(
+            "<span onclick=\"_da({dumpID})\">{display}</span>",
+            compact('display', 'dumpID')
+        );
+
+        $result[] = $display;
+    }
+
+    return $result;
+}
+
+
 ?>
 <html>
 <head>
@@ -151,7 +202,7 @@ $dumps = [];
         .spiral-exception .wrapper .stacktrace .trace {
             font-family: Monospace;
             float: left;
-            width: 70%;
+            width: 60%;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container {
@@ -179,6 +230,16 @@ $dumps = [];
             margin-bottom: 5px;
         }
 
+        .spiral-exception .wrapper .stacktrace .trace .location .arguments span:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .spiral-exception .wrapper .stacktrace .trace .location em {
+            color: #a1a1a1;
+            font-style: normal;
+        }
+
         .spiral-exception .wrapper .stacktrace .trace .lines div {
             white-space: pre;
             color: #E6E1DC;
@@ -199,7 +260,7 @@ $dumps = [];
         }
 
         .spiral-exception .wrapper .stacktrace .chain {
-            width: 30%;
+            width: 40%;
             float: right;
         }
 
@@ -232,15 +293,21 @@ $dumps = [];
 
         .spiral-exception .wrapper .stacktrace .chain .dumper {
             padding-left: 5px;
+            padding-bottom: 5px;
             display: none;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .dumper .close {
             text-align: right;
+            padding: 2px;
             color: #fff;
             cursor: pointer;
             font-size: 12px;
-            margin-bottom: 2px;
+            background-color: #232323;
+        }
+
+        .spiral-exception .wrapper .stacktrace .chain .dumper .close:hover {
+            background-color: #2c2c2c;
         }
 
         .spiral-exception .wrapper .environment .container {
@@ -328,7 +395,7 @@ $dumps = [];
             var block = document.getElementById(id);
             block.style.display = (block.style.display == 'none' ? 'block' : 'none');
         }
-        function dumpArgument(id) {
+        function _da(id) {
             var dump = document.getElementById('argument-dumper');
             dump.style.display = 'block';
             dump.innerHTML = '<div class="close" onclick="toggle(\'argument-dumper\')"> &cross; close</div> '
@@ -336,12 +403,16 @@ $dumps = [];
                 + document.getElementById('argument-' + id).innerHTML
                 + '</div>';
 
-            window.location.href = "#dumper";
+            window.location.href = "#dump-top";
         }
     </script>
 </head>
 <body class="spiral-exception">
+<a name="dump-top"></a>
+
 <div class="wrapper">
+    <a name="dump-top"></a>
+
     <div class="header">
         <?= $snapshot->getClass() ?>:
         <strong
@@ -351,79 +422,57 @@ $dumps = [];
 
     <div class="stacktrace">
         <div class="trace">
-            <div class="container">
-                <div class="location">
-                    <i><?= $snapshot->getFile() ?></i> at
-                    <strong>line <?= $snapshot->getLine() ?></strong>
-                </div>
-                <div class="lines">
-                    <?= $highlighter->highlight($snapshot->getFile(), $snapshot->getLine()) ?>
-                </div>
-            </div>
             <?php
             $stacktrace = $snapshot->getTrace();
+
+            //Let's merge data of first trace (our error handler and real error location)
+            if ($stacktrace[0]['function'] == 'handleError') {
+                $handler = array_shift($stacktrace);
+                $stacktrace[0] = $stacktrace[0] + $handler;
+            }
+
+            //If endpoint was described
+            $endpoint = false;
             foreach ($stacktrace as $trace) {
+
                 $arguments = [];
-                if (!isset($trace['file'])) {
-                    if (isset($trace['args'])) {
-                        foreach ($trace['args'] as $argument) {
-                            $display = $type = strtolower(gettype($argument));
-
-                            if (is_numeric($argument)) {
-                                $display = $argument;
-                            } elseif (is_bool($argument)) {
-                                $display = $argument ? 'true' : 'false';
-                            } elseif (is_null($argument)) {
-                                $display = 'null';
-                            }
-
-                            if (is_object($argument)) {
-                                $reflection = new ReflectionClass($argument);
-                                $display = interpolate(
-                                    "<span title=\"{title}\">{class}</span>", [
-                                        'title' => $reflection->getName(),
-                                        'class' => $reflection->getShortName()
-                                    ]
-                                );
-                            }
-
-                            //Colorizing
-                            $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments)) {
-                                if (($dumpID = array_search($argument, $dumps)) === false) {
-                                    $dumps[] = $dumper->dump($argument,
-                                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
-                                    $dumpID = count($dumps) - 1;
-                                }
-
-                                $display = interpolate(
-                                    "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                                    compact('display', 'dumpID')
-                                );
-                            }
-
-                            $arguments[] = $display;
-                        }
-                    }
-
-                    ?>
-                    <div class="container no-trace">
-                        <?= $trace['class'] . $trace['type'] . $trace['function'] ?>
-                        (<span class="arguments"><?= join(', ', $arguments) ?></span>)
-                    </div>
-                    <?php
-                    continue;
+                if (isset($trace['args'])) {
+                    $arguments = $argumenter($trace['args']);
                 }
 
-                if ($trace['file'] == $snapshot->getFile() && $trace['line'] == $snapshot->getLine()) {
-                    //Duplicate
+                $function = '<strong>' . $trace['function'] . '</strong>';
+                if (isset($trace['type']) && isset($trace['class'])) {
+                    $reflection = new ReflectionClass($trace['class']);
+                    $function = interpolate(
+                        "<span title=\"{title}\">{class}</span>{type}{function}",
+                        [
+                            'title'    => $reflection->getName(),
+                            'class'    => $reflection->getShortName(),
+                            'type'     => $trace['type'],
+                            'function' => $function
+                        ]
+                    );
+                }
+
+                if (!isset($trace['file'])) {
+                    ?>
+                    <div class="container no-trace">
+                        <?= $function ?>(<span class="arguments"><?
+                            echo join(', ', $arguments) ?></span>)
+                    </div>
+                    <?php
                     continue;
                 }
 
                 ?>
                 <div class="container">
                     <div class="location">
-                        <i><?= $trace['file'] ?></i> at <strong>line <?= $trace['line'] ?></strong>
+                        <?= $function ?>(<span class="arguments"><?
+                            echo join(', ', $arguments) ?></span>)
+                        <em>
+                            In <?= $trace['file'] ?> at
+                            <strong>line <?= $trace['line'] ?></strong>
+                        </em>
                     </div>
                     <div class="lines">
                         <?= $highlighter->highlight($trace['file'], $trace['line']) ?>
@@ -434,9 +483,11 @@ $dumps = [];
             ?>
         </div>
         <div class="chain">
+            <div class="dumper" id="argument-dumper"></div>
             <div class="calls">
                 <?php
                 $stacktrace = array_reverse($stacktrace);
+
                 foreach ($stacktrace as $index => $trace) {
                     if (empty($trace['file']) && isset($stacktrace[$index - 1]['file'])) {
                         $trace['file'] = $stacktrace[$index - 1]['file'];
@@ -468,51 +519,14 @@ $dumps = [];
 
                     $arguments = [];
                     if (isset($trace['args'])) {
-                        foreach ($trace['args'] as $argument) {
-                            $display = $type = strtolower(gettype($argument));
-
-                            if (is_numeric($argument)) {
-                                $display = $argument;
-                            } elseif (is_bool($argument)) {
-                                $display = $argument ? 'true' : 'false';
-                            } elseif (is_null($argument)) {
-                                $display = 'null';
-                            }
-
-                            if (is_object($argument)) {
-                                $reflection = new ReflectionClass($argument);
-                                $display = interpolate(
-                                    "<span title=\"{title}\">{class}</span>", [
-                                        'title' => $reflection->getName(),
-                                        'class' => $reflection->getShortName()
-                                    ]
-                                );
-                            }
-
-                            //Colorizing
-                            $display = $dumper->style($display, 'value', $type);
-                            if (!empty($dumpArguments)) {
-                                if (($dumpID = array_search($argument, $dumps)) === false) {
-                                    $dumps[] = $dumper->dump($argument,
-                                        \Spiral\Debug\Dumper::OUTPUT_RETURN);
-                                    $dumpID = count($dumps) - 1;
-                                }
-
-                                $display = interpolate(
-                                    "<span onclick=\"dumpArgument({dumpID})\">{display}</span>",
-                                    compact('display', 'dumpID')
-                                );
-                            }
-
-                            $arguments[] = $display;
-                        }
+                        $arguments = $argumenter($trace['args']);
                     }
 
                     ?>
                     <div class="call">
                         <div class="function">
-                            <?= $function ?> (<span class="arguments"><?= join(', ',
-                                    $arguments) ?></span>)
+                            <?= $function ?>(<span class="arguments"><?
+                                echo join(', ', $arguments) ?></span>)
                         </div>
                         <div class="location">
                             <i><?= $trace['file'] ?></i> at
@@ -523,9 +537,6 @@ $dumps = [];
                 }
                 ?>
             </div>
-            <a name="dumper"></a>
-
-            <div class="dumper" id="argument-dumper"></div>
         </div>
     </div>
 
@@ -568,7 +579,7 @@ $dumps = [];
             <div class="title" onclick="toggle('logger-messages')">
                 Logger Messages (<?= number_format(count($messages)) ?>)
             </div>
-            <div class="data" id="logger-messages">
+            <div class="data" id="logger-messages" style="display: none;">
                 <?php
                 foreach ($messages as $message) {
                     $channel = $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL];

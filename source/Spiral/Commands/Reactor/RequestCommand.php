@@ -9,7 +9,12 @@
 namespace Spiral\Commands\Reactor;
 
 use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
+use Spiral\Models\Reflections\ReflectionEntity;
+use Spiral\ODM\Document;
+use Spiral\ORM\Record;
+use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Generators\RequestGenerator;
+use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -53,18 +58,33 @@ class RequestCommand extends AbstractCommand
      */
     protected $arguments = [
         ['name', InputArgument::REQUIRED, 'Request name.'],
+        ['entity', InputArgument::OPTIONAL, 'Specific entity to create request for.'],
     ];
 
     /**
      * Perform command.
+     *
+     * @param Reactor $reactor
      */
-    public function perform()
+    public function perform(Reactor $reactor)
     {
         /**
          * @var RequestGenerator $generator
          */
         if (empty($generator = $this->getGenerator())) {
             return;
+        }
+
+        if (!empty($entity = $this->argument('entity'))) {
+            if (empty($class = $reactor->findClass('entity', $entity))) {
+                $this->writeln(
+                    "<fg=red>Unable to locate entity class for '{$entity}'.</fg=red>"
+                );
+
+                return;
+            }
+
+            $generator->followEntity($this->getEntityReflection($class));
         }
 
         foreach ($this->option('field') as $field) {
@@ -126,5 +146,27 @@ class RequestCommand extends AbstractCommand
         }
 
         return [$field, $type, $source, $origin];
+    }
+
+    /**
+     * Get entity reflection.
+     *
+     * @param string $entity
+     * @return ReflectionEntity
+     */
+    private function getEntityReflection($entity)
+    {
+        //Getting entity type
+        $reflection = new \ReflectionClass($entity);
+
+        if ($reflection->isSubclassOf(Record::class)) {
+            return $this->orm->updateSchema()->record($entity);
+        }
+
+        if ($reflection->isSubclassOf(Document::class)) {
+            return $this->odm->updateSchema()->document($entity);
+        }
+
+        throw new ReactorException("Undefined entity type '{$entity}'.");
     }
 }

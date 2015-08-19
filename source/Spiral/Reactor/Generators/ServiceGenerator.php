@@ -14,6 +14,7 @@ use Spiral\ODM\Entities\Collection;
 use Spiral\ORM\Entities\Selector;
 use Spiral\ORM\Record;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
+use Spiral\Validation\ValidatesInterface;
 
 /**
  * Generate service class and some of it's methods. Allows to create singleton services. In future
@@ -39,6 +40,7 @@ class ServiceGenerator extends AbstractService
     public function associateModel($name, $class)
     {
         $this->file->addUse($class);
+        $this->file->addUse(ValidatesInterface::class);
 
         $reflection = new \ReflectionClass($class);
         $shortClass = $reflection->getShortName();
@@ -52,33 +54,19 @@ class ServiceGenerator extends AbstractService
             $selection .= "|Collection";
         }
 
-        $this->class->property('errors', [
-            "Last set of errors raised by save method.",
-            "",
-            "@var array"
-        ])->setDefault(true, []);
-
         /**
          * Create new entity method.
          */
         $create = $this->class->method('create');
         $create->setComment([
-            "Create new {$shortClass}. Method will return false if save failed.",
-            "Creation errors available via getErrors() method.",
+            "Create new {$shortClass}. You must save entity using save method..",
             "",
-            "@param array|\\Traversable \$fields",
-            "@param array              \$errors Will be populated if save fails.",
-            "@return {$shortClass}|bool"
+            "@param array|\\Traversable \$fields Initial set of fields.",
+            "@return {$shortClass}"
         ]);
         $create->parameter('fields')->setOptional(true, []);
-        $create->parameter("errors")->setOptional(true, null)->setPBR(true);
         $create->setSource([
-            "\${$name} = {$shortClass}::create(\$fields);",
-            "if (!\$this->save(\${$name}, true, \$errors)) {",
-            "   return false;",
-            "}",
-            "",
-            "return \${$name};"
+            "return {$shortClass}::create(\$fields);"
         ]);
 
         /**
@@ -86,10 +74,10 @@ class ServiceGenerator extends AbstractService
          */
         $save = $this->class->method('save');
         $save->setComment([
-            "Save {$shortClass}. Use Service->getErrors() in case of save failure.",
+            "Save {$shortClass} instance.",
             "",
             "@param {$shortClass} \${$name}",
-            "@param bool \$validate",
+            "@param bool  \$validate",
             "@param array \$errors Will be populated if save fails.",
             "@return bool"
         ]);
@@ -98,10 +86,12 @@ class ServiceGenerator extends AbstractService
         $save->parameter("validate")->setOptional(true, true);
         $save->parameter("errors")->setOptional(true, null)->setPBR(true);
         $save->setSource([
-            "if(\${$name}->save(\$validate)) {",
-            "   return true;",
+            "if (\${$name}->save(\$validate)) {",
+            "    return true;",
             "}",
-            "\$this->errors = \$errors = \${$name}->getErrors();",
+            "",
+            "\$errors = \${$name}->getErrors();",
+            "",
             "return false;"
         ]);
 
@@ -145,17 +135,5 @@ class ServiceGenerator extends AbstractService
 
         $find->parameter("where")->setType('array')->setOptional(true, []);
         $find->setSource("return {$shortClass}::find(\$where);");
-
-        /**
-         * Last save errors.
-         */
-        $errors = $this->class->method('getErrors');
-        $errors->setComment([
-            "Set of error messages raised by last save operation.",
-            "",
-            "@return array"
-        ]);
-
-        $errors->setSource("return \$this->errors;");
     }
 }

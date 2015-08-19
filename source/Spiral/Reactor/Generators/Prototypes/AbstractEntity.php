@@ -8,6 +8,8 @@
  */
 namespace Spiral\Reactor\Generators\Prototypes;
 
+use Spiral\Files\FilesInterface;
+
 /**
  * Generate abstract entity with it's schema, fields and pre-declared validations. Can be used
  * by ORM and ODM entity generators.
@@ -25,12 +27,31 @@ abstract class AbstractEntity extends AbstractGenerator
     protected $validates = [];
 
     /**
+     * @var bool
+     */
+    protected $showFillable = true;
+
+    /**
+     * @var bool
+     */
+    protected $showHidden = true;
+
+    /**
+     * @var bool
+     */
+    protected $showDefaults = false;
+
+    /**
+     * @var bool
+     */
+    protected $showIndexes = false;
+
+    /**
      * {@inheritdoc}
      */
     public function generate()
     {
         $this->class->property('fillable', ["@var array"])->setDefault(true, []);
-
         $this->class->property('hidden', ["@var array"])->setDefault(true, []);
 
         $this->class->property('schema', ["Entity schema.", "", "@var array"])->setDefault(
@@ -39,6 +60,10 @@ abstract class AbstractEntity extends AbstractGenerator
         );
 
         $this->class->property('validates', ["@var array"])->setDefault(true, $this->validates);
+
+        //Both ORM and ODM has indexes and defaults property
+        $this->class->property('defaults', ["@var array"])->setDefault(true, []);
+        $this->class->property('indexes', ["@var array"])->setDefault(true, []);
     }
 
     /**
@@ -51,11 +76,71 @@ abstract class AbstractEntity extends AbstractGenerator
     public function addField($field, $type)
     {
         $this->schema[$field] = $type;
-        $this->validates[$field] = [];
+
+        //We can force validations for all our fields
+        if (!in_array($type, ['primary', 'bigPrimary', 'MongoId'])) {
+            $this->validates[$field] = ['notEmpty'];
+        }
 
         $this->class->property('schema')->setDefault(true, $this->schema);
         $this->class->property('validates')->setDefault(true, $this->validates);
 
         return $this;
+    }
+
+    /**
+     * @param boolean $showIndexes
+     */
+    public function setShowIndexes($showIndexes)
+    {
+        $this->showIndexes = $showIndexes;
+    }
+
+    /**
+     * @param boolean $showFillable
+     */
+    public function setShowFillable($showFillable)
+    {
+        $this->showFillable = $showFillable;
+    }
+
+    /**
+     * @param boolean $showHidden
+     */
+    public function setShowHidden($showHidden)
+    {
+        $this->showHidden = $showHidden;
+    }
+
+    /**
+     * @param boolean $showDefaults
+     */
+    public function setShowDefaults($showDefaults)
+    {
+        $this->showDefaults = $showDefaults;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render($mode = FilesInterface::READONLY, $ensureDirectory = true)
+    {
+        if (!$this->showFillable) {
+            $this->class->removeProperty('fillable');
+        }
+
+        if (!$this->showHidden) {
+            $this->class->removeProperty('hidden');
+        }
+
+        if (!$this->showDefaults) {
+            $this->class->removeProperty('defaults');
+        }
+
+        if (!$this->showIndexes) {
+            $this->class->removeProperty('indexes');
+        }
+
+        return parent::render($mode, $ensureDirectory);
     }
 }

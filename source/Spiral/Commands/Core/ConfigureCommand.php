@@ -65,6 +65,17 @@ class ConfigureCommand extends Command
             $this->console->command('core:key', [], $this->output);
         }
 
+        //Additional commands
+        foreach ($this->console->config()['configureSequence'] as $command => $options) {
+            if (!empty($options['header'])) {
+                $this->writeln($options['header']);
+            }
+            $this->console->command($command, $options['options'], $this->output);
+            if (!empty($options['footer'])) {
+                $this->writeln($options['footer']);
+            }
+        }
+
         $this->writeln("\n<info>Application were successfully configured.</info>");
     }
 

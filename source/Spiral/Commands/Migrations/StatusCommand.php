@@ -38,7 +38,7 @@ class StatusCommand extends AbstractCommand
     {
         if (!$this->migrator()->isConfigured()) {
             $this->writeln(
-                "<fg=red>Migrations are not configured yet, run '<info>migrate:init</info>' first.</fg=red>"
+                "<fg=red>Migrations does not configured yet, run '<info>migrate:init</info>' first.</fg=red>"
             );
 
             return;

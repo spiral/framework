@@ -56,7 +56,9 @@ class EntityCommand extends InspectCommand
                 $field->isFillable() ? self::YES : self::GREEN_NO,
                 $field->isFiltered() ? self::GREEN_YES : self::RED_NO,
                 $field->isValidated() ? self::GREEN_YES : self::NO,
-                $field->isHidden() ? self::GREEN_YES : ($field->isBlacklisted() ? self::RED_NO : self::NO)
+                $field->isHidden()
+                    ? self::GREEN_YES
+                    : ($field->isBlacklisted() ? self::RED_NO . ' (blacklist)' : self::NO)
             ]);
         }
 

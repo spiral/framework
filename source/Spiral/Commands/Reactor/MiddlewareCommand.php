@@ -6,45 +6,45 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
+
 namespace Spiral\Commands\Reactor;
 
 use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
-use Spiral\Reactor\Generators\ServiceGenerator;
+use Spiral\Reactor\Generators\MiddlewareGenerator;
 use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Generate service with it's dependecies and associated model.
+ * Generate empty http middleware.
  */
-class ServiceCommand extends AbstractCommand
+class MiddlewareCommand extends AbstractCommand
 {
     /**
      * Generator class to be used.
      */
-    const GENERATOR = ServiceGenerator::class;
+    const GENERATOR = MiddlewareGenerator::class;
 
     /**
      * Generation type to be used.
      */
-    const TYPE = 'service';
+    const TYPE = 'middleware';
 
     /**
      * {@inheritdoc}
      */
-    protected $name = 'create:service';
+    protected $name = 'create:middleware';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate new service.';
+    protected $description = 'Generate new http middleware.';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Service name.'],
-        ['entity', InputArgument::OPTIONAL, 'Name of associated entity (ORM or ODM) in short form.']
+        ['name', InputArgument::REQUIRED, 'Middleware name.'],
     ];
 
     /**
@@ -55,30 +55,10 @@ class ServiceCommand extends AbstractCommand
     public function perform(Reactor $reactor)
     {
         /**
-         * @var ServiceGenerator $generator
+         * @var MiddlewareGenerator $generator
          */
         if (empty($generator = $this->getGenerator())) {
             return;
-        }
-
-        if (!empty($model = $this->argument('entity'))) {
-            if (empty($class = $reactor->findClass('entity', $model))) {
-                $this->writeln(
-                    "<fg=red>Unable to locate model class for '{$model}'.</fg=red>"
-                );
-
-                return;
-            }
-
-            $generator->associateModel($model, $class);
-        }
-
-        if (!$this->option('mortal')) {
-            $generator->makeSingleton();
-        }
-
-        foreach ($this->option('method') as $method) {
-            $generator->addMethod($method);
         }
 
         foreach ($this->option('depends') as $service) {
@@ -97,7 +77,8 @@ class ServiceCommand extends AbstractCommand
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Service was successfully created:</info> {$filename}");
+        $this->writeln("<info>Http middleware was successfully created:</info> {$filename}");
+        $this->writeln("You register your middleware by assigning it to Route or via http config.");
     }
 
     /**
@@ -107,22 +88,10 @@ class ServiceCommand extends AbstractCommand
     {
         return [
             [
-                'method',
-                'm',
-                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Pre-create service method.'
-            ],
-            [
                 'depends',
                 'd',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Add service dependency. Declare dependency in short form.'
-            ],
-            [
-                'mortal',
-                's',
-                InputOption::VALUE_NONE,
-                'Do not make service instance SingletonInterface.'
+                'Add service dependency to middleware. Declare dependency in short form.'
             ],
             [
                 'comment',
