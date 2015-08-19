@@ -57,8 +57,7 @@ class RequestCommand extends AbstractCommand
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Request name.'],
-        ['entity', InputArgument::OPTIONAL, 'Specific entity to create request for.'],
+        ['name', InputArgument::REQUIRED, 'Request name.']
     ];
 
     /**
@@ -75,7 +74,7 @@ class RequestCommand extends AbstractCommand
             return;
         }
 
-        if (!empty($entity = $this->argument('entity'))) {
+        if (!empty($entity = $this->option('entity'))) {
             if (empty($class = $reactor->findClass('entity', $entity))) {
                 $this->writeln(
                     "<fg=red>Unable to locate entity class for '{$entity}'.</fg=red>"
@@ -110,6 +109,12 @@ class RequestCommand extends AbstractCommand
                 'f',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 'Input field in a format "field:type(source:origin)" or "field(source)". Reactor will perform type mapping.'
+            ],
+            [
+                'entity',
+                'e',
+                InputOption::VALUE_OPTIONAL,
+                'Specific entity to create request for.'
             ],
             [
                 'comment',

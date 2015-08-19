@@ -43,8 +43,7 @@ class ServiceCommand extends AbstractCommand
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Service name.'],
-        ['entity', InputArgument::OPTIONAL, 'Name of associated entity (ORM or ODM) in short form.']
+        ['name', InputArgument::REQUIRED, 'Service name.']
     ];
 
     /**
@@ -61,7 +60,7 @@ class ServiceCommand extends AbstractCommand
             return;
         }
 
-        if (!empty($model = $this->argument('entity'))) {
+        if (!empty($model = $this->option('entity'))) {
             if (empty($class = $reactor->findClass('entity', $model))) {
                 $this->writeln(
                     "<fg=red>Unable to locate model class for '{$model}'.</fg=red>"
@@ -111,6 +110,12 @@ class ServiceCommand extends AbstractCommand
                 'm',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 'Pre-create service method.'
+            ],
+            [
+                'entity',
+                'e',
+                InputOption::VALUE_OPTIONAL,
+                'Name of associated entity (ORM or ODM) in short form.'
             ],
             [
                 'depends',
