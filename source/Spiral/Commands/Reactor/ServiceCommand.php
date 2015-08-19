@@ -60,6 +60,10 @@ class ServiceCommand extends AbstractCommand
             return;
         }
 
+        foreach ($this->option('method') as $method) {
+            $generator->addMethod($method);
+        }
+
         if (!empty($model = $this->option('entity'))) {
             if (empty($class = $reactor->findClass('entity', $model))) {
                 $this->writeln(
@@ -74,10 +78,6 @@ class ServiceCommand extends AbstractCommand
 
         if (!$this->option('mortal')) {
             $generator->makeSingleton();
-        }
-
-        foreach ($this->option('method') as $method) {
-            $generator->addMethod($method);
         }
 
         foreach ($this->option('depends') as $service) {

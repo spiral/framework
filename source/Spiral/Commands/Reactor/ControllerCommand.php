@@ -60,6 +60,10 @@ class ControllerCommand extends AbstractCommand
             return;
         }
 
+        foreach ($this->option('method') as $method) {
+            $generator->addMethod($method);
+        }
+
         if (!empty($service = $this->option('service'))) {
             if (empty($serviceClass = $reactor->findClass('service', $service))) {
                 $this->writeln(
@@ -84,10 +88,6 @@ class ControllerCommand extends AbstractCommand
             } else {
                 $generator->createCRUD($service, $serviceClass);
             }
-        }
-
-        foreach ($this->option('method') as $method) {
-            $generator->addMethod($method);
         }
 
         foreach ($this->option('depends') as $service) {
