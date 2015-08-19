@@ -425,10 +425,14 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
             <?php
             $stacktrace = $snapshot->getTrace();
 
-            //Let's merge data of first trace (our error handler and real error location)
-            if ($stacktrace[0]['function'] == 'handleError') {
-                $handler = array_shift($stacktrace);
-                $stacktrace[0] = $stacktrace[0] + $handler;
+            //Let's let's clarify exception location
+            $header = [
+                    'file' => $snapshot->getFile(),
+                    'line' => $snapshot->getLine()
+                ] + $stacktrace[0];
+
+            if ($stacktrace[0] != $header) {
+                array_unshift($stacktrace, $header);
             }
 
             //If endpoint was described
