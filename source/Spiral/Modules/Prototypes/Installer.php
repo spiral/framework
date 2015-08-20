@@ -423,7 +423,7 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
         }
 
         foreach ($this->publicFiles as $file => $definition) {
-            if (!$this->files->exists($definition['filename'])) {
+            if (!$this->files->exists($definition['destination'])) {
                 $this->logger()->debug(
                     "Publishing file '[module]{file}'.", compact('file')
                 );
