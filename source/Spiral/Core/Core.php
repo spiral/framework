@@ -405,6 +405,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     {
         $filename = $this->createFilename($name, $location);
 
+        if (!file_exists($filename)) {
+            return null;
+        }
+
         try {
             return include($filename);
         } catch (\ErrorException $exception) {
