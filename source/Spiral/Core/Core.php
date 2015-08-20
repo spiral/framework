@@ -78,9 +78,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      * Some environment constants to use to produce more clean code with less magic values.
      */
     const DEVELOPMENT = 'development';
-    const PRODUCTION = 'production';
-    const STAGING = 'staging';
-    const TESTING = 'testing';
+    const PRODUCTION  = 'production';
+    const STAGING     = 'staging';
+    const TESTING     = 'testing';
 
     /**
      * Every application should have defined timezone.
@@ -403,12 +403,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function loadData($name, $location = null, &$filename = null)
     {
-        if (!file_exists($filename = $this->createFilename($name, $location))) {
-            return null;
-        }
+        $filename = $this->createFilename($name, $location);
 
         try {
-            return (require $filename);
+            return include($filename);
         } catch (\ErrorException $exception) {
             return null;
         }
@@ -451,7 +449,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
 
         return $controller->callAction($action, $parameters);
     }
-    
+
     /**
      * Handle php shutdown and search for fatal errors.
      */
