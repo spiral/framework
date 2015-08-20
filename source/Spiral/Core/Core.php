@@ -385,9 +385,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             throw new CoreException("Unable to load '{$section}' configuration, file not found.");
         }
 
-        if (filemtime($cachedFilename) < filemtime($filename)) {
+        if (file_exists($cachedFilename) && filemtime($cachedFilename) < filemtime($filename)) {
             //We can afford skipping FilesInterface here
-            file_exists($cachedFilename) && unlink($cachedFilename);
+            unlink($cachedFilename);
 
             //Configuration were updated, reloading
             return $this->getConfig($section);
