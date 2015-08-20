@@ -16,8 +16,8 @@ use Spiral\Views\ProcessorInterface;
 use Spiral\Views\ViewManager;
 
 /**
- * Evaluates php blocks marked with compilation flag at moment of view code compilation. This processor
- * is required for spiral toolkit.
+ * Evaluates php blocks marked with compilation flag at moment of view code compilation. This
+ * processor is required for spiral toolkit.
  */
 class EvaluateProcessor implements ProcessorInterface, SaturableInterface
 {
@@ -96,15 +96,14 @@ class EvaluateProcessor implements ProcessorInterface, SaturableInterface
         $isolator->setBlocks($phpBlocks);
 
         //Required to prevent collisions
-        $filename = directory('cache') . "/{$this->uniqueID()}.php";
+        $filename = $this->views->config()['cache']['directory'] . "/{$this->uniqueID()}.php";
 
         try {
             $this->files->write($filename, $source, FilesInterface::RUNTIME, true);
 
             ob_start();
-            require_once $filename;
+            include_once $filename;
             $source = ob_get_clean();
-
             $this->files->delete($filename);
         } catch (\ErrorException $exception) {
             throw $exception;
@@ -124,8 +123,8 @@ class EvaluateProcessor implements ProcessorInterface, SaturableInterface
     }
 
     /**
-     * Extract php source from php block (no echos). Used to convert php blocks provided by templater
-     * to local variables.
+     * Extract php source from php block (no echos). Used to convert php blocks provided by
+     * templater to local variables.
      *
      * @param string $phpBlock
      * @return string
