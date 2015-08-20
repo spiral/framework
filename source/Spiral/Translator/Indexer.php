@@ -22,13 +22,14 @@ use Spiral\Translator\Exceptions\TranslatorException;
 use Spiral\Translator\Traits\TranslatorTrait;
 
 /**
- * Index available classes and function calls to fetch every used string translation. Can understand
+ * Index available classes and function calls to fetch every used string translation. Can
+ * understand
  * l, p and translate (trait) function. Only static calls will be indexes.
  *
  * In addition indexes will find every string specified in default value of model or class which
- * uses TranslatorTrait. String has to be embraced with [[ ]] in order to be indexed, you can disable
- * property indexation using @do-not-index doc comment. Translator can merge strings with parent data,
- * set class constant INHERIT_TRANSLATIONS to true.
+ * uses TranslatorTrait. String has to be embraced with [[ ]] in order to be indexed, you can
+ * disable property indexation using @do-not-index doc comment. Translator can merge strings with
+ * parent data, set class constant INHERIT_TRANSLATIONS to true.
  */
 class Indexer extends Component
 {
@@ -171,7 +172,10 @@ class Indexer extends Component
                 continue;
             }
 
-            if ($call->getName() == 'p' || $call->getName() == 'pluralize') {
+            if (
+                ($call->getName() == 'p' || $call->getName() == 'pluralize')
+                && $call->countArguments() == 2
+            ) {
                 $this->translator->pluralize($firstArgument->stringValue(), 0);
 
                 //Registering plural usage
