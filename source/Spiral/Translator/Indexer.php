@@ -203,7 +203,10 @@ class Indexer extends Component
             if ($call->getName() == 'translate') {
                 $secondArgument = $call->argument(1);
                 if (empty($secondArgument) || $secondArgument->getType() != ReflectionArgument::STRING) {
-                    //We can only use static strings
+
+                    //Can belong to TranslatorTrait
+                    $this->indexTrait($call);
+
                     continue;
                 }
 
