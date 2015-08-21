@@ -106,8 +106,7 @@ class ControllerGenerator extends AbstractService
         $save = $this->class->method('save')->setComment([
             "Update existed or create new entity using {$serviceClass}. JSON will be returned.",
             "",
-            "@param string \$id",
-            "@return array"
+            "@param string \$id"
         ]);
 
         //We are going to fetch entity id from route parameters
@@ -195,6 +194,8 @@ class ControllerGenerator extends AbstractService
                 "return ['status' => 204, 'message' => 'Updated'];"
             ]);
         }
+
+        $save->setComment("@return array", true);
 
         //Let's generate some fun!
         $delete = $this->class->method('delete')->setComment([
