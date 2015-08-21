@@ -14,7 +14,9 @@ use Spiral\ODM\Entities\Collection;
 use Spiral\ORM\Entities\Selector;
 use Spiral\ORM\Record;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
+use Spiral\Validation\CheckProviderInterface;
 use Spiral\Validation\ValidatesInterface;
+use Spiral\Validation\Validator;
 
 /**
  * Generate service class and some of it's methods. Allows to create singleton services. In future
