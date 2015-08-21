@@ -75,7 +75,7 @@ class ControllerGenerator extends AbstractService
         ]);
 
         //Create new entity form
-        $create = $this->class->method('show')->setComment([
+        $create = $this->class->method('create')->setComment([
             "Create new entity using view '{$plural}/create'.",
             "",
             "@return string"
@@ -86,13 +86,14 @@ class ControllerGenerator extends AbstractService
         ]);
 
         //Edit existed entity form
-        $edit = $this->class->method('show')->setComment([
+        $edit = $this->class->method('edit')->setComment([
             "Edit existed entity form using view '{$plural}/edit'.",
             "",
             "@param string \$id",
             "@return string"
         ]);
 
+        $edit->parameter('id');
         $edit->setSource([
             "if (empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
             "    throw new ClientException(ClientException::NOT_FOUND);",
@@ -103,9 +104,10 @@ class ControllerGenerator extends AbstractService
 
         //Let's generate some fun!
         $save = $this->class->method('save')->setComment([
-            "Update existed or create new entity using {$serviceClass}.",
+            "Update existed or create new entity using {$serviceClass}. JSON will be returned.",
             "",
             "@param string \$id",
+            "@return array"
         ]);
 
         //We are going to fetch entity id from route parameters
@@ -143,9 +145,11 @@ class ControllerGenerator extends AbstractService
                 "if (empty(\$id)) {",
                 "    return [",
                 "        'status' => 201,",
-                "        'message' => 'Created'",
+                "        'message' => 'Created',",
                 "        'action'  => [",
-                "            'redirect' => (string)\$this->router->createUri('{$this->getName()}::edit', ['id' => \$entity->primaryKey()]),",
+                "            'redirect' => (string)\$this->router->createUri(",
+                "                '{$this->getName()}::edit', ['id' => \$entity->primaryKey()]",
+                "            ),",
                 "            'delay'    => 5",
                 "        ]",
                 "    ];",
@@ -172,9 +176,11 @@ class ControllerGenerator extends AbstractService
                 "if (empty(\$id)) {",
                 "    return [",
                 "        'status' => 201,",
-                "        'message' => 'Created'",
+                "        'message' => 'Created',",
                 "        'action'  => [",
-                "            'redirect' => (string)\$this->router->createUri('{$this->getName()}::edit', ['id' => \$entity->primaryKey()]),",
+                "            'redirect' => (string)\$this->router->createUri(",
+                "                '{$this->getName()}::edit', ['id' => \$entity->primaryKey()]",
+                "            ),",
                 "            'delay'    => 5",
                 "        ]",
                 "    ];",
