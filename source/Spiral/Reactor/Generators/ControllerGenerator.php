@@ -170,6 +170,7 @@ class ControllerGenerator extends AbstractService
                 "    \$entity = \$this->{$plural}->create();",
                 "}",
                 "",
+                "//Use true as second parameter to bypass non fillable flag",
                 "\$entity->setFields(\$this->input->data);",
                 "if (!\$this->{$plural}->save(\$entity, true, \$errors)) {",
                 "    return [",
