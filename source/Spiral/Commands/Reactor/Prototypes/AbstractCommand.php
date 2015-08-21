@@ -61,7 +61,7 @@ class AbstractCommand extends Command
                 "<fg=red>Class name '{$generator->getClassName()}' is not unique.</fg=red>"
             );
 
-            //return null;
+            return null;
         }
 
         if (!empty($this->option('comment'))) {
