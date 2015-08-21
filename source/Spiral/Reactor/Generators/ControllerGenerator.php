@@ -123,7 +123,7 @@ class ControllerGenerator extends AbstractService
             $save->setSource([
                 "if (!empty(\$id) && empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
                 "    throw new ClientException(ClientException::NOT_FOUND);",
-                "} else {",
+                "} elseif (empty(\$id)) {",
                 "    \$entity = \$this->{$plural}->create();",
                 "}",
                 "",
@@ -161,7 +161,7 @@ class ControllerGenerator extends AbstractService
             $save->setSource([
                 "if (!empty(\$id) && empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
                 "    throw new ClientException(ClientException::NOT_FOUND);",
-                "} else {",
+                "} elseif (empty(\$id)) {",
                 "    \$entity = \$this->{$plural}->create();",
                 "}",
                 "",
