@@ -59,7 +59,7 @@ class ServiceGenerator extends AbstractService
          */
         $create = $this->class->method('create');
         $create->setComment([
-            "Create new {$shortClass}. You must save entity using save method..",
+            "Create new blank {$shortClass}. You must save entity using save method.",
             "",
             "@param array|\\Traversable \$fields Initial set of fields.",
             "@return {$shortClass}"

@@ -74,25 +74,52 @@ class ControllerGenerator extends AbstractService
             "return \$this->views->render('{$plural}/show', compact('entity'));"
         ]);
 
+        //Create new entity form
+        $create = $this->class->method('show')->setComment([
+            "Create new entity using view '{$plural}/create'.",
+            "",
+            "@return string"
+        ]);
+
+        $create->setSource([
+            "return \$this->views->render('{$plural}/create', ['entity' => \$this->{$plural}->create()]);"
+        ]);
+
+        //Edit existed entity form
+        $edit = $this->class->method('show')->setComment([
+            "Edit existed entity form using view '{$plural}/edit'.",
+            "",
+            "@param string \$id",
+            "@return string"
+        ]);
+
+        $edit->setSource([
+            "if (empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
+            "    throw new ClientException(ClientException::NOT_FOUND);",
+            "}",
+            "",
+            "return \$this->views->render('{$plural}/edit', compact('entity'));"
+        ]);
+
         //Let's generate some fun!
-        $update = $this->class->method('update')->setComment([
-            "Update existed entity using {$serviceClass}.",
+        $save = $this->class->method('save')->setComment([
+            "Update existed or create new entity using {$serviceClass}.",
             "",
             "@param string \$id",
         ]);
 
         //We are going to fetch entity id from route parameters
-        $update->parameter('id');
+        $save->parameter('id')->setOptional(true, null);
 
         if (!empty($request)) {
             $this->file->addUse($requestClass);
             $reflection = new \ReflectionClass($requestClass);
-            $update->parameter($request, $reflection->getShortName())->setType(
+            $save->parameter($request, $reflection->getShortName())->setType(
                 $reflection->getShortName()
             );
 
-            $update->setSource([
-                "if (empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
+            $save->setSource([
+                "if (!empty(\$id) && empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
                 "    throw new ClientException(ClientException::NOT_FOUND);",
                 "}",
                 "",
@@ -114,9 +141,11 @@ class ControllerGenerator extends AbstractService
                 "return ['status' => 204, 'message' => 'Updated'];"
             ]);
         } else {
-            $update->setSource([
-                "if (empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
+            $save->setSource([
+                "if (!empty(\$id) && empty(\$entity = \$this->{$plural}->findByPK(\$id))) {",
                 "    throw new ClientException(ClientException::NOT_FOUND);",
+                "} else {",
+                "    \$entity =  $this->{$plural}->create();",
                 "}",
                 "",
                 "\$entity->setFields(\$this->input->data);",
@@ -127,60 +156,20 @@ class ControllerGenerator extends AbstractService
                 "    ];",
                 "}",
                 "",
+                "if (empty(\$id)) {",
+                "    return [",
+                "        'status' => 201,",
+                "        'message' => 'Created'",
+                "        'action'  => [",
+                "            'redirect' => (string)\$this->router->createUri('" . $this->getName() . "::edit', ['id' => \$entity->primaryKey()]),",
+                "            'delay'    => 5",
+                "        ]",
+                "    ];",
+                "}",
+                "",
                 "return ['status' => 204, 'message' => 'Updated'];"
             ]);
         }
-
-        //Return JSON
-        $update->setComment("@return array", true);
-
-        //New entity creation
-        $create = $this->class->method('create')->setComment([
-            "Create new entity using {$serviceClass}.",
-            ""
-        ]);
-
-        if (!empty($request)) {
-            $this->file->addUse($requestClass);
-            $reflection = new \ReflectionClass($requestClass);
-            $create->parameter($request, $reflection->getShortName())->setType(
-                $reflection->getShortName()
-            );
-
-            $create->setSource([
-                "if (!\${$request}->isValid()) {",
-                "    return [",
-                "        'status' => ClientException::BAD_DATA,",
-                "        'errors' => \${$request}->getErrors()",
-                "    ];",
-                "}",
-                "",
-                "\$entity = \$this->{$plural}->create(\${$request});",
-                "if (!\$this->{$plural}->save(\$entity, true, \$errors)) {",
-                "    return [",
-                "        'status' => ClientException::BAD_DATA,",
-                "        'errors' => \$errors",
-                "    ];",
-                "}",
-                "",
-                "return ['status' => 201, 'message' => 'Created', 'id' => \$entity->primaryKey()];"
-            ]);
-        } else {
-            $create->setSource([
-                "\$entity = \$this->{$plural}->create(\$this->input->data);",
-                "if (!\$this->{$plural}->save(\$entity, true, \$errors)) {",
-                "    return [",
-                "        'status' => ClientException::BAD_DATA,",
-                "        'errors' => \$errors",
-                "    ];",
-                "}",
-                "",
-                "return ['status' => 201, 'message' => 'Created', 'id' => \$entity->primaryKey()];"
-            ]);
-        }
-
-        //Return JSON
-        $create->setComment("@return array", true);
 
         //Let's generate some fun!
         $delete = $this->class->method('delete')->setComment([

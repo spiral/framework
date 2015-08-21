@@ -26,6 +26,13 @@ abstract class AbstractGenerator
     const EXTENSION = '.php';
 
     /**
+     * Given generation name.
+     *
+     * @var string
+     */
+    private $name = '';
+
+    /**
      * Options must include prefix, namespace and output directory.
      *
      * @var array
@@ -48,9 +55,10 @@ abstract class AbstractGenerator
 
     /**
      * @param FilesInterface $files
-     * @param string         $name    User specified class name, will be joined with default namespace
-     *                                and postfix.
-     * @param array          $options Default namespace must already be included into default directory.
+     * @param string         $name    User specified class name, will be joined with default
+     *                                namespace and postfix.
+     * @param array          $options Default namespace must already be included into default
+     *                                directory.
      * @param string         $header  File header.
      */
     public function __construct(FilesInterface $files, $name, array $options, $header = '')
@@ -82,6 +90,7 @@ abstract class AbstractGenerator
      */
     public function setName($name)
     {
+        $this->name = $name;
         if (strpos($name, '/') !== false || strpos($name, '\\') !== false) {
             $name = str_replace('/', '\\', $name);
 
@@ -96,11 +105,21 @@ abstract class AbstractGenerator
     }
 
     /**
-     * Get generated class name. Namespace will not be included.
+     * Given generation name.
      *
      * @return string
      */
     public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get generated class name. Namespace will not be included.
+     *
+     * @return string
+     */
+    public function getClass()
     {
         return $this->class->getName();
     }
@@ -144,7 +163,7 @@ abstract class AbstractGenerator
      */
     public function getClassName()
     {
-        return $this->getNamespace() . '\\' . $this->getName();
+        return $this->getNamespace() . '\\' . $this->getClass();
     }
 
     /**
