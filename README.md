@@ -14,5 +14,6 @@ Base application with modules, views and routing: https://github.com/spiral-php/
 Guide: https://github.com/spiral-php/guide
 
 Framework roadmap:
-* Authorization module with integration with ORM (and maybe ODM)
+* Authorization module with integration with ORM (and maybe ODM), i'm still thinking about the most optimal
+  implementation
 * Universal administration panel - http://prntscr.com/87912s
