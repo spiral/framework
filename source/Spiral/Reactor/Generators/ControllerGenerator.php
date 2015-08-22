@@ -192,7 +192,7 @@ class ControllerGenerator extends AbstractService
                 "    ];",
                 "}",
                 "",
-                "return ['status' => 204, 'message' => 'Updated'];"
+                "return ['status' => 200, 'message' => 'Updated'];"
             ]);
         }
 
@@ -216,7 +216,7 @@ class ControllerGenerator extends AbstractService
             "    throw new ClientException(ClientException::ERROR);",
             "}",
             "",
-            "return ['status' => 204, 'message' => 'Deleted'];"
+            "return ['status' => 200, 'message' => 'Deleted'];"
         ]);
     }
 }
