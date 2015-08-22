@@ -42,7 +42,7 @@ class UmlCommand extends Command
         /**
          * @var UmlExporter $uml
          */
-        $uml = $this->container->get(UmlExporter::class, [
+        $uml = $this->container->construct(UmlExporter::class, [
             'builder' => $this->odm->schemaBuilder()
         ]);
 

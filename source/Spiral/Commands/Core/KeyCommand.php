@@ -37,7 +37,7 @@ class KeyCommand extends Command
          *
          * @var ConfigWriter $write
          */
-        $configWriter = $this->container->get(ConfigWriter::class, [
+        $configWriter = $this->container->construct(ConfigWriter::class, [
             'name'   => 'encrypter',
             'method' => ConfigWriter::MERGE_REPLACE
         ]);

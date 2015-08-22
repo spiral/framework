@@ -157,7 +157,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
             $compiler->compile();
         }
 
-        return $this->container->get(
+        return $this->container->construct(
             !empty($class) ? $class : $this->viewClass($engine, $namespace, $view),
             [
                 'compiler'  => $compiler,
@@ -278,7 +278,7 @@ class ViewManager extends Singleton implements ViewProviderInterface
             return null;
         }
 
-        return $this->container->get($this->config['engines'][$engine]['compiler'], [
+        return $this->container->construct($this->config['engines'][$engine]['compiler'], [
             'views'     => $this,
             'config'    => $this->config['engines'][$engine],
             'namespace' => $namespace,

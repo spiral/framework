@@ -85,14 +85,14 @@ class InputManager extends Singleton
     public function request()
     {
         //Check if we still pointing to right request
-        if ($this->request !== $this->container->get(ServerRequestInterface::class)) {
+        if ($this->request !== ($outer = $this->container->get(ServerRequestInterface::class))) {
             $this->request = null;
 
             //Our parameter bags has expired
             $this->bagInstances = [];
 
             //Update instance
-            $this->request = $this->container->get(ServerRequestInterface::class);
+            $this->request = $outer;
         }
 
         return $this->request;

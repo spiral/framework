@@ -170,7 +170,7 @@ class ModuleManager extends Singleton
          *
          * @var ConfigWriter $configWriter
          */
-        $configWriter = $this->container->get(ConfigWriter::class, [
+        $configWriter = $this->container->construct(ConfigWriter::class, [
             'name'   => 'modules',
             'method' => ConfigWriter::FULL_OVERWRITE
         ]);

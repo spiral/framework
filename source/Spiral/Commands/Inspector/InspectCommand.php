@@ -106,19 +106,19 @@ class InspectCommand extends Command
      */
     protected function getInspector()
     {
-        if ($this->container->hasBinding(\Spiral\ODM\Entities\SchemaBuilder::class)) {
+        if ($this->container->has(\Spiral\ODM\Entities\SchemaBuilder::class)) {
             $odmBuilder = $this->container->get(\Spiral\ODM\Entities\SchemaBuilder::class);
         } else {
             $odmBuilder = $this->odm->schemaBuilder();
         }
 
-        if ($this->container->hasBinding(\Spiral\ORM\Entities\SchemaBuilder::class)) {
+        if ($this->container->has(\Spiral\ORM\Entities\SchemaBuilder::class)) {
             $ormBuilder = $this->container->get(\Spiral\ORM\Entities\SchemaBuilder::class);
         } else {
             $ormBuilder = $this->orm->schemaBuilder();
         }
 
-        return $this->container->get(Inspector::class, [
+        return $this->container->construct(Inspector::class, [
             'entities' => array_merge(
                 $odmBuilder->getDocuments(),
                 $ormBuilder->getRecords()

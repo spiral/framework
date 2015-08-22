@@ -36,13 +36,13 @@ class PHPStormCommand extends Command
      */
     public function perform(Documenter $documenter)
     {
-        if ($this->container->hasBinding(\Spiral\ODM\Entities\SchemaBuilder::class)) {
+        if ($this->container->has(\Spiral\ODM\Entities\SchemaBuilder::class)) {
             $odmBuilder = $this->container->get(\Spiral\ODM\Entities\SchemaBuilder::class);
         } else {
             $odmBuilder = $this->odm->schemaBuilder();
         }
 
-        if ($this->container->hasBinding(\Spiral\ORM\Entities\SchemaBuilder::class)) {
+        if ($this->container->has(\Spiral\ORM\Entities\SchemaBuilder::class)) {
             $ormBuilder = $this->container->get(\Spiral\ORM\Entities\SchemaBuilder::class);
         } else {
             $ormBuilder = $this->orm->schemaBuilder();
@@ -51,7 +51,7 @@ class PHPStormCommand extends Command
         /**
          * @var ODMStormDocumenter $odmDocumenter
          */
-        $odmDocumenter = $this->container->get(ODMStormDocumenter::class, [
+        $odmDocumenter = $this->container->construct(ODMStormDocumenter::class, [
             'builder' => $odmBuilder
         ]);
 
@@ -65,7 +65,7 @@ class PHPStormCommand extends Command
         /**
          * @var ODMStormDocumenter $odmDocumenter
          */
-        $ormDocumenter = $this->container->get(ORMStormDocumenter::class, [
+        $ormDocumenter = $this->container->construct(ORMStormDocumenter::class, [
             'builder' => $ormBuilder
         ]);
 

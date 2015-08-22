@@ -493,7 +493,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         /**
          * @var SnapshotInterface $snapshot
          */
-        $snapshot = $this->get(SnapshotInterface::class, compact('exception'));
+        $snapshot = $this->construct(SnapshotInterface::class, compact('exception'));
 
         //Reporting
         $snapshot->report();
@@ -517,7 +517,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             return $this->get(ConsoleDispatcher::class);
         }
 
-        if ($this->hasBinding(HttpDispatcher::class)) {
+        if ($this->has(HttpDispatcher::class)) {
             return $this->get(HttpDispatcher::class);
         }
 

@@ -51,7 +51,7 @@ abstract class Module extends Component implements ModuleInterface
         DefinitionInterface $definition
     ) {
         //Let's create default Installer
-        return $container->get(Installer::class, [
+        return $container->construct(Installer::class, [
             'moduleDirectory' => $definition->getLocation()
         ]);
     }

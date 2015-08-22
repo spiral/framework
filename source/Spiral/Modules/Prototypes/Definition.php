@@ -206,7 +206,7 @@ class Definition implements DefinitionInterface
          *
          * @var static $definition
          */
-        $definition = $container->get(static::class, [
+        $definition = $container->construct(static::class, [
             'class' => $class,
             'name'  => null
         ]);
