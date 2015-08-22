@@ -19,11 +19,9 @@ use Spiral\Core\Exceptions\Container\InstanceException;
  *
  * Count service as layer (model) between data entities and various controllers.
  *
- * You can declare service boot logic and dependencies in init method, which is going to be
- * executed
- * using container (same as Saturable interfaces). In addition service can access components
- * binding
- * using string alias.
+ * You can declare service boot logic and dependencies in init method which is going to be
+ * executed using container (same as Saturable interfaces). In addition service can access
+ * components bindings using string alias.
  *
  * @property \Spiral\Core\Core                        $core
  * @property \Spiral\Core\Components\Loader           $loader
