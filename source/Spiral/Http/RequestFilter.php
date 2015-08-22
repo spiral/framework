@@ -117,7 +117,7 @@ class RequestFilter extends DataEntity
         foreach (parent::getErrors($reset) as $field => $errorSet) {
             list(, $origin) = $this->parseSource($field, $this->schema[$field]);
 
-            if ($field == $origin || strpos($origin, '.') === false) {
+            if ($field == $origin) {
                 $errors[$field] = $errorSet;
             } else {
                 //Let's recreate original structure
