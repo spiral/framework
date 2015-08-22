@@ -129,6 +129,19 @@ class RequestFilter extends DataEntity
     }
 
     /**
+     * Mount set of external errors, errors will be mapped to appropriate field when needed.
+     *
+     * @param array $errors
+     * @return $this
+     */
+    public function mountErrors(array $errors)
+    {
+        $this->errors = $errors;
+
+        return $this;
+    }
+
+    /**
      * @return object
      */
     public function __debugInfo()
