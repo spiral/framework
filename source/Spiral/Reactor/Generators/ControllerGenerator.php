@@ -147,9 +147,9 @@ class ControllerGenerator extends AbstractService
                 "if (empty(\$id)) {",
                 "    return [",
                 "        'status'  => 201,",
-                "        'message' => 'Created',",
+                "        'message' => 'Created, redirecting...',",
                 "        'action'  => [",
-                "            'delay'    => 5,",
+                "            'delay'    => 2000,",
                 "            'redirect' => (string)\$this->router->createUri(",
                 "                '{$this->getName()}::edit', ['id' => (string)\$entity->primaryKey()]",
                 "            )",
@@ -157,7 +157,7 @@ class ControllerGenerator extends AbstractService
                 "    ];",
                 "}",
                 "",
-                "return ['status' => 204, 'message' => 'Updated'];"
+                "return ['status' => 200, 'message' => 'Updated'];"
             ]);
         } else {
             $save->setSource([
