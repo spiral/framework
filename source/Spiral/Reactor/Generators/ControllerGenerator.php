@@ -138,7 +138,7 @@ class ControllerGenerator extends AbstractService
                 "",
                 "\$entity->setFields(\${$request});",
                 "if (!\$this->{$plural}->save(\$entity, true, \$errors)) {",
-                "    {$request}->mountErrors(\$errors);",
+                "    \${$request}->mountErrors(\$errors);",
                 "",
                 "    return [",
                 "        'status' => ClientException::BAD_DATA,",
