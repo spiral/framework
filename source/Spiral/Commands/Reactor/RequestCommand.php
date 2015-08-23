@@ -91,6 +91,18 @@ class RequestCommand extends AbstractCommand
             $generator->addField($field, $type, $source, $origin);
         }
 
+        foreach ($this->option('depends') as $service) {
+            if (empty($class = $reactor->findClass('service', $service))) {
+                $this->writeln(
+                    "<fg=red>Unable to locate service class for '{$service}'.</fg=red>"
+                );
+
+                return;
+            }
+
+            $generator->addDependency($service, $class);
+        }
+
         //Generating
         $generator->render();
 
@@ -115,6 +127,12 @@ class RequestCommand extends AbstractCommand
                 'e',
                 InputOption::VALUE_OPTIONAL,
                 'Specific entity to create request for.'
+            ],
+            [
+                'depends',
+                'd',
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Add request service dependency. Declare dependency in short form.'
             ],
             [
                 'comment',

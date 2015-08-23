@@ -10,6 +10,7 @@ namespace Spiral\Reactor\Generators;
 
 use Spiral\Files\FilesInterface;
 use Spiral\Http\RequestFilter;
+use Spiral\Models\EntityInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
 
@@ -59,6 +60,7 @@ class RequestGenerator extends AbstractService
     public function generate()
     {
         $this->file->addUse(RequestFilter::class);
+        $this->file->addUse(EntityInterface::class);
         $this->class->setParent('RequestFilter');
 
         $this->class->property('schema', ["Input schema.", "", "@var array"])->setDefault(
@@ -135,6 +137,19 @@ class RequestGenerator extends AbstractService
                 }
             }
         }
+
+        //Let's create populate method
+        $populate = $this->class->method('populate');
+        $populate->setComment([
+            "{@inheritdoc}.",
+            "",
+            "@param EntityInterface \$entity Entity to be populated with request data.",
+            "@return bool"
+        ]);
+        $populate->parameter('entity')->setType('EntityInterface');
+        $populate->setSource([
+            "return parent::populate(\$entity);"
+        ]);
     }
 
     /**

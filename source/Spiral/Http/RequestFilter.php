@@ -12,6 +12,7 @@ use Spiral\Core\Container\SaturableInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Http\Exceptions\FilterException;
 use Spiral\Models\DataEntity;
+use Spiral\Models\EntityInterface;
 
 /**
  * Request filter is data entity which uses input manager to populate it's fields, model can perform
@@ -36,8 +37,6 @@ use Spiral\Models\DataEntity;
  *
  * There is possibility that this class and it's schema will behave same way as ORM and ODM models
  * one day.
- *
- * @todo Replace errors.
  */
 class RequestFilter extends DataEntity
 {
@@ -46,6 +45,13 @@ class RequestFilter extends DataEntity
      * @var InputManager
      */
     private $input = null;
+
+    /**
+     * Instance of entity used to put data in.
+     *
+     * @var EntityInterface
+     */
+    private $entity = null;
 
     /**
      * Request filter makes every field settable.
@@ -63,12 +69,17 @@ class RequestFilter extends DataEntity
     protected $schema = [];
 
     /**
+     * Please do not construct this class by yourself for now, always use container as i'm working
+     * on new request filter functionality including nested requests.
+     *
      * @final For my own reasons (i have some ideas), please use SaturableInterface and init method.
      * @param InputManager       $input
      * @param ContainerInterface $container
      */
-    final public function __construct(InputManager $input, ContainerInterface $container)
-    {
+    final public function __construct(
+        InputManager $input,
+        ContainerInterface $container
+    ) {
         $this->input = $input;
 
         foreach ($this->schema as $field => $source) {
@@ -108,6 +119,38 @@ class RequestFilter extends DataEntity
     }
 
     /**
+     * Must populate fields of given entity and return true if entity still valid after this
+     * operation. Method must return false is request is not valid by itself.
+     *
+     * Method might create new set of errors related to population process using setError() method.
+     *
+     * @param EntityInterface $entity
+     * @return bool
+     */
+    public function populate(EntityInterface $entity)
+    {
+        if (!$this->isValid()) {
+            return false;
+        }
+
+        //Populating fields
+        $entity->setFields($this);
+
+        if (!$entity->isValid()) {
+            foreach ($entity->getErrors() as $name => $error) {
+                if (isset($this->schema[$name])) {
+                    $this->errors[$name] = $error;
+                }
+            }
+
+            return false;
+        }
+
+        //All good
+        return true;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getErrors($reset = false)
@@ -126,19 +169,6 @@ class RequestFilter extends DataEntity
         }
 
         return $errors;
-    }
-
-    /**
-     * Mount set of external errors, errors will be mapped to appropriate field when needed.
-     *
-     * @param array $errors
-     * @return $this
-     */
-    public function mountErrors(array $errors)
-    {
-        $this->errors = $errors;
-
-        return $this;
     }
 
     /**
