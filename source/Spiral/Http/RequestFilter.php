@@ -41,19 +41,6 @@ use Spiral\Models\EntityInterface;
 class RequestFilter extends DataEntity
 {
     /**
-     * @invisible
-     * @var InputManager
-     */
-    private $input = null;
-
-    /**
-     * Instance of entity used to put data in.
-     *
-     * @var EntityInterface
-     */
-    private $entity = null;
-
-    /**
      * Request filter makes every field settable.
      *
      * @var array
@@ -69,6 +56,18 @@ class RequestFilter extends DataEntity
     protected $schema = [];
 
     /**
+     * @invisible
+     * @var InputManager
+     */
+    protected $input = null;
+
+    /**
+     * @invisible
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
      * Please do not construct this class by yourself for now, always use container as i'm working
      * on new request filter functionality including nested requests.
      *
@@ -81,6 +80,7 @@ class RequestFilter extends DataEntity
         ContainerInterface $container
     ) {
         $this->input = $input;
+        $this->container = $container;
 
         foreach ($this->schema as $field => $source) {
             list($source, $origin) = $this->parseSource($field, $source);
