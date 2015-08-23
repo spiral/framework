@@ -42,20 +42,15 @@ class MiddlewareGenerator extends AbstractService
             '__invoke',
             [
                 "@param ServerRequestInterface \$request",
-                "@param \\Closure               \$next Next middleware/target. Always return ResponseInterface.",
+                "@param \\Closure               \$next Next middleware/target. Always returns ResponseInterface.",
                 "@return ResponseInterface"
             ],
             ['request', 'next']
         );
 
         $invoke->parameter('request')->setType('ServerRequestInterface');
-        $invoke->parameter('next')->setType('\\Closure')->setOptional(true, null);
 
         $invoke->setSource([
-            "if(empty(\$next)) {",
-            "    throw new MiddlewareException('Unable to use middleware as endpoint.');",
-            "}",
-            "",
             "/**",
             " * @var ResponseInterface \$response",
             " */",
