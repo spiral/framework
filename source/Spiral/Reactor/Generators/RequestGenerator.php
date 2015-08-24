@@ -143,12 +143,16 @@ class RequestGenerator extends AbstractService
         $populate->setComment([
             "{@inheritdoc}.",
             "",
-            "@param EntityInterface \$entity Entity to be populated with request data.",
+            "@param \\{$entity->getName()} \$entity Entity to be populated with request data.",
             "@return bool"
         ]);
         $populate->parameter('entity')->setType('EntityInterface');
         $populate->setSource([
-            "return parent::populate(\$entity);"
+            "if (!parent::populate(\$entity)) {",
+            "    return false;",
+            "}",
+            "",
+            "return \$entity->isValid();"
         ]);
     }
 
