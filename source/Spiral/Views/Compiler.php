@@ -152,7 +152,7 @@ class Compiler extends Component implements CompilerInterface, SaturableInterfac
         foreach ($this->getProcessors() as $processor) {
             $reflection = new \ReflectionClass($processor);
 
-            $context = $this->namespace . ViewProviderInterface::NS_SEPARATOR . $this->view;
+            $context = $this->namespace . ViewsInterface::NS_SEPARATOR . $this->view;
 
             $benchmark = $this->benchmark($reflection->getShortName(), $context);
             try {

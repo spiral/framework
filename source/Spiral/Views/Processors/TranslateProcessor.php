@@ -13,7 +13,7 @@ use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\Compiler;
 use Spiral\Views\ProcessorInterface;
 use Spiral\Views\ViewManager;
-use Spiral\Views\ViewProviderInterface;
+use Spiral\Views\ViewsInterface;
 
 /**
  * Performs string replacement in view source using translator instance and [[ ]] pattern. Processor
@@ -52,7 +52,7 @@ class TranslateProcessor implements ProcessorInterface, SaturableInterface
         $this->compiler = $compiler;
         $this->options = $options + $this->options;
 
-        if ($this->compiler->getNamespace() != ViewProviderInterface::DEFAULT_NAMESPACE) {
+        if ($this->compiler->getNamespace() != ViewsInterface::DEFAULT_NAMESPACE) {
             $this->bundle = $compiler->getNamespace();
         }
 

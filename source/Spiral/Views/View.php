@@ -88,7 +88,7 @@ class View extends Component implements ViewInterface
         $__benchmark__ = $this->benchmark(
             'render',
             $this->compiler->getNamespace()
-            . ViewProviderInterface::NS_SEPARATOR
+            . ViewsInterface::NS_SEPARATOR
             . $this->compiler->getView()
         );
 

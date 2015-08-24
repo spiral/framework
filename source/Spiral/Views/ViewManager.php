@@ -21,7 +21,7 @@ use Spiral\Views\Exceptions\ViewException;
  * dependencies. ViewManager support multiple namespaces and namespaces associated with multiple
  * folders.
  */
-class ViewManager extends Singleton implements ViewProviderInterface
+class ViewManager extends Singleton implements ViewsInterface
 {
     /**
      * Configuration is required.
