@@ -142,10 +142,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         //Instrumental bindings
         'Psr\Log\LoggerInterface'                      => 'Spiral\Debug\Logger',
         'Spiral\Debug\SnapshotInterface'               => 'Spiral\Debug\Snapshot',
+        'Spiral\Cache\CacheInterface'                  => 'Spiral\Cache\CacheProvider',
         'Spiral\Cache\StoreInterface'                  => 'Spiral\Cache\CacheStore',
-        'Spiral\Cache\CacheProviderInterface'          => 'Spiral\Cache\CacheProvider',
         'Spiral\Files\FilesInterface'                  => 'Spiral\Files\FileManager',
-        'Spiral\Views\ViewProviderInterface'           => 'Spiral\Views\ViewManager',
+        'Spiral\Views\ViewsInterface'                  => 'Spiral\Views\ViewManager',
         'Spiral\Storage\StorageInterface'              => 'Spiral\Storage\StorageManager',
         'Spiral\Storage\BucketInterface'               => 'Spiral\Storage\Entities\StorageBucket',
         'Spiral\Session\StoreInterface'                => 'Spiral\Session\SessionStore',

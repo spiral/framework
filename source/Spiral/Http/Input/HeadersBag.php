@@ -35,6 +35,8 @@ class HeadersBag extends InputBag
 
     /**
      * {@inheritdoc}
+     *
+     * @return string|array
      */
     public function get($name, $default = null, $implode = ',')
     {
