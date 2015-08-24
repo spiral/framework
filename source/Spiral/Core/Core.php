@@ -153,7 +153,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Tokenizer\TokenizerInterface'          => 'Spiral\Tokenizer\Tokenizer',
         'Spiral\Validation\ValidatorInterface'         => 'Spiral\Validation\Validator',
         'Spiral\Translator\TranslatorInterface'        => 'Spiral\Translator\Translator',
-        'Spiral\Database\DatabaseProviderInterface'    => 'Spiral\Database\DatabaseProvider',
+        'Spiral\Database\DatabasesInterface'           => 'Spiral\Database\DatabaseProvider',
         'Spiral\Database\Migrations\MigratorInterface' => 'Spiral\Database\Migrations\Migrator',
         //Spiral aliases
         'core'                                         => 'Spiral\Core\Core',
