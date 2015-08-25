@@ -202,9 +202,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function __construct(array $directories)
     {
-        //Container constructing
-        parent::__construct();
-
         $this->directories = $directories + [
                 'public'  => $directories['root'] . '/webroot',
                 'config'  => $directories['application'] . '/config',
