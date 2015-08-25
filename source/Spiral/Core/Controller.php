@@ -114,6 +114,7 @@ abstract class Controller extends Service implements ControllerInterface
             return false;
         }
 
+        //Place to implement custom logic
         return true;
     }
 }
