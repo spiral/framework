@@ -55,7 +55,7 @@ abstract class Controller extends Service implements ControllerInterface
 
         $reflection = new \ReflectionMethod($this, $action);
 
-        if (!$this->isCallable($reflection)) {
+        if (!$this->isExecutable($reflection)) {
             throw new ControllerException(
                 "Action '{$action}' can not be executed.",
                 ControllerException::BAD_ACTION
@@ -102,7 +102,7 @@ abstract class Controller extends Service implements ControllerInterface
      * @param \ReflectionMethod $method
      * @return bool
      */
-    protected function isCallable(\ReflectionMethod $method)
+    protected function isExecutable(\ReflectionMethod $method)
     {
         if (
             $method->getName() == SaturableInterface::SATURATE_METHOD
