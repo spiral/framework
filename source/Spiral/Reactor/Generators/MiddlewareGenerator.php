@@ -49,6 +49,7 @@ class MiddlewareGenerator extends AbstractService
         );
 
         $invoke->parameter('request')->setType('ServerRequestInterface');
+        $invoke->parameter('next')->setType('\Closure');
 
         $invoke->setSource([
             "/**",

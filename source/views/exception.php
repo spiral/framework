@@ -612,6 +612,14 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
     <div class="footer">
         <div class="date"><?= date('r') ?></div>
         <div class="elapsed time">
+            <?php
+            if (!defined('SPIRAL_INITIAL_TIME')) {
+                define(
+                'SPIRAL_INITIAL_TIME',
+                isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : 0
+                );
+            }
+            ?>
             <span>Elapsed:</span> <?= number_format(microtime(true) - SPIRAL_INITIAL_TIME, 3) ?>
             seconds
         </div>

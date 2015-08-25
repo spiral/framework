@@ -62,13 +62,15 @@ class Service extends Component
 
     /**
      * @param ContainerInterface $container
+     * @param bool               $init Execute init method.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, $init = true)
     {
         $this->container = $container;
 
         if (
-            method_exists($this, SaturableInterface::SATURATE_METHOD)
+            $init
+            && method_exists($this, SaturableInterface::SATURATE_METHOD)
             && !$this instanceof SaturableInterface
         ) {
             $method = new \ReflectionMethod($this, SaturableInterface::SATURATE_METHOD);
