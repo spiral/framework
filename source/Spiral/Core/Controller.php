@@ -55,13 +55,7 @@ abstract class Controller extends Service implements ControllerInterface
 
         $reflection = new \ReflectionMethod($this, $action);
 
-        if (
-            $reflection->getName() == SaturableInterface::SATURATE_METHOD
-            || $reflection->isStatic()
-            || !$reflection->isPublic()
-            || !$reflection->isUserDefined()
-            || $reflection->getDeclaringClass()->getName() == __CLASS__
-        ) {
+        if (!$this->isCallable($reflection)) {
             throw new ControllerException(
                 "Action '{$action}' can not be executed.",
                 ControllerException::BAD_ACTION
@@ -100,5 +94,26 @@ abstract class Controller extends Service implements ControllerInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Check if method is callable.
+     *
+     * @param \ReflectionMethod $method
+     * @return bool
+     */
+    protected function isCallable(\ReflectionMethod $method)
+    {
+        if (
+            $method->getName() == SaturableInterface::SATURATE_METHOD
+            || $method->isStatic()
+            || !$method->isPublic()
+            || !$method->isUserDefined()
+            || $method->getDeclaringClass()->getName() == __CLASS__
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }
