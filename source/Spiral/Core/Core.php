@@ -559,7 +559,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     }
 
     /**
-     * Initiate application core.
+     * Initiate application core. Method will set global container if none exists.
      *
      * @param array $directories Spiral directories should include root, libraries and application
      *                           directories.
@@ -572,6 +572,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
          * @var Core $core
          */
         $core = new static($directories + ['framework' => dirname(__DIR__)]);
+
+        if (empty(self::container())) {
+            self::setContainer($core);
+        }
 
         $core->bindings = [
                 static::class                => $core,
