@@ -62,7 +62,7 @@ class ConfigureCommand extends Command
 
         if ($this->option('key')) {
             $this->writeln("");
-            $this->console->command('core:key', [], $this->output);
+            $this->console->command('app:key', [], $this->output);
         }
 
         //Additional commands
