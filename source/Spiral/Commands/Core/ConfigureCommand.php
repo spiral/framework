@@ -38,7 +38,7 @@ class ConfigureCommand extends Command
         $this->ensureRuntimeDirectory();
 
         $this->writeln("\n<info>Updating configuration cache...</info>");
-        $this->console->command('core:touch', [], $this->output);
+        $this->console->command('app:touch', [], $this->output);
 
         //Installing modules
         $this->writeln("\n<info>Installing all available modules...</info>");
