@@ -19,7 +19,7 @@ class TouchCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'core:touch';
+    protected $name = 'app:touch';
 
     /**
      * {@inheritdoc}

@@ -19,7 +19,7 @@ class ResetCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'core:reset';
+    protected $name = 'app:reset';
 
     /**
      * {@inheritdoc}

@@ -22,7 +22,7 @@ class EnvironmentCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'core:environment';
+    protected $name = 'environment';
 
     /**
      * {@inheritdoc}
@@ -37,10 +37,7 @@ class EnvironmentCommand extends Command
     ];
 
     /**
-     * Command options specified in Symphony format. For more complex definitions redefine getOptions()
-     * method.
-     *
-     * @var array
+     * {@inheritdoc}
      */
     protected $options = [
         ['configure', 'c', InputOption::VALUE_NONE, 'Reconfigure application.']

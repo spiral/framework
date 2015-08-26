@@ -20,7 +20,7 @@ class KeyCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'core:key';
+    protected $name = 'app:key';
 
     /**
      * {@inheritdoc}
