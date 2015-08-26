@@ -9,6 +9,7 @@
 namespace Spiral\Views\Processors;
 
 use Spiral\Core\Container\SaturableInterface;
+use Spiral\Core\ContainerInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\Compiler;
@@ -37,6 +38,12 @@ class EvaluateProcessor implements ProcessorInterface, SaturableInterface
     protected $files = null;
 
     /**
+     * @invisible
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
      * @var array
      */
     protected $options = [
@@ -59,11 +66,13 @@ class EvaluateProcessor implements ProcessorInterface, SaturableInterface
     }
 
     /**
-     * @param FilesInterface $files
+     * @param FilesInterface     $files
+     * @param ContainerInterface $container
      */
-    public function init(FilesInterface $files)
+    public function init(FilesInterface $files, ContainerInterface $container)
     {
         $this->files = $files;
+        $this->container = $container;
     }
 
     /**
