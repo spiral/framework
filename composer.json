@@ -3,6 +3,7 @@
   "type": "framework",
   "description": "Spiral PHP Framework",
   "license": "MIT",
+  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Anton Titov / Wolfy-J",
@@ -11,10 +12,10 @@
   ],
   "require": {
     "php": ">=5.5.0",
+    "spiral/components": "*",
     "symfony/console": "~2.0",
     "symfony/process": "~2.0",
-    "nesbot/carbon": "dev-master",
-    "spiral/components": "*"
+    "nesbot/carbon": "dev-master"
   },
   "autoload": {
     "files": [
