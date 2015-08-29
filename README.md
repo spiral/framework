@@ -19,5 +19,5 @@ Framework and toolkit roadmap
 * Few tutorials and quick start videos
 * Authorization module with integration with ORM (and maybe ODM), i'm still thinking about the most optimal
   implementation
-* Universal administration panel with flexible design, ACL and set of generators
+* Universal administration panel with flexible design, RBAC and set of generators
 * Tests coverage
