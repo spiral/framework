@@ -102,11 +102,10 @@ class ServiceGenerator extends AbstractService
         $delete->setComment([
             "Delete {$shortClass}.",
             "",
-            "@param {$shortClass} \${$name}",
-            "@return bool"
+            "@param {$shortClass} \${$name}"
         ]);
         $delete->parameter($name)->setType($shortClass);
-        $delete->setSource("return \${$name}->delete();");
+        $delete->setSource("\${$name}->delete();");
 
         /**
          * Find entity by it's primary key.
