@@ -9,7 +9,6 @@
 namespace Spiral\Reactor;
 
 use Spiral\Reactor\ClassElements\MethodElement;
-use Spiral\Reactor\ClassElements\PHPConstant;
 use Spiral\Reactor\ClassElements\PropertyElement;
 
 /**
@@ -22,7 +21,7 @@ class ClassElement extends AbstractElement
      *
      * @var string
      */
-    private $parent = '';
+    private $extends = '';
 
     /**
      * @var array
@@ -35,6 +34,11 @@ class ClassElement extends AbstractElement
     private $constants = [];
 
     /**
+     * @var array
+     */
+    private $constantComments = [];
+
+    /**
      * @var PropertyElement[]
      */
     private $properties = [];
@@ -45,22 +49,22 @@ class ClassElement extends AbstractElement
     private $methods = [];
 
     /**
-     * @return string
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
      * @param string $class Class name.
      * @return $this
      */
-    public function setParent($class)
+    public function setExtends($class)
     {
-        $this->parent = $class;
+        $this->extends = $class;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtends()
+    {
+        return $this->extends;
     }
 
     /**
@@ -71,7 +75,11 @@ class ClassElement extends AbstractElement
      */
     public function setInterfaces(array $interfaces)
     {
-        $this->interfaces = $interfaces;
+        $this->interfaces = [];
+
+        foreach ($interfaces as $interface) {
+            $this->addInterface($interface);
+        }
 
         return $this;
     }
@@ -113,13 +121,18 @@ class ClassElement extends AbstractElement
     }
 
     /**
-     * @param string            $name
-     * @param mixed|PHPConstant $value
+     * @param string              $name
+     * @param mixed|PHPExpression $value
+     * @param array               $comment Comment lines.
      * @return $this
      */
-    public function setConstant($name, $value)
+    public function setConstant($name, $value, array $comment = [])
     {
         $this->constants[$name] = $value;
+
+        if (!empty($comment)) {
+            $this->constantComments[$name] = $comment;
+        }
 
         return $this;
     }
@@ -140,6 +153,7 @@ class ClassElement extends AbstractElement
     public function removeConstant($name)
     {
         unset($this->constants[$name]);
+        unset($this->constantComments[$name]);
 
         return $this;
     }
@@ -155,17 +169,19 @@ class ClassElement extends AbstractElement
     /**
      * Get existed or create new property under given name.
      *
-     * @param string $name
-     * @param mixed  $docComment Forced property docComment.
+     * @param string       $name
+     * @param string|array $comment Forced property docComment.
      * @return PropertyElement
      */
-    public function property($name, $docComment = null)
+    public function property($name, $comment = null)
     {
         if (!$this->hasProperty($name)) {
             $this->properties[$name] = new PropertyElement($name);
         }
 
-        !empty($docComment) && $this->properties[$name]->setComment($docComment);
+        if (!empty($comment)) {
+            $this->properties[$name]->setComment($comment);
+        }
 
         return $this->properties[$name];
     }
@@ -202,24 +218,26 @@ class ClassElement extends AbstractElement
      * Get existed or create new class method.
      *
      * @param string $name       Method name.
-     * @param mixed  $docComment Forced method doc comment.
+     * @param mixed  $comment    Forced method doc comment.
      * @param array  $parameters Forced list of parameters in a form [name => type] or just names.
      * @return MethodElement
      */
-    public function method($name, $docComment = null, array $parameters = [])
+    public function method($name, $comment = null, array $parameters = [])
     {
         if (!$this->hasMethod($name)) {
             $this->methods[$name] = new MethodElement($name);
         }
 
-        !empty($docComment) && $this->methods[$name]->setComment($docComment);
+        if (!empty($comment)) {
+            $this->methods[$name]->setComment($comment);
+        }
 
-        foreach ($parameters as $parameter => $docComment) {
+        foreach ($parameters as $parameter => $comment) {
             if (is_numeric($parameter)) {
                 //Provided as non associated array
-                $this->methods[$name]->parameter($parameter = $docComment);
+                $this->methods[$name]->parameter($parameter = $comment);
             } else {
-                $this->methods[$name]->parameter($parameter, $docComment);
+                $this->methods[$name]->parameter($parameter, $comment);
             }
         }
 
@@ -275,12 +293,13 @@ class ClassElement extends AbstractElement
     /**
      * {@inheritdoc}
      *
-     * @param ArraySerializer $serializer Class used to render array values for default properties and etc.
+     * @param ArraySerializer $serializer Class used to render array values for default properties
+     *                                    and etc.
      */
     public function render($indentLevel = 0, ArraySerializer $serializer = null)
     {
         $result = [$this->renderComment($indentLevel)];
-        $header = 'class ' . $this->getName() . ($this->parent ? ' extends ' . $this->parent : '');
+        $header = 'class ' . $this->getName() . ($this->extends ? ' extends ' . $this->extends : '');
 
         if (!empty($this->interfaces)) {
             $header .= ' implements ' . join(', ', $this->interfaces);
@@ -290,36 +309,41 @@ class ClassElement extends AbstractElement
         $result[] = "{";
 
         foreach ($this->constants as $constant => $value) {
-
-            if ($value instanceof PHPConstant) {
+            if ($value instanceof PHPExpression) {
                 $value = $value->getValue();
             } else {
                 $value = var_export($value, true);
             }
 
-            $result[] = $this->indent(
-                'const ' . $constant . ' = ' . $value . ';',
-                $indentLevel + 1
-            );
+            if (!empty($this->constantComments[$constant])) {
+                $result[] = $this->renderComment(
+                    $indentLevel + 1,
+                    $this->constantComments[$constant]
+                );
+            }
+
+            $result[] = $this->indent("const {$constant} = {$value};", $indentLevel + 1);
+            $result[] = "";
         }
 
-        if (!empty($this->constants)) {
-            //Blank line
-            $result[] = '';
-        }
-
-        $position = 0;
         foreach ($this->properties as $property) {
-            $result[] = $property->render($indentLevel + 1, $serializer, $position++);
+            $result[] = $property->render($indentLevel + 1, $serializer);
+            $result[] = "";
         }
 
         foreach ($this->methods as $method) {
-            $result[] = $method->render($indentLevel + 1, $position++);
+            $result[] = $method->render($indentLevel + 1);
+            $result[] = "";
+        }
+
+        if ($result[count($result) - 1] == "") {
+            //We don't need blank lines at the end
+            unset($result[count($result) - 1]);
         }
 
         $result[] = '}';
 
-        return $this->join($result, $indentLevel);
+        return $this->joinLines($result, $indentLevel);
     }
 
     /**
@@ -336,7 +360,7 @@ class ClassElement extends AbstractElement
 
         $flushSchema && $this->flushSchema();
 
-        !empty($reflection->getParentClass()) && $this->setParent(
+        !empty($reflection->getParentClass()) && $this->setExtends(
             $reflection->getParentClass()->getName()
         );
 
@@ -381,7 +405,7 @@ class ClassElement extends AbstractElement
         $this->properties = [];
         $this->constants = [];
         $this->methods = [];
-        $this->parent = [];
+        $this->extends = [];
         $this->interfaces = [];
 
         parent::flushSchema();

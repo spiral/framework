@@ -8,6 +8,7 @@
  */
 namespace Spiral\Reactor;
 
+use Spiral\Reactor\PHPExpression;
 use Spiral\Reactor\Exceptions\SerializeException;
 
 /**
@@ -79,7 +80,9 @@ class ArraySerializer
      */
     protected function packValue($name, $value)
     {
-        if (is_null($value)) {
+        if ($value instanceof PHPExpression) {
+            $value = $value->getValue();
+        } elseif (is_null($value)) {
             $value = "null";
         } elseif (is_bool($value)) {
             $value = ($value ? "true" : "false");

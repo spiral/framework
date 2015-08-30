@@ -33,7 +33,7 @@ abstract class AbstractElement
     /**
      * @var array
      */
-    protected $docComment = [];
+    protected $comment = [];
 
     /**
      * @param string $name Element name.
@@ -65,32 +65,34 @@ abstract class AbstractElement
     /**
      * Replace element DocComment, comment can be provided in a form of array or string.
      *
-     * @param string|array $docComment
+     * @param string|array $comment
      * @param bool         $append
      * @return $this
      */
-    public function setComment($docComment, $append = false)
+    public function setComment($comment, $append = false)
     {
-        if (is_array($docComment)) {
+        if (is_array($comment)) {
             if (!$append) {
-                $this->docComment = $docComment;
+                $this->comment = $comment;
             } else {
-                $this->docComment = array_merge($this->docComment, $docComment);
+                $this->comment = array_merge($this->comment, $comment);
             }
 
             return $this;
         }
 
         if (!$append) {
-            $this->docComment = [];
+            $this->comment = [];
         }
 
-        $docComment = explode("\n", preg_replace('/[\n\r]+/', "\n", $docComment));
-        foreach ($docComment as $line) {
+        //Normalizing endings
+        $comment = explode("\n", preg_replace('/[\n\r]+/', "\n", $comment));
+
+        foreach ($comment as $line) {
             //Cutting start spaces
             $line = trim(preg_replace('/[ \*]+/si', ' ', $line));
             if ($line != '/') {
-                $this->docComment[] = $line;
+                $this->comment[] = $line;
             }
         }
 
@@ -104,7 +106,7 @@ abstract class AbstractElement
      */
     public function getComment()
     {
-        return $this->docComment;
+        return $this->comment;
     }
 
     /**
@@ -116,24 +118,9 @@ abstract class AbstractElement
      */
     public function replaceComments($search, $replace)
     {
-        foreach ($this->docComment as &$comment) {
+        foreach ($this->comment as &$comment) {
             $comment = str_replace($search, $replace, $comment);
             unset($comment);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Multiple comment replaces.
-     *
-     * @param array $replaces Associated array (search => replace).
-     * @return $this
-     */
-    public function batchReplace(array $replaces)
-    {
-        foreach ($replaces as $target => $replace) {
-            $this->replaceComments($target, $replaces);
         }
 
         return $this;
@@ -150,23 +137,26 @@ abstract class AbstractElement
     /**
      * Render element doc comment.
      *
-     * @param int $indentLevel
+     * @param int   $indentLevel
+     * @param array $comment Comment to be rendered instead of default one.
      * @return string
      */
-    protected function renderComment($indentLevel = 0)
+    protected function renderComment($indentLevel = 0, array $comment = [])
     {
-        if (!$this->docComment) {
-            return "";
+        if (empty($comment)) {
+            if (empty($comment = $this->comment)) {
+                return "";
+            }
         }
 
         $result = ["", "/**"];
-        foreach ($this->docComment as $comment) {
-            $result[] = " * " . $comment;
+        foreach ($comment as $line) {
+            $result[] = " * " . $line;
         }
 
         $result[] = " */";
 
-        return $this->join($result, $indentLevel);
+        return $this->joinLines($result, $indentLevel);
     }
 
     /**
@@ -188,7 +178,7 @@ abstract class AbstractElement
      * @param int   $indentLevel
      * @return string
      */
-    protected function join(array $lines, $indentLevel = 0)
+    protected function joinLines(array $lines, $indentLevel = 0)
     {
         foreach ($lines as &$line) {
             $line = $this->indent($line, $indentLevel);
@@ -203,6 +193,6 @@ abstract class AbstractElement
      */
     public function flushSchema()
     {
-        $this->docComment = [];
+        $this->comment = [];
     }
 }

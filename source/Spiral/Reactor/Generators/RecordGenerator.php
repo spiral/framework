@@ -22,7 +22,7 @@ class RecordGenerator extends AbstractEntity
     public function generate()
     {
         $this->file->addUse(Record::class);
-        $this->class->setParent('Record');
+        $this->class->setExtends('Record');
 
         parent::generate();
     }

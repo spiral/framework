@@ -110,24 +110,23 @@ class PropertyElement extends AbstractElement
     /**
      * {@inheritdoc}
      *
-     * @param ArraySerializer $serializer Class used to render array values for default properties and etc.
-     * @param int             $position   Internal value.
+     * @param ArraySerializer $serializer Class used to render array values for default properties
+     *                                    and etc.
      */
-    public function render($indentLevel = 0, ArraySerializer $serializer = null, $position = 0)
+    public function render($indentLevel = 0, ArraySerializer $serializer = null)
     {
-        $result = [
-            !$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel)
-        ];
+        $result = [$this->renderComment($indentLevel)];
 
         $property = $this->access . ' ' . ($this->static ? 'static ' : '') . '$' . $this->getName();
 
         if (!$this->isDefault()) {
             $result[] = $property . ';';
 
-            return $this->join($result, $indentLevel);
+            return $this->joinLines($result, $indentLevel);
         }
 
         if (is_array($this->defaultValue)) {
+
             $serializer = !empty($serializer) ? $serializer : new ArraySerializer();
             $value = explode("\n", $serializer->serialize($this->defaultValue, self::INDENT));
 
@@ -144,7 +143,7 @@ class PropertyElement extends AbstractElement
 
         $result[] = $property . ';';
 
-        return $this->join($result, $indentLevel);
+        return $this->joinLines($result, $indentLevel);
     }
 
     /**
@@ -156,6 +155,7 @@ class PropertyElement extends AbstractElement
     {
         $this->setDefault(false);
         $this->setComment($property->getDocComment());
+
         $this->static = $property->isStatic();
 
         if ($property->isPrivate()) {

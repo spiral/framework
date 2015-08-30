@@ -92,9 +92,9 @@ class MethodElement extends AbstractElement
 
         if (
             !empty($type)
-            && !in_array($docComment = "@param {$type} \${$name}", $this->docComment)
+            && !in_array($docComment = "@param {$type} \${$name}", $this->comment)
         ) {
-            $this->docComment[] = $docComment;
+            $this->comment[] = $docComment;
         }
 
         return $this->parameters[$name];
@@ -144,6 +144,7 @@ class MethodElement extends AbstractElement
             return $this;
         }
 
+        //Normalizing endings
         $lines = explode("\n", preg_replace('/[\n\r]+/', "\n", $source));
         $indentLevel = 0;
 
@@ -182,8 +183,11 @@ class MethodElement extends AbstractElement
     public function replaceComments($search, $replace)
     {
         parent::replaceComments($search, $replace);
+
         foreach ($this->parameters as $parameter) {
-            $parameter->setType(str_replace($search, $replace, $parameter->getType()));
+            $parameter->setType(
+                str_replace($search, $replace, $parameter->getType())
+            );
         }
 
         return $this;
@@ -191,14 +195,10 @@ class MethodElement extends AbstractElement
 
     /**
      * {@inheritdoc}
-     *
-     * @param int $position Internal value.
      */
-    public function render($indentLevel = 0, $position = 0)
+    public function render($indentLevel = 0)
     {
-        $result = [
-            !$position ? ltrim($this->renderComment($indentLevel)) : $this->renderComment($indentLevel)
-        ];
+        $result = [$this->renderComment($indentLevel)];
 
         //Parameters
         $parameters = [];
@@ -228,7 +228,7 @@ class MethodElement extends AbstractElement
 
         $result[] = '}';
 
-        return $this->join($result, $indentLevel);
+        return $this->joinLines($result, $indentLevel);
     }
 
     /**

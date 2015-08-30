@@ -9,6 +9,7 @@
 namespace Spiral\Reactor;
 
 use Spiral\Files\FilesInterface;
+use Spiral\Reactor\Exceptions\ReactorException;
 
 /**
  * Represent one PHP file and can be written directly to harddrive.
@@ -64,6 +65,34 @@ class FileElement extends NamespaceElement
     }
 
     /**
+     * Add new element.
+     *
+     * @param AbstractElement $element
+     * @return $this
+     * @throws ReactorException
+     */
+    public function add(AbstractElement $element)
+    {
+        if (!$element instanceof NamespaceElement && !$element instanceof ClassElement) {
+            throw new ReactorException(
+                "Only namespaces and classes can be added into file element."
+            );
+        }
+
+        $this->elements[] = $element;
+
+        return $this;
+    }
+
+    /**
+     * @return ClassElement[]|NamespaceElement[]
+     */
+    public function getElements()
+    {
+        return $this->elements;
+    }
+
+    /**
      * @param ClassElement $class
      * @return $this
      */
@@ -88,7 +117,8 @@ class FileElement extends NamespaceElement
     /**
      * {@inheritdoc}
      *
-     * @param ArraySerializer $serializer Class used to render array values for default properties and etc.
+     * @param ArraySerializer $serializer Class used to render array values for default properties
+     *                                    and etc.
      */
     public function render($indentLevel = 0, ArraySerializer $serializer = null)
     {
@@ -108,7 +138,7 @@ class FileElement extends NamespaceElement
             $result[] = $element->render($indentLevel, $serializer);
         }
 
-        return $this->join($result, $indentLevel);
+        return $this->joinLines($result, $indentLevel);
     }
 
     /**
@@ -117,10 +147,11 @@ class FileElement extends NamespaceElement
      * @param string          $filename
      * @param int             $mode
      * @param bool            $ensureLocation
-     * @param ArraySerializer $exporter Class used to render array values for default properties and etc.
+     * @param ArraySerializer $exporter Class used to render array values for default properties
+     *                                  and etc.
      * @return bool
      */
-    public function renderTo(
+    public function export(
         $filename,
         $mode = FilesInterface::RUNTIME,
         $ensureLocation = false,

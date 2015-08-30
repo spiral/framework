@@ -176,7 +176,7 @@ class ORMStormDocumenter extends VirtualDocumenter
         $element = new ClassElement($elementName = $this->createName($name, 'selector'));
         $element->cloneSchema(Selector::class)->setComment("Virtual Selector for {$name}.");
 
-        $element->setParent('\\' . Selector::class)->setInterfaces([]);
+        $element->setExtends('\\' . Selector::class)->setInterfaces([]);
         $this->cleanElement($element);
 
         //Mounting our class
@@ -202,7 +202,7 @@ class ORMStormDocumenter extends VirtualDocumenter
         $element->cloneSchema(RecordIterator::class)->setComment("Virtual Iterator for {$name}.");
         $this->cleanElement($element);
 
-        $element->setParent('\\' . RecordIterator::class)->setInterfaces([]);
+        $element->setExtends('\\' . RecordIterator::class)->setInterfaces([]);
 
         $element->replaceComments(Record::class, $name);
         $element->replaceComments("Record", '\\' . $name);
@@ -255,7 +255,7 @@ class ORMStormDocumenter extends VirtualDocumenter
         $relationClass = $this->builder->config()['relations'][$relation->getType()]['class'];
         $relationElement->cloneSchema($relationClass);
         $this->cleanElement($relationElement);
-        $relationElement->setParent('\\' . $relationClass)->setInterfaces([]);
+        $relationElement->setExtends('\\' . $relationClass)->setInterfaces([]);
 
         $name = $relation->getTarget();
 
@@ -302,7 +302,7 @@ class ORMStormDocumenter extends VirtualDocumenter
         $relationClass = $this->builder->config()['relations'][$relation->getType()]['class'];
         $relationElement->cloneSchema($relationClass);
         $this->cleanElement($relationElement);
-        $relationElement->setParent('\\' . $relationClass)->setInterfaces([]);
+        $relationElement->setExtends('\\' . $relationClass)->setInterfaces([]);
 
         //Let's render sub relations
         foreach ($relation->outerRecords() as $record) {
@@ -348,7 +348,7 @@ class ORMStormDocumenter extends VirtualDocumenter
         //Clone schema from appropriate relation
         $relationElement->cloneSchema($relationClass = ManyToMany::class);
         $this->cleanElement($relationElement);
-        $relationElement->setParent('\\' . $relationClass)->setInterfaces([]);
+        $relationElement->setExtends('\\' . $relationClass)->setInterfaces([]);
 
         $name = $record->getName();
 

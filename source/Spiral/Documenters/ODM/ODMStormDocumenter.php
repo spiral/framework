@@ -195,7 +195,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         $element = new ClassElement($elementName = $this->createName($name, 'collection'));
         $element->cloneSchema(Collection::class)->setComment("Virtual Collection for {$name}.");
 
-        $element->setParent('\\' . Collection::class)->setInterfaces([]);
+        $element->setExtends('\\' . Collection::class)->setInterfaces([]);
         $this->cleanElement($element);
 
         //Mounting our class
@@ -220,7 +220,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         $element = new ClassElement($elementName = $this->createName($name, 'cursor'));
         $element->cloneSchema(DocumentCursor::class)->setComment("Virtual Cursor for {$name}.");
 
-        $element->setParent('\\' . DocumentCursor::class)->setInterfaces([]);
+        $element->setExtends('\\' . DocumentCursor::class)->setInterfaces([]);
         $this->cleanElement($element);
 
         $element->replaceComments(Document::class, $name);
@@ -239,7 +239,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         $element = new ClassElement($elementName = $this->createName($name, 'compositor'));
         $element->cloneSchema(Compositor::class)->setComment("Virtual Compositor for {$name}.");
 
-        $element->setParent('\\' . Compositor::class)->setInterfaces([]);
+        $element->setExtends('\\' . Compositor::class)->setInterfaces([]);
         $this->cleanElement($element);
         $element->removeMethod('getParent');
 

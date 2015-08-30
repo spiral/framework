@@ -24,7 +24,7 @@ class ControllerGenerator extends AbstractService
     protected function generate()
     {
         $this->file->addUse(Controller::class);
-        $this->class->setParent('Controller');
+        $this->class->setExtends('Controller');
     }
 
     /**

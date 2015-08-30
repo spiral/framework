@@ -24,12 +24,12 @@ class NamespaceElement extends AbstractElement
     protected $classes = [];
 
     /**
-     * @param ClassElement $class
+     * @param ClassElement $element
      * @return $this
      */
-    public function addClass(ClassElement $class)
+    public function addClass(ClassElement $element)
     {
-        $this->classes[] = $class;
+        $this->classes[] = $element;
 
         return $this;
     }
@@ -43,12 +43,26 @@ class NamespaceElement extends AbstractElement
     }
 
     /**
-     * @param array $uses
+     * @param string $class
+     * @return bool
+     */
+    public function hasUse($class)
+    {
+        $class = ltrim($class, '\\');
+
+        return array_search($class, $this->uses) !== false;
+    }
+
+    /**
+     * @param array $classes
      * @return $this
      */
-    public function setUses(array $uses)
+    public function setUses(array $classes)
     {
-        $this->uses = $uses;
+        $this->uses = [];
+        foreach ($classes as $use) {
+            $this->addUse($use);
+        }
 
         return $this;
     }
@@ -68,6 +82,20 @@ class NamespaceElement extends AbstractElement
     }
 
     /**
+     * @param string $class
+     * @return $this
+     */
+    public function removeUse($class)
+    {
+        $class = ltrim($class, '\\');
+        if (($index = array_search($class, $this->uses)) !== false) {
+            unset($this->uses[$index]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getUses()
@@ -78,7 +106,8 @@ class NamespaceElement extends AbstractElement
     /**
      * {@inheritdoc}
      *
-     * @param ArraySerializer $serializer Class used to render array values for default properties and etc.
+     * @param ArraySerializer $serializer Class used to render array values for default properties
+     *                                    and etc.
      */
     public function render($indentLevel = 0, ArraySerializer $serializer = null)
     {
@@ -90,19 +119,21 @@ class NamespaceElement extends AbstractElement
         }
 
         foreach ($this->uses as $class) {
-            $result[] = $this->indent('use ' . $class . ';',
-                $indentLevel + !empty($this->getName()) ? 1 : 0);
+            $result[] = $this->indent(
+                'use ' . $class . ';', $indentLevel + !empty($this->getName()) ? 1 : 0
+            );
         }
 
         foreach ($this->classes as $class) {
-            $result[] = $class->render($indentLevel + !empty($this->getName()) ? 1 : 0,
-                $serializer);
+            $result[] = $class->render(
+                $indentLevel + !empty($this->getName()) ? 1 : 0, $serializer
+            );
         }
 
         if (!empty($this->getName())) {
             $result[] = '}';
         }
 
-        return $this->join($result, $indentLevel);
+        return $this->joinLines($result, $indentLevel);
     }
 }

@@ -22,7 +22,7 @@ class CommandGenerator extends AbstractGenerator
     protected function generate()
     {
         $this->file->addUse(Command::class);
-        $this->class->setParent('Command');
+        $this->class->setExtends('Command');
 
         $this->class->property('name', ["@var string"])->setDefault(true, "");
         $this->class->property('description', ["@var string"])->setDefault(true, "");

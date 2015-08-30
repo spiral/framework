@@ -26,7 +26,7 @@ class MigrationGenerator extends AbstractGenerator
         $this->file->addUse(Migration::class);
         $this->file->addUse(AbstractTable::class);
 
-        $this->class->setParent('Migration');
+        $this->class->setExtends('Migration');
         $this->class->method('up', 'Executing migration.');
         $this->class->method('down', 'Dropping (rollback) migration.');
     }

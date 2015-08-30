@@ -61,7 +61,7 @@ class RequestGenerator extends AbstractService
     {
         $this->file->addUse(RequestFilter::class);
         $this->file->addUse(EntityInterface::class);
-        $this->class->setParent('RequestFilter');
+        $this->class->setExtends('RequestFilter');
 
         $this->class->property('schema', ["Input schema.", "", "@var array"])->setDefault(
             true,

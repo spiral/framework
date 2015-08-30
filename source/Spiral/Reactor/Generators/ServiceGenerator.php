@@ -28,7 +28,7 @@ class ServiceGenerator extends AbstractService
     protected function generate()
     {
         $this->file->addUse(Service::class);
-        $this->class->setParent('Service');
+        $this->class->setExtends('Service');
     }
 
     /**

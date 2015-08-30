@@ -22,7 +22,7 @@ class DocumentGenerator extends AbstractEntity
     public function generate()
     {
         $this->file->addUse(Document::class);
-        $this->class->setParent('Document');
+        $this->class->setExtends('Document');
 
         $this->class->property('collection', [
             "Document collection, remove to make document embeddable.",

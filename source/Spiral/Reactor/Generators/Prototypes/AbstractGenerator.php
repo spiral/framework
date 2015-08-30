@@ -217,7 +217,7 @@ abstract class AbstractGenerator
      */
     public function render($mode = FilesInterface::READONLY, $ensureDirectory = true)
     {
-        return $this->file->renderTo($this->getFilename(), $mode, $ensureDirectory);
+        return $this->file->export($this->getFilename(), $mode, $ensureDirectory);
     }
 
     /**

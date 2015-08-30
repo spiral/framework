@@ -35,7 +35,7 @@ class MiddlewareGenerator extends AbstractService
             MiddlewareException::class
         ]);
 
-        $this->class->setParent('Service');
+        $this->class->setExtends('Service');
         $this->class->addInterface('MiddlewareInterface');
 
         $invoke = $this->class->method(

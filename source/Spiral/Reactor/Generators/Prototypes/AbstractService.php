@@ -12,7 +12,7 @@ use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Reactor\AbstractElement;
-use Spiral\Reactor\ClassElements\PHPConstant;
+use Spiral\Reactor\PHPExpression;
 
 /**
  * Abstract service generation.
@@ -46,7 +46,7 @@ abstract class AbstractService extends AbstractGenerator
         $this->class->addInterface('SingletonInterface');
 
         //Class pointing to self
-        $this->class->setConstant('SINGLETON', new PHPConstant('self::class'));
+        $this->class->setConstant('SINGLETON', new PHPExpression('self::class'));
     }
 
     /**

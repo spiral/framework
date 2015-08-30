@@ -6,12 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\Reactor\ClassElements;
+namespace Spiral\Reactor;
 
 /**
  * Class constant linked to some php expression of other constant.
  */
-class PHPConstant
+class PHPExpression
 {
     /**
      * @var string
