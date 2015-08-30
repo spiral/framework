@@ -9,7 +9,6 @@
 namespace Spiral\Reactor;
 
 use Spiral\Files\FilesInterface;
-use Spiral\Reactor\Exceptions\ReactorException;
 
 /**
  * Represent one PHP file and can be written directly to harddrive.
@@ -65,34 +64,6 @@ class FileElement extends NamespaceElement
     }
 
     /**
-     * Add new element.
-     *
-     * @param AbstractElement $element
-     * @return $this
-     * @throws ReactorException
-     */
-    public function add(AbstractElement $element)
-    {
-        if (!$element instanceof NamespaceElement && !$element instanceof ClassElement) {
-            throw new ReactorException(
-                "Only namespaces and classes can be added into file element."
-            );
-        }
-
-        $this->elements[] = $element;
-
-        return $this;
-    }
-
-    /**
-     * @return ClassElement[]|NamespaceElement[]
-     */
-    public function getElements()
-    {
-        return $this->elements;
-    }
-
-    /**
      * @param ClassElement $class
      * @return $this
      */
@@ -115,30 +86,11 @@ class FileElement extends NamespaceElement
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param ArraySerializer $serializer Class used to render array values for default properties
-     *                                    and etc.
+     * @return ClassElement[]|NamespaceElement[]
      */
-    public function render($indentLevel = 0, ArraySerializer $serializer = null)
+    public function getElements()
     {
-        $result = [self::PHP_OPEN, trim($this->renderComment($indentLevel))];
-
-        if (!empty($this->getName())) {
-            $result[] = 'namespace ' . $this->getName() . ';';
-        }
-
-        //Uses
-        foreach ($this->uses as $class) {
-            $result[] = $this->indent('use ' . $class . ';', $indentLevel);
-        }
-
-        //Classes
-        foreach ($this->elements as $element) {
-            $result[] = $element->render($indentLevel, $serializer);
-        }
-
-        return $this->joinLines($result, $indentLevel);
+        return $this->elements;
     }
 
     /**
@@ -151,12 +103,53 @@ class FileElement extends NamespaceElement
      *                                  and etc.
      * @return bool
      */
-    public function export(
+    public function render(
         $filename,
         $mode = FilesInterface::RUNTIME,
         $ensureLocation = false,
         ArraySerializer $exporter = null
     ) {
-        return $this->files->write($filename, $this->render(0, $exporter), $mode, $ensureLocation);
+        return $this->files->write(
+            $filename,
+            join("\n", $this->lines(0, $exporter)),
+            $mode,
+            $ensureLocation
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param ArraySerializer $serializer Class used to render array values for default properties
+     *                                    and etc.
+     */
+    public function lines($indent = 0, ArraySerializer $serializer = null)
+    {
+        $result = array_merge([self::PHP_OPEN], $this->commentLines());
+
+        if (!empty($this->getName())) {
+            $result[] = "namespace {$this->getName()};";
+        }
+
+        //Uses
+        foreach ($this->uses as $class) {
+            $result[] = "use {$class};";
+        }
+
+        $result[] = "";
+
+        //Classes
+        foreach ($this->elements as $element) {
+            //Same level
+            $result = array_merge($result, $element->lines(0, $serializer));
+            $result[] = "";
+        }
+
+        if ($result[count($result) - 1] == "") {
+            //We don't need blank lines at the end
+            unset($result[count($result) - 1]);
+        }
+
+        return $this->indentLines($result, $indent);
     }
 }

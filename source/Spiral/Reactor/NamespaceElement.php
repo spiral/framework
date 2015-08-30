@@ -109,31 +109,38 @@ class NamespaceElement extends AbstractElement
      * @param ArraySerializer $serializer Class used to render array values for default properties
      *                                    and etc.
      */
-    public function render($indentLevel = 0, ArraySerializer $serializer = null)
+    public function lines($indent = 0, ArraySerializer $serializer = null)
     {
-        $result = [$this->renderComment($indentLevel)];
+        $lines = $this->commentLines($this->comment);
 
         if (!empty($this->getName())) {
-            $result[] = 'namespace ' . trim($this->getName(), '\\');
-            $result[] = "{";
+            $lines[] = 'namespace ' . trim($this->getName(), '\\');
+            $lines[] = "{";
         }
 
         foreach ($this->uses as $class) {
-            $result[] = $this->indent(
-                'use ' . $class . ';', $indentLevel + !empty($this->getName()) ? 1 : 0
-            );
+            $lines[] = $this->indent("use {$class};", !empty($this->getName()) ? 1 : 0);
         }
 
+        $result[] = "";
+
         foreach ($this->classes as $class) {
-            $result[] = $class->render(
-                $indentLevel + !empty($this->getName()) ? 1 : 0, $serializer
+            $lines = array_merge($lines,
+                $class->lines(!empty($this->getName()) ? 1 : 0, $serializer)
             );
+
+            $lines[] = "";
+        }
+
+        if ($lines[count($lines) - 1] == "") {
+            //We don't need blank lines at the end
+            unset($lines[count($lines) - 1]);
         }
 
         if (!empty($this->getName())) {
-            $result[] = '}';
+            $lines[] = '}';
         }
 
-        return $this->joinLines($result, $indentLevel);
+        return $this->indentLines($lines, $indent);
     }
 }

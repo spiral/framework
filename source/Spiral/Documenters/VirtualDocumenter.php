@@ -83,7 +83,7 @@ abstract class VirtualDocumenter extends Component
      */
     public function render($filename)
     {
-        return $this->file->export($filename, FilesInterface::RUNTIME, true);
+        return $this->file->render($filename, FilesInterface::RUNTIME, true);
     }
 
     /**

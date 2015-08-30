@@ -113,25 +113,23 @@ class PropertyElement extends AbstractElement
      * @param ArraySerializer $serializer Class used to render array values for default properties
      *                                    and etc.
      */
-    public function render($indentLevel = 0, ArraySerializer $serializer = null)
+    public function lines($indent = 0, ArraySerializer $serializer = null)
     {
-        $result = [$this->renderComment($indentLevel)];
-
+        $lines = $this->commentLines();
         $property = $this->access . ' ' . ($this->static ? 'static ' : '') . '$' . $this->getName();
 
         if (!$this->isDefault()) {
-            $result[] = $property . ';';
+            $lines[] = $property . ';';
 
-            return $this->joinLines($result, $indentLevel);
+            return $this->indentLines($lines, $indent);
         }
 
         if (is_array($this->defaultValue)) {
-
             $serializer = !empty($serializer) ? $serializer : new ArraySerializer();
             $value = explode("\n", $serializer->serialize($this->defaultValue, self::INDENT));
 
             foreach ($value as &$line) {
-                $line = $this->indent($line, $indentLevel);
+                $line = $this->indent($line, 1);
                 unset($line);
             }
 
@@ -141,9 +139,9 @@ class PropertyElement extends AbstractElement
             $property .= ' = ' . var_export($this->defaultValue, true);
         }
 
-        $result[] = $property . ';';
+        $lines[] = $property . ';';
 
-        return $this->joinLines($result, $indentLevel);
+        return $this->indentLines($lines, $indent);
     }
 
     /**

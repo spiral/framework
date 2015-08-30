@@ -46,7 +46,11 @@ abstract class AbstractService extends AbstractGenerator
         $this->class->addInterface('SingletonInterface');
 
         //Class pointing to self
-        $this->class->setConstant('SINGLETON', new PHPExpression('self::class'));
+        $this->class->setConstant(
+            'SINGLETON',
+            new PHPExpression('self::class'),
+            ["Declares to IoC container that class must be treated as Singleton."]
+        );
     }
 
     /**

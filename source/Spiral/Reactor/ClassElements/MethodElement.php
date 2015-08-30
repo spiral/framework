@@ -196,9 +196,9 @@ class MethodElement extends AbstractElement
     /**
      * {@inheritdoc}
      */
-    public function render($indentLevel = 0)
+    public function lines($indent = 0)
     {
-        $result = [$this->renderComment($indentLevel)];
+        $lines = $this->commentLines();
 
         //Parameters
         $parameters = [];
@@ -209,26 +209,13 @@ class MethodElement extends AbstractElement
         $declaration = $this->access . ' ' . ($this->static ? 'static ' : '');
         $declaration .= 'function ' . $this->getName() . '(' . join(', ', $parameters) . ')';
 
-        $result[] = $declaration;
-        $result[] = '{';
+        $lines[] = $declaration;
 
-        $beginning = true;
-        foreach ($this->source as $line) {
-            if (trim($line)) {
-                $beginning = false;
-            }
+        $lines[] = '{';
+        $lines = array_merge($lines, $this->indentLines($this->source, 1));
+        $lines[] = '}';
 
-            if ($beginning && !trim($line)) {
-                //Common problem with console creators, they will add blank line at top for code
-                continue;
-            }
-
-            $result[] = $this->indent($line, $indentLevel);
-        }
-
-        $result[] = '}';
-
-        return $this->joinLines($result, $indentLevel);
+        return $this->indentLines($lines, $indent);
     }
 
     /**

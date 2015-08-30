@@ -293,20 +293,19 @@ class ClassElement extends AbstractElement
     /**
      * {@inheritdoc}
      *
-     * @param ArraySerializer $serializer Class used to render array values for default properties
-     *                                    and etc.
+     * @param ArraySerializer|null $serializer
      */
-    public function render($indentLevel = 0, ArraySerializer $serializer = null)
+    public function lines($indent = 0, ArraySerializer $serializer = null)
     {
-        $result = [$this->renderComment($indentLevel)];
-        $header = 'class ' . $this->getName() . ($this->extends ? ' extends ' . $this->extends : '');
+        $lines = $this->commentLines($this->comment);
+        $header = "class {$this->getName()}" . ($this->extends ? " extends {$this->extends} " : '');
 
         if (!empty($this->interfaces)) {
             $header .= ' implements ' . join(', ', $this->interfaces);
         }
 
-        $result[] = $header;
-        $result[] = "{";
+        $lines[] = $header;
+        $lines[] = "{";
 
         foreach ($this->constants as $constant => $value) {
             if ($value instanceof PHPExpression) {
@@ -316,34 +315,40 @@ class ClassElement extends AbstractElement
             }
 
             if (!empty($this->constantComments[$constant])) {
-                $result[] = $this->renderComment(
-                    $indentLevel + 1,
-                    $this->constantComments[$constant]
+                $lines = array_merge(
+                    $lines,
+                    $this->commentLines($this->constantComments[$constant], 1)
                 );
             }
 
-            $result[] = $this->indent("const {$constant} = {$value};", $indentLevel + 1);
-            $result[] = "";
+            $lines[] = $this->indent("const {$constant} = {$value};", 1);
+            $lines[] = "";
         }
 
         foreach ($this->properties as $property) {
-            $result[] = $property->render($indentLevel + 1, $serializer);
-            $result[] = "";
+            $lines = array_merge(
+                $lines, $property->lines(1, $serializer)
+            );
+
+            $lines[] = "";
         }
 
         foreach ($this->methods as $method) {
-            $result[] = $method->render($indentLevel + 1);
-            $result[] = "";
+            $lines = array_merge(
+                $lines, $method->lines(1)
+            );
+
+            $lines[] = "";
         }
 
-        if ($result[count($result) - 1] == "") {
+        if ($lines[count($lines) - 1] == "") {
             //We don't need blank lines at the end
-            unset($result[count($result) - 1]);
+            unset($lines[count($lines) - 1]);
         }
 
-        $result[] = '}';
+        $lines[] = '}';
 
-        return $this->joinLines($result, $indentLevel);
+        return $this->indentLines($lines, $indent);
     }
 
     /**

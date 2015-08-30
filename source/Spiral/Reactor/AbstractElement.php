@@ -40,7 +40,7 @@ abstract class AbstractElement
      */
     public function __construct($name)
     {
-        $this->setName($name);
+        $this->name = $name;
     }
 
     /**
@@ -127,65 +127,63 @@ abstract class AbstractElement
     }
 
     /**
-     * Render element into string with specified start indent level.
+     * Convert element into set of indented lines.
      *
-     * @param int $indentLevel
-     * @return string
+     * @param int $indent
+     * @return array
      */
-    abstract public function render($indentLevel = 0);
+    abstract public function lines($indent = 0);
 
     /**
-     * Render element doc comment.
+     * Render element doc comment lines with specified indent.
      *
-     * @param int   $indentLevel
      * @param array $comment Comment to be rendered instead of default one.
-     * @return string
+     * @param int   $indent  Indent level.
+     * @return array
      */
-    protected function renderComment($indentLevel = 0, array $comment = [])
+    protected function commentLines(array $comment = [], $indent = 0)
     {
         if (empty($comment)) {
             if (empty($comment = $this->comment)) {
-                return "";
+                return [];
             }
         }
 
-        $result = ["", "/**"];
+        $result = ["/**"];
         foreach ($comment as $line) {
             $result[] = " * " . $line;
         }
 
         $result[] = " */";
 
-        return $this->joinLines($result, $indentLevel);
+        return $this->indentLines($result, $indent);
     }
 
     /**
      * Apply indent to string.
      *
      * @param string $string
-     * @param int    $indentLevel
+     * @param int    $indent
      * @return string
      */
-    public function indent($string, $indentLevel = 0)
+    public function indent($string, $indent = 0)
     {
-        return str_repeat(self::INDENT, max($indentLevel, 0)) . $string;
+        return str_repeat(self::INDENT, max($indent, 0)) . $string;
     }
 
     /**
-     * Join multiple string lines and apply indent to every of them.
-     *
-     * @param array $lines
-     * @param int   $indentLevel
-     * @return string
+     * @param     $lines
+     * @param int $indent
+     * @return array
      */
-    protected function joinLines(array $lines, $indentLevel = 0)
+    protected function indentLines($lines, $indent = 0)
     {
-        foreach ($lines as &$line) {
-            $line = $this->indent($line, $indentLevel);
-            unset($line);
+        $result = [];
+        foreach ($lines as $line) {
+            $result[] = $this->indent($line, $indent);
         }
 
-        return join("\n", $lines);
+        return $result;
     }
 
     /**

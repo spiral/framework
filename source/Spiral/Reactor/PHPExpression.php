@@ -9,7 +9,7 @@
 namespace Spiral\Reactor;
 
 /**
- * Class constant linked to some php expression of other constant.
+ * PHPExpression used to represent some constant or expression value in reactor elements.
  */
 class PHPExpression
 {
@@ -30,6 +30,14 @@ class PHPExpression
      * @return string
      */
     public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         return $this->value;
     }
