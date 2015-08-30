@@ -158,7 +158,7 @@ class ViewManager extends Singleton implements ViewsInterface
         }
 
         return $this->container->construct(
-            !empty($class) ? $class : $this->viewClass($engine, $namespace, $view),
+            !empty($class) ? $class : $this->config['engines'][$engine]['view'],
             [
                 'compiler'  => $compiler,
                 'namespace' => $namespace,
@@ -225,7 +225,7 @@ class ViewManager extends Singleton implements ViewsInterface
                 $filename = substr($filename, 0, -1 - strlen($this->files->extension($filename)));
                 $name = substr($filename, strlen($location) + strlen(FilesInterface::SEPARATOR));
 
-                $result[$name] = $this->viewClass($foundEngine, $namespace, $name);
+                $result[$name] = $this->config['engines'][$foundEngine]['view'];
             }
         }
 
@@ -285,24 +285,6 @@ class ViewManager extends Singleton implements ViewsInterface
             'view'      => $view,
             'filename'  => $filename
         ]);
-    }
-
-    /**
-     * Get associated view class or return default engine view.
-     *
-     * @param string $engine
-     * @param string $namespace
-     * @param string $view
-     * @return string
-     */
-    private function viewClass($engine, $namespace, $view)
-    {
-        $path = $namespace . self::NS_SEPARATOR . $view;
-        if (isset($this->config['classes'][$path])) {
-            return $this->config['classes'][$path];
-        }
-
-        return $this->config['engines'][$engine]['view'];
     }
 
     /**
