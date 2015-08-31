@@ -353,6 +353,8 @@ class ClassElement extends AbstractElement
 
     /**
      * Copy properties, methods and constants from existed class using reflection.
+     * Attention, for compatibility reasons parent class and interfaces will be copied using
+     * absolute name.
      *
      * @param string $class
      * @param bool   $ownData     Copy only data declared in specified class, not in it's parents.
