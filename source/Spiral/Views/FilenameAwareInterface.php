@@ -12,18 +12,22 @@ namespace Spiral\Views;
 use Spiral\Core\ContainerInterface;
 
 /**
- * View class retrieving compiled filename from related compiler.
+ * View renderer without associated compilation engine.
  */
-interface CompilerAwareInterface extends ViewInterface
+interface FilenameAwareInterface extends ViewInterface
 {
     /**
      * @param ContainerInterface $container
-     * @param CompilerInterface  $compiler
+     * @param string             $namespace
+     * @param string             $view
+     * @param string             $filename
      * @param array              $data
      */
     public function __construct(
         ContainerInterface $container,
-        CompilerInterface $compiler,
+        $namespace,
+        $view,
+        $filename,
         array $data = []
     );
 }
