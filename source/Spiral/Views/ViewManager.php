@@ -150,7 +150,7 @@ class ViewManager extends Singleton implements ViewsInterface
         list($namespace, $view) = $this->parsePath($path);
 
         //Some views have associated compiler
-        $compiler = $this->compiler($namespace, $view, $engine);
+        $compiler = $this->compiler($namespace, $view, $engine, $filename);
 
         if (!empty($compiler) && !$compiler->isCompiled()) {
             //Pre-compile
@@ -163,6 +163,7 @@ class ViewManager extends Singleton implements ViewsInterface
                 'compiler'  => $compiler,
                 'namespace' => $namespace,
                 'view'      => $view,
+                'filename'  => $filename,
                 'data'      => $data
             ]
         );
@@ -267,11 +268,12 @@ class ViewManager extends Singleton implements ViewsInterface
      *
      * @param string $namespace
      * @param string $view
-     * @param string $engine Selected engine name.
+     * @param string $engine   Selected engine name.
+     * @param string $filename Reference to original view filename.
      * @return CompilerInterface|null
      * @throws ContainerException
      */
-    private function compiler($namespace, $view, &$engine = null)
+    private function compiler($namespace, $view, &$engine = null, &$filename = null)
     {
         $filename = $this->getFilename($namespace, $view, $engine);
         if (empty($this->config['engines'][$engine]['compiler'])) {
