@@ -62,7 +62,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     /**
      * I need a constant for Symfony Console. :/
      */
-    const VERSION = '0.8.9-alpha';
+    const VERSION = '0.3.3-beta';
 
     /**
      * Name of bootstrap file to be called if no application core were defined.
