@@ -34,6 +34,22 @@ trait TimestampsTrait
     abstract public function events();
 
     /**
+     * Touch object and update it's time_updated value.
+     *
+     * @return $this
+     */
+    public function touch()
+    {
+        if ($this instanceof Record) {
+            $this->setField('time_updated', new \DateTime(), false);
+        } elseif ($this instanceof Document) {
+            $this->setField('timeUpdated', new \MongoDate(time()), false);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param bool $analysis DataEntity is being analyzed.
      */
     protected static function initTimestampsTrait($analysis)
