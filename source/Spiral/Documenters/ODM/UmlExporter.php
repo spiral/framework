@@ -13,6 +13,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\ODM\Document;
 use Spiral\ODM\Entities\SchemaBuilder;
 use Spiral\ODM\Entities\Schemas\DocumentSchema;
+use Spiral\ODM\ODM;
 use Spiral\Reactor\AbstractElement;
 
 /**

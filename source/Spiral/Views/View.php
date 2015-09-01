@@ -16,7 +16,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  * Default spiral implementation of view class. You can link your custom view implementations via
  * editing view config section - associations. You can use $this->container inside view source.
  */
-class View extends Component implements ViewInterface
+class View extends Component implements CompilerAwareInterface
 {
     /**
      * For render benchmarking.
