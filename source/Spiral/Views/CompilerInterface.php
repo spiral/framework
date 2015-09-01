@@ -45,6 +45,13 @@ interface CompilerInterface
     public function getView();
 
     /**
+     * True if view has been already compiled and cached somewhere.
+     *
+     * @return bool
+     */
+    public function isCompiled();
+
+    /**
      * @throws CompilerException
      * @throws \Exception
      */
@@ -56,11 +63,4 @@ interface CompilerInterface
      * @return string
      */
     public function compiledFilename();
-
-    /**
-     * True if view has been already compiled and cached somewhere.
-     *
-     * @return bool
-     */
-    public function isCompiled();
 }

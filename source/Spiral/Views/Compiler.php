@@ -146,6 +146,22 @@ class Compiler extends Component implements CompilerInterface, SaturableInterfac
     /**
      * {@inheritdoc}
      */
+    public function isCompiled()
+    {
+        if (!$this->config['cache']['enabled']) {
+            return false;
+        }
+
+        if (!$this->files->exists($viewFilename = $this->compiledFilename())) {
+            return false;
+        }
+
+        return $this->files->time($viewFilename) >= $this->files->time($this->filename);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function compile()
     {
         $source = $this->getSource();
@@ -184,22 +200,6 @@ class Compiler extends Component implements CompilerInterface, SaturableInterfac
         $filename = $this->namespace . '-' . $view . $postfix;;
 
         return $this->compiledFilename = $this->config['cache']['directory'] . '/' . $filename;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isCompiled()
-    {
-        if (!$this->config['cache']['enabled']) {
-            return false;
-        }
-
-        if (!$this->files->exists($viewFilename = $this->compiledFilename())) {
-            return false;
-        }
-
-        return $this->files->time($viewFilename) >= $this->files->time($this->filename);
     }
 
     /**
