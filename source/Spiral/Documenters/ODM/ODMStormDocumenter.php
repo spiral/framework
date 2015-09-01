@@ -149,12 +149,15 @@ class ODMStormDocumenter extends VirtualDocumenter
 
         //Composition (we only need to handle MANY compositions)
         foreach ($entity->getCompositions() as $name => $composition) {
+            //We are going to create helper compositor class
+            $class = $composition['class'];
+
             if ($composition['type'] == ODM::CMP_ONE) {
+                $element->property($name)->setComment("@var \\" . $composition['class']);
                 continue;
             }
 
-            //We are going to create helper compositor class
-            $class = $composition['class'];
+
             $element->property(
                 $name, '@var ' . $this->helper('compositor', $class) . '|\\' . $class . '[]'
             );
