@@ -254,7 +254,7 @@ class ViewManager extends Singleton implements ViewsInterface
                 foreach ($this->config['engines'] as $engine => $options) {
                 foreach ($options['extensions'] as $extension) {
                     $candidate = $directory . FilesInterface::SEPARATOR . $view . '.' . $extension;
-dumP($candidate,2);
+
                     if ($this->files->exists($candidate)) {
                         return $this->files->normalizePath($candidate);
                     }
