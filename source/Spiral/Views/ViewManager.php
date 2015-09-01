@@ -160,6 +160,7 @@ class ViewManager extends Singleton implements ViewsInterface
         return $this->container->construct(
             !empty($class) ? $class : $this->config['engines'][$engine]['view'],
             [
+                'views'     => $this,
                 'compiler'  => $compiler,
                 'namespace' => $namespace,
                 'view'      => $view,
