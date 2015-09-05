@@ -50,6 +50,11 @@ class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterfac
 
         //We are locking timezone to UTC for mongo
         parent::__construct($data, 'UTC');
+
+        if ($data === null || $this->getTimestamp() === false) {
+            //Correcting default values
+            $this->setTimestamp(0);
+        }
     }
 
     /**
