@@ -348,7 +348,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function getConfig($section = null)
     {
-        $filename = $this->createFilename($section, $this->directories['config']);
+        $filename = $this->createFilename($section, $this->directories['config'], true);
 
         //Configuration cache ID
         $cached = str_replace(['/', '\\'], '-', 'config-' . $section);
@@ -366,7 +366,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             //Let's check for environment specific config
             $environment = $this->createFilename(
                 $section,
-                $this->directories['config'] . '/' . $this->environment
+                $this->directories['config'] . '/' . $this->environment,
+                true
             );
 
             if (file_exists($environment)) {
@@ -531,11 +532,14 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      *
      * @param string $name     Runtime data file name (without extension).
      * @param string $location Location to store data in.
+     * @param bool   $keepSlashes
      * @return string
      */
-    private function createFilename($name, $location = null)
+    private function createFilename($name, $location = null, $keepSlashes = false)
     {
-        $name = str_replace(['/', '\\'], '-', $name);
+        if (!$keepSlashes) {
+            $name = str_replace(['/', '\\'], '-', $name);
+        }
 
         if (!empty($location)) {
             return $location . '/' . $name . '.' . static::EXTENSION;
