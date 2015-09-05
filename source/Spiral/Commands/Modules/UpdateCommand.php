@@ -75,5 +75,10 @@ class UpdateCommand extends InstallCommand
                 "Module '<comment>{$definition->getName()}</comment>' was successfully udpated."
             );
         }
+
+        $this->writeln("");
+
+        //Touching configs
+        $this->console->command('app:touch', [], $this->output);
     }
 }

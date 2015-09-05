@@ -120,6 +120,11 @@ class InstallCommand extends Command
         if ($countInstalled == 0) {
             $this->writeln("<comment>No available modules were found.</comment>");
         }
+
+        $this->writeln("");
+
+        //Touching configs
+        $this->console->command('app:touch', [], $this->output);
     }
 
     /**
