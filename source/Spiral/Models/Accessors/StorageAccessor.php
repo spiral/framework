@@ -72,7 +72,7 @@ class StorageAccessor extends Component implements
     /**
      * {@inheritdoc}
      */
-    public function __construct($data = null, $parent = null, $options = null, ODM $odm = null)
+    public function __construct($data = null, $parent = null, ODM $odm = null, $options = null)
     {
         if ($this->address = $data) {
             $this->object = $this->storage()->open($this->address);
