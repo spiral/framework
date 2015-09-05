@@ -36,7 +36,7 @@ class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterfac
     /**
      * {@inheritdoc}
      */
-    public function __construct($data = null, $parent = null, $timezone = null, ODM $odm = null)
+    public function __construct($data = null, $parent = null, ODM $odm = null, $timezone = null)
     {
         $this->parent = $parent;
         $this->original = $data;
@@ -47,7 +47,7 @@ class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterfac
             return;
         }
 
-        parent::__construct($data, $parent);
+        parent::__construct($data);
     }
 
     /**
