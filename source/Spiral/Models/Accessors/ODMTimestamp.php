@@ -42,12 +42,14 @@ class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterfac
         $this->original = $data;
 
         if ($data instanceof \MongoDate) {
+            parent::__construct(null, 'UTC');
             $this->setTimestamp($data->sec);
 
             return;
         }
 
-        parent::__construct($data);
+        //We are locking timezone to UTC for mongo
+        parent::__construct($data, 'UTC');
     }
 
     /**
