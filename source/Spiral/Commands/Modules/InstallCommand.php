@@ -94,7 +94,7 @@ class InstallCommand extends Command
                 continue;
             }
 
-            if ($definition->isInstalled() && !$this->option('force')) {
+            if ($this->modules->hasModule($definition->getName()) && !$this->option('force')) {
                 //Already installed
                 continue;
             }

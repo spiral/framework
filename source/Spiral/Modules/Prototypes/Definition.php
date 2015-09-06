@@ -73,15 +73,8 @@ class Definition implements DefinitionInterface
     protected $files = null;
 
     /**
-     * @invisible
-     * @var ModuleManager
-     */
-    protected $modules = null;
-
-    /**
      * @param ContainerInterface $container
      * @param FilesInterface     $file
-     * @param ModuleManager      $modules
      * @param string             $class
      * @param string             $name
      * @param string             $description
@@ -90,7 +83,6 @@ class Definition implements DefinitionInterface
     public function __construct(
         ContainerInterface $container,
         FilesInterface $file,
-        ModuleManager $modules,
         $class,
         $name,
         $description = '',
@@ -98,7 +90,6 @@ class Definition implements DefinitionInterface
     ) {
         $this->container = $container;
         $this->files = $file;
-        $this->modules = $modules;
 
         $this->class = $class;
         $this->name = $name;
@@ -162,14 +153,6 @@ class Definition implements DefinitionInterface
     public function getDependencies()
     {
         return $this->dependencies;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isInstalled()
-    {
-        return (bool)$this->modules->hasModule($this->getName());
     }
 
     /**

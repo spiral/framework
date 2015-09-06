@@ -58,7 +58,7 @@ class UpdateCommand extends InstallCommand
         }
 
         foreach ($modules as $definition) {
-            if (!$definition->isInstalled()) {
+            if (!$this->modules->hasModule($definition->getName())) {
                 //Non installed
                 continue;
             }
