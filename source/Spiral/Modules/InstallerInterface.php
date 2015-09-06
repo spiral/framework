@@ -33,8 +33,8 @@ interface InstallerInterface
     public function needsBootstrapping();
 
     /**
-     * Declared module bindings, must be compatible with active container instance and be serializable
-     * into array.
+     * Declared module bindings, must be compatible with active container instance and be
+     * serializable into array.
      *
      * @return array
      */

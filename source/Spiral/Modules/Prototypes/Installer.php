@@ -22,8 +22,8 @@ use Spiral\Modules\InstallerInterface;
 use Spiral\Modules\ModuleManager;
 
 /**
- * Default spiral installer provides ability to alter application configs, register and update module
- * public files, create migrations and set of required component bindings.
+ * Default spiral installer provides ability to alter application configs, register and update
+ * module public files, create migrations and set of required component bindings.
  *
  * Installer requires FileManager implementation (relativePath method).
  */
@@ -51,8 +51,8 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
     private $boostrappable = false;
 
     /**
-     * Declared module bindings, must be compatible with active container instance and be serializable
-     * into array.
+     * Declared module bindings, must be compatible with active container instance and be
+     * serializable into array.
      *
      * @var array
      */
@@ -344,10 +344,10 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
     }
 
     /**
-     * List of files which already exists in application public directory and conflicted with modules
-     * files by size or content, this method should be called before module installation to make sure
-     * that no user files will be removed or overwritten without notification. File conflicts can be
-     * resolved by picking one of resolution methods.
+     * List of files which already exists in application public directory and conflicted with
+     * modules files by size or content, this method should be called before module installation to
+     * make sure that no user files will be removed or overwritten without notification. File
+     * conflicts can be resolved by picking one of resolution methods.
      *
      * @return array
      */

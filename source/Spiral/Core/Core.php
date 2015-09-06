@@ -556,7 +556,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public static function instance()
     {
-        return self::container()->get(self::class);
+        return self::staticContainer()->get(self::class);
     }
 
     /**
@@ -574,9 +574,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
          */
         $core = new static($directories + ['framework' => dirname(__DIR__)]);
 
-        if (empty(self::container())) {
-            self::setContainer($core);
-        }
+        //Initiating global/static container used by traits and some classes
+        self::staticContainer($core);
 
         $core->bindings = [
                 static::class                => $core,

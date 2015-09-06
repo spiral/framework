@@ -11,8 +11,8 @@ namespace Spiral\Modules;
 use Spiral\Core\ContainerInterface;
 
 /**
- * Describes ability to be located by ModuleManager and installed with custom configs, resources and e
- * tc.
+ * Describes ability to be located by ModuleManager and installed with custom configs, resources
+ * and e tc.
  */
 interface ModuleInterface
 {

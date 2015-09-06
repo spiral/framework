@@ -9,6 +9,7 @@
 use Spiral\Core\Core;
 use Spiral\Debug\Dumper;
 use Spiral\Translator\Exceptions\TranslatorException;
+use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 
 if (!function_exists('directory')) {
@@ -74,14 +75,13 @@ if (!function_exists('dump')) {
      * environment. Only use it during development, error handling and other not high loaded
      * application parts. Method is an alias for Debug::dump() method.
      *
-     * @param mixed $value      Value to be dumped.
-     * @param int   $output     Output method, can print, return or log value dump.
-     * @param bool  $showStatic Set true to dump all static object properties.
+     * @param mixed $value  Value to be dumped.
+     * @param int   $output Output method, can print, return or log value dump.
      * @return null|string
      */
-    function dump($value, $output = Dumper::OUTPUT_ECHO, $showStatic = false)
+    function dump($value, $output = Dumper::OUTPUT_ECHO)
     {
-        return Core::container()->get(Dumper::class)->dump($value, $output, $showStatic);
+        return Dumper::instance()->dump($value, $output);
     }
 }
 
@@ -104,9 +104,7 @@ if (!function_exists('l')) {
         $arguments = func_get_args();
         array_unshift($arguments, TranslatorInterface::DEFAULT_BUNDLE);
 
-        return call_user_func_array(
-            [Core::container()->get(TranslatorInterface::class), 'translate'], $arguments
-        );
+        return call_user_func_array([Translator::instance(), 'translate'], $arguments);
     }
 }
 
@@ -127,8 +125,6 @@ if (!function_exists('p')) {
      */
     function p($phrase, $number, $format = true)
     {
-        return Core::container()->get(TranslatorInterface::class)->pluralize(
-            $phrase, $number, $format
-        );
+        return Translator::instance()->pluralize($phrase, $number, $format);
     }
 }
