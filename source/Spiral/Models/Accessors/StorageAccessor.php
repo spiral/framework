@@ -13,6 +13,7 @@ use Spiral\Core\Component;
 use Spiral\Database\Entities\Driver;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\Streams\StreamableInterface;
+use Spiral\Models\DataEntity;
 use Spiral\Models\Exceptions\StorageAccessorException;
 use Spiral\ODM\Document;
 use Spiral\ODM\DocumentAccessorInterface;
@@ -62,6 +63,12 @@ class StorageAccessor extends Component implements
      * @var ObjectInterface
      */
     protected $object = null;
+
+    /**
+     * @invisible
+     * @var DataEntity
+     */
+    private $parent = null;
 
     /**
      * @invisible
@@ -326,6 +333,10 @@ class StorageAccessor extends Component implements
             return $this->storage;
         }
 
-        return $this->storage = self::container()->get(StorageInterface::class);
+        if (!empty($this->parent) && $this->parent instanceof Component) {
+            $this->storage = $this->parent->container()->get(StorageInterface::class);
+        }
+
+        return $this->storage = self::staticContainer()->get(StorageInterface::class);
     }
 }
