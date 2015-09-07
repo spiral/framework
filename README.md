@@ -19,5 +19,5 @@ Framework and toolkit roadmap
 * Few tutorials and quick start videos
 * Authorization module with integration with ORM (and maybe ODM), i'm still thinking about the most optimal
   implementation (heading to RBAC with NIST model level 2b)
-* Universal administration panel with flexible design, RBAC (NIST) and set of generators
+* Universal administration panel with flexible design, RBAC (NIST) and set of generators - http://prntscr.com/8cwddl
 * Tests coverage
