@@ -503,7 +503,7 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
                         $trace['line'] = $snapshot->getLine();
                     }
 
-                    if (!isset($trace['function'])) {
+                    if (!isset($trace['function']) || !isset($trace['file'])) {
                         continue;
                     }
 
