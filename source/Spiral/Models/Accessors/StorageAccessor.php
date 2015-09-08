@@ -28,7 +28,7 @@ use Spiral\Storage\StorageInterface;
 
 /**
  * Provides simplified access to field pointing to storage object address. Global container instance
- * is required!
+ * is required in fallback mode!
  *
  * @method string getName()
  * @method string getAddress()
