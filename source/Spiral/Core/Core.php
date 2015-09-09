@@ -44,7 +44,7 @@ use Spiral\Modules\ModuleManager;
  * @property \Spiral\Redis\RedisManager               $redis
  * @property \Spiral\Image\ImageManager               $images
  *
- * @property \Spiral\Database\DatabaseProvider        $dbal
+ * @property \Spiral\Database\DatabaseManager         $dbal
  * @property \Spiral\ODM\ODM                          $odm
  * @property \Spiral\ORM\ORM                          $orm
  *
