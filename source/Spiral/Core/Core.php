@@ -148,7 +148,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Views\ViewsInterface'                  => 'Spiral\Views\ViewManager',
         'Spiral\Storage\StorageInterface'              => 'Spiral\Storage\StorageManager',
         'Spiral\Storage\BucketInterface'               => 'Spiral\Storage\Entities\StorageBucket',
-        'Spiral\Session\StoreInterface'                => 'Spiral\Session\SessionStore',
+        'Spiral\Session\SessionInterface'              => 'Spiral\Session\SessionStore',
         'Spiral\Encrypter\EncrypterInterface'          => 'Spiral\Encrypter\Encrypter',
         'Spiral\Tokenizer\TokenizerInterface'          => 'Spiral\Tokenizer\Tokenizer',
         'Spiral\Validation\ValidatorInterface'         => 'Spiral\Validation\Validator',

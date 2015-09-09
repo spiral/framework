@@ -337,6 +337,7 @@ class StorageAccessor extends Component implements
             $this->storage = $this->parent->container()->get(StorageInterface::class);
         }
 
+        //Only when global container is set and no parent container specified
         return $this->storage = self::staticContainer()->get(StorageInterface::class);
     }
 }
