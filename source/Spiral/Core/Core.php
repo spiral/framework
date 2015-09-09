@@ -165,7 +165,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'http'                                         => 'Spiral\Http\HttpDispatcher',
         //Component aliases
         'cache'                                        => 'Spiral\Cache\CacheProvider',
-        'dbal'                                         => 'Spiral\Database\DatabaseProvider',
+        'dbal'                                         => 'Spiral\Database\DatabaseManager',
         'encrypter'                                    => 'Spiral\Encrypter\Encrypter',
         'input'                                        => 'Spiral\Http\InputManager',
         'files'                                        => 'Spiral\Files\FileManager',
