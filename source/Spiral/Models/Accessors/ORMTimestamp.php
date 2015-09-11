@@ -8,7 +8,7 @@
  */
 namespace Spiral\Models\Accessors;
 
-use Spiral\Database\DatabaseProvider;
+use Spiral\Database\DatabaseManager;
 use Spiral\Database\Entities\Driver;
 use Spiral\Models\Accessors\Prototypes\AbstractTimestamp;
 use Spiral\ORM\Record;
@@ -40,10 +40,10 @@ class ORMTimestamp extends AbstractTimestamp implements RecordAccessorInterface
     {
         $this->parent = $parent;
         if ($data instanceof \DateTime) {
-            parent::__construct(null, DatabaseProvider::DEFAULT_TIMEZONE);
+            parent::__construct(null, DatabaseManager::DEFAULT_TIMEZONE);
             $this->setTimestamp($data->getTimestamp());
         } else {
-            parent::__construct($data, DatabaseProvider::DEFAULT_TIMEZONE);
+            parent::__construct($data, DatabaseManager::DEFAULT_TIMEZONE);
         }
 
         if ($this->getTimestamp() === false) {
