@@ -8,7 +8,7 @@
  */
 namespace Spiral\Reactor\Generators;
 
-use Spiral\ODM\AbstractDocument;
+use Spiral\ODM\EmbeddableDocument;
 use Spiral\Reactor\Generators\Prototypes\AbstractEntity;
 
 /**
@@ -21,8 +21,8 @@ class EmbeddableGenerator extends AbstractEntity
      */
     public function generate()
     {
-        $this->file->addUse(AbstractDocument::class);
-        $this->class->setExtends('AbstractDocument');
+        $this->file->addUse(EmbeddableDocument::class);
+        $this->class->setExtends('EmbeddableDocument');
 
         parent::generate();
     }
