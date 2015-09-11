@@ -6,26 +6,25 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
+
 namespace Spiral\Commands\Reactor;
 
+
 use Spiral\Commands\Reactor\Prototypes\EntityCommand;
-use Spiral\Reactor\Generators\RecordGenerator;
+use Spiral\Reactor\Generators\EmbeddableGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 
-/**
- * Generate ORM record with pre-defined schema and validation placeholders.
- */
-class RecordCommand extends EntityCommand
+class EmbeddableCommand extends EntityCommand
 {
     /**
      * Success message. To be used by DocumentCommand.
      */
-    const SUCCESS_MESSAGE = 'ORM Record was successfully created:';
+    const SUCCESS_MESSAGE = 'Embeddable ODM Document was successfully created:';
 
     /**
      * Generator class to be used.
      */
-    const GENERATOR = RecordGenerator::class;
+    const GENERATOR = EmbeddableGenerator::class;
 
     /**
      * Generation type to be used.
@@ -35,17 +34,17 @@ class RecordCommand extends EntityCommand
     /**
      * {@inheritdoc}
      */
-    protected $name = 'create:record';
+    protected $name = 'create:embeddable';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Generate new ORM Record.';
+    protected $description = 'Generate new embeddable ODM document.';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['name', InputArgument::REQUIRED, 'Record name.']
+        ['name', InputArgument::REQUIRED, 'Document name.']
     ];
 }

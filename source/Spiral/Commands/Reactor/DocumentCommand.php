@@ -8,13 +8,14 @@
  */
 namespace Spiral\Commands\Reactor;
 
+use Spiral\Commands\Reactor\Prototypes\EntityCommand;
 use Spiral\Reactor\Generators\DocumentGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Generate ORM record with pre-defined schema and validation placeholders.
  */
-class DocumentCommand extends RecordCommand
+class DocumentCommand extends EntityCommand
 {
     /**
      * Success message. To be used by DocumentCommand.
