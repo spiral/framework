@@ -48,9 +48,9 @@ use Spiral\Modules\ModuleManager;
  * @property \Spiral\ODM\ODM                          $odm
  * @property \Spiral\ORM\ORM                          $orm
  *
- * @property \Spiral\Http\Cookies\CookieManager       $cookies Scope depended.
- * @property \Spiral\Http\Routing\Router              $router  Scope depended.
- * @property \Psr\Http\Message\ServerRequestInterface $request Scope depended.
+ * @property \Spiral\Http\Cookies\CookieManager       $cookies  Scope depended.
+ * @property \Spiral\Http\Routing\Router              $router   Scope depended.
+ * @property \Psr\Http\Message\ServerRequestInterface $request  Scope depended.
  */
 class Core extends Container implements CoreInterface, ConfiguratorInterface, HippocampusInterface
 {

@@ -56,6 +56,7 @@ abstract class Controller extends Service implements ControllerInterface
         $reflection = new \ReflectionMethod($this, $action);
 
         if (!$this->isExecutable($reflection)) {
+            //We might need different exception code here
             throw new ControllerException(
                 "Action '{$action}' can not be executed.",
                 ControllerException::BAD_ACTION
