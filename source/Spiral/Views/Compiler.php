@@ -9,7 +9,6 @@
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
-use Spiral\Core\Container\SaturableInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Core\Traits\ConfigurableTrait;
@@ -20,7 +19,7 @@ use Spiral\Files\FilesInterface;
  * Default spiral compiler implementation. Provides ability to cache compiled views and use set
  * of processors to prepare view source.
  */
-class Compiler extends Component implements CompilerInterface, SaturableInterface
+class Compiler extends Component implements CompilerInterface
 {
     /**
      * Configuration and compilation benchmarks.
@@ -87,13 +86,16 @@ class Compiler extends Component implements CompilerInterface, SaturableInterfac
 
     /**
      * {@inheritdoc}
+     *
+     * @param ContainerInterface $container Required.
      */
     public function __construct(
         ViewManager $views,
         FilesInterface $files,
         $namespace,
         $view,
-        $filename
+        $filename,
+        ContainerInterface $container = null
     ) {
         //Our configuration is stored in parent ViewManager config
         $this->config = $views->config()['compiler'];
@@ -107,14 +109,9 @@ class Compiler extends Component implements CompilerInterface, SaturableInterfac
         $this->filename = $filename;
 
         $this->dependencies = $views->getDependencies();
-    }
 
-    /**
-     * @param ContainerInterface $container
-     */
-    public function init(ContainerInterface $container)
-    {
-        $this->container = $container;
+        //We can use global container as fallback if no default values were provided
+        $this->container = self::saturate($container, ContainerInterface::class);
     }
 
     /**

@@ -8,7 +8,6 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Core\Container\SaturableInterface;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\Container\InstanceException;
 
@@ -20,8 +19,7 @@ use Spiral\Core\Exceptions\Container\InstanceException;
  * Count service as layer (model) between data entities and various controllers.
  *
  * You can declare service boot logic and dependencies in init method which is going to be
- * executed using container (same as Saturable interfaces). In addition service can access
- * components bindings using string alias.
+ * executed using container. In addition service can access components bindings using string alias.
  *
  * @property \Spiral\Core\Core                        $core
  * @property \Spiral\Core\Components\Loader           $loader
@@ -55,6 +53,11 @@ use Spiral\Core\Exceptions\Container\InstanceException;
 class Service extends Component
 {
     /**
+     * Init method name.
+     */
+    const INIT_METHOD = 'init';
+
+    /**
      * @invisible
      * @var ContainerInterface
      */
@@ -68,18 +71,9 @@ class Service extends Component
     {
         $this->container = $container;
 
-        if (
-            $init
-            && method_exists($this, SaturableInterface::SATURATE_METHOD)
-            && !$this instanceof SaturableInterface
-        ) {
-            $method = new \ReflectionMethod($this, SaturableInterface::SATURATE_METHOD);
-
-            //Executing init method
-            call_user_func_array(
-                [$this, SaturableInterface::SATURATE_METHOD],
-                $container->resolveArguments($method)
-            );
+        if ($init && method_exists($this, self::INIT_METHOD)) {
+            $method = new \ReflectionMethod($this, self::INIT_METHOD);
+            $method->invokeArgs($this, $container->resolveArguments($method));
         }
     }
 

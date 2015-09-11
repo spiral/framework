@@ -8,7 +8,7 @@
  */
 namespace Spiral\Views\Processors;
 
-use Spiral\Core\Container\SaturableInterface;
+use Spiral\Core\Component;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\Compiler;
 use Spiral\Views\ProcessorInterface;
@@ -19,7 +19,7 @@ use Spiral\Views\ViewsInterface;
  * Performs string replacement in view source using translator instance and [[ ]] pattern. Processor
  * will generate translator bundle name using view name and namespace.
  */
-class TranslateProcessor implements ProcessorInterface, SaturableInterface
+class TranslateProcessor extends Component implements ProcessorInterface
 {
     /**
      * @var array
@@ -46,9 +46,15 @@ class TranslateProcessor implements ProcessorInterface, SaturableInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param TranslatorInterface $translator
      */
-    public function __construct(ViewManager $views, Compiler $compiler, array $options)
-    {
+    public function __construct(
+        ViewManager $views,
+        Compiler $compiler,
+        array $options,
+        TranslatorInterface $translator = null
+    ) {
         $this->compiler = $compiler;
         $this->options = $options + $this->options;
 
@@ -62,14 +68,9 @@ class TranslateProcessor implements ProcessorInterface, SaturableInterface
             );
 
         $this->bundle = trim($this->bundle, '-');
-    }
 
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function init(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
+        //Global container as fallback
+        $this->translator = self::saturate(TranslatorInterface::class, $translator);
     }
 
     /**

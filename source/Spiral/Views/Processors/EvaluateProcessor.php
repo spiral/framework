@@ -8,7 +8,7 @@
  */
 namespace Spiral\Views\Processors;
 
-use Spiral\Core\Container\SaturableInterface;
+use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Tokenizer\Isolator;
@@ -20,7 +20,7 @@ use Spiral\Views\ViewManager;
  * Evaluates php blocks marked with compilation flag at moment of view code compilation. This
  * processor is required for spiral toolkit.
  */
-class EvaluateProcessor implements ProcessorInterface, SaturableInterface
+class EvaluateProcessor extends Component implements ProcessorInterface
 {
     /**
      * @var ViewManager
@@ -56,23 +56,25 @@ class EvaluateProcessor implements ProcessorInterface, SaturableInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param FilesInterface     $files
+     * @param ContainerInterface $container
      */
-    public function __construct(ViewManager $views, Compiler $compiler, array $options)
-    {
+    public function __construct(
+        ViewManager $views,
+        Compiler $compiler,
+        array $options,
+        FilesInterface $files = null,
+        ContainerInterface $container = null
+    ) {
         $this->views = $views;
         $this->compiler = $compiler;
 
         $this->options = $options + $this->options;
-    }
 
-    /**
-     * @param FilesInterface     $files
-     * @param ContainerInterface $container
-     */
-    public function init(FilesInterface $files, ContainerInterface $container)
-    {
-        $this->files = $files;
-        $this->container = $container;
+        //Fallback to global container if no values were provided
+        $this->files = self::saturate(FilesInterface::class, $files);
+        $this->container = self::saturate(ContainerInterface::class, $container);
     }
 
     /**

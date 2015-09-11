@@ -8,7 +8,6 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Core\Container\SaturableInterface;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Debug\Traits\BenchmarkTrait;
@@ -105,7 +104,7 @@ abstract class Controller extends Service implements ControllerInterface
     protected function isExecutable(\ReflectionMethod $method)
     {
         if (
-            $method->getName() == SaturableInterface::SATURATE_METHOD
+            $method->getName() == self::INIT_METHOD
             || $method->isStatic()
             || !$method->isPublic()
             || !$method->isUserDefined()
