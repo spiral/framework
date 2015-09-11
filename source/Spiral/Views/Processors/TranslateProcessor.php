@@ -69,8 +69,8 @@ class TranslateProcessor extends Component implements ProcessorInterface
 
         $this->bundle = trim($this->bundle, '-');
 
-        //Global container as fallback
-        $this->translator = self::saturate(TranslatorInterface::class, $translator);
+        //We can use global container as fallback if no default values were provided
+        $this->translator = self::saturate($translator, TranslatorInterface::class);
     }
 
     /**

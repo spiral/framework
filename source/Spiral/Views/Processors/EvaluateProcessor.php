@@ -72,9 +72,9 @@ class EvaluateProcessor extends Component implements ProcessorInterface
 
         $this->options = $options + $this->options;
 
-        //Fallback to global container if no values were provided
-        $this->files = self::saturate(FilesInterface::class, $files);
-        $this->container = self::saturate(ContainerInterface::class, $container);
+        //We can use global container as fallback if no default values were provided
+        $this->files = self::saturate($files, FilesInterface::class);
+        $this->container = self::saturate($container, ContainerInterface::class);
     }
 
     /**
