@@ -46,7 +46,7 @@ class MiddlewareGenerator extends AbstractService
                 "@param \\Closure               \$next Next middleware/target. Always returns ResponseInterface.",
                 "@return ResponseInterface"
             ],
-            ['request', 'next']
+            ['request', 'response', 'next']
         );
 
         $invoke->parameter('request')->setType('ServerRequestInterface');
