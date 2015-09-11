@@ -9,6 +9,7 @@
 namespace Spiral\Documenters\ODM;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Spiral\Documenters\Documenter;
 use Spiral\Documenters\Exceptions\DocumenterException;
 use Spiral\Documenters\VirtualDocumenter;
@@ -20,11 +21,12 @@ use Spiral\ODM\Entities\Compositor;
 use Spiral\ODM\Entities\DocumentCursor;
 use Spiral\ODM\Entities\SchemaBuilder;
 use Spiral\ODM\Entities\Schemas\DocumentSchema;
-use Spiral\ODM\Exceptions\CompositorException;
 use Spiral\ODM\Exceptions\DefinitionException;
 use Spiral\ODM\Exceptions\ODMException;
 use Spiral\ODM\ODM;
 use Spiral\Pagination\Exceptions\PaginationException;
+use Spiral\Pagination\PaginableInterface;
+use Spiral\Pagination\PaginatorInterface;
 use Spiral\Reactor\AbstractElement;
 use Spiral\Reactor\ClassElement;
 
@@ -74,12 +76,12 @@ class ODMStormDocumenter extends VirtualDocumenter
 
             //Required uses
             $namespace->setUses([
-                DocumentCursor::class,
-                CompositorException::class,
                 DefinitionException::class,
                 ODMException::class,
                 ServerRequestInterface::class,
-                PaginationException::class
+                PaginationException::class,
+                PaginatorInterface::class,
+                LoggerInterface::class
             ]);
         }
     }
@@ -108,7 +110,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         )->setStatic(true)->parameter('fields')->setOptional(true, []);
 
         //Document has collection, let's clarify static methods
-        if (!empty($entity->getCollection())) {
+        if (!$entity->isEmbeddable()) {
             $parent = $entity->getName();
             $return = $entity->getShortName();
             if ($entity->getParent(true) != $entity) {
@@ -156,7 +158,6 @@ class ODMStormDocumenter extends VirtualDocumenter
                 $element->property($name)->setComment("@var \\" . $composition['class']);
                 continue;
             }
-
 
             $element->property(
                 $name, '@var ' . $this->helper('compositor', $class) . '|\\' . $class . '[]'
