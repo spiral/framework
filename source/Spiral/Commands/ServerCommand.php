@@ -54,7 +54,7 @@ class ServerCommand extends Command
         $this->writeln("Press <comment>Ctrl-C</comment> to quit.");
 
         $process = new Process(
-            '"' . PHP_BINARY . '" -S ' . $host . ' "' . directory('framework') . '/../server.php"',
+            '"' . PHP_BINARY . '" -S ' . $host . ' "' . directory('framework') . '../server.php"',
             directory('public'),
             null,
             null,

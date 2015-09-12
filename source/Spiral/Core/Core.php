@@ -198,20 +198,20 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      * Core class will extend default spiral container and initiate set of directories. You must
      * provide application, libraries and root directories to constructor.
      *
-     * @param array $directories Core directories list.
+     * @param array $directories Core directories list. Every directory must have / at the end.
      */
     public function __construct(array $directories)
     {
         $this->directories = $directories + [
-                'public'  => $directories['root'] . '/webroot',
-                'config'  => $directories['application'] . '/config',
-                'runtime' => $directories['application'] . '/runtime',
-                'cache'   => $directories['application'] . '/runtime/cache'
+                'public'  => $directories['root'] . 'webroot/',
+                'config'  => $directories['application'] . 'config/',
+                'runtime' => $directories['application'] . 'runtime/',
+                'cache'   => $directories['application'] . 'runtime/cache/'
             ];
 
         if (empty($this->environment)) {
             //This is spiral shortcut to set environment, can be redefined by custom application class.
-            $filename = $this->directory('runtime') . '/environment.php';
+            $filename = $this->directory('runtime') . 'environment.php';
             $this->setEnvironment(file_exists($filename) ? (require $filename) : self::DEVELOPMENT);
         }
 
@@ -294,7 +294,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function setDirectory($alias, $path)
     {
-        $this->directories[$alias] = $path;
+        $this->directories[$alias] = rtrim($path, '/\\') . '/';
 
         return $this;
     }
@@ -325,10 +325,10 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      */
     public function bootstrap()
     {
-        if (file_exists($this->directory('application') . '/' . static::BOOTSTRAP)) {
+        if (file_exists($this->directory('application') . static::BOOTSTRAP)) {
             $application = $this;
             //Old Fashion, btw there is very tasty cocktail under the same name
-            require($this->directory('application') . '/' . static::BOOTSTRAP);
+            require($this->directory('application') . static::BOOTSTRAP);
         }
     }
 
@@ -366,7 +366,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             //Let's check for environment specific config
             $environment = $this->createFilename(
                 $section,
-                $this->directories['config'] . '/' . $this->environment,
+                $this->directories['config'] . $this->environment,
                 true
             );
 
@@ -546,7 +546,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         }
 
         //Runtime cache
-        return $this->directories['cache'] . "/$name-{$this->applicationID}" . '.' . static::EXTENSION;
+        return $this->directories['cache'] . "$name-{$this->applicationID}" . '.' . static::EXTENSION;
     }
 
     /**
@@ -572,7 +572,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         /**
          * @var Core $core
          */
-        $core = new static($directories + ['framework' => dirname(__DIR__)]);
+        $core = new static($directories + ['framework' => dirname(__DIR__) . '/']);
 
         //Initiating global/static container used by traits and some classes
         self::staticContainer($core);

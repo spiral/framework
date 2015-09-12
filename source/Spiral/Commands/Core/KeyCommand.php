@@ -46,7 +46,7 @@ class KeyCommand extends Command
 
         //Exporting to environment specific configuration file
         $configWriter->setConfig(compact('key'))->writeConfig(
-            directory('config') . '/' . $this->core->environment()
+            directory('config')  . $this->core->environment()
         );
 
         $this->writeln(
