@@ -44,7 +44,8 @@ class ResetCommand extends Command
             !$this->option('emulate') && $this->files->delete($filename);
 
             $this->isVerbosing() && $this->writeln($this->files->relativePath(
-                $filename, directory('cache')
+                $filename,
+                directory('cache')
             ));
         }
 
