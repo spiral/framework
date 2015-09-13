@@ -76,7 +76,7 @@ class AbstractCommand extends Command
         }
 
         $this->writeln(interpolate(
-            "<fg=red>Application environment '{environment}' does not allowed to run migrations.</fg=red>",
+            "<fg=red>Environment '{environment}' requires confirmation to run migrations.</fg=red>",
             ['environment' => $this->core->environment()]
         ));
 
