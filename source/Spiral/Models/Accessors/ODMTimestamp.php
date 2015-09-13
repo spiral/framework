@@ -10,7 +10,7 @@ namespace Spiral\Models\Accessors;
 
 use Spiral\Models\Accessors\Prototypes\AbstractTimestamp;
 use Spiral\ODM\CompositableInterface;
-use Spiral\ODM\Document;
+use Spiral\ODM\ActiveDocument;
 use Spiral\ODM\DocumentAccessorInterface;
 use Spiral\ODM\ODM;
 use Spiral\ORM\Exceptions\AccessorException as ODMAccessException;
@@ -115,7 +115,7 @@ class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterfac
             return [];
         }
 
-        return [Document::ATOMIC_SET => [$container => $this->serializeData()]];
+        return [ActiveDocument::ATOMIC_SET => [$container => $this->serializeData()]];
     }
 
     /**

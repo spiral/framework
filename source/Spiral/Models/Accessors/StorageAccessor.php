@@ -15,7 +15,7 @@ use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\Streams\StreamableInterface;
 use Spiral\Models\DataEntity;
 use Spiral\Models\Exceptions\StorageAccessorException;
-use Spiral\ODM\Document;
+use Spiral\ODM\ActiveDocument;
 use Spiral\ODM\DocumentAccessorInterface;
 use Spiral\ODM\ODM;
 use Spiral\ORM\RecordAccessorInterface;
@@ -194,10 +194,10 @@ class StorageAccessor extends Component implements
 
         if (!empty($this->address) && empty($this->storageObject)) {
             //Object detached
-            return [Document::ATOMIC_SET => [$container => '']];
+            return [ActiveDocument::ATOMIC_SET => [$container => '']];
         }
 
-        return [Document::ATOMIC_SET => [$container => $this->storageObject->getAddress()]];
+        return [ActiveDocument::ATOMIC_SET => [$container => $this->storageObject->getAddress()]];
     }
 
     /**

@@ -8,7 +8,7 @@
  */
 namespace Spiral\Reactor\Generators;
 
-use Spiral\ODM\Document;
+use Spiral\ODM\ActiveDocument;
 use Spiral\Reactor\Generators\Prototypes\AbstractEntity;
 
 /**
@@ -21,8 +21,8 @@ class DocumentGenerator extends AbstractEntity
      */
     public function generate()
     {
-        $this->file->addUse(Document::class);
-        $this->class->setExtends('Document');
+        $this->file->addUse(ActiveDocument::class);
+        $this->class->setExtends('ActiveDocument');
 
         parent::generate();
     }

@@ -9,7 +9,7 @@
 namespace Spiral\Reactor\Generators;
 
 use Spiral\Core\Service;
-use Spiral\ODM\Document;
+use Spiral\ODM\ActiveDocument;
 use Spiral\ODM\Entities\Collection;
 use Spiral\ORM\Entities\Selector;
 use Spiral\ORM\Record;
@@ -49,7 +49,7 @@ class ServiceGenerator extends AbstractService
         if ($reflection->isSubclassOf(Record::class)) {
             $this->file->addUse(Selector::class);
             $selection .= "|Selector";
-        } elseif ($reflection->isSubclassOf(Document::class)) {
+        } elseif ($reflection->isSubclassOf(ActiveDocument::class)) {
             $this->file->addUse(Collection::class);
             $selection .= "|Collection";
         }
