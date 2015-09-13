@@ -43,7 +43,7 @@ class MigrateCommand extends AbstractCommand
             if ($this->option('quiet')) {
                 $this->writeln("<comment>Migrator does not configured, skipping.</comment>");
             } else {
-                $this->writeln("<fg=red>Migrator does not configured, unable to proceed.</fg=red`>");
+                $this->writeln("<fg=red>Migrator does not configured, unable to proceed.</fg=red>");
             }
 
             return;

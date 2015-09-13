@@ -9,9 +9,12 @@
  */
 namespace Spiral\Commands\Migrations\Prototypes;
 
+use Psr\Log\LogLevel;
 use Spiral\Console\Command;
+use Spiral\Console\Helpers\ConsoleFormatter;
 use Spiral\Database\Migrations\Migrator;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Provides environment check and migrator creation for every migration command.
@@ -24,12 +27,32 @@ class AbstractCommand extends Command
     private $migrator = null;
 
     /**
+     * Table schema log formats in verbosity mode.
+     *
+     * @var array
+     */
+    protected $formats = [
+        LogLevel::INFO    => 'fg=cyan',
+        LogLevel::DEBUG   => '',
+        LogLevel::WARNING => 'fg=yellow'
+    ];
+
+    /**
      * @return Migrator
      */
     protected function migrator()
     {
         if ($this->migrator) {
             return $this->migrator;
+        }
+
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+            //Let's show SQL queries
+            foreach ($this->dbal->getDrivers() as $driver) {
+                $driver->setLogger(
+                    new ConsoleFormatter($this->output, $this->formats, $driver->getName())
+                );
+            }
         }
 
         return $this->migrator = $this->container->get(Migrator::class);

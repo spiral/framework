@@ -51,10 +51,9 @@ class MigrationCommand extends AbstractCommand
     /**
      * Perform command.
      *
-     * @param Reactor  $reactor
      * @param Migrator $migrator
      */
-    public function perform(Reactor $reactor, Migrator $migrator)
+    public function perform(Migrator $migrator)
     {
         /**
          * @var MigrationGenerator $generator
