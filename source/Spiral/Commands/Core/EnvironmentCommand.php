@@ -74,9 +74,9 @@ class EnvironmentCommand extends Command
         }
 
         if ($this->option('configure')) {
-            $this->console->command('core:configure', [], $this->output);
+            $this->console->command('configure', [], $this->output);
         } else {
-            $this->console->command('core:touch', [], $this->output);
+            $this->console->command('app:touch', [], $this->output);
         }
     }
 

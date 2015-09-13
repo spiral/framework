@@ -19,6 +19,13 @@ use Spiral\Reactor\Generators\Prototypes\AbstractGenerator;
 class MigrationGenerator extends AbstractGenerator
 {
     /**
+     * Count of pre-generated migration code.
+     *
+     * @var int
+     */
+    private $countMigrations = 0;
+
+    /**
      * {@inheritdoc}
      */
     protected function generate()
@@ -40,18 +47,22 @@ class MigrationGenerator extends AbstractGenerator
     public function createTable($table)
     {
         $table = var_export($table, true);
+
+        if (++$this->countMigrations > 1) {
+            $this->class->method('up')->setSource([""], true);
+            $this->class->method('down')->setSource([""], true);
+        }
+
         $this->class->method('up')->setSource([
             "//Create table {$table}",
             "\$this->create({$table}, function(AbstractTable \$schema) {",
             "   \$schema->column('id')->primary();",
-            "});",
-            ""
+            "});"
         ], true);
 
         $this->class->method('down')->setSource([
             "//Drop table {$table}",
-            "\$this->schema({$table})->drop();",
-            ""
+            "\$this->schema({$table})->drop();"
         ], true);
     }
 
@@ -65,20 +76,23 @@ class MigrationGenerator extends AbstractGenerator
     {
         $table = var_export($table, true);
 
+        if (++$this->countMigrations > 1) {
+            $this->class->method('up')->setSource([""], true);
+            $this->class->method('down')->setSource([""], true);
+        }
+
         $this->class->method('up')->setSource([
             "//Alter table {$table}",
             "\$this->alter({$table}, function(AbstractTable \$schema) {",
             "",
-            "};",
-            ""
+            "};"
         ], true);
 
         $this->class->method('down')->setSource([
             "//Alter table {$table}",
             "\$this->alter({$table}, function(AbstractTable \$schema) {",
             "",
-            "};",
-            ""
+            "};"
         ], true);
     }
 }
