@@ -86,4 +86,15 @@ class AbstractCommand extends Command
             ]
         ];
     }
+
+    /**
+     * In some cases generators might want to include rendered files, to prevent console from
+     * skipping such commands (due they have includes) we moving operation on higher level.
+     *
+     * @param string $filename
+     */
+    protected function includeFile($filename)
+    {
+        include_once($filename);
+    }
 }

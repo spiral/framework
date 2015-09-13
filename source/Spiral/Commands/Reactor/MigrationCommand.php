@@ -12,7 +12,6 @@ use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
 use Spiral\Database\Exceptions\MigratorException;
 use Spiral\Database\Migrations\Migrator;
 use Spiral\Reactor\Generators\MigrationGenerator;
-use Spiral\Reactor\Reactor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -74,7 +73,7 @@ class MigrationCommand extends AbstractCommand
         $generator->render();
 
         //We have to make sure that class were loaded
-        include_once($generator->getFilename());
+        $this->includeFile($generator->getFilename());
 
         //Registering migration in migrator
         try {
@@ -83,7 +82,7 @@ class MigrationCommand extends AbstractCommand
                 $generator->getClassName()
             );
         } catch (MigratorException $exception) {
-            $this->writeln("<fg=red>{$exception->getMessage()}/fg=red>");
+            $this->writeln("<fg=red>{$exception->getMessage()}</fg=red>");
 
             return;
         } finally {
