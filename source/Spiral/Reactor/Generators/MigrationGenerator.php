@@ -41,17 +41,17 @@ class MigrationGenerator extends AbstractGenerator
     {
         $table = var_export($table, true);
         $this->class->method('up')->setSource([
-            "",
             "//Create table {$table}",
             "\$this->create({$table}, function(AbstractTable \$schema) {",
             "   \$schema->column('id')->primary();",
-            "});"
-        ]);
+            "});",
+            ""
+        ], true);
 
         $this->class->method('down')->setSource([
-            "",
             "//Drop table {$table}",
-            "\$this->schema({$table})->drop();"
+            "\$this->schema({$table})->drop();",
+            ""
         ], true);
     }
 
@@ -66,19 +66,19 @@ class MigrationGenerator extends AbstractGenerator
         $table = var_export($table, true);
 
         $this->class->method('up')->setSource([
-            "",
             "//Alter table {$table}",
             "\$this->alter({$table}, function(AbstractTable \$schema) {",
             "",
-            "};"
-        ]);
+            "};",
+            ""
+        ], true);
 
         $this->class->method('down')->setSource([
-            "",
             "//Alter table {$table}",
             "\$this->alter({$table}, function(AbstractTable \$schema) {",
             "",
-            "};"
-        ]);
+            "};",
+            ""
+        ], true);
     }
 }
