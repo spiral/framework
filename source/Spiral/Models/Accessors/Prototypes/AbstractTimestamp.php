@@ -40,10 +40,7 @@ class AbstractTimestamp extends Carbon
      */
     public function jsonSerialize()
     {
-        return [
-            'date'     => $this->toDateTimeString(),
-            'timezone' => $this->timezoneName
-        ];
+        return $this->toIso8601String();
     }
 
     /**
@@ -55,11 +52,12 @@ class AbstractTimestamp extends Carbon
     }
 
     /**
-     * Convert input variable to a valid timestamp. Can accept timestamp (will be converted to an int)
-     * or valid datetime string. Timezone of input datetime string can be set.
+     * Convert input variable to a valid timestamp. Can accept timestamp (will be converted to an
+     * int) or valid datetime string. Timezone of input datetime string can be set.
      *
      * @param string $datetime Timestamp or valid datetime string.
-     * @param string $timezone Reference timezone. Will not apply if the input is a valid timestamp.
+     * @param string $timezone Reference timezone. Will not apply if the input is a valid
+     *                         timestamp.
      * @return int
      */
     protected function castTimestamp($datetime, $timezone = null)
