@@ -69,7 +69,7 @@ class ModulesCommand extends Command
             $table->addRow([
                 $module->getName(),
                 $this->fetchVersion($module->getName()),
-                $module->isInstalled() ? self::INSTALLED : self::NOT_INSTALLED,
+                $this->modules->hasModule($module->getName()) ? self::INSTALLED : self::NOT_INSTALLED,
                 StringHelper::bytes($module->getSize()),
                 $this->files->relativePath($module->getLocation(), directory('root')),
                 wordwrap($module->getDescription())
