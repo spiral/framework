@@ -209,11 +209,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
                 'cache'   => $directories['application'] . 'runtime/cache/'
             ];
 
-        if (empty($this->environment)) {
-            //This is spiral shortcut to set environment, can be redefined by custom application class.
-            $filename = $this->directory('runtime') . 'environment.php';
-            $this->setEnvironment(file_exists($filename) ? (require $filename) : self::DEVELOPMENT);
-        }
+        $this->defineEnvironment();
 
         date_default_timezone_set($this->timezone);
     }
@@ -501,6 +497,18 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
             $this->dispatcher->handleSnapshot($snapshot);
         } else {
             echo $snapshot;
+        }
+    }
+
+    /**
+     * Define application environment.
+     */
+    protected function defineEnvironment()
+    {
+        if (empty($this->environment)) {
+            //This is spiral shortcut to set environment, can be redefined by custom application class.
+            $filename = $this->directory('runtime') . 'environment.php';
+            $this->setEnvironment(file_exists($filename) ? (require $filename) : self::DEVELOPMENT);
         }
     }
 
