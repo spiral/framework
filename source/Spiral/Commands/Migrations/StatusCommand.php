@@ -55,12 +55,12 @@ class StatusCommand extends AbstractCommand
             $filename = (new \ReflectionClass($migration))->getFileName();
 
             $table->addRow([
-                $migration->getStatus()->getName(),
+                $migration->status()->getName(),
                 $this->files->relativePath($filename, $this->migrator()->config()['directory']),
-                $migration->getStatus()->getTimeCreated()->format('Y-m-d H:i:s'),
-                $migration->getStatus()->getState() == StatusInterface::PENDING
+                $migration->status()->getTimeCreated()->format('Y-m-d H:i:s'),
+                $migration->status()->getState() == StatusInterface::PENDING
                     ? self::PENDING
-                    : $migration->getStatus()->getTimeExecuted()->format('Y-m-d H:i:s')
+                    : $migration->status()->getTimeExecuted()->format('Y-m-d H:i:s')
             ]);
         }
 

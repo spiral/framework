@@ -61,7 +61,7 @@ class MigrateCommand extends AbstractCommand
             $count--;
             $this->writeln(interpolate(
                 "<info>Migration <comment>{name}</comment> was successfully executed.</info>",
-                ['name' => $migration->getStatus()->getName()]
+                ['name' => $migration->status()->getName()]
             ));
         }
 
