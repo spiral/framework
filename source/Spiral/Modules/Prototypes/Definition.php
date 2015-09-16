@@ -12,7 +12,6 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Modules\DefinitionInterface;
 use Spiral\Modules\Exceptions\ModuleException;
-use Spiral\Modules\ModuleManager;
 
 /**
  * Default implementation of DefinitionInterface, uses composer.json file to read information about
@@ -98,7 +97,8 @@ class Definition implements DefinitionInterface
 
         //By default we will user module class directory
         $this->location = $this->files->normalizePath(
-            dirname((new \ReflectionClass($this->class))->getFileName())
+            dirname((new \ReflectionClass($this->class))->getFileName()),
+            true
         );
     }
 

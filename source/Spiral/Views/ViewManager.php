@@ -251,7 +251,7 @@ class ViewManager extends Singleton implements ViewsInterface
 
         //This part better be cached one dat
         foreach ($this->namespaces[$namespace] as $directory) {
-                foreach ($this->config['engines'] as $engine => $options) {
+            foreach ($this->config['engines'] as $engine => $options) {
                 foreach ($options['extensions'] as $extension) {
                     $candidate = $directory . FilesInterface::SEPARATOR . $view . '.' . $extension;
 

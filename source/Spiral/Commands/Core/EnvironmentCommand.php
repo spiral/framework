@@ -15,7 +15,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Changes application environment by writing custom value into application/data/environment.php
- * Works only with default spiral core. Run command without any argument to check current environment.
+ * Works only with default spiral core. Run command without any argument to check current
+ * environment.
  */
 class EnvironmentCommand extends Command
 {
@@ -89,8 +90,8 @@ class EnvironmentCommand extends Command
     protected function getAlteredConfigs($environment)
     {
         //We have to touch every config to ensure that cache is OK
-        $configDirectory = $this->files->normalizePath(directory('config'));
-        $environmentDirectory = $configDirectory . "/{$environment}/";
+        $configDirectory = $this->files->normalizePath(directory('config'), true);
+        $environmentDirectory = $configDirectory . "{$environment}/";
 
         $altered = [];
         foreach ($this->files->getFiles($configDirectory, Core::EXTENSION) as $filename) {

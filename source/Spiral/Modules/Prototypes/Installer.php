@@ -113,7 +113,7 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
         $this->modules = $modules;
         $this->migrator = $migrator;
 
-        $this->moduleDirectory = $this->files->normalizePath($moduleDirectory);
+        $this->moduleDirectory = $this->files->normalizePath($moduleDirectory, true);
     }
 
     /**
@@ -260,7 +260,7 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
     ) {
         //Full name
         $source = $this->moduleDirectory . FilesInterface::SEPARATOR . $directory;
-        $source = $this->files->normalizePath($source);
+        $source = $this->files->normalizePath($source, true);
 
         if (!$this->files->exists($source)) {
             throw new InstallerException(

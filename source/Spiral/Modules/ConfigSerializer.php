@@ -67,8 +67,7 @@ class ConfigSerializer extends ArraySerializer
             return $name . $value;
         };
 
-        $isDirectory = in_array(substr($value, -1), ['/', '\\']);
-        $value = $this->files->normalizePath($value) . ($isDirectory ? '/' : '');
+        $value = $this->files->normalizePath($value, in_array(substr($value, -1), ['/', '\\']));
 
         //Trimming directory
         $value = substr($value, strlen($directory));
@@ -89,7 +88,7 @@ class ConfigSerializer extends ArraySerializer
         $directories = $this->core->getDirectories();
 
         foreach ($directories as &$directory) {
-            $directory = $this->files->normalizePath($directory) . '/';
+            $directory = $this->files->normalizePath($directory, true);
             unset($directory);
         }
 
