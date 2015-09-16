@@ -92,8 +92,8 @@ class ViewConfig extends ConfigWriter
         }
 
         $location = $this->files->normalizePath(
-            $this->baseDirectory . FilesInterface::SEPARATOR . $directory
-        );
+                $this->baseDirectory . FilesInterface::SEPARATOR . $directory
+            ) . '/';
 
         if (!$this->files->exists($location)) {
             throw new ConfigWriterException(
@@ -160,7 +160,7 @@ class ViewConfig extends ConfigWriter
 
             //To filter non unique namespaces
             foreach ($config['namespaces'][$namespace] as &$directory) {
-                $directory = $this->files->normalizePath($directory);
+                $directory = $this->files->normalizePath($directory) . '/';
                 unset($directory);
             }
 
