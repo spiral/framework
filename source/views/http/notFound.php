@@ -3,9 +3,9 @@
 <block:message>
     <?php
     /**
-     * @var \Spiral\Http\HttpDispatcher $http
+     * @var \Psr\Http\Message\ServerRequestInterface $request
      */
-    $uri = $http->request()->getUri();
+    $uri = $request->getUri();
     ?>
     [[The requested URL]] <a href="<?= $uri ?>"><?= $uri ?></a> [[was not found on this server.]]
 </block:message>
