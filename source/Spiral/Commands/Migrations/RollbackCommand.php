@@ -47,7 +47,7 @@ class RollbackCommand extends AbstractCommand
             $count--;
             $this->writeln(interpolate(
                 "<info>Migration <comment>{name}</comment> was successfully rolled back.</info>",
-                ['name' => $migration->status()->getName()]
+                ['name' => $migration->state()->getName()]
             ));
         }
 

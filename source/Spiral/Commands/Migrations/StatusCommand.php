@@ -9,7 +9,7 @@
 namespace Spiral\Commands\Migrations;
 
 use Spiral\Commands\Migrations\Prototypes\AbstractCommand;
-use Spiral\Database\Migrations\StatusInterface;
+use Spiral\Database\Migrations\StateInterface;
 
 /**
  * Show all available migrations and their statuses.
@@ -55,12 +55,12 @@ class StatusCommand extends AbstractCommand
             $filename = (new \ReflectionClass($migration))->getFileName();
 
             $table->addRow([
-                $migration->status()->getName(),
+                $migration->state()->getName(),
                 $this->files->relativePath($filename, $this->migrator()->config()['directory']),
-                $migration->status()->getTimeCreated()->format('Y-m-d H:i:s'),
-                $migration->status()->getState() == StatusInterface::PENDING
+                $migration->state()->getTimeCreated()->format('Y-m-d H:i:s'),
+                $migration->state()->getStatus() == StateInterface::PENDING
                     ? self::PENDING
-                    : $migration->status()->getTimeExecuted()->format('Y-m-d H:i:s')
+                    : $migration->state()->getTimeExecuted()->format('Y-m-d H:i:s')
             ]);
         }
 
