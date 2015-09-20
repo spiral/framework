@@ -68,6 +68,7 @@ class Reactor extends Singleton
 
         $definition = $this->config['generators'][$type];
 
+        //TODO: Issue with class name including slashes to be converted into namespace
         $class = $definition['namespace'] . '\\' . Inflector::classify($name) . $definition['postfix'];
 
         if (!class_exists($class)) {
