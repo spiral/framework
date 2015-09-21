@@ -11,7 +11,7 @@ custom applications quickly.
 
 Base application with modules, views and routing: https://github.com/spiral-php/application
 
-Guide: https://github.com/spiral-php/guide
+Guide: https://github.com/spiral/guide
 Gitter: https://gitter.im/spiral/hotline
 
 Framework and toolkit roadmap
