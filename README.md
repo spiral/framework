@@ -12,6 +12,7 @@ Spiral was originally built in 2009 for internal projects and has been continuou
 Base application with modules, views and routing: https://github.com/spiral-php/application
 
 Guide: https://github.com/spiral-php/guide
+Gitter: https://gitter.im/spiral/hotline
 
 Framework and toolkit roadmap
 -----------------------------
