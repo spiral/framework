@@ -10,7 +10,7 @@ namespace Spiral\Commands\Reactor;
 
 use Spiral\Commands\Reactor\Prototypes\AbstractCommand;
 use Spiral\Models\Reflections\ReflectionEntity;
-use Spiral\ODM\ActiveDocument;
+use Spiral\ODM\Document;
 use Spiral\ORM\Record;
 use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Generators\RequestGenerator;
@@ -186,7 +186,7 @@ class RequestCommand extends AbstractCommand
             return $this->orm->updateSchema()->record($entity);
         }
 
-        if ($reflection->isSubclassOf(ActiveDocument::class)) {
+        if ($reflection->isSubclassOf(Document::class)) {
             return $this->odm->updateSchema()->document($entity);
         }
 

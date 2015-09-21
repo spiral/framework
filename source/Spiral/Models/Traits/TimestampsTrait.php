@@ -12,7 +12,7 @@ use Spiral\Events\DispatcherInterface;
 use Spiral\Events\Entities\Event;
 use Spiral\Events\Entities\ObjectEvent;
 use Spiral\Models\DataEntity;
-use Spiral\ODM\ActiveDocument;
+use Spiral\ODM\Document;
 use Spiral\ODM\Entities\Schemas\DocumentSchema;
 use Spiral\ORM\Entities\Schemas\RecordSchema;
 use Spiral\ORM\Record;
@@ -42,7 +42,7 @@ trait TimestampsTrait
     {
         if ($this instanceof Record) {
             $this->setField('time_updated', new \DateTime(), false);
-        } elseif ($this instanceof ActiveDocument) {
+        } elseif ($this instanceof Document) {
             $this->setField('timeUpdated', new \MongoDate(time()), false);
         }
 
@@ -93,7 +93,7 @@ trait TimestampsTrait
                 }
             }
 
-            if ($model instanceof ActiveDocument) {
+            if ($model instanceof Document) {
                 switch ($event->name()) {
                     case 'saving':
                         //There is no break statement missing

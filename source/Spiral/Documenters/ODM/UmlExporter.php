@@ -10,7 +10,7 @@ namespace Spiral\Documenters\ODM;
 
 use Spiral\Core\Component;
 use Spiral\Files\FilesInterface;
-use Spiral\ODM\ActiveDocument;
+use Spiral\ODM\Document;
 use Spiral\ODM\Entities\SchemaBuilder;
 use Spiral\ODM\Entities\Schemas\DocumentSchema;
 use Spiral\ODM\ODM;
@@ -147,7 +147,7 @@ class UmlExporter extends Component
                 continue;
             }
 
-            if ($aggregation['type'] == ActiveDocument::MANY) {
+            if ($aggregation['type'] == Document::MANY) {
                 $this->line(
                     "{$class} ..o " . $this->normalizeName($aggregation['class']) . ":{$name}",
                     0,

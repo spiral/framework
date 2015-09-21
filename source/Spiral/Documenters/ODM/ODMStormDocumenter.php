@@ -15,7 +15,7 @@ use Spiral\Documenters\Exceptions\DocumenterException;
 use Spiral\Documenters\VirtualDocumenter;
 use Spiral\Files\FilesInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
-use Spiral\ODM\ActiveDocument;
+use Spiral\ODM\Document;
 use Spiral\ODM\Entities\Collection;
 use Spiral\ODM\Entities\Compositor;
 use Spiral\ODM\Entities\DocumentCursor;
@@ -173,7 +173,7 @@ class ODMStormDocumenter extends VirtualDocumenter
             $aggregated = $this->builder->document($aggregation['class']);
             $parent = $aggregated->getParent(true)->getName();
 
-            if ($aggregation['type'] == ActiveDocument::ONE) {
+            if ($aggregation['type'] == Document::ONE) {
                 //Simple ONE aggregation
                 $element->method($name, ['@return \\' . $parent]);
             } else {
@@ -208,7 +208,7 @@ class ODMStormDocumenter extends VirtualDocumenter
             $this->helper('cursor', $name) . "|\\{$name}[]"
         );
 
-        $element->replaceComments(ActiveDocument::class, $name);
+        $element->replaceComments(Document::class, $name);
         $element->replaceComments("Document", '\\' . $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
@@ -227,7 +227,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         $element->setExtends('\\' . DocumentCursor::class)->setInterfaces([]);
         $this->cleanElement($element);
 
-        $element->replaceComments(ActiveDocument::class, $name);
+        $element->replaceComments(Document::class, $name);
         $element->replaceComments("Document", '\\' . $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
@@ -248,7 +248,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         $element->removeMethod('getParent');
 
         //Mounting our class
-        $element->replaceComments(ActiveDocument::class, $name);
+        $element->replaceComments(Document::class, $name);
         $element->replaceComments("Document", '\\' . $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
