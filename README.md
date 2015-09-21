@@ -13,6 +13,8 @@ Base application with modules, views and routing: https://github.com/spiral-php/
 
 Guide: https://github.com/spiral/guide
 
+Components framework based on: https://github.com/spiral/components
+
 Framework and toolkit roadmap
 -----------------------------
 * Documentation in a process
