@@ -24,8 +24,8 @@ use Spiral\ODM\Entities\Schemas\DocumentSchema;
 use Spiral\ODM\Exceptions\DefinitionException;
 use Spiral\ODM\Exceptions\ODMException;
 use Spiral\ODM\ODM;
+use Spiral\ODM\SimpleDocument;
 use Spiral\Pagination\Exceptions\PaginationException;
-use Spiral\Pagination\PaginableInterface;
 use Spiral\Pagination\PaginatorInterface;
 use Spiral\Reactor\AbstractElement;
 use Spiral\Reactor\ClassElement;
@@ -208,9 +208,7 @@ class ODMStormDocumenter extends VirtualDocumenter
             $this->helper('cursor', $name) . "|\\{$name}[]"
         );
 
-        $element->replaceComments(Document::class, $name);
-        $element->replaceComments("Document", '\\' . $name);
-        $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
+        $this->replaceComments($element, $name, $elementName);
 
         return $element;
     }
@@ -227,9 +225,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         $element->setExtends('\\' . DocumentCursor::class)->setInterfaces([]);
         $this->cleanElement($element);
 
-        $element->replaceComments(Document::class, $name);
-        $element->replaceComments("Document", '\\' . $name);
-        $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
+        $this->replaceComments($element, $name, $elementName);
 
         return $element;
     }
@@ -248,9 +244,7 @@ class ODMStormDocumenter extends VirtualDocumenter
         $element->removeMethod('getParent');
 
         //Mounting our class
-        $element->replaceComments(Document::class, $name);
-        $element->replaceComments("Document", '\\' . $name);
-        $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
+        $this->replaceComments($element, $name, $elementName);
 
         return $element;
     }
@@ -286,5 +280,21 @@ class ODMStormDocumenter extends VirtualDocumenter
                 $element->removeMethod($method->getName());
             }
         }
+    }
+
+    /**
+     * Replace document commands in rendered class.
+     *
+     * @param ClassElement $element
+     * @param string       $name
+     * @param string       $elementName
+     */
+    protected function replaceComments(ClassElement $element, $name, $elementName)
+    {
+        $element->replaceComments(SimpleDocument::class, $name);
+        $element->replaceComments(Document::class, $name);
+        $element->replaceComments("SimpleDocument", '\\' . $name);
+        $element->replaceComments("Document", '\\' . $name);
+        $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
     }
 }
