@@ -13,13 +13,12 @@ use Spiral\Models\EntityInterface;
 use Spiral\ODM\AtomicAccessorInterface;
 use Spiral\ODM\CompositableInterface;
 use Spiral\ODM\Document;
-use Spiral\ODM\ODM;
 use Spiral\ORM\Exceptions\AccessorException as ODMAccessException;
 
 /**
  * Mocks MongoDate fields using Carbon class as base.
  */
-class ODMTimestamp extends AbstractTimestamp implements AtomicAccessorInterface
+class MongoTimestamp extends AbstractTimestamp implements AtomicAccessorInterface
 {
     /**
      * @invisible
@@ -37,12 +36,8 @@ class ODMTimestamp extends AbstractTimestamp implements AtomicAccessorInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct(
-        $data = null,
-        EntityInterface $parent = null,
-        ODM $odm = null,
-        $timezone = null
-    ) {
+    public function __construct($data = null, EntityInterface $parent = null)
+    {
         $this->parent = $parent;
         $this->original = $data;
 
@@ -90,7 +85,7 @@ class ODMTimestamp extends AbstractTimestamp implements AtomicAccessorInterface
     /**
      * {@inheritdoc}
      */
-    public function setData($data)
+    public function setValue($data)
     {
         $this->setTimestamp($this->castTimestamp($data));
     }

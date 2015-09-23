@@ -60,12 +60,12 @@ abstract class JsonDocument extends DocumentEntity implements ActiveAccessorInte
     /**
      * {@inheritdoc}
      */
-    public function setData($data)
+    public function setValue($data)
     {
         if (is_string($data)) {
             $data = json_decode($data);
         }
 
-        return parent::setData($data);
+        return parent::setValue($data);
     }
 }

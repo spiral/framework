@@ -16,9 +16,8 @@ use Spiral\Files\Streams\StreamableInterface;
 use Spiral\Models\DataEntity;
 use Spiral\Models\EntityInterface;
 use Spiral\Models\Exceptions\StorageAccessorException;
-use Spiral\ODM\Document;
 use Spiral\ODM\AtomicAccessorInterface;
-use Spiral\ODM\ODM;
+use Spiral\ODM\Document;
 use Spiral\ORM\ActiveAccessorInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Exceptions\BucketException;
@@ -80,7 +79,7 @@ class StorageAccessor extends Component implements
     /**
      * {@inheritdoc}
      */
-    public function __construct($data = null, EntityInterface $parent = null, ODM $odm = null, $options = null)
+    public function __construct($data = null, EntityInterface $parent = null)
     {
         if ($this->address = $data) {
             $this->object = $this->storage()->open($this->address);
@@ -115,7 +114,7 @@ class StorageAccessor extends Component implements
     /**
      * {@inheritdoc}
      */
-    public function setData($data)
+    public function setValue($data)
     {
         if (is_string($data)) {
             $this->object = $this->storage()->open($data);

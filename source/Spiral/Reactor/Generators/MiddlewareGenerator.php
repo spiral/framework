@@ -43,7 +43,7 @@ class MiddlewareGenerator extends AbstractService
             [
                 "@param ServerRequestInterface \$request",
                 "@param ResponseInterface      \$response",
-                "@param \\Closure               \$next Next middleware/target. Always returns ResponseInterface.",
+                "@param \\Closure              \$next Next middleware/target. Always returns ResponseInterface.",
                 "@return ResponseInterface"
             ],
             ['request', 'response', 'next']
