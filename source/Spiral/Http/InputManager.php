@@ -48,13 +48,34 @@ class InputManager extends Singleton
      * @var array
      */
     protected $bagAssociations = [
-        'headers'    => ['class' => HeadersBag::class, 'source' => 'getHeaders'],
-        'data'       => ['class' => InputBag::class, 'source' => 'getParsedBody'],
-        'query'      => ['class' => InputBag::class, 'source' => 'getQueryParams'],
-        'cookies'    => ['class' => InputBag::class, 'source' => 'getCookieParams'],
-        'files'      => ['class' => FilesBag::class, 'source' => 'getUploadedFiles'],
-        'server'     => ['class' => ServerBag::class, 'source' => 'getServerParams'],
-        'attributes' => ['class' => InputBag::class, 'source' => 'getAttributes']
+        'headers'    => [
+            'class'  => HeadersBag::class,
+            'source' => 'getHeaders'
+        ],
+        'data'       => [
+            'class'  => InputBag::class,
+            'source' => 'getParsedBody'
+        ],
+        'query'      => [
+            'class'  => InputBag::class,
+            'source' => 'getQueryParams'
+        ],
+        'cookies'    => [
+            'class'  => InputBag::class,
+            'source' => 'getCookieParams'
+        ],
+        'files'      => [
+            'class'  => FilesBag::class,
+            'source' => 'getUploadedFiles'
+        ],
+        'server'     => [
+            'class'  => ServerBag::class,
+            'source' => 'getServerParams'
+        ],
+        'attributes' => [
+            'class'  => InputBag::class,
+            'source' => 'getAttributes'
+        ]
     ];
 
     /**
@@ -84,15 +105,17 @@ class InputManager extends Singleton
      */
     public function request()
     {
+        $request = $this->container->get(ServerRequestInterface::class);
+
         //Check if we still pointing to right request
-        if ($this->request !== ($outer = $this->container->get(ServerRequestInterface::class))) {
+        if ($this->request !== $request) {
             $this->request = null;
 
             //Our parameter bags has expired
             $this->bagInstances = [];
 
             //Update instance
-            $this->request = $outer;
+            $this->request = $request;
         }
 
         return $this->request;
