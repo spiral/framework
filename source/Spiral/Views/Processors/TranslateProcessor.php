@@ -9,6 +9,7 @@
 namespace Spiral\Views\Processors;
 
 use Spiral\Core\Component;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\Compiler;
 use Spiral\Views\ProcessorInterface;
@@ -21,6 +22,11 @@ use Spiral\Views\ViewsInterface;
  */
 class TranslateProcessor extends Component implements ProcessorInterface
 {
+    /**
+     * Additional constructor arguments.
+     */
+    use SaturateTrait;
+
     /**
      * @var array
      */
@@ -70,7 +76,7 @@ class TranslateProcessor extends Component implements ProcessorInterface
         $this->bundle = trim($this->bundle, '-');
 
         //We can use global container as fallback if no default values were provided
-        $this->translator = self::saturate($translator, TranslatorInterface::class);
+        $this->translator = $this->saturate($translator, TranslatorInterface::class);
     }
 
     /**

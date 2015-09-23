@@ -12,6 +12,7 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 
@@ -24,7 +25,7 @@ class Compiler extends Component implements CompilerInterface
     /**
      * Configuration and compilation benchmarks.
      */
-    use ConfigurableTrait, BenchmarkTrait;
+    use ConfigurableTrait, BenchmarkTrait, SaturateTrait;
 
     /**
      * Extension for compiled views.
@@ -111,7 +112,7 @@ class Compiler extends Component implements CompilerInterface
         $this->dependencies = $views->getDependencies();
 
         //We can use global container as fallback if no default values were provided
-        $this->container = self::saturate($container, ContainerInterface::class);
+        $this->container = $this->saturate($container, ContainerInterface::class);
     }
 
     /**
