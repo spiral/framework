@@ -333,7 +333,8 @@ class ConfigWriter extends Component
     private function configFilename($directory, $name)
     {
         return $this->files->normalizePath(
-            $directory . FilesInterface::SEPARATOR . $this->name . '.' . Core::EXTENSION
+            $directory . FilesInterface::SEPARATOR
+            . (!empty($name) ? $name : $this->name) . '.' . Core::EXTENSION
         );
     }
 }
