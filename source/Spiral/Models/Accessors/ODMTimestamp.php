@@ -9,16 +9,17 @@
 namespace Spiral\Models\Accessors;
 
 use Spiral\Models\Accessors\Prototypes\AbstractTimestamp;
+use Spiral\Models\EntityInterface;
+use Spiral\ODM\AtomicAccessorInterface;
 use Spiral\ODM\CompositableInterface;
 use Spiral\ODM\Document;
-use Spiral\ODM\DocumentAccessorInterface;
 use Spiral\ODM\ODM;
 use Spiral\ORM\Exceptions\AccessorException as ODMAccessException;
 
 /**
  * Mocks MongoDate fields using Carbon class as base.
  */
-class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterface
+class ODMTimestamp extends AbstractTimestamp implements AtomicAccessorInterface
 {
     /**
      * @invisible
@@ -36,8 +37,12 @@ class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterfac
     /**
      * {@inheritdoc}
      */
-    public function __construct($data = null, $parent = null, ODM $odm = null, $timezone = null)
-    {
+    public function __construct(
+        $data = null,
+        EntityInterface $parent = null,
+        ODM $odm = null,
+        $timezone = null
+    ) {
         $this->parent = $parent;
         $this->original = $data;
 
@@ -60,7 +65,7 @@ class ODMTimestamp extends AbstractTimestamp implements DocumentAccessorInterfac
     /**
      * {@inheritdoc}
      */
-    public function embed($parent)
+    public function embed(EntityInterface $parent)
     {
         if (!$parent instanceof CompositableInterface) {
             throw new ODMAccessException("Scalar arrays can be embedded only to ODM objects.");

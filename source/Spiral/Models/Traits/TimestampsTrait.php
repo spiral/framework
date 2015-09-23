@@ -8,7 +8,6 @@
  */
 namespace Spiral\Models\Traits;
 
-use Spiral\Events\DispatcherInterface;
 use Spiral\Events\Entities\Event;
 use Spiral\Events\Entities\ObjectEvent;
 use Spiral\Models\DataEntity;
@@ -26,13 +25,6 @@ use Spiral\ORM\Record;
  */
 trait TimestampsTrait
 {
-    /**
-     * Must be declared statically and provide event dispatcher.
-     *
-     * @return DispatcherInterface
-     */
-    abstract public function events();
-
     /**
      * Touch object and update it's time_updated value.
      *

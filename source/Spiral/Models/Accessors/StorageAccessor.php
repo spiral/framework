@@ -14,11 +14,12 @@ use Spiral\Database\Entities\Driver;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\Streams\StreamableInterface;
 use Spiral\Models\DataEntity;
+use Spiral\Models\EntityInterface;
 use Spiral\Models\Exceptions\StorageAccessorException;
 use Spiral\ODM\Document;
-use Spiral\ODM\DocumentAccessorInterface;
+use Spiral\ODM\AtomicAccessorInterface;
 use Spiral\ODM\ODM;
-use Spiral\ORM\RecordAccessorInterface;
+use Spiral\ORM\ActiveAccessorInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Exceptions\BucketException;
 use Spiral\Storage\Exceptions\ServerException;
@@ -41,8 +42,8 @@ use Spiral\Storage\StorageInterface;
  * @method static replace($destination)
  */
 class StorageAccessor extends Component implements
-    DocumentAccessorInterface,
-    RecordAccessorInterface,
+    AtomicAccessorInterface,
+    ActiveAccessorInterface,
     StreamableInterface
 {
     /**
@@ -79,7 +80,7 @@ class StorageAccessor extends Component implements
     /**
      * {@inheritdoc}
      */
-    public function __construct($data = null, $parent = null, ODM $odm = null, $options = null)
+    public function __construct($data = null, EntityInterface $parent = null, ODM $odm = null, $options = null)
     {
         if ($this->address = $data) {
             $this->object = $this->storage()->open($this->address);
@@ -99,7 +100,7 @@ class StorageAccessor extends Component implements
     /**
      * {@inheritdoc}
      */
-    public function embed($parent)
+    public function embed(EntityInterface $parent)
     {
         $accessor = clone $this;
         $accessor->address = '';

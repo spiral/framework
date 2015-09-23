@@ -11,14 +11,15 @@ namespace Spiral\Models\Accessors;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Entities\Driver;
 use Spiral\Models\Accessors\Prototypes\AbstractTimestamp;
+use Spiral\Models\EntityInterface;
+use Spiral\ORM\ActiveAccessorInterface;
 use Spiral\ORM\Record;
-use Spiral\ORM\RecordAccessorInterface;
 
 /**
  * ORM record accessor used to mock database timestamps and date field using Carbon class. Field
  * timezone automatically resolved using default database timezone specified in database provider.
  */
-class ORMTimestamp extends AbstractTimestamp implements RecordAccessorInterface
+class ORMTimestamp extends AbstractTimestamp implements ActiveAccessorInterface
 {
     /**
      * @invisible
@@ -36,7 +37,7 @@ class ORMTimestamp extends AbstractTimestamp implements RecordAccessorInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct($data = null, $parent = null)
+    public function __construct($data = null, EntityInterface $parent = null)
     {
         $this->parent = $parent;
         if ($data instanceof \DateTime) {
@@ -57,7 +58,7 @@ class ORMTimestamp extends AbstractTimestamp implements RecordAccessorInterface
     /**
      * {@inheritdoc}
      */
-    public function embed($parent)
+    public function embed(EntityInterface $parent)
     {
         $accessor = clone $this;
         $accessor->original = -1;
