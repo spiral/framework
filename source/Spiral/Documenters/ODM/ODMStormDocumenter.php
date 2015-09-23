@@ -24,7 +24,7 @@ use Spiral\ODM\Entities\Schemas\DocumentSchema;
 use Spiral\ODM\Exceptions\DefinitionException;
 use Spiral\ODM\Exceptions\ODMException;
 use Spiral\ODM\ODM;
-use Spiral\ODM\SimpleDocument;
+use Spiral\ODM\DocumentEntity;
 use Spiral\Pagination\Exceptions\PaginationException;
 use Spiral\Pagination\PaginatorInterface;
 use Spiral\Reactor\AbstractElement;
@@ -291,9 +291,9 @@ class ODMStormDocumenter extends VirtualDocumenter
      */
     protected function replaceComments(ClassElement $element, $name, $elementName)
     {
-        $element->replaceComments(SimpleDocument::class, $name);
+        $element->replaceComments(DocumentEntity::class, $name);
         $element->replaceComments(Document::class, $name);
-        $element->replaceComments("SimpleDocument", '\\' . $name);
+        $element->replaceComments("DocumentEntity", '\\' . $name);
         $element->replaceComments("Document", '\\' . $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
     }
