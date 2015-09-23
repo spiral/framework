@@ -9,7 +9,7 @@
 namespace Spiral\Support;
 
 use Cocur\Slugify\Slugify;
-use Spiral\Core\Container;
+use Spiral\Core\Core;
 
 /**
  * Set of helper methods to simplify working with string values.
@@ -40,7 +40,7 @@ class StringHelper
      */
     public static function urlSlug($string, $separator = '-')
     {
-        return Container::container()->get(Slugify::class)->slugify($string, $separator);
+        return Core::instance()->get(Slugify::class)->slugify($string, $separator);
     }
 
     /**
@@ -65,7 +65,8 @@ class StringHelper
     }
 
     /**
-     * Shorter string with specified limit. UTF8 encoding will be used to support non English strings.
+     * Shorter string with specified limit. UTF8 encoding will be used to support non English
+     * strings.
      *
      * @param string $string
      * @param int    $limit The max string length, 300 by default.
