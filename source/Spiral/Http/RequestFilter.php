@@ -4,7 +4,7 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
+ * @copyright Â©2009-2015
  */
 namespace Spiral\Http;
 
@@ -69,7 +69,7 @@ class RequestFilter extends DataEntity
      * Please do not construct this class by yourself for now, always use container as i'm working
      * on new request filter functionality including nested requests.
      *
-     * @final For my own reasons (i have some ideas), please use SaturableInterface and init method.
+     * @final For my own reasons (i have some ideas), please use init method.
      * @param InputManager       $input
      * @param ContainerInterface $container
      */
