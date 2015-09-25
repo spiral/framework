@@ -11,6 +11,7 @@ namespace Spiral\Documenters\ORM;
 
 use Doctrine\Common\Inflector\Inflector;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Spiral\Cache\StoreInterface;
 use Spiral\Database\Exceptions\BuilderException;
 use Spiral\Database\Query\QueryResult;
@@ -28,10 +29,10 @@ use Spiral\ORM\Entities\Schemas\RelationSchema;
 use Spiral\ORM\Entities\Selector;
 use Spiral\ORM\Exceptions\ORMException;
 use Spiral\ORM\Exceptions\SelectorException;
-use Spiral\ORM\Record;
 use Spiral\ORM\RecordEntity;
 use Spiral\ORM\RecordInterface;
 use Spiral\Pagination\Exceptions\PaginationException;
+use Spiral\Pagination\PaginatorInterface;
 use Spiral\Reactor\AbstractElement;
 use Spiral\Reactor\ClassElement;
 
@@ -85,6 +86,8 @@ class ORMStormDocumenter extends VirtualDocumenter
                 ORMException::class,
                 ServerRequestInterface::class,
                 PaginationException::class,
+                PaginatorInterface::class,
+                LoggerInterface::class,
                 BuilderException::class,
                 SelectorException::class,
                 StoreInterface::class,
@@ -163,6 +166,7 @@ class ORMStormDocumenter extends VirtualDocumenter
                 continue;
             }
 
+
             $this->renderRelation($entity, $element, $relation);
         }
 
@@ -187,7 +191,7 @@ class ORMStormDocumenter extends VirtualDocumenter
             $this->helper('iterator', $name) . "|\\{$name}[]"
         );
 
-        $this->replaceComments($element, $name, $elementName);
+        $this->recordComment($element, $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         return $element;
@@ -205,7 +209,7 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $element->setExtends('\\' . RecordIterator::class)->setInterfaces([]);
 
-        $this->replaceComments($element, $name, $elementName);
+        $this->recordComment($element, $name);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         return $element;
@@ -261,17 +265,18 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         if ($relation->isMultiple()) {
             $relationElement->replaceComments(
-                'Record|Record[]|RecordIterator',
+                'EntityInterface[]|RecordIterator',
                 $this->helper('iterator', $name) . "|\\{$name}[]"
             );
         } else {
             $relationElement->replaceComments(
-                'Record|Record[]|RecordIterator',
+                'EntityInterface[]|RecordIterator',
                 "\\{$name}"
             );
         }
 
-        $this->replaceComments($relationElement, $name, $elementName);
+        $this->recordComment($relationElement, $name);
+        $relationElement->replaceComments("Selector", $this->helper('selector', $name));
 
         $relationElement->replaceComments(
             "@return \$this", "@return \$this|{$elementName}|\\{$name}[]"
@@ -320,10 +325,7 @@ class ORMStormDocumenter extends VirtualDocumenter
             ]);
         }
 
-
-        $name = $relation->getTarget();
-
-        $this->replaceComments($relationElement, $name, $elementName);
+        $this->recordComment($relationElement, $relation->getTarget());
         $fullName = $this->addClass($relationElement);
 
         $element->property($relation->getName(), "@var {$fullName}")->setAccess(
@@ -355,7 +357,8 @@ class ORMStormDocumenter extends VirtualDocumenter
             $this->helper('iterator', $name) . "|\\{$name}[]"
         );
 
-        $this->replaceComments($relationElement, $name, $elementName);
+        $this->recordComment($relationElement, $name);
+        $relationElement->replaceComments("Selector", $this->helper('selector', $name));
 
         $relationElement->replaceComments(
             "@return \$this", "@return \$this|{$elementName}|\\{$name}[]"
@@ -402,20 +405,16 @@ class ORMStormDocumenter extends VirtualDocumenter
     }
 
     /**
-     * Replace document commands in rendered class.
+     * Replace record name occurences.
      *
-     * @param ClassElement $element
-     * @param string       $name
-     * @param string       $elementName
+     * @param AbstractElement $element
+     * @param string          $record
      */
-    protected function replaceComments(ClassElement $element, $name, $elementName)
+    protected function recordComment(AbstractElement $element, $record)
     {
-        $element->replaceComments(RecordInterface::class, $name);
-        $element->replaceComments(RecordEntity::class, $name);
-        $element->replaceComments(Record::class, $name);
-        $element->replaceComments("RecordInterface", '\\' . $name);
-        $element->replaceComments("RecordEntity", '\\' . $name);
-        $element->replaceComments("Record", '\\' . $name);
-        $element->replaceComments("Selector", $this->helper('selector', $name));
+        $element->replaceComments(RecordInterface::class, $record);
+        $element->replaceComments(RecordEntity::class, $record);
+        $element->replaceComments("RecordInterface", '\\' . $record);
+        $element->replaceComments("RecordEntity", '\\' . $record);
     }
 }
