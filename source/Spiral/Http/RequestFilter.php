@@ -129,7 +129,7 @@ class RequestFilter extends DataEntity
         if (!$entity->isValid()) {
             foreach ($entity->getErrors() as $name => $error) {
                 if (isset($this->schema[$name])) {
-                    $this->errors[$name] = $error;
+                    $this->setError($name, $error);
                 }
             }
 
