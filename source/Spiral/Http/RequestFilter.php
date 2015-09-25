@@ -98,7 +98,7 @@ class RequestFilter extends DataEntity
     }
 
     /**
-     * Associated InputManager instance. Attention, input manager may not decorate save server
+     * Associated InputManager instance. Attention, input manager may not decorate same server
      * request as while request filter constructing.
      *
      * @return InputManager
