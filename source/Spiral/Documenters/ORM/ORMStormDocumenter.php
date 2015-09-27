@@ -4,7 +4,7 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
+ * @copyright ï¿½2009-2015
  */
 
 namespace Spiral\Documenters\ORM;
@@ -135,11 +135,11 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $findOne = $element->method(
             'findOne', [
-            '@param array $where',
-            '@param array $load',
-            '@param array $sortBy',
-            '@return ' . $return . '|null'
-        ], ['where', 'load', 'sortBy']
+                '@param array $where',
+                '@param array $load',
+                '@param array $sortBy',
+                '@return ' . $return . '|null'
+            ], ['where', 'load', 'sortBy']
         )->setStatic(true);
 
         $findOne->parameter('where')->setOptional(true, [])->setType('array');
@@ -148,10 +148,10 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $findByPK = $element->method(
             'findByPK', [
-            '@param mixed $primaryKey',
-            '@param array $load',
-            '@return ' . $return . '|null'
-        ], ['primaryKey']
+                '@param mixed $primaryKey',
+                '@param array $load',
+                '@return ' . $return . '|null'
+            ], ['primaryKey']
         )->setStatic(true);
 
         $findByPK->parameter('load')->setOptional(true, [])->setType('array');
@@ -187,7 +187,8 @@ class ORMStormDocumenter extends VirtualDocumenter
             $this->helper('iterator', $name) . "|\\{$name}[]"
         );
 
-        $this->replaceComments($element, $name, $elementName);
+        $this->replaceComments($element, $name, false);
+        $element->replaceComments("Selector", $elementName);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         return $element;
@@ -205,7 +206,7 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $element->setExtends('\\' . RecordIterator::class)->setInterfaces([]);
 
-        $this->replaceComments($element, $name, $elementName);
+        $this->replaceComments($element, $name, false);
         $element->replaceComments("@return \$this", "@return \$this|{$elementName}|\\{$name}[]");
 
         return $element;
@@ -271,7 +272,7 @@ class ORMStormDocumenter extends VirtualDocumenter
             );
         }
 
-        $this->replaceComments($relationElement, $name, $elementName);
+        $this->replaceComments($relationElement, $name, true);
 
         $relationElement->replaceComments(
             "@return \$this", "@return \$this|{$elementName}|\\{$name}[]"
@@ -323,7 +324,7 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $name = $relation->getTarget();
 
-        $this->replaceComments($relationElement, $name, $elementName);
+        $this->replaceComments($relationElement, $name, true);
         $fullName = $this->addClass($relationElement);
 
         $element->property($relation->getName(), "@var {$fullName}")->setAccess(
@@ -355,7 +356,7 @@ class ORMStormDocumenter extends VirtualDocumenter
             $this->helper('iterator', $name) . "|\\{$name}[]"
         );
 
-        $this->replaceComments($relationElement, $name, $elementName);
+        $this->replaceComments($relationElement, $name, true);
 
         $relationElement->replaceComments(
             "@return \$this", "@return \$this|{$elementName}|\\{$name}[]"
@@ -406,9 +407,9 @@ class ORMStormDocumenter extends VirtualDocumenter
      *
      * @param ClassElement $element
      * @param string       $name
-     * @param string       $elementName
+     * @param bool       $mountSelector
      */
-    protected function replaceComments(ClassElement $element, $name, $elementName)
+    protected function replaceComments(ClassElement $element, $name, $mountSelector = true)
     {
         $element->replaceComments(RecordInterface::class, $name);
         $element->replaceComments(RecordEntity::class, $name);
@@ -416,6 +417,9 @@ class ORMStormDocumenter extends VirtualDocumenter
         $element->replaceComments("RecordInterface", '\\' . $name);
         $element->replaceComments("RecordEntity", '\\' . $name);
         $element->replaceComments("Record", '\\' . $name);
-        $element->replaceComments("Selector", $this->helper('selector', $name));
+
+        if($mountSelector) {
+            $element->replaceComments("Selector", $this->helper('selector', $name));
+        }
     }
 }
