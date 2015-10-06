@@ -109,8 +109,6 @@ class InputManager extends Singleton
 
         //Check if we still pointing to right request
         if ($this->request !== $request) {
-            $this->request = null;
-
             //Our parameter bags has expired
             $this->bagInstances = [];
 

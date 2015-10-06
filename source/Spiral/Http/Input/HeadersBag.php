@@ -15,17 +15,6 @@ namespace Spiral\Http\Input;
 class HeadersBag extends InputBag
 {
     /**
-     * Normalize header name.
-     *
-     * @param string $header
-     * @return string
-     */
-    protected function normalize($header)
-    {
-        return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function has($name)
@@ -68,5 +57,16 @@ class HeadersBag extends InputBag
         }
 
         return $values;
+    }
+    
+    /**
+     * Normalize header name.
+     *
+     * @param string $header
+     * @return string
+     */
+    protected function normalize($header)
+    {
+        return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
     }
 }
