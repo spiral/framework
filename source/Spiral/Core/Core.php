@@ -14,6 +14,8 @@ use Spiral\Core\Exceptions\ConfiguratorException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
+use Spiral\Core\HMVC\ControllerInterface;
+use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;

@@ -10,6 +10,7 @@ namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
+use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
