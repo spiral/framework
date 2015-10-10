@@ -1,4 +1,4 @@
-Spiral PHP Framework
+Spiral PHP HMVC Framework (beta)
 =======================
 [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral)
 
