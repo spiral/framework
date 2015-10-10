@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2015
  */
-namespace Spiral\ORM\Accessors;
+namespace Spiral\Models\Accessors;
 
 use Spiral\Database\Entities\Driver;
 use Spiral\ODM\DocumentEntity;
