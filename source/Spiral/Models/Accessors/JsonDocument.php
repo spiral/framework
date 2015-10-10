@@ -9,7 +9,9 @@
 namespace Spiral\Models\Accessors;
 
 use Spiral\Database\Entities\Driver;
+use Spiral\Models\EntityInterface;
 use Spiral\ODM\DocumentEntity;
+use Spiral\ODM\ODM;
 use Spiral\ORM\ActiveAccessorInterface;
 
 /**
@@ -31,6 +33,26 @@ abstract class JsonDocument extends DocumentEntity implements ActiveAccessorInte
      * @var bool
      */
     protected $solidState = true;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(
+        $fields = [],
+        EntityInterface $parent = null,
+        ODM $odm = null,
+        $odmSchema = null
+    ) {
+        if (is_string($fields)) {
+            try {
+                $fields = json_decode($fields, true);
+            } catch (\ErrorException $exception) {
+                $fields = [];
+            }
+        }
+
+        parent::__construct($fields, $parent, $odm, $odmSchema);
+    }
 
     /**
      * {@inheritdoc}
