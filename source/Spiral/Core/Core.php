@@ -136,16 +136,12 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
      * @invisible
      */
     protected $bindings = [
-        /**
-         * Core interface bindings
-         */
+        //Core interface bindings
         'Spiral\Core\ContainerInterface'               => 'Spiral\Core\Core',
         'Spiral\Core\ConfiguratorInterface'            => 'Spiral\Core\Core',
         'Spiral\Core\HippocampusInterface'             => 'Spiral\Core\Core',
         'Spiral\Core\CoreInterface'                    => 'Spiral\Core\Core',
-        /**
-         * Instrumental bindings
-         */
+        //Instrumental bindings
         'Psr\Log\LoggerInterface'                      => 'Spiral\Debug\Logger',
         'Spiral\Debug\SnapshotInterface'               => 'Spiral\Debug\Snapshot',
         'Spiral\Cache\CacheInterface'                  => 'Spiral\Cache\CacheProvider',
@@ -162,21 +158,15 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Database\DatabaseInterface'            => 'Spiral\Database\Entities\Database',
         'Spiral\Database\DatabasesInterface'           => 'Spiral\Database\DatabaseProvider',
         'Spiral\Database\Migrations\MigratorInterface' => 'Spiral\Database\Migrations\Migrator',
-        /**
-         * Spiral aliases
-         */
+        //Spiral aliases
         'core'                                         => 'Spiral\Core\Core',
         'loader'                                       => 'Spiral\Core\Components\Loader',
         'modules'                                      => 'Spiral\Modules\ModuleManager',
         'debugger'                                     => 'Spiral\Debug\Debugger',
-        /**
-         * Dispatchers
-         */
+        //Dispatchers
         'console'                                      => 'Spiral\Console\ConsoleDispatcher',
         'http'                                         => 'Spiral\Http\HttpDispatcher',
-        /**
-         * Component aliases
-         */
+        //Component aliases
         'cache'                                        => 'Spiral\Cache\CacheProvider',
         'dbal'                                         => 'Spiral\Database\DatabaseManager',
         'encrypter'                                    => 'Spiral\Encrypter\Encrypter',
@@ -189,9 +179,8 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'tokenizer'                                    => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                         => 'Spiral\Translator\Translator',
         'views'                                        => 'Spiral\Views\ViewManager',
-        /**
-         * Scope dependend aliases
-         */
+        //Scope dependend aliases
+
         'cookies'                                      => 'Spiral\Http\Cookies\CookieManager',
         'router'                                       => 'Spiral\Http\Routing\Router',
         'request'                                      => 'Psr\Http\Message\ServerRequestInterface'
