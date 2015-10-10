@@ -69,30 +69,33 @@ $highlighter = new \Spiral\Tokenizer\Hightligher(
         ]
     ]);
 
-$dumper = new \Spiral\Debug\Dumper($container->get(\Spiral\Debug\Debugger::class), [
-    'container' => '<pre style="background-color: #232323; font-family: Monospace;">{dump}</pre>',
-    'styles'    => [
-        'common'           => '#E6E1DC',
-        'name'             => '#E6E1DC',
-        'indent'           => 'gray',
-        'indent-('         => '#E6E1DC',
-        'indent-)'         => '#E6E1DC',
-        'recursion'        => '#ff9900',
-        'value-string'     => '#A5C261',
-        'value-integer'    => '#A5C261',
-        'value-double'     => '#A5C261',
-        'value-boolean'    => '#C26230; font-weight: bold;',
-        'type'             => '#E6E1DC',
-        'type-object'      => '#E6E1DC',
-        'type-array'       => '#C26230;',
-        'type-null'        => '#C26230;',
-        'type-resource'    => '#color: #C26230;',
-        'access'           => '#666',
-        'access-public'    => '#8dc17d',
-        'access-private'   => '#c18c7d',
-        'access-protected' => '#7d95c1'
+$dumper = new \Spiral\Debug\Dumper(
+    null,
+    [
+        'container' => '<pre style="background-color: #232323; font-family: Monospace;">{dump}</pre>',
+        'styles'    => [
+            'common'           => '#E6E1DC',
+            'name'             => '#E6E1DC',
+            'indent'           => 'gray',
+            'indent-('         => '#E6E1DC',
+            'indent-)'         => '#E6E1DC',
+            'recursion'        => '#ff9900',
+            'value-string'     => '#A5C261',
+            'value-integer'    => '#A5C261',
+            'value-double'     => '#A5C261',
+            'value-boolean'    => '#C26230; font-weight: bold;',
+            'type'             => '#E6E1DC',
+            'type-object'      => '#E6E1DC',
+            'type-array'       => '#C26230;',
+            'type-null'        => '#C26230;',
+            'type-resource'    => '#color: #C26230;',
+            'access'           => '#666',
+            'access-public'    => '#8dc17d',
+            'access-private'   => '#c18c7d',
+            'access-protected' => '#7d95c1'
+        ]
     ]
-]);
+);
 
 $dumps = [];
 
@@ -145,8 +148,6 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
 
     return $result;
 }
-
-
 ?>
 <html>
 <head>
