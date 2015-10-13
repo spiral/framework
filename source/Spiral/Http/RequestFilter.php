@@ -40,13 +40,6 @@ use Spiral\Models\EntityInterface;
 class RequestFilter extends DataEntity
 {
     /**
-     * Populated entity.
-     *
-     * @var EntityInterface
-     */
-    private $entity = null;
-
-    /**
      * Request filter makes every field settable.
      *
      * @var array
@@ -127,29 +120,10 @@ class RequestFilter extends DataEntity
      */
     public function populate(EntityInterface $entity)
     {
-        //Storing entity to fetch errors from it
-        $this->entity = $entity;
-
         //Populating fields
         $entity->setFields($this);
 
         return $this->isValid();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function validate($reset = true)
-    {
-        parent::validate($reset);
-
-        if (!empty($this->entity)) {
-            foreach ($this->entity->getErrors($reset) as $name => $error) {
-                if (isset($this->schema[$name])) {
-                    $this->setError($name, $error);
-                }
-            }
-        }
     }
 
     /**

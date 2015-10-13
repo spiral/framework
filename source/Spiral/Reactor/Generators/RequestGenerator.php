@@ -148,12 +148,9 @@ class RequestGenerator extends AbstractService
         ]);
         $populate->parameter('entity')->setType('EntityInterface');
         $populate->setSource([
-            "if(!\$this->isValid()) {",
+            "if(!parent::populate(\$entity)) {",
             "   return false;",
             "}",
-            "",
-            "//Populating entity fields and fetching it's errors",
-            "parent::populate(\$entity);",
             "",
             "return \$this->isValid();"
         ]);
