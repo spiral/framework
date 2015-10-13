@@ -9,6 +9,7 @@
 namespace Spiral\Http;
 
 use Spiral\Core\ContainerInterface;
+use Spiral\Core\Core;
 use Spiral\Core\Service;
 use Spiral\Http\Exceptions\FilterException;
 use Spiral\Models\DataEntity;
@@ -39,6 +40,13 @@ use Spiral\Models\EntityInterface;
 class RequestFilter extends DataEntity
 {
     /**
+     * Populated entity.
+     *
+     * @var EntityInterface
+     */
+    private $entity = null;
+
+    /**
      * Request filter makes every field settable.
      *
      * @var array
@@ -61,7 +69,7 @@ class RequestFilter extends DataEntity
 
     /**
      * @invisible
-     * @var ContainerInterface
+     * @var ContainerInterface|Core
      */
     protected $container = null;
 
@@ -123,31 +131,32 @@ class RequestFilter extends DataEntity
             return false;
         }
 
+        //Storing entity to fetch errors from it
+        $this->entity = $entity;
+
         //Populating fields
         $entity->setFields($this);
 
-        if (!$entity->isValid()) {
-            foreach ($entity->getErrors() as $name => $error) {
-                if (isset($this->schema[$name])) {
-                    $this->setError($name, $error);
-                }
-            }
-
-            return false;
-        }
-
-        //All good
-        return true;
+        return $entity->isValid();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getErrors($reset = false)
+    public function getErrors($reset = true)
     {
+        $entityErrors = [];
+        if (!empty($this->entity)) {
+            foreach ($this->entity->getErrors($reset) as $name => $error) {
+                if (isset($this->schema[$name])) {
+                    $entityErrors[$name] = $error;
+                }
+            }
+        }
+
         //De-mapping
         $errors = [];
-        foreach (parent::getErrors($reset) as $field => $errorSet) {
+        foreach ($entityErrors + parent::getErrors($reset) as $field => $errorSet) {
             list(, $origin) = $this->parseSource($field, $this->schema[$field]);
 
             if ($field == $origin) {
