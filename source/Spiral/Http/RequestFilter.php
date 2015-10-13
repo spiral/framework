@@ -127,17 +127,29 @@ class RequestFilter extends DataEntity
      */
     public function populate(EntityInterface $entity)
     {
-        if (!$this->isValid()) {
-            return false;
-        }
-
         //Storing entity to fetch errors from it
         $this->entity = $entity;
 
         //Populating fields
         $entity->setFields($this);
 
-        return $entity->isValid();
+        return $this->isValid();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function validate($reset = true)
+    {
+        parent::validate($reset);
+
+        if (!empty($this->entity)) {
+            foreach ($this->entity->getErrors($reset) as $name => $error) {
+                if (isset($this->schema[$name])) {
+                    $this->setError($name, $error);
+                }
+            }
+        }
     }
 
     /**
@@ -145,18 +157,9 @@ class RequestFilter extends DataEntity
      */
     public function getErrors($reset = true)
     {
-        $entityErrors = [];
-        if (!empty($this->entity)) {
-            foreach ($this->entity->getErrors($reset) as $name => $error) {
-                if (isset($this->schema[$name])) {
-                    $entityErrors[$name] = $error;
-                }
-            }
-        }
-
         //De-mapping
         $errors = [];
-        foreach ($entityErrors + parent::getErrors($reset) as $field => $errorSet) {
+        foreach (parent::getErrors($reset) as $field => $errorSet) {
             list(, $origin) = $this->parseSource($field, $this->schema[$field]);
 
             if ($field == $origin) {
