@@ -1,4 +1,4 @@
-Spiral PHP HMVC Framework
+Spiral PSR-7 HMVC Framework
 =======================
 [![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![Latest Unstable Version](https://poser.pugx.org/spiral/framework/v/unstable)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework)
 
