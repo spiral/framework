@@ -4,7 +4,7 @@ Spiral PSR-7 HMVC Framework
 
 [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral)
 
-The Spiral framework provides a simple Rapid Application Development (RAD) platform to develop software applications using an HMVC architecture, PSR-7, simple modern syntax and powerful scaffolding mechanisms.
+The Spiral framework provides a simple Rapid Application Development (RAD) platform to develop software applications using an HMVC architecture, PSR-7, simple syntax and powerful scaffolding mechanisms.
 
 Check bundle application: **https://github.com/spiral-php/application**
 
