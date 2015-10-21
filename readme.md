@@ -193,4 +193,4 @@ Frontend toolkit with automatic **AJAX forms**:
 </spiral:form>
 ```
 
-Plug and Play extensions, IDE integration, debugging and profiling tools and much more!
+Plug and Play extensions, IDE friendly, debugging and profiling tools and much more!
