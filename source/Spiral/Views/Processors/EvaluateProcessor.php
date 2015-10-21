@@ -152,7 +152,7 @@ class EvaluateProcessor extends Component implements ProcessorInterface
             return var_export($phpBlock, true);
         }
 
-        $phpBlock = trim(substr($phpBlock, 2, -2));
+        $phpBlock = substr(trim($phpBlock), 2, -2);
         if (substr($phpBlock, 0, 3) == 'php') {
             $phpBlock = trim(substr($phpBlock, 3));
         }

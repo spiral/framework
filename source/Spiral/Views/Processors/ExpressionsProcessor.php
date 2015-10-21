@@ -31,7 +31,7 @@ class ExpressionsProcessor implements ProcessorInterface
         //this expression should be used only inside evaluator code, expression should be executed
         //before Templater
         'fetchVariable'  => [
-            'pattern'  => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*)\s*=\s*fetchVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
+            'pattern'  => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*(?:\[\])?)\s*=\s*fetchVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'fetchVariable']
         ],
         //Used to create php variable related to some php block, will always contain valid php code,

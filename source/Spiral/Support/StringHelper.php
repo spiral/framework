@@ -8,7 +8,7 @@
  */
 namespace Spiral\Support;
 
-use Cocur\Slugify\Slugify;
+use Cocur\Slugify\SlugifyInterface;
 use Spiral\Core\Core;
 
 /**
@@ -40,7 +40,7 @@ class StringHelper
      */
     public static function urlSlug($string, $separator = '-')
     {
-        return Core::instance()->get(Slugify::class)->slugify($string, $separator);
+        return Core::instance()->get(SlugifyInterface::class)->slugify($string, $separator);
     }
 
     /**
