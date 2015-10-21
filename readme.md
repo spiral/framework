@@ -37,7 +37,7 @@ class HomeController extends Controller implements SingletonInterface
         $logDatabase->table('log')->insert(['message' => 'Yo!']);
     
         return $this->views->render('welcome', [
-            'users' => $db->table('users')->select()->all()
+            'users' => $database->table('users')->select()->all()
         ]);
     }
 }
