@@ -169,7 +169,7 @@ class UserService extends Service implements SingletonInterface
 }
 ```
 
-Powerful HTML templater compatible with other templating engines:
+Powerful and extendable HTML templater compatible with other templating engines:
 
 ```html
 <spiral:grid source="<?= $uploads ?>" as="upload">
