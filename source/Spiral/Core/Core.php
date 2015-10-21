@@ -53,6 +53,8 @@ use Spiral\Modules\ModuleManager;
  * @property \Spiral\Http\Cookies\CookieManager       $cookies  Scope depended.
  * @property \Spiral\Http\Routing\Router              $router   Scope depended.
  * @property \Psr\Http\Message\ServerRequestInterface $request  Scope depended.
+ * 
+ * @todo Add ability to mock custom container.
  */
 class Core extends Container implements CoreInterface, ConfiguratorInterface, HippocampusInterface
 {
