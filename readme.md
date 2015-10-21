@@ -192,3 +192,5 @@ Frontend toolkit with automatic **AJAX forms**:
     <form:input label="Select your file:" type="file" name="upload"/>
 </spiral:form>
 ```
+
+Plug and play extensions, IDE integration, debugging and profiling tools and much more! 
