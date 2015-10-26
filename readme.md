@@ -195,4 +195,4 @@ Frontend toolkit with automatic **AJAX forms**:
 </spiral:form>
 ```
 
-Plug and Play extensions, IDE friendly, auto-indexed translator, Symfony Console integration, debugging and profiling tools and much more!
+Plug and Play extensions, IDE friendly, auto-indexed translator, Symfony Console integration, debugging, profiling tools and much more!
