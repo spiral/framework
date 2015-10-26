@@ -177,7 +177,9 @@ Powerful and extendable HTML templater compatible with other engines like Blade 
     <grid:cell title="Time Created:" value="<?= $upload->getTimeCreated() ?>"/>
     <grid:cell.bytes title="Filesize:" value="<?= $upload->getFilesize() ?>"/>
 
-    <grid:cell><a href="#">Download</a></grid:cell>
+    <grid:cell>
+        <a href="#">Download</a>
+    </grid:cell>
 </spiral:grid>
 
 <spiral:cache lifetime="10">
