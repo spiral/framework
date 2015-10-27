@@ -13,11 +13,9 @@ use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Files\FileManager;
 use Spiral\Support\StringHelper;
-use Spiral\Tests\TestCase;
-use Spiral\Tests\TestCore;
 use Spiral\Views\ViewManager;
 
-class TemplaterTest extends TestCase
+class TemplaterTest extends \PHPUnit_Framework_TestCase
 {
     public function testBaseA()
     {

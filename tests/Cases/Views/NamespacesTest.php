@@ -12,10 +12,9 @@ use Spiral\Core\Configurator;
 use Spiral\Core\Container;
 use Spiral\Core\Core;
 use Spiral\Files\FileManager;
-use Spiral\Tests\TestCase;
 use Spiral\Views\ViewManager;
 
-class NamespacesTest extends TestCase
+class NamespacesTest extends \PHPUnit_Framework_TestCase
 {
     public function testNamespaces()
     {
