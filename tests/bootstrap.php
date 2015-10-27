@@ -4,7 +4,6 @@
  *
  * @package   spiralFramework
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 if (!defined('SPIRAL_INITIAL_TIME')) {
     define('SPIRAL_INITIAL_TIME', microtime(true));

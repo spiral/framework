@@ -135,11 +135,11 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $findOne = $element->method(
             'findOne', [
-                '@param array $where',
-                '@param array $load',
-                '@param array $sortBy',
-                '@return ' . $return . '|null'
-            ], ['where', 'load', 'sortBy']
+            '@param array $where',
+            '@param array $load',
+            '@param array $sortBy',
+            '@return ' . $return . '|null'
+        ], ['where', 'load', 'sortBy']
         )->setStatic(true);
 
         $findOne->parameter('where')->setOptional(true, [])->setType('array');
@@ -148,10 +148,10 @@ class ORMStormDocumenter extends VirtualDocumenter
 
         $findByPK = $element->method(
             'findByPK', [
-                '@param mixed $primaryKey',
-                '@param array $load',
-                '@return ' . $return . '|null'
-            ], ['primaryKey']
+            '@param mixed $primaryKey',
+            '@param array $load',
+            '@return ' . $return . '|null'
+        ], ['primaryKey']
         )->setStatic(true);
 
         $findByPK->parameter('load')->setOptional(true, [])->setType('array');
@@ -407,7 +407,7 @@ class ORMStormDocumenter extends VirtualDocumenter
      *
      * @param ClassElement $element
      * @param string       $name
-     * @param bool       $mountSelector
+     * @param bool         $mountSelector
      */
     protected function replaceComments(ClassElement $element, $name, $mountSelector = true)
     {
@@ -418,7 +418,7 @@ class ORMStormDocumenter extends VirtualDocumenter
         $element->replaceComments("RecordEntity", '\\' . $name);
         $element->replaceComments("Record", '\\' . $name);
 
-        if($mountSelector) {
+        if ($mountSelector) {
             $element->replaceComments("Selector", $this->helper('selector', $name));
         }
     }

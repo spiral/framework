@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Commands\Translator;
 
@@ -14,13 +13,14 @@ use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Index available classes and function calls to fetch every used string translation. Can understand
+ * Index available classes and function calls to fetch every used string translation. Can
+ * understand
  * l, p, translate (trait) function and I18n proxy methods. Only statically calls will be indexes.
  *
  * In addition index will find every string specified in default value of model or class which
- * uses TranslatorTrait. String has to be embraced with [[ ]] in order to be indexed, you can disable
- * property indexation using @do-not-index doc comment. Translator can merge strings with parent data,
- * set class constant INHERIT_TRANSLATIONS to true.
+ * uses TranslatorTrait. String has to be embraced with [[ ]] in order to be indexed, you can
+ * disable property indexation using @do-not-index doc comment. Translator can merge strings with
+ * parent data, set class constant INHERIT_TRANSLATIONS to true.
  */
 class IndexCommand extends Command
 {

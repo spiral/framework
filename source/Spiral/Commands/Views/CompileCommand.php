@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Commands\Views;
 
@@ -31,7 +30,7 @@ class CompileCommand extends Command
      */
     public function perform()
     {
-       /**
+        /**
          * @var FormatterHelper $formatter
          */
         $formatter = $this->getHelper('formatter');

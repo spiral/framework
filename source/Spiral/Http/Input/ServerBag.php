@@ -4,12 +4,12 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Http\Input;
 
 /**
- * Access to server parameters of request, every requested key will be normalized for better usability.
+ * Access to server parameters of request, every requested key will be normalized for better
+ * usability.
  */
 class ServerBag extends InputBag
 {

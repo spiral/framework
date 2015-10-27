@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 use Spiral\Core\Core;
 use Spiral\Debug\Dumper;

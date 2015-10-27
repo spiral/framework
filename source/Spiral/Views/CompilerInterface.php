@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Views;
 
@@ -20,11 +19,11 @@ use Spiral\Views\Exceptions\CompilerException;
 interface CompilerInterface
 {
     /**
-     * @param ViewManager $views
+     * @param ViewManager    $views
      * @param FilesInterface $files
-     * @param string $namespace View namespace.
-     * @param string $view      View name.
-     * @param string $filename  View filename.
+     * @param string         $namespace View namespace.
+     * @param string         $view      View name.
+     * @param string         $filename  View filename.
      */
     public function __construct(
         ViewManager $views,

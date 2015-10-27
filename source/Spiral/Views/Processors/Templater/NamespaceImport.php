@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Views\Processors\Templater;
 
@@ -17,9 +16,9 @@ use Spiral\Views\Processors\TemplateProcessor;
 use Spiral\Views\ViewManager;
 
 /**
- * NamespaceImport allows user to create virtual namespace associated with external folder or namespace
- * in spiral views. This import generally used when module or view bundle provides big set of virtual
- * tags.
+ * NamespaceImport allows user to create virtual namespace associated with external folder or
+ * namespace in spiral views. This import generally used when module or view bundle provides big
+ * set of virtual tags.
  *
  * Namespace import expects "path" token attribute points to external namespace or directory and
  * "namespace" with name of outer namespace (: will be added automatically).

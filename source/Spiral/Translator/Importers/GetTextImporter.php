@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Translator\Importers;
 
@@ -100,8 +99,8 @@ class GetTextImporter extends AbstractImporter
     }
 
     /**
-     * Normalizes bundle key (string) to prevent data loosing while extra lines or spaces or formatting.
-     * Method will be applied only to keys, final value will be kept untouched.
+     * Normalizes bundle key (string) to prevent data loosing while extra lines or spaces or
+     * formatting. Method will be applied only to keys, final value will be kept untouched.
      *
      * @param string $string String to be localized.
      * @return string

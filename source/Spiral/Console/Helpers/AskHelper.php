@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Console\Helpers;
 
@@ -63,8 +62,8 @@ class AskHelper extends Component
     private $hiddenFallback = null;
 
     /**
-     * @param QuestionHelper $helper  Parent command.
-     * @param InputInterface $input   An InputInterface instance
+     * @param QuestionHelper  $helper Parent command.
+     * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
     public function __construct(

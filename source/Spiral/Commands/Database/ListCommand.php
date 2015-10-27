@@ -4,14 +4,12 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 
 /**
  * List of every configured database, it's tables and count of records.

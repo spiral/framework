@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
- * @copyright ©2009-2015
  */
 namespace Spiral\Documenters\ODM;
 
@@ -16,6 +15,7 @@ use Spiral\Documenters\VirtualDocumenter;
 use Spiral\Files\FilesInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\ODM\Document;
+use Spiral\ODM\DocumentEntity;
 use Spiral\ODM\Entities\Collection;
 use Spiral\ODM\Entities\Compositor;
 use Spiral\ODM\Entities\DocumentCursor;
@@ -24,7 +24,6 @@ use Spiral\ODM\Entities\Schemas\DocumentSchema;
 use Spiral\ODM\Exceptions\DefinitionException;
 use Spiral\ODM\Exceptions\ODMException;
 use Spiral\ODM\ODM;
-use Spiral\ODM\DocumentEntity;
 use Spiral\Pagination\Exceptions\PaginationException;
 use Spiral\Pagination\PaginatorInterface;
 use Spiral\Reactor\AbstractElement;
