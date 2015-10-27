@@ -9,6 +9,7 @@ namespace Spiral\Tests\Cases\Views;
 
 use Spiral\Core\Configurator;
 use Spiral\Core\Container;
+use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Files\FileManager;
 use Spiral\Support\StringHelper;
@@ -177,9 +178,13 @@ class TemplaterTest extends \PHPUnit_Framework_TestCase
      */
     protected function spiralCore()
     {
-        return new Core([
+        $core = new Core([
             'root'        => TEST_ROOT,
             'application' => TEST_ROOT
         ]);
+
+        $core->bind(ContainerInterface::class, $core);
+
+        return $core;
     }
 }
