@@ -131,6 +131,6 @@ abstract class AbstractService extends AbstractGenerator
         $this->file->addUse(ContainerInterface::class);
 
         $construct->parameter('container', 'ContainerInterface')->setType('ContainerInterface');
-        $construct->setSource("\$this->container = \$container;", true);
+        $construct->setSource("parent::__construct(\$container);", true);
     }
 }
