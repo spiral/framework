@@ -195,9 +195,12 @@ class RequestGenerator extends AbstractService
      */
     protected function initConstruct(MethodElement $construct)
     {
-        $this->file->addUse(ContainerInterface::class);
         $this->file->addUse(InputInterface::class);
+        $this->file->addUse(ContainerInterface::class);
 
-        $construct->setSource("parent::__construct(\$container, \$input);", true);
+        $construct->parameter('input', 'InputInterface')->setType('InputInterface');
+        $construct->parameter('container', 'ContainerInterface')->setType('ContainerInterface');
+
+        $construct->setSource("parent::__construct(\$input, \$container);", true);
     }
 }
