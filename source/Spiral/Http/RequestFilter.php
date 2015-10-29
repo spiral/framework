@@ -9,7 +9,6 @@ namespace Spiral\Http;
 
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
-use Spiral\Http\Exceptions\FilterException;
 use Spiral\Models\DataEntity;
 use Spiral\Models\EntityInterface;
 
@@ -81,17 +80,6 @@ class RequestFilter extends DataEntity
             //Getting data from input source
             $this->setField($field, $input->getValue($source, $origin), true);
         }
-    }
-
-    /**
-     * Associated InputManager instance. Attention, input manager may not decorate same server
-     * request as while request filter constructing.
-     *
-     * @return InputManager
-     */
-    public function input()
-    {
-        return $this->input;
     }
 
     /**
