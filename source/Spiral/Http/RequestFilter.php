@@ -65,7 +65,6 @@ class RequestFilter extends DataEntity
     protected $container = null;
 
     /**
-     * @final For my own reasons (i have some ideas), please use init method.
      * @param InputInterface     $input
      * @param ContainerInterface $container
      */

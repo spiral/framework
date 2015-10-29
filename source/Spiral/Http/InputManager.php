@@ -313,12 +313,7 @@ class InputManager extends Singleton implements InputInterface
     }
 
     /**
-     * Get input value.
-     *
-     * @param string $source
-     * @param string $name
-     * @return mixed
-     * @throws InputException
+     * {@inheritdoc}
      */
     public function getValue($source, $name = null)
     {
