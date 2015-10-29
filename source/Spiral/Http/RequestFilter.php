@@ -78,11 +78,7 @@ class RequestFilter extends DataEntity
         foreach ($this->schema as $field => $source) {
             list($source, $origin) = $this->parseSource($field, $source);
 
-            if (!method_exists($input, $source)) {
-                throw new FilterException("Undefined source '{$source}'.");
-            }
-
-            //Receiving value as result of InputManager method
+            //Getting data from input source
             $this->setField($field, $input->getValue($source, $origin), true);
         }
     }
