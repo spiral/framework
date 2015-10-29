@@ -76,6 +76,11 @@ abstract class AbstractService extends AbstractGenerator
      */
     public function addDependency($name, $dependency)
     {
+        if (strpos($name, '/') !== false || strpos($name, '\\') !== false) {
+            $name = str_replace('/', '\\', $name);
+            $name = substr($name, strrpos($name, '\\') + 1);
+        }
+
         $this->dependencies[Inflector::pluralize($name)] = $dependency;
         $this->file->addUse($dependency);
     }

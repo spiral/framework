@@ -10,7 +10,6 @@ namespace Spiral\Http;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Models\DataEntity;
-use Spiral\Models\EntityInterface;
 
 /**
  * Request filter is data entity which uses input manager to populate it's fields, model can perform
@@ -80,23 +79,6 @@ class RequestFilter extends DataEntity
             //Getting data from input source
             $this->setField($field, $input->getValue($source, $origin), true);
         }
-    }
-
-    /**
-     * Must populate fields of given entity and return true if entity still valid after this
-     * operation. Method must return false is request is not valid by itself.
-     *
-     * Method might create new set of errors related to population process using setError() method.
-     *
-     * @param EntityInterface $entity
-     * @return bool
-     */
-    public function populate(EntityInterface $entity)
-    {
-        //Populating fields
-        $entity->setFields($this);
-
-        return $this->isValid();
     }
 
     /**

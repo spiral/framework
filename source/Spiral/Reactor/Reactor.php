@@ -85,12 +85,19 @@ class Reactor extends Singleton
         $definition = $this->config['generators'][$type];
 
         $namespace = $definition['namespace'];
-
         if (strpos($name, '/') !== false || strpos($name, '\\') !== false) {
             $name = str_replace('/', '\\', $name);
 
-            //Let's split namespace
+            //Let's split and filter namespace
             $namespace = substr($name, 0, strrpos($name, '\\'));
+
+            //We always have to include prefix (namespace)
+            $chunks = [$definition['namespace']];
+            foreach (explode('\\', $namespace) as $chunk) {
+                $chunks[] = ucfirst($chunk);
+            }
+
+            $namespace = join('\\', $chunks);
             $name = substr($name, strrpos($name, '\\') + 1);
         }
 

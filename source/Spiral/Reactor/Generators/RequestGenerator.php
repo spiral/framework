@@ -124,6 +124,8 @@ class RequestGenerator extends AbstractService
      */
     public function followEntity(ReflectionEntity $entity)
     {
+        $this->file->addUse($entity->getName());
+
         foreach ($entity->getFillable() as $field) {
             $type = $entity->getFields()[$field];
 
@@ -145,14 +147,16 @@ class RequestGenerator extends AbstractService
         $populate->setComment([
             "{@inheritdoc}.",
             "",
-            "@param \\{$entity->getName()} \$entity Entity to be populated with request data.",
+            "@param {$entity->getShortName()} \$entity Entity to be populated with request data.",
             "@return bool"
         ]);
-        $populate->parameter('entity')->setType('EntityInterface');
+        $populate->parameter('entity')->setType($entity->getShortName());
         $populate->setSource([
-            "if(!parent::populate(\$entity)) {",
+            "if (!\$this->isValid()) {",
             "   return false;",
             "}",
+            "",
+            "\$entity->setFields(\$this);",
             "",
             "return \$this->isValid();"
         ]);
