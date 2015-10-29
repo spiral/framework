@@ -188,7 +188,7 @@ Powerful and extendable HTML templater compatible with other engines like Blade 
 </spiral:cache>
 ```
 
-Frontend toolkit with automatic **AJAX forms**:
+Frontend toolkit with powerful **AJAX forms** and widgets:
 
 ```html
 <spiral:form action="/upload">
