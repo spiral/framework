@@ -10,7 +10,7 @@ if (!defined('SPIRAL_INITIAL_TIME')) {
 }
 
 iF (!defined('TEST_ROOT')) {
-    define('TEST_ROOT', __DIR__);
+    define('TEST_ROOT', __DIR__ . '/');
 }
 
 /**
