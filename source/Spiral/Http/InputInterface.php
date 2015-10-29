@@ -15,7 +15,7 @@ use Spiral\Http\Exceptions\InputException;
 interface InputInterface
 {
     /**
-     * Get input value.
+     * Get input value based on it's source and name.
      *
      * @param string $source
      * @param string $name
