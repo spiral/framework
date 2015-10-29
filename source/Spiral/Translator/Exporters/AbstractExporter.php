@@ -125,9 +125,14 @@ abstract class AbstractExporter extends Component implements ExporterInterface
         );
 
         $result = [];
+
         foreach ($bundles as $filename) {
-            $bundle = substr(basename($filename), 0,
-                -1 * strlen($this->files->extension($filename)));
+            $bundle = substr(
+                basename($filename),
+                0,
+                -1 * strlen($this->files->extension($filename))
+            );
+
             if (!empty($prefix) && stripos($bundle, $prefix) !== 0) {
                 continue;
             }
