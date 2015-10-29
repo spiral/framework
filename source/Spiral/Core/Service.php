@@ -70,6 +70,7 @@ class Service extends Component
     {
         $this->container = $container;
 
+        //TODO: TO BE REMOVED
         if ($init && method_exists($this, self::INIT_METHOD)) {
             $method = new \ReflectionMethod($this, self::INIT_METHOD);
             $method->invokeArgs($this, $container->resolveArguments($method));

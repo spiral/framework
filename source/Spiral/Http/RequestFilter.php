@@ -55,7 +55,7 @@ class RequestFilter extends DataEntity
 
     /**
      * @invisible
-     * @var InputManager
+     * @var InputInterface
      */
     protected $input = null;
 
@@ -66,15 +66,12 @@ class RequestFilter extends DataEntity
     protected $container = null;
 
     /**
-     * Please do not construct this class by yourself for now, always use container as i'm working
-     * on new request filter functionality including nested requests.
-     *
      * @final For my own reasons (i have some ideas), please use init method.
-     * @param InputManager       $input
+     * @param InputInterface     $input
      * @param ContainerInterface $container
      */
-    final public function __construct(
-        InputManager $input,
+    public function __construct(
+        InputInterface $input,
         ContainerInterface $container
     ) {
         $this->input = $input;
@@ -88,9 +85,10 @@ class RequestFilter extends DataEntity
             }
 
             //Receiving value as result of InputManager method
-            $this->setField($field, call_user_func([$input, $source], $origin), true);
+            $this->setField($field, $input->getValue($source, $origin), true);
         }
 
+        //TODO: TO BE REMOVED
         if (method_exists($this, Service::INIT_METHOD)) {
             $method = new \ReflectionMethod($this, Service::INIT_METHOD);
             $method->invokeArgs($this, $container->resolveArguments($method));

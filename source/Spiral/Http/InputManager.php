@@ -12,6 +12,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Singleton;
+use Spiral\Http\Exceptions\InputException;
 use Spiral\Http\Input\FilesBag;
 use Spiral\Http\Input\HeadersBag;
 use Spiral\Http\Input\InputBag;
@@ -28,7 +29,7 @@ use Spiral\Http\Input\ServerBag;
  * @property ServerBag  $server
  * @property InputBag   $attributes
  */
-class InputManager extends Singleton
+class InputManager extends Singleton implements InputInterface
 {
     /**
      * Declaring to IoC that component should be presented as singleton.
@@ -309,5 +310,22 @@ class InputManager extends Singleton
     public function attribute($name, $default = null)
     {
         return $this->attributes->get($name, $default);
+    }
+
+    /**
+     * Get input value.
+     *
+     * @param string $source
+     * @param string $name
+     * @return mixed
+     * @throws InputException
+     */
+    public function getValue($source, $name = null)
+    {
+        if (!method_exists($this, $source)) {
+            throw new InputException("Undefined input source '{$source}'.");
+        }
+
+        return call_user_func([$this, $source], $name);
     }
 }
