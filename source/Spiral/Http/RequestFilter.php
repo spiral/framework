@@ -9,7 +9,6 @@ namespace Spiral\Http;
 
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
-use Spiral\Core\Service;
 use Spiral\Http\Exceptions\FilterException;
 use Spiral\Models\DataEntity;
 use Spiral\Models\EntityInterface;
@@ -86,12 +85,6 @@ class RequestFilter extends DataEntity
 
             //Receiving value as result of InputManager method
             $this->setField($field, $input->getValue($source, $origin), true);
-        }
-
-        //TODO: TO BE REMOVED
-        if (method_exists($this, Service::INIT_METHOD)) {
-            $method = new \ReflectionMethod($this, Service::INIT_METHOD);
-            $method->invokeArgs($this, $container->resolveArguments($method));
         }
     }
 

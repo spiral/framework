@@ -64,17 +64,10 @@ class Service extends Component
 
     /**
      * @param ContainerInterface $container
-     * @param bool               $init Execute init method.
      */
-    public function __construct(ContainerInterface $container, $init = true)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
-        //TODO: TO BE REMOVED
-        if ($init && method_exists($this, self::INIT_METHOD)) {
-            $method = new \ReflectionMethod($this, self::INIT_METHOD);
-            $method->invokeArgs($this, $container->resolveArguments($method));
-        }
     }
 
     /**
