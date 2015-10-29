@@ -99,6 +99,7 @@ abstract class AbstractService extends AbstractGenerator
             return;
         }
 
+        //TODO: change to constructor redefinition
         $initMethod = $this->class->method('init');
         foreach ($this->dependencies as $name => $dependency) {
             $reflection = new \ReflectionClass($dependency);
