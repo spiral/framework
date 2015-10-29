@@ -159,6 +159,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Database\DatabaseInterface'            => 'Spiral\Database\Entities\Database',
         'Spiral\Database\DatabasesInterface'           => 'Spiral\Database\DatabaseProvider',
         'Spiral\Database\Migrations\MigratorInterface' => 'Spiral\Database\Migrations\Migrator',
+        'Spiral\Http\InputInterface'                   => 'Spiral\Http\InputManager',
         //Spiral aliases
         'core'                                         => 'Spiral\Core\Core',
         'loader'                                       => 'Spiral\Core\Components\Loader',
@@ -181,7 +182,6 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'i18n'                                         => 'Spiral\Translator\Translator',
         'views'                                        => 'Spiral\Views\ViewManager',
         //Scope dependend aliases
-
         'cookies'                                      => 'Spiral\Http\Cookies\CookieManager',
         'router'                                       => 'Spiral\Http\Routing\Router',
         'request'                                      => 'Psr\Http\Message\ServerRequestInterface'

@@ -9,8 +9,10 @@ namespace Spiral\Reactor\Generators\Prototypes;
 
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\ContainerInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Reactor\AbstractElement;
+use Spiral\Reactor\ClassElements\MethodElement;
 use Spiral\Reactor\PHPExpression;
 
 /**
@@ -32,8 +34,8 @@ abstract class AbstractService extends AbstractGenerator
     {
         parent::__construct($files, $name, $options, $header);
 
-        //Let's always make init method first, we can always remove it
-        $this->class->method('init');
+        //Always first
+        $this->class->method('__construct');
     }
 
     /**
@@ -94,13 +96,16 @@ abstract class AbstractService extends AbstractGenerator
     protected function renderDependencies()
     {
         if (empty($this->dependencies)) {
-            $this->class->removeMethod('init');
+            $this->class->removeMethod('__construct');
 
             return;
         }
 
-        //TODO: change to constructor redefinition
-        $initMethod = $this->class->method('init');
+        $construct = $this->class->method('__construct');
+
+        //Default code and etc
+        $this->initConstruct($construct);
+
         foreach ($this->dependencies as $name => $dependency) {
             $reflection = new \ReflectionClass($dependency);
 
@@ -108,11 +113,24 @@ abstract class AbstractService extends AbstractGenerator
                 $name, "@var " . $reflection->getShortName()
             )->setAccess(AbstractElement::ACCESS_PROTECTED)->setDefault(true, null);
 
-            $initMethod->parameter(
+            $construct->parameter(
                 $name, $reflection->getShortName()
             )->setType($reflection->getShortName());
 
-            $initMethod->setSource("\$this->$name = \$$name;", true);
+            $construct->setSource("\$this->$name = \$$name;", true);
         }
+    }
+
+    /**
+     * Initiate default state of construct method.
+     *
+     * @param MethodElement $construct
+     */
+    protected function initConstruct(MethodElement $construct)
+    {
+        $this->file->addUse(ContainerInterface::class);
+
+        $construct->parameter('container', 'ContainerInterface')->setType('ContainerInterface');
+        $construct->setSource("\$this->container = \$container;", true);
     }
 }

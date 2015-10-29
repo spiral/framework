@@ -7,10 +7,13 @@
  */
 namespace Spiral\Reactor\Generators;
 
+use Spiral\Core\ContainerInterface;
 use Spiral\Files\FilesInterface;
+use Spiral\Http\InputInterface;
 use Spiral\Http\RequestFilter;
 use Spiral\Models\EntityInterface;
 use Spiral\Models\Reflections\ReflectionEntity;
+use Spiral\Reactor\ClassElements\MethodElement;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
 
 /**
@@ -183,5 +186,22 @@ class RequestGenerator extends AbstractService
         $this->class->property('schema')->setDefault(true, $this->schema);
         $this->class->property('validates')->setDefault(true, $this->validates);
         $this->class->property('setters')->setDefault(true, $this->setters);
+    }
+
+    /**
+     * Initiate default state of construct method.
+     *
+     * @param MethodElement $construct
+     */
+    protected function initConstruct(MethodElement $construct)
+    {
+        $this->file->addUse(ContainerInterface::class);
+        $this->file->addUse(InputInterface::class);
+
+        $construct->parameter('container', 'ContainerInterface')->setType('ContainerInterface');
+        $construct->setSource("\$this->container = \$container;", true);
+
+        $construct->parameter('input', 'InputInterface')->setType('InputInterface');
+        $construct->setSource("\$this->input = \$input;", true);
     }
 }
