@@ -65,15 +65,35 @@ class Reactor extends Singleton
             throw new ReactorException("Undefined class type '{$type}'.");
         }
 
-        $definition = $this->config['generators'][$type];
-
-        //TODO: Issue with class name including slashes to be converted into namespace
-        $class = $definition['namespace'] . '\\' . Inflector::classify($name) . $definition['postfix'];
-
+        $class = $this->className($type, $name);
         if (!class_exists($class)) {
             return null;
         }
 
         return $class;
+    }
+
+    /**
+     * Generate valid class name based on type and user name.
+     *
+     * @param string $type
+     * @param string $name
+     * @return string
+     */
+    private function className($type, $name)
+    {
+        $definition = $this->config['generators'][$type];
+
+        $namespace = $definition['namespace'];
+
+        if (strpos($name, '/') !== false || strpos($name, '\\') !== false) {
+            $name = str_replace('/', '\\', $name);
+
+            //Let's split namespace
+            $namespace = substr($name, 0, strrpos($name, '\\'));
+            $name = substr($name, strrpos($name, '\\') + 1);
+        }
+
+        return $namespace . '\\' . Inflector::classify($name) . $definition['postfix'];
     }
 }
