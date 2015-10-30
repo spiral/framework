@@ -9,7 +9,6 @@ namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\ContainerInterface;
 use Spiral\Core\Controller;
 use Spiral\Http\Cookies\CookieManager;
 
@@ -19,25 +18,6 @@ use Spiral\Http\Cookies\CookieManager;
  */
 class HttpController extends Controller
 {
-    /**
-     * @var MiddlewarePipeline
-     */
-    private $pipeline = null;
-
-    /**
-     * As moment of controller initialization.
-     *
-     * @var ResponseInterface
-     */
-    private $request = null;
-
-    /**
-     * As moment of controller initialization.
-     *
-     * @var ResponseInterface
-     */
-    private $response = null;
-
     /**
      * You can define controller specific middlewares by redefining this property. In default
      * configuration controller defines it's own CookieManager middleware.
@@ -51,61 +31,26 @@ class HttpController extends Controller
     ];
 
     /**
-     * @param ContainerInterface     $container
+     * {@inheritdoc}
+     *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
      */
-    public function __construct(
-        ContainerInterface $container,
-        ServerRequestInterface $request,
-        ResponseInterface $response
+    public function callAction(
+        $action = '',
+        array $parameters = [],
+        ServerRequestInterface $request = null,
+        ResponseInterface $response = null
     ) {
-        parent::__construct($container);
+        if (empty($request)) {
+            $request = $this->container->get(ServerRequestInterface::class);
+        }
 
-        $this->request = $request;
-        $this->response = $response;
+        if (empty($response)) {
+            $response = $this->container->get(ResponseInterface::class);
+        }
 
-        $this->pipeline = new MiddlewarePipeline($this->container, $this->middlewares);
-    }
-
-    /**
-     * Set Request to be used as initial in internal MiddlewarePipeline.
-     *
-     * @param ServerRequestInterface $request
-     */
-    public function setRequest(ServerRequestInterface $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * Set Response to be used as initial in internal MiddlewarePipeline.
-     *
-     * @param ResponseInterface $response
-     */
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->response = $response;
-    }
-
-    /**
-     * Set controller middleware pipeline.
-     *
-     * @param MiddlewarePipeline $pipeline
-     */
-    public function setPipeline(MiddlewarePipeline $pipeline)
-    {
-        $this->pipeline = $pipeline;
-    }
-
-    /**
-     * Add middleware to active pipeline.
-     *
-     * @param callable $middleware
-     */
-    protected function addMiddleware($middleware)
-    {
-        $this->pipeline->add($middleware);
+        return parent::callAction($action, $parameters + compact('request', 'response'));
     }
 
     /**
@@ -122,12 +67,42 @@ class HttpController extends Controller
         $scope = $this;
 
         try {
-            return $this->pipeline->target(function () use ($method, $scope, $arguments) {
+            $pipeline = $this->createPipeline($this->actionName($method->getName()));
+
+            //Target us our controller method
+            $pipeline->target(function () use ($method, $scope, $arguments) {
                 //Executing controller method
                 return $method->invokeArgs($scope, $arguments);
-            })->run($this->request, $this->response);
+            });
+
+            //Always provided by callAction
+            return $pipeline->run($parameters['request'], $parameters['response']);
         } finally {
             $this->benchmark($benchmark);
         }
+    }
+
+    /**
+     * Get pipeline for specific action.
+     *
+     * @param string $action
+     * @return MiddlewarePipeline
+     */
+    protected function createPipeline($action)
+    {
+        return new MiddlewarePipeline($this->container, $this->middlewares);
+    }
+
+    /**
+     * Fetch normalized action name from method name.
+     *
+     * @param string $method
+     * @return string
+     */
+    private function actionName($method)
+    {
+        return lcfirst(
+            substr($method, strlen(static::ACTION_PREFIX), -1 * strlen(static::ACTION_POSTFIX))
+        );
     }
 }

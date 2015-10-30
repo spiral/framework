@@ -111,13 +111,7 @@ abstract class Controller extends Service implements ControllerInterface
      */
     protected function isExecutable(\ReflectionMethod $method)
     {
-        if (
-            $method->getName() == self::INIT_METHOD
-            || $method->isStatic()
-            || !$method->isPublic()
-            || !$method->isUserDefined()
-            || $method->getDeclaringClass()->getName() == __CLASS__
-        ) {
+        if ($method->isStatic() || !$method->isUserDefined()) {
             return false;
         }
 

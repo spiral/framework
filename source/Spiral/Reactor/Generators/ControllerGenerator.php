@@ -10,6 +10,7 @@ namespace Spiral\Reactor\Generators;
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\Controller;
 use Spiral\Http\Exceptions\ClientException;
+use Spiral\Reactor\AbstractElement;
 use Spiral\Reactor\Generators\Prototypes\AbstractService;
 
 /**
@@ -24,6 +25,22 @@ class ControllerGenerator extends AbstractService
     {
         $this->file->addUse(Controller::class);
         $this->class->setExtends('Controller');
+    }
+
+    /**
+     * Generate action method.
+     *
+     * @param string $action
+     */
+    public function addAction($action)
+    {
+        $retrieve = $this->class->method(
+            Controller::ACTION_PREFIX . $action . Controller::ACTION_POSTFIX
+        )->setComment([
+            "@return mixed"
+        ]);
+
+        $retrieve->setAccess(AbstractElement::ACCESS_PROTECTED);
     }
 
     /**
@@ -56,6 +73,8 @@ class ControllerGenerator extends AbstractService
             "]);"
         ]);
 
+        $retrieve->setAccess(AbstractElement::ACCESS_PROTECTED);
+
         //Let's generate some fun!
         $show = $this->class->method('showAction')->setComment([
             "Fetch one entity from {$serviceClass} and render it using view '{$plural}/show'.",
@@ -73,6 +92,8 @@ class ControllerGenerator extends AbstractService
             "return \$this->views->render('{$plural}/show', compact('entity'));"
         ]);
 
+        $show->setAccess(AbstractElement::ACCESS_PROTECTED);
+
         //Create new entity form
         $create = $this->class->method('createAction')->setComment([
             "Create new entity using view '{$plural}/create'.",
@@ -83,6 +104,8 @@ class ControllerGenerator extends AbstractService
         $create->setSource([
             "return \$this->views->render('{$plural}/create', ['entity' => \$this->{$plural}->create()]);"
         ]);
+
+        $create->setAccess(AbstractElement::ACCESS_PROTECTED);
 
         //Edit existed entity form
         $edit = $this->class->method('editAction')->setComment([
@@ -100,6 +123,8 @@ class ControllerGenerator extends AbstractService
             "",
             "return \$this->views->render('{$plural}/edit', compact('entity'));"
         ]);
+
+        $edit->setAccess(AbstractElement::ACCESS_PROTECTED);
 
         //Let's generate some fun!
         $save = $this->class->method('saveAction')->setComment([
@@ -196,6 +221,7 @@ class ControllerGenerator extends AbstractService
         }
 
         $save->setComment("@return array", true);
+        $save->setAccess(AbstractElement::ACCESS_PROTECTED);
 
         //Let's generate some fun!
         $delete = $this->class->method('deleteAction')->setComment([
@@ -217,5 +243,7 @@ class ControllerGenerator extends AbstractService
             "",
             "return ['status' => 200, 'message' => 'Deleted'];"
         ]);
+
+        $delete->setAccess(AbstractElement::ACCESS_PROTECTED);
     }
 }

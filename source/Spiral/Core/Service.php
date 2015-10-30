@@ -52,11 +52,6 @@ use Spiral\Core\Exceptions\Container\InstanceException;
 class Service extends Component
 {
     /**
-     * Init method name.
-     */
-    const INIT_METHOD = 'init';
-
-    /**
      * @invisible
      * @var ContainerInterface
      */

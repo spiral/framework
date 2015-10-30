@@ -59,6 +59,10 @@ class ControllerCommand extends AbstractCommand
             return;
         }
 
+        foreach ($this->option('action') as $action) {
+            $generator->addAction($action);
+        }
+
         foreach ($this->option('method') as $method) {
             $generator->addMethod($method);
         }
@@ -114,6 +118,12 @@ class ControllerCommand extends AbstractCommand
     protected function defineOptions()
     {
         return [
+            [
+                'action',
+                'a',
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Pre-create controller action.'
+            ],
             [
                 'method',
                 'm',
