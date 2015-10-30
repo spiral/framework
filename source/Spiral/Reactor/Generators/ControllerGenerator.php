@@ -43,7 +43,7 @@ class ControllerGenerator extends AbstractService
         $this->class->property('defaultAction', "@var string")->setDefault(true, 'retrieve');
 
         //Let's generate some fun!
-        $retrieve = $this->class->method('retrieve')->setComment([
+        $retrieve = $this->class->method('retrieveAction')->setComment([
             "Retrieve all entities selected from {$serviceClass} and render them using view '{$plural}/list'.",
             "",
             "@return string"
@@ -57,7 +57,7 @@ class ControllerGenerator extends AbstractService
         ]);
 
         //Let's generate some fun!
-        $show = $this->class->method('show')->setComment([
+        $show = $this->class->method('showAction')->setComment([
             "Fetch one entity from {$serviceClass} and render it using view '{$plural}/show'.",
             "",
             "@param string \$id",
@@ -74,7 +74,7 @@ class ControllerGenerator extends AbstractService
         ]);
 
         //Create new entity form
-        $create = $this->class->method('create')->setComment([
+        $create = $this->class->method('createAction')->setComment([
             "Create new entity using view '{$plural}/create'.",
             "",
             "@return string"
@@ -85,7 +85,7 @@ class ControllerGenerator extends AbstractService
         ]);
 
         //Edit existed entity form
-        $edit = $this->class->method('edit')->setComment([
+        $edit = $this->class->method('editAction')->setComment([
             "Edit existed entity form using view '{$plural}/edit'.",
             "",
             "@param string \$id",
@@ -102,7 +102,7 @@ class ControllerGenerator extends AbstractService
         ]);
 
         //Let's generate some fun!
-        $save = $this->class->method('save')->setComment([
+        $save = $this->class->method('saveAction')->setComment([
             "Update existed or create new entity using {$serviceClass}. JSON will be returned.",
             "",
             "@param string \$id"
@@ -198,7 +198,7 @@ class ControllerGenerator extends AbstractService
         $save->setComment("@return array", true);
 
         //Let's generate some fun!
-        $delete = $this->class->method('delete')->setComment([
+        $delete = $this->class->method('deleteAction')->setComment([
             "Delete one entity using it's primary key and service {$serviceClass}. JSON will be returned.",
             "",
             "@param string \$id",

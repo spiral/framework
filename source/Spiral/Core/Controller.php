@@ -31,6 +31,13 @@ abstract class Controller extends Service implements ControllerInterface
     const ACTION_PREFIX = '';
 
     /**
+     * Action method postfix value.
+     *
+     * @var string
+     */
+    const ACTION_POSTFIX = 'Action';
+
+    /**
      * Default action to run.
      *
      * @var string
@@ -43,7 +50,9 @@ abstract class Controller extends Service implements ControllerInterface
     public function callAction($action = '', array $parameters = [])
     {
         //Action should include prefix and be always specified
-        $action = static::ACTION_PREFIX . (!empty($action) ? $action : $this->defaultAction);
+        $action = static::ACTION_PREFIX
+            . (!empty($action) ? $action : $this->defaultAction)
+            . static::ACTION_POSTFIX;
 
         if (!method_exists($this, $action)) {
             throw new ControllerException(

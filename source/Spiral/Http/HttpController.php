@@ -61,7 +61,6 @@ class HttpController extends Controller
         MiddlewarePipeline $pipeline,
         ServerRequestInterface $request,
         ResponseInterface $response
-
     ) {
         parent::__construct($container);
 
