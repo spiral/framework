@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
-
  */
 namespace Spiral\Views\Processors;
 
@@ -47,7 +46,7 @@ class ExpressionsProcessor implements ProcessorInterface
      */
     public function __construct(ViewManager $views, Compiler $compiler, array $options)
     {
-        $this->viewManager = $views;
+        $this->views = $views;
 
         if (!empty($options['expressions'])) {
             $this->expressions = $options['expressions'] + $this->expressions;
@@ -78,15 +77,15 @@ class ExpressionsProcessor implements ProcessorInterface
      */
     public function dependency(array $matches)
     {
-        return $this->viewManager->getDependency(
+        return $this->views->getDependency(
             $matches['name'],
             !empty($matches['default']) ? $matches['default'] : ''
         );
     }
 
     /**
-     * Export value or expressions of template block to evaluator variable which can be used to build
-     * php expressions.
+     * Export value or expressions of template block to evaluator variable which can be used to
+     * build php expressions.
      *
      * @param array $matches
      * @return string

@@ -226,11 +226,14 @@ class Compiler extends Component implements CompilerInterface
         }
 
         foreach ($this->config['processors'] as $processor => $options) {
-            $this->processors[] = $this->container->construct($processor, [
-                'views'    => $this->views,
-                'compiler' => $this,
-                'options'  => $options
-            ]);
+            $this->processors[] = $this->container->construct(
+                $processor,
+                [
+                    'views'    => $this->views,
+                    'compiler' => $this,
+                    'options'  => $options
+                ]
+            );
         }
 
         return $this->processors;

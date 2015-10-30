@@ -170,20 +170,6 @@ class ViewManager extends Singleton implements ViewsInterface
     }
 
     /**
-     * Alias for get method, get instance of ViewInterface associated with specific template.
-     *
-     * @param string $path
-     * @param array  $data
-     * @param string $class Custom view class name.
-     * @return ViewInterface
-     * @throws ContainerException
-     */
-    public function make($path, array $data = [], $class = null)
-    {
-        return $this->get($path, $data, $class);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function render($path, array $data = [])
