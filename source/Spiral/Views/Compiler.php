@@ -87,7 +87,8 @@ class Compiler extends Component implements CompilerInterface
     /**
      * {@inheritdoc}
      *
-     * @param ContainerInterface $container Required.
+     * @param array              $processors View Processors.
+     * @param ContainerInterface $container  Required.
      */
     public function __construct(
         ViewManager $views,
@@ -95,11 +96,14 @@ class Compiler extends Component implements CompilerInterface
         $namespace,
         $view,
         $filename,
+        array $processors = [],
         ContainerInterface $container = null
     ) {
-        //Our configuration is stored in parent ViewManager config
-        $this->config = $views->config()['compiler'];
-        $this->config['cache'] = $views->config()['cache'];
+        //Better way is required to manage compiler settings
+        $this->config = [
+            'processors' => $processors,
+            'cache'      => $views->config()['cache']
+        ];
 
         $this->views = $views;
         $this->files = $files;

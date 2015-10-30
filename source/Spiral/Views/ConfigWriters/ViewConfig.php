@@ -172,8 +172,8 @@ class ViewConfig extends ConfigWriter
 
         //Processors
         foreach ($this->processors as $processor => $options) {
-            if (!isset($config['compiler']['processors'][$processor])) {
-                $config['compiler']['processors'][$processor] = $options;
+            if (!isset($config['engines']['default']['processors'][$processor])) {
+                $config['engines']['default']['processors'][$processor] = $options;
             }
         }
 
