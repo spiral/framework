@@ -16,7 +16,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\Views\Exceptions\ViewException;
 
 /**
- * Default ViewsInterface implementation with ability to change cache versions via external value
+ * Default ViewsInterface implementation with ability to change cache versions via external
  * dependencies. ViewManager support multiple namespaces and namespaces associated with multiple
  * folders.
  */
