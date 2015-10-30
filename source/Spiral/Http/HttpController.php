@@ -52,25 +52,20 @@ class HttpController extends Controller
 
     /**
      * @param ContainerInterface     $container
-     * @param MiddlewarePipeline     $pipeline
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
      */
     public function __construct(
         ContainerInterface $container,
-        MiddlewarePipeline $pipeline,
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
         parent::__construct($container);
 
-        $this->pipeline = $pipeline;
         $this->request = $request;
         $this->response = $response;
 
-        foreach ($this->middlewares as $middleware) {
-            $this->pipeline->add($middleware);
-        }
+        $this->pipeline = new MiddlewarePipeline($this->container, $this->middlewares);
     }
 
     /**
