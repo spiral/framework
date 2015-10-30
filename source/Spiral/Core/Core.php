@@ -16,6 +16,7 @@ use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Debug\SnapshotInterface;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
 use Spiral\Modules\ModuleManager;

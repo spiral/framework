@@ -128,7 +128,7 @@ class HttpController extends Controller
         $scope = $this;
 
         try {
-            $this->pipeline->target(function () use ($method, $scope, $arguments) {
+            return $this->pipeline->target(function () use ($method, $scope, $arguments) {
                 //Executing controller method
                 return $method->invokeArgs($scope, $arguments);
             })->run($this->request, $this->response);
