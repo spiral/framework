@@ -81,6 +81,9 @@ abstract class Controller extends Service implements ControllerInterface
             );
         }
 
+        //Needed to be called via reflection
+        $reflection->setAccessible(true);
+
         //Executing our action
         return $this->executeAction($reflection, $arguments, $parameters);
     }
