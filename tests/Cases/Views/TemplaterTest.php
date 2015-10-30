@@ -152,16 +152,11 @@ class TemplaterTest extends \PHPUnit_Framework_TestCase
                     'default' => [
                         'extensions' => ['php'],
                         'compiler'   => 'Spiral\Views\Compiler',
-                        'view'       => 'Spiral\Views\View'
+                        'view'       => 'Spiral\Views\View',
+                        'processors' => [
+                            'Spiral\Views\Processors\TemplateProcessor' => []
+                        ]
                     ]
-                ],
-                'compiler'     => [
-                    'processors' => [
-                        'Spiral\Views\Processors\TemplateProcessor' => []
-                    ]
-                ],
-                'classes'      => [
-
                 ]
             ];
         }

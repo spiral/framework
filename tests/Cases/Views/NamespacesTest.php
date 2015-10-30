@@ -74,16 +74,11 @@ class NamespacesTest extends \PHPUnit_Framework_TestCase
                     'default' => [
                         'extensions' => ['php'],
                         'compiler'   => 'Spiral\Views\Compiler',
-                        'view'       => 'Spiral\Views\View'
-                    ]
-                ],
-                'compiler'     => [
-                    'processors' => [
+                        'view'       => 'Spiral\Views\View',
+                        'processors' => [
 
+                        ]
                     ]
-                ],
-                'classes'      => [
-
                 ]
             ];
         }
