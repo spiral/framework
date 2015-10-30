@@ -55,7 +55,7 @@ abstract class Controller extends Service implements ControllerInterface
         $reflection = new \ReflectionMethod($this, $action);
 
         if (!$this->isExecutable($reflection)) {
-            //We might need different exception code here
+            //Need different exception code here
             throw new ControllerException(
                 "Action '{$action}' can not be executed.",
                 ControllerException::BAD_ACTION
@@ -87,12 +87,11 @@ abstract class Controller extends Service implements ControllerInterface
         $benchmark = $this->benchmark($action = $method->getName());
 
         try {
-            $result = $method->invokeArgs($this, $arguments);
+            //Executing controller method
+            return $method->invokeArgs($this, $arguments);
         } finally {
             $this->benchmark($benchmark);
         }
-
-        return $result;
     }
 
     /**
