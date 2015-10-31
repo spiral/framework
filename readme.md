@@ -69,7 +69,14 @@ StorageManger to simplify process of working with remote storages:
 ```php
 public function uploadAction(StorageBucket $uploads)
 {
-    echo $bucket->put('my-upload.file', $this->input->files->get('upload'))->getAddress();
+    $object = $bucket->put(
+        'my-upload.file',
+        $this->input->files->get('upload')
+    );
+    
+    //...
+    
+    echo $object->replace('amazon')->getAddress();
 }
 ```
 
