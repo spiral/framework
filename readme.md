@@ -32,7 +32,7 @@ class HomeController extends Controller implements SingletonInterface
      * @param Database $logDatabase
      * @return string
      */
-    public function index(Database $database, Database $logDatabase)
+    public function indexAction(Database $database, Database $logDatabase)
     {
         $logDatabase->table('log')->insert(['message' => 'Yo!']);
     
@@ -46,7 +46,7 @@ class HomeController extends Controller implements SingletonInterface
 PSR-7 integration and method injections:
 
 ```php
-public function index(ResponseInterface $response)
+public function indexAction(ResponseInterface $response)
 {
     return $response->withHeader('Spiral', 'Value!');
 }
@@ -55,12 +55,21 @@ public function index(ResponseInterface $response)
 JSON responses
 
 ```php
-public function index(ServerRequestInterface $request)
+public function indexAction(ServerRequestInterface $request)
 {
     return [
         'status' => 200,
         'uri'    => (string)$request->getUri()
     ];
+}
+```
+
+StorageManger to simplify process of working with remote storages:
+
+```php
+public function uploadAction(StorageBucket $uploads)
+{
+    echo $bucket->put('my-upload.file', $this->input->files->get('upload'))->getAddress();
 }
 ```
 
