@@ -67,7 +67,7 @@ class HttpController extends Controller
         $scope = $this;
 
         try {
-            $pipeline = $this->createPipeline($this->actionName($method->getName()));
+            $pipeline = $this->createPipeline($this->actionName($method));
 
             //Target us our controller method
             $pipeline->target(function () use ($method, $scope, $arguments) {
@@ -96,13 +96,15 @@ class HttpController extends Controller
     /**
      * Fetch normalized action name from method name.
      *
-     * @param string $method
+     * @param \ReflectionMethod $method
      * @return string
      */
-    private function actionName($method)
+    private function actionName(\ReflectionMethod $method)
     {
-        return lcfirst(
-            substr($method, strlen(static::ACTION_PREFIX), -1 * strlen(static::ACTION_POSTFIX))
-        );
+        return lcfirst(substr(
+            $method->getName(),
+            strlen(static::ACTION_PREFIX),
+            -1 * strlen(static::ACTION_POSTFIX)
+        ));
     }
 }

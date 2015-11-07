@@ -203,20 +203,20 @@ class ControllerGenerator extends AbstractService
                 "    ];",
                 "}",
                 "",
-                "if (empty(\$id)) {",
-                "    return [",
-                "        'status'  => 201,",
-                "        'message' => 'Created, redirecting...',",
-                "        'action'  => [",
-                "            'delay'    => 2000,",
-                "            'redirect' => \$this->router->createUri(",
-                "                '{$this->getName()}::edit', ['id' => (string)\$entity->primaryKey()]",
-                "            )",
-                "        ]",
-                "    ];",
+                "if (!empty(\$id)) {",
+                "   return ['status' => 200, 'message' => 'Updated'];",
                 "}",
                 "",
-                "return ['status' => 200, 'message' => 'Updated'];"
+                "return [",
+                "    'status'  => 201,",
+                "    'message' => 'Created, redirecting...',",
+                "    'action'  => [",
+                "        'delay'    => 2000,",
+                "        'redirect' => \$this->router->createUri(",
+                "            '{$this->getName()}::edit', ['id' => (string)\$entity->primaryKey()]",
+                "        )",
+                "    ]",
+                "];",
             ]);
         }
 
@@ -237,9 +237,7 @@ class ControllerGenerator extends AbstractService
             "    throw new ClientException(ClientException::NOT_FOUND);",
             "}",
             "",
-            "if (!\$this->{$plural}->delete(\$entity)) {",
-            "    throw new ClientException(ClientException::ERROR);",
-            "}",
+            "\$this->{$plural}->delete(\$entity);",
             "",
             "return ['status' => 200, 'message' => 'Deleted'];"
         ]);

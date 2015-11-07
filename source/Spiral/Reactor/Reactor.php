@@ -16,6 +16,8 @@ use Spiral\Reactor\Exceptions\ReactorException;
 
 /**
  * Only holds configurations for class generators.
+ *
+ * @todo To be replaced with Zend Code Generator!
  */
 class Reactor extends Singleton
 {
