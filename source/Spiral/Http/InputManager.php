@@ -10,8 +10,7 @@ namespace Spiral\Http;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Core\ContainerInterface;
-use Spiral\Core\Singleton;
+use Spiral\Core\Component;
 use Spiral\Http\Exceptions\InputException;
 use Spiral\Http\Input\FilesBag;
 use Spiral\Http\Input\HeadersBag;
@@ -29,13 +28,8 @@ use Spiral\Http\Input\ServerBag;
  * @property ServerBag  $server
  * @property InputBag   $attributes
  */
-class InputManager extends Singleton implements InputInterface
+class InputManager extends Component implements InputInterface
 {
-    /**
-     * Declaring to IoC that component should be presented as singleton.
-     */
-    const SINGLETON = self::class;
-
     /**
      * @var InputBag[]
      */
@@ -80,22 +74,18 @@ class InputManager extends Singleton implements InputInterface
 
     /**
      * @invisible
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
-     * @invisible
      * @var ServerRequestInterface
      */
     protected $request = null;
 
     /**
-     * @param ContainerInterface $container
+     * InputManager constructor.
+     *
+     * @param ServerRequestInterface $request
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ServerRequestInterface $request)
     {
-        $this->container = $container;
+        $this->request = $request;
     }
 
     /**
@@ -105,17 +95,6 @@ class InputManager extends Singleton implements InputInterface
      */
     public function request()
     {
-        $request = $this->container->get(ServerRequestInterface::class);
-
-        //Check if we still pointing to right request
-        if ($this->request !== $request) {
-            //Our parameter bags has expired
-            $this->bagInstances = [];
-
-            //Update instance
-            $this->request = $request;
-        }
-
         return $this->request;
     }
 
