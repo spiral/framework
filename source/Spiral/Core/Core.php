@@ -16,7 +16,6 @@ use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
 use Spiral\Modules\ModuleManager;
@@ -45,6 +44,9 @@ use Spiral\Modules\ModuleManager;
  *
  * @property \Spiral\Redis\RedisManager               $redis
  * @property \Spiral\Image\ImageManager               $images
+ *
+ * @property \Spiral\RBAC\RBACBinder                  $rbac
+ * @property \Spiral\RBAC\Guard                       $guard
  *
  * @property \Spiral\Database\DatabaseManager         $dbal
  * @property \Spiral\ODM\ODM                          $odm

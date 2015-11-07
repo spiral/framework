@@ -41,6 +41,9 @@ use Spiral\Core\Exceptions\Container\InstanceException;
  * @property \Spiral\Redis\RedisManager               $redis
  * @property \Spiral\Image\ImageManager               $images
  *
+ * @property \Spiral\RBAC\RBACBinder                  $rbac
+ * @property \Spiral\RBAC\Guard                       $guard
+ *
  * @property \Spiral\Database\DatabaseManager         $dbal
  * @property \Spiral\ODM\ODM                          $odm
  * @property \Spiral\ORM\ORM                          $orm
