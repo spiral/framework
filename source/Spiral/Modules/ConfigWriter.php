@@ -231,7 +231,7 @@ class ConfigWriter extends Component
     protected function renderConfig($original = null)
     {
         $config = $this->config;
-        if (!empty($original)) {
+        if (!is_null($original)) {
             //Merging configs
             $config = $this->mergeConfigs($config, $original);
         }
