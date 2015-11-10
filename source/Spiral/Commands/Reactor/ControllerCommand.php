@@ -109,7 +109,7 @@ class ControllerCommand extends AbstractCommand
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Controller was successfully created:</info> {$filename}");
+        $this->writeln("<info>Controller has been successfully created:</info> {$filename}");
     }
 
     /**

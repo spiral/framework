@@ -106,7 +106,7 @@ class RequestCommand extends AbstractCommand
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Request Filter was successfully created:</info> {$filename}");
+        $this->writeln("<info>Request Filter has been successfully created:</info> {$filename}");
     }
 
     /**

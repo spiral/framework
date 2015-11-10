@@ -97,7 +97,7 @@ class MigrationCommand extends AbstractCommand
             return;
         }
 
-        $this->writeln("<info>Migration was successfully created:</info> {$filename}");
+        $this->writeln("<info>Migration has been successfully created:</info> {$filename}");
     }
 
     /**

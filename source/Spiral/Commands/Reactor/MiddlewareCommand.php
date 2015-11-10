@@ -76,7 +76,7 @@ class MiddlewareCommand extends AbstractCommand
         $generator->render();
 
         $filename = basename($generator->getFilename());
-        $this->writeln("<info>Http middleware was successfully created:</info> {$filename}");
+        $this->writeln("<info>Http middleware has been successfully created:</info> {$filename}");
         $this->writeln("You can assign middleware to Dispatcher, Route or HttpController.");
     }
 
