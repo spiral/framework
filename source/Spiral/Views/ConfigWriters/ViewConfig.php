@@ -53,7 +53,6 @@ class ViewConfig extends ConfigWriter
 
     /**
      * @param string             $baseDirectory
-     * @param int                $method
      * @param ConfigSerializer   $serializer
      * @param Core               $core
      * @param FilesInterface     $files
@@ -61,7 +60,6 @@ class ViewConfig extends ConfigWriter
      */
     public function __construct(
         $baseDirectory,
-        $method = self::MERGE_FOLLOW,
         ConfigSerializer $serializer,
         Core $core,
         FilesInterface $files,
@@ -69,7 +67,12 @@ class ViewConfig extends ConfigWriter
     ) {
         $this->baseDirectory = $baseDirectory;
         parent::__construct(
-            ViewManager::CONFIG, self::MERGE_CUSTOM, $serializer, $core, $files, $tokenizer
+            ViewManager::CONFIG,
+            self::MERGE_CUSTOM,
+            $serializer,
+            $core,
+            $files,
+            $tokenizer
         );
     }
 

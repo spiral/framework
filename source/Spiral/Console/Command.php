@@ -41,7 +41,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @property \Spiral\Redis\RedisManager               $redis
  * @property \Spiral\Image\ImageManager               $images
  *
- * @property \Spiral\RBAC\RBACBinder                  $rbac
+ * @property \Spiral\RBAC\RBACManager                 $rbac
  * @property \Spiral\RBAC\Guard                       $guard
  *
  * @property \Spiral\Database\DatabaseManager         $dbal
