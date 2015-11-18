@@ -13,6 +13,7 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Exceptions\HttpException;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\EmitterInterface;
 use Zend\Diactoros\Response\SapiEmitter;
 
@@ -161,7 +162,7 @@ class HttpCore extends Component implements HttpInterface
      */
     protected function response()
     {
-        return new Response('php://memory', Response::SUCCESS);
+        return new Response('php://memory');
     }
 
     /**

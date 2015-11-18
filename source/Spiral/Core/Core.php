@@ -197,12 +197,14 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
      */
     public function saveData($name, $data, $location = null)
     {
+        $filename = $this->memoryFilename($name, $location);
+
+        //We are packing data into plain php
+        $data = '<?php return ' . var_export($data, true) . ';';
+
         //We need help to write file with directory creation
         $this->container->get(FilesInterface::class)->write(
-            $this->memoryFilename($name, $location),
-            '<?php return ' . var_export($data, true) . ';',
-            FilesInterface::RUNTIME,
-            true
+            $filename, $data, FilesInterface::RUNTIME, true
         );
     }
 

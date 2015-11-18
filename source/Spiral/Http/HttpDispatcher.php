@@ -175,11 +175,11 @@ class HttpDispatcher extends HttpCore implements
                 $response = $this->writeJson(
                     $response,
                     $snapshot->describe(),
-                    Response::SERVER_ERROR
+                    ClientException::ERROR
                 );
             } else {
                 $response->getBody()->write($snapshot->render());
-                $response = $response->withStatus(Response::SERVER_ERROR);
+                $response = $response->withStatus(ClientException::ERROR);
             }
         }
 
