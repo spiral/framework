@@ -69,13 +69,10 @@ if (!function_exists('interpolate')) {
 if (!function_exists('dump')) {
 
     /**
-     * Helper function to dump variable into specified destination (output, log or return) using
-     * pre-defined dumping styles. This method is fairly slow and should not be used in productions
-     * environment. Only use it during development, error handling and other not high loaded
-     * application parts. Method is an alias for Debug::dump() method.
+     * Dump value.
      *
-     * @param mixed $value  Value to be dumped.
-     * @param int   $output Output method, can print, return or log value dump.
+     * @param mixed $value Value to be dumped.
+     * @param int   $output
      * @return null|string
      */
     function dump($value, $output = Dumper::OUTPUT_ECHO)

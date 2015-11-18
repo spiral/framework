@@ -7,17 +7,18 @@
  */
 namespace Spiral\Modules;
 
+use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
-use Spiral\Core\Singleton;
 use Spiral\Tokenizer\TokenizerInterface;
 
 /**
  * ModulesManager used to manager external spiral packages (modules) their bootstrapping and
  * installation. List of modules to be bootstrapped are located in modules config.
  */
-class ModuleManager extends Singleton
+class ModuleManager extends Component implements SingletonInterface
 {
     /**
      * Declares to IoC that component instance should be treated as singleton.

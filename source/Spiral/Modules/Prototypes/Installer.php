@@ -65,20 +65,6 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
     protected $publicFiles = [];
 
     /**
-     * ConfigWriters required for module installation.
-     *
-     * @var ConfigWriter[]
-     */
-    protected $configs = [];
-
-    /**
-     * Migration classes to be registered in Migrator.
-     *
-     * @var array
-     */
-    protected $migrations = [];
-
-    /**
      * @invisible
      * @var FileManager
      */
@@ -91,26 +77,17 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
     protected $modules = null;
 
     /**
-     * @invisible
-     * @var MigratorInterface
-     */
-    protected $migrator = null;
-
-    /**
      * @param FileManager       $file
      * @param ModuleManager     $modules
-     * @param MigratorInterface $migrator
      * @param string            $moduleDirectory Module root directory.
      */
     public function __construct(
         FileManager $file,
         ModuleManager $modules,
-        MigratorInterface $migrator,
         $moduleDirectory
     ) {
         $this->files = $file;
         $this->modules = $modules;
-        $this->migrator = $migrator;
 
         $this->moduleDirectory = $this->files->normalizePath($moduleDirectory, true);
     }
@@ -200,34 +177,6 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
     public function getConfigs()
     {
         return $this->configs;
-    }
-
-    /**
-     * Register new database migration based on it's class name. Migrations will be mounted only
-     * when module will be installer (not updated) and must be executed manually.
-     *
-     * Example:
-     * $installer->registerMigration('blog_posts', 'Vendor\Blog\Migrations\BlogPostsMigration');
-     *
-     * @param string $name      Migration name.
-     * @param string $migration Migration class name (must be reachable by framework).
-     * @return $this
-     */
-    public function registerMigration($name, $migration)
-    {
-        $this->migrations[$name] = $migration;
-
-        return $this;
-    }
-
-    /**
-     * List of migration classes to be registered in Migrator on module installation.
-     *
-     * @return array
-     */
-    public function getMigrations()
-    {
-        return $this->migrations;
     }
 
     /**
@@ -470,20 +419,6 @@ class Installer extends Component implements InstallerInterface, LoggerAwareInte
             $this->logger()->debug("Updating configuration '{config}'.", [
                 'config' => $config->getName()
             ]);
-        }
-    }
-
-    /**
-     * Mount declared migrations.
-     *
-     * @throws MigratorException
-     */
-    protected function mountMigrations()
-    {
-        foreach ($this->migrations as $name => $migration) {
-            $this->migrator->registerMigration($name, $migration);
-
-            $this->logger()->debug("Mounting migration '{name}'.", compact('name', 'migration'));
         }
     }
 }

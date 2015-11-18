@@ -7,10 +7,11 @@
  */
 namespace Spiral\Views;
 
+use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
-use Spiral\Core\Singleton;
 use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Exceptions\ViewException;
@@ -20,7 +21,7 @@ use Spiral\Views\Exceptions\ViewException;
  * dependencies. ViewManager support multiple namespaces and namespaces associated with multiple
  * folders.
  */
-class ViewManager extends Singleton implements ViewsInterface
+class ViewManager extends Component implements SingletonInterface, ViewsInterface
 {
     /**
      * Configuration is required.

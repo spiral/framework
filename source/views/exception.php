@@ -1,101 +1,11 @@
 <!DOCTYPE html>
 <?php
 /**
- * @var \Spiral\Debug\Snapshot          $snapshot
- * @var \Spiral\Core\ContainerInterface $container
- * @var \Spiral\Debug\Debugger          $debugger
+ * @var \Spiral\Debug\Snapshot               $snapshot
+ * @var \Spiral\Tokenizer\TokenizerInterface $tokenizer
  */
-$highlighter = new \Spiral\Tokenizer\Hightligher(
-    $container->get(\Spiral\Tokenizer\TokenizerInterface::class),
-    [
-        'styles' => [
-            'color: #C26230; font-weight: bold;' => [
-                T_STATIC,
-                T_PUBLIC,
-                T_PRIVATE,
-                T_PROTECTED,
-                T_CLASS,
-                T_NEW,
-                T_FINAL,
-                T_ABSTRACT,
-                T_IMPLEMENTS,
-                T_CONST,
-                T_ECHO,
-                T_CASE,
-                T_FUNCTION,
-                T_GOTO,
-                T_INCLUDE,
-                T_INCLUDE_ONCE,
-                T_REQUIRE,
-                T_REQUIRE_ONCE,
-                T_VAR,
-                T_INSTANCEOF,
-                T_INTERFACE,
-                T_THROW,
-                T_ARRAY,
-                T_IF,
-                T_ELSE,
-                T_ELSEIF,
-                T_TRY,
-                T_CATCH,
-                T_CLONE,
-                T_WHILE,
-                T_FOR,
-                T_DO,
-                T_UNSET,
-                T_FOREACH,
-                T_RETURN,
-                T_EXIT,
-                T_EXTENDS
-            ],
-            'color: black; font: weight: bold;'  => [
-                T_OPEN_TAG,
-                T_CLOSE_TAG,
-                T_OPEN_TAG_WITH_ECHO
-            ],
-            'color: #BC9458;'                    => [
-                T_COMMENT,
-                T_DOC_COMMENT
-            ],
-            'color: #A5C261;'                    => [
-                T_CONSTANT_ENCAPSED_STRING,
-                T_ENCAPSED_AND_WHITESPACE,
-                T_DNUMBER,
-                T_LNUMBER
-            ],
-            'color: #D0D0FF;'                    => [
-                T_VARIABLE
-            ]
-        ]
-    ]);
-
-$dumper = new \Spiral\Debug\Dumper(
-    null,
-    [
-        'container' => '<pre style="background-color: #232323; font-family: Monospace;">{dump}</pre>',
-        'styles'    => [
-            'common'           => '#E6E1DC',
-            'name'             => '#E6E1DC',
-            'indent'           => 'gray',
-            'indent-('         => '#E6E1DC',
-            'indent-)'         => '#E6E1DC',
-            'recursion'        => '#ff9900',
-            'value-string'     => '#A5C261',
-            'value-integer'    => '#A5C261',
-            'value-double'     => '#A5C261',
-            'value-boolean'    => '#C26230; font-weight: bold;',
-            'type'             => '#E6E1DC',
-            'type-object'      => '#E6E1DC',
-            'type-array'       => '#C26230;',
-            'type-null'        => '#C26230;',
-            'type-resource'    => '#color: #C26230;',
-            'access'           => '#666',
-            'access-public'    => '#8dc17d',
-            'access-private'   => '#c18c7d',
-            'access-protected' => '#7d95c1'
-        ]
-    ]
-);
+$tokenizer = $this->container->get(\Spiral\Tokenizer\TokenizerInterface::class);
+$dumper = new \Spiral\Debug\Dumper(10, $styler = new \Spiral\Debug\Dumper\InversedStyle());
 
 $dumps = [];
 
@@ -105,19 +15,19 @@ $dumps = [];
  * @param array $arguments
  * @return array
  */
-$argumenter = function (array $arguments) use ($dumper, &$dumps) {
+$argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
     $result = [];
     foreach ($arguments as $argument) {
         $display = $type = strtolower(gettype($argument));
 
         if (is_numeric($argument)) {
-            $result[] = $dumper->style($argument, 'value', $type);
+            $result[] = $styler->style($argument, 'value', $type);
             continue;
         } elseif (is_bool($argument)) {
-            $result[] = $dumper->style($argument ? 'true' : 'false', 'value', $type);
+            $result[] = $styler->style($argument ? 'true' : 'false', 'value', $type);
             continue;
         } elseif (is_null($argument)) {
-            $result[] = $dumper->style('null', 'value', $type);
+            $result[] = $styler->style('null', 'value', $type);
             continue;
         }
 
@@ -132,7 +42,7 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
         }
 
         //Colorizing
-        $display = $dumper->style($display, 'value', $type);
+        $display = $styler->style($display, 'value', $type);
         if (($dumpID = array_search($argument, $dumps)) === false) {
             $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
             $dumpID = count($dumps) - 1;
@@ -147,7 +57,26 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
     }
 
     return $result;
-}
+};
+
+/**
+ * Highlight file source.
+ *
+ * @param string $filename
+ * @param int    $line
+ * @param int    $around
+ * @return string
+ */
+$highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
+    $highlighter = new \Spiral\Tokenizer\Highlighter(
+        $filename,
+        new \Spiral\Tokenizer\Highlighter\InversedStyle(),
+        $tokenizer
+    );
+
+    return $highlighter->lines($line, $around);
+};
+
 ?>
 <html>
 <head>
@@ -403,8 +332,6 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
                 + '<div class="dump" style="display: block">'
                 + document.getElementById('argument-' + id).innerHTML
                 + '</div>';
-
-            window.location.href = "#dump-top";
         }
     </script>
 </head>
@@ -412,8 +339,6 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
 <a name="dump-top"></a>
 
 <div class="wrapper">
-    <a name="dump-top"></a>
-
     <div class="header">
         <?= $snapshot->getClass() ?>:
         <strong
@@ -480,7 +405,7 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
                         </em>
                     </div>
                     <div class="lines">
-                        <?= $highlighter->highlight($trace['file'], $trace['line']) ?>
+                        <?= $highlighter($trace['file'], $trace['line']) ?>
                     </div>
                 </div>
                 <?php
@@ -488,7 +413,6 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
             ?>
         </div>
         <div class="chain">
-            <div class="dumper" id="argument-dumper"></div>
             <div class="calls">
                 <?php
                 $stacktrace = array_reverse($stacktrace);
@@ -542,6 +466,7 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
                 }
                 ?>
             </div>
+            <div class="dumper" id="argument-dumper"></div>
         </div>
     </div>
 
@@ -576,40 +501,6 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
         }
         ?>
     </div>
-
-    <?php
-    if (!empty($messages = $debugger->globalMessages())) {
-        ?>
-        <div class="messages">
-            <div class="title" onclick="toggle('logger-messages')">
-                Logger Messages (<?= number_format(count($messages)) ?>)
-            </div>
-            <div class="data" id="logger-messages" style="display: none;">
-                <?php
-                foreach ($messages as $message) {
-                    $channel = $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL];
-                    if (class_exists($channel)) {
-                        $reflection = new ReflectionClass($channel);
-                        $channel = $reflection->getShortName();
-                    }
-                    ?>
-                    <div class="message <?= $message[\Spiral\Debug\Logger::MESSAGE_LEVEL] ?>">
-                        <div class="channel"
-                             title=" <?= $message[\Spiral\Debug\Logger::MESSAGE_CHANNEL] ?>">
-                            <?= $channel ?>
-                        </div>
-                        <div
-                            class="level"><?= $message[\Spiral\Debug\Logger::MESSAGE_LEVEL] ?></div>
-                        <div class="body"><?= $message[\Spiral\Debug\Logger::MESSAGE_BODY] ?></div>
-                    </div>
-                    <?php
-                }
-                ?>
-            </div>
-        </div>
-        <?php
-    }
-    ?>
     <div class="footer">
         <div class="date"><?= date('r') ?></div>
         <div class="elapsed time">
@@ -625,7 +516,7 @@ $argumenter = function (array $arguments) use ($dumper, &$dumps) {
             seconds
         </div>
         <div class="elapsed memory">
-            <span>Memory:</span> <?= number_format(memory_get_peak_usage() / 1024, 2) ?> Kb
+            <span>Memory peak usage:</span> <?= number_format(memory_get_peak_usage() / 1024, 2) ?> Kb
         </div>
     </div>
     <?php

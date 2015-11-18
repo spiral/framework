@@ -7,19 +7,19 @@
  */
 namespace Spiral\Console;
 
+use Spiral\Console\Configs\ConsoleConfig;
 use Spiral\Console\Exceptions\ConsoleException;
-use Spiral\Core\Components\Loader;
-use Spiral\Core\ConfiguratorInterface;
+use Spiral\Core\Component;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\HippocampusInterface;
-use Spiral\Core\Singleton;
-use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Core\Loader;
 use Spiral\Debug\BenchmarkerInterface;
 use Spiral\Debug\Debugger;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Tokenizer\TokenizerInterface;
+use Spiral\Tokenizer\LocatorInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -32,23 +32,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Used as application dispatcher in console mode. Can execute automatically locate and execute
  * every available Symfony command.
  */
-class ConsoleDispatcher extends Singleton implements DispatcherInterface
+class ConsoleDispatcher extends Component implements SingletonInterface, DispatcherInterface
 {
-    /**
-     * ConsoleDispatcher does not need config for itseft, but some commands (Update for example)
-     * needs configuration source.
-     */
-    use ConfigurableTrait;
-
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = self::class;
-
-    /**
-     * Configuration section.
-     */
-    const CONFIG = 'console';
 
     /**
      * Undefined response code for command (errors).
@@ -66,6 +55,33 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     private $commands = [];
 
     /**
+     * Needed to set valid scope for commands.
+     *
+     * @var mixed
+     */
+    private $inputScope = null;
+
+    /**
+     * Needed to set valid scope for commands.
+     *
+     * @var mixed
+     */
+    private $outputScope = null;
+
+    /**
+     * @var ConsoleConfig
+     */
+    protected $config = null;
+
+    /**
+     * To prevent mixing of web and console loadmaps we would like to get and configure our own
+     * Loader.
+     *
+     * @var Loader
+     */
+    protected $loader = null;
+
+    /**
      * @invisible
      * @var ContainerInterface
      */
@@ -78,36 +94,29 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     protected $memory = null;
 
     /**
-     * @var TokenizerInterface
+     * @var LocatorInterface
      */
-    protected $tokenizer = null;
+    protected $locator = null;
 
     /**
-     * To prevent mixing of web and console loadmaps.
-     *
-     * @var Loader
-     */
-    protected $loader = null;
-
-    /**
-     * @param ConfiguratorInterface $configurator
-     * @param ContainerInterface    $container
-     * @param HippocampusInterface  $memory
-     * @param TokenizerInterface    $tokenizer
-     * @param Loader                $loader
+     * @param ConsoleConfig        $config
+     * @param ContainerInterface   $container
+     * @param HippocampusInterface $memory
+     * @param LocatorInterface     $locator
+     * @param Loader               $loader
      */
     public function __construct(
-        ConfiguratorInterface $configurator,
+        ConsoleConfig $config,
         ContainerInterface $container,
         HippocampusInterface $memory,
-        TokenizerInterface $tokenizer,
+        LocatorInterface $locator,
         Loader $loader
     ) {
-        $this->config = $configurator->getConfig(static::CONFIG);
+        $this->config = $config;
 
         $this->container = $container;
         $this->memory = $memory;
-        $this->tokenizer = $tokenizer;
+        $this->locator = $locator;
         $this->loader = $loader;
 
         //Trying to load list of commands from memory cache
@@ -131,10 +140,14 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
         $this->application = new Application('Spiral Console Toolkit', Core::VERSION);
 
         //Commands lookup
-        empty($this->commands) && $this->findCommands();
+        if (empty($this->commands)) {
+            $this->findCommands();
+        }
+
         foreach ($this->commands as $command) {
             try {
-                $command = $this->container->get($command);
+                //Constructing command class
+                $command = $this->container->construct($command);
                 if (method_exists($command, 'isAvailable') && !$command->isAvailable()) {
                     continue;
                 }
@@ -158,6 +171,7 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
 
         //Let's disable loader in console mode
         $this->loader->disable();
+
         $this->application()->run();
     }
 
@@ -165,28 +179,32 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      * Execute console command using it's name.
      *
      * @param string               $command
-     * @param array|InputInterface $parameters
+     * @param array|InputInterface $input
      * @param OutputInterface      $output
      * @return CommandOutput
      * @throws ConsoleException
      */
-    public function command($command, $parameters = [], OutputInterface $output = null)
+    public function command($command, $input = [], OutputInterface $output = null)
     {
-        $input = is_object($parameters) ? $parameters : new ArrayInput(compact('command') + $parameters);
-        $output = !empty($output) ? $output : new BufferedOutput();
+        if (is_array($input)) {
+            $input = new ArrayInput(compact('command') + $input);
+        }
 
-        $outerOutput = $this->container->replace(OutputInterface::class, $output);
-        $outerInput = $this->container->replace(InputInterface::class, $input);
+        if (empty($output)) {
+            $output = new BufferedOutput();
+        }
 
-        //Go
+        $this->createScope($input, $output);
         $code = self::CODE_UNDEFINED;
+
         try {
+
+            //Go
             $code = $this->application()->find($command)->run($input, $output);
         } catch (\Exception $exception) {
             $this->application->renderException($exception, $output);
         } finally {
-            $this->container->restore($outerInput);
-            $this->container->restore($outerOutput);
+            $this->restoreScope();
         }
 
         return new CommandOutput($code, $output);
@@ -200,7 +218,7 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
     public function findCommands()
     {
         $this->commands = [];
-        foreach ($this->tokenizer->getClasses(SymfonyCommand::class, null, 'Command') as $class) {
+        foreach ($this->locator->getClasses(SymfonyCommand::class) as $class) {
             if ($class['abstract']) {
                 continue;
             }
@@ -230,8 +248,31 @@ class ConsoleDispatcher extends Singleton implements DispatcherInterface
      */
     public function handleSnapshot(SnapshotInterface $snapshot, OutputInterface $output = null)
     {
-        //If no output provided we are probably handling fatal exception, let's verbose
-        $output = !empty($output) ? $output : new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
+        if (empty($output)) {
+            $output = new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
+        }
+
         $this->application()->renderException($snapshot->getException(), $output);
+    }
+
+    /**
+     * Creating input/output scope in container.
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    private function createScope(InputInterface $input, OutputInterface $output)
+    {
+        $this->inputScope = $this->container->replace(InputInterface::class, $input);
+        $this->outputScope = $this->container->replace(OutputInterface::class, $output);
+    }
+
+    /**
+     * Restoring input and output scopes.
+     */
+    private function restoreScope()
+    {
+        $this->container->restore($this->inputScope);
+        $this->container->restore($this->outputScope);
     }
 }

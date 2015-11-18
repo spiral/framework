@@ -8,15 +8,16 @@
 namespace Spiral\Core;
 
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Core\Components\Loader;
 use Spiral\Core\Exceptions\ConfiguratorException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
+use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Files\FilesInterface;
+use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\HttpDispatcher;
 use Spiral\Modules\ModuleManager;
 
@@ -24,42 +25,12 @@ use Spiral\Modules\ModuleManager;
  * He made 9 rings... i mean this is default spiral core responsible for many things at the same
  * time.
  *
- * @property \Spiral\Core\Core                        $core
- * @property \Spiral\Core\Components\Loader           $loader
- * @property \Spiral\Modules\ModuleManager            $modules
- * @property \Spiral\Debug\Debugger                   $debugger
- *
- * @property \Spiral\Console\ConsoleDispatcher        $console
- * @property \Spiral\Http\HttpDispatcher              $http
- *
- * @property \Spiral\Cache\CacheProvider              $cache
- * @property \Spiral\Encrypter\Encrypter              $encrypter
- * @property \Spiral\Http\InputManager                $input
- * @property \Spiral\Files\FileManager                $files
- * @property \Spiral\Session\SessionStore             $session
- * @property \Spiral\Tokenizer\Tokenizer              $tokenizer
- * @property \Spiral\Translator\Translator            $i18n
- * @property \Spiral\Views\ViewManager                $views
- * @property \Spiral\Storage\StorageManager           $storage
- *
- * @property \Spiral\Redis\RedisManager               $redis
- * @property \Spiral\Image\ImageManager               $images
- *
- * @property \Spiral\RBAC\RBACManager                 $rbac
- * @property \Spiral\RBAC\Guard                       $guard
- *
- * @property \Spiral\Database\DatabaseManager         $dbal
- * @property \Spiral\ODM\ODM                          $odm
- * @property \Spiral\ORM\ORM                          $orm
- *
- * @property \Spiral\Http\Cookies\CookieManager       $cookies  Scope depended.
- * @property \Spiral\Http\Routing\Router              $router   Scope depended.
- * @property \Psr\Http\Message\ServerRequestInterface $request  Scope depended.
- *
  * @todo Add ability to mock custom container.
  */
 class Core extends Container implements CoreInterface, ConfiguratorInterface, HippocampusInterface
 {
+    use SharedTrait;
+
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
@@ -142,13 +113,18 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
     protected $bindings = [
         //Core interface bindings
         'Spiral\Core\ContainerInterface'               => 'Spiral\Core\Core',
+        'Interop\Container\ContainerInterface'         => 'Spiral\Core\Core',
+        'Spiral\Core\InteropContainerInterface'        => 'Spiral\Core\Core',
+        'Spiral\Core\ConstructorInterface'             => 'Spiral\Core\Core',
+        'Spiral\Core\ResolverInterface'                => 'Spiral\Core\Core',
         'Spiral\Core\ConfiguratorInterface'            => 'Spiral\Core\Core',
         'Spiral\Core\HippocampusInterface'             => 'Spiral\Core\Core',
         'Spiral\Core\CoreInterface'                    => 'Spiral\Core\Core',
+
         //Instrumental bindings
-        'Psr\Log\LoggerInterface'                      => 'Spiral\Debug\Logger',
+        'Psr\Log\LoggerInterface'                      => 'Spiral\Debug\DebugLogger',
         'Spiral\Debug\SnapshotInterface'               => 'Spiral\Debug\Snapshot',
-        'Spiral\Cache\CacheInterface'                  => 'Spiral\Cache\CacheProvider',
+        'Spiral\Cache\CacheInterface'                  => 'Spiral\Cache\CacheManager',
         'Spiral\Cache\StoreInterface'                  => 'Spiral\Cache\CacheStore',
         'Spiral\Files\FilesInterface'                  => 'Spiral\Files\FileManager',
         'Spiral\Views\ViewsInterface'                  => 'Spiral\Views\ViewManager',
@@ -157,20 +133,25 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'Spiral\Session\SessionInterface'              => 'Spiral\Session\SessionStore',
         'Spiral\Encrypter\EncrypterInterface'          => 'Spiral\Encrypter\Encrypter',
         'Spiral\Tokenizer\TokenizerInterface'          => 'Spiral\Tokenizer\Tokenizer',
+        'Spiral\Tokenizer\LocatorInterface'            => 'Spiral\Tokenizer\ClassLocator',
         'Spiral\Validation\ValidatorInterface'         => 'Spiral\Validation\Validator',
         'Spiral\Translator\TranslatorInterface'        => 'Spiral\Translator\Translator',
         'Spiral\Database\DatabaseInterface'            => 'Spiral\Database\Entities\Database',
         'Spiral\Database\DatabasesInterface'           => 'Spiral\Database\DatabaseProvider',
         'Spiral\Database\Migrations\MigratorInterface' => 'Spiral\Database\Migrations\Migrator',
         'Spiral\Http\InputInterface'                   => 'Spiral\Http\InputManager',
+        'Spiral\Debug\LogsInterface'                   => 'Spiral\Debug\Debugger',
+
         //Spiral aliases
         'core'                                         => 'Spiral\Core\Core',
         'loader'                                       => 'Spiral\Core\Components\Loader',
         'modules'                                      => 'Spiral\Modules\ModuleManager',
         'debugger'                                     => 'Spiral\Debug\Debugger',
+
         //Dispatchers
         'console'                                      => 'Spiral\Console\ConsoleDispatcher',
         'http'                                         => 'Spiral\Http\HttpDispatcher',
+
         //Component aliases
         'cache'                                        => 'Spiral\Cache\CacheProvider',
         'dbal'                                         => 'Spiral\Database\DatabaseManager',
@@ -184,6 +165,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         'tokenizer'                                    => 'Spiral\Tokenizer\Tokenizer',
         'i18n'                                         => 'Spiral\Translator\Translator',
         'views'                                        => 'Spiral\Views\ViewManager',
+
         //Scope dependend aliases
         'cookies'                                      => 'Spiral\Http\Cookies\CookieManager',
         'router'                                       => 'Spiral\Http\Routing\Router',
@@ -397,6 +379,12 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         return $data;
     }
 
+    public function createInjection(\ReflectionClass $class, $context = null)
+    {
+        //todo: change
+        return $class->newInstance($this->getConfig($class->getConstant('CONFIG')));
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -535,7 +523,7 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
         }
 
         //Microseconds :0.
-        $http = new HttpDispatcher($this, $this);
+        $http = new HttpDispatcher(new HttpConfig($this->getConfig('http')), $this);
         $this->bind(HttpDispatcher::SINGLETON, $http);
 
         return $http;
@@ -588,6 +576,9 @@ class Core extends Container implements CoreInterface, ConfiguratorInterface, Hi
          * @var Core $core
          */
         $core = new static($directories + ['framework' => dirname(__DIR__) . '/']);
+
+        //Self container
+        $core->container = $core;
 
         //Initiating global/static container used by traits and some classes
         if (empty(self::staticContainer())) {

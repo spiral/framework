@@ -27,7 +27,7 @@ class HttpController extends Controller
      * @var array
      */
     protected $middlewares = [
-        CookieManager::class
+        //CookieManager::class
     ];
 
     /**
@@ -90,7 +90,7 @@ class HttpController extends Controller
      */
     protected function createPipeline($action)
     {
-        return new MiddlewarePipeline($this->container, $this->middlewares);
+        return new MiddlewarePipeline($this->middlewares, $this->container);
     }
 
     /**
