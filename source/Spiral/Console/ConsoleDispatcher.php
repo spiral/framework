@@ -194,7 +194,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             $output = new BufferedOutput();
         }
 
-        $this->createScope($input, $output);
+        $this->openScope($input, $output);
         $code = self::CODE_UNDEFINED;
 
         try {
@@ -261,7 +261,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    private function createScope(InputInterface $input, OutputInterface $output)
+    private function openScope(InputInterface $input, OutputInterface $output)
     {
         $this->inputScope = $this->container->replace(InputInterface::class, $input);
         $this->outputScope = $this->container->replace(OutputInterface::class, $output);

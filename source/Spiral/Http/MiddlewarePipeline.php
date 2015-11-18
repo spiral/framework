@@ -122,7 +122,7 @@ class MiddlewarePipeline extends Component
     {
         if (!isset($this->middlewares[$position])) {
             //Middleware target endpoint to be called and converted into response
-            return $this->createResponse($request, $response);
+            return $this->mountResponse($request, $response);
         }
 
         /**
@@ -146,7 +146,7 @@ class MiddlewarePipeline extends Component
      * @param ResponseInterface      $response
      * @return ResponseInterface
      */
-    protected function createResponse(ServerRequestInterface $request, ResponseInterface $response)
+    protected function mountResponse(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->openScope($request, $response);
 
@@ -178,15 +178,6 @@ class MiddlewarePipeline extends Component
      */
     protected function execute(ServerRequestInterface $request, ResponseInterface $response)
     {
-        if ($this->target instanceof \Closure) {
-            $reflection = new \ReflectionFunction($this->target);
-
-            return $reflection->invokeArgs(
-                $this->container->resolveArguments($reflection, compact('request', 'response'))
-            );
-        }
-
-        //Calling pipeline target (do we need reflection here?)
         return call_user_func($this->target, $request, $response);
     }
 

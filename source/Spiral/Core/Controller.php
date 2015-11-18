@@ -71,33 +71,21 @@ abstract class Controller extends Service implements ControllerInterface
             );
         }
 
-        try {
-            //Getting set of arguments should be sent to requested method
-            $arguments = $this->container->resolveArguments($reflection, $parameters);
-        } catch (ArgumentException $exception) {
-            throw new ControllerException(
-                "Missing/invalid parameter '{$exception->getParameter()->name}'.",
-                ControllerException::BAD_ARGUMENT
-            );
-        }
-
         //Needed to be called via reflection
         $reflection->setAccessible(true);
 
         //Executing our action
-        return $this->executeAction($reflection, $arguments, $parameters);
+        return $this->executeAction($reflection, $this->resolveArguments($reflection, $parameters));
     }
 
     /**
      * @param \ReflectionMethod $method
      * @param array             $arguments
-     * @param array             $parameters
      * @return mixed
      */
-    protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
+    protected function executeAction(\ReflectionMethod $method, array $arguments)
     {
-        $benchmark = $this->benchmark($action = $method->getName());
-
+        $benchmark = $this->benchmark($method->getName());
         try {
             //Executing controller method
             return $method->invokeArgs($this, $arguments);
@@ -120,5 +108,25 @@ abstract class Controller extends Service implements ControllerInterface
 
         //Place to implement custom logic
         return true;
+    }
+
+    /**
+     * Resolve controller method arguments.
+     *
+     * @param \ReflectionMethod $method
+     * @param array             $parameters
+     * @return array
+     */
+    protected function resolveArguments(\ReflectionMethod $method, array $parameters)
+    {
+        try {
+            //Getting set of arguments should be sent to requested method
+            return $this->container->resolveArguments($method, $parameters);
+        } catch (ArgumentException $exception) {
+            throw new ControllerException(
+                "Missing/invalid parameter '{$exception->getParameter()->name}'.",
+                ControllerException::BAD_ARGUMENT
+            );
+        }
     }
 }
