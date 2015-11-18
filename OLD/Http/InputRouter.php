@@ -28,7 +28,7 @@ use Spiral\Http\Input\ServerBag;
  * @property ServerBag  $server
  * @property InputBag   $attributes
  */
-class InputManager extends Component implements InputInterface
+class InputRouter extends Component implements InputInterface
 {
     /**
      * @var InputBag[]

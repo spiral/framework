@@ -7,7 +7,8 @@
  */
 namespace Spiral\Console;
 
-use Spiral\Console\Configs\ConsoleConfig;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\NullLogger;
 use Spiral\Console\Exceptions\ConsoleException;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
@@ -69,12 +70,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     private $outputScope = null;
 
     /**
-     * @var ConsoleConfig
-     */
-    protected $config = null;
-
-    /**
-     * To prevent mixing of web and console loadmaps we would like to get and configure our own
+     * To prevent mixing of web and console load-maps we would like to get and configure our own
      * Loader.
      *
      * @var Loader
@@ -99,21 +95,17 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $locator = null;
 
     /**
-     * @param ConsoleConfig        $config
      * @param ContainerInterface   $container
      * @param HippocampusInterface $memory
      * @param LocatorInterface     $locator
      * @param Loader               $loader
      */
     public function __construct(
-        ConsoleConfig $config,
         ContainerInterface $container,
         HippocampusInterface $memory,
         LocatorInterface $locator,
         Loader $loader
     ) {
-        $this->config = $config;
-
         $this->container = $container;
         $this->memory = $memory;
         $this->locator = $locator;
@@ -141,7 +133,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
 
         //Commands lookup
         if (empty($this->commands)) {
-            $this->findCommands();
+            $this->locateCommands();
         }
 
         foreach ($this->commands as $command) {
@@ -215,8 +207,13 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      *
      * @return array
      */
-    public function findCommands()
+    public function locateCommands()
     {
+        if ($this->locator instanceof LoggerAwareInterface) {
+            //To warning messages
+            $this->locator->setLogger(new NullLogger());
+        }
+
         $this->commands = [];
         foreach ($this->locator->getClasses(SymfonyCommand::class) as $class) {
             if ($class['abstract']) {

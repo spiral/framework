@@ -56,7 +56,7 @@ class InspectCommand extends Command
     {
         $inspector = $this->getInspector();
 
-        if ($this->isVerbosing()) {
+        if ($this->isVerbosity()) {
             $table = $this->tableHelper(['Entity', 'Rank', 'Fields', 'Fillable', 'Validated']);
             foreach ($inspector->getInspections() as $inspection) {
                 $table->addRow([

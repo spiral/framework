@@ -4,7 +4,6 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
-
  */
 namespace Spiral\Commands;
 
@@ -26,7 +25,7 @@ class ServerCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Run Spiral Development server on specified host and port.';
+    protected $description = 'Run development server on specified host and port.';
 
     /**
      * {@inheritdoc}
@@ -64,7 +63,7 @@ class ServerCommand extends Command
         $process->run(function ($type, $data) {
             if ($type != Process::ERR) {
                 //First character contains request type, second is space
-                ($data[0] == 'S' || $this->isVerbosing()) && $this->writeln(substr($data, 2));
+                ($data[0] == 'S' || $this->isVerbosity()) && $this->writeln(substr($data, 2));
             }
         });
     }

@@ -4,11 +4,11 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
-
  */
 namespace Spiral\Commands\Console;
 
 use Spiral\Console\Command;
+use Spiral\Console\ConsoleDispatcher;
 
 /**
  * Re-index available console commands.
@@ -23,17 +23,14 @@ class RefreshCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Reindex console commands.';
+    protected $description = 'Re-index console commands.';
 
     /**
-     * Perform command.
+     * @param ConsoleDispatcher $dispatcher
      */
-    public function perform()
+    public function perform(ConsoleDispatcher $dispatcher)
     {
-        $commands = count($this->console->findCommands());
-
-        $this->writeln(
-            "Console commands re-indexed, <comment>{$commands}</comment> commands found."
-        );
+        $commands = count($dispatcher->locateCommands());
+        $this->writeln("Console commands re-indexed, <comment>{$commands}</comment> commands found.");
     }
 }

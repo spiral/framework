@@ -45,6 +45,24 @@ abstract class Controller extends Service implements ControllerInterface
     protected $defaultAction = 'index';
 
     /**
+     * Needed to resolve method arguments.
+     *
+     * @invisible
+     * @var ResolverInterface
+     */
+    protected $resolver = null;
+
+    /**
+     * @param ResolverInterface         $resolver
+     * @param InteropContainerInterface $container
+     */
+    public function __construct(ResolverInterface $resolver, InteropContainerInterface $container)
+    {
+        $this->resolver = $resolver;
+        parent::__construct($container);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function callAction($action = '', array $parameters = [])
@@ -56,8 +74,7 @@ abstract class Controller extends Service implements ControllerInterface
 
         if (!method_exists($this, $action)) {
             throw new ControllerException(
-                "No such action '{$action}'.",
-                ControllerException::BAD_ACTION
+                "No such action '{$action}'.", ControllerException::BAD_ACTION
             );
         }
 
@@ -86,6 +103,7 @@ abstract class Controller extends Service implements ControllerInterface
     protected function executeAction(\ReflectionMethod $method, array $arguments)
     {
         $benchmark = $this->benchmark($method->getName());
+
         try {
             //Executing controller method
             return $method->invokeArgs($this, $arguments);
@@ -121,7 +139,7 @@ abstract class Controller extends Service implements ControllerInterface
     {
         try {
             //Getting set of arguments should be sent to requested method
-            return $this->container->resolveArguments($method, $parameters);
+            return $this->resolver->resolveArguments($method, $parameters);
         } catch (ArgumentException $exception) {
             throw new ControllerException(
                 "Missing/invalid parameter '{$exception->getParameter()->name}'.",

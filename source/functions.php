@@ -6,13 +6,26 @@
  * @author    Anton Titov (Wolfy-J)
  */
 use Spiral\Core\Core;
+use Spiral\Core\DirectoriesInterface;
 use Spiral\Debug\Dumper;
 use Spiral\Translator\Exceptions\TranslatorException;
-use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 
-if (!function_exists('directory')) {
+if (!function_exists('spiral')) {
+    /**
+     * Shortcut to shared container get method.
+     *
+     * @param string $alias Class name or alias.
+     * @return object|null
+     * @throws \Interop\Container\Exception\ContainerException
+     */
+    function spiral($alias)
+    {
+        return Core::sharedContainer()->get($alias);
+    }
+}
 
+if (!function_exists('directory')) {
     /**
      * Get directory alias value.
      *
@@ -21,7 +34,7 @@ if (!function_exists('directory')) {
      */
     function directory($alias)
     {
-        return Core::instance()->directory($alias);
+        return spiral(DirectoriesInterface::class)->directory($alias);
     }
 }
 
@@ -77,7 +90,7 @@ if (!function_exists('dump')) {
      */
     function dump($value, $output = Dumper::OUTPUT_ECHO)
     {
-        return Dumper::instance()->dump($value, $output);
+        return spiral(Dumper::class)->dump($value, $output);
     }
 }
 
@@ -100,7 +113,7 @@ if (!function_exists('l')) {
         $arguments = func_get_args();
         array_unshift($arguments, TranslatorInterface::DEFAULT_BUNDLE);
 
-        return call_user_func_array([Translator::instance(), 'translate'], $arguments);
+        return call_user_func_array([spiral(TranslatorInterface::class), 'translate'], $arguments);
     }
 }
 
@@ -121,6 +134,6 @@ if (!function_exists('p')) {
      */
     function p($phrase, $number, $format = true)
     {
-        return Translator::instance()->pluralize($phrase, $number, $format);
+        return spiral(TranslatorInterface::class)->pluralize($phrase, $number, $format);
     }
 }

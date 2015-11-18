@@ -37,17 +37,17 @@ class ResetCommand extends Command
      */
     public function perform()
     {
-        $this->isVerbosing() && $this->writeln("<info>Clearing view cache:</info>");
+        $this->isVerbosity() && $this->writeln("<info>Clearing view cache:</info>");
 
         $cachedViews = $this->files->getFiles($this->views->config()['cache']['directory']);
         foreach ($cachedViews as $filename) {
             !$this->option('emulate') && $this->files->delete($filename);
-            $this->isVerbosing() && $this->writeln($this->files->relativePath(
+            $this->isVerbosity() && $this->writeln($this->files->relativePath(
                 $filename, directory('cache')
             ));
         }
 
-        (empty($filename) && $this->isVerbosing()) && $this->writeln("No cached views were found.");
+        (empty($filename) && $this->isVerbosity()) && $this->writeln("No cached views were found.");
         $this->writeln("<info>Cache is cleared.</info>");
     }
 }

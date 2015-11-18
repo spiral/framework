@@ -10,7 +10,6 @@ namespace Spiral\Views;
 use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
-use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
@@ -24,7 +23,7 @@ class Compiler extends Component implements CompilerInterface
     /**
      * Configuration and compilation benchmarks.
      */
-    use ConfigurableTrait, BenchmarkTrait, SaturateTrait;
+    use  BenchmarkTrait, SaturateTrait;
 
     /**
      * Extension for compiled views.

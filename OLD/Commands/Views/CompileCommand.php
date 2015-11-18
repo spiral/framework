@@ -39,12 +39,12 @@ class CompileCommand extends Command
                 continue;
             }
 
-            $this->isVerbosing() && $this->writeln(
+            $this->isVerbosity() && $this->writeln(
                 "Compiling views in namespace '<comment>{$namespace}</comment>'."
             );
 
             foreach ($views as $view => $engine) {
-                $this->isVerbosing() && $this->write($formatter->formatSection(
+                $this->isVerbosity() && $this->write($formatter->formatSection(
                     $namespace, $view . ", ", 'fg=cyan'
                 ));
 
@@ -52,7 +52,7 @@ class CompileCommand extends Command
                 $this->views->compile($namespace, $view);
                 $elapsed = number_format((microtime(true) - $start) * 1000);
 
-                $this->isVerbosing() && $this->writeln("<comment>{$elapsed}</comment> ms");
+                $this->isVerbosity() && $this->writeln("<comment>{$elapsed}</comment> ms");
             }
         }
 

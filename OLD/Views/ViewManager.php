@@ -23,11 +23,10 @@ use Spiral\Views\Exceptions\ViewException;
  */
 class ViewManager extends Component implements SingletonInterface, ViewsInterface
 {
-    /**
-     * Configuration is required.
-     */
-    use ConfigurableTrait;
-
+   protected $config =[];
+public function config(){
+    return $this->config;
+}
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */

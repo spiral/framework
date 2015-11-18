@@ -57,7 +57,7 @@ class ConfigureCommand extends Command
         $this->console->command('i18n:index', [], $this->output);
 
         //Initiating view cache
-        $this->writeln($this->isVerbosing() ? "\n<info>Generating view cache.</info>" : "");
+        $this->writeln($this->isVerbosity() ? "\n<info>Generating view cache.</info>" : "");
         $this->console->command('view:compile', [], $this->output);
 
         if ($this->option('key')) {
@@ -98,7 +98,7 @@ class ConfigureCommand extends Command
             $this->files->setPermissions($filename, FilesInterface::RUNTIME);
             $this->files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
 
-            if ($this->isVerbosing()) {
+            if ($this->isVerbosity()) {
                 $filename = $this->files->relativePath($filename, directory('runtime'));
                 $this->writeln("Permissions were updated for '<comment>{$filename}</comment>'.");
             }

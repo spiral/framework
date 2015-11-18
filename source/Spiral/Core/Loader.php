@@ -49,6 +49,7 @@ class Loader extends Component implements SingletonInterface
     private $enabled = false;
 
     /**
+     * @invisible
      * @var HippocampusInterface
      */
     protected $memory = null;

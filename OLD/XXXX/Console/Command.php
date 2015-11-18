@@ -7,12 +7,10 @@
  */
 namespace Spiral\Console;
 
-use Spiral\Components;
 use Spiral\Console\Helpers\AskHelper;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerInterface;
-use Spiral\Core\Exceptions\Container\ArgumentException;
-use Spiral\Core\Exceptions\Container\InstanceException;
+use Spiral\Core\Traits\SharedTrait;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,40 +18,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Basic application command class. Implements method injections and simplified access to
  * container bindings.
- *
- * @property \Spiral\Core\Core                        $core
- * @property \Spiral\Core\Components\Loader           $loader
- * @property \Spiral\Modules\ModuleManager            $modules
- * @property \Spiral\Debug\Debugger                   $debugger
- *
- * @property \Spiral\Console\ConsoleDispatcher        $console
- * @property \Spiral\Http\HttpDispatcher              $http
- *
- * @property \Spiral\Cache\CacheManager               $cache
- * @property \Spiral\Encrypter\Encrypter              $encrypter
- * @property \Spiral\Files\FileManager                $files
- * @property \Spiral\Session\SessionStore             $session
- * @property \Spiral\Tokenizer\Tokenizer              $tokenizer
- * @property \Spiral\Translator\Translator            $i18n
- * @property \Spiral\Views\ViewManager                $views
- * @property \Spiral\Storage\StorageManager           $storage
- *
- * @property \Spiral\Redis\RedisManager               $redis
- * @property \Spiral\Image\ImageManager               $images
- *
- * @property \Spiral\RBAC\RBACManager                 $rbac
- * @property \Spiral\RBAC\Guard                       $guard
- *
- * @property \Spiral\Database\DatabaseManager         $dbal
- * @property \Spiral\ODM\ODM                          $odm
- * @property \Spiral\ORM\ORM                          $orm
- *
- * @property \Spiral\Http\Cookies\CookieManager       $cookies Scope depended.
- * @property \Spiral\Http\Routing\Router              $router  Scope depended.
- * @property \Psr\Http\Message\ServerRequestInterface $request Scope depended.
  */
 abstract class Command extends \Symfony\Component\Console\Command\Command
 {
+    /**
+     * Shared stuff.
+     */
+    use SharedTrait;
+
     /**
      * Instance of ask helper.
      *
@@ -106,11 +78,6 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     protected $input = null;
 
     /**
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
      * Configures symfony command based on simplified class definition.
      *
      * @param ContainerInterface $container
@@ -154,19 +121,6 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
         $this->arguments = $this->input->getArguments();
 
         return parent::run($input, $output);
-    }
-
-    /**
-     * Shortcut to Container get method.
-     *
-     * @param string $alias
-     * @return mixed|null|object
-     * @throws InstanceException
-     * @throws ArgumentException
-     */
-    public function __get($alias)
-    {
-        return $this->container->get($alias);
     }
 
     /**
@@ -232,7 +186,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
      *
      * @return bool
      */
-    protected function isVerbosing()
+    protected function isVerbosity()
     {
         return $this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
     }

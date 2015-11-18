@@ -101,7 +101,7 @@ class InstallCommand extends Command
             $installer = $definition->getInstaller();
 
             //We might need to user console logger and LoggerAwareInterface in future
-            if ($this->isVerbosing() && $installer instanceof LoggerAwareInterface) {
+            if ($this->isVerbosity() && $installer instanceof LoggerAwareInterface) {
                 $installer->setLogger($this->createLogger($definition));
             }
 

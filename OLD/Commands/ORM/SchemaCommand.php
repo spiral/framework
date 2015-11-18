@@ -46,7 +46,7 @@ class SchemaCommand extends Command
         $builder = $this->orm->schemaBuilder();
         $this->container->bind(get_class($builder), $builder);
 
-        if ($this->isVerbosing()) {
+        if ($this->isVerbosity()) {
             foreach ($builder->getTables() as $table) {
                 //So we can see what tables are doing
                 $table->setLogger(
