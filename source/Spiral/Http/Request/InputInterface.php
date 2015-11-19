@@ -6,8 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 namespace Spiral\Http\Request;
-
-use Spiral\Http\Exceptions\InputException;
+use Spiral\Http\Exceptions\Request\InputException;
 
 /**
  * Provides values for RequestFilter.

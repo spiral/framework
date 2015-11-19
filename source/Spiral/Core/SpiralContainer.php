@@ -59,7 +59,7 @@ class SpiralContainer extends Container
 
         //Http
         'Spiral\Http\HttpInterface'             => 'Spiral\Http\HttpDispatcher',
-        'Spiral\Http\InputInterface'            => 'Spiral\Http\InputRouter',
+        'Spiral\Http\InputInterface'            => 'Spiral\Http\Input\InputManager',
 
         //Core components (see SharedTrait)
         'memory'                                => 'Spiral\Core\HippocampusInterface',
@@ -91,9 +91,8 @@ class SpiralContainer extends Container
         'mongo'                                 => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Scope dependent
-        'input'                                 => 'Spiral\Http\InputRouter',
+        'input'                                 => 'Spiral\Http\Input\InputManager',
         'cookies'                               => 'Spiral\Http\Cookies\CookieManager',
-        'headers'                               => 'Spiral\Http\Headers\HeaderManager',
         'router'                                => 'Spiral\Http\Routing\Router',
         'request'                               => 'Psr\Http\Message\ServerRequestInterface',
         'response'                              => 'Psr\Http\Message\ResponseInterface',

@@ -5,10 +5,10 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Input;
+namespace Spiral\Http\Input\Bags;
 
 use Spiral\Http\Exceptions\DotNotFoundException;
-use Spiral\Http\Exceptions\InputException;
+use Spiral\Http\Exceptions\Request\InputException;
 
 /**
  * Generic data accessor, used to read properties of active request.

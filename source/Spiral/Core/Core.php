@@ -26,14 +26,14 @@ use Spiral\Http\HttpDispatcher;
 class Core extends Component implements CoreInterface, DirectoriesInterface, HippocampusInterface
 {
     /**
-     * Extension for memory files.
-     */
-    const EXTENSION = '.php';
-
-    /**
      * Simplified access to container bindings.
      */
     use SharedTrait;
+
+    /**
+     * Extension for memory files.
+     */
+    const EXTENSION = '.php';
 
     /**
      * I need a constant for Symfony Console. :/
@@ -319,43 +319,6 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     }
 
     /**
-     * Define current environment using either application memory or .env file (slower).
-     */
-    private function initEnvironment()
-    {
-        if (!file_exists($this->directory('root') . '.env')) {
-            return;
-        }
-
-        /**
-         * DotEnv is pretty slow, i have to cache it using hippocampus at one moment.
-         */
-        $dotenv = new Dotenv($this->directory('root'));
-        $dotenv->load();
-    }
-
-    /**
-     * Get extension to use for runtime data or configuration cache, all file in cache directory
-     * will additionally get applicationID postfix.
-     *
-     * @param string $name     Runtime data file name (without extension).
-     * @param string $location Location to store data in.
-     * @return string
-     */
-    private function memoryFilename($name, $location = null)
-    {
-        $name = str_replace(['/', '\\'], '-', $name);
-
-        if (empty($location)) {
-            //Forcing default location
-            $location = $this->directory('cache');
-        }
-
-        //Runtime cache
-        return $location . $name . static::EXTENSION;
-    }
-
-    /**
      * Shared container instance (needed for helpers and etc).
      *
      * @return InteropContainerInterface
@@ -433,5 +396,42 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
         $spiral->bootstrap();
 
         return $spiral;
+    }
+
+    /**
+     * Define current environment using either application memory or .env file (slower).
+     */
+    private function initEnvironment()
+    {
+        if (!file_exists($this->directory('root') . '.env')) {
+            return;
+        }
+
+        /**
+         * DotEnv is pretty slow, i have to cache it using hippocampus at one moment.
+         */
+        $dotenv = new Dotenv($this->directory('root'));
+        $dotenv->load();
+    }
+
+    /**
+     * Get extension to use for runtime data or configuration cache, all file in cache directory
+     * will additionally get applicationID postfix.
+     *
+     * @param string $name     Runtime data file name (without extension).
+     * @param string $location Location to store data in.
+     * @return string
+     */
+    private function memoryFilename($name, $location = null)
+    {
+        $name = str_replace(['/', '\\'], '-', $name);
+
+        if (empty($location)) {
+            //Forcing default location
+            $location = $this->directory('cache');
+        }
+
+        //Runtime cache
+        return $location . $name . static::EXTENSION;
     }
 }

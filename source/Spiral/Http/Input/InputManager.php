@@ -5,14 +5,34 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-
 namespace Spiral\Http\Input;
 
-
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 use Spiral\Core\Component;
+use Spiral\Core\ContainerInterface;
+use Spiral\Http\Exceptions\Request\InputException;
+use Spiral\Http\Input\Bags\FilesBag;
+use Spiral\Http\Input\Bags\HeadersBag;
+use Spiral\Http\Input\Bags\InputBag;
+use Spiral\Http\Input\Bags\ServerBag;
 use Spiral\Http\MiddlewareInterface;
 use Spiral\Http\Request\InputInterface;
 
+/**
+ * Provides simplistic way to access request input data in controllers and can also be used to
+ * populate RequestFilters.
+ *
+ * @property-read HeadersBag $headers
+ * @property-read InputBag   $data
+ * @property-read InputBag   $query
+ * @property-read InputBag   $cookies
+ * @property-read FilesBag   $files
+ * @property-read ServerBag  $server
+ * @property-read InputBag   $attributes
+ */
 class InputManager extends Component implements MiddlewareInterface, InputInterface
 {
     /**
@@ -59,24 +79,53 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
 
     /**
      * @invisible
-     * @var ServerRequestInterface
+     * @var Request
      */
     protected $request = null;
 
     /**
-     * InputManager constructor.
-     *
-     * @param ServerRequestInterface $request
+     * @invisible
+     * @var ContainerInterface
      */
-    public function __construct(ServerRequestInterface $request)
+    protected $container = null;
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
     {
-        $this->request = $request;
+        $this->container = $container;
+    }
+
+    /**
+     * Pass request thought middleware and receive resulted response.
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param callable $next Next middleware/target. Always returns ResponseInterface.
+     * @return Response
+     */
+    public function __invoke(Request $request, Response $response, callable $next)
+    {
+        $scope = $this->container->replace(self::class, $this);
+
+        try {
+            $this->request = $request;
+            $this->bagInstances = [];
+
+            /**
+             * Debug: input manager creates scope for itself.
+             */
+            return $next($request, $response);
+        } finally {
+            $this->container->restore($scope);
+        }
     }
 
     /**
      * Get active instance of ServerRequestInterface.
      *
-     * @return ServerRequestInterface
+     * @return Request
      */
     public function request()
     {

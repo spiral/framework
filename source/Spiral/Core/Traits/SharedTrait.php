@@ -15,41 +15,40 @@ use Spiral\Core\InteropContainerInterface;
 /**
  * Trait provides access to set of shared components (using short bindings).
  *
- * @property \Spiral\Core\HippocampusInterface        $memory
- * @property \Spiral\Modules\ModuleManager            $modules
- * @property \Spiral\Debug\Debugger                   $debugger
+ * @property-read \Spiral\Core\HippocampusInterface        $memory
+ * @property-read \Spiral\Modules\ModuleManager            $modules
+ * @property-read \Spiral\Debug\Debugger                   $debugger
  *
  * Dispatchers:
- * @property \Spiral\Console\ConsoleDispatcher        $console
- * @property \Spiral\Http\HttpDispatcher              $http
+ * @property-read \Spiral\Console\ConsoleDispatcher        $console
+ * @property-read \Spiral\Http\HttpDispatcher              $http
  *
  * Shared components:
- * @property \Spiral\Encrypter\Encrypter              $encrypter
- * @property \Spiral\Files\FileManager                $files
- * @property \Spiral\Session\SessionStore             $session
- * @property \Spiral\Tokenizer\Tokenizer              $tokenizer
- * @property \Spiral\Tokenizer\ClassLocator           $locator
- * @property \Spiral\Translator\Translator            $i18n
- * @property \Spiral\Views\ViewManager                $views
- * @property \Spiral\Storage\StorageManager           $storage
+ * @property-read \Spiral\Encrypter\Encrypter              $encrypter
+ * @property-read \Spiral\Files\FileManager                $files
+ * @property-read \Spiral\Session\SessionStore             $session
+ * @property-read \Spiral\Tokenizer\Tokenizer              $tokenizer
+ * @property-read \Spiral\Tokenizer\ClassLocator           $locator
+ * @property-read \Spiral\Translator\Translator            $i18n
+ * @property-read \Spiral\Views\ViewManager                $views
+ * @property-read \Spiral\Storage\StorageManager           $storage
  *
  * Databases and models:
- * @property \Spiral\Database\DatabaseManager         $dbal
- * @property \Spiral\ODM\ODM                          $odm
- * @property \Spiral\ORM\ORM                          $orm
+ * @property-read \Spiral\Database\DatabaseManager         $dbal
+ * @property-read \Spiral\ODM\ODM                          $odm
+ * @property-read \Spiral\ORM\ORM                          $orm
  *
  * Shared entities:
- * @property \Spiral\Cache\CacheStore                 $cache
- * @property \Spiral\Database\Entities\Database       $db
- * @property \Spiral\ODM\Entities\MongoDatabase       $mongo
+ * @property-read \Spiral\Cache\CacheStore                 $cache
+ * @property-read \Spiral\Database\Entities\Database       $db
+ * @property-read \Spiral\ODM\Entities\MongoDatabase       $mongo
  *
  * Scope dependent:
- * @property \Spiral\Http\InputRouter                 $input
- * @property \Spiral\Http\Cookies\CookieManager       $cookies
- * @property \Spiral\Http\Headers\HeaderManager       $headers
- * @property \Spiral\Http\Routing\Router              $router
- * @property \Psr\Http\Message\ServerRequestInterface $request
- * @property \Psr\Http\Message\ResponseInterface      $response
+ * @property-read \Spiral\Http\Input\InputManager          $input
+ * @property-read \Spiral\Http\Cookies\CookieManager       $cookies
+ * @property-read \Spiral\Http\Routing\Router              $router
+ * @property-read \Psr\Http\Message\ServerRequestInterface $request
+ * @property-read \Psr\Http\Message\ResponseInterface      $response
  */
 trait SharedTrait
 {

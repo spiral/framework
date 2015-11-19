@@ -7,8 +7,6 @@
  */
 namespace Spiral\Http\Request;
 
-use Spiral\Core\ContainerInterface;
-use Spiral\Core\Core;
 use Spiral\Models\DataEntity;
 
 /**
@@ -57,19 +55,11 @@ class RequestFilter extends DataEntity
     protected $input = null;
 
     /**
-     * @invisible
-     * @var ContainerInterface|Core
+     * @param InputInterface $input
      */
-    protected $container = null;
-
-    /**
-     * @param InputInterface     $input
-     * @param ContainerInterface $container
-     */
-    public function __construct(InputInterface $input, ContainerInterface $container)
+    public function __construct(InputInterface $input)
     {
         $this->input = $input;
-        $this->container = $container;
 
         foreach ($this->schema as $field => $source) {
             list($source, $origin) = $this->parseSource($field, $source);
