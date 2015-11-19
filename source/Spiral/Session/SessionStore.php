@@ -8,11 +8,10 @@
 namespace Spiral\Session;
 
 use Spiral\Core\Component;
-use Spiral\Core\ConfiguratorInterface;
+use Spiral\Core\ConstructorInterface;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Core\ContainerInterface;
-use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Session\Configs\SessionConfig;
 use Spiral\Session\Exceptions\SessionException;
 
 /**
@@ -36,24 +35,9 @@ class SessionStore extends Component implements
     const SINGLETON = self::class;
 
     /**
-     * Configuration section.
-     */
-    const CONFIG = 'session';
-
-    /**
-     * Handler name tells store to user native php sessions.
-     */
-    const NATIVE_HANDLER = 'native';
-
-    /**
      * @var string
      */
     private $id = '';
-
-    /**
-     * @var \SessionHandler
-     */
-    private $handler = null;
 
     /**
      * @var bool
@@ -66,25 +50,32 @@ class SessionStore extends Component implements
     private $destroyed = false;
 
     /**
-     * @invisible
-     * @var ContainerInterface
+     * @var SessionConfig
      */
-    protected $container = null;
+    protected $config = null;
 
     /**
-     * @param ConfiguratorInterface $configurator
-     * @param ContainerInterface    $container
+     * @invisible
+     * @var ConstructorInterface
      */
-    public function __construct(ConfiguratorInterface $configurator, ContainerInterface $container)
+    protected $constructor = null;
+
+    /**
+     * @param SessionConfig        $config
+     * @param ConstructorInterface $constructor
+     */
+    public function __construct(SessionConfig $config, ConstructorInterface $constructor)
     {
-        $this->config = $configurator->getConfig(static::CONFIG);
-        $this->container = $container;
+        $this->config = $config;
+        $this->constructor = $constructor;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @param bool $start
      */
-    public function setID($id)
+    public function setID($id, $start = true)
     {
         if ($this->id == $id) {
             return;
@@ -92,17 +83,16 @@ class SessionStore extends Component implements
 
         if ($this->started) {
             $this->commit();
-            $this->id = $id;
-            $this->start();
         }
 
         if ($this->destroyed) {
             $this->destroyed = false;
-            $this->id = $id;
-            $this->start();
         }
 
         $this->id = $id;
+        if ($start) {
+            $this->start();
+        }
     }
 
     /**
@@ -131,24 +121,13 @@ class SessionStore extends Component implements
         //We don't need cookies
         ini_set('session.use_cookies', false);
 
-        !empty($this->id) && session_id($this->id);
-
-        if (empty($handler)) {
-            $defaultHandler = $this->config['handler'];
-
-            if ($defaultHandler != self::NATIVE_HANDLER) {
-                $config = $this->config['handlers'][$this->config['handler']];
-
-                $benchmark = $this->benchmark('handler', $this->config['handler']);
-                $handler = $this->handler = $this->container->construct($config['class'], [
-                    'options'  => $config,
-                    'lifetime' => $this->config['lifetime']
-                ]);
-                $this->benchmark($benchmark);
-            }
+        if (!empty($this->id)) {
+            //Let's set custom session ID
+            session_id($this->id);
         }
 
-        !empty($handler) && session_set_save_handler($handler, true);
+        //Let's enable session with custom handler
+        $this->initHandler($handler);
 
         try {
             $benchmark = $this->benchmark('start');
@@ -157,7 +136,8 @@ class SessionStore extends Component implements
 
             $this->id = session_id();
             $this->started = true;
-            $this->destroyed = false;
+            $this->destroyed = !$this->started;
+
         } catch (\ErrorException $exception) {
             throw new SessionException($exception->getMessage(), $exception->getCode());
         }
@@ -168,7 +148,7 @@ class SessionStore extends Component implements
     /**
      * {@inheritdoc}
      */
-    public function isStarted()
+    public function started()
     {
         return $this->started;
     }
@@ -176,7 +156,7 @@ class SessionStore extends Component implements
     /**
      * {@inheritdoc}
      */
-    public function isDestroyed()
+    public function destroyed()
     {
         return $this->destroyed;
     }
@@ -205,6 +185,7 @@ class SessionStore extends Component implements
         $this->benchmark($benchmark);
 
         $this->started = false;
+        $this->id = '';
     }
 
     /**
@@ -376,5 +357,33 @@ class SessionStore extends Component implements
     public function getIterator()
     {
         return new \ArrayIterator($_SESSION);
+    }
+
+    /**
+     * Configuring session handler.
+     *
+     * @param \SessionHandler $handler
+     */
+    protected function initHandler(\SessionHandler $handler = null)
+    {
+        if (!empty($handler)) {
+            session_set_save_handler($handler, true);
+
+            return;
+        }
+
+        if ($this->config->sessionHandler() == SessionConfig::NATIVE_HANDLER) {
+            //Nothing to do
+            return;
+        }
+
+        $benchmark = $this->benchmark('handler', $this->config->sessionHandler());
+        $handler = $this->constructor->construct(
+            $this->config->handlerClass(),
+            $this->config->handlerParameters()
+        );
+        $this->benchmark($benchmark);
+
+        session_set_save_handler($handler, true);
     }
 }

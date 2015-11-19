@@ -18,9 +18,10 @@ interface SessionInterface
      * Set session id, if session already started data has to be committed to permanent storage.
      *
      * @param string $id
+     * @param bool   $start Automatically start session with new id.
      * @throws SessionException
      */
-    public function setID($id);
+    public function setID($id, $start = true);
 
     /**
      * Get session ID or create new one if session not started.
@@ -39,18 +40,18 @@ interface SessionInterface
     public function start();
 
     /**
-     * Check is session was started.
+     * Check is session has been started.
      *
      * @return bool
      */
-    public function isStarted();
+    public function started();
 
     /**
      * Check is session were destroyed.
      *
      * @return bool
      */
-    public function isDestroyed();
+    public function destroyed();
 
     /**
      * Commit all session data to session handler, this will close session before script ends.

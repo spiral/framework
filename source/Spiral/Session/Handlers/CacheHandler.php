@@ -30,7 +30,7 @@ class CacheHandler extends Component implements \SessionHandlerInterface
     /**
      * @var StoreInterface
      */
-    protected $cacheStore = null;
+    protected $cache = null;
 
     /**
      * @var int
@@ -50,7 +50,7 @@ class CacheHandler extends Component implements \SessionHandlerInterface
         $this->lifetime = $lifetime;
         $this->options = $options;
 
-        $this->cacheStore = $this->saturate($cache, CacheInterface::class)->store(
+        $this->cache = $this->saturate($cache, CacheInterface::class)->store(
             $this->options['store']
         );
     }
@@ -68,7 +68,7 @@ class CacheHandler extends Component implements \SessionHandlerInterface
      */
     public function destroy($session_id)
     {
-        $this->cacheStore->delete($this->options['prefix'] . $session_id);
+        $this->cache->delete($this->options['prefix'] . $session_id);
     }
 
     /**
@@ -92,7 +92,7 @@ class CacheHandler extends Component implements \SessionHandlerInterface
      */
     public function read($session_id)
     {
-        return $this->cacheStore->get($this->options['prefix'] . $session_id);
+        return $this->cache->get($this->options['prefix'] . $session_id);
     }
 
     /**
@@ -100,7 +100,7 @@ class CacheHandler extends Component implements \SessionHandlerInterface
      */
     public function write($session_id, $session_data)
     {
-        return $this->cacheStore->set(
+        return $this->cache->set(
             $this->options['prefix'] . $session_id,
             $session_data,
             $this->lifetime
