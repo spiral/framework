@@ -92,15 +92,20 @@ abstract class Controller extends Service implements ControllerInterface
         $reflection->setAccessible(true);
 
         //Executing our action
-        return $this->executeAction($reflection, $this->resolveArguments($reflection, $parameters));
+        return $this->executeAction(
+            $reflection,
+            $this->resolveArguments($reflection, $parameters),
+            $parameters
+        );
     }
 
     /**
      * @param \ReflectionMethod $method
      * @param array             $arguments
+     * @param array             $parameters
      * @return mixed
      */
-    protected function executeAction(\ReflectionMethod $method, array $arguments)
+    protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
     {
         $benchmark = $this->benchmark($method->getName());
 

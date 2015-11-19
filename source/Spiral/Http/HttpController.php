@@ -7,11 +7,10 @@
  */
 namespace Spiral\Http;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Controller;
 use Spiral\Http\Cookies\CookieManager;
-use Spiral\Http\Headers\HeaderManager;
 use Spiral\Http\Input\InputManager;
 
 /**
@@ -22,37 +21,33 @@ class HttpController extends Controller
 {
     /**
      * You can define controller specific middlewares by redefining this property. In default
-     * configuration controller defines it's own CookieManager, HeaderManager and InputManager
+     * configuration controller defines it's own CookieManager and InputManager
      * middlewares.
      *
      * More middlewares to be added.
      *
      * @var array
      */
-    protected $middlewares = [
-        CookieManager::class,
-        HeaderManager::class,
-        InputManager::class
-    ];
+    protected $middlewares = [CookieManager::class, InputManager::class];
 
     /**
      * {@inheritdoc}
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param Request $request
+     * @param Response $response
      */
     public function callAction(
         $action = '',
         array $parameters = [],
-        ServerRequestInterface $request = null,
-        ResponseInterface $response = null
+        Request $request = null,
+        Response $response = null
     ) {
         if (empty($request)) {
-            $request = $this->container->get(ServerRequestInterface::class);
+            $request = $this->container->get(Request::class);
         }
 
         if (empty($response)) {
-            $response = $this->container->get(ResponseInterface::class);
+            $response = $this->container->get(Response::class);
         }
 
         return parent::callAction($action, $parameters + compact('request', 'response'));
@@ -62,11 +57,11 @@ class HttpController extends Controller
      * @param \ReflectionMethod $method
      * @param array             $arguments
      * @param array             $parameters
-     * @return ResponseInterface
+     * @return Response
      */
     protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
     {
-        $benchmark = $this->benchmark($action = $method->getName());
+        $benchmark = $this->benchmark($method->getName());
 
         //To invoke method
         $scope = $this;

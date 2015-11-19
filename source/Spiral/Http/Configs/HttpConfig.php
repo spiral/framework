@@ -51,9 +51,9 @@ class HttpConfig extends InjectableConfig
         'basePath'     => '/',
         'exposeErrors' => true,
         'cookies'      => [
-            'domain'  => '.%s',
-            'method'  => self::COOKIE_ENCRYPT,
-            'exclude' => []
+            'domain'   => '.%s',
+            'method'   => self::COOKIE_ENCRYPT,
+            'excluded' => []
         ],
         'csrf'         => [
             'cookie'   => 'csrf-token',
@@ -198,9 +198,13 @@ class HttpConfig extends InjectableConfig
      *
      * @return array
      */
-    public function excludeCookies()
+    public function excludedCookies()
     {
-        return $this->config['cookies']['exclude'];
+        if (empty($this->config['cookies']['excluded'])) {
+            return [];
+        }
+
+        return $this->config['cookies']['excluded'];
     }
 
     /**
