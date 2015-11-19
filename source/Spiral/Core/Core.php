@@ -281,7 +281,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     /**
      * Handle exception using associated application dispatcher and snapshot class.
      *
-     * @param \Exception $exception
+     * @param \Exception $exception PHP7, are you ok?
      */
     public function handleException($exception)
     {
@@ -321,7 +321,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     /**
      * Define current environment using either application memory or .env file (slower).
      */
-    protected function initEnvironment()
+    private function initEnvironment()
     {
         if (!file_exists($this->directory('root') . '.env')) {
             return;

@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Exceptions\ClientExceptions;
+namespace Spiral\Http\Exceptions\Response;
 
 use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Response;
 
 /**
  * HTTP 404 exception.
@@ -18,7 +17,7 @@ class NotFoundException extends ClientException
     /**
      * @var int
      */
-    protected $code = Response::NOT_FOUND;
+    protected $code = ClientException::NOT_FOUND;
 
     /**
      * @param string $message

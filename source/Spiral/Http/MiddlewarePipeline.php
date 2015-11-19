@@ -7,8 +7,8 @@
  */
 namespace Spiral\Http;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\SugarException;
@@ -100,11 +100,11 @@ class MiddlewarePipeline extends Component
      * Pass request and response though every middleware to target and return generated and wrapped
      * response.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
-     * @return ResponseInterface
+     * @param Request  $request
+     * @param Response $response
+     * @return Response
      */
-    public function run(ServerRequestInterface $request, ResponseInterface $response)
+    public function run(Request $request, Response $response)
     {
         return $this->next(0, $request, $response);
     }
@@ -112,13 +112,13 @@ class MiddlewarePipeline extends Component
     /**
      * Get next chain to be called. Exceptions will be converted to responses.
      *
-     * @param int                    $position
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
-     * @return null|ResponseInterface
+     * @param int      $position
+     * @param Request  $request
+     * @param Response $response
+     * @return null|Response
      * @throws \Exception
      */
-    protected function next($position, ServerRequestInterface $request, ResponseInterface $response)
+    protected function next($position, Request $request, Response $response)
     {
         if (!isset($this->middlewares[$position])) {
             //Middleware target endpoint to be called and converted into response
@@ -142,11 +142,11 @@ class MiddlewarePipeline extends Component
     /**
      * Run pipeline target and return generated response.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
-     * @return ResponseInterface
+     * @param Request  $request
+     * @param Response $response
+     * @return Response
      */
-    protected function mountResponse(ServerRequestInterface $request, ResponseInterface $response)
+    protected function mountResponse(Request $request, Response $response)
     {
         $this->openScope($request, $response);
 
@@ -156,6 +156,10 @@ class MiddlewarePipeline extends Component
 
         try {
             ob_start();
+            /**
+             * Debug: this method contain code to open and close scope for [ServerRequestInterface]
+             * and [ResponseInterface].
+             */
             $result = $this->execute($request, $response);
         } finally {
             while (ob_get_level() > $outputLevel + 1) {
@@ -172,11 +176,11 @@ class MiddlewarePipeline extends Component
     /**
      * Execute endpoint and return it's result.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param Request  $request
+     * @param Response $response
      * @return mixed
      */
-    protected function execute(ServerRequestInterface $request, ResponseInterface $response)
+    protected function execute(Request $request, Response $response)
     {
         return call_user_func($this->target, $request, $response);
     }
@@ -184,14 +188,14 @@ class MiddlewarePipeline extends Component
     /**
      * Convert endpoint result into valid response.
      *
-     * @param ResponseInterface $response Initial pipeline response.
-     * @param mixed             $result   Generated endpoint output.
-     * @param string            $output   Buffer output.
-     * @return ResponseInterface
+     * @param Response $response Initial pipeline response.
+     * @param mixed    $result   Generated endpoint output.
+     * @param string   $output   Buffer output.
+     * @return Response
      */
-    private function wrapResponse(ResponseInterface $response, $result = null, $output = '')
+    private function wrapResponse(Response $response, $result = null, $output = '')
     {
-        if ($result instanceof ResponseInterface) {
+        if ($result instanceof Response) {
             if (!empty($output) && $result->getBody()->isWritable()) {
                 $result->getBody()->write($output);
             }
@@ -200,7 +204,7 @@ class MiddlewarePipeline extends Component
         }
 
         if (is_array($result) || $result instanceof \JsonSerializable) {
-            return $this->writeJson($response, $result, Response::SUCCESS);
+            return $this->writeJson($response, $result);
         }
 
         $response->getBody()->write($result . $output);
@@ -211,16 +215,13 @@ class MiddlewarePipeline extends Component
     /**
      * Get next callable element.
      *
-     * @param int                    $position
-     * @param ServerRequestInterface $outerRequest
-     * @param ResponseInterface      $outerResponse
+     * @param int      $position
+     * @param Request  $outerRequest
+     * @param Response $outerResponse
      * @return \Closure
      */
-    private function getNext(
-        $position,
-        ServerRequestInterface $outerRequest,
-        ResponseInterface $outerResponse
-    ) {
+    private function getNext($position, Request $outerRequest, Response $outerResponse)
+    {
         $next = function ($request = null, $response = null) use (
             $position,
             $outerRequest,
@@ -240,13 +241,13 @@ class MiddlewarePipeline extends Component
     /**
      * Open container scope and share instances of request and response.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param Request  $request
+     * @param Response $response
      */
-    private function openScope(ServerRequestInterface $request, ResponseInterface $response)
+    private function openScope(Request $request, Response $response)
     {
-        $this->requestScope = $this->container->replace(ServerRequestInterface::class, $request);
-        $this->responseScope = $this->container->replace(ResponseInterface::class, $response);
+        $this->requestScope = $this->container->replace(Request::class, $request);
+        $this->responseScope = $this->container->replace(Response::class, $response);
     }
 
     /**

@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http;
+namespace Spiral\Http\Request;
 
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
@@ -66,10 +66,8 @@ class RequestFilter extends DataEntity
      * @param InputInterface     $input
      * @param ContainerInterface $container
      */
-    public function __construct(
-        InputInterface $input,
-        ContainerInterface $container
-    ) {
+    public function __construct(InputInterface $input, ContainerInterface $container)
+    {
         $this->input = $input;
         $this->container = $container;
 

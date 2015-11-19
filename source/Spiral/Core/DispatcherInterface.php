@@ -24,7 +24,6 @@ interface DispatcherInterface
      * Core or application can provide snapshot about error happen outside of dispatcher scope.
      *
      * @param SnapshotInterface $snapshot
-     * @return mixed
      */
     public function handleSnapshot(SnapshotInterface $snapshot);
 }

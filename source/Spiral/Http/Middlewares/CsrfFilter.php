@@ -7,8 +7,10 @@
  */
 namespace Spiral\Http\Middlewares;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\UriInterface;
+use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Cookies\Cookie;
 use Spiral\Http\MiddlewareInterface;
 
@@ -18,21 +20,6 @@ use Spiral\Http\MiddlewareInterface;
  */
 class CsrfFilter implements MiddlewareInterface
 {
-    /**
-     * Token have to check in cookies and queries.
-     */
-    const COOKIE = 'csrf-token';
-
-    /**
-     * CSRF token length.
-     */
-    const TOKEN_LENGTH = 16;
-
-    /**
-     * Verification cookie lifetime.
-     */
-    const LIFETIME = 86400;
-
     /**
      * Header to check for token instead of POST/GET data.
      */
@@ -49,33 +36,34 @@ class CsrfFilter implements MiddlewareInterface
     const ATTRIBUTE = 'csrfToken';
 
     /**
+     * @var HttpConfig
+     */
+    protected $config = null;
+
+    /**
+     * @param HttpConfig $config
+     */
+    public function __construct(HttpConfig $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ) {
-        if (isset($request->getCookieParams()[self::COOKIE])) {
-            $token = $request->getCookieParams()[self::COOKIE];
+    public function __invoke(Request $request, Response $response, callable $next)
+    {
+        if (isset($request->getCookieParams()[$this->config->csrfCookie()])) {
+            $token = $request->getCookieParams()[$this->config->csrfCookie()];
         } else {
             //Making new token
-            $token = substr(
-                base64_encode(openssl_random_pseudo_bytes(self::TOKEN_LENGTH)), 0,
-                self::TOKEN_LENGTH
-            );
+            $token = $this->generateToken();
+
+            //Token cookie!
+            $cookie = $this->tokenCookie($request->getUri(), $token);
 
             //We can alter response cookies
-            $response = $response->withAddedHeader(
-                'Set-Cookie',
-                Cookie::create(
-                    self::COOKIE,
-                    $token,
-                    self::LIFETIME,
-                    $request->getAttribute('basePath'),
-                    $request->getAttribute('cookieDomain')
-                )->packHeader()
-            );
+            $response = $response->withAddedHeader('Set-Cookie', $cookie->packHeader());
         }
 
         if ($this->isRequired($request) && !$this->compare($token, $this->fetchToken($request))) {
@@ -83,30 +71,58 @@ class CsrfFilter implements MiddlewareInterface
             return $response->withStatus(412, 'Bad CSRF Token');
         }
 
-        return $next(
-            $request->withAttribute(static::ATTRIBUTE, $token),
-            $response
+        return $next($request->withAttribute(static::ATTRIBUTE, $token), $response);
+    }
+
+    /**
+     * Generate CSRF token (does not replace anything, only generates are value).
+     *
+     * @return string
+     */
+    public function generateToken()
+    {
+        return substr(
+            base64_encode(openssl_random_pseudo_bytes($this->config->csrfLength())), 0,
+            $this->config->csrfLength()
         );
     }
 
     /**
      * Check if middleware should validate csrf token.
      *
-     * @param ServerRequestInterface $request
+     * @param Request $request
      * @return bool
      */
-    protected function isRequired(ServerRequestInterface $request)
+    protected function isRequired(Request $request)
     {
         return !in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']);
     }
 
     /**
+     * Generate CSRF cookie.
+     *
+     * @param UriInterface $uri Incoming uri.
+     * @param string       $token
+     * @return Cookie
+     */
+    protected function tokenCookie(UriInterface $uri, $token)
+    {
+        return Cookie::create(
+            $this->config->csrfCookie(),
+            $token,
+            $this->config->csrfLifetime(),
+            $this->config->basePath(),
+            $this->config->cookiesDomain($uri)
+        );
+    }
+
+    /**
      * Fetch token from request.
      *
-     * @param ServerRequestInterface $request
+     * @param Request $request
      * @return string
      */
-    protected function fetchToken(ServerRequestInterface $request)
+    protected function fetchToken(Request $request)
     {
         if ($request->hasHeader(self::HEADER)) {
             return (string)$request->getHeaderLine(self::HEADER);

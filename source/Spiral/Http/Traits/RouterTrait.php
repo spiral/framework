@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Routing\Traits;
+namespace Spiral\Http\Traits;
 
 use Spiral\Core\Exceptions\SugarException;
 use Spiral\Core\InteropContainerInterface;

@@ -12,6 +12,8 @@ use Spiral\Files\FilesInterface;
 
 /**
  * Responsible for configuration loading. All configs automatically cached.
+ *
+ * @see InjectableConfig
  */
 class Configurator implements ConfiguratorInterface
 {
@@ -81,7 +83,7 @@ class Configurator implements ConfiguratorInterface
         $config = $this->getConfig($class->getConstant('CONFIG'), false);
 
         if ($config instanceof ConfigInterface) {
-            //Apparently config file contain class definition
+            //Apparently config file contain class definition (let's hope this is same config class)
             return $config;
         }
 

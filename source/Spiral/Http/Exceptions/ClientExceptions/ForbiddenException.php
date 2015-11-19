@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Exceptions\ClientExceptions;
+namespace Spiral\Http\Exceptions\Response;
 
 use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Response;
 
 /**
  * HTTP 403 exception.
@@ -18,7 +17,7 @@ class ForbiddenException extends ClientException
     /**
      * @var int
      */
-    protected $code = Response::FORBIDDEN;
+    protected $code = ClientException::FORBIDDEN;
 
     /**
      * @param string $message

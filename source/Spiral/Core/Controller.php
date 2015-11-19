@@ -105,7 +105,7 @@ abstract class Controller extends Service implements ControllerInterface
         $benchmark = $this->benchmark($method->getName());
 
         try {
-            //Executing controller method
+            //Targeted controller method got called.
             return $method->invokeArgs($this, $arguments);
         } finally {
             $this->benchmark($benchmark);

@@ -8,7 +8,6 @@
 namespace Spiral\Http\Traits;
 
 use Psr\Http\Message\ResponseInterface;
-use Spiral\Http\Response;
 
 /**
  * Provides ability to write json into responses.
@@ -23,7 +22,7 @@ trait JsonTrait
      * @param int               $code
      * @return ResponseInterface
      */
-    private function writeJson(ResponseInterface $response, $json, $code = Response::SUCCESS)
+    private function writeJson(ResponseInterface $response, $json, $code = 100)
     {
         if (is_array($json) && isset($json['status'])) {
             $code = $json['status'];

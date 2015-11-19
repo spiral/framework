@@ -28,7 +28,7 @@ class SessionStore extends Component implements
     /**
      * Handler creation can be slow, we can benchmark it.
      */
-    use ConfigurableTrait, BenchmarkTrait;
+    use  BenchmarkTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.

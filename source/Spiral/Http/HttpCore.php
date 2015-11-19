@@ -90,15 +90,31 @@ class HttpCore extends Component implements HttpInterface
     }
 
     /**
-     * Add new middleware into chain.
+     * Add new middleware to the top chain.
      *
      * Example (in bootstrap):
-     * $this->http->middleware(new ProxyMiddleware());
+     * $this->http->unshiftMiddleware(new ProxyMiddleware());
      *
      * @param callable|MiddlewareInterface $middleware
      * @return $this
      */
-    public function addMiddleware($middleware)
+    public function unshiftMiddleware($middleware)
+    {
+        array_unshift($this->middlewares, $middleware);
+
+        return $this;
+    }
+
+    /**
+     * Add new middleware at the end of chain.
+     *
+     * Example (in bootstrap):
+     * $this->http->pushMiddleware(new ProxyMiddleware());
+     *
+     * @param callable|MiddlewareInterface $middleware
+     * @return $this
+     */
+    public function pushMiddleware($middleware)
     {
         $this->middlewares[] = $middleware;
 

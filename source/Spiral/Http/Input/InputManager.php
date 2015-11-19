@@ -5,30 +5,15 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface;
-use Psr\Http\Message\UriInterface;
+namespace Spiral\Http\Input;
+
+
 use Spiral\Core\Component;
-use Spiral\Http\Exceptions\InputException;
-use Spiral\Http\Input\FilesBag;
-use Spiral\Http\Input\HeadersBag;
-use Spiral\Http\Input\InputBag;
-use Spiral\Http\Input\ServerBag;
+use Spiral\Http\MiddlewareInterface;
+use Spiral\Http\Request\InputInterface;
 
-/**
- * Simplified access to ServerRequestInterface values.
- *
- * @property HeadersBag $headers
- * @property InputBag   $data
- * @property InputBag   $query
- * @property InputBag   $cookies
- * @property FilesBag   $files
- * @property ServerBag  $server
- * @property InputBag   $attributes
- */
-class InputRouter extends Component implements InputInterface
+class InputManager extends Component implements MiddlewareInterface, InputInterface
 {
     /**
      * @var InputBag[]

@@ -17,8 +17,6 @@ use Spiral\Encrypter\Exceptions\DecryptException;
 use Spiral\Encrypter\Exceptions\EncrypterException;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\MiddlewareInterface;
-use Spiral\Http\Middlewares\CsrfFilter;
-use Spiral\Session\Http\SessionStarter;
 
 /**
  * Middleware used to encrypt and decrypt cookies. In addition it will set cookieDomain request
@@ -30,35 +28,6 @@ use Spiral\Session\Http\SessionStarter;
  */
 class CookieManager extends Component implements MiddlewareInterface
 {
-    /**
-     * Can be configured.
-     */
-    use ConfigurableTrait;
-
-    /**
-     * Cookie protection modes.
-     */
-    const NONE    = 'none';
-    const ENCRYPT = 'encrypt';
-    const HMAC    = 'hmac';
-
-    /**
-     * Algorithm used to sign cookies.
-     */
-    const HMAC_ALGORITHM = 'sha256';
-
-    /**
-     * Generated MAC length, has to be stripped from cookie.
-     */
-    const MAC_LENGTH = 64;
-
-    /**
-     * Cookie names should never be encrypted or decrypted.
-     *
-     * @var array
-     */
-    private $exclude = [CsrfFilter::COOKIE, SessionStarter::COOKIE];
-
     /**
      * Cookies has to be send (specified via global scope).
      *
@@ -309,39 +278,6 @@ class CookieManager extends Component implements MiddlewareInterface
         }
 
         return $this->encrypter = $this->container->get(EncrypterInterface::class);
-    }
-
-    /**
-     * Default domain to set cookies for. Domain pattern specified in cookie config is presented as
-     * valid sprintf expression.
-     *
-     * Example:
-     * mydomain.com //Forced domain value
-     * %s           //Cookies will be mounted on current domain
-     * .%s          //Cookies will be mounted on current domain and sub domains
-     *
-     * @return string
-     */
-    protected function cookieDomain()
-    {
-        $host = $this->request->getUri()->getHost();
-
-        $pattern = $this->config['domain'];
-        if (filter_var($host, FILTER_VALIDATE_IP)) {
-            //We can't use sub domains
-            $pattern = ltrim($pattern, '.');
-        }
-
-        if (!empty($port = $this->request->getUri()->getPort())) {
-            $host = $host . ':' . $port;
-        }
-
-        if (strpos($pattern, '%s') === false) {
-            //Forced domain
-            return $pattern;
-        }
-
-        return sprintf($pattern, $host);
     }
 
     /**

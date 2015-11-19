@@ -7,13 +7,14 @@
  */
 namespace Spiral\Http\Configs;
 
-use Spiral\Core\ArrayConfig;
+use Psr\Http\Message\UriInterface;
+use Spiral\Core\InjectableConfig;
 use Spiral\Http\Routing\Router;
 
 /**
  * HttpDispatcher configuration.
  */
-class HttpConfig extends ArrayConfig
+class HttpConfig extends InjectableConfig
 {
     /**
      * HttpConfig can be used by multiple classes including cookie middlewares, this should speed
@@ -27,14 +28,37 @@ class HttpConfig extends ArrayConfig
     const CONFIG = 'http';
 
     /**
+     * Cookie protection methods.
+     */
+    const COOKIE_UNPROTECTED = 0;
+    const COOKIE_ENCRYPT     = 1;
+    const COOKIE_HMAC        = 2;
+
+    /**
+     * Algorithm used to sign cookies.
+     */
+    const HMAC_ALGORITHM = 'sha256';
+
+    /**
+     * Generated MAC length, has to be stripped from cookie.
+     */
+    const MAC_LENGTH = 64;
+
+    /**
      * @var array
      */
     protected $config = [
         'basePath'     => '/',
         'exposeErrors' => true,
         'cookies'      => [
-            'domain' => '.%s',
-            'method' => 'encrypt',
+            'domain'  => '.%s',
+            'method'  => self::COOKIE_ENCRYPT,
+            'exclude' => []
+        ],
+        'csrf'         => [
+            'cookie'   => 'csrf-token',
+            'length'   => 16,
+            'lifetime' => 86400
         ],
         'headers'      => [],
         'middlewares'  => [],
@@ -129,5 +153,77 @@ class HttpConfig extends ArrayConfig
     public function errorView($errorCode)
     {
         return $this->config['httpErrors'][$errorCode];
+    }
+
+    /**
+     * Return config and uri specific cookie domain.
+     *
+     * @param UriInterface $uri
+     * @return string
+     */
+    public function cookiesDomain(UriInterface $uri)
+    {
+        $host = $uri->getHost();
+
+        $pattern = $this->config['cookies']['domain'];
+        if (filter_var($host, FILTER_VALIDATE_IP)) {
+            //We can't use sub domains
+            $pattern = ltrim($pattern, '.');
+        }
+
+        if (!empty($port = $uri->getPort())) {
+            $host = $host . ':' . $port;
+        }
+
+        if (strpos($pattern, '%s') === false) {
+            //Forced domain
+            return $pattern;
+        }
+
+        return sprintf($pattern, $host);
+    }
+
+    /**
+     * Cookie protection method.
+     *
+     * @return int
+     */
+    public function cookieProtection()
+    {
+        return $this->config['cookies']['method'];
+    }
+
+    /**
+     * Cookies to be excluded from protection.
+     *
+     * @return array
+     */
+    public function excludeCookies()
+    {
+        return $this->config['cookies']['exclude'];
+    }
+
+    /**
+     * @return string
+     */
+    public function csrfCookie()
+    {
+        return $this->config['csrf']['cookie'];
+    }
+
+    /**
+     * @return int
+     */
+    public function csrfLength()
+    {
+        return $this->config['csrf']['length'];
+    }
+
+    /**
+     * @return int
+     */
+    public function csrfLifetime()
+    {
+        return $this->config['csrf']['lifetime'];
     }
 }

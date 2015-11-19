@@ -7,8 +7,8 @@
  */
 namespace Spiral\Http\Middlewares;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Http\MiddlewareInterface;
 
 /**
@@ -20,11 +20,8 @@ class JsonParser implements MiddlewareInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ) {
+    public function __invoke(Request $request, Response $response, callable $next)
+    {
         if ($request->getHeaderLine('Content-Type') == 'application/json') {
             $request = $request->withParsedBody(json_decode(
                 $request->getBody()->__toString(),

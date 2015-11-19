@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Exceptions\ClientExceptions;
+namespace Spiral\Http\Exceptions\Response;
 
 use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Response;
 
 /**
  * HTTP 401 exception.
@@ -18,7 +17,7 @@ class UnauthorizedException extends ClientException
     /**
      * @var int
      */
-    protected $code = Response::UNAUTHORIZED;
+    protected $code = ClientException::UNAUTHORIZED;
 
     /**
      * @param string $message

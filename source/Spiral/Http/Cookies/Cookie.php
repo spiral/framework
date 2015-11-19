@@ -10,7 +10,7 @@ namespace Spiral\Http\Cookies;
 /**
  * Represent singular cookie header value with packing abilities.
  */
-class Cookie
+final class Cookie
 {
     /**
      * The name of the cookie.

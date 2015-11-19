@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Exceptions\ClientExceptions;
+namespace Spiral\Http\Exceptions\Response;
 
 use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Response;
 
 /**
  * HTTP 400 exception.
@@ -18,7 +17,7 @@ class BadRequestException extends ClientException
     /**
      * @var int
      */
-    protected $code = Response::BAD_REQUEST;
+    protected $code = ClientException::BAD_DATA;
 
     /**
      * @param string $message
