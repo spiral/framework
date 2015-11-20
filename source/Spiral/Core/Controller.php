@@ -7,6 +7,7 @@
  */
 namespace Spiral\Core;
 
+use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\ControllerInterface;
@@ -54,9 +55,9 @@ abstract class Controller extends Service implements ControllerInterface
 
     /**
      * @param ResolverInterface         $resolver
-     * @param InteropContainerInterface $container
+     * @param InteropContainer $container
      */
-    public function __construct(ResolverInterface $resolver, InteropContainerInterface $container)
+    public function __construct(ResolverInterface $resolver, InteropContainer $container)
     {
         $this->resolver = $resolver;
         parent::__construct($container);

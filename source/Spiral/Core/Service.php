@@ -7,6 +7,7 @@
  */
 namespace Spiral\Core;
 
+use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Traits\SharedTrait;
 
 /**
@@ -20,9 +21,9 @@ class Service extends Component
     use SharedTrait;
 
     /**
-     * @param InteropContainerInterface $container
+     * @param InteropContainer $container
      */
-    public function __construct(InteropContainerInterface $container)
+    public function __construct(InteropContainer $container)
     {
         $this->container = $container;
     }

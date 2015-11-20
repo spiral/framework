@@ -11,7 +11,7 @@ use Spiral\Templater\Exceptions\TemplaterException;
 use Spiral\Templater\HtmlTokenizer;
 use Spiral\Templater\ImportInterface;
 use Spiral\Templater\Templater;
-use Spiral\Views\Exceptions\ViewException;
+use Spiral\Views\Exceptions\ViewsException;
 use Spiral\Views\Processors\TemplateProcessor;
 use Spiral\Views\ViewManager;
 
@@ -130,7 +130,7 @@ class NamespaceImport implements ImportInterface
 
         try {
             $views = $viewManager->getViews($this->namespace);
-        } catch (ViewException $exception) {
+        } catch (ViewsException $exception) {
             //Unable to generate import
             throw new TemplaterException(
                 $exception->getMessage(), $token, $exception->getCode(), $exception

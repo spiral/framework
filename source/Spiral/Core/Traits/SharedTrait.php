@@ -8,9 +8,10 @@
 
 namespace Spiral\Core\Traits;
 
+use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\Container\InstanceException;
-use Spiral\Core\InteropContainerInterface;
+
 
 /**
  * Trait provides access to set of shared components (using short bindings).
@@ -26,7 +27,6 @@ use Spiral\Core\InteropContainerInterface;
  * Shared components:
  * @property-read \Spiral\Encrypter\Encrypter              $encrypter
  * @property-read \Spiral\Files\FileManager                $files
- * @property-read \Spiral\Session\SessionStore             $session
  * @property-read \Spiral\Tokenizer\Tokenizer              $tokenizer
  * @property-read \Spiral\Tokenizer\ClassLocator           $locator
  * @property-read \Spiral\Translator\Translator            $i18n
@@ -44,6 +44,7 @@ use Spiral\Core\InteropContainerInterface;
  * @property-read \Spiral\ODM\Entities\MongoDatabase       $mongo
  *
  * Scope dependent:
+ * @property-read \Spiral\Session\SessionStore             $session
  * @property-read \Spiral\Http\Input\InputManager          $input
  * @property-read \Spiral\Http\Cookies\CookieManager       $cookies
  * @property-read \Spiral\Http\Routing\Router              $router
@@ -54,7 +55,7 @@ trait SharedTrait
 {
     /**
      * @invisible
-     * @var InteropContainerInterface
+     * @var InteropContainer
      */
     protected $container = null;
 

@@ -9,6 +9,7 @@ namespace Spiral\Core;
 
 use Dotenv\Dotenv;
 use Spiral\Console\ConsoleDispatcher;
+use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
@@ -18,6 +19,7 @@ use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
+use Spiral\Modules\ModuleManager;
 
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
@@ -78,7 +80,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
      *
      * @var array
      */
-    protected $autoload = [Loader::class];
+    protected $autoload = [Loader::class, ModuleManager::class];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must

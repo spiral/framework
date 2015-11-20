@@ -11,7 +11,6 @@ use Spiral\Core\Component;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
-use Spiral\Core\Core;
 use Spiral\Tokenizer\TokenizerInterface;
 
 /**
@@ -24,16 +23,6 @@ class ModuleManager extends Component implements SingletonInterface
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = self::class;
-
-    /**
-     * Configuration section.
-     */
-    const CONFIG = 'modules';
-
-    /**
-     * @var array
-     */
-    private $modules = [];
 
     /**
      * @invisible
@@ -60,27 +49,6 @@ class ModuleManager extends Component implements SingletonInterface
                 $this->container->get($module['class'])->bootstrap();
             }
         }
-    }
-
-    /**
-     * Application root directory.
-     *
-     * @return string
-     */
-    public function rootDirectory()
-    {
-        return $this->container->get(Core::class)->directory('root');
-    }
-
-    /**
-     * Public resources (webroot) directory, used by default installer implementation to mount
-     * public files to.
-     *
-     * @return string
-     */
-    public function publicDirectory()
-    {
-        return $this->container->get(Core::class)->directory('public');
     }
 
     /**

@@ -150,19 +150,20 @@ class MiddlewarePipeline extends Component
     {
         $this->openScope($request, $response);
 
+        ob_start();
         $outputLevel = ob_get_level();
         $output = '';
         $result = null;
 
         try {
-            ob_start();
+
             /**
              * Debug: this method contain code to open and close scope for [ServerRequestInterface]
              * and [ResponseInterface].
              */
             $result = $this->execute($request, $response);
         } finally {
-            while (ob_get_level() > $outputLevel + 1) {
+            while (ob_get_level() > $outputLevel) {
                 $output = ob_get_clean() . $output;
             }
 

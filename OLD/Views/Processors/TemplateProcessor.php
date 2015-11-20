@@ -16,7 +16,7 @@ use Spiral\Templater\Imports\StopImport;
 use Spiral\Templater\Node;
 use Spiral\Templater\Templater;
 use Spiral\Views\Compiler;
-use Spiral\Views\Exceptions\ViewException;
+use Spiral\Views\Exceptions\ViewsException;
 use Spiral\Views\ProcessorInterface;
 use Spiral\Views\Processors\Templater\NamespaceImport;
 use Spiral\Views\ViewManager;
@@ -199,7 +199,7 @@ class TemplateProcessor extends Templater implements ProcessorInterface
                 $location[self::LOCATION_NAMESPACE],
                 $location[self::LOCATION_VIEW]
             );
-        } catch (ViewException $exception) {
+        } catch (ViewsException $exception) {
             throw $this->clarifyException($exception, $token);
         }
 

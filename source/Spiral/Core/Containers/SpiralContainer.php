@@ -5,7 +5,10 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Core;
+namespace Spiral\Core\Containers;
+
+use Spiral\Core\Container;
+use Spiral\Core\ContainerInterface;
 
 /**
  * Default spiral container with pre-defined set of bindings.
@@ -18,7 +21,7 @@ class SpiralContainer extends Container
      * @invisible
      */
     protected $bindings = [
-        //Self binding
+        //Container related bindings
         'Interop\Container\ContainerInterface'  => ContainerInterface::class,
         'Spiral\Core\InteropContainerInterface' => ContainerInterface::class,
         'Spiral\Core\ConstructorInterface'      => ContainerInterface::class,
@@ -73,7 +76,6 @@ class SpiralContainer extends Container
         //Shared components
         'encrypter'                             => 'Spiral\Encrypter\Encrypter',
         'files'                                 => 'Spiral\Files\FileManager',
-        'session'                               => 'Spiral\Session\SessionStore',
         'tokenizer'                             => 'Spiral\Tokenizer\Tokenizer',
         'locator'                               => 'Spiral\Tokenizer\ClassLocator',
         'i18n'                                  => 'Spiral\Translator\Translator',
@@ -91,6 +93,7 @@ class SpiralContainer extends Container
         'mongo'                                 => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Scope dependent
+        'session'                               => 'Spiral\Session\SessionStore',
         'input'                                 => 'Spiral\Http\Input\InputManager',
         'cookies'                               => 'Spiral\Http\Cookies\CookieManager',
         'router'                                => 'Spiral\Http\Routing\Router',

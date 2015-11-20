@@ -8,13 +8,12 @@
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
-use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
-use Spiral\Core\Exceptions\Container\ContainerException;
-use Spiral\Core\Traits\ConfigurableTrait;
 use Spiral\Files\FilesInterface;
-use Spiral\Views\Exceptions\ViewException;
+use Spiral\Views\Configs\ViewsConfig;
+use Spiral\Views\Exceptions\LoaderException;
+use Spiral\Views\Exceptions\ViewsException;
 
 /**
  * Default ViewsInterface implementation with ability to change cache versions via external
@@ -23,40 +22,44 @@ use Spiral\Views\Exceptions\ViewException;
  */
 class ViewManager extends Component implements SingletonInterface, ViewsInterface
 {
-   protected $config =[];
-public function config(){
-    return $this->config;
-}
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
     const SINGLETON = self::class;
 
     /**
-     * Configuration section.
-     */
-    const CONFIG = 'views';
-
-    /**
-     * Constants to work with view cache.
-     */
-    const CACHE_FILENAME = 0;
-    const CACHE_ENGINE   = 1;
-    const CACHE_CLASS    = 2;
-
-    /**
-     * Namespaces associated with their locations.
+     * Associations between view path and engine.
      *
      * @var array
      */
-    private $namespaces = [];
+    private $associationCache = [];
 
     /**
-     * View cache file will depends on this set of values.
+     * Pre-constructed engines.
      *
-     * @var array
+     * @var EngineInterface[]
      */
-    private $dependencies = [];
+    protected $engines = [];
+
+    /**
+     * @var ViewsConfig
+     */
+    protected $config = null;
+
+    /**
+     * @var LoaderInterface
+     */
+    protected $loader = null;
+
+    /**
+     * @var EnvironmentInterface
+     */
+    protected $environment = null;
+
+    /**
+     * @var FilesInterface
+     */
+    protected $files = null;
 
     /**
      * @invisible
@@ -65,248 +68,156 @@ public function config(){
     protected $container = null;
 
     /**
-     * @invisible
-     * @var FilesInterface
-     */
-    protected $files = null;
-
-    /**
-     * @param ConfiguratorInterface $configurator
-     * @param ContainerInterface    $container
-     * @param FilesInterface        $files
+     * @param ViewsConfig        $config
+     * @param FilesInterface     $files
+     * @param ContainerInterface $container
      */
     public function __construct(
-        ConfiguratorInterface $configurator,
-        ContainerInterface $container,
-        FilesInterface $files
+        ViewsConfig $config,
+        FilesInterface $files,
+        ContainerInterface $container
     ) {
-        $this->config = $configurator->getConfig(static::CONFIG);
-
-        $this->container = $container;
+        $this->config = $config;
         $this->files = $files;
+        $this->container = $container;
 
-        //Namespaces can be edited in runtime
-        $this->namespaces = $this->config['namespaces'];
-    }
-
-    /**
-     * List of every view namespace associated with directories.
-     *
-     * @return array
-     */
-    public function getNamespaces()
-    {
-        return $this->namespaces;
-    }
-
-    /**
-     * Add new view dependency. Every new dependency will change generated cache filename.
-     *
-     * @param string $name
-     * @param mixed  $value
-     */
-    public function setDependency($name, $value)
-    {
-        $this->dependencies[$name] = $value;
-    }
-
-    /**
-     * Get dependency value or return null.
-     *
-     * @param string $name
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function getDependency($name, $default = null)
-    {
-        return array_key_exists($name, $this->dependencies) ? $this->dependencies[$name] : $default;
-    }
-
-    /**
-     * Every configured view dependency.
-     *
-     * @return array
-     */
-    public function getDependencies()
-    {
-        foreach ($this->config['dependencies'] as $variable => $provider) {
-            $this->dependencies[$variable] = call_user_func(
-                [$this->container->get($provider[0]), $provider[1]]
-            );
-        }
-
-        return $this->dependencies;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $class Custom view class name.
-     * @throws ContainerException
-     */
-    public function get($path, array $data = [], $class = null)
-    {
-        list($namespace, $view) = $this->parsePath($path);
-
-        //Some views have associated compiler
-        $compiler = $this->compiler($namespace, $view, $engine, $filename);
-
-        if (!empty($compiler) && !$compiler->isCompiled()) {
-            //Pre-compile
-            $compiler->compile();
-        }
-
-        return $this->container->construct(
-            !empty($class) ? $class : $this->config['engines'][$engine]['view'],
-            [
-                'views'     => $this,
-                'compiler'  => $compiler,
-                'namespace' => $namespace,
-                'view'      => $view,
-                'filename'  => $filename,
-                'data'      => $data
-            ]
+        $this->loader = new ViewLoader($config->getNamespaces(), $files);
+        $this->environment = new ViewEnvironment(
+            $config->environmentDependencies(),
+            $config->cacheEnabled(),
+            $config->cacheDirectory(),
+            $container
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function render($path, array $data = [])
+    public function get($path)
     {
-        return $this->get($path, $data)->render();
+        return $this->engine($this->detectEngine($path))->get($path);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render($path, array $context = [])
+    {
+        return $this->engine($this->detectEngine($path))->render($path, $context);
     }
 
     /**
      * Pre-compile desired view file.
      *
-     * @param string $namespace
-     * @param string $view
+     * @param string $path
      * @return CompilerInterface|null
      */
-    public function compile($namespace, $view)
+    public function compile($path)
     {
-        $compiler = $this->compiler($namespace, $view);
-        !empty($compiler) && $compiler->compile();
-
-        return $compiler;
+        return $this->engine($this->detectEngine($path))->compile($path);
     }
 
     /**
-     * Get list of view names associated with their View class.
+     * Get engine by it's type.
      *
-     * @param string $namespace
-     * @return array
-     * @throws ViewException
+     * @param string $engine
+     * @param bool   $reload If true engine will receive new instance of loader and enviroment.
+     * @return EngineInterface
      */
-    public function getViews($namespace)
+    public function engine($engine, $reload = false)
     {
-        if (!isset($this->namespaces[$namespace])) {
-            throw new ViewException("Invalid view namespace '{$namespace}'.");
+        if (!isset($this->engines[$engine])) {
+            $parameters = $this->config->engineParameters($engine);
+            $parameters['loader'] = $this->loader($engine);
+            $parameters['environment'] = $this->environment;
+
+            //We have to create an engine
+            $this->engines[$engine] = $this->container->construct(
+                $this->config->engineClass($engine),
+                $parameters
+            );
+
+            $reload = true;
         }
 
-        $result = [];
-        foreach ($this->namespaces[$namespace] as $location) {
-            $location = $this->files->normalizePath($location);
-            foreach ($this->files->getFiles($location) as $filename) {
-                $foundEngine = false;
-                foreach ($this->config['engines'] as $engine => $options) {
-                    if (in_array($this->files->extension($filename), $options['extensions'])) {
-                        $foundEngine = $engine;
-                        break;
-                    }
-                }
+        //Configuring engine
+        if ($reload) {
+            $this->engines[$engine]->setLoader($this->loader($engine));
+            $this->engines[$engine]->setEnvironment($this->environment());
+        }
 
-                if (empty($foundEngine)) {
-                    //No engines found = not view
-                    continue;
-                }
+        return $this->engines[$engine];
+    }
 
-                //View filename without extension
-                $filename = substr($filename, 0, -1 - strlen($this->files->extension($filename)));
-                $name = substr($filename, strlen($location) + strlen(FilesInterface::SEPARATOR));
-
-                $result[$name] = $this->config['engines'][$foundEngine]['view'];
+    /**
+     * Get view loader.
+     *
+     * @param string $engine    Forced extension value.
+     * @param string $namespace Forced default namespace.
+     * @return LoaderInterface
+     */
+    public function loader($engine = null, $namespace = self::DEFAULT_NAMESPACE)
+    {
+        $extension = null;
+        if (!empty($engine)) {
+            if (!$this->config->hasEngine($engine)) {
+                throw new ViewsException("Undefined view engine '{$engine}'.");
             }
+
+            $extension = $this->config->engineExtension($engine);
         }
 
-        return $result;
+        return $this->loader->withExtension($extension)->withNamespace($namespace);
     }
 
     /**
-     * Find view file specified by namespace and view name and associated engine id.
+     * Current view environment changes cached filenames.
      *
-     * @param string $namespace
-     * @param string $view
-     * @param string $engine Found engine id, reference.
-     * @return string
-     * @throws ViewException
+     * @return EnvironmentInterface
      */
-    public function getFilename($namespace, $view, &$engine = null)
+    public function environment()
     {
-        if (!isset($this->namespaces[$namespace])) {
-            throw new ViewException("Undefined view namespace '{$namespace}'.");
-        }
-
-        //This part better be cached one dat
-        foreach ($this->namespaces[$namespace] as $directory) {
-            foreach ($this->config['engines'] as $engine => $options) {
-                foreach ($options['extensions'] as $extension) {
-                    $candidate = $directory . FilesInterface::SEPARATOR . $view . '.' . $extension;
-
-                    if ($this->files->exists($candidate)) {
-                        return $this->files->normalizePath($candidate);
-                    }
-                }
-            }
-        }
-
-        throw new ViewException("Unable to find view '{$view}' in namespace '{$namespace}'.");
+        return $this->environment;
     }
 
     /**
-     * Get instance of compiler associated with specified namespace and view.
-     *
-     * @param string $namespace
-     * @param string $view
-     * @param string $engine   Selected engine name.
-     * @param string $filename Reference to original view filename.
-     * @return CompilerInterface|null
-     * @throws ContainerException
-     */
-    private function compiler($namespace, $view, &$engine = null, &$filename = null)
-    {
-        $filename = $this->getFilename($namespace, $view, $engine);
-        if (empty($this->config['engines'][$engine]['compiler'])) {
-            return null;
-        }
-
-        //Building compiler with needed options
-        return $this->container->construct(
-            $this->config['engines'][$engine]['compiler'],
-            [
-                'views'     => $this,
-                'config'    => $this->config['engines'][$engine],
-                'namespace' => $namespace,
-                'view'      => $view,
-                'filename'  => $filename
-            ] + $this->config['engines'][$engine]
-        );
-    }
-
-    /**
-     * Parse path to read namespace and view name.
+     * Detect compiler by view path (automatically resolved based on extension).
      *
      * @param string $path
-     * @return array
+     * @return string
      */
-    private function parsePath($path)
+    protected function detectEngine($path)
     {
-        $namespace = static::DEFAULT_NAMESPACE;
-        if (strpos($path, self::NS_SEPARATOR) !== false) {
-            return explode(self::NS_SEPARATOR, $path);
+        if (isset($this->associationCache[$path])) {
+            return $this->associationCache[$path];
         }
 
-        return [$namespace, $path];
+        //File extension can help us to detect engine faster
+        $extension = $this->files->extension($path);
+        $detected = null;
+        foreach ($this->config->getEngines() as $engine) {
+            if (!empty($extension) && $extension == $this->config->engineExtension($engine)) {
+                //Found by extension
+                $detected = $engine;
+                break;
+            }
+
+            //Trying automatic (no extension) detection
+            $loader = $this->loader($engine);
+
+            try {
+                if (!empty($loader->viewName($path))) {
+                    $detected = $engine;
+                }
+            } catch (LoaderException $exception) {
+                //Does not related to such engine
+            }
+        }
+
+        if (empty($detected)) {
+            throw new ViewsException("Unable to detect view engine for '{$path}'.");
+        }
+
+        return $this->associationCache[$path] = $detected;
     }
 }

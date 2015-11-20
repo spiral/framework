@@ -6,11 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 namespace Spiral\Views\Exceptions;
+use Spiral\Core\Exceptions\ExceptionInterface;
 
-/**
- * Exception happen while compiling view.
- */
-class CompilerException extends ViewException
+class LoaderException extends \Twig_Error_Loader implements ExceptionInterface
 {
 
 }

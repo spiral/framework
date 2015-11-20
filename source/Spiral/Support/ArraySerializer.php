@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Reactor;
+namespace Spiral\Support;
 
 use Spiral\Reactor\Exceptions\SerializeException;
 
@@ -14,15 +14,37 @@ use Spiral\Reactor\Exceptions\SerializeException;
  */
 class ArraySerializer
 {
+    private $array = [];
+
+    /**
+     * @param array $array
+     */
+    public function __construct(array $array)
+    {
+        $this->array = $array;
+    }
+
+    public function serialize()
+    {
+        return $this->serializeArray($this->array);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->serialize();
+    }
+
     /**
      * Serialize array data into pretty but valid PHP code.
      *
-     * @param array  $array
      * @param string $indent
      * @param int    $level Internal value.
      * @return string
      */
-    public function serialize(array $array, $indent = AbstractElement::INDENT, $level = 0)
+    public function serializeArray($array, $indent = '    ', $level = 0)
     {
         //Delimiters between rows and sub-arrays.
         $subIndent = "\n" . str_repeat($indent, $level + 2);
@@ -57,7 +79,7 @@ class ArraySerializer
                 continue;
             }
 
-            $subElement = $this->serialize($value, $indent, $level + 1);
+            $subElement = $this->serializeArray($value, $indent, $level + 1);
             $result[] = $name . "[{$subIndent}" . $subElement . "{$keyIndent}]";
         }
 
@@ -78,9 +100,7 @@ class ArraySerializer
      */
     protected function packValue($name, $value)
     {
-        if ($value instanceof PHPExpression) {
-            $value = $value->getValue();
-        } elseif (is_null($value)) {
+        if (is_null($value)) {
             $value = "null";
         } elseif (is_bool($value)) {
             $value = ($value ? "true" : "false");
