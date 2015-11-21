@@ -256,7 +256,12 @@ class Container extends Component implements ContainerInterface
             return false;
         }
 
-        return is_object($this->bindings[$alias]);
+        //Cross bindings
+        while (isset($this->bindings[$alias]) && is_string($this->bindings[$alias])) {
+            $alias = $this->bindings[$alias];
+        }
+
+        return isset($this->bindings[$alias]) && is_object($this->bindings[$alias]);
     }
 
     /**

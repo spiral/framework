@@ -69,7 +69,7 @@ class SessionStarter implements MiddlewareInterface
     {
         $this->initSession($request);
 
-        $scope = $this->container->replace(SessionInterface::class, $this->session);
+        $scope = $this->container->replace(get_class($this->session), $this->session);
         try {
             /**
              * Debug: this method opens SessionInterface scope.
@@ -113,6 +113,7 @@ class SessionStarter implements MiddlewareInterface
         $sessionID = $this->fetchSID($request);
 
         if (empty($sessionID) || $sessionID != $this->session->getID(false)) {
+
             //Let's mount cookie
             $response = $response->withAddedHeader(
                 'Set-Cookie',

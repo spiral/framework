@@ -144,14 +144,14 @@ class StemplerEngine extends Component implements EngineInterface
         }
 
         //Compiling!
-        $benchmark = $this->benchmark('compiling', $path);
+        $benchmark = $this->benchmark('compile', $path);
         try {
             $source = $this->supervisor()->createNode($path)->compile();
         } finally {
             $this->benchmark($benchmark);
         }
 
-        $benchmark = $this->benchmark('caching', $path);
+        $benchmark = $this->benchmark('cache', $path);
         try {
             //To simplify processors life let's write file to cache first (this might help in debugging)
             $this->cache->write($cached, $source);

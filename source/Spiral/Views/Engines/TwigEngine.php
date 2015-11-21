@@ -9,6 +9,7 @@ namespace Spiral\Views\Engines;
 
 use Spiral\Core\Component;
 use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Twig\TwigCache;
@@ -24,7 +25,7 @@ class TwigEngine extends Component implements EngineInterface
     /**
      * Saturation of files.
      */
-    use SaturateTrait;
+    use SaturateTrait, BenchmarkTrait;
 
     /**
      * @var \Twig_Environment
@@ -70,7 +71,12 @@ class TwigEngine extends Component implements EngineInterface
      */
     public function get($path)
     {
-        return $this->twig->loadTemplate($path);
+        $benchmark = $this->benchmark('load', $path);
+        try {
+            return $this->twig->loadTemplate($path);
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
@@ -86,7 +92,7 @@ class TwigEngine extends Component implements EngineInterface
      */
     public function compile($path)
     {
-        $this->twig->loadTemplate($path);
+        $this->get($path);
     }
 
     /**
