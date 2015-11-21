@@ -22,9 +22,10 @@ use Spiral\Http\Traits\JsonTrait;
 use Spiral\Views\ViewsInterface;
 
 /**
- * Isolates exceptions into response.
+ * Isolates exceptions into response. Ability to isolate regular exceptions is under re-thinking
+ * now.
  */
-class ExceptionIsolator extends Component implements MiddlewareInterface, LoggerAwareInterface
+class Isolator extends Component implements MiddlewareInterface, LoggerAwareInterface
 {
     /**
      * To write json responses.
@@ -142,6 +143,10 @@ class ExceptionIsolator extends Component implements MiddlewareInterface, Logger
 
             return $this->writeException($request, $response, $exception);
         } catch (\Exception $exception) {
+            /**
+             * This part is questionable.
+             */
+
             /**
              * Potentially has to be dedicated to specific service.
              *

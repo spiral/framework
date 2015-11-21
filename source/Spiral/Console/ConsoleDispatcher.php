@@ -7,10 +7,11 @@
  */
 namespace Spiral\Console;
 
-use Monolog\Handler\NullHandler;
+use Monolog\Handler\HandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\NullLogger;
 use Spiral\Console\Exceptions\ConsoleException;
+use Spiral\Console\Logging\ConsoleHandler;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
@@ -20,6 +21,7 @@ use Spiral\Core\HippocampusInterface;
 use Spiral\Core\Loader;
 use Spiral\Debug\BenchmarkerInterface;
 use Spiral\Debug\Debugger;
+use Spiral\Debug\LogsInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Tokenizer\LocatorInterface;
 use Symfony\Component\Console\Application;
@@ -96,6 +98,11 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $locator = null;
 
     /**
+     * @var Debugger
+     */
+    protected $debugger = null;
+
+    /**
      * @param ContainerInterface   $container
      * @param HippocampusInterface $memory
      * @param LocatorInterface     $locator
@@ -120,8 +127,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             $this->commands = [];
         }
 
-        //To suspend default behaviour of monolog
-        $debugger->shareHandler(new NullHandler());
+        $this->debugger = $debugger;
     }
 
     /**
@@ -162,7 +168,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * {@inheritdoc}
      */
-    public function start()
+    public function start(ConsoleHandler $handler = null)
     {
         //Some console commands utilizes benchmarking, let's help them
         $this->container->bind(BenchmarkerInterface::class, Debugger::class);
@@ -170,7 +176,16 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         //Let's disable loader in console mode
         $this->loader->disable();
 
-        $this->application()->run();
+        $output = new ConsoleOutput();
+        $this->debugger->shareHandler($this->consoleHandler($output));
+
+        $scope = $this->container->replace(LogsInterface::class, $this->debugger);
+
+        try {
+            $this->application()->run(null, $output);
+        } finally {
+            $this->container->restore($scope);
+        }
     }
 
     /**
@@ -252,6 +267,17 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         }
 
         $this->application()->renderException($snapshot->getException(), $output);
+    }
+
+    /**
+     * Console handler for Monolog logger.
+     *
+     * @param OutputInterface $output
+     * @return HandlerInterface
+     */
+    protected function consoleHandler(OutputInterface $output)
+    {
+        return new ConsoleHandler($output);
     }
 
     /**

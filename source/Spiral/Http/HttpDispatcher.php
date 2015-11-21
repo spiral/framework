@@ -14,7 +14,7 @@ use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
-use Spiral\Http\Middlewares\ExceptionIsolator;
+use Spiral\Http\Middlewares\Isolator;
 use Spiral\Http\Traits\RouterTrait;
 use Zend\Diactoros\ServerRequestFactory;
 
@@ -86,9 +86,9 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         /**
          * Isolator can write exception/snapshot information into given response.
          *
-         * @var ExceptionIsolator $isolator
+         * @var Isolator $isolator
          */
-        $isolator = $this->container->get(ExceptionIsolator::class);
+        $isolator = $this->container->get(Isolator::class);
 
         //Somewhere outside of dispatcher
         $request = $this->request();

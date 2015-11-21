@@ -8,11 +8,8 @@
 namespace Spiral\Stempler;
 
 use Spiral\Stempler\Behaviours\BlockBehaviour;
-use Spiral\Stempler\Behaviours\BlockBehaviourInterface;
 use Spiral\Stempler\Behaviours\ExtendsBehaviour;
-use Spiral\Stempler\Behaviours\ExtendsBehaviourInterface;
 use Spiral\Stempler\Behaviours\IncludeBehaviour;
-use Spiral\Stempler\Behaviours\IncludeBehaviourInterface;
 use Spiral\Stempler\Exceptions\StrictModeException;
 
 /**

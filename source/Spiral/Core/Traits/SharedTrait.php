@@ -12,7 +12,6 @@ use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\Container\InstanceException;
 
-
 /**
  * Trait provides access to set of shared components (using short bindings).
  *

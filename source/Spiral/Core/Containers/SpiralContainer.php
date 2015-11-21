@@ -28,7 +28,8 @@ class SpiralContainer extends Container
         'Spiral\Core\ResolverInterface'         => ContainerInterface::class,
 
         //Instrumental bindings
-        'Psr\Log\LoggerInterface'               => 'Spiral\Debug\DebugLogger',
+        'Psr\Log\LoggerInterface'               => 'Spiral\Debug\SharedLogger',
+        'Monolog\Logger'                        => 'Spiral\Debug\SharedLogger',
         'Spiral\Debug\LogsInterface'            => 'Spiral\Debug\Debugger',
         'Spiral\Debug\SnapshotInterface'        => 'Spiral\Debug\Snapshot',
         'Spiral\Encrypter\EncrypterInterface'   => 'Spiral\Encrypter\Encrypter',

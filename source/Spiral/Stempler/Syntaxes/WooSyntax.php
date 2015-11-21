@@ -39,7 +39,13 @@ class WooSyntax implements SyntaxInterface
      */
     protected $constructions = [
         self::TYPE_BLOCK    => ['block:', 'section:', 'yield:', 'define:'],
-        self::TYPE_EXTENDS  => ['extends:', 'extends', 'woo:extends', 'layout:extends'],
+        self::TYPE_EXTENDS  => [
+            'extends:layout',
+            'extends:',
+            'extends',
+            'woo:extends',
+            'layout:extends'
+        ],
         self::TYPE_IMPORTER => ['woo:use', 'use', 'node:use', 'stempler:use']
     ];
 

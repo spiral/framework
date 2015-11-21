@@ -1,6 +1,5 @@
-<layout:extends path="spiral:http/layouts/error" code="403" title="[[Forbidden]]"/>
+<extends:layout path="spiral:http/layouts/error" code="403" title="[[Forbidden]]"/>
 
-<block:message>
-    [[You do not have permission to access this page. Please contact the webmaster, for additional
-    information.]]
-</block:message>
+<define:message>
+    [[You do not have permission to access this page. Please contact the webmaster, for additional information.]]
+</define:message>
