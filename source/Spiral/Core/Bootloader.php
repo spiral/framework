@@ -118,6 +118,12 @@ class Bootloader
                 $providerSchema['singletons'] = $object->defineSingletons();
                 $providerSchema['injectors'] = $object->defineInjectors();
 
+                $reflection = new \ReflectionClass($object);
+
+                //Can be booted based on it's configuration
+                $providerSchema['boot'] = (bool)$reflection->getConstant('BOOT');
+                $providerSchema['init'] = $providerSchema['boot'];
+
                 //Let's initialize now
                 $this->initBindings($providerSchema);
             } else {
@@ -125,12 +131,9 @@ class Bootloader
             }
 
             //Need more checks here
-            if ($object instanceof BootableInterface) {
+            if ($providerSchema['boot']) {
                 $boot = new \ReflectionMethod($object, 'boot');
                 $boot->invokeArgs($object, $this->container->resolveArguments($boot));
-
-                $providerSchema['init'] = true;
-                $providerSchema['boot'] = true;
             }
 
             $schema['serviceProviders'][$serviceProvider] = $providerSchema;

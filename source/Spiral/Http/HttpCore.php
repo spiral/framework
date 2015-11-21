@@ -98,7 +98,7 @@ class HttpCore extends Component implements HttpInterface
      * @param callable|MiddlewareInterface $middleware
      * @return $this
      */
-    public function unshiftMiddleware($middleware)
+    public function topMiddleware($middleware)
     {
         array_unshift($this->middlewares, $middleware);
 

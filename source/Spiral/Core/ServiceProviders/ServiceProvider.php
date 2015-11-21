@@ -15,8 +15,13 @@ namespace Spiral\Core\ServiceProviders;
  *
  * You can also declare Initializer classes as singletons while working using spiral container.
  */
-class ServiceProvider implements ServiceProviderInterface
+abstract class ServiceProvider implements ServiceProviderInterface
 {
+    /**
+     * Not bootable by default.
+     */
+    const BOOT = false;
+
     /**
      * Bindings in string/array form, example:
      *

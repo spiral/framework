@@ -11,7 +11,7 @@ namespace Spiral\Core\ServiceProviders;
  * Similar to laravel service provider, however allowed only to define bindings in a simple form so
  * they can be cached.
  *
- * @see BootableInterface
+ * To make class bootable (using method boot() with method injections) declare constant BOOT = true;
  */
 interface ServiceProviderInterface
 {
