@@ -58,7 +58,7 @@ class SpiralContainer extends Container
 
         //Databases
         'Spiral\Database\DatabaseInterface'     => 'Spiral\Database\Entities\Database',
-        'Spiral\Database\DatabasesInterface'    => 'Spiral\Database\DatabaseProvider',
+        'Spiral\Database\DatabasesInterface'    => 'Spiral\Database\DatabaseManager',
 
         //Http
         'Spiral\Http\HttpInterface'             => 'Spiral\Http\HttpDispatcher',
@@ -89,7 +89,7 @@ class SpiralContainer extends Container
 
         //Shared entities
         'cache'                                 => 'Spiral\Cache\CacheStore',
-        'db'                                    => 'Spiral\Databases\Entities\Database',
+        'db'                                    => 'Spiral\Database\Entities\Database',
         'mongo'                                 => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Scope dependent
