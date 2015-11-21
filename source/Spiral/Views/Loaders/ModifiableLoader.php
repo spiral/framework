@@ -39,6 +39,7 @@ class ModifiableLoader extends Component implements LoaderInterface
     public function __construct(LoaderInterface $loader, array $modifiers = [])
     {
         $this->loader = $loader;
+        $this->modifiers = $modifiers;
     }
 
     /**
