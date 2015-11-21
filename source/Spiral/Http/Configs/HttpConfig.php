@@ -8,17 +8,17 @@
 namespace Spiral\Http\Configs;
 
 use Psr\Http\Message\UriInterface;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\InjectableConfig;
 use Spiral\Http\Routing\Router;
 
 /**
  * HttpDispatcher configuration.
  */
-class HttpConfig extends InjectableConfig
+class HttpConfig extends InjectableConfig implements SingletonInterface
 {
     /**
-     * HttpConfig can be used by multiple classes including cookie middlewares, this should speed
-     * up it's loading a little bit.
+     * Config can be accessed from many points now.
      */
     const SINGLETON = self::class;
 

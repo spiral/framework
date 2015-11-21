@@ -11,7 +11,8 @@ use Spiral\Core\Exceptions\ConfiguratorException;
 use Spiral\Files\FilesInterface;
 
 /**
- * Responsible for configuration loading. All configs automatically cached.
+ * Responsible for configuration loading. All configs are automatically cached (temporary
+ * disabled!).
  *
  * @see InjectableConfig
  */
@@ -28,26 +29,25 @@ class Configurator implements ConfiguratorInterface
     private $directory = null;
 
     /**
+     * Cached configs.
+     *
+     * @var array
+     */
+    protected $configs = [];
+
+    /**
      * @var FilesInterface
      */
     protected $files = null;
 
     /**
-     * @invisible
-     * @var HippocampusInterface
+     * @param string         $directory
+     * @param FilesInterface $files
      */
-    protected $memory = null;
-
-    /**
-     * @param string               $directory
-     * @param FilesInterface       $files
-     * @param HippocampusInterface $memory
-     */
-    public function __construct($directory, FilesInterface $files, HippocampusInterface $memory)
+    public function __construct($directory, FilesInterface $files)
     {
         $this->directory = $directory;
         $this->files = $files;
-        $this->memory = $memory;
     }
 
     /**
@@ -79,6 +79,10 @@ class Configurator implements ConfiguratorInterface
      */
     public function createInjection(\ReflectionClass $class, $context = null)
     {
+        if (isset($this->configs[$class->getName()])) {
+            return $this->configs[$class->getName()];
+        }
+
         //Due internal contract we can fetch config section from class constant
         $config = $this->getConfig($class->getConstant('CONFIG'), false);
 
@@ -87,6 +91,14 @@ class Configurator implements ConfiguratorInterface
             return $config;
         }
 
-        return $class->newInstance($config);
+        return $this->configs[$class->getName()] = $class->newInstance($config);
+    }
+
+    /**
+     * Drop all cached configs (in RAM).
+     */
+    public function flushCache()
+    {
+        $this->configs = [];
     }
 }

@@ -13,7 +13,7 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
-use Spiral\Http\Exceptions\Response\ServerErrorException;
+use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Spiral\Http\Middlewares\ExceptionIsolator;
 use Spiral\Http\Traits\RouterTrait;
 use Zend\Diactoros\ServerRequestFactory;

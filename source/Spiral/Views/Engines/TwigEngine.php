@@ -39,20 +39,20 @@ class TwigEngine extends Component implements EngineInterface
     /**
      * @param LoaderInterface      $loader
      * @param EnvironmentInterface $environment
-     * @param FilesInterface       $container
+     * @param FilesInterface       $files
      * @param array                $options
      */
     public function __construct(
         LoaderInterface $loader,
         EnvironmentInterface $environment,
-        FilesInterface $container = null,
+        FilesInterface $files = null,
         array $options = []
     ) {
         $this->twig = new \Twig_Environment($loader, $options);
-        $this->files = $this->saturate($container, FilesInterface::class);
+        $this->files = $this->saturate($files, FilesInterface::class);
 
+        $this->setLoader($loader)->setEnvironment($environment);
         $this->configure($this->twig);
-        $this->setEnvironment($environment);
     }
 
     /**
@@ -91,24 +91,32 @@ class TwigEngine extends Component implements EngineInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this
      */
     public function setLoader(LoaderInterface $loader)
     {
         $this->twig->setLoader($loader);
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this
      */
     public function setEnvironment(EnvironmentInterface $environment)
     {
         if (!$environment->cachable()) {
             $this->twig->setCache(false);
 
-            return;
+            return $this;
         }
 
         $this->twig->setCache(new TwigCache($this->files, $environment));
+
+        return $this;
     }
 
     /**

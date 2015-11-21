@@ -415,8 +415,6 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
         <div class="chain">
             <div class="calls">
                 <?php
-                $stacktrace = array_reverse($stacktrace);
-
                 foreach ($stacktrace as $index => $trace) {
                     if (empty($trace['file']) && isset($stacktrace[$index - 1]['file'])) {
                         $trace['file'] = $stacktrace[$index - 1]['file'];

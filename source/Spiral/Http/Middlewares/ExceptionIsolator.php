@@ -16,7 +16,7 @@ use Spiral\Debug\SnapshotInterface;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Exceptions\Response\ServerErrorException;
+use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Spiral\Http\MiddlewareInterface;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Views\ViewsInterface;
@@ -134,6 +134,7 @@ class ExceptionIsolator extends Component implements MiddlewareInterface, Logger
              * Debug: exceptions and clientExceptions are isolated in this middleware.
              */
             return $next($request, $response);
+
         } catch (ClientException $exception) {
 
             //Logging client error
@@ -173,13 +174,13 @@ class ExceptionIsolator extends Component implements MiddlewareInterface, Logger
             $remoteAddress = $request->getServerParams()['REMOTE_ADDR'];
         }
 
-        $this->logger()->warning(static::LOG_FORMAT, [
+        $this->logger()->error(\Spiral\interpolate(static::LOG_FORMAT, [
             'scheme'  => $request->getUri()->getScheme(),
             'host'    => $request->getUri()->getHost(),
             'path'    => $request->getUri()->getPath(),
             'code'    => $exception->getCode(),
             'message' => $exception->getMessage() ?: '-not specified-',
             'remote'  => $remoteAddress
-        ]);
+        ]));
     }
 }

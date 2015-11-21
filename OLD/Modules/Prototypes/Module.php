@@ -10,7 +10,7 @@ namespace Spiral\Modules\Prototypes;
 use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Modules\DefinitionInterface;
-use Spiral\Modules\ModuleInterface;
+use Spiral\Modules\BootloadableInterface;
 
 /**
  * Abstract module implementation, uses default implementations of Definition and Installer.
@@ -22,7 +22,7 @@ use Spiral\Modules\ModuleInterface;
  * Module class:    vendor/package/scr/Namespace/Class.php
  * Module location: vendor/package
  */
-abstract class Module extends Component implements ModuleInterface
+abstract class Bootloadable extends Component implements BootloadableInterface
 {
     /**
      * {@inheritdoc}

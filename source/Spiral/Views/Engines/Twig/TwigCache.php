@@ -40,7 +40,7 @@ class TwigCache implements \Twig_CacheInterface
      */
     public function generateKey($name, $className)
     {
-        $hash = hash('sha256', $className . '.' . $this->environment->getID());
+        $hash = hash('md5', $className . '.' . $this->environment->getID());
 
         return $this->environment->cacheDirectory() . '/' . $hash[0] . $hash[1] . '/' . $hash . '.php';
     }

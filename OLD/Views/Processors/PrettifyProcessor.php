@@ -7,7 +7,7 @@
  */
 namespace Spiral\Views\Processors;
 
-use Spiral\Support\StringHelper;
+use Spiral\Support\Strings;
 use Spiral\Templater\HtmlTokenizer;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\Compiler;
@@ -75,7 +75,7 @@ class PrettifyProcessor implements ProcessorInterface
     protected function normalizeEndings($source, Isolator $isolator)
     {
         //Step #1, \n only
-        $source = $isolator->isolatePHP(StringHelper::normalizeEndings($source));
+        $source = $isolator->isolatePHP(Strings::normalizeEndings($source));
 
         //Step #2, chunk by lines
         $sourceLines = explode("\n", $source);

@@ -8,6 +8,7 @@
 namespace Spiral\Core;
 
 use Dotenv\Dotenv;
+use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Core\Exceptions\ControllerException;
@@ -24,6 +25,8 @@ use Spiral\Modules\ModuleManager;
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
  * overwritten with custom instance).
+ *
+ * @property-read ContainerInterface $container Protected.
  */
 class Core extends Component implements CoreInterface, DirectoriesInterface, HippocampusInterface
 {
@@ -323,7 +326,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     /**
      * Shared container instance (needed for helpers and etc).
      *
-     * @return InteropContainerInterface
+     * @return InteropContainer
      */
     public static function sharedContainer()
     {

@@ -12,7 +12,7 @@ use Spiral\Core\Container;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Files\FileManager;
-use Spiral\Support\StringHelper;
+use Spiral\Support\Strings;
 use Spiral\Views\ViewManager;
 
 class TemplaterTest extends \PHPUnit_Framework_TestCase
@@ -120,7 +120,7 @@ class TemplaterTest extends \PHPUnit_Framework_TestCase
      */
     protected function render($view)
     {
-        $lines = explode("\n", StringHelper::normalizeEndings(
+        $lines = explode("\n", Strings::normalizeEndings(
             $this->viewManager()->render($view)
         ));
 

@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\ControllerInterface;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
@@ -22,7 +23,7 @@ abstract class Controller extends Service implements ControllerInterface
     /**
      * To benchmark action execution time.
      */
-    use BenchmarkTrait;
+    use BenchmarkTrait, SaturateTrait;
 
     /**
      * Action method prefix value.
@@ -54,12 +55,14 @@ abstract class Controller extends Service implements ControllerInterface
     protected $resolver = null;
 
     /**
-     * @param ResolverInterface         $resolver
-     * @param InteropContainer $container
+     * @param ResolverInterface $resolver  Sugared.
+     * @param InteropContainer  $container Sugared.
      */
-    public function __construct(ResolverInterface $resolver, InteropContainer $container)
-    {
-        $this->resolver = $resolver;
+    public function __construct(
+        ResolverInterface $resolver = null,
+        InteropContainer $container = null
+    ) {
+        $this->resolver = $this->saturate($resolver, ResolverInterface::class);
         parent::__construct($container);
     }
 

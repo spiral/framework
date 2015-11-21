@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Exceptions\Response;
+namespace Spiral\Http\Exceptions\ClientExceptions;
 
 use Spiral\Http\Exceptions\ClientException;
 

@@ -129,7 +129,7 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
         if (!isset($this->engines[$engine])) {
             $parameters = $this->config->engineParameters($engine);
             $parameters['loader'] = $this->loader($engine);
-            $parameters['environment'] = $this->environment;
+            $parameters['environment'] = $this->environment();
 
             //We have to create an engine
             $this->engines[$engine] = $this->container->construct(
@@ -152,11 +152,10 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     /**
      * Get view loader.
      *
-     * @param string $engine    Forced extension value.
-     * @param string $namespace Forced default namespace.
+     * @param string $engine Forced extension value.
      * @return LoaderInterface
      */
-    public function loader($engine = null, $namespace = self::DEFAULT_NAMESPACE)
+    public function loader($engine = null)
     {
         $extension = null;
         if (!empty($engine)) {
@@ -167,7 +166,12 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
             $extension = $this->config->engineExtension($engine);
         }
 
-        return $this->loader->withExtension($extension)->withNamespace($namespace);
+        if (empty($extension)) {
+            return $this->loader;
+        }
+
+        //TODO: change this!
+        return $this->loader->withExtension($extension);
     }
 
     /**
@@ -192,9 +196,11 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
             return $this->associationCache[$path];
         }
 
-        //File extension can help us to detect engine faster
+        //File extension can help us to detect engine faster (attention, does not work with complex
+        //extensions at this moment).
         $extension = $this->files->extension($path);
         $detected = null;
+
         foreach ($this->config->getEngines() as $engine) {
             if (!empty($extension) && $extension == $this->config->engineExtension($engine)) {
                 //Found by extension

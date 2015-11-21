@@ -84,7 +84,7 @@ class ModuleManager extends Component implements SingletonInterface
         $tokenizer = !empty($tokenizer) ? $tokenizer : $this->container->get(TokenizerInterface::class);
 
         $definitions = [];
-        foreach ($tokenizer->getClasses(ModuleInterface::class) as $module) {
+        foreach ($tokenizer->getClasses(BootloadableInterface::class) as $module) {
             if ($module['abstract']) {
                 continue;
             }

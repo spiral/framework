@@ -1,8 +1,9 @@
 <?php
 /**successfully*/
-namespace Spiral\Commands\Core;
+namespace Spiral\Commands\Spiral;
 
 use Spiral\Console\Command;
+use Spiral\Console\Configs\ConsoleConfig;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -31,42 +32,42 @@ class ConfigureCommand extends Command
     ];
 
     /**
-     * Perform command.
+     * @param ConsoleConfig $config
      */
-    public function perform()
+    public function perform(ConsoleConfig $config)
     {
+        //TODO: COLLECT ERRORS
+
+
         $this->ensureRuntimeDirectory();
-
-        $this->writeln("\n<info>Updating configuration cache...</info>");
-        $this->console->command('app:touch', [], $this->output);
-
-        //Installing modules
-        $this->writeln("\n<info>Installing all available modules...</info>");
-        $this->console->command('modules:install', ['--all' => true], $this->output);
 
         //Updating modules
         $this->writeln("\n<info>Updating existed module resources...</info>");
-        $this->console->command('modules:update', [], $this->output);
+        $this->writeln("<error>ERROR!</error>");
+        //$this->console->command('modules:update', [], $this->output);
 
         //Updating commands cache
         $this->writeln("\n<info>Re-indexing available console commands.</info>");
-        $this->console->command('console:refresh', [], $this->output);
+        $this->console->command('console:reload', [], $this->output);
 
         //Indexing i18n usages
         $this->writeln("\n<info>Indexing translate function and classes usage...</info>");
-        $this->console->command('i18n:index', [], $this->output);
+        $this->writeln("<error>ERROR!</error>");
+        //$this->console->command('i18n:index', [], $this->output);
 
         //Initiating view cache
         $this->writeln($this->isVerbosity() ? "\n<info>Generating view cache.</info>" : "");
-        $this->console->command('view:compile', [], $this->output);
+        $this->writeln("<error>ERROR!</error>");
+        //$this->console->command('view:compile', [], $this->output);
 
         if ($this->option('key')) {
             $this->writeln("");
-            $this->console->command('app:key', [], $this->output);
+            $this->writeln("<error>ERROR!</error>");
+            //$this->console->command('app:key', [], $this->output);
         }
 
         //Additional commands
-        foreach ($this->console->config()['configureSequence'] as $command => $options) {
+        foreach ($config->configureSequence() as $command => $options) {
             if (!empty($options['header'])) {
                 $this->writeln($options['header']);
             }
@@ -76,7 +77,7 @@ class ConfigureCommand extends Command
             }
         }
 
-        $this->writeln("\n<info>Application were successfully configured.</info>");
+        $this->writeln("\n<info>All done!</info>");
     }
 
     /**

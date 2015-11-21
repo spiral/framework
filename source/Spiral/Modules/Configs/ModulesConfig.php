@@ -23,4 +23,12 @@ class ModulesConfig extends InjectableConfig
      * @var array
      */
     protected $config = [];
+
+    /**
+     * @return array
+     */
+    public function getModules()
+    {
+        return $this->config;
+    }
 }

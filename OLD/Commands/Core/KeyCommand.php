@@ -6,11 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
 
  */
-namespace Spiral\Commands\Core;
+namespace Spiral\Commands\Spiral;
 
 use Spiral\Console\Command;
-use Spiral\Modules\ConfigWriter;
-use Spiral\Support\StringHelper;
+use Spiral\Support\Strings;
 
 /**
  * Update encryption key for current application enviroment.
@@ -42,7 +41,7 @@ class KeyCommand extends Command
             'method' => ConfigWriter::MERGE_REPLACE
         ]);
 
-        $key = StringHelper::random(32);
+        $key = Strings::random(32);
 
         //Exporting to environment specific configuration file
         $configWriter->setConfig(compact('key'))->writeConfig(

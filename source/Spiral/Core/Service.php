@@ -8,6 +8,7 @@
 namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Core\Traits\SharedTrait;
 
 /**
@@ -18,13 +19,13 @@ class Service extends Component
     /**
      * Access to shared components and entities.
      */
-    use SharedTrait;
+    use SharedTrait, SaturateTrait;
 
     /**
-     * @param InteropContainer $container
+     * @param InteropContainer $container Sugared.
      */
-    public function __construct(InteropContainer $container)
+    public function __construct(InteropContainer $container = null)
     {
-        $this->container = $container;
+        $this->container = $this->saturate($container, InteropContainer::class);
     }
 }
