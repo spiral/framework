@@ -7,7 +7,6 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Core\Initializers\BootableInterface;
 use Spiral\Core\Initializers\InitializerInterface;
 
 /**
@@ -21,11 +20,11 @@ class Bootloader
     const MEMORY = 'bootloading';
 
     /**
-     * Components to be autoloader while application initialization.
+     * Components/initializers to be autoloader while application initialization.
      *
      * @var array
      */
-    private $serviceProviders = [];
+    private $initializers = [];
 
     /**
      * @invisible
@@ -34,12 +33,12 @@ class Bootloader
     private $container = null;
 
     /**
-     * @param array              $serviceProviders
+     * @param array              $initializers
      * @param ContainerInterface $container
      */
-    public function __construct(array $serviceProviders, ContainerInterface $container)
+    public function __construct(array $initializers, ContainerInterface $container)
     {
-        $this->serviceProviders = $serviceProviders;
+        $this->initializers = $initializers;
         $this->container = $container;
     }
 
@@ -54,7 +53,7 @@ class Bootloader
             $schema = $memory->loadData(static::MEMORY);
         }
 
-        if (empty($schema) || $schema['snapshot'] != $this->serviceProviders) {
+        if (empty($schema) || $schema['snapshot'] != $this->initializers) {
             //Schema expired or empty
             $schema = $this->generateSchema();
 
@@ -76,13 +75,13 @@ class Bootloader
      */
     protected function schematicBootload(array $schema)
     {
-        foreach ($schema['serviceProviders'] as $serviceProvider => $options) {
+        foreach ($schema['initializers'] as $initializer => $options) {
             if (array_key_exists('bindings', $options)) {
                 $this->initBindings($options);
             }
 
             if ($options['init']) {
-                $object = $this->container->get($serviceProvider);
+                $object = $this->container->get($initializer);
 
                 //Booting
                 if ($options['boot']) {
@@ -101,42 +100,39 @@ class Bootloader
     protected function generateSchema()
     {
         $schema = [
-            'snapshot'         => $this->serviceProviders,
-            'serviceProviders' => []
+            'snapshot'     => $this->initializers,
+            'initializers' => []
         ];
 
-        foreach ($this->serviceProviders as $serviceProvider) {
-            $providerSchema = [
-                'init' => true,
-                'boot' => false
-            ];
+        foreach ($this->initializers as $initializer) {
+            $initSchema = ['init' => true, 'boot' => false];
 
-            $object = $this->container->get($serviceProvider);
+            $object = $this->container->get($initializer);
 
             if ($object instanceof InitializerInterface) {
-                $providerSchema['bindings'] = $object->defineBindings();
-                $providerSchema['singletons'] = $object->defineSingletons();
-                $providerSchema['injectors'] = $object->defineInjectors();
+                $initSchema['bindings'] = $object->defineBindings();
+                $initSchema['singletons'] = $object->defineSingletons();
+                $initSchema['injectors'] = $object->defineInjectors();
 
                 $reflection = new \ReflectionClass($object);
 
                 //Can be booted based on it's configuration
-                $providerSchema['boot'] = (bool)$reflection->getConstant('BOOT');
-                $providerSchema['init'] = $providerSchema['boot'];
+                $initSchema['boot'] = (bool)$reflection->getConstant('BOOT');
+                $initSchema['init'] = $initSchema['boot'];
 
                 //Let's initialize now
-                $this->initBindings($providerSchema);
+                $this->initBindings($initSchema);
             } else {
-                $providerSchema['init'] = true;
+                $initSchema['init'] = true;
             }
 
             //Need more checks here
-            if ($providerSchema['boot']) {
+            if ($initSchema['boot']) {
                 $boot = new \ReflectionMethod($object, 'boot');
                 $boot->invokeArgs($object, $this->container->resolveArguments($boot));
             }
 
-            $schema['serviceProviders'][$serviceProvider] = $providerSchema;
+            $schema['initializers'][$initializer] = $initSchema;
         }
 
         return $schema;
@@ -145,19 +141,19 @@ class Bootloader
     /**
      * Bind declared bindings.
      *
-     * @param array $providerSchema
+     * @param array $initSchema
      */
-    protected function initBindings(array $providerSchema)
+    protected function initBindings(array $initSchema)
     {
-        foreach ($providerSchema['bindings'] as $aliases => $resolver) {
+        foreach ($initSchema['bindings'] as $aliases => $resolver) {
             $this->container->bind($aliases, $resolver);
         }
 
-        foreach ($providerSchema['singletons'] as $aliases => $resolver) {
+        foreach ($initSchema['singletons'] as $aliases => $resolver) {
             $this->container->bindSingleton($aliases, $resolver);
         }
 
-        foreach ($providerSchema['injectors'] as $aliases => $injector) {
+        foreach ($initSchema['injectors'] as $aliases => $injector) {
             $this->container->bindInjector($aliases, $injector);
         }
     }

@@ -33,7 +33,6 @@ class ShortBindings extends Initializer
         'console'   => 'Spiral\Console\ConsoleDispatcher',
 
         //Shared components
-        'encrypter' => 'Spiral\Encrypter\Encrypter',
         'files'     => 'Spiral\Files\FileManager',
         'tokenizer' => 'Spiral\Tokenizer\Tokenizer',
         'locator'   => 'Spiral\Tokenizer\ClassLocator',
@@ -45,18 +44,5 @@ class ShortBindings extends Initializer
         'dbal'      => 'Spiral\Database\DatabaseManager',
         'orm'       => 'Spiral\ORM\ORM',
         'odm'       => 'Spiral\ODM\ODM',
-
-        //Shared entities
-        'cache'     => 'Spiral\Cache\CacheStore',
-        'db'        => 'Spiral\Database\Entities\Database',
-        'mongo'     => 'Spiral\ODM\Entities\MongoDatabase',
-
-        //Scope dependent
-        'session'   => 'Spiral\Session\SessionStore',
-        'input'     => 'Spiral\Http\Input\InputManager',
-        'cookies'   => 'Spiral\Http\Cookies\CookieManager',
-        'router'    => 'Spiral\Http\Routing\Router',
-        'request'   => 'Psr\Http\Message\ServerRequestInterface',
-        'response'  => 'Psr\Http\Message\ResponseInterface',
     ];
 }
