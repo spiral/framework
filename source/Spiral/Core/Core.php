@@ -20,7 +20,6 @@ use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
-use Spiral\Modules\ModuleManager;
 
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
@@ -81,7 +80,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     protected $dispatcher = null;
 
     /**
-     * @var Bootloader
+     * @var BootloadProcessor
      */
     protected $bootloader = null;
 
@@ -400,7 +399,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
         }
 
         //Bootloading all needed components and extensions
-        $spiral->bootloader = new Bootloader($spiral->load, $container);
+        $spiral->bootloader = new BootloadProcessor($spiral->load, $container);
 
         //We are providing instance of HippocampusInterface
         $spiral->bootloader->bootload($spiral);

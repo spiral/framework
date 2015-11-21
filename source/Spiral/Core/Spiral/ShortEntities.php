@@ -7,12 +7,12 @@
  */
 namespace Spiral\Core\Spiral;
 
-use Spiral\Core\Initializers\Initializer;
+use Spiral\Core\Bootloaders\Bootloader;
 
 /**
  * Some shared bindings for spiral services.
  */
-class ShortEntities extends Initializer
+class ShortEntities extends Bootloader
 {
     /**
      * No boot.

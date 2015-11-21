@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Core\Initializers;
+namespace Spiral\Core\Bootloaders;
 
 /**
  * Similar to laravel service provider, however allowed only to define bindings in a simple form so
@@ -13,7 +13,7 @@ namespace Spiral\Core\Initializers;
  *
  * To make class bootable (using method boot() with method injections) declare constant BOOT = true;
  */
-interface InitializerInterface
+interface BootloaderInterface
 {
     /**
      * Bindings in string/array form, example:

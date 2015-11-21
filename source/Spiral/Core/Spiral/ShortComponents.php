@@ -7,12 +7,12 @@
  */
 namespace Spiral\Core\Spiral;
 
-use Spiral\Core\Initializers\Initializer;
+use Spiral\Core\Bootloaders\Bootloader;
 
 /**
  * Shared components and short bindings.
  */
-class ShortComponents extends Initializer
+class ShortComponents extends Bootloader
 {
     /**
      * No need to boot, all cached.

@@ -7,12 +7,12 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Core\Initializers\InitializerInterface;
+use Spiral\Core\Bootloaders\BootloaderInterface;
 
 /**
  * Provides ability to bootload ServiceProviders.
  */
-class Bootloader
+class BootloadProcessor
 {
     /**
      * Memory section.
@@ -109,7 +109,7 @@ class Bootloader
 
             $object = $this->container->get($initializer);
 
-            if ($object instanceof InitializerInterface) {
+            if ($object instanceof BootloaderInterface) {
                 $initSchema['bindings'] = $object->defineBindings();
                 $initSchema['singletons'] = $object->defineSingletons();
                 $initSchema['injectors'] = $object->defineInjectors();

@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Core\Initializers;
+namespace Spiral\Core\Bootloaders;
 
 /**
  * Provide ability to initiate set of container bindings using simple string form without closures.
@@ -17,7 +17,7 @@ namespace Spiral\Core\Initializers;
  *
  * This is almost the same as ServiceProvider.
  */
-abstract class Initializer implements InitializerInterface
+abstract class Bootloader implements BootloaderInterface
 {
     /**
      * Not bootable by default.
