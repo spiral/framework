@@ -12,7 +12,7 @@ use Spiral\Core\Initializers\Initializer;
 /**
  * Shared components and short bindings.
  */
-class ShortBindings extends Initializer
+class ShortComponents extends Initializer
 {
     /**
      * No need to boot, all cached.

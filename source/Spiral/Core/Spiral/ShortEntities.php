@@ -12,7 +12,7 @@ use Spiral\Core\Initializers\Initializer;
 /**
  * Some shared bindings for spiral services.
  */
-class EntityBindings extends Initializer
+class ShortEntities extends Initializer
 {
     /**
      * No boot.
