@@ -23,6 +23,9 @@ use Spiral\Core\Exceptions\Container\InstanceException;
  * Container does not support setter injections, private properties and etc. Normally will work with
  * classes only.
  *
+ * Attention, this container is autowiring only at this moment, other containers might require more
+ * configuring.
+ *
  * @see InjectableInterface
  * @see SingletonInterface
  */
@@ -35,6 +38,14 @@ class Container extends Component implements ContainerInterface
      * @var array
      */
     protected $bindings = [];
+
+    /**
+     * Registered injectors.
+     *
+     * @invisible
+     * @var array
+     */
+    protected $injectors = [];
 
     /**
      * {@inheritdoc}
@@ -104,6 +115,15 @@ class Container extends Component implements ContainerInterface
                 //Invoking Closure
                 $instance = $reflection->invokeArgs(
                     $this->resolveArguments($reflection, $parameters)
+                );
+            } elseif (is_array($binding[0])) {
+                //In a form of resolver and method
+                list($resolver, $method) = $binding[0];
+                $resolver = $this->get($resolver);
+                $method = new \ReflectionMethod($resolver, $method);
+
+                $instance = $method->invokeArgs(
+                    $resolver, $this->resolveArguments($method, $parameters)
                 );
             } else {
                 throw new ContainerException("Invalid binding.");
@@ -219,6 +239,18 @@ class Container extends Component implements ContainerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this
+     */
+    public function bindInjector($class, $injector)
+    {
+        $this->injectors[$class] = $injector;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function replace($alias, $resolver)
     {
@@ -284,6 +316,16 @@ class Container extends Component implements ContainerInterface
     }
 
     /**
+     * Every binded injector.
+     *
+     * @return array
+     */
+    public function getInjectors()
+    {
+        return $this->injectors;
+    }
+
+    /**
      * Check if given class has associated injector.
      *
      * @param \ReflectionClass $reflection
@@ -291,7 +333,10 @@ class Container extends Component implements ContainerInterface
      */
     protected function hasInjector(\ReflectionClass $reflection)
     {
-        //Custom logic can be applied
+        if (isset($this->injectors[$reflection->getName()])) {
+            return true;
+        }
+
         return $reflection->isSubclassOf(InjectableInterface::class);
     }
 
@@ -303,6 +348,10 @@ class Container extends Component implements ContainerInterface
      */
     protected function getInjector(\ReflectionClass $reflection)
     {
+        if (isset($this->injectors[$reflection->getName()])) {
+            return $this->get($this->injectors[$reflection->getName()]);
+        }
+
         return $this->get($reflection->getConstant('INJECTOR'));
     }
 

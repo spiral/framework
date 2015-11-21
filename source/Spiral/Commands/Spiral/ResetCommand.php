@@ -41,7 +41,9 @@ class ResetCommand extends Command
             $this->files->delete($filename);
 
             if ($this->isVerbosity()) {
-                $this->writeln($this->files->relativePath($filename, directory('cache')));
+                $this->writeln(
+                    $this->files->relativePath($filename, directory('cache'))
+                );
             }
         }
 

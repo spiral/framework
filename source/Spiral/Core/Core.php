@@ -79,11 +79,16 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     protected $dispatcher = null;
 
     /**
+     * @var Bootloader
+     */
+    protected $bootloader = null;
+
+    /**
      * Components to be autoloader while application initialization.
      *
      * @var array
      */
-    protected $autoload = [Loader::class, ModuleManager::class];
+    protected $load = [];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must
@@ -392,10 +397,11 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
             set_exception_handler([$spiral, 'handleException']);
         }
 
-        foreach ($spiral->autoload as $module) {
-            //Initiating needed extensions
-            $spiral->container->get($module);
-        }
+        //Bootloading all needed components and extensions
+        $spiral->bootloader = new Bootloader($spiral->load, $container);
+
+        //We are providing instance of HippocampusInterface
+        $spiral->bootloader->bootload($spiral);
 
         //Bootstrapping our application
         $spiral->bootstrap();

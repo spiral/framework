@@ -139,6 +139,14 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     }
 
     /**
+     * @return ContainerInterface
+     */
+    protected function container()
+    {
+        return $this->container;
+    }
+
+    /**
      * Define command options.
      *
      * @return array
