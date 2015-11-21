@@ -7,15 +7,13 @@
  */
 namespace Spiral\Views\Processors;
 
+use Spiral\Stempler\HtmlTokenizer;
 use Spiral\Support\Strings;
-use Spiral\Templater\HtmlTokenizer;
 use Spiral\Tokenizer\Isolator;
-use Spiral\Views\Compiler;
 use Spiral\Views\ProcessorInterface;
-use Spiral\Views\ViewManager;
 
 /**
- * Performs few simple operations to make output HTML look better.
+ * Cuts blank lines in template html code and normalize attrbiutes.
  */
 class PrettifyProcessor implements ProcessorInterface
 {
@@ -30,36 +28,39 @@ class PrettifyProcessor implements ProcessorInterface
         //Trim attributes
         'attributes' => [
             'normalize' => true,
+            //Drop spaces
             'trim'      => ['class', 'style', 'id'],
+            //Drop when empty
             'drop'      => ['class', 'style', 'id']
         ]
     ];
 
     /**
-     * {@inheritdoc}
+     * @var HtmlTokenizer
      */
-    public function __construct(ViewManager $viewFacade, Compiler $compiler, array $options)
+    protected $tokenizer = null;
+
+    /**
+     * @param HtmlTokenizer $tokenizer
+     * @param array         $options
+     */
+    public function __construct(HtmlTokenizer $tokenizer, array $options = [])
     {
+        $this->tokenizer = $tokenizer;
         $this->options = $options + $this->options;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @param Isolator      $isolator
-     * @param HtmlTokenizer $tokenizer
      */
-    public function process($source, Isolator $isolator = null, HtmlTokenizer $tokenizer = null)
+    public function process($source, $cachedFilename = null)
     {
-        $isolator = !empty($isolator) ? $isolator : new Isolator();
-        $tokenizer = !empty($tokenizer) ? $tokenizer : new HtmlTokenizer();
-
         if ($this->options['endings']) {
-            $source = $this->normalizeEndings($source, $isolator);
+            $source = $this->normalizeEndings($source, new Isolator());
         }
 
         if ($this->options['attributes']['normalize']) {
-            $source = $this->normalizeAttributes($source, $tokenizer);
+            $source = $this->normalizeAttributes($source, $this->tokenizer);
         }
 
         return $source;

@@ -8,7 +8,9 @@
 namespace Spiral\Views\Modifiers;
 
 use Spiral\Core\Component;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Translator\TranslatorInterface;
+use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ModifierInterface;
 
 /**
@@ -17,6 +19,11 @@ use Spiral\Views\ModifierInterface;
  */
 class TranslateModifier extends Component implements ModifierInterface
 {
+    /**
+     * Sugary.
+     */
+    use SaturateTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -31,12 +38,18 @@ class TranslateModifier extends Component implements ModifierInterface
     ];
 
     /**
-     * @param TranslatorInterface $translator
-     * @param array               $options
+     * TranslateModifier constructor.
+     *
+     * @param EnvironmentInterface $environment
+     * @param TranslatorInterface  $translator
+     * @param array                $options
      */
-    public function __construct(TranslatorInterface $translator, array $options = [])
-    {
-        $this->translator = $translator;
+    public function __construct(
+        EnvironmentInterface $environment,
+        TranslatorInterface $translator = null,
+        array $options = []
+    ) {
+        $this->translator = $this->saturate($translator, TranslatorInterface::class);
         $this->options = $options + $this->options;
     }
 

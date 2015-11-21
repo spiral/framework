@@ -14,8 +14,8 @@ interface ProcessorInterface
 {
     /**
      * @param string $source
-     * @param string $compiledFilename
+     * @param string $cachedFilename
      * @return string
      */
-    public function process($source, $compiledFilename = null);
+    public function process($source, $cachedFilename = null);
 }

@@ -49,6 +49,11 @@ class StemplerEngine extends Component implements EngineInterface
     protected $processors = [];
 
     /**
+     * @var EnvironmentInterface
+     */
+    protected $environment = null;
+
+    /**
      * @var StemplerCache
      */
     protected $cache = null;
@@ -139,7 +144,7 @@ class StemplerEngine extends Component implements EngineInterface
         }
 
         //Compiling!
-        $benchmark = $this->benchmark('compile', $path);
+        $benchmark = $this->benchmark('compiling', $path);
         try {
             $source = $this->supervisor()->createNode($path)->compile();
         } finally {
@@ -175,6 +180,7 @@ class StemplerEngine extends Component implements EngineInterface
      */
     public function setEnvironment(EnvironmentInterface $environment)
     {
+        $this->environment = $environment;
         $this->cache = new StemplerCache($this->files, $environment);
 
         return $this;
@@ -208,7 +214,9 @@ class StemplerEngine extends Component implements EngineInterface
         foreach ($this->modifiers as $index => $modifier) {
             if (!is_object($modifier)) {
                 //Initiating using container
-                $this->modifiers[$index] = $this->container->get($modifier);
+                $this->modifiers[$index] = $this->container->construct($modifier, [
+                    'environment' => $this->environment
+                ]);
             }
         }
 
