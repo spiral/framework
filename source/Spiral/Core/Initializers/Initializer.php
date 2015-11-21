@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Core\ServiceProviders;
+namespace Spiral\Core\Initializers;
 
 /**
  * Provide ability to initiate set of container bindings using simple string form without closures.
@@ -14,8 +14,10 @@ namespace Spiral\Core\ServiceProviders;
  * automatically resolved arguments.
  *
  * You can also declare Initializer classes as singletons while working using spiral container.
+ *
+ * This is almost the same as ServiceProvider.
  */
-abstract class ServiceProvider implements ServiceProviderInterface
+abstract class Initializer implements InitializerInterface
 {
     /**
      * Not bootable by default.

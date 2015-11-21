@@ -11,7 +11,8 @@ use Spiral\Core\Container;
 use Spiral\Core\ContainerInterface;
 
 /**
- * Default spiral container with pre-defined set of core bindings.
+ * Default spiral container with pre-defined set of core bindings (since this is default container
+ * singleton flags are not forced).
  */
 class SpiralContainer extends Container
 {
@@ -27,6 +28,9 @@ class SpiralContainer extends Container
         'Spiral\Core\ConstructorInterface'      => ContainerInterface::class,
         'Spiral\Core\ResolverInterface'         => ContainerInterface::class,
 
+        //Files
+        'Spiral\Files\FilesInterface'           => 'Spiral\Files\FileManager',
+
         //Instrumental bindings
         'Psr\Log\LoggerInterface'               => 'Spiral\Debug\SharedLogger',
         'Monolog\Logger'                        => 'Spiral\Debug\SharedLogger',
@@ -37,9 +41,6 @@ class SpiralContainer extends Container
         //Cache component bindings
         'Spiral\Cache\CacheInterface'           => 'Spiral\Cache\CacheManager',
         'Spiral\Cache\StoreInterface'           => 'Spiral\Cache\CacheStore',
-
-        //Files
-        'Spiral\Files\FilesInterface'           => 'Spiral\Files\FileManager',
 
         //Views
         'Spiral\Views\ViewsInterface'           => 'Spiral\Views\ViewManager',
@@ -63,6 +64,6 @@ class SpiralContainer extends Container
 
         //Http
         'Spiral\Http\HttpInterface'             => 'Spiral\Http\HttpDispatcher',
-        'Spiral\Http\InputInterface'            => 'Spiral\Http\Input\InputManager'
+        'Spiral\Http\InputInterface'            => 'Spiral\Http\Input\InputManager',
     ];
 }

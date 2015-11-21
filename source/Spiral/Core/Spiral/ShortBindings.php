@@ -7,13 +7,18 @@
  */
 namespace Spiral\Core\Spiral;
 
-use Spiral\Core\ServiceProviders\ServiceProvider;
+use Spiral\Core\Initializers\Initializer;
 
 /**
  * Shared components and short bindings.
  */
-class ShortBindings extends ServiceProvider
+class ShortBindings extends Initializer
 {
+    /**
+     * No need to boot, all cached.
+     */
+    const BOOT = false;
+
     /**
      * @var array
      */

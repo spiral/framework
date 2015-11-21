@@ -74,7 +74,9 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     ];
 
     /**
-     * @var DispatcherInterface
+     * Not set until start method. Can be set manually in bootload.
+     *
+     * @var DispatcherInterface|null
      */
     protected $dispatcher = null;
 
