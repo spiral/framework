@@ -112,7 +112,6 @@ class BootloadProcessor
             if ($object instanceof BootloaderInterface) {
                 $initSchema['bindings'] = $object->defineBindings();
                 $initSchema['singletons'] = $object->defineSingletons();
-                $initSchema['injectors'] = $object->defineInjectors();
 
                 $reflection = new \ReflectionClass($object);
 
@@ -151,10 +150,6 @@ class BootloadProcessor
 
         foreach ($initSchema['singletons'] as $aliases => $resolver) {
             $this->container->bindSingleton($aliases, $resolver);
-        }
-
-        foreach ($initSchema['injectors'] as $aliases => $injector) {
-            $this->container->bindInjector($aliases, $injector);
         }
     }
 }

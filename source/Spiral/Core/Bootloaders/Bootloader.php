@@ -44,20 +44,19 @@ abstract class Bootloader implements BootloaderInterface
      *      'class' => [self::class, 'createMethod']
      * ]
      *
+     * You don't need to bind classes which are declared with SINGLETON constant here, spiral will
+     * resolve them as singleton automatically.
+     *
      * @return array
      */
     protected $singletons = [];
 
     /**
-     * Injectors in string/array form, example:
-     *
-     * [
-     *      'class' => 'injector'
-     * ]
-     *
-     * @return array
+     * Constructors are not allowed for bootloaders.
      */
-    protected $injectors = [];
+    final public function __construct()
+    {
+    }
 
     /**
      * {@inheritdoc}
@@ -73,13 +72,5 @@ abstract class Bootloader implements BootloaderInterface
     public function defineSingletons()
     {
         return $this->singletons;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function defineInjectors()
-    {
-        return $this->injectors;
     }
 }

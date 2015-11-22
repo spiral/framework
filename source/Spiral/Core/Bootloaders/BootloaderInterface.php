@@ -16,6 +16,11 @@ namespace Spiral\Core\Bootloaders;
 interface BootloaderInterface
 {
     /**
+     * Constructors are not allowed for bootloaders.
+     */
+    public function __construct();
+
+    /**
      * Bindings in string/array form, example:
      *
      * [
@@ -35,18 +40,10 @@ interface BootloaderInterface
      *      'class' => [self::class, 'createMethod']
      * ]
      *
+     * You don't need to bind classes which are declared with SINGLETON constant here, spiral will
+     * resolve them as singleton automatically.
+     *
      * @return array
      */
     public function defineSingletons();
-
-    /**
-     * Injectors in string/array form, example:
-     *
-     * [
-     *      'class' => 'injector'
-     * ]
-     *
-     * @return array
-     */
-    public function defineInjectors();
 }
