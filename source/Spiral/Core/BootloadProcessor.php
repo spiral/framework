@@ -24,7 +24,7 @@ class BootloadProcessor
      *
      * @var array
      */
-    private $initializers = [];
+    private $bootloaders = [];
 
     /**
      * @invisible
@@ -33,12 +33,12 @@ class BootloadProcessor
     private $container = null;
 
     /**
-     * @param array              $initializers
+     * @param array              $bootloaders
      * @param ContainerInterface $container
      */
-    public function __construct(array $initializers, ContainerInterface $container)
+    public function __construct(array $bootloaders, ContainerInterface $container)
     {
-        $this->initializers = $initializers;
+        $this->bootloaders = $bootloaders;
         $this->container = $container;
     }
 
@@ -53,7 +53,7 @@ class BootloadProcessor
             $schema = $memory->loadData(static::MEMORY);
         }
 
-        if (empty($schema) || $schema['snapshot'] != $this->initializers) {
+        if (empty($schema) || $schema['snapshot'] != $this->bootloaders) {
             //Schema expired or empty
             $schema = $this->generateSchema();
 
@@ -75,13 +75,13 @@ class BootloadProcessor
      */
     protected function schematicBootload(array $schema)
     {
-        foreach ($schema['initializers'] as $initializer => $options) {
+        foreach ($schema['bootloaders'] as $bootloader => $options) {
             if (array_key_exists('bindings', $options)) {
                 $this->initBindings($options);
             }
 
             if ($options['init']) {
-                $object = $this->container->get($initializer);
+                $object = $this->container->get($bootloader);
 
                 //Booting
                 if ($options['boot']) {
@@ -100,14 +100,14 @@ class BootloadProcessor
     protected function generateSchema()
     {
         $schema = [
-            'snapshot'     => $this->initializers,
-            'initializers' => []
+            'snapshot'    => $this->bootloaders,
+            'bootloaders' => []
         ];
 
-        foreach ($this->initializers as $initializer) {
+        foreach ($this->bootloaders as $bootloaders) {
             $initSchema = ['init' => true, 'boot' => false];
 
-            $object = $this->container->get($initializer);
+            $object = $this->container->get($bootloaders);
 
             if ($object instanceof BootloaderInterface) {
                 $initSchema['bindings'] = $object->defineBindings();
@@ -131,7 +131,7 @@ class BootloadProcessor
                 $boot->invokeArgs($object, $this->container->resolveArguments($boot));
             }
 
-            $schema['initializers'][$initializer] = $initSchema;
+            $schema['bootloaders'][$bootloaders] = $initSchema;
         }
 
         return $schema;
@@ -140,15 +140,15 @@ class BootloadProcessor
     /**
      * Bind declared bindings.
      *
-     * @param array $initSchema
+     * @param array $bootSchema
      */
-    protected function initBindings(array $initSchema)
+    protected function initBindings(array $bootSchema)
     {
-        foreach ($initSchema['bindings'] as $aliases => $resolver) {
+        foreach ($bootSchema['bindings'] as $aliases => $resolver) {
             $this->container->bind($aliases, $resolver);
         }
 
-        foreach ($initSchema['singletons'] as $aliases => $resolver) {
+        foreach ($bootSchema['singletons'] as $aliases => $resolver) {
             $this->container->bindSingleton($aliases, $resolver);
         }
     }
