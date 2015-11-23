@@ -23,7 +23,7 @@ use Spiral\Debug\BenchmarkerInterface;
 use Spiral\Debug\Debugger;
 use Spiral\Debug\LogsInterface;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Tokenizer\LocatorInterface;
+use Spiral\Tokenizer\ClassLocatorInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -93,7 +93,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $memory = null;
 
     /**
-     * @var LocatorInterface
+     * @var ClassLocatorInterface
      */
     protected $locator = null;
 
@@ -103,16 +103,16 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $debugger = null;
 
     /**
-     * @param ContainerInterface   $container
-     * @param HippocampusInterface $memory
-     * @param LocatorInterface     $locator
-     * @param Debugger             $debugger
-     * @param Loader               $loader
+     * @param ContainerInterface    $container
+     * @param HippocampusInterface  $memory
+     * @param ClassLocatorInterface $locator
+     * @param Debugger              $debugger
+     * @param Loader                $loader
      */
     public function __construct(
         ContainerInterface $container,
         HippocampusInterface $memory,
-        LocatorInterface $locator,
+        ClassLocatorInterface $locator,
         Debugger $debugger,
         Loader $loader
     ) {
