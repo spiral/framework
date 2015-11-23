@@ -8,6 +8,7 @@
 namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
+use Spiral\Database\DatabaseManager;
 use Spiral\Database\Exceptions\DatabaseException;
 use Spiral\Database\Injections\FragmentInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -48,12 +49,12 @@ class DescribeCommand extends Command
     ];
 
     /**
-     * Perform command.
+     * @param DatabaseManager $dbal
      */
-    public function perform()
+    public function perform(DatabaseManager $dbal)
     {
         //Database
-        $database = $this->dbal->database($this->option('database'));
+        $database = $dbal->database($this->option('database'));
 
         //Database schema
         $schema = $database->table($this->argument('table'))->schema();

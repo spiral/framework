@@ -72,7 +72,7 @@ class SessionStarter implements MiddlewareInterface
         $scope = $this->container->replace(get_class($this->session), $this->session);
         try {
             /**
-             * Debug: this method opens SessionInterface scope.
+             * Debug: this method opens [SessionStore] scope.
              */
             $response = $next($request, $response);
 

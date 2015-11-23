@@ -8,6 +8,7 @@
 namespace Spiral\Commands;
 
 use Spiral\Console\Command;
+use Spiral\Core\DirectoriesInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
@@ -43,18 +44,18 @@ class ServerCommand extends Command
     ];
 
     /**
-     * Perform command.
+     * @param DirectoriesInterface $directories
      */
-    public function perform()
+    public function perform(DirectoriesInterface $directories)
     {
         $host = $this->argument('host') . ':' . $this->option('port');
 
-        $this->writeln("<info>Spiral Development server started at <comment>{$host}</comment></info>");
+        $this->writeln("<info>Development server started at <comment>{$host}</comment></info>");
         $this->writeln("Press <comment>Ctrl-C</comment> to quit.");
 
         $process = new Process(
-            '"' . PHP_BINARY . '" -S ' . $host . ' "' . directory('framework') . '../server.php"',
-            directory('public'),
+            '"' . PHP_BINARY . '" -S ' . $host . ' "' . $directories->directory('framework') . '../server.php"',
+            $directories->directory('public'),
             null,
             null,
             $this->option('timeout')
@@ -63,7 +64,9 @@ class ServerCommand extends Command
         $process->run(function ($type, $data) {
             if ($type != Process::ERR) {
                 //First character contains request type, second is space
-                ($data[0] == 'S' || $this->isVerbosity()) && $this->writeln(substr($data, 2));
+                if ($data[0] == 'S' || $this->isVerbosity()) {
+                    $this->writeln(substr($data, 2));
+                }
             }
         });
     }

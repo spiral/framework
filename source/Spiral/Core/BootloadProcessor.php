@@ -15,7 +15,7 @@ use Spiral\Core\Bootloaders\BootloaderInterface;
 class BootloadProcessor
 {
     /**
-     * Memory section.
+     * Memory section. Little bit hardcoded at this moment.
      */
     const MEMORY = 'bootloading';
 

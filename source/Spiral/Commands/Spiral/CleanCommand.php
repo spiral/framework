@@ -8,25 +8,23 @@
 namespace Spiral\Commands\Spiral;
 
 use Spiral\Console\Command;
-use Spiral\Core\BootloadProcessor;
-use Spiral\Core\Core;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 
 /**
- * Reload application boot-loading list.
+ * Remove every file in cache directory or emulate removal.
  */
-class ReloadCommand extends Command
+class CleanCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
-    protected $name = 'app:reload';
+    protected $name = 'app:clean';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Reload application boot-loading list.';
+    protected $description = 'Clean application runtime cache.';
 
     /**
      * @param FilesInterface       $files
@@ -42,7 +40,18 @@ class ReloadCommand extends Command
             return;
         }
 
-        $files->delete($cacheDirectory . BootloadProcessor::MEMORY . Core::EXTENSION);
-        $this->writeln("<info>Bootload cache has been cleared.</info>");
+        $this->isVerbosity() && $this->writeln("<info>Cleaning application runtime cache:</info>");
+
+        foreach ($files->getFiles($cacheDirectory) as $filename) {
+            $files->delete($filename);
+
+            if ($this->isVerbosity()) {
+                $this->writeln(
+                    $files->relativePath($filename, $cacheDirectory)
+                );
+            }
+        }
+
+        $this->writeln("<info>Runtime cache has been cleared.</info>");
     }
 }

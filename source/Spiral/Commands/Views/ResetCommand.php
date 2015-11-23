@@ -8,6 +8,7 @@
 namespace Spiral\Commands\Views;
 
 use Spiral\Console\Command;
+use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
 
 /**
@@ -26,11 +27,12 @@ class ResetCommand extends Command
     protected $description = 'Clear view cache for all environments.';
 
     /**
-     * @param ViewsConfig $config
+     * @param ViewsConfig    $config
+     * @param FilesInterface $files
      */
-    public function perform(ViewsConfig $config)
+    public function perform(ViewsConfig $config, FilesInterface $files)
     {
-        if (!$this->files->exists($config->cacheDirectory())) {
+        if (!$files->exists($config->cacheDirectory())) {
             $this->writeln("Cache directory is missing, no cache to be cleaned.");
 
             return;
@@ -38,15 +40,18 @@ class ResetCommand extends Command
 
         $this->isVerbosity() && $this->writeln("<info>Clearing view cache:</info>");
 
-        $cachedViews = $this->files->getFiles($config->cacheDirectory());
+        $cachedViews = $files->getFiles($config->cacheDirectory());
         foreach ($cachedViews as $filename) {
-            $this->files->delete($filename);
+            $files->delete($filename);
             if ($this->isVerbosity()) {
-                $this->writeln($this->files->relativePath($filename, $config->cacheDirectory()));
+                $this->writeln($files->relativePath($filename, $config->cacheDirectory()));
             }
         }
 
-        (empty($filename) && $this->isVerbosity()) && $this->writeln("No cached views were found.");
+        if (empty($filename) && $this->isVerbosity()) {
+            $this->writeln("No cached views were found.");
+        }
+
         $this->writeln("<info>Cache is cleared.</info>");
     }
 }

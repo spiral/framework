@@ -5,14 +5,12 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Core\Spiral;
-
-use Spiral\Core\Bootloaders\Bootloader;
+namespace Spiral\Core\Bootloaders;
 
 /**
  * Shared components and short bindings.
  */
-class ShortComponents extends Bootloader
+class SharedBindings extends Bootloader
 {
     /**
      * No need to boot, all cached.
@@ -44,5 +42,19 @@ class ShortComponents extends Bootloader
         'dbal'      => 'Spiral\Database\DatabaseManager',
         'orm'       => 'Spiral\ORM\ORM',
         'odm'       => 'Spiral\ODM\ODM',
+
+        //Entities
+        'encrypter' => 'Spiral\Encrypter\Encrypter',
+        'cache'     => 'Spiral\Cache\CacheStore',
+        'db'        => 'Spiral\Database\Entities\Database',
+        'mongo'     => 'Spiral\ODM\Entities\MongoDatabase',
+
+        //Scope dependent
+        'session'   => 'Spiral\Session\SessionStore',
+        'input'     => 'Spiral\Http\Input\InputManager',
+        'cookies'   => 'Spiral\Http\Cookies\CookieManager',
+        'router'    => 'Spiral\Http\Routing\Router',
+        'request'   => 'Psr\Http\Message\ServerRequestInterface',
+        'response'  => 'Psr\Http\Message\ResponseInterface',
     ];
 }

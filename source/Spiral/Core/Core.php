@@ -37,7 +37,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     /**
      * Set to false if you don't want spiral to cache autoloading list.
      */
-    const CACHE_BOOTLOADERS = true;
+    const MEMORIZE_BOOTLOADERS = true;
 
     /**
      * Extension for memory files.
@@ -335,6 +335,22 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     }
 
     /**
+     * Bootload all registered bootloader using BootloadProcessor.
+     */
+    protected function bootload()
+    {
+        //Bootloading all needed components and extensions
+        $this->bootloader = new BootloadProcessor($this->load, $this->container);
+
+        //We are providing instance of HippocampusInterface
+        if (static::MEMORIZE_BOOTLOADERS) {
+            $this->bootloader->bootload($this);
+        } else {
+            $this->bootloader->bootload();
+        }
+    }
+
+    /**
      * Shared container instance (needed for helpers and etc).
      *
      * @return InteropContainer
@@ -403,15 +419,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
             set_exception_handler([$spiral, 'handleException']);
         }
 
-        //Bootloading all needed components and extensions
-        $spiral->bootloader = new BootloadProcessor($spiral->load, $container);
-
-        //We are providing instance of HippocampusInterface
-        if ($spiral::CACHE_BOOTLOADERS) {
-            $spiral->bootloader->bootload($spiral);
-        } else {
-            $spiral->bootloader->bootload();
-        }
+        $spiral->bootload();
 
         //Bootstrapping our application
         $spiral->bootstrap();

@@ -9,6 +9,7 @@ namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
 use Spiral\Database\Configs\DatabasesConfig;
+use Spiral\Database\DatabaseManager;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -41,8 +42,9 @@ class ListCommand extends Command
 
     /**
      * @param DatabasesConfig $config
+     * @param DatabaseManager $dbal
      */
-    public function perform(DatabasesConfig $config)
+    public function perform(DatabasesConfig $config, DatabaseManager $dbal)
     {
         if ($this->argument('db')) {
             $databases = [$this->argument('db')];
@@ -68,7 +70,7 @@ class ListCommand extends Command
         ]);
 
         foreach ($databases as $database) {
-            $database = $this->dbal->database($database);
+            $database = $dbal->database($database);
 
             $driver = $database->driver();
 

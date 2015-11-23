@@ -15,7 +15,7 @@ namespace Spiral\Core\Bootloaders;
  *
  * You can also declare Initializer classes as singletons while working using spiral container.
  *
- * This is almost the same as ServiceProvider.
+ * This is almost the same as ServiceProvider in Laravel.
  */
 abstract class Bootloader implements BootloaderInterface
 {
@@ -50,13 +50,6 @@ abstract class Bootloader implements BootloaderInterface
      * @return array
      */
     protected $singletons = [];
-
-    /**
-     * Constructors are not allowed for bootloaders.
-     */
-    final public function __construct()
-    {
-    }
 
     /**
      * {@inheritdoc}

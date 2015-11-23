@@ -78,10 +78,17 @@ class Container extends Component implements ContainerInterface
     public function construct($class, $parameters = [], $context = null)
     {
         if (!isset($this->bindings[$class])) {
+            if (!class_exists($class)) {
+                throw new InstanceException("Undefined class or binding '{$class}'.");
+            }
+
             //OK, we can create class by ourselves
             $instance = $this->createInstance($class, $parameters, $context, $reflector);
 
             /**
+             * Only for classes which are constructed automatically, SINGLETON logic can be rewritten
+             * or disabled using custom binding or factory.
+             *
              * @var \ReflectionClass $reflector
              */
             if (

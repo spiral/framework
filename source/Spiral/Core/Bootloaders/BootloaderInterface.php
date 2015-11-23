@@ -16,11 +16,6 @@ namespace Spiral\Core\Bootloaders;
 interface BootloaderInterface
 {
     /**
-     * Constructors are not allowed for bootloaders.
-     */
-    public function __construct();
-
-    /**
      * Bindings in string/array form, example:
      *
      * [

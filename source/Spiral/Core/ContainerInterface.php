@@ -39,15 +39,6 @@ interface ContainerInterface extends ConstructorInterface, ResolverInterface, In
     public function bindSingleton($alias, $resolver);
 
     /**
-     * Injector parameter must represent class name or binding to class which implements
-     * InjectorInterface and support given class injections.
-     *
-     * @param string $class
-     * @param string $injector
-     */
-    public function bindInjector($class, $injector);
-
-    /**
      * Replace existed binding and return payload (implementation specific data) of previous
      * binding, previous binding can be restored using restore() method and such payload.
      *
