@@ -340,13 +340,12 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     protected function bootload()
     {
         //Bootloading all needed components and extensions
-        $this->bootloader = new BootloadProcessor($this->load, $this->container);
+        $this->bootloader = new BootloadProcessor($this->load, $this);
 
-        //We are providing instance of HippocampusInterface
         if (static::MEMORIZE_BOOTLOADERS) {
-            $this->bootloader->bootload($this);
+            $this->bootloader->bootload($this->container, 'bootloading');
         } else {
-            $this->bootloader->bootload();
+            $this->bootloader->bootload($this->container);
         }
     }
 
