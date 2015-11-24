@@ -9,6 +9,7 @@ namespace Spiral\Translator\Exporters;
 
 use Spiral\Core\Component;
 use Spiral\Files\FilesInterface;
+use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Exceptions\ExporterException;
 use Spiral\Translator\ExporterInterface;
 use Spiral\Translator\Translator;
@@ -34,6 +35,11 @@ abstract class AbstractExporter extends Component implements ExporterInterface
     protected $bundles = [];
 
     /**
+     * @var TranslatorConfig
+     */
+    protected $config = null;
+
+    /**
      * @var Translator
      */
     protected $translator = null;
@@ -44,11 +50,18 @@ abstract class AbstractExporter extends Component implements ExporterInterface
     protected $files = null;
 
     /**
-     * @param Translator     $translator
-     * @param FilesInterface $files
+     * AbstractExporter constructor.
+     *
+     * @param TranslatorConfig $config
+     * @param Translator       $translator
+     * @param FilesInterface   $files
      */
-    public function __construct(Translator $translator, FilesInterface $files)
-    {
+    public function __construct(
+        TranslatorConfig $config,
+        Translator $translator,
+        FilesInterface $files
+    ) {
+        $this->config = $config;
         $this->translator = $translator;
         $this->files = $files;
     }
@@ -58,18 +71,18 @@ abstract class AbstractExporter extends Component implements ExporterInterface
      */
     public function load($language, $prefix = '')
     {
-        if (!isset($this->translator->config()['languages'][$language])) {
+        if (!$this->config->hasLanguage($language)) {
             throw new ExporterException("Unable to export language '{$language}', no presets found.");
         }
 
         $this->language = $language;
         $this->bundles = $this->loadBundles($language, $prefix);
 
-        if ($this->language == $this->translator->config()['default']) {
+        if ($this->language == $this->config->defaultLanguage()) {
             return $this;
         }
 
-        $defaultBundles = $this->loadBundles($this->translator->config()['default'], $prefix);
+        $defaultBundles = $this->loadBundles($this->config->defaultLanguage(), $prefix);
         foreach ($defaultBundles as $bundle => $data) {
             if (!isset($this->bundles[$bundle])) {
                 $this->bundles[$bundle] = [];
@@ -121,7 +134,7 @@ abstract class AbstractExporter extends Component implements ExporterInterface
     private function loadBundles($language, $prefix = '')
     {
         $bundles = $this->files->getFiles(
-            $this->translator->config()['languages'][$language]['directory']
+            $this->config->languageOptions($language)['directory']
         );
 
         $result = [];

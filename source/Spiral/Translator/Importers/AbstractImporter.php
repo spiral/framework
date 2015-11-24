@@ -10,6 +10,7 @@ namespace Spiral\Translator\Importers;
 use Spiral\Core\Component;
 use Spiral\Core\HippocampusInterface;
 use Spiral\Files\FilesInterface;
+use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Exceptions\ImporterException;
 use Spiral\Translator\ImporterInterface;
 use Spiral\Translator\Translator;
@@ -34,6 +35,11 @@ abstract class AbstractImporter extends Component implements ImporterInterface
     protected $bundles = [];
 
     /**
+     * @var TranslatorConfig
+     */
+    protected $config = null;
+
+    /**
      * @var Translator
      */
     protected $translator = null;
@@ -49,15 +55,18 @@ abstract class AbstractImporter extends Component implements ImporterInterface
     protected $files = null;
 
     /**
+     * @param TranslatorConfig     $config
      * @param Translator           $translator
      * @param HippocampusInterface $memory
      * @param FilesInterface       $files
      */
     public function __construct(
+        TranslatorConfig $config,
         Translator $translator,
         HippocampusInterface $memory,
         FilesInterface $files
     ) {
+        $this->config = $config;
         $this->translator = $translator;
         $this->memory = $memory;
         $this->files = $files;
@@ -105,13 +114,14 @@ abstract class AbstractImporter extends Component implements ImporterInterface
             throw new ImporterException("Unable to perform bundles import, no language detected.");
         }
 
-        if (!isset($this->translator->config()['languages'][$this->language])) {
+        if (!$this->config->hasLanguage($this->language)) {
             throw new ImporterException(
                 "Unable to import language '{$this->language}', no presets found."
             );
         }
 
-        $directory = $this->translator->config()['languages'][$this->language]['directory'];
+        $directory = $this->config->languageOptions($this->language)['directory'];
+
         foreach ($this->bundles as $bundle => $strings) {
             if (!$replace && !empty($existed = $this->memory->loadData($bundle, $directory))) {
                 $strings = $strings + $existed;

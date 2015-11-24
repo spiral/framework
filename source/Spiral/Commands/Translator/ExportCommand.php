@@ -49,13 +49,8 @@ class ExportCommand extends Command
      */
     public function perform(GetTextExporter $exporter)
     {
-        $this->writeln(
-            "Exporting '<comment>{$this->option('language')}</comment>' language bundles to PO file."
-        );
-
-        $exporter->load($this->option('language'), $this->option('prefix'))->export(
-            $this->argument('filename')
-        );
+        $exporter->load($this->option('language'), $this->option('prefix'));
+        $exporter->export($this->argument('filename'));
 
         $this->writeln("<info>Export completed:</info> {$this->argument('filename')}");
     }

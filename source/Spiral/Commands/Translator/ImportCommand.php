@@ -48,19 +48,13 @@ class ImportCommand extends Command
      */
     public function perform(GetTextImporter $importer)
     {
-        $this->writeln(
-            "Importing PO file '<comment>{$this->argument('filename')}</comment>'."
-        );
-
         $importer->open($this->argument('filename'));
+
         if ($this->option('language') != 'auto') {
             $importer->setLanguage($this->option('language'));
         }
 
         $importer->import();
-
-        $this->writeln(
-            "<info>Import completed, target language '<comment>{$importer->getLanguage()}</comment>'.</info>"
-        );
+        $this->writeln("<info>Import completed (<comment>{$importer->getLanguage()}</comment>).</info>");
     }
 }
