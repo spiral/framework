@@ -11,7 +11,7 @@ use Spiral\Database\Entities\Driver;
 use Spiral\Models\EntityInterface;
 use Spiral\ODM\DocumentEntity;
 use Spiral\ODM\ODM;
-use Spiral\ORM\ActiveAccessorInterface;
+use Spiral\ORM\RecordAccessorInterface;
 
 /**
  * JsonDocument utilizes abilities of ODM AbstractDocument and uses it to represent json values
@@ -24,7 +24,7 @@ use Spiral\ORM\ActiveAccessorInterface;
  * @see http://www.postgresql.org/docs/9.3/static/datatype-json.html
  * @see http://www.postgresql.org/docs/9.3/static/functions-json.html
  */
-abstract class JsonDocument extends DocumentEntity implements ActiveAccessorInterface
+abstract class JsonDocument extends DocumentEntity implements RecordAccessorInterface
 {
     /**
      * Let's force solid state... just in case.

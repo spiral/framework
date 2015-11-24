@@ -15,9 +15,9 @@ use Spiral\Files\Streams\StreamableInterface;
 use Spiral\Models\DataEntity;
 use Spiral\Models\EntityInterface;
 use Spiral\Models\Exceptions\StorageAccessorException;
-use Spiral\ODM\AtomicAccessorInterface;
 use Spiral\ODM\Document;
-use Spiral\ORM\ActiveAccessorInterface;
+use Spiral\ODM\DocumentAccessorInterface;
+use Spiral\ORM\RecordAccessorInterface;
 use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Exceptions\BucketException;
 use Spiral\Storage\Exceptions\ServerException;
@@ -40,8 +40,8 @@ use Spiral\Storage\StorageInterface;
  * @method static replace($destination)
  */
 class StorageAccessor extends Component implements
-    AtomicAccessorInterface,
-    ActiveAccessorInterface,
+    RecordAccessorInterface,
+    DocumentAccessorInterface,
     StreamableInterface
 {
     /**
@@ -333,7 +333,7 @@ class StorageAccessor extends Component implements
         }
 
         if (!empty($this->parent) && $this->parent instanceof Component) {
-            $this->storage = $this->parent->container()->get(StorageInterface::class);
+            return $this->storage = $this->parent->container()->get(StorageInterface::class);
         }
 
         //Only when global container is set and no parent container specified
