@@ -8,7 +8,6 @@
 
 namespace Spiral\Stempler;
 
-use Spiral\Core\Component;
 use Spiral\Stempler\Behaviours\BlockBehaviour;
 use Spiral\Stempler\Behaviours\ExtendsBehaviour;
 use Spiral\Stempler\Behaviours\IncludeBehaviour;
@@ -18,7 +17,7 @@ use Spiral\Stempler\Importers\Stopper;
 /**
  * Supervisors used to control node behaviours and syntax.
  */
-class Supervisor extends Component implements SupervisorInterface
+class Supervisor  implements SupervisorInterface
 {
     /**
      * Used to create unique node names when required.

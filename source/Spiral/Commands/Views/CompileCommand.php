@@ -63,7 +63,7 @@ class CompileCommand extends Command
                     $this->isVerbosity() && $this->write("<info>ok</info>");
                 } catch (\Exception $exception) {
                     if ($this->isVerbosity()) {
-                        $this->write("<fg=red>error - {$exception->getMessage()}</fg=red>");
+                        $this->write("<fg=red>error: {$exception->getMessage()}</fg=red>");
                     }
                 } finally {
                     $elapsed = number_format($this->benchmark($benchmark) * 1000);
