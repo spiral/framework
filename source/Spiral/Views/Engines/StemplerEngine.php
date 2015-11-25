@@ -18,10 +18,10 @@ use Spiral\Stempler\SyntaxInterface;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Stempler\StemplerCache;
 use Spiral\Views\Engines\Stempler\StemplerView;
+use Spiral\Views\Engines\Traits\ModifiersTrait;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
 use Spiral\Views\Loaders\ModifiableLoader;
-use Spiral\Views\ModifierInterface;
 use Spiral\Views\ProcessorInterface;
 
 /**
@@ -32,26 +32,7 @@ class StemplerEngine extends Component implements EngineInterface
     /**
      * Saturation of files.
      */
-    use SaturateTrait, BenchmarkTrait;
-
-    /**
-     * Modifier class names.
-     *
-     * @var array|ModifierInterface[]
-     */
-    protected $modifiers = [];
-
-    /**
-     * Processor class names.
-     *
-     * @var array|ProcessorInterface[]
-     */
-    protected $processors = [];
-
-    /**
-     * @var EnvironmentInterface
-     */
-    protected $environment = null;
+    use SaturateTrait, BenchmarkTrait, ModifiersTrait;
 
     /**
      * @var StemplerCache
@@ -72,12 +53,6 @@ class StemplerEngine extends Component implements EngineInterface
      * @var FilesInterface
      */
     protected $files = null;
-
-    /**
-     * @invisible
-     * @var ContainerInterface
-     */
-    protected $container = null;
 
     /**
      * @param LoaderInterface      $loader
@@ -103,10 +78,10 @@ class StemplerEngine extends Component implements EngineInterface
 
         $this->syntax = new WooSyntax(!empty($options['strict']));
 
-        $this->setLoader($loader)->setEnvironment($environment);
-
+        $this->setEnvironment($environment);
         $this->modifiers = $modifiers;
         $this->processors = $processors;
+        $this->setLoader($loader);
     }
 
     /**
@@ -170,6 +145,11 @@ class StemplerEngine extends Component implements EngineInterface
      */
     public function setLoader(LoaderInterface $loader)
     {
+        if (!empty($this->modifiers)) {
+            //Let's prepare source before giving it to Stempler
+            $loader = new ModifiableLoader($loader, $this->getModifiers());
+        }
+
         $this->loader = $loader;
 
         return $this;
@@ -193,34 +173,8 @@ class StemplerEngine extends Component implements EngineInterface
      */
     protected function supervisor()
     {
-        $loader = $this->loader;
-
-        if (!empty($this->modifiers)) {
-            //Let's prepare source before giving it to Stempler
-            $loader = new ModifiableLoader($loader, $this->getModifiers());
-        }
-
         //Prepare loader
-        return new Supervisor($loader, $this->syntax);
-    }
-
-    /**
-     * Initiate set of modifiers.
-     *
-     * @return ModifierInterface[]
-     */
-    protected function getModifiers()
-    {
-        foreach ($this->modifiers as $index => $modifier) {
-            if (!is_object($modifier)) {
-                //Initiating using container
-                $this->modifiers[$index] = $this->container->construct($modifier, [
-                    'environment' => $this->environment
-                ]);
-            }
-        }
-
-        return $this->modifiers;
+        return new Supervisor($this->loader, $this->syntax);
     }
 
     /**

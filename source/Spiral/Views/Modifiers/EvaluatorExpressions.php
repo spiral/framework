@@ -34,11 +34,11 @@ class EvaluatorExpressions implements ModifierInterface
      */
     protected $expressions = [
         'evaluatorVariable' => [
-            'pattern'  => '/(?:(\/\/)\s*)?evaluatorVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
+            'pattern'  => '/(?:(\/\/)\s*)?\$this->evaluatorVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'evaluatorVariable']
         ],
         'runtimeVariable'   => [
-            'pattern'  => '/(?:(\/\/)\s*)?runtimeVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
+            'pattern'  => '/(?:(\/\/)\s*)?\$this->runtimeVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'runtimeVariable']
         ]
     ];
@@ -102,7 +102,7 @@ class EvaluatorExpressions implements ModifierInterface
         $lines = [
             $this->extractCode($tempVariable, $matches[3]),
             //This will generate runtime code
-            "echo '<?php \${$matches[2]} = ', \${$tempVariable}, '?>';"
+            "echo '<?php \${$matches[2]} = ', \${$tempVariable}, '; ?>';"
         ];
 
         return join("\n", $lines);

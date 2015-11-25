@@ -1,1 +1,0 @@
-<tag class="tag-b" name="${name}">${context}</tag>

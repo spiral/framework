@@ -1,1 +1,0 @@
-<tag class="class ${class}" node:attributes>${context}</tag>
