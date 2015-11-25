@@ -20,42 +20,42 @@ class FieldInspection extends Component
      *
      * @var string
      */
-    protected $name = '';
+    private $name = '';
 
     /**
      * Field type.
      *
      * @var string
      */
-    protected $type = '';
+    private $type = '';
 
     /**
      * Is field fillable.
      *
      * @var bool
      */
-    protected $fillable = true;
+    private $fillable = true;
 
     /**
      * Is field hidden from public data.
      *
      * @var bool
      */
-    protected $hidden = false;
+    private $hidden = false;
 
     /**
      * Field has filters or accessors.
      *
      * @var bool
      */
-    protected $filtered = false;
+    private $filtered = false;
 
     /**
      * Field is validated.
      *
      * @var bool
      */
-    protected $validated = false;
+    private $validated = false;
 
     /**
      * @var Inspector

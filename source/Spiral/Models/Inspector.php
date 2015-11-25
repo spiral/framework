@@ -9,8 +9,7 @@
 namespace Spiral\Models;
 
 use Spiral\Core\Component;
-use Spiral\Core\ConfiguratorInterface;
-use Spiral\Core\Traits\ConfigurableTrait;
+use Spiral\Models\Configs\InspectionsConfig;
 use Spiral\Models\Exceptions\InspectorException;
 use Spiral\Models\Inspections\EntityInspection;
 use Spiral\Models\Reflections\ReflectionEntity;
@@ -22,14 +21,9 @@ use Spiral\Models\Reflections\ReflectionEntity;
 class Inspector extends Component
 {
     /**
-     * Every inspector has configuration.
+     * @var InspectionsConfig
      */
-    use ConfigurableTrait;
-
-    /**
-     * Inspections configuration section.
-     */
-    const CONFIG = 'inspections';
+    protected $config = null;
 
     /**
      * @var EntityInspection[]
@@ -37,17 +31,20 @@ class Inspector extends Component
     protected $inspections = [];
 
     /**
-     * @param ConfiguratorInterface $configurator
-     * @param ReflectionEntity[]    $entities Schemas to be inspected.
+     * @param InspectionsConfig  $config
+     * @param ReflectionEntity[] $reflections Schemas to be inspected.
      */
-    public function __construct(ConfiguratorInterface $configurator, array $entities = [])
+    public function __construct(InspectionsConfig $config, array $reflections = [])
     {
-        $this->config = $configurator->getConfig(static::CONFIG);
+        $this->config = $config;
 
-        foreach ($entities as $entity) {
-            if (!$entity->isAbstract()) {
-                $this->inspections[$entity->getName()] = new EntityInspection($this, $entity);
+        foreach ($reflections as $entity) {
+            if ($entity->isAbstract()) {
+                continue;
             }
+
+            $name = $this->normalizeClass($entity->getName());
+            $this->inspections[$name] = new EntityInspection($this, $entity);
         }
     }
 
@@ -59,7 +56,7 @@ class Inspector extends Component
      */
     public function isBlacklisted($name)
     {
-        return in_array($name, $this->config['blacklist']);
+        return in_array($name, $this->config->blacklistKeywords());
     }
 
     /**
@@ -78,6 +75,7 @@ class Inspector extends Component
      */
     public function inspection($class)
     {
+        $class = $this->normalizeClass($class);
         if (!isset($this->inspections[$class])) {
             throw new InspectorException("Undefined entity class '{$class}'.");
         }
@@ -111,5 +109,14 @@ class Inspector extends Component
         }
 
         return $rank / $this->countInspections();
+    }
+
+    /**
+     * @param string $class
+     * @return string
+     */
+    private function normalizeClass($class)
+    {
+        return str_replace('/', '\\', strtolower($class));
     }
 }

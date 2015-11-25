@@ -5,9 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Commands;
+namespace Spiral\Commands\Spiral;
 
 use Spiral\Console\Command;
+use Spiral\Console\Configs\ConsoleConfig;
+use Spiral\Console\ConsoleDispatcher;
 
 /**
  * Execute sequence of commands declared on console component configuration. Usually used to run
@@ -23,18 +25,21 @@ class UpdateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Perform application schemas and cache update.';
+    protected $description = 'Application schemas and cache update.';
 
     /**
-     * Perform command.
+     * @param ConsoleConfig     $config
+     * @param ConsoleDispatcher $dispatcher
      */
-    public function perform()
+    public function perform(ConsoleConfig $config, ConsoleDispatcher $dispatcher)
     {
-        foreach ($this->console->config()['updateSequence'] as $command => $options) {
+        foreach ($config->updateSequence() as $command => $options) {
             if (!empty($options['header'])) {
                 $this->writeln($options['header']);
             }
-            $this->console->command($command, $options['options'], $this->output);
+
+            $dispatcher->command($command, $options['options'], $this->output);
+
             if (!empty($options['footer'])) {
                 $this->writeln($options['footer']);
             }

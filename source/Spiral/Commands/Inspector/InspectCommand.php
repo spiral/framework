@@ -4,12 +4,14 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
-
  */
 namespace Spiral\Commands\Inspector;
 
 use Spiral\Console\Command;
+use Spiral\Models\Configs\InspectionsConfig;
 use Spiral\Models\Inspector;
+use Spiral\ODM\ODM;
+use Spiral\ORM\ORM;
 
 /**
  * Provides inspection of ORM and ODM models to check unhidden fields, missed validations and etc.
@@ -19,12 +21,12 @@ class InspectCommand extends Command
     /**
      * Visual constants.
      */
-    const YES = 'yes';
-    const NO = 'no';
-    const RED_YES = '<fg=red>yes</fg=red>';
-    const RED_NO = '<fg=red>no</fg=red>';
+    const YES       = 'yes';
+    const NO        = 'no';
+    const RED_YES   = '<fg=red>yes</fg=red>';
+    const RED_NO    = '<fg=red>no</fg=red>';
     const GREEN_YES = '<fg=green>yes</fg=green>';
-    const GREEN_NO = '<fg=green>no</fg=green>';
+    const GREEN_NO  = '<fg=green>no</fg=green>';
 
     /**
      * Description for different rank levels, rank level multiplied by 100 in this table.
@@ -50,11 +52,13 @@ class InspectCommand extends Command
     protected $description = 'Inspect ORM and ODM models to locate unprotected field and rules.';
 
     /**
-     * Perform command.
+     * @param InspectionsConfig $config
+     * @param ODM               $odm
+     * @param ORM               $orm
      */
-    public function perform()
+    public function perform(InspectionsConfig $config, ODM $odm, ORM $orm)
     {
-        $inspector = $this->getInspector();
+        $inspector = $this->createInspector($config, $odm, $orm);
 
         if ($this->isVerbosity()) {
             $table = $this->tableHelper(['Entity', 'Rank', 'Fields', 'Fillable', 'Validated']);
@@ -102,27 +106,28 @@ class InspectCommand extends Command
     /**
      * Create instance of inspector associated with ORM and ODM entities.
      *
+     * @param InspectionsConfig $config
+     * @param ODM               $odm
+     * @param ORM               $orm
      * @return Inspector
      */
-    protected function getInspector()
+    protected function createInspector(InspectionsConfig $config, ODM $odm, ORM $orm)
     {
         if ($this->container->has(\Spiral\ODM\Entities\SchemaBuilder::class)) {
             $odmBuilder = $this->container->get(\Spiral\ODM\Entities\SchemaBuilder::class);
         } else {
-            $odmBuilder = $this->odm->schemaBuilder();
+            $odmBuilder = $odm->schemaBuilder();
         }
 
         if ($this->container->has(\Spiral\ORM\Entities\SchemaBuilder::class)) {
             $ormBuilder = $this->container->get(\Spiral\ORM\Entities\SchemaBuilder::class);
         } else {
-            $ormBuilder = $this->orm->schemaBuilder();
+            $ormBuilder = $orm->schemaBuilder();
         }
 
-        return $this->container->construct(Inspector::class, [
-            'entities' => array_merge(
-                $odmBuilder->getDocuments(),
-                $ormBuilder->getRecords()
-            )
-        ]);
+        return new Inspector(
+            $config,
+            array_merge($odmBuilder->getDocuments(), $ormBuilder->getRecords())
+        );
     }
 }

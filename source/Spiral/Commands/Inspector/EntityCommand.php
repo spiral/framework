@@ -7,6 +7,9 @@
  */
 namespace Spiral\Commands\Inspector;
 
+use Spiral\Models\Configs\InspectionsConfig;
+use Spiral\ODM\ODM;
+use Spiral\ORM\ORM;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -32,12 +35,15 @@ class EntityCommand extends InspectCommand
     ];
 
     /**
-     * Inspecting specific models.
+     * @param InspectionsConfig $config
+     * @param ODM               $odm
+     * @param ORM               $orm
      */
-    public function perform()
+    public function perform(InspectionsConfig $config, ODM $odm, ORM $orm)
     {
-        $inspector = $this->getInspector();
-        $inspection = $inspector->inspection(str_replace('/', '\\', $this->argument('entity')));
+        $inspector = $this->createInspector($config, $odm, $orm);
+
+        $inspection = $inspector->inspection( $this->argument('entity'));
 
         $table = $this->tableHelper([
             'Field',

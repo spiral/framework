@@ -18,12 +18,12 @@ class EntityInspection
     /**
      * @var FieldInspection[]
      */
-    protected $fields = [];
+    private $fields = [];
 
     /**
      * @var ReflectionEntity
      */
-    protected $reflection = null;
+    private $reflection = null;
 
     /**
      * @var Inspector
