@@ -42,7 +42,7 @@ class KeyCommand extends Command
 
         if (!$files->exists($envFilename)) {
             $this->writeln(
-                "<fg=red>env. file does not exists, unable to sek encryption key.</fg=red>"
+                "<fg=red>'env.' file does not exists, unable to sek encryption key.</fg=red>"
             );
         }
 
@@ -51,6 +51,6 @@ class KeyCommand extends Command
             str_replace($config->getKey(), Strings::random(32), $files->read($envFilename))
         );
 
-        $this->writeln("<info>Encryption key successfully updated.</info>");
+        $this->writeln("<info>Encryption key has been successfully updated.</info>");
     }
 }

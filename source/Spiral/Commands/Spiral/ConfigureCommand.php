@@ -56,8 +56,10 @@ class ConfigureCommand extends Command
         $dispatcher->command('app:reload', [], $this->output);
 
         //Indexing i18n usages
-        $this->writeln("\n<info>Indexing translate function and classes usage...</info>");
+        $this->writeln("\n<info>Scanning translate function and [[values]] usage...</info>");
         $dispatcher->command('i18n:index', [], $this->output);
+
+        $this->writeln("");
 
         //Additional commands
         foreach ($config->configureSequence() as $command => $options) {
