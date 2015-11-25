@@ -116,7 +116,12 @@ class TwigEngine extends Component implements EngineInterface
      */
     public function render($path, array $context = [])
     {
-        return $this->get($path)->render($context);
+        $benchmark = $this->benchmark('render', $path);
+        try {
+            return $this->get($path)->render($context);
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
