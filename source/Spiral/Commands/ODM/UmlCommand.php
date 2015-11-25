@@ -8,7 +8,9 @@
 namespace Spiral\Commands\ODM;
 
 use Spiral\Console\Command;
-use Spiral\Documenters\ODM\UmlExporter;
+use Spiral\Files\FilesInterface;
+use Spiral\ODM\ODM;
+use Spiral\ODM\UmlExporter;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -34,18 +36,16 @@ class UmlCommand extends Command
     ];
 
     /**
-     * Perform command.
+     * @param FilesInterface $files
+     * @param ODM            $odm
      */
-    public function perform()
+    public function perform(FilesInterface $files, ODM $odm)
     {
-        /**
-         * @var UmlExporter $uml
-         */
-        $uml = $this->container->construct(UmlExporter::class, [
-            'builder' => $this->odm->schemaBuilder()
-        ]);
+        $umlExporter = new UmlExporter($odm->schemaBuilder());
 
-        $uml->export($this->argument('filename'));
-        $this->writeln("<info>UML schema successfully exported:</info> {$this->argument('filename')}");
+        $files->write($this->argument('filename'), $umlExporter->generate());
+        $this->writeln(
+            "<info>UML schema has been  successfully exported:</info> {$this->argument('filename')}"
+        );
     }
 }

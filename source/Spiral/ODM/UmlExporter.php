@@ -5,15 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Documenters\ODM;
+namespace Spiral\ODM;
 
 use Spiral\Core\Component;
-use Spiral\Files\FilesInterface;
-use Spiral\ODM\Document;
 use Spiral\ODM\Entities\SchemaBuilder;
 use Spiral\ODM\Entities\Schemas\DocumentSchema;
-use Spiral\ODM\ODM;
-use Spiral\Reactor\AbstractElement;
 
 /**
  * Renders ODM schema into UML (puml syntax) file.
@@ -31,9 +27,9 @@ class UmlExporter extends Component
      * @var array
      */
     protected $access = [
-        AbstractElement::ACCESS_PUBLIC    => '+',
-        AbstractElement::ACCESS_PRIVATE   => '-',
-        AbstractElement::ACCESS_PROTECTED => '#'
+        'public'    => '+',
+        'private'   => '-',
+        'protected' => '#'
     ];
 
     /**
@@ -49,28 +45,19 @@ class UmlExporter extends Component
     protected $builder = null;
 
     /**
-     * @var FilesInterface
+     * @param SchemaBuilder $builder
      */
-    protected $files = null;
-
-    /**
-     * @param SchemaBuilder  $builder
-     * @param FilesInterface $file
-     */
-    public function __construct(SchemaBuilder $builder, FilesInterface $file)
+    public function __construct(SchemaBuilder $builder)
     {
         $this->builder = $builder;
-        $this->files = $file;
     }
 
     /**
-     * Export UML classes diagram to specified file, all found Documents with their fields, methods
-     * and compositions will be used to generate such UML.
+     * Generate UML diagram code.
      *
-     * @param string $filename
      * @return bool
      */
-    public function export($filename)
+    public function generate()
     {
         $this->line('@startuml');
         foreach ($this->builder->getDocuments() as $document) {
@@ -78,7 +65,7 @@ class UmlExporter extends Component
         }
         $this->line('@enduml');
 
-        return $this->files->write($filename, join("\n", $this->lines));
+        return join("\n", $this->lines);
     }
 
     /**
@@ -103,7 +90,7 @@ class UmlExporter extends Component
                 $type = $type[0] . '[]';
             }
 
-            $field = $this->access[AbstractElement::ACCESS_PUBLIC] . ' ' . addslashes($type) . ' ' . $field;
+            $field = $this->access["public"] . ' ' . addslashes($type) . ' ' . $field;
             $this->line($field, 1);
         }
 
@@ -241,14 +228,14 @@ class UmlExporter extends Component
     private function accessLevel(\ReflectionMethod $method)
     {
         if ($method->isPrivate()) {
-            return AbstractElement::ACCESS_PRIVATE;
+            return 'private';
         }
 
         if ($method->isProtected()) {
-            return AbstractElement::ACCESS_PROTECTED;
+            return 'protected';
         }
 
-        return AbstractElement::ACCESS_PUBLIC;
+        return 'public';
     }
 
     /**
