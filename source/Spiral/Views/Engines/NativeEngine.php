@@ -75,7 +75,7 @@ class NativeEngine extends Component implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function compile($path)
+    public function compile($path, $reset = false)
     {
         //Can not be compiled
     }

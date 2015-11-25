@@ -99,7 +99,7 @@ class FileElement extends NamespaceElement
      *
      * @param string          $filename
      * @param int             $mode
-     * @param bool            $ensureLocation
+     * @param bool            $ensureDirectory
      * @param ArraySerializer $exporter Class used to render array values for default properties
      *                                  and etc.
      * @return bool
@@ -107,14 +107,14 @@ class FileElement extends NamespaceElement
     public function render(
         $filename,
         $mode = FilesInterface::RUNTIME,
-        $ensureLocation = false,
+        $ensureDirectory = false,
         ArraySerializer $exporter = null
     ) {
         return $this->files->write(
             $filename,
             join("\n", $this->lines(0, $exporter)),
             $mode,
-            $ensureLocation
+            $ensureDirectory
         );
     }
 

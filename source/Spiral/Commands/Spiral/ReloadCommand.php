@@ -8,10 +8,7 @@
 namespace Spiral\Commands\Spiral;
 
 use Spiral\Console\Command;
-use Spiral\Core\BootloadProcessor;
-use Spiral\Core\Core;
-use Spiral\Core\DirectoriesInterface;
-use Spiral\Files\FilesInterface;
+use Spiral\Core\HippocampusInterface;
 
 /**
  * Reload application boot-loading list.
@@ -29,20 +26,11 @@ class ReloadCommand extends Command
     protected $description = 'Reload application boot-loading list.';
 
     /**
-     * @param FilesInterface       $files
-     * @param DirectoriesInterface $directories
+     * @param HippocampusInterface $memory
      */
-    public function perform(FilesInterface $files, DirectoriesInterface $directories)
+    public function perform(HippocampusInterface $memory)
     {
-        $cacheDirectory = $directories->directory('cache');
-
-        if (!$files->exists($cacheDirectory)) {
-            $this->writeln("Cache directory is missing, no cache to be cleaned.");
-
-            return;
-        }
-
-        $files->delete($cacheDirectory . BootloadProcessor::MEMORY . Core::EXTENSION);
+        $memory->saveData('bootloading', null);
         $this->writeln("<info>Bootload cache has been cleared.</info>");
     }
 }

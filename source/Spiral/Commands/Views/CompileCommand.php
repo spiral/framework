@@ -1,0 +1,79 @@
+<?php
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ */
+namespace Spiral\Commands\Views;
+
+use Spiral\Console\Command;
+use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Views\ViewLocator;
+use Spiral\Views\ViewManager;
+use Symfony\Component\Console\Helper\FormatterHelper;
+
+/**
+ * Compile every available view file and store result in view cache.
+ */
+class CompileCommand extends Command
+{
+    /**
+     * Benchmarking compilation time.
+     */
+    use BenchmarkTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $name = 'views:compile';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $description = 'Compile every available view file.';
+
+    /**
+     * @param ViewLocator $locator
+     * @param ViewManager $manager
+     */
+    public function perform(ViewLocator $locator, ViewManager $manager)
+    {
+        /**
+         * @var FormatterHelper $formatter
+         */
+        $formatter = $this->getHelper('formatter');
+        foreach ($locator->getNamespaces() as $namespace) {
+            $this->isVerbosity() && $this->writeln(
+                "Compiling views in namespace '<comment>{$namespace}</comment>'."
+            );
+
+            foreach ($locator->namespaceViews($namespace) as $view => $engine) {
+                if ($this->isVerbosity()) {
+                    $this->write($formatter->formatSection(
+                        "{$namespace}:{$engine}", $view . ", ", 'fg=cyan'
+                    ));
+                }
+
+                $benchmark = $this->benchmark('compile');
+                try {
+                    //Compilation
+                    $manager->engine($engine)->compile("{$namespace}:{$view}", true);
+
+                    $this->isVerbosity() && $this->write("<info>ok</info>");
+                } catch (\Exception $exception) {
+                    if ($this->isVerbosity()) {
+                        $this->write("<fg=red>error ({$exception->getMessage()})</fg=red>");
+                    }
+                } finally {
+                    $elapsed = number_format($this->benchmark($benchmark) * 1000);
+                    if ($this->isVerbosity()) {
+                        $this->writeln(" <comment>[{$elapsed} ms]</comment> ");
+                    }
+                }
+            }
+        }
+
+        $this->writeln("<info>View cache was successfully generated.</info>");
+    }
+}

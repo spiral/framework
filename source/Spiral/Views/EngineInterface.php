@@ -36,6 +36,7 @@ interface EngineInterface extends ViewsInterface
      * Pre-compile specified template/view.
      *
      * @param string $path
+     * @param bool   $reset
      */
-    public function compile($path);
+    public function compile($path, $reset = false);
 }

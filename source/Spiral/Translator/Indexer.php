@@ -85,7 +85,7 @@ class Indexer extends Component
             );
 
             if (!empty($strings)) {
-                $this->logger()->info("Found translation string in class '{class}'.", [
+                $this->logger()->info("Found translation string(s) in class '{class}'.", [
                     'class' => $reflection->getName()
                 ]);
             }

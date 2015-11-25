@@ -4,6 +4,8 @@ namespace Spiral\Commands\Spiral;
 
 use Spiral\Console\Command;
 use Spiral\Console\Configs\ConsoleConfig;
+use Spiral\Console\ConsoleDispatcher;
+use Spiral\Core\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -32,75 +34,79 @@ class ConfigureCommand extends Command
     ];
 
     /**
-     * @param ConsoleConfig $config
+     * @param ConsoleConfig        $config
+     * @param ConsoleDispatcher    $dispatcher
+     * @param DirectoriesInterface $directories
+     * @param FilesInterface       $files
      */
-    public function perform(ConsoleConfig $config)
-    {
-        //TODO: COLLECT ERRORS
-
-
-        $this->ensureRuntimeDirectory();
-
-        //Updating modules
-        $this->writeln("\n<info>Updating existed module resources...</info>");
-        $this->writeln("<error>ERROR!</error>");
-        //$this->console->command('modules:update', [], $this->output);
+    public function perform(
+        ConsoleConfig $config,
+        ConsoleDispatcher $dispatcher,
+        DirectoriesInterface $directories,
+        FilesInterface $files
+    ) {
+        $this->ensurePermissions($directories, $files);
 
         //Updating commands cache
         $this->writeln("\n<info>Re-indexing available console commands.</info>");
-        $this->console->command('console:reload', [], $this->output);
+        $dispatcher->command('console:reload', [], $this->output);
+
+        //Updating commands cache
+        $this->writeln("\n<info>Reloading bootload cache.</info>");
+        $dispatcher->command('app:reload', [], $this->output);
 
         //Indexing i18n usages
         $this->writeln("\n<info>Indexing translate function and classes usage...</info>");
-        $this->writeln("<error>ERROR!</error>");
-        //$this->console->command('i18n:index', [], $this->output);
-
-        //Initiating view cache
-        $this->writeln($this->isVerbosity() ? "\n<info>Generating view cache.</info>" : "");
-        $this->writeln("<error>ERROR!</error>");
-        //$this->console->command('view:compile', [], $this->output);
-
-        if ($this->option('key')) {
-            $this->writeln("");
-            $this->writeln("<error>ERROR!</error>");
-            //$this->console->command('app:key', [], $this->output);
-        }
+        $dispatcher->command('i18n:index', [], $this->output);
 
         //Additional commands
         foreach ($config->configureSequence() as $command => $options) {
             if (!empty($options['header'])) {
                 $this->writeln($options['header']);
             }
-            $this->console->command($command, $options['options'], $this->output);
+
+            $dispatcher->command($command, $options['options'], $this->output);
             if (!empty($options['footer'])) {
                 $this->writeln($options['footer']);
             }
+        }
+
+        if ($this->option('key')) {
+            $this->writeln("");
+            $dispatcher->command('app:key', [], $this->output);
         }
 
         $this->writeln("\n<info>All done!</info>");
     }
 
     /**
-     * Ensure existence and permissions of runtime directory.
+     * @param DirectoriesInterface $directories
+     * @param FilesInterface       $files
      */
-    protected function ensureRuntimeDirectory()
-    {
-        $this->writeln("<info>Verifying runtime directory existence and file permissions...</info>");
+    protected function ensurePermissions(
+        DirectoriesInterface $directories,
+        FilesInterface $files
+    ) {
+        $this->writeln(
+            "<info>Verifying runtime directory existence and file permissions...</info>"
+        );
 
-        if (!$this->files->exists(directory('runtime'))) {
-            $this->files->ensureLocation(directory('runtime'));
+        $runtime = $directories->directory('runtime');
+
+        if (!$files->exists(directory('runtime'))) {
+            $files->ensureDirectory(directory('runtime'));
             $this->writeln("Runtime data directory was created.");
 
             return;
         }
 
-        foreach ($this->files->getFiles(directory('runtime')) as $filename) {
+        foreach ($files->getFiles(directory('runtime')) as $filename) {
             //Both file and it's directory must be writable
-            $this->files->setPermissions($filename, FilesInterface::RUNTIME);
-            $this->files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
+            $files->setPermissions($filename, FilesInterface::RUNTIME);
+            $files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
 
             if ($this->isVerbosity()) {
-                $filename = $this->files->relativePath($filename, directory('runtime'));
+                $filename = $files->relativePath($filename, $runtime);
                 $this->writeln("Permissions were updated for '<comment>{$filename}</comment>'.");
             }
         }

@@ -18,7 +18,7 @@ use Spiral\ORM\RecordAccessorInterface;
  * ORM record accessor used to mock database timestamps and date field using Carbon class. Field
  * timezone automatically resolved using default database timezone specified in database provider.
  */
-class SQLTimestamp extends AbstractTimestamp implements RecordAccessorInterface
+class SqlTimestamp extends AbstractTimestamp implements RecordAccessorInterface
 {
     /**
      * @invisible

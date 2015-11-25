@@ -162,7 +162,7 @@ class FieldInspection extends Component
 
     /**
      * Get field protection rank. Rank value depends on field options such as being fillable,
-     * validatable and etc. Ranking value measures between 0 and 1.
+     * validated etc. Ranking value measures between 0 and 1.
      *
      * @return float
      */

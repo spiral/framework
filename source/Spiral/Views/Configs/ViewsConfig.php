@@ -42,6 +42,15 @@ class ViewsConfig extends InjectableConfig
     }
 
     /**
+     * @param string $namespace
+     * @return array
+     */
+    public function namespaceDirectories($namespace)
+    {
+        return $this->config['namespaces'][$namespace];
+    }
+
+    /**
      * @return array
      */
     public function environmentDependencies()

@@ -135,10 +135,10 @@ class StemplerEngine extends Component implements EngineInterface
      *
      * @return string Cached filename.
      */
-    public function compile($path)
+    public function compile($path, $reset = false)
     {
         $cached = $this->cache->generateKey($path);
-        if ($this->loader->isFresh($path, $this->cache->getTimestamp($cached))) {
+        if ($this->loader->isFresh($path, $this->cache->getTimestamp($cached)) && !$reset) {
             //Compiled and cached
             return $cached;
         }

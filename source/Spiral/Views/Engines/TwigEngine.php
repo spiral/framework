@@ -90,9 +90,19 @@ class TwigEngine extends Component implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function compile($path)
+    public function compile($path, $reset = false)
     {
+        if ($reset) {
+            $cache = $this->twig->getCache();
+            $this->twig->setCache(false);
+        }
+
         $this->get($path);
+
+        if ($reset && !empty($cache)) {
+            //Restoring cache
+            $this->twig->setCache($cache);
+        }
     }
 
     /**

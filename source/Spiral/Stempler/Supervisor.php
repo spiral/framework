@@ -152,7 +152,9 @@ class Supervisor extends Component implements SupervisorInterface
     public function createNode($path, array $token = [])
     {
         //We support dots!
-        $path = str_replace('.', '/', $path);
+        if (!empty($token)) {
+            $path = str_replace('.', '/', $path);
+        }
 
         try {
             $source = $this->loader->getSource($path);

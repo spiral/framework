@@ -16,6 +16,7 @@ use Spiral\Stempler\Importers\Prefixer;
 use Spiral\Stempler\Importers\Stopper;
 use Spiral\Stempler\Supervisor;
 use Spiral\Stempler\SyntaxInterface;
+use Spiral\Views\ViewsInterface;
 
 /**
  * Default Stempler syntax - Woo. Provides ability to define blocks, extends and includes.
