@@ -93,15 +93,19 @@ class EvaluateProcessor extends Component implements ProcessorInterface
         //I must validate file syntax in a future
 
         try {
-            $this->files->write(
-                $filename,
-                $this->prepareSource($source),
-                FilesInterface::RUNTIME,
-                true
-            );
+            $this->files->write($filename, $source, FilesInterface::RUNTIME, true);
 
             ob_start();
-            include_once $this->files->localUri($filename);
+            $__outputLevel__ = ob_get_level();
+
+            try {
+                include_once $this->files->localUri($filename);
+            } finally {
+                while (ob_get_level() > $__outputLevel__) {
+                    ob_end_clean();
+                }
+            }
+
             $source = ob_get_clean();
 
             //Dropping temporary filename
@@ -163,70 +167,6 @@ class EvaluateProcessor extends Component implements ProcessorInterface
     }
 
     /**
-     * Mount set of constructions needed to simplify compilation block definitions. Basically this
-     * method mount php sugar methods.
-     *
-     * @param string $source
-     * @return string
-     */
-    protected function prepareSource($source)
-    {
-
-//        protected $expressions = [
-//        //Create variable based on provided PHP code, will erase PHP braces and echo,
-//        //this expression should be used only inside evaluator code, expression should be executed
-//        //before Templater
-//        'fetchVariable'  => [
-//            'pattern'  => '/(?:(\/\/)\s*)?\$([a-z_][a-z_0-9]*(?:\[\])?)\s*=\s*fetchVariable\([\'"]([^\'"]+)[\'"]\)\s*;/i',
-//            'callback' => ['self', 'fetchVariable']
-//        ],
-//        //Used to create php variable related to some php block, will always contain valid php code,
-//        //this expressions should be used only in compiled php
-//        'createVariable' => [
-//            'pattern'  => '/(?:(\/\/)\s*)?createVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
-//            'callback' => ['self', 'createVariable']
-//        ]
-//    ];
-
-//        /**
-//         * Export value or expressions of template block to evaluator variable which can be used to
-//         * build php expressions.
-//         *
-//         * @param array $matches
-//         * @return string
-//         */
-//        public function fetchVariable(array $matches)
-//    {
-//        if (!empty($matches[1])) {
-//            return '//This code is commented';
-//        }
-//
-//        return "ob_start(); >$matches[3]<?php #compile
-//        \$$matches[2] = \$this->fetchPHP(\$isolator->repairPHP(trim(ob_get_clean())));";
-//    }
-//
-//        /**
-//         * Create php variable based on provided block.
-//         *
-//         * @param array $matches
-//         * @return string
-//         */
-//        public function createVariable(array $matches)
-//    {
-//        if (!empty($matches[1])) {
-//            return '//This code is commented';
-//        }
-//
-//        return "ob_start(); >$matches[3]<?php #compile\n"
-//        . "echo '<?php \$$matches[2] = ' . \$this->fetchPHP("
-//        . "\$isolator->repairPHP(trim(ob_get_clean()))"
-//        . ") . ';>';";
-//    }
-
-        return $source;
-    }
-
-    /**
      * Unique filename for evaluation.
      *
      * @param string $filename
@@ -234,6 +174,6 @@ class EvaluateProcessor extends Component implements ProcessorInterface
      */
     private function evalFilename($filename)
     {
-        return $filename . '.eval.' . spl_object_hash($this);
+        return $filename . '.eval.' . spl_object_hash($this) . '.php';
     }
 }
