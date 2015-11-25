@@ -21,6 +21,7 @@ class EnvironmentModifier implements ModifierInterface
     const DEFAULT_PATTERN = '/@\\{(?P<name>[a-z0-9_\\.\\-]+)(?: *\\| *(?P<default>[^}]+))?}/i';
 
     /**
+     * @invisible
      * @var EnvironmentInterface
      */
     protected $environment = null;

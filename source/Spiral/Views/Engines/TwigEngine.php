@@ -37,6 +37,13 @@ class TwigEngine extends Component implements EngineInterface
     protected $loader = null;
 
     /**
+     * List of twig extensions.
+     *
+     * @var array
+     */
+    protected $extensions = [];
+
+    /**
      * @var \Twig_Environment
      */
     protected $twig = null;
@@ -52,6 +59,7 @@ class TwigEngine extends Component implements EngineInterface
      * @param FilesInterface       $files
      * @param ContainerInterface   $container
      * @param array                $modifiers
+     * @param array                $extensions
      * @param array                $options
      */
     public function __construct(
@@ -60,6 +68,7 @@ class TwigEngine extends Component implements EngineInterface
         FilesInterface $files = null,
         ContainerInterface $container = null,
         array $modifiers = [],
+        array $extensions = [],
         array $options = []
     ) {
         $this->twig = new \Twig_Environment($loader, $options);
@@ -67,6 +76,7 @@ class TwigEngine extends Component implements EngineInterface
         $this->files = $this->saturate($files, FilesInterface::class);
 
         $this->setEnvironment($environment);
+        $this->extensions = $extensions;
         $this->modifiers = $modifiers;
         $this->setLoader($loader);
 
@@ -172,6 +182,13 @@ class TwigEngine extends Component implements EngineInterface
     protected function configure(\Twig_Environment $environment)
     {
         $environment->setBaseTemplateClass(TwigView::class);
+
+        /**
+         * Registering extensions.
+         */
+        foreach ($this->extensions as $extension) {
+            $environment->addExtension($this->container->get($extension));
+        }
 
         return $environment;
     }

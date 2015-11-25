@@ -25,6 +25,7 @@ class TranslateModifier extends Component implements ModifierInterface
     use SaturateTrait;
 
     /**
+     * @invisible
      * @var TranslatorInterface
      */
     protected $translator = null;
