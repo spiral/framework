@@ -19,7 +19,7 @@ class SyntaxException extends \RuntimeException
      * Clarify twig syntax exception.
      *
      * @param \Twig_Error_Syntax $error
-     * @param LoaderInterface $loader
+     * @param LoaderInterface    $loader
      * @return self
      */
     public static function fromTwig(\Twig_Error_Syntax $error, LoaderInterface $loader)

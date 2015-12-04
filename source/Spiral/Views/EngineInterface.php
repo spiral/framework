@@ -13,7 +13,7 @@ namespace Spiral\Views;
 interface EngineInterface extends ViewsInterface
 {
     /**
-     * @param LoaderInterface $loader
+     * @param LoaderInterface      $loader
      * @param EnvironmentInterface $environment
      */
     public function __construct(LoaderInterface $loader, EnvironmentInterface $environment);
@@ -36,7 +36,7 @@ interface EngineInterface extends ViewsInterface
      * Pre-compile specified template/view.
      *
      * @param string $path
-     * @param bool $reset
+     * @param bool   $reset
      */
     public function compile($path, $reset = false);
 }

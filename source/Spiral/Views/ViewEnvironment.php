@@ -39,9 +39,9 @@ class ViewEnvironment implements EnvironmentInterface
     protected $container = null;
 
     /**
-     * @param array $dependencies
-     * @param string $cachable
-     * @param string $cacheDirectory
+     * @param array              $dependencies
+     * @param string             $cachable
+     * @param string             $cacheDirectory
      * @param ContainerInterface $container
      */
     public function __construct(
@@ -49,8 +49,7 @@ class ViewEnvironment implements EnvironmentInterface
         $cachable,
         $cacheDirectory,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->dependencies = $dependencies;
         $this->cachable = $cachable;
         $this->cacheDirectory = $cacheDirectory;

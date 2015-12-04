@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\ODM;
+namespace Spiral\Commands\ODM\Support;
 
 use Spiral\Core\Component;
 use Spiral\ODM\Entities\SchemaBuilder;
@@ -27,8 +27,8 @@ class UmlExporter extends Component
      * @var array
      */
     protected $access = [
-        'public' => '+',
-        'private' => '-',
+        'public'    => '+',
+        'private'   => '-',
         'protected' => '#'
     ];
 
@@ -193,8 +193,8 @@ class UmlExporter extends Component
      * Add new line to UML diagram with specified indent.
      *
      * @param string $line
-     * @param int $indent
-     * @param bool $newline
+     * @param int    $indent
+     * @param bool   $newline
      * @return $this
      */
     protected function line($line, $indent = 0, $newline = false)

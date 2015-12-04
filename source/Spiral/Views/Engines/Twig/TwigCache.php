@@ -9,7 +9,6 @@ namespace Spiral\Views\Engines\Twig;
 
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EnvironmentInterface;
-use Spiral\Views\LoaderInterface;
 
 /**
  * Spiral specific twig cache. OpCache reset not included yet.
@@ -32,7 +31,8 @@ class TwigCache implements \Twig_CacheInterface
      * @param FilesInterface       $files
      * @param EnvironmentInterface $environment
      */
-    public function __construct(        FilesInterface $files,        EnvironmentInterface $environment    ) {
+    public function __construct(FilesInterface $files, EnvironmentInterface $environment)
+    {
         $this->files = $files;
         $this->environment = $environment;
     }

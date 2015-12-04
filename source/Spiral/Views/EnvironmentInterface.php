@@ -30,7 +30,7 @@ interface EnvironmentInterface
     /**
      * New dependency.
      *
-     * @param string $dependency
+     * @param string   $dependency
      * @param callable $source
      * @throws EnvironmentException
      */

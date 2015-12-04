@@ -34,11 +34,11 @@ class EvaluatorExpressions implements ModifierInterface
      */
     protected $expressions = [
         'evaluatorVariable' => [
-            'pattern' => '/(?:(\/\/)\s*)?\$this->evaluatorVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
+            'pattern'  => '/(?:(\/\/)\s*)?\$this->evaluatorVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'evaluatorVariable']
         ],
-        'runtimeVariable' => [
-            'pattern' => '/(?:(\/\/)\s*)?\$this->runtimeVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
+        'runtimeVariable'   => [
+            'pattern'  => '/(?:(\/\/)\s*)?\$this->runtimeVariable\([\'"]([^\'"]+)[\'"]\s*,\s*[\'"]([^\'"]+)[\'"]\)\s*;/i',
             'callback' => ['self', 'runtimeVariable']
         ]
     ];

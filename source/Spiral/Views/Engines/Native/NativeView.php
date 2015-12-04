@@ -48,9 +48,9 @@ class NativeView extends Component implements ViewInterface
     protected $container = null;
 
     /**
-     * @param string $filename
-     * @param string $namespace
-     * @param string $name
+     * @param string                  $filename
+     * @param string                  $namespace
+     * @param string                  $name
      * @param ContainerInterface|null $container
      */
     public function __construct($filename, $namespace, $name, ContainerInterface $container = null)

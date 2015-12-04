@@ -7,10 +7,10 @@
  */
 namespace Spiral\Commands\ODM;
 
+use Spiral\Commands\ODM\Support\UmlExporter;
 use Spiral\Console\Command;
 use Spiral\Files\FilesInterface;
 use Spiral\ODM\ODM;
-use Spiral\ODM\UmlExporter;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -37,7 +37,7 @@ class UmlCommand extends Command
 
     /**
      * @param FilesInterface $files
-     * @param ODM $odm
+     * @param ODM            $odm
      */
     public function perform(FilesInterface $files, ODM $odm)
     {

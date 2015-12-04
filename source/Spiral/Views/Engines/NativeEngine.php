@@ -37,16 +37,15 @@ class NativeEngine extends Component implements EngineInterface
     protected $container = null;
 
     /**
-     * @param LoaderInterface $loader
+     * @param LoaderInterface      $loader
      * @param EnvironmentInterface $environment
-     * @param ContainerInterface $files
+     * @param ContainerInterface   $files
      */
     public function __construct(
         LoaderInterface $loader,
         EnvironmentInterface $environment,
         ContainerInterface $files = null
-    )
-    {
+    ) {
         $this->container = $this->saturate($files, ContainerInterface::class);
 
         $this->setEnvironment($environment);

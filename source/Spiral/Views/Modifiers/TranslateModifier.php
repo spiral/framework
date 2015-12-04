@@ -34,7 +34,7 @@ class TranslateModifier extends Component implements ModifierInterface
      * @var array
      */
     protected $options = [
-        'prefix' => 'view-',
+        'prefix'  => 'view-',
         'pattern' => '/\[\[(.*?)\]\]/s'
     ];
 
@@ -42,15 +42,14 @@ class TranslateModifier extends Component implements ModifierInterface
      * TranslateModifier constructor.
      *
      * @param EnvironmentInterface $environment
-     * @param TranslatorInterface $translator
-     * @param array $options
+     * @param TranslatorInterface  $translator
+     * @param array                $options
      */
     public function __construct(
         EnvironmentInterface $environment,
         TranslatorInterface $translator = null,
         array $options = []
-    )
-    {
+    ) {
         $this->translator = $this->saturate($translator, TranslatorInterface::class);
         $this->options = $options + $this->options;
     }

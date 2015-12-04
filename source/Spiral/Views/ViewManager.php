@@ -68,16 +68,15 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     protected $container = null;
 
     /**
-     * @param ViewsConfig $config
-     * @param FilesInterface $files
+     * @param ViewsConfig        $config
+     * @param FilesInterface     $files
      * @param ContainerInterface $container
      */
     public function __construct(
         ViewsConfig $config,
         FilesInterface $files,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->config = $config;
         $this->files = $files;
         $this->container = $container;
@@ -121,7 +120,7 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
      * Get engine by it's type.
      *
      * @param string $engine
-     * @param bool $reload If true engine will receive new instance of loader and enviroment.
+     * @param bool   $reload If true engine will receive new instance of loader and enviroment.
      * @return EngineInterface
      */
     public function engine($engine, $reload = false)

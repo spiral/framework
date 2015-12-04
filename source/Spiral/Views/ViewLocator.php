@@ -29,7 +29,7 @@ class ViewLocator extends Component
     protected $files = null;
 
     /**
-     * @param ViewsConfig $config
+     * @param ViewsConfig    $config
      * @param FilesInterface $files
      */
     public function __construct(ViewsConfig $config, FilesInterface $files)

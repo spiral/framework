@@ -24,13 +24,13 @@ class ViewsConfig extends InjectableConfig
      * @var array
      */
     protected $config = [
-        'cache' => [
-            'enabled' => false,
+        'cache'       => [
+            'enabled'   => false,
             'directory' => '/tmp'
         ],
-        'namespaces' => [],
+        'namespaces'  => [],
         'environment' => [],
-        'engines' => []
+        'engines'     => []
     ];
 
     /**
