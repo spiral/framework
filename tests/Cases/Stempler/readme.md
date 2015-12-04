@@ -1,1 +1,0 @@
-Restore tests which has been written originally for Templater (old Stempler).
