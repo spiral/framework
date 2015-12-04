@@ -6,6 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 namespace Spiral\Http\Request;
+
 use Spiral\Http\Exceptions\Request\InputException;
 
 /**

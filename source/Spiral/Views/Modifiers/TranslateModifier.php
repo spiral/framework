@@ -34,7 +34,7 @@ class TranslateModifier extends Component implements ModifierInterface
      * @var array
      */
     protected $options = [
-        'prefix'  => 'view-',
+        'prefix' => 'view-',
         'pattern' => '/\[\[(.*?)\]\]/s'
     ];
 
@@ -42,14 +42,15 @@ class TranslateModifier extends Component implements ModifierInterface
      * TranslateModifier constructor.
      *
      * @param EnvironmentInterface $environment
-     * @param TranslatorInterface  $translator
-     * @param array                $options
+     * @param TranslatorInterface $translator
+     * @param array $options
      */
     public function __construct(
         EnvironmentInterface $environment,
         TranslatorInterface $translator = null,
         array $options = []
-    ) {
+    )
+    {
         $this->translator = $this->saturate($translator, TranslatorInterface::class);
         $this->options = $options + $this->options;
     }
@@ -59,13 +60,13 @@ class TranslateModifier extends Component implements ModifierInterface
      */
     public function modify($source, $namespace, $name)
     {
-        //Translator bundle to be used
-        $bundle = $this->options['prefix'] . str_replace(
-                ['/', '\\'], '-', $namespace . '-' . $name
-            );
+        //Translator options must automatically route this view name to specific domain
+        $domain = $this->translator->resolveDomain(
+            $this->options['prefix'] . str_replace(['/', '\\'], '-', $namespace . '-' . $name)
+        );
 
-        return preg_replace_callback($this->options['pattern'], function ($matches) use ($bundle) {
-            return $this->translator->translate($bundle, $matches[1]);
+        return preg_replace_callback($this->options['pattern'], function ($matches) use ($domain) {
+            return $this->translator->trans($matches[1], [], $domain);
         }, $source);
     }
 }

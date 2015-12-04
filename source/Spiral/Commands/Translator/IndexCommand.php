@@ -30,7 +30,7 @@ class IndexCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Index all declared translation strings and usages.';
+    protected $description = 'Index all declared translation strings and usages';
 
     /**
      * @param Indexer                    $indexer

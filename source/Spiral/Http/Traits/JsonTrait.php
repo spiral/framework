@@ -18,8 +18,8 @@ trait JsonTrait
      * Generate JSON response.
      *
      * @param ResponseInterface $response
-     * @param mixed             $json
-     * @param int               $code
+     * @param mixed $json
+     * @param int $code
      * @return ResponseInterface
      */
     private function writeJson(ResponseInterface $response, $json, $code = 100)

@@ -8,13 +8,14 @@
 namespace Spiral\Core;
 
 use ReflectionFunctionAbstract as ContextFunction;
+use Spiral\Core\Container\Context;
 use Spiral\Core\Container\InjectableInterface;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exceptions\Container\ArgumentException;
+use Spiral\Core\Exceptions\Container\AutowireException;
 use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Core\Exceptions\Container\InjectionException;
-use Spiral\Core\Exceptions\Container\InstanceException;
 
 /**
  * Super simple auto-wiring container with auto SINGLETON and INJECTOR constants integration.
@@ -67,7 +68,7 @@ class Container extends Component implements ContainerInterface
     public function get($alias, $context = null)
     {
         //Direct bypass to construct, i might think about this option... or not.
-        return $this->construct($alias, [], $context);
+        return $this->make($alias, [], $context);
     }
 
     /**
@@ -75,31 +76,10 @@ class Container extends Component implements ContainerInterface
      *
      * @param string|null $context Related to parameter caused injection if any.
      */
-    public function construct($class, $parameters = [], $context = null)
+    public function make($class, $parameters = [], $context = null)
     {
         if (!isset($this->bindings[$class])) {
-            if (!class_exists($class)) {
-                throw new InstanceException("Undefined class or binding '{$class}'.");
-            }
-
-            //OK, we can create class by ourselves
-            $instance = $this->createInstance($class, $parameters, $context, $reflector);
-
-            /**
-             * Only for classes which are constructed automatically, SINGLETON logic can be rewritten
-             * or disabled using custom binding or factory.
-             *
-             * @var \ReflectionClass $reflector
-             */
-            if (
-                $instance instanceof SingletonInterface
-                && !empty($singleton = $reflector->getConstant('SINGLETON'))
-            ) {
-                //Component declared SINGLETON constant, binding as constant value and class name.
-                $this->bindings[$singleton] = $instance;
-            }
-
-            return $instance;
+            return $this->autowire($class, $parameters, $context);
         }
 
         if (is_object($binding = $this->bindings[$class])) {
@@ -109,13 +89,13 @@ class Container extends Component implements ContainerInterface
 
         if (is_string($binding)) {
             //Binding is pointing to something else
-            return $this->construct($binding, $parameters, $context);
+            return $this->make($binding, $parameters, $context);
         }
 
         if (is_array($binding)) {
             if (is_string($binding[0])) {
-                //Class name with singleton flag
-                $instance = $this->construct($binding[0], $parameters, $context);
+                //Just a class name
+                $instance = $this->make($binding[0], $parameters, $context);
             } elseif ($binding[0] instanceof \Closure) {
                 $reflection = new \ReflectionFunction($binding[0]);
 
@@ -126,8 +106,8 @@ class Container extends Component implements ContainerInterface
             } elseif (is_array($binding[0])) {
                 //In a form of resolver and method
                 list($resolver, $method) = $binding[0];
-                $resolver = $this->get($resolver);
-                $method = new \ReflectionMethod($resolver, $method);
+
+                $method = new \ReflectionMethod($resolver = $this->get($resolver), $method);
 
                 $instance = $method->invokeArgs(
                     $resolver, $this->resolveArguments($method, $parameters)
@@ -166,6 +146,10 @@ class Container extends Component implements ContainerInterface
                 );
             }
 
+            if ($class === Context::class) {
+                $arguments[] = new Context($reflection, $parameter);
+            }
+
             if (empty($class)) {
                 if (array_key_exists($name, $parameters)) {
                     //Scalar value supplied by user
@@ -191,10 +175,10 @@ class Container extends Component implements ContainerInterface
 
             try {
                 //Trying to resolve dependency (contextually)
-                $arguments[] = $this->construct($class->getName(), [], $parameter->getName());
+                $arguments[] = $this->make($class->getName(), [], $parameter->getName());
 
                 continue;
-            } catch (InstanceException $exception) {
+            } catch (AutowireException $exception) {
                 if ($parameter->isDefaultValueAvailable()) {
                     //Let's try to use default value instead
                     $arguments[] = $parameter->getDefaultValue();
@@ -333,6 +317,42 @@ class Container extends Component implements ContainerInterface
     }
 
     /**
+     * Automatically create class.
+     *
+     * @param string $class
+     * @param array  $parameters
+     * @param string $context
+     * @return object
+     * @throws AutowireException
+     */
+    protected function autowire($class, array $parameters, $context)
+    {
+        if (!class_exists($class)) {
+            throw new AutowireException("Undefined class or binding '{$class}'.");
+        }
+
+        //OK, we can create class by ourselves
+        $instance = $this->createInstance($class, $parameters, $context, $reflector);
+
+        /**
+         * Only for classes which are constructed using autowiring, SINGLETON logic can be rewritten
+         * or disabled using custom binding or factory.
+         *
+         * @var \ReflectionClass $reflector
+         */
+        if (
+            $instance instanceof SingletonInterface
+            && !empty($singleton = $reflector->getConstant('SINGLETON'))
+        ) {
+            //Component declared SINGLETON constant, binding as constant value and class name.
+            $this->bindings[$singleton] = $instance;
+        }
+
+        return $instance;
+
+    }
+
+    /**
      * Check if given class has associated injector.
      *
      * @param \ReflectionClass $reflection
@@ -371,7 +391,7 @@ class Container extends Component implements ContainerInterface
      * @param \ReflectionClass $reflection     Instance of reflection associated with class,
      *                                         reference.
      * @return object
-     * @throws InstanceException
+     * @throws ContainerException
      */
     private function createInstance(
         $class,
@@ -382,7 +402,7 @@ class Container extends Component implements ContainerInterface
         try {
             $reflection = new \ReflectionClass($class);
         } catch (\ReflectionException $exception) {
-            throw new InstanceException(
+            throw new ContainerException(
                 $exception->getMessage(), $exception->getCode(), $exception
             );
         }
@@ -399,11 +419,13 @@ class Container extends Component implements ContainerInterface
                 throw new InjectionException("Invalid injector response.");
             }
 
+            //todo: potentially to be replaced with direct call logic (when method is specified
+            //todo: instead of class/binding name)
             return $instance;
         }
 
         if (!$reflection->isInstantiable()) {
-            throw new InstanceException("Class '{$class}' can not be constructed.");
+            throw new ContainerException("Class '{$class}' can not be constructed.");
         }
 
         if (!empty($constructor = $reflection->getConstructor())) {

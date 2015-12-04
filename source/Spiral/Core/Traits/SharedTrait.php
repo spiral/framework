@@ -9,7 +9,8 @@ namespace Spiral\Core\Traits;
 
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
-use Spiral\Core\Exceptions\Container\InstanceException;
+use Spiral\Core\Exceptions\Container\ContainerException;
+use Spiral\Core\Exceptions\SugarException;
 
 /**
  * Trait provides access to set of shared components (using short bindings). You can create virtual
@@ -29,11 +30,16 @@ trait SharedTrait
      * @see ContainerInterface::get()
      * @param string $alias
      * @return mixed|null|object
-     * @throws InstanceException
+     * @throws ContainerException
      * @throws ArgumentException
      */
     public function __get($alias)
     {
-        return $this->container->get($alias);
+        if ($this->container->has($alias)) {
+            return $this->container->get($alias);
+        }
+
+        throw new SugarException("Unable to get property binding '{$alias}'.");
+        //no parent call, too dangerous
     }
 }

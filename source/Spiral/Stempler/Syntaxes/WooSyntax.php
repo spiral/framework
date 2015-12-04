@@ -35,6 +35,7 @@ class WooSyntax implements SyntaxInterface
     /**
      * Stempler syntax options, syntax and names. Every option is required.
      *
+     * @todo Something with DTD? Generally feels compatible, maybe no widgets.
      * @var array
      */
     protected $constructions = [

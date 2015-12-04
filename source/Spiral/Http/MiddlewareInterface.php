@@ -18,7 +18,7 @@ interface MiddlewareInterface
     /**
      * Pass request thought middleware and receive resulted response.
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Response $response
      * @param callable $next Next middleware/target. Always returns ResponseInterface.
      * @return Response

@@ -73,7 +73,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      * Get property or return default value. Dot notation allowed.
      *
      * @param string $name
-     * @param mixed  $default
+     * @param mixed $default
      * @return mixed
      */
     public function get($name, $default = null)
@@ -90,7 +90,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      * filler. Only one variable layer can be fetched (no dot notation).
      *
      * @param array $keys
-     * @param bool  $fill Fill missing key with filler value.
+     * @param bool $fill Fill missing key with filler value.
      * @param mixed $filler
      * @return array
      */

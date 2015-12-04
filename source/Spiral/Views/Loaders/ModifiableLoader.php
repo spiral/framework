@@ -33,7 +33,7 @@ class ModifiableLoader extends Component implements LoaderInterface
     protected $modifiers = [];
 
     /**
-     * @param LoaderInterface     $loader
+     * @param LoaderInterface $loader
      * @param ModifierInterface[] $modifiers
      */
     public function __construct(LoaderInterface $loader, array $modifiers = [])

@@ -74,10 +74,11 @@ class SessionStarter implements MiddlewareInterface
             /**
              * Debug: this method opens [SessionStore] scope.
              */
-            $response = $next($request, $response);
+            $response = $next($request->withAttribute('session', $this->session), $response);
 
             return $this->commitSession($request, $response);
         } finally {
+            //Container scope, technically not so required since session attribute in request
             $this->container->restore($scope);
         }
     }
@@ -104,7 +105,7 @@ class SessionStarter implements MiddlewareInterface
      */
     protected function commitSession(Request $request, Response $response)
     {
-        if (!$this->session->started()) {
+        if (!$this->session->isStarted()) {
             //Nothing to do
             return $response;
         }
@@ -117,7 +118,7 @@ class SessionStarter implements MiddlewareInterface
             //Let's mount cookie
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                $this->sessionCookie($request->getUri(), $this->session->getID(false))->packHeader()
+                $this->sessionCookie($request->getUri(), $this->session->getID(false))->createHeader()
             );
         }
 
@@ -150,14 +151,14 @@ class SessionStarter implements MiddlewareInterface
      * @param string       $sessionID
      * @return Cookie
      */
-    protected function sessionCookie(UriInterface $uri, $sessionID)
+    private function sessionCookie(UriInterface $uri, $sessionID)
     {
         return Cookie::create(
             $this->config->sessionCookie(),
             $sessionID,
             $this->config->sessionLifetime(),
-            $this->httpConfig->basePath(),
-            $this->httpConfig->cookiesDomain($uri)
+            $this->httpConfig->basePath(),          //todo: to be fetched from request
+            $this->httpConfig->cookiesDomain($uri)  //todo: to be fetched from request and set by?
         );
     }
 }

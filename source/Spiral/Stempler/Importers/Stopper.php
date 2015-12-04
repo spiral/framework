@@ -8,7 +8,6 @@
 namespace Spiral\Stempler\Importers;
 
 use Spiral\Stempler\ImporterInterface;
-use Spiral\Stempler\Stempler;
 
 /**
  * Declares to templater that element must be treated as html tag, not Node include. Stop keyword

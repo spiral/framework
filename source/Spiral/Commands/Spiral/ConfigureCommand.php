@@ -24,13 +24,13 @@ class ConfigureCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Configure file permissions, install modules and render view files.';
+    protected $description = 'Configure file permissions, install modules and render view files';
 
     /**
      * {@inheritdoc}
      */
     protected $options = [
-        ['key', 'k', InputOption::VALUE_NONE, 'Generate new encryption key.']
+        ['key', 'k', InputOption::VALUE_NONE, 'Generate new encryption key']
     ];
 
     /**
@@ -47,15 +47,15 @@ class ConfigureCommand extends Command
     ) {
         $this->ensurePermissions($directories, $files);
 
-        //Updating commands cache
         $this->writeln("\n<info>Re-indexing available console commands.</info>");
         $dispatcher->command('console:reload', [], $this->output);
 
-        //Updating commands cache
         $this->writeln("\n<info>Reloading bootload cache.</info>");
         $dispatcher->command('app:reload', [], $this->output);
 
-        //Indexing i18n usages
+        $this->writeln("\n<info>Re-loading translator locales cache...</info>");
+        $dispatcher->command('i18n:reload', [], $this->output);
+
         $this->writeln("\n<info>Scanning translate function and [[values]] usage...</info>");
         $dispatcher->command('i18n:index', [], $this->output);
 

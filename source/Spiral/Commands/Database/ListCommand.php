@@ -31,13 +31,13 @@ class ListCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Get list of available databases, their tables and records count.';
+    protected $description = 'Get list of available databases, their tables and records count';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['db', InputArgument::OPTIONAL, 'Database name.']
+        ['db', InputArgument::OPTIONAL, 'Database name']
     ];
 
     /**

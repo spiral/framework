@@ -71,10 +71,10 @@ class ControllersRoute extends AbstractRoute
      *
      * @param string $name
      * @param string $pattern
-     * @param string $namespace   Default controllers namespace.
-     * @param string $postfix     Default controller postfix.
-     * @param array  $defaults    Default values (including default controller).
-     * @param array  $controllers Controllers aliased by their name, namespace and postfix will be
+     * @param string $namespace Default controllers namespace.
+     * @param string $postfix Default controller postfix.
+     * @param array $defaults Default values (including default controller).
+     * @param array $controllers Controllers aliased by their name, namespace and postfix will be
      *                            ignored in this case.
      */
     public function __construct(
@@ -84,7 +84,8 @@ class ControllersRoute extends AbstractRoute
         $postfix = 'Controller',
         array $defaults = [],
         array $controllers = []
-    ) {
+    )
+    {
         $this->name = $name;
         $this->pattern = $pattern;
         $this->namespace = $namespace;
@@ -117,14 +118,15 @@ class ControllersRoute extends AbstractRoute
         return function () use ($container, $route) {
             $controller = $route->matches['controller'];
 
-            //Due we are expecting part of class name we can remove some garbage
+            //Due we are expecting part of class name we can remove some garbage (see to-do below)
             $controller = strtolower(preg_replace('/[^a-z_0-9]+/i', '', $controller));
 
             if (isset($route->controllers[$controller])) {
                 //Aliased
                 $controller = $route->controllers[$controller];
             } else {
-                $controller = $route->namespace . '\\' . ucfirst($controller) . $route->postfix;
+                //todo: Use better logic, maybe Doctrine Inflector (maybe class-name style)
+                $controller = $route->namespace . '\\' . (ucfirst($controller) . $route->postfix);
             }
 
             return $route->callAction(

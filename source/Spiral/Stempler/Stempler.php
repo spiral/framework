@@ -11,6 +11,8 @@ use Spiral\Stempler\Syntaxes\WooSyntax;
 
 /**
  * Provides ability to compose multiple html files together.
+ *
+ * @todo Separate into components, there is lock via LoaderInterface now and some exception class.
  */
 class Stempler
 {

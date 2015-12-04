@@ -26,21 +26,21 @@ class ServerCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Run development server on specified host and port.';
+    protected $description = 'Run development server on specified host and port';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['host', InputArgument::OPTIONAL, 'Host name.', 'localhost']
+        ['host', InputArgument::OPTIONAL, 'Host name', 'localhost']
     ];
 
     /**
      * {@inheritdoc}
      */
     protected $options = [
-        ['port', 'p', InputOption::VALUE_OPTIONAL, 'Port number.', 8080],
-        ['timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout to hang out server.', 36000],
+        ['port', 'p', InputOption::VALUE_OPTIONAL, 'Port number', 8080],
+        ['timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout to hang out server', 36000],
     ];
 
     /**

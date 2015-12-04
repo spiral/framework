@@ -23,7 +23,7 @@ class ReloadCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Reload application boot-loading list.';
+    protected $description = 'Reload application boot-loading list';
 
     /**
      * @param HippocampusInterface $memory

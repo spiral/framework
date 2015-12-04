@@ -65,13 +65,7 @@ trait TimestampsTrait
      */
     protected static function __describe__timestamps()
     {
-        /**
-         * @var EventDispatcher $dispatcher
-         */
-        $dispatcher = self::events();
-
-        //To modify schema
-        $dispatcher->addListener('describe', self::__timestamps__describeListener());
+        self::events()->addListener('describe', self::__timestamps__describeListener());
     }
 
     /**
@@ -116,7 +110,7 @@ trait TimestampsTrait
     private static function __timestamps__describeListener()
     {
         return function (DescribeEvent $event) {
-            if (!$event->getProperty() != 'schema') {
+            if ($event->getProperty() != 'schema') {
                 return;
             }
 

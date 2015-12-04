@@ -12,11 +12,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerAwareInterface;
 use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
-use Spiral\Debug\SnapshotInterface;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Spiral\Http\MiddlewareInterface;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Views\ViewsInterface;
@@ -24,8 +22,10 @@ use Spiral\Views\ViewsInterface;
 /**
  * Isolates exceptions into response. Ability to isolate regular exceptions is under re-thinking
  * now.
+ *
+ * Attention, middleware requests ViewsInterface on demand!
  */
-class Isolator extends Component implements MiddlewareInterface, LoggerAwareInterface
+class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerAwareInterface
 {
     /**
      * To write json responses.
@@ -42,7 +42,7 @@ class Isolator extends Component implements MiddlewareInterface, LoggerAwareInte
      *
      * @var HttpConfig
      */
-    protected $config = null;
+    protected $httpConfig = null;
 
     /**
      * Required to render error pages via ViewsInterface.
@@ -53,76 +53,13 @@ class Isolator extends Component implements MiddlewareInterface, LoggerAwareInte
     protected $container = null;
 
     /**
-     * @param HttpConfig         $config
+     * @param HttpConfig         $httpConfig
      * @param ContainerInterface $container
      */
-    public function __construct(HttpConfig $config, ContainerInterface $container)
+    public function __construct(HttpConfig $httpConfig, ContainerInterface $container)
     {
-        $this->config = $config;
+        $this->httpConfig = $httpConfig;
         $this->container = $container;
-    }
-
-    /**
-     * Write ClientException content into response.
-     *
-     * @param Request         $request
-     * @param Response        $response
-     * @param ClientException $exception
-     * @return Request
-     */
-    public function writeException(Request $request, Response $response, ClientException $exception)
-    {
-        //Has to contain valid http code
-        $response = $response->withStatus($exception->getCode());
-
-        if ($request->getHeaderLine('Accept') == 'application/json') {
-            //Json got requested
-            return $this->writeJson($response, ['status' => $exception->getCode()]);
-        }
-
-        if (
-            !$this->config->hasView($exception->getCode())
-            || !$this->container->has(ViewsInterface::class)
-        ) {
-            //We don't or can't render http error view
-            return $response;
-        }
-
-        /**
-         * @var ViewsInterface $views
-         */
-        $views = $this->container->get(ViewsInterface::class);
-
-        $errorPage = $views->render($this->config->errorView($exception->getCode()), [
-            'httpConfig' => $this->config,
-            'request'    => $request
-        ]);
-
-        $response->getBody()->write($errorPage);
-
-        return $response;
-    }
-
-    /**
-     * Write snapshot content into exception.
-     *
-     * @param Request           $request
-     * @param Response          $response
-     * @param SnapshotInterface $snapshot
-     * @return Response
-     */
-    public function writeSnapshot(Request $request, Response $response, SnapshotInterface $snapshot)
-    {
-        //Exposing exception
-        if ($request->getHeaderLine('Accept') != 'application/json') {
-            $response->getBody()->write($snapshot->render());
-
-            //Normal exception page
-            return $response->withStatus(ClientException::ERROR);
-        }
-
-        //Exception in a form of JSON object
-        return $this->writeJson($response, $snapshot->describe(), ClientException::ERROR);
     }
 
     /**
@@ -137,33 +74,55 @@ class Isolator extends Component implements MiddlewareInterface, LoggerAwareInte
             return $next($request, $response);
 
         } catch (ClientException $exception) {
-
             //Logging client error
             $this->logError($request, $exception);
 
             return $this->writeException($request, $response, $exception);
-        } catch (\Exception $exception) {
-            /**
-             * This part is questionable.
-             */
-
-            /**
-             * Potentially has to be dedicated to specific service.
-             *
-             * @var SnapshotInterface $snapshot
-             */
-            $snapshot = $this->container->construct(SnapshotInterface::class, compact('exception'));
-
-            //Snapshot must report about itself
-            $snapshot->report();
-
-            if (!$this->config->exposeErrors()) {
-                //We are not allowed to share snapshots
-                return $this->writeException($request, $response, new ServerErrorException());
-            }
-
-            return $this->writeSnapshot($request, $response, $snapshot);
         }
+    }
+
+    /**
+     * Write ClientException content into response.
+     *
+     * @param Request         $request
+     * @param Response        $response
+     * @param ClientException $exception
+     * @return Request
+     */
+    private function writeException(
+        Request $request,
+        Response $response,
+        ClientException $exception
+    ) {
+        //Has to contain valid http code
+        $response = $response->withStatus($exception->getCode());
+
+        if ($request->getHeaderLine('Accept') == 'application/json') {
+            //Json got requested
+            return $this->writeJson($response, ['status' => $exception->getCode()]);
+        }
+
+        if (
+            !$this->httpConfig->hasView($exception->getCode())
+            || !$this->container->has(ViewsInterface::class)
+        ) {
+            //We don't or can't render http error view
+            return $response;
+        }
+
+        /**
+         * @var ViewsInterface $views
+         */
+        $views = $this->container->get(ViewsInterface::class);
+
+        $errorPage = $views->render($this->httpConfig->errorView($exception->getCode()), [
+            'httpConfig' => $this->httpConfig,
+            'request'    => $request
+        ]);
+
+        $response->getBody()->write($errorPage);
+
+        return $response;
     }
 
     /**

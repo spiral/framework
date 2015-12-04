@@ -24,10 +24,10 @@ class ResetCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Clear view cache for all environments.';
+    protected $description = 'Clear view cache for all environments';
 
     /**
-     * @param ViewsConfig    $config
+     * @param ViewsConfig $config
      * @param FilesInterface $files
      */
     public function perform(ViewsConfig $config, FilesInterface $files)

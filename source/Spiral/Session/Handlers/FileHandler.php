@@ -32,15 +32,16 @@ class FileHandler extends Component implements \SessionHandlerInterface
     protected $files = null;
 
     /**
-     * @param array          $options  Session handler options.
-     * @param int            $lifetime Default session lifetime.
+     * @param array $options Session handler options.
+     * @param int $lifetime Default session lifetime.
      * @param FilesInterface $files
      */
     public function __construct(
         array $options,
         $lifetime = 0,
         FilesInterface $files = null
-    ) {
+    )
+    {
         $this->location = $options['directory'];
 
         //Global container as fallback

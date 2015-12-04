@@ -23,7 +23,7 @@ class ConsoleConfig extends InjectableConfig
      * @var array
      */
     protected $config = [
-        'updateSequence'    => [],
+        'updateSequence' => [],
         'configureSequence' => []
     ];
 

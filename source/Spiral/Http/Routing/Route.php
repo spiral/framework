@@ -33,10 +33,10 @@ class Route extends AbstractRoute
     /**
      * New Route instance.
      *
-     * @param string          $name
-     * @param string          $pattern
+     * @param string $name
+     * @param string $pattern
      * @param string|callable $target Route target.
-     * @param array           $defaults
+     * @param array $defaults
      */
     public function __construct($name, $pattern, $target, array $defaults = [])
     {

@@ -28,6 +28,16 @@ class EvaluateProcessor extends Component implements ProcessorInterface
     ];
 
     /**
+     * @var string
+     */
+    protected $namespace = '';
+
+    /**
+     * @var string
+     */
+    protected $view = '';
+
+    /**
      * @var FilesInterface
      */
     protected $files = null;
@@ -57,14 +67,17 @@ class EvaluateProcessor extends Component implements ProcessorInterface
     }
 
     /**
-     * @param string        $source
-     * @param string        $cachedFilename
+     * {@inheritdoc}
+     *
      * @param Isolator|null $isolator
-     * @return string
-     * @throws \ErrorException
      */
-    public function process($source, $cachedFilename = null, Isolator $isolator = null)
-    {
+    public function process(
+        $source,
+        $namespace,
+        $view,
+        $cachedFilename = null,
+        Isolator $isolator = null
+    ) {
         $isolator = !empty($isolator) ? $isolator : new Isolator();
 
         //Let's hide original php blocks
@@ -98,6 +111,10 @@ class EvaluateProcessor extends Component implements ProcessorInterface
             ob_start();
             $__outputLevel__ = ob_get_level();
 
+            //Can be accessed in evaluated php
+            $this->namespace = $namespace;
+            $this->view = $view;
+
             try {
                 include_once $this->files->localUri($filename);
             } finally {
@@ -105,6 +122,9 @@ class EvaluateProcessor extends Component implements ProcessorInterface
                     ob_end_clean();
                 }
             }
+
+            $this->namespace = '';
+            $this->view = '';
 
             $source = ob_get_clean();
 

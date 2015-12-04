@@ -103,11 +103,11 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $debugger = null;
 
     /**
-     * @param ContainerInterface    $container
-     * @param HippocampusInterface  $memory
+     * @param ContainerInterface $container
+     * @param HippocampusInterface $memory
      * @param ClassLocatorInterface $locator
-     * @param Debugger              $debugger
-     * @param Loader                $loader
+     * @param Debugger $debugger
+     * @param Loader $loader
      */
     public function __construct(
         ContainerInterface $container,
@@ -115,7 +115,8 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         ClassLocatorInterface $locator,
         Debugger $debugger,
         Loader $loader
-    ) {
+    )
+    {
         $this->container = $container;
         $this->memory = $memory;
         $this->locator = $locator;
@@ -151,7 +152,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         foreach ($this->commands as $command) {
             try {
                 //Constructing command class
-                $command = $this->container->construct($command);
+                $command = $this->container->make($command);
                 if (method_exists($command, 'isAvailable') && !$command->isAvailable()) {
                     continue;
                 }
@@ -191,9 +192,9 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * Execute console command using it's name.
      *
-     * @param string               $command
+     * @param string $command
      * @param array|InputInterface $input
-     * @param OutputInterface      $output
+     * @param OutputInterface $output
      * @return CommandOutput
      * @throws ConsoleException
      */
@@ -207,6 +208,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             $output = new BufferedOutput();
         }
 
+        //todo: do we need input scope?
         $this->openScope($input, $output);
         $code = self::CODE_UNDEFINED;
 
@@ -266,7 +268,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             $output = new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        $this->application()->renderException($snapshot->getException(), $output);
+        $this->application()->renderException($snapshot->exception(), $output);
     }
 
     /**
@@ -283,7 +285,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * Creating input/output scope in container.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     private function openScope(InputInterface $input, OutputInterface $output)

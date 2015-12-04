@@ -52,7 +52,7 @@ class ViewLoader extends Component implements LoaderInterface
     protected $files = null;
 
     /**
-     * @param array               $namespaces
+     * @param array $namespaces
      * @param FilesInterface|null $files
      */
     public function __construct(array $namespaces, FilesInterface $files = null)

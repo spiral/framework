@@ -22,9 +22,9 @@ interface ModifierInterface
     /**
      * Modify given source.
      *
-     * @param string $source    Source.
+     * @param string $source Source.
      * @param string $namespace View namespace.
-     * @param string $name      View name (no extension included).
+     * @param string $name View name (no extension included).
      * @return mixed
      */
     public function modify($source, $namespace, $name);

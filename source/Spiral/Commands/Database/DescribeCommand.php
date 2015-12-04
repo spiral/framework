@@ -32,20 +32,20 @@ class DescribeCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Describe table schema of specific database.';
+    protected $description = 'Describe table schema of specific database';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['table', InputArgument::REQUIRED, 'Table name.']
+        ['table', InputArgument::REQUIRED, 'Table name']
     ];
 
     /**
      * {@inheritdoc}
      */
     protected $options = [
-        ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database.', 'default'],
+        ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database', 'default'],
     ];
 
     /**

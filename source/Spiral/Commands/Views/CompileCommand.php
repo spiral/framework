@@ -8,6 +8,7 @@
 namespace Spiral\Commands\Views;
 
 use Spiral\Console\Command;
+use Spiral\Console\ConsoleDispatcher;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Views\ViewLocator;
 use Spiral\Views\ViewManager;
@@ -31,14 +32,21 @@ class CompileCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Compile every available view file.';
+    protected $description = 'Compile every available view file';
 
     /**
      * @param ViewLocator $locator
      * @param ViewManager $manager
+     * @param ConsoleDispatcher $dispatcher
      */
-    public function perform(ViewLocator $locator, ViewManager $manager)
-    {
+    public function perform(
+        ViewLocator $locator,
+        ViewManager $manager,
+        ConsoleDispatcher $dispatcher
+    ) {
+        //To clean up cache
+        $dispatcher->command('views:reset', [], $this->output);
+
         /**
          * @var FormatterHelper $formatter
          */

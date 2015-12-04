@@ -23,7 +23,7 @@ class ReloadCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Re-index console commands.';
+    protected $description = 'Re-index console commands';
 
     /**
      * @param ConsoleDispatcher $dispatcher

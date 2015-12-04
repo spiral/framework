@@ -23,6 +23,9 @@ interface SyntaxInterface
     const TYPE_INCLUDE  = 'include';
     const TYPE_NONE     = 'none';
 
+    //todo: yep, self modifiable syntax
+    const TYPE_DIRECTIVE = 'directive';
+
     /**
      * In strict mode every unpaired close tag or other html error will raise an
      * StrictModeException.

@@ -24,7 +24,7 @@ interface RouterInterface
      * Valid endpoint for MiddlewarePipeline.
      *
      * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
+     * @param ResponseInterface $response
      * @return ResponseInterface
      * @throws ClientException
      */
@@ -63,8 +63,8 @@ interface RouterInterface
      * and action name separated by ":" - in this case router should find appropriate route and
      * create url using it.
      *
-     * @param string           $route      Route name.
-     * @param array            $parameters Accepts only arrays at this moment.
+     * @param string $route Route name.
+     * @param array $parameters Accepts only arrays at this moment.
      * @param SlugifyInterface $slugify
      * @return UriInterface
      * @throws RouterException

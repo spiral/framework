@@ -19,9 +19,9 @@ interface CoreInterface
      * controller, we can request it too.
      *
      * @param string $controller Controller class.
-     * @param string $action     Controller action, empty by default (controller will use default
+     * @param string $action Controller action, empty by default (controller will use default
      *                           action).
-     * @param array  $parameters Action parameters (if any).
+     * @param array $parameters Action parameters (if any).
      * @return mixed
      * @throws ControllerException
      * @throws \Exception

@@ -26,18 +26,19 @@ class KeyCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Update application encryption key.';
+    protected $description = 'Update application encryption key';
 
     /**
      * @param DirectoriesInterface $directories
-     * @param FilesInterface       $files
-     * @param EncrypterConfig      $config
+     * @param FilesInterface $files
+     * @param EncrypterConfig $config
      */
     public function perform(
         DirectoriesInterface $directories,
         FilesInterface $files,
         EncrypterConfig $config
-    ) {
+    )
+    {
         $envFilename = $directories->directory('root') . '.env';
 
         if (!$files->exists($envFilename)) {

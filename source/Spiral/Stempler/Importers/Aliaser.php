@@ -8,7 +8,6 @@
 namespace Spiral\Stempler\Importers;
 
 use Spiral\Stempler\ImporterInterface;
-use Spiral\Stempler\Stempler;
 
 /**
  * {@inheritdoc}

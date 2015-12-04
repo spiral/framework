@@ -44,8 +44,8 @@ class ConsoleLogger extends AbstractLogger
 
     /**
      * @param OutputInterface $output
-     * @param array           $formats
-     * @param string          $section Formatting section, optional.
+     * @param array $formats
+     * @param string $section Formatting section, optional.
      */
     public function __construct(OutputInterface $output, array $formats, $section = '')
     {

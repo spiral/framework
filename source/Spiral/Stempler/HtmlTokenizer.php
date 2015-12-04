@@ -13,6 +13,8 @@ use Spiral\Tokenizer\Isolator;
  * Perform html code tokenization. Class used for spiral Stempler and can be used for other html
  * related operations. HtmlTokenizer is pretty slow! Please don't forget that this is tokenizer,
  * not parser.
+ *
+ * @todo very old class, improvement required
  */
 class HtmlTokenizer
 {
@@ -246,6 +248,7 @@ class HtmlTokenizer
         //Parsing arguments, due they already checked for open-close quotas we can use regular expression
         $attribute = '/(?P<name>[a-z0-9_\-\.\:]+)[ \n\t\r]*(?:(?P<equal>=)[ \n\t\r]*'
             . '(?P<value>[a-z0-9\-]+|\'[^\']+\'|\"[^\"]+\"|\"\"))?/si';
+        //todo: need better regexp for quotes
 
         preg_match_all($attribute, $content, $attributes);
 
@@ -254,7 +257,12 @@ class HtmlTokenizer
                 $value = trim($value, $value{0});
             }
 
-            $name = $this->repairPHP($isolator->repairPHP($attributes['name'][$index]));
+            //Restoring global php isolation
+            $name = $this->repairPHP(
+            //Restoring local php isolation
+                $isolator->repairPHP($attributes['name'][$index])
+            );
+
             $token[self::TOKEN_ATTRIBUTES][$name] = $this->repairPHP($isolator->repairPHP($value));
 
             if (empty($attributes['equal'][$index])) {

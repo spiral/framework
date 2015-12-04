@@ -31,7 +31,7 @@ class EntityInspection
     protected $inspector = null;
 
     /**
-     * @param Inspector        $inspector
+     * @param Inspector $inspector
      * @param ReflectionEntity $entity
      */
     public function __construct(Inspector $inspector, ReflectionEntity $entity)

@@ -45,8 +45,8 @@ class Strings
      * Applies htmlentities() and strip_tags() to string (if enabled). Can be used to clean up
      * data before rendering it in HTML.
      *
-     * @param string $string    String to be escaped.
-     * @param bool   $stripTags Will remove all tags using strip_tags(). Disabled by default.
+     * @param string $string String to be escaped.
+     * @param bool $stripTags Will remove all tags using strip_tags(). Disabled by default.
      * @return string
      */
     public static function escape($string, $stripTags = false)
@@ -67,7 +67,7 @@ class Strings
      * strings.
      *
      * @param string $string
-     * @param int    $limit The max string length, 300 by default.
+     * @param int $limit The max string length, 300 by default.
      * @return string
      */
     public static function shorter($string, $limit = 300)
@@ -82,7 +82,7 @@ class Strings
     /**
      * Format bytes to human-readable format.
      *
-     * @param int $bytes    Size in bytes.
+     * @param int $bytes Size in bytes.
      * @param int $decimals The number of decimals include to output. Set to 1 by default.
      * @return string
      */
@@ -100,8 +100,8 @@ class Strings
      * Normalize string endings to avoid EOL problem. Replace \n\r and multiply new lines with
      * single \n.
      *
-     * @param string $string       String to be normalized.
-     * @param bool   $joinMultiple Join multiple new lines into one.
+     * @param string $string String to be normalized.
+     * @param bool $joinMultiple Join multiple new lines into one.
      * @return mixed
      */
     public static function normalizeEndings($string, $joinMultiple = true)
@@ -128,7 +128,7 @@ class Strings
      * |-c
      * |--d
      *
-     * @param string $string         Input string with multiple lines.
+     * @param string $string Input string with multiple lines.
      * @param string $tabulationCost How to treat \t symbols relatively to spaces. By default, this
      *                               is set to 4 spaces.
      * @return string

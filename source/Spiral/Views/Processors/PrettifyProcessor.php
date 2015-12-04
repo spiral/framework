@@ -53,7 +53,7 @@ class PrettifyProcessor implements ProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function process($source, $cachedFilename = null)
+    public function process($source, $namespace, $view, $cachedFilename = null)
     {
         if ($this->options['endings']) {
             $source = $this->normalizeEndings($source, new Isolator());

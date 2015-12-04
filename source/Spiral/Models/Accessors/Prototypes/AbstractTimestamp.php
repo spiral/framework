@@ -48,7 +48,7 @@ abstract class AbstractTimestamp extends Carbon
     public function __debugInfo()
     {
         return (object)[
-            'date'     => $this->toDateTimeString(),
+            'date' => $this->toDateTimeString(),
             'timezone' => $this->timezoneName
         ];
     }

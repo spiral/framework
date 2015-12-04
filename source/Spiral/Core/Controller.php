@@ -7,7 +7,6 @@
  */
 namespace Spiral\Core;
 
-use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\ControllerInterface;
@@ -55,14 +54,11 @@ abstract class Controller extends Service implements ControllerInterface
     protected $resolver = null;
 
     /**
-     * @param ResolverInterface $resolver  Sugared.
-     * @param InteropContainer  $container Sugared.
+     * @param ContainerInterface $container Sugared.
      */
-    public function __construct(
-        ResolverInterface $resolver = null,
-        InteropContainer $container = null
-    ) {
-        $this->resolver = $this->saturate($resolver, ResolverInterface::class);
+    public function __construct(ContainerInterface $container = null)
+    {
+        $this->resolver = $this->saturate($container, ContainerInterface::class);
         parent::__construct($container);
     }
 
@@ -105,8 +101,8 @@ abstract class Controller extends Service implements ControllerInterface
 
     /**
      * @param \ReflectionMethod $method
-     * @param array             $arguments
-     * @param array             $parameters
+     * @param array $arguments
+     * @param array $parameters
      * @return mixed
      */
     protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
@@ -141,7 +137,7 @@ abstract class Controller extends Service implements ControllerInterface
      * Resolve controller method arguments.
      *
      * @param \ReflectionMethod $method
-     * @param array             $parameters
+     * @param array $parameters
      * @return array
      */
     protected function resolveArguments(\ReflectionMethod $method, array $parameters)

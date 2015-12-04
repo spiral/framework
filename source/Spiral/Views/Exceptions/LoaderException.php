@@ -6,6 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 namespace Spiral\Views\Exceptions;
+
 use Spiral\Core\Exceptions\ExceptionInterface;
 
 /**

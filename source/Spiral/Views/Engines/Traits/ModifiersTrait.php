@@ -44,7 +44,7 @@ trait ModifiersTrait
         foreach ($this->modifiers as $index => $modifier) {
             if (!is_object($modifier)) {
                 //Initiating using container
-                $this->modifiers[$index] = $this->container->construct($modifier, [
+                $this->modifiers[$index] = $this->container->make($modifier, [
                     'environment' => $this->environment
                 ]);
             }

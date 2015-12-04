@@ -113,6 +113,7 @@ class StemplerEngine extends Component implements EngineInterface
     public function compile($path, $reset = false)
     {
         $cached = $this->cache->generateKey($path);
+
         if ($this->loader->isFresh($path, $this->cache->getTimestamp($cached)) && !$reset) {
             //Compiled and cached
             return $cached;
@@ -151,6 +152,7 @@ class StemplerEngine extends Component implements EngineInterface
         }
 
         $this->loader = $loader;
+        $this->cache = new StemplerCache($this->files, $this->environment, $this->loader);
 
         return $this;
     }
@@ -161,7 +163,10 @@ class StemplerEngine extends Component implements EngineInterface
     public function setEnvironment(EnvironmentInterface $environment)
     {
         $this->environment = $environment;
-        $this->cache = new StemplerCache($this->files, $environment);
+
+        if (!empty($this->loader)) {
+            $this->cache = new StemplerCache($this->files, $environment, $this->loader);
+        }
 
         return $this;
     }
@@ -190,7 +195,12 @@ class StemplerEngine extends Component implements EngineInterface
         foreach ($this->getProcessors() as $processor) {
             $benchmark = $this->benchmark('process', $path . '@' . get_class($processor));
             try {
-                $source = $processor->process($source, $compiledFilename);
+                $source = $processor->process(
+                    $source,
+                    $this->loader->viewNamespace($path),
+                    $this->loader->viewName($path),
+                    $compiledFilename
+                );
             } finally {
                 $this->benchmark($benchmark);
             }

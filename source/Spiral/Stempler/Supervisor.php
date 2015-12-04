@@ -11,13 +11,14 @@ namespace Spiral\Stempler;
 use Spiral\Stempler\Behaviours\BlockBehaviour;
 use Spiral\Stempler\Behaviours\ExtendsBehaviour;
 use Spiral\Stempler\Behaviours\IncludeBehaviour;
+use Spiral\Stempler\Exceptions\LoaderException;
 use Spiral\Stempler\Exceptions\StemplerException;
 use Spiral\Stempler\Importers\Stopper;
 
 /**
  * Supervisors used to control node behaviours and syntax.
  */
-class Supervisor  implements SupervisorInterface
+class Supervisor implements SupervisorInterface
 {
     /**
      * Used to create unique node names when required.
@@ -140,8 +141,7 @@ class Supervisor  implements SupervisorInterface
     }
 
     /**
-     * Create node based on provided location (source to be fetched from loader). Supervisor
-     * automatically clone itself to prevent import collisions.
+     * Create node based on given location with identical supervisor (cloned).
      *
      * @param string $path
      * @param array  $token Context token.
@@ -157,7 +157,7 @@ class Supervisor  implements SupervisorInterface
 
         try {
             $source = $this->loader->getSource($path);
-        } catch (\Exception $exception) {
+        } catch (LoaderException $exception) {
             throw new StemplerException($exception->getMessage(), $token, 0, $exception);
         }
 

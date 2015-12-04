@@ -21,12 +21,12 @@ class InspectCommand extends Command
     /**
      * Visual constants.
      */
-    const YES       = 'yes';
-    const NO        = 'no';
-    const RED_YES   = '<fg=red>yes</fg=red>';
-    const RED_NO    = '<fg=red>no</fg=red>';
+    const YES = 'yes';
+    const NO = 'no';
+    const RED_YES = '<fg=red>yes</fg=red>';
+    const RED_NO = '<fg=red>no</fg=red>';
     const GREEN_YES = '<fg=green>yes</fg=green>';
-    const GREEN_NO  = '<fg=green>no</fg=green>';
+    const GREEN_NO = '<fg=green>no</fg=green>';
 
     /**
      * Description for different rank levels, rank level multiplied by 100 in this table.
@@ -34,10 +34,10 @@ class InspectCommand extends Command
      * @var array
      */
     protected $ranks = [
-        0   => '<fg=red>Very Bad</fg=red>',
-        25  => '<fg=red>Bad</fg=red>',
-        50  => '<fg=yellow>Moderate</fg=yellow>',
-        75  => '<fg=yellow>Good</fg=yellow>',
+        0 => '<fg=red>Very Bad</fg=red>',
+        25 => '<fg=red>Bad</fg=red>',
+        50 => '<fg=yellow>Moderate</fg=yellow>',
+        75 => '<fg=yellow>Good</fg=yellow>',
         100 => '<fg=green>Very Good</fg=green>'
     ];
 
@@ -49,12 +49,12 @@ class InspectCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Inspect ORM and ODM models to locate unprotected field and rules.';
+    protected $description = 'Inspect ORM and ODM models to locate unprotected field and rules';
 
     /**
      * @param InspectionsConfig $config
-     * @param ODM               $odm
-     * @param ORM               $orm
+     * @param ODM $odm
+     * @param ORM $orm
      */
     public function perform(InspectionsConfig $config, ODM $odm, ORM $orm)
     {
@@ -81,7 +81,7 @@ class InspectCommand extends Command
             [
                 'count' => number_format($inspector->countInspections()),
                 'level' => $this->describeRank($inspector->getRank()),
-                'rank'  => number_format($inspector->getRank(), 2)
+                'rank' => number_format($inspector->getRank(), 2)
             ]
         ));
     }
@@ -107,8 +107,8 @@ class InspectCommand extends Command
      * Create instance of inspector associated with ORM and ODM entities.
      *
      * @param InspectionsConfig $config
-     * @param ODM               $odm
-     * @param ORM               $orm
+     * @param ODM $odm
+     * @param ORM $orm
      * @return Inspector
      */
     protected function createInspector(InspectionsConfig $config, ODM $odm, ORM $orm)

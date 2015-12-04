@@ -25,25 +25,25 @@ class EntityCommand extends InspectCommand
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Inspect specified entity schema to locate unprotected field and rules.';
+    protected $description = 'Inspect specified entity schema to locate unprotected field and rules';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['entity', InputArgument::REQUIRED, 'Entity class name.']
+        ['entity', InputArgument::REQUIRED, 'Entity class name']
     ];
 
     /**
      * @param InspectionsConfig $config
-     * @param ODM               $odm
-     * @param ORM               $orm
+     * @param ODM $odm
+     * @param ORM $orm
      */
     public function perform(InspectionsConfig $config, ODM $odm, ORM $orm)
     {
         $inspector = $this->createInspector($config, $odm, $orm);
 
-        $inspection = $inspector->inspection( $this->argument('entity'));
+        $inspection = $inspector->inspection($this->argument('entity'));
 
         $table = $this->tableHelper([
             'Field',

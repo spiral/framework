@@ -10,7 +10,6 @@ namespace Spiral\Stempler\Importers;
 use Spiral\Stempler\ImporterInterface;
 use Spiral\Views\Exceptions\ViewsException;
 use Spiral\Views\Processors\TemplateProcessor;
-use Spiral\Views\ViewManager;
 
 /**
  * Namespace importer provides ability to include multiple elements using common namespace prefix.

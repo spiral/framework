@@ -170,7 +170,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
      * Writes a message to the output.
      *
      * @param string|array $messages The message as an array of lines or a single string
-     * @param bool         $newline  Whether to add a newline
+     * @param bool $newline Whether to add a newline
      * @throws \InvalidArgumentException When unknown output type is given
      */
     protected function write($messages, $newline = false)
@@ -224,8 +224,8 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     /**
      * Table helper instance with configured header and pre-defined set of rows.
      *
-     * @param array  $headers
-     * @param array  $rows
+     * @param array $headers
+     * @param array $rows
      * @param string $style
      * @return Table
      */

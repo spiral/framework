@@ -7,14 +7,16 @@
  */
 namespace Spiral\Http;
 
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
-use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
-use Spiral\Http\Middlewares\Isolator;
+use Spiral\Http\Exceptions\ClientException;
+use Spiral\Http\Traits\JsonTrait;
 use Spiral\Http\Traits\RouterTrait;
 use Zend\Diactoros\ServerRequestFactory;
 
@@ -27,7 +29,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * HttpDispatcher has embedded router and log it's errors.
      */
-    use RouterTrait;
+    use RouterTrait, JsonTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -83,25 +85,13 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
-        /**
-         * Isolator can write exception/snapshot information into given response.
-         *
-         * @var Isolator $isolator
-         */
-        $isolator = $this->container->get(Isolator::class);
-
         //Somewhere outside of dispatcher
         $request = $this->request();
         $response = $this->response();
 
-        if (!$this->config->exposeErrors()) {
-            //Http was not allowed to show any error snapshot to client
-            $response = $isolator->writeException($request, $response, new ServerErrorException());
-        } else {
-            $response = $isolator->writeSnapshot($request, $response, $snapshot);
-        }
-
-        $this->dispatch($response);
+        $this->dispatch(
+            $this->writeSnapshot($request, $response, $snapshot)
+        );
     }
 
     /**
@@ -147,9 +137,34 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     protected function createRouter()
     {
-        return $this->container->construct(
+        return $this->container->make(
             $this->config->routerClass(),
             $this->config->routerParameters()
         );
+    }
+
+    /**
+     * Write snapshot content into exception.
+     *
+     * @param Request           $request
+     * @param Response          $response
+     * @param SnapshotInterface $snapshot
+     * @return Response
+     */
+    private function writeSnapshot(
+        Request $request,
+        Response $response,
+        SnapshotInterface $snapshot
+    ) {
+        //Exposing exception
+        if ($request->getHeaderLine('Accept') != 'application/json') {
+            $response->getBody()->write($snapshot->render());
+
+            //Normal exception page
+            return $response->withStatus(ClientException::ERROR);
+        }
+
+        //Exception in a form of JSON object
+        return $this->writeJson($response, $snapshot->describe(), ClientException::ERROR);
     }
 }

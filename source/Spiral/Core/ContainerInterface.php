@@ -16,7 +16,7 @@ use Spiral\Core\Exceptions\Container\ContainerException;
  * @see InjectorInterface
  * @see SingletonInterface
  */
-interface ContainerInterface extends ConstructorInterface, ResolverInterface, InteropContainer
+interface ContainerInterface extends FactoryInterface, ResolverInterface, InteropContainer
 {
     /**
      * Bind value resolver to container alias. Resolver can be class name (will be constructed
@@ -24,7 +24,7 @@ interface ContainerInterface extends ConstructorInterface, ResolverInterface, In
      * method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
      *
-     * @param string                $alias
+     * @param string $alias
      * @param string|array|callable $resolver
      */
     public function bind($alias, $resolver);
@@ -33,7 +33,7 @@ interface ContainerInterface extends ConstructorInterface, ResolverInterface, In
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
      *
-     * @param string                $alias
+     * @param string $alias
      * @param string|array|callable $resolver
      */
     public function bindSingleton($alias, $resolver);
@@ -43,7 +43,7 @@ interface ContainerInterface extends ConstructorInterface, ResolverInterface, In
      * binding, previous binding can be restored using restore() method and such payload.
      *
      * @see restore()
-     * @param string                $alias
+     * @param string $alias
      * @param string|array|callable $resolver
      * @return mixed
      */

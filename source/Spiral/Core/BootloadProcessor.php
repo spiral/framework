@@ -29,7 +29,7 @@ class BootloadProcessor
 
 
     /**
-     * @param array                $bootloaders
+     * @param array $bootloaders
      * @param HippocampusInterface $memory
      */
     public function __construct(array $bootloaders, HippocampusInterface $memory)
@@ -42,7 +42,7 @@ class BootloadProcessor
      * Initiate all given service providers. Has ability to cache list in memory.
      *
      * @param ContainerInterface $container
-     * @param string|null        $memory Memory section to be used for caching, set to null to
+     * @param string|null $memory Memory section to be used for caching, set to null to
      *                                   disable caching.
      */
     public function bootload(ContainerInterface $container, $memory = null)
@@ -70,7 +70,7 @@ class BootloadProcessor
      * Bootload based on schema.
      *
      * @param ContainerInterface $container
-     * @param array              $schema
+     * @param array $schema
      */
     protected function schematicBootload(ContainerInterface $container, array $schema)
     {
@@ -100,7 +100,7 @@ class BootloadProcessor
     protected function generateSchema(ContainerInterface $container)
     {
         $schema = [
-            'snapshot'    => $this->bootloaders,
+            'snapshot' => $this->bootloaders,
             'bootloaders' => []
         ];
 
@@ -141,7 +141,7 @@ class BootloadProcessor
      * Bind declared bindings.
      *
      * @param ContainerInterface $container
-     * @param array              $bootSchema
+     * @param array $bootSchema
      */
     protected function initBindings(ContainerInterface $container, array $bootSchema)
     {

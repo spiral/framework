@@ -49,7 +49,7 @@ class Router implements RouterInterface
      *
      * @param RouteInterface|array $default Default route or options to construct instance of
      *                                      DirectRoute.
-     * @param bool                 $keepOutput
+     * @param bool $keepOutput
      * @throws RouterException
      */
     public function __construct(ContainerInterface $container, $basePath = '/')
@@ -156,7 +156,7 @@ class Router implements RouterInterface
      * Find route matched for given request.
      *
      * @param ServerRequestInterface $request
-     * @param string                 $basePath
+     * @param string $basePath
      * @return null|RouteInterface
      */
     protected function findRoute(ServerRequestInterface $request, $basePath)

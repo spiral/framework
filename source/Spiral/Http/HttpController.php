@@ -10,6 +10,7 @@ namespace Spiral\Http;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Controller;
+use Spiral\Http\Traits\MiddlewaresTrait;
 
 /**
  * Controller with MiddlewarePipeline (PSR-7) functionality added. HttpController actions will
@@ -18,11 +19,9 @@ use Spiral\Core\Controller;
 class HttpController extends Controller
 {
     /**
-     * You can define controller specific middlewares by redefining this property.
-     *
-     * @var array
+     * Managing middlewares.
      */
-    protected $middlewares = [];
+    use MiddlewaresTrait;
 
     /**
      * {@inheritdoc}

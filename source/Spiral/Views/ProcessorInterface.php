@@ -14,8 +14,10 @@ interface ProcessorInterface
 {
     /**
      * @param string $source
+     * @param string $namespace
+     * @param string $view
      * @param string $cachedFilename
      * @return string
      */
-    public function process($source, $cachedFilename = null);
+    public function process($source, $namespace, $view, $cachedFilename = null);
 }

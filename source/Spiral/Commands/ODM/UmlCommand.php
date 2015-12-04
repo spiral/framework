@@ -26,18 +26,18 @@ class UmlCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Export ODM schema to UML.';
+    protected $description = 'Export ODM schema to UML';
 
     /**
      * {@inheritdoc}
      */
     protected $arguments = [
-        ['filename', InputArgument::REQUIRED, 'Output filename.'],
+        ['filename', InputArgument::REQUIRED, 'Output filename'],
     ];
 
     /**
      * @param FilesInterface $files
-     * @param ODM            $odm
+     * @param ODM $odm
      */
     public function perform(FilesInterface $files, ODM $odm)
     {

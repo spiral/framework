@@ -29,8 +29,8 @@ class SessionConfig extends InjectableConfig
      */
     protected $config = [
         'lifetime' => 86400,
-        'cookie'   => 'spiral-session',
-        'handler'  => self::NATIVE_HANDLER,
+        'cookie' => 'spiral-session',
+        'handler' => self::NATIVE_HANDLER,
         'handlers' => []
     ];
 

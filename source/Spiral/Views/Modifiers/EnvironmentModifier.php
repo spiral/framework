@@ -37,7 +37,7 @@ class EnvironmentModifier implements ModifierInterface
      * All modifiers should be requested using container (you can add more dependencies).
      *
      * @param EnvironmentInterface $environment
-     * @param string               $pattern
+     * @param string $pattern
      */
     public function __construct(EnvironmentInterface $environment, $pattern = '')
     {
@@ -48,9 +48,9 @@ class EnvironmentModifier implements ModifierInterface
     /**
      * Modify given source.
      *
-     * @param string $source    Source.
+     * @param string $source Source.
      * @param string $namespace View namespace.
-     * @param string $name      View name (no extension included).
+     * @param string $name View name (no extension included).
      * @return mixed
      */
     public function modify($source, $namespace, $name)

@@ -18,7 +18,7 @@ interface SessionInterface
      * Set session id, if session already started data has to be committed to permanent storage.
      *
      * @param string $id
-     * @param bool   $start Automatically start session with new id.
+     * @param bool $start Automatically start session with new id.
      * @throws SessionException
      */
     public function setID($id, $start = true);
@@ -44,14 +44,14 @@ interface SessionInterface
      *
      * @return bool
      */
-    public function started();
+    public function isStarted();
 
     /**
      * Check is session were destroyed.
      *
      * @return bool
      */
-    public function destroyed();
+    public function isDestroyed();
 
     /**
      * Commit all session data to session handler, this will close session before script ends.
@@ -80,7 +80,7 @@ interface SessionInterface
      * Set data in session. Value will be immediately available via $_SESSION array.
      *
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      * @return mixed
      * @throws SessionException
      */
@@ -99,7 +99,7 @@ interface SessionInterface
      * Get value stored in session.
      *
      * @param string $name
-     * @param mixed  $default
+     * @param mixed $default
      * @return mixed
      * @throws SessionException
      */
@@ -109,7 +109,7 @@ interface SessionInterface
      * Increment numeric value stored in cache. Must return incremented value.
      *
      * @param string $name
-     * @param int    $delta How much to increment by. Set to 1 by default.
+     * @param int $delta How much to increment by. Set to 1 by default.
      * @return int
      * @throws SessionException
      */
@@ -119,7 +119,7 @@ interface SessionInterface
      * Decrement numeric value stored in cache. Must return decremented value.
      *
      * @param string $name
-     * @param int    $delta How much to decrement by. Set to 1 by default.
+     * @param int $delta How much to decrement by. Set to 1 by default.
      * @return int
      * @throws SessionException
      */

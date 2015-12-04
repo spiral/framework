@@ -13,7 +13,7 @@ use Spiral\Stempler\Behaviours\IncludeBehaviour;
 use Spiral\Stempler\Exceptions\StrictModeException;
 
 /**
- * Template Node represents simple XML like tree of blocks defined by behaviours provided by it's
+ * Stempler Node represents simple XML like tree of blocks defined by behaviours provided by it's
  * supervisor. Node utilizes HtmlTokenizer to create set of tokens being feeded to supervisor.
  */
 class Node
@@ -114,6 +114,7 @@ class Node
         }
 
         if (!$this->extended && !$replace) {
+            //No parent yet, block are open
             $this->mountNode($node);
 
             return;
@@ -149,7 +150,7 @@ class Node
     public function findNode($name)
     {
         foreach ($this->nodes as $node) {
-            if ($node instanceof self && $node->name) {
+            if ($node instanceof self && !empty($node->name)) {
                 if ($node->name === $name) {
                     return $node;
                 }
@@ -186,7 +187,7 @@ class Node
                 //We don't need outer blocks from deeper level (right?)
                 $nestedOuters = [];
 
-                //Node was never compiled
+                //Node data in a cache now
                 $dynamic[$node->name] = $compiled[$node->name] = $node->compile(
                     $nestedOuters,
                     $compiled
@@ -196,7 +197,7 @@ class Node
 
         if ($this->nodes === [null]) {
             //Valueless attributes
-            return null;
+            return '';
         }
 
         $result = '';
@@ -210,7 +211,7 @@ class Node
                 //We don't need outer blocks from deeper level (right?)
                 $nestedOuters = [];
 
-                //Node was never compiled
+                //Node data in a cache now
                 $compiled[$node->name] = $node->compile($nestedOuters, $compiled);
             }
 
