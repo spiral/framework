@@ -5,6 +5,7 @@
  *
  * @see  http://ppig.org/sites/default/files/2015-PPIG-26th-Sarkar.pdf
  *
+ * @var Throwable                            $exception
  * @var \Spiral\Debug\Snapshot               $snapshot
  * @var \Spiral\Tokenizer\TokenizerInterface $tokenizer
  */
