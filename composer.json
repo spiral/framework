@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "spiral/components": "dev-dbal-improvement",
+    "spiral/components": "dev-develop",
     "symfony/console": "~2.0",
     "symfony/process": "~2.0",
     "nesbot/carbon": "*",
