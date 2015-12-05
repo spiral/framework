@@ -9,8 +9,8 @@ if (!defined('SPIRAL_INITIAL_TIME')) {
     define('SPIRAL_INITIAL_TIME', microtime(true));
 }
 
-iF (!defined('TEST_ROOT')) {
-    define('TEST_ROOT', __DIR__ . '/');
+iF (!defined('TEST_CACHE')) {
+    define('TEST_CACHE', __DIR__ . '/cache/');
 }
 
 /**

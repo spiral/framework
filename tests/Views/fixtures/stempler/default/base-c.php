@@ -1,0 +1,1 @@
+<extends:base-b c="Block C defined in file C(default)."/>
