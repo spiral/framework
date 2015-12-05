@@ -7,7 +7,6 @@
  */
 namespace Spiral\Core;
 
-use Dotenv\Dotenv;
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
@@ -91,9 +90,14 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     protected $dispatcher = null;
 
     /**
-     * @var BootloadProcessor
+     * @var BootloadManager
      */
     protected $bootloader = null;
+
+    /**
+     * @var EnvironmentInterface
+     */
+    protected $environment = null;
 
     /**
      * Components to be autoloader while application initialization.
@@ -134,11 +138,40 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         }
 
         $this->memory = $memory;
-
         date_default_timezone_set($this->timezone);
+    }
 
-        //Initial env variables
-        $this->initEnvironment();
+    /**
+     * Set application enviroment.
+     *
+     * @param EnvironmentInterface $environment
+     */
+    public function setEnvironment(EnvironmentInterface $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @return EnvironmentInterface
+     * @throws CoreException
+     */
+    public function environment()
+    {
+        if (empty($this->environment)) {
+            throw new CoreException("Application environment not set.");
+        }
+
+        return $this->environment;
+    }
+
+    /**
+     * List of components to be loaded with application.
+     *
+     * @return array
+     */
+    public function loadList()
+    {
+        return $this->load;
     }
 
     /**
@@ -283,8 +316,6 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
      */
     public function handleException($exception)
     {
-
-
         restore_error_handler();
         restore_exception_handler();
 
@@ -325,7 +356,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     protected function bootload()
     {
         //Bootloading all needed components and extensions
-        $this->bootloader = new BootloadProcessor($this->load, $this->memory);
+        $this->bootloader = new BootloadManager($this->load, $this->memory);
 
         if (static::MEMORIZE_BOOTLOADERS) {
             $this->bootloader->bootload($this->container, 'bootloading');
@@ -367,67 +398,56 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
             $container = new SpiralContainer();
         }
 
-        /**
-         * @var Core $spiral
-         */
-        $spiral = new static($directories, $container);
-
         //Self binding
         $container->bindSingleton(ContainerInterface::class, $container);
 
-        //Core binding
-        $container->bindSingleton(self::class, $spiral)->bind(static::class, $spiral);
-
-        //Directories manager
-        $container->bindSingleton(DirectoriesInterface::class, $spiral);
-
-        //Memory binding
-        $container->bindSingleton(HippocampusInterface::class, $spiral->memory);
-
-        //HMVC core binding
-        $container->bindSingleton(CoreInterface::class, $spiral);
-
-        //Configurator is needed to configure every other component
-        $configurator = $container->make(Configurator::class, [
-            'directory' => $spiral->directory('config')
-        ]);
-
-        //Configurator binding
-        $container->bindSingleton(ConfiguratorInterface::class, $configurator);
-
-        //Error and exception handlers
-        if ($handleErrors) {
-            register_shutdown_function([$spiral, 'handleShutdown']);
-            set_error_handler([$spiral, 'handleError']);
-            set_exception_handler([$spiral, 'handleException']);
-        }
-
         //Some sugar for modules, technically can be used as wrapper only here and in start method
-        self::staticContainer($spiral->container);
-
-        $spiral->bootload();
-
-        //Bootstrapping our application
-        $spiral->bootstrap();
-
-        return $spiral;
-    }
-
-    /**
-     * Define current environment using either application memory or .env file (slower).
-     *
-     * @todo move into separate component and cache inside memory
-     */
-    private function initEnvironment()
-    {
-        if (!file_exists($this->directory('root') . '.env')) {
-            return;
+        if (empty(self::staticContainer())) {
+            //todo: better logic needed
+            self::staticContainer($container);
         }
 
         /**
-         * DotEnv is pretty slow, i have to cache it using hippocampus at one moment.
+         * @var Core $core
          */
-        $dotenv = new Dotenv($this->directory('root'));
-        $dotenv->load();
+        $core = new static($directories, $container);
+
+        //Core binding
+        $container->bindSingleton(self::class, $core);
+        $container->bindSingleton(static::class, $core);
+        $container->bindSingleton(DirectoriesInterface::class, $core);
+        $container->bindSingleton(HippocampusInterface::class, $core->memory);
+        $container->bindSingleton(CoreInterface::class, $core);
+
+        //Configurator binding
+        $container->bindSingleton(ConfiguratorInterface::class, $container->make(
+            Configurator::class, ['directory' => $core->directory('config')]
+        ));
+
+        //Setting environment (by default we are using dotenv extension)
+        $environment = new Environment(
+            $core->directory('root') . '.env',
+            $container->get(FilesInterface::class),
+            $core->memory
+        );
+
+        $environment->load();
+
+        $container->bindSingleton(EnvironmentInterface::class, $environment);
+        $core->setEnvironment($environment);
+
+        //Error and exception handlers
+        if ($handleErrors) {
+            register_shutdown_function([$core, 'handleShutdown']);
+            set_error_handler([$core, 'handleError']);
+            set_exception_handler([$core, 'handleException']);
+        }
+
+         $core->bootload();
+
+        //Bootstrapping our application
+        $core->bootstrap();
+
+        return $core;
     }
 }

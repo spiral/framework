@@ -12,7 +12,7 @@ use Spiral\Core\Bootloaders\BootloaderInterface;
 /**
  * Provides ability to bootload ServiceProviders.
  */
-class BootloadProcessor
+class BootloadManager
 {
     /**
      * Components/initializers to be autoloader while application initialization.
@@ -26,7 +26,6 @@ class BootloadProcessor
      * @var HippocampusInterface
      */
     protected $memory = null;
-
 
     /**
      * @param array                $bootloaders
