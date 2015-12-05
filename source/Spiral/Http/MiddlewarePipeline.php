@@ -59,14 +59,13 @@ class MiddlewarePipeline extends Component
 
     /**
      * @param callable[]|MiddlewareInterface[] $middleware
-     * @param ContainerInterface $container Spiral container is needed, due scoping.
+     * @param ContainerInterface               $container Spiral container is needed, due scoping.
      * @throws SugarException
      */
     public function __construct(
         array $middleware = [],
         ContainerInterface $container = null
-    )
-    {
+    ) {
         $this->middlewares = $middleware;
         $this->container = $this->saturate($container, ContainerInterface::class);
     }
@@ -101,7 +100,7 @@ class MiddlewarePipeline extends Component
      * Pass request and response though every middleware to target and return generated and wrapped
      * response.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @return Response
      */
@@ -113,8 +112,8 @@ class MiddlewarePipeline extends Component
     /**
      * Get next chain to be called. Exceptions will be converted to responses.
      *
-     * @param int $position
-     * @param Request $request
+     * @param int      $position
+     * @param Request  $request
      * @param Response $response
      * @return null|Response
      * @throws \Exception
@@ -143,7 +142,7 @@ class MiddlewarePipeline extends Component
     /**
      * Run pipeline target and return generated response.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @return Response
      */
@@ -178,7 +177,7 @@ class MiddlewarePipeline extends Component
     /**
      * Execute endpoint and return it's result.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @return mixed
      */
@@ -191,8 +190,8 @@ class MiddlewarePipeline extends Component
      * Convert endpoint result into valid response.
      *
      * @param Response $response Initial pipeline response.
-     * @param mixed $result Generated endpoint output.
-     * @param string $output Buffer output.
+     * @param mixed    $result   Generated endpoint output.
+     * @param string   $output   Buffer output.
      * @return Response
      */
     private function wrapResponse(Response $response, $result = null, $output = '')
@@ -217,8 +216,8 @@ class MiddlewarePipeline extends Component
     /**
      * Get next callable element.
      *
-     * @param int $position
-     * @param Request $outerRequest
+     * @param int      $position
+     * @param Request  $outerRequest
      * @param Response $outerResponse
      * @return \Closure
      */
@@ -243,7 +242,7 @@ class MiddlewarePipeline extends Component
     /**
      * Open container scope and share instances of request and response.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      */
     private function openScope(Request $request, Response $response)

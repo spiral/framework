@@ -31,7 +31,7 @@ class Inspector extends Component
     protected $inspections = [];
 
     /**
-     * @param InspectionsConfig $config
+     * @param InspectionsConfig  $config
      * @param ReflectionEntity[] $reflections Schemas to be inspected.
      */
     public function __construct(InspectionsConfig $config, array $reflections = [])

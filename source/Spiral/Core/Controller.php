@@ -101,8 +101,8 @@ abstract class Controller extends Service implements ControllerInterface
 
     /**
      * @param \ReflectionMethod $method
-     * @param array $arguments
-     * @param array $parameters
+     * @param array             $arguments
+     * @param array             $parameters
      * @return mixed
      */
     protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
@@ -137,7 +137,7 @@ abstract class Controller extends Service implements ControllerInterface
      * Resolve controller method arguments.
      *
      * @param \ReflectionMethod $method
-     * @param array $parameters
+     * @param array             $parameters
      * @return array
      */
     protected function resolveArguments(\ReflectionMethod $method, array $parameters)

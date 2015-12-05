@@ -25,20 +25,20 @@ class ConsoleHandler extends SharedHandler
      * @var array
      */
     protected $styles = [
-        'DEBUG' => 'fg=green',
-        'INFO' => 'fg=cyan',
-        'NOTICE' => 'fg=yellow',
-        'WARNING' => 'fg=yellow',
-        'ERROR' => 'fg=red',
-        'CRITICAL' => 'fg=red',
-        'ALERT' => 'fg=red',
+        'DEBUG'     => 'fg=green',
+        'INFO'      => 'fg=cyan',
+        'NOTICE'    => 'fg=yellow',
+        'WARNING'   => 'fg=yellow',
+        'ERROR'     => 'fg=red',
+        'CRITICAL'  => 'fg=red',
+        'ALERT'     => 'fg=red',
         'EMERGENCY' => 'fg=red',
     ];
 
     /**
      * @param OutputInterface $output
-     * @param bool|int $level
-     * @param bool|true $bubble
+     * @param bool|int        $level
+     * @param bool|true       $bubble
      */
     public function __construct(OutputInterface $output, $level = Logger::DEBUG, $bubble = true)
     {
@@ -69,7 +69,7 @@ class ConsoleHandler extends SharedHandler
      * @param string $channel
      * @param string $level
      * @param string $message
-     * @param array $context
+     * @param array  $context
      * @return string
      */
     protected function formatMessage($channel, $level, $message, array $context)
@@ -85,8 +85,8 @@ class ConsoleHandler extends SharedHandler
         $this->output->writeln(\Spiral\interpolate(
             "<{style}>{prefix}</{style}> {message}",
             [
-                'style' => $this->prefixStyle($level),
-                'prefix' => $this->getPrefix($channel),
+                'style'   => $this->prefixStyle($level),
+                'prefix'  => $this->getPrefix($channel),
                 'message' => $message
             ]
         ));

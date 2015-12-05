@@ -26,12 +26,12 @@ use Spiral\Http\Request\InputInterface;
  * populate RequestFilters.
  *
  * @property-read HeadersBag $headers
- * @property-read InputBag $data
- * @property-read InputBag $query
- * @property-read InputBag $cookies
- * @property-read FilesBag $files
- * @property-read ServerBag $server
- * @property-read InputBag $attributes
+ * @property-read InputBag   $data
+ * @property-read InputBag   $query
+ * @property-read InputBag   $cookies
+ * @property-read FilesBag   $files
+ * @property-read ServerBag  $server
+ * @property-read InputBag   $attributes
  */
 class InputManager extends Component implements MiddlewareInterface, InputInterface
 {
@@ -47,32 +47,32 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
      * @var array
      */
     protected $bagAssociations = [
-        'headers' => [
-            'class' => HeadersBag::class,
+        'headers'    => [
+            'class'  => HeadersBag::class,
             'source' => 'getHeaders'
         ],
-        'data' => [
-            'class' => InputBag::class,
+        'data'       => [
+            'class'  => InputBag::class,
             'source' => 'getParsedBody'
         ],
-        'query' => [
-            'class' => InputBag::class,
+        'query'      => [
+            'class'  => InputBag::class,
             'source' => 'getQueryParams'
         ],
-        'cookies' => [
-            'class' => InputBag::class,
+        'cookies'    => [
+            'class'  => InputBag::class,
             'source' => 'getCookieParams'
         ],
-        'files' => [
-            'class' => FilesBag::class,
+        'files'      => [
+            'class'  => FilesBag::class,
             'source' => 'getUploadedFiles'
         ],
-        'server' => [
-            'class' => ServerBag::class,
+        'server'     => [
+            'class'  => ServerBag::class,
             'source' => 'getServerParams'
         ],
         'attributes' => [
-            'class' => InputBag::class,
+            'class'  => InputBag::class,
             'source' => 'getAttributes'
         ]
     ];
@@ -100,7 +100,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
     /**
      * Pass request thought middleware and receive resulted response.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @param callable $next Next middleware/target. Always returns ResponseInterface.
      * @return Response
@@ -244,8 +244,8 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
     }
 
     /**
-     * @param string $name
-     * @param mixed $default
+     * @param string      $name
+     * @param mixed       $default
      * @param bool|string $implode Implode header lines, false to return header as array.
      * @return mixed
      */
@@ -256,7 +256,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function data($name, $default = null)
@@ -267,7 +267,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
     /**
      * @see data()
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function post($name, $default = null)
@@ -277,7 +277,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function query($name, $default = null)
@@ -287,7 +287,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function cookie($name, $default = null)
@@ -297,7 +297,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      * @return UploadedFileInterface|null
      */
     public function file($name, $default = null)
@@ -307,7 +307,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function server($name, $default = null)
@@ -317,7 +317,7 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function attribute($name, $default = null)

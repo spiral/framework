@@ -41,7 +41,7 @@ class Configurator implements ConfiguratorInterface
     protected $files = null;
 
     /**
-     * @param string $directory
+     * @param string         $directory
      * @param FilesInterface $files
      */
     public function __construct($directory, FilesInterface $files)

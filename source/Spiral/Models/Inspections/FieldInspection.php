@@ -64,12 +64,12 @@ class FieldInspection extends Component
 
     /**
      * @param Inspector $inspector
-     * @param string $name
-     * @param string $type
-     * @param bool $fillable
-     * @param bool $hidden
-     * @param bool $filtered
-     * @param bool $validated
+     * @param string    $name
+     * @param string    $type
+     * @param bool      $fillable
+     * @param bool      $hidden
+     * @param bool      $filtered
+     * @param bool      $validated
      */
     public function __construct(
         Inspector $inspector,
@@ -79,8 +79,7 @@ class FieldInspection extends Component
         $hidden,
         $filtered,
         $validated
-    )
-    {
+    ) {
         $this->inspector = $inspector;
 
         $this->name = $name;

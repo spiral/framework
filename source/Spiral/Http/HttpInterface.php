@@ -20,7 +20,7 @@ interface HttpInterface
      * Execute request using internal http logic.
      *
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
+     * @param ResponseInterface      $response
      * @return ResponseInterface
      * @throws ClientException
      */

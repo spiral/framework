@@ -62,16 +62,15 @@ class AskHelper extends Component
     private $hiddenFallback = null;
 
     /**
-     * @param QuestionHelper $helper Parent command.
-     * @param InputInterface $input An InputInterface instance
+     * @param QuestionHelper  $helper Parent command.
+     * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
     public function __construct(
         QuestionHelper $helper,
         InputInterface $input,
         OutputInterface $output
-    )
-    {
+    ) {
         $this->helper = $helper;
         $this->input = $input;
         $this->output = $output;
@@ -109,7 +108,7 @@ class AskHelper extends Component
      * Request user input with specified question and default value.
      *
      * @param string $question
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function input($question, $default = null)
@@ -121,7 +120,7 @@ class AskHelper extends Component
      * Request user confirmation of given question.
      *
      * @param string $question
-     * @param mixed $default
+     * @param mixed  $default
      * @return mixed
      */
     public function confirm($question, $default = null)
@@ -135,8 +134,8 @@ class AskHelper extends Component
      * Request user selection from given options list.
      *
      * @param string $question
-     * @param array $options
-     * @param mixed $default
+     * @param array  $options
+     * @param mixed  $default
      * @return mixed
      */
     public function choice($question, array $options, $default = null)

@@ -35,7 +35,7 @@ interface RouteInterface
      * Check if route matched with provided request.
      *
      * @param ServerRequestInterface $request
-     * @param string $basePath
+     * @param string                 $basePath
      * @return bool
      * @throws RouteException
      */
@@ -45,8 +45,8 @@ interface RouteInterface
      * Execute route on given request. Has to be called after match method.
      *
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param ContainerInterface $container Spiral container is needed (due scoping).
+     * @param ResponseInterface      $response
+     * @param ContainerInterface     $container Spiral container is needed (due scoping).
      * @return ResponseInterface
      */
     public function perform(
@@ -58,8 +58,8 @@ interface RouteInterface
     /**
      * Generate valid route URL using route name and set of parameters.
      *
-     * @param array $parameters Accepts only arrays at this moment.
-     * @param string $basePath
+     * @param array            $parameters Accepts only arrays at this moment.
+     * @param string           $basePath
      * @param SlugifyInterface $slugify
      * @return UriInterface
      * @throws RouteException

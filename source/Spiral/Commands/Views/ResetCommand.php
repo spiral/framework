@@ -27,7 +27,7 @@ class ResetCommand extends Command
     protected $description = 'Clear view cache for all environments';
 
     /**
-     * @param ViewsConfig $config
+     * @param ViewsConfig    $config
      * @param FilesInterface $files
      */
     public function perform(ViewsConfig $config, FilesInterface $files)

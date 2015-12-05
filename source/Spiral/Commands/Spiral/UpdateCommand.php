@@ -28,7 +28,7 @@ class UpdateCommand extends Command
     protected $description = 'Application schemas and cache update';
 
     /**
-     * @param ConsoleConfig $config
+     * @param ConsoleConfig     $config
      * @param ConsoleDispatcher $dispatcher
      */
     public function perform(ConsoleConfig $config, ConsoleDispatcher $dispatcher)

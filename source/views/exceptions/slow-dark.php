@@ -392,7 +392,8 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
                 if (!isset($trace['file'])) {
                     ?>
                     <div class="container no-trace">
-                        <?= $function ?>(<span class="arguments"><?= join(', ', $arguments) ?></span>)
+                        <?= $function ?>(<span class="arguments"><?= join(', ',
+                                $arguments) ?></span>)
                     </div>
                     <?php
                     continue;
@@ -401,7 +402,8 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
                 ?>
                 <div class="container">
                     <div class="location">
-                        <?= $function ?>(<span class="arguments"><?= join(', ', $arguments) ?></span>)
+                        <?= $function ?>(<span class="arguments"><?= join(', ',
+                                $arguments) ?></span>)
                         <em>
                             In <?= $trace['file'] ?> at
                             <strong>line <?= $trace['line'] ?></strong>
@@ -455,7 +457,8 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
                     ?>
                     <div class="call">
                         <div class="function">
-                            <?= $function ?>(<span class="arguments"><?= join(', ', $arguments) ?></span>)
+                            <?= $function ?>(<span class="arguments"><?= join(', ',
+                                    $arguments) ?></span>)
                         </div>
                         <div class="location">
                             <i><?= $trace['file'] ?></i> at
@@ -492,7 +495,8 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
                         <?= $name ?> (<?= number_format(count($GLOBALS[$variable])) ?>)
                     </div>
                     <div class="dump" id="environment-<?= $name ?>" style="display: none;">
-                        <?= $dumper->dump($GLOBALS[$variable], \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
+                        <?= $dumper->dump($GLOBALS[$variable],
+                            \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
                     </div>
                 </div>
                 <?php
@@ -515,7 +519,8 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
             <?= number_format(microtime(true) - SPIRAL_INITIAL_TIME, 3) ?> seconds
         </div>
         <div class="elapsed memory">
-            <span>Memory peak usage:</span> <?= number_format(memory_get_peak_usage() / 1024, 2) ?> Kb
+            <span>Memory peak usage:</span> <?= number_format(memory_get_peak_usage() / 1024,
+                2) ?> Kb
         </div>
     </div>
     <?php

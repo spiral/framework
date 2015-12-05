@@ -27,7 +27,7 @@ class CommandOutput extends Component
     private $output = '';
 
     /**
-     * @param int $code
+     * @param int             $code
      * @param OutputInterface $output
      */
     public function __construct($code, OutputInterface $output)

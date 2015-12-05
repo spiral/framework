@@ -27,7 +27,7 @@ class CleanCommand extends Command
     protected $description = 'Clean application runtime cache';
 
     /**
-     * @param FilesInterface $files
+     * @param FilesInterface       $files
      * @param DirectoriesInterface $directories
      */
     public function perform(FilesInterface $files, DirectoriesInterface $directories)

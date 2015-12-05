@@ -35,8 +35,8 @@ class CompileCommand extends Command
     protected $description = 'Compile every available view file';
 
     /**
-     * @param ViewLocator $locator
-     * @param ViewManager $manager
+     * @param ViewLocator       $locator
+     * @param ViewManager       $manager
      * @param ConsoleDispatcher $dispatcher
      */
     public function perform(

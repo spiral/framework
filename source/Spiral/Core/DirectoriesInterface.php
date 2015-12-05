@@ -16,7 +16,7 @@ interface DirectoriesInterface
      * Set application directory.
      *
      * @param string $alias Directory alias, ie. "framework".
-     * @param string $path Directory path without ending slash.
+     * @param string $path  Directory path without ending slash.
      * @return $this
      */
     public function setDirectory($alias, $path);

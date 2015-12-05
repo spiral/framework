@@ -41,8 +41,7 @@ abstract class JsonDocument extends DocumentEntity implements RecordAccessorInte
         EntityInterface $parent = null,
         ODM $odm = null,
         $odmSchema = null
-    )
-    {
+    ) {
         if (is_string($fields)) {
             try {
                 $fields = json_decode($fields, true);

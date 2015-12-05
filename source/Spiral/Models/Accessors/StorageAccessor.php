@@ -227,7 +227,7 @@ class StorageAccessor extends Component implements
      * Bypass call to mocked storage object.
      *
      * @param string $method
-     * @param array $arguments
+     * @param array  $arguments
      * @return mixed
      * @throws StorageAccessorException
      */
@@ -252,8 +252,8 @@ class StorageAccessor extends Component implements
      * Put object data into specified bucket under provided name. Should support filenames, PSR7
      * streams and streamable objects. Must create empty object if source empty.
      *
-     * @param string|BucketInterface $bucket
-     * @param string $name
+     * @param string|BucketInterface                    $bucket
+     * @param string                                    $name
      * @param mixed|StreamInterface|StreamableInterface $source
      * @return $this
      * @throws StorageException

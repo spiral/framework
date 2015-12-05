@@ -152,7 +152,7 @@ class Indexer extends Component
             if ($invocation->getName() == 'say') {
                 $domain = $this->translator->resolveDomain($invocation->getClass());
             } else {
-               //L or P functions
+                //L or P functions
                 if ($invocation->countArguments() >= 3) {
                     if ($invocation->argument(2)->getType() != ReflectionArgument::STRING) {
                         //Unable to resolve domain name

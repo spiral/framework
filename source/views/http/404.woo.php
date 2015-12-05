@@ -7,5 +7,6 @@
      */
     $uri = $request->getUri();
     ?>
-    [[The requested URL]] <a href="<?= $uri ?>"><?= $uri->getPath() ?></a> [[was not found on this server.]]
+    [[The requested URL]] <a
+        href="<?= $uri ?>"><?= $uri->getPath() ?></a> [[was not found on this server.]]
 </define:message>

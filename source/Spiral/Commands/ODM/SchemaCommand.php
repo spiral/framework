@@ -30,18 +30,17 @@ class SchemaCommand extends Command
     protected $description = 'Update ODM schema';
 
     /**
-     * @param Debugger $debugger
-     * @param ODM $odm
+     * @param Debugger           $debugger
+     * @param ODM                $odm
      * @param ContainerInterface $container
-     * @param ClassLocator $locator
+     * @param ClassLocator       $locator
      */
     public function perform(
         Debugger $debugger,
         ODM $odm,
         ContainerInterface $container,
         ClassLocator $locator
-    )
-    {
+    ) {
         //We don't really need location errors here
         $locator->setLogger(new NullLogger());
 

@@ -121,9 +121,9 @@ class RequestFilter extends DataEntity
     /**
      * Set element using dot notation.
      *
-     * @param array $array
+     * @param array  $array
      * @param string $path
-     * @param mixed $value
+     * @param mixed  $value
      */
     private function dotSet(array &$array, $path, $value)
     {

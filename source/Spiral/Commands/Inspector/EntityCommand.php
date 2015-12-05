@@ -36,8 +36,8 @@ class EntityCommand extends InspectCommand
 
     /**
      * @param InspectionsConfig $config
-     * @param ODM $odm
-     * @param ORM $orm
+     * @param ODM               $odm
+     * @param ORM               $orm
      */
     public function perform(InspectionsConfig $config, ODM $odm, ORM $orm)
     {

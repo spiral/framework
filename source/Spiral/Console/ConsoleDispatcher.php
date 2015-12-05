@@ -103,11 +103,11 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $debugger = null;
 
     /**
-     * @param ContainerInterface $container
-     * @param HippocampusInterface $memory
+     * @param ContainerInterface    $container
+     * @param HippocampusInterface  $memory
      * @param ClassLocatorInterface $locator
-     * @param Debugger $debugger
-     * @param Loader $loader
+     * @param Debugger              $debugger
+     * @param Loader                $loader
      */
     public function __construct(
         ContainerInterface $container,
@@ -115,8 +115,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         ClassLocatorInterface $locator,
         Debugger $debugger,
         Loader $loader
-    )
-    {
+    ) {
         $this->container = $container;
         $this->memory = $memory;
         $this->locator = $locator;
@@ -192,9 +191,9 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * Execute console command using it's name.
      *
-     * @param string $command
+     * @param string               $command
      * @param array|InputInterface $input
-     * @param OutputInterface $output
+     * @param OutputInterface      $output
      * @return CommandOutput
      * @throws ConsoleException
      */
@@ -285,7 +284,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * Creating input/output scope in container.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     private function openScope(InputInterface $input, OutputInterface $output)

@@ -31,18 +31,17 @@ class SchemaCommand extends Command
     protected $description = 'Update ORM schema';
 
     /**
-     * @param Debugger $debugger
-     * @param ORM $orm
+     * @param Debugger           $debugger
+     * @param ORM                $orm
      * @param ContainerInterface $container
-     * @param ClassLocator $locator
+     * @param ClassLocator       $locator
      */
     public function perform(
         Debugger $debugger,
         ORM $orm,
         ContainerInterface $container,
         ClassLocator $locator
-    )
-    {
+    ) {
         //We don't really need location errors here
         $locator->setLogger(new NullLogger());
 

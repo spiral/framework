@@ -118,7 +118,8 @@ class SessionStarter implements MiddlewareInterface
             //Let's mount cookie
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                $this->sessionCookie($request->getUri(), $this->session->getID(false))->createHeader()
+                $this->sessionCookie($request->getUri(),
+                    $this->session->getID(false))->createHeader()
             );
         }
 

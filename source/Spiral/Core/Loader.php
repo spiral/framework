@@ -58,8 +58,8 @@ class Loader extends Component implements SingletonInterface
      * Loader will automatically handle SPL autoload functions to start caching loadmap.
      *
      * @param HippocampusInterface $memory
-     * @param string $name Memory section name.
-     * @param bool $enable Automatically enable.
+     * @param string               $name   Memory section name.
+     * @param bool                 $enable Automatically enable.
      */
     public function __construct(HippocampusInterface $memory, $name = 'loadmap', $enable = true)
     {

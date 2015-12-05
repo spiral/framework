@@ -17,7 +17,7 @@ use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\MiddlewareInterface;
 use Spiral\Http\MiddlewarePipeline;
-use Spiral\Http\Uri;
+use Zend\Diactoros\Uri;
 
 /**
  * Base for all spiral routes.
@@ -234,8 +234,7 @@ abstract class AbstractRoute implements RouteInterface
         ServerRequestInterface $request,
         ResponseInterface $response,
         ContainerInterface $container
-    )
-    {
+    ) {
         $pipeline = new MiddlewarePipeline($this->middlewares, $container);
 
         return $pipeline->target($this->createEndpoint($container))->run($request, $response);
@@ -248,8 +247,7 @@ abstract class AbstractRoute implements RouteInterface
         $parameters = [],
         $basePath = '/',
         SlugifyInterface $slugify = null
-    )
-    {
+    ) {
         if (empty($this->compiled)) {
             $this->compile();
         }
@@ -287,9 +285,9 @@ abstract class AbstractRoute implements RouteInterface
      * Internal helper used to create execute controller action using associated core instance.
      *
      * @param ContainerInterface $container
-     * @param string $controller
-     * @param string $action
-     * @param array $parameters
+     * @param string             $controller
+     * @param string             $action
+     * @param array              $parameters
      * @return mixed
      * @throws ClientException
      */
@@ -298,8 +296,7 @@ abstract class AbstractRoute implements RouteInterface
         $controller,
         $action,
         array $parameters = []
-    )
-    {
+    ) {
         if (empty($this->core)) {
             $this->core = $container->get(CoreInterface::class);
         }
@@ -307,17 +304,16 @@ abstract class AbstractRoute implements RouteInterface
         try {
             return $this->core->callAction($controller, $action, $parameters);
         } catch (ControllerException $exception) {
-            $code = $exception->getCode();
-
-            if ($code == ControllerException::BAD_ACTION || $code == ControllerException::NOT_FOUND) {
-                throw new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
+            //Converting one exception to another
+            switch ($exception->getCode()) {
+                case ControllerException::BAD_ACTION:
+                case ControllerException::NOT_FOUND:
+                    throw new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
+                case  ControllerException::FORBIDDEN:
+                    throw new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
+                default:
+                    throw new ClientException(ClientException::BAD_DATA, $exception->getMessage());
             }
-
-            if ($code == ControllerException::FORBIDDEN) {
-                throw new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
-            }
-
-            throw new ClientException(ClientException::BAD_DATA, $exception->getMessage());
         }
     }
 
@@ -343,9 +339,9 @@ abstract class AbstractRoute implements RouteInterface
         $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $this->pattern);
 
         $this->compiled = [
-            'pattern' => '/^' . strtr($template, $replaces) . '$/iu',
+            'pattern'  => '/^' . strtr($template, $replaces) . '$/iu',
             'template' => stripslashes(str_replace('?', '', $template)),
-            'options' => array_fill_keys($options, null)
+            'options'  => array_fill_keys($options, null)
         ];
     }
 }

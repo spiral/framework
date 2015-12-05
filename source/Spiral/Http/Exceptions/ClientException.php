@@ -17,16 +17,16 @@ class ClientException extends HttpException implements ClientExceptionInterface
     /**
      * Most common codes.
      */
-    const BAD_DATA = 400;
+    const BAD_DATA     = 400;
     const UNAUTHORIZED = 401;
-    const FORBIDDEN = 403;
-    const NOT_FOUND = 404;
-    const ERROR = 500;
+    const FORBIDDEN    = 403;
+    const NOT_FOUND    = 404;
+    const ERROR        = 500;
 
     /**
      * Code and message positions are reverted.
      *
-     * @param int $code
+     * @param int    $code
      * @param string $message
      */
     public function __construct($code = null, $message = "")

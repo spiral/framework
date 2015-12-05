@@ -71,10 +71,10 @@ class ControllersRoute extends AbstractRoute
      *
      * @param string $name
      * @param string $pattern
-     * @param string $namespace Default controllers namespace.
-     * @param string $postfix Default controller postfix.
-     * @param array $defaults Default values (including default controller).
-     * @param array $controllers Controllers aliased by their name, namespace and postfix will be
+     * @param string $namespace   Default controllers namespace.
+     * @param string $postfix     Default controller postfix.
+     * @param array  $defaults    Default values (including default controller).
+     * @param array  $controllers Controllers aliased by their name, namespace and postfix will be
      *                            ignored in this case.
      */
     public function __construct(
@@ -84,8 +84,7 @@ class ControllersRoute extends AbstractRoute
         $postfix = 'Controller',
         array $defaults = [],
         array $controllers = []
-    )
-    {
+    ) {
         $this->name = $name;
         $this->pattern = $pattern;
         $this->namespace = $namespace;
