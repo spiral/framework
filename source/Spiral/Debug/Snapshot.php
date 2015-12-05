@@ -80,10 +80,10 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
      */
     public function __construct(
         $exception,
-        LoggerInterface $logger = null,
-        SnapshotConfig $config = null,
-        FilesInterface $files = null,
-        ViewsInterface $views = null
+        LoggerInterface $logger,
+        SnapshotConfig $config,
+        FilesInterface $files,
+        ViewsInterface $views
     ) {
         $this->exception = $exception;
         $this->logger = $logger;

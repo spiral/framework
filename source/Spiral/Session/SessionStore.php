@@ -52,7 +52,8 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
 
     /**
      * @param SessionConfig    $config
-     * @param FactoryInterface $factory
+     * @param FactoryInterface $factory Factory is needed to construct valid instance of session
+     *                                  handler on demand.
      */
     public function __construct(SessionConfig $config, FactoryInterface $factory)
     {
