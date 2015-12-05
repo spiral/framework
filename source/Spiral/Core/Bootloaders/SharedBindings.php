@@ -7,6 +7,8 @@
  */
 namespace Spiral\Core\Bootloaders;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 /**
  * Shared components and short bindings.
  */
@@ -54,6 +56,8 @@ class SharedBindings extends Bootloader
         'session'           => 'Spiral\Session\SessionStore',
         'input'             => 'Spiral\Http\Input\InputManager',
         'cookies'           => 'Spiral\Http\Cookies\CookieManager',
-        'router'            => 'Spiral\Http\Routing\Router'
+        'router'            => 'Spiral\Http\Routing\Router',
+
+        'request' => 'Psr\Http\Message\ServerRequestInterface'
     ];
 }

@@ -310,7 +310,7 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
     {
         $catalogue = new Catalogue($locale, $this->memory);
 
-        if (!empty($this->loadedLocales[$locale]) && !$this->config->autoReload()) {
+        if (array_key_exists($locale, $this->loadedLocales) && !$this->config->autoReload()) {
             //Has been loaded
             return $catalogue;
         }

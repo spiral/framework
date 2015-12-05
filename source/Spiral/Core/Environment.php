@@ -77,9 +77,9 @@ class Environment implements EnvironmentInterface
         }
 
         //Load env values using DotEnv extension
-        $values = $this->parseValues($this->filename);
-
-        $this->initEnvironment($values);
+        $this->initEnvironment(
+            $values = $this->parseValues($this->filename)
+        );
 
         $this->memory->saveData($hash, $values, static::MEMORY_SECTION);
 
