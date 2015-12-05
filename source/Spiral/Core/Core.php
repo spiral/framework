@@ -416,7 +416,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     /**
      * Define current environment using either application memory or .env file (slower).
      *
-     * @todo moved into separate component and cached inside memory
+     * @todo move into separate component and cache inside memory
      */
     private function initEnvironment()
     {
