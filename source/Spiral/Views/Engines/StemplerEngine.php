@@ -13,7 +13,7 @@ use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Stempler\Supervisor;
-use Spiral\Stempler\Syntaxes\WooSyntax;
+use Spiral\Stempler\Syntaxes\DarkSyntax;
 use Spiral\Stempler\SyntaxInterface;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Stempler\StemplerCache;
@@ -76,7 +76,7 @@ class StemplerEngine extends Component implements EngineInterface
         $this->container = $this->saturate($container, ContainerInterface::class);
         $this->files = $this->saturate($files, FilesInterface::class);
 
-        $this->syntax = new WooSyntax(!empty($options['strict']));
+        $this->syntax = new DarkSyntax(!empty($options['strict']));
 
         $this->setEnvironment($environment);
         $this->modifiers = $modifiers;

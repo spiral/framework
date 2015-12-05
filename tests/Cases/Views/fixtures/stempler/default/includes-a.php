@@ -1,4 +1,4 @@
-<woo:use path="includes/tag-a" as="tagA"/>
+<dark:use path="includes/tag-a" as="tagA"/>
 
 <block:a>Include A, block A.</block:a>
 <block:b>

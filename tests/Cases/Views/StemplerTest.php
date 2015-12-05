@@ -12,7 +12,7 @@ use Spiral\Core\Container;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Files\FileManager;
-use Spiral\Stempler\Syntaxes\WooSyntax;
+use Spiral\Stempler\Syntaxes\DarkSyntax;
 use Spiral\Support\Strings;
 use Spiral\Views\Configs\ViewsConfig;
 use Spiral\Views\Engines\StemplerEngine;
@@ -147,7 +147,7 @@ class StemplerTest extends \PHPUnit_Framework_TestCase
                 'engines'     => [
                     'stempler' => [
                         'class'      => StemplerEngine::class,
-                        'syntax'     => WooSyntax::class,
+                        'syntax'     => DarkSyntax::class,
                         'extension'  => 'php',
                         'modifiers'  => [],
                         'processors' => []

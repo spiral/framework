@@ -47,6 +47,10 @@ class CompileCommand extends Command
         //To clean up cache
         $dispatcher->command('views:reset', [], $this->output);
 
+        if ($this->isVerbosity()) {
+            $this->write("\n");
+        }
+
         /**
          * @var FormatterHelper $formatter
          */
