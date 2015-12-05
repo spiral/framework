@@ -23,11 +23,12 @@ class Serializer
     /**
      * Serialize array.
      *
-     * @todo Indent level?
-     * @param array $array
+     * @todo Make indent level work.
+     * @param mixed $array
+     * @param int   $indentLevel
      * @return string
      */
-    public function serialize($array)
+    public function serialize($array, $indentLevel = 0)
     {
         if (is_array($array)) {
             return $this->packArray($array);
@@ -63,8 +64,11 @@ class Serializer
             $prefix = '';
             if ($associated) {
                 //Key prefix
-                $prefix = str_pad(var_export($key, true), $innerIndent, ' ',
-                        STR_PAD_RIGHT) . " => ";
+                $prefix = str_pad(
+                        var_export($key, true),
+                        $innerIndent, ' ',
+                        STR_PAD_RIGHT
+                    ) . " => ";
             }
 
             if (!is_array($value)) {

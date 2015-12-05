@@ -12,13 +12,11 @@ use Spiral\Reactor\Body\Source;
 /**
  * Wraps docBlock comment (by representing it as string lines).
  */
-class DocComment extends Source
+class DocComment extends Source implements ReplaceableInterface
 {
     /**
-     * Replace sub string in a comment. Behaviour identical to str_replace.
+     * {@inheritdoc}
      *
-     * @param string|array $search
-     * @param string|array $replace
      * @return $this
      */
     public function replace($search, $replace)

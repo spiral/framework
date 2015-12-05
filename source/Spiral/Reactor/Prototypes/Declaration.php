@@ -16,6 +16,13 @@ use Spiral\Reactor\RenderableInterface;
 abstract class Declaration extends Component implements RenderableInterface
 {
     /**
+     * Access level constants.
+     */
+    const ACCESS_PUBLIC    = 'public';
+    const ACCESS_PROTECTED = 'protected';
+    const ACCESS_PRIVATE   = 'private';
+
+    /**
      * @param string $string
      * @param int    $indent
      * @return string

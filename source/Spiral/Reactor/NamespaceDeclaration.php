@@ -7,48 +7,36 @@
  */
 namespace Spiral\Reactor;
 
-use Spiral\Reactor\Prototypes\Declaration;
+use Spiral\Reactor\Body\Source;
+use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\CommentTrait;
-use Spiral\Reactor\Traits\ElementsTrait;
 use Spiral\Reactor\Traits\UsesTrait;
 
 /**
  * Represent namespace declaration. Attention, namespace renders in a form of namespace name { ... }
  */
-class NamespaceDeclaration extends Declaration
+class NamespaceDeclaration extends NamedDeclaration
 {
-    use UsesTrait, CommentTrait, ElementsTrait;
+    use UsesTrait, CommentTrait;
 
     /**
-     * @var string
+     * @var DeclarationAggregator
      */
-    private $name = '';
+    private $aggregator = null;
 
     /**
      * @param string $name
      */
     public function __construct($name = '')
     {
-        $this->name = $name;
-    }
+        parent::__construct($name);
 
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+        //todo: Function declaration
+        $this->aggregator = new DeclarationAggregator([
+            ClassDeclaration::class,
+            DocComment::class,
+            Source::class
+        ]);
     }
 
     /**
@@ -63,8 +51,8 @@ class NamespaceDeclaration extends Declaration
             $result .= $this->docComment->render($indentLevel) . "\n";
         }
 
-        if (!empty($this->name)) {
-            $result = $this->indent("namespace {$this->name} {", $indentLevel);
+        if (!empty($this->getName())) {
+            $result = $this->indent("namespace {$this->getName()} {", $indentLevel);
             $indentShift = 1;
         }
 
@@ -76,7 +64,7 @@ class NamespaceDeclaration extends Declaration
             $result .= $element->render($indentLevel + $indentShift);
         }
 
-        if (!empty($this->name)) {
+        if (!empty($this->getName())) {
             $result = $this->indent("}", $indentLevel);
         }
 

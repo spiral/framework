@@ -28,4 +28,20 @@ trait CommentTrait
     {
         return $this->docComment;
     }
+
+    /**
+     * Initi comment value.
+     *
+     * @param string $comment
+     */
+    private function initComment($comment)
+    {
+        if (!empty($comment)) {
+            if (is_array($comment)) {
+                $this->docComment->setLines($comment);
+            } elseif (is_string($comment)) {
+                $this->docComment->setString($comment);
+            }
+        }
+    }
 }

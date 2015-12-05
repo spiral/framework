@@ -7,17 +7,20 @@
  */
 namespace Spiral\Reactor;
 
+use Spiral\Reactor\Body\Source;
+use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Prototypes\Declaration;
 use Spiral\Reactor\Traits\CommentTrait;
-use Spiral\Reactor\Traits\ElementsTrait;
 use Spiral\Reactor\Traits\UsesTrait;
 
 /**
  * Provides ability to render file content.
+ *
+ * @property DeclarationAggregator|ClassDeclaration[]|NamespaceDeclaration[]|Source[]|DocComment[] $elements
  */
 class FileDeclaration extends Declaration
 {
-    use UsesTrait, CommentTrait, ElementsTrait;
+    use UsesTrait, CommentTrait;
 
     /**
      * File namespace.
@@ -25,6 +28,11 @@ class FileDeclaration extends Declaration
      * @var string
      */
     private $namespace = '';
+
+    /**
+     * @var DeclarationAggregator
+     */
+    private $aggregator = null;
 
     /**
      * @param string $namespace
@@ -35,13 +43,15 @@ class FileDeclaration extends Declaration
         $this->namespace = $namespace;
         $this->docComment = new DocComment();
 
-        if (!empty($comment)) {
-            if (is_array($comment)) {
-                $this->docComment->setLines($comment);
-            } elseif (is_string($comment)) {
-                $this->docComment->setString($comment);
-            }
-        }
+        //todo: Function declaration as well.
+        $this->aggregator = new DeclarationAggregator([
+            ClassDeclaration::class,
+            NamespaceDeclaration::class,
+            DocComment::class,
+            Source::class
+        ]);
+
+        $this->initComment($comment);
     }
 
     /**
@@ -82,7 +92,7 @@ class FileDeclaration extends Declaration
             $result .= $this->renderUses($indentLevel) . "\n";
         }
 
-        $result .= $this->renderElements($indentLevel);
+        $result .= $this->aggregator->render($indentLevel);
 
         return $result;
     }
@@ -93,5 +103,21 @@ class FileDeclaration extends Declaration
     public function __toString()
     {
         return $this->render(0);
+    }
+
+    /**
+     * Returns aggregator for property name elements.
+     *
+     * @param string $name
+     * @return DeclarationAggregator
+     * @throws ReactorException
+     */
+    public function __get($name)
+    {
+        if ($name == 'elements') {
+            return $this->aggregator;
+        }
+
+        throw new ReactorException("Undefined property '{$name}'.");
     }
 }
