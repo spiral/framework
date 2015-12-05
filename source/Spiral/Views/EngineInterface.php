@@ -13,12 +13,6 @@ namespace Spiral\Views;
 interface EngineInterface extends ViewsInterface
 {
     /**
-     * @param LoaderInterface      $loader
-     * @param EnvironmentInterface $environment
-     */
-    public function __construct(LoaderInterface $loader, EnvironmentInterface $environment);
-
-    /**
      * Change engine view loader.
      *
      * @param LoaderInterface $loader
