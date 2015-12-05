@@ -142,7 +142,17 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     }
 
     /**
-     * Set application enviroment.
+     * List of components to be loaded with application.
+     *
+     * @return array
+     */
+    public function getLoads()
+    {
+        return $this->load;
+    }
+
+    /**
+     * Set application environment.
      *
      * @param EnvironmentInterface $environment
      */
@@ -162,16 +172,6 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         }
 
         return $this->environment;
-    }
-
-    /**
-     * List of components to be loaded with application.
-     *
-     * @return array
-     */
-    public function loadList()
-    {
-        return $this->load;
     }
 
     /**
