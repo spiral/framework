@@ -431,10 +431,8 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
             $core->memory
         );
 
-        $environment->load();
-
+        $core->setEnvironment($environment->load());
         $container->bindSingleton(EnvironmentInterface::class, $environment);
-        $core->setEnvironment($environment);
 
         //Error and exception handlers
         if ($handleErrors) {
@@ -443,7 +441,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
             set_exception_handler([$core, 'handleException']);
         }
 
-         $core->bootload();
+        $core->bootload();
 
         //Bootstrapping our application
         $core->bootstrap();

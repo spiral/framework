@@ -56,12 +56,14 @@ class Environment implements EnvironmentInterface
 
     /**
      * Load environment data.
+     *
+     * @return $this
      */
     public function load()
     {
         if (!$this->files->exists($this->filename)) {
             //Nothing to load
-            return;
+            return $this;
         }
 
         //Unique env file hash
@@ -71,7 +73,7 @@ class Environment implements EnvironmentInterface
             //Restore from cache
             $this->initEnvironment($values);
 
-            return;
+            return $this;
         }
 
         //Load env values using DotEnv extension
@@ -80,6 +82,8 @@ class Environment implements EnvironmentInterface
         $this->initEnvironment($values);
 
         $this->memory->saveData($hash, $values, static::MEMORY_SECTION);
+
+        return $this;
     }
 
     /**
