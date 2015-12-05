@@ -114,11 +114,11 @@ class SessionStarter implements MiddlewareInterface
         $sessionID = $this->fetchSID($request);
 
         if (empty($sessionID) || $sessionID != $this->session->getID(false)) {
-
             //Let's mount cookie
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                $this->sessionCookie($request->getUri(),
+                $this->sessionCookie(
+                    $request->getUri(),
                     $this->session->getID(false))->createHeader()
             );
         }
