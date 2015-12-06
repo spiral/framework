@@ -207,7 +207,7 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
         }
 
         return $this->rendered = $this->views->render($this->config->viewName(), [
-            'snapshot' => $this
+            'exception' => $this->exception
         ]);
     }
 

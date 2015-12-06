@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <?php
 /**
- * @see  http://ppig.org/sites/default/files/2015-PPIG-26th-Sarkar.pdf
- * @var Throwable                            $exception
- * @var \Spiral\Debug\Snapshot               $snapshot
- * @var \Spiral\Tokenizer\TokenizerInterface $tokenizer
+ * @see http://ppig.org/sites/default/files/2015-PPIG-26th-Sarkar.pdf
+ * @var Throwable $exception
  */
-$tokenizer = $this->container->get(\Spiral\Tokenizer\TokenizerInterface::class);
 $dumper = new \Spiral\Debug\Dumper(10, $styler = new \Spiral\Debug\Dumper\InversedStyle());
-
 $dumps = [];
 
 /**
@@ -57,30 +53,12 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
     return $result;
 };
 
-/**
- * Highlight file source.
- *
- * @param string $filename
- * @param int    $line
- * @param int    $around
- * @return string
- */
-$highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
-    $highlighter = new \Spiral\Tokenizer\Highlighter(
-        $filename,
-        new \Spiral\Tokenizer\Highlighter\InversedStyle(),
-        $tokenizer
-    );
-
-    return $highlighter->lines($line, $around);
-};
-
 ?>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>
-        <?= $snapshot->getMessage() ?>
+        <?= \Spiral\Support\ExceptionSupport::createMessage($exception) ?>
     </title>
     <style>
         body.spiral-exception {
@@ -338,21 +316,20 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
 
 <div class="wrapper">
     <div class="header">
-        <?= $snapshot->getClass() ?>:
-        <strong
-            title="You have to catch them all!"><?= $snapshot->exception()->getMessage() ?></strong>
-        in <i><?= $snapshot->getFile() ?></i> at <strong>line <?= $snapshot->getLine() ?></strong>
+        <?= get_class($exception) ?>:
+        <strong><?= $exception->getMessage() ?></strong>
+        in <i><?= $exception->getFile() ?></i> at <strong>line <?= $exception->getLine() ?></strong>
     </div>
 
     <div class="stacktrace">
         <div class="trace">
             <?php
-            $stacktrace = $snapshot->getTrace();
+            $stacktrace = $exception->getTrace();
 
             //Let's let's clarify exception location
             $header = [
-                    'file' => $snapshot->getFile(),
-                    'line' => $snapshot->getLine()
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine()
                 ] + $stacktrace[0];
 
             if ($stacktrace[0] != $header) {
@@ -385,8 +362,10 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
                 if (!isset($trace['file'])) {
                     ?>
                     <div class="container no-trace">
-                        <?= $function ?>(<span class="arguments"><?= join(', ',
-                                $arguments) ?></span>)
+                        <?= $function ?>(<span class="arguments"><?= join(
+                                ', ',
+                                $arguments
+                            ) ?></span>)
                     </div>
                     <?php
                     continue;
@@ -395,15 +374,20 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
                 ?>
                 <div class="container">
                     <div class="location">
-                        <?= $function ?>(<span class="arguments"><?= join(', ',
-                                $arguments) ?></span>)
+                        <?= $function ?>(<span class="arguments"><?= join(
+                                ', ',
+                                $arguments
+                            ) ?></span>)
                         <em>
                             In <?= $trace['file'] ?> at
                             <strong>line <?= $trace['line'] ?></strong>
                         </em>
                     </div>
                     <div class="lines">
-                        <?= $highlighter($trace['file'], $trace['line']) ?>
+                        <?= \Spiral\Support\ExceptionSupport::highlightSource(
+                            $trace['file'],
+                            $trace['line']
+                        ) ?>
                     </div>
                 </div>
                 <?php
@@ -420,8 +404,8 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
                     }
 
                     if (!isset($stacktrace[$index + 1])) {
-                        $trace['file'] = $snapshot->getFile();
-                        $trace['line'] = $snapshot->getLine();
+                        $trace['file'] = $exception->getFile();
+                        $trace['line'] = $exception->getLine();
                     }
 
                     if (!isset($trace['function']) || !isset($trace['file'])) {
