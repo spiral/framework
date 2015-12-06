@@ -15,10 +15,11 @@ interface RegistratorInterface
     /**
      * Update configuration file by adding set of lines in a place of specified placeholder.
      *
-     * @param string $class
      * @param string $config
      * @param string $placeholder
+     * @param string $wrapper Wrapper string must identify what module added configuration lines.
+     *                        In some future wrappers can be used to un-register modules.
      * @param array  $lines
      */
-    public function configure($class, $config, $placeholder, array $lines);
+    public function configure($config, $placeholder, $wrapper, array $lines);
 }
