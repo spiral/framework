@@ -14,7 +14,7 @@ use Spiral\Core\ContainerInterface;
  * Default spiral container with pre-defined set of core bindings (since this is default container
  * singleton flags are not forced).
  */
-class SpiralContainer extends Container
+class SpiralContainer extends Container implements ContainerInterface
 {
     /**
      * {@inheritdoc}
@@ -33,7 +33,6 @@ class SpiralContainer extends Container
 
         //Instrumental bindings
         'Psr\Log\LoggerInterface'                           => 'Spiral\Debug\SharedLogger',
-        'Monolog\Logger'                                    => 'Spiral\Debug\SharedLogger',
         'Spiral\Debug\LogsInterface'                        => 'Spiral\Debug\Debugger',
         'Spiral\Debug\SnapshotInterface'                    => 'Spiral\Debug\Snapshot',
         'Spiral\Encrypter\EncrypterInterface'               => 'Spiral\Encrypter\Encrypter',

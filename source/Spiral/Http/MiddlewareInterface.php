@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Common interface for spiral middlewares.
+ * Common interface for spiral middlewares/filters.
  */
 interface MiddlewareInterface
 {

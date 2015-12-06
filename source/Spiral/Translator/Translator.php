@@ -216,6 +216,22 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * Attention, method will return cached locales first.
+     */
+    public function getLocales()
+    {
+        if (!empty($this->loadedLocales)) {
+            return array_keys($this->loadedLocales);
+        }
+
+        $this->loadLocales();
+
+        return $this->source->getLocales();
+    }
+
+    /**
      * Return catalogue for specific locate or return default one if no locale specified.
      *
      * @param string $locale

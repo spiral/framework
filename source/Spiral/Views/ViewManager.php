@@ -19,6 +19,9 @@ use Spiral\Views\Exceptions\ViewsException;
  * Default ViewsInterface implementation with ability to change cache versions via external
  * dependencies. ViewManager support multiple namespaces and namespaces associated with multiple
  * folders.
+ *
+ * @todo improve view engine location method
+ * @todo cache associations between view name and engine
  */
 class ViewManager extends Component implements SingletonInterface, ViewsInterface
 {
@@ -68,6 +71,7 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     protected $container = null;
 
     /**
+     * @todo HippocampusInterface
      * @param ViewsConfig        $config
      * @param FilesInterface     $files
      * @param ContainerInterface $container
@@ -169,7 +173,7 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
             return $this->loader;
         }
 
-        //TODO: change this!
+        //TODO: fix it
         return $this->loader->withExtension($extension);
     }
 
@@ -186,6 +190,7 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     /**
      * Detect compiler by view path (automatically resolved based on extension).
      *
+     * @todo cache needed?
      * @param string $path
      * @return string
      */

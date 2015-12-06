@@ -75,8 +75,19 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     ];
 
     /**
+     * @var BootloadManager
+     */
+    private $bootloader = null;
+
+    /**
+     * @var EnvironmentInterface
+     */
+    private $environment = null;
+
+    /**
      * Application memory.
      *
+     * @whatif private
      * @var HippocampusInterface
      */
     protected $memory = null;
@@ -84,19 +95,10 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     /**
      * Not set until start method. Can be set manually in bootload.
      *
+     * @whatif private
      * @var DispatcherInterface|null
      */
     protected $dispatcher = null;
-
-    /**
-     * @var BootloadManager
-     */
-    protected $bootloader = null;
-
-    /**
-     * @var EnvironmentInterface
-     */
-    protected $environment = null;
 
     /**
      * Components to be autoloader while application initialization.
@@ -140,6 +142,8 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
 
         $this->memory = $memory;
         date_default_timezone_set($this->timezone);
+
+        $this->bootloader = new BootloadManager($this->container, $this->memory);
     }
 
     /**
@@ -163,6 +167,14 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         }
 
         return $this->environment;
+    }
+
+    /**
+     * @return BootloadManager
+     */
+    public function bootloader()
+    {
+        return $this->bootloader;
     }
 
     /**
@@ -376,12 +388,12 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
             $container = new SpiralContainer();
         }
 
-        //Self binding
+        //Spiral core interface, @see SpiralContainer
         $container->bindSingleton(ContainerInterface::class, $container);
 
         //Some sugar for modules, technically can be used as wrapper only here and in start method
         if (empty(self::staticContainer())) {
-            //todo: better logic is required
+            //todo: better logic is required, stack wrapping?
             self::staticContainer($container);
         }
 
@@ -394,23 +406,24 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         $container->bindSingleton(self::class, $core);
         $container->bindSingleton(static::class, $core);
         $container->bindSingleton(DirectoriesInterface::class, $core);
+        $container->bindSingleton(BootloadManager::class, $core->bootloader);
         $container->bindSingleton(HippocampusInterface::class, $core->memory);
         $container->bindSingleton(CoreInterface::class, $core);
 
-        //Configurator binding
         $container->bindSingleton(ConfiguratorInterface::class, $container->make(
             Configurator::class, ['directory' => $core->directory('config')]
         ));
 
-        //Setting environment (by default we are using dotenv extension)
-        $environment = new Environment(
+        //Setting environment (by default - dotenv extension)
+        $core->environment = new Environment(
             $core->directory('root') . '.env',
             $container->get(FilesInterface::class),
             $core->memory
         );
 
-        $core->setEnvironment($environment->load());
-        $container->bindSingleton(EnvironmentInterface::class, $environment);
+        $core->environment->load();
+
+        $container->bindSingleton(EnvironmentInterface::class, $core->environment);
 
         //Error and exception handlers
         if ($handleErrors) {
@@ -419,27 +432,24 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
             set_exception_handler([$core, 'handleException']);
         }
 
-        $core->bootload();
-
-        //Bootstrapping our application
-        $core->bootstrap();
+        $core->bootload()->bootstrap();
 
         return $core;
     }
 
     /**
-     * Bootload all registered bootloader using BootloadProcessor.
+     * Bootload all registered classes using BootloadManager.
+     *
+     * @return $this
      */
     private function bootload()
     {
         //Bootloading all needed components and extensions
-        $this->bootloader = new BootloadManager($this->container, $this->memory);
         $this->bootloader->bootload(
             $this->load,
             static::MEMORIZE_BOOTLOADERS ? 'bootloading' : null
         );
 
-        //Let's make bootloader available for our application
-        $this->container->bind(BootloadManager::class, $this->bootloader);
+        return $this;
     }
 }

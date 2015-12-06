@@ -54,6 +54,8 @@ class TranslationSource extends Component implements SourceInterface
      */
     public function hasLocale($locale)
     {
+        $locale = preg_replace("/[^a-zA-Z_]/", '', mb_strtolower($locale));
+
         return $this->files->exists($this->config->localeDirectory($locale));
     }
 

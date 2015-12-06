@@ -28,4 +28,9 @@ interface EnvironmentInterface
      * @return mixed
      */
     public function get($name, $default = null);
+
+    /**
+     * Load environment values from associated storage.
+     */
+    public function load();
 }

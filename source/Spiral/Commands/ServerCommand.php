@@ -15,6 +15,10 @@ use Symfony\Component\Process\Process;
 
 /**
  * Create php development server on specified host and port.
+ *
+ * To specify process user:
+ *
+ * @see https://www.reddit.com/r/PHP/comments/3vlnzq/a_tip_for_those_directly_running_php_s/
  */
 class ServerCommand extends Command
 {
@@ -54,7 +58,7 @@ class ServerCommand extends Command
         $this->writeln("Press <comment>Ctrl-C</comment> to quit.");
 
         $process = new Process(
-            '"' . PHP_BINARY . '" -S ' . $host . ' "' . $directories->directory('framework') . '../server.php"',
+            '"' . PHP_BINARY . "\" -S {$host} \"{$directories->directory('framework')}../server.php\"",
             $directories->directory('public'),
             null,
             null,
