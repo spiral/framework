@@ -26,7 +26,6 @@ use Spiral\Http\HttpDispatcher;
  * overwritten with custom instance).
  *
  * @property-read ContainerInterface $container Protected.
- *
  * @todo move start method and dispatcher property into trait
  */
 class Core extends Component implements CoreInterface, DirectoriesInterface
@@ -129,7 +128,8 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
                 'config'    => $directories['application'] . 'config/',
                 'runtime'   => $directories['application'] . 'runtime/',
                 'cache'     => $directories['application'] . 'runtime/cache/',
-                'locales'   => $directories['application'] . 'locales/'
+                'resources' => $directories['application'] . 'resources/',
+                'locales'   => $directories['application'] . 'resources/locales/'
             ];
 
         if (empty($memory)) {
