@@ -41,6 +41,14 @@ class DeclarationAggregator extends Declaration implements
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->elements);
+    }
+
+    /**
      * Check if aggregation has named element with given name.
      *
      * @param string $name

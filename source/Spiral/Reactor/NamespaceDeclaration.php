@@ -8,6 +8,7 @@
 namespace Spiral\Reactor;
 
 use Spiral\Reactor\Body\Source;
+use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Reactor\Traits\UsesTrait;
@@ -22,7 +23,7 @@ class NamespaceDeclaration extends NamedDeclaration
     /**
      * @var DeclarationAggregator
      */
-    private $aggregator = null;
+    private $elements = null;
 
     /**
      * @param string $name
@@ -32,7 +33,7 @@ class NamespaceDeclaration extends NamedDeclaration
         parent::__construct($name);
 
         //todo: Function declaration
-        $this->aggregator = new DeclarationAggregator([
+        $this->elements = new DeclarationAggregator([
             ClassDeclaration::class,
             DocComment::class,
             Source::class
@@ -60,14 +61,41 @@ class NamespaceDeclaration extends NamedDeclaration
             $result .= $this->renderUses($indentLevel + $indentShift) . "\n";
         }
 
-        foreach ($this->elements as $element) {
-            $result .= $element->render($indentLevel + $indentShift);
-        }
+        $result .= $this->elements->render($indentLevel + $indentShift);
 
         if (!empty($this->getName())) {
             $result = $this->indent("}", $indentLevel);
         }
 
         return $result;
+    }
+
+    /**
+     * @return DeclarationAggregator
+     */
+    public function elements()
+    {
+        return $this->elements;
+    }
+
+    /**
+     * Returns aggregator for property name elements.
+     *
+     * @todo DRY
+     * @param string $name
+     * @return mixed
+     * @throws ReactorException
+     */
+    public function __get($name)
+    {
+        if ($name == 'elements') {
+            return $this->elements();
+        }
+
+        if ($name == 'comment') {
+            return $this->comment();
+        }
+
+        throw new ReactorException("Undefined property '{$name}'.");
     }
 }

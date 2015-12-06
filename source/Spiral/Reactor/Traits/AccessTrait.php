@@ -7,10 +7,14 @@
  */
 namespace Spiral\Reactor\Traits;
 
+use Spiral\Reactor\DeclarationAggregator;
 use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Prototypes\Declaration;
 
-class AccessTrait
+/**
+ * Provides ability to set access level for element.
+ */
+trait AccessTrait
 {
     /**
      * @var string
@@ -44,5 +48,35 @@ class AccessTrait
     public function getAccess()
     {
         return $this->access;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setPublic()
+    {
+        $this->setAccess(DeclarationAggregator::ACCESS_PUBLIC);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setProtected()
+    {
+        $this->setAccess(DeclarationAggregator::ACCESS_PROTECTED);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setPrivate()
+    {
+        $this->setAccess(DeclarationAggregator::ACCESS_PRIVATE);
+
+        return $this;
     }
 }

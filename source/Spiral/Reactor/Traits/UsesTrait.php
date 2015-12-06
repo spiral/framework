@@ -46,8 +46,8 @@ trait UsesTrait
     }
 
     /**
-     * @param      $class
-     * @param null $alias
+     * @param string $class
+     * @param string $alias Optional.
      * @return $this
      */
     public function addUse($class, $alias = null)

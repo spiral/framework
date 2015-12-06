@@ -16,7 +16,10 @@ use Spiral\Reactor\Traits\UsesTrait;
 /**
  * Provides ability to render file content.
  *
- * @property DeclarationAggregator|ClassDeclaration[]|NamespaceDeclaration[]|Source[]|DocComment[] $elements
+ * @property DeclarationAggregator|ClassDeclaration[]|NamespaceDeclaration[]|Source[]|DocComment[]
+ *           $elements
+ * @property DocComment
+ *           $comment
  */
 class FileDeclaration extends Declaration
 {
@@ -32,7 +35,7 @@ class FileDeclaration extends Declaration
     /**
      * @var DeclarationAggregator
      */
-    private $aggregator = null;
+    private $elements = null;
 
     /**
      * @param string $namespace
@@ -44,7 +47,7 @@ class FileDeclaration extends Declaration
         $this->docComment = new DocComment();
 
         //todo: Function declaration as well.
-        $this->aggregator = new DeclarationAggregator([
+        $this->elements = new DeclarationAggregator([
             ClassDeclaration::class,
             NamespaceDeclaration::class,
             DocComment::class,
@@ -92,7 +95,7 @@ class FileDeclaration extends Declaration
             $result .= $this->renderUses($indentLevel) . "\n";
         }
 
-        $result .= $this->aggregator->render($indentLevel);
+        $result .= $this->elements->render($indentLevel);
 
         return $result;
     }
@@ -106,16 +109,29 @@ class FileDeclaration extends Declaration
     }
 
     /**
+     * @return DeclarationAggregator
+     */
+    public function elements()
+    {
+        return $this->elements;
+    }
+
+    /**
      * Returns aggregator for property name elements.
      *
+     * @todo DRY
      * @param string $name
-     * @return DeclarationAggregator
+     * @return mixed
      * @throws ReactorException
      */
     public function __get($name)
     {
         if ($name == 'elements') {
-            return $this->aggregator;
+            return $this->elements();
+        }
+
+        if ($name == 'comment') {
+            return $this->comment();
         }
 
         throw new ReactorException("Undefined property '{$name}'.");

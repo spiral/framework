@@ -312,12 +312,14 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     /**
      * Handle exception using associated application dispatcher and snapshot class.
      *
-     * @param \Exception $exception PHP7, are you ok?
+     * @param \Exception $exception Works well in PHP7.
      */
     public function handleException($exception)
     {
         restore_error_handler();
         restore_exception_handler();
+
+        //todo: Change mechanism how exceptions are handled, possibly split snapshot away! Critical!
 
         /**
          * @var SnapshotInterface $snapshot
