@@ -172,7 +172,7 @@ class ConfigInjector extends Component
      */
     private function prepare($indent, $wrapper, array $lines)
     {
-        $wrapper = "/*~{$wrapper}:" . date('Y-m-d') . "~*/";
+        $wrapper = "/*~[{$wrapper}]:" . date('Y-m-d') . "~*/";
 
         $result = [$indent . $wrapper];
         foreach ($lines as $line) {

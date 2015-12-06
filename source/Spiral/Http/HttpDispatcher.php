@@ -8,16 +8,16 @@
 namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
-use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Traits\JsonTrait;
+use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Spiral\Http\Traits\RouterTrait;
+use Spiral\Views\ViewsInterface;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
@@ -29,7 +29,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * HttpDispatcher has embedded router and log it's errors.
      */
-    use RouterTrait, JsonTrait;
+    use RouterTrait;
 
     /**
      * Declares to IoC that component instance should be treated as singleton.
@@ -89,9 +89,16 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         $request = $this->request();
         $response = $this->response();
 
-        $this->dispatch(
-            $this->writeSnapshot($request, $response, $snapshot)
-        );
+
+        $writer = new ErrorWriter($this->config, $this->container->get(ViewsInterface::class));
+
+        if (!$this->config->exposeErrors()) {
+            $response = $writer->writeException($request, $response, new ServerErrorException());
+        } else {
+            $response = $writer->writeSnapshot($request, $response, $snapshot);
+        }
+
+        $this->dispatch($response);
     }
 
     /**
@@ -143,28 +150,5 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         );
     }
 
-    /**
-     * Write snapshot content into exception.
-     *
-     * @param Request           $request
-     * @param Response          $response
-     * @param SnapshotInterface $snapshot
-     * @return Response
-     */
-    private function writeSnapshot(
-        Request $request,
-        Response $response,
-        SnapshotInterface $snapshot
-    ) {
-        //Exposing exception
-        if ($request->getHeaderLine('Accept') != 'application/json') {
-            $response->getBody()->write($snapshot->render());
 
-            //Normal exception page
-            return $response->withStatus(ClientException::ERROR);
-        }
-
-        //Exception in a form of JSON object
-        return $this->writeJson($response, $snapshot->describe(), ClientException::ERROR);
-    }
 }

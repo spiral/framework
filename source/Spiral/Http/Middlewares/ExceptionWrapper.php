@@ -14,9 +14,9 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Http\Configs\HttpConfig;
+use Spiral\Http\ErrorWriter;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\MiddlewareInterface;
-use Spiral\Http\Traits\JsonTrait;
 use Spiral\Views\ViewsInterface;
 
 /**
@@ -30,7 +30,7 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
     /**
      * To write json responses.
      */
-    use JsonTrait, LoggerTrait;
+    use LoggerTrait;
 
     /**
      * Format to be used for log messages in cases where http error caused by client request.
@@ -77,52 +77,13 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
             //Logging client error
             $this->logError($request, $exception);
 
-            return $this->writeException($request, $response, $exception);
+            $writer = new ErrorWriter(
+                $this->httpConfig,
+                $this->container->get(ViewsInterface::class)
+            );
+
+            return $writer->writeException($request, $response, $exception);
         }
-    }
-
-    /**
-     * Write ClientException content into response.
-     *
-     * @param Request         $request
-     * @param Response        $response
-     * @param ClientException $exception
-     * @return Request
-     */
-    private function writeException(
-        Request $request,
-        Response $response,
-        ClientException $exception
-    ) {
-        //Has to contain valid http code
-        $response = $response->withStatus($exception->getCode());
-
-        if ($request->getHeaderLine('Accept') == 'application/json') {
-            //Json got requested
-            return $this->writeJson($response, ['status' => $exception->getCode()]);
-        }
-
-        if (
-            !$this->httpConfig->hasView($exception->getCode())
-            || !$this->container->has(ViewsInterface::class)
-        ) {
-            //We don't or can't render http error view
-            return $response;
-        }
-
-        /**
-         * @var ViewsInterface $views
-         */
-        $views = $this->container->get(ViewsInterface::class);
-
-        $errorPage = $views->render($this->httpConfig->errorView($exception->getCode()), [
-            'httpConfig' => $this->httpConfig,
-            'request'    => $request
-        ]);
-
-        $response->getBody()->write($errorPage);
-
-        return $response;
     }
 
     /**

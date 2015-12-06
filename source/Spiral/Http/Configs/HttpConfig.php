@@ -48,25 +48,26 @@ class HttpConfig extends InjectableConfig implements SingletonInterface
      * @var array
      */
     protected $config = [
-        'basePath'    => '/',
-        'cookies'     => [
+        'basePath'     => '/',
+        'exposeErrors' => false,
+        'cookies'      => [
             'domain'   => '.%s',
             'method'   => self::COOKIE_ENCRYPT,
             'excluded' => []
         ],
-        'csrf'        => [
+        'csrf'         => [
             'cookie'   => 'csrf-token',
             'length'   => 16,
             'lifetime' => 86400
         ],
-        'headers'     => [],
-        'middlewares' => [],
-        'endpoint'    => null,
-        'router'      => [
+        'headers'      => [],
+        'middlewares'  => [],
+        'endpoint'     => null,
+        'router'       => [
             'class'      => Router::class,
             'parameters' => []
         ],
-        'httpErrors'  => []
+        'httpErrors'   => []
     ];
 
     /**
@@ -75,6 +76,14 @@ class HttpConfig extends InjectableConfig implements SingletonInterface
     public function basePath()
     {
         return $this->config['basePath'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function exposeErrors()
+    {
+        return $this->config['exposeErrors'];
     }
 
     /**
