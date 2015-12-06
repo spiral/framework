@@ -15,11 +15,17 @@ use Spiral\Core\Bootloaders\BootloaderInterface;
 class BootloadManager
 {
     /**
-     * Components/initializers to be autoloader while application initialization.
+     * List of bootloaded classes.
      *
      * @var array
      */
-    private $bootloaders = [];
+    private $classes = [];
+
+    /**
+     * @invisible
+     * @var ContainerInterface
+     */
+    protected $container = null;
 
     /**
      * @invisible
@@ -28,31 +34,31 @@ class BootloadManager
     protected $memory = null;
 
     /**
-     * @param array                $bootloaders
+     * @param ContainerInterface   $container
      * @param HippocampusInterface $memory
      */
-    public function __construct(array $bootloaders, HippocampusInterface $memory)
+    public function __construct(ContainerInterface $container, HippocampusInterface $memory)
     {
-        $this->bootloaders = $bootloaders;
+        $this->container = $container;
         $this->memory = $memory;
     }
 
     /**
-     * Initiate all given service providers. Has ability to cache list in memory.
+     * Bootload set of classes
      *
-     * @param ContainerInterface $container
-     * @param string|null        $memory Memory section to be used for caching, set to null to
-     *                                   disable caching.
+     * @param array       $classes
+     * @param string|null $memory Memory section to be used for caching, set to null to disable
+     *                            caching.
      */
-    public function bootload(ContainerInterface $container, $memory = null)
+    public function bootload(array $classes, $memory = null)
     {
         if (!empty($memory)) {
             $schema = $this->memory->loadData($memory);
         }
 
-        if (empty($schema) || $schema['snapshot'] != $this->bootloaders) {
+        if (empty($schema) || $schema['snapshot'] != $classes) {
             //Schema expired or empty
-            $schema = $this->generateSchema($container);
+            $schema = $this->generateSchema($classes, $this->container);
 
             if (!empty($memory)) {
                 $this->memory->saveData($memory, $schema);
@@ -62,7 +68,17 @@ class BootloadManager
         }
 
         //We can initiate schema thought the cached schema
-        $this->schematicBootload($container, $schema);
+        $this->schematicBootload($this->container, $schema);
+    }
+
+    /**
+     * Get bootloaded classes.
+     *
+     * @return array
+     */
+    public function getClasses()
+    {
+        return $this->classes;
     }
 
     /**
@@ -74,6 +90,8 @@ class BootloadManager
     protected function schematicBootload(ContainerInterface $container, array $schema)
     {
         foreach ($schema['bootloaders'] as $bootloader => $options) {
+            $this->classes[] = $bootloader;
+
             if (array_key_exists('bindings', $options)) {
                 $this->initBindings($container, $options);
             }
@@ -93,26 +111,28 @@ class BootloadManager
     /**
      * Generate cached bindings schema.
      *
+     * @param array              $classes
      * @param ContainerInterface $container
      * @return array
      */
-    protected function generateSchema(ContainerInterface $container)
+    protected function generateSchema(array $classes, ContainerInterface $container)
     {
         $schema = [
-            'snapshot'    => $this->bootloaders,
+            'snapshot'    => $classes,
             'bootloaders' => []
         ];
 
-        foreach ($this->bootloaders as $bootloaders) {
+        foreach ($classes as $class) {
+            $this->classes[] = $class;
+
             $initSchema = ['init' => true, 'boot' => false];
+            $bootloader = $container->get($class);
 
-            $object = $container->get($bootloaders);
+            if ($bootloader instanceof BootloaderInterface) {
+                $initSchema['bindings'] = $bootloader->defineBindings();
+                $initSchema['singletons'] = $bootloader->defineSingletons();
 
-            if ($object instanceof BootloaderInterface) {
-                $initSchema['bindings'] = $object->defineBindings();
-                $initSchema['singletons'] = $object->defineSingletons();
-
-                $reflection = new \ReflectionClass($object);
+                $reflection = new \ReflectionClass($bootloader);
 
                 //Can be booted based on it's configuration
                 $initSchema['boot'] = (bool)$reflection->getConstant('BOOT');
@@ -126,11 +146,11 @@ class BootloadManager
 
             //Need more checks here
             if ($initSchema['boot']) {
-                $boot = new \ReflectionMethod($object, 'boot');
-                $boot->invokeArgs($object, $container->resolveArguments($boot));
+                $boot = new \ReflectionMethod($bootloader, 'boot');
+                $boot->invokeArgs($bootloader, $container->resolveArguments($boot));
             }
 
-            $schema['bootloaders'][$bootloaders] = $initSchema;
+            $schema['bootloaders'][$class] = $initSchema;
         }
 
         return $schema;

@@ -143,16 +143,6 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     }
 
     /**
-     * List of components to be loaded with application.
-     *
-     * @return array
-     */
-    public function getLoads()
-    {
-        return $this->load;
-    }
-
-    /**
      * Set application environment.
      *
      * @param EnvironmentInterface $environment
@@ -354,21 +344,6 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     }
 
     /**
-     * Bootload all registered bootloader using BootloadProcessor.
-     */
-    protected function bootload()
-    {
-        //Bootloading all needed components and extensions
-        $this->bootloader = new BootloadManager($this->load, $this->memory);
-
-        if (static::MEMORIZE_BOOTLOADERS) {
-            $this->bootloader->bootload($this->container, 'bootloading');
-        } else {
-            $this->bootloader->bootload($this->container);
-        }
-    }
-
-    /**
      * Shared container instance (needed for helpers and etc).
      *
      * @return InteropContainer
@@ -406,7 +381,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
 
         //Some sugar for modules, technically can be used as wrapper only here and in start method
         if (empty(self::staticContainer())) {
-            //todo: better logic needed
+            //todo: better logic is required
             self::staticContainer($container);
         }
 
@@ -450,5 +425,21 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         $core->bootstrap();
 
         return $core;
+    }
+
+    /**
+     * Bootload all registered bootloader using BootloadProcessor.
+     */
+    private function bootload()
+    {
+        //Bootloading all needed components and extensions
+        $this->bootloader = new BootloadManager($this->container, $this->memory);
+        $this->bootloader->bootload(
+            $this->load,
+            static::MEMORIZE_BOOTLOADERS ? 'bootloading' : null
+        );
+
+        //Let's make bootloader available for our application
+        $this->container->bind(BootloadManager::class, $this->bootloader);
     }
 }
