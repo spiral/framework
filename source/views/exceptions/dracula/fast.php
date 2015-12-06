@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <?php
 /**
- * @todo No snapshot.
- *
  * @see  http://ppig.org/sites/default/files/2015-PPIG-26th-Sarkar.pdf
- *
  * @var Throwable                            $exception
  * @var \Spiral\Debug\Snapshot               $snapshot
  * @var \Spiral\Tokenizer\TokenizerInterface $tokenizer
@@ -416,7 +413,7 @@ $highlighter = function ($filename, $line, $around = 10) use ($tokenizer) {
         <div class="chain">
             <div class="calls">
                 <?php
-                foreach ($stacktrace as $index => $trace) {
+                foreach (array_reverse($stacktrace) as $index => $trace) {
                     if (empty($trace['file']) && isset($stacktrace[$index - 1]['file'])) {
                         $trace['file'] = $stacktrace[$index - 1]['file'];
                         $trace['line'] = $stacktrace[$index - 1]['line'];
