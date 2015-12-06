@@ -47,10 +47,16 @@ class ConfigureCommand extends Command
     ) {
         $this->ensurePermissions($directories, $files);
 
-        $this->writeln("\n<info>Re-indexing available console commands.</info>");
+        $this->writeln("\n<info>Configuring all new spiral modules</info>");
+        $dispatcher->command('modules:configure', [], $this->output);
+
+        $this->writeln("\n<info>Publishing modules resources</info>");
+        $dispatcher->command('modules:publish', [], $this->output);
+
+        $this->writeln("\n<info>Re-indexing available console commands</info>");
         $dispatcher->command('console:reload', [], $this->output);
 
-        $this->writeln("\n<info>Reloading bootload cache.</info>");
+        $this->writeln("\n<info>Reloading bootload cache</info>");
         $dispatcher->command('app:reload', [], $this->output);
 
         $this->writeln("\n<info>Re-loading translator locales cache...</info>");

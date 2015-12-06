@@ -32,6 +32,6 @@ class ReloadCommand extends Command
     {
         $translator->flushLocales()->loadLocales();
 
-        $this->writeln("<info>Translation cache has been reloaded.</info>");
+        $this->writeln("Translation cache has been reloaded.");
     }
 }
