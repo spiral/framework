@@ -148,6 +148,7 @@ class Container extends Component implements ContainerInterface
 
             if ($class === Context::class) {
                 $arguments[] = new Context($reflection, $parameter);
+                continue;
             }
 
             if (empty($class)) {

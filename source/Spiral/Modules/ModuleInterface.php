@@ -19,9 +19,9 @@ interface ModuleInterface
     /**
      * Module must specify set of updates to be applied to existed configurations.
      *
-     * @param ConfiguratorInterface $configurator
+     * @param RegistratorInterface $registrator
      */
-    public function configure(ConfiguratorInterface $configurator);
+    public function register(RegistratorInterface $registrator);
 
     /**
      * Module must publish set of files or directories.
