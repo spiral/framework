@@ -9,6 +9,7 @@ namespace Spiral\Support;
 
 use Spiral\Tokenizer\Highlighter;
 use Spiral\Tokenizer\Highlighter\InversedStyle;
+use Spiral\Tokenizer\Highlighter\Style;
 use Spiral\Tokenizer\TokenizerInterface;
 
 /**
@@ -38,13 +39,14 @@ class ExceptionSupport
      * @param string $filename
      * @param int    $line
      * @param int    $around
+     * @param Style  $style
      * @return string
      */
-    public static function highlightSource($filename, $line, $around = 10)
+    public static function highlightSource($filename, $line, $around = 10, Style $style = null)
     {
         $highlighter = new Highlighter(
             $filename,
-            new InversedStyle(),
+            !empty($style) ? $style : new Style(),
             spiral(TokenizerInterface::class)
         );
 

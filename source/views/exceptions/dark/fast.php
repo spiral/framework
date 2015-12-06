@@ -228,64 +228,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             cursor: pointer;
         }
 
-        .spiral-exception .wrapper .messages {
-            margin-bottom: 5px;
-        }
-
-        .spiral-exception .wrapper .messages .data {
-            display: none;
-            background-color: #2e2e2e;
-        }
-
-        .spiral-exception .wrapper .messages .data .message {
-            padding: 5px;
-            color: #fff;
-        }
-
-        .spiral-exception .wrapper .messages .data .message:nth-child(2n) {
-            background-color: #2e2e2e;
-        }
-
-        .spiral-exception .wrapper .messages .data .message .channel {
-            display: inline-block;
-            font-weight: bold;
-            width: 200px;
-            float: left;
-        }
-
-        .spiral-exception .wrapper .messages .data .message .level {
-            display: inline-block;
-            font-weight: bold;
-            width: 70px;
-            float: left;
-            text-transform: uppercase;
-        }
-
-        .spiral-exception .wrapper .messages .data .message .body {
-            margin-left: 200px;
-            unicode-bidi: embed;
-            white-space: pre;
-        }
-
-        .spiral-exception .wrapper .messages .data .message:hover {
-            background-color: #1e1e1e;
-        }
-
-        .spiral-exception .wrapper .messages .data .message.warning,
-        .spiral-exception .wrapper .messages .data .message.notice {
-            background-color: #2e2e25;
-        }
-
-        .spiral-exception .wrapper .messages .data .message.error {
-            background-color: #2e0e16;
-        }
-
-        .spiral-exception .wrapper .messages .data .message.critical,
-        .spiral-exception .wrapper .messages .data .message.alert,
-        .spiral-exception .wrapper .messages .data .message.emergency {
-            background-color: #4c001f;
-        }
-
         .spiral-exception .wrapper .footer {
             margin-top: 10px;
             margin-bottom: 5px;
@@ -318,7 +260,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
     <div class="header">
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
-        in <i><?= $exception->getFile() ?></i> at <strong>line <?= $exception->getLine() ?></strong>
+        in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
     </div>
 
     <div class="stacktrace">
@@ -377,16 +319,17 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                         <?= $function ?>(<span class="arguments"><?= join(
                                 ', ',
                                 $arguments
-                            ) ?></span>)
+                            ) ?></span>)<br/>
                         <em>
-                            In <?= $trace['file'] ?> at
-                            <strong>line <?= $trace['line'] ?></strong>
+                            In&nbsp;<?= $trace['file'] ?>&nbsp;at&nbsp;<strong>line <?= $trace['line'] ?></strong>
                         </em>
                     </div>
                     <div class="lines">
                         <?= \Spiral\Support\ExceptionSupport::highlightSource(
                             $trace['file'],
-                            $trace['line']
+                            $trace['line'],
+                            10,
+                            new \Spiral\Tokenizer\Highlighter\InversedStyle()
                         ) ?>
                     </div>
                 </div>
@@ -434,8 +377,10 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                     ?>
                     <div class="call">
                         <div class="function">
-                            <?= $function ?>(<span class="arguments"><?= join(', ',
-                                    $arguments) ?></span>)
+                            <?= $function ?>(<span class="arguments"><?= join(
+                                    ', ',
+                                    $arguments
+                                ) ?></span>)
                         </div>
                         <div class="location">
                             <i><?= $trace['file'] ?></i> at

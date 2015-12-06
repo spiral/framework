@@ -16,6 +16,7 @@ use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Configs\SnapshotConfig;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\FilesInterface;
+use Spiral\Support\ExceptionSupport;
 use Spiral\Views\ViewsInterface;
 
 /**
@@ -104,6 +105,14 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
     }
 
     /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return ExceptionSupport::createMessage($this->exception);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function exception()
@@ -114,54 +123,9 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
     /**
      * {@inheritdoc}
      */
-    public function getClass()
-    {
-        return get_class($this->exception);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFile()
-    {
-        return $this->exception->getFile();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLine()
-    {
-        return $this->exception->getLine();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTrace()
-    {
-        return $this->exception->getTrace();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMessage()
-    {
-        return \Spiral\interpolate(static::MESSAGE, [
-            'exception' => $this->getClass(),
-            'message'   => $this->exception->getMessage(),
-            'file'      => $this->getFile(),
-            'line'      => $this->getLine()
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function report()
     {
-        $this->logger()->error($this->getMessage());
+        $this->logger()->error(ExceptionSupport::createMessage($this->exception));
 
         if (!$this->config->reportingEnabled()) {
             //No need to record anything
@@ -190,10 +154,11 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
         return [
             'error'    => $this->getMessage(),
             'location' => [
-                'file' => $this->getFile(),
-                'line' => $this->getLine()
+                'file' => $this->exception->getFile(),
+                'line' => $this->exception->getLine()
             ],
-            'trace'    => $this->getTrace()
+            //todo: needed?
+            'trace'    => $this->exception->getTrace()
         ];
     }
 

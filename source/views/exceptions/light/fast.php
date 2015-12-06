@@ -4,7 +4,7 @@
  * @see http://ppig.org/sites/default/files/2015-PPIG-26th-Sarkar.pdf
  * @var Throwable $exception
  */
-$dumper = new \Spiral\Debug\Dumper(10, $styler = new \Spiral\Debug\Dumper\InversedStyle());
+$dumper = new \Spiral\Debug\Dumper(10, $styler = new \Spiral\Debug\Dumper\Style());
 $dumps = [];
 
 /**
@@ -41,14 +41,10 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         //Colorizing
         $display = $styler->style($display, 'value', $type);
-        if (($dumpID = array_search($argument, $dumps)) === false) {
-            $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
-            $dumpID = count($dumps) - 1;
-        }
 
         $display = interpolate(
-            "<span onclick=\"_da({dumpID})\">{display}</span>",
-            compact('display', 'dumpID')
+            "<span>{display}</span>",
+            compact('display')
         );
 
         $result[] = $display;
@@ -56,6 +52,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
     return $result;
 };
+
 ?>
 <html>
 <head>
@@ -69,13 +66,12 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             background-color: #e0e0e0;
             font-size: 14px;
             padding: 5px;
-            color: #a1a1a1;
+            color: #141414;
         }
 
         .spiral-exception .wrapper {
             padding: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, .7);
-            background-color: #3a3a3a;
+            background-color: #ddd;
         }
 
         .spiral-exception .wrapper strong {
@@ -88,7 +84,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .dump {
             padding: 5px;
-            background-color: #232323;
+            background-color: white;
             margin-top: 0;
             display: none;
             overflow-x: auto;
@@ -96,11 +92,10 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .wrapper .header {
             margin-bottom: 5px;
-            background: #d34646;
-            border: 2px solid #d34646;
+            background-color: #990000;
+            border: 2px solid #990000;
             padding: 8px 13px 8px 18px;
             color: #fff;
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, .2);
         }
 
         .spiral-exception .wrapper .stacktrace {
@@ -116,14 +111,13 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .wrapper .stacktrace .trace .container {
             padding: 15px;
-            background-color: #2e2e2e;
+            background-color: white;
             margin-bottom: 5px;
             overflow-x: auto;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, .2);
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container.no-trace {
-            color: #6bbdff;
+            color: #0078ff;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container.no-trace .arguments span {
@@ -135,7 +129,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .location {
-            color: #6bbdff;
+            color: #0078ff;
             margin-bottom: 5px;
         }
 
@@ -145,13 +139,12 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .location em {
-            color: #a1a1a1;
+            color: #636363;
             font-style: normal;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div {
             white-space: pre;
-            color: #E6E1DC;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div .number {
@@ -161,11 +154,11 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div:hover {
-            background-color: #404040;
+            background-color: #f2f1f1;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div.highlighted {
-            background-color: #404040;
+            background-color: #ffeaaa;
         }
 
         .spiral-exception .wrapper .stacktrace .chain {
@@ -176,15 +169,14 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         .spiral-exception .wrapper .stacktrace .chain .calls {
             padding: 10px 10px 10px 10px;
             margin-left: 5px;
-            background-color: #2e2e2e;
+            background-color: white;
             margin-bottom: 5px;
             overflow-x: auto;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, .2);
         }
 
         .spiral-exception .wrapper .stacktrace .chain .call .function {
             font-size: 11px;
-            color: #6bbdff;
+            color: #0078ff;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .call .function .arguments span {
@@ -198,6 +190,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         .spiral-exception .wrapper .stacktrace .chain .call .location {
             margin-bottom: 10px;
             font-size: 10px;
+            color: #636363;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .dumper {
@@ -209,14 +202,14 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         .spiral-exception .wrapper .stacktrace .chain .dumper .close {
             text-align: right;
             padding: 2px;
-            color: #fff;
+            color: #151515;
             cursor: pointer;
             font-size: 12px;
-            background-color: #232323;
+            background-color: white;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .dumper .close:hover {
-            background-color: #2c2c2c;
+            background-color: #e5e5e5;
         }
 
         .spiral-exception .wrapper .environment .container {
@@ -231,64 +224,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             cursor: pointer;
         }
 
-        .spiral-exception .wrapper .messages {
-            margin-bottom: 5px;
-        }
-
-        .spiral-exception .wrapper .messages .data {
-            display: none;
-            background-color: #2e2e2e;
-        }
-
-        .spiral-exception .wrapper .messages .data .message {
-            padding: 5px;
-            color: #fff;
-        }
-
-        .spiral-exception .wrapper .messages .data .message:nth-child(2n) {
-            background-color: #2e2e2e;
-        }
-
-        .spiral-exception .wrapper .messages .data .message .channel {
-            display: inline-block;
-            font-weight: bold;
-            width: 200px;
-            float: left;
-        }
-
-        .spiral-exception .wrapper .messages .data .message .level {
-            display: inline-block;
-            font-weight: bold;
-            width: 70px;
-            float: left;
-            text-transform: uppercase;
-        }
-
-        .spiral-exception .wrapper .messages .data .message .body {
-            margin-left: 200px;
-            unicode-bidi: embed;
-            white-space: pre;
-        }
-
-        .spiral-exception .wrapper .messages .data .message:hover {
-            background-color: #1e1e1e;
-        }
-
-        .spiral-exception .wrapper .messages .data .message.warning,
-        .spiral-exception .wrapper .messages .data .message.notice {
-            background-color: #2e2e25;
-        }
-
-        .spiral-exception .wrapper .messages .data .message.error {
-            background-color: #2e0e16;
-        }
-
-        .spiral-exception .wrapper .messages .data .message.critical,
-        .spiral-exception .wrapper .messages .data .message.alert,
-        .spiral-exception .wrapper .messages .data .message.emergency {
-            background-color: #4c001f;
-        }
-
         .spiral-exception .wrapper .footer {
             margin-top: 10px;
             margin-bottom: 5px;
@@ -296,7 +231,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .footer .date {
-            color: #fafafa;
+            color: #1d1d1d;
         }
     </style>
     <script type="text/javascript">
@@ -321,7 +256,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
     <div class="header">
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
-        in <i><?= $exception->getFile() ?></i> at <strong>line <?= $exception->getLine() ?></strong>
+        in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
     </div>
 
     <div class="stacktrace">
@@ -380,10 +315,9 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                         <?= $function ?>(<span class="arguments"><?= join(
                                 ', ',
                                 $arguments
-                            ) ?></span>)
+                            ) ?></span>)<br/>
                         <em>
-                            In <?= $trace['file'] ?> at
-                            <strong>line <?= $trace['line'] ?></strong>
+                            In&nbsp;<?= $trace['file'] ?>&nbsp;at&nbsp;<strong>line <?= $trace['line'] ?></strong>
                         </em>
                     </div>
                     <div class="lines">
