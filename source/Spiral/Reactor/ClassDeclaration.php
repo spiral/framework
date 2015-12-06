@@ -11,32 +11,22 @@ use Spiral\Database\Entities\Schemas\AbstractColumn;
 use Spiral\Reactor\ClassDeclaration\Aggregators\ConstantAggregator;
 use Spiral\Reactor\ClassDeclaration\Aggregators\MethodAggregator;
 use Spiral\Reactor\ClassDeclaration\Aggregators\PropertyAggregator;
-use Spiral\Reactor\ClassElements\ConstantDeclaration;
-use Spiral\Reactor\ClassElements\MethodDeclaration;
-use Spiral\Reactor\ClassElements\PropertyDeclaration;
+use Spiral\Reactor\ClassDeclaration\ConstantDeclaration;
+use Spiral\Reactor\ClassDeclaration\MethodDeclaration;
+use Spiral\Reactor\ClassDeclaration\PropertyDeclaration;
 use Spiral\Reactor\Exceptions\ReactorException;
-use Spiral\Reactor\Prototypes\Declaration;
+use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\CommentTrait;
 
 /**
  * Class declaration.
- *
- * @property ConstantAggregator|ConstantDeclaration[] $constants
- * @property PropertyAggregator|PropertyDeclaration[] $properties
- * @property MethodAggregator|MethodDeclaration[]     $methods
- * @property DocComment                               $comment
  */
-class ClassDeclaration extends Declaration implements ReplaceableInterface
+class ClassDeclaration extends NamedDeclaration implements ReplaceableInterface
 {
     /**
      * Can be commented.
      */
     use CommentTrait;
-
-    /**
-     * @var string
-     */
-    private $name = '';
 
     /**
      * @var string
@@ -74,38 +64,23 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
      * @param string $name
      * @param string $extends
      * @param array  $interfaces
+     * @param string $comment
      * @throws ReactorException When name is invalid.
      */
-    public function __construct($name, $extends = '', array $interfaces = [])
+    public function __construct($name, $extends = '', array $interfaces = [], $comment = '')
     {
-        $this->setName($name);
+        parent::__construct($name);
+
         if (!empty($extends)) {
             $this->setExtends($extends);
         }
-    }
 
-    /**
-     * @param string $name
-     * @return $this
-     * @throws ReactorException When name is invalid.
-     */
-    public function setName($name)
-    {
-        if (!preg_match('/^[a-z_0-9]+$/', $name)) {
-            throw new ReactorException("Invalid class name '{$name}'.");
-        }
+        $this->setInterfaces($interfaces);
+        $this->initComment($comment);
 
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+        $this->constants = new ConstantAggregator([]);
+        $this->properties = new PropertyAggregator([]);
+        $this->methods = new MethodAggregator([]);
     }
 
     /**
@@ -234,7 +209,7 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
-     * @return DeclarationAggregator
+     * @return ConstantAggregator|ConstantDeclaration[]
      */
     public function constants()
     {
@@ -242,7 +217,16 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
-     * @return DeclarationAggregator
+     * @param string $name
+     * @return ConstantDeclaration
+     */
+    public function constant($name)
+    {
+        return $this->constants->get($name);
+    }
+
+    /**
+     * @return PropertyAggregator|PropertyDeclaration[]
      */
     public function properties()
     {
@@ -250,11 +234,29 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
-     * @return DeclarationAggregator
+     * @param string $name
+     * @return PropertyDeclaration
+     */
+    public function property($name)
+    {
+        return $this->properties->get($name);
+    }
+
+    /**
+     * @return MethodAggregator|MethodDeclaration[]
      */
     public function methods()
     {
         return $this->methods;
+    }
+
+    /**
+     * @param string $name
+     * @return MethodDeclaration
+     */
+    public function method($name)
+    {
+        return $this->methods->get($name);
     }
 
     /**
@@ -272,28 +274,6 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
-     * @todo DRY
-     * @param string $name
-     * @return mixed
-     * @throws ReactorException
-     */
-    public function __get($name)
-    {
-        switch ($name) {
-            case 'constants':
-                return $this->constants();
-            case 'properties':
-                return $this->properties();
-            case 'methods':
-                return $this->methods();
-            case 'comment':
-                return $this->comment();
-        }
-
-        throw new ReactorException("Undefined property '{$name}'.");
-    }
-
-    /**
      * @param int $indentLevel
      * @return string
      */
@@ -302,11 +282,11 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
         $result = '';
 
         if (!$this->docComment->isEmpty()) {
-            $result .= $this->docComment->render($indentLevel);
+            $result .= $this->docComment->render($indentLevel) . "\n";
         }
 
         //Class header
-        $header = "class {$this->name}";
+        $header = "class {$this->getName()}";
 
         //Rendering extends
         if (!empty($this->extends)) {
@@ -327,17 +307,18 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
         }
 
         if (!$this->constants->isEmpty()) {
-            $result .= "\n" . $this->constants->render($indentLevel + 1) . "\n";
+            $result .= $this->constants->render($indentLevel + 1) . "\n";
         }
 
         if (!$this->properties->isEmpty()) {
-            $result .= "\n" . $this->properties->render($indentLevel + 1) . "\n";
+            $result .= $this->properties->render($indentLevel + 1) . "\n";
         }
 
         if (!$this->methods->isEmpty()) {
-            $result .= "\n" . $this->methods->render($indentLevel + 1) . "\n";
+            $result .= $this->methods->render($indentLevel + 1) . "\n";
         }
 
+        $result = rtrim($result, "\n") . "\n";
         $result .= $this->indent("}", $indentLevel);
 
         return $result;

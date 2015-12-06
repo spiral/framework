@@ -7,19 +7,14 @@
  */
 namespace Spiral\Reactor;
 
+use Spiral\Reactor\Body\DocComment;
 use Spiral\Reactor\Body\Source;
-use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Prototypes\Declaration;
 use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Reactor\Traits\UsesTrait;
 
 /**
  * Provides ability to render file content.
- *
- * @property DeclarationAggregator|ClassDeclaration[]|NamespaceDeclaration[]|Source[]|DocComment[]
- *           $elements
- * @property DocComment
- *           $comment
  */
 class FileDeclaration extends Declaration implements ReplaceableInterface
 {
@@ -44,7 +39,6 @@ class FileDeclaration extends Declaration implements ReplaceableInterface
     public function __construct($namespace = '', $comment = '')
     {
         $this->namespace = $namespace;
-        $this->docComment = new DocComment();
 
         //todo: Function declaration as well.
         $this->elements = new DeclarationAggregator([
@@ -122,31 +116,10 @@ class FileDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
-     * @return DeclarationAggregator
+     * @return DeclarationAggregator|ClassDeclaration[]|NamespaceDeclaration[]|Source[]|DocComment[]
      */
     public function elements()
     {
         return $this->elements;
-    }
-
-    /**
-     * Returns aggregator for property name elements.
-     *
-     * @todo DRY
-     * @param string $name
-     * @return mixed
-     * @throws ReactorException
-     */
-    public function __get($name)
-    {
-        if ($name == 'elements') {
-            return $this->elements();
-        }
-
-        if ($name == 'comment') {
-            return $this->comment();
-        }
-
-        throw new ReactorException("Undefined property '{$name}'.");
     }
 }

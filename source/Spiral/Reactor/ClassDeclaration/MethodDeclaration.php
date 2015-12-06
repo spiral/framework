@@ -5,8 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Reactor\ClassElements;
+namespace Spiral\Reactor\ClassDeclaration;
 
+use Spiral\Reactor\Body\DocComment;
 use Spiral\Reactor\Body\Source;
 use Spiral\Reactor\ClassElements\MethodElements\ParameterElement;
 use Spiral\Reactor\Exceptions\ReactorException;
@@ -17,6 +18,8 @@ use Spiral\Reactor\Traits\CommentTrait;
 
 /**
  * Represent class method.
+ *
+ * @property-read DocComment $comment
  */
 class MethodDeclaration extends NamedDeclaration implements ReplaceableInterface
 {
@@ -241,6 +244,10 @@ class MethodDeclaration extends NamedDeclaration implements ReplaceableInterface
      */
     private function initSource($source)
     {
+        if (empty($this->source)) {
+            $this->source = new Source();
+        }
+
         if (!empty($source)) {
             if (is_array($source)) {
                 $this->source->setLines($source);

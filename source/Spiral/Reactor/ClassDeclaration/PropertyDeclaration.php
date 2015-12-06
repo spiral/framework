@@ -5,14 +5,16 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Reactor\ClassElements;
+namespace Spiral\Reactor\ClassDeclaration;
 
-use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\AccessTrait;
 use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Reactor\Traits\SerializerTrait;
 
+/**
+ * Declares property element.
+ */
 class PropertyDeclaration extends NamedDeclaration
 {
     use CommentTrait, SerializerTrait, AccessTrait;
@@ -28,12 +30,14 @@ class PropertyDeclaration extends NamedDeclaration
     private $defaultValue = null;
 
     /**
-     * @param string       $name
-     * @param string|array $comment
+     * @param string $name
+     * @param null   $defaultValue
+     * @param string $comment
      */
-    public function __construct($name, $comment = '')
+    public function __construct($name, $defaultValue = null, $comment = '')
     {
         parent::__construct($name);
+        $this->setDefault($defaultValue);
         $this->initComment($comment);
     }
 
@@ -81,34 +85,18 @@ class PropertyDeclaration extends NamedDeclaration
     {
         $result = '';
         if (!$this->docComment->isEmpty()) {
-            $result .= $this->docComment->render($indentLevel);
+            $result .= $this->docComment->render($indentLevel)."\n";
         }
 
-        $result .= "{$this->access} \${$this->getName()}";
+        $result .= $this->indent("{$this->access} \${$this->getName()}", $indentLevel);
 
         if ($this->hasDefault) {
             //todo: make indent level work
-            $result .= $this->serializer->serialize($this->defaultValue, $indentLevel);
+            $result .= " = " . $this->serializer()->serialize($this->defaultValue, $indentLevel) . ";";
         } else {
             $result .= ";";
         }
 
         return $result;
-    }
-
-    /**
-     * Returns aggregator for property name elements.
-     *
-     * @param string $name
-     * @return mixed
-     * @throws ReactorException
-     */
-    public function __get($name)
-    {
-        if ($name == 'comment') {
-            return $this->comment();
-        }
-
-        throw new ReactorException("Undefined property '{$name}'.");
     }
 }

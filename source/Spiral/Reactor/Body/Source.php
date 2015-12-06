@@ -110,7 +110,10 @@ class Source extends Declaration
      */
     public function render($indentLevel = 0)
     {
-        $lines = array_map([$this, 'indent'], $this->lines, $indentLevel);
+        $lines = $this->lines;
+        array_walk($lines, function (&$line) use ($indentLevel) {
+            $line = $this->indent($line, $indentLevel);
+        });
 
         return join("\n", $lines);
     }

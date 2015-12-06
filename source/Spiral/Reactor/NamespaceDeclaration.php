@@ -7,8 +7,8 @@
  */
 namespace Spiral\Reactor;
 
+use Spiral\Reactor\Body\DocComment;
 use Spiral\Reactor\Body\Source;
-use Spiral\Reactor\Exceptions\ReactorException;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Reactor\Traits\UsesTrait;
@@ -27,8 +27,9 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
 
     /**
      * @param string $name
+     * @param string $comment
      */
-    public function __construct($name = '')
+    public function __construct($name = '', $comment = '')
     {
         parent::__construct($name);
 
@@ -38,6 +39,8 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
             DocComment::class,
             Source::class
         ]);
+
+        $this->initComment($comment);
     }
 
     /**
@@ -84,31 +87,10 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
     }
 
     /**
-     * @return DeclarationAggregator
+     * @return DeclarationAggregator|ClassDeclaration[]|Source[]|DocComment[]
      */
     public function elements()
     {
         return $this->elements;
-    }
-
-    /**
-     * Returns aggregator for property name elements.
-     *
-     * @todo DRY
-     * @param string $name
-     * @return mixed
-     * @throws ReactorException
-     */
-    public function __get($name)
-    {
-        if ($name == 'elements') {
-            return $this->elements();
-        }
-
-        if ($name == 'comment') {
-            return $this->comment();
-        }
-
-        throw new ReactorException("Undefined property '{$name}'.");
     }
 }

@@ -5,9 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Reactor;
+namespace Spiral\Reactor\Body;
 
-use Spiral\Reactor\Body\Source;
+use Spiral\Reactor\ReplaceableInterface;
 
 /**
  * Wraps docBlock comment (by representing it as string lines).
@@ -28,6 +28,25 @@ class DocComment extends Source implements ReplaceableInterface
         });
 
         return $this->setLines($lines);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function render($indentLevel = 0)
+    {
+        if ($this->isEmpty()) {
+            return '';
+        }
+
+        $result = $this->indent("/**\n", $indentLevel);
+        foreach ($this->getLines() as $line) {
+            $result .= $this->indent(" * {$line}\n", $indentLevel);
+        }
+
+        $result .= $this->indent(" */", $indentLevel);
+
+        return $result;
     }
 
     /**

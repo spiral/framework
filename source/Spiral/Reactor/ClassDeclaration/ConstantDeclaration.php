@@ -5,16 +5,20 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Reactor\ClassElements;
+namespace Spiral\Reactor\ClassDeclaration;
 
+use Spiral\Reactor\Body\DocComment;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Reactor\Traits\SerializerTrait;
 
+/**
+ * Class constant declaration.
+ *
+ * @property-read DocComment $comment
+ */
 class ConstantDeclaration extends NamedDeclaration
 {
-    use CommentTrait, SerializerTrait;
-
     /**
      * Constants and properties.
      */

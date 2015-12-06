@@ -7,7 +7,7 @@
  */
 namespace Spiral\Reactor\Traits;
 
-use Spiral\Reactor\DocComment;
+use Spiral\Reactor\Body\DocComment;
 
 /**
  * Element can have doc comment.
@@ -32,9 +32,24 @@ trait CommentTrait
     /**
      * Initi comment value.
      *
-     * @param string $comment
+     * @param string|array $comment
      */
     private function initComment($comment)
+    {
+        if (empty($this->docComment)) {
+            $this->docComment = new DocComment();
+        }
+
+        $this->setComment($comment);
+    }
+
+    /**
+     * Set comment value.
+     *
+     * @param string|array $comment
+     * @return $this
+     */
+    public function setComment($comment)
     {
         if (!empty($comment)) {
             if (is_array($comment)) {
@@ -43,5 +58,7 @@ trait CommentTrait
                 $this->docComment->setString($comment);
             }
         }
+
+        return $this;
     }
 }

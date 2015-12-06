@@ -7,7 +7,7 @@
  */
 namespace Spiral\Reactor\ClassDeclaration\Aggregators;
 
-use Spiral\Reactor\ClassElements\ConstantDeclaration;
+use Spiral\Reactor\ClassDeclaration\ConstantDeclaration;
 use Spiral\Reactor\DeclarationAggregator;
 
 /**
