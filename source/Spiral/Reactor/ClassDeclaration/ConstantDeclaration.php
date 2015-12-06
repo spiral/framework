@@ -7,7 +7,6 @@
  */
 namespace Spiral\Reactor\ClassDeclaration;
 
-use Spiral\Reactor\Body\DocComment;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Reactor\Traits\SerializerTrait;
@@ -70,10 +69,9 @@ class ConstantDeclaration extends NamedDeclaration
             $result .= $this->docComment->render($indentLevel) . "\n";
         }
 
+        $result .= $this->indent("const {$this->getName()} = ", $indentLevel);
+
         //todo: make indent level work
-        return "{$result}const {$this->getName()} = " . $this->serializer()->serialize(
-            $this->value,
-            $indentLevel
-        );
+        return $result . $this->serializer()->serialize($this->value, $indentLevel);
     }
 }
