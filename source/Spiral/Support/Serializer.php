@@ -44,6 +44,10 @@ class Serializer
      */
     protected function packArray(array $array, $level = 0)
     {
+        if ($array === []) {
+            return '[]';
+        }
+
         //Delimiters between rows and sub-arrays.
         $subIndent = "\n" . str_repeat(self::INDENT, $level + 2);
         $keyIndent = "\n" . str_repeat(self::INDENT, $level + 1);

@@ -139,7 +139,7 @@ class Source extends Declaration
             $string = Strings::normalizeEndings($string, false);
         }
 
-        $lines = explode("\n", Strings::normalizeEndings($string), $cutIndents = false);
+        $lines = explode("\n", Strings::normalizeEndings($string, false));
 
         //Pre-processing
         return array_map([$this, 'prepareLine'], $lines);

@@ -91,7 +91,7 @@ trait UsesTrait
                 $line .= ";";
             }
 
-            $lines = $this->indent($line, $indentLevel);
+            $lines[] = $this->indent($line, $indentLevel);
         }
 
         return join("\n", $lines);

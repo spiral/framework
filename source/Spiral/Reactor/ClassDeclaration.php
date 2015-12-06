@@ -303,19 +303,19 @@ class ClassDeclaration extends NamedDeclaration implements ReplaceableInterface
 
         //Rendering content
         if (!empty($this->traits)) {
-            $result .= $this->renderTraits($indentLevel + 1) . "\n";
+            $result .= $this->renderTraits($indentLevel + 1) . "\n\n";
         }
 
         if (!$this->constants->isEmpty()) {
-            $result .= $this->constants->render($indentLevel + 1) . "\n";
+            $result .= $this->constants->render($indentLevel + 1) . "\n\n";
         }
 
         if (!$this->properties->isEmpty()) {
-            $result .= $this->properties->render($indentLevel + 1) . "\n";
+            $result .= $this->properties->render($indentLevel + 1) . "\n\n";
         }
 
         if (!$this->methods->isEmpty()) {
-            $result .= $this->methods->render($indentLevel + 1) . "\n";
+            $result .= $this->methods->render($indentLevel + 1) . "\n\n";
         }
 
         $result = rtrim($result, "\n") . "\n";
@@ -332,7 +332,7 @@ class ClassDeclaration extends NamedDeclaration implements ReplaceableInterface
     {
         $lines = [];
         foreach ($this->traits as $class => $options) {
-            $lines = $this->indent("use {$class};", $indentLevel);
+            $lines[] = $this->indent("use {$class};", $indentLevel);
         }
 
         return join("\n", $lines);

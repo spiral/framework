@@ -14,8 +14,6 @@ use Spiral\Reactor\Traits\SerializerTrait;
 
 /**
  * Class constant declaration.
- *
- * @property-read DocComment $comment
  */
 class ConstantDeclaration extends NamedDeclaration
 {
