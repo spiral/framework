@@ -126,6 +126,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
                 'framework' => dirname(__DIR__) . '/',
                 'public'    => $directories['root'] . 'webroot/',
                 'config'    => $directories['application'] . 'config/',
+                'views'     => $directories['application'] . 'views/',
                 'runtime'   => $directories['application'] . 'runtime/',
                 'cache'     => $directories['application'] . 'runtime/cache/',
                 'resources' => $directories['application'] . 'resources/',
