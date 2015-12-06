@@ -258,10 +258,8 @@ class ClassDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
-     * Replace sub string in element content.
+     * {@inheritdoc}
      *
-     * @param string|array $search
-     * @param string|array $replace
      * @return $this
      */
     public function replace($search, $replace)

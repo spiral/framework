@@ -21,7 +21,7 @@ use Spiral\Reactor\Traits\UsesTrait;
  * @property DocComment
  *           $comment
  */
-class FileDeclaration extends Declaration
+class FileDeclaration extends Declaration implements ReplaceableInterface
 {
     use UsesTrait, CommentTrait;
 
@@ -74,6 +74,19 @@ class FileDeclaration extends Declaration
     public function getNamespace()
     {
         return $this->namespace;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return $this
+     */
+    public function replace($search, $replace)
+    {
+        $this->docComment->replace($search, $replace);
+        $this->elements->replace($search, $replace);
+
+        return $this;
     }
 
     /**

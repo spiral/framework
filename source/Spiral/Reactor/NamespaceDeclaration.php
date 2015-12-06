@@ -16,7 +16,7 @@ use Spiral\Reactor\Traits\UsesTrait;
 /**
  * Represent namespace declaration. Attention, namespace renders in a form of namespace name { ... }
  */
-class NamespaceDeclaration extends NamedDeclaration
+class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterface
 {
     use UsesTrait, CommentTrait;
 
@@ -38,6 +38,19 @@ class NamespaceDeclaration extends NamedDeclaration
             DocComment::class,
             Source::class
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return $this
+     */
+    public function replace($search, $replace)
+    {
+        $this->docComment->replace($search, $replace);
+        $this->elements->replace($search, $replace);
+
+        return $this;
     }
 
     /**
