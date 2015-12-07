@@ -18,5 +18,19 @@ class Service extends Component
     /**
      * Access to shared components and entities.
      */
-    use SharedTrait;
+    use SharedTrait, SaturateTrait;
+
+    /**
+     * @invisible
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
+     * @param ContainerInterface $container Sugared.
+     */
+    public function __construct(ContainerInterface $container = null)
+    {
+        $this->container = $this->saturate($container, ContainerInterface::class);
+    }
 }

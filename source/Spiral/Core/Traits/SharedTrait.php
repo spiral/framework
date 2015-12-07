@@ -8,7 +8,6 @@
 namespace Spiral\Core\Traits;
 
 use Interop\Container\ContainerInterface as InteropContainer;
-use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\Container\AutowireException;
 use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Core\Exceptions\SugarException;
@@ -19,22 +18,6 @@ use Spiral\Core\Exceptions\SugarException;
  */
 trait SharedTrait
 {
-    use SaturateTrait;
-
-    /**
-     * @invisible
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
-     * @param ContainerInterface $container Sugared.
-     */
-    public function __construct(ContainerInterface $container = null)
-    {
-        $this->container = $this->saturate($container, ContainerInterface::class);
-    }
-
     /**
      * Shortcut to Container get method.
      *
@@ -57,4 +40,10 @@ trait SharedTrait
 
         //no parent call, too dangerous
     }
+
+    /**
+     * @return InteropContainer
+     * @throws SugarException
+     */
+    abstract protected function container();
 }
