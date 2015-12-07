@@ -28,6 +28,9 @@ class SharedBindings extends Bootloader
         'modules'           => 'Spiral\Modules\ModuleManager',
         'debugger'          => 'Spiral\Debug\Debugger',
 
+        //Container
+        'container'         => 'Spiral\Core\ContainerInterface',
+
         //Dispatchers
         'http'              => 'Spiral\Http\HttpDispatcher',
         'console'           => 'Spiral\Console\ConsoleDispatcher',

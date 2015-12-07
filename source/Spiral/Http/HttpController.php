@@ -68,7 +68,7 @@ class HttpController extends Controller
                 return $method->invokeArgs($scope, $arguments);
             });
 
-            //Always provided by callAction
+            //Request and Response are always provided by callAction
             return $pipeline->run($parameters['request'], $parameters['response']);
         } finally {
             $this->benchmark($benchmark);
