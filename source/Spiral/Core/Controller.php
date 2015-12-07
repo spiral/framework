@@ -58,7 +58,9 @@ abstract class Controller extends Service implements ControllerInterface
      */
     public function __construct(ContainerInterface $container = null)
     {
-        $this->resolver = $this->saturate($container, ContainerInterface::class);
+        //Default container can be used as argument resolver as well
+        $this->resolver = $this->saturate($container, ResolverInterface::class);
+
         parent::__construct($container);
     }
 

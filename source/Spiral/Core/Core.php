@@ -255,7 +255,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         }
 
         //Initiating controller with all required dependencies
-        $controller = $this->container->get($controller);
+        $controller = $this->container->make($controller);
 
         if (!$controller instanceof ControllerInterface) {
             throw new ControllerException(
