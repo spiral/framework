@@ -44,11 +44,11 @@ class ExceptionSupport
      */
     public static function highlightSource($filename, $line, $around = 10, Style $style = null)
     {
-        $highlighter = new Highlighter(
-            $filename,
-            !empty($style) ? $style : new Style(),
-            spiral(TokenizerInterface::class)
-        );
+        if (empty($style)) {
+            $style = new Style();
+        }
+
+        $highlighter = new Highlighter(file_get_contents($filename), $style);
 
         return $highlighter->lines($line, $around);
     }
