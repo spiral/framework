@@ -120,7 +120,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container.no-trace {
-            color: #0078ff;
+            color: black;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container.no-trace .arguments span {
@@ -132,7 +132,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .location {
-            color: #0078ff;
+            color: black;
             margin-bottom: 5px;
         }
 
@@ -179,7 +179,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .wrapper .stacktrace .chain .call .function {
             font-size: 11px;
-            color: #0078ff;
+            color: black;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .call .function .arguments span {
