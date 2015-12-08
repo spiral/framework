@@ -8,14 +8,23 @@
 namespace Spiral\Debug;
 
 /**
- * Wrapper used to describe and show exception information in user friendly way.
+ * Exception wrapper used to describe and show exception information in user friendly way.
  */
-interface SnapshotInterface extends \Throwable
+interface SnapshotInterface
 {
     /**
+     * Associated exceptiom.
+     *
      * @return \Throwable
      */
     public function exception();
+
+    /**
+     * Must return formatted exception message including exception class, location and etc.
+     *
+     * @return string
+     */
+    public function formattedMessage();
 
     /**
      * Report or store snapshot in known location. Used to store exception information for future
@@ -36,9 +45,4 @@ interface SnapshotInterface extends \Throwable
      * @return string
      */
     public function render();
-
-    /**
-     * @return string
-     */
-    public function __toString();
 }

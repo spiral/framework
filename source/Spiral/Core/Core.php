@@ -326,19 +326,9 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         restore_error_handler();
         restore_exception_handler();
 
-        if (!$exception instanceof SnapshotInterface) {
-            if (!$this->container->has(SnapshotInterface::class)) {
-
-                //Nothing we can really do
-                echo $exception;
-
-                return;
-            }
-
-            $snapshot = $this->container->make(SnapshotInterface::class, compact('exception'));
-        } else {
-            //Exception can handle itself
-            $snapshot = $exception;
+        if (empty($snapshot = $this->describeException($exception))) {
+            //No action is required
+            return;
         }
 
         //Let's allow snapshot to report about itself
@@ -350,6 +340,27 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         } else {
             echo $snapshot;
         }
+    }
+
+    /**
+     * Create appropriate snapshot for given exception. By default SnapshotInterface binding will be
+     * used.
+     *
+     * Method can return null, in this case exception will be ignored.
+     *
+     * @param \Throwable $exception
+     * @return mixed|null|object
+     */
+    protected function describeException($exception)
+    {
+        if (!$this->container->has(SnapshotInterface::class)) {
+            return null;
+        }
+
+        return $this->container->make(
+            SnapshotInterface::class,
+            compact('exception')
+        );
     }
 
     /**
