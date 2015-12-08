@@ -66,7 +66,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
     <style>
         body.spiral-exception {
             font-family: Helvetica, sans-serif;
-            background-color: #e0e0e0;
+            background-color: #25000a;
             font-size: 14px;
             padding: 5px;
             color: #a1a1a1;
@@ -96,8 +96,8 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .wrapper .header {
             margin-bottom: 5px;
-            background: #d34646;
-            border: 2px solid #d34646;
+            background: #d3833b;
+            border: 2px solid #d3833b;
             padding: 8px 13px 8px 18px;
             color: #fff;
             box-shadow: inset 0 0 8px rgba(0, 0, 0, .2);
