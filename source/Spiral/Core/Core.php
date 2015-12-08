@@ -29,7 +29,7 @@ use Spiral\Http\HttpDispatcher;
  * @todo move start method and dispatcher property into trait
  * @todo potentially add more events and create common event dispatcher?
  */
-class Core extends Component implements CoreInterface, DirectoriesInterface
+abstract class Core extends Component implements CoreInterface, DirectoriesInterface
 {
     /**
      * Simplified access to container bindings.
@@ -285,10 +285,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     /**
      * Bootstrap application. Must be executed before start method.
      */
-    public function bootstrap()
-    {
-        //Doing nothing here
-    }
+    abstract protected function bootstrap();
 
     /**
      * Handle php shutdown and search for fatal errors.
