@@ -279,8 +279,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                 array_unshift($stacktrace, $header);
             }
 
-            //If endpoint was described
-            $endpoint = false;
             foreach ($stacktrace as $trace) {
 
                 $arguments = [];

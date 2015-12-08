@@ -42,10 +42,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         //Colorizing
         $display = $styler->style($display, 'value', $type);
 
-        $display = interpolate(
-            "<span>{display}</span>",
-            compact('display')
-        );
+        $display = interpolate("<span>{display}</span>", compact('display'));
 
         $result[] = $display;
     }
@@ -239,14 +236,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             var block = document.getElementById(id);
             block.style.display = (block.style.display == 'none' ? 'block' : 'none');
         }
-        function _da(id) {
-            var dump = document.getElementById('argument-dumper');
-            dump.style.display = 'block';
-            dump.innerHTML = '<div class="close" onclick="toggle(\'argument-dumper\')"> &cross; close</div> '
-                + '<div class="dump" style="display: block">'
-                + document.getElementById('argument-' + id).innerHTML
-                + '</div>';
-        }
     </script>
 </head>
 <body class="spiral-exception">
@@ -274,8 +263,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                 array_unshift($stacktrace, $header);
             }
 
-            //If endpoint was described
-            $endpoint = false;
             foreach ($stacktrace as $trace) {
 
                 $arguments = [];
