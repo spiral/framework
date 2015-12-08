@@ -21,7 +21,7 @@ use Symfony\Component\Process\Process;
 class ConfigInjector extends Component
 {
     /**
-     * Placeholder repex.
+     * Placeholder regex.
      */
     const PLACEHOLDER_REGEX = '#/\*\{\{([a-z0-9\.\-]+)\}\}\*/#';
 
@@ -94,9 +94,6 @@ class ConfigInjector extends Component
     {
         try {
             $tempFilename = tempnam(sys_get_temp_dir(), 'spl');
-
-            //Saving file content (we are not using FilesInterface as we have to work with local
-            //filesystem)
             file_put_contents($tempFilename, $this->render());
 
             $process = new Process(PHP_BINARY . " -l {$tempFilename}");
@@ -163,18 +160,18 @@ class ConfigInjector extends Component
 
     /**
      * Prepare set of lines to be injected by adding indentation, missing commas and wrapping lines
-     * using given string.
+     * using given string. See examples in configs.
      *
      * @param string $indent
-     * @param string $wrapper
+     * @param string $id
      * @param array  $lines
      * @return array
      */
-    private function prepare($indent, $wrapper, array $lines)
+    private function prepare($indent, $id, array $lines)
     {
-        $wrapper = "/*~[{$wrapper}]:" . date('Y-m-d') . "~*/";
+        $id = "/*~[{$id}]:" . date('Y-m-d') . "~*/";
 
-        $result = [$indent . $wrapper];
+        $result = [$indent . $id];
         foreach ($lines as $line) {
             $result[] = $indent . $line;
         }
@@ -184,7 +181,7 @@ class ConfigInjector extends Component
             $result[count($result) - 1] .= ',';
         }
 
-        $result[] = $indent . $wrapper;
+        $result[] = $indent . $id;
 
         return $result;
     }

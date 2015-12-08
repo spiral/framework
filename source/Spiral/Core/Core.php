@@ -18,6 +18,7 @@ use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
 
@@ -34,7 +35,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * Simplified access to container bindings.
      */
-    use SharedTrait;
+    use SharedTrait, BenchmarkTrait;
 
     /**
      * Set to false if you don't want spiral to cache autoloading list.
@@ -258,17 +259,23 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             );
         }
 
-        //Initiating controller with all required dependencies
-        $controller = $this->container->make($controller);
+        $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?: '~default~'));
+        try {
+            //Initiating controller with all required dependencies
+            $controller = $this->container->make($controller);
 
-        if (!$controller instanceof ControllerInterface) {
-            throw new ControllerException(
-                "No such controller '{$controller}' found.",
-                ControllerException::NOT_FOUND
-            );
+            if (!$controller instanceof ControllerInterface) {
+                throw new ControllerException(
+                    "No such controller '{$controller}' found.",
+                    ControllerException::NOT_FOUND
+                );
+            }
+
+
+            return $controller->callAction($action, $parameters);
+        } finally {
+            $this->benchmark($benchmark);
         }
-
-        return $controller->callAction($action, $parameters);
     }
 
     /**

@@ -10,6 +10,8 @@ namespace Spiral\Views;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
+use Spiral\Core\HippocampusInterface;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
 use Spiral\Views\Exceptions\LoaderException;
@@ -25,6 +27,8 @@ use Spiral\Views\Exceptions\ViewsException;
  */
 class ViewManager extends Component implements SingletonInterface, ViewsInterface
 {
+    use BenchmarkTrait;
+
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
@@ -71,10 +75,10 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     protected $container = null;
 
     /**
-     * @todo HippocampusInterface
-     * @param ViewsConfig        $config
-     * @param FilesInterface     $files
-     * @param ContainerInterface $container
+     * @todo Memory?
+     * @param ViewsConfig          $config
+     * @param FilesInterface       $files
+     * @param ContainerInterface   $container
      */
     public function __construct(
         ViewsConfig $config,
