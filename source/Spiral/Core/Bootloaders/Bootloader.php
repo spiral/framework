@@ -7,6 +7,8 @@
  */
 namespace Spiral\Core\Bootloaders;
 
+use Spiral\Core\Component;
+
 /**
  * Provide ability to initiate set of container bindings using simple string form without closures.
  *
@@ -17,7 +19,7 @@ namespace Spiral\Core\Bootloaders;
  *
  * This is almost the same as ServiceProvider in Laravel.
  */
-abstract class Bootloader implements BootloaderInterface
+abstract class Bootloader extends Component implements BootloaderInterface
 {
     /**
      * Not bootable by default.

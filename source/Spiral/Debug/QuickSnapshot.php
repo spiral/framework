@@ -8,9 +8,10 @@
 namespace Spiral\Debug;
 
 use Psr\Log\LoggerInterface;
+use Spiral\Core\Component;
 use Spiral\Support\ExceptionSupport;
 
-class QuickSnapshot implements SnapshotInterface
+class QuickSnapshot extends Component implements SnapshotInterface
 {
     /**
      * @var \Exception
@@ -78,6 +79,18 @@ class QuickSnapshot implements SnapshotInterface
      */
     public function render()
     {
-        return (string)$this->exception;
+        return "<pre>{$this->exception}</pre>";
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        if (php_sapi_name() == 'cli') {
+            return (string)$this->exception;
+        }
+
+        return $this->render();
     }
 }

@@ -60,7 +60,6 @@ class SharedBindings extends Bootloader
         'input'             => 'Spiral\Http\Input\InputManager',
         'cookies'           => 'Spiral\Http\Cookies\CookieManager',
         'router'            => 'Spiral\Http\Routing\Router',
-
-        'request' => 'Psr\Http\Message\ServerRequestInterface'
+        'request'           => 'Psr\Http\Message\ServerRequestInterface'
     ];
 }

@@ -10,7 +10,7 @@ namespace Spiral\Debug\Configs;
 use Spiral\Core\InjectableConfig;
 
 /**
- * Snapshots.
+ * Configuration for Snapshot exception handler.
  */
 class SnapshotConfig extends InjectableConfig
 {
@@ -55,7 +55,6 @@ class SnapshotConfig extends InjectableConfig
     public function reportingDirectory()
     {
         return $this->config['reporting']['directory'];
-
     }
 
     /**
@@ -67,15 +66,17 @@ class SnapshotConfig extends InjectableConfig
     }
 
     /**
-     * @param string $exception
-     * @param int    $time
+     * @param \Throwable $exception
+     * @param int        $time
      * @return string
      */
     public function snapshotFilename($exception, $time)
     {
+        $name = (new \ReflectionObject($exception))->getShortName();
+
         $filename = \Spiral\interpolate($this->config['reporting']['filename'], [
-            'date'      => date($this->config['reporting']['dateFormat'], $time),
-            'exception' => $exception
+            'date' => date($this->config['reporting']['dateFormat'], $time),
+            'name' => $name
         ]);
 
         return $this->reportingDirectory() . $filename;

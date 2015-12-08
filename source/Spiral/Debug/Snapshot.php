@@ -7,45 +7,33 @@
  */
 namespace Spiral\Debug;
 
-use Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Exceptions\SugarException;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Configs\SnapshotConfig;
+use Spiral\Debug\Configs\SnapshotingConfig;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\FilesInterface;
-use Spiral\Support\ExceptionSupport;
 use Spiral\Views\ViewsInterface;
 
 /**
- * Spiral implementation of SnapshotInterface with ability to render exception explanation using
- * ViewsInterface.
+ * Provides ability to render and store snapshot information on a disk.
  *
- * TODO: REWRITE OR REMOVE THAT? STILL THINKING
+ * @see SnapshotConfig
  */
-class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterface
+class Snapshot extends QuickSnapshot implements SnapshotInterface
 {
     /**
      * Additional constructor arguments.
      */
-    use LoggerTrait, SaturateTrait;
+    use SaturateTrait;
 
     /**
-     * Message format.
+     * @var SnapshotConfig
      */
-    const MESSAGE = "{exception}: {message} in {file} at line {line}";
-
-    /**
-     * Part of debug configuration.
-     */
-    const CONFIG = 'snapshots';
-
-    /**
-     * @var \Exception
-     */
-    private $exception = null;
+    private $config = null;
 
     /**
      * Rendered backtrace view, can be used in to save into file, send by email or show to client.
@@ -53,11 +41,6 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
      * @var string
      */
     private $rendered = '';
-
-    /**
-     * @var SnapshotConfig
-     */
-    protected $config = null;
 
     /**
      * @var FilesInterface
@@ -70,13 +53,11 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
     protected $views = null;
 
     /**
-     * Snapshot constructor.
-     *
      * @param \Throwable      $exception
-     * @param LoggerInterface $logger
-     * @param SnapshotConfig  $config
-     * @param FilesInterface  $files
-     * @param ViewsInterface  $views
+     * @param LoggerInterface $logger Sugared.
+     * @param SnapshotConfig  $config Sugared.
+     * @param FilesInterface  $files  Sugared.
+     * @param ViewsInterface  $views  Sugared.
      * @throws SugarException
      */
     public function __construct(
@@ -86,37 +67,14 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
         FilesInterface $files = null,
         ViewsInterface $views = null
     ) {
-        $this->exception = $exception;
-
-        //Saturating
-        $this->logger = $this->saturate($logger, LoggerInterface::class);
-        $this->config = $this->saturate($config, SnapshotConfig::class);
+        /**
+         * All this properties can be automatically populated using shared contaner.
+         */
+        $this->config = $this->saturate($config, SnapshotingConfig::class);
         $this->files = $this->saturate($files, FilesInterface::class);
         $this->views = $this->saturate($views, ViewsInterface::class);
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return (new \ReflectionObject($this->exception))->getShortName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessage()
-    {
-        return ExceptionSupport::createMessage($this->exception);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function exception()
-    {
-        return $this->exception;
+        parent::__construct($exception, $this->saturate($logger, LoggerInterface::class));
     }
 
     /**
@@ -124,41 +82,14 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
      */
     public function report()
     {
-        $this->logger()->error(ExceptionSupport::createMessage($this->exception));
+        parent::report();
 
         if (!$this->config->reportingEnabled()) {
             //No need to record anything
             return;
         }
 
-        //Writing to hard drive
-        $this->files->write(
-            $this->config->snapshotFilename($this->getName(), time()),
-            $this->render(),
-            FilesInterface::RUNTIME,
-            true
-        );
-
-        $snapshots = $this->files->getFiles($this->config->reportingDirectory());
-        if (count($snapshots) > $this->config->maxSnapshots()) {
-            $this->dropOldest($snapshots);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function describe()
-    {
-        return [
-            'error'    => $this->getMessage(),
-            'location' => [
-                'file' => $this->exception->getFile(),
-                'line' => $this->exception->getLine()
-            ],
-            //todo: needed?
-            'trace'    => $this->exception->getTrace()
-        ];
+        $this->saveSnapshot();
     }
 
     /**
@@ -170,29 +101,36 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
             return $this->rendered;
         }
 
+        if (empty($this->config->viewName())) {
+            return parent::render();
+        }
+
         return $this->rendered = $this->views->render($this->config->viewName(), [
-            'exception' => $this->exception
+            'exception' => $this->exception()
         ]);
     }
 
     /**
-     * @return string
+     * Save snapshot information on hard-drive.
      */
-    public function __toString()
+    protected function saveSnapshot()
     {
-        if (php_sapi_name() == 'cli') {
-            return (string)$this->exception;
-        }
+        $filename = $this->config->snapshotFilename($this->exception(), time());
+        $this->files->write($filename, $this->render(), FilesInterface::RUNTIME, true);
 
-        return $this->render();
+        $snapshots = $this->files->getFiles($this->config->reportingDirectory());
+        if (count($snapshots) > $this->config->maxSnapshots()) {
+            $this->performRotation($snapshots);
+        }
     }
 
     /**
      * Clean old snapshots.
      *
+     * @todo Possibly need better implementation.
      * @param array $snapshots
      */
-    private function dropOldest(array $snapshots)
+    protected function performRotation(array $snapshots)
     {
         $oldest = '';
         $oldestTimestamp = PHP_INT_MAX;
