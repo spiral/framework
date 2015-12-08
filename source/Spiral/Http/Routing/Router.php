@@ -11,6 +11,7 @@ use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\ContainerInterface;
+use Spiral\Http\Exceptions\BadRouteException;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\Exceptions\RouterException;
 
@@ -112,7 +113,7 @@ class Router implements RouterInterface
             }
         }
 
-        throw new RouterException("Undefined route '{$name}'.");
+        throw new BadRouteException("Undefined route '{$name}'.");
     }
 
     /**
@@ -125,17 +126,20 @@ class Router implements RouterInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws BadRouteException
      */
     public function createUri($route, $parameters = [], SlugifyInterface $slugify = null)
     {
-        if (isset($this->routes[$route])) {
-            //Dedicating to specified route
-            return $this->routes[$route]->createUri($parameters, $this->basePath, $slugify);
+        try {
+            return $this->getRoute($route)->createUri($parameters, $this->basePath, $slugify);
+        } catch (BadRouteException $e) {
+            //Using fallback route
         }
 
         //Will be handled via default route where route name is specified as controller::action
         if (strpos($route, RouteInterface::SEPARATOR) === false && strpos($route, '/') === false) {
-            throw new RouterException(
+            throw new BadRouteException(
                 "Unable to locate route or use default route with controller::action pattern."
             );
         }

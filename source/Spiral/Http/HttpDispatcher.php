@@ -8,8 +8,8 @@
 namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
@@ -108,8 +108,15 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     protected function request()
     {
-        //Zend code is here
-        return ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+        $benchmark = $this->benchmark('new:request');
+        try {
+            /**
+             * @see \Zend\Diactoros\ServerRequestFactory
+             */
+            return ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
@@ -117,12 +124,17 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     protected function response()
     {
-        $response = parent::response();
-        foreach ($this->config->defaultHeaders() as $header => $value) {
-            $response = $response->withHeader($header, $value);
-        }
+        $benchmark = $this->benchmark('new:response');
+        try {
+            $response = parent::response();
+            foreach ($this->config->defaultHeaders() as $header => $value) {
+                $response = $response->withHeader($header, $value);
+            }
 
-        return $response;
+            return $response;
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
