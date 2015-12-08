@@ -149,6 +149,4 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
             $this->config->routerParameters()
         );
     }
-
-
 }

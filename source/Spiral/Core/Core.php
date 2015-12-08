@@ -27,6 +27,7 @@ use Spiral\Http\HttpDispatcher;
  *
  * @property-read ContainerInterface $container Protected.
  * @todo move start method and dispatcher property into trait
+ * @todo potentially add more events and create common event dispatcher?
  */
 class Core extends Component implements CoreInterface, DirectoriesInterface
 {
@@ -41,7 +42,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     const MEMORIZE_BOOTLOADERS = true;
 
     /**
-     * I need a constant for Symfony Console. :/
+     * I need this constant for Symfony Console. :/
      */
     const VERSION = '0.8.0-beta';
 
@@ -123,7 +124,9 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
     ) {
         $this->container = $container;
 
-        //We can set some directories automatically
+        /*
+         * Default directories pattern, you can overwrite any directory you want in index file.
+         */
         $this->directories = $directories + [
                 'framework' => dirname(__DIR__) . '/',
                 'public'    => $directories['root'] . 'webroot/',
@@ -135,14 +138,15 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
                 'locales'   => $directories['application'] . 'resources/locales/'
             ];
 
+        //Every application needs timezone to be set, by default we are using UTC
+        date_default_timezone_set($this->timezone);
+
         if (empty($memory)) {
             //Default memory implementation
             $memory = new Memory($this->directory('cache'), $container->get(FilesInterface::class));
         }
 
         $this->memory = $memory;
-        date_default_timezone_set($this->timezone);
-
         $this->bootloader = new BootloadManager($this->container, $this->memory);
     }
 
@@ -322,14 +326,22 @@ class Core extends Component implements CoreInterface, DirectoriesInterface
         restore_error_handler();
         restore_exception_handler();
 
-        //todo: Change mechanism how exceptions are handled, possibly split snapshot away! Critical!
+        if (!$exception instanceof SnapshotInterface) {
+            if (!$this->container->has(SnapshotInterface::class)) {
 
-        /**
-         * @var SnapshotInterface $snapshot
-         */
-        $snapshot = $this->container->make(SnapshotInterface::class, compact('exception'));
+                //Nothing we can really do
+                echo $exception;
 
-        //Reporting
+                return;
+            }
+
+            $snapshot = $this->container->make(SnapshotInterface::class, compact('exception'));
+        } else {
+            //Exception can handle itself
+            $snapshot = $exception;
+        }
+
+        //Let's allow snapshot to report about itself
         $snapshot->report();
 
         if (!empty($this->dispatcher)) {

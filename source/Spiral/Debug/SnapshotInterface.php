@@ -10,7 +10,7 @@ namespace Spiral\Debug;
 /**
  * Wrapper used to describe and show exception information in user friendly way.
  */
-interface SnapshotInterface
+interface SnapshotInterface extends \Throwable
 {
     /**
      * @return \Throwable

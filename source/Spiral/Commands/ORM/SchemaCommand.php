@@ -14,6 +14,7 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Debugger;
 use Spiral\ORM\ORM;
 use Spiral\Tokenizer\ClassLocator;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Performs ORM schema update and binds schema builder in container.
@@ -29,6 +30,13 @@ class SchemaCommand extends Command
      * {@inheritdoc}
      */
     protected $description = 'Update ORM schema';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $options = [
+        ['silent', 's', InputOption::VALUE_NONE, 'Do not alter database(s)']
+    ];
 
     /**
      * @param Debugger           $debugger
@@ -50,7 +58,12 @@ class SchemaCommand extends Command
 
         //To make builder available for other commands (in sequence)
         $container->bind(get_class($builder), $builder);
-        $orm->updateSchema($builder);
+
+        if ($this->option('silent')) {
+            $this->writeln("<comment>Silent mode on, no databases to be altered.</comment>");
+        }
+
+        $orm->updateSchema($builder, !$this->option('silent'));
 
         $elapsed = number_format($debugger->benchmark($this, $benchmark), 3);
 

@@ -7,30 +7,15 @@
  */
 namespace Spiral\Debug;
 
-use Exception;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Spiral\Core\Component;
-use Spiral\Core\Exceptions\SugarException;
-use Spiral\Core\Traits\SaturateTrait;
-use Spiral\Debug\Configs\SnapshotConfig;
-use Spiral\Debug\Traits\LoggerTrait;
-use Spiral\Files\FilesInterface;
-use Spiral\Support\ExceptionSupport;
-use Spiral\Views\ViewsInterface;
+use Psr\Log\LoggerTrait;
 
-/**
- * Spiral implementation of SnapshotInterface with ability to render exception explanation using
- * ViewsInterface.
- *
- * TODO: REWRITE OR REMOVE THAT? STILL THINKING
- */
-class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterface
+class QuickSnapshot implements SnapshotInterface
 {
     /**
      * Additional constructor arguments.
      */
-    use LoggerTrait, SaturateTrait;
+    use LoggerTrait;
 
     /**
      * Message format.
@@ -55,44 +40,18 @@ class Snapshot extends Component implements SnapshotInterface, LoggerAwareInterf
     private $rendered = '';
 
     /**
-     * @var SnapshotConfig
-     */
-    protected $config = null;
-
-    /**
-     * @var FilesInterface
-     */
-    protected $files = null;
-
-    /**
-     * @var ViewsInterface
-     */
-    protected $views = null;
-
-    /**
      * Snapshot constructor.
      *
      * @param \Throwable      $exception
      * @param LoggerInterface $logger
-     * @param SnapshotConfig  $config
-     * @param FilesInterface  $files
-     * @param ViewsInterface  $views
-     * @throws SugarException
      */
     public function __construct(
         $exception,
-        LoggerInterface $logger = null,
-        SnapshotConfig $config = null,
-        FilesInterface $files = null,
-        ViewsInterface $views = null
+        LoggerInterface $logger = null
+
     ) {
         $this->exception = $exception;
-
-        //Saturating
-        $this->logger = $this->saturate($logger, LoggerInterface::class);
-        $this->config = $this->saturate($config, SnapshotConfig::class);
-        $this->files = $this->saturate($files, FilesInterface::class);
-        $this->views = $this->saturate($views, ViewsInterface::class);
+        $this->logger = $logger;
     }
 
     /**
