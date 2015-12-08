@@ -173,7 +173,7 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
             return $this->loader;
         }
 
-        //TODO: fix it
+        //todo: think about it
         return $this->loader->withExtension($extension);
     }
 
