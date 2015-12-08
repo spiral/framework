@@ -264,6 +264,8 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
         in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
+
+        <span style="float: right; opacity: 0.7;">SLOW MODE</span>
     </div>
 
     <div class="stacktrace">
