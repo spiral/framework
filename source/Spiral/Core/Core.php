@@ -353,7 +353,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      * Method can return null, in this case exception will be ignored.
      *
      * @param \Throwable $exception
-     * @return mixed|null|object
+     * @return SnapshotInterface|null
      */
     public function getSnapshot($exception)
     {
