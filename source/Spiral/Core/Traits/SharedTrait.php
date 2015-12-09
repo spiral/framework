@@ -33,9 +33,6 @@ trait SharedTrait
      */
     public function __get($alias)
     {
-        /**
-         * Shared trait do not use
-         */
         if ($this->container()->has($alias)) {
             return $this->container()->get($alias);
         }
