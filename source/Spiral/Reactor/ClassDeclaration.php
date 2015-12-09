@@ -20,6 +20,8 @@ use Spiral\Reactor\Traits\CommentTrait;
 
 /**
  * Class declaration.
+ *
+ * @todo interface, trait declarations
  */
 class ClassDeclaration extends NamedDeclaration implements ReplaceableInterface
 {

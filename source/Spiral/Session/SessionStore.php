@@ -18,6 +18,7 @@ use Spiral\Session\Exceptions\SessionException;
  * default spiral session uses native php sessions as backbone, it can be changed in future.
  *
  * @todo At this moment native php sessions used which limits functionality a bit.
+ * @todo probably not the best component due sticking to native sessions, to find replacement
  */
 class SessionStore extends Component implements SessionInterface, \ArrayAccess, \IteratorAggregate
 {
