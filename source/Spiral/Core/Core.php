@@ -330,7 +330,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         restore_error_handler();
         restore_exception_handler();
 
-        if (empty($snapshot = $this->describeException($exception))) {
+        if (empty($snapshot = $this->getSnapshot($exception))) {
             //No action is required
             return;
         }
@@ -355,7 +355,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      * @param \Throwable $exception
      * @return mixed|null|object
      */
-    protected function describeException($exception)
+    public function getSnapshot($exception)
     {
         if (!$this->container->has(SnapshotInterface::class)) {
             return null;
