@@ -59,6 +59,7 @@ class RequestFilter extends DataEntity
      */
     public function __construct(InputInterface $input)
     {
+        parent::__construct([]);
         $this->input = $input;
 
         foreach ($this->schema as $field => $source) {

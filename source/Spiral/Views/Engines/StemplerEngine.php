@@ -147,6 +147,7 @@ class StemplerEngine extends Component implements EngineInterface
     public function setLoader(LoaderInterface $loader)
     {
         if (!empty($this->modifiers)) {
+            //todo: not needed when view is already in cache
             //Let's prepare source before giving it to Stempler
             $loader = new ModifiableLoader($loader, $this->getModifiers());
         }
