@@ -8,6 +8,8 @@
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\ConfiguratorException;
+use Spiral\Core\Exceptions\SugarException;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Files\FilesInterface;
 
 /**
@@ -16,8 +18,10 @@ use Spiral\Files\FilesInterface;
  *
  * @see InjectableConfig
  */
-class Configurator implements ConfiguratorInterface
+class Configurator extends Component implements ConfiguratorInterface
 {
+    use SaturateTrait;
+
     /**
      * Config files extension.
      */
@@ -43,11 +47,12 @@ class Configurator implements ConfiguratorInterface
     /**
      * @param string         $directory
      * @param FilesInterface $files
+     * @throws SugarException
      */
-    public function __construct($directory, FilesInterface $files)
+    public function __construct($directory, FilesInterface $files = null)
     {
         $this->directory = $directory;
-        $this->files = $files;
+        $this->files = $this->saturate($files, FilesInterface::class);
     }
 
     /**
