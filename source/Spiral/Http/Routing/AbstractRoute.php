@@ -243,7 +243,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function createUri(
+    public function uri(
         $parameters = [],
         $basePath = '/',
         SlugifyInterface $slugify = null

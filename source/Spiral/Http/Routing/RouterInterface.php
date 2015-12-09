@@ -72,5 +72,5 @@ interface RouterInterface
      * @throws RouterException
      * @throws RouteException
      */
-    public function createUri($route, $parameters = [], SlugifyInterface $slugify = null);
+    public function uri($route, $parameters = [], SlugifyInterface $slugify = null);
 }

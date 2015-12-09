@@ -129,12 +129,12 @@ class Router implements RouterInterface
      *
      * @throws BadRouteException
      */
-    public function createUri($route, $parameters = [], SlugifyInterface $slugify = null)
+    public function uri($route, $parameters = [], SlugifyInterface $slugify = null)
     {
         try {
-            return $this->getRoute($route)->createUri($parameters, $this->basePath, $slugify);
+            return $this->getRoute($route)->uri($parameters, $this->basePath, $slugify);
         } catch (BadRouteException $e) {
-            //Using fallback route
+            //Using fallback uri
         }
 
         //Will be handled via default route where route name is specified as controller::action
@@ -149,7 +149,7 @@ class Router implements RouterInterface
             RouteInterface::SEPARATOR, str_replace('/', RouteInterface::SEPARATOR, $route)
         );
 
-        return $this->defaultRoute->createUri(
+        return $this->defaultRoute->uri(
             compact('controller', 'action') + $parameters,
             $this->basePath,
             $slugify

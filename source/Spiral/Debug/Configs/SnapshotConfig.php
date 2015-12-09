@@ -28,7 +28,7 @@ class SnapshotConfig extends InjectableConfig
             'enabled'      => true,
             'maxSnapshots' => 20,
             'directory'    => '',
-            'filename'     => '{date}-{exception}.html',
+            'filename'     => '{date}-{name}.html',
             'dateFormat'   => 'd.m.Y-Hi.s',
         ]
     ];
