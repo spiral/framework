@@ -17,7 +17,7 @@ use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\MiddlewareInterface;
 use Spiral\Http\MiddlewarePipeline;
-use Zend\Diactoros\Uri;
+use Spiral\Http\Uri;
 
 /**
  * Base for all spiral routes.
