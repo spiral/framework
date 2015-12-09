@@ -34,7 +34,7 @@ class SchemaCommand extends Command
      * {@inheritdoc}
      */
     protected $options = [
-        ['silent', 's', InputOption::VALUE_NONE, 'Do not alter database']
+        ['sync', null, InputOption::VALUE_NONE, 'Syncronize database indexes']
     ];
 
     /**
@@ -58,12 +58,12 @@ class SchemaCommand extends Command
         //To make builder available for other commands (in sequence)
         $container->bind(get_class($builder), $builder);
 
-        if ($this->option('silent')) {
-            $this->writeln("<comment>Silent mode on, no databases to be altered.</comment>");
+        if (!$this->option('sync')) {
+            $this->writeln("<comment>Silent mode on, no mongo indexes to be created.</comment>");
         }
 
         //Save and syncronize
-        $odm->updateSchema($builder, !$this->option('silent'));
+        $odm->updateSchema($builder, $this->option('sync'));
 
         $elapsed = number_format($debugger->benchmark($this, $benchmark), 3);
 

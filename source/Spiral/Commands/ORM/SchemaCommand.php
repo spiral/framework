@@ -35,7 +35,7 @@ class SchemaCommand extends Command
      * {@inheritdoc}
      */
     protected $options = [
-        ['silent', 's', InputOption::VALUE_NONE, 'Do not alter database(s)']
+        ['sync', null, InputOption::VALUE_NONE, 'Syncronize database schemas']
     ];
 
     /**
@@ -59,11 +59,11 @@ class SchemaCommand extends Command
         //To make builder available for other commands (in sequence)
         $container->bind(get_class($builder), $builder);
 
-        if ($this->option('silent')) {
+        if (!$this->option('sync')) {
             $this->writeln("<comment>Silent mode on, no databases to be altered.</comment>");
         }
 
-        $orm->updateSchema($builder, !$this->option('silent'));
+        $orm->updateSchema($builder, $this->option('sync'));
 
         $elapsed = number_format($debugger->benchmark($this, $benchmark), 3);
 

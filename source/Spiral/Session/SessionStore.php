@@ -16,6 +16,8 @@ use Spiral\Session\Exceptions\SessionException;
 /**
  * Default implementation of StoreInterface, can map session data to specified SessionHandler. By
  * default spiral session uses native php sessions as backbone, it can be changed in future.
+ *
+ * @todo At this moment native php sessions used which limits functionality a bit.
  */
 class SessionStore extends Component implements SessionInterface, \ArrayAccess, \IteratorAggregate
 {
@@ -51,12 +53,14 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     protected $factory = null;
 
     /**
+     * @param string           $id
      * @param SessionConfig    $config
      * @param FactoryInterface $factory Factory is needed to construct valid instance of session
      *                                  handler on demand.
      */
-    public function __construct(SessionConfig $config, FactoryInterface $factory)
+    public function __construct($id = null, SessionConfig $config, FactoryInterface $factory)
     {
+        $this->id = $id;
         $this->config = $config;
         $this->factory = $factory;
     }
