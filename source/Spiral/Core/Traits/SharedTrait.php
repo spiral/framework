@@ -15,6 +15,10 @@ use Spiral\Core\Exceptions\SugarException;
 /**
  * Trait provides access to set of shared components (using short bindings). You can create virtual
  * copies of this trait to let IDE know about your bindings (works in PHPStorm).
+ *
+ * Compatible with any Component class.
+ *
+ * @see Component
  */
 trait SharedTrait
 {

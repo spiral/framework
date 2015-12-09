@@ -13,6 +13,8 @@ use Spiral\Core\Exceptions\Container\ContainerException;
 /**
  * Spiral IoC container interface. Used to resolve dependencies and etc.
  *
+ * @todo different name?
+ *
  * @see InjectorInterface
  * @see SingletonInterface
  */
