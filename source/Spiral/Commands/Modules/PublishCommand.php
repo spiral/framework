@@ -7,17 +7,19 @@
  */
 namespace Spiral\Commands\Modules;
 
+use Spiral\Commands\Modules\Traits\ModuleTrait;
 use Spiral\Console\Command;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Modules\Entities\Publisher;
-use Spiral\Modules\ModuleInterface;
-use Spiral\Modules\ModuleManager;
+use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Publish all registered modules resources.
  */
 class PublishCommand extends Command
 {
+    use ModuleTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -26,36 +28,31 @@ class PublishCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Publish all registered modules resources';
+    protected $description = 'Publish module resources';
 
     /**
-     * @param ModuleManager        $modules
+     * {@inheritdoc}
+     */
+    protected $arguments = [
+        ['module', InputArgument::REQUIRED, 'Module class name'],
+    ];
+
+    /**
      * @param Publisher            $publisher
      * @param DirectoriesInterface $directories
      */
-    public function perform(
-        ModuleManager $modules,
-        Publisher $publisher,
-        DirectoriesInterface $directories
-    ) {
-        foreach ($modules->getModules() as $module => $registered) {
-            if (!$registered) {
-                $this->isVerbosity() && $this->writeln(
-                    "Module '<comment>{$module}</comment>' has to be registered first."
-                );
+    public function perform(Publisher $publisher, DirectoriesInterface $directories)
+    {
+        $class = $this->moduleClass($this->argument('module'));
+        if (!$this->isModule($class)) {
+            $this->writeln("<fg=red>Class '{$class}' is not valid module.</fg=red>");
 
-                continue;
-            }
-
-            $this->isVerbosity() && $this->writeln("Publishing module '<comment>{$module}</comment>'.");
-
-            /**
-             * @var ModuleInterface $module
-             */
-            $module = $this->container->get($module);
-
-            //Publishing
-            $module->publish($publisher, $directories);
+            return;
         }
+
+        $this->writeln("Publishing module '<comment>{$class}</comment>'.");
+
+        //Publishing
+        $this->container->get($class)->publish($publisher, $directories);
     }
 }
