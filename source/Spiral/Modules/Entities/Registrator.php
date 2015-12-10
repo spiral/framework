@@ -89,7 +89,7 @@ class Registrator extends Component implements RegistratorInterface
                     "Config syntax of '{$config}' does not valid after registrations."
                 );
             } else {
-                $this->logger()->debug("Syntax of config '{$config}' has been checked and valid.");
+                $this->logger()->debug("Syntax of config '{$config}' has been checked.");
             }
 
             //Saving to file
