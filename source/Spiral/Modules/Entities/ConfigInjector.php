@@ -202,11 +202,8 @@ class ConfigInjector extends Component
      */
     private function prepare($indent, $id, array $lines)
     {
-        $result = [];
-        if (!empty($id)) {
-            $id = "/*~[{$id}]~*/";
-            $result = [$indent . $id];
-        }
+        $id = "/*~[{$id}]~*/";
+        $result = [$indent . $id];
 
         foreach ($lines as $line) {
             $result[] = $indent . $line;
@@ -217,9 +214,7 @@ class ConfigInjector extends Component
             $result[count($result) - 1] .= ',';
         }
 
-        if (!empty($id)) {
-            $result[] = $indent . $id;
-        }
+        $result[] = $indent . $id;
 
         return $result;
     }
