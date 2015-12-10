@@ -7,6 +7,7 @@
  */
 namespace Spiral\Core;
 
+use Spiral\Core\Exceptions\SugarException;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Finder\Finder;
@@ -44,6 +45,7 @@ class Memory extends Component implements HippocampusInterface
     /**
      * @param string              $directory
      * @param FilesInterface|null $files
+     * @throws SugarException
      */
     public function __construct($directory, FilesInterface $files = null)
     {

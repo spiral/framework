@@ -169,7 +169,9 @@ class ConfigInjector extends Component
      */
     private function prepare($indent, $id, array $lines)
     {
-        $id = "/*~[{$id}]:" . date('Y-m-d') . "~*/";
+        if (!empty($id)) {
+            $id = "/*~[{$id}]:" . date('Y-m-d') . "~*/";
+        }
 
         $result = [$indent . $id];
         foreach ($lines as $line) {
@@ -181,7 +183,9 @@ class ConfigInjector extends Component
             $result[count($result) - 1] .= ',';
         }
 
-        $result[] = $indent . $id;
+        if (!empty($id)) {
+            $result[] = $indent . $id;
+        }
 
         return $result;
     }

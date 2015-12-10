@@ -7,6 +7,8 @@
  */
 namespace Spiral\Modules;
 
+use Spiral\Modules\Exceptions\RegistratorException;
+
 /**
  * Provides ability to safely edit content of existed configurations.
  */
@@ -17,9 +19,10 @@ interface RegistratorInterface
      *
      * @param string $config
      * @param string $placeholder
-     * @param string $wrapper Wrapper string must identify what module added configuration lines.
-     *                        In some future wrappers can be used to un-register modules.
+     * @param string $id Wrapper string must identify what module added configuration lines. In
+     *                   some future wrappers can be used to un-register modules.
      * @param array  $lines
+     * @throws RegistratorException
      */
-    public function configure($config, $placeholder, $wrapper, array $lines);
+    public function configure($config, $placeholder, $id, array $lines);
 }
