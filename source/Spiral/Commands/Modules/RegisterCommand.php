@@ -51,13 +51,13 @@ class RegisterCommand extends Command
             return;
         }
 
-        $this->writeln("Registering module '<comment>{$class}</comment>'.");
-
         //Altering all requested module configurations
         $this->container->get($class)->register($registrator);
 
         //Let's save all updated configs now
         $registrator->save();
+
+        $this->writeln("<info>Module '<comment>{$class}</comment>' has been registered.</info>");
 
         $dispatcher->command('modules:publish', $this->input, $this->output);
     }

@@ -50,9 +50,10 @@ class PublishCommand extends Command
             return;
         }
 
-        $this->writeln("Publishing module '<comment>{$class}</comment>'.");
-
         //Publishing
         $this->container->get($class)->publish($publisher, $directories);
+
+        $this->writeln("<info>Module '<comment>{$class}</comment>' has been published.</info>");
+
     }
 }
