@@ -86,6 +86,6 @@ class CompileCommand extends Command
             }
         }
 
-        $this->writeln("View cache was successfully generated.");
+        $this->writeln("<info>View cache was successfully generated.</info>");
     }
 }

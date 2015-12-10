@@ -52,6 +52,6 @@ class ResetCommand extends Command
             $this->writeln("No cached views were found.");
         }
 
-        $this->writeln("View cache has been cleared.");
+        $this->writeln("<info>View cache has been cleared.</info>");
     }
 }
