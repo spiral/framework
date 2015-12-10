@@ -204,7 +204,7 @@ class ConfigInjector extends Component
     {
         $result = [];
         if (!empty($id)) {
-            $id = "/*~[{$id}]:" . date('Y-m-d') . "~*/";
+            $id = "/*~[{$id}]~*/";
             $result = [$indent . $id];
         }
 
