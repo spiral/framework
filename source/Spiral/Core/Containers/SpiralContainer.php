@@ -28,6 +28,9 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Core\FactoryInterface'                      => ContainerInterface::class,
         'Spiral\Core\ResolverInterface'                     => ContainerInterface::class,
 
+        //Configurator
+        'Spiral\Core\ConfiguratorInterface'                 => 'Spiral\Core\Configurator',
+
         //Files
         'Spiral\Files\FilesInterface'                       => 'Spiral\Files\FileManager',
 

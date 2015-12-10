@@ -437,7 +437,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         $container->bindSingleton(HippocampusInterface::class, $core->memory);
         $container->bindSingleton(CoreInterface::class, $core);
 
-        $container->bindSingleton(ConfiguratorInterface::class, $container->make(
+        $container->bindSingleton(Configurator::class, $container->make(
             Configurator::class, ['directory' => $core->directory('config')]
         ));
 

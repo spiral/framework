@@ -9,6 +9,7 @@ namespace Spiral\Commands\Modules;
 
 use Interop\Container\ContainerInterface;
 use Spiral\Console\Command;
+use Spiral\Core\Configurator;
 use Spiral\Modules\Entities\Registrator;
 use Spiral\Modules\ModuleInterface;
 use Spiral\Modules\ModuleManager;
@@ -31,9 +32,13 @@ class ConfigureCommand extends Command
     /**
      * @param Registrator   $registrator
      * @param ModuleManager $modules
+     * @param Configurator  $configurator
      */
-    public function perform(Registrator $registrator, ModuleManager $modules)
-    {
+    public function perform(
+        Registrator $registrator,
+        ModuleManager $modules,
+        Configurator $configurator
+    ) {
         $newModules = [];
         foreach ($modules->getModules() as $class => $registered) {
             $reflection = new \ReflectionClass($class);
@@ -44,7 +49,7 @@ class ConfigureCommand extends Command
 
             if ($registered) {
                 $this->writeln(
-                    "<comment>Module {$reflection->getName()} already registered.</comment>"
+                    "<comment>Module {$reflection->getName()} has already been registered.</comment>"
                 );
 
                 continue;
@@ -68,9 +73,8 @@ class ConfigureCommand extends Command
         //Let's save all updated configs now
         $registrator->save();
 
-        /**
-         * Potentially we can remove modules as well.
-         */
+        //Cleaning runtime config cache
+        $configurator->flushCache();
     }
 
     /**

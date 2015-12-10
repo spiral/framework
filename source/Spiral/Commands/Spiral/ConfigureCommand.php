@@ -5,6 +5,7 @@ namespace Spiral\Commands\Spiral;
 use Spiral\Console\Command;
 use Spiral\Console\Configs\ConsoleConfig;
 use Spiral\Console\ConsoleDispatcher;
+use Spiral\Core\Configurator;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -47,16 +48,16 @@ class ConfigureCommand extends Command
     ) {
         $this->ensurePermissions($directories, $files);
 
-        $this->writeln("\n<info>Configuring all new spiral modules</info>");
+        $this->writeln("\n<info>Configuring all new spiral modules...</info>");
         $dispatcher->command('modules:configure', [], $this->output);
 
-        $this->writeln("\n<info>Publishing modules resources</info>");
+        $this->writeln("\n<info>Publishing modules resources...</info>");
         $dispatcher->command('modules:publish', [], $this->output);
 
-        $this->writeln("\n<info>Re-indexing available console commands</info>");
+        $this->writeln("\n<info>Re-indexing available console commands...</info>");
         $dispatcher->command('console:reload', [], $this->output);
 
-        $this->writeln("\n<info>Reloading bootload cache</info>");
+        $this->writeln("\n<info>Reloading bootload cache...</info>");
         $dispatcher->command('app:reload', [], $this->output);
 
         $this->writeln("\n<info>Re-loading translator locales cache...</info>");

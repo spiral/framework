@@ -75,12 +75,12 @@ class Registrator extends Component implements RegistratorInterface
                     "Config syntax of '{$config}' does not valid after registrations."
                 );
             } else {
-                $this->logger()->debug("Syntax of config '{$config}' checked and valid.");
+                $this->logger()->debug("Syntax of config '{$config}' has been checked and valid.");
             }
 
             //Saving to file
             $this->files->write($this->configFilename($config), $injector->render());
-            $this->logger()->info("Config '{$config}' were updated.");
+            $this->logger()->info("Config '{$config}' were updated with new content.");
         }
     }
 
