@@ -28,6 +28,13 @@ class Registrator extends Component implements RegistratorInterface
     use LoggerTrait;
 
     /**
+     * Injected sections.
+     *
+     * @var array
+     */
+    private $injected = [];
+
+    /**
      * @var ConfigInjector[]
      */
     protected $injectors = [];
@@ -58,10 +65,17 @@ class Registrator extends Component implements RegistratorInterface
     {
         //Injecting config values
         $this->injector($config)->inject($placeholder, $id, $lines);
+        $this->injected[] = compact('config', 'placeholder', 'lines');
+    }
 
-        $this->logger()->info(
-            "Altering configuration '{$config}' under placeholder '{$placeholder}' with '{$id}'."
-        );
+    /**
+     * List of injected config sections.
+     *
+     * @return array
+     */
+    public function getInjected()
+    {
+        return $this->injected;
     }
 
     /**

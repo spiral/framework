@@ -54,11 +54,33 @@ class RegisterCommand extends Command
         //Altering all requested module configurations
         $this->container->get($class)->register($registrator);
 
+        $table = $this->tableHelper([
+            'Config',
+            'Section',
+            'Lines'
+        ]);
+
+        foreach ($registrator->getInjected() as $injected) {
+            $table->addRow([
+                "<info>{$injected['config']}</info>",
+                "{$injected['placeholder']}",
+                join("\n", $injected['lines'])
+            ]);
+        }
+
+        $this->writeln("<comment>Following configuration section going to be altered:</comment>");
+        $table->render();
+
+        if (!$this->ask()->confirm("Confirm module registration (y/n)")) {
+            return;
+        }
+
         //Let's save all updated configs now
         $registrator->save();
 
-        $this->writeln("<info>Module '<comment>{$class}</comment>' has been registered.</info>");
-
+        $this->writeln(
+            "<info>Module '<comment>{$class}</comment>' has been successfully registered.</info>"
+        );
         $dispatcher->command('modules:publish', $this->input, $this->output);
     }
 }
