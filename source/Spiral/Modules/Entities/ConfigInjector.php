@@ -72,8 +72,13 @@ class ConfigInjector extends Component
         //Let's prepare lines to be injected
         $lines = $this->prepare($this->placeholderIndentation($placeholder), $wrapper, $lines);
 
-        $offset = $this->placeholderOffset($placeholder);
+        if ($this->hasLines($lines)) {
 
+            //Already registered
+            return $this;
+        }
+
+        $offset = $this->placeholderOffset($placeholder);
 
         //Injecting!
         $this->lines = array_merge(
@@ -118,6 +123,34 @@ class ConfigInjector extends Component
     public function __toString()
     {
         return $this->render();
+    }
+
+    /**
+     * Check if given set of lines already exists in config (including indentation).
+     *
+     * @param array $lines
+     * @return bool
+     */
+    protected function hasLines(array $lines)
+    {
+        $offset = 0;
+        foreach ($this->lines as $line) {
+            if (trim($line) == trim($lines[$offset])) {
+                $offset++;
+
+                if ($offset == count($lines)) {
+                    //All matched
+                    return true;
+                }
+
+                continue;
+            }
+
+            //Restart search
+            $offset = 0;
+        }
+
+        return $offset == count($lines);
     }
 
     /**
