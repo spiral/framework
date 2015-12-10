@@ -12,6 +12,8 @@ use Spiral\Modules\ModuleInterface;
 
 /**
  * Converts module name into class name.
+ *
+ * @todo improve class name guessing
  */
 trait ModuleTrait
 {
@@ -19,7 +21,7 @@ trait ModuleTrait
      * @param string $module
      * @return string
      */
-    public function moduleClass($module)
+    public function guessClass($module)
     {
         $module = str_replace('/', '\\', $module);
         $module = explode('\\', $module);

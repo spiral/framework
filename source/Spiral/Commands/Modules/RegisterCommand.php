@@ -44,7 +44,7 @@ class RegisterCommand extends Command
      */
     public function perform(Registrator $registrator, ConsoleDispatcher $dispatcher)
     {
-        $class = $this->moduleClass($this->argument('module'));
+        $class = $this->guessClass($this->argument('module'));
         if (!$this->isModule($class)) {
             $this->writeln("<fg=red>Class '{$class}' is not valid module.</fg=red>");
 
