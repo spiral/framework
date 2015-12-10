@@ -17,6 +17,8 @@ use Symfony\Component\Process\Process;
 
 /**
  * Provides ability to inject string lines in a specified placeholder of configuration file.
+ *
+ * @todo Revertable?
  */
 class ConfigInjector extends Component
 {
