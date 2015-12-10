@@ -159,7 +159,7 @@ class ConfigInjector extends Component
      * @param string $placeholder
      * @return string
      */
-    private function placeholderIndentation($placeholder)
+    protected function placeholderIndentation($placeholder)
     {
         foreach ($this->lines as $line) {
             if (preg_match(static::PLACEHOLDER_REGEX, $line, $matches)) {
@@ -178,7 +178,7 @@ class ConfigInjector extends Component
      * @param string $placeholder
      * @return int
      */
-    private function placeholderOffset($placeholder)
+    protected function placeholderOffset($placeholder)
     {
         foreach ($this->lines as $number => $line) {
             if (preg_match(static::PLACEHOLDER_REGEX, $line, $matches)) {
@@ -200,7 +200,7 @@ class ConfigInjector extends Component
      * @param array  $lines
      * @return array
      */
-    private function prepare($indent, $id, array $lines)
+    protected function prepare($indent, $id, array $lines)
     {
         //$id = "/*~[{$id}]~*/";
         //$result = [$indent . $id];
