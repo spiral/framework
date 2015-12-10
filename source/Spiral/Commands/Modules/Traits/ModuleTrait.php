@@ -30,7 +30,7 @@ trait ModuleTrait
             $chunk = Inflector::classify($chunk);
         });
 
-        return join('\\', $module);
+        return join('\\', $module) . 'Module';
     }
 
     /**
