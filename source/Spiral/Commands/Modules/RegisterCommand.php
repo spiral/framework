@@ -54,25 +54,30 @@ class RegisterCommand extends Command
         //Altering all requested module configurations
         $this->container->get($class)->register($registrator);
 
-        $table = $this->tableHelper([
-            'Config',
-            'Section',
-            'Lines'
-        ]);
 
-        foreach ($registrator->getInjected() as $injected) {
-            $table->addRow([
-                "<info>{$injected['config']}</info>",
-                "{$injected['placeholder']}",
-                join("\n", $injected['lines'])
-            ]);
-        }
+        /**
+         * Sometimes modules request to alter some config files, we need user confirmation for that.
+         */
+        if (!empty($registrator->getInjected())) {
+            $table = $this->tableHelper(['Config', 'Section', 'Added Lines']);
+            foreach ($registrator->getInjected() as $injected) {
+                $table->addRow([
+                    "<info>{$injected['config']}</info>",
+                    "{$injected['placeholder']}",
+                    join("\n", $injected['lines'])
+                ]);
+            }
 
-        $this->writeln("<comment>Following configuration section going to be altered:</comment>");
-        $table->render();
+            //todo: better english
+            $this->writeln("<comment>Module requests following configs to be altered:</comment>");
+            $table->render();
 
-        if (!$this->ask()->confirm("Confirm module registration (y/n)")) {
-            return;
+            $this->writeln("");
+            if (!$this->ask()->confirm("Confirm module registration (y/n)")) {
+                return;
+            }
+
+            $this->writeln("");
         }
 
         //Let's save all updated configs now
