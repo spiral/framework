@@ -24,7 +24,7 @@ class RegisterCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'modules:register';
+    protected $name = 'register';
 
     /**
      * {@inheritdoc}
@@ -86,6 +86,7 @@ class RegisterCommand extends Command
         $this->writeln(
             "<info>Module '<comment>{$class}</comment>' has been successfully registered.</info>"
         );
-        $dispatcher->command('modules:publish', $this->input, $this->output);
+
+        $dispatcher->command('publish', $this->input, $this->output);
     }
 }

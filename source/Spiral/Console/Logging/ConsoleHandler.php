@@ -52,7 +52,7 @@ class ConsoleHandler extends SharedHandler
      */
     public function handle(array $record)
     {
-        if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_VERY_VERBOSE) {
+        if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_VERBOSE) {
             //Showing log
             $this->output->writeln($this->formatMessage(
                 $record['channel'],

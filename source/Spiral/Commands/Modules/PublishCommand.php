@@ -23,12 +23,12 @@ class PublishCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'modules:publish';
+    protected $name = 'publish';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Publish module resources';
+    protected $description = 'Publish specific module resources';
 
     /**
      * {@inheritdoc}
