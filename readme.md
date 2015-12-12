@@ -4,4 +4,4 @@ Spiral RAD PSR-7 HMVC Framework - DEV
 [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral)
 [![Gitter Chat](https://img.shields.io/badge/GITTER-join%20chat-green.svg)](https://gitter.im/spiral/hotline)
 
-Currently in prepations for the first public relese.
+Currently in prepations for the first public relese (see develop branch).
