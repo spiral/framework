@@ -127,6 +127,7 @@ class Router implements RouterInterface
     /**
      * {@inheritdoc}
      *
+     * @todo Optimize performance of slugification and uri compilation
      * @throws BadRouteException
      */
     public function uri($route, $parameters = [], SlugifyInterface $slugify = null)

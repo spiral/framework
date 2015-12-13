@@ -252,10 +252,18 @@ abstract class AbstractRoute implements RouteInterface
             $this->compile();
         }
 
-        $parameters = array_map(
-            [!empty($slugify) ? $slugify : new Slugify(), 'slugify'],
-            $parameters + $this->defaults + $this->compiled['options']
-        );
+        //todo: improve performance of slugification
+        $slugify = !empty($slugify) ? $slugify : new Slugify();
+        foreach ($parameters as &$parameter) {
+            if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
+                //Default Slugify is pretty slow, we'd better not apply it for every value
+                $parameter = $slugify->slugify($parameter);
+            }
+
+            unset($parameter);
+        }
+
+        $parameters = $parameters + $this->defaults + $this->compiled['options'];
 
         //Uri without empty blocks
         $uri = strtr(

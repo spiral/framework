@@ -7,11 +7,12 @@
  */
 namespace Spiral\Http\Input;
 
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Component;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Http\Exceptions\Request\InputException;
 use Spiral\Http\Input\Bags\FilesBag;
@@ -25,6 +26,8 @@ use Spiral\Http\Request\InputInterface;
  * Provides simplistic way to access request input data in controllers and can also be used to
  * populate RequestFilters.
  *
+ * Attention, this class is singleton based, it reads request from current active container scope!
+ *
  * @property-read HeadersBag $headers
  * @property-read InputBag   $data
  * @property-read InputBag   $query
@@ -33,8 +36,10 @@ use Spiral\Http\Request\InputInterface;
  * @property-read ServerBag  $server
  * @property-read InputBag   $attributes
  */
-class InputManager extends Component implements MiddlewareInterface, InputInterface
+class InputManager extends Component implements InputInterface, SingletonInterface
 {
+    const SINGLETON = self::class;
+
     /**
      * @var InputBag[]
      */
@@ -98,37 +103,21 @@ class InputManager extends Component implements MiddlewareInterface, InputInterf
     }
 
     /**
-     * Pass request thought middleware and receive resulted response.
-     *
-     * @param Request  $request
-     * @param Response $response
-     * @param callable $next Next middleware/target. Always returns ResponseInterface.
-     * @return Response
-     */
-    public function __invoke(Request $request, Response $response, callable $next)
-    {
-        $scope = $this->container->replace(self::class, $this);
-
-        try {
-            $this->request = $request;
-            $this->bagInstances = [];
-
-            /**
-             * Debug: input manager creates scope for itself.
-             */
-            return $next($request, $response);
-        } finally {
-            $this->container->restore($scope);
-        }
-    }
-
-    /**
-     * Get active instance of ServerRequestInterface.
+     * Get active instance of ServerRequestInterface and reset all bags if instance changed.
      *
      * @return Request
+     * @throws InputException
      */
     public function request()
     {
+        $request = $this->container->get(ServerRequestInterface::class);
+
+        //Flushing input state
+        if ($this->request !== $request) {
+            $this->bagInstances = [];
+            $this->request = $request;
+        }
+
         return $this->request;
     }
 

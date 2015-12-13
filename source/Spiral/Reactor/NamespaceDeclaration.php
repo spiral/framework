@@ -44,6 +44,17 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
     }
 
     /**
+     * @param ClassDeclaration $class
+     * @return $this
+     */
+    public function addClass(ClassDeclaration $class)
+    {
+        $this->elements->add($class);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return $this
