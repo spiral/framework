@@ -8,6 +8,9 @@
 namespace Spiral\Core\Bootloaders;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Exceptions\CoreException;
+use Spiral\Core\Exceptions\SugarException;
+use Spiral\Http\Routing\RouteInterface;
 
 /**
  * Shared components and short bindings.
@@ -60,6 +63,23 @@ class SharedBindings extends Bootloader
         'input'             => 'Spiral\Http\Input\InputManager',
         'cookies'           => 'Spiral\Http\Cookies\CookieManager',
         'router'            => 'Spiral\Http\Routing\Router',
-        'request'           => 'Psr\Http\Message\ServerRequestInterface'
+        'request'           => 'Psr\Http\Message\ServerRequestInterface',
+
+        'route' => [self::class, 'activeRoute']
     ];
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return RouteInterface
+     */
+    public function activeRoute(ServerRequestInterface $request)
+    {
+        $route = $request->getAttribute('route');
+
+        if (!$route instanceof RouteInterface) {
+            throw new SugarException("Unable to resolve active route using active request.");
+        }
+
+        return $request->getAttribute('route');
+    }
 }
