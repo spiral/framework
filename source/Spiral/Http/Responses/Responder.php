@@ -49,8 +49,8 @@ class Responder extends Component
     /**
      * Mount redirect headers into response
      *
-     * @param UriInterface $uri
-     * @param int          $status
+     * @param UriInterface|string $uri
+     * @param int                 $status
      * @return ResponseInterface
      * @throws \InvalidArgumentException
      */
