@@ -41,7 +41,6 @@ class HttpCore extends Component implements HttpInterface
      */
     private $endpoint = null;
 
-
     /**
      * @invisible
      * @var ContainerInterface
