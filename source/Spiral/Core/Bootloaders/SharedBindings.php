@@ -58,14 +58,18 @@ class SharedBindings extends Bootloader
         'db'                => 'Spiral\Database\Entities\Database',
         'mongo'             => 'Spiral\ODM\Entities\MongoDatabase',
 
-        //Scope dependent
+        //Http scope dependent
         'session'           => 'Spiral\Session\SessionStore',
-        'input'             => 'Spiral\Http\Input\InputManager',
         'cookies'           => 'Spiral\Http\Cookies\CookieManager',
         'router'            => 'Spiral\Http\Routing\Router',
         'request'           => 'Psr\Http\Message\ServerRequestInterface',
 
-        'route' => [self::class, 'activeRoute']
+        //Http scope depended data routes and wrappers
+        'input'             => 'Spiral\Http\Input\InputManager',
+        'responses'         => 'Spiral\Http\Responses\Responder',
+
+        //Active route thought request attribute
+        'route'             => [self::class, 'activeRoute']
     ];
 
     /**

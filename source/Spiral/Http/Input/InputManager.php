@@ -7,13 +7,13 @@
  */
 namespace Spiral\Http\Input;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Core\ContainerInterface;
 use Spiral\Http\Exceptions\Request\InputException;
 use Spiral\Http\Input\Bags\FilesBag;
 use Spiral\Http\Input\Bags\HeadersBag;
