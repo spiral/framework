@@ -275,6 +275,18 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     }
 
     /**
+     * Reads data from data array, if not found query array will be used as fallback.
+     *
+     * @param string $name
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function input($name, $default = null)
+    {
+        return $this->data($name, $this->query($name, $default));
+    }
+
+    /**
      * @param string $name
      * @param mixed  $default
      * @return mixed
