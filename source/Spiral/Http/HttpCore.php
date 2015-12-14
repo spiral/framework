@@ -13,6 +13,7 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Exceptions\HttpException;
+use Spiral\Http\Responses\Emitter;
 use Spiral\Http\Traits\MiddlewaresTrait;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\EmitterInterface;
@@ -126,7 +127,7 @@ class HttpCore extends Component implements HttpInterface
     public function dispatch(ResponseInterface $response)
     {
         if (empty($this->emitter)) {
-            $this->emitter = new SapiEmitter();
+            $this->emitter = new Emitter();
         }
 
         $this->emitter->emit($response, ob_get_level());
