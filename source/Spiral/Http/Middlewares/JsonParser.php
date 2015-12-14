@@ -23,10 +23,13 @@ class JsonParser implements MiddlewareInterface
     public function __invoke(Request $request, Response $response, callable $next)
     {
         if ($request->getHeaderLine('Content-Type') == 'application/json') {
-            $request = $request->withParsedBody(json_decode(
-                $request->getBody()->__toString(),
-                true
-            ));
+            try {
+                $data = json_decode($request->getBody()->__toString(), true);
+                $request = $request->withParsedBody($data);
+            } catch (\ErrorException $e) {
+                //Mailformed request
+                return $response->withStatus(400);
+            }
         }
 
         return $next($request);

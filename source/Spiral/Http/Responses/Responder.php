@@ -12,10 +12,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Component;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Files\Streams\StreamableInterface;
 use Spiral\Http\Exceptions\ResponderException;
+use Spiral\Http\Traits\JsonTrait;
 use Zend\Diactoros\Stream;
 
 /**
@@ -26,6 +26,8 @@ use Zend\Diactoros\Stream;
  */
 class Responder extends Component
 {
+    use JsonTrait;
+
     /**
      * @var ResponseInterface
      */
@@ -63,6 +65,18 @@ class Responder extends Component
         }
 
         return $this->response->withStatus($status)->withHeader("Location", (string)$uri);
+    }
+
+    /**
+     * Write json data into response.
+     *
+     * @param mixed $data
+     * @param int   $code
+     * @return ResponseInterface
+     */
+    public function json($data, $code = 200)
+    {
+        return $this->writeJson($this->response, $data, $code);
     }
 
     /**
