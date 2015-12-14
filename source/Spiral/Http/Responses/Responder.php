@@ -68,18 +68,19 @@ class Responder extends Component
     /**
      * Configure response to send given attachment to client.
      *
-     * @param string|StreamInterface|StreamableInterface $filename
-     * @param string                                     $name Public file name (in attachment), by
-     *                                                         default local filename.
+     * @param string|StreamInterface|StreamableInterface $filename Local filename or stream or
+     *                                                             streamable or resource.
+     * @param string                                     $name     Public file name (in
+     *                                                             attachment), by default local
+     *                                                             filename. Name is mandratory
+     *                                                             when filename supplied in a form
+     *                                                             of stream or resource.
      * @param string                                     $mimetype
      * @return ResponseInterface
      * @throws ResponderException
      */
     public function attachment($filename, $name = '', $mimetype = 'application/octet-stream')
     {
-        $response = $this->response;
-        $stream = $this->getStream($filename);
-
         if (empty($name)) {
             if (!is_string($filename)) {
                 throw new ResponderException("Unable to resolve public filename.");
@@ -88,11 +89,15 @@ class Responder extends Component
             $name = basename($filename);
         }
 
+        $stream = $this->getStream($filename);
+
         /**
          * PSR7 love to return 'self' from methods, IDE thinks now that response is MessageInterface
          *
          * @var ResponseInterface $response
          */
+        $response = $this->response;
+
         $response = $response->withHeader('Content-Type', $mimetype);
         $response = $response->withHeader('Content-Length', (string)$stream->getSize());
         $response = $response->withHeader(
@@ -138,10 +143,10 @@ class Responder extends Component
 
         if (!$this->files->isFile($filename)) {
             throw  new \InvalidArgumentException(
-                "Unable to populate response body, file does not exist."
+                "Unable to allocate response body stream, file does not exist."
             );
         }
 
-        return new Stream(fopen($filename, 'r'));
+        return new Stream(fopen($this->files->localUri($filename), 'r'));
     }
 }
