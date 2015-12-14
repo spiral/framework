@@ -10,11 +10,14 @@ namespace Spiral\Http\Request;
 use Spiral\Models\DataEntity;
 
 /**
- * Request filter is data entity which uses input manager to populate it's fields, model can perform
+ * Request filter is data entity which uses input manager to populate it's fields, model can
+ * perform
  * input filtering, value routing (query, data, files) and filtering.
  *
  * Attention, you can not inherit one request from another at this moment. You can use generic
  * validation rules for your input fields.
+ * Please do not request instance without using container, constructor signature might change over
+ * time (or another request filter class can be created with inheritance and composition support).
  *
  * Example schema definition:
  * protected $schema = [
@@ -28,8 +31,8 @@ use Spiral\Models\DataEntity;
  * Available sources: uri, path, method, isSecure, isAjax, isJsonExpected, remoteAddress.
  * Plus named sources (bags): header, data, post, query, cookie, file, server, attribute.
  *
- * There is possibility that this class and it's schema will behave same way as ORM and ODM models
- * one day.
+ * @todo There is possibility that this class and it's schema will behave same way as ORM and
+ * @todo ODM models one day.
  */
 class RequestFilter extends DataEntity
 {
