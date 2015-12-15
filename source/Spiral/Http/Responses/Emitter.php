@@ -120,6 +120,8 @@ class Emitter implements EmitterInterface
         $body = $response->getBody();
 
         if ($body->isSeekable() && $body->getSize() > static::STREAM_SIZE_THRESHOLD) {
+            $body->rewind();
+
             //Prevents huge memory usage for big files
             while ($chunk = $body->read(static::STREAM_CHUNK_SIZE)) {
                 echo $chunk;

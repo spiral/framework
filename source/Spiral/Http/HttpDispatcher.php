@@ -8,8 +8,8 @@
 namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
@@ -88,7 +88,6 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         //Somewhere outside of dispatcher
         $request = $this->request();
         $response = $this->response();
-
 
         $writer = new ErrorWriter($this->config, $this->container->get(ViewsInterface::class));
 

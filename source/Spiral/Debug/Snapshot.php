@@ -13,7 +13,6 @@ use Spiral\Core\Component;
 use Spiral\Core\Exceptions\SugarException;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Configs\SnapshotConfig;
-use Spiral\Debug\Configs\SnapshotingConfig;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\ViewsInterface;
@@ -70,7 +69,7 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
         /**
          * All this properties can be automatically populated using shared contaner.
          */
-        $this->config = $this->saturate($config, SnapshotingConfig::class);
+        $this->config = $this->saturate($config, SnapshotConfig::class);
         $this->files = $this->saturate($files, FilesInterface::class);
         $this->views = $this->saturate($views, ViewsInterface::class);
 
