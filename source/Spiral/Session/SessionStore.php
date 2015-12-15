@@ -243,7 +243,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     /**
      * {@inheritdoc}
      */
-    public function increment($name, $delta = 1)
+    public function inc($name, $delta = 1)
     {
         $this->set($name, $this->get($name) + $delta);
 
@@ -253,7 +253,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     /**
      * {@inheritdoc}
      */
-    public function decrement($name, $delta = 1)
+    public function dec($name, $delta = 1)
     {
         $this->set($name, $this->get($name) - $delta);
 

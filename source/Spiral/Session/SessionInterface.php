@@ -113,7 +113,7 @@ interface SessionInterface
      * @return int
      * @throws SessionException
      */
-    public function increment($name, $delta = 1);
+    public function inc($name, $delta = 1);
 
     /**
      * Decrement numeric value stored in cache. Must return decremented value.
@@ -123,7 +123,7 @@ interface SessionInterface
      * @return int
      * @throws SessionException
      */
-    public function decrement($name, $delta = 1);
+    public function dec($name, $delta = 1);
 
     /**
      * Delete data from session.
