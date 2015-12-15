@@ -85,13 +85,13 @@ class SpiralBindings extends Bootloader
     public function activeRoute(ServerRequestInterface $request = null)
     {
         if (empty($request)) {
-            throw new AutowireException("No active request found.");
+            throw new AutowireException("No active request found");
         }
 
         $route = $request->getAttribute('route');
 
         if (!$route instanceof RouteInterface) {
-            throw new SugarException("Unable to resolve active route using active request.");
+            throw new SugarException("Unable to resolve active route using active request");
         }
 
         return $route;
@@ -104,13 +104,13 @@ class SpiralBindings extends Bootloader
     public function activeSession(ServerRequestInterface $request = null)
     {
         if (empty($request)) {
-            throw new AutowireException("No active request found.");
+            throw new AutowireException("No active request found");
         }
 
         $session = $request->getAttribute('session');
 
         if (!$session instanceof SessionInterface) {
-            throw new SugarException("Unable to resolve active session using active request.");
+            throw new SugarException("Unable to resolve active session using active request");
         }
 
         return $session;
