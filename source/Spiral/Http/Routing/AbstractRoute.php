@@ -253,7 +253,9 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         //todo: improve performance of slugification
+        //todo: request SlugifyInterface using container?
         $slugify = !empty($slugify) ? $slugify : new Slugify();
+
         foreach ($parameters as &$parameter) {
             if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
                 //Default Slugify is pretty slow, we'd better not apply it for every value

@@ -21,7 +21,6 @@ class Service extends Component
     use SharedTrait, SaturateTrait;
 
     /**
-     * @invisible
      * @var ContainerInterface
      */
     protected $container = null;

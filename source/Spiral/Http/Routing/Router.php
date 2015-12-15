@@ -67,15 +67,16 @@ class Router implements RouterInterface
         //Open router scope
         $scope = $this->container->replace(self::class, $this);
 
-        $matched = $this->findRoute($request, $this->basePath);
-        if (empty($matched)) {
+        $route = $this->findRoute($request, $this->basePath);
+
+        if (empty($route)) {
             //Unable to locate route
             throw new ClientException(ClientException::NOT_FOUND);
         }
 
         //Default routes will understand about keepOutput
-        $response = $matched->perform(
-            $request->withAttribute('route', $matched),
+        $response = $route->perform(
+            $request->withAttribute('route', $route),
             $response,
             $this->container
         );
@@ -132,6 +133,8 @@ class Router implements RouterInterface
      */
     public function uri($route, $parameters = [], SlugifyInterface $slugify = null)
     {
+        //todo: resolve SlugifyInterface using container
+
         try {
             return $this->getRoute($route)->uri($parameters, $this->basePath, $slugify);
         } catch (BadRouteException $e) {
@@ -147,7 +150,8 @@ class Router implements RouterInterface
 
         //We can fetch controller and action names from url
         list($controller, $action) = explode(
-            RouteInterface::SEPARATOR, str_replace('/', RouteInterface::SEPARATOR, $route)
+            RouteInterface::SEPARATOR,
+            str_replace('/', RouteInterface::SEPARATOR, $route)
         );
 
         return $this->defaultRoute->uri(
