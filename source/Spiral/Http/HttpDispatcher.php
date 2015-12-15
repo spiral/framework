@@ -8,7 +8,6 @@
 namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
@@ -103,7 +102,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * Get initial request instance or create new one.
      *
-     * @return ServerRequestInterface
+     * @return Request
      */
     protected function request()
     {

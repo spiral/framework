@@ -9,8 +9,8 @@ namespace Spiral\Http\Routing;
 
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\CoreInterface;
@@ -195,7 +195,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function match(ServerRequestInterface $request, $basePath = '/')
+    public function match(Request $request, $basePath = '/')
     {
         if (empty($this->compiled)) {
             $this->compile();
@@ -230,11 +230,8 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function perform(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        ContainerInterface $container
-    ) {
+    public function perform(Request $request, Response $response, ContainerInterface $container)
+    {
         $pipeline = new MiddlewarePipeline($this->middlewares, $container);
 
         return $pipeline->target($this->createEndpoint($container))->run($request, $response);
