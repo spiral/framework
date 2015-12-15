@@ -11,9 +11,9 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "spiral/components": "dev-develop",
-    "symfony/console": "~2.0",
-    "symfony/process": "~2.0",
+    "spiral/components": "*",
+    "symfony/console": "^2.7",
+    "symfony/process": "^2.7",
     "nesbot/carbon": "*",
     "zendframework/zend-diactoros": "^1.1",
     "vlucas/phpdotenv": "^2.1",
