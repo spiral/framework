@@ -106,13 +106,8 @@ class ConfigureCommand extends Command
             //Both file and it's directory must be writable
             $files->setPermissions($filename, FilesInterface::RUNTIME);
             $files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
-
-            if ($this->isVerbosity()) {
-                $filename = $files->relativePath($filename, $runtime);
-                $this->writeln("Permissions were updated for '<comment>{$filename}</comment>'.");
-            }
         }
 
-        $this->writeln("Runtime directory permissions updated.");
+        $this->writeln("Runtime directory permissions were updated.");
     }
 }
