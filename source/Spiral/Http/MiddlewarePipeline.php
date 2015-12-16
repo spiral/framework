@@ -14,6 +14,7 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\SugarException;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Http\Traits\JsonTrait;
+use Spiral\Http\Traits\MiddlewaresTrait;
 
 /**
  * Pipeline used to pass request and response thought the chain of middlewares.
@@ -23,7 +24,7 @@ class MiddlewarePipeline extends Component
     /**
      * Sugar.
      */
-    use SaturateTrait, JsonTrait;
+    use SaturateTrait, JsonTrait, MiddlewaresTrait;
 
     /**
      * Pipeline automatically replaces outer request with active instance for internal endpoint.
@@ -45,42 +46,20 @@ class MiddlewarePipeline extends Component
     private $target = null;
 
     /**
-     * Pipeline middlewares.
-     *
-     * @var callable[]|MiddlewareInterface[]
-     */
-    protected $middlewares = [];
-
-    /**
      * @invisible
      * @var ContainerInterface
      */
     protected $container = null;
 
     /**
-     * @param callable[]|MiddlewareInterface[] $middleware
+     * @param callable[]|MiddlewareInterface[] $middlewares
      * @param ContainerInterface               $container Spiral container is needed, due scoping.
      * @throws SugarException
      */
-    public function __construct(
-        array $middleware = [],
-        ContainerInterface $container = null
-    ) {
-        $this->middlewares = $middleware;
-        $this->container = $this->saturate($container, ContainerInterface::class);
-    }
-
-    /**
-     * Register new middleware at the end of chain.
-     *
-     * @param callable $middleware Can accept middleware class name.
-     * @return $this
-     */
-    public function add($middleware)
+    public function __construct(array $middlewares = [], ContainerInterface $container = null)
     {
-        $this->middlewares[] = $middleware;
-
-        return $this;
+        $this->middlewares = $middlewares;
+        $this->container = $this->saturate($container, ContainerInterface::class);
     }
 
     /**
@@ -132,7 +111,7 @@ class MiddlewarePipeline extends Component
 
         if (is_string($next)) {
             //Resolve using container
-            $next = $this->container->construct($next);
+            $next = $this->container->make($next);
         }
 
         //Executing next middleware
@@ -205,10 +184,11 @@ class MiddlewarePipeline extends Component
         }
 
         if (is_array($result) || $result instanceof \JsonSerializable) {
-            return $this->writeJson($response, $result);
+            $response = $this->writeJson($response, $result);
+            $response->getBody()->write($output);
+        } else {
+            $response->getBody()->write($result . $output);
         }
-
-        $response->getBody()->write($result . $output);
 
         return $response;
     }

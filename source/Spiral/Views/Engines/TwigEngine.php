@@ -8,13 +8,18 @@
 namespace Spiral\Views\Engines;
 
 use Spiral\Core\Component;
+use Spiral\Core\ContainerInterface;
 use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EngineInterface;
+use Spiral\Views\Engines\Traits\ModifiersTrait;
+use Spiral\Views\Engines\Twig\Exceptions\SyntaxException;
 use Spiral\Views\Engines\Twig\TwigCache;
 use Spiral\Views\Engines\Twig\TwigView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
+use Spiral\Views\Loaders\ModifiableLoader;
 
 /**
  * Wraps and control twig engine.
@@ -24,7 +29,19 @@ class TwigEngine extends Component implements EngineInterface
     /**
      * Saturation of files.
      */
-    use SaturateTrait;
+    use SaturateTrait, BenchmarkTrait, ModifiersTrait;
+
+    /**
+     * @var LoaderInterface
+     */
+    protected $loader = null;
+
+    /**
+     * List of twig extensions.
+     *
+     * @var array
+     */
+    protected $extensions = [];
 
     /**
      * @var \Twig_Environment
@@ -39,20 +56,31 @@ class TwigEngine extends Component implements EngineInterface
     /**
      * @param LoaderInterface      $loader
      * @param EnvironmentInterface $environment
-     * @param FilesInterface       $container
+     * @param FilesInterface       $files
+     * @param ContainerInterface   $container
+     * @param array                $modifiers
+     * @param array                $extensions
      * @param array                $options
      */
     public function __construct(
         LoaderInterface $loader,
         EnvironmentInterface $environment,
-        FilesInterface $container = null,
+        FilesInterface $files = null,
+        ContainerInterface $container = null,
+        array $modifiers = [],
+        array $extensions = [],
         array $options = []
     ) {
         $this->twig = new \Twig_Environment($loader, $options);
-        $this->files = $this->saturate($container, FilesInterface::class);
+        $this->container = $this->saturate($container, ContainerInterface::class);
+        $this->files = $this->saturate($files, FilesInterface::class);
+
+        $this->setEnvironment($environment);
+        $this->extensions = $extensions;
+        $this->modifiers = $modifiers;
+        $this->setLoader($loader);
 
         $this->configure($this->twig);
-        $this->setEnvironment($environment);
     }
 
     /**
@@ -67,10 +95,20 @@ class TwigEngine extends Component implements EngineInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws SyntaxException
      */
     public function get($path)
     {
-        return $this->twig->loadTemplate($path);
+        $benchmark = $this->benchmark('load', $path);
+        try {
+            return $this->twig->loadTemplate($path);
+        } catch (\Twig_Error_Syntax $exception) {
+            //Let's clarify exception location
+            throw SyntaxException::fromTwig($exception, $this->loader);
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
@@ -78,37 +116,66 @@ class TwigEngine extends Component implements EngineInterface
      */
     public function render($path, array $context = [])
     {
-        return $this->get($path)->render($context);
+        $benchmark = $this->benchmark('render', $path);
+        try {
+            return $this->get($path)->render($context);
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function compile($path)
+    public function compile($path, $reset = false)
     {
-        $this->twig->loadTemplate($path);
+        if ($reset) {
+            $cache = $this->twig->getCache();
+            $this->twig->setCache(false);
+        }
+
+        $this->get($path);
+
+        if ($reset && !empty($cache)) {
+            //Restoring cache
+            $this->twig->setCache($cache);
+        }
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this
      */
     public function setLoader(LoaderInterface $loader)
     {
-        $this->twig->setLoader($loader);
+        if (!empty($this->modifiers)) {
+            //Let's prepare source before giving it to Stempler
+            $loader = new ModifiableLoader($loader, $this->getModifiers());
+        }
+
+        $this->twig->setLoader($this->loader = $loader);
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this
      */
     public function setEnvironment(EnvironmentInterface $environment)
     {
+        $this->environment = $environment;
         if (!$environment->cachable()) {
             $this->twig->setCache(false);
 
-            return;
+            return $this;
         }
 
         $this->twig->setCache(new TwigCache($this->files, $environment));
+
+        return $this;
     }
 
     /**
@@ -120,6 +187,13 @@ class TwigEngine extends Component implements EngineInterface
     protected function configure(\Twig_Environment $environment)
     {
         $environment->setBaseTemplateClass(TwigView::class);
+
+        /**
+         * Registering extensions.
+         */
+        foreach ($this->extensions as $extension) {
+            $environment->addExtension($this->container->get($extension));
+        }
 
         return $environment;
     }

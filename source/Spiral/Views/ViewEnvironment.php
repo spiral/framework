@@ -88,7 +88,7 @@ class ViewEnvironment implements EnvironmentInterface
     public function getValue($dependency)
     {
         if (!isset($this->dependencies[$dependency])) {
-            throw new EnvironmentException("Undefined environment dependency '{$dependency}'.");
+            throw new EnvironmentException("Undefined environment variable '{$dependency}'.");
         }
 
         $source = $this->dependencies[$dependency];
@@ -112,6 +112,6 @@ class ViewEnvironment implements EnvironmentInterface
             $calculated .= "[{$dependency}={$this->getValue($dependency)}]";
         }
 
-        return crc32($calculated);
+        return md5($calculated);
     }
 }

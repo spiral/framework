@@ -10,6 +10,8 @@ namespace Spiral\Views;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
+use Spiral\Core\HippocampusInterface;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
 use Spiral\Views\Exceptions\LoaderException;
@@ -19,9 +21,14 @@ use Spiral\Views\Exceptions\ViewsException;
  * Default ViewsInterface implementation with ability to change cache versions via external
  * dependencies. ViewManager support multiple namespaces and namespaces associated with multiple
  * folders.
+ *
+ * @todo improve view engine location method
+ * @todo cache associations between view name and engine
  */
 class ViewManager extends Component implements SingletonInterface, ViewsInterface
 {
+    use BenchmarkTrait;
+
     /**
      * Declares to IoC that component instance should be treated as singleton.
      */
@@ -68,9 +75,10 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     protected $container = null;
 
     /**
-     * @param ViewsConfig        $config
-     * @param FilesInterface     $files
-     * @param ContainerInterface $container
+     * @todo Memory?
+     * @param ViewsConfig          $config
+     * @param FilesInterface       $files
+     * @param ContainerInterface   $container
      */
     public function __construct(
         ViewsConfig $config,
@@ -110,11 +118,10 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
      * Pre-compile desired view file.
      *
      * @param string $path
-     * @return CompilerInterface|null
      */
     public function compile($path)
     {
-        return $this->engine($this->detectEngine($path))->compile($path);
+        $this->engine($this->detectEngine($path))->compile($path);
     }
 
     /**
@@ -129,10 +136,10 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
         if (!isset($this->engines[$engine])) {
             $parameters = $this->config->engineParameters($engine);
             $parameters['loader'] = $this->loader($engine);
-            $parameters['environment'] = $this->environment;
+            $parameters['environment'] = $this->environment();
 
             //We have to create an engine
-            $this->engines[$engine] = $this->container->construct(
+            $this->engines[$engine] = $this->container->make(
                 $this->config->engineClass($engine),
                 $parameters
             );
@@ -152,11 +159,10 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     /**
      * Get view loader.
      *
-     * @param string $engine    Forced extension value.
-     * @param string $namespace Forced default namespace.
+     * @param string $engine Forced extension value.
      * @return LoaderInterface
      */
-    public function loader($engine = null, $namespace = self::DEFAULT_NAMESPACE)
+    public function loader($engine = null)
     {
         $extension = null;
         if (!empty($engine)) {
@@ -167,7 +173,12 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
             $extension = $this->config->engineExtension($engine);
         }
 
-        return $this->loader->withExtension($extension)->withNamespace($namespace);
+        if (empty($extension)) {
+            return $this->loader;
+        }
+
+        //todo: think about it
+        return $this->loader->withExtension($extension);
     }
 
     /**
@@ -183,6 +194,7 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     /**
      * Detect compiler by view path (automatically resolved based on extension).
      *
+     * @todo cache needed?
      * @param string $path
      * @return string
      */
@@ -192,9 +204,11 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
             return $this->associationCache[$path];
         }
 
-        //File extension can help us to detect engine faster
+        //File extension can help us to detect engine faster (attention, does not work with complex
+        //extensions at this moment).
         $extension = $this->files->extension($path);
         $detected = null;
+
         foreach ($this->config->getEngines() as $engine) {
             if (!empty($extension) && $extension == $this->config->engineExtension($engine)) {
                 //Found by extension

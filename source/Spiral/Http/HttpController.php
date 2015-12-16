@@ -10,8 +10,7 @@ namespace Spiral\Http;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Controller;
-use Spiral\Http\Cookies\CookieManager;
-use Spiral\Http\Input\InputManager;
+use Spiral\Http\Traits\MiddlewaresTrait;
 
 /**
  * Controller with MiddlewarePipeline (PSR-7) functionality added. HttpController actions will
@@ -20,20 +19,14 @@ use Spiral\Http\Input\InputManager;
 class HttpController extends Controller
 {
     /**
-     * You can define controller specific middlewares by redefining this property. In default
-     * configuration controller defines it's own CookieManager and InputManager
-     * middlewares.
-     *
-     * More middlewares to be added.
-     *
-     * @var array
+     * Managing middlewares.
      */
-    protected $middlewares = [CookieManager::class, InputManager::class];
+    use MiddlewaresTrait;
 
     /**
      * {@inheritdoc}
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      */
     public function callAction(
@@ -75,7 +68,7 @@ class HttpController extends Controller
                 return $method->invokeArgs($scope, $arguments);
             });
 
-            //Always provided by callAction
+            //Request and Response are always provided by callAction
             return $pipeline->run($parameters['request'], $parameters['response']);
         } finally {
             $this->benchmark($benchmark);

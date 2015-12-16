@@ -8,7 +8,7 @@
 namespace Spiral\Session;
 
 use Spiral\Core\Component;
-use Spiral\Core\ConstructorInterface;
+use Spiral\Core\FactoryInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Session\Configs\SessionConfig;
 use Spiral\Session\Exceptions\SessionException;
@@ -16,6 +16,9 @@ use Spiral\Session\Exceptions\SessionException;
 /**
  * Default implementation of StoreInterface, can map session data to specified SessionHandler. By
  * default spiral session uses native php sessions as backbone, it can be changed in future.
+ *
+ * @todo At this moment native php sessions used which limits functionality a bit.
+ * @todo probably not the best component due sticking to native sessions, to find replacement
  */
 class SessionStore extends Component implements SessionInterface, \ArrayAccess, \IteratorAggregate
 {
@@ -46,18 +49,21 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
 
     /**
      * @invisible
-     * @var ConstructorInterface
+     * @var FactoryInterface
      */
-    protected $constructor = null;
+    protected $factory = null;
 
     /**
-     * @param SessionConfig        $config
-     * @param ConstructorInterface $constructor
+     * @param string           $id
+     * @param SessionConfig    $config
+     * @param FactoryInterface $factory Factory is needed to construct valid instance of session
+     *                                  handler on demand.
      */
-    public function __construct(SessionConfig $config, ConstructorInterface $constructor)
+    public function __construct($id = null, SessionConfig $config, FactoryInterface $factory)
     {
+        $this->id = $id;
         $this->config = $config;
-        $this->constructor = $constructor;
+        $this->factory = $factory;
     }
 
     /**
@@ -138,7 +144,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     /**
      * {@inheritdoc}
      */
-    public function started()
+    public function isStarted()
     {
         return $this->started;
     }
@@ -146,7 +152,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     /**
      * {@inheritdoc}
      */
-    public function destroyed()
+    public function isDestroyed()
     {
         return $this->destroyed;
     }
@@ -237,7 +243,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     /**
      * {@inheritdoc}
      */
-    public function increment($name, $delta = 1)
+    public function inc($name, $delta = 1)
     {
         $this->set($name, $this->get($name) + $delta);
 
@@ -247,7 +253,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     /**
      * {@inheritdoc}
      */
-    public function decrement($name, $delta = 1)
+    public function dec($name, $delta = 1)
     {
         $this->set($name, $this->get($name) - $delta);
 
@@ -346,7 +352,23 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
      */
     public function getIterator()
     {
+        if (!$this->isStarted()) {
+            return new \ArrayIterator([]);
+        }
+
         return new \ArrayIterator($_SESSION);
+    }
+
+    /**
+     * @return object
+     */
+    public function __debugInfo()
+    {
+        return (object)[
+            'started' => $this->isStarted(),
+            'id'      => $this->getID(false),
+            'data'    => $this->isStarted() ? $_SESSION : null
+        ];
     }
 
     /**
@@ -368,7 +390,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
         }
 
         $benchmark = $this->benchmark('handler', $this->config->sessionHandler());
-        $handler = $this->constructor->construct(
+        $handler = $this->factory->make(
             $this->config->handlerClass(),
             $this->config->handlerParameters()
         );

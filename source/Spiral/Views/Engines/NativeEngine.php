@@ -14,7 +14,6 @@ use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Native\NativeView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
-use Spiral\Views\ViewLoader;
 
 /**
  * The simpliest view engine, simply renders php files.
@@ -27,7 +26,7 @@ class NativeEngine extends Component implements EngineInterface
     use SaturateTrait;
 
     /**
-     * @var ViewLoader
+     * @var LoaderInterface
      */
     protected $loader = null;
 
@@ -40,14 +39,14 @@ class NativeEngine extends Component implements EngineInterface
     /**
      * @param LoaderInterface      $loader
      * @param EnvironmentInterface $environment
-     * @param ContainerInterface   $container
+     * @param ContainerInterface   $files
      */
     public function __construct(
         LoaderInterface $loader,
         EnvironmentInterface $environment,
-        ContainerInterface $container = null
+        ContainerInterface $files = null
     ) {
-        $this->container = $this->saturate($container, ContainerInterface::class);
+        $this->container = $this->saturate($files, ContainerInterface::class);
 
         $this->setEnvironment($environment);
     }
@@ -58,7 +57,7 @@ class NativeEngine extends Component implements EngineInterface
     public function get($path)
     {
         return new NativeView(
-            $this->loader->includableFilename($path),
+            $this->loader->localFilename($path),
             $this->loader->viewNamespace($path),
             $this->loader->viewName($path),
             $this->container
@@ -76,17 +75,21 @@ class NativeEngine extends Component implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function compile($path)
+    public function compile($path, $reset = false)
     {
         //Can not be compiled
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this
      */
     public function setLoader(LoaderInterface $loader)
     {
         $this->loader = $loader;
+
+        return $this;
     }
 
     /**

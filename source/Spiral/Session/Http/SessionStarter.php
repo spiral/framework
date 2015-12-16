@@ -10,16 +10,21 @@ namespace Spiral\Session\Http;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
+use Spiral\Cache\StoreInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Cookies\Cookie;
 use Spiral\Http\MiddlewareInterface;
 use Spiral\Session\Configs\SessionConfig;
 use Spiral\Session\SessionInterface;
+use Spiral\Session\SessionStore;
 
 /**
  * HttpMiddleware used to create and commit session data using cookies as sessionID provider.
  * Expected to work with SessionStore class.
+ *
+ * Attention, nested sessions are not well isolated at this moment as native php session mechanism
+ * used (to be changed over time).
  */
 class SessionStarter implements MiddlewareInterface
 {
@@ -34,31 +39,22 @@ class SessionStarter implements MiddlewareInterface
     protected $httpConfig = null;
 
     /**
-     * @var SessionInterface
+     * @var SessionStore
      */
     protected $session = null;
 
     /**
-     * @invisible
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
-     * @param SessionConfig      $config
-     * @param HttpConfig         $httpConfig
-     * @param ContainerInterface $container
-     * @param SessionInterface   $session
+     * @param SessionConfig $config
+     * @param HttpConfig    $httpConfig
+     * @param SessionStore  $session
      */
     public function __construct(
         SessionConfig $config,
         HttpConfig $httpConfig,
-        ContainerInterface $container,
-        SessionInterface $session
+        SessionStore $session
     ) {
         $this->config = $config;
         $this->httpConfig = $httpConfig;
-        $this->container = $container;
         $this->session = $session;
     }
 
@@ -69,17 +65,12 @@ class SessionStarter implements MiddlewareInterface
     {
         $this->initSession($request);
 
-        $scope = $this->container->replace(SessionInterface::class, $this->session);
-        try {
-            /**
-             * Debug: this method opens SessionInterface scope.
-             */
-            $response = $next($request, $response);
+        $response = $next(
+            $request->withAttribute('session', $this->session),
+            $response
+        );
 
-            return $this->commitSession($request, $response);
-        } finally {
-            $this->container->restore($scope);
-        }
+        return $this->commitSession($request, $response);
     }
 
     /**
@@ -104,7 +95,7 @@ class SessionStarter implements MiddlewareInterface
      */
     protected function commitSession(Request $request, Response $response)
     {
-        if (!$this->session->started()) {
+        if (!$this->session->isStarted()) {
             //Nothing to do
             return $response;
         }
@@ -116,7 +107,9 @@ class SessionStarter implements MiddlewareInterface
             //Let's mount cookie
             $response = $response->withAddedHeader(
                 'Set-Cookie',
-                $this->sessionCookie($request->getUri(), $this->session->getID(false))->packHeader()
+                $this->sessionCookie(
+                    $request->getUri(),
+                    $this->session->getID(false))->createHeader()
             );
         }
 
@@ -149,14 +142,14 @@ class SessionStarter implements MiddlewareInterface
      * @param string       $sessionID
      * @return Cookie
      */
-    protected function sessionCookie(UriInterface $uri, $sessionID)
+    private function sessionCookie(UriInterface $uri, $sessionID)
     {
         return Cookie::create(
             $this->config->sessionCookie(),
             $sessionID,
             $this->config->sessionLifetime(),
-            $this->httpConfig->basePath(),
-            $this->httpConfig->cookiesDomain($uri)
+            $this->httpConfig->basePath(),          //todo: to be fetched from request
+            $this->httpConfig->cookiesDomain($uri)  //todo: to be fetched from request and set by?
         );
     }
 }

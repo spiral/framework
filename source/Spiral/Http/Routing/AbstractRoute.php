@@ -9,8 +9,8 @@ namespace Spiral\Http\Routing;
 
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\CoreInterface;
@@ -195,7 +195,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function match(ServerRequestInterface $request, $basePath = '/')
+    public function match(Request $request, $basePath = '/')
     {
         if (empty($this->compiled)) {
             $this->compile();
@@ -230,11 +230,8 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function perform(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        ContainerInterface $container
-    ) {
+    public function perform(Request $request, Response $response, ContainerInterface $container)
+    {
         $pipeline = new MiddlewarePipeline($this->middlewares, $container);
 
         return $pipeline->target($this->createEndpoint($container))->run($request, $response);
@@ -243,7 +240,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function createUri(
+    public function uri(
         $parameters = [],
         $basePath = '/',
         SlugifyInterface $slugify = null
@@ -252,10 +249,20 @@ abstract class AbstractRoute implements RouteInterface
             $this->compile();
         }
 
-        $parameters = array_map(
-            [!empty($slugify) ? $slugify : new Slugify(), 'slugify'],
-            $parameters + $this->defaults + $this->compiled['options']
-        );
+        //todo: improve performance of slugification
+        //todo: request SlugifyInterface using container?
+        $slugify = !empty($slugify) ? $slugify : new Slugify();
+
+        foreach ($parameters as &$parameter) {
+            if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
+                //Default Slugify is pretty slow, we'd better not apply it for every value
+                $parameter = $slugify->slugify($parameter);
+            }
+
+            unset($parameter);
+        }
+
+        $parameters = $parameters + $this->defaults + $this->compiled['options'];
 
         //Uri without empty blocks
         $uri = strtr(
@@ -304,17 +311,16 @@ abstract class AbstractRoute implements RouteInterface
         try {
             return $this->core->callAction($controller, $action, $parameters);
         } catch (ControllerException $exception) {
-            $code = $exception->getCode();
-
-            if ($code == ControllerException::BAD_ACTION || $code == ControllerException::NOT_FOUND) {
-                throw new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
+            //Converting one exception to another
+            switch ($exception->getCode()) {
+                case ControllerException::BAD_ACTION:
+                case ControllerException::NOT_FOUND:
+                    throw new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
+                case  ControllerException::FORBIDDEN:
+                    throw new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
+                default:
+                    throw new ClientException(ClientException::BAD_DATA, $exception->getMessage());
             }
-
-            if ($code == ControllerException::FORBIDDEN) {
-                throw new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
-            }
-
-            throw new ClientException(ClientException::BAD_DATA, $exception->getMessage());
         }
     }
 

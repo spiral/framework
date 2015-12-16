@@ -11,6 +11,7 @@ use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\ContainerInterface;
+use Spiral\Http\Exceptions\BadRouteException;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\Exceptions\RouterException;
 
@@ -66,15 +67,16 @@ class Router implements RouterInterface
         //Open router scope
         $scope = $this->container->replace(self::class, $this);
 
-        $matched = $this->findRoute($request, $this->basePath);
-        if (empty($matched)) {
+        $route = $this->findRoute($request, $this->basePath);
+
+        if (empty($route)) {
             //Unable to locate route
             throw new ClientException(ClientException::NOT_FOUND);
         }
 
         //Default routes will understand about keepOutput
-        $response = $matched->perform(
-            $request->withAttribute('route', $matched),
+        $response = $route->perform(
+            $request->withAttribute('route', $route),
             $response,
             $this->container
         );
@@ -112,7 +114,7 @@ class Router implements RouterInterface
             }
         }
 
-        throw new RouterException("Undefined route '{$name}'.");
+        throw new BadRouteException("Undefined route '{$name}'.");
     }
 
     /**
@@ -125,27 +127,34 @@ class Router implements RouterInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @todo Optimize performance of slugification and uri compilation
+     * @throws BadRouteException
      */
-    public function createUri($route, $parameters = [], SlugifyInterface $slugify = null)
+    public function uri($route, $parameters = [], SlugifyInterface $slugify = null)
     {
-        if (isset($this->routes[$route])) {
-            //Dedicating to specified route
-            return $this->routes[$route]->createUri($parameters, $this->basePath, $slugify);
+        //todo: resolve SlugifyInterface using container
+
+        try {
+            return $this->getRoute($route)->uri($parameters, $this->basePath, $slugify);
+        } catch (BadRouteException $e) {
+            //Using fallback uri
         }
 
         //Will be handled via default route where route name is specified as controller::action
         if (strpos($route, RouteInterface::SEPARATOR) === false && strpos($route, '/') === false) {
-            throw new RouterException(
+            throw new BadRouteException(
                 "Unable to locate route or use default route with controller::action pattern."
             );
         }
 
         //We can fetch controller and action names from url
         list($controller, $action) = explode(
-            RouteInterface::SEPARATOR, str_replace('/', RouteInterface::SEPARATOR, $route)
+            RouteInterface::SEPARATOR,
+            str_replace('/', RouteInterface::SEPARATOR, $route)
         );
 
-        return $this->defaultRoute->createUri(
+        return $this->defaultRoute->uri(
             compact('controller', 'action') + $parameters,
             $this->basePath,
             $slugify

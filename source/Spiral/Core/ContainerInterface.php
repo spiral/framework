@@ -13,10 +13,12 @@ use Spiral\Core\Exceptions\Container\ContainerException;
 /**
  * Spiral IoC container interface. Used to resolve dependencies and etc.
  *
+ * @todo different name?
+ *
  * @see InjectorInterface
  * @see SingletonInterface
  */
-interface ContainerInterface extends ConstructorInterface, ResolverInterface, InteropContainer
+interface ContainerInterface extends FactoryInterface, ResolverInterface, InteropContainer
 {
     /**
      * Bind value resolver to container alias. Resolver can be class name (will be constructed

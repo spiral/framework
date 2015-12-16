@@ -25,13 +25,6 @@ class ViewLoader extends Component implements LoaderInterface
     use SaturateTrait;
 
     /**
-     * Namespace to be counted as default.
-     *
-     * @var string
-     */
-    protected $namespace = ViewsInterface::DEFAULT_NAMESPACE;
-
-    /**
      * Such extensions will automatically be added to every file but only if no other extension
      * specified in view name. As result you are able to render "home" view, instead of "home.twig".
      *
@@ -80,9 +73,9 @@ class ViewLoader extends Component implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getSource($name)
+    public function getSource($path)
     {
-        return $this->files->read($this->findView($name));
+        return $this->files->read($this->findView($path));
     }
 
     /**
@@ -104,7 +97,7 @@ class ViewLoader extends Component implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function includableFilename($path)
+    public function localFilename($path)
     {
         return $this->findView($path);
     }
@@ -125,20 +118,8 @@ class ViewLoader extends Component implements LoaderInterface
     public function viewName($path)
     {
         $this->findView($path);
-        dump($this->cache);
 
         return $this->cache[$path][2];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withNamespace($namespace)
-    {
-        $loader = clone $this;
-        $loader->namespace = $namespace;
-
-        return $loader->flushCache();
     }
 
     /**
@@ -169,7 +150,7 @@ class ViewLoader extends Component implements LoaderInterface
         list($namespace, $filename) = $this->parsePath($path);
 
         if (!isset($this->namespaces[$namespace])) {
-            throw new LoaderException("undefined view namespace '{$namespace}'.");
+            throw new LoaderException("Undefined view namespace '{$namespace}'.");
         }
 
         foreach ($this->namespaces[$namespace] as $directory) {
@@ -177,7 +158,7 @@ class ViewLoader extends Component implements LoaderInterface
 
                 $this->cache[$path] = [
                     $directory . $filename,
-                    $path,
+                    $namespace,
                     $this->resolveName($filename)
                 ];
 
@@ -185,7 +166,7 @@ class ViewLoader extends Component implements LoaderInterface
             }
         }
 
-        throw new LoaderException("Unable to locate view '{$path}' in namespace '{$namespace}'.");
+        throw new LoaderException("Unable to locate view '{$filename}' in namespace '{$namespace}'.");
     }
 
     /**
@@ -225,7 +206,7 @@ class ViewLoader extends Component implements LoaderInterface
         }
 
         //Let's force default namespace
-        return [$this->namespace, $filename];
+        return [ViewsInterface::DEFAULT_NAMESPACE, $filename];
     }
 
     /**

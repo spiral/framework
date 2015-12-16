@@ -13,6 +13,8 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Exceptions\HttpException;
+use Spiral\Http\Responses\Emitter;
+use Spiral\Http\Traits\MiddlewaresTrait;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\EmitterInterface;
 use Zend\Diactoros\Response\SapiEmitter;
@@ -25,7 +27,7 @@ class HttpCore extends Component implements HttpInterface
     /**
      * HttpDispatcher has embedded router and log it's errors.
      */
-    use BenchmarkTrait;
+    use BenchmarkTrait, MiddlewaresTrait;
 
     /**
      * @var EmitterInterface
@@ -38,13 +40,6 @@ class HttpCore extends Component implements HttpInterface
      * @var string|callable|null
      */
     private $endpoint = null;
-
-    /**
-     * Set of middlewares to be applied for every request.
-     *
-     * @var callable[]|MiddlewareInterface[]
-     */
-    protected $middlewares = [];
 
     /**
      * @invisible
@@ -85,38 +80,6 @@ class HttpCore extends Component implements HttpInterface
     public function setEndpoint(callable $endpoint)
     {
         $this->endpoint = $endpoint;
-
-        return $this;
-    }
-
-    /**
-     * Add new middleware to the top chain.
-     *
-     * Example (in bootstrap):
-     * $this->http->unshiftMiddleware(new ProxyMiddleware());
-     *
-     * @param callable|MiddlewareInterface $middleware
-     * @return $this
-     */
-    public function unshiftMiddleware($middleware)
-    {
-        array_unshift($this->middlewares, $middleware);
-
-        return $this;
-    }
-
-    /**
-     * Add new middleware at the end of chain.
-     *
-     * Example (in bootstrap):
-     * $this->http->pushMiddleware(new ProxyMiddleware());
-     *
-     * @param callable|MiddlewareInterface $middleware
-     * @return $this
-     */
-    public function pushMiddleware($middleware)
-    {
-        $this->middlewares[] = $middleware;
 
         return $this;
     }
@@ -163,7 +126,7 @@ class HttpCore extends Component implements HttpInterface
     public function dispatch(ResponseInterface $response)
     {
         if (empty($this->emitter)) {
-            $this->emitter = new SapiEmitter();
+            $this->emitter = new Emitter();
         }
 
         $this->emitter->emit($response, ob_get_level());

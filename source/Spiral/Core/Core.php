@@ -7,38 +7,43 @@
  */
 namespace Spiral\Core;
 
-use Dotenv\Dotenv;
+use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
+use Spiral\Core\Exceptions\SugarException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
-use Spiral\Modules\ModuleManager;
 
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
  * overwritten with custom instance).
+ *
+ * @property-read ContainerInterface $container Protected.
+ * @todo move start method and dispatcher property into trait
+ * @todo potentially add more events and create common event dispatcher?
  */
-class Core extends Component implements CoreInterface, DirectoriesInterface, HippocampusInterface
+abstract class Core extends Component implements CoreInterface, DirectoriesInterface
 {
     /**
      * Simplified access to container bindings.
      */
-    use SharedTrait;
+    use SharedTrait, BenchmarkTrait;
 
     /**
-     * Extension for memory files.
+     * Set to false if you don't want spiral to cache autoloading list.
      */
-    const EXTENSION = '.php';
+    const MEMORIZE_BOOTLOADERS = true;
 
     /**
-     * I need a constant for Symfony Console. :/
+     * I need this constant for Symfony Console. :/
      */
     const VERSION = '0.8.0-beta';
 
@@ -65,13 +70,35 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
         'libraries'   => null,
         'framework'   => null,
         'application' => null,
+        'locales'     => null,
         'runtime'     => null,
         'config'      => null,
         'cache'       => null
     ];
 
     /**
-     * @var DispatcherInterface
+     * @var BootloadManager
+     */
+    private $bootloader = null;
+
+    /**
+     * @var EnvironmentInterface
+     */
+    private $environment = null;
+
+    /**
+     * Application memory.
+     *
+     * @whatif private
+     * @var HippocampusInterface
+     */
+    protected $memory = null;
+
+    /**
+     * Not set until start method. Can be set manually in bootload.
+     *
+     * @whatif private
+     * @var DispatcherInterface|null
      */
     protected $dispatcher = null;
 
@@ -80,33 +107,79 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
      *
      * @var array
      */
-    protected $autoload = [Loader::class, ModuleManager::class];
+    protected $load = [];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must
      * provide application, libraries and root directories to constructor.
      *
-     * @param ContainerInterface $container
-     * @param array              $directories Core directories list. Every directory must have / at
-     *                                        the end.
+     * @param array                $directories Core directories list. Every directory must have /
+     *                                          at the end.
+     * @param ContainerInterface   $container
+     * @param HippocampusInterface $memory
      */
-    public function __construct(ContainerInterface $container, array $directories)
-    {
+    public function __construct(
+        array $directories,
+        ContainerInterface $container,
+        HippocampusInterface $memory = null
+    ) {
         $this->container = $container;
 
-        //We can set some directories automatically
+        /*
+         * Default directories pattern, you can overwrite any directory you want in index file.
+         */
         $this->directories = $directories + [
                 'framework' => dirname(__DIR__) . '/',
                 'public'    => $directories['root'] . 'webroot/',
                 'config'    => $directories['application'] . 'config/',
+                'views'     => $directories['application'] . 'views/',
                 'runtime'   => $directories['application'] . 'runtime/',
-                'cache'     => $directories['application'] . 'runtime/cache/'
+                'cache'     => $directories['application'] . 'runtime/cache/',
+                'resources' => $directories['application'] . 'resources/',
+                'locales'   => $directories['application'] . 'resources/locales/'
             ];
 
+        //Every application needs timezone to be set, by default we are using UTC
         date_default_timezone_set($this->timezone);
 
-        //Initial env variables
-        $this->initEnvironment();
+        if (empty($memory)) {
+            //Default memory implementation
+            $memory = new Memory($this->directory('cache'), $container->get(FilesInterface::class));
+        }
+
+        $this->memory = $memory;
+        $this->bootloader = new BootloadManager($this->container, $this->memory);
+    }
+
+    /**
+     * Set application environment.
+     *
+     * @param EnvironmentInterface $environment
+     */
+    public function setEnvironment(EnvironmentInterface $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @return EnvironmentInterface
+     * @throws CoreException
+     */
+    public function environment()
+    {
+        if (empty($this->environment)) {
+            throw new CoreException("Application environment not set.");
+        }
+
+        return $this->environment;
+    }
+
+    /**
+     * @return BootloadManager
+     */
+    public function bootloader()
+    {
+        return $this->bootloader;
     }
 
     /**
@@ -176,42 +249,6 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
 
     /**
      * {@inheritdoc}
-     *
-     * @param string $filename Cache filename.
-     */
-    public function loadData($name, $location = null, &$filename = null)
-    {
-        $filename = $this->memoryFilename($name, $location);
-
-        if (!file_exists($filename)) {
-            return null;
-        }
-
-        try {
-            return include($filename);
-        } catch (\ErrorException $exception) {
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function saveData($name, $data, $location = null)
-    {
-        $filename = $this->memoryFilename($name, $location);
-
-        //We are packing data into plain php
-        $data = '<?php return ' . var_export($data, true) . ';';
-
-        //We need help to write file with directory creation
-        $this->container->get(FilesInterface::class)->write(
-            $filename, $data, FilesInterface::RUNTIME, true
-        );
-    }
-
-    /**
-     * {@inheritdoc}
      */
     public function callAction($controller, $action = '', array $parameters = [])
     {
@@ -222,17 +259,23 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
             );
         }
 
-        //Initiating controller with all required dependencies
-        $controller = $this->container->get($controller);
+        $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?: '~default~'));
+        try {
+            //Initiating controller with all required dependencies
+            $controller = $this->container->make($controller);
 
-        if (!$controller instanceof ControllerInterface) {
-            throw new ControllerException(
-                "No such controller '{$controller}' found.",
-                ControllerException::NOT_FOUND
-            );
+            if (!$controller instanceof ControllerInterface) {
+                throw new ControllerException(
+                    "No such controller '{$controller}' found.",
+                    ControllerException::NOT_FOUND
+                );
+            }
+
+
+            return $controller->callAction($action, $parameters);
+        } finally {
+            $this->benchmark($benchmark);
         }
-
-        return $controller->callAction($action, $parameters);
     }
 
     /**
@@ -249,10 +292,7 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     /**
      * Bootstrap application. Must be executed before start method.
      */
-    public function bootstrap()
-    {
-        //Doing nothing here
-    }
+    abstract protected function bootstrap();
 
     /**
      * Handle php shutdown and search for fatal errors.
@@ -283,19 +323,19 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     /**
      * Handle exception using associated application dispatcher and snapshot class.
      *
-     * @param \Exception $exception PHP7, are you ok?
+     * @param \Exception $exception Works well in PHP7.
      */
     public function handleException($exception)
     {
         restore_error_handler();
         restore_exception_handler();
 
-        /**
-         * @var SnapshotInterface $snapshot
-         */
-        $snapshot = $this->container->construct(SnapshotInterface::class, compact('exception'));
+        if (empty($snapshot = $this->getSnapshot($exception))) {
+            //No action is required
+            return;
+        }
 
-        //Reporting
+        //Let's allow snapshot to report about itself
         $snapshot->report();
 
         if (!empty($this->dispatcher)) {
@@ -307,26 +347,52 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
     }
 
     /**
+     * Create appropriate snapshot for given exception. By default SnapshotInterface binding will be
+     * used.
+     *
+     * Method can return null, in this case exception will be ignored.
+     *
+     * @param \Throwable $exception
+     * @return SnapshotInterface|null
+     */
+    public function getSnapshot($exception)
+    {
+        if (!$this->container->has(SnapshotInterface::class)) {
+            return null;
+        }
+
+        return $this->container->make(
+            SnapshotInterface::class,
+            compact('exception')
+        );
+    }
+
+    /**
      * Create default application dispatcher based on environment value.
      *
+     * @todo possibly split into two protected methods to let user define dispatcher easier
      * @return DispatcherInterface|ConsoleDispatcher|HttpDispatcher
      */
     protected function createDispatcher()
     {
         if (php_sapi_name() === 'cli') {
-            return $this->container->get(ConsoleDispatcher::class);
+            return $this->container->make(ConsoleDispatcher::class);
         }
 
-        return $this->container->get(HttpDispatcher::class);
+        return $this->container->make(HttpDispatcher::class);
     }
 
     /**
      * Shared container instance (needed for helpers and etc).
      *
-     * @return InteropContainerInterface
+     * @return InteropContainer
      */
     public static function sharedContainer()
     {
+        if (empty(self::staticContainer())) {
+            throw new SugarException("No shared/static container are set.");
+        }
+
         return self::staticContainer();
     }
 
@@ -349,91 +415,68 @@ class Core extends Component implements CoreInterface, DirectoriesInterface, Hip
             $container = new SpiralContainer();
         }
 
-        /**
-         * @var Core $spiral
-         */
-        $spiral = new static($container, $directories);
+        //Spiral core interface, @see SpiralContainer
+        $container->bindSingleton(ContainerInterface::class, $container);
 
-        //Initiating global/static container used by traits and some classes
+        //Some sugar for modules, technically can be used as wrapper only here and in start method
         if (empty(self::staticContainer())) {
+            //todo: better logic is required, stack wrapping?
             self::staticContainer($container);
         }
 
-        //Self binding
-        $container->bindSingleton(ContainerInterface::class, $container);
+        /**
+         * @var Core $core
+         */
+        $core = new static($directories, $container);
 
         //Core binding
-        $container->bindSingleton(self::class, $spiral)->bind(static::class, $spiral);
+        $container->bindSingleton(self::class, $core);
+        $container->bindSingleton(static::class, $core);
+        $container->bindSingleton(DirectoriesInterface::class, $core);
+        $container->bindSingleton(BootloadManager::class, $core->bootloader);
+        $container->bindSingleton(HippocampusInterface::class, $core->memory);
+        $container->bindSingleton(CoreInterface::class, $core);
 
-        //Directories manager
-        $container->bindSingleton(DirectoriesInterface::class, $spiral);
+        $container->bindSingleton(Configurator::class, $container->make(
+            Configurator::class, ['directory' => $core->directory('config')]
+        ));
 
-        //Memory binding
-        $container->bindSingleton(HippocampusInterface::class, $spiral);
+        //Setting environment (by default - dotenv extension)
+        $core->environment = new Environment(
+            $core->directory('root') . '.env',
+            $container->get(FilesInterface::class),
+            $core->memory
+        );
 
-        //HMVC core binding
-        $container->bindSingleton(CoreInterface::class, $spiral);
+        $core->environment->load();
 
-        //Configurator is needed to configure every other component
-        $configurator = $container->construct(Configurator::class, [
-            'directory' => $spiral->directory('config')
-        ]);
-
-        //Configurator binding
-        $container->bindSingleton(ConfiguratorInterface::class, $configurator);
+        $container->bindSingleton(EnvironmentInterface::class, $core->environment);
 
         //Error and exception handlers
         if ($handleErrors) {
-            register_shutdown_function([$spiral, 'handleShutdown']);
-            set_error_handler([$spiral, 'handleError']);
-            set_exception_handler([$spiral, 'handleException']);
+            register_shutdown_function([$core, 'handleShutdown']);
+            set_error_handler([$core, 'handleError']);
+            set_exception_handler([$core, 'handleException']);
         }
 
-        foreach ($spiral->autoload as $module) {
-            //Initiating needed extensions
-            $spiral->container->get($module);
-        }
+        $core->bootload()->bootstrap();
 
-        //Bootstrapping our application
-        $spiral->bootstrap();
-
-        return $spiral;
+        return $core;
     }
 
     /**
-     * Define current environment using either application memory or .env file (slower).
-     */
-    private function initEnvironment()
-    {
-        if (!file_exists($this->directory('root') . '.env')) {
-            return;
-        }
-
-        /**
-         * DotEnv is pretty slow, i have to cache it using hippocampus at one moment.
-         */
-        $dotenv = new Dotenv($this->directory('root'));
-        $dotenv->load();
-    }
-
-    /**
-     * Get extension to use for runtime data or configuration cache, all file in cache directory
-     * will additionally get applicationID postfix.
+     * Bootload all registered classes using BootloadManager.
      *
-     * @param string $name     Runtime data file name (without extension).
-     * @param string $location Location to store data in.
-     * @return string
+     * @return $this
      */
-    private function memoryFilename($name, $location = null)
+    private function bootload()
     {
-        $name = str_replace(['/', '\\'], '-', $name);
+        //Bootloading all needed components and extensions
+        $this->bootloader->bootload(
+            $this->load,
+            static::MEMORIZE_BOOTLOADERS ? 'bootloading' : null
+        );
 
-        if (empty($location)) {
-            //Forcing default location
-            $location = $this->directory('cache');
-        }
-
-        //Runtime cache
-        return $location . $name . static::EXTENSION;
+        return $this;
     }
 }

@@ -7,15 +7,16 @@
  */
 namespace Spiral\Http;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
-use Spiral\Http\Exceptions\Response\ServerErrorException;
-use Spiral\Http\Middlewares\ExceptionIsolator;
+use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Spiral\Http\Traits\RouterTrait;
+use Spiral\Views\ViewsInterface;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
@@ -83,22 +84,16 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
-        /**
-         * Isolator can write exception/snapshot information into given response.
-         *
-         * @var ExceptionIsolator $isolator
-         */
-        $isolator = $this->container->get(ExceptionIsolator::class);
-
         //Somewhere outside of dispatcher
         $request = $this->request();
         $response = $this->response();
 
+        $writer = new ErrorWriter($this->config, $this->container->get(ViewsInterface::class));
+
         if (!$this->config->exposeErrors()) {
-            //Http was not allowed to show any error snapshot to client
-            $response = $isolator->writeException($request, $response, new ServerErrorException());
+            $response = $writer->writeException($request, $response, new ServerErrorException());
         } else {
-            $response = $isolator->writeSnapshot($request, $response, $snapshot);
+            $response = $writer->writeSnapshot($request, $response, $snapshot);
         }
 
         $this->dispatch($response);
@@ -107,12 +102,19 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * Get initial request instance or create new one.
      *
-     * @return ServerRequestInterface
+     * @return Request
      */
     protected function request()
     {
-        //Zend code is here
-        return ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+        $benchmark = $this->benchmark('new:request');
+        try {
+            /**
+             * @see \Zend\Diactoros\ServerRequestFactory
+             */
+            return ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
@@ -120,12 +122,17 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     protected function response()
     {
-        $response = parent::response();
-        foreach ($this->config->defaultHeaders() as $header => $value) {
-            $response = $response->withHeader($header, $value);
-        }
+        $benchmark = $this->benchmark('new:response');
+        try {
+            $response = parent::response();
+            foreach ($this->config->defaultHeaders() as $header => $value) {
+                $response = $response->withHeader($header, $value);
+            }
 
-        return $response;
+            return $response;
+        } finally {
+            $this->benchmark($benchmark);
+        }
     }
 
     /**
@@ -147,7 +154,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     protected function createRouter()
     {
-        return $this->container->construct(
+        return $this->container->make(
             $this->config->routerClass(),
             $this->config->routerParameters()
         );

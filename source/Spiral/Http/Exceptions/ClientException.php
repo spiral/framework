@@ -35,6 +35,10 @@ class ClientException extends HttpException implements ClientExceptionInterface
             $code = self::NOT_FOUND;
         }
 
+        if (empty($message)) {
+            $message = "Http Error - {$code}";
+        }
+
         parent::__construct($message, $code);
     }
 }

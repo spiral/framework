@@ -53,12 +53,12 @@ class CookieManager extends Component implements MiddlewareInterface
     /**
      * @var EncrypterInterface
      */
-    protected $encrypter = null;
+    private $encrypter = null;
 
     /**
      * @var HttpConfig
      */
-    protected $config = null;
+    protected $httpConfig = null;
 
     /**
      * @invisible
@@ -67,14 +67,27 @@ class CookieManager extends Component implements MiddlewareInterface
     protected $container = null;
 
     /**
-     * @param HttpConfig         $config
+     * @param HttpConfig         $httpConfig
      * @param ContainerInterface $container
      */
-    public function __construct(HttpConfig $config, ContainerInterface $container)
+    public function __construct(HttpConfig $httpConfig, ContainerInterface $container)
     {
-        $this->config = $config;
-        $this->excluded = $config->excludedCookies();
+        $this->httpConfig = $httpConfig;
+        $this->excluded = $httpConfig->excludedCookies();
         $this->container = $container;
+    }
+
+    /**
+     * Set custom instance of encrypter (by default resolved from container on demand).
+     *
+     * @param EncrypterInterface $encrypter
+     * @return $this
+     */
+    public function setEncrypter(EncrypterInterface $encrypter)
+    {
+        $this->encrypter = $encrypter;
+
+        return $this;
     }
 
     /**
@@ -103,7 +116,7 @@ class CookieManager extends Component implements MiddlewareInterface
             $this->request = $request;
 
             /**
-             * Debug: middleware creates scope for CookieManager.
+             * Debug: middleware creates scope for [CookieManager].
              */
             $response = $next($this->unpackCookies($request), $response);
 
@@ -167,7 +180,7 @@ class CookieManager extends Component implements MiddlewareInterface
         $httpOnly = true
     ) {
         if (is_null($domain)) {
-            $domain = $this->config->cookiesDomain($this->request->getUri());
+            $domain = $this->httpConfig->cookiesDomain($this->request->getUri());
         }
 
         if (is_null($secure)) {
@@ -257,11 +270,11 @@ class CookieManager extends Component implements MiddlewareInterface
 
         foreach ($this->scheduled as $cookie) {
             if (!$this->isProtected($cookie->getName())) {
-                $cookies[] = $cookie->packHeader();
+                $cookies[] = $cookie->createHeader();
                 continue;
             }
 
-            $cookies[] = $this->encodeCookie($cookie)->packHeader();
+            $cookies[] = $this->encodeCookie($cookie)->createHeader();
         }
 
         return $response->withHeader('Set-Cookie', $cookies);
@@ -280,21 +293,7 @@ class CookieManager extends Component implements MiddlewareInterface
             return false;
         }
 
-        return $this->config->cookieProtection() != HttpConfig::COOKIE_UNPROTECTED;
-    }
-
-    /**
-     * Get or create encrypter instance.
-     *
-     * @return EncrypterInterface
-     */
-    protected function encrypter()
-    {
-        if (!empty($this->encrypter)) {
-            return $this->encrypter;
-        }
-
-        return $this->encrypter = $this->container->get(EncrypterInterface::class);
+        return $this->httpConfig->cookieProtection() != HttpConfig::COOKIE_UNPROTECTED;
     }
 
     /**
@@ -303,7 +302,7 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     private function decodeCookie($cookie)
     {
-        if ($this->config->cookieProtection() == HttpConfig::COOKIE_ENCRYPT) {
+        if ($this->httpConfig->cookieProtection() == HttpConfig::COOKIE_ENCRYPT) {
             try {
                 if (is_array($cookie)) {
                     return array_map([$this, 'decodeCookie'], $cookie);
@@ -332,14 +331,28 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     private function encodeCookie(Cookie $cookie)
     {
-        if ($this->config->cookieProtection() == HttpConfig::COOKIE_ENCRYPT) {
+        if ($this->httpConfig->cookieProtection() == HttpConfig::COOKIE_ENCRYPT) {
             return $cookie->withValue(
                 $this->encrypter()->encrypt($cookie->getValue())
             );
         }
 
-        //MAC
+        //VALUE.HMAC
         return $cookie->withValue($cookie->getValue() . $this->hmacSign($cookie->getValue()));
+    }
+
+    /**
+     * Get or create encrypter instance.
+     *
+     * @return EncrypterInterface
+     */
+    private function encrypter()
+    {
+        if (!empty($this->encrypter)) {
+            return $this->encrypter;
+        }
+
+        return $this->encrypter = $this->container->get(EncrypterInterface::class);
     }
 
     /**

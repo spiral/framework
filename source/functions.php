@@ -97,43 +97,83 @@ if (!function_exists('dump')) {
 if (!function_exists('l')) {
 
     /**
-     * Translate value using active language. Method must support message interpolation using
-     * interpolate method or sptrinf.
+     * Translate message using default or specific bundle name.
      *
      * Examples:
      * l('Some Message');
-     * l('Hello %s', $name);
+     * l('Hello {name}!', ['name' => $name]);
      *
      * @param string $string
+     * @param array  $options
+     * @param string $domain
      * @return string
      * @throws TranslatorException
      */
-    function l($string)
+    function l($string, array $options = [], $domain = TranslatorInterface::DEFAULT_DOMAIN)
     {
-        $arguments = func_get_args();
-        array_unshift($arguments, TranslatorInterface::DEFAULT_BUNDLE);
-
-        return call_user_func_array([spiral(TranslatorInterface::class), 'translate'], $arguments);
+        return spiral(TranslatorInterface::class)->trans($string, $options, $domain);
     }
 }
 
 if (!function_exists('p')) {
 
     /**
-     * Pluralize string using language pluralization options and specified numeric value. Number
-     * has to be ingested at place of {n} placeholder.
+     * Pluralize string using language pluralization options and specified numeric value.
      *
      * Examples:
-     * p("{n} user", $users);
+     * p("{n} user|{n} users", $users);
      *
-     * @param string $phrase Should include {n} as placeholder.
+     * @param string $string Can include {n} as placeholder.
      * @param int    $number
-     * @param bool   $format Format number.
+     * @param array  $options
+     * @param string $domain
      * @return string
      * @throws TranslatorException
      */
-    function p($phrase, $number, $format = true)
+    function p(
+        $string,
+        $number,
+        array $options = [],
+        $domain = TranslatorInterface::DEFAULT_DOMAIN
+    ) {
+        return spiral(TranslatorInterface::class)->transChoice($string, $number, $options, $domain);
+    }
+}
+
+if (!function_exists('env')) {
+    /**
+     * Gets the value of an environment variable. Supports boolean, empty and null.
+     *
+     * @param  string $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function env($key, $default = null)
     {
-        return spiral(TranslatorInterface::class)->pluralize($phrase, $number, $format);
+        $value = getenv($key);
+
+        if ($value === false) {
+            return $default;
+        }
+
+        switch (strtolower($value)) {
+            case 'true':
+            case '(true)':
+                return true;
+
+            case 'false':
+            case '(false)':
+                return false;
+
+            case 'null':
+            case '(null)':
+                return null;
+
+            case 'empty':
+            case '(empty)':
+                return '';
+        }
+
+        return $value;
     }
 }

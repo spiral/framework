@@ -64,5 +64,5 @@ interface RouteInterface
      * @return UriInterface
      * @throws RouteException
      */
-    public function createUri($parameters = [], $basePath = '/', SlugifyInterface $slugify = null);
+    public function uri($parameters = [], $basePath = '/', SlugifyInterface $slugify = null);
 }

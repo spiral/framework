@@ -17,6 +17,8 @@ use Spiral\Http\Exceptions\RouterException;
 
 /**
  * Routers used by HttpDispatcher and other components for logical routing to controller actions.
+ *
+ * @todo try fast route
  */
 interface RouterInterface
 {
@@ -70,5 +72,5 @@ interface RouterInterface
      * @throws RouterException
      * @throws RouteException
      */
-    public function createUri($route, $parameters = [], SlugifyInterface $slugify = null);
+    public function uri($route, $parameters = [], SlugifyInterface $slugify = null);
 }

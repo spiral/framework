@@ -8,15 +8,20 @@
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\ConfiguratorException;
+use Spiral\Core\Exceptions\SugarException;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Files\FilesInterface;
 
 /**
- * Responsible for configuration loading. All configs automatically cached.
+ * Responsible for configuration loading. All configs are automatically cached (temporary
+ * disabled!).
  *
  * @see InjectableConfig
  */
-class Configurator implements ConfiguratorInterface
+class Configurator extends Component implements ConfiguratorInterface
 {
+    use SaturateTrait;
+
     /**
      * Config files extension.
      */
@@ -28,26 +33,26 @@ class Configurator implements ConfiguratorInterface
     private $directory = null;
 
     /**
+     * Cached configs.
+     *
+     * @var array
+     */
+    protected $configs = [];
+
+    /**
      * @var FilesInterface
      */
     protected $files = null;
 
     /**
-     * @invisible
-     * @var HippocampusInterface
+     * @param string         $directory
+     * @param FilesInterface $files
+     * @throws SugarException
      */
-    protected $memory = null;
-
-    /**
-     * @param string               $directory
-     * @param FilesInterface       $files
-     * @param HippocampusInterface $memory
-     */
-    public function __construct($directory, FilesInterface $files, HippocampusInterface $memory)
+    public function __construct($directory, FilesInterface $files = null)
     {
         $this->directory = $directory;
-        $this->files = $files;
-        $this->memory = $memory;
+        $this->files = $this->saturate($files, FilesInterface::class);
     }
 
     /**
@@ -79,6 +84,10 @@ class Configurator implements ConfiguratorInterface
      */
     public function createInjection(\ReflectionClass $class, $context = null)
     {
+        if (isset($this->configs[$class->getName()])) {
+            return $this->configs[$class->getName()];
+        }
+
         //Due internal contract we can fetch config section from class constant
         $config = $this->getConfig($class->getConstant('CONFIG'), false);
 
@@ -87,6 +96,14 @@ class Configurator implements ConfiguratorInterface
             return $config;
         }
 
-        return $class->newInstance($config);
+        return $this->configs[$class->getName()] = $class->newInstance($config);
+    }
+
+    /**
+     * Drop all cached configs (in RAM).
+     */
+    public function flushCache()
+    {
+        $this->configs = [];
     }
 }

@@ -42,11 +42,8 @@ class CacheHandler extends Component implements \SessionHandlerInterface
      * @param int            $lifetime Default session lifetime.
      * @param CacheInterface $cache
      */
-    public function __construct(
-        array $options,
-        $lifetime = 0,
-        CacheInterface $cache = null
-    ) {
+    public function __construct(array $options, $lifetime = 0, CacheInterface $cache = null)
+    {
         $this->lifetime = $lifetime;
         $this->options = $options;
 

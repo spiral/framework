@@ -247,7 +247,7 @@ final class Cookie
      * @link http://www.w3.org/Protocols/rfc2109/rfc2109
      * @return string
      */
-    public function packHeader()
+    public function createHeader()
     {
         $header = [
             rawurlencode($this->name) . '=' . rawurlencode($this->value)
@@ -333,6 +333,6 @@ final class Cookie
      */
     public function __toString()
     {
-        return $this->packHeader();
+        return $this->createHeader();
     }
 }

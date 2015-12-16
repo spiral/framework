@@ -44,14 +44,14 @@ interface SessionInterface
      *
      * @return bool
      */
-    public function started();
+    public function isStarted();
 
     /**
      * Check is session were destroyed.
      *
      * @return bool
      */
-    public function destroyed();
+    public function isDestroyed();
 
     /**
      * Commit all session data to session handler, this will close session before script ends.
@@ -113,7 +113,7 @@ interface SessionInterface
      * @return int
      * @throws SessionException
      */
-    public function increment($name, $delta = 1);
+    public function inc($name, $delta = 1);
 
     /**
      * Decrement numeric value stored in cache. Must return decremented value.
@@ -123,7 +123,7 @@ interface SessionInterface
      * @return int
      * @throws SessionException
      */
-    public function decrement($name, $delta = 1);
+    public function dec($name, $delta = 1);
 
     /**
      * Delete data from session.

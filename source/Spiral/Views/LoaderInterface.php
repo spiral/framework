@@ -12,21 +12,12 @@ use Spiral\Views\Exceptions\LoaderException;
 /**
  * View loader interface. Compatible with twig loader.
  */
-interface LoaderInterface extends \Twig_LoaderInterface
+interface LoaderInterface extends \Twig_LoaderInterface, \Spiral\Stempler\LoaderInterface
 {
     /**
      * @return array
      */
     public function getNamespaces();
-
-    /**
-     * Get local (includable) filename for given view name.
-     *
-     * @param string $path
-     * @return string
-     * @throws LoaderException
-     */
-    public function includableFilename($path);
 
     /**
      * Get namespace related to path.
@@ -43,16 +34,6 @@ interface LoaderInterface extends \Twig_LoaderInterface
      * @return string
      */
     public function viewName($path);
-
-    /**
-     * Automatically force default namespace for lookup. Must not alter existed loader and only
-     * return ne instance of it (immutable method).
-     *
-     * @param string $namespace
-     * @return self
-     * @throws LoaderException
-     */
-    public function withNamespace($namespace);
 
     /**
      * Automatically force file extensions, must not alter existed loader.

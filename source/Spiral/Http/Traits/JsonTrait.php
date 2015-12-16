@@ -22,11 +22,10 @@ trait JsonTrait
      * @param int               $code
      * @return ResponseInterface
      */
-    private function writeJson(ResponseInterface $response, $json, $code = 100)
+    private function writeJson(ResponseInterface $response, $json, $code = 200)
     {
         if (is_array($json) && isset($json['status'])) {
             $code = $json['status'];
-
         }
 
         $response->getBody()->write(json_encode($json));

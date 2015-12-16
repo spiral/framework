@@ -117,14 +117,15 @@ class ControllersRoute extends AbstractRoute
         return function () use ($container, $route) {
             $controller = $route->matches['controller'];
 
-            //Due we are expecting part of class name we can remove some garbage
+            //Due we are expecting part of class name we can remove some garbage (see to-do below)
             $controller = strtolower(preg_replace('/[^a-z_0-9]+/i', '', $controller));
 
             if (isset($route->controllers[$controller])) {
                 //Aliased
                 $controller = $route->controllers[$controller];
             } else {
-                $controller = $route->namespace . '\\' . ucfirst($controller) . $route->postfix;
+                //todo: Use better logic, maybe Doctrine Inflector (maybe class-name style)
+                $controller = $route->namespace . '\\' . (ucfirst($controller) . $route->postfix);
             }
 
             return $route->callAction(

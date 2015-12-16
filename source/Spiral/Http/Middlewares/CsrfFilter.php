@@ -38,14 +38,14 @@ class CsrfFilter implements MiddlewareInterface
     /**
      * @var HttpConfig
      */
-    protected $config = null;
+    protected $httpConfig = null;
 
     /**
-     * @param HttpConfig $config
+     * @param HttpConfig $httpConfig
      */
-    public function __construct(HttpConfig $config)
+    public function __construct(HttpConfig $httpConfig)
     {
-        $this->config = $config;
+        $this->httpConfig = $httpConfig;
     }
 
     /**
@@ -53,8 +53,8 @@ class CsrfFilter implements MiddlewareInterface
      */
     public function __invoke(Request $request, Response $response, callable $next)
     {
-        if (isset($request->getCookieParams()[$this->config->csrfCookie()])) {
-            $token = $request->getCookieParams()[$this->config->csrfCookie()];
+        if (isset($request->getCookieParams()[$this->httpConfig->csrfCookie()])) {
+            $token = $request->getCookieParams()[$this->httpConfig->csrfCookie()];
         } else {
             //Making new token
             $token = $this->generateToken();
@@ -63,7 +63,7 @@ class CsrfFilter implements MiddlewareInterface
             $cookie = $this->tokenCookie($request->getUri(), $token);
 
             //We can alter response cookies
-            $response = $response->withAddedHeader('Set-Cookie', $cookie->packHeader());
+            $response = $response->withAddedHeader('Set-Cookie', $cookie->createHeader());
         }
 
         if ($this->isRequired($request) && !$this->compare($token, $this->fetchToken($request))) {
@@ -82,8 +82,8 @@ class CsrfFilter implements MiddlewareInterface
     public function generateToken()
     {
         return substr(
-            base64_encode(openssl_random_pseudo_bytes($this->config->csrfLength())), 0,
-            $this->config->csrfLength()
+            base64_encode(openssl_random_pseudo_bytes($this->httpConfig->csrfLength())), 0,
+            $this->httpConfig->csrfLength()
         );
     }
 
@@ -108,11 +108,11 @@ class CsrfFilter implements MiddlewareInterface
     protected function tokenCookie(UriInterface $uri, $token)
     {
         return Cookie::create(
-            $this->config->csrfCookie(),
+            $this->httpConfig->csrfCookie(),
             $token,
-            $this->config->csrfLifetime(),
-            $this->config->basePath(),
-            $this->config->cookiesDomain($uri)
+            $this->httpConfig->csrfLifetime(),
+            $this->httpConfig->basePath(),          //todo: to be fetched from request
+            $this->httpConfig->cookiesDomain($uri)  //todo: to be fetched from request and set by?
         );
     }
 
@@ -161,7 +161,7 @@ class CsrfFilter implements MiddlewareInterface
 
         $result = 0;
         for ($i = 0; $i < $clientLength; $i++) {
-            $result |= (ord($token[$i]) ^ ord($clientToken[$i]));
+            $result = $result | (ord($token[$i]) ^ ord($clientToken[$i]));
         }
 
         return $result === 0;

@@ -30,23 +30,7 @@ class ViewsConfig extends InjectableConfig
         ],
         'namespaces'  => [],
         'environment' => [],
-        'engines'     => [
-            'twig'     => [
-                'class'     => Engines\TwigEngine::class,
-                'extension' => 'twig',
-                'options'   => []
-            ],
-            'php'      => [
-                'class'     => Engines\NativeEngine::class,
-                'extension' => 'php'
-            ],
-            'stempler' => [
-                'class'      => Engines\StemplerEngine::class,
-                'extension'  => 'stpl',
-                'syntax'     => [],
-                'processors' => []
-            ]
-        ]
+        'engines'     => []
     ];
 
     /**
@@ -55,6 +39,15 @@ class ViewsConfig extends InjectableConfig
     public function getNamespaces()
     {
         return $this->config['namespaces'];
+    }
+
+    /**
+     * @param string $namespace
+     * @return array
+     */
+    public function namespaceDirectories($namespace)
+    {
+        return $this->config['namespaces'][$namespace];
     }
 
     /**
