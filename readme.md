@@ -136,6 +136,8 @@ Frontend toolkit with powerful **AJAX forms** and widgets:
     <form:input label="Select your file:" type="file" name="upload"/>
 </spiral:form>
 ```
+Also included
+=============
 
 Plug and Play extensions, IDE friendly, static analysis, meta programing, cloud storages, scaffolding, 
 auto-indexed translator, Interop Container, Symfony Console integration, Zend Diactoros,
