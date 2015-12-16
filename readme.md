@@ -10,10 +10,8 @@ Guide: https://github.com/spiral/guide
 
 Components: https://github.com/spiral/components
 
-Spiral will take care of database abstractions, ORM, MongoDB, working with Amazon or Rackspace, Views and Templates, etc.
-It will help you to mount external libraries by providing simple API or design your application using **Services** and **DataEntities**.
-
-Spiral DI container will work behind the scene, in most of cases you don't even need to know about it:
+Examples:
+========
 
 ```php
 class HomeController extends Controller implements SingletonInterface
