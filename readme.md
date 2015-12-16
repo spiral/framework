@@ -212,4 +212,6 @@ Frontend toolkit with powerful **AJAX forms** and widgets:
 </spiral:form>
 ```
 
-Plug and Play extensions, IDE friendly, auto-indexed translator, Symfony Console integration, debugging, profiling tools and much more!
+Plug and Play extensions, IDE friendly, static analysis, meta programing, scaffolding, 
+auto-indexed translator, Iterop Container, Symfony Console integration, Zend Diactoros,
+Symfony Events, Twig, debugging/profiling tools and much more!
