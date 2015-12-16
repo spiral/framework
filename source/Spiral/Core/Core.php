@@ -342,7 +342,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             //Now dispatcher can handle snapshot it's own way
             $this->dispatcher->handleSnapshot($snapshot);
         } else {
-            echo $snapshot;
+            echo $snapshot->exception();
         }
     }
 
