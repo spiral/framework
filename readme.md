@@ -14,12 +14,8 @@ Examples:
 ========
 
 ```php
-class HomeController extends Controller implements SingletonInterface
+class HomeController extends Controller
 {
-    //Now DI will automatically link this class as singleton and return 
-    //same instance on every injection - "I want to be a Singleton" constant.
-    const SINGLETON = self::class;
-
     /**
      * Spiral can automatically deside what database/cache/storage
      * instance to provide for every action parameter.
