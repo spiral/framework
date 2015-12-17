@@ -62,6 +62,14 @@ public function indexAction(ServerRequestInterface $request)
 }
 ```
 
+Contextual injections and database introspection:
+
+![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
+
+Shared components and shortcuts to container bindings:
+
+![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
+
 StorageManger to simplify process of working with remote storages:
 
 ```php
