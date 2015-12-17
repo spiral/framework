@@ -153,7 +153,12 @@ if (!function_exists('env')) {
         $value = getenv($key);
 
         if ($value === false) {
-            return $default;
+
+            if (!array_key_exists($value, $_ENV)) {
+                return $default;
+            }
+
+            $value = $_ENV[$value];
         }
 
         switch (strtolower($value)) {

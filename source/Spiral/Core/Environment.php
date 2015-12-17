@@ -8,6 +8,7 @@
 namespace Spiral\Core;
 
 use Spiral\Core\Environment\Parser;
+use Spiral\Core\Exceptions\EnvironmentException;
 use Spiral\Files\FilesInterface;
 
 /**
@@ -62,8 +63,7 @@ class Environment implements EnvironmentInterface
     public function load()
     {
         if (!$this->files->exists($this->filename)) {
-            //Nothing to load
-            return $this;
+            throw new EnvironmentException("Unable to load environment, file is missing");
         }
 
         //Unique env file hash
@@ -94,6 +94,7 @@ class Environment implements EnvironmentInterface
     public function set($name, $value)
     {
         $_ENV[$name] = $value;
+        putenv("$name=$value");
 
         return $this;
     }
@@ -132,9 +133,7 @@ class Environment implements EnvironmentInterface
     protected function initEnvironment(array $values)
     {
         foreach ($values as $name => $value) {
-            putenv("$name=$value");
-            $_ENV[$name] = $value;
-            $_SERVER[$name] = $value;
+            $this->set($name, $value);
         }
     }
 }
