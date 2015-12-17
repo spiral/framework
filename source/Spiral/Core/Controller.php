@@ -42,19 +42,19 @@ abstract class Controller extends Service implements ControllerInterface
     const ACTION_POSTFIX = 'Action';
 
     /**
-     * Default action to run.
-     *
-     * @var string
-     */
-    protected $defaultAction = 'index';
-
-    /**
      * Needed to resolve method arguments.
      *
      * @invisible
      * @var ResolverInterface
      */
-    protected $resolver = null;
+    private $resolver = null;
+
+    /**
+     * Default action to run.
+     *
+     * @var string
+     */
+    protected $defaultAction = 'index';
 
     /**
      * @param InteropContainer  $container
@@ -147,7 +147,7 @@ abstract class Controller extends Service implements ControllerInterface
      * @param array             $parameters
      * @return array
      */
-    protected function resolveArguments(\ReflectionMethod $method, array $parameters)
+    private function resolveArguments(\ReflectionMethod $method, array $parameters)
     {
         try {
             //Getting set of arguments should be sent to requested method
