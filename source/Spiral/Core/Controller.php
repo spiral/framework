@@ -7,6 +7,7 @@
  */
 namespace Spiral\Core;
 
+use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\ControllerInterface;
@@ -16,6 +17,8 @@ use Spiral\Debug\Traits\BenchmarkTrait;
 /**
  * Basic application controller class. Implements method injections and simplified access to
  * container bindings.
+ *
+ * @todo Potentially move resolver to callAction method? Maybe not.
  */
 abstract class Controller extends Service implements ControllerInterface
 {
@@ -54,14 +57,16 @@ abstract class Controller extends Service implements ControllerInterface
     protected $resolver = null;
 
     /**
-     * @param ContainerInterface $container Sugared.
+     * @param InteropContainer  $container
+     * @param ResolverInterface $resolver Required to resolve method injections.
      */
-    public function __construct(ContainerInterface $container = null)
-    {
-        //Default container can be used as argument resolver as well
-        $this->resolver = $this->saturate($container, ResolverInterface::class);
-
+    public function __construct(
+        InteropContainer $container = null,
+        ResolverInterface $resolver = null
+    ) {
         parent::__construct($container);
+
+        $this->resolver = $this->saturate($resolver, ResolverInterface::class);
     }
 
     /**
