@@ -57,8 +57,8 @@ abstract class Controller extends Service implements ControllerInterface
     protected $defaultAction = 'index';
 
     /**
-     * @param InteropContainer  $container
-     * @param ResolverInterface $resolver Required to resolve method injections.
+     * @param InteropContainer  $container Required for shared/virtual bindings (if any).
+     * @param ResolverInterface $resolver  Required to resolve method injections.
      */
     public function __construct(
         InteropContainer $container = null,
