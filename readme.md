@@ -66,10 +66,6 @@ Contextual injections and database introspection:
 
 ![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
 
-Shared components and shortcuts to container bindings:
-
-![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
-
 StorageManger to simplify process of working with remote storages:
 
 ```php
@@ -118,6 +114,10 @@ foreach($posts as $post) {
     echo $post->author->getName();
 }
 ```
+
+Shared components and shortcuts to container bindings:
+
+![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
 
 Powerful and extendable HTML templater compatible with other engines like Blade or Twig (included as well):
 
