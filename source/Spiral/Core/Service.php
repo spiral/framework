@@ -27,7 +27,7 @@ class Service extends Component
     protected $container = null;
 
     /**
-     * @param InteropContainer $container Sugared.
+     * @param InteropContainer $container Sugared. Used to drive shared/virtual bindings, if any.
      */
     public function __construct(InteropContainer $container = null)
     {
