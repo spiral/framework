@@ -136,6 +136,7 @@ Powerful and extendable HTML templater compatible with other engines like Blade 
     <?= mt_rand(0, 100) ?>
 </spiral:cache>
 ```
+> You can write your own virtual tags (similar to web components) or connect external libraries.
 
 Frontend toolkit with powerful **AJAX forms** and widgets:
 
