@@ -10,6 +10,12 @@ Guide: https://github.com/spiral/guide
 
 Components: https://github.com/spiral/components
 
+Temporary in transition
+=======================
+* Scaffolding module
+* PHPStorm IDE help module (ORM and ODM)
+* Documentation update (current version has pre-symfony/zend state)
+
 Examples:
 ========
 
