@@ -7,9 +7,12 @@
  */
 namespace Spiral\Console;
 
+use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\Helpers\AskHelper;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerInterface;
+use Spiral\Core\ResolverInterface;
+use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Core\Traits\SharedTrait;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,7 +27,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     /**
      * Shared stuff.
      */
-    use SharedTrait;
+    use SharedTrait, SaturateTrait;
 
     /**
      * Instance of ask helper.
@@ -32,6 +35,11 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
      * @var AskHelper
      */
     private $askHelper = null;
+
+    /**
+     * @var ResolverInterface
+     */
+    private $resolver = null;
 
     /**
      * Command name.
@@ -78,13 +86,20 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     protected $input = null;
 
     /**
-     * Configures symfony command based on simplified class definition.
-     *
-     * @param ContainerInterface $container
+     * @var InteropContainer
      */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    protected $container = null;
+
+    /**
+     * @param InteropContainer  $container Required for shared/virtual bindings (if any).
+     * @param ResolverInterface $resolver  Required to resolve method injections.
+     */
+    public function __construct(
+        InteropContainer $container = null,
+        ResolverInterface $resolver = null
+    ) {
+        $this->container = $this->saturate($container, ContainerInterface::class);
+        $this->resolver = $this->saturate($resolver, ResolverInterface::class);
 
         parent::__construct($this->name);
         $this->setDescription($this->description);
@@ -133,7 +148,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
         $reflection = new \ReflectionMethod($this, 'perform');
         $reflection->setAccessible(true);
 
-        return $reflection->invokeArgs($this, $this->container->resolveArguments(
+        return $reflection->invokeArgs($this, $this->resolver->resolveArguments(
             $reflection, compact('input', 'output')
         ));
     }
