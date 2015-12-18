@@ -16,8 +16,10 @@ use Spiral\Core\Component;
  * automatically resolved arguments.
  *
  * You can also declare Initializer classes as singletons while working using spiral container.
- *
  * This is almost the same as ServiceProvider in Laravel.
+ *
+ * Attention, you are able to define your own set of shared (short bindings) components in your
+ * bootloader, DO NOT share your business models this way - use regular DI.
  */
 abstract class Bootloader extends Component implements BootloaderInterface
 {

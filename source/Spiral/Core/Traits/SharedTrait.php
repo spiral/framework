@@ -18,6 +18,10 @@ use Spiral\Core\Exceptions\SugarException;
  *
  * Compatible with any Component class.
  *
+ * Attention, to improve code testability do not use this trait when class do not have local
+ * container, plus you are recommended to use short bindings for components only, do not share
+ * business models using this way (use DI).
+ *
  * @see Component
  */
 trait SharedTrait
