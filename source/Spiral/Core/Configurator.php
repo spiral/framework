@@ -57,10 +57,8 @@ class Configurator extends Component implements ConfiguratorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param bool $toArray Always force array response.
      */
-    public function getConfig($section = null, $toArray = true)
+    public function getConfig($section = null)
     {
         $filename = $this->directory . $section . static::EXTENSION;
 
@@ -71,7 +69,7 @@ class Configurator extends Component implements ConfiguratorInterface
         }
 
         $data = require($this->files->localUri($filename));
-        if ($toArray && $data instanceof ConfigInterface) {
+        if ($data instanceof ConfigInterface) {
             //getConfig method must always return arrays
             $data = $data->toArray();
         }
@@ -89,12 +87,7 @@ class Configurator extends Component implements ConfiguratorInterface
         }
 
         //Due internal contract we can fetch config section from class constant
-        $config = $this->getConfig($class->getConstant('CONFIG'), false);
-
-        if ($config instanceof ConfigInterface) {
-            //Apparently config file contain class definition (let's hope this is same config class)
-            return $config;
-        }
+        $config = $this->getConfig($class->getConstant('CONFIG'));
 
         return $this->configs[$class->getName()] = $class->newInstance($config);
     }
