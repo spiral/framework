@@ -10,6 +10,7 @@ namespace Spiral\Core;
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
+use Spiral\Core\Exceptions\UndefinedAliasException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
@@ -213,11 +214,15 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     }
 
     /**
-     * Set application directory.
-     *
-     * @param string $alias Directory alias, ie. "framework".
-     * @param string $path  Directory path without ending slash.
-     * @return $this
+     * {@inheritdoc}
+     */
+    public function hasDirectory($alias)
+    {
+        return isset($this->directories[$alias]);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setDirectory($alias, $path)
     {
@@ -227,20 +232,19 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     }
 
     /**
-     * Get application directory.
-     *
-     * @param string $alias
-     * @return string
+     * {@inheritdoc}
      */
     public function directory($alias)
     {
+        if (!$this->hasDirectory($alias)) {
+            throw new UndefinedAliasException("Undefined directory alias '{$alias}'");
+        }
+
         return $this->directories[$alias];
     }
 
     /**
-     * All application directories.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getDirectories()
     {
