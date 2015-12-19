@@ -127,6 +127,7 @@ class Configurator extends Component implements ConfiguratorInterface
      */
     protected function loadConfig($config, $filename)
     {
+        //todo: support more config types, maybe yaml?
         $data = require($this->files->localUri($filename));
 
         if (!is_array($data)) {
