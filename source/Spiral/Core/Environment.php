@@ -34,6 +34,13 @@ class Environment implements EnvironmentInterface
     private $filename = '';
 
     /**
+     * Enviroment id
+     *
+     * @var string
+     */
+    private $id = '';
+
+    /**
      * @var FilesInterface
      */
     protected $files = null;
@@ -67,9 +74,9 @@ class Environment implements EnvironmentInterface
         }
 
         //Unique env file hash
-        $hash = $this->files->md5($this->filename);
+        $this->id = $this->files->md5($this->filename);
 
-        if (!empty($values = $this->memory->loadData($hash, static::MEMORY_SECTION))) {
+        if (!empty($values = $this->memory->loadData($this->id, static::MEMORY_SECTION))) {
             //Restore from cache
             $this->initEnvironment($values);
 
@@ -81,9 +88,17 @@ class Environment implements EnvironmentInterface
             $values = $this->parseValues($this->filename)
         );
 
-        $this->memory->saveData($hash, $values, static::MEMORY_SECTION);
+        $this->memory->saveData($this->id, $values, static::MEMORY_SECTION);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getID()
+    {
+        return $this->id;
     }
 
     /**

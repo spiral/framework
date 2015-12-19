@@ -10,11 +10,11 @@ namespace Spiral\Core;
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
-use Spiral\Core\Exceptions\UndefinedAliasException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\Exceptions\SugarException;
+use Spiral\Core\Exceptions\UndefinedAliasException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
@@ -441,10 +441,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         $container->bindSingleton(HippocampusInterface::class, $core->memory);
         $container->bindSingleton(CoreInterface::class, $core);
 
-        $container->bindSingleton(Configurator::class, $container->make(
-            Configurator::class, ['directory' => $core->directory('config')]
-        ));
-
         //Setting environment (by default - dotenv extension)
         $core->environment = new Environment(
             $core->directory('root') . '.env',
@@ -455,6 +451,10 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         $core->environment->load();
 
         $container->bindSingleton(EnvironmentInterface::class, $core->environment);
+
+        $container->bindSingleton(Configurator::class, $container->make(
+            Configurator::class, ['directory' => $core->directory('config')]
+        ));
 
         //Error and exception handlers
         if ($handleErrors) {
