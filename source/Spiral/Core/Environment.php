@@ -84,8 +84,8 @@ class Environment implements EnvironmentInterface
         }
 
         //Load env values using DotEnv extension
-        $this->initEnvironment(
-            $values = $this->parseValues($this->filename)
+        $values = $this->initEnvironment(
+            $this->parseValues($this->filename)
         );
 
         $this->memory->saveData($this->id, $values, static::MEMORY_SECTION);
@@ -144,11 +144,45 @@ class Environment implements EnvironmentInterface
      * Initiate environment values.
      *
      * @param array $values
+     * @return array
      */
     protected function initEnvironment(array $values)
     {
-        foreach ($values as $name => $value) {
+        foreach ($values as $name => &$value) {
+            $value = $this->normalize($value);
             $this->set($name, $value);
+            unset($value);
         }
+
+        return $values;
+    }
+
+    /**
+     * Normalize env value.
+     *
+     * @param string $value
+     * @return bool|null|string
+     */
+    private function normalize($value)
+    {
+        switch (strtolower($value)) {
+            case 'true':
+            case '(true)':
+                return true;
+
+            case 'false':
+            case '(false)':
+                return false;
+
+            case 'null':
+            case '(null)':
+                return null;
+
+            case 'empty':
+            case '(empty)':
+                return '';
+        }
+
+        return $value;
     }
 }

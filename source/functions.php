@@ -7,6 +7,7 @@
  */
 use Spiral\Core\Core;
 use Spiral\Core\DirectoriesInterface;
+use Spiral\Core\EnvironmentInterface;
 use Spiral\Debug\Dumper;
 use Spiral\Translator\Exceptions\TranslatorException;
 use Spiral\Translator\TranslatorInterface;
@@ -144,42 +145,12 @@ if (!function_exists('env')) {
     /**
      * Gets the value of an environment variable. Supports boolean, empty and null.
      *
-     * @todo make it work thought EnvironmentInterface and shared container
      * @param  string $key
      * @param  mixed  $default
      * @return mixed
      */
     function env($key, $default = null)
     {
-        $value = getenv($key);
-
-        if ($value === false) {
-
-            if (!array_key_exists($value, $_ENV)) {
-                return $default;
-            }
-
-            $value = $_ENV[$value];
-        }
-
-        switch (strtolower($value)) {
-            case 'true':
-            case '(true)':
-                return true;
-
-            case 'false':
-            case '(false)':
-                return false;
-
-            case 'null':
-            case '(null)':
-                return null;
-
-            case 'empty':
-            case '(empty)':
-                return '';
-        }
-
-        return $value;
+        return spiral(EnvironmentInterface::class)->get($key, $default);
     }
 }
