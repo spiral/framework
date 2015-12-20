@@ -67,6 +67,8 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
      */
     public function __invoke(Request $request, Response $response, callable $next)
     {
+        $outputLevel = ob_get_level();
+
         try {
             /**
              * Debug: exceptions and clientExceptions are isolated in this middleware.
@@ -74,6 +76,11 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
             return $next($request, $response);
 
         } catch (ClientException $exception) {
+            while (ob_get_level() > $outputLevel) {
+                //Flushing all unclosed buffers
+                ob_end_clean();
+            }
+
             //Logging client error
             $this->logError($request, $exception);
 
