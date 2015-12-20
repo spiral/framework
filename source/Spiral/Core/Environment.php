@@ -44,11 +44,13 @@ class Environment implements EnvironmentInterface
     private $values = [];
 
     /**
+     * @invisible
      * @var FilesInterface
      */
     protected $files = null;
 
     /**
+     * @invisible
      * @var HippocampusInterface
      */
     protected $memory = null;
