@@ -33,4 +33,11 @@ interface EnvironmentInterface
      * Load environment values from associated storage.
      */
     public function load();
+
+    /**
+     * Unique environment identificator
+     *
+     * @return string
+     */
+    public function getID();
 }

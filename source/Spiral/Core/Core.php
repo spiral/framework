@@ -14,6 +14,7 @@ use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\Exceptions\SugarException;
+use Spiral\Core\Exceptions\UndefinedAliasException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
@@ -213,11 +214,15 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     }
 
     /**
-     * Set application directory.
-     *
-     * @param string $alias Directory alias, ie. "framework".
-     * @param string $path  Directory path without ending slash.
-     * @return $this
+     * {@inheritdoc}
+     */
+    public function hasDirectory($alias)
+    {
+        return isset($this->directories[$alias]);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setDirectory($alias, $path)
     {
@@ -227,20 +232,19 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     }
 
     /**
-     * Get application directory.
-     *
-     * @param string $alias
-     * @return string
+     * {@inheritdoc}
      */
     public function directory($alias)
     {
+        if (!$this->hasDirectory($alias)) {
+            throw new UndefinedAliasException("Undefined directory alias '{$alias}'");
+        }
+
         return $this->directories[$alias];
     }
 
     /**
-     * All application directories.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getDirectories()
     {
@@ -437,10 +441,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         $container->bindSingleton(HippocampusInterface::class, $core->memory);
         $container->bindSingleton(CoreInterface::class, $core);
 
-        $container->bindSingleton(Configurator::class, $container->make(
-            Configurator::class, ['directory' => $core->directory('config')]
-        ));
-
         //Setting environment (by default - dotenv extension)
         $core->environment = new Environment(
             $core->directory('root') . '.env',
@@ -451,6 +451,10 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         $core->environment->load();
 
         $container->bindSingleton(EnvironmentInterface::class, $core->environment);
+
+        $container->bindSingleton(Configurator::class, $container->make(
+            Configurator::class, ['directory' => $core->directory('config')]
+        ));
 
         //Error and exception handlers
         if ($handleErrors) {

@@ -9,7 +9,6 @@ namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\ConfiguratorException;
 use Spiral\Core\Exceptions\SugarException;
-use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Files\FilesInterface;
 
 /**
@@ -20,8 +19,6 @@ use Spiral\Files\FilesInterface;
  */
 class Configurator extends Component implements ConfiguratorInterface
 {
-    use SaturateTrait;
-
     /**
      * Config files extension.
      */
@@ -45,24 +42,39 @@ class Configurator extends Component implements ConfiguratorInterface
     protected $files = null;
 
     /**
-     * @param string         $directory
-     * @param FilesInterface $files
-     * @throws SugarException
+     * @var HippocampusInterface
      */
-    public function __construct($directory, FilesInterface $files = null)
-    {
+    protected $memory = null;
+
+    /**
+     * @var EnvironmentInterface
+     */
+    protected $environment = null;
+
+    /**
+     * @param string               $directory
+     * @param FilesInterface       $files
+     * @param HippocampusInterface $memory
+     * @param EnvironmentInterface $environment
+     */
+    public function __construct(
+        $directory,
+        FilesInterface $files,
+        HippocampusInterface $memory,
+        EnvironmentInterface $environment
+    ) {
         $this->directory = $directory;
-        $this->files = $this->saturate($files, FilesInterface::class);
+        $this->files = $files;
+        $this->memory = $memory;
+        $this->environment = $environment;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @param bool $toArray Always force array response.
      */
-    public function getConfig($section = null, $toArray = true)
+    public function getConfig($section = null)
     {
-        $filename = $this->directory . $section . static::EXTENSION;
+        $filename = $this->configFilename($section);
 
         if (!$this->files->exists($filename)) {
             throw new ConfiguratorException(
@@ -70,13 +82,8 @@ class Configurator extends Component implements ConfiguratorInterface
             );
         }
 
-        $data = require($this->files->localUri($filename));
-        if ($toArray && $data instanceof ConfigInterface) {
-            //getConfig method must always return arrays
-            $data = $data->toArray();
-        }
-
-        return $data;
+        //@todo restore caching
+        return $this->loadConfig($section, $filename);
     }
 
     /**
@@ -89,12 +96,7 @@ class Configurator extends Component implements ConfiguratorInterface
         }
 
         //Due internal contract we can fetch config section from class constant
-        $config = $this->getConfig($class->getConstant('CONFIG'), false);
-
-        if ($config instanceof ConfigInterface) {
-            //Apparently config file contain class definition (let's hope this is same config class)
-            return $config;
-        }
+        $config = $this->getConfig($class->getConstant('CONFIG'));
 
         return $this->configs[$class->getName()] = $class->newInstance($config);
     }
@@ -105,5 +107,33 @@ class Configurator extends Component implements ConfiguratorInterface
     public function flushCache()
     {
         $this->configs = [];
+    }
+
+    /**
+     * @param string $config
+     * @return string
+     */
+    protected function configFilename($config)
+    {
+        return $this->directory . $config . static::EXTENSION;
+    }
+
+    /**
+     * Load config data from file
+     *
+     * @param string $config
+     * @param string $filename
+     * @return array
+     */
+    protected function loadConfig($config, $filename)
+    {
+        //todo: support more config types, maybe yaml?
+        $data = require($this->files->localUri($filename));
+
+        if (!is_array($data)) {
+            throw  new ConfiguratorException("Config '{$config}' does not contain array data");
+        }
+
+        return $data;
     }
 }

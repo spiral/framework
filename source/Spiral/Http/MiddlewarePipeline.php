@@ -129,8 +129,9 @@ class MiddlewarePipeline extends Component
     {
         $this->openScope($request, $response);
 
-        ob_start();
         $outputLevel = ob_get_level();
+        ob_start();
+
         $output = '';
         $result = null;
 
@@ -142,7 +143,7 @@ class MiddlewarePipeline extends Component
              */
             $result = $this->execute($request, $response);
         } finally {
-            while (ob_get_level() > $outputLevel) {
+            while (ob_get_level() > $outputLevel + 1) {
                 $output = ob_get_clean() . $output;
             }
 
