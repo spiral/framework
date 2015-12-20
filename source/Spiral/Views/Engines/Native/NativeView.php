@@ -10,6 +10,7 @@ namespace Spiral\Views\Engines\Native;
 use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Views\ViewInterface;
 
@@ -18,7 +19,7 @@ class NativeView extends Component implements ViewInterface
     /**
      * Container saturation.
      */
-    use SaturateTrait, BenchmarkTrait;
+    use SaturateTrait, BenchmarkTrait, SharedTrait;
 
     /**
      * View filename.
