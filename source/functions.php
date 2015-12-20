@@ -144,6 +144,7 @@ if (!function_exists('env')) {
     /**
      * Gets the value of an environment variable. Supports boolean, empty and null.
      *
+     * @todo make it work thought EnvironmentInterface and shared container
      * @param  string $key
      * @param  mixed  $default
      * @return mixed
