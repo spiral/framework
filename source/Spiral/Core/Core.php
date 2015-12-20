@@ -46,7 +46,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * I need this constant for Symfony Console. :/
      */
-    const VERSION = '0.8.0-beta';
+    const VERSION = '0.8.6-beta';
 
     /**
      * Every application should have defined timezone.
