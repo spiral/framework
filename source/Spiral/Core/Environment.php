@@ -34,11 +34,14 @@ class Environment implements EnvironmentInterface
     private $filename = '';
 
     /**
-     * Enviroment id
-     *
      * @var string
      */
     private $id = '';
+
+    /**
+     * @var array
+     */
+    private $values = [];
 
     /**
      * @var FilesInterface
@@ -108,7 +111,7 @@ class Environment implements EnvironmentInterface
      */
     public function set($name, $value)
     {
-        $_ENV[$name] = $value;
+        $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
 
         return $this;
@@ -119,8 +122,8 @@ class Environment implements EnvironmentInterface
      */
     public function get($name, $default = null)
     {
-        if (array_key_exists($name, $_ENV)) {
-            return $_ENV[$name];
+        if (array_key_exists($name, $this->values)) {
+            return $this->values[$name];
         }
 
         return $default;
