@@ -149,6 +149,11 @@ abstract class Controller extends Service implements ControllerInterface
      */
     private function resolveArguments(\ReflectionMethod $method, array $parameters)
     {
+        if (empty($this->resolver)) {
+            //Preparation for isolate-container update
+            $this->resolver = $this->container()->get(ResolverInterface::class);
+        }
+
         try {
             //Getting set of arguments should be sent to requested method
             return $this->resolver->resolveArguments($method, $parameters);
