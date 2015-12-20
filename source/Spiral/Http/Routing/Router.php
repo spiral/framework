@@ -65,7 +65,7 @@ class Router implements RouterInterface
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
     {
         //Open router scope
-        $scope = $this->container->replace(self::class, $this);
+        $scope = $this->container->replace(RouterInterface::class, $this);
 
         $route = $this->findRoute($request, $this->basePath);
 
