@@ -19,6 +19,7 @@ use Spiral\Session\Exceptions\SessionException;
  *
  * @todo At this moment native php sessions used which limits functionality a bit.
  * @todo probably not the best component due sticking to native sessions, to find replacement
+ * @note should work well in between requests, not sure about nested http requests (slow?)
  */
 class SessionStore extends Component implements SessionInterface, \ArrayAccess, \IteratorAggregate
 {

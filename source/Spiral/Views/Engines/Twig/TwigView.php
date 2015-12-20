@@ -11,6 +11,8 @@ use Spiral\Views\ViewInterface;
 
 /**
  * Only wraps Twig template.
+ *
+ * @todo this->container ?
  */
 abstract class TwigView extends \Twig_Template implements ViewInterface
 {
