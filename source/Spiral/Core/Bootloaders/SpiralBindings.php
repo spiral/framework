@@ -46,10 +46,10 @@ class SpiralBindings extends Bootloader
         'files'                              => 'Spiral\Files\FileManager',
         'tokenizer'                          => 'Spiral\Tokenizer\Tokenizer',
         'locator'                            => 'Spiral\Tokenizer\ClassLocator',
-        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocator',
-        'translator'                         => 'Spiral\Translator\Translator',
+        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocatorInterface',
+        'translator'                         => 'Spiral\Translator\TranslatorInterface',
         'views'                              => 'Spiral\Views\ViewManager',
-        'storage'                            => 'Spiral\Storage\StorageManager',
+        'storage'                            => 'Spiral\Storage\StorageInterface',
 
         //Databases and models
         'dbal'                               => 'Spiral\Database\DatabaseManager',
@@ -57,14 +57,14 @@ class SpiralBindings extends Bootloader
         'odm'                                => 'Spiral\ODM\ODM',
 
         //Entities
-        'encrypter'                          => 'Spiral\Encrypter\Encrypter',
-        'cache'                              => 'Spiral\Cache\CacheStore',
+        'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
+        'cache'                              => 'Spiral\Cache\StoreInterface',
         'db'                                 => 'Spiral\Database\Entities\Database',
         'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Http scope dependent
         'cookies'                            => 'Spiral\Http\Cookies\CookieManager',
-        'router'                             => 'Spiral\Http\Routing\Router',
+        'router'                             => 'Spiral\Http\Routing\RouterInterface',
         'request'                            => 'Psr\Http\Message\ServerRequestInterface',
 
         //Http scope depended data routes and wrappers
