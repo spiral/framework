@@ -60,7 +60,9 @@ class SpiralBindings extends Bootloader
 
         //Entities
         'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
-        'cache'                              => 'Spiral\Cache\StoreInterface',
+        
+        //Concrete for now, replace with better interface in future
+        'cache'                              => 'Spiral\Cache\CacheStore',
         'db'                                 => 'Spiral\Database\Entities\Database',
         'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
 
