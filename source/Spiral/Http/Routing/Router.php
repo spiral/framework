@@ -185,7 +185,7 @@ class Router implements RouterInterface
         //We can fetch controller and action names from url
         list($controller, $action) = explode(
             RouteInterface::SEPARATOR,
-            str_replace(['/', ':'], RouteInterface::SEPARATOR, $route)
+            str_replace('/', RouteInterface::SEPARATOR, $route)
         );
 
         $route = $this->defaultRoute->copy($route, compact('controller', 'action'));
