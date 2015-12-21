@@ -249,28 +249,18 @@ abstract class AbstractRoute implements RouteInterface
             $this->compile();
         }
 
-        //todo: improve performance of slugification
-        //todo: request SlugifyInterface using container?
-        $slugify = !empty($slugify) ? $slugify : new Slugify();
-
-        foreach ($parameters as &$parameter) {
-            if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
-                //Default Slugify is pretty slow, we'd better not apply it for every value
-                $parameter = $slugify->slugify($parameter);
-            }
-
-            unset($parameter);
-        }
-
+        $parameters = $this->fetchParameters($parameters, $slugify);
         $parameters = $parameters + $this->defaults + $this->compiled['options'];
 
-        //Uri without empty blocks
+        //Uri without empty blocks (pretty stupid implementation)
         $uri = strtr(
             \Spiral\interpolate($this->compiled['template'], $parameters, '<', '>'),
             ['[]' => '', '[/]' => '', '[' => '', ']' => '', '//' => '/']
         );
 
-        $uri = new Uri(($this->withHost ? '' : $basePath) . $uri);
+        $uri = new Uri(
+            ($this->withHost ? '' : $basePath) . $uri
+        );
 
         //Getting additional query parameters
         if (!empty($queryParameters = array_diff_key($parameters, $this->compiled['options']))) {
@@ -278,6 +268,40 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         return $uri;
+    }
+
+    /**
+     * Generate parameters list.
+     *
+     * @param \Traversable|array $parameters
+     * @param SlugifyInterface   $slugify
+     * @return array
+     */
+    protected function fetchParameters($parameters, SlugifyInterface $slugify)
+    {
+        $result = [];
+        $allowed = array_keys($this->compiled['options']);
+
+        foreach ($parameters as $key => $parameter) {
+            if (!array_key_exists($key, $this->compiled['options'])) {
+                //Numeric key?
+                if (isset($allowed[$key])) {
+                    $key = $allowed[$key];
+                } else {
+                    continue;
+                }
+            }
+
+            if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
+                //Default Slugify is pretty slow, we'd better not apply it for every value
+                $result[$key] = $slugify->slugify($parameter);
+                continue;
+            }
+
+            $result[$key] = (string)$parameter;
+        }
+
+        return $result;
     }
 
     /**

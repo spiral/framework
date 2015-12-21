@@ -7,6 +7,8 @@
  */
 namespace Spiral\Core\Bootloaders;
 
+use Cocur\Slugify\Slugify;
+use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exceptions\Container\AutowireException;
 use Spiral\Core\Exceptions\CoreException;
@@ -79,6 +81,13 @@ class SpiralBindings extends Bootloader
     ];
 
     /**
+     * @var array
+     */
+    protected $singletons = [
+        SlugifyInterface::class => [self::class, 'slugify']
+    ];
+
+    /**
      * @param ServerRequestInterface $request
      * @return RouteInterface
      */
@@ -114,5 +123,13 @@ class SpiralBindings extends Bootloader
         }
 
         return $session;
+    }
+
+    /**
+     * @return Slugify
+     */
+    public function slugify()
+    {
+        return new Slugify();
     }
 }
