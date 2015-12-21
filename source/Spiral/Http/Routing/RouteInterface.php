@@ -56,6 +56,15 @@ interface RouteInterface
     );
 
     /**
+     * Get route copy with different parameters.
+     *
+     * @param string $name
+     * @param array  $defaults
+     * @return RouteInterface
+     */
+    public function copy($name, array $defaults);
+
+    /**
      * Generate valid route URL using route name and set of parameters.
      *
      * @param array            $parameters Accepts only arrays at this moment.

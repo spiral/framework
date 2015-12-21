@@ -108,6 +108,7 @@ class Router implements RouterInterface
      */
     public function getRoute($name)
     {
+        //todo: optimize
         foreach ($this->routes as $route) {
             if ($route->getName() == $name) {
                 return $route;
@@ -137,27 +138,12 @@ class Router implements RouterInterface
         try {
             return $this->getRoute($route)->uri($parameters, $this->basePath, $slugify);
         } catch (BadRouteException $e) {
-            //Using fallback uri
+
+            //Cast and retry
+            $this->castRoute($route);
+
+            return $this->uri($route, $parameters, $slugify);
         }
-
-        //Will be handled via default route where route name is specified as controller::action
-        if (strpos($route, RouteInterface::SEPARATOR) === false && strpos($route, '/') === false) {
-            throw new BadRouteException(
-                "Unable to locate route or use default route with controller::action pattern."
-            );
-        }
-
-        //We can fetch controller and action names from url
-        list($controller, $action) = explode(
-            RouteInterface::SEPARATOR,
-            str_replace('/', RouteInterface::SEPARATOR, $route)
-        );
-
-        return $this->defaultRoute->uri(
-            compact('controller', 'action') + $parameters,
-            $this->basePath,
-            $slugify
-        );
     }
 
     /**
@@ -180,5 +166,31 @@ class Router implements RouterInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param string $route
+     * @return RouteInterface
+     * @throws BadRouteException
+     */
+    private function castRoute($route)
+    {
+        //Will be handled via default route where route name is specified as controller::action
+        if (strpos($route, RouteInterface::SEPARATOR) === false && strpos($route, '/') === false) {
+            throw new BadRouteException(
+                "Unable to locate route or use default route with controller::action pattern."
+            );
+        }
+
+        //We can fetch controller and action names from url
+        list($controller, $action) = explode(
+            RouteInterface::SEPARATOR,
+            str_replace(['/', ':'], RouteInterface::SEPARATOR, $route)
+        );
+
+        $route = $this->defaultRoute->copy($route, compact('controller', 'action'));
+        $this->addRoute($route);
+
+        return $route;
     }
 }

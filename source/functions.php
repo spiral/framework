@@ -166,7 +166,7 @@ if (!function_exists('uri')) {
      */
     function uri($route, $parameters = [])
     {
-        if (!is_array($parameters)) {
+        if (!is_array($parameters) && !$parameters instanceof Traversable) {
             $parameters = array_slice(func_get_args(), 1);
         }
 

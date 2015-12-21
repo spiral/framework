@@ -129,6 +129,18 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
+    public function copy($name, array $defaults)
+    {
+        $copy = clone $this;
+        $copy->name = (string)$name;
+        $copy->defaults($defaults);
+
+        return $copy;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return $this->name;
