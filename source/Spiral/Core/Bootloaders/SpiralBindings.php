@@ -43,13 +43,15 @@ class SpiralBindings extends Bootloader
         'console'                            => 'Spiral\Console\ConsoleDispatcher',
 
         //Shared components
-        'files'                              => 'Spiral\Files\FileManager',
-        'tokenizer'                          => 'Spiral\Tokenizer\Tokenizer',
-        'locator'                            => 'Spiral\Tokenizer\ClassLocator',
+        'files'                              => 'Spiral\Files\FilesInterface',
+        'tokenizer'                          => 'Spiral\Tokenizer\TokenizerInterface',
+        'locator'                            => 'Spiral\Tokenizer\ClassLocatorInterface',
         'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocatorInterface',
-        'translator'                         => 'Spiral\Translator\TranslatorInterface',
-        'views'                              => 'Spiral\Views\ViewManager',
         'storage'                            => 'Spiral\Storage\StorageInterface',
+
+        //Concrete for now
+        'views'                              => 'Spiral\Views\ViewManager',
+        'translator'                         => 'Spiral\Translator\Translator',
 
         //Databases and models
         'dbal'                               => 'Spiral\Database\DatabaseManager',
