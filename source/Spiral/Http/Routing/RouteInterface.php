@@ -58,6 +58,7 @@ interface RouteInterface
     /**
      * Get route copy with different parameters.
      *
+     * @todo i don't like this method, find alternative, DO NOT USE IN YOUR CODE
      * @param string $name
      * @param array  $defaults
      * @return RouteInterface
