@@ -289,6 +289,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      */
     public function start(DispatcherInterface $dispatcher = null)
     {
+        //todo move dispatcher creation into core initialization method
         $this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
         $this->dispatcher->start();
     }
