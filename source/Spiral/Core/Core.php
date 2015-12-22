@@ -44,6 +44,11 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     const VERSION = '0.8.6-beta';
 
     /**
+     * Memory section for bootloaders cache.
+     */ 
+    const MEMORY_SECTION = 'app';
+
+    /**
      * Every application should have defined timezone.
      *
      * @see setTimezone()
@@ -473,9 +478,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Bootloading all needed components and extensions
         $this->bootloader->bootload(
             $this->load,
-            $this->environment->get('CACHE_BOOTLOADER', true)
-                ? $this->environment->get('BOOTLOAD_CACHE', 'bootloading')
-                : null
+            $this->environment->get('CACHE_BOOTLOADERS', true) ? static::MEMORY_SECTION : null
         );
 
         return $this;
