@@ -57,20 +57,20 @@ class StemplerEngine extends Component implements EngineInterface
     /**
      * @param LoaderInterface      $loader
      * @param EnvironmentInterface $environment
+     * @param FilesInterface       $files     Saturable.
+     * @param ContainerInterface   $container Saturable.
      * @param array                $modifiers
      * @param array                $processors
      * @param array                $options
-     * @param FilesInterface       $files     Saturable.
-     * @param ContainerInterface   $container Saturable.
      */
     public function __construct(
         LoaderInterface $loader,
         EnvironmentInterface $environment,
+        FilesInterface $files = null,
+        ContainerInterface $container = null,
         array $modifiers = [],
         array $processors = [],
-        array $options = [],
-        FilesInterface $files = null,
-        ContainerInterface $container = null
+        array $options = []
     ) {
         //Needed components
         $this->container = $this->saturate($container, ContainerInterface::class);
@@ -119,7 +119,6 @@ class StemplerEngine extends Component implements EngineInterface
             return $cached;
         }
 
-        //Compiling!
         $benchmark = $this->benchmark('compile', $path);
         try {
             $source = $this->supervisor()->createNode($path)->compile();
@@ -148,7 +147,7 @@ class StemplerEngine extends Component implements EngineInterface
     {
         if (!empty($this->modifiers)) {
             //todo: not needed when view is already in cache
-            //Let's prepare source before giving it to Stempler
+            //To prepare source before giving it to Stempler
             $loader = new ModifiableLoader($loader, $this->getModifiers());
         }
 
@@ -194,7 +193,7 @@ class StemplerEngine extends Component implements EngineInterface
     protected function processSource($source, $path, $compiledFilename = null)
     {
         foreach ($this->getProcessors() as $processor) {
-            $benchmark = $this->benchmark('process', $path . '@' . get_class($processor));
+            $benchmark = $this->benchmark('process', get_class($processor) . '-{' . $path);
             try {
                 $source = $processor->process(
                     $source,

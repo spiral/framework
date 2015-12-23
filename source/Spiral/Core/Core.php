@@ -39,14 +39,14 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     use SharedTrait, BenchmarkTrait;
 
     /**
-     * Set to false if you don't want spiral to cache autoloading list.
-     */
-    const MEMORIZE_BOOTLOADERS = true;
-
-    /**
      * I need this constant for Symfony Console. :/
      */
-    const VERSION = '0.8.0-beta';
+    const VERSION = '0.8.6-beta';
+
+    /**
+     * Memory section for bootloaders cache.
+     */ 
+    const MEMORY_SECTION = 'app';
 
     /**
      * Every application should have defined timezone.
@@ -479,7 +479,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Bootloading all needed components and extensions
         $this->bootloader->bootload(
             $this->load,
-            static::MEMORIZE_BOOTLOADERS ? 'bootloading' : null
+            $this->environment->get('CACHE_BOOTLOADERS', true) ? static::MEMORY_SECTION : null
         );
 
         return $this;

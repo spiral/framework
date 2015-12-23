@@ -25,6 +25,8 @@ use Spiral\Http\MiddlewareInterface;
  * you can use CookieManager instance on controller level.
  *
  * Attention, EncrypterInterface is requested from container on demand.
+ * 
+ * @todo add simple interface and replace in short bindings
  */
 class CookieManager extends Component implements MiddlewareInterface
 {

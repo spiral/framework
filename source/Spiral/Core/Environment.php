@@ -34,18 +34,23 @@ class Environment implements EnvironmentInterface
     private $filename = '';
 
     /**
-     * Enviroment id
-     *
      * @var string
      */
     private $id = '';
 
     /**
+     * @var array
+     */
+    private $values = [];
+
+    /**
+     * @invisible
      * @var FilesInterface
      */
     protected $files = null;
 
     /**
+     * @invisible
      * @var HippocampusInterface
      */
     protected $memory = null;
@@ -84,8 +89,8 @@ class Environment implements EnvironmentInterface
         }
 
         //Load env values using DotEnv extension
-        $this->initEnvironment(
-            $values = $this->parseValues($this->filename)
+        $values = $this->initEnvironment(
+            $this->parseValues($this->filename)
         );
 
         $this->memory->saveData($this->id, $values, static::MEMORY_SECTION);
@@ -108,7 +113,7 @@ class Environment implements EnvironmentInterface
      */
     public function set($name, $value)
     {
-        $_ENV[$name] = $value;
+        $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
 
         return $this;
@@ -119,8 +124,8 @@ class Environment implements EnvironmentInterface
      */
     public function get($name, $default = null)
     {
-        if (array_key_exists($name, $_ENV)) {
-            return $_ENV[$name];
+        if (array_key_exists($name, $this->values)) {
+            return $this->values[$name];
         }
 
         return $default;
@@ -144,11 +149,45 @@ class Environment implements EnvironmentInterface
      * Initiate environment values.
      *
      * @param array $values
+     * @return array
      */
     protected function initEnvironment(array $values)
     {
-        foreach ($values as $name => $value) {
+        foreach ($values as $name => &$value) {
+            $value = $this->normalize($value);
             $this->set($name, $value);
+            unset($value);
         }
+
+        return $values;
+    }
+
+    /**
+     * Normalize env value.
+     *
+     * @param string $value
+     * @return bool|null|string
+     */
+    private function normalize($value)
+    {
+        switch (strtolower($value)) {
+            case 'true':
+            case '(true)':
+                return true;
+
+            case 'false':
+            case '(false)':
+                return false;
+
+            case 'null':
+            case '(null)':
+                return null;
+
+            case 'empty':
+            case '(empty)':
+                return '';
+        }
+
+        return $value;
     }
 }

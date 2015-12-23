@@ -76,8 +76,8 @@ class TwigEngine extends Component implements EngineInterface
         $this->files = $this->saturate($files, FilesInterface::class);
 
         $this->setEnvironment($environment);
-        $this->extensions = $extensions;
         $this->modifiers = $modifiers;
+        $this->extensions = $extensions;
         $this->setLoader($loader);
 
         $this->configure($this->twig);

@@ -56,6 +56,17 @@ interface RouteInterface
     );
 
     /**
+     * Get route copy with different parameters.
+     *
+     * @internal DO NOT USE IN YOUR CODE
+     * @todo i don't like this method, find alternative
+     * @param string $name
+     * @param array  $defaults
+     * @return RouteInterface
+     */
+    public function copy($name, array $defaults);
+
+    /**
      * Generate valid route URL using route name and set of parameters.
      *
      * @param array            $parameters Accepts only arrays at this moment.

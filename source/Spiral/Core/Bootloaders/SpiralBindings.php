@@ -7,6 +7,8 @@
  */
 namespace Spiral\Core\Bootloaders;
 
+use Cocur\Slugify\Slugify;
+use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exceptions\Container\AutowireException;
 use Spiral\Core\Exceptions\CoreException;
@@ -41,13 +43,15 @@ class SpiralBindings extends Bootloader
         'console'                            => 'Spiral\Console\ConsoleDispatcher',
 
         //Shared components
-        'files'                              => 'Spiral\Files\FileManager',
-        'tokenizer'                          => 'Spiral\Tokenizer\Tokenizer',
-        'locator'                            => 'Spiral\Tokenizer\ClassLocator',
-        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocator',
-        'translator'                         => 'Spiral\Translator\Translator',
+        'files'                              => 'Spiral\Files\FilesInterface',
+        'tokenizer'                          => 'Spiral\Tokenizer\TokenizerInterface',
+        'locator'                            => 'Spiral\Tokenizer\ClassLocatorInterface',
+        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocatorInterface',
+        'storage'                            => 'Spiral\Storage\StorageInterface',
+
+        //Concrete for now
         'views'                              => 'Spiral\Views\ViewManager',
-        'storage'                            => 'Spiral\Storage\StorageManager',
+        'translator'                         => 'Spiral\Translator\Translator',
 
         //Databases and models
         'dbal'                               => 'Spiral\Database\DatabaseManager',
@@ -55,14 +59,16 @@ class SpiralBindings extends Bootloader
         'odm'                                => 'Spiral\ODM\ODM',
 
         //Entities
-        'encrypter'                          => 'Spiral\Encrypter\Encrypter',
-        'cache'                              => 'Spiral\Cache\CacheStore',
+        'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
+        'cache'                              => 'Spiral\Cache\StoreInterface',
+        
+        //Concrete for now, replace with better interface in future
         'db'                                 => 'Spiral\Database\Entities\Database',
         'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Http scope dependent
         'cookies'                            => 'Spiral\Http\Cookies\CookieManager',
-        'router'                             => 'Spiral\Http\Routing\Router',
+        'router'                             => 'Spiral\Http\Routing\RouterInterface',
         'request'                            => 'Psr\Http\Message\ServerRequestInterface',
 
         //Http scope depended data routes and wrappers
@@ -76,6 +82,13 @@ class SpiralBindings extends Bootloader
         //Short aliases
         'route'                              => 'Spiral\Http\Router\RouteInterface',
         'session'                            => 'Spiral\Session\SessionInterface'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $singletons = [
+        SlugifyInterface::class => [self::class, 'slugify']
     ];
 
     /**
@@ -114,5 +127,13 @@ class SpiralBindings extends Bootloader
         }
 
         return $session;
+    }
+
+    /**
+     * @return Slugify
+     */
+    public function slugify()
+    {
+        return new Slugify();
     }
 }

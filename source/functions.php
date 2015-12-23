@@ -7,7 +7,9 @@
  */
 use Spiral\Core\Core;
 use Spiral\Core\DirectoriesInterface;
+use Spiral\Core\EnvironmentInterface;
 use Spiral\Debug\Dumper;
+use Spiral\Http\Routing\RouterInterface;
 use Spiral\Translator\Exceptions\TranslatorException;
 use Spiral\Translator\TranslatorInterface;
 
@@ -150,35 +152,24 @@ if (!function_exists('env')) {
      */
     function env($key, $default = null)
     {
-        $value = getenv($key);
+        return spiral(EnvironmentInterface::class)->get($key, $default);
+    }
+}
 
-        if ($value === false) {
-
-            if (!array_key_exists($value, $_ENV)) {
-                return $default;
-            }
-
-            $value = $_ENV[$value];
+if (!function_exists('uri')) {
+    /**
+     * Create uri for route and parameters.
+     *
+     * @param string $route
+     * @param array  $parameters
+     * @return \Psr\Http\Message\UriInterface
+     */
+    function uri($route, $parameters = [])
+    {
+        if (!is_array($parameters) && !$parameters instanceof Traversable) {
+            $parameters = array_slice(func_get_args(), 1);
         }
 
-        switch (strtolower($value)) {
-            case 'true':
-            case '(true)':
-                return true;
-
-            case 'false':
-            case '(false)':
-                return false;
-
-            case 'null':
-            case '(null)':
-                return null;
-
-            case 'empty':
-            case '(empty)':
-                return '';
-        }
-
-        return $value;
+        return spiral(RouterInterface::class)->uri($route, $parameters);
     }
 }
