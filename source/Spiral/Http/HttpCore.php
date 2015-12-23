@@ -122,16 +122,14 @@ class HttpCore extends Component implements HttpInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     * @param callable|null          $next
      * @return ResponseInterface
      * @throws HttpException
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next = null
+        ResponseInterface $response
     ) {
-        return $this->perform($request, $response, $next);
+        return $this->perform($request, $response);
     }
 
     /**
