@@ -26,10 +26,15 @@ use Spiral\Http\HttpDispatcher;
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
  * overwritten with custom instance).
+ * 
+ * Btw, you can design your architect any way you want, MVC, MMVC, HMVC, ADR, anything which can be 
+ * invoked and routed. Technically you can even invent your own, application specific, architecture.
+ * 
+ * Just experiment and enjoy your results.
  *
  * @property-read ContainerInterface $container Protected.
  * @todo move start method and dispatcher property into trait
- * @todo potentially add more events and create common event dispatcher?
+ * @todo potentially add more events and create common event dispatcher? or not?
  */
 abstract class Core extends Component implements CoreInterface, DirectoriesInterface
 {
