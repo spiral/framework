@@ -28,10 +28,10 @@ use Spiral\Http\HttpDispatcher;
  * overwritten with custom instance).
  * 
  * Btw, you can design your architect any way you want, MVC, MMVC, HMVC, ADR, anything which can be 
- * invoked and routed. Technically you can even invent your own, application specific, architecture.
+ * invoked and/or routed. Technically you can even invent your own, application specific, architecture.
  * 
- * Just experiment and enjoy your results.
- *
+ * Try to experiment and enjoy your results.
+ * 
  * @property-read ContainerInterface $container Protected.
  * @todo move start method and dispatcher property into trait
  * @todo potentially add more events and create common event dispatcher? or not?
