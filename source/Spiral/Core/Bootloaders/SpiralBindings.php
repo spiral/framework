@@ -73,6 +73,7 @@ class SpiralBindings extends Bootloader
 
         //Http scope depended data routes and wrappers
         'input'                              => 'Spiral\Http\Input\InputManager',
+        'response'                           => 'Spiral\Http\Responses\Responder',
         'responses'                          => 'Spiral\Http\Responses\Responder',
 
         //Thought request attributes
