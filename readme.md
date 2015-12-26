@@ -134,7 +134,7 @@ Powerful and extendable HTML templater compatible with other engines like Blade 
 ```
 > You can write your own virtual tags (similar to web components) with almost any functionality or connect external libraries.
 
-Frontend toolkit with powerful AJAX forms and widgets:
+Frontend toolkit with AJAX forms and widgets:
 
 ```html
 <spiral:form action="/upload">
