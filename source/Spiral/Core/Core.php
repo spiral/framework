@@ -256,6 +256,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
     /**
      * {@inheritdoc}
+     * 
+     * todo: add ability to register exception bridges (custom module exception => controller exception)
      */
     public function callAction($controller, $action = '', array $parameters = [])
     {
