@@ -34,6 +34,7 @@ interface RouteInterface
     /**
      * Check if route matched with provided request.
      *
+     * @todo potentially this method might return route instance!
      * @param ServerRequestInterface $request
      * @param string                 $basePath
      * @return bool
