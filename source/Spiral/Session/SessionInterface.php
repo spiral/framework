@@ -78,6 +78,14 @@ interface SessionInterface
     public function inc($name, $delta = 1);
 
     /**
+     * Delete data from session.
+     *
+     * @param string $name
+     * @throws SessionException
+     */
+    public function delete($name);
+
+    /**
      * Decrement numeric value stored in cache. Must return decremented value.
      *
      * @param string $name
@@ -86,14 +94,6 @@ interface SessionInterface
      * @throws SessionException
      */
     public function dec($name, $delta = 1);
-
-    /**
-     * Delete data from session.
-     *
-     * @param string $name
-     * @throws SessionException
-     */
-    public function delete($name);
 
     /**
      * Read item from session and delete it after.
