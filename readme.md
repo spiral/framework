@@ -149,6 +149,6 @@ meta programing ideas, cloud storages, scaffolding, auto-indexed translator, Int
 Zend Diactoros, Symfony Console, Symfony Translation, Symfony Events, Monolog, Twig, 
 debugging/profiling tools and much more!
 
-Inspired By
+Inspired by
 ===========
 Spiral (earlier versions), Laravel, Yii 2, Symfony 2, Lithium, Ruby on Rails (conceptually), CodeIgniter.
