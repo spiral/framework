@@ -182,6 +182,10 @@ class Router implements RouterInterface
             );
         }
 
+        if (empty($this->defaultRoute)) {
+            throw new BadRouteException("Default/fallback route is missing.");
+        }
+
         //We can fetch controller and action names from url
         list($controller, $action) = explode(
             RouteInterface::SEPARATOR,
