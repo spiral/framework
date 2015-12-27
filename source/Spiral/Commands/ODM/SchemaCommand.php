@@ -68,7 +68,7 @@ class SchemaCommand extends Command
         $elapsed = number_format($debugger->benchmark($this, $benchmark), 3);
 
         $countModels = count($builder->getDocuments());
-        $this->write("<info>ORM Schema has been updated: <comment>{$elapsed} s</comment>");
+        $this->write("<info>ODM Schema has been updated: <comment>{$elapsed} s</comment>");
         $this->writeln(", found documents: <comment>{$countModels}</comment></info>");
     }
 }

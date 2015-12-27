@@ -71,6 +71,7 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     /**
      * {@inheritdoc}
      *
+     * @deprecated
      * @param bool $start
      */
     public function setID($id, $start = true)

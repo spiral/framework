@@ -25,6 +25,8 @@ use Spiral\Session\SessionStore;
  *
  * Attention, nested sessions are not well isolated at this moment as native php session mechanism
  * used (to be changed over time).
+ *
+ * @todo rewrite
  */
 class SessionStarter implements MiddlewareInterface
 {
