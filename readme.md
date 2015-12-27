@@ -137,10 +137,14 @@ Extendable and programmable HTML Stempler compatible with any command syntax:
 Frontend toolkit with AJAX forms and widgets:
 
 ```html
-<spiral:form action="/upload">
-    <form:input label="Select your file:" type="file" name="upload"/>
+<spiral:form action="/sample/save/<?= $entity ?>">
+    <form.input label="Value" name="value" value="<?= $entity->child->value ?>"/>
+    <input type="submit" class="btn btn-default" value="[[Update Element]]"/>
 </spiral:form>
 ```
+
+![Form](https://raw.githubusercontent.com/spiral/guide/master/resources/form.gif)
+
 Also included
 =============
 
