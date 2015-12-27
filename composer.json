@@ -12,13 +12,13 @@
   "require": {
     "php": ">=5.5.0",
     "spiral/components": "*",
+    "zendframework/zend-diactoros": "^1.1",
     "symfony/console": "^2.7",
     "symfony/process": "^2.7",
-    "nesbot/carbon": "*",
-    "zendframework/zend-diactoros": "^1.1",
+    "symfony/config": "^2.7",
     "vlucas/phpdotenv": "^2.1",
     "twig/twig": "^1.23",
-    "symfony/config": "^2.7",
+    "nesbot/carbon": "*",
     "cocur/slugify": "^1.4"
   },
   "autoload": {
