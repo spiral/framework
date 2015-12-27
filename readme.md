@@ -148,3 +148,7 @@ Plug and Play extensions, IDE friendly, frontend toolkit, static analysis, cache
 meta programing ideas, cloud storages, scaffolding, auto-indexed translator, Interop Container,
 Zend Diactoros, Symfony Console, Symfony Translation, Symfony Events, Monolog, Twig, 
 debugging/profiling tools and much more!
+
+Inspired By
+===========
+Spiral (early versions), Laravel, Yii 2, Symfony 2, Lithium, Ruby on Rails (conceptually), CodeIgniter.
