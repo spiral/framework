@@ -115,7 +115,7 @@ Shared components and shortcuts to container bindings:
 
 ![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
 
-Powerful and extendable HTML templater compatible with other engines like Blade or Twig (included as well):
+Extendable and programmable HTML templater compatible with other engines like Blade or Twig (included as well):
 
 ```html
 <spiral:grid source="<?= $uploads ?>" as="upload">
