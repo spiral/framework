@@ -124,7 +124,7 @@ Extendable and programmable HTML Stempler compatible with any command syntax:
     <grid:cell.bytes title="Filesize:" value="<?= $upload->getFilesize() ?>"/>
 
     <grid:cell>
-        <a href="#">Download</a>
+        <a href="<?= uri('uploads::edit', $upload->id) ?>">Edit</a>
     </grid:cell>
 </spiral:grid>
 
