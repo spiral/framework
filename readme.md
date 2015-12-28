@@ -19,8 +19,9 @@ Examples:
 class HomeController extends Controller
 {
     /**
-     * Spiral can automatically deside what database/cache/storage
-     * instance to provide for every action parameter.
+     * Spiral DI can automatically deside what database/cache/storage
+     * instance to provide for every action parameter based on it's 
+     * name or type.
      *
      * @param Database $database
      * @param Database $logDatabase
@@ -37,16 +38,15 @@ class HomeController extends Controller
 }
 ```
 
-PSR-7 integration and method injections:
+PSR-7 ready:
 
 ```php
-public function indexAction(ResponseInterface $response)
-{
-    return $response->withHeader('Spiral', 'Value!');
-}
+$route->middleware(function ($request, $response, $next) {
+    return $next($request, $response)->withHeader('My-Header', 'Yay!');
+});
 ```
 
-JSON responses
+JSON responses and method injections:
 
 ```php
 public function indexAction(ServerRequestInterface $request)
