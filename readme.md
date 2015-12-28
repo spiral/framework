@@ -46,7 +46,7 @@ $route->middleware(function ($request, $response, $next) {
 });
 ```
 
-JSON responses and method injections:
+JSON responses, method injections, container visibility scopes:
 
 ```php
 public function indexAction(ServerRequestInterface $request)
