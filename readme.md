@@ -113,6 +113,7 @@ class Post extends Record
 ```
 
 ```php
+//Post::find() == $this->orm->selector(Post::class);
 $posts = Post::find()
     ->with('comments') //Automatic joins
     ->with('author')->where('author.name', 'LIKE', $authorName) //Fluent
