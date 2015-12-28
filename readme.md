@@ -100,13 +100,13 @@ class Post extends Record
         
         //Little bit more complex relation definitions
         'collaborators' => [
-            self::MANY_TO_MANY => User::class,
-            self::PIVOT_TABLE  => 'post_collaborators_map',
+            self::MANY_TO_MANY  => User::class,
+            self::PIVOT_TABLE   => 'post_collaborators_map',
             self::PIVOT_COLUMNS => [
                 'time_assigned' => 'datetime',
                 'type'          => 'string, nullable',
             ],
-            self::INVERSE     => 'collaborated_posts'
+            self::INVERSE       => 'collaborated_posts'
         ],
     ];
 }
