@@ -24,9 +24,6 @@ use Spiral\Http\Traits\MiddlewaresTrait;
  */
 class MiddlewarePipeline extends Component
 {
-    /**
-     * Sugar.
-     */
     use SaturateTrait, JsonTrait, MiddlewaresTrait;
 
     /**
