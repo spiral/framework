@@ -17,6 +17,8 @@ use Spiral\Http\Exceptions\RouterException;
 
 /**
  * Spiral implementation of RouterInterface.
+ * 
+ * @todo potentially add ability to work as middleware with $next call
  */
 class Router implements RouterInterface
 {
