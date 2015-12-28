@@ -58,7 +58,7 @@ public function indexAction(ServerRequestInterface $request)
 }
 ```
 
-Contextual injections and database introspection:
+Database introspection and schema declaration:
 
 ![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
 
