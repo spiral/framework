@@ -167,4 +167,4 @@ debugging/profiling tools and much more!
 
 Inspired by
 ===========
-Internal Spiral CMS/CMF, Laravel, Yii 2, Symfony 2, Lithium, Ruby on Rails (conceptually), CodeIgniter.
+Internal Spiral CMS/CMF, Laravel 5+, Yii 2, Symfony 2, Lithium, Ruby on Rails (conceptually), CodeIgniter.
