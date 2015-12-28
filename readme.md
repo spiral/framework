@@ -97,6 +97,17 @@ class Post extends Record
         //Simple relation definition
         'author'   => [self::BELONGS_TO => Author::class],
         'comments' => [self::HAS_MANY => Comment::class]
+        
+        //Little bit more complex relation definitions
+        'collaborators' => [
+            self::MANY_TO_MANY  => User::class,
+            self::PIVOT_COLUMNS => [
+                'time_assigned' => 'datetime',
+                'type'          => 'string, nullable',
+            ],
+            self::PIVOT_TABLE => 'post_collaborators_map',
+            self::INVERSE     => 'collaborated_posts'
+        ],
     ];
 }
 ```
