@@ -114,10 +114,11 @@ foreach($posts as $post) {
 }
 ```
 
+Embedded functionality for static analysis of your code
+
 ```php
 public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
 {
-    //Embedded functionality for static analysis of your code
     dump($locator->getClasses(ControllerInterface::class));
 }
 ```
