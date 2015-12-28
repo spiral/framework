@@ -149,7 +149,7 @@ Extendable and programmable HTML Stempler compatible with any command syntax:
 Frontend toolkit with AJAX forms and widgets:
 
 ```html
-<spiral:form action="/sample/save/<?= $entity ?>">
+<spiral:form action="/sample/save/<?= $entity->id ?>">
     <form.input label="Value" name="value" value="<?= $entity->child->value ?>"/>
     <input type="submit" class="btn btn-default" value="[[Update Element]]"/>
 </spiral:form>
