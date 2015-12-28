@@ -158,7 +158,7 @@ Extendable and programmable template engine compatible with any command syntax:
 ```
 > You can write your own virtual tags (similar to web components) with almost any functionality or connect external libraries.
 
-Frontend toolkit with AJAX forms and widgets:
+Frontend toolkit with customizable AJAX forms and widgets:
 
 ```html
 <spiral:form action="/sample/save/<?= $entity->id ?>">
