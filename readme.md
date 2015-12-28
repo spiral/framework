@@ -85,6 +85,9 @@ class Post extends Record
 {
     use TimestampsTrait;
 
+    //Database partitions and isolation
+    protected $database = 'blog';
+
     protected $schema = [
         'id'     => 'bigPrimary',
         'title'  => 'string(64)',
@@ -108,6 +111,14 @@ $posts = Post::find()
 
 foreach($posts as $post) {
     echo $post->author->getName();
+}
+```
+
+```php
+public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
+{
+    //Embedded functionality for static analysis of your code
+    dump($locator->getClasses(ControllerInterface::class));
 }
 ```
 
