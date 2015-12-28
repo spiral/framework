@@ -58,7 +58,7 @@ public function indexAction(ServerRequestInterface $request)
 }
 ```
 
-Database introspection and schema declaration:
+Database introspection and schema declaration (diff based):
 
 ![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
 
