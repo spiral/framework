@@ -114,7 +114,7 @@ foreach($posts as $post) {
 }
 ```
 
-Embedded functionality for static analysis of your code
+Embedded functionality for static indexation of your code:
 
 ```php
 public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
