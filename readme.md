@@ -127,7 +127,7 @@ Shared components and shortcuts to container bindings:
 
 ![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
 
-Extendable and programmable HTML Stempler compatible with any command syntax:
+Extendable and programmable template engine compatible with any command syntax:
 
 ```html
 <spiral:grid source="<?= $uploads ?>" as="upload">
