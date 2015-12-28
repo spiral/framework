@@ -38,7 +38,7 @@ class HomeController extends Controller
 }
 ```
 
-PSR-7 ready:
+PSR-7 under hood:
 
 ```php
 $route->middleware(function ($request, $response, $next) {
