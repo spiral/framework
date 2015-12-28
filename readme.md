@@ -179,4 +179,4 @@ debugging/profiling tools and much more!
 
 Inspired by
 ===========
-Laravel 5+, Yii 2, Symfony 2, Lithium, Ruby on Rails (conceptually), CodeIgniter.
+Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails (conceptually).
