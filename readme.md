@@ -136,31 +136,6 @@ foreach($posts as $post) {
 }
 ```
 
-
-ODM engine with inheritance, compositions, aggregations and cascade validation:
-
-```php
-class MediaProduct extends Product
-{
-    protected $schema = [
-        'mediaURL' => 'string',
-        'images'   => [Image::class],
-        
-        'categories' => [self::MANY => Category::class, [
-            '_id' => ['$in' => 'self::categoryIDs']
-        ]]
-    ];
-}
-```
-
-```php
-$media = new MediaProduct();
-$media->images[] = new Image(...);
-$media->categoryIDs[] = new MongoId(...);
-
-dump($media->categories()->count());
-```
-
 Embedded functionality for static indexation of your code:
 
 ```php
