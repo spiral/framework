@@ -25,9 +25,6 @@ use Zend\Diactoros\ServerRequestFactory;
  */
 class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonInterface
 {
-    /**
-     * HttpDispatcher has embedded router and log it's errors.
-     */
     use RouterTrait;
 
     /**
