@@ -146,8 +146,7 @@ class MediaProduct extends Product
         'mediaURL' => 'string',
         'images'   => [Image::class],
         
-        //Aggregations
-        'categories' => [Category::MANY => Category::class, [
+        'categories' => [self::MANY => Category::class, [
             '_id' => ['$in' => 'self::categoryIDs']
         ]]
     ];
@@ -157,6 +156,9 @@ class MediaProduct extends Product
 ```php
 $media = new MediaProduct();
 $media->images[] = new Image(...);
+$media->categoryIDs[] = new MongoId(...);
+
+dump($media->categories()->count());
 ```
 
 Embedded functionality for static indexation of your code:
