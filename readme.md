@@ -14,6 +14,14 @@ Temporary in transition
 * PHPStorm IDE help module (ORM and ODM)
 * Guide update (current version requires some updates as new coding alternatives were created)
 
+Includes
+=============
+
+Plug and Play extensions, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
+meta programing, cloud storages, scaffolding, auto-indexed translator, Interop Container,
+Zend Diactoros, Symfony Console, Symfony Translation, Symfony Events, Monolog, Twig, 
+debugging/profiling tools and much more!
+
 Examples:
 ========
 
@@ -170,14 +178,6 @@ Frontend toolkit with customizable AJAX forms and widgets:
 ```
 
 ![Form](https://raw.githubusercontent.com/spiral/guide/master/resources/form.gif)
-
-Also included
-=============
-
-Plug and Play extensions, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
-meta programing, cloud storages, scaffolding, auto-indexed translator, Interop Container,
-Zend Diactoros, Symfony Console, Symfony Translation, Symfony Events, Monolog, Twig, 
-debugging/profiling tools and much more!
 
 Inspired by
 ===========
