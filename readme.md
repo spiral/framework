@@ -18,8 +18,8 @@ Includes
 =============
 
 Plug and Play extensions, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
-meta programing, cloud storages, scaffolding, auto-indexed translator, Interop Container,
-Zend Diactoros, Symfony Console, Symfony Translation, Symfony Events, Monolog, Twig, 
+static analysis, meta programing, cloud storages, scaffolding, auto-indexable translator, Interop Container,
+Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, 
 debugging/profiling tools and much more!
 
 Examples:
