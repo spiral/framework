@@ -88,7 +88,7 @@ public function uploadAction(StorageBucket $uploads)
 }
 ```
 
-Powerful ORM with automatic scaffolding for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with automatic scaffolding for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends Record 
@@ -134,6 +134,29 @@ $posts = Post::find()
 foreach($posts as $post) {
     echo $post->author->getName();
 }
+```
+
+
+ODM engine with inheritance, compositions, aggregations and cascade validation:
+
+```php
+class MediaProduct extends Product
+{
+    protected $schema = [
+        'mediaURL' => 'string',
+        'images'   => [Image::class],
+        
+        //Aggregations
+        'categories' => [Category::MANY => Category::class, [
+            '_id' => ['$in' => 'self::categoryIDs']
+        ]]
+    ];
+}
+```
+
+```php
+$media = new MediaProduct();
+$media->images[] = new Image(...);
 ```
 
 Embedded functionality for static indexation of your code:
