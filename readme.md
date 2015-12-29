@@ -95,7 +95,7 @@ class Post extends Record
 {
     use TimestampsTrait;
 
-    //Database partitions and isolation
+    //Database partitions, isolation and aliasing
     protected $database = 'blog';
 
     protected $schema = [
