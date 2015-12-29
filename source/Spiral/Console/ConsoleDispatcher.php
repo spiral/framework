@@ -35,6 +35,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Used as application dispatcher in console mode. Can execute automatically locate and execute
  * every available Symfony command.
+ * 
+ * @todo optimize
  */
 class ConsoleDispatcher extends Component implements SingletonInterface, DispatcherInterface
 {
