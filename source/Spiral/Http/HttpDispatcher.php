@@ -22,6 +22,9 @@ use Zend\Diactoros\ServerRequestFactory;
 /**
  * Basic spiral Http Dispatcher implementation. Used for web based applications and can route
  * requests to controllers or custom endpoints.
+ * 
+ * HttpDispatcher, it's endpoing can be replaced on application level with any other
+ * implementation.
  */
 class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonInterface
 {
