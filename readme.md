@@ -148,6 +148,8 @@ Extendable and programmable template engine compatible with any command syntax (
 <spiral:grid source="<?= $uploads ?>" as="upload">
     <grid:cell title="ID:" value="<?= $upload->getId() ?>"/>
     <grid:cell title="Time Created:" value="<?= $upload->getTimeCreated() ?>"/>
+    <grid:cell title="Label:" value="<?= e($upload->getLabel()) ?>"/>
+
     <grid:cell.bytes title="Filesize:" value="<?= $upload->getFilesize() ?>"/>
 
     <grid:cell>
