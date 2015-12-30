@@ -21,7 +21,7 @@ Examples:
 class HomeController extends Controller
 {
     /**
-     * Spiral DI can automatically deside what database/cache/storage
+     * DI can automatically deside what database/cache/storage
      * instance to provide for every action parameter based on it's 
      * name or type.
      *
