@@ -133,7 +133,7 @@ Embedded functionality for static indexation of your code:
 ```php
 public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
 {
-    //Not AST yet... :(
+    //Not AST yet, but planned... :(
     dump($locator->getClasses(ControllerInterface::class));
 }
 ```
