@@ -142,7 +142,7 @@ Shared components and shortcuts to container bindings:
 
 ![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
 
-Extendable and programmable template engine compatible with any command syntax (plain PHP by default):
+Extendable and programmable template engine compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
 
 ```html
 <spiral:grid source="<?= $uploads ?>" as="upload">
