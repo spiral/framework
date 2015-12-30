@@ -108,7 +108,7 @@ class Post extends Record
                 'time_assigned' => 'datetime',
                 'type'          => 'string, nullable',
             ],
-            self::INVERSE       => 'collaborated_posts'
+            User::INVERSE       => 'collaborated_posts'
         ],
     ];
 }
