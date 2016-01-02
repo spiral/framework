@@ -13,6 +13,7 @@ Temporary in transition
 * Scaffolding module (scaffolding engine has already been built)
 * PHPStorm IDE help module (ORM and ODM)
 * Guide update (current version requires some updates as new coding alternatives were created)
+* Authentication RBAC
 
 Examples:
 ========
