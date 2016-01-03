@@ -27,7 +27,7 @@ class HomeController extends Controller
      * name or type.
      *
      * In some cases you don't even need to configure DI to make entire
-     * application.
+     * application due autowiring nature of default container.
      *
      * @param Database $database
      * @param Database $logDatabase
