@@ -121,8 +121,7 @@ class Memory extends Component implements HippocampusInterface
     }
 
     /**
-     * Get extension to use for runtime data or configuration cache, all file in cache directory
-     * will additionally get applicationID postfix.
+     * Get extension to use for runtime data or configuration cache.
      *
      * @param string $name     Runtime data file name (without extension).
      * @param string $location Location to store data in.
