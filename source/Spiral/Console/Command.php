@@ -37,11 +37,6 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     private $askHelper = null;
 
     /**
-     * @var ResolverInterface
-     */
-    private $resolver = null;
-
-    /**
      * Command name.
      *
      * @var string
@@ -92,14 +87,9 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
 
     /**
      * @param InteropContainer  $container Required for shared/virtual bindings (if any).
-     * @param ResolverInterface $resolver  Required to resolve method injections.
      */
-    public function __construct(
-        InteropContainer $container = null,
-        ResolverInterface $resolver = null
-    ) {
+    public function __construct(InteropContainer $container = null) {
         $this->container = $this->saturate($container, ContainerInterface::class);
-        $this->resolver = $this->saturate($resolver, ResolverInterface::class);
 
         parent::__construct($this->name);
         $this->setDescription($this->description);
@@ -148,7 +138,8 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
         $reflection = new \ReflectionMethod($this, 'perform');
         $reflection->setAccessible(true);
 
-        return $reflection->invokeArgs($this, $this->resolver->resolveArguments(
+        $resolver = $this->container->get(ResolverInterface::class);
+        return $reflection->invokeArgs($this, $resolver->resolveArguments(
             $reflection, compact('input', 'output')
         ));
     }
