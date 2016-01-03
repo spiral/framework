@@ -11,7 +11,6 @@ use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\ControllerInterface;
-use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
