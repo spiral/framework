@@ -29,12 +29,15 @@ class HomeController extends Controller
      * In most cases you don't even need to configure DI to make entire
      * application due autowiring nature of default container.
      *
-     * @param Database $database
-     * @param Database $logDatabase
+     * @param Database   $database
+     * @param Database   $logDatabase
+     * @param HttpConfig $config
      * @return string
      */
-    public function indexAction(Database $database, Database $logDatabase)
+    public function indexAction(Database $database, Database $logDatabase, HttpConfig $config)
     {
+        dump($config->basePath());
+    
         $logDatabase->table('log')->insert(['message' => 'Yo!']);
     
         return $this->views->render('welcome', [
