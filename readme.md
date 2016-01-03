@@ -150,6 +150,20 @@ Shared components and shortcuts to container bindings:
 
 ![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
 
+```php
+class AppBootloader extends Bootloader
+{
+    protected $bindings = [
+        'myDB' => [self::class, 'myDB']
+    ];
+    
+    public function myDB(DatabaseManager $dbal)
+    {
+        return $dbal->database('default');
+    }
+}
+```
+
 Extendable and programmable template engine compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
 
 ```html
