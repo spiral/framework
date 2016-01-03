@@ -191,7 +191,7 @@ class DeclarationAggregator extends Declaration implements
         $result = '';
 
         foreach ($this->elements as $element) {
-            $result .= $element->render($indentLevel) . "\n";
+            $result .= $element->render($indentLevel) . "\n\n";
         }
 
         return rtrim($result, "\n");

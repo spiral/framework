@@ -80,7 +80,7 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
         }
 
         if (!empty($this->getName())) {
-            $result = $this->indent("namespace {$this->getName()} {", $indentLevel);
+            $result = $this->indent("namespace {$this->getName()} {", $indentLevel) . "\n";
             $indentShift = 1;
         }
 
@@ -91,7 +91,7 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
         $result .= $this->elements->render($indentLevel + $indentShift);
 
         if (!empty($this->getName())) {
-            $result = $this->indent("}", $indentLevel);
+            $result .= "\n" . $this->indent("}", $indentLevel);
         }
 
         return $result;
