@@ -198,7 +198,7 @@ Frontend toolkit with customizable AJAX forms and widgets:
 
 Includes
 =============
-Plug and Play extensions, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
+Plug and Play extensions, componental nature, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
 static analysis, meta programing, cloud storages, scaffolding, auto-indexable translator, Interop Container,
 Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, 
 debugging/profiling tools and much more.
