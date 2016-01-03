@@ -24,7 +24,7 @@ abstract class NamedDeclaration extends Declaration
      */
     public function __construct($name)
     {
-        $this->name = $name;
+        $this->setName($name);
     }
 
     /**
@@ -34,7 +34,7 @@ abstract class NamedDeclaration extends Declaration
      */
     public function setName($name)
     {
-        if (!preg_match('/^[a-z_0-9]+$/', $name)) {
+        if (!preg_match('/^[a-z_0-9]+$/i', $name)) {
             throw new ReactorException("Invalid element  name '{$name}'.");
         }
 
