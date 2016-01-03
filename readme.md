@@ -26,8 +26,8 @@ class HomeController extends Controller
      * instance to provide for every action parameter based on it's 
      * name or type.
      *
-     * In most cases you don't even need to configure DI to make entire
-     * application due autowiring nature of default container.
+     * In most cases you don't even need to configure DI to make your
+     * application work due autowiring nature of default container.
      *
      * @param Database   $database
      * @param Database   $logDatabase
