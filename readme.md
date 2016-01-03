@@ -26,6 +26,9 @@ class HomeController extends Controller
      * instance to provide for every action parameter based on it's 
      * name or type.
      *
+     * In some cases you don't even need to configure DI to make entire
+     * application.
+     *
      * @param Database $database
      * @param Database $logDatabase
      * @return string
