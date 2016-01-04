@@ -7,6 +7,7 @@
  */
 namespace Spiral\Reactor;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\ClassDeclaration\Aggregators\ConstantAggregator;
 use Spiral\Reactor\ClassDeclaration\Aggregators\MethodAggregator;
 use Spiral\Reactor\ClassDeclaration\Aggregators\PropertyAggregator;
@@ -82,6 +83,14 @@ class ClassDeclaration extends NamedDeclaration implements ReplaceableInterface
         $this->constants = new ConstantAggregator([]);
         $this->properties = new PropertyAggregator([]);
         $this->methods = new MethodAggregator([]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        return parent::setName(Inflector::classify($name));
     }
 
     /**

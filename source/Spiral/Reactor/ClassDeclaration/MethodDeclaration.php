@@ -7,6 +7,7 @@
  */
 namespace Spiral\Reactor\ClassDeclaration;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\Body\Source;
 use Spiral\Reactor\ClassDeclaration\Aggregators\ParameterAggregator;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
@@ -49,6 +50,14 @@ class MethodDeclaration extends NamedDeclaration implements ReplaceableInterface
 
         $this->initSource($source);
         $this->initComment($comment);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        return parent::setName(Inflector::camelize($name));
     }
 
     /**

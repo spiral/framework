@@ -7,6 +7,7 @@
  */
 namespace Spiral\Reactor\ClassDeclaration;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\AccessTrait;
 use Spiral\Reactor\Traits\CommentTrait;
@@ -39,6 +40,14 @@ class PropertyDeclaration extends NamedDeclaration
         parent::__construct($name);
         $this->setDefault($defaultValue);
         $this->initComment($comment);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        return parent::setName(Inflector::camelize($name));
     }
 
     /**

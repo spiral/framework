@@ -7,7 +7,6 @@
  */
 namespace Spiral\Reactor\Prototypes;
 
-use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\Exceptions\ReactorException;
 
 /**
@@ -37,7 +36,7 @@ abstract class NamedDeclaration extends Declaration
      */
     public function setName($name)
     {
-        $this->name = Inflector::classify($name);
+        $this->name = $name;
 
         return $this;
     }
