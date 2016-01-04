@@ -81,7 +81,7 @@ class PropertyDeclaration extends NamedDeclaration
     /**
      * @return mixed
      */
-    public function getDefaultValue()
+    public function getDefault()
     {
         return $this->defaultValue;
     }
@@ -99,8 +99,11 @@ class PropertyDeclaration extends NamedDeclaration
         $result .= $this->indent("{$this->access} \${$this->getName()}", $indentLevel);
 
         if ($this->hasDefault) {
-            //todo: make indent level work
-            $value = $this->serializer()->serialize($this->defaultValue, $indentLevel);
+            $value = $this->serializer()->serialize($this->defaultValue);
+
+            if (is_array($this->defaultValue)) {
+                $value = $this->mountIndents($value, $indentLevel);
+            }
 
             $result .= " = {$value};";
         } else {
@@ -108,5 +111,23 @@ class PropertyDeclaration extends NamedDeclaration
         }
 
         return $result;
+    }
+
+    /**
+     * Mount indentation to value. Attention, to be applied to arrays only!
+     *
+     * @param $serialized
+     * @param $indentLevel
+     * @return string
+     */
+    private function mountIndents($serialized, $indentLevel)
+    {
+        $lines = explode("\n", $serialized);
+        foreach ($lines as &$line) {
+            $line = $this->indent($line, $indentLevel);
+            unset($line);
+        }
+
+        return ltrim(join("\n", $lines));
     }
 }

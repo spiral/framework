@@ -9,8 +9,10 @@ namespace Spiral\Reactor;
 
 /**
  * Declares needed uses and aliases in array form.
+ *
+ * @todo automatically associate with class declaration?
  */
-interface UseRequesterInterface
+interface DependedInterface
 {
     /**
      * Must return needed uses in array form [class => alias|null] to be automatically merged
@@ -18,5 +20,5 @@ interface UseRequesterInterface
      *
      * @return array
      */
-    public function requestedUses();
+    public function getDependencies();
 }

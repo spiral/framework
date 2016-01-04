@@ -71,15 +71,6 @@ class FileDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
-     * @param ClassDeclaration $class
-     * @return $this
-     */
-    public function addClass(ClassDeclaration $class)
-    {
-        return $this->addElement($class);
-    }
-
-    /**
      * Method will automatically mount requested uses is any.
      *
      * @param RenderableInterface $element
@@ -89,8 +80,8 @@ class FileDeclaration extends Declaration implements ReplaceableInterface
     public function addElement(RenderableInterface $element)
     {
         $this->elements->add($element);
-        if ($element instanceof UseRequesterInterface) {
-            $this->addUses($element->requestsUses());
+        if ($element instanceof DependedInterface) {
+            $this->addUses($element->getDependencies());
         }
 
         return $this;

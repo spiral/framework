@@ -44,15 +44,6 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
     }
 
     /**
-     * @param ClassDeclaration $class
-     * @return $this
-     */
-    public function addClass(ClassDeclaration $class)
-    {
-        return $this->addElement($class);
-    }
-
-    /**
      * Method will automatically mount requested uses is any.
      *
      * @todo DRY, see FileDeclaration
@@ -63,8 +54,8 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
     public function addElement(RenderableInterface $element)
     {
         $this->elements->add($element);
-        if ($element instanceof UseRequesterInterface) {
-            $this->addUses($element->requestsUses());
+        if ($element instanceof DependedInterface) {
+            $this->addUses($element->getDependencies());
         }
 
         return $this;
