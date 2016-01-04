@@ -202,7 +202,7 @@ static analysis, metaprograming, cloud storages, auto-indexable translator (incl
 
 External Libraries
 ================
-Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces, singular fallback locale), Symfony Events, Monolog (thought PSR-3), Twig, Slugify (interface), Carbon, Funct (application only), PHP dotenv (cached), Guzzle 6 (cloud storages) and other
+Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces, singular fallback locale, domain routing), Symfony Events, Monolog (thought PSR-3), Twig, Slugify (interface), Carbon, Funct (application only), PHP dotenv (cached), Guzzle 6 (cloud storages) and other
 
 Inspired by
 ===========
