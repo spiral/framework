@@ -72,14 +72,6 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     private $outputScope = null;
 
     /**
-     * To prevent mixing of web and console load-maps we would like to get and configure our own
-     * Loader.
-     *
-     * @var Loader
-     */
-    protected $loader = null;
-
-    /**
      * @invisible
      * @var ContainerInterface
      */
@@ -106,19 +98,16 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      * @param HippocampusInterface  $memory
      * @param ClassLocatorInterface $locator
      * @param Debugger              $debugger
-     * @param Loader                $loader
      */
     public function __construct(
         ContainerInterface $container,
         HippocampusInterface $memory,
         ClassLocatorInterface $locator,
-        Debugger $debugger,
-        Loader $loader
+        Debugger $debugger
     ) {
         $this->container = $container;
         $this->memory = $memory;
         $this->locator = $locator;
-        $this->loader = $loader;
 
         //Trying to load list of commands from memory cache
         $this->commands = $memory->loadData('commands');
@@ -171,9 +160,6 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     {
         //Some console commands utilizes benchmarking, let's help them
         $this->container->bind(BenchmarkerInterface::class, Debugger::class);
-
-        //Let's disable loader in console mode
-        $this->loader->disable();
 
         $output = new ConsoleOutput();
         $this->debugger->shareHandler($this->consoleHandler($output));
