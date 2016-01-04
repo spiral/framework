@@ -200,9 +200,9 @@ Includes
 Plug and Play extensions, componental, small footprint, IDE friendly, frontend toolkit, cache and logic cache, scaffolding,
 static analysis, metaprograming, cloud storages, auto-indexable translator (including view compilation), debugging/profiling tools and much more 
 
-Vendor Libraries
+External Libraries
 ================
-Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog (thought PSR-3), Twig, Slugify (interface), Carbon, Funct (application only), PHP dotenv (cached), Guzzle (cloud storages) and other
+Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog (thought PSR-3), Twig, Slugify (interface), Carbon, Funct (application only), PHP dotenv (cached), Guzzle 6 (cloud storages) and other
 
 Inspired by
 ===========
