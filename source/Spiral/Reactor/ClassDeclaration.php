@@ -7,7 +7,6 @@
  */
 namespace Spiral\Reactor;
 
-use Spiral\Database\Entities\Schemas\AbstractColumn;
 use Spiral\Reactor\ClassDeclaration\Aggregators\ConstantAggregator;
 use Spiral\Reactor\ClassDeclaration\Aggregators\MethodAggregator;
 use Spiral\Reactor\ClassDeclaration\Aggregators\PropertyAggregator;
@@ -137,7 +136,7 @@ class ClassDeclaration extends NamedDeclaration implements ReplaceableInterface
      */
     public function addInterface($interface)
     {
-        $this->traits[ltrim($interface, '\\')] = true;
+        $this->interfaces[ltrim($interface, '\\')] = true;
 
         return $this;
     }
@@ -297,7 +296,7 @@ class ClassDeclaration extends NamedDeclaration implements ReplaceableInterface
 
         if (!empty($this->interfaces)) {
             $interfaces = join(", ", array_keys($this->interfaces));
-            $header .= "implements {$interfaces}";
+            $header .= " implements {$interfaces}";
         }
 
         $result .= $this->indent($header, $indentLevel) . "\n";

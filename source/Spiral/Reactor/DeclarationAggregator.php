@@ -74,8 +74,19 @@ class DeclarationAggregator extends Declaration implements
      */
     public function add(RenderableInterface $element)
     {
-        if (!in_array($type = get_class($element), $this->allowed)) {
-            throw new ReactorException("Elements with type {$type} are not allowed.");
+        $reflector = new \ReflectionObject($element);
+
+        $allowed = false;
+        foreach ($this->allowed as $class) {
+            if ($reflector->isSubclassOf($class) || get_class($element) == $class) {
+                $allowed = true;
+                break;
+            }
+        }
+
+        if (!$allowed) {
+            $type = get_class($element);
+            throw new ReactorException("Elements with type '{$type}' are not allowed.");
         }
 
         $this->elements[] = $element;

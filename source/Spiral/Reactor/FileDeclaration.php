@@ -71,6 +71,32 @@ class FileDeclaration extends Declaration implements ReplaceableInterface
     }
 
     /**
+     * @param ClassDeclaration $class
+     * @return $this
+     */
+    public function addClass(ClassDeclaration $class)
+    {
+        return $this->addElement($class);
+    }
+
+    /**
+     * Method will automatically mount requested uses is any.
+     *
+     * @param RenderableInterface $element
+     * @return $this
+     * @throws Exceptions\ReactorException
+     */
+    public function addElement(RenderableInterface $element)
+    {
+        $this->elements->add($element);
+        if ($element instanceof UsesRequesterInterface) {
+            $this->addUses($element->requestsUses());
+        }
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return $this
@@ -95,11 +121,11 @@ class FileDeclaration extends Declaration implements ReplaceableInterface
         }
 
         if (!empty($this->namespace)) {
-            $result .= "namespace {$this->namespace};\n";
+            $result .= "namespace {$this->namespace};\n\n";
         }
 
         if (!empty($this->uses)) {
-            $result .= $this->renderUses($indentLevel) . "\n";
+            $result .= $this->renderUses($indentLevel) . "\n\n";
         }
 
         $result .= $this->elements->render($indentLevel);

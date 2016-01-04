@@ -29,7 +29,7 @@ trait UsesTrait
     }
 
     /**
-     * Declare uses in a form of array [class => alias|null].
+     * Declare uses in a form of array [class => alias|null]. Existed uses will be dropped.
      *
      * @param array $uses
      * @return $this
@@ -37,6 +37,18 @@ trait UsesTrait
     public function setUses(array $uses)
     {
         $this->uses = [];
+
+        return $this->addUses($uses);
+    }
+
+    /**
+     * Add additional set of uses.
+     *
+     * @param array $uses
+     * @return $this
+     */
+    public function addUses(array $uses)
+    {
         foreach ($uses as $class => $alias) {
             $this->addUse($class, $alias);
         }
