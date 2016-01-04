@@ -151,6 +151,7 @@ class TwigEngine extends Component implements EngineInterface
     {
         if (!empty($this->modifiers)) {
             //Let's prepare source before giving it to Stempler
+            //todo: make sure not used until needed?
             $loader = new ModifiableLoader($loader, $this->getModifiers());
         }
 
