@@ -7,6 +7,7 @@
  */
 namespace Spiral\Reactor\Prototypes;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\Exceptions\ReactorException;
 
 /**
@@ -28,17 +29,15 @@ abstract class NamedDeclaration extends Declaration
     }
 
     /**
+     * Attention, element name will be automatically classified.
+     *
      * @param string $name
      * @return $this
      * @throws ReactorException
      */
     public function setName($name)
     {
-        if (!preg_match('/^[a-z_0-9]+$/i', $name)) {
-            throw new ReactorException("Invalid element  name '{$name}'.");
-        }
-
-        $this->name = $name;
+        $this->name = Inflector::classify($name);
 
         return $this;
     }
