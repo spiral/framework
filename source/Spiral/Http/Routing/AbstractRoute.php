@@ -111,6 +111,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * Route matches, populated after match() method executed. Internal.
      *
+     * @todo not sure if it's good idea to store matches in route?
      * @var array
      */
     protected $matches = [];
@@ -233,6 +234,7 @@ abstract class AbstractRoute implements RouteInterface
                 $this->matches
             );
 
+            //todo: return clone this, see copy?
             return true;
         }
 

@@ -26,10 +26,13 @@ use Spiral\Http\HttpDispatcher;
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
  * overwritten with custom instance).
- *
+ * 
+ * Btw, you can design your architecture any way you want: MVC, MMVC, HMVC, ADR, anything which can be 
+ * invoked and/or routed. Technically you can even invent your own, application specific, architecture.
+ * 
  * @property-read ContainerInterface $container Protected.
  * @todo move start method and dispatcher property into trait
- * @todo potentially add more events and create common event dispatcher?
+ * @todo potentially add more events and create common event dispatcher? or not?
  */
 abstract class Core extends Component implements CoreInterface, DirectoriesInterface
 {
@@ -41,7 +44,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * I need this constant for Symfony Console. :/
      */
-    const VERSION = '0.8.6-beta';
+    const VERSION = '0.8.7-beta';
 
     /**
      * Memory section for bootloaders cache.
@@ -253,6 +256,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
     /**
      * {@inheritdoc}
+     * 
+     * todo: add ability to register exception bridges (custom module exception => controller exception)
      */
     public function callAction($controller, $action = '', array $parameters = [])
     {
@@ -289,6 +294,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      */
     public function start(DispatcherInterface $dispatcher = null)
     {
+        //todo move dispatcher creation into core initialization method
         $this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
         $this->dispatcher->start();
     }

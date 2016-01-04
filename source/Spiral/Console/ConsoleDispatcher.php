@@ -35,16 +35,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Used as application dispatcher in console mode. Can execute automatically locate and execute
  * every available Symfony command.
+ * 
+ * @todo optimize
  */
 class ConsoleDispatcher extends Component implements SingletonInterface, DispatcherInterface
 {
-    /**
-     * Declares to IoC that component instance should be treated as singleton.
-     */
     const SINGLETON = self::class;
 
     /**
-     * Undefined response code for command (errors).
+     * Undefined response code for command (errors). See below.
      */
     const CODE_UNDEFINED = 102;
 

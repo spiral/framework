@@ -11,7 +11,6 @@ use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\ControllerInterface;
-use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
@@ -25,7 +24,7 @@ abstract class Controller extends Service implements ControllerInterface
     /**
      * To benchmark action execution time.
      */
-    use BenchmarkTrait, SaturateTrait;
+    use BenchmarkTrait;
 
     /**
      * Action method prefix value.
@@ -42,33 +41,12 @@ abstract class Controller extends Service implements ControllerInterface
     const ACTION_POSTFIX = 'Action';
 
     /**
-     * Needed to resolve method arguments.
-     *
-     * @invisible
-     * @var ResolverInterface
-     */
-    private $resolver = null;
-
-    /**
      * Default action to run.
      *
      * @var string
      */
     protected $defaultAction = 'index';
-
-    /**
-     * @param InteropContainer  $container Required for shared/virtual bindings (if any).
-     * @param ResolverInterface $resolver  Required to resolve method injections.
-     */
-    public function __construct(
-        InteropContainer $container = null,
-        ResolverInterface $resolver = null
-    ) {
-        parent::__construct($container);
-
-        $this->resolver = $this->saturate($resolver, ResolverInterface::class);
-    }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -149,14 +127,11 @@ abstract class Controller extends Service implements ControllerInterface
      */
     private function resolveArguments(\ReflectionMethod $method, array $parameters)
     {
-        if (empty($this->resolver)) {
-            //Preparation for isolate-container update
-            $this->resolver = $this->container()->get(ResolverInterface::class);
-        }
-
+        $resolver = $this->container->get(ResolverInterface::class);
+  
         try {
             //Getting set of arguments should be sent to requested method
-            return $this->resolver->resolveArguments($method, $parameters);
+            return $resolver->resolveArguments($method, $parameters);
         } catch (ArgumentException $exception) {
             throw new ControllerException(
                 "Missing/invalid parameter '{$exception->getParameter()->name}'.",

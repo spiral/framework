@@ -17,6 +17,8 @@ use Spiral\Http\Exceptions\RouterException;
 
 /**
  * Spiral implementation of RouterInterface.
+ * 
+ * @todo potentially add ability to work as middleware with $next call
  */
 class Router implements RouterInterface
 {
@@ -156,7 +158,12 @@ class Router implements RouterInterface
     protected function findRoute(ServerRequestInterface $request, $basePath)
     {
         foreach ($this->routes as $route) {
-            if ($route->match($request, $basePath)) {
+            if (!empty($matched = $route->match($request, $basePath))) {
+                if($matched instanceof RouteInterface){
+                    //todo: future agreement
+                    return $matched;
+                }
+                
                 return $route;
             }
         }

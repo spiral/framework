@@ -22,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  *
  * ORM: time_created, time_updated
  * ODM: timeCreated, timeUpdated
+ * 
+ * @todo find alternatives to declarative traits
  */
 trait TimestampsTrait
 {

@@ -24,9 +24,6 @@ use Zend\Diactoros\Response\SapiEmitter;
  */
 class HttpCore extends Component implements HttpInterface
 {
-    /**
-     * HttpDispatcher has embedded router and log it's errors.
-     */
     use BenchmarkTrait, MiddlewaresTrait;
 
     /**

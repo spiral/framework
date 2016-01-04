@@ -18,12 +18,12 @@ use Spiral\Http\Traits\MiddlewaresTrait;
 
 /**
  * Pipeline used to pass request and response thought the chain of middlewares.
+ * 
+ * Spiral middlewares are similar to Laravel's one. However router and http itself
+ * can be in used in zend expressive.
  */
 class MiddlewarePipeline extends Component
 {
-    /**
-     * Sugar.
-     */
     use SaturateTrait, JsonTrait, MiddlewaresTrait;
 
     /**
