@@ -44,15 +44,6 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
     }
 
     /**
-     * @param ClassDeclaration $class
-     * @return $this
-     */
-    public function addClass(ClassDeclaration $class)
-    {
-        return $this->addElement($class);
-    }
-
-    /**
      * Method will automatically mount requested uses is any.
      *
      * @todo DRY, see FileDeclaration
