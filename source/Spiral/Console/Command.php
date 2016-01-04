@@ -86,9 +86,10 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     protected $container = null;
 
     /**
-     * @param InteropContainer  $container Required for shared/virtual bindings (if any).
+     * @param InteropContainer $container Required for shared/virtual bindings (if any).
      */
-    public function __construct(InteropContainer $container = null) {
+    public function __construct(InteropContainer $container = null)
+    {
         $this->container = $this->saturate($container, ContainerInterface::class);
 
         parent::__construct($this->name);
@@ -139,6 +140,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
         $reflection->setAccessible(true);
 
         $resolver = $this->container->get(ResolverInterface::class);
+
         return $reflection->invokeArgs($this, $resolver->resolveArguments(
             $reflection, compact('input', 'output')
         ));
