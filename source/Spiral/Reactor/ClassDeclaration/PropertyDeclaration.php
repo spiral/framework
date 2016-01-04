@@ -114,7 +114,7 @@ class PropertyDeclaration extends NamedDeclaration
     }
 
     /**
-     * Mount indentation to value.
+     * Mount indentation to value. Attention, to be applied to arrays only!
      *
      * @param $serialized
      * @param $indentLevel
