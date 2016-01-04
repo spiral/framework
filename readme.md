@@ -12,7 +12,7 @@ Temporary in transition
 =======================
 * PHPStorm IDE help module (ORM and ODM)
 * Guide update (current version requires some updates as new coding alternatives were created)
-* Authentication module RBAC
+* Security module
 
 Examples:
 ========
