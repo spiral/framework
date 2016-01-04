@@ -163,6 +163,10 @@ class AppBootloader extends Bootloader
 }
 ```
 
+```php
+echo $this->myDB->table('users')->count();
+```
+
 Extendable and programmable template engine compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
 
 ```html
