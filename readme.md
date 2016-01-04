@@ -211,4 +211,6 @@ Inspired by
 ===========
 Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails (conceptually).
 
+
+---
 Released under an [MIT license](/LICENSE). [Contribution notes](https://github.com/spiral/guide/blob/master/contributing.md).
