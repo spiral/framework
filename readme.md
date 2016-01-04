@@ -171,7 +171,8 @@ Extendable and programmable template engine compatible with any command syntax (
     <grid:cell title="Time Created:" value="<?= $upload->getTimeCreated() ?>"/>
     <grid:cell title="Label:" value="<?= e($upload->getLabel()) ?>"/>
 
-    <grid:cell.bytes title="Filesize:" value="<?= $upload->getFilesize() ?>"/>
+    <!-- Behaves as usual html tag -->
+    <grid:cell.bytes title="Filesize:" value="<?= $upload->getFilesize() ?>" style="color: blue;"/>
 
     <grid:cell>
         <a href="<?= uri('uploads::edit', $upload) ?>">Edit</a>
