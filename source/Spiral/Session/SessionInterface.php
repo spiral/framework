@@ -15,43 +15,12 @@ use Spiral\Session\Exceptions\SessionException;
 interface SessionInterface
 {
     /**
-     * Set session id, if session already started data has to be committed to permanent storage.
-     *
-     * @param string $id
-     * @param bool   $start Automatically start session with new id.
-     * @throws SessionException
-     */
-    public function setID($id, $start = true);
-
-    /**
      * Get session ID or create new one if session not started.
      *
-     * @param bool $start Automatically start session.
-     * @return string|null
+     * @return string
      * @throws SessionException
      */
-    public function getID($start = true);
-
-    /**
-     * Initiate store and start session.
-     *
-     * @throws SessionException
-     */
-    public function start();
-
-    /**
-     * Check is session has been started.
-     *
-     * @return bool
-     */
-    public function isStarted();
-
-    /**
-     * Check is session were destroyed.
-     *
-     * @return bool
-     */
-    public function isDestroyed();
+    public function getID();
 
     /**
      * Commit all session data to session handler, this will close session before script ends.
@@ -60,13 +29,6 @@ interface SessionInterface
      * @throws SessionException
      */
     public function commit();
-
-    /**
-     * Destroys session data, session has to be started at this moment.
-     *
-     * @throws SessionException
-     */
-    public function destroy();
 
     /**
      * All values stored in session.
@@ -116,6 +78,14 @@ interface SessionInterface
     public function inc($name, $delta = 1);
 
     /**
+     * Delete data from session.
+     *
+     * @param string $name
+     * @throws SessionException
+     */
+    public function delete($name);
+
+    /**
      * Decrement numeric value stored in cache. Must return decremented value.
      *
      * @param string $name
@@ -124,14 +94,6 @@ interface SessionInterface
      * @throws SessionException
      */
     public function dec($name, $delta = 1);
-
-    /**
-     * Delete data from session.
-     *
-     * @param string $name
-     * @throws SessionException
-     */
-    public function delete($name);
 
     /**
      * Read item from session and delete it after.

@@ -79,20 +79,30 @@ class PropertyDeclaration extends NamedDeclaration
     }
 
     /**
+     * @return mixed
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render($indentLevel = 0)
     {
         $result = '';
         if (!$this->docComment->isEmpty()) {
-            $result .= $this->docComment->render($indentLevel)."\n";
+            $result .= $this->docComment->render($indentLevel) . "\n";
         }
 
         $result .= $this->indent("{$this->access} \${$this->getName()}", $indentLevel);
 
         if ($this->hasDefault) {
             //todo: make indent level work
-            $result .= " = " . $this->serializer()->serialize($this->defaultValue, $indentLevel) . ";";
+            $value = $this->serializer()->serialize($this->defaultValue, $indentLevel);
+
+            $result .= " = {$value};";
         } else {
             $result .= ";";
         }

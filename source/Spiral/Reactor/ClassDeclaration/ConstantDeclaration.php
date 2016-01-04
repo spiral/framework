@@ -7,6 +7,7 @@
  */
 namespace Spiral\Reactor\ClassDeclaration;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\CommentTrait;
 use Spiral\Reactor\Traits\SerializerTrait;
@@ -36,6 +37,14 @@ class ConstantDeclaration extends NamedDeclaration
         parent::__construct($name);
         $this->value = $value;
         $this->initComment($comment);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        return parent::setName(strtoupper(Inflector::tableize($name)));
     }
 
     /**

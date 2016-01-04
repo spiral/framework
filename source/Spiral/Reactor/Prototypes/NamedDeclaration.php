@@ -24,20 +24,18 @@ abstract class NamedDeclaration extends Declaration
      */
     public function __construct($name)
     {
-        $this->name = $name;
+        $this->setName($name);
     }
 
     /**
+     * Attention, element name will be automatically classified.
+     *
      * @param string $name
      * @return $this
      * @throws ReactorException
      */
     public function setName($name)
     {
-        if (!preg_match('/^[a-z_0-9]+$/', $name)) {
-            throw new ReactorException("Invalid element  name '{$name}'.");
-        }
-
         $this->name = $name;
 
         return $this;

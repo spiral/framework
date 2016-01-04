@@ -7,6 +7,7 @@
  */
 namespace Spiral\Reactor\ClassDeclaration;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\Body\Source;
 use Spiral\Reactor\ClassDeclaration\Aggregators\ParameterAggregator;
 use Spiral\Reactor\Prototypes\NamedDeclaration;

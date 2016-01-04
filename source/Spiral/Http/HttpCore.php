@@ -115,6 +115,22 @@ class HttpCore extends Component implements HttpInterface
     }
 
     /**
+     * Running spiral as middleware.
+     *
+     * @todo add ability to call $next on NotFound exceptions
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     * @return ResponseInterface
+     * @throws HttpException
+     */
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
+        return $this->perform($request, $response);
+    }
+
+    /**
      * Dispatch response to client.
      *
      * @param ResponseInterface $response

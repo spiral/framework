@@ -49,7 +49,23 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
      */
     public function addClass(ClassDeclaration $class)
     {
-        $this->elements->add($class);
+        return $this->addElement($class);
+    }
+
+    /**
+     * Method will automatically mount requested uses is any.
+     *
+     * @todo DRY, see FileDeclaration
+     * @param RenderableInterface $element
+     * @return $this
+     * @throws Exceptions\ReactorException
+     */
+    public function addElement(RenderableInterface $element)
+    {
+        $this->elements->add($element);
+        if ($element instanceof UseRequesterInterface) {
+            $this->addUses($element->requestsUses());
+        }
 
         return $this;
     }
@@ -80,18 +96,18 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
         }
 
         if (!empty($this->getName())) {
-            $result = $this->indent("namespace {$this->getName()} {", $indentLevel);
+            $result = $this->indent("namespace {$this->getName()} {", $indentLevel) . "\n";
             $indentShift = 1;
         }
 
         if (!empty($this->uses)) {
-            $result .= $this->renderUses($indentLevel + $indentShift) . "\n";
+            $result .= $this->renderUses($indentLevel + $indentShift) . "\n\n";
         }
 
         $result .= $this->elements->render($indentLevel + $indentShift);
 
         if (!empty($this->getName())) {
-            $result = $this->indent("}", $indentLevel);
+            $result .= "\n" . $this->indent("}", $indentLevel);
         }
 
         return $result;

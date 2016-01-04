@@ -7,6 +7,7 @@
  */
 namespace Spiral\Reactor\ClassDeclaration;
 
+use Doctrine\Common\Inflector\Inflector;
 use Spiral\Reactor\Prototypes\NamedDeclaration;
 use Spiral\Reactor\Traits\SerializerTrait;
 
@@ -41,6 +42,14 @@ class ParameterDeclaration extends NamedDeclaration
      * @var bool
      */
     private $pdb = false;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        return parent::setName(Inflector::camelize($name));
+    }
 
     /**
      * @param string $type

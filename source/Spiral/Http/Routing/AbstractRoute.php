@@ -350,6 +350,7 @@ abstract class AbstractRoute implements RouteInterface
             return $this->core->callAction($controller, $action, $parameters);
         } catch (ControllerException $exception) {
             //Converting one exception to another
+            //todo: i need more exception converters closer to core
             switch ($exception->getCode()) {
                 case ControllerException::BAD_ACTION:
                 case ControllerException::NOT_FOUND:
@@ -370,12 +371,12 @@ abstract class AbstractRoute implements RouteInterface
         $replaces = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
 
         $options = [];
-
         if (preg_match_all('/<(\w+):?(.*?)?>/', $this->pattern, $matches)) {
             $variables = array_combine($matches[1], $matches[2]);
 
             foreach ($variables as $name => $segment) {
-                $segment = $segment ?: self::DEFAULT_SEGMENT;
+                //Segment regex
+                $segment = !empty($segment) ? $segment : self::DEFAULT_SEGMENT;
                 $replaces["<$name>"] = "(?P<$name>$segment)";
                 $options[] = $name;
             }
