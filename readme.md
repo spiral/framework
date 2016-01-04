@@ -202,7 +202,7 @@ static analysis, metaprograming, cloud storages, auto-indexable translator, debu
 
 Vendor Libraries
 ================
-Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, Slugify, Carbon, Funct (application only), PHP dotenv (cached), Guzzle (cloud storages) and other
+Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog (thought PSR-3), Twig, Slugify (interface), Carbon, Funct (application only), PHP dotenv (cached), Guzzle (cloud storages) and other
 
 Inspired by
 ===========
