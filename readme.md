@@ -106,7 +106,7 @@ class Post extends Record
         'author'   => [self::BELONGS_TO => Author::class],
         'comments' => [self::HAS_MANY => Comment::class]
         
-        //Not very simple relation definitions (optional)
+        //Not too simple relation definitions (optional)
         'collaborators' => [
             self::MANY_TO_MANY  => User::class,
             self::PIVOT_TABLE   => 'post_collaborators_map',
