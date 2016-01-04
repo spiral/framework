@@ -89,7 +89,7 @@ class FileDeclaration extends Declaration implements ReplaceableInterface
     public function addElement(RenderableInterface $element)
     {
         $this->elements->add($element);
-        if ($element instanceof UsesRequesterInterface) {
+        if ($element instanceof UseRequesterInterface) {
             $this->addUses($element->requestsUses());
         }
 
