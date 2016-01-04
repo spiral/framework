@@ -64,7 +64,7 @@ class NamespaceDeclaration extends NamedDeclaration implements ReplaceableInterf
     {
         $this->elements->add($element);
         if ($element instanceof UseRequesterInterface) {
-            $this->addUses($element->requestsUses());
+            $this->addUses($element->requestedUses());
         }
 
         return $this;

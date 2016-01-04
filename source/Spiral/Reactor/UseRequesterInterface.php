@@ -18,5 +18,5 @@ interface UseRequesterInterface
      *
      * @return array
      */
-    public function requestsUses();
+    public function requestedUses();
 }
