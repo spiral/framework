@@ -199,7 +199,7 @@ Includes
 =============
 Plug and Play extensions, componental nature, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
 static analysis, metaprograming, cloud storages, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, 
-Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profiling tools and much more.
+Symfony Translation (interfaces), Symfony Events, Monolog, Twig, Slugify, Carbon, Funct, PHPDotEnv, Guzzle, debugging/profiling tools and much more.
 
 Inspired by
 ===========
