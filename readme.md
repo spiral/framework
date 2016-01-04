@@ -196,10 +196,13 @@ Frontend toolkit with customizable AJAX forms and widgets:
 ![Form](https://raw.githubusercontent.com/spiral/guide/master/resources/form.gif)
 
 Includes
-=============
-Plug and Play extensions, componental nature, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
-static analysis, metaprograming, cloud storages, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, 
-Symfony Translation (interfaces), Symfony Events, Monolog, Twig, Slugify, Carbon, Funct (application only), PHP dotenv (cached), Guzzle (storages), debugging/profiling tools and much more.
+========
+Plug and Play extensions, componental, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
+static analysis, metaprograming (views), cloud storages, auto-indexable translator, debugging/profiling tools and much more 
+
+Vendor Libraries
+================
+Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, Slugify, Carbon, Funct (application only), PHP dotenv (cached), Guzzle (cloud storages) and other
 
 Inspired by
 ===========
