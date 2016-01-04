@@ -23,12 +23,10 @@ class Serializer
     /**
      * Serialize array.
      *
-     * @todo Make indent level work.
      * @param mixed $array
-     * @param int   $indentLevel
      * @return string
      */
-    public function serialize($array, $indentLevel = 0)
+    public function serialize($array)
     {
         if (is_array($array)) {
             return $this->packArray($array);
