@@ -43,14 +43,6 @@ class PropertyDeclaration extends NamedDeclaration
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function setName($name)
-    {
-        return parent::setName(Inflector::camelize($name));
-    }
-
-    /**
      * Has default value.
      *
      * @return bool

@@ -53,14 +53,6 @@ class MethodDeclaration extends NamedDeclaration implements ReplaceableInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function setName($name)
-    {
-        return parent::setName(Inflector::camelize($name));
-    }
-
-    /**
      * @param bool $static
      * @return $this
      */
