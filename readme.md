@@ -86,7 +86,7 @@ public function uploadAction(StorageBucket $uploads)
 }
 ```
 
-ORM with automatic scaffolding for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with automatic scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends Record 
