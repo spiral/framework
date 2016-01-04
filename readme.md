@@ -201,7 +201,7 @@ Frontend toolkit with customizable AJAX forms and widgets:
 Includes
 ========
 Plug and Play extensions, componental, small footprint, IDE friendly, frontend toolkit, cache and logic cache, scaffolding,
-static analysis, metaprograming, cloud storages, auto-indexable translator (including view compilation), debugging/profiling tools and much more 
+static analysis, metaprograming, cloud storages, auto-indexable translator (including view compilation), strict ODM engine, debugging/profiling tools and much more 
 
 External Libraries
 ================
