@@ -53,41 +53,6 @@ $route->middleware(function ($request, $response, $next) {
     return $next($request, $response)->withHeader('My-Header', 'Yay!');
 });
 ```
-
-JSON responses, method injections, container visibility scopes:
-
-```php
-public function indexAction(ServerRequestInterface $request)
-{
-    return [
-        'status' => 200,
-        'uri'    => (string)$request->getUri()
-    ];
-}
-```
-
-Database introspection and schema declaration (diff based):
-
-![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
-
-StorageManger to simplify process of working with remote storages:
-
-```php
-public function uploadAction(StorageBucket $uploads)
-{
-    $object = $bucket->put(
-        'my-upload.file',
-        $this->input->files->get('upload')
-    );
-    
-    //...
-    
-    echo $object->replace('amazon')->getAddress();
-}
-```
-
-ORM with automatic scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
-
 ```php
 class Post extends Record 
 {
@@ -135,40 +100,6 @@ foreach($posts as $post) {
 }
 ```
 
-Embedded functionality for static indexation of your code:
-
-```php
-public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
-{
-    //Not AST yet, but planned... :(
-    dump($locator->getClasses(ControllerInterface::class));
-}
-```
-
-Shared components and shortcuts to container bindings:
-
-![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
-
-```php
-class AppBootloader extends Bootloader
-{
-    protected $bindings = [
-        'myDB' => [self::class, 'myDB']
-    ];
-    
-    public function myDB(DatabaseManager $dbal)
-    {
-        return $dbal->database('default');
-    }
-}
-```
-
-```php
-echo $this->myDB->table('users')->count();
-```
-
-Extendable and programmable template engine compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
-
 ```html
 <spiral:grid source="<?= $uploads ?>" as="upload">
     <grid:cell title="ID:" value="<?= $upload->getId() ?>"/>
@@ -187,34 +118,3 @@ Extendable and programmable template engine compatible with any command syntax (
     <?= mt_rand(0, 100) ?>
 </spiral:cache>
 ```
-> You can write your own virtual tags (similar to web components) with almost any functionality or connect external libraries.
-
-Frontend toolkit with customizable AJAX forms and widgets:
-
-```html
-<spiral:form action="/sample/save/<?= $entity->id ?>">
-    <form.input label="Value" name="value" value="<?= $entity->child->value ?>"/>
-    
-    <!-- Compatible with regular html tags, inputs and layout elements -->
-    <input type="submit" class="btn btn-default" value="[[Update Element]]"/>
-</spiral:form>
-```
-
-![Form](https://raw.githubusercontent.com/spiral/guide/master/resources/form.gif)
-
-Includes
-========
-Plug and Play extensions, componental, small footprint, IDE friendly, frontend toolkit, cache and logic cache, scaffolding,
-static analysis, metaprograming, cloud storages, auto-indexable translator (including view compilation), ODM engine (strict), debugging/profiling tools and much more 
-
-External Libraries
-================
-Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (singular fallback locale, domain routing), Symfony Events, Monolog (thought PSR-3), Twig, Slugify (interface), Carbon, Funct (application only), PHP dotenv (cached), Guzzle 6 (cloud storages) and other
-
-Inspired by
-===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails (conceptually).
-
-
----
-Released under an [MIT license](/LICENSE). [Contribution notes](https://github.com/spiral/guide/blob/master/contributing.md).
