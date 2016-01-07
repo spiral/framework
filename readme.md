@@ -45,14 +45,6 @@ class HomeController extends Controller
     }
 }
 ```
-
-PSR-7 is under the hood:
-
-```php
-$route->middleware(function ($request, $response, $next) {
-    return $next($request, $response)->withHeader('My-Header', 'Yay!');
-});
-```
 ```php
 class Post extends Record 
 {
