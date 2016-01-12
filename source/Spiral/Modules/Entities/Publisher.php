@@ -58,12 +58,14 @@ class Publisher extends Component implements PublisherInterface
             throw new PublishException("Given '{$filename}' is not valid file.");
         }
 
+        //wtf? always empty
         if (empty($relativeFilename)) {
             $relativeFilename = $this->files->normalizePath(
                 $this->files->relativePath($filename, $this->directories->directory('root'))
             );
         }
 
+        //wtf?
         if (empty($relativeDestination)) {
             $relativeDestination = $this->files->relativePath(
                 $destination,
