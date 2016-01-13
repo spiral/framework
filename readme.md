@@ -104,7 +104,7 @@ class Post extends Record
         
         //Simple relation definition (optional)
         'author'   => [self::BELONGS_TO => Author::class],
-        'comments' => [self::HAS_MANY => Comment::class]
+        'comments' => [self::HAS_MANY => Comment::class],
         
         //Not very simple relation definitions (optional)
         'collaborators' => [
