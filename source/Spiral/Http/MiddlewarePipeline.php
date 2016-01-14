@@ -163,7 +163,7 @@ class MiddlewarePipeline extends Component
      */
     protected function execute(Request $request, Response $response)
     {
-        //todo: What about DI here?
+        //todo: What about DI here? think about InvokerInterface
         return call_user_func($this->target, $request, $response);
     }
 
