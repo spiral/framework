@@ -7,8 +7,6 @@
  */
 namespace Spiral\Translator;
 
-use Doctrine\Common\Inflector\Inflector;
-use Psr\Log\LoggerAwareInterface;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\HippocampusInterface;
@@ -326,7 +324,7 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
     {
         $catalogue = new Catalogue($locale, $this->memory);
 
-        if (array_key_exists($locale, $this->loadedLocales) && !$this->config->autoReload()) {
+        if (array_key_exists($locale, $this->loadedLocales) && $this->config->cacheLocales()) {
             //Has been loaded
             return $catalogue;
         }

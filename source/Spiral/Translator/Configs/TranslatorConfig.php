@@ -26,6 +26,7 @@ class TranslatorConfig extends InjectableConfig
         'locale'           => '',
         'fallbackLocale'   => '',
         'localesDirectory' => '',
+        'cacheLocales'     => true,
         'autoRegister'     => true,
         'domains'          => [],
         'loaders'          => [],
@@ -52,11 +53,15 @@ class TranslatorConfig extends InjectableConfig
     /**
      * @return bool
      */
-    public function autoReload()
+    public function cacheLocales()
     {
-        return !empty($this->config['autoReload']);
-    }
+        if (!empty($this->config['cacheLocales'])) {
+            return true;
+        }
 
+        //Legacy configs
+        return empty($this->config['autoReload']);
+    }
 
     /**
      * @return bool
