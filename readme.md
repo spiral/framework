@@ -11,7 +11,6 @@ Spiral framework has not been publicly released/announced yet due guide is still
 Temporary in transition
 =======================
 * PHPStorm IDE help module (ORM and ODM)
-* Role/Permission/Rule security component
 * Guide update (current version requires some updates as new coding alternatives were created)
 
 Examples:
