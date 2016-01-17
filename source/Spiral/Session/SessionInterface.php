@@ -23,14 +23,6 @@ interface SessionInterface
     public function getID();
 
     /**
-     * Commit all session data to session handler, this will close session before script ends.
-     * Session will be restarted on next call.
-     *
-     * @throws SessionException
-     */
-    public function commit();
-
-    /**
      * All values stored in session.
      *
      * @return array
