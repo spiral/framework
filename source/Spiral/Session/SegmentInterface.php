@@ -12,7 +12,7 @@ use Spiral\Session\Exceptions\SessionException;
 /**
  * Singular session segment (session data isolator).
  *
- * @todo Merge with parent.
+ * @todo INACTIVE AT THIS MOMENT!
  */
 interface SegmentInterface
 {
@@ -54,6 +54,14 @@ interface SegmentInterface
     public function get($name, $default = null);
 
     /**
+     * Delete data from session.
+     *
+     * @param string $name
+     * @throws SessionException
+     */
+    public function delete($name);
+
+    /**
      * Increment numeric value stored in cache. Must return incremented value.
      *
      * @param string $name
@@ -62,14 +70,6 @@ interface SegmentInterface
      * @throws SessionException
      */
     public function inc($name, $delta = 1);
-
-    /**
-     * Delete data from session.
-     *
-     * @param string $name
-     * @throws SessionException
-     */
-    public function delete($name);
 
     /**
      * Decrement numeric value stored in cache. Must return decremented value.
