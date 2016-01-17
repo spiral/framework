@@ -88,7 +88,7 @@ public function uploadAction(StorageBucket $uploads)
 ORM with automatic scaffolding for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
-class Post extends Record 
+class Post extends Record //or RecordEntity to use as DataMapper
 {
     use TimestampsTrait;
 
