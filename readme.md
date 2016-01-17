@@ -203,4 +203,4 @@ Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profi
 
 Inspired by
 ===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails (conceptually).
+Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails (conceptually), other engines.
