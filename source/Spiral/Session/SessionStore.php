@@ -17,6 +17,7 @@ use Spiral\Session\Exceptions\SessionException;
  * Default implementation of StoreInterface, can map session data to specified SessionHandler. By
  * default spiral session uses native php sessions as backbone, it can be changed in future.
  *
+ * @todo to be rewritten (drop native session starters) + segments
  * @todo At this moment native php sessions used which limits functionality a bit.
  * @todo probably not the best component due sticking to native sessions, to find replacement
  * @todo add storage manager
