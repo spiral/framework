@@ -280,7 +280,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
                 );
             }
 
-
             return $controller->callAction($action, $parameters);
         } finally {
             $this->benchmark($benchmark);
