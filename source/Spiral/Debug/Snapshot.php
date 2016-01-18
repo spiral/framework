@@ -105,7 +105,7 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
         }
 
         return $this->rendered = $this->views->render($this->config->viewName(), [
-            'exception' => $this->exception()
+            'exception' => $this->getException()
         ]);
     }
 
@@ -114,7 +114,7 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
      */
     protected function saveSnapshot()
     {
-        $filename = $this->config->snapshotFilename($this->exception(), time());
+        $filename = $this->config->snapshotFilename($this->getException(), time());
         $this->files->write($filename, $this->render(), FilesInterface::RUNTIME, true);
 
         $snapshots = $this->files->getFiles($this->config->reportingDirectory());

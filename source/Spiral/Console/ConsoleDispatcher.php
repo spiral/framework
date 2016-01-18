@@ -252,7 +252,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             $output = new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        $this->application()->renderException($snapshot->exception(), $output);
+        $this->application()->renderException($snapshot->getException(), $output);
     }
 
     /**

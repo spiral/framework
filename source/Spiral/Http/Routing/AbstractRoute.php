@@ -263,17 +263,21 @@ abstract class AbstractRoute implements RouteInterface
             $this->compile();
         }
 
+        if (empty($slugify)) {
+            $slugify = new Slugify();
+        }
+
         $parameters = $this->fetchParameters($parameters, $slugify);
         $parameters = $parameters + $this->defaults + $this->compiled['options'];
 
         //Uri without empty blocks (pretty stupid implementation)
-        $uri = strtr(
+        $path = strtr(
             \Spiral\interpolate($this->compiled['template'], $parameters, '<', '>'),
             ['[]' => '', '[/]' => '', '[' => '', ']' => '', '//' => '/']
         );
 
         $uri = new Uri(
-            ($this->withHost ? '' : $basePath) . $uri
+            ($this->withHost ? '' : $basePath) . rtrim($path, '/')
         );
 
         //Getting additional query parameters
@@ -348,18 +352,27 @@ abstract class AbstractRoute implements RouteInterface
 
         try {
             return $this->core->callAction($controller, $action, $parameters);
-        } catch (ControllerException $exception) {
-            //Converting one exception to another
-            //todo: i need more exception converters closer to core
-            switch ($exception->getCode()) {
-                case ControllerException::BAD_ACTION:
-                case ControllerException::NOT_FOUND:
-                    throw new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
-                case  ControllerException::FORBIDDEN:
-                    throw new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
-                default:
-                    throw new ClientException(ClientException::BAD_DATA, $exception->getMessage());
-            }
+        } catch (ControllerException $e) {
+            throw $this->convertException($e);
+        }
+    }
+
+    /**
+     * Converts controller exceptions into client exceptions.
+     *
+     * @param ControllerException $exception
+     * @return ClientException
+     */
+    protected function convertException(ControllerException $exception)
+    {
+        switch ($exception->getCode()) {
+            case ControllerException::BAD_ACTION:
+            case ControllerException::NOT_FOUND:
+                return new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
+            case  ControllerException::FORBIDDEN:
+                return new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
+            default:
+                return new ClientException(ClientException::BAD_DATA, $exception->getMessage());
         }
     }
 

@@ -38,7 +38,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
     /**
      * {@inheritdoc}
      */
-    public function exception()
+    public function getException()
     {
         return $this->exception;
     }
@@ -46,7 +46,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
     /**
      * {@inheritdoc}
      */
-    public function formattedMessage()
+    public function getMessage()
     {
         return ExceptionSupport::createMessage($this->exception);
     }
@@ -56,7 +56,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
      */
     public function report()
     {
-        $this->logger->error($this->formattedMessage());
+        $this->logger->error($this->getMessage());
     }
 
     /**
@@ -65,7 +65,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
     public function describe()
     {
         return [
-            'error'    => $this->formattedMessage(),
+            'error'    => $this->getMessage(),
             'location' => [
                 'file' => $this->exception->getFile(),
                 'line' => $this->exception->getLine()

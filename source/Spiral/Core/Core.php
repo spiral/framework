@@ -280,7 +280,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
                 );
             }
 
-
             return $controller->callAction($action, $parameters);
         } finally {
             $this->benchmark($benchmark);
@@ -352,7 +351,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             //Now dispatcher can handle snapshot it's own way
             $this->dispatcher->handleSnapshot($snapshot);
         } else {
-            echo $snapshot->exception();
+            echo $snapshot->getException();
         }
     }
 
