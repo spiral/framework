@@ -353,7 +353,7 @@ abstract class AbstractRoute implements RouteInterface
         try {
             return $this->core->callAction($controller, $action, $parameters);
         } catch (ControllerException $e) {
-            return $this->convertException($e);
+            throw $this->convertException($e);
         }
     }
 
