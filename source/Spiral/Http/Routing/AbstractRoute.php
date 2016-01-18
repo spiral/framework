@@ -271,13 +271,13 @@ abstract class AbstractRoute implements RouteInterface
         $parameters = $parameters + $this->defaults + $this->compiled['options'];
 
         //Uri without empty blocks (pretty stupid implementation)
-        $uri = strtr(
+        $path = strtr(
             \Spiral\interpolate($this->compiled['template'], $parameters, '<', '>'),
             ['[]' => '', '[/]' => '', '[' => '', ']' => '', '//' => '/']
         );
 
         $uri = new Uri(
-            ($this->withHost ? '' : $basePath) . $uri
+            ($this->withHost ? '' : $basePath) . rtrim($path, '/')
         );
 
         //Getting additional query parameters
