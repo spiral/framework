@@ -13,7 +13,6 @@ Temporary in transition
 =======================
 * PHPStorm IDE help module (ORM and ODM)
 * Guide update (current version requires some updates as new coding alternatives were created)
-* Albus administration [panel](https://github.com/spiral-modules/albus) (+[flat RBAC](https://github.com/spiral-modules/security)) with set of Dark partials
 
 Examples:
 ========
