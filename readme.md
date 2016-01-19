@@ -152,7 +152,7 @@ Extendable and programmable template engine compatible with any command syntax (
 
 Includes
 =============
-Plug and Play extensions, componental nature, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
+Plug and Play extensions, ajax form tookit, componental nature, small footprint, IDE friendly, frontend toolkit, cache and logic cache, 
 static analysis, metaprograming, cloud storages, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, 
 Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profiling tools and much more.
 
