@@ -71,22 +71,6 @@ Database introspection and schema declaration (diff based):
 
 ![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
 
-StorageManger to simplify process of working with remote storages:
-
-```php
-public function uploadAction(StorageBucket $uploads)
-{
-    $object = $bucket->put(
-        'my-upload.file',
-        $this->input->files->get('upload')
-    );
-    
-    //...
-    
-    echo $object->replace('amazon')->getAddress();
-}
-```
-
 ORM with automatic scaffolding for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
@@ -146,24 +130,6 @@ public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInt
 }
 ```
 
-Shared components and shortcuts to container bindings:
-
-![Shared bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
-
-```php
-class AppBootloader extends Bootloader
-{
-    protected $bindings = [
-        'myDB' => [self::class, 'myDB']
-    ];
-    
-    public function myDB(DatabaseManager $dbal)
-    {
-        return $dbal->database('default');
-    }
-}
-```
-
 Extendable and programmable template engine compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
 
 ```html
@@ -184,17 +150,6 @@ Extendable and programmable template engine compatible with any command syntax (
 </spiral:cache>
 ```
 > You can write your own virtual tags (similar to web components) with almost any functionality or connect external libraries.
-
-Frontend toolkit with customizable AJAX forms and widgets:
-
-```html
-<spiral:form action="/sample/save/<?= $entity->id ?>">
-    <form.input label="Value" name="value" value="<?= $entity->child->value ?>"/>
-    <input type="submit" class="btn btn-default" value="[[Update Element]]"/>
-</spiral:form>
-```
-
-![Form](https://raw.githubusercontent.com/spiral/guide/master/resources/form.gif)
 
 Includes
 =============
