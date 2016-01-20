@@ -162,7 +162,7 @@ Modules
 
 [Security Layer](https://github.com/spiral-modules/security) - flat RBAC security layer with Role-Permission-Rule association mechanism. 
 
-[Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS.
+[Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS and Security component.
 
 Inspired by
 ===========
