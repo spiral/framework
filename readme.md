@@ -143,10 +143,6 @@ Extendable and programmable template engine compatible with any command syntax (
         <a href="<?= uri('uploads::edit', $upload) ?>">Edit</a>
     </grid:cell>
 </spiral:grid>
-
-<spiral:cache lifetime="10">
-    <?= mt_rand(0, 100) ?>
-</spiral:cache>
 ```
 > You can write your own virtual tags (similar to web components) with almost any functionality or connect external libraries.
 
