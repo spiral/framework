@@ -156,6 +156,12 @@ Plug and Play extensions, ajax form tookit, componental nature, small footprint,
 static analysis, metaprograming, cloud storages, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, 
 Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profiling tools and much more.
 
+Modules
+=======
+[Scaffolder](https://github.com/spiral-modules/scaffolder) - provides set of console commands and extendable class declarations for application scaffolding.
+[Security Layer](https://github.com/spiral-modules/security) - flat RBAC security layer with Role-Permission-Rule association mechanism. 
+[Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS.
+
 Inspired by
 ===========
 Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails (conceptually), many other engines.
