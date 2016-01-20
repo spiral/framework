@@ -159,7 +159,9 @@ Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profi
 Modules
 =======
 [Scaffolder](https://github.com/spiral-modules/scaffolder) - provides set of console commands and extendable class declarations for application scaffolding.
+
 [Security Layer](https://github.com/spiral-modules/security) - flat RBAC security layer with Role-Permission-Rule association mechanism. 
+
 [Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS.
 
 Inspired by
