@@ -12,7 +12,7 @@ on functionality transtion from previous generation engine.
 Temporary in transition
 =======================
 * PHPStorm IDE help module (ORM and ODM)
-* Guide update (current version requires some updates as new coding alternatives were created)
+* Guide update (current version is seriously outdated)
 
 Examples:
 ========
