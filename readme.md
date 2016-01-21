@@ -110,7 +110,7 @@ $posts = Post::find()
     ->distinct()
     ->with('comments') //Automatic joins
     ->with('author')->where('author.name', 'LIKE', $authorName) //Fluent
-    ->load('comments.author') //Cascade eager-loading
+    ->load('comments.author') //Cascade eager-loading (joins or external query)
     ->paginate(10) //Quick pagination using active request
     ->all();
 
