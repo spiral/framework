@@ -144,6 +144,9 @@ Extendable and programmable template engine compatible with any command syntax (
     </grid:cell>
 </spiral:grid>
 ```
+
+![Grid](https://raw.githubusercontent.com/spiral/guide/master/resources/grid.png)
+
 > You can write your own virtual tags (similar to web components) with almost any functionality or connect external libraries.
 
 Includes
