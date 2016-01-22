@@ -13,11 +13,11 @@ namespace Spiral\Views;
 interface ModifierInterface
 {
     /**
-     * All modifiers should be requested using container (you can add more dependencies).
+     * All modifiers should be requested using FactoryInterface.
      *
      * @param EnvironmentInterface $environment
      */
-    public function __construct(EnvironmentInterface $environment);
+    //public function __construct(EnvironmentInterface $environment);
 
     /**
      * Modify given source.
