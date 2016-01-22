@@ -72,7 +72,7 @@ class HomeController extends Controller
 
         return [
             'status'  => 200,
-            'message' => $this->say('Post information has been updated')
+            'message' => $this->say('Post has been updated')
         ];
     }
 }
