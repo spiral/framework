@@ -483,7 +483,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Bootloading all needed components and extensions
         $this->bootloader->bootload(
             $this->load,
-            $this->environment->get('CACHE_BOOTLOADERS', true) ? static::MEMORY_SECTION : null
+            $this->environment->get('CACHE_BOOTLOADERS', false) ? static::MEMORY_SECTION : null
         );
 
         return $this;
