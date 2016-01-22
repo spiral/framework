@@ -20,6 +20,8 @@ Examples:
 ```php
 class HomeController extends Controller
 {
+    use TranslatorTrait;
+
     /**
      * DI can automatically deside what database/cache/storage
      * instance to provide for every action parameter based on it's 
@@ -42,6 +44,33 @@ class HomeController extends Controller
         return $this->views->render('welcome', [
             'users' => $database->table('users')->select()->where('name', 'John')->all()
         ]);
+    }
+    
+    /**
+     * @param string      $id
+     * @param PostSource $source
+     * @return array
+     */
+    public function updateAction($id, PostSource $source)
+    {
+        if (empty($post = $source->findByPK($id))) {
+            throw new ForbiddenException("Undefined post");
+        }
+
+        $this->authorize('posts.edit', compact('post'));
+
+        $entity->setFields($this->input->data);
+        if (!$source->save($entity, $errors)) {
+            return [
+                'status' => 400,
+                'errors' => $errors
+            ];
+        }
+
+        return [
+            'status'  => 200,
+            'message' => $this->say('Post information has been updated')
+        ];
     }
 }
 ```
