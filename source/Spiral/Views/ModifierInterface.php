@@ -17,7 +17,7 @@ interface ModifierInterface
      *
      * @param EnvironmentInterface $environment
      */
-    public function __construct(EnvironmentInterface $environment);
+    //public function __construct(EnvironmentInterface $environment);
 
     /**
      * Modify given source.
