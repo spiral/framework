@@ -57,8 +57,10 @@ class HomeController extends Controller
             throw new ForbiddenException("Undefined post");
         }
 
+        //See Security Module
         $this->authorize('posts.edit', compact('post'));
 
+        //In-Model filtration and validation
         $entity->setFields($this->input->data);
         if (!$source->save($entity, $errors)) {
             return [
