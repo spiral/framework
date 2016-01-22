@@ -61,9 +61,9 @@ class HomeController extends Controller
         $this->authorize('posts.edit', compact('post'));
 
         //In-Model filtration and validation
-        $entity->setFields($this->input->data);
+        $post->setFields($this->input->data);
         
-        if (!$source->save($entity, $errors)) {
+        if (!$source->save($post, $errors)) {
             return [
                 'status' => 400,
                 'errors' => $errors
