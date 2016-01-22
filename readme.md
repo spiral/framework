@@ -62,6 +62,7 @@ class HomeController extends Controller
 
         //In-Model filtration and validation
         $entity->setFields($this->input->data);
+        
         if (!$source->save($entity, $errors)) {
             return [
                 'status' => 400,
