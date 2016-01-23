@@ -22,7 +22,7 @@ Examples:
 ```php
 class HomeController extends Controller
 {
-    use TranslatorTrait;
+    use TranslatorTrait, AuthorizesTrait;
 
     /**
      * DI can automatically deside what database/cache/storage
