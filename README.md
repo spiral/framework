@@ -104,7 +104,7 @@ Database introspection and schema declaration (diff based):
 
 ![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
 
-ORM with adaptive scaffolding for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends Record //or RecordEntity to use as DataMapper
