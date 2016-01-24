@@ -23,15 +23,7 @@ use Symfony\Component\Translation\MessageSelector;
  */
 class Translator extends Component implements SingletonInterface, TranslatorInterface
 {
-    /**
-     * Catalogue loading.
-     */
     use BenchmarkTrait;
-
-    /**
-     * Declares to Spiral IoC that component instance should be treated as singleton.
-     */
-    const SINGLETON = self::class;
 
     /**
      * Memory section.

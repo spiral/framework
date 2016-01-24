@@ -30,11 +30,6 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
     use BenchmarkTrait;
 
     /**
-     * Declares to IoC that component instance should be treated as singleton.
-     */
-    const SINGLETON = self::class;
-
-    /**
      * Associations between view path and engine.
      *
      * @var array
