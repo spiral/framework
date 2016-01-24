@@ -38,8 +38,6 @@ use Spiral\Http\Request\InputInterface;
  */
 class InputManager extends Component implements InputInterface, SingletonInterface
 {
-    const SINGLETON = self::class;
-
     /**
      * @var InputBag[]
      */

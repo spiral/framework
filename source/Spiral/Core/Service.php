@@ -8,13 +8,14 @@
 namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Core\Traits\SharedTrait;
 
 /**
  * Generic spiral service only provide simplified access to shared components and instances.
  */
-class Service extends Component
+class Service extends Component implements SingletonInterface
 {
     /**
      * Access to shared components and entities.

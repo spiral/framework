@@ -40,8 +40,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ConsoleDispatcher extends Component implements SingletonInterface, DispatcherInterface
 {
-    const SINGLETON = self::class;
-
     /**
      * Undefined response code for command (errors). See below.
      */

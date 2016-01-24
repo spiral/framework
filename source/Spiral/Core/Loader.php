@@ -16,11 +16,6 @@ use Spiral\Core\Container\SingletonInterface;
 class Loader extends Component implements SingletonInterface
 {
     /**
-     * Declares to IoC that component instance should be treated as singleton.
-     */
-    const SINGLETON = self::class;
-
-    /**
      * List of classes loaded while this working session.
      *
      * @var array

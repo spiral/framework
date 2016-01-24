@@ -8,20 +8,14 @@
 namespace Spiral\Http\Configs;
 
 use Psr\Http\Message\UriInterface;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\InjectableConfig;
 use Spiral\Http\Routing\Router;
 
 /**
  * HttpDispatcher configuration.
  */
-class HttpConfig extends InjectableConfig implements SingletonInterface
+class HttpConfig extends InjectableConfig
 {
-    /**
-     * Config can be accessed from many points now.
-     */
-    const SINGLETON = self::class;
-
     /**
      * Configuration section.
      */
