@@ -80,6 +80,14 @@ class HomeController extends Controller
 }
 ```
 
+Declarative singletons and services:
+
+```php
+class SomeService implements SingletonInterface
+{
+}
+```
+
 PSR-7 is under the hood:
 
 ```php
