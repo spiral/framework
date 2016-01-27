@@ -108,10 +108,6 @@ public function indexAction(ServerRequestInterface $request)
 }
 ```
 
-Database introspection and schema declaration (diff based):
-
-![Databases](https://raw.githubusercontent.com/spiral/guide/master/resources/db-schema.gif)
-
 ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
