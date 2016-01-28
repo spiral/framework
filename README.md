@@ -8,8 +8,7 @@ The Spiral framework provides a modular Rapid Application Development (RAD) plat
 
 > Attention, Spiral is optimized to be used under good IDE, don't expect much development performace by writing code without auto-completion.
 
-Spiral framework has not been publicly released/announced yet due guide is still in progress. :/ Currenlty development focused
-on functionality transtion from previous generation engine.
+Spiral framework has not been publicly released/announced yet due guide is still in progress. :/ 
 
 Temporary in transition
 =======================
