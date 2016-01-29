@@ -50,7 +50,6 @@ class HomeController extends Controller
     public function updateAction($id, PostSource $source)
     {
         $post = $source->findByPK($id);
-        
         if (empty($post)) {
             throw new ForbiddenException("Undefined post");
         }
