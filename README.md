@@ -95,7 +95,7 @@ class MyBootloader extends Bootloader
         'reader'               => [self::class, 'reader']
     ];
     
-    protected function reader(ParserInterface $parser, Database $database)
+    public function reader(ParserInterface $parser, Database $database)
     {
         return new Reader($parser, $database->table('some'));
     }
