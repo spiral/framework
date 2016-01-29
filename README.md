@@ -81,11 +81,36 @@ class HomeController extends Controller
 }
 ```
 
-Declarative singletons and services:
+Declarative ootloaders:
+
+```php
+class MyBootloader extends Bootloader
+{
+    protected $bindings = [
+        ParserInterface::class => DefaultParser::class,
+    ];
+    
+    protected $singletons = [
+        //Can be used in controllers and services
+        'reader'         => [self::class, 'reader']
+    ];
+    
+    protected function reader(ParserInterface $parser, Database $database)
+    {
+        return new Reader($parser, $database->table('some'));
+    }
+}
+```
+
+Declarative singletons, services and shared bindings (RAD sugar):
 
 ```php
 class SomeService implements SingletonInterface
 {
+    public function readSometing($value)
+    {
+        return $this->reader->read($value);
+    }
 }
 ```
 
