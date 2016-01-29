@@ -55,6 +55,7 @@ class HomeController extends Controller
     public function updateAction($id, PostSource $source)
     {
         $post = $source->findByPK($id);
+        
         if (empty($post)) {
             throw new ForbiddenException("Undefined post");
         }
@@ -62,7 +63,7 @@ class HomeController extends Controller
         //See Security Module
         $this->authorize('posts.edit', compact('post'));
 
-        //In-Model filtration and validation (optional)
+        //In-Model filtration and validation (optional, see RequestFilters)
         $post->setFields($this->input->data);
         
         if (!$source->save($post, $errors)) {
