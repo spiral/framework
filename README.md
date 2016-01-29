@@ -101,10 +101,12 @@ use Zend\Expressive\Application;
 use Zend\Stratigility\MiddlewarePipe;
 
 $app = new Application();
-$app->get('/spiral', function ($req, $res, $next) {
-    //Or $app->get('/spiral', MySpiralApp::init(...)->http);
+$app->any('/spiral', function ($req, $res, $next) {
+    //Or $app->any('/spiral', MySpiralApp::init(...)->http);
     return MySpiralApp::init(...)->http->perform($req, $res);
 });
+
+//see https://github.com/zendframework/zend-expressive ...
 ```
 
 JSON responses, method injections, container visibility scopes:
