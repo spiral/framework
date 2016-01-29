@@ -107,7 +107,7 @@ Declarative singletons, services and shared bindings:
 ```php
 class SomeService implements SingletonInterface
 {
-    public function readSometing($value)
+    public function readValue($value)
     {
         //Resolved via container
         return $this->reader->read($value);
@@ -136,6 +136,8 @@ JSON responses, method injections, container visibility scopes:
 ```php
 public function indexAction(ServerRequestInterface $request, SomeService $service)
 {
+    dump($service->readValue('abc'));
+    
     return [
         'status' => 200,
         'uri'    => (string)$request->getUri()
