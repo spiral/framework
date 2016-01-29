@@ -47,11 +47,6 @@ class HomeController extends Controller
         ]);
     }
     
-    /**
-     * @param string     $id
-     * @param PostSource $source
-     * @return array
-     */
     public function updateAction($id, PostSource $source)
     {
         $post = $source->findByPK($id);
