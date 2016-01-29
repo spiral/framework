@@ -126,7 +126,7 @@ public function indexAction(ServerRequestInterface $request)
 ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
-class Post extends Record //or RecordEntity to use as DataMapper
+class Post extends Record //or RecordEntity to use more as DataMapper
 {
     use TimestampsTrait;
 
