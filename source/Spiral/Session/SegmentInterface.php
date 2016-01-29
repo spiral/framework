@@ -13,6 +13,7 @@ use Spiral\Session\Exceptions\SessionException;
  * Singular session segment (session data isolator).
  *
  * @todo INACTIVE AT THIS MOMENT!
+ * @todo hasChanged?
  */
 interface SegmentInterface
 {
