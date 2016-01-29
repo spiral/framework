@@ -104,8 +104,8 @@ use Zend\Stratigility\MiddlewarePipe;
 
 $app = new Application();
 $app->any('/spiral', function ($req, $res, $next) {
-    //Or $app->any('/spiral', MySpiralApp::init(...)->http);
-    return MySpiralApp::init(...)->http->perform($req, $res);
+    //Equals to http->perform() or http->__invoke()
+    return MySpiralApp::init(...)->http($req, $res);
 });
 
 //see https://github.com/zendframework/zend-expressive ...
