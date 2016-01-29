@@ -218,4 +218,4 @@ Modules
 
 Inspired by
 ===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, RubyOnRails, Spring.
+Laravel 5+, CodeIgniter, Yii 2, Symfony 2, RubyOnRails.
