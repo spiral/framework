@@ -87,18 +87,14 @@ class HttpCore extends Component implements HttpInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     * @param callable               $endpoint User specified endpoint.
      * @return ResponseInterface
      * @throws HttpException
      */
-    public function perform(
-        ServerRequestInterface $request,
-        ResponseInterface $response = null,
-        callable $endpoint = null
-    ) {
-        $endpoint = !empty($endpoint) ? $endpoint : $this->endpoint();
+    public function perform(ServerRequestInterface $request, ResponseInterface $response = null)
+    {
         $response = !empty($response) ? $response : $this->response();
 
+        $endpoint = $this->endpoint();
         if (empty($endpoint)) {
             throw new HttpException("Unable to execute request without destination endpoint.");
         }
@@ -123,10 +119,8 @@ class HttpCore extends Component implements HttpInterface
      * @return ResponseInterface
      * @throws HttpException
      */
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response
-    ) {
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
+    {
         return $this->perform($request, $response);
     }
 
