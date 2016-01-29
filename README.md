@@ -95,7 +95,7 @@ $route->middleware(function ($request, $response, $next) {
 });
 ```
 
-Spiral application can be used as middleware/endpoint inside other PSR7 frameworks:
+Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks:
 
 ```php
 use Zend\Diactoros\Server;
