@@ -61,7 +61,7 @@ class HomeController extends Controller
         //See Security Module
         $this->authorize('posts.edit', compact('post'));
 
-        //In-Model filtration and validation
+        //In-Model filtration and validation (optional)
         $post->setFields($this->input->data);
         
         if (!$source->save($post, $errors)) {
@@ -92,6 +92,18 @@ PSR-7 is under the hood:
 ```php
 $route->middleware(function ($request, $response, $next) {
     return $next($request, $response)->withHeader('My-Header', 'Yay!');
+});
+
+//You can also use your app as middleware
+
+use Zend\Diactoros\Server;
+use Zend\Expressive\Application;
+use Zend\Stratigility\MiddlewarePipe;
+
+$app = new Application();
+$app->get('/spiral', function ($req, $res, $next) {
+    //Or $app->get('/spiral', MySpiralApp::init(...)->http);
+    return MySpiralApp::init(...)->http->perform($req, $res);
 });
 ```
 
