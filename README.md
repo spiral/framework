@@ -81,7 +81,7 @@ class HomeController extends Controller
 }
 ```
 
-Declarative ootloaders:
+Declarative Bootloaders:
 
 ```php
 class MyBootloader extends Bootloader
