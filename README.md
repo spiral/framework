@@ -89,7 +89,7 @@ class SomeService implements SingletonInterface
 }
 ```
 
-Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks:
+Spiral application(s) can be used as middleware/endpoint inside other PSR7 [frameworks](https://github.com/zendframework/zend-expressive):
 
 ```php
 use Zend\Diactoros\Server;
@@ -101,8 +101,6 @@ $app->any('/spiral', function ($req, $res, $next) {
     //Equals to http->perform() or http->__invoke()
     return MySpiralApp::init(...)->http($req, $res);
 });
-
-//see https://github.com/zendframework/zend-expressive ...
 ```
 
 JSON responses, method injections, container visibility scopes:
