@@ -92,7 +92,7 @@ class MyBootloader extends Bootloader
     
     protected $singletons = [
         //Can be used in controllers and services
-        'reader'               => [self::class, 'reader']
+        'reader' => [self::class, 'reader']
     ];
     
     protected function reader(ParserInterface $parser, Database $database)
