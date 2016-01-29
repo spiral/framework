@@ -106,7 +106,7 @@ $app->any('/spiral', function ($req, $res, $next) {
 JSON responses, method injections, container visibility scopes:
 
 ```php
-public function indexAction(ServerRequestInterface $request)
+public function indexAction(ServerRequestInterface $request, SomeService $service)
 {
     return [
         'status' => 200,
