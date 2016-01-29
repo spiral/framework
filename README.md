@@ -33,7 +33,7 @@ class HomeController extends Controller
      *
      * @param Database   $database
      * @param Database   $logs     Can be physical or virtual database
-     * @param HttpConfig $config
+     * @param HttpConfig $config   Dependency as well
      * @return string
      */
     public function indexAction(Database $database, Database $logs, HttpConfig $config)
@@ -199,7 +199,6 @@ Embedded functionality for static indexation of your code:
 ```php
 public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
 {
-    //Not AST yet, but planned... :(
     dump($locator->getClasses(ControllerInterface::class));
 }
 ```
