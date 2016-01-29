@@ -93,9 +93,11 @@ PSR-7 is under the hood:
 $route->middleware(function ($request, $response, $next) {
     return $next($request, $response)->withHeader('My-Header', 'Yay!');
 });
+```
 
-//You can also use your app as middleware
+Spiral application can be used as middleware inside other frameworks:
 
+```
 use Zend\Diactoros\Server;
 use Zend\Expressive\Application;
 use Zend\Stratigility\MiddlewarePipe;
