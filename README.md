@@ -81,7 +81,7 @@ class HomeController extends Controller
 }
 ```
 
-Declarative Bootloaders:
+Bootloaders, Factory Methods:
 
 ```php
 class MyBootloader extends Bootloader
