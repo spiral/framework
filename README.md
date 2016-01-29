@@ -97,7 +97,7 @@ $route->middleware(function ($request, $response, $next) {
 
 Spiral application can be used as middleware inside other frameworks:
 
-```
+```php
 use Zend\Diactoros\Server;
 use Zend\Expressive\Application;
 use Zend\Stratigility\MiddlewarePipe;
