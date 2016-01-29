@@ -99,7 +99,7 @@ class MyBootloader extends Bootloader
 Declarative singletons, services and shared bindings:
 
 ```php
-class SomeService extends Service implements SingletonInterface
+class SomeService extends Service //already implements SingletonInterface
 {
     public function readValue($value)
     {
