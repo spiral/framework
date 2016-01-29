@@ -126,7 +126,7 @@ use Zend\Stratigility\MiddlewarePipe;
 
 $app = new Application();
 $app->any('/spiral', function ($req, $res, $next) {
-    //Equals to http->perform() or http->__invoke()
+    //Equals to http->perform()
     return MySpiralApp::init(...)->http($req, $res);
 });
 ```
