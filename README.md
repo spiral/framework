@@ -102,7 +102,7 @@ class MyBootloader extends Bootloader
 }
 ```
 
-Declarative singletons, services and shared bindings (RAD sugar):
+Declarative singletons, services and shared bindings:
 
 ```php
 class SomeService implements SingletonInterface
