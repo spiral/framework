@@ -32,11 +32,11 @@ class HomeController extends Controller
      * application work due autowiring nature of default container.
      *
      * @param Database   $database
-     * @param Database   $logDatabase
+     * @param Database   $logs     Can be physical or virtual database
      * @param HttpConfig $config
      * @return string
      */
-    public function indexAction(Database $database, Database $logDatabase, HttpConfig $config)
+    public function indexAction(Database $database, Database $logs, HttpConfig $config)
     {
         dump($config->basePath());
     
