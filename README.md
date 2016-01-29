@@ -40,7 +40,7 @@ class HomeController extends Controller
     {
         dump($config->basePath());
     
-        $logDatabase->table('log')->insert(['message' => 'Yo!']);
+        $logs->table('log')->insert(['message' => 'Yo!']);
     
         return $this->views->render('welcome', [
             'users' => $database->table('users')->select()->where('name', 'John')->all()
