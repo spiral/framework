@@ -89,14 +89,6 @@ class SomeService implements SingletonInterface
 }
 ```
 
-PSR-7 is under the hood:
-
-```php
-$route->middleware(function ($request, $response, $next) {
-    return $next($request, $response)->withHeader('My-Header', 'Yay!');
-});
-```
-
 Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks:
 
 ```php
