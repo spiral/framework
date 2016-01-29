@@ -109,6 +109,7 @@ class SomeService implements SingletonInterface
 {
     public function readSometing($value)
     {
+        //Resolved via container
         return $this->reader->read($value);
     }
 }
