@@ -13,12 +13,13 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\SugarException;
 use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Http\Exceptions\MiddlewareException;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Http\Traits\MiddlewaresTrait;
 
 /**
  * Pipeline used to pass request and response thought the chain of middlewares.
- * 
+ *
  * Spiral middlewares are similar to Laravel's one. However router and http itself
  * can be in used in zend expressive.
  */
@@ -76,6 +77,16 @@ class MiddlewarePipeline extends Component
     }
 
     /**
+     * @param Request  $request
+     * @param Response $response
+     * @return Response
+     */
+    public function __invoke(Request $request, Response $response)
+    {
+        return $this->run($request, $response);
+    }
+
+    /**
      * Pass request and response though every middleware to target and return generated and wrapped
      * response.
      *
@@ -85,6 +96,10 @@ class MiddlewarePipeline extends Component
      */
     public function run(Request $request, Response $response)
     {
+        if (empty($this->target)) {
+            throw new MiddlewareException("Unable to run pipeline without specified target.");
+        }
+
         return $this->next(0, $request, $response);
     }
 
@@ -159,7 +174,7 @@ class MiddlewarePipeline extends Component
      *
      * @param Request  $request
      * @param Response $response
-     * @return mixed
+     * @return Response
      */
     protected function execute(Request $request, Response $response)
     {
