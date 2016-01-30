@@ -117,20 +117,6 @@ class SomeService implements SingletonInterface
 }
 ```
 
-Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks:
-
-```php
-use Zend\Diactoros\Server;
-use Zend\Expressive\Application;
-use Zend\Stratigility\MiddlewarePipe;
-
-$app = new Application();
-$app->any('/spiral', function ($req, $res, $next) {
-    //Equals to http->perform()
-    return MySpiralApp::init(...)->http($req, $res);
-});
-```
-
 JSON responses, method injections, container visibility scopes, container shortcuts:
 
 ```php
@@ -149,6 +135,20 @@ public function indexAction(ServerRequestInterface $request, SomeService $servic
 ```
 
 ![Short Bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
+
+Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks:
+
+```php
+use Zend\Diactoros\Server;
+use Zend\Expressive\Application;
+use Zend\Stratigility\MiddlewarePipe;
+
+$app = new Application();
+$app->any('/spiral', function ($req, $res, $next) {
+    //Equals to http->perform()
+    return MySpiralApp::init(...)->http($req, $res);
+});
+```
 
 ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
