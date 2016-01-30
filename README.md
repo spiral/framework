@@ -118,8 +118,6 @@ class SomeService implements SingletonInterface
 }
 ```
 
-![Short Bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
-
 Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks:
 
 ```php
