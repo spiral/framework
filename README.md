@@ -98,7 +98,7 @@ class MyBootloader extends Bootloader
 }
 ```
 
-Declarative singletons, services and shared bindings:
+Declarative singletons and simple services:
 
 ```php
 class SomeService implements SingletonInterface
@@ -132,7 +132,7 @@ $app->any('/spiral', function ($req, $res, $next) {
 });
 ```
 
-JSON responses, method injections, container visibility scopes:
+JSON responses, method injections, container visibility scopes, container shortcuts:
 
 ```php
 public function indexAction(ServerRequestInterface $request, SomeService $service)
@@ -148,6 +148,8 @@ public function indexAction(ServerRequestInterface $request, SomeService $servic
     ];
 }
 ```
+
+![Short Bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
 
 ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
