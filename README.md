@@ -85,8 +85,10 @@ class MyBootloader extends Bootloader
     ];
     
     protected $singletons = [
-        //Can be used in controllers and services
-        'reader' => [self::class, 'reader']
+        ReaderInterface::class => [self::class, 'reader'],
+    
+        //Short bindings
+        'reader' => ReaderInterface::class
     ];
     
     protected function reader(ParserInterface $parser, Database $database)
@@ -99,8 +101,15 @@ class MyBootloader extends Bootloader
 Declarative singletons, services and shared bindings:
 
 ```php
-class SomeService extends Service //implements SingletonInterface
+class SomeService implements SingletonInterface
 {
+    private $reader;
+    
+    public function __construct(ReaderInterface $reader)
+    {
+        $this->reader = $reader;
+    }
+
     public function readValue($value)
     {
         //Resolved via container
@@ -131,6 +140,9 @@ JSON responses, method injections, container visibility scopes:
 public function indexAction(ServerRequestInterface $request, SomeService $service)
 {
     dump($service->readValue('abc'));
+    
+    //Shortcuts
+    dump($this->reader);
     
     return [
         'status' => 200,
