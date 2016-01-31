@@ -97,7 +97,7 @@ class MiddlewarePipeline extends Component
     public function run(Request $request, Response $response)
     {
         if (empty($this->target)) {
-            throw new MiddlewareException("Unable to run pipeline without specified target.");
+            throw new MiddlewareException("Unable to run pipeline without specified target");
         }
 
         return $this->next(0, $request, $response);
