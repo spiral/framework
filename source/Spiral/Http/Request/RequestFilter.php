@@ -97,11 +97,11 @@ class RequestFilter extends DataEntity
     }
 
     /**
-     * @return object
+     * @return array
      */
     public function __debugInfo()
     {
-        return (object)[
+        return [
             'schema' => $this->schema,
             'fields' => $this->getFields(),
             'errors' => $this->getErrors()
