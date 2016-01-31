@@ -82,13 +82,11 @@ class MyBootloader extends Bootloader
 {
     protected $bindings = [
         ParserInterface::class => DefaultParser::class,
+        'reader' => ReaderInterface::class
     ];
     
     protected $singletons = [
         ReaderInterface::class => [self::class, 'reader'],
-    
-        //Short bindings
-        'reader' => ReaderInterface::class
     ];
     
     protected function reader(ParserInterface $parser, Database $database)
