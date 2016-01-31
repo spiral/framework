@@ -20,6 +20,7 @@ class CookieQueue
     private $scheduled = [];
 
     /**
+     * @invisible
      * @var HttpConfig
      */
     private $httpConfig = null;
