@@ -368,11 +368,11 @@ class SessionStore extends Component implements SessionInterface, \ArrayAccess, 
     }
 
     /**
-     * @return object
+     * @return array
      */
     public function __debugInfo()
     {
-        return (object)[
+        return [
             'started' => $this->isStarted(),
             'id'      => $this->getID(false),
             'data'    => $this->isStarted() ? $_SESSION : null
