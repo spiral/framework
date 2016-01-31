@@ -1,1 +1,0 @@
-Header manager is needed.
