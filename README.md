@@ -11,7 +11,7 @@ The Spiral framework provides open and modular Rapid Application Development (RA
 > Spiral framework has not been publicly released/announced yet due guide is still in progress. :/ 
 
 Examples:
-========
+--------
 
 ```php
 class HomeController extends Controller
