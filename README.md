@@ -8,7 +8,7 @@ The Spiral framework provides open and modular Rapid Application Development (RA
 
 [**Skeleton App**](https://github.com/spiral-php/application) | [Guide](https://github.com/spiral-php/guide) | [Gitter](https://gitter.im/spiral/hotline) | [**Forum**](https://groups.google.com/forum/#!forum/spiral-framework) | [Twitter](https://twitter.com/spiralphp) | [**Foundation Components**](https://github.com/spiral/components) | [Modules](https://github.com/spiral-modules) | [**Contributing**](https://github.com/spiral/guide/blob/master/contributing.md)
 
-<br/>
+<br/><br/>
 
 Examples:
 --------
