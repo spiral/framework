@@ -82,7 +82,6 @@ class MyBootloader extends Bootloader
 {
     protected $bindings = [
         ParserInterface::class => DefaultParser::class,
-        'reader'               => ReaderInterface::class,
         'someService'          => SomeService::class
     ];
     
