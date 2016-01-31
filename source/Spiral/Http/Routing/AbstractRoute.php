@@ -268,7 +268,7 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         $parameters = $this->fetchParameters($parameters, $slugify);
-        $parameters = $parameters + $this->defaults + $this->compiled['options'];
+        $parameters = $parameters + $this->matches + $this->defaults + $this->compiled['options'];
 
         //Uri without empty blocks (pretty stupid implementation)
         $path = strtr(
