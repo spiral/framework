@@ -22,6 +22,8 @@ use Spiral\Session\Exceptions\SessionException;
  * @todo probably not the best component due sticking to native sessions, to find replacement
  * @todo add storage manager
  * @note should work well in between requests, not sure about nested http requests (slow?)
+ *
+ * @see SessionInterface
  */
 class SessionStore extends Component implements SessionInterface, \ArrayAccess, \IteratorAggregate
 {
