@@ -10,7 +10,6 @@ namespace Spiral\Views;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
-use Spiral\Core\HippocampusInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
@@ -71,9 +70,9 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
 
     /**
      * @todo Memory?
-     * @param ViewsConfig          $config
-     * @param FilesInterface       $files
-     * @param ContainerInterface   $container
+     * @param ViewsConfig        $config
+     * @param FilesInterface     $files
+     * @param ContainerInterface $container
      */
     public function __construct(
         ViewsConfig $config,
@@ -134,10 +133,15 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
             $parameters['environment'] = $this->environment();
 
             //We have to create an engine
-            $this->engines[$engine] = $this->container->make(
-                $this->config->engineClass($engine),
-                $parameters
-            );
+            $benchmark = $this->benchmark('engine', $engine);
+            try {
+                $this->engines[$engine] = $this->container->make(
+                    $this->config->engineClass($engine),
+                    $parameters
+                );
+            } finally {
+                $this->benchmark($benchmark);
+            }
 
             $reload = true;
         }

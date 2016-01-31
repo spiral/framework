@@ -145,12 +145,6 @@ class StemplerEngine extends Component implements EngineInterface
      */
     public function setLoader(LoaderInterface $loader)
     {
-        if (!empty($this->modifiers)) {
-            //todo: not needed when view is already in cache
-            //To prepare source before giving it to Stempler
-            $loader = new ModifiableLoader($loader, $this->getModifiers());
-        }
-
         $this->loader = $loader;
         $this->cache = new StemplerCache($this->files, $this->environment, $this->loader);
 
@@ -178,8 +172,14 @@ class StemplerEngine extends Component implements EngineInterface
      */
     protected function supervisor()
     {
+        $loader = $this->loader;
+        if (!empty($this->modifiers)) {
+            //To prepare source before giving it to Stempler
+            $loader = new ModifiableLoader($loader, $this->getModifiers());
+        }
+
         //Prepare loader
-        return new Supervisor($this->loader, $this->syntax);
+        return new Supervisor($loader, $this->syntax);
     }
 
     /**
