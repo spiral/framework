@@ -127,7 +127,7 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     protected function packCookies(Response $response, CookieQueue $queue)
     {
-        if (empty($this->scheduled)) {
+        if (empty($queue->getScheduled())) {
             return $response;
         }
 
