@@ -183,7 +183,7 @@ class Post extends Record //or RecordEntity to use more as DataMapper
 ```
 
 ```php
-//Post::find() == $this->orm->selector(Post::class) == PostSource->find()
+//Post::find() == $this->orm->selector(Post::class) == PostSource->find() == Post::source()->find()
 $posts = Post::find()
     ->distinct()
     ->with('comments') //Automatic joins
