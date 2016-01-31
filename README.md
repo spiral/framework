@@ -82,7 +82,8 @@ class MyBootloader extends Bootloader
 {
     protected $bindings = [
         ParserInterface::class => DefaultParser::class,
-        'reader'               => ReaderInterface::class
+        'reader'               => ReaderInterface::class,
+        'someService'          => SomeService::class
     ];
     
     protected $singletons = [
@@ -123,7 +124,7 @@ public function indexAction(ServerRequestInterface $request, SomeService $servic
     dump($service->readValue('abc'));
     
     //Shortcuts
-    dump($this->reader);
+    dump($this->someService === $service);
     
     return [
         'status' => 200,
