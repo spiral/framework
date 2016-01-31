@@ -18,9 +18,6 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class Memory extends Component implements HippocampusInterface
 {
-    /**
-     * Sugary files.
-     */
     use SaturateTrait;
 
     /**
@@ -44,7 +41,7 @@ class Memory extends Component implements HippocampusInterface
 
     /**
      * @param string              $directory
-     * @param FilesInterface|null $files
+     * @param FilesInterface|null $files Sugared.
      * @throws SugarException
      */
     public function __construct($directory, FilesInterface $files = null)

@@ -9,6 +9,8 @@ namespace Spiral\Core\Exceptions;
 
 /**
  * Undefined directory alias
+ * 
+ * @todo rename?
  */
 class UndefinedAliasException extends CoreException
 {

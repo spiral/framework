@@ -28,6 +28,9 @@ use Spiral\Http\Request\InputInterface;
  *
  * Attention, this class is singleton based, it reads request from current active container scope!
  *
+ * Technically this class can be made as middleware, but due spiral provides container scoping
+ * such functionality may be replaces with simple container request routing.
+ * 
  * @property-read HeadersBag $headers
  * @property-read InputBag   $data
  * @property-read InputBag   $query

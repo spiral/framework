@@ -33,6 +33,8 @@ use Spiral\Models\DataEntity;
  *
  * @todo There is possibility that this class and it's schema will behave same way as ORM and
  * @todo ODM models one day.
+ * 
+ * @todo need overal improvement
  */
 class RequestFilter extends DataEntity
 {

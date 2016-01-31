@@ -11,6 +11,8 @@ use Spiral\Http\Exceptions\Request\InputException;
 
 /**
  * Provides values for RequestFilter.
+ * 
+ * @todo move to higher level
  */
 interface InputInterface
 {
