@@ -146,7 +146,7 @@ $app->any('/spiral', function ($req, $res, $next) {
 ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
-class Post extends Record //or RecordEntity to use more as DataMapper
+class Post extends Record //or RecordEntity without active record like methods
 {
     use TimestampsTrait;
 
