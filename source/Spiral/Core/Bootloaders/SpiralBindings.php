@@ -67,7 +67,7 @@ class SpiralBindings extends Bootloader
         'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Http scope dependent
-        'cookies'                            => 'Spiral\Http\Cookies\CookieManager',
+        'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
         'router'                             => 'Spiral\Http\Routing\RouterInterface',
         'request'                            => 'Psr\Http\Message\ServerRequestInterface',
 
