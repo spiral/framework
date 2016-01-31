@@ -20,7 +20,7 @@ interface SessionInterface extends SegmentInterface
      * @return string
      * @throws SessionException
      */
-    public function getID();
+    //public function getID();
     
     //Access and drop segment methods
 }

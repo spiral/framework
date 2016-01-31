@@ -23,6 +23,8 @@ use Spiral\Session\Exceptions\SessionException;
  * @todo add storage manager
  * @note should work well in between requests, not sure about nested http requests (slow?)
  *
+ * DO NOT USE IMPLEMENTATION DIRECTLY, only use interfaces!
+ *
  * @see SessionInterface
  */
 class SessionStore extends Component implements SessionInterface, \ArrayAccess, \IteratorAggregate
