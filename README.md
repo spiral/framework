@@ -115,7 +115,7 @@ class SomeService implements SingletonInterface //or extends Service
 }
 ```
 
-JSON responses, method injections, container visibility scopes, container shortcuts:
+JSON responses, method injections, IoC scopes, container shortcuts:
 
 ```php
 public function indexAction(ServerRequestInterface $request, SomeService $service)
