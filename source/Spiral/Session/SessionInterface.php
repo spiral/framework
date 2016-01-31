@@ -15,22 +15,6 @@ use Spiral\Session\Exceptions\SessionException;
 interface SessionInterface
 {
     /**
-     * Get session ID or create new one if session not started.
-     *
-     * @return string
-     * @throws SessionException
-     */
-    public function getID();
-
-    /**
-     * Commit all session data to session handler, this will close session before script ends.
-     * Session will be restarted on next call.
-     *
-     * @throws SessionException
-     */
-    public function commit();
-
-    /**
      * All values stored in session.
      *
      * @return array
