@@ -10,11 +10,6 @@ The Spiral framework provides open and modular Rapid Application Development (RA
 
 > Spiral framework has not been publicly released/announced yet due guide is still in progress. :/ 
 
-Temporary in transition
-=======================
-* PHPStorm IDE help module (ORM and ODM)
-* Guide update (current version is seriously outdated)
-
 Examples:
 ========
 
