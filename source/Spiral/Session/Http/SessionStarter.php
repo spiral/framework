@@ -10,7 +10,6 @@ namespace Spiral\Session\Http;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
-use Spiral\Cache\StoreInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Cookies\Cookie;
@@ -46,18 +45,26 @@ class SessionStarter implements MiddlewareInterface
     protected $session = null;
 
     /**
-     * @param SessionConfig $config
-     * @param HttpConfig    $httpConfig
-     * @param SessionStore  $session
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
+     * @param SessionConfig      $config
+     * @param HttpConfig         $httpConfig
+     * @param SessionStore       $session
+     * @param ContainerInterface $container Needed for session scope.
      */
     public function __construct(
         SessionConfig $config,
         HttpConfig $httpConfig,
-        SessionStore $session
+        SessionStore $session,
+        ContainerInterface $container
     ) {
         $this->config = $config;
         $this->httpConfig = $httpConfig;
         $this->session = $session;
+        $this->container = $container;
     }
 
     /**
@@ -67,10 +74,15 @@ class SessionStarter implements MiddlewareInterface
     {
         $this->initSession($request);
 
-        $response = $next(
-            $request->withAttribute('session', $this->session),
-            $response
-        );
+        $scope = $this->container->replace(SessionInterface::class, $this->session);
+        try {
+            $response = $next(
+                $request->withAttribute('session', $this->session),
+                $response
+            );
+        } finally {
+            $this->container->restore($scope);
+        }
 
         return $this->commitSession($request, $response);
     }

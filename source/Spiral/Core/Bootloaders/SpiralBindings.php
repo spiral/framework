@@ -11,10 +11,8 @@ use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exceptions\Container\AutowireException;
-use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\SugarException;
 use Spiral\Http\Routing\RouteInterface;
-use Spiral\Session\SessionInterface;
 
 /**
  * Shared components and short bindings.
@@ -61,7 +59,7 @@ class SpiralBindings extends Bootloader
         //Entities
         'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
         'cache'                              => 'Spiral\Cache\StoreInterface',
-        
+
         //Concrete for now, replace with better interface in future
         'db'                                 => 'Spiral\Database\Entities\Database',
         'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
@@ -79,7 +77,6 @@ class SpiralBindings extends Bootloader
 
         //Thought request attributes
         'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],
-        'Spiral\Session\SessionInterface'    => [self::class, 'activeSession'],
 
         //Short aliases
         'route'                              => 'Spiral\Http\Router\RouteInterface',
@@ -110,25 +107,6 @@ class SpiralBindings extends Bootloader
         }
 
         return $route;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return SessionInterface
-     */
-    public function activeSession(ServerRequestInterface $request = null)
-    {
-        if (empty($request)) {
-            throw new AutowireException("No active request found");
-        }
-
-        $session = $request->getAttribute('session');
-
-        if (!$session instanceof SessionInterface) {
-            throw new SugarException("Unable to resolve active session using active request");
-        }
-
-        return $session;
     }
 
     /**
