@@ -235,6 +235,8 @@ Modules
 
 [Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS and Security component.
 
+[Auth](https://github.com/spiral-modules/vault) - authentication layer with multiple token providers and firewall middlewares.
+
 Inspired by
 ===========
 Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails.
