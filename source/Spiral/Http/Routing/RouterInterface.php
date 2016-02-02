@@ -7,7 +7,6 @@
  */
 namespace Spiral\Http\Routing;
 
-use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
