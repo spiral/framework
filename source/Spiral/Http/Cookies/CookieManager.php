@@ -84,7 +84,7 @@ class CookieManager extends Component implements MiddlewareInterface
              * Debug: middleware creates scope for [CookieQueue].
              */
             $response = $next(
-                $this->unpackCookies($request),
+                $this->unpackCookies($request)->withAttribute('cookieQueue', $queue),
                 $response
             );
 
