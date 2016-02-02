@@ -130,18 +130,6 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function copy($name, array $defaults)
-    {
-        $copy = clone $this;
-        $copy->name = (string)$name;
-        $copy->defaults($defaults);
-
-        return $copy;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
@@ -173,6 +161,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * Update route defaults (new values will be merged with existed data).
      *
+     * @deprecated User withDefault method
      * @param array $defaults
      * @return $this
      */
@@ -181,6 +170,18 @@ abstract class AbstractRoute implements RouteInterface
         $this->defaults = $defaults + $this->defaults;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withDefaults($name, array $matches)
+    {
+        $copy = clone $this;
+        $copy->name = (string)$name;
+        $copy->defaults($matches);
+
+        return $copy;
     }
 
     /**
