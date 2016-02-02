@@ -7,7 +7,8 @@
  */
 namespace Spiral\Http\Routing;
 
-use Spiral\Core\ContainerInterface;
+use Doctrine\Common\Inflector\Inflector;
+use Spiral\Http\Routing\Traits\CoreTrait;
 
 /**
  * {@inheritdoc}
@@ -45,6 +46,8 @@ use Spiral\Core\ContainerInterface;
  */
 class ControllersRoute extends AbstractRoute
 {
+    use CoreTrait;
+
     /**
      * Default controllers namespace.
      *
@@ -85,11 +88,11 @@ class ControllersRoute extends AbstractRoute
         array $defaults = [],
         array $controllers = []
     ) {
-        $this->name = $name;
+        parent::__construct($name, $defaults);
+
         $this->pattern = $pattern;
         $this->namespace = $namespace;
         $this->postfix = $postfix;
-        $this->defaults = $defaults;
         $this->controllers = $controllers;
     }
 
@@ -113,30 +116,25 @@ class ControllersRoute extends AbstractRoute
     /**
      * {@inheritdoc}
      */
-    protected function createEndpoint(ContainerInterface $container)
+    protected function createEndpoint()
     {
         $route = $this;
 
-        return function () use ($container, $route) {
-            $controller = $route->matches['controller'];
+        return function () use ($route) {
+            $matches = $route->getMatches();
 
             //Due we are expecting part of class name we can remove some garbage (see to-do below)
-            $controller = strtolower(preg_replace('/[^a-z_0-9]+/i', '', $controller));
+            $controller = strtolower(preg_replace('/[^a-z_0-9]+/i', '', $matches['controller']));
 
             if (isset($route->controllers[$controller])) {
                 //Aliased
                 $controller = $route->controllers[$controller];
             } else {
-                //todo: Use better logic, maybe Doctrine Inflector (maybe class-name style)
-                $controller = $route->namespace . '\\' . (ucfirst($controller) . $route->postfix);
+                $controller = Inflector::classify($controller) . $route->postfix;
+                $controller = "{$route->namespace}\\{$controller}";
             }
 
-            return $route->callAction(
-                $container,
-                $controller,
-                $route->matches['action'],
-                $route->matches
-            );
+            return $route->callAction($controller, $matches['action'], $matches);
         };
     }
 }
