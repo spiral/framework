@@ -14,11 +14,10 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\Exceptions\RouteException;
 use Spiral\Http\Exceptions\RouterException;
+use Spiral\Http\Exceptions\UndefinedRouteException;
 
 /**
  * Routers used by HttpDispatcher and other components for logical routing to controller actions.
- *
- * @todo try fast route
  */
 interface RouterInterface
 {
@@ -50,6 +49,7 @@ interface RouterInterface
      * @param string $name
      * @return Route
      * @throws RouterException
+     * @throws UndefinedRouteException
      */
     public function getRoute($name);
 
@@ -65,12 +65,12 @@ interface RouterInterface
      * and action name separated by ":" - in this case router should find appropriate route and
      * create url using it.
      *
-     * @param string           $route      Route name.
-     * @param array            $parameters Accepts only arrays at this moment.
-     * @param SlugifyInterface $slugify
+     * @param string             $route Route name.
+     * @param array|\Traversable $parameters
      * @return UriInterface
      * @throws RouterException
      * @throws RouteException
+     * @throws UndefinedRouteException
      */
-    public function uri($route, $parameters = [], SlugifyInterface $slugify = null);
+    public function uri($route, $parameters = []);
 }
