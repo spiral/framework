@@ -64,6 +64,10 @@ abstract class AbstractTimestamp extends Carbon
      */
     protected function castTimestamp($datetime, $timezone = null)
     {
+        if ($datetime instanceof \DateTime) {
+            return $datetime->getTimestamp();
+        }
+
         if (!is_scalar($datetime)) {
             return 0;
         }
