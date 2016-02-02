@@ -9,7 +9,6 @@ namespace Spiral\Http\Routing;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Http\Exceptions\RouteException;
 use Spiral\Http\MiddlewareInterface;
@@ -19,8 +18,10 @@ use Spiral\Support\Strings;
 
 /**
  * Abstract route with ability to execute endpoint using middleware pipeline and context container.
+ *
+ * Attention, route does not extends container is it's mandatory to be set.
  */
-abstract class AbstractRoute extends Component implements RouteInterface
+abstract class AbstractRoute implements RouteInterface
 {
     /**
      * Default segment pattern, this patter can be applied to controller names, actions and etc.
@@ -326,6 +327,10 @@ abstract class AbstractRoute extends Component implements RouteInterface
      */
     protected function container()
     {
+        if (empty($this->container)) {
+            throw new RouteException("Route context container has not been set");
+        }
+
         return $this->container;
     }
 
