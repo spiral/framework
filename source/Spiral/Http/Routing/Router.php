@@ -17,7 +17,7 @@ use Spiral\Http\Exceptions\RouterException;
 
 /**
  * Spiral implementation of RouterInterface.
- * 
+ *
  * @todo potentially add ability to work as middleware with $next call
  */
 class Router implements RouterInterface
@@ -159,12 +159,11 @@ class Router implements RouterInterface
     {
         foreach ($this->routes as $route) {
             if (!empty($matched = $route->match($request, $basePath))) {
-                if($matched instanceof RouteInterface){
-                    //todo: future agreement
+                if ($matched instanceof RouteInterface) {
                     return $matched;
                 }
-                
-                return $route;
+
+                throw new RouterException("Matched route must return RouteInterface instance");
             }
         }
 
@@ -199,7 +198,9 @@ class Router implements RouterInterface
             str_replace('/', RouteInterface::SEPARATOR, $route)
         );
 
-        $route = $this->defaultRoute->copy($route, compact('controller', 'action'));
+        $route = $this->defaultRoute->withDefaults($route, compact('controller', 'action'));
+
+        //Storing
         $this->addRoute($route);
 
         return $route;

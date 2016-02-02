@@ -130,18 +130,6 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function copy($name, array $defaults)
-    {
-        $copy = clone $this;
-        $copy->name = (string)$name;
-        $copy->defaults($defaults);
-
-        return $copy;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
@@ -173,6 +161,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * Update route defaults (new values will be merged with existed data).
      *
+     * @deprecated User withDefault method
      * @param array $defaults
      * @return $this
      */
@@ -181,6 +170,18 @@ abstract class AbstractRoute implements RouteInterface
         $this->defaults = $defaults + $this->defaults;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withDefaults($name, array $matches)
+    {
+        $copy = clone $this;
+        $copy->name = (string)$name;
+        $copy->defaults($matches);
+
+        return $copy;
     }
 
     /**
@@ -225,17 +226,20 @@ abstract class AbstractRoute implements RouteInterface
             $uri = substr($path, strlen($basePath));
         }
 
-        if (preg_match($this->compiled['pattern'], rtrim($uri, '/'), $this->matches)) {
+        if (preg_match($this->compiled['pattern'], rtrim($uri, '/'), $matches)) {
+            $route = clone $this;
+
+            $route->matches = $matches;
+
             //To get only named matches
-            $this->matches = array_intersect_key($this->matches, $this->compiled['options']);
-            $this->matches = array_merge(
-                $this->compiled['options'],
-                $this->defaults,
-                $this->matches
+            $route->matches = array_intersect_key($route->matches, $route->compiled['options']);
+            $route->matches = array_merge(
+                $route->compiled['options'],
+                $route->defaults,
+                $route->matches
             );
 
-            //todo: return clone this, see copy?
-            return true;
+            return $route;
         }
 
         return false;

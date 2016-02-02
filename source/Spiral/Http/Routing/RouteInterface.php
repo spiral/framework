@@ -32,12 +32,11 @@ interface RouteInterface
     public function getName();
 
     /**
-     * Check if route matched with provided request.
+     * Check if route matched with provided request. Must return new route.
      *
-     * @todo potentially this method might return route instance!
      * @param ServerRequestInterface $request
      * @param string                 $basePath
-     * @return bool
+     * @return RouteInterface
      * @throws RouteException
      */
     public function match(ServerRequestInterface $request, $basePath = '/');
@@ -59,13 +58,11 @@ interface RouteInterface
     /**
      * Get route copy with different parameters.
      *
-     * @internal DO NOT USE IN YOUR CODE
-     * @todo i don't like this method, find alternative
      * @param string $name
-     * @param array  $defaults
+     * @param array  $matches
      * @return RouteInterface
      */
-    public function copy($name, array $defaults);
+    public function withDefaults($name, array $matches);
 
     /**
      * Generate valid route URL using route name and set of parameters.

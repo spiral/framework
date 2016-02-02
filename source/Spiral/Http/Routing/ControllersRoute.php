@@ -97,6 +97,7 @@ class ControllersRoute extends AbstractRoute
      * Create controller aliases, namespace and postfix will be ignored in this case.
      * Example: $route->controllers(["auth" => "Module\Authorization\AuthController"]);
      *
+     * @todo immutable
      * @param array $controllers
      * @return $this
      */
