@@ -7,13 +7,15 @@
  */
 namespace Spiral\Http\Routing;
 
-use Spiral\Core\ContainerInterface;
+use Spiral\Http\Routing\Traits\CoreTrait;
 
 /**
  * {@inheritdoc} General purpose route.
  */
 class Route extends AbstractRoute
 {
+    use CoreTrait;
+
     /**
      * Use this string as your target action to resolve action from routed URL.
      *
@@ -35,41 +37,41 @@ class Route extends AbstractRoute
      *
      * @param string          $name
      * @param string          $pattern
-     * @param string|callable $target Route target.
+     * @param string|callable $target Route target. Can be in a form of controler:action
      * @param array           $defaults
      */
     public function __construct($name, $pattern, $target, array $defaults = [])
     {
-        $this->name = $name;
+        parent::__construct($name, $defaults);
+
         $this->pattern = $pattern;
         $this->target = $target;
-        $this->defaults = $defaults;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function createEndpoint(ContainerInterface $container)
+    protected function createEndpoint()
     {
         if (is_object($this->target) || is_array($this->target)) {
             return $this->target;
         }
 
-        if (is_string($this->target) && strpos($this->target, self::SEPARATOR) === false) {
+        if (is_string($this->target) && strpos($this->target, ':') === false) {
             //Endpoint
-            return $container->get($this->target);
+            return $this->container()->get($this->target);
         }
 
         $route = $this;
 
-        return function () use ($container, $route) {
-            list($controller, $action) = explode(self::SEPARATOR, $route->target);
+        return function () use ($route) {
+            list($controller, $action) = explode(':', str_replace('::', ':', $route->target));
 
             if ($action == self::DYNAMIC_ACTION) {
-                $action = $route->matches['action'];
+                $action = $route->getMatches()['action'];
             }
 
-            return $route->callAction($container, $controller, $action, $route->matches);
+            return $route->callAction($controller, $action, $route->getMatches());
         };
     }
 }

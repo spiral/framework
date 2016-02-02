@@ -7,7 +7,6 @@
  */
 namespace Spiral\Http\Routing;
 
-use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -21,10 +20,20 @@ use Spiral\Http\Exceptions\RouteException;
 interface RouteInterface
 {
     /**
-     * Controller and action in route targets and createURL route name has to be separated like
-     * that.
+     * Isolate route endpoint in a given container.
+     *
+     * @param ContainerInterface $container
+     * @return self
      */
-    const SEPARATOR = '::';
+    public function withContainer(ContainerInterface $container);
+
+    /**
+     * Returns new route instance.
+     *
+     * @param string $name
+     * @return RouteInterface
+     */
+    public function withName($name);
 
     /**
      * @return string
@@ -32,46 +41,55 @@ interface RouteInterface
     public function getName();
 
     /**
+     * @return string
+     */
+    public function getPrefix();
+
+    /**
+     * @param string $prefix
+     * @return self
+     */
+    public function withPrefix($prefix);
+
+    /**
+     * Returns new route instance.
+     *
+     * @param array $matches
+     * @return self
+     */
+    public function withDefaults(array $matches);
+
+    /**
+     * Get default route values.
+     *
+     * @return array
+     */
+    public function getDefaults();
+
+    /**
      * Check if route matched with provided request. Must return new route.
      *
      * @param ServerRequestInterface $request
-     * @param string                 $basePath
-     * @return RouteInterface
+     * @return self|null
      * @throws RouteException
      */
-    public function match(ServerRequestInterface $request, $basePath = '/');
+    public function match(ServerRequestInterface $request);
 
     /**
      * Execute route on given request. Has to be called after match method.
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     * @param ContainerInterface     $container Spiral container is needed (due scoping).
      * @return ResponseInterface
      */
-    public function perform(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        ContainerInterface $container
-    );
-
-    /**
-     * Get route copy with different parameters.
-     *
-     * @param string $name
-     * @param array  $matches
-     * @return RouteInterface
-     */
-    public function withDefaults($name, array $matches);
+    public function perform(ServerRequestInterface $request, ResponseInterface $response);
 
     /**
      * Generate valid route URL using route name and set of parameters.
      *
-     * @param array            $parameters Accepts only arrays at this moment.
-     * @param string           $basePath
-     * @param SlugifyInterface $slugify
+     * @param array|\Traversable $parameters
      * @return UriInterface
      * @throws RouteException
      */
-    public function uri($parameters = [], $basePath = '/', SlugifyInterface $slugify = null);
+    public function uri($parameters = []);
 }

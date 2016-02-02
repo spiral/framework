@@ -7,7 +7,8 @@
  */
 namespace Spiral\Http\Routing;
 
-use Spiral\Core\ContainerInterface;
+use Doctrine\Common\Inflector\Inflector;
+use Spiral\Http\Routing\Traits\CoreTrait;
 
 /**
  * {@inheritdoc}
@@ -19,10 +20,10 @@ use Spiral\Core\ContainerInterface;
  * controller action and etc. Having DirectRoute attached to Router as default route will allow
  * user to generate urls based on controller action name ($router->createUri("controller::action")
  * or
- * $router->createUri("controller/action")).
+ * $router->uri("controller/action")).
  *
  * Examples:
- * new DirectRoute(
+ * new ControllersRoute(
  *      "default",
  *      "[<controller>[/<action>[/<id>]]]",
  *      "Controllers",
@@ -31,7 +32,7 @@ use Spiral\Core\ContainerInterface;
  * );
  *
  * You can also create host depended routes.
- * $route = new DirectRoute(
+ * $route = new ControllersRoute(
  *      "default",
  *      "domain.com[/<controller>[/<action>[/<id>]]]",
  *      "Controllers",
@@ -45,6 +46,8 @@ use Spiral\Core\ContainerInterface;
  */
 class ControllersRoute extends AbstractRoute
 {
+    use CoreTrait;
+
     /**
      * Default controllers namespace.
      *
@@ -85,56 +88,53 @@ class ControllersRoute extends AbstractRoute
         array $defaults = [],
         array $controllers = []
     ) {
-        $this->name = $name;
+        parent::__construct($name, $defaults);
+
         $this->pattern = $pattern;
         $this->namespace = $namespace;
         $this->postfix = $postfix;
-        $this->defaults = $defaults;
         $this->controllers = $controllers;
     }
 
     /**
      * Create controller aliases, namespace and postfix will be ignored in this case.
-     * Example: $route->controllers(["auth" => "Module\Authorization\AuthController"]);
+     * Example: $route->withControllers([
+     *      "auth" => "Module\Authorization\AuthController"
+     * ]);
      *
-     * @todo immutable
      * @param array $controllers
      * @return $this
      */
-    public function controllers(array $controllers)
+    public function withControllers(array $controllers)
     {
-        $this->controllers += $controllers;
+        $route = clone $this;
+        $route->controllers += $controllers;
 
-        return $this;
+        return $route;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function createEndpoint(ContainerInterface $container)
+    protected function createEndpoint()
     {
         $route = $this;
 
-        return function () use ($container, $route) {
-            $controller = $route->matches['controller'];
+        return function () use ($route) {
+            $matches = $route->getMatches();
 
             //Due we are expecting part of class name we can remove some garbage (see to-do below)
-            $controller = strtolower(preg_replace('/[^a-z_0-9]+/i', '', $controller));
+            $controller = strtolower(preg_replace('/[^a-z_0-9]+/i', '', $matches['controller']));
 
             if (isset($route->controllers[$controller])) {
                 //Aliased
                 $controller = $route->controllers[$controller];
             } else {
-                //todo: Use better logic, maybe Doctrine Inflector (maybe class-name style)
-                $controller = $route->namespace . '\\' . (ucfirst($controller) . $route->postfix);
+                $controller = Inflector::classify($controller) . $route->postfix;
+                $controller = "{$route->namespace}\\{$controller}";
             }
 
-            return $route->callAction(
-                $container,
-                $controller,
-                $route->matches['action'],
-                $route->matches
-            );
+            return $route->callAction($controller, $matches['action'], $matches);
         };
     }
 }

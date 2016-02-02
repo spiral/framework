@@ -11,9 +11,9 @@ use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\ContainerInterface;
-use Spiral\Http\Exceptions\BadRouteException;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\Exceptions\RouterException;
+use Spiral\Http\Exceptions\UndefinedRouteException;
 
 /**
  * Spiral implementation of RouterInterface.
@@ -66,25 +66,24 @@ class Router implements RouterInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
     {
-        //Open router scope
         $scope = $this->container->replace(RouterInterface::class, $this);
 
-        $route = $this->findRoute($request, $this->basePath);
+        try {
+            $route = $this->findRoute($request);
 
-        if (empty($route)) {
-            //Unable to locate route
-            throw new ClientException(ClientException::NOT_FOUND);
+            if (empty($route)) {
+                //Unable to locate route
+                throw new ClientException(ClientException::NOT_FOUND);
+            }
+
+            //IoC container context
+            $response = $route->withContainer($this->container)->perform(
+                $request->withAttribute('route', $route),
+                $response
+            );
+        } finally {
+            $this->container->restore($scope);
         }
-
-        //Default routes will understand about keepOutput
-        $response = $route->perform(
-            $request->withAttribute('route', $route),
-            $response,
-            $this->container
-        );
-
-        //Close router scope
-        $this->container->restore($scope);
 
         return $response;
     }
@@ -94,7 +93,7 @@ class Router implements RouterInterface
      */
     public function addRoute(RouteInterface $route)
     {
-        $this->routes[] = $route;
+        $this->routes[] = $route->withPrefix($this->basePath);
     }
 
     /**
@@ -110,14 +109,13 @@ class Router implements RouterInterface
      */
     public function getRoute($name)
     {
-        //todo: optimize
         foreach ($this->routes as $route) {
             if ($route->getName() == $name) {
                 return $route;
             }
         }
 
-        throw new BadRouteException("Undefined route '{$name}'.");
+        throw new UndefinedRouteException("Undefined route '{$name}'.");
     }
 
     /**
@@ -131,20 +129,15 @@ class Router implements RouterInterface
     /**
      * {@inheritdoc}
      *
-     * @throws BadRouteException
+     * @throws UndefinedRouteException
      */
-    public function uri($route, $parameters = [], SlugifyInterface $slugify = null)
+    public function uri($route, $parameters = [])
     {
-        $slugify = !empty($slugify) ? $slugify : $this->container->get(SlugifyInterface::class);
-
         try {
-            return $this->getRoute($route)->uri($parameters, $this->basePath, $slugify);
-        } catch (BadRouteException $e) {
-
+            return $this->getRoute($route)->uri($parameters, $this->basePath);
+        } catch (UndefinedRouteException $e) {
             //Cast and retry
-            $this->castRoute($route);
-
-            return $this->uri($route, $parameters, $slugify);
+            return $this->castRoute($route)->uri($parameters);
         }
     }
 
@@ -152,13 +145,13 @@ class Router implements RouterInterface
      * Find route matched for given request.
      *
      * @param ServerRequestInterface $request
-     * @param string                 $basePath
      * @return null|RouteInterface
      */
-    protected function findRoute(ServerRequestInterface $request, $basePath)
+    protected function findRoute(ServerRequestInterface $request)
     {
         foreach ($this->routes as $route) {
-            if (!empty($matched = $route->match($request, $basePath))) {
+
+            if (!empty($matched = $route->match($request))) {
                 if ($matched instanceof RouteInterface) {
                     return $matched;
                 }
@@ -169,7 +162,7 @@ class Router implements RouterInterface
 
         if (
             !empty($this->defaultRoute)
-            && !empty($matched = $this->defaultRoute->match($request, $basePath))
+            && !empty($matched = $this->defaultRoute->match($request))
         ) {
             return $matched;
         }
@@ -180,30 +173,30 @@ class Router implements RouterInterface
     /**
      * @param string $route
      * @return RouteInterface
-     * @throws BadRouteException
+     * @throws UndefinedRouteException
      */
     private function castRoute($route)
     {
         //Will be handled via default route where route name is specified as controller::action
-        if (strpos($route, RouteInterface::SEPARATOR) === false && strpos($route, '/') === false) {
-            throw new BadRouteException(
-                "Unable to locate route or use default route with controller::action pattern."
+        if (strpos($route, ':') === false) {
+            throw new UndefinedRouteException(
+                "Unable to locate route or use default route with 'controller:action' pattern."
             );
         }
 
         if (empty($this->defaultRoute)) {
-            throw new BadRouteException("Default/fallback route is missing.");
+            throw new UndefinedRouteException("Default/fallback route is missing.");
         }
 
         //We can fetch controller and action names from url
-        list($controller, $action) = explode(
-            RouteInterface::SEPARATOR,
-            str_replace('/', RouteInterface::SEPARATOR, $route)
-        );
+        list($controller, $action) = explode(':', str_replace(['/', '::'], ':', $route));
 
-        $route = $this->defaultRoute->withDefaults($route, compact('controller', 'action'));
+        $route = $this->defaultRoute->withName($route)->withDefaults([
+            'controller' => $controller,
+            'action'     => $action
+        ]);
 
-        //Storing
+        //For future requests
         $this->addRoute($route);
 
         return $route;

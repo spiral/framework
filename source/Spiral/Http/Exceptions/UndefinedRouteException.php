@@ -10,7 +10,7 @@ namespace Spiral\Http\Exceptions;
 /**
  * When no route found by name.
  */
-class BadRouteException extends RouterException
+class UndefinedRouteException extends RouterException
 {
 
 }
