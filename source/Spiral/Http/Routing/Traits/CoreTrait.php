@@ -32,7 +32,7 @@ trait CoreTrait
         $route = clone $this;
         $route->core = $core;
 
-        return $this;
+        return $route;
     }
 
     /**
