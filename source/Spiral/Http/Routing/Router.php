@@ -167,8 +167,11 @@ class Router implements RouterInterface
             }
         }
 
-        if (!empty($this->defaultRoute) && $this->defaultRoute->match($request, $basePath)) {
-            return $this->defaultRoute;
+        if (
+            !empty($this->defaultRoute)
+            && !empty($matched = $this->defaultRoute->match($request, $basePath))
+        ) {
+            return $matched;
         }
 
         return null;
