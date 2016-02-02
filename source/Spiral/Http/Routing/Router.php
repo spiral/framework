@@ -101,7 +101,7 @@ class Router implements RouterInterface
      */
     public function defaultRoute(RouteInterface $route)
     {
-        $this->defaultRoute = $route;
+        $this->defaultRoute = $route->withPrefix($this->basePath);
     }
 
     /**
