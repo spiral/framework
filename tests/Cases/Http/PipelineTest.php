@@ -164,4 +164,23 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $res->getStatusCode());
         $this->assertEquals('hello world', (string)$res->getBody());
     }
+
+    public function testMiddlewareModifiesResponseBefore()
+    {
+        $pipeline = new MiddlewarePipeline([], new SpiralContainer());
+        $res = $pipeline->target(function ($req, $res) {
+            $this->assertTrue($res->hasHeader('Test'));
+
+            return 'hello world';
+        })->pushMiddleware(function ($res, $req, $next) {
+            return $next($res, $req->withHeader('Test', 'Value'));
+        })->run(new ServerRequest(), new Response());
+
+        $this->assertTrue($res->hasHeader('Test'));
+        $this->assertEquals('Value', $res->getHeaderLine('Test'));
+
+        $this->assertInstanceOf(Response::class, $res);
+        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertEquals('hello world', (string)$res->getBody());
+    }
 }
