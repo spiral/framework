@@ -69,7 +69,7 @@ class MiddlewarePipeline extends Component
      * @param callable $target
      * @return $this
      */
-    public function target($target)
+    public function target(callable $target)
     {
         $this->target = $target;
 
