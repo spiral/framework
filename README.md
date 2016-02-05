@@ -144,7 +144,7 @@ $app->any('/spiral', function ($req, $res, $next) {
 });
 ```
 
-ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with adaptive scaffolding (optional, Phinx is currently being intergrated as migration engine) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends Record //or RecordEntity without active record like methods
