@@ -82,7 +82,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         $request = $this->request();
         $response = $this->response();
 
-        $writer = new ErrorWriter($this->config, $this->container->get(ViewsInterface::class));
+        $writer = $this->container->get(ErrorWriter::class);
 
         if (!$this->config->exposeErrors()) {
             $response = $writer->writeException($request, $response, new ServerErrorException());
