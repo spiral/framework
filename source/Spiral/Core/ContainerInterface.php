@@ -22,8 +22,7 @@ interface ContainerInterface extends FactoryInterface, ResolverInterface, Intero
 {
     /**
      * Bind value resolver to container alias. Resolver can be class name (will be constructed
-     * every
-     * method call), function array or Closure (executed every call). Only object resolvers
+     * every method call), function array or Closure (executed every call). Only object resolvers
      * supported by this method.
      *
      * @param string                $alias
