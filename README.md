@@ -238,8 +238,9 @@ Modules
 
 Roadmap
 =======
-- Queue component
-- Restore of PHPStorm IDE help component
+- Queue module
+- SwiftMailer module
+- Restore of PHPStorm IDE help module
 - Improving Test Coverage 
 
 Inspired by
