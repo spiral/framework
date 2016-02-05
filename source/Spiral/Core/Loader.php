@@ -10,8 +10,7 @@ namespace Spiral\Core;
 use Spiral\Core\Container\SingletonInterface;
 
 /**
- * Can speed up class loading in some conditions. In addition this class is needed for tokenizer
- * to handle not found classes.
+ * Can speed up class loading in some conditions. Used by profiler to show all loadead classes.
  */
 class Loader extends Component implements SingletonInterface
 {
