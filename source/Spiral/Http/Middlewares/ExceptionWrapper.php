@@ -84,10 +84,7 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
             //Logging client error
             $this->logError($request, $exception);
 
-            $writer = new ErrorWriter(
-                $this->httpConfig,
-                $this->container->get(ViewsInterface::class)
-            );
+            $writer = $this->container->get(ErrorWriter::class);
 
             return $writer->writeException($request, $response, $exception);
         }
