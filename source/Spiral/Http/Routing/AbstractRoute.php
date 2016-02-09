@@ -295,7 +295,7 @@ abstract class AbstractRoute implements RouteInterface
             }
 
             if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
-                $result[$key] = Strings::slug($parameters);
+                $result[$key] = Strings::slug($parameter);
                 continue;
             }
 
