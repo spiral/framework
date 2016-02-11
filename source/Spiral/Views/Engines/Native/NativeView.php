@@ -72,6 +72,7 @@ class NativeView extends Component implements ViewInterface
         ob_start();
         $__outputLevel__ = ob_get_level();
 
+        $outerContainer = self::staticContainer($this->container);
         try {
             extract($context, EXTR_OVERWRITE);
             require $this->filename;
@@ -81,6 +82,7 @@ class NativeView extends Component implements ViewInterface
             }
 
             $this->benchmark($__benchmark__);
+            self::staticContainer($outerContainer);
         }
 
         return ob_get_clean();

@@ -47,6 +47,13 @@ class Configurator extends Component implements ConfiguratorInterface
     protected $memory = null;
 
     /**
+     * Needed for container scope.
+     *
+     * @var ContainerInterface
+     */
+    protected $container = null;
+
+    /**
      * @var EnvironmentInterface
      */
     protected $environment = null;
@@ -55,17 +62,20 @@ class Configurator extends Component implements ConfiguratorInterface
      * @param string               $directory
      * @param FilesInterface       $files
      * @param HippocampusInterface $memory
+     * @param ContainerInterface   $container
      * @param EnvironmentInterface $environment
      */
     public function __construct(
         $directory,
         FilesInterface $files,
         HippocampusInterface $memory,
+        ContainerInterface $container,
         EnvironmentInterface $environment
     ) {
         $this->directory = $directory;
         $this->files = $files;
         $this->memory = $memory;
+        $this->container = $container;
         $this->environment = $environment;
     }
 
@@ -82,8 +92,13 @@ class Configurator extends Component implements ConfiguratorInterface
             );
         }
 
-        //@todo restore caching
-        return $this->loadConfig($section, $filename);
+        $outerContainer = self::staticContainer($this->container);
+        try {
+            //@todo restore caching
+            return $this->loadConfig($section, $filename);
+        } finally {
+            self::staticContainer($outerContainer);
+        }
     }
 
     /**

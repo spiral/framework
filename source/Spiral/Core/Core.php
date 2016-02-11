@@ -26,10 +26,11 @@ use Spiral\Http\HttpDispatcher;
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
  * overwritten with custom instance).
- * 
- * Btw, you can design your architecture any way you want: MVC, MMVC, HMVC, ADR, anything which can be 
- * invoked and/or routed. Technically you can even invent your own, application specific, architecture.
- * 
+ *
+ * Btw, you can design your architecture any way you want: MVC, MMVC, HMVC, ADR, anything which can
+ * be invoked and/or routed. Technically you can even invent your own, application specific,
+ * architecture.
+ *
  * @property-read ContainerInterface $container Protected.
  * @todo move start method and dispatcher property into trait
  * @todo potentially add more events and create common event dispatcher? or not?
@@ -48,7 +49,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
     /**
      * Memory section for bootloaders cache.
-     */ 
+     */
     const MEMORY_SECTION = 'app';
 
     /**
@@ -256,8 +257,9 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
     /**
      * {@inheritdoc}
-     * 
-     * todo: add ability to register exception bridges (custom module exception => controller exception)
+     *
+     * todo: add ability to register exception bridges (custom module exception => controller
+     * exception)
      */
     public function callAction($controller, $action = '', array $parameters = [])
     {
@@ -269,6 +271,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         }
 
         $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?: '~default~'));
+
+        $outerContainer = self::staticContainer($this->container);
         try {
             //Initiating controller with all required dependencies
             $controller = $this->container->make($controller);
@@ -283,6 +287,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             return $controller->callAction($action, $parameters);
         } finally {
             $this->benchmark($benchmark);
+            self::staticContainer($outerContainer);
         }
     }
 
@@ -427,12 +432,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Spiral core interface, @see SpiralContainer
         $container->bindSingleton(ContainerInterface::class, $container);
 
-        //Some sugar for modules, technically can be used as wrapper only here and in start method
-        if (empty(self::staticContainer())) {
-            //todo: better logic is required, stack wrapping?
-            self::staticContainer($container);
-        }
-
         /**
          * @var Core $core
          */
@@ -453,6 +452,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             $core->memory
         );
 
+        //Need way to redefine environment
         $core->environment->load();
 
         $container->bindSingleton(EnvironmentInterface::class, $core->environment);
@@ -468,7 +468,13 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             set_exception_handler([$core, 'handleException']);
         }
 
-        $core->bootload()->bootstrap();
+        //Container scope
+        $outerContainer = self::staticContainer($container);
+        try {
+            $core->bootload()->bootstrap();
+        } finally {
+            self::staticContainer($outerContainer);
+        }
 
         return $core;
     }
