@@ -65,7 +65,7 @@ class MyBootloader extends Bootloader
 }
 ```
 
-Declarative/lazy singletons and services (no need to torture IoC all the time):
+Declarative/lazy singletons and services:
 
 ```php
 class SomeService implements SingletonInterface //or extends Service
