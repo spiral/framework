@@ -21,6 +21,7 @@ use Spiral\Http\Routing\RouterInterface;
 trait RouterTrait
 {
     /**
+     * @internal
      * @var RouterInterface|null
      */
     private $router = null;
