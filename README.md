@@ -28,7 +28,7 @@ class HomeController extends Controller
      *
      * @param Database   $database
      * @param Database   $logs     Can be physical or virtual database
-     * @param HttpConfig $config   Dependency as well
+     * @param HttpConfig $config   
      * @return string
      */
     public function indexAction(Database $database, Database $logs, HttpConfig $config)
