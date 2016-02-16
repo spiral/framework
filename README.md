@@ -116,6 +116,18 @@ $app->any('/spiral', function ($req, $res, $next) {
 });
 ```
 
+StorageManager with deep PSR-7 streams integration:
+
+```php
+public function downloadAction()
+{
+    return $this->responses->attachment(
+        $this->storage->open('cloud:filename.txt'), 
+        'filename.txt'
+    );
+}
+```
+
 ORM with adaptive scaffolding (optional, Phinx is currently being intergrated as migration engine) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
