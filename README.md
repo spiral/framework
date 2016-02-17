@@ -101,7 +101,7 @@ public function indexAction(ServerRequestInterface $request, SomeService $servic
 
 ![Short Bindings](https://raw.githubusercontent.com/spiral/guide/master/resources/virtual-bindings.gif)
 
-Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks (static container isolation is planned):
+Spiral application(s) can be used as middleware/endpoint inside other PSR7 frameworks:
 
 ```php
 use Zend\Diactoros\Server;
