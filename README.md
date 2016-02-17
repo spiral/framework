@@ -142,11 +142,11 @@ class Post extends Record //or RecordEntity without active record like methods
         'status' => 'enum(published,draft)',
         'body'   => 'text',
         
-        //Simple relation definition (optional)
+        //Simple relation definition
         'author'   => [self::BELONGS_TO => Author::class],
         'comments' => [self::HAS_MANY => Comment::class],
         
-        //Not very simple relation definitions (optional)
+        //Not very simple relation definitions
         'collaborators' => [
             self::MANY_TO_MANY  => User::class,
             self::PIVOT_TABLE   => 'post_collaborators_map',
