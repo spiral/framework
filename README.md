@@ -184,7 +184,7 @@ public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInt
 }
 ```
 
-Extendable and programmable template engine compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
+Extendable and programmable template markup language compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
 
 ```html
 <spiral:grid source="<?= $uploads ?>" as="upload">
