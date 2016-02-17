@@ -199,9 +199,7 @@ Extendable and programmable template engine compatible with any command syntax (
     </grid:cell>
 </spiral:grid>
 ```
-> You can write your own virtual tags (similar to web components or [Polymer](https://www.polymer-project.org/1.0/) with server side compilation), layouts and wrappers with almost any functionality or connect external libraries like [Vault](https://github.com/spiral-modules/vault):
-
-![Grid](https://raw.githubusercontent.com/spiral/guide/master/resources/grid.png)
+> You can write your own virtual tags (similar to web components or [Polymer](https://www.polymer-project.org/1.0/) with server side compilation), layouts and wrappers with almost any functionality or connect external libraries like [Vault](https://github.com/spiral-modules/vault).
 
 Includes
 =============
