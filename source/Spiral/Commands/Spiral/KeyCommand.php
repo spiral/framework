@@ -51,7 +51,7 @@ class KeyCommand extends Command
         $environmentData = $files->read($envFilename);
 
         $environmentData = str_replace(
-            base64_encode($config->getKey()),
+            $config->getKey(),
             base64_encode($encrypterManager->generateKey()),
             $environmentData
         );
