@@ -17,7 +17,6 @@ use Spiral\Http\Responses\Emitter;
 use Spiral\Http\Traits\MiddlewaresTrait;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\EmitterInterface;
-use Zend\Diactoros\Response\SapiEmitter;
 
 /**
  * Magically simple implementation of PRS7 Http core.
@@ -102,11 +101,15 @@ class HttpCore extends Component implements HttpInterface
         $pipeline = new MiddlewarePipeline($this->middlewares, $this->container);
 
         $benchmark = $this->benchmark('request', $request->getUri());
+
+        //Container scope
+        $outerContainer = self::staticContainer($this->container);
         try {
             //Exceptions (including client one) must be handled by pipeline
             return $pipeline->target($endpoint)->run($request, $response);
         } finally {
             $this->benchmark($benchmark);
+            self::staticContainer($outerContainer);
         }
     }
 

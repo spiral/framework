@@ -18,7 +18,6 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\HippocampusInterface;
-use Spiral\Core\Loader;
 use Spiral\Debug\BenchmarkerInterface;
 use Spiral\Debug\Debugger;
 use Spiral\Debug\LogsInterface;
@@ -35,7 +34,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Used as application dispatcher in console mode. Can execute automatically locate and execute
  * every available Symfony command.
- * 
+ *
  * @todo optimize
  */
 class ConsoleDispatcher extends Component implements SingletonInterface, DispatcherInterface
@@ -162,12 +161,15 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         $output = new ConsoleOutput();
         $this->debugger->shareHandler($this->consoleHandler($output));
 
+        //Deprecated
         $scope = $this->container->replace(LogsInterface::class, $this->debugger);
 
+        $outerContainer = self::staticContainer($this->container);
         try {
             $this->application()->run(null, $output);
         } finally {
             $this->container->restore($scope);
+            self::staticContainer($outerContainer);
         }
     }
 
@@ -194,6 +196,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         $this->openScope($input, $output);
         $code = self::CODE_UNDEFINED;
 
+        $outerContainer = self::staticContainer($this->container);
         try {
             /**
              * Debug: this method creates scope for [[InputInterface]] and [[OutputInterface]].
@@ -203,6 +206,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             $this->application->renderException($exception, $output);
         } finally {
             $this->restoreScope();
+            self::staticContainer($outerContainer);
         }
 
         return new CommandOutput($code, $output);

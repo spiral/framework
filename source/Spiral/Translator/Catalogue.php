@@ -15,6 +15,8 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Similar to Symfony catalogue, however this one does not operate with fallback locale.
+ *
+ * @todo improve
  */
 class Catalogue
 {

@@ -10,8 +10,8 @@ namespace Spiral\Commands\Spiral;
 use Spiral\Console\Command;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Encrypter\Configs\EncrypterConfig;
+use Spiral\Encrypter\EncrypterManager;
 use Spiral\Files\FilesInterface;
-use Spiral\Support\Strings;
 
 /**
  * Updates encryption key in root/.env file. Same logic as in Laravel.
@@ -32,11 +32,13 @@ class KeyCommand extends Command
      * @param DirectoriesInterface $directories
      * @param FilesInterface       $files
      * @param EncrypterConfig      $config
+     * @param EncrypterManager     $encrypterManager
      */
     public function perform(
         DirectoriesInterface $directories,
         FilesInterface $files,
-        EncrypterConfig $config
+        EncrypterConfig $config,
+        EncrypterManager $encrypterManager
     ) {
         $envFilename = $directories->directory('root') . '.env';
 
@@ -46,10 +48,15 @@ class KeyCommand extends Command
             );
         }
 
-        $files->write(
-            $envFilename,
-            str_replace($config->getKey(), Strings::random(32), $files->read($envFilename))
+        $environmentData = $files->read($envFilename);
+
+        $environmentData = str_replace(
+            base64_encode($config->getKey()),
+            base64_encode($encrypterManager->generateKey()),
+            $environmentData
         );
+
+        $files->write($envFilename, $environmentData);
 
         $this->writeln("<info>Encryption key has been successfully updated.</info>");
     }
