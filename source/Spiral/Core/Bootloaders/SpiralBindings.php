@@ -79,7 +79,7 @@ class SpiralBindings extends Bootloader
         'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],
 
         //Short aliases
-        'route'                              => 'Spiral\Http\Router\RouteInterface',
+        'route'                              => 'Spiral\Http\Routing\RouteInterface',
         'session'                            => 'Spiral\Session\SessionInterface'
     ];
 
