@@ -272,6 +272,30 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
+     * Route matches.
+     *
+     * @return array
+     */
+    public function getMatches()
+    {
+        return $this->matches;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getMatch($name, $default = null)
+    {
+        if (array_key_exists($name, $this->matches)) {
+            return $this->matches[$name];
+        }
+
+        return $default;
+    }
+
+    /**
      * Fetch uri segments and query parameters.
      *
      * @param \Traversable|array $parameters
@@ -305,29 +329,6 @@ abstract class AbstractRoute implements RouteInterface
         return $result;
     }
 
-    /**
-     * Route matches.
-     *
-     * @return array
-     */
-    protected function getMatches()
-    {
-        return $this->matches;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function getMatch($name, $default = null)
-    {
-        if (array_key_exists($name, $this->matches)) {
-            return $this->matches[$name];
-        }
-
-        return $default;
-    }
 
     /**
      * Create callable route endpoint.
