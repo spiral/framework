@@ -221,10 +221,7 @@ abstract class AbstractRoute implements RouteInterface
             $matches = array_intersect_key($matches, $this->compiled['options']);
             $matches = array_merge($this->compiled['options'], $this->defaults, $matches);
 
-            $route = clone $this;
-            $route->matches = $matches;
-
-            return $route;
+            return $this->withMatches($matches);
         }
 
         return null;
@@ -293,6 +290,18 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         return $default;
+    }
+
+    /**
+     * @param array $matches
+     * @return AbstractRoute
+     */
+    protected function withMatches(array $matches)
+    {
+        $route = clone $this;
+        $route->matches = $matches;
+
+        return $route;
     }
 
     /**
