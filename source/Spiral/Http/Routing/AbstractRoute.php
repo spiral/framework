@@ -316,6 +316,20 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
+     * @param string $name
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getMatch($name, $default = null)
+    {
+        if (array_key_exists($name, $this->matches)) {
+            return $this->matches[$name];
+        }
+
+        return $default;
+    }
+
+    /**
      * Create callable route endpoint.
      *
      * @return callable
