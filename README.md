@@ -220,7 +220,7 @@ Roadmap
 - Queue module
 - SwiftMailer module
 - Restore of PHPStorm IDE help module
-- Improving Test Coverage 
+- Improving Test Coverage and components split
 
 Inspired by
 ===========
