@@ -111,6 +111,21 @@ class Catalogue
     }
 
     /**
+     * Get all domain messages.
+     *
+     * @param string $domain
+     * @return array
+     */
+    public function getMessages($domain)
+    {
+        if (!isset($this->domains[$domain])) {
+            $this->loadDomain($domain);
+        }
+
+        return $this->domains[$domain];
+    }
+
+    /**
      * Adding string association to be stored into memory.
      *
      * @param string $domain
