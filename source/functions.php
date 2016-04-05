@@ -57,7 +57,6 @@ if (!function_exists('e')) {
 }
 
 if (!function_exists('interpolate')) {
-
     /**
      * Format string using previously named arguments from values array. Arguments that are not found
      * will be skipped without any notification. Extra arguments will be skipped as well.
@@ -82,7 +81,6 @@ if (!function_exists('interpolate')) {
 }
 
 if (!function_exists('dump')) {
-
     /**
      * Dump value.
      *
@@ -97,7 +95,6 @@ if (!function_exists('dump')) {
 }
 
 if (!function_exists('l')) {
-
     /**
      * Translate message using default or specific bundle name.
      *
@@ -118,7 +115,6 @@ if (!function_exists('l')) {
 }
 
 if (!function_exists('p')) {
-
     /**
      * Pluralize string using language pluralization options and specified numeric value.
      *

@@ -203,7 +203,7 @@ Extendable and programmable template markup language compatible with any command
 
 Includes
 =============
-Plug and Play extensions, small footprint, IDE friendly, frontend toolkit (ajax forms, asset manager), static analysis, loosely coupled, cloud storages, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profiling tools and much more.
+Plug and Play extensions, small footprint, IDE friendly, frontend toolkit (ajax forms, asset manager), static analysis, loosely coupled, cloud storages, MongoDB, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profiling tools and much more.
 
 Modules
 =======
@@ -220,7 +220,7 @@ Roadmap
 - Queue module
 - SwiftMailer module
 - Restore of PHPStorm IDE help module
-- Improving Test Coverage 
+- Improving Test Coverage and components split
 
 Inspired by
 ===========
