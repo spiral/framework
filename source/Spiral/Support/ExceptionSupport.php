@@ -14,8 +14,6 @@ use Spiral\Tokenizer\TokenizerInterface;
 
 /**
  * Helper class for spiral exceptions.
- *
- * needs shared container and tokenizer binding
  */
 class ExceptionSupport
 {

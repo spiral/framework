@@ -112,10 +112,11 @@ class ViewManager extends Component implements SingletonInterface, ViewsInterfac
      * Pre-compile desired view file.
      *
      * @param string $path
+     * @param bool $reset
      */
-    public function compile($path)
+    public function compile($path, $reset = false)
     {
-        $this->engine($this->detectEngine($path))->compile($path);
+        $this->engine($this->detectEngine($path))->compile($path, $reset);
     }
 
     /**
