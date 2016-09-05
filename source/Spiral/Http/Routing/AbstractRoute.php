@@ -323,7 +323,7 @@ abstract class AbstractRoute implements RouteInterface
                 !array_key_exists($key, $this->compiled['options'])
                 && is_array($parameters)
             ) {
-                $query[$key] = $parameters;
+                $query[$key] = $parameter;
                 continue;
             }
 
