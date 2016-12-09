@@ -173,8 +173,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     {
         try {
             date_default_timezone_set($timezone);
-        } catch (\Error $exception) {
-            throw new CoreException($exception->getMessage(), $exception->getCode(), $exception);
+        } catch (\Exception $e) {
+            throw new CoreException($e->getMessage(), $e->getCode(), $e);
         }
 
         $this->timezone = $timezone;
