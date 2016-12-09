@@ -61,7 +61,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>
-        <?= \Spiral\Support\ExceptionSupport::createMessage($exception) ?>
+        <?= \Spiral\Support\ExceptionHelper::createMessage($exception) ?>
     </title>
     <style>
         body.spiral-exception {
@@ -324,7 +324,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                         </em>
                     </div>
                     <div class="lines">
-                        <?= \Spiral\Support\ExceptionSupport::highlightSource(
+                        <?= \Spiral\Support\ExceptionHelper::highlightSource(
                             $trace['file'],
                             $trace['line']
                         ) ?>

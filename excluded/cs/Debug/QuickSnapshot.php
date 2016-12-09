@@ -9,7 +9,7 @@ namespace Spiral\Debug;
 
 use Psr\Log\LoggerInterface;
 use Spiral\Core\Component;
-use Spiral\Support\ExceptionSupport;
+use Spiral\Support\ExceptionHelper;
 
 class QuickSnapshot extends Component implements SnapshotInterface
 {
@@ -48,7 +48,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
      */
     public function getMessage()
     {
-        return ExceptionSupport::createMessage($this->exception);
+        return ExceptionHelper::createMessage($this->exception);
     }
 
     /**

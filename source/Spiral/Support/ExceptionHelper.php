@@ -8,27 +8,29 @@
 namespace Spiral\Support;
 
 use Spiral\Tokenizer\Highlighter;
-use Spiral\Tokenizer\Highlighter\InversedStyle;
 use Spiral\Tokenizer\Highlighter\Style;
-use Spiral\Tokenizer\TokenizerInterface;
 
 /**
  * Helper class for spiral exceptions.
  */
-class ExceptionSupport
+class ExceptionHelper
 {
     /**
      * @param \Throwable $exception
+     *
      * @return string
      */
-    public static function createMessage($exception)
+    public static function createMessage(\Throwable $exception)
     {
-        return interpolate('{exception}: {message} in {file} at line {line}', [
-            'exception' => get_class($exception),
-            'message'   => $exception->getMessage(),
-            'file'      => $exception->getFile(),
-            'line'      => $exception->getLine()
-        ]);
+        return \Spiral\interpolate(
+            '{exception}: {message} in {file} at line {line}',
+            [
+                'exception' => get_class($exception),
+                'message'   => $exception->getMessage(),
+                'file'      => $exception->getFile(),
+                'line'      => $exception->getLine()
+            ]
+        );
     }
 
     /**
@@ -38,15 +40,12 @@ class ExceptionSupport
      * @param int    $line
      * @param int    $around
      * @param Style  $style
+     *
      * @return string
      */
     public static function highlightSource($filename, $line, $around = 10, Style $style = null)
     {
-        if (empty($style)) {
-            $style = new Style();
-        }
-
-        $highlighter = new Highlighter(file_get_contents($filename), $style);
+        $highlighter = new Highlighter(file_get_contents($filename), $style ?? new Style());
 
         return $highlighter->lines($line, $around);
     }

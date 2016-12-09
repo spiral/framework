@@ -85,3 +85,5 @@ if (!function_exists('dump')) {
         return spiral(Dumper::class)->dump($value, $output);
     }
 }
+
+//todo: interpolate
