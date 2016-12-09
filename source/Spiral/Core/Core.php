@@ -12,10 +12,13 @@ use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\DirectoryException;
 use Spiral\Core\Exceptions\ScopeException;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 
 abstract class Core extends Component implements DirectoriesInterface
 {
+    use BenchmarkTrait;
+
     /**
      * I need this constant for Symfony Console. :/
      */
@@ -25,6 +28,12 @@ abstract class Core extends Component implements DirectoriesInterface
      * Memory section for bootloaders cache.
      */
     const BOOTLOADERS_MEMORY_SECTION = 'app';
+
+    /**
+     * Components to be autoloader while application initialization. This property can be redefined
+     * on application level.
+     */
+    const BOOTLOAD = [];
 
     /**
      * Every application should have defined timezone.
@@ -76,14 +85,6 @@ abstract class Core extends Component implements DirectoriesInterface
      * @var MemoryInterface
      */
     protected $memory = null;
-
-    /**
-     * Components to be autoloader while application initialization. This property can be redefined
-     * on application level.
-     *
-     * @var array
-     */
-    protected $load = [];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must
@@ -259,7 +260,7 @@ abstract class Core extends Component implements DirectoriesInterface
     {
         //Bootloading all needed components and extensions
         $this->bootloader->bootload(
-            $this->load,
+            static::BOOTLOAD,
             $this->environment->get('CACHE_BOOTLOADERS', false)
                 ? static::BOOTLOADERS_MEMORY_SECTION
                 : null

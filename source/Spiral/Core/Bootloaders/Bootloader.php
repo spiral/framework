@@ -29,6 +29,12 @@ abstract class Bootloader extends Component implements BootloaderInterface
     const BOOT = false;
 
     /**
+     * ALTERNATIVE DEFINITIONS OF BINDINGS.
+     */
+    const BINDINGS   = [];
+    const SINGLETONS = [];
+
+    /**
      * Bindings in string/array form, example:
      *
      * [
@@ -60,7 +66,7 @@ abstract class Bootloader extends Component implements BootloaderInterface
      */
     public function defineBindings(): array
     {
-        return $this->bindings;
+        return $this->bindings + static::BINDINGS;
     }
 
     /**
@@ -68,6 +74,6 @@ abstract class Bootloader extends Component implements BootloaderInterface
      */
     public function defineSingletons(): array
     {
-        return $this->singletons;
+        return $this->singletons + static::SINGLETONS;
     }
 }

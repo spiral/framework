@@ -35,7 +35,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      */
     use SharedTrait, BenchmarkTrait;
 
-
     /**
      * Not set until start method. Can be set manually in bootload.
      *
@@ -129,7 +128,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         restore_error_handler();
         restore_exception_handler();
 
-        if (empty($snapshot = $this->getSnapshot($exception))) {
+        if (empty($snapshot = $this->makeSnapshot($exception))) {
             //No action is required
             return;
         }
@@ -155,22 +154,18 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      *
      * @return SnapshotInterface|null
      */
-    public function getSnapshot($exception)
+    public function makeSnapshot(\Throwable $exception)
     {
         if (!$this->container->has(SnapshotInterface::class)) {
             return null;
         }
 
-        return $this->container->make(
-            SnapshotInterface::class,
-            compact('exception')
-        );
+        return $this->container->make(SnapshotInterface::class, compact('exception'));
     }
 
     /**
      * Create default application dispatcher based on environment value.
      *
-     * @todo possibly split into two protected methods to let user define dispatcher easier
      * @return DispatcherInterface|ConsoleDispatcher|HttpDispatcher
      */
     protected function createDispatcher()
