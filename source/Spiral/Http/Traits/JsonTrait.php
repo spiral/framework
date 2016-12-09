@@ -20,10 +20,14 @@ trait JsonTrait
      * @param ResponseInterface $response
      * @param mixed             $json
      * @param int               $code
+     *
      * @return ResponseInterface
      */
-    private function writeJson(ResponseInterface $response, $json, $code = 200)
-    {
+    private function writeJson(
+        ResponseInterface $response,
+        $json,
+        int $code = 200
+    ): ResponseInterface {
         if (is_array($json) && isset($json['status'])) {
             $code = $json['status'];
         }
