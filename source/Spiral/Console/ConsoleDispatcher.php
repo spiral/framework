@@ -7,12 +7,14 @@
 namespace Spiral\Console;
 
 use Spiral\Console\Exceptions\ConsoleException;
+use Spiral\Console\Logging\ConsoleHandler;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\MemoryInterface;
+use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Tokenizer\ClassLocatorInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
@@ -39,11 +41,11 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     private $application = null;
 
     /**
-     * Container scope for input and output intefaces.
+     * Active console output.
      *
-     * @var mixed
+     * @var OutputInterface
      */
-    private $scope = null;
+    private $output = null;
 
     /**
      * @invisible
@@ -79,18 +81,15 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
 
     /**
      * {@inheritdoc}
-     *
-     * @param bool $verbose When true ConsoleDispatcher will mount custom ConsoleHandler for logs
-     *                      in order out log messages in console in realtime.
      */
-    public function start(bool $verbose = true)
+    public function start()
     {
-        $output = new ConsoleOutput();
+        $this->output = new ConsoleOutput();
 
-        if ($verbose) {
-            //todo: implement
-            //$scope = $this->container->replace(LogsInterface::class, $this->logManager);
-        }
+        /**
+         * Sharing common log handler in order to display debug messages in verbosity mode.
+         */
+        $this->container->get(LogManager::class)->shareHandler(new ConsoleHandler($this->output));
 
         //Container scope
         $scope = self::staticContainer($this->container);
@@ -98,13 +97,10 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             /*
              * Commands are being executed in isolated container scope.
              */
-            $this->consoleApplication()->run(null, $output);
+            $this->consoleApplication()->run(null, $this->output);
         } finally {
             //Restoring scopes
             self::staticContainer($scope);
-//            if ($verbose && !empty($scope)) {
-//                $this->container->restore($scope);
-//            }
         }
     }
 
@@ -159,6 +155,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         }
 
         $this->application = new ConsoleApplication('Spiral Console Toolkit', Core::VERSION);
+        $this->application->setCatchExceptions(false);
 
         foreach ($this->locateCommands() as $command) {
             //Constructing command class
@@ -214,7 +211,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      */
     public function handleSnapshot(SnapshotInterface $snapshot, OutputInterface $output = null)
     {
-        $output = $output ?? new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
+        $output = $output ??  $this->output ?? new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
 
         //Rendering exception in console
         $this->consoleApplication()->renderException($snapshot->getException(), $output);

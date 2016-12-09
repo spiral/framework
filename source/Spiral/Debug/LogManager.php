@@ -117,15 +117,15 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
     {
         $result = [];
 
-        if (!empty($this->sharedHandler)) {
-            $result[] = $this->sharedHandler;
-        }
-
         if ($this->config->hasHandlers($channel)) {
             //Creating handlers
             foreach ($this->config->logHandlers($channel) as $handler) {
                 $result[] = $this->createHandler($handler);
             }
+        }
+
+        if (!empty($this->sharedHandler)) {
+            $result[] = $this->sharedHandler;
         }
 
         return $result;
@@ -160,7 +160,7 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
          */
         $instance = $this->factory->make($handler['handler'], $handler['options']);
 
-        if (!empty($handler['format'])) {
+        if (!empty($handler['format']) && method_exists($instance, 'setFormatter')) {
             //Shortcut
             $instance->setFormatter(new LineFormatter($handler['format']));
         }

@@ -144,7 +144,7 @@ class DescribeCommand extends Command
                 'On Delete:',
                 'On Update:'
             ]);
-
+echo $aa;
             foreach ($foreigns as $reference) {
                 $foreignsTable->addRow([
                     $reference->getName(),
