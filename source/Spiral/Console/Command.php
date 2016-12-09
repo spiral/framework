@@ -148,7 +148,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return array
      */
-    protected function defineOptions()
+    protected function defineOptions(): array
     {
         return static::OPTIONS;
     }
@@ -158,7 +158,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return array
      */
-    protected function defineArguments()
+    protected function defineArguments(): array
     {
         return static::ARGUMENTS;
     }
@@ -166,7 +166,7 @@ abstract class Command extends SymfonyCommand
     /**
      * @return ContainerInterface
      */
-    protected function iocContainer()
+    protected function iocContainer(): ContainerInterface
     {
         //We have to always be executed in a container scope
         return $this->container;
@@ -177,7 +177,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return bool
      */
-    protected function isVerbosity()
+    protected function isVerbosity(): bool
     {
         return $this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE;
     }
@@ -190,7 +190,7 @@ abstract class Command extends SymfonyCommand
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
-    protected function write($messages, $newline = false)
+    protected function write($messages, bool $newline = false)
     {
         return $this->output->write($messages, $newline);
     }
@@ -214,7 +214,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return mixed
      */
-    protected function option($name)
+    protected function option(string $name)
     {
         return $this->input->getOption($name);
     }
@@ -226,7 +226,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return mixed
      */
-    protected function argument($name)
+    protected function argument(string $name)
     {
         return $this->input->getArgument($name);
     }
@@ -240,7 +240,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return Table
      */
-    protected function table(array $headers, $rows = [], $style = 'default')
+    protected function table(array $headers, array $rows = [], string $style = 'default'): Table
     {
         $table = new Table($this->output);
 
@@ -252,7 +252,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return AskHelper
      */
-    protected function ask()
+    protected function ask(): AskHelper
     {
         return new AskHelper($this->getHelper('question'), $this->input, $this->output);
     }

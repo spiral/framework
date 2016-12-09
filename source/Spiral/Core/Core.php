@@ -1,5 +1,4 @@
 <?php
-
 /**
  * spiral
  *
@@ -153,15 +152,12 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Every application needs timezone to be set, by default we are using UTC
         date_default_timezone_set($this->timezone);
 
-        if (empty($memory)) {
-            //Default memory implementation
-            $memory = new Memory(
+        //Default memory implementation as fallback
+        $this->memory = $memory ?? new Memory(
                 $this->directory('cache'),
                 $container->get(FilesInterface::class)
             );
-        }
 
-        $this->memory = $memory;
         $this->bootloader = new BootloadManager($this->container, $this->memory);
     }
 
