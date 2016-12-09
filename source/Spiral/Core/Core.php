@@ -9,10 +9,13 @@ namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Containers\SpiralContainer;
+use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\DirectoryException;
 use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\Exceptions\ScopeException;
+use Spiral\Core\HMVC\ControllerInterface;
+use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
@@ -26,7 +29,7 @@ use Spiral\Files\FilesInterface;
  * be invoked and/or routed. Technically you can even invent your own, application specific,
  * architecture.
  */
-abstract class Core extends Component implements DirectoriesInterface
+abstract class Core extends Component implements CoreInterface, DirectoriesInterface
 {
     use SharedTrait, BenchmarkTrait;
 
@@ -273,17 +276,51 @@ abstract class Core extends Component implements DirectoriesInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function callAction(string $controller, string $action = null, array $parameters = [])
+    {
+        if (!class_exists($controller)) {
+            throw new ControllerException(
+                "No such controller '{$controller}' found",
+                ControllerException::NOT_FOUND
+            );
+        }
+
+        $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?? '~default~'));
+
+        $scope = self::staticContainer($this->container);
+        try {
+            //Getting instance of controller
+            $controller = $this->container->get($controller);
+
+            if (!$controller instanceof ControllerInterface) {
+                throw new ControllerException(
+                    "No such controller '{$controller}' found",
+                    ControllerException::NOT_FOUND
+                );
+            }
+
+            return $controller->callAction($action, $parameters);
+        } finally {
+            $this->benchmark($benchmark);
+            self::staticContainer($scope);
+        }
+    }
+
+    /**
      * Handle php shutdown and search for fatal errors.
      */
     public function handleShutdown()
     {
+        if (!$this->container->has(SnapshotInterface::class)) {
+            //We are unable to handle exception without proper snaphotter
+            return;
+        }
+
         if (!empty($error = error_get_last())) {
             $this->handleException(new FatalException(
-                $error['message'],
-                $error['type'],
-                0,
-                $error['file'],
-                $error['line']
+                $error['message'], $error['type'], 0, $error['file'], $error['line']
             ));
         }
     }
@@ -307,6 +344,8 @@ abstract class Core extends Component implements DirectoriesInterface
      * Handle exception using associated application dispatcher and snapshot class.
      *
      * @param \Throwable $exception
+     *
+     * @throws \Throwable
      */
     public function handleException(\Throwable $exception)
     {
@@ -317,7 +356,7 @@ abstract class Core extends Component implements DirectoriesInterface
 
         if (empty($snapshot)) {
             //No action is required
-            return;
+            throw $exception;
         }
 
         //Let's allow snapshot to report about itself
@@ -469,12 +508,12 @@ abstract class Core extends Component implements DirectoriesInterface
             set_exception_handler([$core, 'handleException']);
         }
 
-        $outerContainer = self::staticContainer($container);
+        $scope = self::staticContainer($container);
         try {
             //Bootloading our application in a defined GLOBAL container scope
             $core->bootload()->bootstrap();
         } finally {
-            self::staticContainer($outerContainer);
+            self::staticContainer($scope);
         }
 
         return $core;

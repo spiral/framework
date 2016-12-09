@@ -74,12 +74,12 @@ class Configurator extends Component implements ConfiguratorInterface
             );
         }
 
-        $outerContainer = self::staticContainer($this->container);
+        $scope = self::staticContainer($this->container);
         try {
             //Configs are loaded in a defined GLOBAL container scope
             return $this->loadConfig($section, $filename);
         } finally {
-            self::staticContainer($outerContainer);
+            self::staticContainer($scope);
         }
     }
 

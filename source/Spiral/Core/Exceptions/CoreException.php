@@ -6,7 +6,7 @@
  */
 namespace Spiral\Core\Exceptions;
 
-class CoreException extends \Error
+class CoreException extends RuntimeException
 {
 
 }

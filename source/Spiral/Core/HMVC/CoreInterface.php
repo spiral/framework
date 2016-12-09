@@ -22,9 +22,12 @@ interface CoreInterface
      * @param string $action     Controller action, empty by default (controller will use default
      *                           action).
      * @param array  $parameters Action parameters (if any).
+     *
      * @return mixed
+     *
      * @throws ControllerException
+     *
      * @throws \Exception
      */
-    public function callAction($controller, $action = '', array $parameters = []);
+    public function callAction(string $controller, string $action = null, array $parameters = []);
 }
