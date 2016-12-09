@@ -4,13 +4,14 @@
  * @see http://ppig.org/sites/default/files/2015-PPIG-26th-Sarkar.pdf
  * @var Throwable $exception
  */
-$dumper = new \Spiral\Debug\Dumper(10, $styler = new \Spiral\Debug\Dumper\Style());
+$dumper = new \Spiral\Debug\Dumper(10, $styler = new \Spiral\Debug\Dumper\InversedStyle());
 $dumps = [];
 
 /**
  * Format arguments and create data dumps.
  *
  * @param array $arguments
+ *
  * @return array
  */
 $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
@@ -19,19 +20,19 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         $display = $type = strtolower(gettype($argument));
 
         if (is_numeric($argument)) {
-            $result[] = $styler->style($argument, 'value', $type);
+            $result[] = $styler->apply($argument, 'value', $type);
             continue;
         } elseif (is_bool($argument)) {
-            $result[] = $styler->style($argument ? 'true' : 'false', 'value', $type);
+            $result[] = $styler->apply($argument ? 'true' : 'false', 'value', $type);
             continue;
         } elseif (is_null($argument)) {
-            $result[] = $styler->style('null', 'value', $type);
+            $result[] = $styler->apply('null', 'value', $type);
             continue;
         }
 
         if (is_object($argument)) {
             $reflection = new ReflectionClass($argument);
-            $display = interpolate(
+            $display = \Spiral\interpolate(
                 "<span title=\"{title}\">{class}</span>", [
                     'title' => $reflection->getName(),
                     'class' => $reflection->getShortName()
@@ -40,13 +41,13 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         //Colorizing
-        $display = $styler->style($display, 'value', $type);
+        $display = $styler->apply($display, 'value', $type);
         if (($dumpID = array_search($argument, $dumps)) === false) {
             $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
             $dumpID = count($dumps) - 1;
         }
 
-        $display = interpolate(
+        $display = \Spiral\interpolate(
             "<span onclick=\"_da({dumpID})\">{display}</span>",
             compact('display', 'dumpID')
         );
@@ -66,15 +67,16 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
     <style>
         body.spiral-exception {
             font-family: Helvetica, sans-serif;
-            background-color: #e0e0e0;
+            background-color: #25000a;
             font-size: 14px;
             padding: 5px;
-            color: #141414;
+            color: #a1a1a1;
         }
 
         .spiral-exception .wrapper {
             padding: 5px;
-            background-color: #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .7);
+            background-color: #3a3a3a;
         }
 
         .spiral-exception .wrapper strong {
@@ -87,7 +89,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .dump {
             padding: 5px;
-            background-color: white;
+            background-color: #232323;
             margin-top: 0;
             display: none;
             overflow-x: auto;
@@ -95,10 +97,11 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .wrapper .header {
             margin-bottom: 5px;
-            background-color: #990000;
-            border: 2px solid #990000;
+            background: #d3833b;
+            border: 2px solid #d3833b;
             padding: 8px 13px 8px 18px;
             color: #fff;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, .2);
         }
 
         .spiral-exception .wrapper .stacktrace {
@@ -114,13 +117,14 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         .spiral-exception .wrapper .stacktrace .trace .container {
             padding: 15px;
-            background-color: white;
+            background-color: #2e2e2e;
             margin-bottom: 5px;
             overflow-x: auto;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, .2);
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container.no-trace {
-            color: black;
+            color: #6bbdff;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .container.no-trace .arguments span {
@@ -132,7 +136,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .location {
-            color: black;
+            color: #6bbdff;
             margin-bottom: 5px;
         }
 
@@ -142,12 +146,13 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .location em {
-            color: #636363;
+            color: #a1a1a1;
             font-style: normal;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div {
             white-space: pre;
+            color: #E6E1DC;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div .number {
@@ -157,11 +162,11 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div:hover {
-            background-color: #f2f1f1;
+            background-color: #404040;
         }
 
         .spiral-exception .wrapper .stacktrace .trace .lines div.highlighted {
-            background-color: #ffeaaa;
+            background-color: #404040;
         }
 
         .spiral-exception .wrapper .stacktrace .chain {
@@ -172,14 +177,15 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         .spiral-exception .wrapper .stacktrace .chain .calls {
             padding: 10px 10px 10px 10px;
             margin-left: 5px;
-            background-color: white;
+            background-color: #2e2e2e;
             margin-bottom: 5px;
             overflow-x: auto;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, .2);
         }
 
         .spiral-exception .wrapper .stacktrace .chain .call .function {
             font-size: 11px;
-            color: black;
+            color: #6bbdff;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .call .function .arguments span {
@@ -193,7 +199,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         .spiral-exception .wrapper .stacktrace .chain .call .location {
             margin-bottom: 10px;
             font-size: 10px;
-            color: #636363;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .dumper {
@@ -205,14 +210,14 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         .spiral-exception .wrapper .stacktrace .chain .dumper .close {
             text-align: right;
             padding: 2px;
-            color: #151515;
+            color: #fff;
             cursor: pointer;
             font-size: 12px;
-            background-color: white;
+            background-color: #232323;
         }
 
         .spiral-exception .wrapper .stacktrace .chain .dumper .close:hover {
-            background-color: #e5e5e5;
+            background-color: #2c2c2c;
         }
 
         .spiral-exception .wrapper .environment .container {
@@ -234,7 +239,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         .spiral-exception .wrapper .footer .date {
-            color: #1d1d1d;
+            color: #fafafa;
         }
     </style>
     <script type="text/javascript">
@@ -289,7 +294,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                 $function = '<strong>' . $trace['function'] . '</strong>';
                 if (isset($trace['type']) && isset($trace['class'])) {
                     $reflection = new ReflectionClass($trace['class']);
-                    $function = interpolate(
+                    $function = \Spiral\interpolate(
                         "<span title=\"{title}\">{class}</span>{type}{function}",
                         [
                             'title'    => $reflection->getName(),
@@ -326,7 +331,9 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                     <div class="lines">
                         <?= \Spiral\Support\ExceptionHelper::highlightSource(
                             $trace['file'],
-                            $trace['line']
+                            $trace['line'],
+                            10,
+                            new \Spiral\Tokenizer\Highlighter\InversedStyle()
                         ) ?>
                     </div>
                 </div>
@@ -355,7 +362,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                     $function = '<strong>' . $trace['function'] . '</strong>';
                     if (isset($trace['type']) && isset($trace['class'])) {
                         $reflection = new ReflectionClass($trace['class']);
-                        $function = interpolate(
+                        $function = \Spiral\interpolate(
                             "<span title=\"{title}\">{class}</span>{type}{function}",
                             [
                                 'title'    => $reflection->getName(),
@@ -414,8 +421,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                         <?= $name ?> (<?= number_format(count($GLOBALS[$variable])) ?>)
                     </div>
                     <div class="dump" id="environment-<?= $name ?>" style="display: none;">
-                        <?= $dumper->dump($GLOBALS[$variable],
-                            \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
+                        <?= $dumper->dump($GLOBALS[$variable], \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
                     </div>
                 </div>
                 <?php
@@ -429,8 +435,8 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             <?php
             if (!defined('SPIRAL_INITIAL_TIME')) {
                 define(
-                'SPIRAL_INITIAL_TIME',
-                isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : 0
+                    'SPIRAL_INITIAL_TIME',
+                    isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : 0
                 );
             }
             ?>
@@ -438,8 +444,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             <?= number_format(microtime(true) - SPIRAL_INITIAL_TIME, 3) ?> seconds
         </div>
         <div class="elapsed memory">
-            <span>Memory peak usage:</span> <?= number_format(memory_get_peak_usage() / 1024,
-                2) ?> Kb
+            <span>Memory peak usage:</span> <?= number_format(memory_get_peak_usage() / 1024, 2) ?> Kb
         </div>
     </div>
     <?php

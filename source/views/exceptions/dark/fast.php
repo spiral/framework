@@ -11,6 +11,7 @@ $dumps = [];
  * Format arguments and create data dumps.
  *
  * @param array $arguments
+ *
  * @return array
  */
 $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
@@ -19,19 +20,19 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         $display = $type = strtolower(gettype($argument));
 
         if (is_numeric($argument)) {
-            $result[] = $styler->style($argument, 'value', $type);
+            $result[] = $styler->apply($argument, 'value', $type);
             continue;
         } elseif (is_bool($argument)) {
-            $result[] = $styler->style($argument ? 'true' : 'false', 'value', $type);
+            $result[] = $styler->apply($argument ? 'true' : 'false', 'value', $type);
             continue;
         } elseif (is_null($argument)) {
-            $result[] = $styler->style('null', 'value', $type);
+            $result[] = $styler->apply('null', 'value', $type);
             continue;
         }
 
         if (is_object($argument)) {
             $reflection = new ReflectionClass($argument);
-            $display = interpolate(
+            $display = \Spiral\interpolate(
                 "<span title=\"{title}\">{class}</span>", [
                     'title' => $reflection->getName(),
                     'class' => $reflection->getShortName()
@@ -40,22 +41,15 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         }
 
         //Colorizing
-        $display = $styler->style($display, 'value', $type);
-        if (($dumpID = array_search($argument, $dumps)) === false) {
-            $dumps[] = $dumper->dump($argument, \Spiral\Debug\Dumper::OUTPUT_RETURN);
-            $dumpID = count($dumps) - 1;
-        }
-
-        $display = interpolate(
-            "<span onclick=\"_da({dumpID})\">{display}</span>",
-            compact('display', 'dumpID')
-        );
+        $display = $styler->apply($display, 'value', $type);
+        $display = \Spiral\interpolate("<span>{display}</span>", compact('display'));
 
         $result[] = $display;
     }
 
     return $result;
 };
+
 ?>
 <html>
 <head>
@@ -246,14 +240,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             var block = document.getElementById(id);
             block.style.display = (block.style.display == 'none' ? 'block' : 'none');
         }
-        function _da(id) {
-            var dump = document.getElementById('argument-dumper');
-            dump.style.display = 'block';
-            dump.innerHTML = '<div class="close" onclick="toggle(\'argument-dumper\')"> &cross; close</div> '
-                + '<div class="dump" style="display: block">'
-                + document.getElementById('argument-' + id).innerHTML
-                + '</div>';
-        }
     </script>
 </head>
 <body class="spiral-exception">
@@ -264,8 +250,6 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
         in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
-
-        <span style="float: right; opacity: 0.7;">SLOW MODE</span>
     </div>
 
     <div class="stacktrace">
@@ -293,7 +277,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                 $function = '<strong>' . $trace['function'] . '</strong>';
                 if (isset($trace['type']) && isset($trace['class'])) {
                     $reflection = new ReflectionClass($trace['class']);
-                    $function = interpolate(
+                    $function = \Spiral\interpolate(
                         "<span title=\"{title}\">{class}</span>{type}{function}",
                         [
                             'title'    => $reflection->getName(),
@@ -361,7 +345,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                     $function = '<strong>' . $trace['function'] . '</strong>';
                     if (isset($trace['type']) && isset($trace['class'])) {
                         $reflection = new ReflectionClass($trace['class']);
-                        $function = interpolate(
+                        $function = \Spiral\interpolate(
                             "<span title=\"{title}\">{class}</span>{type}{function}",
                             [
                                 'title'    => $reflection->getName(),
@@ -420,8 +404,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
                         <?= $name ?> (<?= number_format(count($GLOBALS[$variable])) ?>)
                     </div>
                     <div class="dump" id="environment-<?= $name ?>" style="display: none;">
-                        <?= $dumper->dump($GLOBALS[$variable],
-                            \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
+                        <?= $dumper->dump($GLOBALS[$variable], \Spiral\Debug\Dumper::OUTPUT_RETURN) ?>
                     </div>
                 </div>
                 <?php
@@ -435,8 +418,8 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             <?php
             if (!defined('SPIRAL_INITIAL_TIME')) {
                 define(
-                'SPIRAL_INITIAL_TIME',
-                isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : 0
+                    'SPIRAL_INITIAL_TIME',
+                    isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : 0
                 );
             }
             ?>
@@ -444,8 +427,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             <?= number_format(microtime(true) - SPIRAL_INITIAL_TIME, 3) ?> seconds
         </div>
         <div class="elapsed memory">
-            <span>Memory peak usage:</span> <?= number_format(memory_get_peak_usage() / 1024,
-                2) ?> Kb
+            <span>Memory peak usage:</span> <?= number_format(memory_get_peak_usage() / 1024, 2) ?> Kb
         </div>
     </div>
     <?php
