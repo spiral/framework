@@ -8,6 +8,7 @@
 namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;
+use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
@@ -20,6 +21,7 @@ use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
+use Spiral\Http\HttpDispatcher;
 
 /**
  * Spiral core responsible for application timezone, memory, represents spiral container (can be
@@ -390,12 +392,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      */
     public function start(DispatcherInterface $dispatcher = null)
     {
-        //$this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
-//        try {
-        //          $this->dispatcher->start();
-        //    } finally {
-        //      $this->dispatcher = null;
-        // }
+        $this->dispatcher = $dispatcher ?? $this->createDispatcher();
+        $this->dispatcher->start();
     }
 
     /**
@@ -403,19 +401,19 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      */
     abstract protected function bootstrap();
 
-//    /**
-//     * Create default application dispatcher based on environment value.
-//     *
-//     * @return DispatcherInterface|ConsoleDispatcher|HttpDispatcher
-//     */
-//    protected function createDispatcher()
-//    {
-//        if (php_sapi_name() === 'cli') {
-//            return $this->container->make(ConsoleDispatcher::class);
-//        }
-//
-//        return $this->container->make(HttpDispatcher::class);
-//    }
+    /**
+     * Create default application dispatcher based on environment value.
+     *
+     * @return DispatcherInterface|ConsoleDispatcher|HttpDispatcher
+     */
+    protected function createDispatcher()
+    {
+        if (php_sapi_name() === 'cli') {
+            return $this->container->make(ConsoleDispatcher::class);
+        }
+
+        return $this->container->make(HttpDispatcher::class);
+    }
 
     /**
      * Bootload all registered classes using BootloadManager.
@@ -482,11 +480,11 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         $container->bindSingleton(static::class, $core);
 
         //Core shared interfaces
-        //$container->bindSingleton(CoreInterface::class, $core);
+        $container->bindSingleton(CoreInterface::class, $core);
         $container->bindSingleton(DirectoriesInterface::class, $core);
 
         //Core shared components
-        //$container->bindSingleton(BootloadManager::class, $core->bootloader);
+        $container->bindSingleton(BootloadManager::class, $core->bootloader);
         $container->bindSingleton(MemoryInterface::class, $core->memory);
 
         //Setting environment (by default - dotenv extension)

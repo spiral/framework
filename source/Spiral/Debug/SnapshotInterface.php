@@ -15,7 +15,7 @@ interface SnapshotInterface
     /**
      * Associated exception.
      *
-     * @return \Throwable
+     * @return \Throwable|\Exception
      */
     public function getException(): \Throwable;
 
