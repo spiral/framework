@@ -10,7 +10,7 @@ namespace Spiral\Http\Exceptions;
 /**
  * Responder exceptions such as unability to generate response.
  */
-class ResponderException extends HttpException
+class ResponseException extends HttpException
 {
 
 }

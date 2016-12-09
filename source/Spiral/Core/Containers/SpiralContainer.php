@@ -34,6 +34,9 @@ class SpiralContainer extends Container implements ContainerInterface
         //Files
         'Spiral\Files\FilesInterface'                 => 'Spiral\Files\FileManager',
 
+        //Encrypter
+        'Spiral\Encrypter\EncrypterInterface'         => 'Spiral\Encrypter\Encrypter',
+
         //Cache component bindings
         'Spiral\Cache\CacheInterface'                 => 'Spiral\Cache\CacheManager',
         'Spiral\Cache\StoreInterface'                 => 'Spiral\Cache\CacheStore',
@@ -50,5 +53,10 @@ class SpiralContainer extends Container implements ContainerInterface
         //Http
         'Spiral\Http\HttpInterface'                   => 'Spiral\Http\HttpDispatcher',
         'Spiral\Http\Request\InputInterface'          => 'Spiral\Http\Input\InputManager',
+
+        //Storage manager interfaces
+        'Spiral\Storage\StorageInterface'             => 'Spiral\Storage\StorageManager',
+        'Spiral\Storage\BucketInterface'              => 'Spiral\Storage\Entities\StorageBucket',
+        'Spiral\Session\SessionInterface'             => 'Spiral\Session\SessionStore',
     ];
 }

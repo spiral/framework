@@ -7,14 +7,13 @@
  */
 namespace Spiral\Http\Responses;
 
-use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Component;
 use Spiral\Files\FilesInterface;
 use Spiral\Files\Streams\StreamableInterface;
-use Spiral\Http\Exceptions\ResponderException;
+use Spiral\Http\Exceptions\ResponseException;
 use Spiral\Http\Traits\JsonTrait;
 use Zend\Diactoros\Stream;
 
@@ -24,7 +23,7 @@ use Zend\Diactoros\Stream;
  * @todo add more methods and wrappers
  * @see  MiddlewarePipeline
  */
-class Responder extends Component
+class ResponseWrapper extends Component
 {
     use JsonTrait;
 
@@ -53,14 +52,15 @@ class Responder extends Component
      *
      * @param UriInterface|string $uri
      * @param int                 $status
+     *
      * @return ResponseInterface
      * @throws \InvalidArgumentException
      */
-    public function redirect($uri, $status = 302)
+    public function redirect($uri, int $status = 302): ResponseInterface
     {
         if (!is_string($uri) && !$uri instanceof UriInterface) {
             throw new \InvalidArgumentException(
-                "Redirect allowed only for string or UriInterface uris."
+                "Redirect allowed only for string or UriInterface uris"
             );
         }
 
@@ -72,9 +72,10 @@ class Responder extends Component
      *
      * @param mixed $data
      * @param int   $code
+     *
      * @return ResponseInterface
      */
-    public function json($data, $code = 200)
+    public function json($data, int $code = 200): ResponseInterface
     {
         return $this->writeJson($this->response, $data, $code);
     }
@@ -90,14 +91,20 @@ class Responder extends Component
      *                                                             when filename supplied in a form
      *                                                             of stream or resource.
      * @param string                                     $mimetype
+     *
      * @return ResponseInterface
-     * @throws ResponderException
+     *
+     * @throws ResponseException
      */
-    public function attachment($filename, $name = '', $mimetype = 'application/octet-stream')
-    {
+    public function attachment(
+        $filename,
+        string $name = '',
+        string $mimetype = 'application/octet-stream'
+    ): ResponseInterface {
+
         if (empty($name)) {
             if (!is_string($filename)) {
-                throw new ResponderException("Unable to resolve public filename.");
+                throw new ResponseException("Unable to resolve public filename");
             }
 
             $name = basename($filename);
@@ -126,9 +133,10 @@ class Responder extends Component
      * Write html content into response and set content-type header.
      *
      * @param string $body
-     * @return \Psr\Http\Message\MessageInterface
+     *
+     * @return ResponseInterface
      */
-    public function html($body)
+    public function html(string $body): ResponseInterface
     {
         $this->response->getBody()->write($body);
 
@@ -139,9 +147,10 @@ class Responder extends Component
      * Create stream for given filename.
      *
      * @param string|StreamInterface|StreamableInterface $filename
+     *
      * @return StreamInterface
      */
-    private function getStream($filename)
+    private function getStream($filename): StreamInterface
     {
         if ($filename instanceof StreamableInterface) {
             return $filename->getStream();
@@ -156,8 +165,8 @@ class Responder extends Component
         }
 
         if (!$this->files->isFile($filename)) {
-            throw  new \InvalidArgumentException(
-                "Unable to allocate response body stream, file does not exist."
+            throw new \InvalidArgumentException(
+                "Unable to allocate response body stream, file does not exist"
             );
         }
 

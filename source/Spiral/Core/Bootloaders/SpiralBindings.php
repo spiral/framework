@@ -33,7 +33,7 @@ class SpiralBindings extends Bootloader
         'container'         => 'Spiral\Core\ContainerInterface',
 
         //Dispatchers
-//        'http'                               => 'Spiral\Http\HttpDispatcher',
+        'http'              => 'Spiral\Http\HttpDispatcher',
 //        'console'                            => 'Spiral\Console\ConsoleDispatcher',
 //
         //Shared components
@@ -63,14 +63,14 @@ class SpiralBindings extends Bootloader
 //        //Http scope dependent
 //        'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
 //        'router'                             => 'Spiral\Http\Routing\RouterInterface',
-//        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
-//
-//        //Http scope depended data routes and wrappers
+        'request'           => 'Psr\Http\Message\ServerRequestInterface',
+
+        //Http scope depended data routes and wrappers
         'input'             => 'Spiral\Http\Input\InputManager',
-//        'response'                           => 'Spiral\Http\Responses\Responder',
-//        'responses'                          => 'Spiral\Http\Responses\Responder',
-//        'responder'                          => 'Spiral\Http\Responses\Responder',
-//
+        'response'          => 'Spiral\Http\Responses\ResponseWrapper',
+        'responses'         => 'Spiral\Http\Responses\ResponseWrapper',
+        'responder'         => 'Spiral\Http\Responses\ResponseWrapper',
+
 //        //Thought request attributes
 //        'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],
 //
