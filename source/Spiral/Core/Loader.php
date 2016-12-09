@@ -55,8 +55,11 @@ class Loader extends Component implements SingletonInterface
      * @param string          $name   Memory section name.
      * @param bool            $enable Automatically enable.
      */
-    public function __construct(MemoryInterface $memory, $name = 'loadmap', $enable = true)
-    {
+    public function __construct(
+        MemoryInterface $memory,
+        string $name = 'loadmap',
+        bool $enable = true
+    ) {
         $this->memory = $memory;
         $this->name = $name;
 
@@ -68,9 +71,9 @@ class Loader extends Component implements SingletonInterface
     /**
      * Handle SPL auto location, will go to top of spl chain.
      *
-     * @return $this
+     * @return $this|self
      */
-    public function enable()
+    public function enable(): Loader
     {
         if ($this->enabled) {
             return $this;
@@ -89,9 +92,9 @@ class Loader extends Component implements SingletonInterface
     /**
      * Stop handling SPL calls.
      *
-     * @return $this
+     * @return $this|self
      */
-    public function disable()
+    public function disable(): Loader
     {
         if ($this->enabled) {
             spl_autoload_unregister([$this, 'loadClass']);
@@ -115,7 +118,7 @@ class Loader extends Component implements SingletonInterface
      *
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         if ($this->name != $name && !empty($name)) {
             if (empty($this->loadmap = (array)$this->memory->loadData($name))) {
@@ -197,7 +200,7 @@ class Loader extends Component implements SingletonInterface
      *
      * @return array
      */
-    public function getClasses()
+    public function getClasses(): array
     {
         return $this->classes;
     }
@@ -209,7 +212,7 @@ class Loader extends Component implements SingletonInterface
      *
      * @return bool
      */
-    public function isKnown($class)
+    public function isKnown(string $class): bool
     {
         return isset($this->classes[$class]);
     }
