@@ -64,7 +64,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         //Now we can generate response using request
         $response = $this->perform(
             $this->request(),
-            $this->response()
+            $this->initResponse()
         );
 
         if (!empty($response)) {
@@ -80,7 +80,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     {
         //Somewhere outside of dispatcher
         $request = $this->request();
-        $response = $this->response();
+        $response = $this->initResponse();
 
         $writer = $this->container->get(ErrorWriter::class);
 
@@ -114,11 +114,11 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * {@inheritdoc}
      */
-    protected function response()
+    protected function initResponse()
     {
         $benchmark = $this->benchmark('new:response');
         try {
-            $response = parent::response();
+            $response = parent::initResponse();
             foreach ($this->config->defaultHeaders() as $header => $value) {
                 $response = $response->withHeader($header, $value);
             }
@@ -132,9 +132,9 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * {@inheritdoc}
      */
-    protected function endpoint()
+    protected function getEndpoint()
     {
-        if (!empty($endpoint = parent::endpoint())) {
+        if (!empty($endpoint = parent::getEndpoint())) {
             //Endpoint specified by user
             return $endpoint;
         }
