@@ -27,7 +27,7 @@ abstract class Core extends Component implements DirectoriesInterface
     /**
      * Memory section for bootloaders cache.
      */
-    const BOOTLOADERS_MEMORY_SECTION = 'app';
+    const BOOT_MEMORY = 'app';
 
     /**
      * Components to be autoloader while application initialization. This property can be redefined
@@ -85,6 +85,12 @@ abstract class Core extends Component implements DirectoriesInterface
      * @var MemoryInterface
      */
     protected $memory = null;
+
+    /**
+     * Components to be autoloader while application initialization. This property can be redefined
+     * on application level.
+     */
+    protected $bootload = [];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must
@@ -258,12 +264,9 @@ abstract class Core extends Component implements DirectoriesInterface
      */
     private function bootload()
     {
-        //Bootloading all needed components and extensions
         $this->bootloader->bootload(
-            static::BOOTLOAD,
-            $this->environment->get('CACHE_BOOTLOADERS', false)
-                ? static::BOOTLOADERS_MEMORY_SECTION
-                : null
+            $this->bootload + static::BOOTLOAD,
+            $this->environment->get('CACHE_BOOTLOADERS', false) ? static::BOOT_MEMORY : null
         );
 
         return $this;
