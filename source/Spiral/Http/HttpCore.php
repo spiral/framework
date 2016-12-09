@@ -107,9 +107,8 @@ class HttpCore extends Component implements HttpInterface
 
         $pipeline = new MiddlewarePipeline($this->middlewares, $this->container);
 
+        //Working in a scope
         $benchmark = $this->benchmark('request', $request->getUri());
-
-        //Container scope
         $scope = self::staticContainer($this->container);
         try {
             //Exceptions (including client one) must be handled by pipeline
