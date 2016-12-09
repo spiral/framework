@@ -8,13 +8,12 @@
 namespace Spiral\Debug;
 
 use Psr\Log\LoggerInterface;
-use Spiral\Core\Component;
 use Spiral\Support\ExceptionHelper;
 
-class QuickSnapshot extends Component implements SnapshotInterface
+class QuickSnapshot implements SnapshotInterface
 {
     /**
-     * @var \Exception
+     * @var \Throwable
      */
     private $exception = null;
 
@@ -38,7 +37,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
     /**
      * {@inheritdoc}
      */
-    public function getException()
+    public function getException(): \Throwable
     {
         return $this->exception;
     }
@@ -46,7 +45,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
     /**
      * {@inheritdoc}
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return ExceptionHelper::createMessage($this->exception);
     }
@@ -56,13 +55,15 @@ class QuickSnapshot extends Component implements SnapshotInterface
      */
     public function report()
     {
-        $this->logger->error($this->getMessage());
+        if (!empty($this->logger)) {
+            $this->logger->error($this->getMessage());
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function describe()
+    public function describe(): array
     {
         return [
             'error'    => $this->getMessage(),
@@ -77,7 +78,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         return "<pre>{$this->exception}</pre>";
     }
@@ -85,7 +86,7 @@ class QuickSnapshot extends Component implements SnapshotInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (php_sapi_name() == 'cli') {
             return (string)$this->exception;

@@ -58,5 +58,8 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Storage\StorageInterface'             => 'Spiral\Storage\StorageManager',
         'Spiral\Storage\BucketInterface'              => 'Spiral\Storage\Entities\StorageBucket',
         'Spiral\Session\SessionInterface'             => 'Spiral\Session\SessionStore',
+
+        //Default snapshot handler
+        'Spiral\Debug\SnapshotInterface'              => 'Spiral\Debug\QuickSnapshot'
     ];
 }

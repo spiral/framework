@@ -25,7 +25,6 @@ class SpiralContainer2 extends Container implements ContainerInterface
         //Instrumental bindings
         'Psr\Log\LoggerInterface'                           => 'Spiral\Debug\SharedLogger',
         'Spiral\Debug\LogsInterface'                        => 'Spiral\Debug\Debugger',
-        'Spiral\Encrypter\EncrypterInterface'               => 'Spiral\Encrypter\Encrypter',
 
         //Views
         'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',
