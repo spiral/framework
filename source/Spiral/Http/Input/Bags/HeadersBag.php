@@ -16,7 +16,7 @@ class HeadersBag extends InputBag
     /**
      * {@inheritdoc}
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return parent::has($this->normalize($name));
     }
@@ -26,7 +26,7 @@ class HeadersBag extends InputBag
      *
      * @return string|array
      */
-    public function get($name, $default = null, $implode = ',')
+    public function get(string $name, $default = null, $implode = ',')
     {
         $value = parent::get($this->normalize($name), $default);
 
@@ -42,7 +42,7 @@ class HeadersBag extends InputBag
      *
      * @param bool|string $implode Implode header lines, false to return header as array.
      */
-    public function fetch(array $keys, $fill = false, $filler = null, $implode = ',')
+    public function fetch(array $keys, bool $fill = false, $filler = null, $implode = ',')
     {
         $keys = array_map([$this, 'normalize'], $keys);
 
@@ -62,9 +62,10 @@ class HeadersBag extends InputBag
      * Normalize header name.
      *
      * @param string $header
+     *
      * @return string
      */
-    protected function normalize($header)
+    protected function normalize(string $header): string
     {
         return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
     }

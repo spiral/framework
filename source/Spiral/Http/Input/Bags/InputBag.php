@@ -8,7 +8,7 @@
 namespace Spiral\Http\Input\Bags;
 
 use Spiral\Http\Exceptions\DotNotFoundException;
-use Spiral\Http\Exceptions\Request\InputException;
+use Spiral\Http\Exceptions\InputException;
 
 /**
  * Generic data accessor, used to read properties of active request.
@@ -31,7 +31,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -39,7 +39,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->data);
     }
@@ -47,7 +47,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return array
      */
-    public function all()
+    public function all(): array
     {
         return $this->data;
     }
@@ -56,9 +56,10 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      * Check if field presented (can be empty) by it's name. Dot notation allowed.
      *
      * @param string $name
+     *
      * @return bool
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         try {
             $this->dotGet($name);
@@ -74,9 +75,10 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function get($name, $default = null)
+    public function get(string $name, $default = null)
     {
         try {
             return $this->dotGet($name);
@@ -92,9 +94,10 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      * @param array $keys
      * @param bool  $fill Fill missing key with filler value.
      * @param mixed $filler
+     *
      * @return array
      */
-    public function fetch(array $keys, $fill = false, $filler = null)
+    public function fetch(array $keys, bool $fill = false, $filler = null)
     {
         $result = array_intersect_key($this->data, array_flip($keys));;
 
@@ -153,9 +156,12 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      * Get element using dot notation.
      *
      * @param string $name
+     *
      * @return mixed|null
+     *
+     * @throws DotNotFoundException
      */
-    private function dotGet($name)
+    private function dotGet(string $name)
     {
         $data = $this->data;
 

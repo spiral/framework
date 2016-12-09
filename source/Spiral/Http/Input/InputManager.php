@@ -9,17 +9,15 @@ namespace Spiral\Http\Input;
 
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Http\Exceptions\Request\InputException;
+use Spiral\Core\Exceptions\Container\ContainerException;
+use Spiral\Http\Exceptions\InputException;
 use Spiral\Http\Input\Bags\FilesBag;
 use Spiral\Http\Input\Bags\HeadersBag;
 use Spiral\Http\Input\Bags\InputBag;
 use Spiral\Http\Input\Bags\ServerBag;
-use Spiral\Http\MiddlewareInterface;
 use Spiral\Http\Request\InputInterface;
 
 /**
@@ -30,7 +28,7 @@ use Spiral\Http\Request\InputInterface;
  *
  * Technically this class can be made as middleware, but due spiral provides container scoping
  * such functionality may be replaces with simple container request routing.
- * 
+ *
  * @property-read HeadersBag $headers
  * @property-read InputBag   $data
  * @property-read InputBag   $query
@@ -39,7 +37,7 @@ use Spiral\Http\Request\InputInterface;
  * @property-read ServerBag  $server
  * @property-read InputBag   $attributes
  */
-class InputManager extends Component implements InputInterface, SingletonInterface
+class InputManager implements InputInterface, SingletonInterface
 {
     /**
      * @var InputBag[]
@@ -107,11 +105,16 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      * Get active instance of ServerRequestInterface and reset all bags if instance changed.
      *
      * @return Request
+     *
      * @throws InputException
      */
-    public function request()
+    public function request(): Request
     {
-        $request = $this->container->get(ServerRequestInterface::class);
+        try {
+            $request = $this->container->get(Request::class);
+        } catch (ContainerException $e) {
+            throw new InputException("Unable to get ServerRequestInterface in active container scope");
+        }
 
         //Flushing input state
         if ($this->request !== $request) {
@@ -127,7 +130,7 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      *
      * @return UriInterface
      */
-    public function uri()
+    public function uri(): UriInterface
     {
         return $this->request()->getUri();
     }
@@ -137,9 +140,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      *
      * @return string
      */
-    public function path()
+    public function path(): string
     {
         $path = $this->uri()->getPath();
+
         if (empty($path)) {
             return '/';
         } elseif ($path[0] !== '/') {
@@ -154,7 +158,7 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      *
      * @return string
      */
-    public function method()
+    public function method(): string
     {
         return $this->request()->getMethod();
     }
@@ -164,7 +168,7 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      *
      * @return bool
      */
-    public function isSecure()
+    public function isSecure(): bool
     {
         return $this->request()->getUri()->getScheme() == 'https';
     }
@@ -174,7 +178,7 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      *
      * @return bool
      */
-    public function isAjax()
+    public function isAjax(): bool
     {
         return strtolower($this->request()->getHeaderLine('X-Requested-With')) == 'xmlhttprequest';
     }
@@ -184,7 +188,7 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      *
      * @return bool
      */
-    public function isJsonExpected()
+    public function isJsonExpected(): bool
     {
         return $this->request()->getHeaderLine('Accept') == 'application/json';
     }
@@ -206,9 +210,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      * Get bag instance or create new one on demand.
      *
      * @param string $name
+     *
      * @return InputBag
      */
-    public function bag($name)
+    public function bag(string $name): InputBag
     {
         if (isset($this->bagInstances[$name])) {
             return $this->bagInstances[$name];
@@ -226,9 +231,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
 
     /**
      * @param string $name
+     *
      * @return InputBag
      */
-    public function __get($name)
+    public function __get(string $name): InputBag
     {
         return $this->bag($name);
     }
@@ -237,9 +243,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      * @param string      $name
      * @param mixed       $default
      * @param bool|string $implode Implode header lines, false to return header as array.
+     *
      * @return mixed
      */
-    public function header($name, $default = null, $implode = ',')
+    public function header(string $name, $default = null, $implode = ',')
     {
         return $this->headers->get($name, $default, $implode);
     }
@@ -247,20 +254,23 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     /**
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function data($name, $default = null)
+    public function data(string $name, $default = null)
     {
         return $this->data->get($name, $default);
     }
 
     /**
      * @see data()
+     *
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function post($name, $default = null)
+    public function post(string $name, $default = null)
     {
         return $this->data($name, $default);
     }
@@ -268,9 +278,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     /**
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function query($name, $default = null)
+    public function query(string $name, $default = null)
     {
         return $this->query->get($name, $default);
     }
@@ -280,9 +291,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
      *
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function input($name, $default = null)
+    public function input(string $name, $default = null)
     {
         return $this->data($name, $this->query($name, $default));
     }
@@ -290,9 +302,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     /**
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function cookie($name, $default = null)
+    public function cookie(string $name, $default = null)
     {
         return $this->cookies->get($name, $default);
     }
@@ -300,9 +313,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     /**
      * @param string $name
      * @param mixed  $default
+     *
      * @return UploadedFileInterface|null
      */
-    public function file($name, $default = null)
+    public function file(string $name, $default = null)
     {
         return $this->files->get($name, $default);
     }
@@ -310,9 +324,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     /**
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function server($name, $default = null)
+    public function server(string $name, $default = null)
     {
         return $this->server->get($name, $default);
     }
@@ -320,9 +335,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     /**
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function attribute($name, $default = null)
+    public function attribute(string $name, $default = null)
     {
         return $this->attributes->get($name, $default);
     }
@@ -330,10 +346,10 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
     /**
      * {@inheritdoc}
      */
-    public function getValue($source, $name = null)
+    public function getValue(string $source, string $name = null)
     {
         if (!method_exists($this, $source)) {
-            throw new InputException("Undefined input source '{$source}'.");
+            throw new InputException("Undefined input source '{$source}'");
         }
 
         return call_user_func([$this, $source], $name);

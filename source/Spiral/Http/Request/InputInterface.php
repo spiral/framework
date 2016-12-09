@@ -7,12 +7,12 @@
  */
 namespace Spiral\Http\Request;
 
-use Spiral\Http\Exceptions\Request\InputException;
+use Spiral\Http\Exceptions\InputException;
 
 /**
  * Provides values for RequestFilter.
- * 
- * @todo move to higher level
+ *
+ * @todo Move on another level.
  */
 interface InputInterface
 {
@@ -21,8 +21,10 @@ interface InputInterface
      *
      * @param string $source
      * @param string $name
+     *
      * @return mixed
+     *
      * @throws InputException
      */
-    public function getValue($source, $name = null);
+    public function getValue(string $source, string $name = null);
 }

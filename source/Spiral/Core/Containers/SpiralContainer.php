@@ -46,5 +46,9 @@ class SpiralContainer extends Container implements ContainerInterface
         //Databases
         'Spiral\Database\DatabaseInterface'           => 'Spiral\Database\Entities\Database',
         'Spiral\Database\DatabasesInterface'          => 'Spiral\Database\DatabaseManager',
+
+        //Http
+        'Spiral\Http\HttpInterface'                   => 'Spiral\Http\HttpDispatcher',
+        'Spiral\Http\Request\InputInterface'          => 'Spiral\Http\Input\InputManager',
     ];
 }

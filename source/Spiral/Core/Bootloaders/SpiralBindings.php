@@ -32,7 +32,7 @@ class SpiralBindings extends Bootloader
         //Container
         'container'         => 'Spiral\Core\ContainerInterface',
 
-//        //Dispatchers
+        //Dispatchers
 //        'http'                               => 'Spiral\Http\HttpDispatcher',
 //        'console'                            => 'Spiral\Console\ConsoleDispatcher',
 //
@@ -66,7 +66,7 @@ class SpiralBindings extends Bootloader
 //        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
 //
 //        //Http scope depended data routes and wrappers
-//        'input'                              => 'Spiral\Http\Input\InputManager',
+        'input'             => 'Spiral\Http\Input\InputManager',
 //        'response'                           => 'Spiral\Http\Responses\Responder',
 //        'responses'                          => 'Spiral\Http\Responses\Responder',
 //        'responder'                          => 'Spiral\Http\Responses\Responder',

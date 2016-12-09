@@ -14,20 +14,9 @@ namespace Spiral\Http\Input\Bags;
 class ServerBag extends InputBag
 {
     /**
-     * Normalizing name to simplify selection.
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function normalize($name)
-    {
-        return preg_replace('/[^a-z]/i', '_', strtoupper($name));
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return parent::has($this->normalize($name));
     }
@@ -35,7 +24,7 @@ class ServerBag extends InputBag
     /**
      * {@inheritdoc}
      */
-    public function get($name, $default = null)
+    public function get(string $name, $default = null)
     {
         return parent::get($this->normalize($name), $default);
     }
@@ -43,10 +32,22 @@ class ServerBag extends InputBag
     /**
      * {@inheritdoc}
      */
-    public function fetch(array $keys, $fill = false, $filler = null)
+    public function fetch(array $keys, bool $fill = false, $filler = null)
     {
         $keys = array_map([$this, 'normalize'], $keys);
 
         return parent::fetch($keys, $fill, $filler);
+    }
+
+    /**
+     * Normalizing name to simplify selection.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function normalize(string $name): string
+    {
+        return preg_replace('/[^a-z]/i', '_', strtoupper($name));
     }
 }
