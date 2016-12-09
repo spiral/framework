@@ -23,43 +23,61 @@ class SpiralContainer extends Container implements ContainerInterface
      */
     protected $bindings = [
         //Container related bindings
-        'Interop\Container\ContainerInterface'        => ContainerInterface::class,
-        'Spiral\Core\InteropContainerInterface'       => ContainerInterface::class,
-        'Spiral\Core\FactoryInterface'                => ContainerInterface::class,
-        'Spiral\Core\ResolverInterface'               => ContainerInterface::class,
+        'Interop\Container\ContainerInterface'              => ContainerInterface::class,
+        'Spiral\Core\InteropContainerInterface'             => ContainerInterface::class,
+        'Spiral\Core\FactoryInterface'                      => ContainerInterface::class,
+        'Spiral\Core\ResolverInterface'                     => ContainerInterface::class,
+
+        //Logging and debugging
+        'Spiral\Debug\LogsInterface'                        => 'Spiral\Debug\LogManager',
 
         //Configurator
-        'Spiral\Core\ConfiguratorInterface'           => 'Spiral\Core\Configurator',
+        'Spiral\Core\ConfiguratorInterface'                 => 'Spiral\Core\Configurator',
 
         //Files
-        'Spiral\Files\FilesInterface'                 => 'Spiral\Files\FileManager',
+        'Spiral\Files\FilesInterface'                       => 'Spiral\Files\FileManager',
 
         //Encrypter
-        'Spiral\Encrypter\EncrypterInterface'         => 'Spiral\Encrypter\Encrypter',
+        'Spiral\Encrypter\EncrypterInterface'               => 'Spiral\Encrypter\Encrypter',
 
         //Cache component bindings
-        'Spiral\Cache\CacheInterface'                 => 'Spiral\Cache\CacheManager',
-        'Spiral\Cache\StoreInterface'                 => 'Spiral\Cache\CacheStore',
+        'Spiral\Cache\CacheInterface'                       => 'Spiral\Cache\CacheManager',
+        'Spiral\Cache\StoreInterface'                       => 'Spiral\Cache\CacheStore',
 
         //Tokenization and class/invocation location
-        'Spiral\Tokenizer\TokenizerInterface'         => 'Spiral\Tokenizer\Tokenizer',
-        'Spiral\Tokenizer\ClassLocatorInterface'      => 'Spiral\Tokenizer\ClassLocator',
-        'Spiral\Tokenizer\InvocationLocatorInterface' => 'Spiral\Tokenizer\InvocationLocator',
+        'Spiral\Tokenizer\TokenizerInterface'               => 'Spiral\Tokenizer\Tokenizer',
+        'Spiral\Tokenizer\ClassLocatorInterface'            => 'Spiral\Tokenizer\ClassLocator',
+        'Spiral\Tokenizer\InvocationLocatorInterface'       => 'Spiral\Tokenizer\InvocationLocator',
 
         //Databases
-        'Spiral\Database\DatabaseInterface'           => 'Spiral\Database\Entities\Database',
-        'Spiral\Database\DatabasesInterface'          => 'Spiral\Database\DatabaseManager',
+        'Spiral\Database\DatabaseInterface'                 => 'Spiral\Database\Entities\Database',
+        'Spiral\Database\DatabasesInterface'                => 'Spiral\Database\DatabaseManager',
 
         //Http
-        'Spiral\Http\HttpInterface'                   => 'Spiral\Http\HttpDispatcher',
-        'Spiral\Http\Request\InputInterface'          => 'Spiral\Http\Input\InputManager',
+        'Spiral\Http\HttpInterface'                         => 'Spiral\Http\HttpDispatcher',
+        'Spiral\Http\Request\InputInterface'                => 'Spiral\Http\Input\InputManager',
 
         //Storage manager interfaces
-        'Spiral\Storage\StorageInterface'             => 'Spiral\Storage\StorageManager',
-        'Spiral\Storage\BucketInterface'              => 'Spiral\Storage\Entities\StorageBucket',
-        'Spiral\Session\SessionInterface'             => 'Spiral\Session\SessionStore',
+        'Spiral\Storage\StorageInterface'                   => 'Spiral\Storage\StorageManager',
+        'Spiral\Storage\BucketInterface'                    => 'Spiral\Storage\Entities\StorageBucket',
+        'Spiral\Session\SessionInterface'                   => 'Spiral\Session\SessionStore',
+
+        //Default validator
+        'Spiral\Validation\ValidatorInterface'              => 'Spiral\Validation\Validator',
+
+        //Translations and internalization
+        'Symfony\Component\Translation\TranslatorInterface' => 'Spiral\Translator\TranslatorInterface',
+        'Spiral\Translator\TranslatorInterface'             => 'Spiral\Translator\Translator',
+        'Spiral\Translator\SourceInterface'                 => 'Spiral\Translator\TranslationSource',
+
+        //Views
+//        'Spiral\Views\ViewsInterface'         => 'Spiral\Views\ViewManager',
+//
+//        //Modules
+//        'Spiral\Modules\PublisherInterface'   => 'Spiral\Modules\Entities\Publisher',
+//        'Spiral\Modules\RegistratorInterface' => 'Spiral\Modules\Entities\Registrator',
 
         //Default snapshot handler
-        'Spiral\Debug\SnapshotInterface'              => 'Spiral\Debug\QuickSnapshot'
+        'Spiral\Debug\SnapshotInterface'                    => 'Spiral\Debug\QuickSnapshot'
     ];
 }
