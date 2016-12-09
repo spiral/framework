@@ -265,17 +265,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     }
 
     /**
-     * Start application using custom or default dispatcher.
-     *
-     * @param DispatcherInterface $dispatcher Custom dispatcher.
-     */
-    public function start(DispatcherInterface $dispatcher = null)
-    {
-        //$this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
-        // $this->dispatcher->start();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function callAction(string $controller, string $action = null, array $parameters = [])
@@ -387,6 +376,21 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         }
 
         return $this->container->make(SnapshotInterface::class, compact('exception'));
+    }
+
+    /**
+     * Start application using custom or default dispatcher.
+     *
+     * @param DispatcherInterface $dispatcher Custom dispatcher.
+     */
+    public function start(DispatcherInterface $dispatcher = null)
+    {
+        //$this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
+//        try {
+        //          $this->dispatcher->start();
+        //    } finally {
+        //      $this->dispatcher = null;
+        // }
     }
 
     /**

@@ -44,8 +44,8 @@ class HttpCore extends Component implements HttpInterface
     protected $container = null;
 
     /**
-     * @param ContainerInterface   $container
-     * @param array                $middlewares
+     * @param ContainerInterface $container
+     * @param array $middlewares
      * @param callable|null|string $endpoint
      */
     public function __construct(
@@ -71,6 +71,7 @@ class HttpCore extends Component implements HttpInterface
      * Set endpoint as callable function or invokable class name (will be resolved using container).
      *
      * @param callable $endpoint
+     *
      * @return $this
      */
     public function setEndpoint(callable $endpoint)
@@ -86,11 +87,14 @@ class HttpCore extends Component implements HttpInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
+     *
      * @return ResponseInterface
      * @throws HttpException
      */
-    public function perform(ServerRequestInterface $request, ResponseInterface $response = null)
-    {
+    public function perform(
+        ServerRequestInterface $request,
+        ResponseInterface $response = null
+    ): ResponseInterface {
         $response = !empty($response) ? $response : $this->response();
 
         $endpoint = $this->endpoint();
@@ -117,8 +121,10 @@ class HttpCore extends Component implements HttpInterface
      * Running spiral as middleware.
      *
      * @todo add ability to call $next on NotFound exceptions
+     *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
+     *
      * @return ResponseInterface
      * @throws HttpException
      */
@@ -131,6 +137,7 @@ class HttpCore extends Component implements HttpInterface
      * Dispatch response to client.
      *
      * @param ResponseInterface $response
+     *
      * @return null Specifically.
      */
     public function dispatch(ResponseInterface $response)

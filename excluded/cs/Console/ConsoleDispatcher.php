@@ -159,6 +159,8 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         $this->container->bind(BenchmarkerInterface::class, Debugger::class);
 
         $output = new ConsoleOutput();
+
+        //ATTATA!
         $this->debugger->shareHandler($this->consoleHandler($output));
 
         //Deprecated
