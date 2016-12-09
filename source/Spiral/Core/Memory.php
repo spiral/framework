@@ -7,19 +7,16 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Core\Exceptions\SugarException;
-use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Files\FilesInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Default implementation of HippocampusInterface.
+ * Default implementation of MemoryInterface.
  */
-class Memory extends Component implements HippocampusInterface
+class Memory implements MemoryInterface
 {
-    use SaturateTrait;
-
     /**
      * Extension for memory files.
      */
@@ -37,17 +34,18 @@ class Memory extends Component implements HippocampusInterface
      *
      * @var FilesInterface
      */
-    protected $files = null;
+    private $files = null;
 
     /**
-     * @param string              $directory
-     * @param FilesInterface|null $files Sugared.
-     * @throws SugarException
+     * @param string         $directory
+     * @param FilesInterface $files
+     *
+     * @throws ScopeException
      */
-    public function __construct($directory, FilesInterface $files = null)
+    public function __construct(string $directory, FilesInterface $files)
     {
         $this->directory = $directory;
-        $this->files = $this->saturate($files, FilesInterface::class);
+        $this->files = $files;
     }
 
     /**
@@ -55,7 +53,7 @@ class Memory extends Component implements HippocampusInterface
      *
      * @param string $filename Cache filename.
      */
-    public function loadData($section, $location = null, &$filename = null)
+    public function loadData(string $section, string $location = null, string &$filename = null)
     {
         $filename = $this->memoryFilename($section, $location);
 
@@ -73,7 +71,7 @@ class Memory extends Component implements HippocampusInterface
     /**
      * {@inheritdoc}
      */
-    public function saveData($section, $data, $location = null)
+    public function saveData(string $section, $data, string $location = null)
     {
         $filename = $this->memoryFilename($section, $location);
 
@@ -89,9 +87,10 @@ class Memory extends Component implements HippocampusInterface
      * none specified).
      *
      * @param string $location
+     *
      * @return array
      */
-    public function getSections($location = null)
+    public function getSections(string $location = null)
     {
         if (!empty($location)) {
             $location = $this->directory . $location . '/';
@@ -122,9 +121,10 @@ class Memory extends Component implements HippocampusInterface
      *
      * @param string $name     Runtime data file name (without extension).
      * @param string $location Location to store data in.
+     *
      * @return string
      */
-    private function memoryFilename($name, $location = null)
+    private function memoryFilename(string $name, string $location = null): string
     {
         $name = strtolower(str_replace(['/', '\\'], '-', $name));
 

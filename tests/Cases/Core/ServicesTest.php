@@ -13,7 +13,7 @@ use Spiral\Core\Service;
 class ServicesTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException \Spiral\Core\Exceptions\SugarException
+     * @expectedException \Spiral\Core\Exceptions\ScopeException
      */
     public function testPropertiesFailure()
     {

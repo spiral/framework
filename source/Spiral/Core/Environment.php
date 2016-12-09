@@ -16,8 +16,6 @@ use Spiral\Files\FilesInterface;
  * application memory. Based on my tests it can speed up application in 1.4-1.9 times.
  *
  * Attention, this implementation works using global _ENV array.
- *
- * @todo Work on immutable environment values. Or ignore it.
  */
 class Environment implements EnvironmentInterface
 {
@@ -51,16 +49,16 @@ class Environment implements EnvironmentInterface
 
     /**
      * @invisible
-     * @var HippocampusInterface
+     * @var MemoryInterface
      */
     protected $memory = null;
 
     /**
-     * @param string               $filename
-     * @param FilesInterface       $files
-     * @param HippocampusInterface $memory
+     * @param string          $filename
+     * @param FilesInterface  $files
+     * @param MemoryInterface $memory
      */
-    public function __construct($filename, FilesInterface $files, HippocampusInterface $memory)
+    public function __construct(string $filename, FilesInterface $files, MemoryInterface $memory)
     {
         $this->filename = $filename;
         $this->files = $files;
@@ -70,9 +68,11 @@ class Environment implements EnvironmentInterface
     /**
      * Load environment data.
      *
-     * @return $this
+     * @return $this|self
+     *
+     * @throws EnvironmentException
      */
-    public function load()
+    public function load(): Environment
     {
         if (!$this->files->exists($this->filename)) {
             throw new EnvironmentException("Unable to load environment, file is missing");
@@ -101,7 +101,7 @@ class Environment implements EnvironmentInterface
     /**
      * {@inheritdoc}
      */
-    public function getID()
+    public function getID(): string
     {
         return $this->id;
     }
@@ -111,7 +111,7 @@ class Environment implements EnvironmentInterface
      *
      * @return $this
      */
-    public function set($name, $value)
+    public function set(string $name, $value): Environment
     {
         $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
@@ -122,7 +122,7 @@ class Environment implements EnvironmentInterface
     /**
      * {@inheritdoc}
      */
-    public function get($name, $default = null)
+    public function get(string $name, $default = null)
     {
         if (array_key_exists($name, $this->values)) {
             return $this->values[$name];
@@ -135,6 +135,7 @@ class Environment implements EnvironmentInterface
      * Fetch environment values from .evn file.
      *
      * @param string $filename
+     *
      * @return array
      */
     protected function parseValues($filename)
@@ -149,9 +150,10 @@ class Environment implements EnvironmentInterface
      * Initiate environment values.
      *
      * @param array $values
+     *
      * @return array
      */
-    protected function initEnvironment(array $values)
+    protected function initEnvironment(array $values): array
     {
         foreach ($values as $name => &$value) {
             $value = $this->normalize($value);
@@ -166,9 +168,10 @@ class Environment implements EnvironmentInterface
      * Normalize env value.
      *
      * @param string $value
+     *
      * @return bool|null|string
      */
-    private function normalize($value)
+    private function normalize(string $value)
     {
         switch (strtolower($value)) {
             case 'true':

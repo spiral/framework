@@ -18,16 +18,17 @@ interface EnvironmentInterface
      * @param string $name
      * @param mixed  $value
      */
-    public function set($name, $value);
+    public function set(string $name, $value);
 
     /**
      * Get environment value.
      *
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function get($name, $default = null);
+    public function get(string $name, $default = null);
 
     /**
      * Load environment values from associated storage.

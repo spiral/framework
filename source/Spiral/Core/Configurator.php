@@ -8,12 +8,10 @@
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\ConfiguratorException;
-use Spiral\Core\Exceptions\SugarException;
 use Spiral\Files\FilesInterface;
 
 /**
- * Responsible for configuration loading. All configs are automatically cached (temporary
- * disabled!).
+ * Responsible for configuration loading.
  *
  * @see InjectableConfig
  */
@@ -42,11 +40,6 @@ class Configurator extends Component implements ConfiguratorInterface
     protected $files = null;
 
     /**
-     * @var HippocampusInterface
-     */
-    protected $memory = null;
-
-    /**
      * Needed for container scope.
      *
      * @var ContainerInterface
@@ -54,47 +47,36 @@ class Configurator extends Component implements ConfiguratorInterface
     protected $container = null;
 
     /**
-     * @var EnvironmentInterface
-     */
-    protected $environment = null;
-
-    /**
-     * @param string               $directory
-     * @param FilesInterface       $files
-     * @param HippocampusInterface $memory
-     * @param ContainerInterface   $container
-     * @param EnvironmentInterface $environment
+     * @param string             $directory
+     * @param FilesInterface     $files
+     * @param ContainerInterface $container Needed to set proper scope at moment of config parsing.
      */
     public function __construct(
-        $directory,
+        string $directory,
         FilesInterface $files,
-        HippocampusInterface $memory,
-        ContainerInterface $container,
-        EnvironmentInterface $environment
+        ContainerInterface $container
     ) {
         $this->directory = $directory;
         $this->files = $files;
-        $this->memory = $memory;
         $this->container = $container;
-        $this->environment = $environment;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConfig($section = null)
+    public function getConfig(string $section = null): array
     {
         $filename = $this->configFilename($section);
 
         if (!$this->files->exists($filename)) {
             throw new ConfiguratorException(
-                "Unable to load '{$section}' configuration, file not found."
+                "Unable to load '{$section}' configuration, file not found"
             );
         }
 
         $outerContainer = self::staticContainer($this->container);
         try {
-            //@todo restore caching
+            //Configs are loaded in a defined GLOBAL container scope
             return $this->loadConfig($section, $filename);
         } finally {
             self::staticContainer($outerContainer);
@@ -104,7 +86,7 @@ class Configurator extends Component implements ConfiguratorInterface
     /**
      * {@inheritdoc}
      */
-    public function createInjection(\ReflectionClass $class, $context = null)
+    public function createInjection(\ReflectionClass $class, string $context = null)
     {
         if (isset($this->configs[$class->getName()])) {
             return $this->configs[$class->getName()];
@@ -126,9 +108,10 @@ class Configurator extends Component implements ConfiguratorInterface
 
     /**
      * @param string $config
+     *
      * @return string
      */
-    protected function configFilename($config)
+    protected function configFilename(string $config): string
     {
         return $this->directory . $config . static::EXTENSION;
     }
@@ -138,11 +121,15 @@ class Configurator extends Component implements ConfiguratorInterface
      *
      * @param string $config
      * @param string $filename
+     *
      * @return array
      */
-    protected function loadConfig($config, $filename)
+    protected function loadConfig(string $config, string $filename): array
     {
-        //todo: support more config types, maybe yaml?
+        /**
+         * Altering this method will provide ability to support more config types, config classes
+         * can be left untouched.
+         */
         $data = require($this->files->localUri($filename));
 
         if (!is_array($data)) {

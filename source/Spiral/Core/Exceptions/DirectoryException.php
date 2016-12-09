@@ -8,9 +8,9 @@
 namespace Spiral\Core\Exceptions;
 
 /**
- * When env file is missing.
+ * Undefined directory alias
  */
-class EnvironmentException extends CoreException
+class DirectoryException extends CoreException
 {
 
 }
