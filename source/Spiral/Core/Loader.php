@@ -142,7 +142,7 @@ class Loader extends Component implements SingletonInterface
             try {
                 //We already know route to class declaration
                 include_once($this->classes[$class] = $this->loadmap[$class]);
-            } catch (\Error $exception) {
+            } catch (\Throwable $exception) {
                 //File was replaced or removed
                 unset($this->loadmap[$class]);
 
@@ -182,7 +182,7 @@ class Loader extends Component implements SingletonInterface
                             $this->loadmap[$class] = $this->classes[$class] = $filename;
                             $this->memory->saveData($this->name, $this->loadmap);
                         }
-                    } catch (\ErrorException $exception) {
+                    } catch (\Throwable $exception) {
                         //getFileName can throw and exception, we can ignore it
                     }
 
