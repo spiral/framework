@@ -1,35 +1,29 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
 namespace Spiral\Http;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
-use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
-use Spiral\Http\Traits\RouterTrait;
-use Spiral\Views\ViewsInterface;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Basic spiral Http Dispatcher implementation. Used for web based applications and can route
  * requests to controllers or custom endpoints.
  *
- * HttpDispatcher, it's endpoing can be replaced on application level with any other
+ * HttpDispatcher, it's endpoint can be replaced on application level with any other
  * implementation.
  */
 class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonInterface
 {
-    use RouterTrait;
-
     /**
      * @var HttpConfig
      */
@@ -43,7 +37,11 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     {
         $this->config = $config;
 
-        parent::__construct($container, $config->defaultMiddlewares(), $config->defaultEndpoint());
+        parent::__construct(
+            $container,
+            $config->defaultMiddlewares(),
+            $config->defaultEndpoint()
+        );
     }
 
     /**
@@ -51,7 +49,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      *
      * @return string
      */
-    public function basePath()
+    public function basePath(): string
     {
         return $this->config->basePath();
     }
@@ -63,7 +61,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     {
         //Now we can generate response using request
         $response = $this->perform(
-            $this->request(),
+            $this->initRequest(),
             $this->initResponse()
         );
 
@@ -79,15 +77,15 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
         //Somewhere outside of dispatcher
-        $request = $this->request();
+        $request = $this->initRequest();
         $response = $this->initResponse();
 
-        $writer = $this->container->get(ErrorWriter::class);
+//        $writer = $this->container->get(ErrorWriter::class);
 
         if (!$this->config->exposeErrors()) {
-            $response = $writer->writeException($request, $response, new ServerErrorException());
+//            $response = $writer->writeException($request, $response, new ServerErrorException());
         } else {
-            $response = $writer->writeSnapshot($request, $response, $snapshot);
+//            $response = $writer->writeSnapshot($request, $response, $snapshot);
         }
 
         $this->dispatch($response);
@@ -96,9 +94,9 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * Get initial request instance or create new one.
      *
-     * @return Request
+     * @return ServerRequestInterface
      */
-    protected function request()
+    protected function initRequest(): ServerRequestInterface
     {
         $benchmark = $this->benchmark('new:request');
         try {
@@ -114,7 +112,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * {@inheritdoc}
      */
-    protected function initResponse()
+    protected function initResponse(): ResponseInterface
     {
         $benchmark = $this->benchmark('new:response');
         try {
@@ -150,7 +148,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     {
         return $this->container->make(
             $this->config->routerClass(),
-            $this->config->routerParameters()
+            $this->config->routerOptions()
         );
     }
 }

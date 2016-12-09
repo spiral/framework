@@ -160,7 +160,7 @@ class HttpCore extends Component implements HttpInterface
      *
      * @return Response
      */
-    protected function initResponse()
+    protected function initResponse(): Response
     {
         return new ZendResponse('php://memory');
     }
@@ -172,6 +172,10 @@ class HttpCore extends Component implements HttpInterface
      */
     protected function getEndpoint()
     {
+        if (empty($this->endpoint)) {
+            return null;
+        }
+
         if (!is_string($this->endpoint)) {
             //Presumably callable
             return $this->endpoint;
