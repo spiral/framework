@@ -58,7 +58,7 @@ abstract class Bootloader extends Component implements BootloaderInterface
     /**
      * {@inheritdoc}
      */
-    public function defineBindings()
+    public function defineBindings(): array
     {
         return $this->bindings;
     }
@@ -66,7 +66,7 @@ abstract class Bootloader extends Component implements BootloaderInterface
     /**
      * {@inheritdoc}
      */
-    public function defineSingletons()
+    public function defineSingletons(): array
     {
         return $this->singletons;
     }

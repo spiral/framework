@@ -34,13 +34,23 @@ class BootloadManager
     protected $memory = null;
 
     /**
-     * @param ContainerInterface   $container
-     * @param MemoryInterface $memory
+     * @param ContainerInterface $container
+     * @param MemoryInterface    $memory
      */
     public function __construct(ContainerInterface $container, MemoryInterface $memory)
     {
         $this->container = $container;
         $this->memory = $memory;
+    }
+
+    /**
+     * Get bootloaded classes.
+     *
+     * @return array
+     */
+    public function getClasses(): array
+    {
+        return $this->classes;
     }
 
     /**
@@ -50,7 +60,7 @@ class BootloadManager
      * @param string|null $memory Memory section to be used for caching, set to null to disable
      *                            caching.
      */
-    public function bootload(array $classes, $memory = null)
+    public function bootload(array $classes, string $memory = null)
     {
         if (!empty($memory)) {
             $schema = $this->memory->loadData($memory);
@@ -69,16 +79,6 @@ class BootloadManager
 
         //We can initiate schema thought the cached schema
         $this->schematicBootload($this->container, $schema);
-    }
-
-    /**
-     * Get bootloaded classes.
-     *
-     * @return array
-     */
-    public function getClasses()
-    {
-        return $this->classes;
     }
 
     /**
@@ -113,9 +113,10 @@ class BootloadManager
      *
      * @param array              $classes
      * @param ContainerInterface $container
+     *
      * @return array
      */
-    protected function generateSchema(array $classes, ContainerInterface $container)
+    protected function generateSchema(array $classes, ContainerInterface $container): array
     {
         $schema = [
             'snapshot'    => $classes,

@@ -56,6 +56,16 @@ abstract class Core extends Component implements DirectoriesInterface
     ];
 
     /**
+     * @var EnvironmentInterface
+     */
+    private $environment = null;
+
+    /**
+     * @var BootloadManager
+     */
+    private $bootloader = null;
+
+    /**
      * @var ContainerInterface
      */
     protected $container = null;
@@ -68,9 +78,12 @@ abstract class Core extends Component implements DirectoriesInterface
     protected $memory = null;
 
     /**
-     * @var EnvironmentInterface
+     * Components to be autoloader while application initialization. This property can be redefined
+     * on application level.
+     *
+     * @var array
      */
-    private $environment = null;
+    protected $load = [];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must
@@ -114,7 +127,7 @@ abstract class Core extends Component implements DirectoriesInterface
         }
 
         $this->memory = $memory;
-//        $this->bootloader = new BootloadManager($this->container, $this->memory);
+        $this->bootloader = new BootloadManager($this->container, $this->memory);
     }
 
     /**
@@ -213,6 +226,16 @@ abstract class Core extends Component implements DirectoriesInterface
         return $this->environment;
     }
 
+    /**
+     * BootloadManager responsible for initiation of your application.
+     *
+     * @return BootloadManager
+     */
+    public function bootloader()
+    {
+        return $this->bootloader;
+    }
+
     //----
 
     public function start()
@@ -221,6 +244,29 @@ abstract class Core extends Component implements DirectoriesInterface
     }
 
     //---
+
+    /**
+     * Bootstrap application. Must be executed before start method.
+     */
+    abstract protected function bootstrap();
+
+    /**
+     * Bootload all registered classes using BootloadManager.
+     *
+     * @return $this
+     */
+    private function bootload()
+    {
+        //Bootloading all needed components and extensions
+        $this->bootloader->bootload(
+            $this->load,
+            $this->environment->get('CACHE_BOOTLOADERS', false)
+                ? static::BOOTLOADERS_MEMORY_SECTION
+                : null
+        );
+
+        return $this;
+    }
 
     /**
      * Shared container instance (needed for helpers and etc). Attention, method will fail if no
@@ -310,12 +356,7 @@ abstract class Core extends Component implements DirectoriesInterface
         $outerContainer = self::staticContainer($container);
         try {
             //Bootloading our application in a defined GLOBAL container scope
-            //$core->bootload();
-            //$core->bootstrap();
-
-
-            dump($core);
-
+            $core->bootload()->bootstrap();
         } finally {
             self::staticContainer($outerContainer);
         }

@@ -7,19 +7,14 @@
  */
 namespace Spiral\Core;
 
-use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Core\Exceptions\ControllerException;
-use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\FatalException;
-use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
-use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
 
 /**
@@ -40,23 +35,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      */
     use SharedTrait, BenchmarkTrait;
 
-    /**
-     * @var BootloadManager
-     */
-    private $bootloader = null;
-
-    /**
-     * @var EnvironmentInterface
-     */
-    private $environment = null;
-
-    /**
-     * Application memory.
-     *
-     * @whatif private
-     * @var MemoryInterface
-     */
-    protected $memory = null;
 
     /**
      * Not set until start method. Can be set manually in bootload.
@@ -65,21 +43,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      * @var DispatcherInterface|null
      */
     protected $dispatcher = null;
-
-    /**
-     * Components to be autoloader while application initialization.
-     *
-     * @var array
-     */
-    protected $load = [];
-
-    /**
-     * @return BootloadManager
-     */
-    public function bootloader()
-    {
-        return $this->bootloader;
-    }
 
     /**
      * {@inheritdoc}
@@ -130,11 +93,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     }
 
     /**
-     * Bootstrap application. Must be executed before start method.
-     */
-    abstract protected function bootstrap();
-
-    /**
      * Handle php shutdown and search for fatal errors.
      */
     public function handleShutdown()
@@ -164,9 +122,9 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * Handle exception using associated application dispatcher and snapshot class.
      *
-     * @param \Exception $exception Works well in PHP7.
+     * @param \Throwable $exception
      */
-    public function handleException($exception)
+    public function handleException(\Throwable $exception)
     {
         restore_error_handler();
         restore_exception_handler();
@@ -222,21 +180,5 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         }
 
         return $this->container->make(HttpDispatcher::class);
-    }
-
-    /**
-     * Bootload all registered classes using BootloadManager.
-     *
-     * @return $this
-     */
-    private function bootload()
-    {
-        //Bootloading all needed components and extensions
-        $this->bootloader->bootload(
-            $this->load,
-            $this->environment->get('CACHE_BOOTLOADERS', false) ? static::MEMORY_SECTION : null
-        );
-
-        return $this;
     }
 }
