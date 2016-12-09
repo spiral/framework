@@ -9,10 +9,6 @@ namespace Spiral\Core\Bootloaders;
 
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Exceptions\Container\AutowireException;
-use Spiral\Core\Exceptions\ScopeException;
-use Spiral\Http\Routing\RouteInterface;
 
 /**
  * Shared components and short bindings.
@@ -28,26 +24,26 @@ class SpiralBindings extends Bootloader
      * @var array
      */
     protected $bindings = [
-//        //Core components (see SharedTrait)
-//        'memory'                             => 'Spiral\Core\MemoryInterface',
+        //Core components (see SharedTrait)
+        'memory'            => 'Spiral\Core\MemoryInterface',
 //        'modules'                            => 'Spiral\Modules\ModuleManager',
 //        'debugger'                           => 'Spiral\Debug\Debugger',
 //
-//        //Container
-//        'container'                          => 'Spiral\Core\ContainerInterface',
+        //Container
+        'container'         => 'Spiral\Core\ContainerInterface',
 
 //        //Dispatchers
 //        'http'                               => 'Spiral\Http\HttpDispatcher',
 //        'console'                            => 'Spiral\Console\ConsoleDispatcher',
 //
-//        //Shared components
-//        'files'                              => 'Spiral\Files\FilesInterface',
-//        'tokenizer'                          => 'Spiral\Tokenizer\TokenizerInterface',
-//        'locator'                            => 'Spiral\Tokenizer\ClassLocatorInterface',
-//        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocatorInterface',
-//        'storage'                            => 'Spiral\Storage\StorageInterface',
-//
-//        //Concrete for now
+        //Shared components
+        'files'             => 'Spiral\Files\FilesInterface',
+        'tokenizer'         => 'Spiral\Tokenizer\TokenizerInterface',
+        'locator'           => 'Spiral\Tokenizer\ClassLocatorInterface',
+        'invocationLocator' => 'Spiral\Tokenizer\InvocationLocatorInterface',
+        'storage'           => 'Spiral\Storage\StorageInterface',
+
+        //Concrete for now
 //        'views'                              => 'Spiral\Views\ViewManager',
 //        'translator'                         => 'Spiral\Translator\Translator',
 //
@@ -56,12 +52,12 @@ class SpiralBindings extends Bootloader
 //        'orm'                                => 'Spiral\ORM\ORM',
 //        'odm'                                => 'Spiral\ODM\ODM',
 //
-//        //Entities
-//        'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
-//        'cache'                              => 'Spiral\Cache\StoreInterface',
-//
-//        //Concrete for now, replace with better interface in future
-//        'db'                                 => 'Spiral\Database\Entities\Database',
+        //Entities
+        'encrypter'         => 'Spiral\Encrypter\EncrypterInterface',
+        'cache'             => 'Spiral\Cache\StoreInterface',
+
+        //Concrete for now, replace with better interface in future
+        'db'                => 'Spiral\Database\Entities\Database',
 //        'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
 //
 //        //Http scope dependent

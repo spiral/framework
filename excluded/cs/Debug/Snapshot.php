@@ -7,13 +7,9 @@
  */
 namespace Spiral\Debug;
 
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Spiral\Core\Component;
 use Spiral\Core\Exceptions\ScopeException;
-use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Configs\SnapshotConfig;
-use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\ViewsInterface;
 
@@ -24,11 +20,6 @@ use Spiral\Views\ViewsInterface;
  */
 class Snapshot extends QuickSnapshot implements SnapshotInterface
 {
-    /**
-     * Additional constructor arguments.
-     */
-    use SaturateTrait;
-
     /**
      * @var SnapshotConfig
      */
@@ -57,21 +48,17 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
      * @param SnapshotConfig  $config Sugared.
      * @param FilesInterface  $files  Sugared.
      * @param ViewsInterface  $views  Sugared.
+     *
      * @throws ScopeException
      */
     public function __construct(
         $exception,
-        LoggerInterface $logger = null,
-        SnapshotConfig $config = null,
-        FilesInterface $files = null,
-        ViewsInterface $views = null
+        LoggerInterface $logger,
+        SnapshotConfig $config,
+        FilesInterface $files,
+        ViewsInterface $views
     ) {
-        /**
-         * All this properties can be automatically populated using shared contaner.
-         */
-        $this->config = $this->saturate($config, SnapshotConfig::class);
-        $this->files = $this->saturate($files, FilesInterface::class);
-        $this->views = $this->saturate($views, ViewsInterface::class);
+
 
         parent::__construct($exception, $this->saturate($logger, LoggerInterface::class));
     }
@@ -127,6 +114,7 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
      * Clean old snapshots.
      *
      * @todo Possibly need better implementation.
+     *
      * @param array $snapshots
      */
     protected function performRotation(array $snapshots)

@@ -11,13 +11,24 @@ use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\DirectoryException;
+use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\Exceptions\ScopeException;
+use Spiral\Core\Traits\SharedTrait;
+use Spiral\Debug\SnapshotInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 
+/**
+ * Spiral core responsible for application timezone, memory, represents spiral container (can be
+ * overwritten with custom instance).
+ *
+ * Btw, you can design your architecture any way you want: MVC, MMVC, HMVC, ADR, anything which can
+ * be invoked and/or routed. Technically you can even invent your own, application specific,
+ * architecture.
+ */
 abstract class Core extends Component implements DirectoriesInterface
 {
-    use BenchmarkTrait;
+    use SharedTrait, BenchmarkTrait;
 
     /**
      * I need this constant for Symfony Console. :/
@@ -33,7 +44,7 @@ abstract class Core extends Component implements DirectoriesInterface
      * Components to be autoloader while application initialization. This property can be redefined
      * on application level.
      */
-    const BOOTLOAD = [];
+    const LOAD = [];
 
     /**
      * Every application should have defined timezone.
@@ -67,30 +78,37 @@ abstract class Core extends Component implements DirectoriesInterface
     /**
      * @var EnvironmentInterface
      */
-    private $environment = null;
+    private $environment;
 
     /**
      * @var BootloadManager
      */
-    private $bootloader = null;
+    private $bootloader;
+
+    /**
+     * Not set until start method. Can be set manually in bootload.
+     *
+     * @var DispatcherInterface
+     */
+    private $dispatcher;
 
     /**
      * @var ContainerInterface
      */
-    protected $container = null;
+    protected $container;
 
     /**
      * Application memory.
      *
      * @var MemoryInterface
      */
-    protected $memory = null;
+    protected $memory;
 
     /**
      * Components to be autoloader while application initialization. This property can be redefined
      * on application level.
      */
-    protected $bootload = [];
+    protected $load = [];
 
     /**
      * Core class will extend default spiral container and initiate set of directories. You must
@@ -243,19 +261,113 @@ abstract class Core extends Component implements DirectoriesInterface
         return $this->bootloader;
     }
 
-    //----
-
-    public function start()
+    /**
+     * Start application using custom or default dispatcher.
+     *
+     * @param DispatcherInterface $dispatcher Custom dispatcher.
+     */
+    public function start(DispatcherInterface $dispatcher = null)
     {
-
+        //$this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
+        // $this->dispatcher->start();
     }
 
-    //---
+    /**
+     * Handle php shutdown and search for fatal errors.
+     */
+    public function handleShutdown()
+    {
+        if (!empty($error = error_get_last())) {
+            $this->handleException(new FatalException(
+                $error['message'],
+                $error['type'],
+                0,
+                $error['file'],
+                $error['line']
+            ));
+        }
+    }
+
+    /**
+     * Convert application error into exception.
+     *
+     * @param int    $code
+     * @param string $message
+     * @param string $filename
+     * @param int    $line
+     *
+     * @throws \ErrorException
+     */
+    public function handleError($code, $message, $filename = '', $line = 0)
+    {
+        throw new \ErrorException($message, $code, 0, $filename, $line);
+    }
+
+    /**
+     * Handle exception using associated application dispatcher and snapshot class.
+     *
+     * @param \Throwable $exception
+     */
+    public function handleException(\Throwable $exception)
+    {
+        restore_error_handler();
+        restore_exception_handler();
+
+        $snapshot = $this->makeSnapshot($exception);
+
+        if (empty($snapshot)) {
+            //No action is required
+            return;
+        }
+
+        //Let's allow snapshot to report about itself
+        $snapshot->report();
+
+        if (!empty($this->dispatcher)) {
+            //Now dispatcher can handle snapshot it's own way
+            $this->dispatcher->handleSnapshot($snapshot);
+        } else {
+            echo $snapshot->getException();
+        }
+    }
+
+    /**
+     * Create appropriate snapshot for given exception. By default SnapshotInterface binding will be
+     * used.
+     *
+     * Method can return null, in this case exception will be ignored and handled default way.
+     *
+     * @param \Throwable $exception
+     *
+     * @return SnapshotInterface|null
+     */
+    public function makeSnapshot(\Throwable $exception)
+    {
+        if (!$this->container->has(SnapshotInterface::class)) {
+            return null;
+        }
+
+        return $this->container->make(SnapshotInterface::class, compact('exception'));
+    }
 
     /**
      * Bootstrap application. Must be executed before start method.
      */
     abstract protected function bootstrap();
+
+//    /**
+//     * Create default application dispatcher based on environment value.
+//     *
+//     * @return DispatcherInterface|ConsoleDispatcher|HttpDispatcher
+//     */
+//    protected function createDispatcher()
+//    {
+//        if (php_sapi_name() === 'cli') {
+//            return $this->container->make(ConsoleDispatcher::class);
+//        }
+//
+//        return $this->container->make(HttpDispatcher::class);
+//    }
 
     /**
      * Bootload all registered classes using BootloadManager.
@@ -265,7 +377,7 @@ abstract class Core extends Component implements DirectoriesInterface
     private function bootload()
     {
         $this->bootloader->bootload(
-            $this->bootload + static::BOOTLOAD,
+            $this->load + static::LOAD,
             $this->environment->get('CACHE_BOOTLOADERS', false) ? static::BOOT_MEMORY : null
         );
 
@@ -352,9 +464,9 @@ abstract class Core extends Component implements DirectoriesInterface
 
         //Error and exception handlers
         if ($handleErrors) {
-//            register_shutdown_function([$core, 'handleShutdown']);
-//            set_error_handler([$core, 'handleError']);
-//            set_exception_handler([$core, 'handleException']);
+            register_shutdown_function([$core, 'handleShutdown']);
+            set_error_handler([$core, 'handleError']);
+            set_exception_handler([$core, 'handleException']);
         }
 
         $outerContainer = self::staticContainer($container);

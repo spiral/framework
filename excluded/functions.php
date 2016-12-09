@@ -14,20 +14,6 @@ use Spiral\Translator\Exceptions\TranslatorException;
 use Spiral\Translator\TranslatorInterface;
 
 
-if (!function_exists('dump')) {
-    /**
-     * Dump value.
-     *
-     * @param mixed $value Value to be dumped.
-     * @param int   $output
-     * @return null|string
-     */
-    function dump($value, $output = Dumper::OUTPUT_ECHO)
-    {
-        return spiral(Dumper::class)->dump($value, $output);
-    }
-}
-
 if (!function_exists('l')) {
     /**
      * Translate message using default or specific bundle name.
