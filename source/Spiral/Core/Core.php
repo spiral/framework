@@ -79,23 +79,25 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     ];
 
     /**
-     * @var EnvironmentInterface
-     */
-    private $environment;
-
-    /**
      * @var BootloadManager
      */
-    private $bootloader;
+    protected $bootloader;
 
     /**
      * Not set until start method. Can be set manually in bootload.
      *
      * @var DispatcherInterface
      */
-    private $dispatcher;
+    protected $dispatcher;
 
     /**
+     * @var EnvironmentInterface
+     */
+    protected $environment;
+
+    /**
+     * @invisible
+     *
      * @var ContainerInterface
      */
     protected $container;
@@ -103,6 +105,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * Application memory.
      *
+     * @invisible
      * @var MemoryInterface
      */
     protected $memory;
@@ -110,6 +113,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * Components to be autoloader while application initialization. This property can be redefined
      * on application level.
+     *
+     * @invisible
      */
     protected $load = [];
 

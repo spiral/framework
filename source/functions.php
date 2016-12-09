@@ -9,6 +9,8 @@ use Spiral\Core\Core;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Core\EnvironmentInterface;
 use Spiral\Debug\Dumper;
+use Spiral\Translator\Exceptions\TranslatorException;
+use Spiral\Translator\TranslatorInterface;
 
 if (!function_exists('spiral')) {
     /**
@@ -83,6 +85,81 @@ if (!function_exists('dump')) {
     function dump($value, $output = Dumper::OUTPUT_ECHO): string
     {
         return spiral(Dumper::class)->dump($value, $output);
+    }
+}
+
+if (!function_exists('interpolate')) {
+    /**
+     * Format string using previously named arguments from values array. Arguments that are not found
+     * will be skipped without any notification. Extra arguments will be skipped as well.
+     *
+     * Example:
+     * Hello [:name]! Good [:time]!
+     * + array('name'=>'Member','time'=>'day')
+     *
+     * Output:
+     * Hello Member! Good Day!
+     *
+     * @param string $format  Formatted string.
+     * @param array  $values  Arguments (key=>value). Will skip n
+     * @param string $prefix  Value prefix, "{" by default.
+     * @param string $postfix Value postfix "}" by default.
+     *
+     * @return mixed
+     */
+    function interpolate(
+        string $format,
+        array $values,
+        string $prefix = '{',
+        string $postfix = '}'
+    ): string {
+        return \Spiral\interpolate($format, $values, $prefix, $postfix);
+    }
+}
+
+if (!function_exists('l')) {
+    /**
+     * Translate message using default or specific bundle name.
+     *
+     * Examples:
+     * l('Some Message');
+     * l('Hello {name}!', ['name' => $name]);
+     *
+     * @param string $string
+     * @param array  $options
+     * @param string $domain
+     *
+     * @return string
+     * @throws TranslatorException
+     */
+    function l(string $string, array $options = [], string $domain = null): string
+    {
+        return spiral(TranslatorInterface::class)->trans($string, $options, $domain);
+    }
+}
+
+if (!function_exists('p')) {
+    /**
+     * Pluralize string using language pluralization options and specified numeric value.
+     *
+     * Examples:
+     * p("{n} user|{n} users", $users);
+     *
+     * @param string $string Can include {n} as placeholder.
+     * @param int    $number
+     * @param array  $options
+     * @param string $domain
+     *
+     * @return string
+     * @throws TranslatorException
+     */
+    function p(
+        string $string,
+        int $number,
+        array $options = [],
+        string $domain = null
+    ): string {
+        return spiral(TranslatorInterface::class)->transChoice($string, $number, $options, $domain);
     }
 }
 
