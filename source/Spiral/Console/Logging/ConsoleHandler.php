@@ -56,50 +56,22 @@ class ConsoleHandler extends AbstractHandler
      */
     public function handle(array $record): bool
     {
-        if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_VERBOSE) {
-            //Showing log
-            $this->output->writeln($this->formatMessage(
-                $record['channel'],
-                $record['level_name'],
-                $record['message'],
-                $record['context']
-            ));
-
-            return true;
+        if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE) {
+            return false;
         }
-
-        return false;
-    }
-
-    /**
-     * @param string $channel
-     * @param string $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return string
-     */
-    protected function formatMessage($channel, $level, $message, array $context): string
-    {
-        $message = \Spiral\interpolate($message, $context);
-
-        $reflection = new \ReflectionClass($channel);
-        $channel = $reflection->getShortName();
-
         /**
          * We are going to format message our own style.
          */
         $this->output->writeln(\Spiral\interpolate(
             "<{style}>{prefix}</{style}> {message}",
             [
-                'style'   => $this->prefixStyle($level),
-                'prefix'  => $this->getPrefix($channel),
-                'message' => $message
+                'style'   => $this->prefixStyle($record['level_name']),
+                'prefix'  => $this->getPrefix($record['channel']),
+                'message' => $record['message']
             ]
         ));
 
-        //Nothing to echo
-        return '';
+        return true;
     }
 
     /**
