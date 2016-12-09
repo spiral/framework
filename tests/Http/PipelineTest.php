@@ -5,11 +5,10 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Cases\Http;
+namespace Spiral\Tests\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Container;
 use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Http\MiddlewarePipeline;
 use Zend\Diactoros\Response;

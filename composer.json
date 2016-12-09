@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "spiral/components": "*",
+    "spiral/components": "^0.9.0",
     "zendframework/zend-diactoros": "^1.1",
     "symfony/console": "^2.7",
     "symfony/process": "^2.7",
@@ -19,9 +19,7 @@
     "vlucas/phpdotenv": "^2.1",
     "twig/twig": "^1.23",
     "nesbot/carbon": "*",
-    "cocur/slugify": "^1.4"
-  },
-  "require-dev": {
+    "cocur/slugify": "^1.4",
     "phpunit/phpunit": "~4.0"
   },
   "autoload": {

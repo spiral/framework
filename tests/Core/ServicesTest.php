@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Tests\Cases\Core;
+namespace Spiral\Tests\Core;
 
 use Spiral\Core\Container;
 use Spiral\Core\Service;
