@@ -26,6 +26,7 @@ class SpiralBindings extends Bootloader
     protected $bindings = [
         //How to resolve log instances
         'Psr\Log\LoggerInterface' => ['Spiral\Debug\LogsInterface', 'getLogger'],
+        'Monolog\Logger'          => ['Spiral\Debug\LogsInterface', 'getLogger'],
 
         //Core components (see SharedTrait)
         'memory'                  => 'Spiral\Core\MemoryInterface',
