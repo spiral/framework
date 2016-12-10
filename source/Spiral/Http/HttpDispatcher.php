@@ -74,29 +74,28 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
 
     /**
      * {@inheritdoc}
+     *
+     * @todo Use already initiated requests?
      */
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
-        //Somewhere outside of dispatcher
-        $request = $this->initRequest();
-        $response = $this->initResponse();
-
-        /**
-         * @var ErrorWriter $writer
-         */
-       // $writer = $this->container->get(ErrorWriter::class);
-
         if (!$this->config->exposeErrors()) {
             //Standard 500 error page
-           // $response = $writer->writeException($request, $response, new ServerErrorException());
+            $response = $this->errorWriter()->writeException(
+                $this->initRequest(),
+                $this->initResponse(),
+                new ServerErrorException()
+            );
         } else {
             //Rendering details about exception
-          //  $response = $writer->writeSnapshot($request, $response, $snapshot);
+            $response = $this->errorWriter()->writeSnapshot(
+                $this->initRequest(),
+                $this->initResponse(),
+                $snapshot
+            );
         }
 
-        echo $snapshot;
-
-        //$this->dispatch($response);
+        $this->dispatch($response);
     }
 
     /**
@@ -158,5 +157,15 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
             $this->config->routerClass(),
             $this->config->routerOptions()
         );
+    }
+
+    /**
+     * Instance of ErrorWriter.
+     *
+     * @return ErrorWriter
+     */
+    protected function errorWriter(): ErrorWriter
+    {
+        return $this->container->get(ErrorWriter::class);
     }
 }
