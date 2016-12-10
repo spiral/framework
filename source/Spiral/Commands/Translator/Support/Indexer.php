@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Translator;
+namespace Spiral\Commands\Translator\Support;
 
 use Spiral\Core\Component;
 use Spiral\Debug\Traits\LoggerTrait;
@@ -13,8 +13,10 @@ use Spiral\Tokenizer\ClassLocatorInterface;
 use Spiral\Tokenizer\InvocationLocatorInterface;
 use Spiral\Tokenizer\Reflections\ReflectionArgument;
 use Spiral\Tokenizer\Reflections\ReflectionInvocation;
+use Spiral\Translator\Catalogue;
 use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Traits\TranslatorTrait;
+use Spiral\Translator\Translator;
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can

@@ -9,10 +9,10 @@ namespace Spiral\Commands\Translator;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\NullLogger;
+use Spiral\Commands\Translator\Support\Indexer;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\ClassLocatorInterface;
 use Spiral\Tokenizer\InvocationLocatorInterface;
-use Spiral\Translator\Indexer;
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can
