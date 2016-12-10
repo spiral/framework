@@ -56,7 +56,7 @@ interface RouterInterface
      * @throws RouterException
      * @throws UndefinedRouteException
      */
-    public function getRoute($name): RouteInterface;
+    public function getRoute(string $name): RouteInterface;
 
     /**
      * Get all registered routes.

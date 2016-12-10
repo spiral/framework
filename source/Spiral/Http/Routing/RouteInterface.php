@@ -19,6 +19,15 @@ use Spiral\Http\Exceptions\RouteException;
 interface RouteInterface
 {
     /**
+     * Isolate route endpoint in a given container.
+     *
+     * @param ContainerInterface $container
+     *
+     * @return self
+     */
+    public function withContainer(ContainerInterface $container): RouteInterface;
+
+    /**
      * Returns new route instance.
      *
      * @param string $name
@@ -43,15 +52,6 @@ interface RouteInterface
      * @return string
      */
     public function getPrefix(): string;
-
-    /**
-     * Isolate route endpoint in a given container.
-     *
-     * @param ContainerInterface $container
-     *
-     * @return self
-     */
-    public function withContainer(ContainerInterface $container): RouteInterface;
 
     /**
      * Returns new route instance.

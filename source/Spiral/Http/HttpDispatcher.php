@@ -14,6 +14,7 @@ use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
+use Spiral\Http\Traits\RouterTrait;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
@@ -25,6 +26,8 @@ use Zend\Diactoros\ServerRequestFactory;
  */
 class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonInterface
 {
+    use RouterTrait;
+
     /**
      * @var HttpConfig
      */
@@ -143,11 +146,6 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
             //Endpoint specified by user
             return $endpoint;
         }
-
-        return function ($r) {
-            dump($r);
-            echo 'hello world';
-        };
 
         //We are using router as default endpoint
         return $this->getRouter();
