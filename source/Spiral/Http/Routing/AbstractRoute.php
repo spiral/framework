@@ -56,19 +56,19 @@ abstract class AbstractRoute implements RouteInterface
     private $withHost = false;
 
     /**
-     * Route matches, populated after match() method executed. Internal.
-     *
-     * @var array
-     */
-    private $matches = [];
-
-    /**
      * Compiled route options, pattern and etc. Internal data.
      *
      * @invisible
      * @var array
      */
     private $compiled = [];
+
+    /**
+     * Route matches, populated after match() method executed. Internal.
+     *
+     * @var array
+     */
+    protected $matches = [];
 
     /**
      * Route pattern includes simplified regular expressing later compiled to real regexp.
