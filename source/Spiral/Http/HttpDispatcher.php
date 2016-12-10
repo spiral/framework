@@ -13,6 +13,7 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Http\Configs\HttpConfig;
+use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
@@ -80,15 +81,22 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         $request = $this->initRequest();
         $response = $this->initResponse();
 
-//        $writer = $this->container->get(ErrorWriter::class);
+        /**
+         * @var ErrorWriter $writer
+         */
+       // $writer = $this->container->get(ErrorWriter::class);
 
         if (!$this->config->exposeErrors()) {
-//            $response = $writer->writeException($request, $response, new ServerErrorException());
+            //Standard 500 error page
+           // $response = $writer->writeException($request, $response, new ServerErrorException());
         } else {
-//            $response = $writer->writeSnapshot($request, $response, $snapshot);
+            //Rendering details about exception
+          //  $response = $writer->writeSnapshot($request, $response, $snapshot);
         }
 
-        $this->dispatch($response);
+        echo $snapshot;
+
+        //$this->dispatch($response);
     }
 
     /**
@@ -98,7 +106,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     protected function initRequest(): ServerRequestInterface
     {
-        $benchmark = $this->benchmark('new:request');
+        $benchmark = $this->benchmark('init:request');
         try {
             /**
              * @see \Zend\Diactoros\ServerRequestFactory
@@ -114,7 +122,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     protected function initResponse(): ResponseInterface
     {
-        $benchmark = $this->benchmark('new:response');
+        $benchmark = $this->benchmark('init:response');
         try {
             $response = parent::initResponse();
             foreach ($this->config->defaultHeaders() as $header => $value) {
@@ -138,7 +146,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
         }
 
         //We are using router as default endpoint
-        return $this->router();
+        return $this->getRouter();
     }
 
     /**
