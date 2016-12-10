@@ -11,6 +11,9 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Http\Exceptions\ClientException;
+use Spiral\Http\Exceptions\ClientExceptions\BadRequestException;
+use Spiral\Http\Exceptions\ClientExceptions\ForbiddenException;
+use Spiral\Http\Exceptions\ClientExceptions\NotFoundException;
 use Spiral\Http\Routing\RouteInterface;
 
 /**
@@ -67,12 +70,13 @@ trait CoreTrait
     {
         switch ($exception->getCode()) {
             case ControllerException::BAD_ACTION:
+                //no break
             case ControllerException::NOT_FOUND:
-                return new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
+                return new NotFoundException($exception->getMessage());
             case  ControllerException::FORBIDDEN:
-                return new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
+                return new ForbiddenException($exception->getMessage());
             default:
-                return new ClientException(ClientException::BAD_DATA, $exception->getMessage());
+                return new BadRequestException($exception->getMessage());
         }
     }
 
