@@ -166,10 +166,7 @@ class Router implements RouterInterface
             }
         }
 
-        if (
-            !empty($this->defaultRoute)
-            && !empty($matched = $this->defaultRoute->match($request))
-        ) {
+        if (!empty($this->defaultRoute) && !empty($matched = $this->defaultRoute->match($request))) {
             //Trying to use default route as fallback
             return $matched;
         }
