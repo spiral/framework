@@ -144,6 +144,11 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
             return $endpoint;
         }
 
+        return function ($r) {
+            dump($r);
+            echo 'hello world';
+        };
+
         //We are using router as default endpoint
         return $this->getRouter();
     }
