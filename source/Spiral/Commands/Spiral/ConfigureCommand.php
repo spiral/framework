@@ -96,14 +96,14 @@ class ConfigureCommand extends Command
 
         $runtime = $directories->directory('runtime');
 
-        if (!$files->exists(directory('runtime'))) {
-            $files->ensureDirectory(directory('runtime'));
+        if (!$files->exists($runtime)) {
+            $files->ensureDirectory($runtime);
             $this->writeln("Runtime data directory was created.");
 
             return;
         }
 
-        foreach ($files->getFiles(directory('runtime')) as $filename) {
+        foreach ($files->getFiles($runtime) as $filename) {
             //Both file and it's directory must be writable
             $files->setPermissions($filename, FilesInterface::RUNTIME);
             $files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
