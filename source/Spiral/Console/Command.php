@@ -166,7 +166,7 @@ abstract class Command extends SymfonyCommand
     /**
      * @return ContainerInterface
      */
-    protected function iocContainer(): ContainerInterface
+    protected function iocContainer()
     {
         //We have to always be executed in a container scope
         return $this->container;

@@ -16,7 +16,7 @@ use Spiral\Views\ViewInterface;
 /**
  * Spiral Stempler template composer.
  */
-class StemplerEngine extends AbstractEngine
+abstract class StemplerEngine extends AbstractEngine
 {
     /**
      * @var ContainerInterface
