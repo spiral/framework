@@ -12,6 +12,8 @@ use Spiral\Views\ModifierInterface;
 
 /**
  * Provides ability to modify view source before giving it to template engine.
+ *
+ * @todo: do i need it?
  */
 trait ProcessorsTrait
 {

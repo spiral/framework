@@ -83,6 +83,7 @@ class ViewLoader extends Component implements LoaderInterface
      */
     public function getSource($path): string
     {
+        //Processors in here?
         return $this->files->read($this->locateView($path)[self::VIEW_FILENAME]);
     }
 
