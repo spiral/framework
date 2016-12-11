@@ -53,7 +53,6 @@ class ExpressionsProcessors implements ProcessorInterface
         string $namespace,
         string $name
     ): string {
-
         foreach (static::EXPRESSIONS as $expression) {
             $source = preg_replace_callback(
                 $expression['pattern'],
