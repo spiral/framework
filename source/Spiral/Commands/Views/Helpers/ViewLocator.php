@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Views;
+namespace Spiral\Commands\Views\Helpers;
 
 use Spiral\Core\Component;
 use Spiral\Files\FilesInterface;
