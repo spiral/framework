@@ -157,9 +157,9 @@ class HttpConfig extends InjectableConfig implements SingletonInterface
      *
      * @param UriInterface $uri
      *
-     * @return string
+     * @return string|null
      */
-    public function cookiesDomain(UriInterface $uri): string
+    public function cookiesDomain(UriInterface $uri)
     {
         $host = $uri->getHost();
 

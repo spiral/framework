@@ -148,9 +148,9 @@ final class Cookie
      * The value of the cookie. This value is stored on the clients computer; do not store sensitive
      * information.
      *
-     * @return string
+     * @return string|null
      */
-    public function getValue(): string
+    public function getValue()
     {
         return $this->value;
     }
