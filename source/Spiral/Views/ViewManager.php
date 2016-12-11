@@ -70,7 +70,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         $this->container = $container;
 
         //Define engine's behaviour
-        $this->loader = new ViewLoader($config->getNamespaces(), $files);
+        $this->loader = new ViewLoader($config->getNamespaces(), $files, $container);
         $this->environment = $this->createEnvironment($config);
     }
 

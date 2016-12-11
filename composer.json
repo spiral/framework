@@ -17,7 +17,7 @@
     "symfony/process": "^2.7",
     "symfony/config": "^2.7",
     "vlucas/phpdotenv": "^2.1",
-    "twig/twig": "^1.23",
+    "twig/twig": "~1.0",
     "nesbot/carbon": "*",
     "cocur/slugify": "^1.4",
     "phpunit/phpunit": "~4.0"

@@ -8,6 +8,7 @@
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Exceptions\LoaderException;
 
@@ -18,6 +19,8 @@ use Spiral\Views\Exceptions\LoaderException;
  */
 class ViewLoader extends Component implements LoaderInterface
 {
+    use BenchmarkTrait;
+
     const VIEW_FILENAME  = 0;
     const VIEW_NAMESPACE = 1;
     const VIEW_NAME      = 2;
@@ -83,7 +86,6 @@ class ViewLoader extends Component implements LoaderInterface
      */
     public function getSource($path): string
     {
-        //Processors in here?
         return $this->files->read($this->locateView($path)[self::VIEW_FILENAME]);
     }
 
