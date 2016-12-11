@@ -71,9 +71,9 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Translator\SourceInterface'                 => 'Spiral\Translator\TranslationSource',
 
         //Views
-//        'Spiral\Views\ViewsInterface'         => 'Spiral\Views\ViewManager',
-//
-//        //Modules
+        'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',
+
+        //Modules
 //        'Spiral\Modules\PublisherInterface'   => 'Spiral\Modules\Entities\Publisher',
 //        'Spiral\Modules\RegistratorInterface' => 'Spiral\Modules\Entities\Registrator',
 

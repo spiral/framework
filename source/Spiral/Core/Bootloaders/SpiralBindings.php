@@ -51,7 +51,7 @@ class SpiralBindings extends Bootloader
         'storage'                            => 'Spiral\Storage\StorageInterface',
 
         //Concrete for now
-//        'views'                              => 'Spiral\Views\ViewManager',
+        'views'                              => 'Spiral\Views\ViewManager',
         'translator'                         => 'Spiral\Translator\Translator',
 
         //Databases and models
