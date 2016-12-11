@@ -29,7 +29,7 @@ class ProcessableLoader extends Component implements LoaderInterface
      *
      * @var EnvironmentInterface
      */
-    private $enviroment = null;
+    private $environment = null;
 
     /**
      * @var ProcessorInterface[]
@@ -48,7 +48,7 @@ class ProcessableLoader extends Component implements LoaderInterface
         LoaderInterface $loader,
         array $processors = []
     ) {
-        $this->enviroment = $environment;
+        $this->environment = $environment;
         $this->loader = $loader;
         $this->processors = $processors;
     }
@@ -64,7 +64,7 @@ class ProcessableLoader extends Component implements LoaderInterface
             $benchmark = $this->benchmark('modify', $path . '@' . get_class($processor));
             try {
                 $source = $processor->modify(
-                    $this->enviroment,
+                    $this->environment,
                     $source,
                     $this->fetchNamespace($path),
                     $this->fetchName($path)
