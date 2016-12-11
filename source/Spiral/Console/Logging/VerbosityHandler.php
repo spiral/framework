@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Provides ability to output log messages in console in realtime.
  */
-class ConsoleHandler extends AbstractHandler
+class VerbosityHandler extends AbstractHandler
 {
     /**
      * @var OutputInterface
