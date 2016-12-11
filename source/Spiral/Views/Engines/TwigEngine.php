@@ -101,7 +101,7 @@ class TwigEngine extends AbstractEngine
             //Yeah... we are using internal method for now, the only alternative is to wrap
             //template wrapper, but there is already too much wrappers in a world
             return $this->twig->loadTemplate($path);
-        } catch (\Twig_Error_Syntax $exception) {
+       } catch (\Twig_Error_Syntax $exception) {
             //Let's clarify exception location
             throw SyntaxException::fromTwig($exception, $this->loader);
         } finally {
