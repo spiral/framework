@@ -43,19 +43,23 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
 
     /**
      * @param \Throwable      $exception
-     * @param LoggerInterface $logger Sugared.
-     * @param SnapshotConfig  $config Sugared.
-     * @param FilesInterface  $files  Sugared.
-     * @param ViewsInterface  $views  Sugared.
+     * @param SnapshotConfig  $config
+     * @param LoggerInterface $logger
+     * @param FilesInterface  $files
+     * @param ViewsInterface  $views
      */
     public function __construct(
         $exception,
-        LoggerInterface $logger,
         SnapshotConfig $config,
+        LoggerInterface $logger,
         FilesInterface $files,
         ViewsInterface $views
     ) {
         parent::__construct($exception, $logger);
+
+        $this->config = $config;
+        $this->files = $files;
+        $this->views = $views;
     }
 
     /**
