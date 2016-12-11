@@ -36,6 +36,7 @@ class NativeEngine extends AbstractEngine
         ContainerInterface $container
     ) {
         parent::__construct($environment, $loader);
+
         $this->container = $container;
     }
 

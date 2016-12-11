@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Views\Modifiers;
+namespace Spiral\Views\Processors;
 
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;

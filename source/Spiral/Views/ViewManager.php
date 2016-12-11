@@ -220,7 +220,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
 //            throw new ViewsException("Unable to detect view engine for '{$path}'");
         }
 
-        return 'native';
+        return 'twig';
 
         return $result;
     }
