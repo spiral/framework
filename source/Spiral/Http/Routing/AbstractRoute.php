@@ -313,16 +313,17 @@ abstract class AbstractRoute implements RouteInterface
      * Fetch uri segments and query parameters.
      *
      * @param \Traversable|array $parameters
-     * @param array              $query Query parameters.
+     * @param array|null         $query Query parameters.
      *
      * @return array
      */
-    protected function fetchSegments($parameters, array &$query): array
+    protected function fetchSegments($parameters, &$query): array
     {
         $allowed = array_keys($this->compiled['options']);
 
         $result = [];
         foreach ($parameters as $key => $parameter) {
+            //This segment fetched keys from given parameters either by name or by position
             if (is_numeric($key) && isset($allowed[$key])) {
                 $key = $allowed[$key];
             } elseif (
@@ -333,6 +334,7 @@ abstract class AbstractRoute implements RouteInterface
                 continue;
             }
 
+            //String must be normalized here
             if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
                 $result[$key] = Strings::slug($parameter);
                 continue;
