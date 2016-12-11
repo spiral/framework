@@ -66,6 +66,8 @@ class NativeView extends Component implements ViewInterface
         $this->filename = $filename;
         $this->namespace = $namespace;
         $this->name = $name;
+
+        $this->container = $container;
     }
 
     /**
