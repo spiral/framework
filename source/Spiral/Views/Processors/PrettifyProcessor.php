@@ -52,12 +52,7 @@ class PrettifyProcessor implements ProcessorInterface
     }
 
     /**
-     * @param EnvironmentInterface $environment
-     * @param string               $source
-     * @param string               $namespace
-     * @param string               $view
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function modify(
         EnvironmentInterface $environment,
