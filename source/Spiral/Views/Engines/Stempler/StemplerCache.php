@@ -9,7 +9,6 @@ namespace Spiral\Views\Engines\Stempler;
 
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EnvironmentInterface;
-use Spiral\Views\LoaderInterface;
 
 /**
  * Very simple Stempler cache. Almost identical to twig cache except generateKey method.
@@ -31,16 +30,11 @@ class StemplerCache
      *
      * @param FilesInterface       $files
      * @param EnvironmentInterface $environment
-     * @param LoaderInterface      $loader
      */
-    public function __construct(
-        FilesInterface $files,
-        EnvironmentInterface $environment,
-        LoaderInterface $loader
-    ) {
+    public function __construct(FilesInterface $files, EnvironmentInterface $environment)
+    {
         $this->files = $files;
         $this->environment = $environment;
-        $this->loader = $loader;
     }
 
     /**
@@ -52,10 +46,7 @@ class StemplerCache
      */
     public function generateKey(string $path): string
     {
-        $namespace = $this->loader->fetchNamespace($path);
-        $name = $this->loader->fetchName($path);
-
-        $hash = hash('md5', $namespace . ':' . $name . '.' . $this->environment->getID());
+        $hash = hash('md5', $path . '.' . $this->environment->getID());
 
         return $this->environment->cacheDirectory() . '/' . $hash . '.php';
     }
