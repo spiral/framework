@@ -56,9 +56,7 @@ class CompileCommand extends Command
 
             foreach ($locator->getViews($namespace) as $view => $engine) {
                 if ($this->isVerbosity()) {
-                    $this->write($formatter->formatSection(
-                        "{$namespace}:{$engine}", $view . ", ", 'fg=cyan'
-                    ));
+                    $this->write($formatter->formatSection("{$engine}", $view . ", ", 'fg=cyan'));
                 }
 
                 $start = microtime(true);
