@@ -34,7 +34,6 @@ class SpiralBindings extends Bootloader
 
         //Core components (see SharedTrait)
         'memory'                             => 'Spiral\Core\MemoryInterface',
-//        'modules'                            => 'Spiral\Modules\ModuleManager',
 
         //Container
         'container'                          => 'Spiral\Core\ContainerInterface',
