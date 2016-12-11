@@ -38,6 +38,19 @@ class StemplerCache
     }
 
     /**
+     * @param EnvironmentInterface $environment
+     *
+     * @return StemplerCache
+     */
+    public function withEnvironment(EnvironmentInterface $environment): StemplerCache
+    {
+        $cache = clone $this;
+        $cache->environment = $environment;
+
+        return $cache;
+    }
+
+    /**
      * Generate cache key for given path.
      *
      * @param string $path
