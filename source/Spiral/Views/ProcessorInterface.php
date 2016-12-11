@@ -5,13 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Views\Processors;
-
-use Spiral\Views\EnvironmentInterface;
+namespace Spiral\Views;
 
 /**
- * Can be applied to compiled source to apply some modifications or optimizations. Processor outcome
- * might ONLY depend on environment values.
+ * Can be applied to source before or after compilation to apply some modifications or
+ * optimizations. Processor outcome might ONLY depend on environment values.
  */
 interface ProcessorInterface
 {
@@ -20,15 +18,13 @@ interface ProcessorInterface
      * @param string               $source
      * @param string               $namespace
      * @param string               $view
-     * @param string               $cachedFilename
      *
      * @return string
      */
-    public function process(
+    public function modify(
         EnvironmentInterface $environment,
         string $source,
         string $namespace,
-        string $view,
-        string $cachedFilename = null
+        string $view
     ): string;
 }
