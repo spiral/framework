@@ -11,12 +11,12 @@ use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Prototypes\AbstractEngine;
+use Spiral\Views\Engines\Twig\ContextLoader;
 use Spiral\Views\Engines\Twig\Exceptions\SyntaxException;
 use Spiral\Views\Engines\Twig\TwigCache;
 use Spiral\Views\Engines\Twig\TwigView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
-use Spiral\Views\ProcessableLoader;
 use Spiral\Views\ViewInterface;
 
 /**
@@ -205,11 +205,6 @@ class TwigEngine extends AbstractEngine
      */
     private function defineLoader(): LoaderInterface
     {
-        if (empty($this->modifiers)) {
-            //No custom processors, skipping wrapping
-            return $this->loader;
-        }
-
         $processors = [];
         foreach ($this->modifiers as $modifier) {
             if (is_object($modifier)) {
@@ -219,7 +214,7 @@ class TwigEngine extends AbstractEngine
             }
         }
 
-        return new ProcessableLoader($this->environment, $this->loader, $processors);
+        return new ContextLoader($this->environment, $this->loader, $processors);
     }
 
     /**
