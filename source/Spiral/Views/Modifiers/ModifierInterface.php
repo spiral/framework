@@ -22,7 +22,12 @@ interface ModifierInterface
      * @param string               $namespace View namespace.
      * @param string               $name      View name (no extension included).
      *
-     * @return mixed
+     * @return string
      */
-    public function modify(EnvironmentInterface $environment, $source, $namespace, $name);
+    public function modify(
+        EnvironmentInterface $environment,
+        string $source,
+        string $namespace,
+        string $name
+    ): string;
 }
