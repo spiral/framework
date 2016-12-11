@@ -13,7 +13,7 @@ use Spiral\Views\Exceptions\EnvironmentException;
 /**
  * Default implementation of EnvironmentInterface
  */
-class MutableEnvironment implements EnvironmentInterface
+class DynamicEnvironment implements EnvironmentInterface
 {
     /**
      * Registered dependencies.

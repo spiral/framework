@@ -264,7 +264,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
      */
     protected function createEnvironment(ViewsConfig $config): EnvironmentInterface
     {
-        return new MutableEnvironment(
+        return new DynamicEnvironment(
             $config->environmentDependencies(),
             $config->cacheEnabled(),
             $config->cacheDirectory(),
