@@ -19,10 +19,6 @@ class ContextLoader extends ProcessableLoader implements \Twig_SourceContextLoad
      */
     public function getSourceContext($name)
     {
-        return new \Twig_Source(
-            $this->getSource($name),
-            $name,
-            $this->localFilename($name)
-        );
+        return new \Twig_Source($this->getSource($name), $name, $this->localFilename($name));
     }
 }
