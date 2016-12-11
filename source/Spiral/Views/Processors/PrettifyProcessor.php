@@ -56,7 +56,6 @@ class PrettifyProcessor implements ProcessorInterface
      * @param string               $source
      * @param string               $namespace
      * @param string               $view
-     * @param string               $cachedFilename
      *
      * @return string
      */
@@ -64,8 +63,7 @@ class PrettifyProcessor implements ProcessorInterface
         EnvironmentInterface $environment,
         string $source,
         string $namespace,
-        string $view,
-        string $cachedFilename = null
+        string $view
     ): string {
         if ($this->options['endings']) {
             $source = $this->normalizeEndings($source, new Isolator());

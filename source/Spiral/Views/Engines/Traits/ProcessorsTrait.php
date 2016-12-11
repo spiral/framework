@@ -13,7 +13,7 @@ use Spiral\Views\ModifierInterface;
 /**
  * Provides ability to modify view source before giving it to template engine.
  */
-trait ModifiersTrait
+trait ProcessorsTrait
 {
     /**
      * Modifier class names.
