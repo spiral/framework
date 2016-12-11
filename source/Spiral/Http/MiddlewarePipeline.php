@@ -154,7 +154,6 @@ class MiddlewarePipeline extends Component
         $result = null;
 
         try {
-
             /**
              * Debug: this method contain code to open and close scope for [ServerRequestInterface]
              * and [ResponseInterface].

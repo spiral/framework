@@ -201,9 +201,6 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
                 //Found by extension
                 $result = $engine;
 
-
-                echo 1;
-
                 break;
             }
 
