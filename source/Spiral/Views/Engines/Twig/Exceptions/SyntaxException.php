@@ -27,7 +27,7 @@ class SyntaxException extends \RuntimeException
         LoaderInterface $loader
     ): SyntaxException {
         $exception = new static($error->getMessage(), $error->getCode(), $error);
-        $exception->file = $loader->localFilename($error->getSourceContext()->getPath());
+        $exception->file = $error->getSourceContext()->getPath();
         $exception->line = $error->getTemplateLine();
 
         return $exception;

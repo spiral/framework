@@ -12,6 +12,7 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
+use Spiral\Views\Exceptions\LoaderException;
 use Spiral\Views\Exceptions\ViewsException;
 
 class ViewManager extends Component implements ViewsInterface, SingletonInterface
@@ -204,23 +205,21 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
                 break;
             }
 
-//            //Trying automatic (no extension) detection
-//            $loader = $this->loader($engine);
-//
-//            try {
-//                if (!empty($loader->viewName($path))) {
-//                    $result = $engine;
-//                }
-//            } catch (LoaderException $exception) {
-//                //Does not related to such engine
-//            }
-//        }
-//
-//        if (empty($result)) {
-//            throw new ViewsException("Unable to detect view engine for '{$path}'");
+            //Trying automatic (no extension) detection
+            $loader = $this->isolatedLoader($engine);
+
+            try {
+                if (!empty($loader->fetchName($path))) {
+                    $result = $engine;
+                }
+            } catch (LoaderException $exception) {
+                //Does not related to such engine
+            }
         }
 
-        return 'twig';
+        if (empty($result)) {
+            throw new ViewsException("Unable to detect view engine for '{$path}'");
+        }
 
         return $result;
     }
