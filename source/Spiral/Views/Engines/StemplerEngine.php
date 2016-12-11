@@ -176,7 +176,7 @@ class StemplerEngine extends AbstractEngine
             $benchmark = $this->benchmark('process', get_class($processor) . '-{' . $path);
             try {
                 //Post processing
-                $source = $processor->process(
+                $source = $processor->modify(
                     $this->environment,
                     $source,
                     $this->loader->fetchNamespace($path),

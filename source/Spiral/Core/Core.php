@@ -436,11 +436,12 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      */
     public static function sharedContainer()
     {
-        if (empty(self::staticContainer())) {
+        $container = self::staticContainer();
+        if (empty($container)) {
             throw new ScopeException("No shared/global container scope are set");
         }
 
-        return self::staticContainer();
+        return $container;
     }
 
     /**
