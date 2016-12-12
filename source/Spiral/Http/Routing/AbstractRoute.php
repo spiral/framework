@@ -102,6 +102,8 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return self
      */
     public function withContainer(ContainerInterface $container): RouteInterface
     {
@@ -113,6 +115,8 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return self|RouteInterface
      */
     public function withName(string $name): RouteInterface
     {
@@ -132,6 +136,8 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return self|RouteInterface
      */
     public function withPrefix(string $prefix): RouteInterface
     {
@@ -166,6 +172,8 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return self|RouteInterface
      */
     public function withDefaults(array $defaults): RouteInterface
     {
@@ -195,7 +203,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @param callable|MiddlewareInterface|array $middleware
      *
-     * @return self
+     * @return self|RouteInterface
      */
     public function withMiddleware($middleware): AbstractRoute
     {
