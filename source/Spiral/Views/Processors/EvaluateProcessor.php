@@ -87,22 +87,19 @@ class EvaluateProcessor extends Component implements ProcessorInterface
         $phpBlocks = $evaluateBlocks = [];
 
         foreach ($isolator->getBlocks() as $id => $phpBlock) {
-            if ($this->isEvaluatable($phpBlock)) {
-                $evaluateBlocks[$id] = $phpBlock;
+            if ($this->isTargeted($phpBlock)) {
+                $evaluateBlocks[] = $id;
                 continue;
             }
 
-            $phpBlocks[$id] = $phpBlock;
+            $phpBlocks[] = $id;
         }
 
-        //Let's only mount blocks to be evaluated
-        $source = $isolator->setBlocks($evaluateBlocks)->repairPHP($source);
-        $isolator->setBlocks($phpBlocks);
+        //Restoring evaluate blocks
+        $source = $isolator->repairPHP($source, $evaluateBlocks);
 
         //Let's create temporary filename
-        $filename = $this->evalFilename($cachedFilename);
-
-        //I must validate file syntax in a future
+        $filename = $this->evalFilename($environment, $namespace, $view);
 
         try {
             $this->files->write($filename, $source, FilesInterface::RUNTIME, true);
@@ -147,7 +144,7 @@ class EvaluateProcessor extends Component implements ProcessorInterface
      *
      * @return string
      */
-    public function fetchPHP($phpBlock)
+    public function fetchPHP(string $phpBlock): string
     {
         if (strpos($phpBlock, '<?') !== 0) {
             return var_export($phpBlock, true);
@@ -176,7 +173,7 @@ class EvaluateProcessor extends Component implements ProcessorInterface
      *
      * @return bool
      */
-    protected function isEvaluatable($block)
+    protected function isTargeted(string $block): bool
     {
         foreach ($this->flags as $flag) {
             if (strpos($block, $flag) !== false) {
@@ -188,14 +185,21 @@ class EvaluateProcessor extends Component implements ProcessorInterface
     }
 
     /**
-     * Unique filename for evaluation.
+     * Unique filename to be used for compilation.
      *
-     * @param string $filename
+     * @param EnvironmentInterface $environment
+     * @param string               $namespace
+     * @param string               $view
      *
      * @return string
      */
-    private function evalFilename($filename)
-    {
-        return $filename . '.eval.' . spl_object_hash($this) . '.php';
+    private function evalFilename(
+        EnvironmentInterface $environment,
+        string $namespace,
+        string $view
+    ): string {
+        $filename = $namespace . '.' . $view . '.eval.' . spl_object_hash($this) . '.php';
+
+        return $environment->cacheDirectory() . $filename;
     }
 }
