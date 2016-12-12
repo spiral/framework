@@ -95,8 +95,8 @@ class EvaluateProcessor extends Component implements ProcessorInterface
             $phpBlocks[] = $id;
         }
 
-        //Restoring evaluate blocks
-        $source = $isolator->repairPHP($source, $evaluateBlocks);
+        //Restoring evaluate blocks only
+        $source = $isolator->repairPHP($source, true, $evaluateBlocks);
 
         //Let's create temporary filename
         $filename = $this->evalFilename($environment, $namespace, $view);
@@ -126,11 +126,11 @@ class EvaluateProcessor extends Component implements ProcessorInterface
 
             //Dropping temporary filename
             $this->files->delete($filename);
-        } catch (\ErrorException $exception) {
+        } catch (\Exception $exception) {
             throw $exception;
         }
 
-        //Restoring original php blocks
+        //Restoring all original php blocks
         return $isolator->repairPHP($source);
     }
 
