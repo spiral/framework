@@ -23,11 +23,19 @@ interface CoreInterface
      *                           action).
      * @param array  $parameters Action parameters (if any).
      *
+     * @param array  $scope      Scope in a form if [alias=>binding] to be set by container before
+     *                           executing given action.
+     *
      * @return mixed
      *
      * @throws ControllerException
      *
      * @throws \Exception
      */
-    public function callAction(string $controller, string $action = null, array $parameters = []);
+    public function callAction(
+        string $controller,
+        string $action = null,
+        array $parameters = [],
+        array $scope = []
+    );
 }

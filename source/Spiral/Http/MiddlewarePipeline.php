@@ -9,9 +9,8 @@ namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Spiral\Core\Component;
-use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\ScopeException;
+use Spiral\Core\FactoryInterface;
 use Spiral\Http\Exceptions\MiddlewareException;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Http\Traits\MiddlewaresTrait;
@@ -22,17 +21,15 @@ use Spiral\Http\Traits\MiddlewaresTrait;
  * Spiral middlewares are similar to Laravel's one. However router and http itself
  * can be in used in zend expressive.
  */
-class MiddlewarePipeline extends Component
+class MiddlewarePipeline
 {
     use JsonTrait, MiddlewaresTrait;
 
     /**
-     * Pipeline automatically replaces outer request and response with active instances for internal
-     * endpoint.
-     *
-     * @var mixed
+     * @invisible
+     * @var FactoryInterface
      */
-    private $scope = null;
+    private $factory;
 
     /**
      * Endpoint should be called at the deepest level of pipeline.
@@ -42,21 +39,15 @@ class MiddlewarePipeline extends Component
     private $target = null;
 
     /**
-     * @invisible
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
      * @param callable[]|MiddlewareInterface[] $middlewares
-     * @param ContainerInterface               $container Spiral container is needed, due scoping.
+     * @param FactoryInterface                 $factory Spiral container is needed, due scoping.
      *
      * @throws ScopeException
      */
-    public function __construct(array $middlewares = [], ContainerInterface $container)
+    public function __construct(array $middlewares = [], FactoryInterface $factory)
     {
         $this->middlewares = $middlewares;
-        $this->container = $container;
+        $this->factory = $factory;
     }
 
     /**
@@ -128,7 +119,7 @@ class MiddlewarePipeline extends Component
 
         if (is_string($next)) {
             //Resolve using container
-            $next = $this->container->make($next);
+            $next = $this->factory->make($next);
         }
 
         //Executing next middleware
@@ -145,8 +136,6 @@ class MiddlewarePipeline extends Component
      */
     protected function mountResponse(Request $request, Response $response): Response
     {
-        $this->openScope($request, $response);
-
         $outputLevel = ob_get_level();
         ob_start();
 
@@ -163,9 +152,6 @@ class MiddlewarePipeline extends Component
             while (ob_get_level() > $outputLevel + 1) {
                 $output = ob_get_clean() . $output;
             }
-
-            //Closing request/response scope
-            $this->restoreScope();
         }
 
         return $this->wrapResponse($response, $result, ob_get_clean() . $output);
@@ -226,29 +212,5 @@ class MiddlewarePipeline extends Component
         };
 
         return $next;
-    }
-
-    /**
-     * Open container scope and share instances of request and response.
-     *
-     * @param Request  $request
-     * @param Response $response
-     */
-    private function openScope(Request $request, Response $response)
-    {
-        $this->scope = [
-            $this->container->replace(Request::class, $request),
-            $this->container->replace(Response::class, $response)
-        ];
-    }
-
-    /**
-     * Restore initial (pre pipeline) request and response.
-     */
-    private function restoreScope()
-    {
-        $this->container->restore($this->scope[0]);
-        $this->container->restore($this->scope[1]);
-        $this->scope = [];
     }
 }

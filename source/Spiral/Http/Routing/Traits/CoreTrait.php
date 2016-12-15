@@ -22,17 +22,19 @@ use Spiral\Http\Routing\RouteInterface;
 trait CoreTrait
 {
     /**
+     * Core class or class name. By default links to spiral CoreInterface.
+     *
      * @invisible
-     * @var CoreInterface|null
+     * @var CoreInterface|string
      */
-    private $core;
+    private $core = CoreInterface::class;
 
     /**
-     * @param CoreInterface $core
+     * @param CoreInterface|string $core Core class or class name.
      *
      * @return self|RouteInterface
      */
-    public function withCore(CoreInterface $core): RouteInterface
+    public function withCore($core): RouteInterface
     {
         $route = clone $this;
         $route->core = $core;
@@ -43,17 +45,24 @@ trait CoreTrait
     /**
      * Internal helper used to create execute controller action using associated core instance.
      *
+     * @see CoreInterface
+     *
      * @param string $controller
      * @param string $action
      * @param array  $parameters
+     * @param array  $scope
      *
      * @return mixed
      * @throws ClientException
      */
-    protected function callAction(string $controller, string $action = null, array $parameters = [])
-    {
+    protected function callAction(
+        string $controller,
+        string $action = null,
+        array $parameters = [],
+        array $scope = []
+    ) {
         try {
-            return $this->getCore()->callAction($controller, $action, $parameters);
+            return $this->getCore()->callAction($controller, $action, $parameters, $scope);
         } catch (ControllerException $e) {
             throw $this->convertException($e);
         }
@@ -85,15 +94,15 @@ trait CoreTrait
      */
     protected function getCore(): CoreInterface
     {
-        if (!empty($this->core)) {
+        if ($this->core instanceof CoreInterface) {
             return $this->core;
         }
 
-        return $this->iocContainer()->get(CoreInterface::class);
+        return $this->iocContainer()->get($this->core);
     }
 
     /**
      * @return ContainerInterface
      */
-    abstract protected function iocContainer();
+    abstract protected function iocContainer(): ContainerInterface;
 }

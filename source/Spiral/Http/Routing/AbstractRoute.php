@@ -364,7 +364,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    protected function iocContainer()
+    protected function iocContainer(): ContainerInterface
     {
         if (empty($this->container)) {
             throw new RouteException("Route context container has not been set");

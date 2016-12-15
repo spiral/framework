@@ -8,6 +8,8 @@
 namespace Spiral\Http\Routing;
 
 use Doctrine\Common\Inflector\Inflector;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Http\Routing\Traits\CoreTrait;
 
 /**
@@ -121,7 +123,7 @@ class ControllersRoute extends AbstractRoute
     {
         $route = $this;
 
-        return function () use ($route) {
+        return function (Request $request, Response $response) use ($route) {
             $matches = $route->getMatches();
 
             //Due we are expecting part of class name we can remove some garbage (see to-do below)
@@ -135,7 +137,12 @@ class ControllersRoute extends AbstractRoute
                 $controller = "{$route->namespace}\\{$controller}";
             }
 
-            return $route->callAction($controller, $matches['action'], $matches);
+            return $route->callAction(
+                $controller,
+                $matches['action'],
+                $matches,
+                [Request::class => $request, Response::class => $response]
+            );
         };
     }
 }

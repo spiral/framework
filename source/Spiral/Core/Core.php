@@ -270,8 +270,12 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * {@inheritdoc}
      */
-    public function callAction(string $controller, string $action = null, array $parameters = [])
-    {
+    public function callAction(
+        string $controller,
+        string $action = null,
+        array $parameters = [],
+        array $scope = []
+    ) {
         if (!class_exists($controller)) {
             throw new ControllerException(
                 "No such controller '{$controller}' found",
@@ -281,7 +285,14 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
         $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?? '~default~'));
 
-        $scope = self::staticContainer($this->container);
+        $iocScope = self::staticContainer($this->container);
+
+        //Working with container scope
+        foreach ($scope as $alias => &$target) {
+            $target = $this->container->replace($alias, $target);
+            unset($target);
+        }
+
         try {
             //Getting instance of controller
             $controller = $this->container->get($controller);
@@ -296,7 +307,13 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             return $controller->callAction($action, $parameters);
         } finally {
             $this->benchmark($benchmark);
-            self::staticContainer($scope);
+
+            //Restoring container scope
+            foreach (array_reverse($scope) as $payload) {
+                $this->container->restore($payload);
+            }
+
+            self::staticContainer($iocScope);
         }
     }
 

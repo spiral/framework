@@ -7,6 +7,8 @@
  */
 namespace Spiral\Http\Routing;
 
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Http\Routing\Traits\CoreTrait;
 
 /**
@@ -64,14 +66,20 @@ class Route extends AbstractRoute
 
         $route = $this;
 
-        return function () use ($route) {
+        return function (Request $request, Response $response) use ($route) {
             list($controller, $action) = explode(':', str_replace('::', ':', $route->target));
 
             if ($action == self::DYNAMIC_ACTION) {
                 $action = $route->getMatches()['action'];
             }
 
-            return $route->callAction($controller, $action, $route->getMatches());
+            //Calling action with matched parameters and request/response scope
+            return $route->callAction(
+                $controller,
+                $action,
+                $route->getMatches(),
+                [Request::class => $request, Response::class => $response]
+            );
         };
     }
 }

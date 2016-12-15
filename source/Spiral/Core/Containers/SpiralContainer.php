@@ -42,7 +42,7 @@ class SpiralContainer extends Container implements ContainerInterface
 
         //Cache component bindings
         'Spiral\Cache\CacheInterface'                       => 'Spiral\Cache\CacheManager',
-        'Spiral\Cache\StoreInterface'                       => 'Spiral\Cache\CacheStore',
+        'Spiral\Cache\StoreInterface'                       => 'Spiral\Cache\Prototypes\CacheStore',
 
         //Tokenization and class/invocation location
         'Spiral\Tokenizer\TokenizerInterface'               => 'Spiral\Tokenizer\Tokenizer',
