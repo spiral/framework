@@ -344,7 +344,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         <div class="chain">
             <div class="calls">
                 <?php
-                foreach (array_reverse($stacktrace) as $index => $trace) {
+                foreach ($stacktrace as $index => $trace) {
                     if (empty($trace['file']) && isset($stacktrace[$index - 1]['file'])) {
                         $trace['file'] = $stacktrace[$index - 1]['file'];
                         $trace['line'] = $stacktrace[$index - 1]['line'];
