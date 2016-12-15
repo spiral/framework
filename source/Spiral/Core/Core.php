@@ -285,6 +285,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
         $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?? '~default~'));
 
+        //Making sure that all static functionality works well
         $iocScope = self::staticContainer($this->container);
 
         //Working with container scope
@@ -313,6 +314,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
                 $this->container->restore($payload);
             }
 
+            //Restoring shared container to it's original state
             self::staticContainer($iocScope);
         }
     }
