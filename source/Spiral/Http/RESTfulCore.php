@@ -54,7 +54,7 @@ class RESTfulCore implements CoreInterface, SingletonInterface
 
         return $this->core->callAction(
             $controller,
-            $this->defineAction($scope[Request::class], $action),
+            $this->defineAction($scope[Request::class], $parameters, $action),
             $parameters,
             $scope
         );
@@ -64,11 +64,12 @@ class RESTfulCore implements CoreInterface, SingletonInterface
      * Define action name based on a given request method.
      *
      * @param Request $request
+     * @param array   $parameters
      * @param string  $action
      *
      * @return string
      */
-    protected function defineAction(Request $request, $action)
+    protected function defineAction(Request $request, array $parameters, string $action)
     {
         //methodAction [putPost, getPost]
         return strtolower($request->getMethod()) . ucfirst($action);
