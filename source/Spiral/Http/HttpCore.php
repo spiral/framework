@@ -109,12 +109,16 @@ class HttpCore extends Component implements HttpInterface
 
         //Working in a scope
         $benchmark = $this->benchmark('request', $request->getUri());
+
+        //Ensure global container scope
         $scope = self::staticContainer($this->container);
         try {
             //Exceptions (including client one) must be handled by pipeline
             return $pipeline->target($endpoint)->run($request, $response);
         } finally {
             $this->benchmark($benchmark);
+
+            //Restore global container scope
             self::staticContainer($scope);
         }
     }
