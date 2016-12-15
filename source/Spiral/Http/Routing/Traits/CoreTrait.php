@@ -32,7 +32,7 @@ trait CoreTrait
     /**
      * @param CoreInterface|string $core Core class or class name.
      *
-     * @return self|RouteInterface
+     * @return $this|self|RouteInterface
      */
     public function withCore($core): RouteInterface
     {

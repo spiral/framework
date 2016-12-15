@@ -106,7 +106,7 @@ class ControllersRoute extends AbstractRoute
      *
      * @param array $controllers
      *
-     * @return self|$this
+     * @return $this|ControllersRoute
      */
     public function withControllers(array $controllers): ControllersRoute
     {
