@@ -12,9 +12,9 @@ use Spiral\Files\FilesInterface;
 use Spiral\Stempler\Supervisor;
 use Spiral\Stempler\Syntaxes\DarkSyntax;
 use Spiral\Views\EngineInterface;
-use Spiral\Views\Engines\Native\NativeView;
 use Spiral\Views\Engines\Prototypes\AbstractEngine;
 use Spiral\Views\Engines\Stempler\StemplerCache;
+use Spiral\Views\Engines\Stempler\StemplerView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
 use Spiral\Views\ProcessableLoader;
@@ -85,7 +85,7 @@ class StemplerEngine extends AbstractEngine
      */
     public function get(string $path): ViewInterface
     {
-        return new NativeView(
+        return new StemplerView(
             $this->compile($path),
             $this->loader->fetchNamespace($path),
             $this->loader->fetchName($path),
