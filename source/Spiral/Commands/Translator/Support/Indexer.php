@@ -202,16 +202,16 @@ class Indexer extends Component
      */
     private function fetchStrings(\ReflectionClass $reflection, $recursively = false)
     {
-        $defaultProperties = $reflection->getDefaultProperties();
+        $target = $reflection->getDefaultProperties() + $reflection->getConstants();
 
         foreach ($reflection->getProperties() as $property) {
             if (strpos($property->getDocComment(), "@do-not-index")) {
-                unset($defaultProperties[$property->getName()]);
+                unset($target[$property->getName()]);
             }
         }
 
         $strings = [];
-        array_walk_recursive($defaultProperties, function ($value) use (&$strings) {
+        array_walk_recursive($target, function ($value) use (&$strings) {
             if (is_string($value) && $this->hasBraces($value)) {
                 $strings[] = $this->removeBraces($value);
             }
