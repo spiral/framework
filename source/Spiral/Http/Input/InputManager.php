@@ -45,6 +45,15 @@ class InputManager implements InputInterface, SingletonInterface
     private $bagInstances = [];
 
     /**
+     * Prefix to add for each input request.
+     *
+     * @see self::withPrefix();
+     *
+     * @var string
+     */
+    private $prefix = '';
+
+    /**
      * Associations between bags and representing class/request method.
      *
      * @invisible
@@ -344,6 +353,14 @@ class InputManager implements InputInterface, SingletonInterface
     }
 
     /**
+     * Flushing bag instances when cloned.
+     */
+    public function __clone()
+    {
+        $this->bagInstances = [];
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getValue(string $source, string $name = null)
@@ -352,6 +369,17 @@ class InputManager implements InputInterface, SingletonInterface
             throw new InputException("Undefined input source '{$source}'");
         }
 
-        return call_user_func([$this, $source], $name);
+        return call_user_func([$this, $source], ($this->prefix ? $this->prefix . '.' : '') . $name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withPrefix(string $prefix): InputInterface
+    {
+        $input = clone $this;
+        $input->prefix = $prefix;
+
+        return $input;
     }
 }
