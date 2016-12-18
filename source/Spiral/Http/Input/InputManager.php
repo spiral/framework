@@ -235,7 +235,7 @@ class InputManager implements InputInterface, SingletonInterface
         $class = $this->bagAssociations[$name]['class'];
         $data = call_user_func([$this->request(), $this->bagAssociations[$name]['source']]);
 
-        return $this->bagInstances[$name] = new $class($data);
+        return $this->bagInstances[$name] = new $class($data, $this->prefix);
     }
 
     /**
@@ -369,11 +369,13 @@ class InputManager implements InputInterface, SingletonInterface
             throw new InputException("Undefined input source '{$source}'");
         }
 
-        return call_user_func([$this, $source], ($this->prefix ? $this->prefix . '.' : '') . $name);
+        return call_user_func([$this, $source], $name);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return self
      */
     public function withPrefix(string $prefix): InputInterface
     {

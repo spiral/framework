@@ -42,6 +42,11 @@ use Spiral\Validation\ValidatorInterface;
 class RequestFilter extends ValidatesEntity
 {
     /**
+     * Default data origin (POST).
+     */
+    const DEFAULT_SOURCE = 'data';
+
+    /**
      * Defines request data mapping (input => request property)
      */
     const SCHEMA = [];
@@ -69,30 +74,42 @@ class RequestFilter extends ValidatesEntity
     public function initValues(InputInterface $input, ValidatorInterface $validator = null)
     {
         //Emptying the model
-        $this->flushFields();
+        $this->flushValues();
 
         if (empty(static::SCHEMA)) {
             throw new InputException("Unable to initiate RequestFilter with empty schema");
         }
 
         foreach (static::SCHEMA as $field => $source) {
-            list($source, $origin) = $this->parseSource($field, $source);
+            list($xsource, $origin, $class, $iterate) = $this->parseSource($field, $source);
 
             if (!empty($class)) {
+                if ($iterate) {
+                    $models = [];
+                    foreach ($this->createOrigins() as $index => $origin) {
+                        $models[$index] = new $class(
+                            $input->withPrefix($origin),
+                            !empty($validator) ? clone $validator : null
+                        );
+                    }
+
+                    $this->setField($field, $models, false);
+
+                    continue;
+                }
+
                 //Let's initiate sub model
                 $model = new $class(
-                    $input->withPrefix($source),
+                    $input->withPrefix($origin),
                     !empty($validator) ? clone $validator : null
                 );
-
-                //todo: iterate over
 
                 $this->setField($field, $model, false);
                 continue;
             }
 
             //Set data value based on input (enable filtering)
-            $this->setField($field, $input->getValue($source, $origin), true);
+            $this->setField($field, $input->getValue($xsource, $origin), true);
         }
     }
 
@@ -110,7 +127,7 @@ class RequestFilter extends ValidatesEntity
                 $errors[$field] = $message;
             } else {
                 //Let's recreate original structure
-                $this->mapMessage($errors, $origin, $message);
+                self::mountMessage($errors, $origin, $message);
             }
         }
 
@@ -139,11 +156,60 @@ class RequestFilter extends ValidatesEntity
      */
     private function parseSource(string $field, $source): array
     {
-        if (strpos($source, ':') === false) {
-            return [$source, $field];
+        if (is_array($source)) {
+            if (count($source) == 1) {
+                //Short definition
+                return [
+                    null,       //Does not needed due prefix based isolation
+                    $field,     //Using field as origin
+                    $source[0], //Class are given to us in a schema
+                    true        //Iteration is needed
+                ];
+            }
+
+            return [
+                null,    //Does not needed due prefix based isolation
+                $field,  //Using field as origin
+                $source,   //Class are given to us in a schema
+                true     //Iteration is needed
+            ];
         }
 
-        return explode(':', $source);
+        if (class_exists($source)) {
+            return [
+                null,    //Does not needed due prefix based isolation
+                $field,  //Using field as origin
+                $source, //Class are given to us in a schema
+                false    //No iteration
+            ];
+        }
+
+        if (strpos($source, ':') === false) {
+            return [
+                self::DEFAULT_SOURCE, //Using default source
+                $field,               //What is origin field name
+                null,                 //Not sub model
+                false                 //No iteration
+            ];
+        }
+
+        list($source, $origin) = explode(':', $source);
+
+        return [
+            $source, //What is data source
+            $origin, //What is origin field name
+            null,    //Not sub model
+            false    //No iterations
+        ];
+    }
+
+    private function createOrigins()
+    {
+        return [
+            0 => 'files.0',
+            1 => 'files.1',
+            2 => 'files.2'
+        ];
     }
 
     /**
@@ -153,7 +219,7 @@ class RequestFilter extends ValidatesEntity
      * @param string $path
      * @param mixed  $value
      */
-    private function mapMessage(array &$array, string $path, $value)
+    private static function mountMessage(array &$array, string $path, $value)
     {
         $step = explode('.', $path);
         while ($name = array_shift($step)) {

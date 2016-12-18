@@ -85,7 +85,7 @@ class ValidatesEntity extends StaticDateEntity
     public function hasErrors(string $field = null): bool
     {
         if (empty($field)) {
-            return !$this->isValid();
+            return !empty($this->getErrors());
         }
 
         //Looking for specific error
@@ -125,14 +125,16 @@ class ValidatesEntity extends StaticDateEntity
             }
 
             if ($value instanceof ValidatesEntity) {
-                $errors[$index] = $value->getErrors();
+                if (!$value->isValid()) {
+                    $errors[$index] = $value->getErrors();
+                }
                 continue;
             }
 
             //We also support array of nested entities for validation
             if (is_array($value)) {
                 foreach ($value as $nIndex => $nValue) {
-                    if ($nValue instanceof ValidatesEntity) {
+                    if ($nValue instanceof ValidatesEntity && !$nValue->isValid()) {
                         $errors[$index][$nIndex] = $nValue->getErrors();
                     }
                 }

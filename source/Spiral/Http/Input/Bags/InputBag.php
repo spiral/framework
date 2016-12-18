@@ -11,7 +11,8 @@ use Spiral\Http\Exceptions\DotNotFoundException;
 use Spiral\Http\Exceptions\InputException;
 
 /**
- * Generic data accessor, used to read properties of active request.
+ * Generic data accessor, used to read properties of active request. Input bags provide ability to
+ * isolate request parts using given prefix.
  */
 class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 {
@@ -21,11 +22,19 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     private $data = [];
 
     /**
+     * Data prefix.
+     *
+     * @var string
+     */
+    private $prefix = '';
+
+    /**
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data, string $prefix = '')
     {
         $this->data = $data;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -33,7 +42,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function count(): int
     {
-        return count($this->data);
+        return count($this->all());
     }
 
     /**
@@ -41,7 +50,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function getIterator(): \Traversable
     {
-        return new \ArrayIterator($this->data);
+        return new \ArrayIterator($this->all());
     }
 
     /**
@@ -49,7 +58,11 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function all(): array
     {
-        return $this->data;
+        try {
+            return $this->dotGet('');
+        } catch (DotNotFoundException $e) {
+            return [];
+        }
     }
 
     /**
@@ -63,7 +76,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         try {
             $this->dotGet($name);
-        } catch (DotNotFoundException $exception) {
+        } catch (DotNotFoundException $e) {
             return false;
         }
 
@@ -82,7 +95,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         try {
             return $this->dotGet($name);
-        } catch (DotNotFoundException $exception) {
+        } catch (DotNotFoundException $e) {
             return $default;
         }
     }
@@ -99,7 +112,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function fetch(array $keys, bool $fill = false, $filler = null)
     {
-        $result = array_intersect_key($this->data, array_flip($keys));;
+        $result = array_intersect_key($this->all(), array_flip($keys));;
 
         if (!$fill) {
             return $result;
@@ -165,7 +178,10 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         $data = $this->data;
 
-        $path = explode('.', $name);
+        //Generating path relative to a given name and prefix
+        $path = (!empty($this->prefix) ? $this->prefix . '.' : '') . $name;
+        $path = explode('.', rtrim($path, '.'));
+
         foreach ($path as $step) {
             if (!is_array($data) || !array_key_exists($step, $data)) {
                 throw new DotNotFoundException("Unable to find requested element '{$name}'");
