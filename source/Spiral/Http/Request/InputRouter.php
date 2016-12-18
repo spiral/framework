@@ -155,7 +155,6 @@ class InputRouter
 
             //Complex definition
             if (is_array($definition)) {
-
                 if (!empty($definition[self::ISOLATION_PREFIX])) {
                     list($source, $origin) = $this->parseDefinition($field, $definition[1]);
 

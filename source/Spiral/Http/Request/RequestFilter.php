@@ -36,6 +36,8 @@ use Spiral\Validation\ValidatorInterface;
  * You can declare as source (query, file, post and etc) as source plus origin name (file:files.0).
  * Available sources: uri, path, method, isSecure, isAjax, isJsonExpected, remoteAddress.
  * Plus named sources (bags): header, data, post, query, cookie, file, server, attribute.
+ *
+ * @todo add error message caching
  */
 class RequestFilter extends ValidatesEntity
 {
