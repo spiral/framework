@@ -36,20 +36,18 @@ use Spiral\Validation\ValidatorInterface;
  * You can declare as source (query, file, post and etc) as source plus origin name (file:files.0).
  * Available sources: uri, path, method, isSecure, isAjax, isJsonExpected, remoteAddress.
  * Plus named sources (bags): header, data, post, query, cookie, file, server, attribute.
- *
- * @todo HIERARCHICAL VALIDATION
  */
 class RequestFilter extends ValidatesEntity
 {
     /**
-     * Default data origin (POST).
-     */
-    const DEFAULT_SOURCE = 'data';
-
-    /**
      * Defines request data mapping (input => request property)
      */
     const SCHEMA = [];
+
+    /**
+     * @var InputRouter
+     */
+    private $router;
 
     /**
      * @param InputInterface     $input
@@ -60,6 +58,11 @@ class RequestFilter extends ValidatesEntity
         //We are going to populate input fields manually
         parent::__construct([], $validator);
 
+        if (empty(static::SCHEMA)) {
+            throw new InputException("Unable to initiate RequestFilter with empty schema");
+        }
+
+        $this->router = new InputRouter(static::SCHEMA);
         if (!empty($input)) {
             $this->initValues($input, $validator);
         }
@@ -76,40 +79,8 @@ class RequestFilter extends ValidatesEntity
         //Emptying the model
         $this->flushValues();
 
-        if (empty(static::SCHEMA)) {
-            throw new InputException("Unable to initiate RequestFilter with empty schema");
-        }
-
-        foreach (static::SCHEMA as $field => $source) {
-            list($xsource, $origin, $class, $iterate) = $this->parseSource($field, $source);
-
-            if (!empty($class)) {
-                if ($iterate) {
-                    $models = [];
-                    foreach ($this->createOrigins() as $index => $origin) {
-                        $models[$index] = new $class(
-                            $input->withPrefix($origin),
-                            !empty($validator) ? clone $validator : null
-                        );
-                    }
-
-                    $this->setField($field, $models, false);
-
-                    continue;
-                }
-
-                //Let's initiate sub model
-                $model = new $class(
-                    $input->withPrefix($origin),
-                    !empty($validator) ? clone $validator : null
-                );
-
-                $this->setField($field, $model, false);
-                continue;
-            }
-
-            //Set data value based on input (enable filtering)
-            $this->setField($field, $input->getValue($xsource, $origin), true);
+        foreach ($this->router->createValues($input, $validator) as $field => $value) {
+            $this->setField($field, $value);
         }
     }
 
@@ -118,20 +89,8 @@ class RequestFilter extends ValidatesEntity
      */
     public function getErrors(): array
     {
-        //De-mapping
-        $errors = [];
-        foreach (parent::getErrors() as $field => $message) {
-            list(, $origin) = $this->parseSource($field, static::SCHEMA[$field]);
-
-            if ($field == $origin) {
-                $errors[$field] = $message;
-            } else {
-                //Let's recreate original structure
-                self::mountMessage($errors, $origin, $message);
-            }
-        }
-
-        return $errors;
+        //Making sure that each error point to proper input origin
+        return $this->router->originateErrors(parent::getErrors());
     }
 
     /**
@@ -140,92 +99,9 @@ class RequestFilter extends ValidatesEntity
     public function __debugInfo()
     {
         return [
-            'schema' => static::SCHEMA,
+            'valid'  => $this->isValid(),
             'fields' => $this->getFields(),
             'errors' => $this->getErrors()
         ];
-    }
-
-    /**
-     * Fetch source name and origin from schema definition.
-     *
-     * @param string $field
-     * @param mixed  $source
-     *
-     * @return array [$source, $origin, $class, $iterate]
-     */
-    private function parseSource(string $field, $source): array
-    {
-        if (is_array($source)) {
-            if (count($source) == 1) {
-                //Short definition
-                return [
-                    null,       //Does not needed due prefix based isolation
-                    $field,     //Using field as origin
-                    $source[0], //Class are given to us in a schema
-                    true        //Iteration is needed
-                ];
-            }
-
-            return [
-                null,    //Does not needed due prefix based isolation
-                $field,  //Using field as origin
-                $source,   //Class are given to us in a schema
-                true     //Iteration is needed
-            ];
-        }
-
-        if (class_exists($source)) {
-            return [
-                null,    //Does not needed due prefix based isolation
-                $field,  //Using field as origin
-                $source, //Class are given to us in a schema
-                false    //No iteration
-            ];
-        }
-
-        if (strpos($source, ':') === false) {
-            return [
-                self::DEFAULT_SOURCE, //Using default source
-                $field,               //What is origin field name
-                null,                 //Not sub model
-                false                 //No iteration
-            ];
-        }
-
-        list($source, $origin) = explode(':', $source);
-
-        return [
-            $source, //What is data source
-            $origin, //What is origin field name
-            null,    //Not sub model
-            false    //No iterations
-        ];
-    }
-
-    private function createOrigins()
-    {
-        return [
-            0 => 'files.0',
-            1 => 'files.1',
-            2 => 'files.2'
-        ];
-    }
-
-    /**
-     * Set element using dot notation.
-     *
-     * @param array  $array
-     * @param string $path
-     * @param mixed  $value
-     */
-    private static function mountMessage(array &$array, string $path, $value)
-    {
-        $step = explode('.', $path);
-        while ($name = array_shift($step)) {
-            $array = &$array[$name];
-        }
-
-        $array = $value;
     }
 }
