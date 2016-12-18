@@ -131,9 +131,9 @@ abstract class Controller extends Service implements ControllerInterface
         try {
             //Getting set of arguments should be sent to requested method
             return $resolver->resolveArguments($method, $parameters);
-        } catch (ArgumentException $exception) {
+        } catch (ArgumentException $e) {
             throw new ControllerException(
-                "Missing/invalid parameter '{$exception->getParameter()->name}'",
+                "Missing/invalid parameter '{$e->getParameter()->name}'",
                 ControllerException::BAD_ARGUMENT
             );
         }
