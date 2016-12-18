@@ -41,14 +41,14 @@ class PaginationManager implements SingletonInterface, PaginatorsInterface
         }
 
         /**
-         * @var ServerRequestInterface $request
+         * @var array $query
          */
-        $request = $this->container->get(ServerRequestInterface::class);
+        $query = $this->container->get(ServerRequestInterface::class)->getQueryParams();
 
         //Getting page number
         $page = 0;
-        if (!empty($request->getQueryParams()[$parameter]) && is_scalar($request->getQueryParams()[$parameter])) {
-            $page = (int)$request->getQueryParams()[$parameter];
+        if (!empty($query[$parameter]) && is_scalar($query[$parameter])) {
+            $page = (int)$query[$parameter];
         }
 
         //Initiating paginator
