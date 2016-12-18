@@ -7,14 +7,16 @@
 namespace Spiral\Models;
 
 use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Translator\Traits\TranslatorTrait;
+use Spiral\Translator\Translator;
 use Spiral\Validation\ValidatorInterface;
 
 /**
- * Provides ability to validate mocked data.
+ * Provides ability to validate mocked data. Model provides ability to localize error messages.
  */
 class ValidatesEntity extends StaticDateEntity
 {
-    use SaturateTrait;
+    use SaturateTrait, TranslatorTrait;
 
     /**
      * Validation rules compatible with ValidatorInterface.
@@ -24,7 +26,7 @@ class ValidatesEntity extends StaticDateEntity
     /**
      * @var ValidatorInterface
      */
-    private $validator = null;
+    protected $validator = null;
 
     /**
      * @param array              $fields
@@ -33,6 +35,117 @@ class ValidatesEntity extends StaticDateEntity
     public function __construct(array $fields, ValidatorInterface $validator = null)
     {
         parent::__construct($fields);
+
         $this->validator = $this->saturate($validator, ValidatorInterface::class);
+    }
+
+    /**
+     * Get entity validator.
+     *
+     * @return ValidatorInterface
+     */
+    public function getValidator(): ValidatorInterface
+    {
+        return $this->validator;
+    }
+
+    /**
+     * Change associated entity validator.
+     *
+     * @param ValidatorInterface $validator
+     *
+     * @return ValidatesEntity
+     */
+    public function setValidator(ValidatorInterface $validator): ValidatesEntity
+    {
+        $this->validator = $validator;
+
+        return $this;
+    }
+
+    /**
+     * Check if entity data is valid.
+     *
+     * @param string $field
+     *
+     * @return bool
+     */
+    public function isValid(string $field = null): bool
+    {
+        return !$this->hasErrors($field);
+    }
+
+    /**
+     * Check if any of data fields has errors.
+     *
+     * @param string $field
+     *
+     * @return bool
+     */
+    public function hasErrors(string $field = null): bool
+    {
+        if (empty($field)) {
+            return !$this->isValid();
+        }
+
+        //Looking for specific error
+        return !empty($this->getErrors()[$field]);
+    }
+
+    /**
+     * Get validation errors.
+     *
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        //Configuring validator (validation will be performed on next step)
+        $this->validate();
+
+        /*
+         * Primary model errors.
+         */
+        $errors = $this->validator->getErrors();
+        foreach ($errors as &$error) {
+            if (is_string($error) && Translator::isMessage($error)) {
+                //Localizing error message
+                $error = $this->say($error);
+            }
+
+            unset($error);
+        }
+
+        /*
+         * Nested models validation (if any).
+         */
+        foreach ($this->getFields(false) as $index => $value) {
+            if ($value instanceof ValidatesEntity) {
+                $errors[$index] = $value->getErrors();
+                continue;
+            }
+
+            //We also support array of nested entities for validation
+            if (is_array($value)) {
+                foreach ($value as $nIndex => $nValue) {
+                    if ($nValue instanceof ValidatesEntity) {
+                        $errors[$index][$nIndex] = $nValue->getErrors();
+                    }
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Perform data validation.
+     */
+    protected function validate()
+    {
+        //Configuring validator
+        $this->validator->setRules(static::VALIDATES)->setData($this->getFields());
+
+        //Dropping all validation errors set by user
+        $this->validator->flushRegistered();
     }
 }
