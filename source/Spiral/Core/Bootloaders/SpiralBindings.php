@@ -72,6 +72,9 @@ class SpiralBindings extends Bootloader
         'router'                             => 'Spiral\Http\Routing\RouterInterface',
         'request'                            => 'Psr\Http\Message\ServerRequestInterface',
 
+        //Pagination manager
+        'paginators'                         => 'Spiral\Pagination\PaginatorsInterface',
+
         //Http scope depended data routes and wrappers
         'input'                              => 'Spiral\Http\Input\InputManager',
         'response'                           => 'Spiral\Http\Responses\ResponseWrapper',
