@@ -27,7 +27,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * Default segment pattern, this patter can be applied to controller names, actions and etc.
      */
-    const DEFAULT_SEGMENT = '[^\.\/]+';
+    const DEFAULT_SEGMENT = '[^\/]+';
 
     /**
      * @var string
