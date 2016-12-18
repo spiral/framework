@@ -119,6 +119,11 @@ class ValidatesEntity extends StaticDateEntity
          * Nested models validation (if any).
          */
         foreach ($this->getFields(false) as $index => $value) {
+            if (isset($errors[$index])) {
+                //Invalid on parent level
+                continue;
+            }
+
             if ($value instanceof ValidatesEntity) {
                 $errors[$index] = $value->getErrors();
                 continue;

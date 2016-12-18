@@ -22,10 +22,15 @@ use Spiral\Validation\ValidatorInterface;
  *
  * Example schema definition:
  * const SCHEMA = [
- *      'name'   => 'post:name',           //identical to "data:name"
- *      'field'  => 'query',               //field name will used as search criteria in query
- *      'file'   => 'file:images.preview', //Yep, that's too
- *      'secure' => 'isSecure'             //Alias for InputManager->isSecure()
+ *      'name'   => 'post:name',                              //identical to "data:name"
+ *      'field'  => 'query',                                  //field name will used as search
+ *                                                            //criteria in query ("query:field")
+ *      'file'   => 'file:images.preview',                    //Yep, that's too
+ *      'secure' => 'isSecure'                                //Alias for InputManager->isSecure(),
+ *      'uploads' => [UploadFilter::class, "file:uploads.*"], //Iterate over files:uploads array
+ *      'address' => AddressRequest::class,                   //Nested model associated with
+ *                                                            //address subset of data
+ *      'address' => [AddressRequest::class, "data:address"]  //Identical to previous definition
  * ];
  *
  * You can declare as source (query, file, post and etc) as source plus origin name (file:files.0).
@@ -50,27 +55,43 @@ class RequestFilter extends ValidatesEntity
         //We are going to populate input fields manually
         parent::__construct([], $validator);
 
-        if (empty(static::SCHEMA)) {
-            throw new InputException("Unable to initiate RequestFilter with empty schema");
-        }
-
         if (!empty($input)) {
-            $this->initValues($input);
+            $this->initValues($input, $validator);
         }
     }
 
     /**
      * Set request values based on a given input interface.
      *
-     * @param InputInterface $input
+     * @param InputInterface     $input
+     * @param ValidatorInterface $validator Validator to propagate to sub entities. To be cloned.
      */
-    public function initValues(InputInterface $input)
+    public function initValues(InputInterface $input, ValidatorInterface $validator = null)
     {
+        //Emptying the model
+        $this->flushFields();
 
-        foreach ($this->schema as $field => $source) {
+        if (empty(static::SCHEMA)) {
+            throw new InputException("Unable to initiate RequestFilter with empty schema");
+        }
+
+        foreach (static::SCHEMA as $field => $source) {
             list($source, $origin) = $this->parseSource($field, $source);
 
-            //Getting data from input source
+            if (!empty($class)) {
+                //Let's initiate sub model
+                $model = new $class(
+                    $input->withPrefix($source),
+                    !empty($validator) ? clone $validator : null
+                );
+
+                //todo: iterate over
+
+                $this->setField($field, $model, false);
+                continue;
+            }
+
+            //Set data value based on input (enable filtering)
             $this->setField($field, $input->getValue($source, $origin), true);
         }
     }
@@ -78,18 +99,18 @@ class RequestFilter extends ValidatesEntity
     /**
      * {@inheritdoc}
      */
-    public function getErrors($reset = true)
+    public function getErrors(): array
     {
         //De-mapping
         $errors = [];
-        foreach (parent::getErrors($reset) as $field => $errorSet) {
-            list(, $origin) = $this->parseSource($field, $this->schema[$field]);
+        foreach (parent::getErrors() as $field => $message) {
+            list(, $origin) = $this->parseSource($field, static::SCHEMA[$field]);
 
             if ($field == $origin) {
-                $errors[$field] = $errorSet;
+                $errors[$field] = $message;
             } else {
                 //Let's recreate original structure
-                $this->dotSet($errors, $origin, $errorSet);
+                $this->mapMessage($errors, $origin, $message);
             }
         }
 
@@ -102,7 +123,7 @@ class RequestFilter extends ValidatesEntity
     public function __debugInfo()
     {
         return [
-            'schema' => $this->schema,
+            'schema' => static::SCHEMA,
             'fields' => $this->getFields(),
             'errors' => $this->getErrors()
         ];
@@ -112,11 +133,11 @@ class RequestFilter extends ValidatesEntity
      * Fetch source name and origin from schema definition.
      *
      * @param string $field
-     * @param string $source
+     * @param mixed  $source
      *
-     * @return array [$source, $origin]
+     * @return array [$source, $origin, $class, $iterate]
      */
-    private function parseSource($field, $source)
+    private function parseSource(string $field, $source): array
     {
         if (strpos($source, ':') === false) {
             return [$source, $field];
@@ -132,7 +153,7 @@ class RequestFilter extends ValidatesEntity
      * @param string $path
      * @param mixed  $value
      */
-    private function dotSet(array &$array, $path, $value)
+    private function mapMessage(array &$array, string $path, $value)
     {
         $step = explode('.', $path);
         while ($name = array_shift($step)) {
