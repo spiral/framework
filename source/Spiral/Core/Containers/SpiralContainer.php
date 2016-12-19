@@ -81,6 +81,12 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Modules\RegistratorInterface'               => 'Spiral\Modules\Entities\Registrator',
 
         //Default snapshot handler
-        'Spiral\Debug\SnapshotInterface'                    => 'Spiral\Debug\QuickSnapshot'
+        'Spiral\Debug\SnapshotInterface'                    => 'Spiral\Debug\QuickSnapshot',
+
+        //Security component
+        'Spiral\Security\PermissionsInterface'              => 'Spiral\Security\PermissionManager',
+        'Spiral\Security\RulesInterface'                    => 'Spiral\Security\RuleManager',
+        'Spiral\Security\GuardInterface'                    => 'Spiral\Security\Guard'
+
     ];
 }

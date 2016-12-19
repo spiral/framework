@@ -91,6 +91,13 @@ class SpiralBindings extends Bootloader
 
         //Short aliases
         'route'                                 => 'Spiral\Http\Routing\RouteInterface',
+
+        //Security component
+        'permissions'                           => 'Spiral\Security\PermissionsInterface',
+        'rules'                                 => 'Spiral\Security\RulesInterface',
+
+        //Scope depended
+        'actor'                                 => 'Spiral\Security\ActorInterface',
     ];
 
     /**
