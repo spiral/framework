@@ -104,6 +104,10 @@ class DescribeCommand extends Command
                 $defaultValue = "<info>{$defaultValue}</info>";
             }
 
+            if ($defaultValue instanceof \DateTimeInterface) {
+                $defaultValue = $defaultValue->format('c');
+            }
+
             $columnsTable->addRow([
                 $name,
                 $type,

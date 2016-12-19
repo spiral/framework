@@ -70,13 +70,16 @@ class SpiralBindings extends Bootloader
         //Http scope dependent
         'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
         'router'                             => 'Spiral\Http\Routing\RouterInterface',
-        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
+//        'session'                            => 'Spiral\Session\SessionInterface'
 
         //Pagination manager
         'paginators'                         => 'Spiral\Pagination\PaginatorsInterface',
 
         //Http scope depended data routes and wrappers
-        'input'                              => 'Spiral\Http\Input\InputManager',
+        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
+        'input'                              => 'Spiral\Http\Request\InputManager',
+
+        //Response and response wrappers
         'response'                           => 'Spiral\Http\Responses\ResponseWrapper',
         'responses'                          => 'Spiral\Http\Responses\ResponseWrapper',
         'responder'                          => 'Spiral\Http\Responses\ResponseWrapper',
@@ -86,7 +89,6 @@ class SpiralBindings extends Bootloader
 
         //Short aliases
         'route'                              => 'Spiral\Http\Routing\RouteInterface',
-//        'session'                            => 'Spiral\Session\SessionInterface'
     ];
 
     /**

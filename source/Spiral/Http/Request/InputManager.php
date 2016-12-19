@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Input;
+namespace Spiral\Http\Request;
 
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -18,7 +18,6 @@ use Spiral\Http\Input\Bags\FilesBag;
 use Spiral\Http\Input\Bags\HeadersBag;
 use Spiral\Http\Input\Bags\InputBag;
 use Spiral\Http\Input\Bags\ServerBag;
-use Spiral\Http\Request\InputInterface;
 
 /**
  * Provides simplistic way to access request input data in controllers and can also be used to

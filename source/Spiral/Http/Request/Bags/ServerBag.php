@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Input\Bags;
+namespace Spiral\Http\Request\Bags;
 
 /**
  * Access to server parameters of request, every requested key will be normalized for better

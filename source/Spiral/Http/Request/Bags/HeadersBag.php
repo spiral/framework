@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Http\Input\Bags;
+namespace Spiral\Http\Request\Bags;
 
 /**
  * Provides access to headers property of server request, will normalize every requested name for
