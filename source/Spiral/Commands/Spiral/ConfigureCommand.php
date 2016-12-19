@@ -36,29 +36,29 @@ class ConfigureCommand extends Command
 
     /**
      * @param ConsoleConfig        $config
-     * @param ConsoleDispatcher    $dispatcher
+     * @param ConsoleDispatcher    $console
      * @param DirectoriesInterface $directories
      * @param FilesInterface       $files
      */
     public function perform(
         ConsoleConfig $config,
-        ConsoleDispatcher $dispatcher,
+        ConsoleDispatcher $console,
         DirectoriesInterface $directories,
         FilesInterface $files
     ) {
         $this->ensurePermissions($directories, $files);
 
         $this->writeln("\n<info>Re-indexing available console commands...</info>");
-        $dispatcher->command('console:reload', [], $this->output);
+        $console->command('console:reload', [], $this->output);
 
         $this->writeln("\n<info>Reloading bootload cache...</info>");
-        $dispatcher->command('app:reload', [], $this->output);
+        $console->command('app:reload', [], $this->output);
 
         $this->writeln("\n<info>Re-loading translator locales cache...</info>");
-        $dispatcher->command('i18n:reload', [], $this->output);
+        $console->command('i18n:reload', [], $this->output);
 
         $this->writeln("\n<info>Scanning translate function and [[values]] usage...</info>");
-        $dispatcher->command('i18n:index', [], $this->output);
+        $console->command('i18n:index', [], $this->output);
 
         $this->writeln("");
 
@@ -68,7 +68,7 @@ class ConfigureCommand extends Command
                 $this->writeln($options['header']);
             }
 
-            $dispatcher->command($command, $options['options'], $this->output);
+            $console->command($command, $options['options'], $this->output);
             if (!empty($options['footer'])) {
                 $this->writeln($options['footer']);
             }
@@ -76,7 +76,7 @@ class ConfigureCommand extends Command
 
         if ($this->option('key')) {
             $this->writeln("");
-            $dispatcher->command('app:key', [], $this->output);
+            $console->command('app:key', [], $this->output);
         }
 
         $this->writeln("\n<info>All done!</info>");

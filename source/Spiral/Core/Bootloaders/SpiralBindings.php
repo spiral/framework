@@ -29,66 +29,68 @@ class SpiralBindings extends Bootloader
      */
     protected $bindings = [
         //How to resolve log instances
-        'Psr\Log\LoggerInterface'            => ['Spiral\Debug\LogsInterface', 'getLogger'],
-        'Monolog\Logger'                     => ['Spiral\Debug\LogsInterface', 'getLogger'],
+        'Psr\Log\LoggerInterface'               => ['Spiral\Debug\LogsInterface', 'getLogger'],
+        'Monolog\Logger'                        => ['Spiral\Debug\LogsInterface', 'getLogger'],
 
         //Core components (see SharedTrait)
-        'memory'                             => 'Spiral\Core\MemoryInterface',
-        'container'                          => 'Spiral\Core\ContainerInterface',
+        'memory'                                => 'Spiral\Core\MemoryInterface',
+        'container'                             => 'Spiral\Core\ContainerInterface',
 
         //Logging
-        'logs'                               => 'Spiral\Debug\LogsInterface',
+        'logs'                                  => 'Spiral\Debug\LogsInterface',
 
         //Dispatchers
-        'http'                               => 'Spiral\Http\HttpDispatcher',
-        'console'                            => 'Spiral\Console\ConsoleDispatcher',
+        'http'                                  => 'Spiral\Http\HttpDispatcher',
+        'console'                               => 'Spiral\Console\ConsoleDispatcher',
 
         //Shared components
-        'files'                              => 'Spiral\Files\FilesInterface',
-        'tokenizer'                          => 'Spiral\Tokenizer\TokenizerInterface',
-        'locator'                            => 'Spiral\Tokenizer\ClassLocatorInterface',
-        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocatorInterface',
-        'storage'                            => 'Spiral\Storage\StorageInterface',
+        'files'                                 => 'Spiral\Files\FilesInterface',
+        'tokenizer'                             => 'Spiral\Tokenizer\TokenizerInterface',
+        'locator'                               => 'Spiral\Tokenizer\ClassLocatorInterface',
+        'invocationLocator'                     => 'Spiral\Tokenizer\InvocationLocatorInterface',
+        'storage'                               => 'Spiral\Storage\StorageInterface',
 
         //Concrete for now
-        'views'                              => 'Spiral\Views\ViewManager',
-        'translator'                         => 'Spiral\Translator\Translator',
+        'views'                                 => 'Spiral\Views\ViewManager',
+        'translator'                            => 'Spiral\Translator\Translator',
 
         //Databases and models
-        'dbal'                               => 'Spiral\Database\DatabaseManager',
-//        'orm'                                => 'Spiral\ORM\ORM',
-//        'odm'                                => 'Spiral\ODM\ODM',
+        'dbal'                                  => 'Spiral\Database\DatabaseManager',
+        //'orm'                                => 'Spiral\ORM\ORM',
+        //'odm'                                => 'Spiral\ODM\ODM',
+
+        //Migrations
+        'Spiral\Migrations\RepositoryInterface' => 'Spiral\Migrations\FileRepository',
 
         //Entities
-        'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
-        'cache'                              => 'Spiral\Cache\StoreInterface',
+        'encrypter'                             => 'Spiral\Encrypter\EncrypterInterface',
+        'cache'                                 => 'Spiral\Cache\StoreInterface',
 
         //Concrete for now, replace with better interface in future
-        'db'                                 => 'Spiral\Database\Entities\Database',
-//        'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
+        'db'                                    => 'Spiral\Database\Entities\Database',
+        //'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Http scope dependent
-        'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
-        'router'                             => 'Spiral\Http\Routing\RouterInterface',
-//        'session'                            => 'Spiral\Session\SessionInterface'
+        'cookies'                               => 'Spiral\Http\Cookies\CookieQueue',
+        'router'                                => 'Spiral\Http\Routing\RouterInterface',
+        //'session'                            => 'Spiral\Session\SessionInterface'
 
         //Pagination manager
-        'paginators'                         => 'Spiral\Pagination\PaginatorsInterface',
+        'paginators'                            => 'Spiral\Pagination\PaginatorsInterface',
 
         //Http scope depended data routes and wrappers
-        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
-        'input'                              => 'Spiral\Http\Request\InputManager',
+        'request'                               => 'Psr\Http\Message\ServerRequestInterface',
+        'input'                                 => 'Spiral\Http\Request\InputManager',
 
         //Response and response wrappers
-        'response'                           => 'Spiral\Http\Responses\ResponseWrapper',
-        'responses'                          => 'Spiral\Http\Responses\ResponseWrapper',
-        'responder'                          => 'Spiral\Http\Responses\ResponseWrapper',
+        'response'                              => 'Spiral\Http\Responses\ResponseWrapper',
+        'responses'                             => 'Spiral\Http\Responses\ResponseWrapper',
 
         //Thought request attributes
-        'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],
+        'Spiral\Http\Routing\RouteInterface'    => [self::class, 'activeRoute'],
 
         //Short aliases
-        'route'                              => 'Spiral\Http\Routing\RouteInterface',
+        'route'                                 => 'Spiral\Http\Routing\RouteInterface',
     ];
 
     /**
