@@ -14,7 +14,7 @@ use Spiral\Validation\ValidatorInterface;
 /**
  * Provides ability to validate mocked data. Model provides ability to localize error messages.
  */
-class ValidatesEntity extends StaticDateEntity
+class ValidatesEntity extends DataEntity
 {
     use SaturateTrait, TranslatorTrait;
 
