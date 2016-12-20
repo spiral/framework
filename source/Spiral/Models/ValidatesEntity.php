@@ -132,7 +132,7 @@ class ValidatesEntity extends DataEntity
             }
 
             //We also support array of nested entities for validation
-            if (is_array($value)) {
+            if (is_array($value) || $value instanceof \Traversable) {
                 foreach ($value as $nIndex => $nValue) {
                     if ($nValue instanceof ValidatesEntity && !$nValue->isValid()) {
                         $errors[$index][$nIndex] = $nValue->getErrors();
