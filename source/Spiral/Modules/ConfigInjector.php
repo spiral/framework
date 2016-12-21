@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Modules\Entities;
+namespace Spiral\Modules;
 
 use Spiral\Core\Component;
 use Spiral\Modules\Exceptions\InjectorException;

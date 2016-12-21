@@ -10,7 +10,7 @@ namespace Spiral\Commands\Modules;
 use Spiral\Commands\Modules\Traits\ModuleTrait;
 use Spiral\Console\Command;
 use Spiral\Core\DirectoriesInterface;
-use Spiral\Modules\Entities\Publisher;
+use Spiral\Modules\Publisher;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**

@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Modules\Entities;
+namespace Spiral\Modules;
 
 use Spiral\Core\Component;
 use Spiral\Core\Configurator;
@@ -13,7 +13,6 @@ use Spiral\Core\DirectoriesInterface;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Modules\Exceptions\RegistratorException;
-use Spiral\Modules\RegistratorInterface;
 
 /**
  * Provides ability to modify existed configuration files and inject specific set of lines.

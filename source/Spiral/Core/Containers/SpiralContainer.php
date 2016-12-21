@@ -77,8 +77,8 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',
 
         //Modules
-        'Spiral\Modules\PublisherInterface'                 => 'Spiral\Modules\Entities\Publisher',
-        'Spiral\Modules\RegistratorInterface'               => 'Spiral\Modules\Entities\Registrator',
+        'Spiral\Modules\PublisherInterface'                 => 'Spiral\Modules\Publisher',
+        'Spiral\Modules\RegistratorInterface'               => 'Spiral\Modules\Registrator',
 
         //Default snapshot handler
         'Spiral\Debug\SnapshotInterface'                    => 'Spiral\Debug\QuickSnapshot',

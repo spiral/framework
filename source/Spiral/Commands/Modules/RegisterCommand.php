@@ -10,7 +10,7 @@ namespace Spiral\Commands\Modules;
 use Spiral\Commands\Modules\Traits\ModuleTrait;
 use Spiral\Console\Command;
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Modules\Entities\Registrator;
+use Spiral\Modules\Registrator;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
