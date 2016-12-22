@@ -11,7 +11,7 @@ use Spiral\Validation\ValidatorInterface;
 /**
  * Helper class needed to properly initiate request values and mount messages.
  */
-class InputRouter
+class InputMapper
 {
     /**
      * Default data source (POST).

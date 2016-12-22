@@ -47,9 +47,9 @@ class RequestFilter extends ValidatesEntity
     const SCHEMA = [];
 
     /**
-     * @var InputRouter
+     * @var InputMapper
      */
-    private $router;
+    private $mapper;
 
     /**
      * @param InputInterface     $input
@@ -64,7 +64,7 @@ class RequestFilter extends ValidatesEntity
             throw new InputException("Unable to initiate RequestFilter with empty schema");
         }
 
-        $this->router = new InputRouter(static::SCHEMA);
+        $this->mapper = new InputMapper(static::SCHEMA);
         if (!empty($input)) {
             $this->initValues($input, $validator);
         }
@@ -81,7 +81,7 @@ class RequestFilter extends ValidatesEntity
         //Emptying the model
         $this->flushFields();
 
-        foreach ($this->router->createValues($input, $validator) as $field => $value) {
+        foreach ($this->mapper->createValues($input, $validator) as $field => $value) {
             $this->setField($field, $value);
         }
     }
@@ -92,7 +92,7 @@ class RequestFilter extends ValidatesEntity
     public function getErrors(): array
     {
         //Making sure that each error point to proper input origin
-        return $this->router->originateErrors(parent::getErrors());
+        return $this->mapper->originateErrors(parent::getErrors());
     }
 
     /**
