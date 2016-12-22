@@ -79,7 +79,7 @@ class RequestFilter extends ValidatesEntity
     public function initValues(InputInterface $input, ValidatorInterface $validator = null)
     {
         //Emptying the model
-        $this->flushValues();
+        $this->flushFields();
 
         foreach ($this->router->createValues($input, $validator) as $field => $value) {
             $this->setField($field, $value);
