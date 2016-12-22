@@ -75,6 +75,7 @@ class InputMapper
                             !empty($validator) ? clone $validator : null
                         );
                     }
+
                     continue;
                 }
 

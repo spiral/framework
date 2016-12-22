@@ -103,5 +103,6 @@ class DumpCommand extends Command
         ]);
 
         $this->writeln("Dump successfully completed using <info>" . get_class($dumper) . "</info>");
+        $this->writeln("Output directory: <comment>" . realpath($this->argument('path')) . "</comment>");
     }
 }
