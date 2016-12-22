@@ -22,22 +22,31 @@ use Spiral\Validation\ValidatorInterface;
  *
  * Example schema definition:
  * const SCHEMA = [
- *      'name'   => 'post:name',                              //identical to "data:name"
- *      'field'  => 'query',                                  //field name will used as search
- *                                                            //criteria in query ("query:field")
- *      'file'   => 'file:images.preview',                    //Yep, that's too
- *      'secure' => 'isSecure'                                //Alias for InputManager->isSecure(),
- *      'uploads' => [UploadFilter::class, "file:uploads.*"], //Iterate over files:uploads array
- *      'address' => AddressRequest::class,                   //Nested model associated with
- *                                                            //address subset of data
- *      'address' => [AddressRequest::class, "data:address"]  //Identical to previous definition
+ *       //identical to "data:name"
+ *      'name'   => 'post:name',
+ *
+ *       //field name will used as search criteria in query ("query:field")
+ *      'field'  => 'query',
+ *
+ *       //Yep, that's too
+ *      'file'   => 'file:images.preview',
+ *
+ *       //Alias for InputManager->isSecure(),
+ *      'secure' => 'isSecure'
+ *
+ *       //Iterate over file:uploads array with model UploadFilter and isolate it in uploads.*
+ *      'uploads' => [UploadFilter::class, "uploads.*", "file:upload"],
+ *
+ *      //Nested model associated with address subset of data
+ *      'address' => AddressRequest::class,
+ *
+ *       //Identical to previous definition
+ *      'address' => [AddressRequest::class, "address"]
  * ];
  *
  * You can declare as source (query, file, post and etc) as source plus origin name (file:files.0).
  * Available sources: uri, path, method, isSecure, isAjax, isJsonExpected, remoteAddress.
  * Plus named sources (bags): header, data, post, query, cookie, file, server, attribute.
- *
- * @todo add error message caching
  */
 class RequestFilter extends ValidatesEntity
 {
@@ -50,6 +59,13 @@ class RequestFilter extends ValidatesEntity
      * @var InputMapper
      */
     private $mapper;
+
+    /**
+     * Cached set of errors from previous validation.
+     *
+     * @var array
+     */
+    private $lastErrors = [];
 
     /**
      * @param InputInterface     $input
@@ -88,11 +104,17 @@ class RequestFilter extends ValidatesEntity
 
     /**
      * {@inheritdoc}
+     *
+     * @param bool $lastErrors Set to true to return previous set of errors without re-validation.
      */
-    public function getErrors(): array
+    public function getErrors(bool $lastErrors = false): array
     {
+        if ($lastErrors && !empty($this->lastErrors)) {
+            return $this->lastErrors;
+        }
+
         //Making sure that each error point to proper input origin
-        return $this->mapper->originateErrors(parent::getErrors());
+        return $this->lastErrors = $this->mapper->originateErrors(parent::getErrors());
     }
 
     /**
