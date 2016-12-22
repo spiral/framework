@@ -22,7 +22,8 @@ class InputMapper
      * Used to define multiple nested models.
      */
     const NESTED_CLASS     = 0;
-    const ISOLATION_PREFIX = 1;
+    const DATA_ORIGIN      = 1;
+    const ITERATION_SOURCE = 2;
 
     /**
      * Input routing schema, must be compatible with RequestFilter.
@@ -56,8 +57,19 @@ class InputMapper
 
                 //Working with nested models
                 if ($map['multiple']) {
-                    //Create model for each key in origin
-                    foreach ($this->createOrigins($input, $map) as $index => $origin) {
+
+                    //Let's create list of "key" => "location in request"
+                    $origins = $this->createOrigins(
+                        $input,
+                        $field,
+                        $map['origin'],
+                        $map['iterate']
+                    );
+
+                    //Create model for each key in iteration list
+                    foreach ($origins as $index => $origin) {
+
+                        //New nested model in array of models over origins
                         $result[$field][$index] = new $class(
                             $input->withPrefix($origin),
                             !empty($validator) ? clone $validator : null
@@ -140,7 +152,7 @@ class InputMapper
                     //Singular nested model
                     $result[$field] = [
                         'class'    => $definition,
-                        'source'   => self::DEFAULT_SOURCE,
+                        'source'   => null,
                         'origin'   => $field,
                         'multiple' => false
                     ];
@@ -155,24 +167,32 @@ class InputMapper
 
             //Complex definition
             if (is_array($definition)) {
-                if (!empty($definition[self::ISOLATION_PREFIX])) {
-                    list($source, $origin) = $this->parseDefinition($field, $definition[1]);
+                if (!empty($definition[self::DATA_ORIGIN])) {
+                    $origin = $definition[self::DATA_ORIGIN];
 
-                    $result[$field] = [
-                        'class'    => $definition[self::NESTED_CLASS],
-                        'source'   => $source,
-                        'origin'   => rtrim($origin, '.*'),
-                        'multiple' => strpos($origin, '*') !== false
-                    ];
+                    //[class, 'data:something.*']
+                    $multiple = strpos($origin, '.*') !== false;
+                    $origin = rtrim($origin, '.*');
                 } else {
-                    //Array of models (default isolation prefix)
-                    $result[$field] = [
-                        'class'    => $definition[self::NESTED_CLASS],
-                        'source'   => self::DEFAULT_SOURCE,
-                        'origin'   => $field,
-                        'multiple' => true
-                    ];
+                    $origin = $field;
+                    $multiple = true;
                 }
+
+
+                //Array of models (default isolation prefix)
+                $map = [
+                    'class'    => $definition[self::NESTED_CLASS],
+                    'source'   => null,
+                    'origin'   => $origin,
+                    'multiple' => $multiple
+                ];
+
+                if ($multiple && !empty($definition[self::ITERATION_SOURCE])) {
+                    //When multiple records we might have iteration flag
+                    $map['iterate'] = $definition[self::ITERATION_SOURCE];
+                }
+
+                $result[$field] = $map;
             }
         }
 
@@ -180,17 +200,20 @@ class InputMapper
     }
 
     /**
-     * Fetch source name and origin from schema definition.
+     * Fetch source name and origin from schema definition. Support forms:
+     *
+     * field => source        => source:field
+     * field => source:origin => source:origin
      *
      * @param string $field
-     * @param mixed  $definition
+     * @param string $definition
      *
-     * @return array [$source, $origin, $class, $iterate]
+     * @return array [$source, $origin]
      */
-    private function parseDefinition(string $field, $definition): array
+    private function parseDefinition(string $field, string $definition): array
     {
         if (strpos($definition, ':') === false) {
-            return [self::DEFAULT_SOURCE, $field];
+            return [self::DEFAULT_SOURCE, $field, $definition];
         }
 
         return explode(':', $definition);
@@ -200,21 +223,29 @@ class InputMapper
      * Create set of origins and prefixed for a nested array of models.
      *
      * @param InputInterface $input
-     * @param array          $definition
+     * @param string         $field
+     * @param string         $prefix
+     * @param string         $iterate
      *
      * @return array
      */
-    private function createOrigins(InputInterface $input, array $definition)
-    {
+    private function createOrigins(
+        InputInterface $input,
+        string $field,
+        string $prefix,
+        string $iterate
+    ) {
         $result = [];
 
-        $iteration = $input->getValue($definition['source'], $definition['origin']);
+        list($source, $origin) = $this->parseDefinition($field, $iterate);
+
+        $iteration = $input->getValue($source, $origin);
         if (empty($iteration) || !is_array($iteration)) {
             return [];
         }
 
         foreach (array_keys($iteration) as $key) {
-            $result[$key] = $definition['origin'] . '.' . $key;
+            $result[$key] = $prefix . '.' . $key;
         }
 
         return $result;
