@@ -159,6 +159,7 @@ class DescribeCommand extends Command
                     $reference->getUpdateRule()
                 ]);
             }
+
             $foreignsTable->render();
         }
     }
