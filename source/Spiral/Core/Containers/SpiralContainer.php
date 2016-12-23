@@ -86,7 +86,9 @@ class SpiralContainer extends Container implements ContainerInterface
         //Security component
         'Spiral\Security\PermissionsInterface'              => 'Spiral\Security\PermissionManager',
         'Spiral\Security\RulesInterface'                    => 'Spiral\Security\RuleManager',
-        'Spiral\Security\GuardInterface'                    => 'Spiral\Security\Guard'
+        'Spiral\Security\GuardInterface'                    => 'Spiral\Security\Guard',
 
+        //ODM
+        'Spiral\ODM\ODMInterface'                           => 'Spiral\ODM\ODM'
     ];
 }

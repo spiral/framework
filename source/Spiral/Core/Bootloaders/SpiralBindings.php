@@ -57,7 +57,7 @@ class SpiralBindings extends Bootloader
         //Databases and models
         'dbal'                                  => 'Spiral\Database\DatabaseManager',
         //'orm'                                => 'Spiral\ORM\ORM',
-        //'odm'                                => 'Spiral\ODM\ODM',
+        'odm'                                   => 'Spiral\ODM\ODM',
 
         //Migrations
         'Spiral\Migrations\RepositoryInterface' => 'Spiral\Migrations\FileRepository',
@@ -68,7 +68,7 @@ class SpiralBindings extends Bootloader
 
         //Concrete for now, replace with better interface in future
         'db'                                    => 'Spiral\Database\Entities\Database',
-        //'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
+        'mongo'                                 => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Http scope dependent
         'cookies'                               => 'Spiral\Http\Cookies\CookieQueue',
