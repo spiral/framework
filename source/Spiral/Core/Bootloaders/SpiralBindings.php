@@ -46,8 +46,8 @@ class SpiralBindings extends Bootloader
         //Shared components
         'files'                                 => 'Spiral\Files\FilesInterface',
         'tokenizer'                             => 'Spiral\Tokenizer\TokenizerInterface',
-        'locator'                               => 'Spiral\Tokenizer\ClassLocatorInterface',
-        'invocationLocator'                     => 'Spiral\Tokenizer\InvocationLocatorInterface',
+        'locator'                               => 'Spiral\Tokenizer\ClassesInterface',
+        'invocationLocator'                     => 'Spiral\Tokenizer\InvocationsInterface',
         'storage'                               => 'Spiral\Storage\StorageInterface',
 
         //Concrete for now
