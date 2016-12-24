@@ -16,7 +16,7 @@ use Spiral\Core\DispatcherInterface;
 use Spiral\Core\MemoryInterface;
 use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Tokenizer\ClassLocatorInterface;
+use Spiral\Tokenizer\ClassesInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,23 +60,23 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $memory = null;
 
     /**
-     * @var ClassLocatorInterface
+     * @var ClassesInterface
      */
     protected $locator = null;
 
     /**
-     * @param ContainerInterface    $container
-     * @param MemoryInterface       $memory
-     * @param ClassLocatorInterface $locator
+     * @param ContainerInterface $container
+     * @param MemoryInterface    $memory
+     * @param ClassesInterface   $classes
      */
     public function __construct(
         ContainerInterface $container,
         MemoryInterface $memory,
-        ClassLocatorInterface $locator
+        ClassesInterface $classes
     ) {
         $this->container = $container;
         $this->memory = $memory;
-        $this->locator = $locator;
+        $this->locator = $classes;
     }
 
     /**
