@@ -33,7 +33,7 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
      *
      * @var LoggerInterface
      */
-    private $sharedLogger;
+    private $debugLogger;
 
     /**
      * Handler to be added to every created logger (already exists loggers would not be affected).
@@ -75,12 +75,12 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
          * shared debug logger in this case.
          */
         if (empty($channel)) {
-            if (!empty($this->sharedLogger)) {
-                return $this->sharedLogger;
+            if (!empty($this->debugLogger)) {
+                return $this->debugLogger;
             }
 
             //When no channel is provided we are going to use same shared logger
-            return $this->sharedLogger = $this->getLogger(self::DEBUG_CHANNEL);
+            return $this->debugLogger = $this->getLogger(self::DEBUG_CHANNEL);
         }
 
         return new Logger(
