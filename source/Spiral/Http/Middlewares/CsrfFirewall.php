@@ -76,7 +76,7 @@ class CsrfFirewall implements MiddlewareInterface
             return (string)$request->getHeaderLine(self::HEADER);
         }
 
-        $data = $request->getParsedBody();
+             $data = $request->getParsedBody();
         if (is_array($data) && isset($data[self::PARAMETER])) {
             if (is_string($data[self::PARAMETER])) {
                 return (string)$data[self::PARAMETER];
