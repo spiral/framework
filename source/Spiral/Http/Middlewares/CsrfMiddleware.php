@@ -17,6 +17,8 @@ use Spiral\Http\MiddlewareInterface;
 /**
  * Provides generic CSRF protection using cookie as token storage. Set "csrfToken" attribute to
  * request.
+ *
+ * @see https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Double_Submit_Cookie
  */
 class CsrfMiddleware implements MiddlewareInterface
 {
@@ -57,7 +59,10 @@ class CsrfMiddleware implements MiddlewareInterface
         }
 
         //CSRF issues must be handled by Firewall middleware
-        return $next($request->withAttribute(static::ATTRIBUTE, $token), $response);
+        return $next(
+            $request->withAttribute(static::ATTRIBUTE, $token),
+            $response
+        );
     }
 
     /**
