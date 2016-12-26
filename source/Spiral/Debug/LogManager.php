@@ -40,7 +40,7 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
      *
      * @var HandlerInterface
      */
-    private $sharedHandler;
+    private $debugHandler;
 
     /**
      * @var LogsConfig
@@ -96,12 +96,12 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
      *
      * @param HandlerInterface $handler
      *
-     * @return HandlerInterface|null Returns previously set handler.
+     * @return HandlerInterface|null Returns previous handler.
      */
-    public function shareHandler(HandlerInterface $handler = null)
+    public function debugHandler(HandlerInterface $handler = null)
     {
-        $previous = $this->sharedHandler;
-        $this->sharedHandler = $handler;
+        $previous = $this->debugHandler;
+        $this->debugHandler = $handler;
 
         return $previous;
     }
@@ -124,8 +124,8 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
             }
         }
 
-        if (!empty($this->sharedHandler)) {
-            $result[] = $this->sharedHandler;
+        if (!empty($this->debugHandler)) {
+            $result[] = $this->debugHandler;
         }
 
         return $result;

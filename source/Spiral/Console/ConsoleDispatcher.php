@@ -7,7 +7,7 @@
 namespace Spiral\Console;
 
 use Spiral\Console\Exceptions\ConsoleException;
-use Spiral\Console\Logging\VerbosityHandler;
+use Spiral\Console\Logging\DebugHandler;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
@@ -89,7 +89,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         /**
          * Sharing common log handler in order to display debug messages in verbosity mode.
          */
-        $this->container->get(LogManager::class)->shareHandler(new VerbosityHandler($this->output));
+        $this->container->get(LogManager::class)->debugHandler(new DebugHandler($this->output));
 
         //Container scope
         $scope = self::staticContainer($this->container);
