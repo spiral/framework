@@ -56,7 +56,7 @@ class CsrfMiddleware implements MiddlewareInterface
             $response = $response->withAddedHeader('Set-Cookie', $cookie->createHeader());
         }
 
-        //CSRF inssues must be handled by Firewall middleware
+        //CSRF issues must be handled by Firewall middleware
         return $next($request->withAttribute(static::ATTRIBUTE, $token), $response);
     }
 
