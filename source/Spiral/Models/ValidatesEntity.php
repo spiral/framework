@@ -6,6 +6,7 @@
  */
 namespace Spiral\Models;
 
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Translator\Traits\TranslatorTrait;
 use Spiral\Translator\Translator;
@@ -26,16 +27,17 @@ class ValidatesEntity extends DataEntity
     /**
      * @var ValidatorInterface
      */
-    protected $validator = null;
+    protected $validator;
 
     /**
      * @param array              $fields
      * @param ValidatorInterface $validator
+     *
+     * @throws ScopeException
      */
     public function __construct(array $fields, ValidatorInterface $validator = null)
     {
         parent::__construct($fields);
-
         $this->validator = $this->saturate($validator, ValidatorInterface::class);
     }
 
