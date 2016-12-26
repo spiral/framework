@@ -47,7 +47,7 @@ class SpiralContainer extends Container implements ContainerInterface
         //Tokenization and class/invocation location
         'Spiral\Tokenizer\TokenizerInterface'               => 'Spiral\Tokenizer\Tokenizer',
         'Spiral\Tokenizer\ClassesInterface'                 => 'Spiral\Tokenizer\ClassLocator',
-        'Spiral\Tokenizer\InvocationsInterface'             => 'Spiral\Tokenizer\InvocationLocator',
+        'Spiral\Tokenizer\InvocationsInterface'             => 'Spiral\Tokenizer\InvocationsLocator',
 
         //Databases
         'Spiral\Database\DatabaseInterface'                 => 'Spiral\Database\Entities\Database',

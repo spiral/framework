@@ -13,6 +13,7 @@ use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocatorInterface;
 use Spiral\Tokenizer\InvocationInterface;
 use Spiral\Tokenizer\InvocationLocatorInterface;
+use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Reflections\ReflectionArgument;
 use Spiral\Tokenizer\Reflections\ReflectionInvocation;
 use Spiral\Translator\Catalogue;
@@ -68,21 +69,21 @@ class Indexer extends Component
      * Indexing available method and function invocations, target: l, p, $this->translate()
      * functions.
      *
-     * @param InvocationInterface $locator
+     * @param InvocationsInterface $locator
      */
-    public function indexInvocations(InvocationInterface $locator)
+    public function indexInvocations(InvocationsInterface $locator)
     {
-        $this->logger()->info("Indexing invocations of 'l' function.");
+        $this->logger()->info("Indexing usages of 'l' function.");
         $this->registerInvocations(
             $locator->getInvocations(new \ReflectionFunction('l'))
         );
 
-        $this->logger()->info("Indexing invocations of 'p' function.");
+        $this->logger()->info("Indexing usages of 'p' function.");
         $this->registerInvocations(
             $locator->getInvocations(new \ReflectionFunction('p'))
         );
 
-        $this->logger()->info("Indexing invocations of 'say' method (TranslatorTrait).");
+        $this->logger()->info("Indexing usages of 'say' method (TranslatorTrait).");
         $this->registerInvocations(
             $locator->getInvocations(new \ReflectionMethod(TranslatorTrait::class, 'say'))
         );

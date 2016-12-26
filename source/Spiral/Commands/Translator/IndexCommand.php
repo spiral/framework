@@ -11,8 +11,8 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\NullLogger;
 use Spiral\Commands\Translator\Support\Indexer;
 use Spiral\Console\Command;
-use Spiral\Tokenizer\ClassLocatorInterface;
-use Spiral\Tokenizer\InvocationLocatorInterface;
+use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\InvocationsInterface;
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can
@@ -33,29 +33,29 @@ class IndexCommand extends Command
     const DESCRIPTION = 'Index all declared translation strings and usages';
 
     /**
-     * @param Indexer                    $indexer
-     * @param InvocationLocatorInterface $invocationLocator
-     * @param ClassLocatorInterface      $classLocator
+     * @param Indexer             $indexer
+     * @param InvocationsInterface $invocations
+     * @param ClassesInterface    $classes
      */
     public function perform(
         Indexer $indexer,
-        InvocationLocatorInterface $invocationLocator,
-        ClassLocatorInterface $classLocator
+        InvocationsInterface $invocations,
+        ClassesInterface $classes
     ) {
-        if ($invocationLocator instanceof LoggerAwareInterface) {
+        if ($invocations instanceof LoggerAwareInterface) {
             //Way too much verbosity
-            $invocationLocator->setLogger(new NullLogger());
+            $invocations->setLogger(new NullLogger());
         }
 
-        if ($classLocator instanceof LoggerAwareInterface) {
+        if ($classes instanceof LoggerAwareInterface) {
             //Way too much verbosity
-            $classLocator->setLogger(new NullLogger());
+            $classes->setLogger(new NullLogger());
         }
 
         $this->writeln("<info>Scanning translate function usages...</info>");
-        $indexer->indexInvocations($invocationLocator);
+        $indexer->indexInvocations($invocations);
 
         $this->writeln("<info>Scanning Translatable classes...</info>");
-        $indexer->indexClasses($classLocator);
+        $indexer->indexClasses($classes);
     }
 }
