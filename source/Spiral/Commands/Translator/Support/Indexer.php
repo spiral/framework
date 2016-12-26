@@ -9,7 +9,9 @@ namespace Spiral\Commands\Translator\Support;
 
 use Spiral\Core\Component;
 use Spiral\Debug\Traits\LoggerTrait;
+use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocatorInterface;
+use Spiral\Tokenizer\InvocationInterface;
 use Spiral\Tokenizer\InvocationLocatorInterface;
 use Spiral\Tokenizer\Reflections\ReflectionArgument;
 use Spiral\Tokenizer\Reflections\ReflectionInvocation;
@@ -66,9 +68,9 @@ class Indexer extends Component
      * Indexing available method and function invocations, target: l, p, $this->translate()
      * functions.
      *
-     * @param InvocationLocatorInterface $locator
+     * @param InvocationInterface $locator
      */
-    public function indexInvocations(InvocationLocatorInterface $locator)
+    public function indexInvocations(InvocationInterface $locator)
     {
         $this->logger()->info("Indexing invocations of 'l' function.");
         $this->registerInvocations(
@@ -92,9 +94,9 @@ class Indexer extends Component
      * Index and register i18n string located in default properties which belongs to TranslatorTrait
      * classes.
      *
-     * @param ClassLocatorInterface $locator
+     * @param ClassesInterface $locator
      */
-    public function indexClasses(ClassLocatorInterface $locator)
+    public function indexClasses(ClassesInterface $locator)
     {
         foreach ($locator->getClasses(TranslatorTrait::class) as $class => $options) {
             $reflection = new \ReflectionClass($class);

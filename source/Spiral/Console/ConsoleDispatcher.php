@@ -16,7 +16,6 @@ use Spiral\Core\DispatcherInterface;
 use Spiral\Core\MemoryInterface;
 use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Tokenizer\ClassesInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,23 +59,23 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $memory = null;
 
     /**
-     * @var ClassesInterface
+     * @var CommandLocator
      */
     protected $locator = null;
 
     /**
      * @param ContainerInterface $container
      * @param MemoryInterface    $memory
-     * @param ClassesInterface   $classes
+     * @param CommandLocator     $locator
      */
     public function __construct(
         ContainerInterface $container,
         MemoryInterface $memory,
-        ClassesInterface $classes
+        CommandLocator $locator
     ) {
         $this->container = $container;
         $this->memory = $memory;
-        $this->locator = $classes;
+        $this->locator = $locator;
     }
 
     /**
@@ -187,19 +186,8 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             return $commands;
         }
 
-        /*
-         * Locating available commands using class locator.
-         */
-        $commands = [];
-        foreach ($this->locator->getClasses(Command::class) as $class) {
-            if ($class['abstract']) {
-                continue;
-            }
-
-            $commands[] = $class['name'];
-        }
-
-        $this->memory->saveData('commands', $commands);
+        //Locating
+        $this->memory->saveData('commands', $this->locator->locateCommands());
 
         return $commands;
     }
