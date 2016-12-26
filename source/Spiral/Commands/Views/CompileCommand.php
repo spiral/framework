@@ -41,17 +41,13 @@ class CompileCommand extends Command
         //To clean up cache
         $dispatcher->command('views:reset', [], $this->output);
 
-        if ($this->isVerbosity()) {
-            $this->write("\n");
-        }
-
         /**
          * @var FormatterHelper $formatter
          */
         $formatter = $this->getHelper('formatter');
         foreach ($locator->getNamespaces() as $namespace) {
             $this->isVerbosity() && $this->writeln(
-                "<info>Compiling views in namespace '<comment>{$namespace}</comment>'.</info>"
+                "\n<info>Compiling views in namespace '<comment>{$namespace}</comment>'.</info>"
             );
 
             foreach ($locator->getViews($namespace) as $view => $engine) {
