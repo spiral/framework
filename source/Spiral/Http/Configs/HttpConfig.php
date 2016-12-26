@@ -228,4 +228,12 @@ class HttpConfig extends InjectableConfig implements SingletonInterface
     {
         return $this->config['csrf']['lifetime'];
     }
+
+    /**
+     * @return bool
+     */
+    public function csrfSecure(): bool
+    {
+        return !empty($this->config['csrf']['secure']);
+    }
 }

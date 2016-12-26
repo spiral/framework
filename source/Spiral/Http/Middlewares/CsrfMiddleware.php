@@ -88,7 +88,9 @@ class CsrfMiddleware implements MiddlewareInterface
             $token,
             $this->httpConfig->csrfLifetime(),
             $this->httpConfig->basePath(),
-            $this->httpConfig->cookiesDomain($uri)
+            $this->httpConfig->cookiesDomain($uri),
+            $this->httpConfig->csrfSecure(),
+            true
         );
     }
 }
