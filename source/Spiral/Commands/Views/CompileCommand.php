@@ -51,7 +51,7 @@ class CompileCommand extends Command
         $formatter = $this->getHelper('formatter');
         foreach ($locator->getNamespaces() as $namespace) {
             $this->isVerbosity() && $this->writeln(
-                "Compiling views in namespace '<comment>{$namespace}</comment>'."
+                "<info>Compiling views in namespace '<comment>{$namespace}</comment>'.</info>"
             );
 
             foreach ($locator->getViews($namespace) as $view => $engine) {
