@@ -28,6 +28,11 @@ class CsrfFirewall implements MiddlewareInterface
     const PARAMETER = 'csrf-token';
 
     /**
+     * Methods to be allowed to be passed with proper token.
+     */
+    const ALLOW_METHODS = ['GET', 'HEAD', 'OPTIONS'];
+
+    /**
      * {@inheritdoc}
      */
     public function __invoke(Request $request, Response $response, callable $next)
@@ -38,7 +43,7 @@ class CsrfFirewall implements MiddlewareInterface
             throw new \LogicException("Unable to apply CSRF firewall, attribute is missing");
         }
 
-        if ($this->isRequired($request) && !$this->compare($token, $this->fetchToken($request))) {
+        if ($this->isRequired($request) && !hash_equals($token, $this->fetchToken($request))) {
             //Invalid CSRF token
             return $response->withStatus(412, 'Bad CSRF Token');
         }
@@ -55,7 +60,7 @@ class CsrfFirewall implements MiddlewareInterface
      */
     protected function isRequired(Request $request): bool
     {
-        return !in_array($request->getMethod(), ['GET', 'HEAD', 'OPTIONS']);
+        return !in_array($request->getMethod(), static::ALLOW_METHODS);
     }
 
     /**
@@ -79,36 +84,5 @@ class CsrfFirewall implements MiddlewareInterface
         }
 
         return '';
-    }
-
-    /**
-     * Perform timing attack safe string comparison of tokens.
-     *
-     * @link http://blog.ircmaxell.com/2014/11/its-all-about-time.html
-     *
-     * @param string $token Known token.
-     * @param string $clientToken
-     *
-     * @return bool
-     */
-    protected function compare(string $token, string $clientToken): bool
-    {
-        if (function_exists('hash_compare')) {
-            return hash_compare($token, $clientToken);
-        }
-
-        $tokenLength = strlen($token);
-        $clientLength = strlen($clientToken);
-
-        if ($clientLength != $tokenLength) {
-            return false;
-        }
-
-        $result = 0;
-        for ($i = 0; $i < $clientLength; $i++) {
-            $result = $result | (ord($token[$i]) ^ ord($clientToken[$i]));
-        }
-
-        return $result === 0;
     }
 }
