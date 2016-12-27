@@ -73,7 +73,7 @@ class StemplerCache
      */
     public function cachedFilename(string $key): string
     {
-        return $this->files->localUri($key);
+        return $this->files->localPath($key);
     }
 
     /**

@@ -112,7 +112,7 @@ class EvaluateProcessor extends Component implements ProcessorInterface
             $this->view = $view;
 
             try {
-                include_once $this->files->localUri($filename);
+                include_once $this->files->localPath($filename);
             } finally {
                 while (ob_get_level() > $__outputLevel__) {
                     ob_end_clean();

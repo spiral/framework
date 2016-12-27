@@ -40,10 +40,6 @@ class SpiralContainer extends Container implements ContainerInterface
         //Encrypter
         'Spiral\Encrypter\EncrypterInterface'               => 'Spiral\Encrypter\Encrypter',
 
-        //Cache component bindings
-        'Spiral\Cache\CacheInterface'                       => 'Spiral\Cache\CacheManager',
-        'Spiral\Cache\StoreInterface'                       => 'Spiral\Cache\Prototypes\CacheStore',
-
         //Tokenization and class/invocation location
         'Spiral\Tokenizer\TokenizerInterface'               => 'Spiral\Tokenizer\Tokenizer',
         'Spiral\Tokenizer\ClassesInterface'                 => 'Spiral\Tokenizer\ClassLocator',
@@ -88,7 +84,8 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Security\RulesInterface'                    => 'Spiral\Security\RuleManager',
         'Spiral\Security\GuardInterface'                    => 'Spiral\Security\Guard',
 
-        //ODM
-        'Spiral\ODM\ODMInterface'                           => 'Spiral\ODM\ODM'
+        //ODM and ORM
+        'Spiral\ODM\ODMInterface'                           => 'Spiral\ODM\ODM',
+        'Spiral\ORM\ORMInterface'                           => 'Spiral\ORM\ORM'
     ];
 }

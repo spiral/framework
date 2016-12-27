@@ -56,15 +56,14 @@ class SpiralBindings extends Bootloader
 
         //Databases and models
         'dbal'                                  => 'Spiral\Database\DatabaseManager',
-        //'orm'                                => 'Spiral\ORM\ORM',
+        'orm'                                   => 'Spiral\ORM\ORM',
         'odm'                                   => 'Spiral\ODM\ODM',
 
         //Migrations
         'Spiral\Migrations\RepositoryInterface' => 'Spiral\Migrations\FileRepository',
 
-        //Entities
+        //Encryption
         'encrypter'                             => 'Spiral\Encrypter\EncrypterInterface',
-        'cache'                                 => 'Spiral\Cache\StoreInterface',
 
         //Concrete for now, replace with better interface in future
         'db'                                    => 'Spiral\Database\Entities\Database',

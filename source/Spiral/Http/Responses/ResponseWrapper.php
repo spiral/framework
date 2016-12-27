@@ -170,6 +170,6 @@ class ResponseWrapper extends Component
             );
         }
 
-        return new Stream(fopen($this->files->localUri($filename), 'r'));
+        return new Stream(fopen($this->files->localPath($filename), 'r'));
     }
 }
