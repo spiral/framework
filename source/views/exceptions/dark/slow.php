@@ -104,6 +104,16 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             box-shadow: inset 0 0 8px rgba(0, 0, 0, .2);
         }
 
+        .spiral-exception .wrapper .query {
+            margin-bottom: 5px;
+            background: #d3833b;
+            border: 2px solid #d3833b;
+            padding: 8px 13px 8px 18px;
+            color: #fff;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, .2);
+            white-space: pre;
+        }
+
         .spiral-exception .wrapper .stacktrace {
             display: inline-block;
             width: 100%;
@@ -268,6 +278,10 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
         <span style="float: right; opacity: 0.7;">SLOW MODE</span>
     </div>
+
+    <?php if($exception instanceof \Spiral\Database\Exceptions\QueryExceptionInterface) {?>
+        <div class="query"><?= $exception->getQuery() ?></div>
+    <?php } ?>
 
     <div class="stacktrace">
         <div class="trace">

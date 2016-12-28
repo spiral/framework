@@ -37,7 +37,8 @@ class SpiralContainer extends Container implements ContainerInterface
         //Files
         'Spiral\Files\FilesInterface'                       => 'Spiral\Files\FileManager',
 
-        //Encrypter
+        //Default instances
+        'Spiral\Cache\StoreInterface'                       => 'Spiral\Cache\Prototypes\CacheStore',
         'Spiral\Encrypter\EncrypterInterface'               => 'Spiral\Encrypter\Encrypter',
 
         //Tokenization and class/invocation location
@@ -67,7 +68,7 @@ class SpiralContainer extends Container implements ContainerInterface
         //Translations and internalization
         'Symfony\Component\Translation\TranslatorInterface' => 'Spiral\Translator\TranslatorInterface',
         'Spiral\Translator\TranslatorInterface'             => 'Spiral\Translator\Translator',
-        'Spiral\Translator\SourceInterface'                 => 'Spiral\Translator\TranslationSource',
+        'Spiral\Translator\LocatorInterface'                 => 'Spiral\Translator\TranslationLocator',
 
         //Views
         'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',

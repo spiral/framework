@@ -94,6 +94,15 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             color: #fff;
         }
 
+        .spiral-exception .wrapper .query {
+            margin-bottom: 5px;
+            background-color: #990000;
+            border: 2px solid #990000;
+            padding: 8px 13px 8px 18px;
+            color: #fff;
+            white-space: pre;
+        }
+
         .spiral-exception .wrapper .stacktrace {
             display: inline-block;
             width: 100%;
@@ -246,6 +255,10 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
         <strong><?= $exception->getMessage() ?></strong>
         in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
     </div>
+
+    <?php if($exception instanceof \Spiral\Database\Exceptions\QueryExceptionInterface) {?>
+        <div class="query"><?= $exception->getQuery() ?></div>
+    <?php } ?>
 
     <div class="stacktrace">
         <div class="trace">
