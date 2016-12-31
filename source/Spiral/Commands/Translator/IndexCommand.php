@@ -9,7 +9,7 @@ namespace Spiral\Commands\Translator;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\NullLogger;
-use Spiral\Commands\Translator\Support\Indexer;
+use Spiral\Translator\Indexer;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
