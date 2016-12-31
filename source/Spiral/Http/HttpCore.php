@@ -13,7 +13,7 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Exceptions\HttpException;
-use Spiral\Http\Responses\Emitter;
+use Spiral\Http\Response\Emitter;
 use Spiral\Http\Traits\MiddlewaresTrait;
 use Zend\Diactoros\Response as ZendResponse;
 use Zend\Diactoros\Response\EmitterInterface;
@@ -107,11 +107,11 @@ class HttpCore extends Component implements HttpInterface
 
         $pipeline = new MiddlewarePipeline($this->middlewares, $this->container);
 
-        //Working in a scope
-        $benchmark = $this->benchmark('request', $request->getUri());
-
         //Ensure global container scope
         $scope = self::staticContainer($this->container);
+
+        //Working in a scope
+        $benchmark = $this->benchmark('request', $request->getUri());
         try {
             //Exceptions (including client one) must be handled by pipeline
             return $pipeline->target($endpoint)->run($request, $response);

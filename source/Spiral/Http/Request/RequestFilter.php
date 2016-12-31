@@ -7,7 +7,7 @@
 namespace Spiral\Http\Request;
 
 use Spiral\Http\Exceptions\InputException;
-use Spiral\Models\ValidatesEntity;
+use Spiral\Validation\ValidatesEntity;
 use Spiral\Validation\ValidatorInterface;
 
 /**
