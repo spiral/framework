@@ -55,7 +55,7 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Http\Request\InputInterface'                => 'Spiral\Http\Request\InputManager',
 
         //Http based pagination
-        'Spiral\Pagination\PaginatorsInterface'             => 'Spiral\Pagination\PaginationManager',
+        'Spiral\Pagination\PaginatorsInterface'             => 'Spiral\Pagination\PaginationFactory',
 
         //Storage manager interfaces
         'Spiral\Storage\StorageInterface'                   => 'Spiral\Storage\StorageManager',

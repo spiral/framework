@@ -15,7 +15,7 @@ use Spiral\Files\FilesInterface;
  *
  * @see InjectableConfig
  */
-class Configurator extends Component implements ConfiguratorInterface
+class ConfigFactory extends Component implements ConfiguratorInterface
 {
     /**
      * Config files extension.
@@ -130,7 +130,7 @@ class Configurator extends Component implements ConfiguratorInterface
          * Altering this method will provide ability to support more config types, config classes
          * can be left untouched.
          */
-        $data = require($this->files->localPath($filename));
+        $data = require($this->files->localFilename($filename));
 
         if (!is_array($data)) {
             throw  new ConfiguratorException("Config '{$config}' does not contain array data");

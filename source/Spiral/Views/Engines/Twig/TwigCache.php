@@ -59,7 +59,7 @@ class TwigCache implements \Twig_CacheInterface
     public function load($key)
     {
         if ($this->files->exists($key)) {
-            include_once $this->files->localPath($key);
+            include_once $this->files->localFilename($key);
         }
     }
 

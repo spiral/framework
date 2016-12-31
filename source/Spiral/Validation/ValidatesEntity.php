@@ -4,13 +4,13 @@
  *
  * @author    Wolfy-J
  */
-namespace Spiral\Models;
+namespace Spiral\Validation;
 
 use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Models\DataEntity;
 use Spiral\Translator\Traits\TranslatorTrait;
 use Spiral\Translator\Translator;
-use Spiral\Validation\ValidatorInterface;
 
 /**
  * Provides ability to validate mocked data. Model provides ability to localize error messages.

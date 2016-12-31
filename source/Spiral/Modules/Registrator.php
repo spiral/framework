@@ -8,7 +8,7 @@
 namespace Spiral\Modules;
 
 use Spiral\Core\Component;
-use Spiral\Core\Configurator;
+use Spiral\Core\ConfigFactory;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\FilesInterface;
@@ -124,7 +124,7 @@ class Registrator extends Component implements RegistratorInterface
      */
     protected function configFilename(string $config): string
     {
-        $filename = $this->directories->directory('config') . $config . Configurator::EXTENSION;
+        $filename = $this->directories->directory('config') . $config . ConfigFactory::EXTENSION;
 
         if (!$this->files->exists($filename)) {
             throw new RegistratorException("Unable to find filename for config '{$config}'");

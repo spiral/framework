@@ -521,7 +521,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Initiating config loader
         $container->bindSingleton(
             ConfiguratorInterface::class,
-            $container->make(Configurator::class, ['directory' => $core->directory('config')])
+            $container->make(ConfigFactory::class, ['directory' => $core->directory('config')])
         );
 
         //Error and exception handlers

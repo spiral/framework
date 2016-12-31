@@ -14,7 +14,7 @@ use Spiral\Core\Exceptions\ScopeException;
 /**
  * Paginators factory binded to active request scope in order to select page number.
  */
-class PaginationManager implements SingletonInterface, PaginatorsInterface
+class PaginationFactory implements SingletonInterface, PaginatorsInterface
 {
     /**
      * @var ContainerInterface
