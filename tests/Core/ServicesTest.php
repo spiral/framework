@@ -9,6 +9,7 @@ namespace Spiral\Tests\Core;
 
 use Spiral\Core\Container;
 use Spiral\Core\Service;
+use Spiral\Tests\Core\Fixtures\SharedComponent;
 
 class ServicesTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,12 +19,12 @@ class ServicesTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = new Container();
 
-        //open scope
+        SharedComponent::shareContainer($this->container);
     }
 
     public function tearDown()
     {
-        //close scope
+        SharedComponent::shareContainer(null);
     }
 
     /**
@@ -31,20 +32,18 @@ class ServicesTest extends \PHPUnit_Framework_TestCase
      */
     public function testPropertiesFailure()
     {
-        $container = new Container();
-        $service = new ServiceFixture($container);
+        $service = new ServiceFixture();
 
         $service->getAbc();
     }
 
     public function testPropertiesSuccess()
     {
-        $container = new Container();
-        $container->bind('abc', function () {
+        $this->container->bind('abc', function () {
             return 'test';
         });
 
-        $service = new ServiceFixture($container);
+        $service = new ServiceFixture();
         $this->assertEquals('test', $service->getAbc());
     }
 }

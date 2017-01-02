@@ -11,6 +11,7 @@ use Mockery as m;
 use Spiral\Core\Component;
 use Spiral\Core\Container;
 use Spiral\Tests\Core\Fixtures\SampleComponent;
+use Spiral\Tests\Core\Fixtures\SharedComponent;
 use Spiral\Translator\Traits\TranslatorTrait;
 use Spiral\Translator\TranslatorInterface;
 
@@ -18,7 +19,7 @@ class TraitTest extends \PHPUnit_Framework_TestCase
 {
     public function tearDown()
     {
-        SampleComponent::shareContainer(null);
+        SharedComponent::shareContainer(null);
     }
 
     /**
@@ -39,7 +40,7 @@ class TraitTest extends \PHPUnit_Framework_TestCase
             $translator = m::mock(TranslatorInterface::class)
         );
 
-        SampleComponent::shareContainer($container);
+        SharedComponent::shareContainer($container);
 
         $translator->shouldReceive('resolveDomain')->with(SayClass::class)->andReturn('say-class');
         $translator->shouldReceive('trans')->with('Something', [], 'say-class')->andReturn(
@@ -58,7 +59,7 @@ class TraitTest extends \PHPUnit_Framework_TestCase
             $translator = m::mock(TranslatorInterface::class)
         );
 
-        SampleComponent::shareContainer($container);
+        SharedComponent::shareContainer($container);
 
         $translator->shouldReceive('resolveDomain')->with(SayClass::class)->andReturn('say-class');
         $translator->shouldReceive('trans')->with(
