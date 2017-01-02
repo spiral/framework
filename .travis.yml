@@ -1,7 +1,15 @@
 language: php
 
+services:
+  - mongodb
+
 php:
   - 7.0
+  - 7.1
 
+before_install:
+  - phpenv config-add tests/php-travis.ini
+  - mysql -e 'CREATE DATABASE spiral;'
+  - psql -c 'create database spiral;' -U postgres
 install: composer install --no-interaction --prefer-source
 script: phpunit
