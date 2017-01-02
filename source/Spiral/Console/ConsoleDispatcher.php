@@ -9,6 +9,7 @@ namespace Spiral\Console;
 use Spiral\Console\Exceptions\ConsoleException;
 use Spiral\Console\Logging\DebugHandler;
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
@@ -73,11 +74,11 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      * @param LocatorInterface|null $locator
      */
     public function __construct(
-        ContainerInterface $container,
+        ContainerInterface $container = null,
         MemoryInterface $memory = null,
         LocatorInterface $locator = null
     ) {
-        $this->container = $container;
+        $this->container = $container ?? new Container();
         $this->memory = $memory ?? new NullMemory();
         $this->locator = $locator ?? new NullLocator();
     }
