@@ -44,14 +44,14 @@ class HttpCore extends Component implements HttpInterface
     protected $container = null;
 
     /**
-     * @param ContainerInterface   $container Https requests are executed in a container scopes.
-     * @param array                $middlewares
-     * @param callable|null|string $endpoint
+     * @param callable|null|string $endpoint    Default endpoint, Router in HttpDispatcher.
+     * @param array                $middlewares Set of http middlewares to run on every request.
+     * @param ContainerInterface   $container   Https requests are executed in a container scopes.
      */
     public function __construct(
-        ContainerInterface $container,
+        callable $endpoint = null,
         array $middlewares = [],
-        callable $endpoint = null
+        ContainerInterface $container = null
     ) {
         $this->container = $container;
         $this->middlewares = $middlewares;
