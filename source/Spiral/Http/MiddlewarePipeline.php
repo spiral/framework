@@ -208,7 +208,11 @@ class MiddlewarePipeline
             $outerResponse
         ) {
             //This function will be provided to next (deeper) middleware
-            return $this->next(++$position, $request ?? $outerRequest, $response ?? $outerResponse);
+            return $this->next(
+                ++$position,
+                $request ?? $outerRequest,
+                $response ?? $outerResponse
+            );
         };
 
         return $next;
