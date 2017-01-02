@@ -11,10 +11,16 @@
          stopOnFailure="false"
          stopOnError="false"
          syntaxCheck="true"
-        >
+>
     <testsuites>
         <testsuite name="Spiral Framework Core Tests">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>source/Spiral</directory>
+        </whitelist>
+    </filter>
 </phpunit>
