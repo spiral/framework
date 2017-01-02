@@ -14,6 +14,7 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Core\MemoryInterface;
+use Spiral\Core\NullMemory;
 use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
@@ -59,23 +60,26 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     protected $memory = null;
 
     /**
-     * @var CommandLocator
+     * @invisible
+     * @var LocatorInterface
      */
     protected $locator = null;
 
     /**
-     * @param ContainerInterface $container
-     * @param MemoryInterface    $memory
-     * @param CommandLocator     $locator
+     * ConsoleDispatcher constructor.
+     *
+     * @param ContainerInterface    $container
+     * @param MemoryInterface|null  $memory
+     * @param LocatorInterface|null $locator
      */
     public function __construct(
         ContainerInterface $container,
-        MemoryInterface $memory,
-        CommandLocator $locator
+        MemoryInterface $memory = null,
+        LocatorInterface $locator = null
     ) {
         $this->container = $container;
-        $this->memory = $memory;
-        $this->locator = $locator;
+        $this->memory = $memory ?? new NullMemory();
+        $this->locator = $locator ?? new NullLocator();
     }
 
     /**

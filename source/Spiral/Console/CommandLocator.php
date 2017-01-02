@@ -12,7 +12,7 @@ use Symfony\Component\Console\Command\Command;
 /**
  * Locate commands.
  */
-class CommandLocator
+class CommandLocator implements LocatorInterface
 {
     /**
      * @var ClassesInterface
@@ -28,9 +28,7 @@ class CommandLocator
     }
 
     /**
-     * Locate all available document schemas in a project.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function locateCommands(): array
     {
