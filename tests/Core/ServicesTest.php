@@ -12,6 +12,20 @@ use Spiral\Core\Service;
 
 class ServicesTest extends \PHPUnit_Framework_TestCase
 {
+    protected $container;
+
+    public function setUp()
+    {
+        $this->container = new Container();
+
+        //open scope
+    }
+
+    public function tearDown()
+    {
+        //close scope
+    }
+
     /**
      * @expectedException \Spiral\Core\Exceptions\ScopeException
      */
