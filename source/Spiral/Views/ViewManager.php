@@ -7,9 +7,11 @@
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Files\FileManager;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
 use Spiral\Views\Exceptions\LoaderException;
@@ -63,12 +65,12 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
      */
     public function __construct(
         ViewsConfig $config,
-        FilesInterface $files,
-        ContainerInterface $container
+        FilesInterface $files = null,
+        ContainerInterface $container = null
     ) {
         $this->config = $config;
-        $this->files = $files;
-        $this->container = $container;
+        $this->files = $files ?? new FileManager();
+        $this->container = $container ?? new Container();
 
         //Define engine's behaviour
         $this->loader = new ViewLoader($config->getNamespaces(), $files, $container);
