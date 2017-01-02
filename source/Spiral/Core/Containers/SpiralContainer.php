@@ -34,6 +34,9 @@ class SpiralContainer extends Container implements ContainerInterface
         //Configurator
         'Spiral\Core\ConfiguratorInterface'                 => 'Spiral\Core\Configurator',
 
+        //Commands locator
+        'Spiral\Console\LocatorInterface'                   => 'Spiral\Console\CommandLocator',
+
         //Files
         'Spiral\Files\FilesInterface'                       => 'Spiral\Files\FileManager',
 
@@ -68,7 +71,7 @@ class SpiralContainer extends Container implements ContainerInterface
         //Translations and internalization
         'Symfony\Component\Translation\TranslatorInterface' => 'Spiral\Translator\TranslatorInterface',
         'Spiral\Translator\TranslatorInterface'             => 'Spiral\Translator\Translator',
-        'Spiral\Translator\LocatorInterface'                 => 'Spiral\Translator\TranslationLocator',
+        'Spiral\Translator\LocatorInterface'                => 'Spiral\Translator\TranslationLocator',
 
         //Views
         'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',
