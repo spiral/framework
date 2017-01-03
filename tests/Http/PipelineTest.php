@@ -206,4 +206,37 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $res->getStatusCode());
         $this->assertEquals('hello world', (string)$res->getBody());
     }
+
+    public function testInvoke()
+    {
+        $pipeline = new MiddlewarePipeline([], new SpiralContainer());
+        $pipeline->target(function ($req, $res) {
+            return $res;
+        });
+        $res = $pipeline(new ServerRequest(), new EmptyResponse());
+
+        $this->assertInstanceOf(EmptyResponse::class, $res);
+    }
+
+    /**
+     * @expectedException \Spiral\Http\Exceptions\MiddlewareException
+     * @expectedExceptionMessage Unable to run pipeline without specified target
+     */
+    public function testNoTarget()
+    {
+        $pipeline = new MiddlewarePipeline([], new SpiralContainer());
+        $pipeline->run(new ServerRequest(), new EmptyResponse());
+    }
+
+    public function testCloseBuffers()
+    {
+        $pipeline = new MiddlewarePipeline([], new SpiralContainer());
+        $res = $pipeline->target(function ($req, $res) {
+            ob_start();
+            echo 'test';
+        })->run(new ServerRequest(), new Response());
+
+        $this->assertInstanceOf(Response::class, $res);
+        $this->assertEquals('test', (string)$res->getBody());
+    }
 }
