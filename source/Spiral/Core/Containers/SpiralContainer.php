@@ -34,9 +34,6 @@ class SpiralContainer extends Container implements ContainerInterface
         //Configurator
         'Spiral\Core\ConfiguratorInterface'                 => 'Spiral\Core\Configurator',
 
-        //Commands locator
-        'Spiral\Console\LocatorInterface'                   => 'Spiral\Console\CommandLocator',
-
         //Files
         'Spiral\Files\FilesInterface'                       => 'Spiral\Files\FileManager',
 
@@ -90,6 +87,11 @@ class SpiralContainer extends Container implements ContainerInterface
 
         //ODM and ORM
         'Spiral\ODM\ODMInterface'                           => 'Spiral\ODM\ODM',
-        'Spiral\ORM\ORMInterface'                           => 'Spiral\ORM\ORM'
+
+        'Spiral\ORM\ORMInterface'             => 'Spiral\ORM\ORM',
+
+        //Locators
+        'Spiral\Console\LocatorInterface'     => 'Spiral\Console\CommandLocator',
+        'Spiral\ODM\Schemas\LocatorInterface' => 'Spiral\ODM\Schemas\SchemaLocator',
     ];
 }
