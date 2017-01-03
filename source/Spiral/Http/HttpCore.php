@@ -73,11 +73,11 @@ class HttpCore extends Component implements HttpInterface
     /**
      * Set endpoint as callable function or invokable class name (will be resolved using container).
      *
-     * @param callable $endpoint
+     * @param callable|string $endpoint
      *
      * @return $this|self
      */
-    public function setEndpoint(callable $endpoint): HttpCore
+    public function setEndpoint($endpoint): HttpCore
     {
         $this->endpoint = $endpoint;
 
