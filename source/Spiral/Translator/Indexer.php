@@ -10,14 +10,12 @@ namespace Spiral\Translator;
 use Spiral\Core\Component;
 use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Tokenizer\ClassesInterface;
-use Spiral\Tokenizer\ClassLocatorInterface;
-use Spiral\Tokenizer\InvocationInterface;
-use Spiral\Tokenizer\InvocationLocatorInterface;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Reflections\ReflectionArgument;
 use Spiral\Tokenizer\Reflections\ReflectionInvocation;
 use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Traits\TranslatorTrait;
+
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can
@@ -30,9 +28,6 @@ use Spiral\Translator\Traits\TranslatorTrait;
  */
 class Indexer extends Component
 {
-    /**
-     * Provides event "string" when new string is found.
-     */
     use LoggerTrait;
 
     /**
