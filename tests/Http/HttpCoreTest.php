@@ -44,7 +44,7 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
 
     public function testInvoke()
     {
-        $core = new HttpCore($this->container);
+        $core = new HttpCore(null, [], $this->container);
         $core->setEndpoint(function (Request $request, Response $response) {
             return $response->withStatus(300);
         });
@@ -59,7 +59,7 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
         $aContainer = $this->createMock(ContainerInterface::class);
         SharedComponent::shareContainer($aContainer);
 
-        $core = new HttpCore($this->container);
+        $core = new HttpCore(null, [], $this->container);
         $core->setEndpoint(function (Request $request, Response $response) {
             return $response->withStatus(300);
         });
@@ -72,7 +72,7 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
 
     public function testPerformNoResponse()
     {
-        $core = new HttpCore($this->container);
+        $core = new HttpCore(null, [], $this->container);
         $core->setEndpoint(function (Request $request, Response $response) {
             return $response->withStatus(300);
         });
@@ -89,7 +89,7 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
                 return $response->withStatus(300);
             });
 
-        $core = new HttpCore($this->container);
+        $core = new HttpCore(null, [], $this->container);
         $core->setEndpoint('InvokableClassName');
 
         $response = $core->perform($this->request, $this->response);
@@ -102,7 +102,7 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testPerformNoEndpoint()
     {
-        $core = new HttpCore($this->container);
+        $core = new HttpCore(null, [], $this->container);
 
         $core->perform($this->request, $this->response);
     }
@@ -118,19 +118,8 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
             }
         };
 
-        $core = new HttpCore($this->container);
+        $core = new HttpCore(null, [], $this->container);
         $core->setEmitter($emitter);
-        $core->setEndpoint(function (Request $request, Response $response) {
-            return $response->withStatus(300);
-        });
-
-        $response = $core->perform($this->request, $this->response);
-        $core->dispatch($response);
-    }
-
-    public function testDispatchWithDefaultEmitter()
-    {
-        $core = new HttpCore($this->container);
         $core->setEndpoint(function (Request $request, Response $response) {
             return $response->withStatus(300);
         });
