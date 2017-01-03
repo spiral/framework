@@ -39,7 +39,7 @@ trait FileTrait
             $filename instanceof UploadedFileInterface
             || $filename instanceof StreamableInterface
         ) {
-            return StreamWrapper::getUri($filename->getStream());
+            return StreamWrapper::localFilename($filename->getStream());
         }
 
         if (is_array($filename)) {
