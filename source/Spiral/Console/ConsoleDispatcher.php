@@ -85,10 +85,13 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
 
     /**
      * {@inheritdoc}
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
-    public function start()
+    public function start(InputInterface $input = null, OutputInterface $output = null)
     {
-        $this->output = new ConsoleOutput();
+        $this->output = $output ?? new ConsoleOutput();
 
         /**
          * Sharing common log handler in order to display debug messages in verbosity mode.
@@ -101,7 +104,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             /*
              * Commands are being executed in isolated container scope.
              */
-            $this->consoleApplication()->run(null, $this->output);
+            $this->consoleApplication()->run($input, $this->output);
         } finally {
             //Restoring scopes
             self::staticContainer($scope);

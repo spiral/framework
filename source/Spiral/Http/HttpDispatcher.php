@@ -8,6 +8,7 @@ namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
@@ -37,14 +38,14 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      * @param HttpConfig         $config
      * @param ContainerInterface $container
      */
-    public function __construct(HttpConfig $config, ContainerInterface $container)
+    public function __construct(HttpConfig $config, ContainerInterface $container = null)
     {
         $this->config = $config;
 
         parent::__construct(
-            $container,
+            $config->defaultEndpoint(),
             $config->defaultMiddlewares(),
-            $config->defaultEndpoint()
+            $container ?? new Container()
         );
     }
 

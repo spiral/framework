@@ -68,7 +68,7 @@ class SpiralContainer extends Container implements ContainerInterface
         //Translations and internalization
         'Symfony\Component\Translation\TranslatorInterface' => 'Spiral\Translator\TranslatorInterface',
         'Spiral\Translator\TranslatorInterface'             => 'Spiral\Translator\Translator',
-        'Spiral\Translator\LocatorInterface'                 => 'Spiral\Translator\TranslationLocator',
+        'Spiral\Translator\LocatorInterface'                => 'Spiral\Translator\TranslationLocator',
 
         //Views
         'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',
@@ -87,6 +87,10 @@ class SpiralContainer extends Container implements ContainerInterface
 
         //ODM and ORM
         'Spiral\ODM\ODMInterface'                           => 'Spiral\ODM\ODM',
-        'Spiral\ORM\ORMInterface'                           => 'Spiral\ORM\ORM'
+        'Spiral\ORM\ORMInterface'                           => 'Spiral\ORM\ORM',
+
+        //Locators
+        'Spiral\Console\LocatorInterface'                   => 'Spiral\Console\CommandLocator',
+        'Spiral\ODM\Schemas\LocatorInterface'               => 'Spiral\ODM\Schemas\SchemaLocator',
     ];
 }

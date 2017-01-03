@@ -11,6 +11,7 @@ namespace Spiral\Translator;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\MemoryInterface;
+use Spiral\Core\NullMemory;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Exceptions\LocaleException;
@@ -82,20 +83,22 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
 
     /**
      * @param TranslatorConfig $config
+     * @param LocatorInterface $locator
      * @param MemoryInterface  $memory
-     * @param LocatorInterface $source
      * @param MessageSelector  $selector
      */
     public function __construct(
         TranslatorConfig $config,
-        MemoryInterface $memory,
-        LocatorInterface $source,
+
+        LocatorInterface $locator,
+        MemoryInterface $memory = null,
         MessageSelector $selector = null
     ) {
         $this->config = $config;
-        $this->memory = $memory;
-        $this->source = $source;
-        $this->selector = $selector;
+        $this->source = $locator;
+
+        $this->memory = $memory ?? new NullMemory();
+        $this->selector = $selector ?? new MessageSelector();
 
         $this->locale = $this->config->defaultLocale();
 

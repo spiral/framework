@@ -191,6 +191,9 @@ class InputMapper
                 if ($multiple && !empty($definition[self::ITERATION_SOURCE])) {
                     //When multiple records we might have iteration flag
                     $map['iterate'] = $definition[self::ITERATION_SOURCE];
+                } else {
+                    //Default iteration over origin
+                    $map['iterate'] = $map['origin'];
                 }
 
                 $result[$field] = $map;

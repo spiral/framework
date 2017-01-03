@@ -9,8 +9,10 @@ namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
 use Spiral\Database\DatabaseManager;
+use Spiral\Database\Entities\Database;
 use Spiral\Database\Exceptions\DatabaseException;
 use Spiral\Database\Injections\FragmentInterface;
+use Spiral\Database\Schemas\Prototypes\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -69,6 +71,22 @@ class DescribeCommand extends Command
             "Columns of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
         );
 
+        $this->describeColumns($schema);
+
+        if (!empty($indexes = $schema->getIndexes())) {
+            $this->describeIndexes($database, $indexes);
+        }
+
+        if (!empty($foreigns = $schema->getForeigns())) {
+            $this->describeForeigns($database, $foreigns);
+        }
+    }
+
+    /**
+     * @param AbstractTable $schema
+     */
+    protected function describeColumns(AbstractTable $schema)
+    {
         $columnsTable = $this->table([
             'Column:',
             'Database Type:',
@@ -118,49 +136,59 @@ class DescribeCommand extends Command
         }
 
         $columnsTable->render();
+    }
 
-        if (!empty($indexes = $schema->getIndexes())) {
-            $this->writeln(
-                "\nIndexes of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
-            );
+    /**
+     * @param Database $database
+     * @param array    $indexes
+     */
+    protected function describeIndexes(Database $database, array $indexes)
+    {
+        $this->writeln(
+            "\nIndexes of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
+        );
 
-            $indexesTable = $this->table(['Name:', 'Type:', 'Columns:']);
-            foreach ($indexes as $index) {
-                $indexesTable->addRow([
-                    $index->getName(),
-                    $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
-                    join(", ", $index->getColumns())
-                ]);
-            }
-            $indexesTable->render();
-        }
-
-        if (!empty($foreigns = $schema->getForeigns())) {
-            $this->writeln(
-                "\nForeign keys of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
-            );
-
-            $foreignsTable = $this->table([
-                'Name:',
-                'Column:',
-                'Foreign Table:',
-                'Foreign Column:',
-                'On Delete:',
-                'On Update:'
+        $indexesTable = $this->table(['Name:', 'Type:', 'Columns:']);
+        foreach ($indexes as $index) {
+            $indexesTable->addRow([
+                $index->getName(),
+                $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
+                join(", ", $index->getColumns())
             ]);
-
-            foreach ($foreigns as $reference) {
-                $foreignsTable->addRow([
-                    $reference->getName(),
-                    $reference->getColumn(),
-                    $reference->getForeignTable(),
-                    $reference->getForeignKey(),
-                    $reference->getDeleteRule(),
-                    $reference->getUpdateRule()
-                ]);
-            }
-
-            $foreignsTable->render();
         }
+        $indexesTable->render();
+    }
+
+    /**
+     * @param Database $database
+     * @param array    $foreigns
+     */
+    protected function describeForeigns(Database $database, array $foreigns)
+    {
+        $this->writeln(
+            "\nForeign keys of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
+        );
+
+        $foreignsTable = $this->table([
+            'Name:',
+            'Column:',
+            'Foreign Table:',
+            'Foreign Column:',
+            'On Delete:',
+            'On Update:'
+        ]);
+
+        foreach ($foreigns as $reference) {
+            $foreignsTable->addRow([
+                $reference->getName(),
+                $reference->getColumn(),
+                $reference->getForeignTable(),
+                $reference->getForeignKey(),
+                $reference->getDeleteRule(),
+                $reference->getUpdateRule()
+            ]);
+        }
+
+        $foreignsTable->render();
     }
 }

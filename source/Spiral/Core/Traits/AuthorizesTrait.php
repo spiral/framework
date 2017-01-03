@@ -5,10 +5,10 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Security\Traits;
+namespace Spiral\Core\Traits;
 
 use Spiral\Core\Exceptions\ControllerException;
-
+use Spiral\Security\Traits\GuardedTrait;
 
 /**
  * Authorizes method and throws an exception in case of failure.

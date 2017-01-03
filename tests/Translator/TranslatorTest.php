@@ -29,8 +29,8 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-            $memory,
             $source = m::mock(TranslationLocator::class),
+            $memory,
             $selector = m::mock(MessageSelector::class)
         );
 
@@ -48,8 +48,8 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-            $memory,
             $source = m::mock(TranslationLocator::class),
+            $memory,
             $selector = m::mock(MessageSelector::class)
         );
 
@@ -75,8 +75,8 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-            $memory,
             $source,
+            $memory,
             $selector = m::mock(MessageSelector::class)
         );
 
@@ -96,8 +96,8 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-            $memory,
             $source,
+            $memory,
             $selector = m::mock(MessageSelector::class)
         );
 
@@ -123,8 +123,9 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-            $memory,
+
             $source,
+            $memory,
             $selector = m::mock(MessageSelector::class)
         );
 
@@ -145,8 +146,9 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-            $memory,
+
             $source,
+            $memory,
             $selector = m::mock(MessageSelector::class)
         );
 
@@ -199,8 +201,9 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-            $memory,
+
             $source,
+            $memory,
             $selector = m::mock(MessageSelector::class)
         );
 

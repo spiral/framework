@@ -269,6 +269,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
     /**
      * {@inheritdoc}
+     *
+     * @todo Move to AbstractCore?
      */
     public function callAction(
         string $controller,
