@@ -56,6 +56,17 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
 
     return $result;
 };
+
+$highlightQuery = function (string $query) {
+    if(class_exists('SqlFormatter')) {
+        \SqlFormatter::$pre_attributes = '';
+
+        //Cutting container
+        return trim(substr(\SqlFormatter::highlight($query), 6, -6));
+    }
+
+    return $query;
+}
 ?>
 <html>
 <head>
@@ -93,12 +104,13 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
             overflow-x: auto;
         }
 
-        .spiral-exception .wrapper .header {
+        .spiral-exception .wrapper .query {
             margin-bottom: 5px;
-            background-color: #990000;
-            border: 2px solid #990000;
+            background-color: #ffeaaa;
+            border: 2px solid #ffeaaa;
             padding: 8px 13px 8px 18px;
-            color: #fff;
+            color: black;
+            white-space: pre;
         }
 
         .spiral-exception .wrapper .query {
@@ -274,7 +286,7 @@ $argumenter = function (array $arguments) use ($dumper, $styler, &$dumps) {
     </div>
 
    <?php if($exception instanceof \Spiral\Database\Exceptions\QueryExceptionInterface) {?>
-       <div class="query"><?= $exception->getQuery() ?></div>
+       <div class="query"><?= $highlightQuery($exception->getQuery()) ?></div>
    <?php } ?>
 
     <div class="stacktrace">

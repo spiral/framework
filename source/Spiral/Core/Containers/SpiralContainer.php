@@ -92,5 +92,6 @@ class SpiralContainer extends Container implements ContainerInterface
         //Locators
         'Spiral\Console\LocatorInterface'                   => 'Spiral\Console\CommandLocator',
         'Spiral\ODM\Schemas\LocatorInterface'               => 'Spiral\ODM\Schemas\SchemaLocator',
+        'Spiral\ORM\Schemas\LocatorInterface'               => 'Spiral\ORM\Schemas\SchemaLocator',
     ];
 }
