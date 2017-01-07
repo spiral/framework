@@ -291,6 +291,9 @@ $highlightQuery = function (string $query) {
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
         in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
+
+        <span style="float: right; opacity: 0.7;">SLOW MODE</span>
+
         <?php
         $previous = $exception->getPrevious();
         while($previous instanceof Throwable) {
@@ -303,7 +306,6 @@ $highlightQuery = function (string $query) {
             $previous = $previous->getPrevious();
         }
         ?>
-        <span style="float: right; opacity: 0.7;">SLOW MODE</span>
     </div>
 
     <?php if($exception instanceof \Spiral\Database\Exceptions\QueryExceptionInterface) {?>
