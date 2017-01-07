@@ -115,6 +115,10 @@ $highlightQuery = function (string $query) {
             box-shadow: inset 0 0 8px rgba(0, 0, 0, .2);
         }
 
+        .spiral-exception .wrapper .header .previous {
+            font-size: 10px;
+        }
+
         .spiral-exception .wrapper .query {
             margin-bottom: 5px;
             background: rgb(251, 217, 139);
@@ -286,6 +290,18 @@ $highlightQuery = function (string $query) {
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
         in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
+        <?php
+        $previous = $exception->getPrevious();
+        while($previous instanceof Throwable) {
+            ?><div class="previous">
+            caused by <?= get_class($previous) ?>:
+            <strong><?= $previous->getMessage() ?></strong>
+            in&nbsp;<i><?= $previous->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $previous->getLine() ?></strong>
+            </div>
+            <?php
+            $previous = $previous->getPrevious();
+        }
+        ?>
 
         <span style="float: right; opacity: 0.7;">SLOW MODE</span>
     </div>

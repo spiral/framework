@@ -112,6 +112,10 @@ $highlightQuery = function (string $query) {
             color: #fff;
         }
 
+        .spiral-exception .wrapper .header .previous {
+            font-size: 10px;
+        }
+
         .spiral-exception .wrapper .query {
             margin-bottom: 5px;
             background-color: #ffeaaa;
@@ -280,13 +284,24 @@ $highlightQuery = function (string $query) {
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
         in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
-
+        <?php
+        $previous = $exception->getPrevious();
+        while($previous instanceof Throwable) {
+            ?><div class="previous">
+            caused by <?= get_class($previous) ?>:
+            <strong><?= $previous->getMessage() ?></strong>
+            in&nbsp;<i><?= $previous->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $previous->getLine() ?></strong>
+            </div>
+            <?php
+            $previous = $previous->getPrevious();
+        }
+        ?>
         <span style="float: right; opacity: 0.7;">SLOW MODE</span>
     </div>
 
-   <?php if($exception instanceof \Spiral\Database\Exceptions\QueryExceptionInterface) {?>
-       <div class="query"><?= $highlightQuery($exception->getQuery()) ?></div>
-   <?php } ?>
+    <?php if($exception instanceof \Spiral\Database\Exceptions\QueryExceptionInterface) {?>
+        <div class="query"><?= $highlightQuery($exception->getQuery()) ?></div>
+    <?php } ?>
 
     <div class="stacktrace">
         <div class="trace">

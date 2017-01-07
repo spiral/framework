@@ -104,6 +104,10 @@ $highlightQuery = function (string $query) {
             padding: 8px 13px 8px 18px;
             color: #fff;
         }
+        
+        .spiral-exception .wrapper .header .previous {
+            font-size: 10px;
+        }
 
         .spiral-exception .wrapper .query {
             margin-bottom: 5px;
@@ -265,6 +269,18 @@ $highlightQuery = function (string $query) {
         <?= get_class($exception) ?>:
         <strong><?= $exception->getMessage() ?></strong>
         in&nbsp;<i><?= $exception->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $exception->getLine() ?></strong>
+        <?php
+        $previous = $exception->getPrevious();
+        while($previous instanceof Throwable) {
+            ?><div class="previous">
+            caused by <?= get_class($previous) ?>:
+            <strong><?= $previous->getMessage() ?></strong>
+            in&nbsp;<i><?= $previous->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $previous->getLine() ?></strong>
+            </div>
+            <?php
+            $previous = $previous->getPrevious();
+        }
+        ?>
     </div>
 
     <?php if($exception instanceof \Spiral\Database\Exceptions\QueryExceptionInterface) {?>
