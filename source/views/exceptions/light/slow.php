@@ -110,7 +110,6 @@ $highlightQuery = function (string $query) {
             border: 2px solid #990000;
             padding: 8px 13px 8px 18px;
             color: #fff;
-            white-space: pre;
         }
 
         .spiral-exception .wrapper .query {
