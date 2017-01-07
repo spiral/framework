@@ -114,6 +114,11 @@ $highlightQuery = function (string $query) {
 
         .spiral-exception .wrapper .header .previous {
             font-size: 10px;
+            opacity: 0.6;
+        }
+
+        .spiral-exception .wrapper .header .previous:hover {
+            opacity: 1;
         }
 
         .spiral-exception .wrapper .query {
@@ -288,7 +293,7 @@ $highlightQuery = function (string $query) {
         $previous = $exception->getPrevious();
         while($previous instanceof Throwable) {
             ?><div class="previous">
-            caused by <?= get_class($previous) ?>:
+            &bull; caused by <?= get_class($previous) ?>:
             <strong><?= $previous->getMessage() ?></strong>
             in&nbsp;<i><?= $previous->getFile() ?></i>&nbsp;at&nbsp;<strong>line&nbsp;<?= $previous->getLine() ?></strong>
             </div>
