@@ -67,7 +67,9 @@ class SchemaCommand extends Command
         } else {
             foreach ($builder->getTables() as $table) {
                 if ($table->getComparator()->hasChanges()) {
-                    $this->writeln("<fg=cyan>Table schema '{$table}' has changes.</fg=cyan>");
+                    $this->writeln(
+                        "<fg=cyan>Table schema '<comment>{$table}</comment>' has changes.</fg=cyan>"
+                    );
                 }
             }
 
