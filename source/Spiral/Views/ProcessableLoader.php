@@ -61,7 +61,7 @@ class ProcessableLoader extends Component implements LoaderInterface
         $source = $this->loader->getSource($path);
 
         foreach ($this->processors as $processor) {
-            $benchmark = $this->benchmark('modify', $path . '@' . get_class($processor));
+            $benchmark = $this->benchmark('process', $path . '@' . get_class($processor));
             try {
                 $source = $processor->modify(
                     $this->environment,
