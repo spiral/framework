@@ -104,21 +104,21 @@ $highlightQuery = function (string $query) {
             overflow-x: auto;
         }
 
+        .spiral-exception .wrapper .header {
+            margin-bottom: 5px;
+            background-color: #990000;
+            border: 2px solid #990000;
+            padding: 8px 13px 8px 18px;
+            color: #fff;
+            white-space: pre;
+        }
+
         .spiral-exception .wrapper .query {
             margin-bottom: 5px;
             background-color: #ffeaaa;
             border: 2px solid #ffeaaa;
             padding: 8px 13px 8px 18px;
             color: black;
-            white-space: pre;
-        }
-
-        .spiral-exception .wrapper .query {
-            margin-bottom: 5px;
-            background-color: #990000;
-            border: 2px solid #990000;
-            padding: 8px 13px 8px 18px;
-            color: #fff;
             white-space: pre;
         }
 
