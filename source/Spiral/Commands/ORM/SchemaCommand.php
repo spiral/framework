@@ -54,7 +54,7 @@ class SchemaCommand extends Command
 
         $countModels = count($builder->getSchemas());
         $this->write("<info>Schema have been updated: <comment>{$elapsed} s</comment>");
-        $this->writeln(", found documents: <comment>{$countModels}</comment></info>");
+        $this->writeln(", found records: <comment>{$countModels}</comment></info>");
 
         if ($this->option('alter')) {
 
