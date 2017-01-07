@@ -37,7 +37,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * I need this constant for Symfony Console. :/
      */
-    const VERSION = '0.9.0-beta';
+    const VERSION = '0.9.0-rc';
 
     /**
      * Memory section for bootloaders cache.

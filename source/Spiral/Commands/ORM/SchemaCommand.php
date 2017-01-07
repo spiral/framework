@@ -35,8 +35,9 @@ class SchemaCommand extends Command
             'alter',
             'a',
             InputOption::VALUE_NONE,
-            'Alter databases based on given schemas'
-        ]
+            'Automatically alter databases based on declared schemas'
+        ],
+        //todo: drop external
     ];
 
     /**
@@ -63,7 +64,7 @@ class SchemaCommand extends Command
             $builder->pushSchema();
             $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
-            $this->writeln("<info>Databases have been altered:</info> <comment>{$elapsed} s</comment>");
+            $this->writeln("<info>Databases have been modified:</info> <comment>{$elapsed} s</comment>");
         } else {
             foreach ($builder->getTables() as $table) {
                 if ($table->getComparator()->hasChanges()) {
