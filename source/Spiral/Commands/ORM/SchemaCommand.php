@@ -55,7 +55,7 @@ class SchemaCommand extends Command
         $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
         $countModels = count($builder->getSchemas());
-        $this->write("<info>Schema have been updated: <comment>{$elapsed} s</comment>");
+        $this->write("<info>ORM Schema have been updated: <comment>{$elapsed} s</comment>");
         $this->writeln(", found records: <comment>{$countModels}</comment></info>");
 
         if ($this->option('alter')) {
