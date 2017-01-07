@@ -59,14 +59,19 @@ class SchemaCommand extends Command
         $this->writeln(", found records: <comment>{$countModels}</comment></info>");
 
         if ($this->option('alter')) {
-
             $benchmark = $benchmarker->benchmark($this, 'update');
             $builder->pushSchema();
             $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
             $this->writeln("<info>Databases have been altered:</info> <comment>{$elapsed} s</comment>");
         } else {
-            $this->writeln("<comment>Silent mode on, no databases altered.</comment>");
+            foreach ($builder->getTables() as $table) {
+                if ($table->getComparator()->hasChanges()) {
+                    $this->writeln("<comment>Table schema '{$table}' has changes.</comment>");
+                }
+            }
+
+            $this->writeln("<info>Silent mode on, no databases altered.</info>");
         }
     }
 }

@@ -60,7 +60,7 @@ class SchemaCommand extends Command
             //todo: better language
             $this->writeln("<info>Index creation is done:</info> <comment>{$elapsed} s</comment>");
         } else {
-            $this->writeln("<comment>Silent mode on, no mongo indexes to be created.</comment>");
+            $this->writeln("<info>Silent mode on, no mongo indexes to be created.</info>");
         }
     }
 }
