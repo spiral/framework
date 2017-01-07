@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Commands\ODM;
+namespace Spiral\Commands\ORM;
 
 use Spiral\Console\Command;
 use Spiral\Debug\Benchmarker;
