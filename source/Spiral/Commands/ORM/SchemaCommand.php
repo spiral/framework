@@ -9,7 +9,7 @@ namespace Spiral\Commands\ODM;
 
 use Spiral\Console\Command;
 use Spiral\Debug\Benchmarker;
-use Spiral\ODM\ODM;
+use Spiral\ORM\ORM;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -20,30 +20,35 @@ class SchemaCommand extends Command
     /**
      * {@inheritdoc}
      */
-    const NAME = 'odm:schema';
+    const NAME = 'orm:schema';
 
     /**
      * {@inheritdoc}
      */
-    const DESCRIPTION = 'Update ODM schema';
+    const DESCRIPTION = 'Update ORM schema';
 
     /**
      * {@inheritdoc}
      */
     const OPTIONS = [
-        ['indexes', 'i', InputOption::VALUE_NONE, 'Create requested database indexes']
+        [
+            'alter',
+            'a',
+            InputOption::VALUE_NONE,
+            'Alter databases based on given schemas'
+        ]
     ];
 
     /**
      * @param Benchmarker $benchmarker
-     * @param ODM         $odm
+     * @param ORM         $orm
      */
-    public function perform(Benchmarker $benchmarker, ODM $odm)
+    public function perform(Benchmarker $benchmarker, ORM $orm)
     {
         $benchmark = $benchmarker->benchmark($this, 'update');
 
-        $builder = $odm->schemaBuilder(true);
-        $odm->buildSchema($builder, true);
+        $builder = $orm->schemaBuilder(true);
+        $orm->buildSchema($builder, true);
 
         $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
@@ -51,16 +56,15 @@ class SchemaCommand extends Command
         $this->write("<info>Schema have been updated: <comment>{$elapsed} s</comment>");
         $this->writeln(", found documents: <comment>{$countModels}</comment></info>");
 
-        if ($this->option('indexes')) {
+        if ($this->option('alter')) {
 
             $benchmark = $benchmarker->benchmark($this, 'update');
-            $builder->createIndexes();
+            $builder->pushSchema();
             $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
-            //todo: better language
-            $this->writeln("<info>Index creation is done:</info> <comment>{$elapsed} s</comment>");
+            $this->writeln("<info>Databases have been altered:</info> <comment>{$elapsed} s</comment>");
         } else {
-            $this->writeln("<comment>Silent mode on, no mongo indexes to be created.</comment>");
+            $this->writeln("<comment>Silent mode on, no databases altered.</comment>");
         }
     }
 }
