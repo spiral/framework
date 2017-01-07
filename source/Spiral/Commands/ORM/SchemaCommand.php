@@ -10,6 +10,7 @@ namespace Spiral\Commands\ORM;
 use Spiral\Console\Command;
 use Spiral\Debug\Benchmarker;
 use Spiral\ORM\ORM;
+use Spiral\ORM\Schemas\SchemaBuilder;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -64,7 +65,11 @@ class SchemaCommand extends Command
             $builder->pushSchema();
             $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
-            $this->writeln("<info>Databases have been modified:</info> <comment>{$elapsed} s</comment>");
+            if ($this->hasChanges($builder)) {
+                $this->writeln("<info>Databases have been modified:</info> <comment>{$elapsed} s</comment>");
+            } else {
+                $this->writeln("<info>No database changes are detected.</info>");
+            }
         } else {
             foreach ($builder->getTables() as $table) {
                 if ($table->getComparator()->hasChanges()) {
@@ -76,5 +81,23 @@ class SchemaCommand extends Command
 
             $this->writeln("<info>Silent mode on, no databases altered.</info>");
         }
+    }
+
+    /**
+     * Indication that table schemas has changed.
+     *
+     * @param SchemaBuilder $builder
+     *
+     * @return bool
+     */
+    private function hasChanges(SchemaBuilder $builder): bool
+    {
+        foreach ($builder->getTables() as $table) {
+            if ($table->getComparator()->hasChanges()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
