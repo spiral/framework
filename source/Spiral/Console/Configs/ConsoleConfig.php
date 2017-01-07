@@ -23,9 +23,41 @@ class ConsoleConfig extends InjectableConfig
      * @var array
      */
     protected $config = [
+        'locateCommands'    => true,
+        'commands'          => [],
         'updateSequence'    => [],
         'configureSequence' => []
     ];
+
+    /**
+     * Indication that ConsoleDispatcher must locate commands.
+     *
+     * @return bool
+     */
+    public function locateCommands(): bool
+    {
+        if (!array_key_exists('locateCommands', $this->config)) {
+            //Legacy config support
+            return true;
+        }
+
+        return $this->config['locateCommands'];
+    }
+
+    /**
+     * User defined set of commands (to be used when auto-location is off).
+     *
+     * @return array
+     */
+    public function userCommands(): array
+    {
+        if (!array_key_exists('commands', $this->config)) {
+            //Legacy config support
+            return [];
+        }
+
+        return $this->config['commands'];
+    }
 
     /**
      * Set of commands to be executed in "spiral:configure" command.

@@ -30,7 +30,7 @@ class ReloadCommand extends Command
      */
     public function perform(ConsoleDispatcher $dispatcher)
     {
-        $commands = count($dispatcher->locateCommands(true));
+        $commands = count($dispatcher->getCommands(true));
         $this->writeln(
             "Console commands re-indexed, <comment>{$commands}</comment> commands found."
         );

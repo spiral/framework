@@ -6,6 +6,7 @@
  */
 namespace Spiral\Console;
 
+use Spiral\Console\Configs\ConsoleConfig;
 use Spiral\Console\Exceptions\ConsoleException;
 use Spiral\Console\Logging\DebugHandler;
 use Spiral\Core\Component;
@@ -49,31 +50,36 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     private $output = null;
 
     /**
+     * @var ConsoleConfig
+     */
+    protected $config;
+
+    /**
      * @invisible
      * @var ContainerInterface
      */
-    protected $container = null;
+    protected $container;
 
     /**
      * @invisible
      * @var MemoryInterface
      */
-    protected $memory = null;
+    protected $memory;
 
     /**
      * @invisible
      * @var LocatorInterface
      */
-    protected $locator = null;
+    protected $locator;
 
     /**
-     * ConsoleDispatcher constructor.
-     *
-     * @param ContainerInterface    $container
-     * @param MemoryInterface|null  $memory
-     * @param LocatorInterface|null $locator
+     * @param ConsoleConfig           $config
+     * @param ContainerInterface|null $container
+     * @param MemoryInterface|null    $memory
+     * @param LocatorInterface|null   $locator
      */
     public function __construct(
+        ConsoleConfig $config,
         ContainerInterface $container = null,
         MemoryInterface $memory = null,
         LocatorInterface $locator = null
@@ -164,7 +170,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         $this->application = new ConsoleApplication('Spiral Console Toolkit', Core::VERSION);
         $this->application->setCatchExceptions(false);
 
-        foreach ($this->locateCommands() as $command) {
+        foreach ($this->getCommands() as $command) {
             //Constructing command class
             $command = $this->container->get($command);
 
@@ -186,21 +192,23 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      *
      * @return array
      */
-    public function locateCommands(bool $reset = false): array
+    public function getCommands(bool $reset = false): array
     {
         $commands = (array)$this->memory->loadData('commands');
         if (!empty($commands) && !$reset) {
             //Reading from cache
-            return $commands;
+            return $commands + $this->config->userCommands();
         }
 
-        //Locating
-        $commands = $this->locator->locateCommands();
+        if ($this->config->locateCommands()) {
+            //Automatically locate commands
+            $commands = $this->locator->locateCommands();
+        }
 
         //Warming up cache
         $this->memory->saveData('commands', $commands);
 
-        return $commands;
+        return $commands + $this->config->userCommands();
     }
 
     /**
