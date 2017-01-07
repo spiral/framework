@@ -131,7 +131,7 @@ class Indexer extends Component
                 continue;
             }
 
-            if ($invocation->argument(0)->getType() != ReflectionArgument::STRING) {
+            if ($invocation->getArgument(0)->getType() != ReflectionArgument::STRING) {
                 //We can only index invocations with constant string arguments
                 continue;
             }
@@ -145,7 +145,7 @@ class Indexer extends Component
                 ]
             );
 
-            $string = $invocation->argument(0)->stringValue();
+            $string = $invocation->getArgument(0)->stringValue();
 
             if ($invocation->getName() == 'say') {
                 $string = $this->removeBraces($string);
@@ -159,13 +159,13 @@ class Indexer extends Component
             } else {
                 //L or P functions
                 if ($invocation->countArguments() >= 3) {
-                    if ($invocation->argument(2)->getType() != ReflectionArgument::STRING) {
+                    if ($invocation->getArgument(2)->getType() != ReflectionArgument::STRING) {
                         //Unable to resolve domain name
                         continue;
                     }
 
                     $domain = $this->translator->resolveDomain(
-                        $invocation->argument(2)->stringValue()
+                        $invocation->getArgument(2)->stringValue()
                     );
                 }
             }
