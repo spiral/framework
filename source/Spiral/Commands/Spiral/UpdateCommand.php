@@ -36,6 +36,9 @@ class UpdateCommand extends Command
         foreach ($config->updateSequence() as $command => $options) {
             if (!empty($options['header'])) {
                 $this->writeln($options['header']);
+            } else {
+                //A bit of spacing
+                $this->writeln("");
             }
 
             $dispatcher->command($command, $options['options'], $this->output);
