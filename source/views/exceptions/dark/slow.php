@@ -118,6 +118,8 @@ $highlightQuery = function (string $query) {
         .spiral-exception .wrapper .header .previous {
             font-size: 10px;
             opacity: 0.6;
+
+            margin-top: 4px;
         }
 
         .spiral-exception .wrapper .header .previous:hover {
