@@ -82,8 +82,7 @@ class SpiralBindings extends Bootloader
         'input'                                 => 'Spiral\Http\Request\InputManager',
 
         //Response and response wrappers
-        'response'                              => 'Spiral\Http\Responses\ResponseWrapper',
-        'responses'                             => 'Spiral\Http\Responses\ResponseWrapper',
+        'response'                              => 'Spiral\Http\Response\ResponseWrapper',
 
         //Thought request attributes
         'Spiral\Http\Routing\RouteInterface'    => [self::class, 'activeRoute'],
