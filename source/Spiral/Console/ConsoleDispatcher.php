@@ -195,7 +195,10 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         }
 
         //Locating
-        $this->memory->saveData('commands', $commands = $this->locator->locateCommands());
+        $commands = $this->locator->locateCommands();
+
+        //Warming up cache
+        $this->memory->saveData('commands', $commands);
 
         return $commands;
     }
