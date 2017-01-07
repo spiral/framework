@@ -48,7 +48,9 @@ class SchemaCommand extends Command
         $benchmark = $benchmarker->benchmark($this, 'update');
 
         $builder = $orm->schemaBuilder(true);
-        $orm->buildSchema($builder, true);
+
+        //Rendering schema
+        $orm->buildSchema($builder->renderSchema(), true);
 
         $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
