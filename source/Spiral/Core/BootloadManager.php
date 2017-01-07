@@ -66,6 +66,7 @@ class BootloadManager
             $schema = $this->memory->loadData($memory);
         }
 
+        //todo: make sure it's working properly
         if (empty($schema) || $schema['snapshot'] != $classes) {
             //Schema expired or empty
             $schema = $this->generateSchema($classes, $this->container);
