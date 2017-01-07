@@ -185,7 +185,7 @@ class Indexer extends Component
         //Automatically registering
         $this->catalogue->set($domain, $string, $string);
 
-        $this->logger()->debug("Found [{domain}]:'{string}'", compact('domain', 'string'));
+        $this->logger()->debug("Found [{domain}]: '{string}'", compact('domain', 'string'));
     }
 
     /**
