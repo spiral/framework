@@ -84,6 +84,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         MemoryInterface $memory = null,
         LocatorInterface $locator = null
     ) {
+        $this->config = $config;
         $this->container = $container ?? new Container();
         $this->memory = $memory ?? new NullMemory();
         $this->locator = $locator ?? new NullLocator();
