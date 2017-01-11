@@ -217,4 +217,4 @@ Modules
 
 Inspired by
 ===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails.
+Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET.
