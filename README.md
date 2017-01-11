@@ -215,13 +215,6 @@ Modules
 
 [Auth](https://github.com/spiral-modules/auth) - authentication layer with multiple token operators and firewall middlewares.
 
-Roadmap
-=======
-- Queue module
-- SwiftMailer module
-- Restore of PHPStorm IDE help module
-- Improving Test Coverage and components split
-
 Inspired by
 ===========
 Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails.
