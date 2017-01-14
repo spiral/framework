@@ -57,6 +57,7 @@ class SchemaCommand extends Command
         $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
         $countModels = count($builder->getSchemas());
+        $countTables = count($builder->getTables());
         $countSources = count($builder->getSources());
         $countRelations = count($builder->getRelations());
 
@@ -66,9 +67,16 @@ class SchemaCommand extends Command
             $countSources = "<comment>{$countSources}</comment>";
         }
 
+        if ($countTables != $countModels) {
+            $countTables = "<fg=cyan>{$countTables}</fg=cyan>";
+        } else {
+            $countTables = "<comment>{$countTables}</comment>";
+        }
+
         $this->write("<info>ORM Schema have been updated:</info> <comment>{$elapsed} s</comment>");
         $this->write("<info>, records: </info><comment>{$countModels}</comment></info>");
         $this->write("<info>, sources: </info>{$countSources}</info>");
+        $this->write("<info>, tables: </info>{$countTables}</info>");
         $this->writeln("<info>, relations: </info><comment>{$countRelations}</comment></info>");
 
         if ($this->option('alter')) {
