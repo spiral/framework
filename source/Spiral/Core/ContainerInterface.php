@@ -14,6 +14,8 @@ use Interop\Container\ContainerInterface as InteropContainer;
  *
  * @see  InjectorInterface
  * @see  SingletonInterface
+ *
+ * Factory, Recolver and Scoper interfaces MIGHT be removed from extends in a later versions.
  */
 interface ContainerInterface extends FactoryInterface, ResolverInterface, InteropContainer, ScoperInterface
 {

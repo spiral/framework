@@ -13,6 +13,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Spiral\Http\Traits\RouterTrait;
@@ -27,7 +28,7 @@ use Zend\Diactoros\ServerRequestFactory;
  */
 class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonInterface
 {
-    use RouterTrait;
+    use RouterTrait, BenchmarkTrait;
 
     /**
      * @var HttpConfig
