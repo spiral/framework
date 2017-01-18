@@ -526,8 +526,8 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             $container->make(ConfigFactory::class, ['directory' => $core->directory('config')])
         );
 
-        //Error and exception handlers
         if ($handleErrors) {
+            //Error and exception handlers
             register_shutdown_function([$core, 'handleShutdown']);
             set_error_handler([$core, 'handleError']);
             set_exception_handler([$core, 'handleException']);
