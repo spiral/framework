@@ -31,11 +31,6 @@ interface EnvironmentInterface
     public function get(string $name, $default = null);
 
     /**
-     * Load environment values from associated storage.
-     */
-    public function load();
-
-    /**
      * Unique environment identificator
      *
      * @return string

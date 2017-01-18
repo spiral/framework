@@ -94,4 +94,34 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\ODM\Schemas\LocatorInterface'               => 'Spiral\ODM\Schemas\SchemaLocator',
         'Spiral\ORM\Schemas\LocatorInterface'               => 'Spiral\ORM\Schemas\SchemaLocator',
     ];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function replace(string $alias, $resolver): array
+    {
+        $payload = [$alias, null];
+        if (isset($this->bindings[$alias])) {
+            $payload[1] = $this->bindings[$alias];
+        }
+
+        $this->bind($alias, $resolver);
+
+        return $payload;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function restore(array $payload)
+    {
+        list($alias, $resolver) = $payload;
+
+        unset($this->bindings[$alias]);
+
+        if (!empty($resolver)) {
+            //Restoring original value
+            $this->bindings[$alias] = $resolver;
+        }
+    }
 }

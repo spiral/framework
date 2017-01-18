@@ -57,45 +57,16 @@ class Environment implements EnvironmentInterface
      * @param string          $filename
      * @param FilesInterface  $files
      * @param MemoryInterface $memory
+     *
+     * @throws EnvironmentException
      */
     public function __construct(string $filename, FilesInterface $files, MemoryInterface $memory)
     {
         $this->filename = $filename;
         $this->files = $files;
         $this->memory = $memory;
-    }
 
-    /**
-     * Load environment data.
-     *
-     * @return $this|self
-     *
-     * @throws EnvironmentException
-     */
-    public function load(): Environment
-    {
-        if (!$this->files->exists($this->filename)) {
-            throw new EnvironmentException("Unable to load environment, file is missing");
-        }
-
-        //Unique env file hash
-        $this->id = $this->files->md5($this->filename);
-
-        if (!empty($values = $this->memory->loadData($this->id, static::MEMORY_SECTION))) {
-            //Restore from cache
-            $this->initEnvironment($values);
-
-            return $this;
-        }
-
-        //Load env values using DotEnv extension
-        $values = $this->initEnvironment(
-            $this->parseValues($this->filename)
-        );
-
-        $this->memory->saveData($this->id, $values, static::MEMORY_SECTION);
-
-        return $this;
+        $this->load();
     }
 
     /**
@@ -144,6 +115,39 @@ class Environment implements EnvironmentInterface
         $parser = new Parser($filename);
 
         return $parser->parse();
+    }
+
+    /**
+     * Load environment data.
+     *
+     * @return $this|self
+     *
+     * @throws EnvironmentException
+     */
+    protected function load(): Environment
+    {
+        if (!$this->files->exists($this->filename)) {
+            throw new EnvironmentException("Unable to load environment ({$this->filename})");
+        }
+
+        //Unique env file hash
+        $this->id = $this->files->md5($this->filename);
+
+        if (!empty($values = $this->memory->loadData($this->id, static::MEMORY_SECTION))) {
+            //Restore from cache
+            $this->initEnvironment($values);
+
+            return $this;
+        }
+
+        //Load env values using DotEnv extension
+        $values = $this->initEnvironment(
+            $this->parseValues($this->filename)
+        );
+
+        $this->memory->saveData($this->id, $values, static::MEMORY_SECTION);
+
+        return $this;
     }
 
     /**

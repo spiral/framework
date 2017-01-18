@@ -470,17 +470,17 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      *
      * @param array                $directories Spiral directories should include root, libraries
      *                                          and application directories.
+     * @param EnvironmentInterface $environment Application specific environment if any.
      * @param ContainerInterface   $container   Initial container instance.
      * @param bool                 $handleErrors
-     * @param EnvironmentInterface $environment Application specific environment if any.
      *
      * @return self
      */
     public static function init(
         array $directories,
+        EnvironmentInterface $environment = null,
         ContainerInterface $container = null,
-        bool $handleErrors = true,
-        EnvironmentInterface $environment = null
+        bool $handleErrors = true
     ): self {
         //Default spiral container
         $container = $container ?? new SpiralContainer();
@@ -507,14 +507,14 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
         //Setting environment (by default - dotenv extension)
         if (empty($environment)) {
+            /*
+             * Default spiral environment is based on .env file.
+             */
             $environment = new Environment(
                 $core->directory('root') . '.env',
                 $container->get(FilesInterface::class),
                 $core->memory
             );
-
-            //Need way to redefine environment
-            $environment->load();
         }
 
         //Mounting environment to be available for other components
