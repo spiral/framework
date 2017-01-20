@@ -15,12 +15,11 @@
     "zendframework/zend-diactoros": "^1.1",
     "symfony/console": "^3.2",
     "symfony/process": "^3.2",
-    "symfony/config": "^3.2",
+    "symfony/translation": "^3.2",
     "vlucas/phpdotenv": "^2.1",
     "twig/twig": "~1.0",
     "nesbot/carbon": "*",
     "cocur/slugify": "^1.4",
-    "symfony/translation": "^3.2",
     "defuse/php-encryption": "^2.0"
   },
   "require-dev": {
