@@ -176,6 +176,7 @@ foreach($posts as $post) {
 
 ```php
 $post = new Post();
+$post->publish_at = 'tomorrow';
 $post->author = new User(['name' => 'Antony']);
 
 $post->tags->link(new Tag(['name' => 'tag A']));
