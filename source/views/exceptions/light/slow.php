@@ -74,7 +74,7 @@ $highlightQuery = function (string $query) {
     <title>
         <?= \Spiral\Support\ExceptionHelper::createMessage($exception) ?>
     </title>
-    <? include 'style.php'; ?>
+    <?php include 'style.php'; ?>
     <script type="text/javascript">
         function toggle(id) {
             var block = document.getElementById(id);
