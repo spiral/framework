@@ -194,6 +194,7 @@ Embedded functionality for static indexation of your code (foundation for many i
 public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
 {
     dump($locator->getClasses(ControllerInterface::class));
+    dump($invocations->getInvocations(new \ReflectionFunction('dump')));
 }
 ```
 
