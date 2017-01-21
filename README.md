@@ -2,7 +2,7 @@ Spiral, modular RAD Framework (beta)
 =======================
 [![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master)
 
-<img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="200px" alt="Spiral Framework" align="left"/>
+<img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
 The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using an HMVC architecture, layers separation, code re-usability, extremely friendly IoC, PSR-7, simple syntax and customizable scaffolding mechanisms.
 
