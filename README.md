@@ -47,12 +47,12 @@ Bootloaders, Factory Methods:
 ```php
 class MyBootloader extends Bootloader
 {
-    protected $bindings = [
+    const BINDINGS = [
         ParserInterface::class => DefaultParser::class,
         'someService'          => SomeService::class
     ];
     
-    protected $singletons = [
+    const SINGLETONS = [
         ReaderInterface::class => [self::class, 'reader'],
     ];
     
@@ -129,14 +129,14 @@ public function downloadAction()
 ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
-class Post extends Record //or RecordEntity without active record like methods
+class Post extends Record
 {
     use TimestampsTrait;
 
     //Database partitions, isolation and aliasing
-    protected $database = 'blog';
+    const DATABASE = 'blog';
 
-    protected $schema = [
+    const SCHEMA = [
         'id'     => 'bigPrimary',
         'title'  => 'string(64)',
         'status' => 'enum(published,draft)',
@@ -161,8 +161,7 @@ class Post extends Record //or RecordEntity without active record like methods
 ```
 
 ```php
-//Post::find() == $this->orm->selector(Post::class) == PostSource->find() == Post::source()->find()
-$posts = Post::find()
+$posts = $this->orm->selector(Post::class)
     ->distinct()
     ->with('comments') //Automatic joins
     ->with('author')->where('author.name', 'LIKE', $authorName) //Fluent
@@ -209,19 +208,10 @@ Modules
 =======
 [Scaffolder](https://github.com/spiral-modules/scaffolder) - provides set of console commands and extendable class declarations for application scaffolding.
 
-[Security Layer](https://github.com/spiral-modules/security) - flat RBAC security layer with Role-Permission-Rule association mechanism. 
-
 [Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS and Security component.
 
 [Auth](https://github.com/spiral-modules/auth) - authentication layer with multiple token operators and firewall middlewares.
 
-Roadmap
-=======
-- Queue module
-- SwiftMailer module
-- Restore of PHPStorm IDE help module
-- Improving Test Coverage and components split
-
 Inspired by
 ===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, Ruby on Rails.
+Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3, Ruby on Rails.
