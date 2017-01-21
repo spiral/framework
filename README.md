@@ -231,4 +231,4 @@ Modules
 
 Inspired by
 ===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3.
+Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3, RoR ORM.
