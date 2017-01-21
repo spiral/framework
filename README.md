@@ -129,7 +129,7 @@ public function downloadAction()
 ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
-class Post extends Record
+class Post extends RecordEntity
 {
     use TimestampsTrait;
 
@@ -172,6 +172,20 @@ $posts = $this->orm->selector(Post::class)
 foreach($posts as $post) {
     echo $post->author->getName();
 }
+```
+
+```php
+$post = new Post();
+$post->author = new User(['name' => 'Antony']);
+
+$post->tags->link(new Tag(['name' => 'tag A']));
+$post->tags->link($tags->findOne(['name' => 'tag B']));
+
+$transaction = new Transaction();
+$transaction->store($post);
+$transaction->run();
+
+dump($post);
 ```
 
 Embedded functionality for static indexation of your code (foundation for many internal components):
