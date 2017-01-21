@@ -161,13 +161,14 @@ class Post extends RecordEntity
 ```
 
 ```php
-$posts = $this->orm->selector(Post::class)
+$posts = $this->orm->source(Post::class)
+    ->find()
     ->distinct()
     ->with('comments') //Automatic joins
     ->with('author')->where('author.name', 'LIKE', $authorName) //Fluent
     ->load('comments.author') //Cascade eager-loading (joins or external query)
     ->paginate(10) //Quick pagination using active request
-    ->all();
+    ->fetchAll();
 
 foreach($posts as $post) {
     echo $post->author->getName();
