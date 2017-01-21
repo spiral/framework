@@ -7,6 +7,7 @@
  */
 namespace Spiral\Commands\ORM;
 
+use Spiral\Commands\ORM\Helpers\MigrationHelper;
 use Spiral\Console\Command;
 use Spiral\Debug\Benchmarker;
 use Spiral\ORM\ORM;
@@ -38,14 +39,19 @@ class SchemaCommand extends Command
             InputOption::VALUE_NONE,
             'Automatically alter databases based on declared schemas'
         ],
-        //todo: drop external
+        [
+            'migrate',
+            'm',
+            InputOption::VALUE_NONE,
+            'Create migration to alter database schema'
+        ],
     ];
 
     /**
      * @param Benchmarker $benchmarker
      * @param ORM         $orm
      */
-    public function perform(Benchmarker $benchmarker, ORM $orm)
+    public function perform(Benchmarker $benchmarker, ORM $orm, MigrationHelper $migrationHelper)
     {
         $benchmark = $benchmarker->benchmark($this, 'update');
 
@@ -79,27 +85,32 @@ class SchemaCommand extends Command
         $this->write("<info>, tables: </info>{$countTables}</info>");
         $this->writeln("<info>, relations: </info><comment>{$countRelations}</comment></info>");
 
+        if (!$this->hasChanges($builder)) {
+            $this->writeln("<info>No database changes are detected.</info>");
+
+            return;
+        } else {
+            $this->showChanges($builder);
+        }
+
+        if ($this->option('migrate')) {
+            $migration = $migrationHelper->createMigration($builder);
+            $this->writeln("<info>New migration created: </info><comment>{$migration}</comment>");
+
+            return;
+        }
+
         if ($this->option('alter')) {
             $benchmark = $benchmarker->benchmark($this, 'update');
             $builder->pushSchema();
             $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
-            if ($this->hasChanges($builder)) {
-                $this->writeln("<info>Databases have been modified:</info> <comment>{$elapsed} s</comment>");
-            } else {
-                $this->writeln("<info>No database changes are detected.</info>");
-            }
-        } else {
-            foreach ($builder->getTables() as $table) {
-                if ($table->getComparator()->hasChanges()) {
-                    $this->writeln(
-                        "<fg=cyan>Table schema '<comment>{$table}</comment>' has changes.</fg=cyan>"
-                    );
-                }
-            }
+            $this->writeln("<info>Databases have been modified:</info> <comment>{$elapsed} s</comment>");
 
-            $this->writeln("<info>Silent mode on, no databases altered.</info>");
+            return;
         }
+
+        $this->writeln("<info>Silent mode on, no databases altered.</info>");
     }
 
     /**
@@ -118,5 +129,19 @@ class SchemaCommand extends Command
         }
 
         return false;
+    }
+
+    /**
+     * @param $builder
+     */
+    protected function showChanges($builder)
+    {
+        foreach ($builder->getTables() as $table) {
+            if ($table->getComparator()->hasChanges()) {
+                $this->writeln(
+                    "<fg=cyan>Table schema '<comment>{$table}</comment>' has changes.</fg=cyan>"
+                );
+            }
+        }
     }
 }
