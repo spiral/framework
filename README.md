@@ -189,7 +189,7 @@ $transaction->run();
 dump($post);
 ```
 
-Embedded functionality for static indexation of your code (foundation for many internal components):
+Embedded functionality for static indexation of your code:
 
 ```php
 public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
