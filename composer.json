@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "spiral/components": "dev-feature/pre-split",
+    "spiral/components": "^0.9",
     "zendframework/zend-diactoros": "^1.1",
     "symfony/console": "^3.2",
     "symfony/process": "^3.2",
