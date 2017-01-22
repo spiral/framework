@@ -162,9 +162,8 @@ class Post extends RecordEntity
 
 ```php
 $posts = $this->orm->source(Post::class)
-    ->find()
-    ->distinct()
-    ->with('comments') //Automatic joins
+    ->find()->distinct()
+    ->with('comments', ['where' => ['{@}.approved' => true]]) //Automatic joins
     ->with('author')->where('author_name', 'LIKE', $authorName) //Fluent
     ->load('comments.author') //Cascade eager-loading (joins or external query)
     ->paginate(10) //Quick pagination using active request
