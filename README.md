@@ -165,7 +165,7 @@ $posts = $this->orm->source(Post::class)
     ->find()
     ->distinct()
     ->with('comments') //Automatic joins
-    ->with('author')->where('author.name', 'LIKE', $authorName) //Fluent
+    ->with('author')->where('author_name', 'LIKE', $authorName) //Fluent
     ->load('comments.author') //Cascade eager-loading (joins or external query)
     ->paginate(10) //Quick pagination using active request
     ->fetchAll();
