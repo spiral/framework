@@ -330,6 +330,19 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
 
                     return $result;
                 }
+                
+                //If checker does not have registered alias
+                if (class_exists($condition[0])) {
+                    $checker = $this->container->get($condition[0]);
+                    if ($checker instanceof Checker) {
+                        if (!$result = $checker->check($condition[1], $value, $arguments, $this)) {
+                            //To let validation() method know that message should be handled via Checker
+                            return $checker;
+                        }
+
+                        return $result;
+                    }
+                }
             }
 
             if (is_array($condition)) {
