@@ -79,4 +79,19 @@ class EncryptionTest extends BaseTest
 
         $this->assertSame($key, $this->app->encrypter->getKey());
     }
+
+    public function testRandom()
+    {
+        $encrypter = new Encrypter(Key::CreateNewRandomKey()->saveToAsciiSafeString());
+        $this->assertSame(100, strlen($encrypter->random(100)));
+    }
+
+    /**
+     * @expectedException \Spiral\Encrypter\Exceptions\EncrypterException
+     */
+    public function testRandomFail()
+    {
+        $encrypter = new Encrypter(Key::CreateNewRandomKey()->saveToAsciiSafeString());
+        $encrypter->random(0);
+    }
 }
