@@ -37,11 +37,11 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
         $memory = m::mock(MemoryInterface::class);
         $catalogue = new Catalogue('ru', $memory);
 
-        $memory->shouldReceive('loadData')->with('ru-messages', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-messages')->andReturn([
             'message' => 'Russian Translation'
         ]);
 
-        $memory->shouldReceive('loadData')->with('ru-views', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-views')->andReturn([
             'view' => 'Russian View'
         ]);
 
@@ -55,11 +55,11 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
         $memory = m::mock(MemoryInterface::class);
         $catalogue = new Catalogue('ru', $memory);
 
-        $memory->shouldReceive('loadData')->with('ru-messages', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-messages')->andReturn([
             'message' => 'Russian Translation'
         ]);
 
-        $memory->shouldReceive('loadData')->with('ru-views', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-views')->andReturn([
             'view' => 'Russian View'
         ]);
 
@@ -72,7 +72,7 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($catalogue->has('messages', 'another-message'));
 
-        $memory->shouldReceive('loadData')->with('ru-other-domain', Translator::MEMORY)->andReturn(
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-other-domain')->andReturn(
             null
         );
 
@@ -88,7 +88,7 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
         $memory = m::mock(MemoryInterface::class);
         $catalogue = new Catalogue('ru', $memory);
 
-        $memory->shouldReceive('loadData')->with('ru-domain', Translator::MEMORY)->andReturn(null);
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-domain')->andReturn(null);
         $catalogue->get('domain', 'message');
     }
 
@@ -97,11 +97,11 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
         $memory = m::mock(MemoryInterface::class);
         $catalogue = new Catalogue('ru', $memory);
 
-        $memory->shouldReceive('loadData')->with('ru-messages', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-messages')->andReturn([
             'message' => 'Russian Translation'
         ]);
 
-        $memory->shouldReceive('loadData')->with('ru-views', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-views')->andReturn([
             'view' => 'Russian View'
         ]);
 
@@ -117,11 +117,11 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
     {
         $memory = m::mock(MemoryInterface::class);
         $catalogue = new Catalogue('ru', $memory);
-        $memory->shouldReceive('loadData')->with('ru-messages', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-messages')->andReturn([
             'message' => 'Russian Translation'
         ]);
 
-        $memory->shouldReceive('loadData')->with('ru-views', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-views')->andReturn([
             'view' => 'Russian View'
         ]);
 
@@ -144,7 +144,7 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
         $memory = m::mock(MemoryInterface::class);
         $catalogue = new Catalogue('ru', $memory);
 
-        $memory->shouldReceive('loadData')->with('ru-test', Translator::MEMORY)->andReturn([
+        $memory->shouldReceive('loadData')->with(Translator::MEMORY . '.ru-test')->andReturn([
             'existed' => 'Value'
         ]);
 
@@ -152,12 +152,11 @@ class CatalogueTest extends \PHPUnit_Framework_TestCase
         $catalogue->set('test', 'message', 'Some Test Message');
 
         $memory->shouldReceive('saveData')->with(
-            'ru-test',
+            Translator::MEMORY . '.ru-test',
             [
                 'existed' => 'Value',
                 'message' => 'Some Test Message'
-            ],
-            'translator'
+            ]
         );
 
         $catalogue->saveDomains();

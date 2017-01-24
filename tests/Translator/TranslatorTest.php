@@ -123,7 +123,6 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
 
         $translator = new Translator(
             $config,
-
             $source,
             $memory,
             $selector = m::mock(MessageSelector::class)
@@ -166,11 +165,10 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $memory->shouldReceive('saveData')->with(
-            'ru-domain',
+            Translator::MEMORY . '.ru-domain',
             [
                 'Welcome {name}?' => 'Welcome {name}!'
-            ],
-            Translator::MEMORY
+            ]
         );
 
         //Locales cache
@@ -221,11 +219,10 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $memory->shouldReceive('saveData')->with(
-            'ru-domain',
+            Translator::MEMORY . '.ru-domain',
             [
                 'Welcome {name}?' => 'Welcome {name}!'
-            ],
-            Translator::MEMORY
+            ]
         );
 
         //Locales cache
