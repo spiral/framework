@@ -28,7 +28,8 @@ class MigrationHelper
     private $dbal;
 
     /**
-     * @param Migrator $migrator
+     * @param \Spiral\Migrations\Migrator      $migrator
+     * @param \Spiral\Database\DatabaseManager $dbal
      */
     public function __construct(Migrator $migrator, DatabaseManager $dbal)
     {
