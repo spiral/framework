@@ -67,6 +67,8 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
+        $this->db->getDriver()->disconnect();
+
         $files = $this->app->files;
         foreach ($files->getFiles(directory('runtime')) as $filename) {
             $files->delete($filename);
