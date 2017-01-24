@@ -41,7 +41,7 @@ class UpdateCommand extends Command
                 $this->writeln("");
             }
 
-            $dispatcher->command($command, $options['options'], $this->output);
+            $dispatcher->run($command, $options['options'], $this->output);
 
             if (!empty($options['footer'])) {
                 $this->writeln($options['footer']);

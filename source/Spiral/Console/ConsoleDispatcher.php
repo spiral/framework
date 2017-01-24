@@ -21,6 +21,7 @@ use Spiral\Core\NullMemory;
 use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -36,7 +37,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * Undefined response code for command (errors). See below.
      */
-    const CODE_COMPLETED = 0;
+    const CODE_UNDEFINED = 102;
 
     /**
      * @var ConsoleApplication
@@ -99,30 +100,21 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      */
     public function start(InputInterface $input = null, OutputInterface $output = null)
     {
+        //Let's keep output reference to render exceptions
         $this->output = $output ?? new ConsoleOutput();
 
-        /**
-         * Sharing common log handler in order to display debug messages in verbosity mode.
-         */
-        $this->container->get(LogManager::class)->debugHandler(new DebugHandler($this->output));
-
-        //Container scope
-        $scope = self::staticContainer($this->container);
-        try {
-            /*
-             * Commands are being executed in isolated container scope.
-             */
-            $this->consoleApplication()->run($input, $this->output);
-        } finally {
-            //Restoring scopes
-            self::staticContainer($scope);
-        }
+        //Execute default command
+        $this->run(
+            $this->config->defaultCommand(),
+            $input ?? new ArgvInput(),
+            $this->output
+        );
     }
 
     /**
      * Execute console command by it's name.
      *
-     * @param string               $command
+     * @param string|null          $command Default command when null.
      * @param array|InputInterface $input
      * @param OutputInterface      $output
      *
@@ -130,31 +122,38 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      *
      * @throws ConsoleException
      */
-    public function command(
-        string $command,
+    public function run(
+        string $command = null,
         $input = [],
         OutputInterface $output = null
     ): CommandOutput {
         if (is_array($input)) {
-            $input = new ArrayInput(compact('command') + $input);
+            $input = new ArrayInput($input + compact('command'));
         }
 
         $output = $output ?? new BufferedOutput();
 
         //Each command are executed in a specific environment
         $scope = self::staticContainer($this->container);
+
+        //This handler will allow us to enable verbosity mode
+        $debugHandler = $this->container->get(LogManager::class)->debugHandler(
+            new DebugHandler($output)
+        );
+
         try {
             /**
              * Debug: this method creates scope for [[InputInterface]] and [[OutputInterface]].
              */
             $code = $this->consoleApplication()->find($command)->run($input, $output);
-        } catch (\Throwable $e) {
-            $this->application->renderException($e, $output);
         } finally {
+            //Restore default debug handler
+            $this->container->get(LogManager::class)->debugHandler($debugHandler);
+
             self::staticContainer($scope);
         }
 
-        return new CommandOutput($code ?? self::CODE_COMPLETED, $output);
+        return new CommandOutput($code ?? self::CODE_UNDEFINED, $output);
     }
 
     /**
@@ -169,19 +168,15 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             return $this->application;
         }
 
-        $this->application = new ConsoleApplication('Spiral Console Toolkit', Core::VERSION);
+        $this->application = new ConsoleApplication(
+            'Spiral, Console Toolkit',
+            Core::VERSION
+        );
+
         $this->application->setCatchExceptions(false);
 
         foreach ($this->getCommands() as $command) {
-            //Constructing command class
-            $command = $this->container->get($command);
-
-            if (method_exists($command, 'isAvailable') && !$command->isAvailable()) {
-                //Command declares itself as non available
-                continue;
-            }
-
-            $this->application->add($command);
+            $this->application->add($this->container->get($command));
         }
 
         return $this->application;

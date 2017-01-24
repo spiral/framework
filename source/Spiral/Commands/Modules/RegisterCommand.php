@@ -84,6 +84,6 @@ class RegisterCommand extends Command
             "<info>Module '<comment>{$class}</comment>' has been successfully registered.</info>"
         );
 
-        $dispatcher->command('publish', $this->input, $this->output);
+        $dispatcher->run('publish', $this->input, $this->output);
     }
 }

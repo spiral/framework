@@ -97,16 +97,6 @@ abstract class Command extends SymfonyCommand
     }
 
     /**
-     * Command can hide itself from parent ConsoleDispatcher when it needed.
-     *
-     * @return bool
-     */
-    public function isAvailable(): bool
-    {
-        return true;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function run(InputInterface $input, OutputInterface $output)

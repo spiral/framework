@@ -39,7 +39,7 @@ class CompileCommand extends Command
         ConsoleDispatcher $dispatcher
     ) {
         //To clean up cache
-        $dispatcher->command('views:reset', [], $this->output);
+        $dispatcher->run('views:reset', [], $this->output);
 
         /**
          * @var FormatterHelper $formatter

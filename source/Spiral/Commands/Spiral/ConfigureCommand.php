@@ -49,16 +49,16 @@ class ConfigureCommand extends Command
         $this->ensurePermissions($directories, $files);
 
         $this->writeln("\n<info>Re-indexing available console commands...</info>");
-        $console->command('console:reload', [], $this->output);
+        $console->run('console:reload', [], $this->output);
 
         $this->writeln("\n<info>Reloading bootload cache...</info>");
-        $console->command('app:reload', [], $this->output);
+        $console->run('app:reload', [], $this->output);
 
         $this->writeln("\n<info>Re-loading translator locales cache...</info>");
-        $console->command('i18n:reload', [], $this->output);
+        $console->run('i18n:reload', [], $this->output);
 
         $this->writeln("\n<info>Scanning translate function and [[values]] usage...</info>");
-        $console->command('i18n:index', [], $this->output);
+        $console->run('i18n:index', [], $this->output);
 
         $this->writeln("");
 
@@ -68,7 +68,7 @@ class ConfigureCommand extends Command
                 $this->writeln($options['header']);
             }
 
-            $console->command($command, $options['options'], $this->output);
+            $console->run($command, $options['options'], $this->output);
             if (!empty($options['footer'])) {
                 $this->writeln($options['footer']);
             }
@@ -76,7 +76,7 @@ class ConfigureCommand extends Command
 
         if ($this->option('key')) {
             $this->writeln("");
-            $console->command('app:key', [], $this->output);
+            $console->run('app:key', [], $this->output);
         }
 
         $this->writeln("\n<info>All done!</info>");

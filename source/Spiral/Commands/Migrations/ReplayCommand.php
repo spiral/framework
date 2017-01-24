@@ -50,11 +50,11 @@ class ReplayCommand extends AbstractCommand
         }
 
         $this->writeln("Rolling back executed migration(s)...");
-        $console->command('migrate:rollback', $rollback, $this->output);
+        $console->run('migrate:rollback', $rollback, $this->output);
 
         $this->writeln("");
 
         $this->writeln("Executing outstanding migration(s)...");
-        $console->command('migrate', $migrate, $this->output);
+        $console->run('migrate', $migrate, $this->output);
     }
 }

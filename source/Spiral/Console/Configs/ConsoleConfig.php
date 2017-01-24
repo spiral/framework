@@ -5,6 +5,7 @@
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Console\Configs;
 
 use Spiral\Core\InjectableConfig;
@@ -28,6 +29,14 @@ class ConsoleConfig extends InjectableConfig
         'updateSequence'    => [],
         'configureSequence' => []
     ];
+
+    /**
+     * @return string
+     */
+    public function defaultCommand(): string
+    {
+        return $this->config['defaultCommand'] ??'list';
+    }
 
     /**
      * Indication that ConsoleDispatcher must locate commands.

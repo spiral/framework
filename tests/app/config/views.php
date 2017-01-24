@@ -36,7 +36,7 @@ return [
          * views and widgets.
          */
         'spiral'  => [
-            directory("libraries") . 'spiral/framework/source/views/',
+            directory("framework") . 'views/',
             /*{{namespaces.spiral}}*/
         ],
         /*{{namespaces}}*/
