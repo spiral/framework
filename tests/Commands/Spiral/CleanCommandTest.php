@@ -9,7 +9,7 @@ namespace Spiral\Tests\Commands\Spiral;
 
 use Spiral\Tests\BaseTest;
 
-class CleanCommand extends BaseTest
+class CleanCommandTest extends BaseTest
 {
     public function testClean()
     {

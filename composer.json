@@ -11,6 +11,9 @@
   ],
   "require": {
     "php": ">=7.0",
+    "ext-mbstring": "*",
+    "ext-openssl": "*",
+    "ext-mongodb": "*",
     "spiral/components": "^0.9",
     "zendframework/zend-diactoros": "^1.1",
     "symfony/console": "^3.2",

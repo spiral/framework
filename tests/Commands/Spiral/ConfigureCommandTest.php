@@ -11,7 +11,7 @@ use Spiral\Core\Environment;
 use Spiral\Core\NullMemory;
 use Spiral\Tests\BaseTest;
 
-class ConfigureTest extends BaseTest
+class ConfigureCommandTest extends BaseTest
 {
     public function testConfigure()
     {
