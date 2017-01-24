@@ -52,9 +52,9 @@ class Memory implements MemoryInterface
      *
      * @param string $filename Cache filename.
      */
-    public function loadData(string $section, string $location = null, string &$filename = null)
+    public function loadData(string $section, string &$filename = null)
     {
-        $filename = $this->memoryFilename($section, $location);
+        $filename = $this->memoryFilename($section);
 
         if (!file_exists($filename)) {
             return null;
@@ -70,9 +70,9 @@ class Memory implements MemoryInterface
     /**
      * {@inheritdoc}
      */
-    public function saveData(string $section, $data, string $location = null)
+    public function saveData(string $section, $data)
     {
-        $filename = $this->memoryFilename($section, $location);
+        $filename = $this->memoryFilename($section);
 
         //We are packing data into plain php
         $data = '<?php return ' . var_export($data, true) . ';';
@@ -84,22 +84,15 @@ class Memory implements MemoryInterface
     /**
      * Get extension to use for runtime data or configuration cache.
      *
-     * @param string $name     Runtime data file name (without extension).
-     * @param string $location Location to store data in.
+     * @param string $name Runtime data file name (without extension).
      *
      * @return string
      */
-    private function memoryFilename(string $name, string $location = null): string
+    private function memoryFilename(string $name): string
     {
         $name = strtolower(str_replace(['/', '\\'], '-', $name));
 
-        if (!empty($location)) {
-            $location = $this->directory . $location . '/';
-        } else {
-            $location = $this->directory;
-        }
-
         //Runtime cache
-        return $location . $name . static::EXTENSION;
+        return $this->directory . $name . static::EXTENSION;
     }
 }
