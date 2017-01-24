@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core\Bootloaders;
 
-use Cocur\Slugify\Slugify;
-use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exceptions\Container\AutowireException;
 use Spiral\Core\Exceptions\ScopeException;
@@ -102,7 +101,7 @@ class SpiralBindings extends Bootloader
      * @var array
      */
     protected $singletons = [
-        SlugifyInterface::class => Slugify::class
+        'Cocur\Slugify\SlugifyInterface' => 'Cocur\Slugify\Slugify'
     ];
 
     /**
