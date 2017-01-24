@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Support;
 
 use Spiral\Tokenizer\Highlighter;
@@ -43,8 +44,12 @@ class ExceptionHelper
      *
      * @return string
      */
-    public static function highlightSource($filename, $line, $around = 10, Style $style = null)
-    {
+    public static function highlightSource(
+        string $filename,
+        int $line,
+        int $around = 10,
+        Style $style = null
+    ) {
         $highlighter = new Highlighter(file_get_contents($filename), $style ?? new Style());
 
         return $highlighter->lines($line, $around);
