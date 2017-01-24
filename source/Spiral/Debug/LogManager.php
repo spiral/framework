@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Debug;
 
 use Monolog\Formatter\LineFormatter;
@@ -93,6 +94,8 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
     /**
      * Set instance of shared HandlerInterface, such handler will be passed to every created log.
      * To remove existed handler set it argument as null.
+     *
+     * Attention, handler will affect only newly created logs at this moment.
      *
      * @param HandlerInterface $handler
      *

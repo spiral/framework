@@ -112,7 +112,9 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     }
 
     /**
-     * Execute console command by it's name.
+     * Execute console command by it's name. Attention, this method will automatically set debug
+     * handler which will display log messages into console when verbosity is ON, hovewer, already
+     * existed Logger instances would not be affected.
      *
      * @param string|null          $command Default command when null.
      * @param array|InputInterface $input
