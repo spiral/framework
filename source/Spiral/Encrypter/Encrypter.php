@@ -66,8 +66,6 @@ class Encrypter implements EncrypterInterface, InjectableInterface
     /**
      * {@inheritdoc}
      *
-     * @todo double check
-     *
      * @param bool $passWeak Do not throw an exception if result is "weak". Not recommended.
      */
     public function random(int $length, $passWeak = false): string
