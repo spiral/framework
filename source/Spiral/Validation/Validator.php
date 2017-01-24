@@ -43,9 +43,6 @@ use Spiral\Validation\Exceptions\ValidationException;
  * In cases where you don't need custom message or check parameters you can use simplified
  * rule syntax:
  *      "flag" => ["notEmpty", "boolean"]
- *
- *
- * @todo create ImmutableValidator class
  */
 class Validator extends Component implements ValidatorInterface, LoggerAwareInterface
 {
