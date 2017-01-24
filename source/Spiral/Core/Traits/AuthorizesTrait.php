@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core\Traits;
 
 use Spiral\Core\Exceptions\ControllerException;
