@@ -15,7 +15,7 @@ class ConfigureTest extends BaseTest
     public function testConfigure()
     {
         $this->assertSame(
-            ConsoleDispatcher::CODE_UNDEFINED,
+            ConsoleDispatcher::CODE_COMPLETED,
             $this->app->console->command('spiral:configure')->getCode()
         );
     }

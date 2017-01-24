@@ -10,9 +10,9 @@ namespace Spiral\Tests\Core;
 use Spiral\Core\Core;
 use Spiral\Tests\BaseTest;
 
-class ApplicationTest extends BaseTest
+class CoreTest extends BaseTest
 {
-    public function testCore()
+    public function testInstance()
     {
         $this->assertInstanceOf(Core::class, $this->app);
     }
@@ -25,6 +25,13 @@ class ApplicationTest extends BaseTest
     public function testDirectories()
     {
         $this->assertSame($this->app->directory('application'), directory('application'));
+
+        $this->assertFalse($this->app->hasDirectory('custom'));
+        $this->app->setDirectory('custom', __DIR__);
+        $this->assertTrue($this->app->hasDirectory('custom'));
+
+        $this->assertSame($this->app->directory('custom'), directory('custom'));
+        $this->assertArrayHasKey('custom', $this->app->getDirectories());
     }
 
     public function testTimezone()
@@ -32,5 +39,13 @@ class ApplicationTest extends BaseTest
         $this->assertSame('UTC', $this->app->getTimezone()->getName());
         $this->app->setTimezone('Europe/Minsk');
         $this->assertSame('Europe/Minsk', $this->app->getTimezone()->getName());
+    }
+
+    /**
+     * @expectedException \Spiral\Core\Exceptions\CoreException
+     */
+    public function testBadTimezone()
+    {
+        $this->app->setTimezone('magic');
     }
 }

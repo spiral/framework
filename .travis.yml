@@ -8,8 +8,13 @@ php:
   - 7.1
 
 before_install:
+  - composer self-update
   - phpenv config-add tests/php-travis.ini
   - mysql -e 'CREATE DATABASE spiral;'
   - psql -c 'create database spiral;' -U postgres
-install: composer install --no-interaction --prefer-source
-script: phpunit
+
+install:
+  - composer install --no-interaction --prefer-source
+
+script:
+  -phpunit

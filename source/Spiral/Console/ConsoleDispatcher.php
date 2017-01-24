@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Console;
 
 use Spiral\Console\Configs\ConsoleConfig;
@@ -35,7 +36,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * Undefined response code for command (errors). See below.
      */
-    const CODE_UNDEFINED = 102;
+    const CODE_COMPLETED = 0;
 
     /**
      * @var ConsoleApplication
@@ -153,7 +154,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             self::staticContainer($scope);
         }
 
-        return new CommandOutput($code ?? self::CODE_UNDEFINED, $output);
+        return new CommandOutput($code ?? self::CODE_COMPLETED, $output);
     }
 
     /**
