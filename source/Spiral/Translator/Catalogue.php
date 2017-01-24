@@ -6,6 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  * @copyright ©2009-2011
  */
+
 namespace Spiral\Translator;
 
 use Spiral\Core\MemoryInterface;
@@ -210,7 +211,7 @@ class Catalogue
      */
     protected function loadDomain(string $domain)
     {
-        $data = $this->memory->loadData($this->domainSection($domain), Translator::MEMORY);
+        $data = $this->memory->loadData(Translator::MEMORY . '.' . $this->domainSection($domain));
 
         if (empty($data)) {
             $data = [];
@@ -231,7 +232,7 @@ class Catalogue
      */
     protected function saveDomain(string $domain, array $data)
     {
-        $this->memory->saveData($this->domainSection($domain), $data, Translator::MEMORY);
+        $this->memory->saveData(Translator::MEMORY . '.' . $this->domainSection($domain), $data);
     }
 
     /**
