@@ -152,7 +152,7 @@ class StemplerEngine extends AbstractEngine
     protected function createSupervisor(): Supervisor
     {
         //Prepare loader
-        return new Supervisor($this->defineLoader(), new DarkSyntax());
+        return new Supervisor($this->wrapLoader(), new DarkSyntax());
     }
 
     /**
@@ -196,7 +196,7 @@ class StemplerEngine extends AbstractEngine
      *
      * @return LoaderInterface
      */
-    private function defineLoader(): LoaderInterface
+    private function wrapLoader(): LoaderInterface
     {
         $processors = [];
         foreach ($this->modifiers as $modifier) {

@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Engines;
 
 use Spiral\Core\ContainerInterface;
@@ -21,8 +22,6 @@ use Spiral\Views\ViewInterface;
 
 /**
  * Wraps and control twig engine.
- *
- * @todo version 2.0 have some deprecations to be addressed
  */
 class TwigEngine extends AbstractEngine
 {
@@ -150,8 +149,9 @@ class TwigEngine extends AbstractEngine
          * @var self $engine
          */
         $engine = parent::withLoader($loader);
+
         $engine->twig = clone $this->twig;
-        $engine->twig->setLoader($engine->defineLoader());
+        $engine->twig->setLoader($engine->wrapLoader());
 
         return $engine;
     }
@@ -167,8 +167,9 @@ class TwigEngine extends AbstractEngine
          * @var self $engine
          */
         $engine = parent::withEnvironment($environment);
+
         $engine->twig = clone $this->twig;
-        $engine->twig->setLoader($engine->defineLoader());
+        $engine->twig->setLoader($engine->wrapLoader());
         $engine->twig->setCache($engine->defineCache());
 
         return $engine;
@@ -185,7 +186,7 @@ class TwigEngine extends AbstractEngine
     protected function createTwig(array $extensions, array $options): \Twig_Environment
     {
         //Initiating Twig Environment
-        $twig = new \Twig_Environment($this->defineLoader(), $options);
+        $twig = new \Twig_Environment($this->wrapLoader(), $options);
         $twig->setCache($this->defineCache());
         $twig->setBaseTemplateClass(TwigView::class);
 
@@ -203,7 +204,7 @@ class TwigEngine extends AbstractEngine
      *
      * @return LoaderInterface
      */
-    private function defineLoader(): LoaderInterface
+    private function wrapLoader(): LoaderInterface
     {
         $processors = [];
         foreach ($this->modifiers as $modifier) {

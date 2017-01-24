@@ -208,7 +208,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
             }
 
             //Trying automatic (no extension) detection
-            $loader = $this->isolatedLoader($engine);
+            $loader = $this->isolateLoader($engine);
 
             try {
                 if (!empty($loader->fetchName($path))) {
@@ -244,7 +244,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         //Populating constructor parameters
         $options = $this->config->engineOptions($engine);
         $options += [
-            'loader'      => $this->isolatedLoader($engine),
+            'loader'      => $this->isolateLoader($engine),
             'environment' => $this->getEnvironment()
         ];
 
@@ -284,7 +284,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
      *
      * @throws ViewsException
      */
-    protected function isolatedLoader(string $engine = null): LoaderInterface
+    protected function isolateLoader(string $engine = null): LoaderInterface
     {
         $extension = null;
         if (!empty($engine)) {
