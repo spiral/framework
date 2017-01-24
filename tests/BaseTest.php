@@ -51,7 +51,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $root = __DIR__ . '/app/';
+        $root = __DIR__ . '/-app-/';
         $this->app = TestApplication::init([
             'root'        => $root,
             'libraries'   => dirname(__DIR__) . '/vendor/',
