@@ -59,6 +59,7 @@ class DebugHandler extends AbstractHandler
         if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE) {
             return false;
         }
+
         /**
          * We are going to format message our own style.
          */
