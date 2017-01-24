@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Bootloaders\BootloaderInterface;
@@ -66,7 +67,7 @@ class BootloadManager
             $schema = $this->memory->loadData($memory);
         }
 
-        //todo: make sure it's working properly
+        //Checks if cached schema matches to booted services
         if (empty($schema) || $schema['snapshot'] != $classes) {
             //Schema expired or empty
             $schema = $this->generateSchema($classes, $this->container);
@@ -79,7 +80,7 @@ class BootloadManager
         }
 
         //We can initiate schema thought the cached schema
-        $this->schematicBootload($this->container, $schema);
+        $this->bootSchema($this->container, $schema);
     }
 
     /**
@@ -88,7 +89,7 @@ class BootloadManager
      * @param ContainerInterface $container
      * @param array              $schema
      */
-    protected function schematicBootload(ContainerInterface $container, array $schema)
+    protected function bootSchema(ContainerInterface $container, array $schema)
     {
         foreach ($schema['bootloaders'] as $bootloader => $options) {
             $this->classes[] = $bootloader;
