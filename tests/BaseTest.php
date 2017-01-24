@@ -21,8 +21,9 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
         $root = __DIR__ . '/app/';
         $this->app = TestApplication::init([
             'root'        => $root,
-            'libraries'   => $root . 'vendor/',
-            'application' => $root . 'app/',
+            'libraries'   => dirname(__DIR__) . '/vendor/',
+            'application' => $root,
+            'framework'   => dirname(__DIR__) . '/source/',
             'runtime'     => $root . 'runtime/',
             'cache'       => $root . 'runtime/cache/',
         ]);
@@ -33,7 +34,14 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
+        $files = $this->app->files;
+        foreach ($files->getFiles(directory('runtime')) as $filename) {
+            $files->delete($filename);
+        }
+
         //Close scope
         SharedComponent::shareContainer(null);
+
+
     }
 }

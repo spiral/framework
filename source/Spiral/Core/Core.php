@@ -54,7 +54,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      * Every application should have defined timezone.
      *
      * @see setTimezone()
-     * @see timezone()
+     * @see getTimezone()
      * @var string
      */
     private $timezone = 'UTC';
@@ -187,7 +187,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      *
      * @return \DateTimeZone
      */
-    public function timezone(): \DateTimeZone
+    public function getTimezone(): \DateTimeZone
     {
         return new \DateTimeZone($this->timezone);
     }

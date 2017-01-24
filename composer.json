@@ -20,7 +20,8 @@
     "twig/twig": "~1.0",
     "nesbot/carbon": "*",
     "cocur/slugify": "^1.4",
-    "defuse/php-encryption": "^2.0"
+    "defuse/php-encryption": "^2.0",
+    "monolog/monolog": "^1.22"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.0",

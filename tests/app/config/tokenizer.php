@@ -14,10 +14,10 @@ return [
         directory('application'),
 
         //Default set of spiral console commands
-        directory('libraries') . 'spiral/framework/source/Spiral/Commands',
+        directory('framework') . 'Spiral/Commands/',
 
         //Needed to allow Translator locate i18n validation messages
-        directory('libraries') . 'spiral/framework/source/Spiral/Validation'
+        directory('framework') . 'Spiral/Validation/'
 
         /*{{directories}}*/
     ],

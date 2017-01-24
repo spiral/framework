@@ -26,4 +26,11 @@ class ApplicationTest extends BaseTest
     {
         $this->assertSame($this->app->directory('application'), directory('application'));
     }
+
+    public function testTimezone()
+    {
+        $this->assertSame('UTC', $this->app->getTimezone()->getName());
+        $this->app->setTimezone('Europe/Minsk');
+        $this->assertSame('Europe/Minsk', $this->app->getTimezone()->getName());
+    }
 }
