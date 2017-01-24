@@ -5,12 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Files\FilesInterface;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Default implementation of MemoryInterface.
@@ -80,40 +79,6 @@ class Memory implements MemoryInterface
 
         //We need help to write file with directory creation
         $this->files->write($filename, $data, FilesInterface::RUNTIME, true);
-    }
-
-    /**
-     * Get all memory sections belongs to given memory location (default location to be used if
-     * none specified).
-     *
-     * @param string $location
-     *
-     * @return array
-     */
-    public function getSections(string $location = null)
-    {
-        if (!empty($location)) {
-            $location = $this->directory . $location . '/';
-        } else {
-            $location = $this->directory;
-        }
-
-        if (!$this->files->exists($location)) {
-            return [];
-        }
-
-        $finder = new Finder();
-        $finder->in($location);
-
-        /**
-         * @var SplFileInfo $file
-         */
-        $sections = [];
-        foreach ($finder->name("*" . static::EXTENSION) as $file) {
-            $sections[] = substr($file->getRelativePathname(), 0, -1 * (strlen(static::EXTENSION)));
-        }
-
-        return $sections;
     }
 
     /**
