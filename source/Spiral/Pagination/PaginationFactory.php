@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Pagination;
 
 use Psr\Http\Message\ServerRequestInterface;
