@@ -87,7 +87,7 @@ class NativeView extends Component implements ViewInterface
             extract($context, EXTR_OVERWRITE);
             require $this->filename;
         } catch (\Throwable $e) {
-            //Cleaning previously open buffer
+            //Clear all rendered output (should we save it into exception?)
             ob_end_clean();
 
             //Wrapping exception
