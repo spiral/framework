@@ -5,20 +5,22 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\ControllerInterface;
+use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
  * Basic application controller class. Implements method injections and simplified access to
  * container bindings.
  */
-abstract class Controller extends Service implements ControllerInterface
+abstract class Controller extends Component implements ControllerInterface
 {
-    use BenchmarkTrait;
+    use SharedTrait, BenchmarkTrait;
 
     /**
      * Controller action prefixes and postfixes.
