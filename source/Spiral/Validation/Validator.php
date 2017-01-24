@@ -14,6 +14,7 @@ use Spiral\Core\Component;
 use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\LoggerTrait;
+use Spiral\Models\EntityInterface;
 use Spiral\Translator\Traits\TranslatorTrait;
 use Spiral\Validation\Configs\ValidatorConfig;
 use Spiral\Validation\Exceptions\ValidationException;
@@ -220,7 +221,7 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
     {
         $value = isset($this->data[$field]) ? $this->data[$field] : $default;
 
-        return $value instanceof ValueInterface ? $value->packValue() : $value;
+        return $value instanceof EntityInterface ? $value->packValue() : $value;
     }
 
     /**
