@@ -8,6 +8,7 @@
 namespace Spiral\Tests\Views;
 
 use Spiral\Tests\BaseTest;
+use Spiral\Views\Exceptions\RenderException;
 
 class NativeEngineTest extends BaseTest
 {
@@ -16,6 +17,22 @@ class NativeEngineTest extends BaseTest
         $this->assertSame('Hello, World!', $this->views->render('native', [
             'name' => 'World'
         ]));
+    }
+
+    public function testBuffer()
+    {
+        ob_start();
+        ob_start();
+
+        $level = ob_get_level();
+
+        $this->assertSame('Hello, World!', $this->views->render('native', [
+            'name' => 'World'
+        ]));
+
+        $this->assertSame($level, ob_get_level());
+        ob_end_clean();
+        ob_end_clean();
     }
 
     public function testRenderSimpleWithExtension()
@@ -45,5 +62,22 @@ class NativeEngineTest extends BaseTest
     public function testRenderException()
     {
         $this->views->render('native');
+    }
+
+    public function testBufferWhenException()
+    {
+        ob_start();
+        ob_start();
+
+        $level = ob_get_level();
+        try {
+            $this->views->render('native');
+        } catch (RenderException $e) {
+
+        }
+
+        $this->assertSame($level, ob_get_level());
+        ob_end_clean();
+        ob_end_clean();
     }
 }
