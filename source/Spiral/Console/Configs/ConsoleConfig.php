@@ -35,7 +35,7 @@ class ConsoleConfig extends InjectableConfig
      */
     public function defaultCommand(): string
     {
-        return $this->config['defaultCommand'] ??'list';
+        return $this->config['defaultCommand'] ?? 'list';
     }
 
     /**
