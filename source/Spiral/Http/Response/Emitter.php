@@ -41,7 +41,7 @@ class Emitter implements EmitterInterface
     public function emit(ResponseInterface $response, $maxBufferLevel = null)
     {
         if (headers_sent()) {
-            throw new \RuntimeException('Unable to emit response; headers already sent');
+            throw new \RuntimeException('Unable to emit response, headers already sent');
         }
 
         $response = $this->injectContentLength($response);

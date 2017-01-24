@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Engines\Stempler;
 
 use Spiral\Files\FilesInterface;
