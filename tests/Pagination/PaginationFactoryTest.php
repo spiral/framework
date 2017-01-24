@@ -19,17 +19,17 @@ class PaginationFactoryTest extends BaseTest
      */
     public function testBadScope()
     {
-        $paginator = $this->app->paginators->createPaginator('page');
+        $paginator = $this->paginators->createPaginator('page');
     }
 
     public function testGoodScope()
     {
-        $scope = $this->app->container->replace(
+        $scope = $this->container->replace(
             ServerRequestInterface::class,
             new ServerRequest([], [], null, null, 'php://input', [], [], ['page' => 1])
         );
 
-        $paginator = $this->app->paginators->createPaginator('page', 25);
+        $paginator = $this->paginators->createPaginator('page', 25);
         $this->assertInstanceOf(PaginatorInterface::class, $paginator);
 
         $paginator = $paginator->withCount(100);
@@ -37,17 +37,17 @@ class PaginationFactoryTest extends BaseTest
         $this->assertSame(25, $paginator->getLimit());
         $this->assertSame(0, $paginator->getOffset());
 
-        $this->app->container->restore($scope);
+        $this->container->restore($scope);
     }
 
     public function testGoodScopeBadParameter()
     {
-        $scope = $this->app->container->replace(
+        $scope = $this->container->replace(
             ServerRequestInterface::class,
             new ServerRequest([], [], null, null, 'php://input', [], [], ['page' => ['a']])
         );
 
-        $paginator = $this->app->paginators->createPaginator('page', 25);
+        $paginator = $this->paginators->createPaginator('page', 25);
         $this->assertInstanceOf(PaginatorInterface::class, $paginator);
 
         $paginator = $paginator->withCount(100);
@@ -60,13 +60,13 @@ class PaginationFactoryTest extends BaseTest
 
     public function testGoodScopeSecondPage()
     {
-        $scope = $this->app->container->replace(
+        $scope = $this->container->replace(
             ServerRequestInterface::class,
             new ServerRequest([], [], null, null, 'php://input', [], [], ['page' => 2])
         );
 
         /**@var \Spiral\Pagination\CountingInterface $paginator */
-        $paginator = $this->app->paginators->createPaginator('page', 25);
+        $paginator = $this->paginators->createPaginator('page', 25);
         $this->assertInstanceOf(PaginatorInterface::class, $paginator);
 
         $paginator = $paginator->withCount(100);
@@ -74,6 +74,6 @@ class PaginationFactoryTest extends BaseTest
         $this->assertSame(25, $paginator->getLimit());
         $this->assertSame(25, $paginator->getOffset());
 
-        $this->app->container->restore($scope);
+        $this->container->restore($scope);
     }
 }

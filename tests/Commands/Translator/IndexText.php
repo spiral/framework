@@ -5,11 +5,11 @@
  * @author    Wolfy-J
  */
 
-namespace Spiral\Tests\Translator;
+namespace Spiral\Tests\Commands\Translator;
 
 use Spiral\Tests\BaseTest;
 
-class IndexerTest extends BaseTest
+class IndexText extends BaseTest
 {
     public function testIndex()
     {

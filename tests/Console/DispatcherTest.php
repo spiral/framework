@@ -13,7 +13,7 @@ class DispatcherTest extends BaseTest
 {
     public function testConfigure()
     {
-        $this->assertNotEmpty($this->app->console->getCommands());
+        $this->assertNotEmpty($this->console->getCommands());
     }
 
     /**
@@ -21,6 +21,6 @@ class DispatcherTest extends BaseTest
      */
     public function testRunUndefined()
     {
-        $this->app->console->run('undefined');
+        $this->console->run('undefined');
     }
 }
