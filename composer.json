@@ -1,7 +1,7 @@
 {
   "name": "spiral/framework",
   "type": "framework",
-  "description": "Spiral PHP Framework",
+  "description": "Spiral, PHP Framework",
   "license": "MIT",
   "authors": [
     {
