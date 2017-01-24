@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface;
@@ -29,6 +30,13 @@ use Zend\Diactoros\ServerRequestFactory;
 class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonInterface
 {
     use RouterTrait, BenchmarkTrait;
+
+    /**
+     * Initial dispatcher request, used to track exceptions.
+     *
+     * @var ServerRequestInterface
+     */
+    private $request = null;
 
     /**
      * @var HttpConfig
@@ -67,7 +75,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     {
         //Now we can generate response using request
         $response = $this->perform(
-            $this->initRequest(),
+            $this->request = $this->initRequest(),
             $this->initResponse()
         );
 
@@ -79,22 +87,20 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
 
     /**
      * {@inheritdoc}
-     *
-     * @todo Use already initiated requests?
      */
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
         if (!$this->config->exposeErrors()) {
             //Standard 500 error page
             $response = $this->errorWriter()->writeException(
-                $this->initRequest(),
+                $this->request ?? $this->initRequest(),
                 $this->initResponse(),
                 new ServerErrorException()
             );
         } else {
             //Rendering details about exception
             $response = $this->errorWriter()->writeSnapshot(
-                $this->initRequest(),
+                $this->request ?? $this->initRequest(),
                 $this->initResponse(),
                 $snapshot
             );
