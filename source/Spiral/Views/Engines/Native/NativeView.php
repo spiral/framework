@@ -5,12 +5,14 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Engines\Native;
 
 use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Views\Exceptions\RenderException;
 use Spiral\Views\ViewInterface;
 
 /**
@@ -84,6 +86,9 @@ class NativeView extends Component implements ViewInterface
         try {
             extract($context, EXTR_OVERWRITE);
             require $this->filename;
+        } catch (\Throwable $e) {
+            //Wrapping exception
+            throw new RenderException($e->getMessage(), $e->getCode(), $e);
         } finally {
             while (ob_get_level() > $__outputLevel__) {
                 ob_end_clean();

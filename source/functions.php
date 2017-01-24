@@ -162,5 +162,3 @@ if (!function_exists('p')) {
         return spiral(TranslatorInterface::class)->transChoice($string, $number, $options, $domain);
     }
 }
-
-//todo: interpolate

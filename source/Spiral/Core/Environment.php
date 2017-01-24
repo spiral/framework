@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Environment\Parser;
@@ -22,7 +23,7 @@ class Environment implements EnvironmentInterface
     /**
      * Environment section.
      */
-    const MEMORY_SECTION = 'environment';
+    const MEMORY = 'environment';
 
     /**
      * Environment filename.
@@ -133,7 +134,7 @@ class Environment implements EnvironmentInterface
         //Unique env file hash
         $this->id = $this->files->md5($this->filename);
 
-        if (!empty($values = $this->memory->loadData($this->id, static::MEMORY_SECTION))) {
+        if (!empty($values = $this->memory->loadData(static::MEMORY . '.' . $this->id))) {
             //Restore from cache
             $this->initEnvironment($values);
 
@@ -145,7 +146,7 @@ class Environment implements EnvironmentInterface
             $this->parseValues($this->filename)
         );
 
-        $this->memory->saveData($this->id, $values, static::MEMORY_SECTION);
+        $this->memory->saveData(static::MEMORY . '.' . $this->id, $values);
 
         return $this;
     }
