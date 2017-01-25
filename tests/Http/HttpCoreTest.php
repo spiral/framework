@@ -8,10 +8,9 @@
 
 namespace Spiral\Tests\Http;
 
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Spiral\Core\ContainerInterface;
+use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Http\HttpCore;
 use Spiral\Tests\Core\Fixtures\SharedComponent;
 use Zend\Diactoros\Response as ZendResponse;
@@ -20,7 +19,7 @@ use Zend\Diactoros\ServerRequest as ZendRequest;
 class HttpCoreTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ContainerInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Spiral\Core\ContainerInterface
      */
     private $container;
 
@@ -36,8 +35,7 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->container = $this->createMock(ContainerInterface::class);
-
+        $this->container = new SpiralContainer();
         $this->request = new ZendRequest();
         $this->response = new ZendResponse();
     }
@@ -56,7 +54,7 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
     public function testPerform()
     {
         // scoping
-        $aContainer = $this->createMock(ContainerInterface::class);
+        $aContainer = new SpiralContainer();
         SharedComponent::shareContainer($aContainer);
 
         $core = new HttpCore(null, [], $this->container);
@@ -83,11 +81,14 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
 
     public function testPerformClassEndpoint()
     {
-        $this->container->method('get')
-            ->with('InvokableClassName')
-            ->willReturn(function (Request $request, Response $response) {
-                return $response->withStatus(300);
-            });
+        $this->container->bind('InvokableClassName', new class
+            {
+                function __invoke(Request $request, Response $response)
+                {
+                    return $response->withStatus(300);
+                }
+            }
+        );
 
         $core = new HttpCore(null, [], $this->container);
         $core->setEndpoint('InvokableClassName');

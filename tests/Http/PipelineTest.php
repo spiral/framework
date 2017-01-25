@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Tests\Http;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Containers\SpiralContainer;
 use Spiral\Http\MiddlewarePipeline;
 use Zend\Diactoros\Response;
@@ -118,32 +117,6 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $res->getHeaderLine('Content-Type'));
         $this->assertEquals('{"status":201,"hello":"world"}', (string)$res->getBody());
     }
-
-//    public function testScoping()
-//    {
-//        $container = new SpiralContainer();
-//
-//        $this->assertFalse($container->has(ServerRequestInterface::class));
-//        $this->assertFalse($container->has(ResponseInterface::class));
-//
-//        $pipeline = new MiddlewarePipeline([], $container);
-//        $res = $pipeline->target(function ($req, $res) use ($container) {
-//            $this->assertTrue($container->has(ServerRequestInterface::class));
-//            $this->assertTrue($container->has(ResponseInterface::class));
-//
-//            $this->assertSame($req, $container->get(ServerRequestInterface::class));
-//            $this->assertSame($res, $container->get(ResponseInterface::class));
-//
-//            return 'hello world';
-//        })->run(new ServerRequest(), new Response());
-//
-//        $this->assertFalse($container->has(ServerRequestInterface::class));
-//        $this->assertFalse($container->has(ResponseInterface::class));
-//
-//        $this->assertInstanceOf(Response::class, $res);
-//        $this->assertEquals(200, $res->getStatusCode());
-//        $this->assertEquals('hello world', (string)$res->getBody());
-//    }
 
     public function testMiddlewareModifiesResponseAfter()
     {

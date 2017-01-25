@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;
@@ -17,7 +18,11 @@ use Interop\Container\ContainerInterface as InteropContainer;
  *
  * Factory, Recolver and Scoper interfaces MIGHT be removed from extends in a later versions.
  */
-interface ContainerInterface extends FactoryInterface, ResolverInterface, InteropContainer, ScoperInterface
+interface ContainerInterface extends
+    FactoryInterface,
+    ResolverInterface,
+    InteropContainer,
+    ScoperInterface
 {
     /**
      * Bind value resolver to container alias. Resolver can be class name (will be constructed

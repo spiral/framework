@@ -7,6 +7,7 @@
 
 namespace TestApplication\Controllers;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Controller;
 
 class DummyController extends Controller
@@ -19,6 +20,11 @@ class DummyController extends Controller
     public function requiredAction(int $id)
     {
         return $id;
+    }
+
+    public function scopedAction()
+    {
+        return spl_object_hash($this->container->get(ServerRequestInterface::class));
     }
 
     static function innerAction()
