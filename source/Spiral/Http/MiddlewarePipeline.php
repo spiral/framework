@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -143,10 +144,6 @@ class MiddlewarePipeline
         $result = null;
 
         try {
-            /**
-             * Debug: this method contain code to open and close scope for [ServerRequestInterface]
-             * and [ResponseInterface].
-             */
             $result = call_user_func($this->target, $request, $response);
         } finally {
             while (ob_get_level() > $outputLevel + 1) {
