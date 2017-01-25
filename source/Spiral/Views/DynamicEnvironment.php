@@ -98,7 +98,7 @@ class DynamicEnvironment implements EnvironmentInterface
     public function getValue(string $dependency)
     {
         if (!isset($this->dependencies[$dependency])) {
-            throw new EnvironmentException("Undefined environment variable '{$dependency}'");
+            throw new EnvironmentException("Undefined environment dependency '{$dependency}'");
         }
 
         $source = $this->dependencies[$dependency];
