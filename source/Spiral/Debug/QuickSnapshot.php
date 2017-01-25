@@ -10,6 +10,9 @@ namespace Spiral\Debug;
 use Psr\Log\LoggerInterface;
 use Spiral\Support\ExceptionHelper;
 
+/**
+ * Wraps exception message and automatically stores this message into associated logger.
+ */
 class QuickSnapshot implements SnapshotInterface
 {
     /**
