@@ -34,16 +34,6 @@ interface EncrypterInterface
     public function getKey(): string;
 
     /**
-     * Generate random set of bytes with specified length.
-     *
-     * @param int $length
-     *
-     * @return string
-     * @throws EncrypterException
-     */
-    public function random(int $length): string;
-
-    /**
      * Encrypt data into encrypter specific payload string. Can be decrypted only using decrypt()
      * method.
      *

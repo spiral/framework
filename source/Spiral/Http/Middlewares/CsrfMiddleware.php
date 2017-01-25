@@ -14,6 +14,7 @@ use Psr\Http\Message\UriInterface;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Cookies\Cookie;
 use Spiral\Http\MiddlewareInterface;
+use Spiral\Support\Strings;
 
 /**
  * Provides generic CSRF protection using cookie as token storage. Set "csrfToken" attribute to
@@ -73,10 +74,7 @@ class CsrfMiddleware implements MiddlewareInterface
      */
     public function generateToken(): string
     {
-        return substr(
-            base64_encode(openssl_random_pseudo_bytes($this->httpConfig->csrfLength())), 0,
-            $this->httpConfig->csrfLength()
-        );
+        return Strings::random($this->httpConfig->csrfLength());
     }
 
     /**

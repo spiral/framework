@@ -66,31 +66,6 @@ class Encrypter implements EncrypterInterface, InjectableInterface
     /**
      * {@inheritdoc}
      *
-     * @param bool $passWeak Do not throw an exception if result is "weak". Not recommended.
-     */
-    public function random(int $length, $passWeak = false): string
-    {
-        if ($length < 1) {
-            throw new EncrypterException("Random string length should be at least 1 byte long");
-        }
-
-        $result = openssl_random_pseudo_bytes($length, $cryptoStrong);
-        if ($result === false) {
-            throw new EncrypterException(
-                "Unable to generate pseudo-random string with {$length} length"
-            );
-        }
-
-        if (!$passWeak && !(bool)$cryptoStrong) {
-            throw new EncrypterException("Weak random result received");
-        }
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * Data encoded using json_encode method, only supported formats are allowed!
      */
     public function encrypt($data): string
