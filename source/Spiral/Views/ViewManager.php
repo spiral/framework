@@ -165,9 +165,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
      */
     public function compile(string $path)
     {
-        $engine = $this->detectEngine($path);
-
-        $this->engine($engine)->compile($path);
+        $this->engine($this->detectEngine($path))->compile($path);
     }
 
     /**
