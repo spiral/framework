@@ -36,7 +36,8 @@
     ],
     "psr-4": {
       "Spiral\\": "source/Spiral/",
-      "Spiral\\Tests\\": "tests/"
+      "Spiral\\Tests\\": "tests/",
+      "TestApplication\\": "tests/-app-/classes/"
     }
   }
 }

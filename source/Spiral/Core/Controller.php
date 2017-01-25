@@ -10,6 +10,7 @@ namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
@@ -123,10 +124,7 @@ abstract class Controller extends Component implements ControllerInterface
         $container = $this->iocContainer();
 
         if (empty($container)) {
-            throw new ControllerException(
-                "Controller can only be executed in a valid container scope",
-                ControllerException::ERROR
-            );
+            throw new ScopeException("Controller can only be executed in a valid container scope");
         }
 
         $resolver = $container->get(ResolverInterface::class);

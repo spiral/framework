@@ -298,16 +298,16 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
 
         try {
             //Getting instance of controller
-            $controller = $this->container->get($controller);
+            $instance = $this->container->get($controller);
 
-            if (!$controller instanceof ControllerInterface) {
+            if (!$instance instanceof ControllerInterface) {
                 throw new ControllerException(
                     "No such controller '{$controller}' found",
                     ControllerException::NOT_FOUND
                 );
             }
 
-            return $controller->callAction($action, $parameters);
+            return $instance->callAction($action, $parameters);
         } finally {
             $this->benchmark($benchmark);
 

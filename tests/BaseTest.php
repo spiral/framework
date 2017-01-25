@@ -67,6 +67,8 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
+        SharedComponent::shareContainer($this->app->container);
+
         $this->db->getDriver()->disconnect();
 
         $files = $this->app->files;
