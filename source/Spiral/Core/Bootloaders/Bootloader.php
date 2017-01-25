@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core\Bootloaders;
 
 use Spiral\Core\Component;
@@ -42,6 +43,7 @@ abstract class Bootloader extends Component implements BootloaderInterface
      *      'class' => [self::class, 'createMethod']
      * ]
      *
+     * @deprecated Use constant instead.
      * @return array
      */
     protected $bindings = [];
@@ -57,6 +59,7 @@ abstract class Bootloader extends Component implements BootloaderInterface
      * You don't need to bind classes which are declared with SINGLETON constant here, spiral will
      * resolve them as singleton automatically.
      *
+     * @deprecated Use constant instead.
      * @return array
      */
     protected $singletons = [];
