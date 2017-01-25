@@ -9,7 +9,6 @@
 namespace Spiral\Encrypter;
 
 use Defuse\Crypto\Crypto;
-use Defuse\Crypto\Exception\BadFormatException;
 use Defuse\Crypto\Exception\CryptoException;
 use Defuse\Crypto\Key;
 use Spiral\Core\Container\InjectableInterface;
@@ -75,8 +74,6 @@ class Encrypter implements EncrypterInterface, InjectableInterface
             return base64_encode(
                 Crypto::Encrypt($packed, $this->key)
             );
-        } catch (BadFormatException $e) {
-            throw new EncryptException($e->getMessage(), $e->getCode(), $e);
         } catch (CryptoException $e) {
             throw new EncryptException($e->getMessage(), $e->getCode(), $e);
         }
