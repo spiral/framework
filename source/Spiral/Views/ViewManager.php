@@ -102,7 +102,17 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
     }
 
     /**
-     * Current view environment.
+     * Current view environment. View environment defines isolated cache version which provides
+     * ability to create multiple cached versions for some views and improve application
+     * performance.
+     *
+     * Example:
+     * $this->views->compile('home');
+     *
+     * $this->translator->setLocale('ru');
+     *
+     * //Different cache id
+     * $this->views->compile('home');
      *
      * @return EnvironmentInterface
      */
