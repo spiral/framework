@@ -11,6 +11,14 @@ use Spiral\Tests\BaseTest;
 
 class LoaderTest extends BaseTest
 {
+    public function testNamespaces()
+    {
+        $loader = $this->views->getLoader();
+
+        $this->assertArrayHasKey('default', $loader->getNamespaces());
+        $this->assertArrayHasKey('spiral', $loader->getNamespaces());
+    }
+
     public function testFetch()
     {
         $loader = $this->views->getLoader();
@@ -28,6 +36,26 @@ class LoaderTest extends BaseTest
 
         $this->assertSame('native.php', $loader->fetchName('@default/
         native.php'));
+    }
+
+    /**
+     * @expectedException \Spiral\Views\Exceptions\LoaderException
+     */
+    public function testFetchInvalid2()
+    {
+        $loader = $this->views->getLoader();
+
+        $this->assertSame('native.php', $loader->fetchName('@default~native.php'));
+    }
+
+    /**
+     * @expectedException \Spiral\Views\Exceptions\LoaderException
+     */
+    public function testFetchInvalidNamespace()
+    {
+        $loader = $this->views->getLoader();
+
+        $this->assertSame('native.php', $loader->fetchName('@magic/native.php'));
     }
 
     public function testImmutable()
