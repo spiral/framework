@@ -13,9 +13,12 @@ use Spiral\Tests\BaseTest;
 
 class ConfigureCommandTest extends BaseTest
 {
+    /**
+     * This is in a fact one of the most important tests in framework since it's basically complies
+     * application.
+     */
     public function testConfigure()
     {
-        //This is very complex and MUST not fail!
         $this->assertSame(
             0,
             $this->app->console->run('configure')->getCode()
