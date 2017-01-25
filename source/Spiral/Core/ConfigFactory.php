@@ -133,7 +133,7 @@ class ConfigFactory extends Component implements ConfiguratorInterface
         $data = require($this->files->localFilename($filename));
 
         if (!is_array($data)) {
-            throw  new ConfiguratorException("Config '{$config}' does not contain array data");
+            throw new ConfiguratorException("Config '{$config}' does not contain array data");
         }
 
         return $data;
