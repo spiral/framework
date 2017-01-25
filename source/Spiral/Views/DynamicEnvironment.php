@@ -24,17 +24,17 @@ class DynamicEnvironment implements EnvironmentInterface
      *
      * @var array
      */
-    protected $dependencies = [];
+    private $dependencies = [];
 
     /**
      * @var bool
      */
-    protected $cachable = true;
+    private $cachable = true;
 
     /**
      * @var string
      */
-    protected $cacheDirectory = null;
+    private $cacheDirectory = null;
 
     /**
      * @invisible
@@ -84,9 +84,12 @@ class DynamicEnvironment implements EnvironmentInterface
      * You can add dependency to a function, closure, or callable pair where first argument is
      * binding name (resolved thought container).
      */
-    public function addDependency(string $dependency, callable $source)
+    public function withDependency(string $dependency, callable $source): EnvironmentInterface
     {
-        $this->dependencies[$dependency] = $source;
+        $environment = clone $this;
+        $environment->dependencies[$dependency] = $source;
+
+        return $environment;
     }
 
     /**
