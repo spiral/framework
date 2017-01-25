@@ -8,7 +8,6 @@
 namespace Spiral\Tests\Views;
 
 use Spiral\Tests\BaseTest;
-use Spiral\Views\Configs\ViewsConfig;
 
 class TwigTest extends BaseTest
 {
@@ -65,29 +64,6 @@ class TwigTest extends BaseTest
         $this->assertContains('Timezone: UTC', $this->views->render('hello'));
         $this->app->setTimezone('Europe/Minsk');
         $this->assertContains('Timezone: Europe/Minsk', $this->views->render('hello'));
-    }
-
-    public function testCompiled()
-    {
-        /**
-         * @var ViewsConfig $viewConfig
-         */
-        $viewConfig = $this->container->get(ViewsConfig::class);
-
-        clearstatcache();
-        $cacheFiles = $this->files->getFiles($viewConfig->cacheDirectory());
-
-        $this->views->compile('sample');
-
-        clearstatcache();
-        $compiledFiles = $this->files->getFiles($viewConfig->cacheDirectory());
-
-        $this->assertNotEquals($cacheFiles, $compiledFiles);
-
-        $this->assertContains(
-            'Welcome to Spiral Framework',
-            $this->views->render('hello')
-        );
     }
 
     /**

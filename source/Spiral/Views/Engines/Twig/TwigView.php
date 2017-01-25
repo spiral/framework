@@ -8,7 +8,6 @@
 
 namespace Spiral\Views\Engines\Twig;
 
-use Spiral\Views\Exceptions\RenderException;
 use Spiral\Views\ViewInterface;
 
 /**
@@ -24,10 +23,6 @@ abstract class TwigView extends \Twig_Template implements ViewInterface
      */
     public function render(array $context = []): string
     {
-        try {
-            return parent::render($context);
-        } catch (\Throwable $e) {
-            throw new RenderException($e->getMessage(), $e->getCode(), $e);
-        }
+        return parent::render($context);
     }
 }
