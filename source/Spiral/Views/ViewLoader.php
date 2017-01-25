@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
@@ -182,7 +183,11 @@ class ViewLoader extends Component implements LoaderInterface
     protected function parsePath(string $path): array
     {
         //Cutting extra symbols (see Twig)
-        $filename = preg_replace('#/{2,}#', '/', str_replace('\\', '/', (string)$path));
+        $filename = preg_replace(
+            '#/{2,}#',
+            '/',
+            str_replace('\\', '/', (string)$path)
+        );
 
         if (strpos($filename, '.') === false && !empty($this->extension)) {
             //Forcing default extension

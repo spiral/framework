@@ -40,20 +40,11 @@ return [
      * different databases (for now).
      */
     'databases'   => [
-        /*
-         * You can use this database to store application specific settings, obviously data has to be
-         * cached and no client data can land here.
-         */
-        'runtime'   => [
+        'runtime' => [
             'connection'  => 'runtime',
             'tablePrefix' => '',
         ],
-
-        /*
-        * You can use this database to store application specific settings, obviously data has to be
-        * cached and no client data can land here.
-        */
-        'secondary' => [
+        'other'   => [
             'connection'  => 'runtime',
             'tablePrefix' => 'secondary_',
         ],
@@ -72,7 +63,7 @@ return [
             'username'   => 'sqlite',
             'password'   => '',
             'options'    => []
-        ]
+        ],
         /*{{connections}}*/
     ]
 ];

@@ -49,9 +49,23 @@ class NativeEngineTest extends BaseTest
         ]));
     }
 
+    public function testRenderNamespacedAlternative()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('@default/native', [
+            'name' => 'World'
+        ]));
+    }
+
     public function testRenderNamespacedWithExtension()
     {
         $this->assertSame('Hello, World!', $this->views->render('default:native.php', [
+            'name' => 'World'
+        ]));
+    }
+
+    public function testRenderNamespacedWithExtensionAlternative()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('@default/native.php', [
             'name' => 'World'
         ]));
     }

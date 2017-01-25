@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
@@ -99,8 +100,10 @@ class ListCommand extends Command
 
             $header[] = "<info>connected</info>";
             foreach ($database->getTables() as $table) {
-                $grid->addRow(array_merge($header,
-                    [$table->getName(), number_format($table->count())]));
+                $grid->addRow(array_merge(
+                    $header,
+                    [$table->getName(), number_format($table->count())]
+                ));
                 $header = ["", "", "", "", ""];
             }
 

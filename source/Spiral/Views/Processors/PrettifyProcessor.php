@@ -31,6 +31,7 @@ class PrettifyProcessor implements ProcessorInterface
             'normalize' => true,
             //Drop spaces
             'trim'      => ['class', 'style', 'id'],
+
             //Drop when empty
             'drop'      => ['class', 'style', 'id']
         ]
