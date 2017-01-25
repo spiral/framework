@@ -11,6 +11,14 @@ use Spiral\Tests\BaseTest;
 
 class TwigTest extends BaseTest
 {
+    public function testTwigAccess()
+    {
+        $this->assertInstanceOf(
+            \Twig_Environment::class,
+            $this->views->engine('twig')->getTwig()
+        );
+    }
+
     public function testRenderSimple()
     {
         $this->assertContains(
