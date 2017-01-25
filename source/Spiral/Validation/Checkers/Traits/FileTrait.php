@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Validation\Checkers\Traits;
 
 use Psr\Http\Message\UploadedFileInterface;
@@ -36,8 +37,7 @@ trait FileTrait
         }
 
         if (
-            $filename instanceof UploadedFileInterface
-            || $filename instanceof StreamableInterface
+            $filename instanceof UploadedFileInterface || $filename instanceof StreamableInterface
         ) {
             return StreamWrapper::localFilename($filename->getStream());
         }
