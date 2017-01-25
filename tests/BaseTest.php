@@ -73,7 +73,11 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 
         $files = $this->app->files;
         foreach ($files->getFiles(directory('runtime')) as $filename) {
-            $files->delete($filename);
+            try {
+                $files->delete($filename);
+            } catch (\Throwable $e) {
+
+            }
         }
 
         //Close scope
