@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Engines\Prototypes;
 
 use Spiral\Core\Component;
@@ -11,6 +12,9 @@ use Spiral\Views\EngineInterface;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
 
+/**
+ * ViewEngine with ability to switch environment and loader.
+ */
 abstract class AbstractEngine extends Component implements EngineInterface
 {
     /**
