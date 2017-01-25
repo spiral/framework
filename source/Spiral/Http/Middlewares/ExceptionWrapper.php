@@ -107,7 +107,6 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
         ]));
     }
 
-
     /**
      * Instance of ErrorWriter.
      *

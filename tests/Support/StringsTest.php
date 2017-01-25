@@ -64,4 +64,39 @@ class StringsTest extends BaseTest
             Strings::escape('<b>hello</b>', false)
         );
     }
+
+    public function testShorterButSmaller()
+    {
+        $this->assertSame('abc', Strings::shorter('abc', 300));
+    }
+
+    public function testShorterButLonger()
+    {
+        $this->assertSame('long...', Strings::shorter('long content', 7));
+    }
+
+    public function testShorterButLongerUTF8()
+    {
+        $this->assertSame('привет...', Strings::shorter('привет мир', 9));
+    }
+
+    public function testBytes()
+    {
+        $this->assertSame('100 B', Strings::bytes(100));
+        $this->assertSame('1,024 B', Strings::bytes(1024));
+        $this->assertSame('1.0 kB', Strings::bytes(1025));
+        $this->assertSame('100.0 kB', Strings::bytes(1024 * 100));
+        $this->assertSame('100.0 MB', Strings::bytes(1024 * 1024 * 100));
+        $this->assertSame('100.0 GB', Strings::bytes(1024 * 1024 * 1024 * 100));
+    }
+
+    public function normalizeEndings()
+    {
+        $string = "line\n\rline2";
+        $this->assertSame("line\nline2", Strings::normalizeEndings($string));
+
+        $string = "line\n\r\nline2";
+        $this->assertSame("line\n\nline2", Strings::normalizeEndings($string, false));
+        $this->assertSame("line\nline2", Strings::normalizeEndings($string, true));
+    }
 }
