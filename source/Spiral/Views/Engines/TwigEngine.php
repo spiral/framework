@@ -102,7 +102,7 @@ class TwigEngine extends AbstractEngine
             return $this->twig->loadTemplate($path);
         } catch (\Twig_Error_Syntax $exception) {
             //Let's clarify exception location
-            throw SyntaxException::fromTwig($exception, $this->loader);
+            throw SyntaxException::fromTwig($exception);
         } finally {
             $this->benchmark($benchmark);
         }

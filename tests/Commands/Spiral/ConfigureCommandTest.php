@@ -14,7 +14,7 @@ use Spiral\Tests\BaseTest;
 class ConfigureCommandTest extends BaseTest
 {
     /**
-     * This is in a fact one of the most important tests in framework since it's basically complies
+     * This is, in a fact, one of the most important tests in framework since it's basically complies
      * application.
      */
     public function testConfigure()
