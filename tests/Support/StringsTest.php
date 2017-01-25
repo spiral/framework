@@ -99,4 +99,37 @@ class StringsTest extends BaseTest
         $this->assertSame("line\n\nline2", Strings::normalizeEndings($string, false));
         $this->assertSame("line\nline2", Strings::normalizeEndings($string, true));
     }
+
+    public function testNormalizeEndingsEmptyReference()
+    {
+        $input = ['', '    b', '    c'];
+        $output = ['', 'b', 'c'];
+
+        $this->assertSame(
+            join("\n", $output),
+            Strings::normalizeIndents(join("\n", $input))
+        );
+    }
+
+    public function testNormalizeEndingsEmptySpaceReference()
+    {
+        $input = [' ', '    b', '    c'];
+        $output = ['', 'b', 'c'];
+
+        $this->assertSame(
+            join("\n", $output),
+            Strings::normalizeIndents(join("\n", $input))
+        );
+    }
+
+    public function testNormalizeEndingsNonEmptyReference()
+    {
+        $input = ['a', '    b', '    c'];
+        $output = ['a', '    b', '    c'];
+
+        $this->assertSame(
+            join("\n", $output),
+            Strings::normalizeIndents(join("\n", $input))
+        );
+    }
 }

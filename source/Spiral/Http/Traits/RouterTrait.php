@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Traits;
 
 use Spiral\Core\ContainerInterface;
@@ -41,13 +42,13 @@ trait RouterTrait
      *
      * @return RouterInterface
      */
-    public function getRouter()
+    public function getRouter(): RouterInterface
     {
-        if (!empty($this->router)) {
-            return $this->router;
+        if (empty($this->router)) {
+            $this->router = $this->createRouter();
         }
 
-        return $this->router = $this->createRouter();
+        return $this->router;
     }
 
     /**
@@ -55,7 +56,7 @@ trait RouterTrait
      *
      * @param RouteInterface $route
      *
-     * @return $this
+     * @return $this|self
      */
     public function addRoute(RouteInterface $route)
     {
@@ -69,13 +70,13 @@ trait RouterTrait
      *
      * @param RouteInterface $route
      *
-     * @return RouteInterface
+     * @return $this|self
      */
     public function defaultRoute(RouteInterface $route)
     {
         $this->getRouter()->defaultRoute($route);
 
-        return $route;
+        return $this;
     }
 
     /**
@@ -84,18 +85,7 @@ trait RouterTrait
      * @return RouterInterface
      * @throws ScopeException
      */
-    protected function createRouter()
-    {
-        $container = $this->iocContainer();
-        if (empty($container) || !$container->has(RouterInterface::class)) {
-            throw new ScopeException(
-                "Unable to create Router, container not set or binding is missing"
-            );
-        }
-
-        //Let's create default router
-        return $container->get(RouterInterface::class);
-    }
+    abstract protected function createRouter(): RouterInterface;
 
     /**
      * @return ContainerInterface
