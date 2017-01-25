@@ -5,13 +5,17 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views;
 
 use Spiral\Core\ContainerInterface;
 use Spiral\Views\Exceptions\EnvironmentException;
 
 /**
- * Default implementation of EnvironmentInterface
+ * Declares set of dependencies for environment and cache keys based on associated container.
+ *
+ * Attention, dependency set is stated as immutable, THOUGHT calculated values DO depend on
+ * container and might change in application lifetime.
  */
 class DynamicEnvironment implements EnvironmentInterface
 {

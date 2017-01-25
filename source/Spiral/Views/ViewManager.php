@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Views;
 
 use Spiral\Core\Component;
@@ -17,6 +18,10 @@ use Spiral\Views\Configs\ViewsConfig;
 use Spiral\Views\Exceptions\LoaderException;
 use Spiral\Views\Exceptions\ViewsException;
 
+/**
+ * Provides ability to manage view engines, loaders and environment (cache dependencies).
+ * Attention, this is immutable class.
+ */
 class ViewManager extends Component implements ViewsInterface, SingletonInterface
 {
     use BenchmarkTrait;
