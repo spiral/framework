@@ -7,7 +7,9 @@
 
 namespace Spiral\Tests\Http;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Http\Routing\Route;
+use Spiral\Http\Routing\RouteInterface;
 use TestApplication\Controllers\DummyController;
 
 class RoutingTest extends HttpTest
@@ -32,6 +34,22 @@ class RoutingTest extends HttpTest
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('hello world', (string)$response->getBody());
+    }
+
+    public function testRouteInAttributes()
+    {
+        $this->http->addRoute(new Route('default', '', function (ServerRequestInterface $r) {
+            $this->assertArrayHasKey(
+                'route',
+                $r->getAttributes()
+            );
+
+            $this->assertInstanceOf(RouteInterface::class, $r->getAttribute('route'));
+        }));
+
+        $response = $this->get('http://sample.com/');
+
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testNoRoutes()
