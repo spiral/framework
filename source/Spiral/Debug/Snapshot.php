@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Debug;
 
 use Psr\Log\LoggerInterface;
@@ -114,8 +115,6 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
 
     /**
      * Clean old snapshots.
-     *
-     * @todo better implementation?
      *
      * @param array $snapshots
      */
