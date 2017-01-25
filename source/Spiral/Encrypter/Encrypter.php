@@ -14,7 +14,6 @@ use Defuse\Crypto\Exception\CryptoException;
 use Defuse\Crypto\Key;
 use Spiral\Core\Container\InjectableInterface;
 use Spiral\Encrypter\Exceptions\DecryptException;
-use Spiral\Encrypter\Exceptions\EncrypterException;
 use Spiral\Encrypter\Exceptions\EncryptException;
 
 /**
