@@ -95,8 +95,9 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         $views->loader = clone $this->loader;
         $views->environment = $environment;
 
-        //Not carrying already built engines with us
-        $views->engines = [];
+        foreach ($this->engines as $name => $engine) {
+            $this->engines[$name] = $engine->withEnvironment($environment);
+        }
 
         return $views;
     }
@@ -133,7 +134,9 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         $views->environment = clone $this->environment;
 
         //Not carrying already built engines with us
-        $views->engines = [];
+        foreach ($this->engines as $name => $engine) {
+            $this->engines[$name] = $engine->withLoader($loader);
+        }
 
         return $views;
     }
