@@ -196,10 +196,8 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
     }
 
     /**
-     * Detect engine by view path (automatically resolved based on extension).
-     *
-     * @todo this method might require some optimizations, for example utilizing memory cache for
-     * @todo associations will be a nice idea.
+     * Detect engine by view path (automatically resolved based on extension). Method require
+     * improvements and 2nd level caching.
      *
      * @param string $path
      *
