@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Middlewares;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -55,7 +56,7 @@ class CsrfMiddleware implements MiddlewareInterface
             $cookie = $this->tokenCookie($request->getUri(), $token);
 
             //We can alter response cookies
-            $response = $response->withAddedHeader('Set-Cookie', $cookie->createHeader());
+            $response = $response->withAddedHeader('Set-Cookie', (string)$cookie);
         }
 
         //CSRF issues must be handled by Firewall middleware
