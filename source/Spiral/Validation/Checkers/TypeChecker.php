@@ -20,11 +20,24 @@ class TypeChecker extends AbstractChecker implements SingletonInterface
      * {@inheritdoc}
      */
     const MESSAGES = [
-        'notEmpty' => '[[This field is required.]]',
+        'notNull'  => '[[This value is required.]]',
+        'notEmpty' => '[[This value is required.]]',
         'boolean'  => '[[Not a valid boolean.]]',
         'datetime' => '[[Not a valid datetime.]]',
         'timezone' => '[[Not a valid timezone.]]',
     ];
+
+    /**
+     * Value should not be null.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function notNull($value): bool
+    {
+        return !is_null($value);
+    }
 
     /**
      * Value should not be empty.
