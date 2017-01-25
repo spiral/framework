@@ -5,14 +5,16 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Engines\Twig\Exceptions;
 
+use Spiral\Views\Exceptions\RenderException;
 use Spiral\Views\LoaderInterface;
 
 /**
  * Provides ability to clarify syntax error location.
  */
-class SyntaxException extends \RuntimeException
+class SyntaxException extends RenderException
 {
     /**
      * Clarify twig syntax exception.

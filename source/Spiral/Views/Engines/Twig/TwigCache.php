@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Engines\Twig;
 
 use Spiral\Files\FilesInterface;
@@ -50,7 +51,12 @@ class TwigCache implements \Twig_CacheInterface
      */
     public function write($key, $content)
     {
-        $this->files->write($key, $content, FilesInterface::RUNTIME, true);
+        $this->files->write(
+            $key,
+            $content,
+            FilesInterface::RUNTIME,
+            true
+        );
     }
 
     /**

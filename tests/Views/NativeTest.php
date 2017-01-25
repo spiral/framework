@@ -10,7 +10,7 @@ namespace Spiral\Tests\Views;
 use Spiral\Tests\BaseTest;
 use Spiral\Views\Exceptions\RenderException;
 
-class NativeEngineTest extends BaseTest
+class NativeTest extends BaseTest
 {
     public function testRenderSimple()
     {
