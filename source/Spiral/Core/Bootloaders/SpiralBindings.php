@@ -26,7 +26,7 @@ class SpiralBindings extends Bootloader
     /**
      * @var array
      */
-    protected $bindings = [
+    const BINDINGS = [
         //How to resolve log instances
         'Psr\Log\LoggerInterface'               => ['Spiral\Debug\LogsInterface', 'getLogger'],
         'Monolog\Logger'                        => ['Spiral\Debug\LogsInterface', 'getLogger'],
@@ -100,7 +100,7 @@ class SpiralBindings extends Bootloader
     /**
      * @var array
      */
-    protected $singletons = [
+    const SINGLETONS = [
         'Cocur\Slugify\SlugifyInterface' => 'Cocur\Slugify\Slugify'
     ];
 
