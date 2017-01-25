@@ -17,5 +17,6 @@ class ListCommandTest extends BaseTest
 
         $this->assertContains('SQLite', $output);
         $this->assertContains('runtime', $output);
+        $this->assertContains('secondary', $output);
     }
 }

@@ -5,12 +5,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Entities\Database;
-use Spiral\Database\Exceptions\DatabaseException;
+use Spiral\Database\Exceptions\DBALException;
 use Spiral\Database\Injections\FragmentInterface;
 use Spiral\Database\Schemas\Prototypes\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
@@ -62,7 +63,7 @@ class DescribeCommand extends Command
         $schema = $database->table($this->argument('table'))->getSchema();
 
         if (!$schema->exists()) {
-            throw new DatabaseException(
+            throw new DBALException(
                 "Table {$database->getName()}.{$this->argument('table')} does not exists."
             );
         }
