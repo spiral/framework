@@ -10,7 +10,7 @@ namespace Spiral\Tests\Translator;
 use Spiral\Translator\Loaders\PhpFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class PhpFileLoaderTest extends \PHPUnit_Framework_TestCase
+class PHPLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testLoader()
     {

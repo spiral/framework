@@ -9,9 +9,12 @@ namespace TestApplication\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Controller;
+use Spiral\Translator\Traits\TranslatorTrait;
 
 class DummyController extends Controller
 {
+    use TranslatorTrait;
+
     public function indexAction(string $name = 'John')
     {
         return "Hello, {$name}.";
@@ -19,6 +22,8 @@ class DummyController extends Controller
 
     public function requiredAction(int $id)
     {
+        $this->say('Hello world');
+
         return $id;
     }
 
