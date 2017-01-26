@@ -123,26 +123,6 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
     }
 
     /**
-     * Create copy of translator with different locale. Catalogues and
-     * sources are not copied, cache synced.
-     *
-     * @param string $locale
-     *
-     * @return Translator
-     */
-    public function withLocale(string $locale): Translator
-    {
-        $translator = clone $this;
-        $translator->setLocale($locale);
-
-        //Keep direct reference, check if needed
-        $translator->catalogues = &$this->catalogues;
-        $translator->loadedLocales = &$this->loadedLocales;
-
-        return $translator;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * Non immutable version of withLocale.
@@ -158,6 +138,7 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
         }
 
         $this->locale = $locale;
+        setlocale(E_ALL, $locale);
 
         return $this;
     }

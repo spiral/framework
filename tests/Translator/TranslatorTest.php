@@ -154,7 +154,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $source->shouldReceive('getLocales')->andReturn([]);
         $source->shouldReceive('hasLocale')->with('ru')->andReturn(true);
 
-        $translator = $translator->withLocale('ru');
+        $translator->setLocale('ru');
 
         $source->shouldReceive('loadLocale')->with('ru')->andReturn([
             new MessageCatalogue('ru', [
@@ -208,7 +208,7 @@ class TranslatorTest extends \PHPUnit_Framework_TestCase
         $source->shouldReceive('getLocales')->andReturn([]);
         $source->shouldReceive('hasLocale')->with('ru')->andReturn(true);
 
-        $translator = $translator->withLocale('ru');
+         $translator->setLocale('ru');
 
         $source->shouldReceive('loadLocale')->with('ru')->andReturn([
             new MessageCatalogue('ru', [
