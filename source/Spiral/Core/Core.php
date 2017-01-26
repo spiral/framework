@@ -9,16 +9,13 @@ namespace Spiral\Core;
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
-use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
 use Spiral\Core\Exceptions\DirectoryException;
 use Spiral\Core\Exceptions\FatalException;
 use Spiral\Core\Exceptions\ScopeException;
-use Spiral\Core\HMVC\ControllerInterface;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
 
@@ -30,9 +27,9 @@ use Spiral\Http\HttpDispatcher;
  * be invoked and/or routed. Technically you can even invent your own, application specific,
  * architecture.
  */
-abstract class Core extends Component implements CoreInterface, DirectoriesInterface
+abstract class Core extends AbstractCore implements DirectoriesInterface
 {
-    use SharedTrait, BenchmarkTrait;
+    use SharedTrait;
 
     /**
      * I need this constant for Symfony Console. :/
@@ -265,60 +262,6 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     public function getBootloader()
     {
         return $this->bootloader;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @todo Move to AbstractCore?
-     */
-    public function callAction(
-        string $controller,
-        string $action = null,
-        array $parameters = [],
-        array $scope = []
-    ) {
-        if (!class_exists($controller)) {
-            throw new ControllerException(
-                "No such controller '{$controller}' found",
-                ControllerException::NOT_FOUND
-            );
-        }
-
-        $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?? '~default~'));
-
-        //Making sure that all static functionality works well
-        $iocScope = self::staticContainer($this->container);
-
-        //Working with container scope
-        foreach ($scope as $alias => &$target) {
-            $target = $this->container->replace($alias, $target);
-            unset($target);
-        }
-
-        try {
-            //Getting instance of controller
-            $instance = $this->container->get($controller);
-
-            if (!$instance instanceof ControllerInterface) {
-                throw new ControllerException(
-                    "No such controller '{$controller}' found",
-                    ControllerException::NOT_FOUND
-                );
-            }
-
-            return $instance->callAction($action, $parameters);
-        } finally {
-            $this->benchmark($benchmark);
-
-            //Restoring container scope
-            foreach (array_reverse($scope) as $payload) {
-                $this->container->restore($payload);
-            }
-
-            //Restoring shared container to it's original state
-            self::staticContainer($iocScope);
-        }
     }
 
     /**

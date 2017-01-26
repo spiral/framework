@@ -13,7 +13,6 @@ use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Encrypter\EncrypterInterface;
 use Spiral\Encrypter\Exceptions\DecryptException;
-use Spiral\Encrypter\Exceptions\EncrypterException;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\MiddlewareInterface;
 
@@ -136,7 +135,7 @@ class CookieManager extends Component implements MiddlewareInterface
      *
      * @return Response
      *
-     * @throws EncrypterException
+     * @throws \Spiral\Encrypter\Exceptions\EncryptException
      */
     protected function packCookies(Response $response, CookieQueue $queue): Response
     {

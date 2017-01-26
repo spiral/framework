@@ -93,7 +93,7 @@ class EnvironmentTest extends BaseTest
         $this->assertNotSame($this->app->getEnvironment()->getID(), $environment->getID());
     }
 
-    public function testSetEnv()
+    public function testSetAndGet()
     {
         unset($_ENV['TEST']);
 
@@ -102,6 +102,10 @@ class EnvironmentTest extends BaseTest
         $this->assertArrayHasKey('TEST', $_ENV);
 
         $this->assertSame('abc', $this->app->getEnvironment()->get('TEST'));
+
+        $this->assertSame('default', $this->app->getEnvironment()->get('other', 'default'));
+        $this->assertSame('default', env('other', 'default'));
+
         $this->assertSame('abc', getenv('TEST'));
         $this->assertSame('abc', env('TEST'));
     }
