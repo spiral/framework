@@ -62,23 +62,35 @@ class EnvironmentTest extends BaseTest
         );
     }
 
-    public function loadFromMemory()
+    public function testLoadFromMemory()
     {
-        $environment = new Environment(
-            __DIR__ . '/Fixtures/.env',
-            $this->files,
-            $this->memory
-        );
+        $environment = new Environment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
 
         $this->assertNotEmpty(
             $this->memory->loadData(Environment::MEMORY . '.' . $environment->getID())
         );
 
-        $environment = new Environment(
-            __DIR__ . '/Fixtures/.env',
-            $this->files,
-            $this->memory
-        );
+        //Re-init
+        $environment = new Environment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+
+        $this->assertSame('', $environment->get('TEST_EMPTY_1'));
+        $this->assertSame('', $environment->get('TEST_EMPTY_2'));
+
+        $this->assertNull($environment->get('TEST_EMPTY_3'));
+        $this->assertNull($environment->get('TEST_EMPTY_4'));
+
+        $this->assertTrue($environment->get('TEST_BOOLEAN_1'));
+        $this->assertTrue($environment->get('TEST_BOOLEAN_2'));
+        $this->assertTrue($environment->get('TEST_BOOLEAN_3'));
+        $this->assertFalse($environment->get('TEST_BOOLEAN_4'));
+        $this->assertFalse($environment->get('TEST_BOOLEAN_5'));
+        $this->assertFalse($environment->get('TEST_BOOLEAN_6'));
+    }
+
+    public function testDifferentIDs()
+    {
+        $environment = new Environment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+        $this->assertNotSame($this->app->getEnvironment()->getID(), $environment->getID());
     }
 
     public function testSetEnv()

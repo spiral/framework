@@ -121,11 +121,9 @@ class Environment implements EnvironmentInterface
     /**
      * Load environment data.
      *
-     * @return $this|self
-     *
      * @throws EnvironmentException
      */
-    protected function load(): Environment
+    protected function load()
     {
         if (!$this->files->exists($this->filename)) {
             throw new EnvironmentException("Unable to load environment ({$this->filename})");
@@ -138,7 +136,7 @@ class Environment implements EnvironmentInterface
             //Restore from cache
             $this->initEnvironment($values);
 
-            return $this;
+            return;
         }
 
         //Load env values using DotEnv extension
@@ -147,8 +145,6 @@ class Environment implements EnvironmentInterface
         );
 
         $this->memory->saveData(static::MEMORY . '.' . $this->id, $values);
-
-        return $this;
     }
 
     /**
@@ -172,11 +168,11 @@ class Environment implements EnvironmentInterface
     /**
      * Normalize env value.
      *
-     * @param string $value
+     * @param mixed $value
      *
      * @return bool|null|string
      */
-    private function normalize(string $value)
+    private function normalize($value)
     {
         switch (strtolower($value)) {
             case 'true':
