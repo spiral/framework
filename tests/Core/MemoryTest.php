@@ -37,4 +37,31 @@ class MemoryTest extends BaseTest
         $this->memory->saveData('hello', $fragment);
         $this->assertEquals($fragment, $this->memory->loadData('hello'));
     }
+
+    public function testLoadCorrupted()
+    {
+        file_put_contents($this->memoryFilename('corrupt'), '<?php return ');
+        $this->assertSame(null, $this->memory->loadData('corrupt'));
+    }
+
+    public function testLoadCorrupted1()
+    {
+        file_put_contents($this->memoryFilename('corrupt'), '<?ph ');
+        $this->assertSame(null, $this->memory->loadData('corrupt'));
+    }
+
+    /**
+     * Get extension to use for runtime data or configuration cache.
+     *
+     * @param string $name Runtime data file name (without extension).
+     *
+     * @return string
+     */
+    private function memoryFilename(string $name): string
+    {
+        $name = strtolower(str_replace(['/', '\\'], '-', $name));
+
+        //Runtime cache
+        return directory('cache') . $name . '.php';
+    }
 }
