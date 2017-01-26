@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views;
 
 use Spiral\Views\Exceptions\LoaderException;

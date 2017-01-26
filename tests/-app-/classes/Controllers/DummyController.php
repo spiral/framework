@@ -7,6 +7,7 @@
 
 namespace TestApplication\Controllers;
 
+use Models\Hybrid;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Controller;
 use Spiral\Translator\Traits\TranslatorTrait;

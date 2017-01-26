@@ -58,9 +58,6 @@ class SpiralBindings extends Bootloader
         'orm'                                   => 'Spiral\ORM\ORM',
         'odm'                                   => 'Spiral\ODM\ODM',
 
-        //Migrations
-        'Spiral\Migrations\RepositoryInterface' => 'Spiral\Migrations\FileRepository',
-
         //Encryption
         'encrypter'                             => 'Spiral\Encrypter\EncrypterInterface',
 
@@ -83,9 +80,6 @@ class SpiralBindings extends Bootloader
         //Response and response wrappers
         'response'                              => 'Spiral\Http\Response\ResponseWrapper',
 
-        //Thought request attributes
-        'Spiral\Http\Routing\RouteInterface'    => [self::class, 'activeRoute'],
-
         //Short aliases
         'route'                                 => 'Spiral\Http\Routing\RouteInterface',
 
@@ -95,6 +89,9 @@ class SpiralBindings extends Bootloader
 
         //Scope depended
         'actor'                                 => 'Spiral\Security\ActorInterface',
+
+        //Thought request attributes
+        'Spiral\Http\Routing\RouteInterface'    => [self::class, 'activeRoute'],
     ];
 
     /**

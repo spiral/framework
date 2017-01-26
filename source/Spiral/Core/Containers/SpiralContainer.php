@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core\Containers;
 
 use Spiral\Core\Container;
@@ -88,6 +89,9 @@ class SpiralContainer extends Container implements ContainerInterface
         //ODM and ORM
         'Spiral\ODM\ODMInterface'                           => 'Spiral\ODM\ODM',
         'Spiral\ORM\ORMInterface'                           => 'Spiral\ORM\ORM',
+
+        //Migrations
+        'Spiral\Migrations\RepositoryInterface'             => 'Spiral\Migrations\FileRepository',
 
         //Locators
         'Spiral\Console\LocatorInterface'                   => 'Spiral\Console\CommandLocator',

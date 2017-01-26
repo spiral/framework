@@ -62,7 +62,7 @@ class Memory implements MemoryInterface
 
         try {
             return include($filename);
-        } catch (\ErrorException $exception) {
+        } catch (\Throwable $exception) {
             return null;
         }
     }

@@ -248,7 +248,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      *
      * @throws CoreException
      */
-    public function environment()
+    public function getEnvironment()
     {
         if (empty($this->environment)) {
             throw new CoreException("Application environment not set");
@@ -262,7 +262,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      *
      * @return BootloadManager
      */
-    public function bootloader()
+    public function getBootloader()
     {
         return $this->bootloader;
     }

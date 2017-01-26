@@ -71,9 +71,7 @@ class Encrypter implements EncrypterInterface, InjectableInterface
         $packed = json_encode($data);
 
         try {
-            return base64_encode(
-                Crypto::Encrypt($packed, $this->key)
-            );
+            return base64_encode(Crypto::Encrypt($packed, $this->key));
         } catch (CryptoException $e) {
             throw new EncryptException($e->getMessage(), $e->getCode(), $e);
         }
