@@ -21,7 +21,6 @@ use Spiral\Core\NullMemory;
 use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -103,8 +102,22 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         //Let's keep output reference to render exceptions
         $this->output = $output ?? new ConsoleOutput();
 
+        $scope = self::staticContainer($this->container);
+
+        //This handler will allow us to enable verbosity mode
+        $debugHandler = $this->container->get(LogManager::class)->debugHandler(
+            new DebugHandler($this->output)
+        );
+
         //Execute default command
-        $this->run(null, $input ?? new ArgvInput(), $this->output);
+        try {
+            $this->consoleApplication()->run($input, $this->output);
+        } finally {
+            //Restore default debug handler
+            $this->container->get(LogManager::class)->debugHandler($debugHandler);
+
+            self::staticContainer($scope);
+        }
     }
 
     /**
@@ -139,14 +152,8 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             new DebugHandler($output)
         );
 
-        $application = $this->consoleApplication();
-
         try {
-            if (!empty($command)) {
-                $code = $application->find($command)->run($input, $output);
-            } else {
-                $code = $application->run($input, $output);
-            }
+            $code = $this->consoleApplication()->find($command)->run($input, $output);
         } finally {
             //Restore default debug handler
             $this->container->get(LogManager::class)->debugHandler($debugHandler);
