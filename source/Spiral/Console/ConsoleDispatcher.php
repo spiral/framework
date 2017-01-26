@@ -104,11 +104,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         $this->output = $output ?? new ConsoleOutput();
 
         //Execute default command
-        $this->run(
-            $this->config->defaultCommand(),
-            $input ?? new ArgvInput(),
-            $this->output
-        );
+        $this->run(null, $input ?? new ArgvInput(), $this->output);
     }
 
     /**
@@ -143,11 +139,14 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             new DebugHandler($output)
         );
 
+        $application = $this->consoleApplication();
+
         try {
-            /**
-             * Debug: this method creates scope for [[InputInterface]] and [[OutputInterface]].
-             */
-            $code = $this->consoleApplication()->find($command)->run($input, $output);
+            if (!empty($command)) {
+                $code = $application->find($command)->run($input, $output);
+            } else {
+                $code = $application->run($input, $output);
+            }
         } finally {
             //Restore default debug handler
             $this->container->get(LogManager::class)->debugHandler($debugHandler);

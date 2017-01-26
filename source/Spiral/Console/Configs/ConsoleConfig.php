@@ -31,14 +31,6 @@ class ConsoleConfig extends InjectableConfig
     ];
 
     /**
-     * @return string
-     */
-    public function defaultCommand(): string
-    {
-        return $this->config['defaultCommand'] ?? 'list';
-    }
-
-    /**
      * Indication that ConsoleDispatcher must locate commands.
      *
      * @return bool
