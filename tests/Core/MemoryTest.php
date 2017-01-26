@@ -44,12 +44,6 @@ class MemoryTest extends BaseTest
         $this->assertSame(null, $this->memory->loadData('corrupt'));
     }
 
-    public function testLoadCorrupted1()
-    {
-        file_put_contents($this->memoryFilename('corrupt'), '<?ph ');
-        $this->assertSame(null, $this->memory->loadData('corrupt'));
-    }
-
     /**
      * Get extension to use for runtime data or configuration cache.
      *
