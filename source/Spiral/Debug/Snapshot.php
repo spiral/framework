@@ -104,7 +104,12 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
     {
         $filename = $this->config->snapshotFilename($this->getException(), time());
 
-        $this->files->write($filename, $this->render(), FilesInterface::RUNTIME, true);
+        $this->files->write(
+            $filename,
+            $this->render(),
+            FilesInterface::RUNTIME,
+            true
+        );
 
         //Rotating files
         $snapshots = $this->files->getFiles($this->config->reportingDirectory());
