@@ -113,9 +113,8 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         try {
             $this->consoleApplication()->run($input, $this->output);
         } finally {
-            //Restore default debug handler
+            //Restore default debug handler and container scope
             $this->container->get(LogManager::class)->debugHandler($debugHandler);
-
             self::staticContainer($scope);
         }
     }
@@ -155,9 +154,8 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         try {
             $code = $this->consoleApplication()->find($command)->run($input, $output);
         } finally {
-            //Restore default debug handler
+            //Restore default debug handler and container scope
             $this->container->get(LogManager::class)->debugHandler($debugHandler);
-
             self::staticContainer($scope);
         }
 
