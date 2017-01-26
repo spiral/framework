@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 /**
@@ -12,6 +13,13 @@ namespace Spiral\Core;
  */
 interface EnvironmentInterface
 {
+    /**
+     * Unique environment ID.
+     *
+     * @return string
+     */
+    public function getID(): string;
+    
     /**
      * Set environment value.
      *
@@ -29,11 +37,4 @@ interface EnvironmentInterface
      * @return mixed
      */
     public function get(string $name, $default = null);
-
-    /**
-     * Unique environment identificator
-     *
-     * @return string
-     */
-    public function getID();
 }
