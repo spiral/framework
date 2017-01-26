@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Debug;
 
 use Psr\Log\LoggerInterface;
@@ -31,7 +32,7 @@ class QuickSnapshot implements SnapshotInterface
      * @param \Throwable      $exception
      * @param LoggerInterface $logger
      */
-    public function __construct($exception, LoggerInterface $logger = null)
+    public function __construct(\Throwable $exception, LoggerInterface $logger = null)
     {
         $this->exception = $exception;
         $this->logger = $logger;

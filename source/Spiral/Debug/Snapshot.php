@@ -50,7 +50,7 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
      * @param ViewsInterface  $views
      */
     public function __construct(
-        $exception,
+        \Throwable $exception,
         SnapshotConfig $config,
         LoggerInterface $logger,
         FilesInterface $files,
