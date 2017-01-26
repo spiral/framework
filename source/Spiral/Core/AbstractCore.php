@@ -19,6 +19,7 @@ abstract class AbstractCore extends Component implements CoreInterface
     use BenchmarkTrait;
 
     /**
+     * @invisible
      * @var ContainerInterface
      */
     protected $container;

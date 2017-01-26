@@ -82,23 +82,16 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
     protected $bootloader;
 
     /**
-     * Not set until start method. Can be set manually in bootload.
-     *
-     * @var DispatcherInterface
-     */
-    protected $dispatcher;
-
-    /**
      * @var EnvironmentInterface
      */
     protected $environment;
 
     /**
-     * @invisible
+     * Not set until start method. Can be set manually in bootload.
      *
-     * @var ContainerInterface
+     * @var DispatcherInterface
      */
-    protected $container;
+    protected $dispatcher;
 
     /**
      * Application memory.
@@ -112,6 +105,7 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
      * Components to be autoloader while application initialization. This property can be redefined
      * on application level.
      *
+     * @deprecated use LOAD constant instead
      * @invisible
      */
     protected $load = [];
