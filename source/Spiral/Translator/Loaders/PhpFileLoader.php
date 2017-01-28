@@ -8,7 +8,6 @@
 
 namespace Spiral\Translator\Loaders;
 
-use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 
@@ -22,14 +21,12 @@ class PhpFileLoader extends ArrayLoader
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        if (!stream_is_local($resource)) {
-            throw new InvalidResourceException(sprintf('This is not a local file "%s"', $resource));
-        }
-
         if (!file_exists($resource)) {
-            throw new NotFoundResourceException(sprintf('File "%s" not found', $resource));
+            throw new NotFoundResourceException(
+                sprintf('File "%s" not found', $resource)
+            );
         }
 
-        return parent::load(require $resource, $locale, $domain);
+        return parent::load(include_once $resource, $locale, $domain);
     }
 }
