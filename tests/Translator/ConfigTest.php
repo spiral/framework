@@ -112,6 +112,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('messages', $config->resolveDomain('vendor-views'));
     }
 
+    public function testDomainsFallback()
+    {
+        $config = new TranslatorConfig([
+            'domains' => [
+                'spiral'   => [
+                    'spiral-*'
+                ],
+                'messages' => ['*']
+            ]
+        ]);
+
+        $this->assertSame('external', $config->resolveDomain('external'));
+    }
+
     public function testHasLoader()
     {
         $config = new TranslatorConfig([

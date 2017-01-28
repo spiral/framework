@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Translator;
 
 use Spiral\Core\Component;
@@ -126,11 +127,6 @@ class Indexer extends Component
     protected function registerInvocations(array $invocations)
     {
         foreach ($invocations as $invocation) {
-            if ($invocation->countArguments() < 1) {
-                //This is not valid invocation
-                continue;
-            }
-
             if ($invocation->getArgument(0)->getType() != ReflectionArgument::STRING) {
                 //We can only index invocations with constant string arguments
                 continue;
@@ -146,31 +142,9 @@ class Indexer extends Component
             );
 
             $string = $invocation->getArgument(0)->stringValue();
+            $string = $this->removeBraces($string);
 
-            if ($invocation->getName() == 'say') {
-                $string = $this->removeBraces($string);
-            }
-
-            //Translation using default bundle
-            $domain = $this->config->defaultDomain();
-
-            if ($invocation->getName() == 'say') {
-                $domain = $this->translator->resolveDomain($invocation->getClass());
-            } else {
-                //L or P functions
-                if ($invocation->countArguments() >= 3) {
-                    if ($invocation->getArgument(2)->getType() != ReflectionArgument::STRING) {
-                        //Unable to resolve domain name
-                        continue;
-                    }
-
-                    $domain = $this->translator->resolveDomain(
-                        $invocation->getArgument(2)->stringValue()
-                    );
-                }
-            }
-
-            $this->register($domain, $string);
+            $this->register($this->resolveDomain($invocation), $string);
         }
     }
 
@@ -186,6 +160,46 @@ class Indexer extends Component
         $this->catalogue->set($domain, $string, $string);
 
         $this->logger()->debug("Found [{domain}]: '{string}'", compact('domain', 'string'));
+    }
+
+    /**
+     * Get associated domain.
+     *
+     * @param \Spiral\Tokenizer\Reflections\ReflectionInvocation $invocation
+     *
+     * @return string
+     */
+    private function resolveDomain(ReflectionInvocation $invocation): string
+    {
+        //Translation using default bundle
+        $domain = $this->config->defaultDomain();
+
+        if ($invocation->getName() == 'say') {
+            //Let's try to confirm domain
+            $domain = $this->translator->resolveDomain($invocation->getClass());
+        }
+
+        //L and SAY functions
+        $argument = null;
+        switch (strtolower($invocation->getName())) {
+            case 'say':
+            case 'l':
+                if ($invocation->countArguments() >= 3) {
+                    $argument = $invocation->getArgument(2);
+                }
+                break;
+            case 'p':
+                if ($invocation->countArguments() >= 4) {
+                    $argument = $invocation->getArgument(3);
+                }
+        }
+
+        if (!empty($argument) && $argument->getType() == ReflectionArgument::STRING) {
+            //Domain specified in arguments
+            $domain = $this->translator->resolveDomain($argument->stringValue());
+        }
+
+        return $domain;
     }
 
     /**

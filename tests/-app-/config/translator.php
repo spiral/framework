@@ -48,6 +48,7 @@ return [
         'requests'   => [
             'requests-*'
         ],
+        'external'   => ['external'],
         'messages'   => ['*'],
         /*{{domains}}*/
     ],

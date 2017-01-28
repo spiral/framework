@@ -7,7 +7,6 @@
 
 namespace TestApplication\Controllers;
 
-use Models\Hybrid;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Controller;
 use Spiral\Http\Routing\RouteInterface;
@@ -29,7 +28,17 @@ class DummyController extends Controller
 
     public function requiredAction(int $id)
     {
+        //no index
+        $this->say(get_class($this));
+
         $this->say('Hello world');
+        $this->say('Hello world', [], 'external');
+
+        l('l');
+        l('l', [], 'external');
+
+        p('%s unit|%s units', 10);
+        p('%s unit|%s units', 10, [], 'external');
 
         return $id;
     }

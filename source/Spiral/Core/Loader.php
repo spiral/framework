@@ -205,25 +205,32 @@ class Loader extends Component implements SingletonInterface
                 || interface_exists($class, false)
                 || trait_exists($class, false)
             ) {
-                //We need reflection to find class location
-                $reflector = new \ReflectionClass($class);
-
-                try {
-                    $filename = $reflector->getFileName();
-                    $filename = rtrim(
-                        str_replace(['\\', '//'], '/', $filename),
-                        '/'
-                    );
-
-                    if (file_exists($filename)) {
-                        $this->loadmap[$class] = $this->classes[$class] = $filename;
-                    }
-                } catch (\Throwable $e) {
-                    //Get filename for classes located in PHARs might break reflection
-                }
-
+                $this->rememberFilename($class);
                 break;
             }
+        }
+    }
+
+    /**
+     * @param string $class
+     */
+    private function rememberFilename(string $class)
+    {
+        //We need reflection to find class location
+        $reflector = new \ReflectionClass($class);
+
+        try {
+            $filename = $reflector->getFileName();
+            $filename = rtrim(
+                str_replace(['\\', '//'], '/', $filename),
+                '/'
+            );
+
+            if (file_exists($filename)) {
+                $this->loadmap[$class] = $this->classes[$class] = $filename;
+            }
+        } catch (\Throwable $e) {
+            //Get filename for classes located in PHARs might break reflection
         }
     }
 }
