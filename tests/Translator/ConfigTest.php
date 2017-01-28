@@ -118,8 +118,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             'domains' => [
                 'spiral'   => [
                     'spiral-*'
-                ],
-                'messages' => ['*']
+                ]
             ]
         ]);
 

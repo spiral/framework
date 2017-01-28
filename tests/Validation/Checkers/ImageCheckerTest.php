@@ -78,6 +78,15 @@ class ImageCheckerTest extends BaseTest
                 ['image:smaller', 150, 150]
             ]
         ]);
+
+
+        $this->assertFail('i', [
+            'i' => __DIR__ . '/fixtures/hack.jpg'
+        ], [
+            'i' => [
+                ['image:smaller', 150, 150]
+            ]
+        ]);
     }
 
     public function testBigger()
@@ -94,6 +103,14 @@ class ImageCheckerTest extends BaseTest
 
         $this->assertFail('i', [
             'i' => $file
+        ], [
+            'i' => [
+                ['image:bigger', 150, 150]
+            ]
+        ]);
+
+        $this->assertFail('i', [
+            'i' => __DIR__ . '/fixtures/hack.jpg'
         ], [
             'i' => [
                 ['image:bigger', 150, 150]

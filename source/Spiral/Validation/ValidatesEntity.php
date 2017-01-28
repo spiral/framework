@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Validation;
 
 use Spiral\Core\Exceptions\ScopeException;
@@ -27,17 +28,17 @@ class ValidatesEntity extends DataEntity
     /**
      * @var ValidatorInterface
      */
-    protected $validator;
+    private $validator;
 
     /**
-     * @param array              $fields
+     * @param array              $data
      * @param ValidatorInterface $validator
      *
      * @throws ScopeException
      */
-    public function __construct(array $fields, ValidatorInterface $validator = null)
+    public function __construct(array $data, ValidatorInterface $validator = null)
     {
-        parent::__construct($fields);
+        parent::__construct($data);
         $this->validator = $this->saturate($validator, ValidatorInterface::class);
     }
 
