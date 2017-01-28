@@ -23,9 +23,9 @@ class RequiredCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testWrongScope()
     {
-        $checker = new Checkers\RequiredChecker();
+        $checker = new Checkers\RequiredChecker(new Container());
 
-        $checker->with('a', ['b']);
+        $checker->with(null, ['b']);
     }
 
     public function testRequiredWith()
