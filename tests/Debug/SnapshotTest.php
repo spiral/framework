@@ -74,6 +74,10 @@ class SnapshotTest extends BaseTest
         $this->assertNotEmpty($this->files->getFiles($config->reportingDirectory()));
     }
 
+    /**
+     * This test will perform crazy amount of calculations due amount of dump commands and PHPUnit
+     * stack.
+     */
     public function testReportSlow()
     {
         /**@var SnapshotConfig $config */
