@@ -18,6 +18,16 @@ use Spiral\Validation\Validator;
 
 class RequiredCheckerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @expectedException \Spiral\Validation\Exceptions\CheckerException
+     */
+    public function testWrongScope()
+    {
+        $checker = new Checkers\RequiredChecker();
+
+        $checker->with('a', ['b']);
+    }
+
     public function testRequiredWith()
     {
         $rules = [
@@ -126,6 +136,10 @@ class RequiredCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertFail('a', [], $rules);
 
         $this->assertValid([
+            'a' => true
+        ], $rules);
+
+        $this->assertValid([
             'b' => true
         ], $rules);
 
@@ -155,6 +169,10 @@ class RequiredCheckerTest extends \PHPUnit_Framework_TestCase
         //BOOLEAN TREE TEST
 
         $this->assertFail('a', [], $rules);
+
+        $this->assertValid([
+            'a' => true
+        ], $rules);
 
         $this->assertValid([
             'b' => true

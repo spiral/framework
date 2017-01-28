@@ -22,6 +22,18 @@ class ImageCheckerTest extends BaseTest
             'i' => ['image:valid']
         ]);
 
+        $this->assertValid([
+            'i' => $file
+        ], [
+            'i' => [['image:type', 'jpeg']]
+        ]);
+
+        $this->assertFail('i', [
+            'i' => $file
+        ], [
+            'i' => [['image:type', 'png']]
+        ]);
+
         $this->assertFail('i', [
             'i' => null
         ], [
