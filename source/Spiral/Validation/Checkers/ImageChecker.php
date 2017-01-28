@@ -9,8 +9,10 @@
 namespace Spiral\Validation\Checkers;
 
 use Interop\Container\ContainerInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Files\FilesInterface;
+use Spiral\Files\Streams\StreamableInterface;
 use Spiral\Validation\Checkers\Traits\FileTrait;
 use Spiral\Validation\Prototypes\AbstractChecker;
 
@@ -77,14 +79,14 @@ class ImageChecker extends AbstractChecker implements SingletonInterface
     /**
      * Check if image in a list of allowed image types.
      *
-     * @param mixed       $filename
-     * @param array|mixed $types
+     * @param string|UploadedFileInterface|StreamableInterface $file
+     * @param array|string                                     $types
      *
      * @return bool
      */
-    public function type($filename, $types): bool
+    public function type($file, $types): bool
     {
-        if (empty($image = $this->imageData($filename))) {
+        if (empty($image = $this->imageData($file))) {
             return false;
         }
 
@@ -92,71 +94,60 @@ class ImageChecker extends AbstractChecker implements SingletonInterface
             $types = array_slice(func_get_args(), 1);
         }
 
-        return in_array(self::IMAGE_TYPES[$image[self::IMAGE_TYPE]], $types);
+        return in_array(
+            self::IMAGE_TYPES[$image[self::IMAGE_TYPE]],
+            $types
+        );
     }
 
     /**
      * Shortcut to check if image has valid type (JPEG, PNG and GIF are allowed).
      *
-     * @param mixed $filename
+     * @param string|UploadedFileInterface|StreamableInterface $file
      *
      * @return bool
      */
-    public function valid($filename): bool
+    public function valid($file): bool
     {
-        return $this->type($filename, ['jpeg', 'png', 'gif']);
+        return $this->type($file, ['jpeg', 'png', 'gif']);
     }
 
     /**
      * Check if image smaller that specified rectangle (height check if optional).
      *
-     * @param mixed $filename
-     * @param int   $width
-     * @param int   $height Optional.
+     * @param string|UploadedFileInterface|StreamableInterface $file
+     * @param int                                              $width
+     * @param int                                              $height Optional.
      *
      * @return bool
      */
-    public function smaller($filename, int $width, int $height = null): bool
+    public function smaller($file, int $width, int $height): bool
     {
-        if (empty($image = $this->imageData($filename))) {
+        if (empty($image = $this->imageData($file))) {
             return false;
         }
 
-        if ($image[self::WIDTH] >= $width) {
-            return false;
-        }
-
-        if (!empty($height) && $image[self::HEIGHT] >= $height) {
-            return false;
-        }
-
-        return true;
+        return $image[self::WIDTH] <= $width
+            && $image[self::HEIGHT] <= $height;
     }
 
     /**
      * Check if image is bigger that specified rectangle (height check is optional).
      *
-     * @param mixed $filename
-     * @param int   $width
-     * @param int   $height Optional.
+     * @param string|UploadedFileInterface|StreamableInterface $file
+     * @param int                                              $width
+     * @param int                                              $height Optional.
      *
      * @return bool
      */
-    public function bigger($filename, int $width, int $height = null): bool
+    public function bigger($file, int $width, int $height = null): bool
     {
-        if (empty($image = $this->imageData($filename))) {
+        if (empty($image = $this->imageData($file))) {
             return false;
         }
 
-        if ($image[self::WIDTH] < $width) {
-            return false;
-        }
-
-        if (!empty($height) && $image[self::HEIGHT] < $height) {
-            return false;
-        }
-
-        return true;
+        return $image[self::WIDTH] >= $width
+            && $image[self::HEIGHT] >= $height;
     }
 
     /**
@@ -164,14 +155,14 @@ class ImageChecker extends AbstractChecker implements SingletonInterface
      *
      * @see getimagesize()
      *
-     * @param string|mixed $filename
+     * @param string|mixed $file
      *
      * @return array|bool
      */
-    protected function imageData($filename)
+    protected function imageData($file)
     {
         try {
-            return getimagesize($this->resolveFilename($filename));
+            return getimagesize($this->resolveFilename($file));
         } catch (\Exception $e) {
             //We can simply invalidate image if system can't read it
         }

@@ -262,7 +262,6 @@ class FileCheckerTest extends BaseTest
 
     public function testExtensionUploaded()
     {
-
         $this->assertFail('a', [], [
             'a' => [
                 'file:exists',
