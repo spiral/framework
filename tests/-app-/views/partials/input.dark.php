@@ -12,11 +12,14 @@
             </block:input-label>
             <?php #compiled
         }
+
+        /** @var mixed $inputValue */
+        $this->runtimeVariable('inputValue', '${value}${context}');
         ?>
         <block:input-body>
                 <input type="${type|text}"
                        name="${name}"
-                       value="${value}${context}"
+                       value="<?= $inputValue ?>"
                        data-prefix="${prefix}"
                        data-pattern="${pattern}"
                        class="item-input <?=(!empty($prefix) && $prefix != "''") || (!empty($pattern) && $pattern != "''") ? 'sf-js-input' : '' ?>"

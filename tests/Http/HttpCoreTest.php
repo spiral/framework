@@ -16,7 +16,7 @@ use Spiral\Tests\Core\Fixtures\SharedComponent;
 use Zend\Diactoros\Response as ZendResponse;
 use Zend\Diactoros\ServerRequest as ZendRequest;
 
-class CoreTest extends \PHPUnit_Framework_TestCase
+class HttpCoreTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Spiral\Core\ContainerInterface
@@ -114,8 +114,8 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         {
             public function emit(Response $response, $maxBufferLevel = null)
             {
-                CoreTest::assertEquals(300, $response->getStatusCode());
-                CoreTest::assertEquals(ob_get_level(), $maxBufferLevel);
+                HttpCoreTest::assertEquals(300, $response->getStatusCode());
+                HttpCoreTest::assertEquals(ob_get_level(), $maxBufferLevel);
             }
         };
 

@@ -23,7 +23,7 @@ class TwigTest extends BaseTest
 
     public function testCompile()
     {
-        $this->views->compile('isolated');
+        $this->views->compile('isolated-y');
 
         clearstatcache();
         $this->assertNotEmpty($this->files->getFiles(
@@ -33,7 +33,7 @@ class TwigTest extends BaseTest
 
     public function testCompileWithEnvironment()
     {
-        $this->views->compile('isolated');
+        $this->views->compile('isolated-x');
 
         $result = $this->views->withEnvironment(
             $this->views->getEnvironment()->withDependency('value', function () {
