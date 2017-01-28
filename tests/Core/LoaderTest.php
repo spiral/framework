@@ -14,6 +14,7 @@ use Spiral\Tests\Core\Fixtures\IsolatedBClass;
 use Spiral\Tests\Core\Fixtures\IsolatedCClass;
 use Spiral\Tests\Core\Fixtures\IsolatedClass;
 use Spiral\Tests\Core\Fixtures\SampleClass;
+use Spiral\Tests\Core\Fixtures\SampleInterface;
 
 class LoaderTest extends BaseTest
 {
@@ -71,6 +72,27 @@ class LoaderTest extends BaseTest
         $this->assertTrue($loader->isKnown(IsolatedCClass::class));
 
         $this->assertArrayHasKey(IsolatedCClass::class, $loader->getClasses());
+
+        $loader->disable();
+
+        $this->assertNoLoaders();
+    }
+
+    public function testLoadInterface()
+    {
+        $this->assertNoLoaders();
+
+        $loader = new Loader(new NullMemory(), false);
+        $this->assertFalse($loader->isEnabled());
+
+        $loader->enable();
+        $this->assertTrue($loader->isEnabled());
+
+        $this->assertFalse($loader->isKnown(SampleInterface::class));
+        class_exists(SampleInterface::class, true);
+        $this->assertTrue($loader->isKnown(SampleInterface::class));
+
+        $this->assertArrayHasKey(SampleInterface::class, $loader->getClasses());
 
         $loader->disable();
 
