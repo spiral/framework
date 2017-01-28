@@ -138,7 +138,6 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
         }
 
         $this->locale = $locale;
-        setlocale(E_ALL, $locale);
 
         return $this;
     }

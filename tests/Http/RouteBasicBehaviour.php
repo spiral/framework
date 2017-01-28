@@ -12,7 +12,7 @@ use Spiral\Http\Routing\Route;
 use Spiral\Http\Routing\RouteInterface;
 use TestApplication\Controllers\DummyController;
 
-class RoutingTest extends HttpTest
+class RouteBasicBehaviour extends HttpTest
 {
     public function testRouteToController()
     {

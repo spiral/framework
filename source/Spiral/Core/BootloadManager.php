@@ -101,8 +101,8 @@ class BootloadManager
             if ($options['init']) {
                 $object = $container->get($bootloader);
 
-                //Booting
                 if ($options['boot']) {
+                    //Booting
                     $boot = new \ReflectionMethod($object, 'boot');
                     $boot->invokeArgs($object, $container->resolveArguments($boot));
                 }

@@ -9,7 +9,6 @@
 namespace Spiral\Core\Bootloaders;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Exceptions\Container\AutowireException;
 use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Http\Routing\RouteInterface;
 
@@ -28,70 +27,70 @@ class SpiralBindings extends Bootloader
      */
     const BINDINGS = [
         //How to resolve log instances
-        'Psr\Log\LoggerInterface'               => ['Spiral\Debug\LogsInterface', 'getLogger'],
-        'Monolog\Logger'                        => ['Spiral\Debug\LogsInterface', 'getLogger'],
+        'Psr\Log\LoggerInterface'            => ['Spiral\Debug\LogsInterface', 'getLogger'],
+        'Monolog\Logger'                     => ['Spiral\Debug\LogsInterface', 'getLogger'],
 
         //Core components (see SharedTrait)
-        'memory'                                => 'Spiral\Core\MemoryInterface',
-        'container'                             => 'Spiral\Core\ContainerInterface',
+        'memory'                             => 'Spiral\Core\MemoryInterface',
+        'container'                          => 'Spiral\Core\ContainerInterface',
 
         //Logging
-        'logs'                                  => 'Spiral\Debug\LogsInterface',
+        'logs'                               => 'Spiral\Debug\LogsInterface',
 
         //Dispatchers
-        'http'                                  => 'Spiral\Http\HttpDispatcher',
-        'console'                               => 'Spiral\Console\ConsoleDispatcher',
+        'http'                               => 'Spiral\Http\HttpDispatcher',
+        'console'                            => 'Spiral\Console\ConsoleDispatcher',
 
         //Shared components
-        'files'                                 => 'Spiral\Files\FilesInterface',
-        'tokenizer'                             => 'Spiral\Tokenizer\TokenizerInterface',
-        'locator'                               => 'Spiral\Tokenizer\ClassesInterface',
-        'invocationLocator'                     => 'Spiral\Tokenizer\InvocationsInterface',
-        'storage'                               => 'Spiral\Storage\StorageInterface',
+        'files'                              => 'Spiral\Files\FilesInterface',
+        'tokenizer'                          => 'Spiral\Tokenizer\TokenizerInterface',
+        'locator'                            => 'Spiral\Tokenizer\ClassesInterface',
+        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationsInterface',
+        'storage'                            => 'Spiral\Storage\StorageInterface',
 
         //Concrete for now
-        'views'                                 => 'Spiral\Views\ViewManager',
-        'translator'                            => 'Spiral\Translator\Translator',
+        'views'                              => 'Spiral\Views\ViewManager',
+        'translator'                         => 'Spiral\Translator\Translator',
 
         //Databases and models
-        'dbal'                                  => 'Spiral\Database\DatabaseManager',
-        'orm'                                   => 'Spiral\ORM\ORM',
-        'odm'                                   => 'Spiral\ODM\ODM',
+        'dbal'                               => 'Spiral\Database\DatabaseManager',
+        'orm'                                => 'Spiral\ORM\ORM',
+        'odm'                                => 'Spiral\ODM\ODM',
 
         //Encryption
-        'encrypter'                             => 'Spiral\Encrypter\EncrypterInterface',
+        'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
 
         //Concrete for now, replace with better interface in future
-        'db'                                    => 'Spiral\Database\Entities\Database',
-        'mongo'                                 => 'Spiral\ODM\Entities\MongoDatabase',
+        'db'                                 => 'Spiral\Database\Entities\Database',
+        'mongo'                              => 'Spiral\ODM\Entities\MongoDatabase',
 
         //Http scope dependent
-        'cookies'                               => 'Spiral\Http\Cookies\CookieQueue',
-        'router'                                => 'Spiral\Http\Routing\RouterInterface',
+        'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
+        'router'                             => 'Spiral\Http\Routing\RouterInterface',
         //'session'                            => 'Spiral\Session\SessionInterface'
 
         //Pagination manager
-        'paginators'                            => 'Spiral\Pagination\PaginatorsInterface',
+        'paginators'                         => 'Spiral\Pagination\PaginatorsInterface',
 
         //Http scope depended data routes and wrappers
-        'request'                               => 'Psr\Http\Message\ServerRequestInterface',
-        'input'                                 => 'Spiral\Http\Request\InputManager',
+        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
+        'input'                              => 'Spiral\Http\Request\InputManager',
 
         //Response and response wrappers
-        'response'                              => 'Spiral\Http\Response\ResponseWrapper',
+        'response'                           => 'Spiral\Http\Response\ResponseWrapper',
 
         //Short aliases
-        'route'                                 => 'Spiral\Http\Routing\RouteInterface',
+        'route'                              => 'Spiral\Http\Routing\RouteInterface',
 
         //Security component
-        'permissions'                           => 'Spiral\Security\PermissionsInterface',
-        'rules'                                 => 'Spiral\Security\RulesInterface',
+        'permissions'                        => 'Spiral\Security\PermissionsInterface',
+        'rules'                              => 'Spiral\Security\RulesInterface',
 
         //Scope depended
-        'actor'                                 => 'Spiral\Security\ActorInterface',
+        'actor'                              => 'Spiral\Security\ActorInterface',
 
         //Thought request attributes
-        'Spiral\Http\Routing\RouteInterface'    => [self::class, 'activeRoute'],
+        'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],
     ];
 
     /**
@@ -109,7 +108,7 @@ class SpiralBindings extends Bootloader
     public function activeRoute(ServerRequestInterface $request = null)
     {
         if (empty($request)) {
-            throw new AutowireException("No active request found");
+            throw new ScopeException("No active request found");
         }
 
         $route = $request->getAttribute('route');
