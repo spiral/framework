@@ -5,6 +5,7 @@
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Configs;
 
 use Spiral\Core\InjectableConfig;
@@ -75,7 +76,7 @@ class ViewsConfig extends InjectableConfig
      */
     public function cacheDirectory(): string
     {
-        return $this->config['cache']['directory'];
+        return rtrim($this->config['cache']['directory'], '/') . '/';
     }
 
     /**

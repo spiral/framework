@@ -5,10 +5,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Processors;
 
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
+use Spiral\Views\SourceContextInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Set of helper expressions for Evaluate processor.
@@ -49,19 +52,18 @@ class ExpressionsProcessors implements ProcessorInterface
      */
     public function modify(
         EnvironmentInterface $environment,
-        string $source,
-        string $namespace,
-        string $name
+        ViewSource $view,
+        string $code
     ): string {
         foreach (static::EXPRESSIONS as $expression) {
-            $source = preg_replace_callback(
+            $code = preg_replace_callback(
                 $expression['pattern'],
                 $expression['callback'],
-                $source
+                $code
             );
         }
 
-        return $source;
+        return $code;
     }
 
     /**

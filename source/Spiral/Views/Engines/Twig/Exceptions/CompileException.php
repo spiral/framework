@@ -8,12 +8,10 @@
 
 namespace Spiral\Views\Engines\Twig\Exceptions;
 
-use Spiral\Views\Exceptions\RenderException;
-
 /**
  * Provides ability to clarify syntax error location.
  */
-class SyntaxException extends RenderException
+class CompileException extends \Spiral\Views\Exceptions\CompileException
 {
     /**
      * Clarify twig syntax exception.
@@ -22,7 +20,7 @@ class SyntaxException extends RenderException
      *
      * @return self
      */
-    public static function fromTwig(\Twig_Error_Syntax $error): SyntaxException
+    public static function fromTwig(\Twig_Error_Syntax $error): CompileException
     {
         $exception = new static($error->getMessage(), $error->getCode(), $error);
         $exception->file = $error->getSourceContext()->getPath();

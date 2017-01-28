@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Engines;
 
 use Spiral\Core\ContainerInterface;
@@ -13,13 +14,15 @@ use Spiral\Stempler\Supervisor;
 use Spiral\Stempler\Syntaxes\DarkSyntax;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Prototypes\AbstractEngine;
+use Spiral\Views\Engines\Stempler\LoaderBridge;
 use Spiral\Views\Engines\Stempler\StemplerCache;
 use Spiral\Views\Engines\Stempler\StemplerView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
-use Spiral\Views\ProcessableLoader;
+use Spiral\Views\Loaders\ModifiableLoader;
 use Spiral\Views\ProcessorInterface;
 use Spiral\Views\ViewInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Spiral Stempler template composer.
@@ -77,7 +80,7 @@ class StemplerEngine extends AbstractEngine
         $this->modifiers = $modifiers;
         $this->processors = $processors;
 
-        $this->cache = new StemplerCache($files, $this->environment);
+        $this->cache = new StemplerCache($this->environment, $files);
     }
 
     /**
@@ -87,8 +90,6 @@ class StemplerEngine extends AbstractEngine
     {
         return new StemplerView(
             $this->compile($path),
-            $this->loader->fetchNamespace($path),
-            $this->loader->fetchName($path),
             $this->container
         );
     }
@@ -96,20 +97,31 @@ class StemplerEngine extends AbstractEngine
     /**
      * {@inheritdoc}
      *
-     * @return string Cached filename.
+     * @return ViewSource Points to compiled view source.
      */
-    public function compile(string $path, bool $reset = false): string
+    public function compile(string $path, bool $reset = false): ViewSource
     {
-        $cached = $this->cache->generateKey($path);
+        $context = $this->loader->getSourceContext($path);
+        $cached = new ViewSource(
+            $this->cache->cacheFilename($path),
+            $context->getName(),
+            $context->getNamespace()
+        );
 
-        if ($this->loader->isFresh($path, $this->cache->getTimestamp($cached)) && !$reset) {
-            //Compiled and cached
+        if (
+            $context->isFresh($this->cache->timeCached($cached->getFilename()))
+            && !$reset
+        ) {
+            //Compiled and cached and not changed (simple cache check)
             return $cached;
         }
 
         $benchmark = $this->benchmark('compile', $path);
         try {
-            $source = $this->createSupervisor()->createNode($path)->compile();
+            //Compiling into cache
+            $cached = $cached->withCode(
+                $this->createSupervisor()->createNode($path)->compile()
+            );
         } finally {
             $this->benchmark($benchmark);
         }
@@ -117,10 +129,18 @@ class StemplerEngine extends AbstractEngine
         $benchmark = $this->benchmark('cache', $path);
         try {
             //To simplify processors life let's write file to cache first (this might help in debugging)
-            $this->cache->write($cached, $source);
+            $this->cache->write(
+                $cached->getFilename(),
+                $cached->getCode()
+            );
 
             //Ok, now we can apply processors
-            $this->cache->write($cached, $this->processSource($source, $path));
+            $cached = $this->postProcess($cached);
+
+            $this->cache->write(
+                $cached->getFilename(),
+                $cached->getCode()
+            );
         } finally {
             $this->benchmark($benchmark);
         }
@@ -156,14 +176,13 @@ class StemplerEngine extends AbstractEngine
     }
 
     /**
-     * Process compiled source using Stempler post-processors.
+     * Run associated processors for post-processing.
      *
-     * @param string $source
-     * @param string $path
+     * @param \Spiral\Views\ViewSource $source
      *
-     * @return string
+     * @return ViewSource
      */
-    protected function processSource(string $source, string $path): string
+    protected function postProcess(ViewSource $source): ViewSource
     {
         foreach ($this->processors as $processor) {
             /**
@@ -173,15 +192,18 @@ class StemplerEngine extends AbstractEngine
                 $processor = $this->container->make($processor);
             }
 
-            $benchmark = $this->benchmark('process', get_class($processor) . '-{' . $path);
+            $benchmark = $this->benchmark(
+                'process',
+                get_class($processor) . '-{' . $source->getName()
+            );
+
             try {
                 //Post processing
-                $source = $processor->modify(
+                $source->withCode($processor->modify(
                     $this->environment,
                     $source,
-                    $this->loader->fetchNamespace($path),
-                    $this->loader->fetchName($path)
-                );
+                    $source->getCode()
+                ));
             } finally {
                 $this->benchmark($benchmark);
             }
@@ -194,9 +216,9 @@ class StemplerEngine extends AbstractEngine
      * In most of cases stempler will get view processors to be executed before composing, to run
      * such processors we need special wrapper at top of environment.
      *
-     * @return LoaderInterface
+     * @return \Spiral\Stempler\LoaderInterface
      */
-    private function wrapLoader(): LoaderInterface
+    private function wrapLoader(): \Spiral\Stempler\LoaderInterface
     {
         $processors = [];
         foreach ($this->modifiers as $modifier) {
@@ -207,6 +229,8 @@ class StemplerEngine extends AbstractEngine
             }
         }
 
-        return new ProcessableLoader($this->environment, $this->loader, $processors);
+        return new LoaderBridge(
+            new ModifiableLoader($this->environment, $this->loader, $processors)
+        );
     }
 }

@@ -27,12 +27,10 @@ class StemplerCache
     protected $environment = null;
 
     /**
-     * TwigCache constructor.
-     *
-     * @param FilesInterface       $files
      * @param EnvironmentInterface $environment
+     * @param FilesInterface       $files
      */
-    public function __construct(FilesInterface $files, EnvironmentInterface $environment)
+    public function __construct(EnvironmentInterface $environment, FilesInterface $files)
     {
         $this->files = $files;
         $this->environment = $environment;
@@ -52,40 +50,17 @@ class StemplerCache
     }
 
     /**
-     * Generate cache key for given path.
+     * Generate cache filename for given path.
      *
      * @param string $path
      *
      * @return string
      */
-    public function generateKey(string $path): string
+    public function cacheFilename(string $path): string
     {
         $hash = hash('md5', $path . '.' . $this->environment->getID());
 
-        return $this->environment->cacheDirectory() . '/' . $hash . '.php';
-    }
-
-    /**
-     * Get local cache filename (to be included in view).
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    public function cachedFilename(string $key): string
-    {
-        return $this->files->localFilename($key);
-    }
-
-    /**
-     * Store data into cache.
-     *
-     * @param string $key
-     * @param string $content
-     */
-    public function write(string $key, string $content)
-    {
-        $this->files->write($key, $content, FilesInterface::RUNTIME, true);
+        return $this->environment->cacheDirectory() . $hash . '.php';
     }
 
     /**
@@ -95,7 +70,7 @@ class StemplerCache
      *
      * @return int
      */
-    public function getTimestamp(string $key): int
+    public function timeCached(string $key): int
     {
         if (!$this->environment->isCachable()) {
             //Always expired
@@ -107,5 +82,21 @@ class StemplerCache
         }
 
         return 0;
+    }
+
+    /**
+     * Store data into cache.
+     *
+     * @param string $cacheFilename
+     * @param string $content
+     */
+    public function write(string $cacheFilename, string $content)
+    {
+        $this->files->write(
+            $cacheFilename,
+            $content,
+            FilesInterface::RUNTIME,
+            true
+        );
     }
 }

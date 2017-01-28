@@ -42,41 +42,41 @@ class NativeTest extends BaseTest
         ]));
     }
 
-    public function testRenderNamespaced()
-    {
-        $this->assertSame('Hello, World!', $this->views->render('default:native', [
-            'name' => 'World'
-        ]));
-    }
-
-    public function testRenderNamespacedAlternative()
-    {
-        $this->assertSame('Hello, World!', $this->views->render('@default/native', [
-            'name' => 'World'
-        ]));
-    }
-
-    public function testRenderNamespacedWithExtension()
-    {
-        $this->assertSame('Hello, World!', $this->views->render('default:native.php', [
-            'name' => 'World'
-        ]));
-    }
-
-    public function testRenderNamespacedWithExtensionAlternative()
-    {
-        $this->assertSame('Hello, World!', $this->views->render('@default/native.php', [
-            'name' => 'World'
-        ]));
-    }
-
-    /**
-     * @expectedException \Spiral\Views\Exceptions\RenderException
-     */
-    public function testRenderException()
-    {
-        $this->views->render('native');
-    }
+//    public function testRenderNamespaced()
+//    {
+//        $this->assertSame('Hello, World!', $this->views->render('default:native', [
+//            'name' => 'World'
+//        ]));
+//    }
+//
+//    public function testRenderNamespacedAlternative()
+//    {
+//        $this->assertSame('Hello, World!', $this->views->render('@default/native', [
+//            'name' => 'World'
+//        ]));
+//    }
+//
+//    public function testRenderNamespacedWithExtension()
+//    {
+//        $this->assertSame('Hello, World!', $this->views->render('default:native.php', [
+//            'name' => 'World'
+//        ]));
+//    }
+//
+//    public function testRenderNamespacedWithExtensionAlternative()
+//    {
+//        $this->assertSame('Hello, World!', $this->views->render('@default/native.php', [
+//            'name' => 'World'
+//        ]));
+//    }
+//
+//    /**
+//     * @expectedException \Spiral\Views\Exceptions\RenderException
+//     */
+//    public function testRenderException()
+//    {
+//        $this->views->render('native');
+//    }
 
     public function testBufferWhenException()
     {

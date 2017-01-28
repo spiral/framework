@@ -36,6 +36,8 @@ interface EngineInterface extends ViewsInterface
      *
      * @param string $path
      * @param bool   $reset Ignore cache.
+     *
+     * @throws \Spiral\Views\Exceptions\CompileException
      */
     public function compile(string $path, bool $reset = false);
 }

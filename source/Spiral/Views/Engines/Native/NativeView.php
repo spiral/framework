@@ -14,6 +14,7 @@ use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Views\Exceptions\RenderException;
 use Spiral\Views\ViewInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Simpliest implement of view model used by native and Stempler engines. Provides ability to
@@ -27,25 +28,9 @@ class NativeView extends Component implements ViewInterface
     use BenchmarkTrait, SharedTrait;
 
     /**
-     * View filename.
-     *
-     * @var string
+     * @var \Spiral\Views\ViewSource
      */
-    protected $filename = null;
-
-    /**
-     * View namespace.
-     *
-     * @var string
-     */
-    protected $namespace = '';
-
-    /**
-     * View name.
-     *
-     * @var string
-     */
-    protected $name = '';
+    protected $sourceContext;
 
     /**
      * @invisible
@@ -54,21 +39,14 @@ class NativeView extends Component implements ViewInterface
     protected $container = null;
 
     /**
-     * @param string             $filename
-     * @param string             $namespace
-     * @param string             $name
-     * @param ContainerInterface $container
+     * @param ViewSource         $sourceContext
+     * @param ContainerInterface $container For inner view scope.
      */
     public function __construct(
-        string $filename,
-        string $namespace,
-        string $name,
+        ViewSource $sourceContext,
         ContainerInterface $container
     ) {
-        $this->filename = $filename;
-        $this->namespace = $namespace;
-        $this->name = $name;
-
+        $this->sourceContext = $sourceContext;
         $this->container = $container;
     }
 
@@ -77,7 +55,10 @@ class NativeView extends Component implements ViewInterface
      */
     public function render(array $context = []): string
     {
-        $__benchmark__ = $this->benchmark('render', "{$this->namespace}:{$this->name}");
+        $__benchmark__ = $this->benchmark(
+            'render',
+            "{$this->sourceContext->getNamespace()}:{$this->sourceContext->getName()}"
+        );
 
         ob_start();
         $__outputLevel__ = ob_get_level();
@@ -85,7 +66,7 @@ class NativeView extends Component implements ViewInterface
         $scope = self::staticContainer($this->container);
         try {
             extract($context, EXTR_OVERWRITE);
-            require $this->filename;
+            require $this->sourceContext->getFilename();
         } catch (\Throwable $e) {
             //Clear all rendered output (should we save it into exception?)
             ob_end_clean();

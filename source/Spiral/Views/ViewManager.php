@@ -15,8 +15,8 @@ use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FileManager;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
-use Spiral\Views\Exceptions\LoaderException;
 use Spiral\Views\Exceptions\ViewsException;
+use Spiral\Views\Loaders\FileLoader;
 
 /**
  * Provides ability to manage view engines, loaders and environment (cache dependencies).
@@ -78,7 +78,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         $this->container = $container ?? new Container();
 
         //Define engine's behaviour
-        $this->loader = new ViewLoader($config->getNamespaces(), $files, $container);
+        $this->loader = new FileLoader($config->getNamespaces(), $files, $container);
         $this->environment = $this->createEnvironment($config);
     }
 
@@ -213,23 +213,22 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         $extension = $this->files->extension($path);
 
         $result = null;
+        $previousMatch = 0;
         foreach ($this->config->getEngines() as $engine) {
-            if (!empty($extension) && $extension == $this->config->engineExtension($engine)) {
-                //Found by extension
-                $result = $engine;
-
-                break;
+            if (!empty($extension)) {
+                if ($extension == $this->config->engineExtension($engine)) {
+                    return $engine;
+                } else {
+                    continue;
+                }
             }
 
-            //Trying automatic (no extension) detection
-            $loader = $this->isolateLoader($engine);
-
-            try {
-                if (!empty($loader->fetchName($path))) {
-                    $result = $engine;
-                }
-            } catch (LoaderException $exception) {
-                //Does not related to such engine
+            if (
+                strlen($this->config->engineExtension($engine)) > $previousMatch
+                && $this->engineLoader($engine)->exists($path)
+            ) {
+                $previousMatch = strlen($this->config->engineExtension($engine));
+                $result = $engine;
             }
         }
 
@@ -258,7 +257,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         //Populating constructor parameters
         $options = $this->config->engineOptions($engine);
         $options += [
-            'loader'      => $this->isolateLoader($engine),
+            'loader'      => $this->engineLoader($engine),
             'environment' => $this->getEnvironment()
         ];
 
@@ -298,7 +297,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
      *
      * @throws ViewsException
      */
-    protected function isolateLoader(string $engine = null): LoaderInterface
+    protected function engineLoader(string $engine = null): LoaderInterface
     {
         $extension = null;
         if (!empty($engine)) {

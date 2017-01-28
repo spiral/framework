@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Processors;
 
 use Spiral\Core\Component;
@@ -13,6 +14,8 @@ use Spiral\Files\FilesInterface;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
+use Spiral\Views\SourceContextInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Evaluate processor can evaluate php blocks which contain specific flags at compilation phase.
@@ -73,14 +76,13 @@ class EvaluateProcessor extends Component implements ProcessorInterface
      */
     public function modify(
         EnvironmentInterface $environment,
-        string $source,
-        string $namespace,
-        string $view
+        ViewSource $view,
+        string $code
     ): string {
         $isolator = new Isolator();
 
         //Let's hide original php blocks
-        $source = $isolator->isolatePHP($source);
+        $code = $isolator->isolatePHP($code);
 
         //Now we have to detect blocks which has to be compiled
         //Restoring only evaluator blocks
@@ -96,20 +98,30 @@ class EvaluateProcessor extends Component implements ProcessorInterface
         }
 
         //Restoring evaluate blocks only
-        $source = $isolator->repairPHP($source, true, $evaluateBlocks);
+        $code = $isolator->repairPHP($code, true, $evaluateBlocks);
 
         //Let's create temporary filename
-        $filename = $this->evalFilename($environment, $namespace, $view);
+        $filename = $this->evalFilename(
+            $environment,
+            $view->getNamespace(),
+            $view->getName()
+        );
 
         try {
-            $this->files->write($filename, $source, FilesInterface::RUNTIME, true);
+            //Temporary PHP to compile code
+            $this->files->write(
+                $filename,
+                $code,
+                FilesInterface::RUNTIME,
+                true
+            );
 
             ob_start();
             $__outputLevel__ = ob_get_level();
 
             //Can be accessed in evaluated php
-            $this->namespace = $namespace;
-            $this->view = $view;
+            $this->namespace = $view->getNamespace();
+            $this->view = $view->getName();
 
             try {
                 include_once $this->files->localFilename($filename);
@@ -122,16 +134,16 @@ class EvaluateProcessor extends Component implements ProcessorInterface
             $this->namespace = '';
             $this->view = '';
 
-            $source = ob_get_clean();
+            $view = ob_get_clean();
 
             //Dropping temporary filename
             $this->files->delete($filename);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             throw $exception;
         }
 
         //Restoring all original php blocks
-        return $isolator->repairPHP($source);
+        return $isolator->repairPHP($view);
     }
 
     /**

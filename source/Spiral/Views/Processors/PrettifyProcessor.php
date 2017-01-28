@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Processors;
 
 use Spiral\Stempler\HtmlTokenizer;
@@ -12,6 +13,8 @@ use Spiral\Support\Strings;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
+use Spiral\Views\SourceContextInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Cuts blank lines in template html code and normalize attrbiutes.
@@ -57,19 +60,18 @@ class PrettifyProcessor implements ProcessorInterface
      */
     public function modify(
         EnvironmentInterface $environment,
-        string $source,
-        string $namespace,
-        string $view
+        ViewSource $view,
+        string $code
     ): string {
         if ($this->options['endings']) {
-            $source = $this->normalizeEndings($source, new Isolator());
+            $view = $this->normalizeEndings($code, new Isolator());
         }
 
         if ($this->options['attributes']['normalize']) {
-            $source = $this->normalizeAttributes($source, $this->tokenizer);
+            $view = $this->normalizeAttributes($code, $this->tokenizer);
         }
 
-        return $source;
+        return $view;
     }
 
     /**

@@ -12,12 +12,13 @@ use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Prototypes\AbstractEngine;
-use Spiral\Views\Engines\Twig\ContextLoader;
-use Spiral\Views\Engines\Twig\Exceptions\SyntaxException;
+use Spiral\Views\Engines\Twig\Exceptions\CompileException;
+use Spiral\Views\Engines\Twig\LoaderBridge;
 use Spiral\Views\Engines\Twig\TwigCache;
 use Spiral\Views\Engines\Twig\TwigView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
+use Spiral\Views\Loaders\ModifiableLoader;
 use Spiral\Views\ViewInterface;
 
 /**
@@ -75,7 +76,7 @@ class TwigEngine extends AbstractEngine
         $this->modifiers = $modifiers;
 
         //Initiating twig Environment
-        $this->twig = $this->createTwig($extensions, $options);
+        $this->twig = $this->makeTwig($extensions, $options);
     }
 
     /**
@@ -91,18 +92,17 @@ class TwigEngine extends AbstractEngine
     /**
      * {@inheritdoc}
      *
-     * @throws SyntaxException
+     * @throws CompileException
      */
     public function get(string $path): ViewInterface
     {
         $benchmark = $this->benchmark('load', $path);
+
         try {
-            //Yeah... we are using internal method for now, the only alternative is to wrap
-            //template wrapper, but there is already too much wrappers in a world
-            return $this->twig->loadTemplate($path);
+            return new TwigView($this->twig->load($path));
         } catch (\Twig_Error_Syntax $exception) {
             //Let's clarify exception location
-            throw SyntaxException::fromTwig($exception);
+            throw CompileException::fromTwig($exception);
         } finally {
             $this->benchmark($benchmark);
         }
@@ -151,7 +151,7 @@ class TwigEngine extends AbstractEngine
         $engine = parent::withLoader($loader);
 
         $engine->twig = clone $this->twig;
-        $engine->twig->setLoader($engine->wrapLoader());
+        $engine->twig->setLoader($engine->makeLoader());
 
         return $engine;
     }
@@ -169,8 +169,8 @@ class TwigEngine extends AbstractEngine
         $engine = parent::withEnvironment($environment);
 
         $engine->twig = clone $this->twig;
-        $engine->twig->setLoader($engine->wrapLoader());
-        $engine->twig->setCache($engine->defineCache());
+        $engine->twig->setLoader($engine->makeLoader());
+        $engine->twig->setCache($engine->makeCache());
 
         return $engine;
     }
@@ -183,12 +183,15 @@ class TwigEngine extends AbstractEngine
      *
      * @return \Twig_Environment
      */
-    protected function createTwig(array $extensions, array $options): \Twig_Environment
+    protected function makeTwig(array $extensions, array $options): \Twig_Environment
     {
         //Initiating Twig Environment
-        $twig = new \Twig_Environment($this->wrapLoader(), $options);
-        $twig->setCache($this->defineCache());
-        $twig->setBaseTemplateClass(TwigView::class);
+        $twig = $this->container->make(\Twig_Environment::class, [
+            'loader'  => $this->makeLoader(),
+            'options' => $options
+        ]);
+
+        $twig->setCache($this->makeCache());
 
         foreach ($extensions as $extension) {
             //Each extension can be delivered thought container
@@ -202,26 +205,28 @@ class TwigEngine extends AbstractEngine
      * In most of cases twig will get view processors to be executed before twig itself, to run
      * such processors we need special wrapper at top of environment.
      *
-     * @return LoaderInterface
+     * @return \Twig_LoaderInterface
      */
-    private function wrapLoader(): LoaderInterface
+    private function makeLoader(): \Twig_LoaderInterface
     {
-        $processors = [];
+        $modifiers = [];
         foreach ($this->modifiers as $modifier) {
             if (is_object($modifier)) {
-                $processors[] = $modifier;
+                $modifiers[] = $modifier;
             } else {
-                $processors[] = $this->container->make($modifier);
+                $modifiers[] = $this->container->make($modifier);
             }
         }
 
-        return new ContextLoader($this->environment, $this->loader, $processors);
+        return new LoaderBridge(
+            new ModifiableLoader($this->environment, $this->loader, $modifiers)
+        );
     }
 
     /**
      * @return bool|TwigCache
      */
-    private function defineCache()
+    private function makeCache()
     {
         if (!$this->environment->isCachable()) {
             return false;

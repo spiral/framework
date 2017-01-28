@@ -75,7 +75,7 @@ class TwigTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Views\Engines\Twig\Exceptions\SyntaxException
+     * @expectedException \Spiral\Views\Engines\Twig\Exceptions\CompileException
      */
     public function testSyntaxException()
     {

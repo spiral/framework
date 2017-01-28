@@ -13,16 +13,28 @@ use Spiral\Views\ViewInterface;
 /**
  * Twig Template with ViewInterface being added.
  */
-abstract class TwigView extends \Twig_Template implements ViewInterface
+class TwigView implements ViewInterface
 {
+    /**
+     * @var \Twig_TemplateWrapper
+     */
+    private $wrapper;
+
+    /**
+     * @param \Twig_TemplateWrapper $wrapper
+     */
+    public function __construct(\Twig_TemplateWrapper $wrapper)
+    {
+        $this->wrapper = $wrapper;
+    }
+
     /**
      * @param array $context
      *
      * @return string
-     * @throws \Exception
      */
     public function render(array $context = []): string
     {
-        return parent::render($context);
+        return $this->wrapper->render($context);
     }
 }

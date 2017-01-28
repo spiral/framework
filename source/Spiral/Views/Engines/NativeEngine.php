@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Engines;
 
 use Spiral\Core\ContainerInterface;
@@ -45,12 +46,7 @@ class NativeEngine extends AbstractEngine
      */
     public function get(string $path): ViewInterface
     {
-        return new NativeView(
-            $this->loader->localFilename($path),
-            $this->loader->fetchNamespace($path),
-            $this->loader->fetchName($path),
-            $this->container
-        );
+        return new NativeView($this->loader->getSourceContext($path), $this->container);
     }
 
     /**

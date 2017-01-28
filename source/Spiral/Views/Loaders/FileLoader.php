@@ -6,32 +6,32 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Views;
+namespace Spiral\Views\Loaders;
 
 use Spiral\Core\Component;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Exceptions\LoaderException;
+use Spiral\Views\LoaderInterface;
+use Spiral\Views\SourceContextInterface;
+use Spiral\Views\ViewsInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Default views loader is very similar to twig loader (compatible), however it uses different view
  * namespace syntax, can change it's default namespace and force specified file extension. Plus it
  * works over FilesInterface.
  */
-class ViewLoader extends Component implements LoaderInterface
+class FileLoader extends Component implements LoaderInterface
 {
     use BenchmarkTrait;
-
-    const VIEW_FILENAME  = 0;
-    const VIEW_NAMESPACE = 1;
-    const VIEW_NAME      = 2;
 
     /**
      * View cache. Can be improved using MemoryInterface.
      *
      * @var array
      */
-    private $viewsCache = [];
+    private $sourceCache = [];
 
     /**
      * Such extensions will automatically be added to every file but only if no other extension
@@ -85,69 +85,15 @@ class ViewLoader extends Component implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getSource($path): string
+    public function getSourceContext(string $path): ViewSource
     {
-        return $this->files->read($this->locateView($path)[self::VIEW_FILENAME]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheKey($name): string
-    {
-        return $this->locateView($name)[self::VIEW_FILENAME];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isFresh($name, $time): bool
-    {
-        return $this->files->time($this->locateView($name)[self::VIEW_FILENAME]) <= $time;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function localFilename(string $path): string
-    {
-        return $this->locateView($path)[self::VIEW_FILENAME];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fetchNamespace(string $path): string
-    {
-        return $this->locateView($path)[self::VIEW_NAMESPACE];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function fetchName(string $path): string
-    {
-        return $this->locateView($path)[self::VIEW_NAME];
-    }
-
-    /**
-     * Locate view filename based on current loader settings.
-     *
-     * @param string $path
-     *
-     * @return array [namespace, name]
-     *
-     * @throws LoaderException
-     */
-    protected function locateView(string $path): array
-    {
-        if (isset($this->viewsCache[$path])) {
+        if (isset($this->sourceCache[$path])) {
             //Already resolved and cached
-            return $this->viewsCache[$path];
+            return $this->sourceCache[$path];
         }
 
         //Making sure requested name is valid
-        $this->validateName($path);
+        $this->validatePath($path);
 
         list($namespace, $filename) = $this->parsePath($path);
 
@@ -159,17 +105,35 @@ class ViewLoader extends Component implements LoaderInterface
             //Seeking for view filename
             if ($this->files->exists($directory . $filename)) {
 
-                $this->viewsCache[$path] = [
-                    self::VIEW_FILENAME  => $directory . $filename,
-                    self::VIEW_NAMESPACE => $namespace,
-                    self::VIEW_NAME      => $this->resolveName($filename)
-                ];
+                //Found view context
+                $this->sourceCache[$path] = new ViewSource(
+                    $directory . $filename,
+                    $this->fetchName($filename),
+                    $namespace
+                );
 
-                return $this->viewsCache[$path];
+                return $this->sourceCache[$path];
             }
         }
 
         throw new LoaderException("Unable to locate view '{$filename}' in namespace '{$namespace}'");
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exists(string $path): bool
+    {
+        if (isset($this->sourceCache[$path])) {
+            //Already resolved and cached
+            return true;
+        }
+
+        try {
+            return !empty($this->getSourceContext($path));
+        } catch (LoaderException $e) {
+            return false;
+        }
     }
 
     /**
@@ -224,7 +188,7 @@ class ViewLoader extends Component implements LoaderInterface
      *
      * @throws LoaderException
      */
-    protected function validateName(string $name)
+    protected function validatePath(string $name)
     {
         if (false !== strpos($name, "\0")) {
             throw new LoaderException('A template name cannot contain NUL bytes');
@@ -254,9 +218,9 @@ class ViewLoader extends Component implements LoaderInterface
      *
      * @return self
      */
-    protected function flushCache(): ViewLoader
+    protected function flushCache(): FileLoader
     {
-        $this->viewsCache = [];
+        $this->sourceCache = [];
 
         return $this;
     }
@@ -268,7 +232,7 @@ class ViewLoader extends Component implements LoaderInterface
      *
      * @return string
      */
-    private function resolveName(string $filename): string
+    private function fetchName(string $filename): string
     {
         if (empty($this->extension)) {
             return $filename;

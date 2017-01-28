@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views;
 
 /**
@@ -15,16 +16,14 @@ interface ProcessorInterface
 {
     /**
      * @param EnvironmentInterface $environment
-     * @param string               $source
-     * @param string               $namespace
-     * @param string               $view
+     * @param ViewSource           $view
+     * @param string               $code
      *
      * @return string
      */
     public function modify(
         EnvironmentInterface $environment,
-        string $source,
-        string $namespace,
-        string $view
+        ViewSource $view,
+        string $code
     ): string;
 }

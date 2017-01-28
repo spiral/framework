@@ -5,10 +5,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Processors;
 
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
+use Spiral\Views\SourceContextInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Mount view environment variables using @{name} pattern.
@@ -40,12 +43,11 @@ class EnvironmentProcessor implements ProcessorInterface
      */
     public function modify(
         EnvironmentInterface $environment,
-        string $source,
-        string $namespace,
-        string $name
+        ViewSource $view,
+        string $code
     ): string {
         return preg_replace_callback($this->pattern, function ($matches) use ($environment) {
             return $environment->getValue($matches[1]);
-        }, $source);
+        }, $code);
     }
 }
