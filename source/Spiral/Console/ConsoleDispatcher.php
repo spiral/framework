@@ -102,21 +102,9 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         //Let's keep output reference to render exceptions
         $this->output = $output ?? new ConsoleOutput();
 
-        $scope = self::staticContainer($this->container);
-
-        //This handler will allow us to enable verbosity mode
-        $debugHandler = $this->container->get(LogManager::class)->debugHandler(
-            new DebugHandler($this->output)
-        );
-
-        //Execute default command
-        try {
+        $this->runScoped(function () use ($input) {
             $this->consoleApplication()->run($input, $this->output);
-        } finally {
-            //Restore default debug handler and container scope
-            $this->container->get(LogManager::class)->debugHandler($debugHandler);
-            self::staticContainer($scope);
-        }
+        }, $this->output);
     }
 
     /**
@@ -143,23 +131,11 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
 
         $output = $output ?? new BufferedOutput();
 
-        //Each command are executed in a specific environment
-        $scope = self::staticContainer($this->container);
+        $code = $this->runScoped(function () use ($input, $output, $command) {
+            $this->consoleApplication()->find($command)->run($input, $output);
+        }, $output);
 
-        //This handler will allow us to enable verbosity mode
-        $debugHandler = $this->container->get(LogManager::class)->debugHandler(
-            new DebugHandler($output)
-        );
-
-        try {
-            $code = $this->consoleApplication()->find($command)->run($input, $output);
-        } finally {
-            //Restore default debug handler and container scope
-            $this->container->get(LogManager::class)->debugHandler($debugHandler);
-            self::staticContainer($scope);
-        }
-
-        return new CommandOutput($code ?? self::CODE_UNDEFINED, $output);
+        return new CommandOutput($code ?: self::CODE_UNDEFINED, $output);
     }
 
     /**
@@ -225,5 +201,32 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
 
         //Rendering exception in console
         $this->consoleApplication()->renderException($snapshot->getException(), $output);
+    }
+
+    /**
+     * Run method in console IoC scope.
+     *
+     * @param \Closure                                          $closure
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return mixed
+     */
+    private function runScoped(\Closure $closure, OutputInterface $output)
+    {
+        //Each command are executed in a specific environment
+        $scope = self::staticContainer($this->container);
+
+        //This handler will allow us to enable verbosity mode
+        $debugHandler = $this->container->get(LogManager::class)->debugHandler(
+            new DebugHandler($output)
+        );
+
+        try {
+            return $closure->call($this);
+        } finally {
+            //Restore default debug handler and container scope
+            $this->container->get(LogManager::class)->debugHandler($debugHandler);
+            self::staticContainer($scope);
+        }
     }
 }
