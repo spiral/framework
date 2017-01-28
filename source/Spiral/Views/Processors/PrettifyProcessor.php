@@ -13,7 +13,6 @@ use Spiral\Support\Strings;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
-use Spiral\Views\SourceContextInterface;
 use Spiral\Views\ViewSource;
 
 /**
@@ -64,14 +63,14 @@ class PrettifyProcessor implements ProcessorInterface
         string $code
     ): string {
         if ($this->options['endings']) {
-            $view = $this->normalizeEndings($code, new Isolator());
+            $code = $this->normalizeEndings($code, new Isolator());
         }
 
         if ($this->options['attributes']['normalize']) {
-            $view = $this->normalizeAttributes($code, $this->tokenizer);
+            $code = $this->normalizeAttributes($code, $this->tokenizer);
         }
 
-        return $view;
+        return $code;
     }
 
     /**
@@ -114,7 +113,7 @@ class PrettifyProcessor implements ProcessorInterface
         $result = '';
         foreach ($tokenizer->parse($source) as $token) {
             if (empty($token[HtmlTokenizer::TOKEN_ATTRIBUTES])) {
-                $result .= $tokenizer->compile($token);
+                $result .= $tokenizer->compileToken($token);
                 continue;
             }
 
@@ -133,7 +132,7 @@ class PrettifyProcessor implements ProcessorInterface
             }
 
             $token[HtmlTokenizer::TOKEN_ATTRIBUTES] = $attributes;
-            $result .= $tokenizer->compile($token);
+            $result .= $tokenizer->compileToken($token);
         }
 
         return $result;

@@ -96,7 +96,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         $views->environment = $environment;
 
         foreach ($this->engines as $name => $engine) {
-            $this->engines[$name] = $engine->withEnvironment($environment);
+            $views->engines[$name] = $engine->withEnvironment($environment);
         }
 
         return $views;
@@ -135,7 +135,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
 
         //Not carrying already built engines with us
         foreach ($this->engines as $name => $engine) {
-            $this->engines[$name] = $engine->withLoader($loader);
+            $views->engines[$name] = $engine->withLoader($views->engineLoader($name));
         }
 
         return $views;
@@ -294,20 +294,9 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
      * @param string $engine Forced extension value.
      *
      * @return LoaderInterface
-     *
-     * @throws ViewsException
      */
-    protected function engineLoader(string $engine = null): LoaderInterface
+    private function engineLoader(string $engine = null): LoaderInterface
     {
-        $extension = null;
-        if (!empty($engine)) {
-            if (!$this->config->hasEngine($engine)) {
-                throw new ViewsException("Undefined view engine '{$engine}'");
-            }
-
-            $extension = $this->config->engineExtension($engine);
-        }
-
-        return $this->loader->withExtension($extension);
+        return $this->loader->withExtension($this->config->engineExtension($engine));
     }
 }

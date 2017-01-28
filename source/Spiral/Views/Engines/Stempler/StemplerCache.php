@@ -66,19 +66,19 @@ class StemplerCache
     /**
      * Last update time.
      *
-     * @param string $key
+     * @param string $cacheFilename
      *
      * @return int
      */
-    public function timeCached(string $key): int
+    public function timeCached(string $cacheFilename): int
     {
         if (!$this->environment->isCachable()) {
             //Always expired
             return 0;
         }
 
-        if ($this->files->exists($key)) {
-            return $this->files->time($key);
+        if ($this->files->exists($cacheFilename)) {
+            return $this->files->time($cacheFilename);
         }
 
         return 0;

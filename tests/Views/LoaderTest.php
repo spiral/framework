@@ -23,7 +23,7 @@ class LoaderTest extends BaseTest
     {
         $loader = $this->views->getLoader();
 
-        $context = $loader->getSourceContext('@default/native.php');
+        $context = $loader->getSource('@default/native.php');
 
         $this->assertSame('native.php', $context->getName());
         $this->assertSame('default', $context->getNamespace());
@@ -33,7 +33,7 @@ class LoaderTest extends BaseTest
     {
         $loader = $this->views->getLoader()->withExtension('php');
 
-        $context = $loader->getSourceContext('@default/native.php');
+        $context = $loader->getSource('@default/native.php');
 
         $this->assertSame('native', $context->getName());
         $this->assertSame('default', $context->getNamespace());
@@ -46,7 +46,7 @@ class LoaderTest extends BaseTest
     {
         $loader = $this->views->getLoader();
 
-        $this->assertSame('native.php', $loader->getSourceContext('@default/
+        $this->assertSame('native.php', $loader->getSource('@default/
         native.php'));
     }
 
@@ -58,7 +58,7 @@ class LoaderTest extends BaseTest
         $loader = $this->views->getLoader();
 
         $this->assertSame('native.php',
-            $loader->getSourceContext('@default~native.php')->getName());
+            $loader->getSource('@default~native.php')->getName());
     }
 
     /**
@@ -68,7 +68,7 @@ class LoaderTest extends BaseTest
     {
         $loader = $this->views->getLoader();
 
-        $this->assertSame('native.php', $loader->getSourceContext('@magic/native.php')->getName());
+        $this->assertSame('native.php', $loader->getSource('@magic/native.php')->getName());
     }
 
     public function testImmutable()
@@ -78,10 +78,10 @@ class LoaderTest extends BaseTest
 
         $this->assertNotSame($loader, $nativeLoader);
 
-        $this->assertSame('native', $nativeLoader->getSourceContext('@default/native')->getName());
+        $this->assertSame('native', $nativeLoader->getSource('@default/native')->getName());
         $this->assertSame(
             'default',
-            $nativeLoader->getSourceContext('@default/native')->getNamespace()
+            $nativeLoader->getSource('@default/native')->getNamespace()
         );
     }
 }

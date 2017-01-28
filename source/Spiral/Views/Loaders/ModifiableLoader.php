@@ -62,9 +62,9 @@ class ModifiableLoader extends Component implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getSourceContext(string $path): ViewSource
+    public function getSource(string $path): ViewSource
     {
-        $source = $this->parent->getSourceContext($path);
+        $source = $this->parent->getSource($path);
 
         foreach ($this->modifiers as $modifier) {
             $benchmark = $this->benchmark('process', $path . '@' . get_class($modifier));

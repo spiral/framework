@@ -20,6 +20,7 @@ use Spiral\Views\ViewInterface;
 class NativeEngine extends AbstractEngine
 {
     /**
+     * @invisible
      * @var ContainerInterface
      */
     protected $container;
@@ -46,7 +47,7 @@ class NativeEngine extends AbstractEngine
      */
     public function get(string $path): ViewInterface
     {
-        return new NativeView($this->loader->getSourceContext($path), $this->container);
+        return new NativeView($this->loader->getSource($path), $this->container);
     }
 
     /**

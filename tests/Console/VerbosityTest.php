@@ -16,9 +16,6 @@ class VerbosityTest extends BaseTest
 {
     public function testConfigureWithVerbosity()
     {
-        //Make sure logged is emptied
-        Indexer::shareLogger(null);
-
         $output = new BufferedOutput();
         $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
 

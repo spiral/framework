@@ -101,7 +101,7 @@ class StemplerEngine extends AbstractEngine
      */
     public function compile(string $path, bool $reset = false): ViewSource
     {
-        $context = $this->loader->getSourceContext($path);
+        $context = $this->loader->getSource($path);
         $cached = new ViewSource(
             $this->cache->cacheFilename($path),
             $context->getName(),
@@ -197,13 +197,13 @@ class StemplerEngine extends AbstractEngine
                 get_class($processor) . '-{' . $source->getName()
             );
 
+            $source->getCode();
+
             try {
                 //Post processing
-                $source->withCode($processor->modify(
-                    $this->environment,
-                    $source,
-                    $source->getCode()
-                ));
+                $source = $source->withCode(
+                    $processor->modify($this->environment, $source, $source->getCode())
+                );
             } finally {
                 $this->benchmark($benchmark);
             }

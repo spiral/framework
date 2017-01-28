@@ -7,6 +7,7 @@
 
 namespace Spiral\Tests;
 
+use Monolog\Handler\NullHandler;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Tests\Core\Fixtures\SharedComponent;
 
@@ -61,6 +62,9 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
             'cache'       => $root . 'runtime/cache/',
         ]);
 
+        //Monolog love to write to CLI when no handler set
+        $this->app->logs->debugHandler(new NullHandler());
+
         //Open application scope
         SharedComponent::shareContainer($this->app->container);
     }
@@ -74,7 +78,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
         $files = $this->app->files;
         foreach ($files->getFiles(directory('runtime')) as $filename) {
             try {
-               // $files->delete($filename);
+                $files->delete($filename);
             } catch (\Throwable $e) {
 
             }

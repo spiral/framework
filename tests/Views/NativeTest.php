@@ -9,6 +9,7 @@ namespace Spiral\Tests\Views;
 
 use Spiral\Tests\BaseTest;
 use Spiral\Views\Exceptions\RenderException;
+use Spiral\Views\Loaders\FileLoader;
 
 class NativeTest extends BaseTest
 {
@@ -17,6 +18,22 @@ class NativeTest extends BaseTest
         $this->assertSame('Hello, World!', $this->views->render('native', [
             'name' => 'World'
         ]));
+    }
+
+    public function testRenderFromOtherLoader()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('native', [
+            'name' => 'World'
+        ]));
+
+        $views = $this->views->withLoader(
+            new FileLoader(
+                ['default' => [directory('application') . 'alternative/']],
+                $this->files
+            )
+        );
+
+        $this->assertSame('native alt', $views->render('native'));
     }
 
     public function testBuffer()
@@ -42,41 +59,41 @@ class NativeTest extends BaseTest
         ]));
     }
 
-//    public function testRenderNamespaced()
-//    {
-//        $this->assertSame('Hello, World!', $this->views->render('default:native', [
-//            'name' => 'World'
-//        ]));
-//    }
-//
-//    public function testRenderNamespacedAlternative()
-//    {
-//        $this->assertSame('Hello, World!', $this->views->render('@default/native', [
-//            'name' => 'World'
-//        ]));
-//    }
-//
-//    public function testRenderNamespacedWithExtension()
-//    {
-//        $this->assertSame('Hello, World!', $this->views->render('default:native.php', [
-//            'name' => 'World'
-//        ]));
-//    }
-//
-//    public function testRenderNamespacedWithExtensionAlternative()
-//    {
-//        $this->assertSame('Hello, World!', $this->views->render('@default/native.php', [
-//            'name' => 'World'
-//        ]));
-//    }
-//
-//    /**
-//     * @expectedException \Spiral\Views\Exceptions\RenderException
-//     */
-//    public function testRenderException()
-//    {
-//        $this->views->render('native');
-//    }
+    public function testRenderNamespaced()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('default:native', [
+            'name' => 'World'
+        ]));
+    }
+
+    public function testRenderNamespacedAlternative()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('@default/native', [
+            'name' => 'World'
+        ]));
+    }
+
+    public function testRenderNamespacedWithExtension()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('default:native.php', [
+            'name' => 'World'
+        ]));
+    }
+
+    public function testRenderNamespacedWithExtensionAlternative()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('@default/native.php', [
+            'name' => 'World'
+        ]));
+    }
+
+    /**
+     * @expectedException \Spiral\Views\Exceptions\RenderException
+     */
+    public function testRenderException()
+    {
+        $this->views->render('native');
+    }
 
     public function testBufferWhenException()
     {

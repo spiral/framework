@@ -32,7 +32,7 @@ class LoaderBridge implements \Twig_LoaderInterface
      */
     public function getSourceContext($name)
     {
-        $context = $this->loader->getSourceContext($name);
+        $context = $this->loader->getSource($name);
 
         return new \Twig_Source(
             $context->getCode(),
@@ -46,7 +46,7 @@ class LoaderBridge implements \Twig_LoaderInterface
      */
     public function getCacheKey($name)
     {
-        return $this->loader->getSourceContext($name)->getFilename();
+        return $this->loader->getSource($name)->getFilename();
     }
 
     /**
@@ -54,7 +54,7 @@ class LoaderBridge implements \Twig_LoaderInterface
      */
     public function isFresh($name, $time)
     {
-        return !$this->loader->getSourceContext($name)->isFresh($time);
+        return !$this->loader->getSource($name)->isFresh($time);
     }
 
     /**

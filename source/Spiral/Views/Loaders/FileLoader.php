@@ -85,7 +85,7 @@ class FileLoader extends Component implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getSourceContext(string $path): ViewSource
+    public function getSource(string $path): ViewSource
     {
         if (isset($this->sourceCache[$path])) {
             //Already resolved and cached
@@ -130,7 +130,7 @@ class FileLoader extends Component implements LoaderInterface
         }
 
         try {
-            return !empty($this->getSourceContext($path));
+            return !empty($this->getSource($path));
         } catch (LoaderException $e) {
             return false;
         }

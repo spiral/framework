@@ -8,6 +8,8 @@
 namespace Spiral\Tests\Views;
 
 use Spiral\Tests\BaseTest;
+use Spiral\Views\Engines\Twig\TwigView;
+use Spiral\Views\Loaders\FileLoader;
 
 class TwigTest extends BaseTest
 {
@@ -17,6 +19,50 @@ class TwigTest extends BaseTest
             \Twig_Environment::class,
             $this->views->engine('twig')->getTwig()
         );
+    }
+
+    public function testCompile()
+    {
+        $this->views->compile('isolated');
+
+        clearstatcache();
+        $this->assertNotEmpty($this->files->getFiles(
+            $this->views->getEnvironment()->cacheDirectory()
+        ));
+    }
+
+    public function testCompileWithEnvironment()
+    {
+        $this->views->compile('isolated');
+
+        $result = $this->views->withEnvironment(
+            $this->views->getEnvironment()->withDependency('value', function () {
+                return 'test';
+            })
+        )->render('valued');
+
+        $this->assertSame('test', $result);
+    }
+
+    public function testRenderFromOtherLoader()
+    {
+        $this->assertSame('Hello, World!', $this->views->render('native', [
+            'name' => 'World'
+        ]));
+
+        $views = $this->views->withLoader(
+            new FileLoader(
+                ['default' => [directory('application') . 'alternative/']],
+                $this->files
+            )
+        );
+
+        $this->assertSame('cba', $views->render('isolated'));
+    }
+
+    public function testView()
+    {
+        $this->assertInstanceOf(TwigView::class, $this->views->get('hello'));
     }
 
     public function testRenderSimple()

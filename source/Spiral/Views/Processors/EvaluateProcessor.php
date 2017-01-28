@@ -14,13 +14,10 @@ use Spiral\Files\FilesInterface;
 use Spiral\Tokenizer\Isolator;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
-use Spiral\Views\SourceContextInterface;
 use Spiral\Views\ViewSource;
 
 /**
  * Evaluate processor can evaluate php blocks which contain specific flags at compilation phase.
- *
- * @todo FINISH IT!
  */
 class EvaluateProcessor extends Component implements ProcessorInterface
 {
@@ -101,11 +98,7 @@ class EvaluateProcessor extends Component implements ProcessorInterface
         $code = $isolator->repairPHP($code, true, $evaluateBlocks);
 
         //Let's create temporary filename
-        $filename = $this->evalFilename(
-            $environment,
-            $view->getNamespace(),
-            $view->getName()
-        );
+        $filename = $this->evalFilename($environment, $view);
 
         try {
             //Temporary PHP to compile code
@@ -200,17 +193,15 @@ class EvaluateProcessor extends Component implements ProcessorInterface
      * Unique filename to be used for compilation.
      *
      * @param EnvironmentInterface $environment
-     * @param string               $namespace
-     * @param string               $view
+     * @param  ViewSource          $view
      *
      * @return string
      */
     private function evalFilename(
         EnvironmentInterface $environment,
-        string $namespace,
-        string $view
+        ViewSource $view
     ): string {
-        $filename = $namespace . '.' . $view . '.eval.' . spl_object_hash($this) . '.php';
+        $filename = "{$view->getNamespace()}.{$view->getName()}.eval." . spl_object_hash($this) . '.php';
 
         return $environment->cacheDirectory() . $filename;
     }

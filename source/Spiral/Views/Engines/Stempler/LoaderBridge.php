@@ -30,9 +30,9 @@ class LoaderBridge implements LoaderInterface
      *
      * @return StemplerSource
      */
-    public function getSourceContext(string $path): StemplerSource
+    public function getSource(string $path): StemplerSource
     {
-        $context = $this->loader->getSourceContext($path);
+        $context = $this->loader->getSource($path);
 
         return new StemplerSource($context->getFilename(), $context->getCode());
     }

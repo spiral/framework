@@ -41,7 +41,7 @@ interface LoaderInterface
      *
      * @throws LoaderException
      */
-    public function getSourceContext(string $path): ViewSource;
+    public function getSource(string $path): ViewSource;
 
     /**
      * Given path exists in loader.
