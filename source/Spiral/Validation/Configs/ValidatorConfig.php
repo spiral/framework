@@ -39,7 +39,9 @@ class ValidatorConfig extends InjectableConfig
      */
     public function emptyCondition($condition): bool
     {
-        return in_array($condition, $this->config['emptyConditions']);
+        //Legacy fallback included
+        return in_array($condition, $this->config['emptyConditions'])
+            || in_array(str_replace(':', '::', $condition), $this->config['emptyConditions']);
     }
 
     /**

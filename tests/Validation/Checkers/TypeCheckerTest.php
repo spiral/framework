@@ -80,6 +80,9 @@ class TypeCheckerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($checker->datetime('~#@'));
         $this->assertFalse($checker->datetime(''));
+
+        $this->assertFalse($checker->datetime([]));
+        $this->assertFalse($checker->datetime(null));
     }
 
     public function testTimezone()

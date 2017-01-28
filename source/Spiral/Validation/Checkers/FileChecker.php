@@ -36,24 +36,23 @@ class FileChecker extends AbstractChecker implements SingletonInterface
     public function __construct(FilesInterface $files, ContainerInterface $container = null)
     {
         $this->files = $files;
-
         parent::__construct($container);
     }
 
     /**
      * Check if file exist.
      *
-     * @param mixed $filename
+     * @param mixed $file
      *
      * @return bool
      */
-    public function exists($filename): bool
+    public function exists($file): bool
     {
-        return (bool)$this->filename($filename, false);
+        return !empty($this->resolveFilename($file));
     }
 
     /**
-     * Will check if local file exists or just uploaded.
+     * Check if file been uploaded.
      *
      * @param mixed $file Local file or uploaded file array.
      *
@@ -61,48 +60,51 @@ class FileChecker extends AbstractChecker implements SingletonInterface
      */
     public function uploaded($file): bool
     {
-        return (bool)$this->filename($file, true);
+        return $this->isUploaded($file);
     }
 
     /**
      * Check if file size less that specified value in KB.
      *
-     * @param mixed $filename Local file or uploaded file array.
-     * @param int   $size     Size in KBytes.
+     * @todo add Pow multiplier
+     *
+     * @param mixed $file Local file or uploaded file array.
+     * @param int   $size Size in KBytes.
      *
      * @return bool
      */
-    public function size($filename, int $size): bool
+    public function size($file, int $size): bool
     {
-        $filename = $this->filename($filename, false);
-        if (empty($filename) || !is_string($filename)) {
+        if (empty($filename = $this->resolveFilename($file))) {
             return false;
         }
 
-        return $this->files->size($filename) < $size * 1024;
+        return $this->files->size($filename) <= ($size * 1024);
     }
 
     /**
      * Check if file extension in whitelist. Client name of uploaded file will be used!
+     * It is recommended to use external validation like media type based on file mimetype or
+     * ensure that resource is properly converted.
      *
-     * @param mixed        $filename
+     * @param mixed        $file
      * @param array|string $extensions
      *
      * @return bool
      */
-    public function extension($filename, $extensions): bool
+    public function extension($file, $extensions): bool
     {
         if (!is_array($extensions)) {
             $extensions = array_slice(func_get_args(), 1);
         }
 
-        if ($filename instanceof UploadedFileInterface) {
+        if ($file instanceof UploadedFileInterface) {
             return in_array(
-                $this->files->extension($filename->getClientFilename()),
+                $this->files->extension($file->getClientFilename()),
                 $extensions
             );
         }
 
-        return in_array($this->files->extension($filename), $extensions);
+        return in_array($this->files->extension($file), $extensions);
     }
 }
