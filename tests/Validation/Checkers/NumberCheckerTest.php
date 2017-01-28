@@ -26,6 +26,9 @@ class NumberCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($checker->range(10, 11, 100));
         $this->assertFalse($checker->range(10, 10.1, 100));
         $this->assertFalse($checker->range(10, 1, 9.99));
+
+        $this->assertFalse($checker->range(null, 10.1, 100));
+        $this->assertFalse($checker->range([], 1, 9.99));
     }
 
     public function testHigher()
@@ -37,6 +40,9 @@ class NumberCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($checker->higher(10, 9.99));
 
         $this->assertFalse($checker->higher(10, 11));
+
+        $this->assertFalse($checker->higher(null, 11));
+        $this->assertFalse($checker->higher([], 11));
     }
 
     public function testLower()
@@ -47,5 +53,9 @@ class NumberCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($checker->lower(10, 10.01));
 
         $this->assertFalse($checker->lower(10, 9.99));
+
+        $this->assertFalse($checker->lower(null, 9.99));
+        $this->assertFalse($checker->lower([], 9.99));
+
     }
 }

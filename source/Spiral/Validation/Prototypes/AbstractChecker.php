@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Validation\Prototypes;
 
 use Interop\Container\ContainerInterface;
@@ -55,11 +56,8 @@ abstract class AbstractChecker extends Component implements CheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function check(
-        string $method,
-        $value,
-        array $arguments = []
-    ) {
+    public function check(string $method, $value, array $arguments = [])
+    {
         array_unshift($arguments, $value);
 
         return call_user_func_array([$this, $method], $arguments);
@@ -72,7 +70,7 @@ abstract class AbstractChecker extends Component implements CheckerInterface
     {
         $messages = static::MESSAGES;
         if (isset($messages[$method])) {
-            return $this->say($messages[$method]);
+            return $this->say(static::MESSAGES[$method]);
         }
 
         return '';

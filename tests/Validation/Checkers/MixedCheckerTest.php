@@ -59,6 +59,8 @@ class MixedCheckerTest extends \PHPUnit_Framework_TestCase
             [false, '6011000400900000'],
             [true, '3528000700000000'],
             [false, '3528000707000000'],
+            [false, 'abc'],
+            [false, []],
         ];
     }
 }

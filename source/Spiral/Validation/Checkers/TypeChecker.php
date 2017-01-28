@@ -9,6 +9,7 @@
 namespace Spiral\Validation\Checkers;
 
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Validation\Checkers\Traits\NotEmptyTrait;
 use Spiral\Validation\Prototypes\AbstractChecker;
 
 /**
@@ -16,6 +17,8 @@ use Spiral\Validation\Prototypes\AbstractChecker;
  */
 class TypeChecker extends AbstractChecker implements SingletonInterface
 {
+    use NotEmptyTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -37,23 +40,6 @@ class TypeChecker extends AbstractChecker implements SingletonInterface
     public function notNull($value): bool
     {
         return !is_null($value);
-    }
-
-    /**
-     * Value should not be empty.
-     *
-     * @param mixed $value
-     * @param bool  $trim
-     *
-     * @return bool
-     */
-    public function notEmpty($value, bool $trim = true): bool
-    {
-        if ($trim && is_string($value) && strlen(trim($value)) == 0) {
-            return false;
-        }
-
-        return !empty($value);
     }
 
     /**

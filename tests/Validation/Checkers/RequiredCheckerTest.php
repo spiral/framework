@@ -20,108 +20,176 @@ class RequiredCheckerTest extends \PHPUnit_Framework_TestCase
 {
     public function testRequiredWith()
     {
-        $validator = $this->createValidator([
-            'input'     => [
-                'notEmpty'
+        $rules = [
+            'a' => [
+                ['notEmpty']
             ],
-            'secondary' => [
-                ['required::with', ['input']]
+            'b' => [
+                ['required::with', 'a']
             ]
-        ]);
+        ];
 
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('input', $validator->getErrors());
+        //BOOLEAN TREE TEST
+        $this->assertFail('a', [
+        ], $rules);
 
-        $validator->setData(['input' => true]);
+        $this->assertFail('b', [
+            'a' => true,
+            'b' => null
+        ], $rules);
 
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
-
-        $validator->setData(['input' => true, 'secondary' => 'cool']);
-
-        $this->assertTrue($validator->isValid());
+        $this->assertValid([
+            'a' => true,
+            'b' => true
+        ], $rules);
     }
 
-    public function testRequiredWithAny()
+    public function testRequiredWithMultiple()
     {
-        $validator = $this->createValidator([
-            'secondary' => [
-                ['required::with', ['input', 'other']]
+        $rules = [
+            'a' => [
+                ['notEmpty']
+            ],
+            'b' => [
+                ['required::with', ['a', 'c']]
             ]
-        ]);
+        ];
 
-        $this->assertTrue($validator->isValid());
+        //BOOLEAN TREE TEST
+        $this->assertFail('a', [
+        ], $rules);
 
-        $validator->setData(['input' => true]);
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
+        $this->assertFail('b', [
+            'a' => true,
+            'b' => null
+        ], $rules);
 
-        $validator->setData(['other' => true]);
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
+        $this->assertFail('b', [
+            'c' => true,
+            'b' => null
+        ], $rules);
+
+        $this->assertValid([
+            'a' => true,
+            'b' => true
+        ], $rules);
+
+        $this->assertFail('a', [
+            'c' => true,
+            'b' => true
+        ], $rules);
     }
 
     public function testRequiredWithAll()
     {
-        $validator = $this->createValidator([
-            'secondary' => [
-                ['required::withAll', ['input', 'other']]
+        $rules = [
+            'a' => [
+                ['required::withAll', ['b', 'c']]
             ]
-        ]);
+        ];
 
-        $this->assertTrue($validator->isValid());
+        //BOOLEAN TREE TEST
+        $this->assertValid([], $rules);
 
-        $validator->setData(['input' => true]);
-        $this->assertTrue($validator->isValid());
+        $this->assertValid([
+            'a' => true,
+            'b' => null
+        ], $rules);
 
-        $validator->setData(['other' => true]);
-        $this->assertTrue($validator->isValid());
+        $this->assertValid([
+            'a' => null,
+            'c' => true
+        ], $rules);
 
-        $validator->setData(['input' => true, 'other' => true]);
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
+        $this->assertFail('a', [
+            'b' => true,
+            'c' => true
+        ], $rules);
+
+        $this->assertValid([
+            'a' => true,
+            'b' => true,
+            'c' => true
+        ], $rules);
     }
 
     public function testRequiredWithout()
     {
-        $validator = $this->createValidator([
-            'secondary' => [
-                ['required::without', ['input']]
+        $rules = [
+            'a' => [
+                ['required::without', ['b', 'c']]
             ]
-        ]);
+        ];
 
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
+        //BOOLEAN TREE TEST
 
-        $validator->setData(['input' => true]);
-        $this->assertTrue($validator->isValid());
+        $this->assertFail('a', [], $rules);
 
-        $validator->setData(['input' => true, 'secondary' => 'cool']);
-        $this->assertTrue($validator->isValid());
+        $this->assertValid([
+            'b' => true
+        ], $rules);
+
+        $this->assertValid([
+            'c' => true
+        ], $rules);
+
+        $this->assertValid([
+            'b' => true,
+            'c' => true
+        ], $rules);
+
+        $this->assertFail('a', [
+            'b' => null,
+            'c' => null
+        ], $rules);
     }
 
     public function testRequiredWithoutAll()
     {
-        $validator = $this->createValidator([
-            'secondary' => [
-                ['required::without', ['input', 'other']]
+        $rules = [
+            'a' => [
+                ['required::withoutAll', ['b', 'c']]
             ]
-        ]);
+        ];
 
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
+        //BOOLEAN TREE TEST
 
+        $this->assertFail('a', [], $rules);
 
-        $validator->setData(['input' => true]);
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
+        $this->assertValid([
+            'b' => true
+        ], $rules);
 
-        $validator->setData(['other' => true]);
-        $this->assertFalse($validator->isValid());
-        $this->assertArrayHasKey('secondary', $validator->getErrors());
+        $this->assertValid([
+            'c' => true
+        ], $rules);
 
-        $validator->setData(['input' => true, 'other' => true]);
-        $this->assertTrue($validator->isValid());
+        $this->assertValid([
+            'b' => true,
+            'c' => true
+        ], $rules);
+
+        $this->assertFail('a', [
+            'b' => null,
+            'c' => null
+        ], $rules);
+    }
+
+    protected function assertValid(array $data, array $rules)
+    {
+        $validator = $this->createValidator($rules);
+        $validator->setData($data);
+
+        $this->assertTrue($validator->isValid(), 'Validation FAILED');
+    }
+
+    protected function assertFail(string $error, array $data, array $rules)
+    {
+        $validator = $this->createValidator($rules);
+        $validator->setData($data);
+
+        $this->assertFalse($validator->isValid(), 'Validation PASSED');
+        $this->assertArrayHasKey($error, $validator->getErrors());
     }
 
     /**

@@ -344,20 +344,10 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
             array_unshift($arguments, $value);
 
             return call_user_func_array($condition, $arguments);
-        } catch (\Exception $e) {
-            $condition = func_get_arg(2);
-            if (is_array($condition)) {
-                if (is_object($condition[0])) {
-                    $condition[0] = get_class($condition[0]);
-                }
-
-                $condition = join('::', $condition);
-            }
-
-            $this->logger()->error(
-                "Condition '{condition}' failed with '{exception}' while checking '{field}' field.",
-                compact('condition', 'field') + ['exception' => $e->getMessage()]
-            );
+        } catch (\Error $e) {
+            throw new ValidationException("Invalid rule definition", $e->getCode(), $e);
+        } catch (\Throwable $e) {
+            $this->logException($field, func_get_arg(2), $e);
 
             return false;
         }
@@ -440,6 +430,27 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
         $this->errors[$field] = \Spiral\interpolate(
             $message,
             compact('field', 'condition') + $arguments
+        );
+    }
+
+    /**
+     * @param string     $field
+     * @param array      $condition
+     * @param \Throwable $e
+     */
+    protected function logException(string $field, $condition, \Throwable $e)
+    {
+        if (is_array($condition)) {
+            if (is_object($condition[0])) {
+                $condition[0] = get_class($condition[0]);
+            }
+
+            $condition = join('::', $condition);
+        }
+
+        $this->logger()->error(
+            "Condition '{condition}' failed with '{e}' while checking '{field}' field.",
+            compact('condition', 'field') + ['e' => $e->getMessage()]
         );
     }
 }

@@ -13,6 +13,21 @@ use Spiral\Validation\Checkers\TypeChecker;
 
 class TypeCheckerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testNotNull()
+    {
+        $checker = new TypeChecker(new Container());
+
+        $this->assertEquals(!is_null('value'), $checker->notNull('value'));
+        $this->assertEquals(!is_null(1), $checker->notNull(1));
+        $this->assertEquals(!is_null(0), $checker->notNull(0));
+        $this->assertEquals(!is_null('0'), $checker->notNull('0'));
+        $this->assertEquals(!is_null(''), $checker->notNull(''));
+        $this->assertEquals(!is_null([]), $checker->notNull([]));
+
+        $this->assertEquals(!is_null(false), $checker->notNull(false));
+        $this->assertEquals(!is_null(true), $checker->notNull(true));
+    }
+
     public function testNotEmpty()
     {
         $checker = new TypeChecker(new Container());

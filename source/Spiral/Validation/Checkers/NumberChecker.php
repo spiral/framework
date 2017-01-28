@@ -28,40 +28,44 @@ class NumberChecker extends AbstractChecker implements SingletonInterface
     /**
      * Check if number in specified range.
      *
-     * @param float $value
-     * @param float $begin
-     * @param float $end
+     * @param float|int $value
+     * @param float|int $begin
+     * @param float|int $end
      *
      * @return bool
      */
     public function range($value, $begin, $end): bool
     {
-        return $value >= $begin && $value <= $end;
+        return is_numeric($value)
+            && $value >= $begin
+            && $value <= $end;
     }
 
     /**
      * Check if value is bigger or equal that specified.
      *
-     * @param float $value
-     * @param float $limit
+     * @param float|int $value
+     * @param float|int $limit
      *
      * @return bool
      */
     public function higher($value, $limit): bool
     {
-        return $value >= $limit;
+        return is_numeric($value)
+            && $value >= $limit;
     }
 
     /**
      * Check if value smaller of equal that specified.
      *
-     * @param float $value
-     * @param float $limit
+     * @param float|int $value
+     * @param float|int $limit
      *
      * @return bool
      */
     public function lower($value, $limit): bool
     {
-        return $value <= $limit;
+        return is_numeric($value)
+            && $value <= $limit;
     }
 }

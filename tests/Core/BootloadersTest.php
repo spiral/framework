@@ -15,6 +15,11 @@ use Spiral\Tests\Core\Fixtures\SampleClass;
 
 class BootloadersTest extends BaseTest
 {
+    public function testAccess()
+    {
+        $this->assertInstanceOf(BootloadManager::class, $this->app->getBootloader());
+    }
+
     public function testSchemaLoading()
     {
         $bootloader = new BootloadManager($this->container, $this->memory);

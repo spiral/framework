@@ -166,10 +166,6 @@ class Strings
             $minIndent = min($minIndent, strlen($matches[1]));
         }
 
-        if (is_null($minIndent) || $minIndent === 0) {
-            return $string;
-        }
-
         //Fixing indent
         foreach ($lines as &$line) {
             if (empty($line)) {

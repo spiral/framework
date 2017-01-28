@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;

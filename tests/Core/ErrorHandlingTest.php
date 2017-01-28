@@ -48,6 +48,15 @@ class ErrorHandlingTest extends BaseTest
         $this->app->handleException(new \Error('exception'));
     }
 
+    /**
+     * @expectedException \Error
+     */
+    public function testHandleExceptionWhenNoSnapshot()
+    {
+        $this->container->removeBinding(SnapshotInterface::class);
+        $this->app->handleException(new \Error('exception'));
+    }
+
     public function testHandleSnapshotNoDispatcher()
     {
         ob_start();

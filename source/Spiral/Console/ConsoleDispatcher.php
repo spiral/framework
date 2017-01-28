@@ -132,10 +132,10 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
         $output = $output ?? new BufferedOutput();
 
         $code = $this->runScoped(function () use ($input, $output, $command) {
-            $this->consoleApplication()->find($command)->run($input, $output);
+            return $this->consoleApplication()->find($command)->run($input, $output);
         }, $output);
 
-        return new CommandOutput($code ?: self::CODE_UNDEFINED, $output);
+        return new CommandOutput($code ?? self::CODE_UNDEFINED, $output);
     }
 
     /**

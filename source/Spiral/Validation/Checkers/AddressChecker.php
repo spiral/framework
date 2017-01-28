@@ -29,13 +29,13 @@ class AddressChecker extends AbstractChecker implements SingletonInterface
      *
      * @link http://www.ietf.org/rfc/rfc2822.txt
      *
-     * @param string
+     * @param string $address
      *
      * @return bool
      */
-    public function email(string $email): bool
+    public function email($address): bool
     {
-        return (bool)filter_var($email, FILTER_VALIDATE_EMAIL);
+        return (bool)filter_var($address, FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -51,12 +51,14 @@ class AddressChecker extends AbstractChecker implements SingletonInterface
     public function url(string $url, bool $requireScheme = true): bool
     {
         if (!$requireScheme && stripos($url, '://') === false) {
-            //Forcing scheme (not super great idea)
+            //Allow urls without http schema
             $url = 'http://' . $url;
         }
 
         if ((bool)filter_var($url, FILTER_VALIDATE_URL)) {
-            return stripos($url, 'http://') === 0 || stripos($url, 'https://') === 0;
+            //Double checking http protocol presence
+            return stripos($url, 'http://') === 0
+                || stripos($url, 'https://') === 0;
         }
 
         return false;
