@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\Exceptions\HttpException;
 use Spiral\Http\Response\Emitter;
 use Spiral\Http\Traits\MiddlewaresTrait;
@@ -126,18 +128,31 @@ class HttpCore extends Component implements HttpInterface
     /**
      * Running spiral as middleware.
      *
-     * @todo add ability to call $next on NotFound exceptions
-     *
      * @param Request  $request
      * @param Response $response
+     * @param callable $next
      *
      * @return Response
      *
      * @throws HttpException
      */
-    public function __invoke(Request $request, Response $response): Response
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
-        return $this->perform($request, $response);
+        try {
+            $response = $this->perform($request, $response);
+        } catch (ClientException $e) {
+            if ($e->getCode() != 404) {
+                //Server, forbidden and other exceptions
+                throw new $e;
+            }
+        }
+
+        if (!empty($response) && $response->getStatusCode() != 404) {
+            //Not empty response
+            return $response;
+        }
+
+        return $next($request, $response);
     }
 
     /**

@@ -16,7 +16,7 @@ class DummyController extends Controller
 {
     use TranslatorTrait;
 
-    public function indexAction(string $name = 'John')
+    public function indexAction(string $name = 'Dave')
     {
         return "Hello, {$name}.";
     }

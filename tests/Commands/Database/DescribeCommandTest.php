@@ -35,8 +35,19 @@ class DescribeCommandTest extends BaseTest
 
     public function testDescribeExisted()
     {
+        $table = $this->db->table('sample1')->getSchema();
+        $table->primary('primary_id');
+        $table->string('some_string');
+        $table->index(['some_string'])->setName('custom_index');
+
+        $table->save();
+
         $table = $this->db->table('sample')->getSchema();
         $table->primary('primary_id');
+
+        $table->integer('primary1_id');
+        $table->foreign('primary1_id')->references('samlple1', 'primary_id');
+
         $table->string('some_string');
         $table->index(['some_string'])->setName('custom_index');
 

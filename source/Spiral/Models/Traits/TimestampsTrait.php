@@ -35,7 +35,7 @@ trait TimestampsTrait
         if ($this instanceof RecordEntity) {
             $this->setField('time_updated', new \DateTime(), false);
         } elseif ($this instanceof DocumentEntity) {
-            $this->setField('timeUpdated', new \MongoDate(time()), false);
+            $this->setField('timeUpdated', new UTCDateTime(time()), false);
         }
 
         return $this;

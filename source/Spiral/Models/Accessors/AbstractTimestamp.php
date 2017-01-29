@@ -11,6 +11,8 @@ use Spiral\Models\AccessorInterface;
 
 /**
  * Provides shared functionality for time based fields in both ORM and ODM components.
+ *
+ * You can also implement entity specific timezone using entity context.
  */
 abstract class AbstractTimestamp extends \DateTime implements AccessorInterface
 {

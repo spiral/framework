@@ -109,6 +109,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->isValid());
     }
 
+
+    /**
+     * @expectedException \Spiral\Validation\Exceptions\ValidationException
+     */
+    public function testInvalidRule()
+    {
+        $validator = new Validator([
+            'email' => ['string:regexp']
+        ], [], $this->config, $this->container);
+        $this->assertTrue($validator->isValid());
+
+        $validator->setData(['email' => 'user@example.com']);
+        $this->assertTrue($validator->isValid());
+    }
+
     public function testEmptyConditions()
     {
         $validator = new Validator(['name' => ['type::notEmpty']], [], $this->config,

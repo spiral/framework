@@ -13,6 +13,24 @@ use TestApplication\Database\SampleRecord;
 
 class SqlTimestampsTest extends BaseTest
 {
+    /**
+     * @expectedException \Spiral\Models\Exceptions\AccessorException
+     */
+    public function testErrors()
+    {
+        $a = new SqlTimestamp(null, []);
+    }
+
+    /**
+     * @expectedException \Spiral\Models\Exceptions\AccessorException
+     */
+    public function testErrors2()
+    {
+        $this->configureDB();
+
+        $a = new SqlTimestamp(null, ['entity' => new SampleRecord(), 'orm' => true]);
+    }
+
     public function testSqlAccessorNotNullable()
     {
         $this->configureDB();
@@ -32,6 +50,8 @@ class SqlTimestampsTest extends BaseTest
 
         $this->assertNotEmpty($sample->primaryKey());
 
+        $sample->touch()->save();
+
         //Check value in DB
         $sampleB = $this->orm->source(SampleRecord::class)->findByPK($sample->primaryKey());
 
@@ -49,6 +69,8 @@ class SqlTimestampsTest extends BaseTest
             json_encode($sample),
             json_encode($sampleB)
         );
+
+        $this->assertInternalType('array', $sample->time_altered->__debugInfo());
     }
 
     public function testSqlAccessorNullable()
@@ -107,7 +129,7 @@ class SqlTimestampsTest extends BaseTest
 
     protected function configureDB()
     {
-        $this->console->run('orm:schema', [
+        $this->commands->run('orm:schema', [
             '--alter' => true
         ]);
     }
