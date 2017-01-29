@@ -55,7 +55,7 @@ abstract class AbstractTimestamp extends \DateTime implements AccessorInterface
      */
     public function packValue()
     {
-        return $this;
+        return clone $this;
     }
 
     /**

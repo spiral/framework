@@ -32,7 +32,7 @@ class UTCMongoTimestamp extends AbstractTimestamp implements CompositableInterfa
      */
     public function packValue()
     {
-        return new UTCDateTime($this->getTimestamp());
+        return new UTCDateTime($this);
     }
 
     /**
@@ -40,10 +40,6 @@ class UTCMongoTimestamp extends AbstractTimestamp implements CompositableInterfa
      */
     public function buildAtomics(string $container = ''): array
     {
-        if (!$this->hasChanges()) {
-            return [];
-        }
-
         return ['$set' => [$container => $this->packValue()]];
     }
 }

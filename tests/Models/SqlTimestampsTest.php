@@ -49,7 +49,6 @@ class SqlTimestampsTest extends BaseTest
         $sample->save();
 
         $this->assertNotEmpty($sample->primaryKey());
-
         $sample->touch()->save();
 
         //Check value in DB

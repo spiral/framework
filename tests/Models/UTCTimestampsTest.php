@@ -11,7 +11,7 @@ use Spiral\Models\Accessors\UTCMongoTimestamp;
 use Spiral\Tests\BaseTest;
 use TestApplication\Database\SampleDocument;
 
-class MongoTimestampsTest extends BaseTest
+class UTCTimestampsTest extends BaseTest
 {
     public function testMongoAccessor()
     {
@@ -30,6 +30,7 @@ class MongoTimestampsTest extends BaseTest
         $this->assertInstanceOf(UTCMongoTimestamp::class, $document->timeUpdated);
         $this->assertNotEmpty((string)$document->timeUpdated);
 
+        $document->solidState(false);
         $document->touch()->save();
 
         $documentB = SampleDocument::findByPK($document->_id);
@@ -43,7 +44,6 @@ class MongoTimestampsTest extends BaseTest
         $this->assertNotEmpty((string)$documentB->timeUpdated);
 
         $this->assertInternalType('array', $document->time_altered->__debugInfo());
-
     }
 
     protected function configureDB()

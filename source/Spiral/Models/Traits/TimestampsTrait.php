@@ -33,9 +33,9 @@ trait TimestampsTrait
     public function touch()
     {
         if ($this instanceof RecordEntity) {
-            $this->setField('time_updated', new \DateTime(), false);
+            $this->setField('time_updated', new \DateTime());
         } elseif ($this instanceof DocumentEntity) {
-            $this->setField('timeUpdated', new UTCDateTime(time()), false);
+            $this->setField('timeUpdated', new UTCDateTime(time()));
         }
 
         return $this;
@@ -75,13 +75,13 @@ trait TimestampsTrait
             if ($event instanceof RecordEvent && $event->isContextual()) {
                 switch ($eventName) {
                     case 'create':
-                        $entity->setField('time_created', new \DateTime(), false);
+                        $entity->setField('time_created', new \DateTime());
                         $event->getCommand()->addContext('time_created', new \DateTime());
 
 
                     //no-break
                     case 'update':
-                        $entity->setField('time_updated', new \DateTime(), false);
+                        $entity->setField('time_updated', new \DateTime());
                         $event->getCommand()->addContext('time_updated', new \DateTime());
                 }
             }
@@ -89,10 +89,10 @@ trait TimestampsTrait
             if ($entity instanceof DocumentEntity) {
                 switch ($eventName) {
                     case 'create':
-                        $entity->setField('timeCreated', new UTCDateTime(time()), false);
+                        $entity->setField('timeCreated', new UTCDateTime(time() * 1000));
                     //no-break
                     case 'update':
-                        $entity->setField('timeUpdated', new UTCDateTime(time()), false);
+                        $entity->setField('timeUpdated', new UTCDateTime(time() * 1000));
                 }
             }
         };
