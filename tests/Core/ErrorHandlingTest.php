@@ -7,13 +7,19 @@
 
 namespace Spiral\Tests\Core;
 
-use Mockery as m;
+use Psr\Log\LoggerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
 use Spiral\Tests\BaseTest;
+use Mockery as m;
 
 class ErrorHandlingTest extends BaseTest
 {
+    public function testLogError()
+    {
+        $log = $this->app->container->get(LoggerInterface::class)->alert('error');
+    }
+
     public function testConvertException()
     {
         try {
@@ -26,6 +32,11 @@ class ErrorHandlingTest extends BaseTest
         $this->assertSame('error', $e->getMessage());
         $this->assertSame(__FILE__, $e->getFile());
         $this->assertSame(17, $e->getLine());
+    }
+
+    public function testLogError2()
+    {
+        $this->app->container->get(LoggerInterface::class)->alert('error');
     }
 
     public function testMakeSnapshot()
@@ -46,6 +57,11 @@ class ErrorHandlingTest extends BaseTest
         }))->andReturnNull();
 
         $this->app->handleException(new \Error('exception'));
+    }
+
+    public function testLogError3()
+    {
+        $this->app->container->get(LoggerInterface::class)->alert('error');
     }
 
     /**

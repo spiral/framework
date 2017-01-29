@@ -25,7 +25,7 @@ class ControllersTest extends BaseTest
 
     public function testCallActionDefaultParameter()
     {
-        $this->assertSame("Hello, John.",
+        $this->assertSame("Hello, Dave.",
             $this->app->callAction(DummyController::class, 'index')
         );
     }

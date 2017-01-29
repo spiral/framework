@@ -43,7 +43,7 @@ class TwigCache implements \Twig_CacheInterface
     {
         $hash = hash('md5', $className . '.' . $this->environment->getID());
 
-        return $this->environment->cacheDirectory() . '/' . $hash[0] . $hash[1] . '/' . $hash . '.php';
+        return "{$this->environment->cacheDirectory()}/{$hash}.php";
     }
 
     /**

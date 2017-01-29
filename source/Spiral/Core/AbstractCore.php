@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\ControllerException;

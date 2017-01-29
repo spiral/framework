@@ -17,19 +17,10 @@ return [
             'handler' => \Monolog\Handler\RotatingFileHandler::class,
             'format'  => "[%datetime%] %level_name%: %message%\n",
             'options' => [
-                'level'    => \Psr\Log\LogLevel::ERROR,
-                'maxFiles' => 1,
-                'filename' => directory('runtime') . 'logs/errors.log',
-                'bubble'   => false
-            ],
-        ],
-        [
-            'handler' => \Monolog\Handler\RotatingFileHandler::class,
-            'format'  => "[%datetime%] %level_name%: %message%\n",
-            'options' => [
-                'level'    => \Psr\Log\LogLevel::DEBUG,
-                'maxFiles' => 1,
-                'filename' => directory('runtime') . 'logs/debug.log'
+                'level'          => \Psr\Log\LogLevel::ERROR,
+                'maxFiles'       => 1,
+                'filename'       => directory('runtime') . 'logs/errors.log',
+                'bubble'         => false
             ],
         ],
         /*{{handlers.debug}}*/

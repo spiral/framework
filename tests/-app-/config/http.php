@@ -41,8 +41,8 @@ return [
      */
     'csrf'         => [
         'cookie'   => 'csrf-token',
-        'length'   => 16,
-        'lifetime' => 86400
+        'length'   => 64,
+        'lifetime' => null
     ],
 
     /*

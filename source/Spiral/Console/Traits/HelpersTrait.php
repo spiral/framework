@@ -96,16 +96,6 @@ trait HelpersTrait
     }
 
     /**
-     * Create or use cached instance of AskHelper.
-     *
-     * @return AskHelper
-     */
-    protected function ask(): AskHelper
-    {
-        return new AskHelper($this->getHelper('question'), $this->input, $this->output);
-    }
-
-    /**
      * @return \Interop\Container\ContainerInterface
      */
     abstract protected function iocContainer();

@@ -5,9 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Middlewares;
 
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerAwareInterface;
 use Spiral\Core\Component;
@@ -19,8 +21,7 @@ use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\MiddlewareInterface;
 
 /**
- * Isolates exceptions into response. Ability to isolate regular exceptions is under re-thinking
- * now.
+ * Isolates ClientException(s) into response.
  *
  * Attention, middleware requests ViewsInterface on demand!
  */
@@ -92,18 +93,13 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
      */
     private function logError(Request $request, ClientException $exception)
     {
-        $remoteAddress = '-undefined-';
-        if (!empty($request->getServerParams()['REMOTE_ADDR'])) {
-            $remoteAddress = $request->getServerParams()['REMOTE_ADDR'];
-        }
-
         $this->logger()->error(\Spiral\interpolate(static::LOG_FORMAT, [
             'scheme'  => $request->getUri()->getScheme(),
             'host'    => $request->getUri()->getHost(),
             'path'    => $request->getUri()->getPath(),
             'code'    => $exception->getCode(),
             'message' => $exception->getMessage() ?: '-not specified-',
-            'remote'  => $remoteAddress
+            'remote'  => $this->findIp($request)
         ]));
     }
 
@@ -115,5 +111,17 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
     protected function errorWriter(): ErrorWriter
     {
         return $this->container->get(ErrorWriter::class);
+    }
+
+    /**
+     * Try to locate client ip. To be used for debug purposes only.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     *
+     * @return string
+     */
+    private function findIp(ServerRequestInterface $request): string
+    {
+        return $request->getServerParams()['REMOTE_ADDR'] ?? '127.0.0.1';
     }
 }

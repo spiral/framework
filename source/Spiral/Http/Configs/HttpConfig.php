@@ -222,9 +222,9 @@ class HttpConfig extends InjectableConfig implements SingletonInterface
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function csrfLifetime(): int
+    public function csrfLifetime()
     {
         return $this->config['csrf']['lifetime'];
     }

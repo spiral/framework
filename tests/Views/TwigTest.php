@@ -21,34 +21,22 @@ class TwigTest extends BaseTest
         );
     }
 
-    public function testCompile()
-    {
-        $this->views->compile('isolated-y');
-
-        clearstatcache();
-        $this->assertNotEmpty($this->files->getFiles(
-            $this->views->getEnvironment()->cacheDirectory()
-        ));
-    }
-
     public function testCompileWithEnvironment()
     {
         $this->views->compile('isolated-x');
 
         $result = $this->views->withEnvironment(
             $this->views->getEnvironment()->withDependency('value', function () {
-                return 'test';
+                return 'test78';
             })
         )->render('valued');
 
-        $this->assertSame('test', $result);
+        $this->assertSame('test78', $result);
     }
 
     public function testRenderFromOtherLoader()
     {
-        $this->assertSame('Hello, World!', $this->views->render('native', [
-            'name' => 'World'
-        ]));
+        $this->assertSame('abc', $this->views->render('isolated'));
 
         $views = $this->views->withLoader(
             new FileLoader(
@@ -58,6 +46,7 @@ class TwigTest extends BaseTest
         );
 
         $this->assertSame('cba', $views->render('isolated'));
+
     }
 
     public function testView()

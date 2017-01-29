@@ -8,7 +8,11 @@
 
 namespace Spiral\Console\Configs;
 
+use Spiral\Console\Helpers\AskHelper;
 use Spiral\Core\InjectableConfig;
+use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\ProcessHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 
 /**
  * Console component configuration.

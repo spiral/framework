@@ -5,13 +5,16 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Migrations\Prototypes;
 
 use Interop\Container\ContainerInterface;
 use Spiral\Console\Command;
 use Spiral\Migrations\Configs\MigrationsConfig;
 use Spiral\Migrations\Migrator;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 abstract class AbstractCommand extends Command
 {
@@ -71,7 +74,14 @@ abstract class AbstractCommand extends Command
 
         $this->writeln("<fg=red>Confirmation is required to run migrations!</fg=red>");
 
-        if (!$this->ask()->confirm("Do you wish to continue?")) {
+        $question = new QuestionHelper();
+        $confirmation = $question->ask(
+            $this->input,
+            $this->output,
+            new ConfirmationQuestion("<question>{$question}</question> ")
+        );
+
+        if (!$confirmation) {
             $this->writeln("<comment>Cancelling operation...</comment>");
 
             return false;

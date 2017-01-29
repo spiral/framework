@@ -13,8 +13,9 @@ class CleanCommandTest extends BaseTest
 {
     public function testClean()
     {
-        $this->assertNotEmpty($this->files->getFiles(directory('runtime')));
+        $this->assertEmpty($this->files->getFiles(directory('cache')));
+        $this->files->write(directory('cache') . 'abc', 'data');
         $this->console->run('app:clean');
-        $this->assertEmpty($this->files->getFiles(directory('runtime')));
+        $this->assertEmpty($this->files->getFiles(directory('cache')));
     }
 }

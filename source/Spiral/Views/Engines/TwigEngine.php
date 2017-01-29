@@ -29,6 +29,16 @@ class TwigEngine extends AbstractEngine
     use BenchmarkTrait;
 
     /**
+     * @var array
+     */
+    private $extensions = [];
+
+    /**
+     * @var array
+     */
+    private $options = [];
+
+    /**
      * Set of class names (processors) to be applied to view sources befor giving it to Twig.
      *
      * @var array
@@ -75,8 +85,8 @@ class TwigEngine extends AbstractEngine
         $this->files = $files;
         $this->modifiers = $modifiers;
 
-        //Initiating twig Environment
-        $this->twig = $this->makeTwig($extensions, $options);
+        $this->extensions = $extensions;
+        $this->options = $options;
     }
 
     /**
@@ -86,6 +96,10 @@ class TwigEngine extends AbstractEngine
      */
     public function getTwig()
     {
+        if (empty($this->twig)) {
+            $this->twig = $this->makeTwig();
+        }
+
         return $this->twig;
     }
 
@@ -99,7 +113,7 @@ class TwigEngine extends AbstractEngine
         $benchmark = $this->benchmark('load', $path);
 
         try {
-            return new TwigView($this->twig->load($path));
+            return new TwigView($this->getTwig()->load($path));
         } catch (\Twig_Error_Syntax $exception) {
             //Let's clarify exception location
             throw CompileException::fromTwig($exception);
@@ -127,16 +141,14 @@ class TwigEngine extends AbstractEngine
     public function compile(string $path, bool $reset = false)
     {
         if ($reset) {
-            $cache = $this->twig->getCache();
-            $this->twig->setCache(false);
+            $this->getTwig()->setCache(false);
         }
 
         //This must force twig to compile template
         $this->get($path);
-
         if ($reset && !empty($cache)) {
             //Restoring cache
-            $this->twig->setCache($cache);
+            $this->twig->setCache($this->makeCache());
         }
     }
 
@@ -149,9 +161,7 @@ class TwigEngine extends AbstractEngine
          * @var self $engine
          */
         $engine = parent::withLoader($loader);
-
-        $engine->twig = clone $this->twig;
-        $engine->twig->setLoader($engine->makeLoader());
+        $engine->twig = $engine->makeTwig();
 
         return $engine;
     }
@@ -167,36 +177,32 @@ class TwigEngine extends AbstractEngine
          * @var self $engine
          */
         $engine = parent::withEnvironment($environment);
-
-        $engine->twig = clone $this->twig;
-        $engine->twig->setLoader($engine->makeLoader());
-        $engine->twig->setCache($engine->makeCache());
+        $engine->twig = $engine->makeTwig();
 
         return $engine;
     }
 
     /**
-     * Initiating twig environment.
-     *
-     * @param array $extensions
-     * @param array $options
+     * Initiate twig environment.
      *
      * @return \Twig_Environment
      */
-    protected function makeTwig(array $extensions, array $options): \Twig_Environment
+    protected function makeTwig(): \Twig_Environment
     {
         //Initiating Twig Environment
         $twig = $this->container->make(\Twig_Environment::class, [
             'loader'  => $this->makeLoader(),
-            'options' => $options
+            'options' => $this->options
         ]);
 
         $twig->setCache($this->makeCache());
 
-        foreach ($extensions as $extension) {
+        foreach ($this->extensions as $extension) {
             //Each extension can be delivered thought container
             $twig->addExtension($this->container->get($extension));
         }
+
+        $twig->setLoader($this->makeLoader());
 
         return $twig;
     }
@@ -214,7 +220,7 @@ class TwigEngine extends AbstractEngine
             if (is_object($modifier)) {
                 $modifiers[] = $modifier;
             } else {
-                $modifiers[] = $this->container->make($modifier);
+                $modifiers[] = $this->container->get($modifier);
             }
         }
 

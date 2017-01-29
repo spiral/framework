@@ -121,7 +121,13 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
             /**
              * @see \Zend\Diactoros\ServerRequestFactory
              */
-            return ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+            return ServerRequestFactory::fromGlobals(
+                $_SERVER,
+                $_GET,
+                $_POST,
+                $_COOKIE,
+                $_FILES
+            );
         } finally {
             $this->benchmark($benchmark);
         }

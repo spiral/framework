@@ -38,7 +38,7 @@ class DescribeCommandTest extends BaseTest
         $table = $this->db->table('sample1')->getSchema();
         $table->primary('primary_id');
         $table->string('some_string');
-        $table->index(['some_string'])->setName('custom_index');
+        $table->index(['some_string'])->setName('custom_index_1');
 
         $table->save();
 
@@ -46,10 +46,10 @@ class DescribeCommandTest extends BaseTest
         $table->primary('primary_id');
 
         $table->integer('primary1_id');
-        $table->foreign('primary1_id')->references('samlple1', 'primary_id');
+        $table->foreign('primary1_id')->references('sample1', 'primary_id');
 
-        $table->string('some_string');
-        $table->index(['some_string'])->setName('custom_index');
+        $table->integer('some_int');
+        $table->index(['some_int'])->setName('custom_index');
 
         $table->save();
 
@@ -62,7 +62,8 @@ class DescribeCommandTest extends BaseTest
         $output = $output->getOutput()->fetch();
 
         $this->assertContains('primary_id', $output);
-        $this->assertContains('some_string', $output);
+        $this->assertContains('some_int', $output);
         $this->assertContains('custom_index', $output);
+        $this->assertContains('sample1', $output);
     }
 }

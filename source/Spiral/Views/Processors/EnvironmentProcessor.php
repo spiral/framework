@@ -10,7 +10,6 @@ namespace Spiral\Views\Processors;
 
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
-use Spiral\Views\SourceContextInterface;
 use Spiral\Views\ViewSource;
 
 /**

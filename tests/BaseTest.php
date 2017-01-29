@@ -54,39 +54,53 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $root = __DIR__ . '/-app-/';
-        $this->app = TestApplication::init([
-            'root'        => $root,
-            'libraries'   => dirname(__DIR__) . '/vendor/',
-            'application' => $root,
-            'framework'   => dirname(__DIR__) . '/source/',
-            'runtime'     => $root . 'runtime/',
-            'cache'       => $root . 'runtime/cache/',
-        ]);
+
+        $this->app = TestApplication::init(
+            [
+                'root'        => $root,
+                'libraries'   => dirname(__DIR__) . '/vendor/',
+                'application' => $root,
+                'framework'   => dirname(__DIR__) . '/source/',
+                'runtime'     => $root . 'runtime/',
+                'cache'       => $root . 'runtime/cache/',
+            ],
+            null,
+            null,
+            false
+        );
 
         //Monolog love to write to CLI when no handler set
+
         $this->app->logs->debugHandler(new NullHandler());
+
+        $files = $this->app->files;
+
+        //Ensure runtime is clean
+        foreach ($files->getFiles($this->app->directory('runtime')) as $filename) {
+            //If exception is thrown here this will mean that application wasn't correctly destructed
+            //and there is open resources kept
+            $files->delete($filename);
+        }
+
+        clearstatcache();
 
         //Open application scope
         SharedComponent::shareContainer($this->app->container);
     }
 
+    /**
+     * This method performs full destroy of spiral environment.
+     */
     public function tearDown()
     {
-        SharedComponent::shareContainer($this->app->container);
-
-        $this->db->getDriver()->disconnect();
-
-        $files = $this->app->files;
-        foreach ($files->getFiles(directory('runtime')) as $filename) {
-            try {
-                $files->delete($filename);
-            } catch (\Throwable $e) {
-
-            }
-        }
-
-        //Close scope
+        \Mockery::close();
         SharedComponent::shareContainer(null);
+
+        //Forcing destruction
+        $this->app = null;
+
+        gc_collect_cycles();
+        clearstatcache();
     }
 
     /**

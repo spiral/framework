@@ -47,7 +47,9 @@ class HttpCoreTest extends \PHPUnit_Framework_TestCase
             return $response->withStatus(300);
         });
 
-        $response = $core($this->request, $this->response);
+        $response = $core($this->request, $this->response, function () {
+            return null;
+        });
         $this->assertEquals(300, $response->getStatusCode());
     }
 

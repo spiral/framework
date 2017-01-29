@@ -68,7 +68,7 @@ class CsrfMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Generate CSRF token (does not replace anything, only generates are value).
+     * Generate CSRF token.
      *
      * @return string
      */

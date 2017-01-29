@@ -64,6 +64,6 @@ class RoterScopeTest extends HttpTest
 
         $response = $this->get('http://sample.com/');
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('Hello, John.', (string)$response->getBody());
+        $this->assertSame('Hello, Dave.', (string)$response->getBody());
     }
 }
