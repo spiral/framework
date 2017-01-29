@@ -41,6 +41,9 @@ class SpiralBindings extends Bootloader
         'http'                               => 'Spiral\Http\HttpDispatcher',
         'console'                            => 'Spiral\Console\ConsoleDispatcher',
 
+        //Alias for console
+        'commands'                           => 'Spiral\Console\ConsoleDispatcher',
+
         //Shared components
         'files'                              => 'Spiral\Files\FilesInterface',
         'tokenizer'                          => 'Spiral\Tokenizer\TokenizerInterface',

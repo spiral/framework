@@ -7,7 +7,7 @@
 
 namespace Spiral\Console;
 
-use Console\Traits\HelpersTrait;
+use Spiral\Console\Traits\HelpersTrait;
 use Interop\Container\ContainerInterface;
 use Spiral\Core\ResolverInterface;
 use Spiral\Core\Traits\SharedTrait;

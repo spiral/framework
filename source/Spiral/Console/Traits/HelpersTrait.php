@@ -4,8 +4,7 @@
  *
  * @author    Wolfy-J
  */
-
-namespace Console\Traits;
+namespace Spiral\Console\Traits;
 
 use Spiral\Console\Helpers\AskHelper;
 use Symfony\Component\Console\Helper\Table;

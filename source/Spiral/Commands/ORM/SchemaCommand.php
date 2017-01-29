@@ -58,7 +58,7 @@ class SchemaCommand extends Command
         $builder = $orm->schemaBuilder(true);
 
         //Rendering schema
-        $orm->buildSchema($builder->renderSchema(), true);
+        $orm->setSchema($builder->renderSchema(), true);
 
         $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 

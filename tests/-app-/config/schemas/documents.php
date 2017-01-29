@@ -6,7 +6,8 @@
  *
  * @see SchemasConfig
  */
-use Spiral\ODM\Accessors;
+use Spiral\Models\Accessors;
+use Spiral\ODM\Accessors as ODMAccessors;
 use Spiral\ODM\ODM;
 
 return [
@@ -22,13 +23,11 @@ return [
         //Automatic casting of mongoID
         'ObjectID' => ['setter' => [ODM::class, 'mongoID']],
 
-        'array::string'    => ['accessor' => Accessors\StringArray::class],
-        'array::objectIDs' => ['accessor' => Accessors\ObjectIDsArray::class],
-        'array::integer'   => ['accessor' => Accessors\IntegerArray::class],
+        'array::string'    => ['accessor' => ODMAccessors\StringArray::class],
+        'array::objectIDs' => ['accessor' => ODMAccessors\ObjectIDsArray::class],
+        'array::integer'   => ['accessor' => ODMAccessors\IntegerArray::class],
 
-        //'array'     => ['accessor' => ScalarArray::class],
-        //'MongoDate' => ['accessor' => Accessors\MongoTimestamp::class],
-        //'timestamp' => ['accessor' => Accessors\MongoTimestamp::class],
+        'timestamp' => ['accessor' => Accessors\UTCMongoTimestamp::class],
         /*{{mutators}}*/
     ],
     /*
@@ -36,20 +35,23 @@ return [
      */
     'aliases'  => [
         //Id aliases
-        'MongoId'                     => 'ObjectID',
-        'objectID'                    => 'ObjectID',
-        'MongoDB\BSON\ObjectID'       => 'ObjectID',
+        'MongoId'                        => 'ObjectID',
+        'objectID'                       => 'ObjectID',
+        \MongoDB\BSON\ObjectID::class    => 'ObjectID',
+
+        //Timestamps
+        \MongoDB\BSON\UTCDateTime::class => 'timestamp',
 
         //Scalar typ aliases
-        'integer'                     => 'int',
-        'long'                        => 'int',
-        'text'                        => 'string',
+        'integer'                        => 'int',
+        'long'                           => 'int',
+        'text'                           => 'string',
 
         //Array aliases
-        'array::int'                  => 'array::integer',
-        'array::MongoId'              => 'array::objectIDs',
-        'array::ObjectID'             => 'array::objectIDs',
-        'array::MongoDB\BSON\ObjectID' => 'array::objectIDs'
+        'array::int'                     => 'array::integer',
+        'array::MongoId'                 => 'array::objectIDs',
+        'array::ObjectID'                => 'array::objectIDs',
+        'array::MongoDB\BSON\ObjectID'   => 'array::objectIDs'
 
         /*{{mutators.aliases}}*/
     ]

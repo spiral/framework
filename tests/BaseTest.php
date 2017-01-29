@@ -17,6 +17,7 @@ use Spiral\Tests\Core\Fixtures\SharedComponent;
  * @property \Spiral\Debug\LogsInterface              $logs
  * @property \Spiral\Http\HttpDispatcher              $http
  * @property \Spiral\Console\ConsoleDispatcher        $console
+ * @property \Spiral\Console\ConsoleDispatcher        $commands
  * @property \Spiral\Files\FilesInterface             $files
  * @property \Spiral\Tokenizer\TokenizerInterface     $tokenizer
  * @property \Spiral\Tokenizer\ClassesInterface       $locator

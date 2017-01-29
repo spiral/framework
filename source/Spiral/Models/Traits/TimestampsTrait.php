@@ -5,14 +5,15 @@
  * @author    Wolfy-J
  */
 
-namespace Models\Traits;
+namespace Spiral\Models\Traits;
 
+use MongoDB\BSON\UTCDateTime;
 use Spiral\Models\Events\DescribeEvent;
 use Spiral\Models\Events\EntityEvent;
 use Spiral\ODM\DocumentEntity;
-use Spiral\ODM\Schemas\DocumentSchema;
+use Spiral\ORM\Events\RecordEvent;
 use Spiral\ORM\RecordEntity;
-use Spiral\ORM\Schemas\RecordSchema;
+use Spiral\ORM\RecordInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -50,8 +51,8 @@ trait TimestampsTrait
          */
         $listener = self::__timestamps__saveListener();
 
-        self::events()->addListener('saving', $listener);
-        self::events()->addListener('updating', $listener);
+        self::events()->addListener('create', $listener);
+        self::events()->addListener('update', $listener);
     }
 
     /**
@@ -71,23 +72,27 @@ trait TimestampsTrait
     {
         return function (EntityEvent $event, $eventName) {
             $entity = $event->getEntity();
-            if ($entity instanceof RecordEntity) {
+            if ($event instanceof RecordEvent && $event->isContextual()) {
                 switch ($eventName) {
                     case 'create':
                         $entity->setField('time_created', new \DateTime(), false);
+                        $event->getCommand()->addContext('time_created', new \DateTime());
+
+
                     //no-break
                     case 'update':
                         $entity->setField('time_updated', new \DateTime(), false);
+                        $event->getCommand()->addContext('time_updated', new \DateTime());
                 }
             }
 
             if ($entity instanceof DocumentEntity) {
                 switch ($eventName) {
                     case 'create':
-                        $entity->setField('timeCreated', new \MongoDate(time()), false);
+                        $entity->setField('timeCreated', new UTCDateTime(time()), false);
                     //no-break
                     case 'update':
-                        $entity->setField('timeUpdated', new \MongoDate(time()), false);
+                        $entity->setField('timeUpdated', new UTCDateTime(time()), false);
                 }
             }
         };
@@ -107,20 +112,16 @@ trait TimestampsTrait
 
             $schema = $event->getValue();
 
-            //Registering fields in schema
-            switch (get_class($event->getReflection())) {
-                case RecordSchema::class:
-                    $schema += [
-                        'time_created' => 'datetime, null',
-                        'time_updated' => 'datetime, null'
-                    ];
-                    break;
-                case DocumentSchema::class:
-                    $schema += [
-                        'timeCreated' => 'timestamp',
-                        'timeUpdated' => 'timestamp'
-                    ];
-                    break;
+            if ($event->getReflection()->isSubclassOf(RecordInterface::class)) {
+                $schema += [
+                    'time_created' => 'datetime, null',
+                    'time_updated' => 'datetime, null'
+                ];
+            } elseif ($event->getReflection()->isSubclassOf(DocumentEntity::class)) {
+                $schema += [
+                    'timeCreated' => 'timestamp',
+                    'timeUpdated' => 'timestamp'
+                ];
             }
 
             //Updating schema value

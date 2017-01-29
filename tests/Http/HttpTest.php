@@ -19,7 +19,27 @@ abstract class HttpTest extends BaseTest
         array $headers = [],
         array $cookies = []
     ): ResponseInterface {
-        $request = new ServerRequest(
+        return $this->http->perform($this->request($uri, $query, $headers, $cookies));
+    }
+
+    protected function post(
+        $uri,
+        array $data = [],
+        array $headers = [],
+        array $cookies = []
+    ): ResponseInterface {
+        return $this->http->perform(
+            $this->request($uri, [], $headers, $cookies)->withParsedBody($data)
+        );
+    }
+
+    protected function request(
+        $uri,
+        array $query = [],
+        array $headers = [],
+        array $cookies = []
+    ): ServerRequest {
+        return new ServerRequest(
             [],
             [],
             $uri,
@@ -29,6 +49,5 @@ abstract class HttpTest extends BaseTest
             $query
         );
 
-        return $this->http->perform($request);
     }
 }

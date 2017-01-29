@@ -9,12 +9,12 @@ return [
     /*
      * Directory to store migration files
      */
-    'directory' => directory('application') . 'migrations/',
+    'directory' => directory('runtime') . 'migrations/',
 
     /*
      * Database name to store information about migrations status
      */
-    'database'  => 'default',
+    'database'  => 'runtime',
 
     /*
      * Table name to store information about migrations status
