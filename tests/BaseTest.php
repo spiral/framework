@@ -8,8 +8,13 @@
 namespace Spiral\Tests;
 
 use Monolog\Handler\NullHandler;
+use Spiral\Core\Memory;
 use Spiral\Core\Traits\SharedTrait;
+use Spiral\Files\FilesInterface;
 use Spiral\Tests\Core\Fixtures\SharedComponent;
+use Spiral\Tokenizer\Configs\TokenizerConfig;
+use Spiral\Tokenizer\Tokenizer;
+use Spiral\Tokenizer\TokenizerInterface;
 
 /**
  * @property \Spiral\Core\MemoryInterface             $memory
@@ -54,8 +59,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $root = __DIR__ . '/-app-/';
-
-        $this->app = TestApplication::init(
+        $app = $this->app = TestApplication::init(
             [
                 'root'        => $root,
                 'libraries'   => dirname(__DIR__) . '/vendor/',
@@ -70,15 +74,14 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
         );
 
         //Monolog love to write to CLI when no handler set
-
         $this->app->logs->debugHandler(new NullHandler());
 
         $files = $this->app->files;
 
         //Ensure runtime is clean
         foreach ($files->getFiles($this->app->directory('runtime')) as $filename) {
-            //If exception is thrown here this will mean that application wasn't correctly destructed
-            //and there is open resources kept
+            //If exception is thrown here this will mean that application wasn't correctly
+            //destructed and there is open resources kept
             $files->delete($filename);
         }
 
@@ -94,6 +97,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         \Mockery::close();
+
         SharedComponent::shareContainer(null);
 
         //Forcing destruction

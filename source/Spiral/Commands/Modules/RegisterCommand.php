@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Modules;
 
 use Spiral\Commands\Modules\Traits\ModuleTrait;
@@ -19,6 +20,12 @@ use Symfony\Component\Console\Input\InputArgument;
 class RegisterCommand extends Command
 {
     use ModuleTrait;
+
+    /**
+     * Error codes.
+     */
+    const INVALID_MODULE = 9;
+    const UNCONFIRMED    = 10;
 
     /**
      * {@inheritdoc}
@@ -40,14 +47,16 @@ class RegisterCommand extends Command
     /**
      * @param Registrator       $registrator
      * @param ConsoleDispatcher $dispatcher
+     *
+     * @return int
      */
-    public function perform(Registrator $registrator, ConsoleDispatcher $dispatcher)
+    public function perform(Registrator $registrator, ConsoleDispatcher $dispatcher): int
     {
         $class = $this->guessClass($this->argument('module'));
         if (!$this->isModule($class)) {
             $this->writeln("<fg=red>Class '{$class}' is not valid module.</fg=red>");
 
-            return;
+            return self::INVALID_MODULE;
         }
 
         //Altering all requested module configurations
@@ -71,7 +80,7 @@ class RegisterCommand extends Command
 
             $this->writeln("");
             if (!$this->ask()->confirm("Confirm module registration (y/n)")) {
-                return;
+                return self::UNCONFIRMED;
             }
 
             $this->writeln("");
@@ -85,5 +94,7 @@ class RegisterCommand extends Command
         );
 
         $dispatcher->run('publish', $this->input, $this->output);
+
+        return 0;
     }
 }

@@ -46,7 +46,6 @@ class TwigTest extends BaseTest
         );
 
         $this->assertSame('cba', $views->render('isolated'));
-
     }
 
     public function testView()

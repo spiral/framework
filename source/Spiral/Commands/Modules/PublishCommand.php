@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Modules;
 
 use Spiral\Commands\Modules\Traits\ModuleTrait;
@@ -19,6 +20,11 @@ use Symfony\Component\Console\Input\InputArgument;
 class PublishCommand extends Command
 {
     use ModuleTrait;
+
+    /**
+     * Error codes.
+     */
+    const INVALID_MODULE = 9;
 
     /**
      * {@inheritdoc}
@@ -40,14 +46,16 @@ class PublishCommand extends Command
     /**
      * @param Publisher            $publisher
      * @param DirectoriesInterface $directories
+     *
+     * @return int
      */
-    public function perform(Publisher $publisher, DirectoriesInterface $directories)
+    public function perform(Publisher $publisher, DirectoriesInterface $directories): int
     {
         $class = $this->guessClass($this->argument('module'));
         if (!$this->isModule($class)) {
             $this->writeln("<fg=red>Class '{$class}' is not valid module.</fg=red>");
 
-            return;
+            return self::INVALID_MODULE;
         }
 
         //Publishing
@@ -56,5 +64,7 @@ class PublishCommand extends Command
         $this->writeln(
             "<info>Module '<comment>{$class}</comment>' has been successfully published.</info>"
         );
+
+        return 0;
     }
 }
