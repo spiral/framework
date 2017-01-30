@@ -78,7 +78,6 @@ trait TimestampsTrait
                         $entity->setField('time_created', new \DateTime());
                         $event->getCommand()->addContext('time_created', new \DateTime());
 
-
                     //no-break
                     case 'update':
                         $entity->setField('time_updated', new \DateTime());
