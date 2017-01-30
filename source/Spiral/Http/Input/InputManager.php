@@ -221,7 +221,7 @@ class InputManager extends Component implements InputInterface, SingletonInterfa
         $class = $this->bagAssociations[$name]['class'];
         $data = call_user_func([$this->request(), $this->bagAssociations[$name]['source']]);
 
-        return $this->bagInstances[$name] = new $class($data);
+        return $this->bagInstances[$name] = new $class((array)$data);
     }
 
     /**
