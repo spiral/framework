@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Cookies\Cookie;
+use Spiral\Http\Cookies\CookieQueue;
 use Spiral\Http\MiddlewareInterface;
 use Spiral\Support\Strings;
 
@@ -56,8 +57,13 @@ class CsrfMiddleware implements MiddlewareInterface
             //Token cookie!
             $cookie = $this->tokenCookie($request->getUri(), $token);
 
-            //We can alter response cookies
-            $response = $response->withAddedHeader('Set-Cookie', (string)$cookie);
+            if (!empty($queue = $request->getAttribute(CookieQueue::ATTRIBUTE))) {
+                /** @var CookieQueue $queue */
+                $queue->schedule($cookie);
+            } else {
+                //Fallback
+                $response = $response->withAddedHeader('Set-Cookie', (string)$cookie);
+            }
         }
 
         //CSRF issues must be handled by Firewall middleware

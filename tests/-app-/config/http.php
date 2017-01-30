@@ -27,11 +27,11 @@ return [
     'cookies'      => [
         //You force specific domain or use pattern like ".{host}" to share cookies with sub domains
         'domain' => null,
+
         //Cookie protection method
         'method' => Http\Configs\HttpConfig::COOKIE_ENCRYPT,
 
         'excluded' => [
-            'csrf-token',
             /*{{cookies.excluded}}*/
         ]
     ],

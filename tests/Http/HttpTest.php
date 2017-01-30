@@ -19,7 +19,7 @@ abstract class HttpTest extends BaseTest
         array $headers = [],
         array $cookies = []
     ): ResponseInterface {
-        return $this->http->perform($this->request($uri, $query, $headers, $cookies));
+        return $this->http->perform($this->request($uri, 'GET', $query, $headers, $cookies));
     }
 
     protected function post(
@@ -29,12 +29,13 @@ abstract class HttpTest extends BaseTest
         array $cookies = []
     ): ResponseInterface {
         return $this->http->perform(
-            $this->request($uri, [], $headers, $cookies)->withParsedBody($data)
+            $this->request($uri, 'POST', [], $headers, $cookies)->withParsedBody($data)
         );
     }
 
     protected function request(
         $uri,
+        string $method,
         array $query = [],
         array $headers = [],
         array $cookies = []
@@ -43,7 +44,7 @@ abstract class HttpTest extends BaseTest
             [],
             [],
             $uri,
-            'GET',
+            $method,
             'php://input',
             $headers, $cookies,
             $query

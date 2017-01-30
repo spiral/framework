@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Cookies;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -93,7 +94,7 @@ class CookieManager extends Component implements MiddlewareInterface
              * Debug: middleware creates scope for [CookieQueue].
              */
             $response = $next(
-                $this->unpackCookies($request)->withAttribute('cookieQueue', $queue),
+                $this->unpackCookies($request)->withAttribute(CookieQueue::ATTRIBUTE, $queue),
                 $response
             );
 

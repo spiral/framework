@@ -101,6 +101,8 @@ class Publisher extends Component implements PublisherInterface
 
         $this->files->copy($filename, $destination);
         $this->files->setPermissions($destination, $mode);
+
+        clearstatcache();
     }
 
     /**

@@ -14,7 +14,8 @@ use Spiral\Http\MiddlewareInterface;
 
 /**
  * Populates parsedBody data of request with decoded json content if appropriate request header
- * set.
+ * set. Check alternative from ps7-middlewares to find alternative solution with more format
+ * options.
  */
 class JsonParser implements MiddlewareInterface
 {

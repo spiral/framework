@@ -12,7 +12,9 @@ use Spiral\Commands\Modules\Traits\ModuleTrait;
 use Spiral\Console\Command;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Modules\Registrator;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Configure all non-registered modules (alters configuration files).
@@ -79,7 +81,8 @@ class RegisterCommand extends Command
             $table->render();
 
             $this->writeln("");
-            if (!$this->ask()->confirm("Confirm module registration (y/n)")) {
+
+            if (!$this->askConfirmation()) {
                 return self::UNCONFIRMED;
             }
 
@@ -96,5 +99,20 @@ class RegisterCommand extends Command
         $dispatcher->run('publish', $this->input, $this->output);
 
         return 0;
+    }
+
+    /**
+     * @return string
+     */
+    protected function askConfirmation(): string
+    {
+        $question = new QuestionHelper();
+        $confirmation = $question->ask(
+            $this->input,
+            $this->output,
+            new ConfirmationQuestion("<question>Confirm module registration (y/n)</question> ")
+        );
+
+        return $confirmation;
     }
 }

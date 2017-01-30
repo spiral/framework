@@ -28,12 +28,41 @@ class PublishCommandTest extends BaseTest
         );
     }
 
-
     public function testPublishEmpty()
     {
         $this->assertSame(
             0,
             $this->commands->run('publish', ['module' => 'test-application/empty'])->getCode()
+        );
+    }
+
+    public function testPublishWithFiles()
+    {
+        $this->assertFalse(
+            $this->files->exists(directory('runtime') . 'fixtures/hello.world')
+        );
+
+        $this->assertSame(
+            0,
+            $this->commands->run('publish', ['module' => 'test-application/profiler'])->getCode()
+        );
+
+        clearstatcache();
+        $this->assertTrue(
+            $this->files->exists(directory('runtime') . 'fixtures/hello.world')
+        );
+    }
+
+    public function testPublishTwice()
+    {
+        $this->assertSame(
+            0,
+            $this->commands->run('publish', ['module' => 'test-application/profiler'])->getCode()
+        );
+
+        $this->assertSame(
+            0,
+            $this->commands->run('publish', ['module' => 'test-application/profiler'])->getCode()
         );
     }
 }

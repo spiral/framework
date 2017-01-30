@@ -67,9 +67,7 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
         $outputLevel = ob_get_level();
 
         try {
-            /**
-             * Debug: exceptions and clientExceptions are isolated in this middleware.
-             */
+            //Debug: ClientExceptions are isolated in this middleware.
             return $next($request, $response);
         } catch (ClientException $exception) {
             while (ob_get_level() > $outputLevel) {
@@ -114,7 +112,7 @@ class ExceptionWrapper extends Component implements MiddlewareInterface, LoggerA
     }
 
     /**
-     * Try to locate client ip. To be used for debug purposes only.
+     * Try to locate client ip. To be used for debug purposes only!
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      *

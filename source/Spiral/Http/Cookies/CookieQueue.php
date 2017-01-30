@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Cookies;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,6 +13,8 @@ use Spiral\Http\Configs\HttpConfig;
 
 class CookieQueue
 {
+    const ATTRIBUTE = 'cookieQueue';
+
     /**
      * Cookies has to be send (specified via global scope).
      *

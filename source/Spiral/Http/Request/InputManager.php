@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Request;
 
 use Interop\Container\ContainerInterface;
@@ -121,7 +122,11 @@ class InputManager implements InputInterface, SingletonInterface
         try {
             $request = $this->container->get(Request::class);
         } catch (ContainerException $e) {
-            throw new InputException("Unable to get ServerRequestInterface in active container scope");
+            throw new InputException(
+                "Unable to get ServerRequestInterface in active container scope",
+                $e->getCode(),
+                $e
+            );
         }
 
         //Flushing input state
@@ -228,11 +233,15 @@ class InputManager implements InputInterface, SingletonInterface
         }
 
         if (!isset($this->bagAssociations[$name])) {
-            throw new \RuntimeException("Undefined input bag '{$name}'.");
+            throw new InputException("Undefined input bag '{$name}'");
         }
 
         $class = $this->bagAssociations[$name]['class'];
         $data = call_user_func([$this->request(), $this->bagAssociations[$name]['source']]);
+
+        if (!is_array($data)) {
+            $data = (array)$data;
+        }
 
         return $this->bagInstances[$name] = new $class($data, $this->prefix);
     }

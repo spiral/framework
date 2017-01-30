@@ -74,14 +74,7 @@ abstract class AbstractCommand extends Command
 
         $this->writeln("<fg=red>Confirmation is required to run migrations!</fg=red>");
 
-        $question = new QuestionHelper();
-        $confirmation = $question->ask(
-            $this->input,
-            $this->output,
-            new ConfirmationQuestion("<question>{$question}</question> ")
-        );
-
-        if (!$confirmation) {
+        if (!$this->askConfirmation()) {
             $this->writeln("<comment>Cancelling operation...</comment>");
 
             return false;
@@ -98,5 +91,20 @@ abstract class AbstractCommand extends Command
         return array_merge(static::OPTIONS, [
             ['force', 's', InputOption::VALUE_NONE, 'Skip safe environment check']
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    protected function askConfirmation(): string
+    {
+        $question = new QuestionHelper();
+        $confirmation = $question->ask(
+            $this->input,
+            $this->output,
+            new ConfirmationQuestion("<question>{$question}</question> ")
+        );
+
+        return $confirmation;
     }
 }
