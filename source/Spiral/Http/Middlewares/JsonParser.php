@@ -42,6 +42,11 @@ class JsonParser implements MiddlewareInterface
         if (strpos($request->getHeaderLine('Content-Type'), 'application/json') !== false) {
             try {
                 $data = json_decode($request->getBody()->__toString(), $this->asArray);
+                if ($data === null) {
+                    //Mailformed request
+                    return $response->withStatus(400);
+                }
+
                 $request = $request->withParsedBody($data);
             } catch (\Throwable $e) {
                 //Mailformed request

@@ -2,3 +2,7 @@
 composer.lock
 vendor/
 tests/runtime/*
+clover.xml
+.coveralls.yml
+.env
+coveralls.json
