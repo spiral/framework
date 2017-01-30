@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Cookies;
 
 /**
@@ -223,7 +224,7 @@ final class Cookie
      *
      * @return bool
      */
-    public function isHttpOnly():bool
+    public function isHttpOnly(): bool
     {
         return $this->httpOnly;
     }

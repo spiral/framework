@@ -10,8 +10,8 @@ namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\ScopeException;
-use Spiral\Core\FactoryInterface;
 use Spiral\Http\Exceptions\MiddlewareException;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Http\Traits\MiddlewaresTrait;
@@ -28,9 +28,9 @@ class MiddlewarePipeline
 
     /**
      * @invisible
-     * @var FactoryInterface
+     * @var ContainerInterface
      */
-    private $factory;
+    private $container;
 
     /**
      * Endpoint should be called at the deepest level of pipeline.
@@ -41,14 +41,14 @@ class MiddlewarePipeline
 
     /**
      * @param callable[]|MiddlewareInterface[] $middlewares
-     * @param FactoryInterface                 $factory Spiral container is needed, due scoping.
+     * @param ContainerInterface               $container Spiral container is needed, due scoping.
      *
      * @throws ScopeException
      */
-    public function __construct(array $middlewares = [], FactoryInterface $factory)
+    public function __construct(array $middlewares = [], ContainerInterface $container)
     {
         $this->middlewares = $middlewares;
-        $this->factory = $factory;
+        $this->container = $container;
     }
 
     /**
@@ -120,7 +120,7 @@ class MiddlewarePipeline
 
         if (is_string($next)) {
             //Resolve using container
-            $next = $this->factory->make($next);
+            $next = $this->container->get($next);
         }
 
         //Executing next middleware
@@ -143,9 +143,22 @@ class MiddlewarePipeline
         $output = '';
         $result = null;
 
+        $scope = [
+            $this->container->replace(Request::class, $request),
+            $this->container->replace(Response::class, $response)
+        ];
+
         try {
             $result = call_user_func($this->target, $request, $response);
+        } catch (\Throwable $e) {
+            //Close buffer due error
+            ob_get_clean();
+            throw new $e;
         } finally {
+            foreach (array_reverse($scope) as $payload) {
+                $this->container->restore($payload);
+            }
+
             while (ob_get_level() > $outputLevel + 1) {
                 $output = ob_get_clean() . $output;
             }

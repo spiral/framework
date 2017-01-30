@@ -16,9 +16,24 @@ use Spiral\Http\MiddlewareInterface;
  * Populates parsedBody data of request with decoded json content if appropriate request header
  * set. Check alternative from ps7-middlewares to find alternative solution with more format
  * options.
+ *
+ * Incoming JSON parsed into array!
  */
 class JsonParser implements MiddlewareInterface
 {
+    /**
+     * @var bool
+     */
+    private $asArray;
+
+    /**
+     * @param bool $asArray
+     */
+    public function __construct(bool $asArray = true)
+    {
+        $this->asArray = $asArray;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -26,9 +41,9 @@ class JsonParser implements MiddlewareInterface
     {
         if (strpos($request->getHeaderLine('Content-Type'), 'application/json') !== false) {
             try {
-                $data = json_decode($request->getBody()->__toString(), true);
+                $data = json_decode($request->getBody()->__toString(), $this->asArray);
                 $request = $request->withParsedBody($data);
-            } catch (\ErrorException $e) {
+            } catch (\Throwable $e) {
                 //Mailformed request
                 return $response->withStatus(400);
             }

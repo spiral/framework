@@ -12,7 +12,7 @@ use Spiral\Http\Routing\Route;
 use Spiral\Http\Routing\RouteInterface;
 use TestApplication\Controllers\DummyController;
 
-class RoterScopeTest extends HttpTest
+class RouteTest extends HttpTest
 {
     public function testRouteToController()
     {
@@ -22,6 +22,24 @@ class RoterScopeTest extends HttpTest
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('Hello, Dave.', (string)$response->getBody());
+    }
+
+    public function testRouteToAction()
+    {
+        $this->http->addRoute(new Route('default', '', 'action'));
+
+        $this->container->bind('action', new class
+        {
+            public function __invoke()
+            {
+                return 'im action';
+            }
+        });
+
+        $response = $this->get('http://sample.com/');
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('im action', (string)$response->getBody());
     }
 
     public function testRouteToClosure()

@@ -5,6 +5,7 @@
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Configs;
 
 use Psr\Http\Message\UriInterface;

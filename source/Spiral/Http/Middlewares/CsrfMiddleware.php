@@ -21,6 +21,8 @@ use Spiral\Support\Strings;
  * Provides generic CSRF protection using cookie as token storage. Set "csrfToken" attribute to
  * request.
  *
+ * Do not use middleware without CookieManager at top!
+ *
  * @see https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Double_Submit_Cookie
  */
 class CsrfMiddleware implements MiddlewareInterface
@@ -61,7 +63,7 @@ class CsrfMiddleware implements MiddlewareInterface
                 /** @var CookieQueue $queue */
                 $queue->schedule($cookie);
             } else {
-                //Fallback
+                //Fallback, this is less secure but faster way
                 $response = $response->withAddedHeader('Set-Cookie', (string)$cookie);
             }
         }

@@ -5,7 +5,7 @@
  * @author    Wolfy-J
  */
 
-namespace Spiral\Tests\Http\Middlewares;
+namespace Spiral\Tests\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\ConfiguratorInterface;
@@ -14,7 +14,6 @@ use Spiral\Http\Cookies\CookieManager;
 use Spiral\Http\Middlewares\CsrfFirewall;
 use Spiral\Http\Middlewares\CsrfMiddleware;
 use Spiral\Http\Middlewares\StrictCsrfFirewall;
-use Spiral\Tests\Http\HttpTest;
 
 class CsrfMiddlewareTest extends HttpTest
 {
@@ -173,7 +172,7 @@ class CsrfMiddlewareTest extends HttpTest
         );
 
         $cookie = substr($cookie, 0, strpos($cookie, ';'));
-        
+
         $result = $this->post('/', [
 
         ], [

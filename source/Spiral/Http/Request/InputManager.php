@@ -183,6 +183,7 @@ class InputManager implements InputInterface, SingletonInterface
      */
     public function isSecure(): bool
     {
+        //Double check though attributes?
         return $this->request()->getUri()->getScheme() == 'https';
     }
 

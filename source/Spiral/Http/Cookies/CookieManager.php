@@ -42,41 +42,12 @@ class CookieManager extends Component implements MiddlewareInterface
 
     /**
      * @param HttpConfig         $httpConfig
-     * @param ContainerInterface $container
+     * @param ContainerInterface $container Lazy access to encrypter.
      */
     public function __construct(HttpConfig $httpConfig, ContainerInterface $container)
     {
         $this->httpConfig = $httpConfig;
         $this->container = $container;
-    }
-
-    /**
-     * Set custom instance of encrypter (by default resolved from container on demand).
-     *
-     * @param EncrypterInterface $encrypter
-     *
-     * @return $this|self
-     */
-    public function setEncrypter(EncrypterInterface $encrypter): CookieManager
-    {
-        $this->encrypter = $encrypter;
-
-        return $this;
-    }
-
-    /**
-     * Get or create encrypter instance.
-     *
-     * @return EncrypterInterface
-     */
-    public function getEncrypter()
-    {
-        if (empty($this->encrypter)) {
-            //On demand creation (speed up app when no cookies were set)
-            $this->encrypter = $this->container->get(EncrypterInterface::class);
-        }
-
-        return $this->encrypter;
     }
 
     /**
@@ -147,7 +118,7 @@ class CookieManager extends Component implements MiddlewareInterface
         $cookies = $response->getHeader('Set-Cookie');
 
         foreach ($queue->getScheduled() as $cookie) {
-            if (!$this->isProtected($cookie->getName())) {
+            if (!$this->isProtected($cookie->getName()) || empty($cookie->getValue())) {
                 $cookies[] = $cookie->createHeader();
                 continue;
             }
@@ -206,6 +177,21 @@ class CookieManager extends Component implements MiddlewareInterface
     }
 
     /**
+     * Get or create encrypter instance.
+     *
+     * @return EncrypterInterface
+     */
+    protected function getEncrypter()
+    {
+        if (empty($this->encrypter)) {
+            //On demand creation (speed up app when no cookies were set)
+            $this->encrypter = $this->container->get(EncrypterInterface::class);
+        }
+
+        return $this->encrypter;
+    }
+
+    /**
      * @param Cookie $cookie
      *
      * @return Cookie
@@ -231,6 +217,10 @@ class CookieManager extends Component implements MiddlewareInterface
      */
     private function hmacSign($value): string
     {
-        return hash_hmac(HttpConfig::HMAC_ALGORITHM, $value, $this->getEncrypter()->getKey());
+        return hash_hmac(
+            HttpConfig::HMAC_ALGORITHM,
+            $value,
+            $this->getEncrypter()->getKey()
+        );
     }
 }
