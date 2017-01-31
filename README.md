@@ -147,8 +147,8 @@ class Post extends RecordEntity
         
         //Relation thought interface
         'author'   => [
-            self::BELONGS_TO    => AuthorInterface::class,
-            self::LATEP_BINDING => true
+            self::BELONGS_TO   => AuthorInterface::class,
+            self::LATE_BINDING => true
         ],
         
         //Not very simple relation definitions
