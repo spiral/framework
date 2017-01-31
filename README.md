@@ -126,7 +126,7 @@ public function downloadAction()
 }
 ```
 
-ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with adaptive scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends RecordEntity
