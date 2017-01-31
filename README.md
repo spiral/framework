@@ -143,8 +143,13 @@ class Post extends RecordEntity
         'body'   => 'text',
         
         //Simple relation definition
-        'author'   => [self::BELONGS_TO => Author::class],
         'comments' => [self::HAS_MANY => Comment::class],
+        
+        //Relation thought interface
+        'author'   => [
+            self::BELONGS_TO    => AuthorInterface::class,
+            self::LATEP_BINDING => true
+        ],
         
         //Not very simple relation definitions
         'collaborators' => [
