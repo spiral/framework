@@ -219,7 +219,6 @@ Extendable and programmable template markup language compatible with any command
     </grid:cell>
 </spiral:grid>
 ```
-> You can write your own virtual tags (similar to web components or [Polymer](https://www.polymer-project.org/1.0/) with server side compilation), layouts and wrappers with almost any functionality or connect external libraries like [Vault](https://github.com/spiral-modules/vault).
 
 Includes
 =============
