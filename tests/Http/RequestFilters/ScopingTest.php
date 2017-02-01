@@ -10,6 +10,7 @@ namespace Spiral\Tests\Http\RequestFilters;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Http\Request\InputInterface;
 use Spiral\Tests\BaseTest;
+use Spiral\Tests\Http\Fixtures\EmptyRequest;
 use Spiral\Tests\Http\Fixtures\SimpleRequest;
 use Zend\Diactoros\ServerRequest;
 
@@ -63,5 +64,18 @@ class ScopingTest extends BaseTest
 
         $this->assertTrue($request->isValid());
         $this->assertSame('John', $request->name);
+    }
+
+    /**
+     * @expectedException \Spiral\Http\Exceptions\InputException
+     */
+    public function testEmptyRequest()
+    {
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withParsedBody(['name' => 'John']);
+
+        $this->container->bind(ServerRequestInterface::class, $serverRequest);
+
+        $request = $this->container->get(EmptyRequest::class);
     }
 }

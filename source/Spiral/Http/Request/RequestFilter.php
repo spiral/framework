@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Http\Request;
 
 use Spiral\Http\Exceptions\InputException;
@@ -76,11 +77,7 @@ class RequestFilter extends ValidatesEntity
         //We are going to populate input fields manually
         parent::__construct([], $validator);
 
-        if (empty(static::SCHEMA)) {
-            throw new InputException("Unable to initiate RequestFilter with empty schema");
-        }
-
-        $this->mapper = new InputMapper(static::SCHEMA);
+        $this->mapper = new InputMapper($this->getSchema());
         if (!empty($input)) {
             $this->initValues($input, $validator);
         }
@@ -127,5 +124,19 @@ class RequestFilter extends ValidatesEntity
             'fields' => $this->getFields(),
             'errors' => $this->getErrors()
         ];
+    }
+
+    /**
+     * @return array
+     *
+     * @throws InputException
+     */
+    protected function getSchema(): array
+    {
+        if (empty(static::SCHEMA)) {
+            throw new InputException("Unable to initiate RequestFilter with empty schema");
+        }
+
+        return static::SCHEMA;
     }
 }

@@ -59,6 +59,16 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     }
 
     /**
+     * Application base path.
+     *
+     * @return string
+     */
+    public function basePath(): string
+    {
+        return $this->config->basePath();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function start()

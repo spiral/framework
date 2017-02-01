@@ -68,7 +68,6 @@ class InputMapper
 
                     //Create model for each key in iteration list
                     foreach ($origins as $index => $origin) {
-
                         //New nested model in array of models over origins
                         $result[$field][$index] = new $class(
                             $input->withPrefix($origin),
