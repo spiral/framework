@@ -1,6 +1,6 @@
 Spiral, modular RAD Framework [PHP7]
 =======================
-[![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/spiral/spiral/badge.svg?branch=09branch)](https://coveralls.io/github/spiral/spiral?branch=09branch)
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
@@ -126,7 +126,7 @@ public function downloadAction()
 }
 ```
 
-ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with adaptive scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends RecordEntity
@@ -143,8 +143,13 @@ class Post extends RecordEntity
         'body'   => 'text',
         
         //Simple relation definition
-        'author'   => [self::BELONGS_TO => Author::class],
         'comments' => [self::HAS_MANY => Comment::class],
+        
+        //Relation thought interface
+        'author'   => [
+            self::BELONGS_TO   => AuthorInterface::class,
+            self::LATE_BINDING => true
+        ],
         
         //Not very simple relation definitions
         'collaborators' => [
@@ -214,7 +219,6 @@ Extendable and programmable template markup language compatible with any command
     </grid:cell>
 </spiral:grid>
 ```
-> You can write your own virtual tags (similar to web components or [Polymer](https://www.polymer-project.org/1.0/) with server side compilation), layouts and wrappers with almost any functionality or connect external libraries like [Vault](https://github.com/spiral-modules/vault).
 
 Includes
 =============
