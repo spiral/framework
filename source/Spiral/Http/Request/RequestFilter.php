@@ -86,6 +86,25 @@ class RequestFilter extends ValidatesEntity
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setField(string $name, $value, bool $filter = true)
+    {
+        $this->lastErrors = [];
+
+        return parent::setField($name, $value, $filter);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __unset($offset)
+    {
+        $this->lastErrors = [];
+        parent::__unset($offset);
+    }
+
+    /**
      * Set request values based on a given input interface.
      *
      * @param InputInterface     $input

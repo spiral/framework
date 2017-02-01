@@ -198,5 +198,13 @@ class DemoRequestTest extends HttpTest
 
         $this->assertTrue($request->isValid());
         $this->assertInternalType('array', $request->__debugInfo());
+
+        $this->assertTrue($request->isValid(true));
+        $name = $request['name'];
+        unset($request['name']);
+        $this->assertTrue($request->isValid(true));
+
+        $request->name = $name;
+        $this->assertTrue($request->isValid(true));
     }
 }
