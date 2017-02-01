@@ -166,7 +166,7 @@ class HttpConfig extends InjectableConfig implements SingletonInterface
 
         $pattern = $this->config['cookies']['domain'];
         if (filter_var($host, FILTER_VALIDATE_IP)) {
-            //We can't use sub domains
+            //We can't use sub-domains when website required by IP
             $pattern = ltrim($pattern, '.');
         }
 
