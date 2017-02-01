@@ -14,7 +14,11 @@ class MatchesTest extends HttpTest
 {
     public function testControllerMatches()
     {
-        $this->http->addRoute(new Route('default', '[<id>]', DummyController::class . ':matches'));
+        $this->http->addRoute(new Route(
+            'default',
+            '[<id>]',
+            DummyController::class . ':matches'
+        ));
 
         $response = $this->get('/123');
 
