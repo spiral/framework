@@ -15,7 +15,6 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\Exceptions\HttpException;
-use Spiral\Http\Response\ChunkEmitter;
 use Spiral\Http\Traits\MiddlewaresTrait;
 use Zend\Diactoros\Response as ZendResponse;
 use Zend\Diactoros\Response\EmitterInterface;
@@ -165,7 +164,7 @@ class HttpCore extends Component implements HttpInterface
     public function dispatch(Response $response)
     {
         if (empty($this->emitter)) {
-            $this->emitter = new ChunkEmitter();
+            $this->emitter = new ZendResponse\SapiEmitter();
         }
 
         $this->emitter->emit($response, ob_get_level());

@@ -67,7 +67,6 @@ class Router implements RouterInterface
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
-
         //Defining our scope
         $scope = $this->container->replace(RouterInterface::class, $this);
         try {
@@ -117,7 +116,7 @@ class Router implements RouterInterface
             }
         }
 
-        throw new UndefinedRouteException("Undefined route '{$name}'.");
+        throw new UndefinedRouteException("Undefined route '{$name}'");
     }
 
     /**
@@ -188,7 +187,7 @@ class Router implements RouterInterface
         //Will be handled via default route where route name is specified as controller::action
         if (strpos($route, ':') === false) {
             throw new UndefinedRouteException(
-                "Unable to locate route or use default route with 'controller:action' pattern."
+                "Unable to locate route or use default route with 'controller:action' pattern"
             );
         }
 

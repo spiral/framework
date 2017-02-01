@@ -53,12 +53,13 @@ class ResponseWrapper extends Component
      * @param int                 $status
      *
      * @return ResponseInterface
-     * @throws \InvalidArgumentException
+     *
+     * @throws ResponseException
      */
     public function redirect($uri, int $status = 302): ResponseInterface
     {
         if (!is_string($uri) && !$uri instanceof UriInterface) {
-            throw new \InvalidArgumentException(
+            throw new ResponseException(
                 "Redirect allowed only for string or UriInterface uris"
             );
         }
@@ -164,7 +165,7 @@ class ResponseWrapper extends Component
         }
 
         if (!$this->files->isFile($filename)) {
-            throw new \InvalidArgumentException(
+            throw new ResponseException(
                 "Unable to allocate response body stream, file does not exist"
             );
         }
