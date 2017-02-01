@@ -71,6 +71,8 @@ class RequestFilter extends ValidatesEntity
     /**
      * @param InputInterface     $input
      * @param ValidatorInterface $validator
+     *
+     * @throws InputException If schema is empty.
      */
     public function __construct(InputInterface $input = null, ValidatorInterface $validator = null)
     {
@@ -103,6 +105,8 @@ class RequestFilter extends ValidatesEntity
      * {@inheritdoc}
      *
      * @param bool $lastErrors Set to true to return previous set of errors without re-validation.
+     *
+     * @throws InputException When entity has non proper configuration.
      */
     public function getErrors(bool $lastErrors = false): array
     {

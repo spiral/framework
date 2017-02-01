@@ -4,8 +4,10 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Http\Request;
 
+use Spiral\Http\Exceptions\InputException;
 use Spiral\Validation\ValidatorInterface;
 
 /**
@@ -124,9 +126,17 @@ class InputMapper
      * @param array  $array
      * @param string $path
      * @param mixed  $value
+     *
+     * @throws \Spiral\Http\Exceptions\InputException
      */
     protected function mountMessage(array &$array, string $path, $value)
     {
+        if ($path == '.') {
+            throw new InputException(
+                "Invalid input location with error '{$value}', make sure to use proper pattern 'data:field_name'"
+            );
+        }
+
         $step = explode('.', $path);
         while ($name = array_shift($step)) {
             $array = &$array[$name];
@@ -178,6 +188,7 @@ class InputMapper
                     $multiple = true;
                 }
 
+                // print_r()
 
                 //Array of models (default isolation prefix)
                 $map = [
