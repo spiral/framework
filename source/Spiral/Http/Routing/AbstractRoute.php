@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Routing;
 
 use Psr\Http\Message\ResponseInterface as Response;

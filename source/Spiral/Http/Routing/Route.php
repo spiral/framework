@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Routing;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -46,7 +47,7 @@ class Route extends AbstractRoute
     {
         parent::__construct($name, $defaults);
 
-        $this->pattern = $pattern;
+        $this->pattern = ltrim($pattern, '/');
         $this->target = $target;
     }
 

@@ -14,6 +14,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exceptions\Container\ContainerException;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Http\Exceptions\InputException;
 use Spiral\Http\Request\Bags\FilesBag;
 use Spiral\Http\Request\Bags\HeadersBag;
@@ -115,14 +116,14 @@ class InputManager implements InputInterface, SingletonInterface
      *
      * @return Request
      *
-     * @throws InputException
+     * @throws ScopeException
      */
     public function request(): Request
     {
         try {
             $request = $this->container->get(Request::class);
         } catch (ContainerException $e) {
-            throw new InputException(
+            throw new ScopeException(
                 "Unable to get ServerRequestInterface in active container scope",
                 $e->getCode(),
                 $e
@@ -167,13 +168,13 @@ class InputManager implements InputInterface, SingletonInterface
     }
 
     /**
-     * Get HTTP method active request was made with.
+     * Http method. Always uppercase.
      *
      * @return string
      */
     public function method(): string
     {
-        return $this->request()->getMethod();
+        return strtoupper($this->request()->getMethod());
     }
 
     /**
@@ -209,7 +210,7 @@ class InputManager implements InputInterface, SingletonInterface
 
     /**
      * Get remove addr resolved from $_SERVER['REMOTE_ADDR']. Will return null if nothing if key not
-     * exists.
+     * exists. Consider using psr-7 middlewares to customize configuration.
      *
      * @return string|null
      */

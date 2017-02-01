@@ -5,12 +5,14 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Response;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Component;
+use Spiral\Files\FileManager;
 use Spiral\Files\FilesInterface;
 use Spiral\Files\Streams\StreamableInterface;
 use Spiral\Http\Exceptions\ResponseException;
@@ -19,9 +21,6 @@ use Zend\Diactoros\Stream;
 
 /**
  * Provides ability to write content into currently active (resolved using container) response.
- *
- * @todo add more methods and wrappers
- * @see  MiddlewarePipeline
  */
 class ResponseWrapper extends Component
 {
@@ -41,10 +40,10 @@ class ResponseWrapper extends Component
      * @param ResponseInterface $response
      * @param FilesInterface    $files
      */
-    public function __construct(ResponseInterface $response, FilesInterface $files)
+    public function __construct(ResponseInterface $response, FilesInterface $files = null)
     {
         $this->response = $response;
-        $this->files = $files;
+        $this->files = $files ?? new FileManager();
     }
 
     /**
@@ -170,6 +169,8 @@ class ResponseWrapper extends Component
             );
         }
 
-        return new Stream(fopen($this->files->localFilename($filename), 'r'));
+        return new Stream(
+            fopen($this->files->localFilename($filename), 'r')
+        );
     }
 }

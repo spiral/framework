@@ -48,6 +48,6 @@ class ServerBag extends InputBag
      */
     protected function normalize(string $name): string
     {
-        return preg_replace('/[^a-z]/i', '_', strtoupper($name));
+        return preg_replace('/[^a-z\.]/i', '_', strtoupper($name));
     }
 }

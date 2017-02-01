@@ -134,6 +134,8 @@ class MiddlewarePipeline
      * @param Response $response
      *
      * @return Response
+     *
+     * @throws \Throwable
      */
     protected function mountResponse(Request $request, Response $response): Response
     {
@@ -153,7 +155,7 @@ class MiddlewarePipeline
         } catch (\Throwable $e) {
             //Close buffer due error
             ob_get_clean();
-            throw new $e;
+            throw  $e;
         } finally {
             foreach (array_reverse($scope) as $payload) {
                 $this->container->restore($payload);

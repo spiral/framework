@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Request\Bags;
 
 use Spiral\Http\Exceptions\DotNotFoundException;
@@ -29,7 +30,8 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     private $prefix = '';
 
     /**
-     * @param array $data
+     * @param array  $data
+     * @param string $prefix
      */
     public function __construct(array $data, string $prefix = '')
     {
@@ -113,7 +115,6 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     public function fetch(array $keys, bool $fill = false, $filler = null)
     {
         $result = array_intersect_key($this->all(), array_flip($keys));;
-
         if (!$fill) {
             return $result;
         }
@@ -144,7 +145,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new InputException("InputBag does not allow parameter altering.");
+        throw new InputException("InputBag is immutable");
     }
 
     /**
@@ -154,7 +155,7 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        throw new InputException("InputBag does not allow parameter altering.");
+        throw new InputException("InputBag is immutable");
     }
 
     /**
@@ -180,12 +181,17 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 
         //Generating path relative to a given name and prefix
         $path = (!empty($this->prefix) ? $this->prefix . '.' : '') . $name;
+        if (empty($path)) {
+            return $data;
+        }
+
         $path = explode('.', rtrim($path, '.'));
 
         foreach ($path as $step) {
             if (!is_array($data) || !array_key_exists($step, $data)) {
                 throw new DotNotFoundException("Unable to find requested element '{$name}'");
             }
+
             $data = &$data[$step];
         }
 

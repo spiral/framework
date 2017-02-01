@@ -26,6 +26,11 @@ class DummyController extends Controller
         return $route->getName();
     }
 
+    public function matchesAction()
+    {
+        return $this->route->getMatches();
+    }
+
     public function requiredAction(int $id)
     {
         //no index

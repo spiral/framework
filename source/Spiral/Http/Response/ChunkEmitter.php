@@ -14,8 +14,12 @@ use Zend\Diactoros\Response\SapiEmitterTrait;
 /**
  * Zend's implementation echoes full stream content ignoring seeking functionality. Since original
  * emitter defines sendBody and all other methods as private i had to temporary copy this class.
+ *
+ * Consider use StreamRangeEmitter for ranged download queries.
+ *
+ * This class can not be tested due dependency on SAPI.
  */
-class Emitter implements EmitterInterface
+class ChunkEmitter implements EmitterInterface
 {
     use SapiEmitterTrait;
 

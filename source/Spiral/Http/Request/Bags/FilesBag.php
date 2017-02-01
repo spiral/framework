@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Request\Bags;
 
 use Psr\Http\Message\UploadedFileInterface;
@@ -21,16 +22,16 @@ use Spiral\Files\Streams\StreamWrapper;
 class FilesBag extends InputBag
 {
     /**
-     * Get URI (virtual filename) associated with UploadedFile resource.
+     * Locale local filename (virtual filename) associated with UploadedFile resource.
      *
      * @param string $name
      *
      * @return null|string
      */
-    public function uri(string $name)
+    public function getFilename(string $name)
     {
         if (!empty($file = $this->get($name)) && !$file->getError()) {
-            return StreamWrapper::getUri($file->getStream());
+            return StreamWrapper::localFilename($file->getStream());
         }
 
         return null;

@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Request\Bags;
 
 /**
@@ -24,13 +25,16 @@ class HeadersBag extends InputBag
     /**
      * {@inheritdoc}
      *
+     *
+     * @param bool|string $implode Implode header lines, false to return header as array.
+     *
      * @return string|array
      */
     public function get(string $name, $default = null, $implode = ',')
     {
         $value = parent::get($this->normalize($name), $default);
 
-        if (!empty($implode)) {
+        if (!empty($implode) && is_array($value)) {
             return implode($implode, $value);
         }
 
@@ -67,6 +71,10 @@ class HeadersBag extends InputBag
      */
     protected function normalize(string $header): string
     {
-        return str_replace(' ', '-', ucwords(str_replace('-', ' ', $header)));
+        return str_replace(
+            ' ',
+            '-',
+            ucwords(str_replace('-', ' ', $header))
+        );
     }
 }
