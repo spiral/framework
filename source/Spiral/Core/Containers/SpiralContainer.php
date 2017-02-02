@@ -61,6 +61,8 @@ class SpiralContainer extends Container implements ContainerInterface
         //Storage manager interfaces
         'Spiral\Storage\StorageInterface'                   => 'Spiral\Storage\StorageManager',
         'Spiral\Storage\BucketInterface'                    => 'Spiral\Storage\Entities\StorageBucket',
+
+        //Session
         'Spiral\Session\SessionInterface'                   => 'Spiral\Session\SessionStore',
 
         //Default validator

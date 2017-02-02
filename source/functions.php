@@ -27,6 +27,24 @@ if (!function_exists('spiral')) {
     }
 }
 
+if (!function_exists('wire')) {
+    /**
+     * Shortcut to container Autowire definition.
+     *
+     * Example:
+     * 'name' => wire(SomeClass::name, [...])
+     *
+     * @param string $alias Class name or alias.
+     * @param array  $parameters
+     *
+     * @return \Spiral\Core\Container\Autowire
+     */
+    function wire(string $alias, array $parameters = [])
+    {
+        return new \Spiral\Core\Container\Autowire($alias, $parameters);
+    }
+}
+
 if (!function_exists('directory')) {
     /**
      * Get directory alias value.
