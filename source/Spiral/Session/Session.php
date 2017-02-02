@@ -23,6 +23,11 @@ class Session implements SessionInterface
     const CLIENT_SIGNATURE = '_CLIENT_SIGNATURE';
 
     /**
+     * Locations for unnamed segments i.e. default segment.
+     */
+    const DEFAULT_SECTION = '_DEFAULT';
+
+    /**
      * Unique string to identify client. Signature is stored inside the session.
      *
      * @var string
@@ -32,7 +37,7 @@ class Session implements SessionInterface
     /**
      * @var string
      */
-    private $id;
+    private $id = null;
 
     /**
      * @var bool
@@ -46,7 +51,10 @@ class Session implements SessionInterface
     public function __construct(string $clientSignature, string $id = null)
     {
         $this->clientSignature = $clientSignature;
-        $this->id = $this->isValid($id) ? $id : null;
+
+        if (!empty($id) && $this->validID($id)) {
+            $this->id = $id;
+        }
     }
 
     /**
@@ -164,27 +172,21 @@ class Session implements SessionInterface
         ];
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function getSegment(string $name = null): SectionInterface
-//    {
-//        $this->start();
-//
-//        if (empty($name)) {
-//            return new SessionSection($_SESSION);
-//        } else {
-//            return new SessionSection($_SESSION[$name]);
-//        }
-//    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getSection(string $name = null): SectionInterface
+    {
+        return new SessionSection($this, $name ?? static::DEFAULT_SECTION);
+    }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function createInjection(\ReflectionClass $class, string $context = null)
-//    {
-//        return $this->getSegment($context);
-//    }
+    /**
+     * {@inheritdoc}
+     */
+    public function createInjection(\ReflectionClass $class, string $context = null)
+    {
+        return $this->getSection($context);
+    }
 
     /**
      * Check if given session ID valid.
@@ -193,7 +195,7 @@ class Session implements SessionInterface
      *
      * @return bool
      */
-    private function isValid(string $id): bool
+    private function validID(string $id): bool
     {
         return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id);
     }

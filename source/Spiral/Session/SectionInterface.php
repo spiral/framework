@@ -11,10 +11,17 @@ namespace Spiral\Session;
 use Spiral\Session\Exceptions\SessionException;
 
 /**
- * Singular session segment (session data isolator).
+ * Singular session section (session data isolator).
  */
 interface SectionInterface extends \IteratorAggregate, \ArrayAccess
 {
+    /**
+     * All section data in a form of array.
+     *
+     * @return array
+     */
+    public function all(): array;
+
     /**
      * Set data in session.
      *
@@ -66,4 +73,9 @@ interface SectionInterface extends \IteratorAggregate, \ArrayAccess
      * @throws SessionException
      */
     public function delete(string $name);
+
+    /**
+     * Clear all session section data.
+     */
+    public function clear();
 }

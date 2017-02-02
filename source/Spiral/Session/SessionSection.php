@@ -20,18 +20,25 @@ class SessionSection implements SectionInterface, InjectableInterface
     const INJECTOR = SessionInterface::class;
 
     /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * Reference to _SESSION segment.
      *
      * @var array
      */
-    private $segment;
+    private $section;
 
     /**
-     * @param array $segment
+     * @param \Spiral\Session\SessionInterface $session
+     * @param string                           $section
      */
-    public function __construct(array &$segment)
+    public function __construct(SessionInterface $session, string $section = null)
     {
-        $this->segment = $segment;
+        $this->session = $session;
+        $this->section = $section;
     }
 
     /**
@@ -39,7 +46,17 @@ class SessionSection implements SectionInterface, InjectableInterface
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->segment);
+        return new \ArrayIterator($this->all());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function all(): array
+    {
+        $this->resumeSection();
+
+        return $_SESSION[$this->section];
     }
 
     /**
@@ -47,7 +64,9 @@ class SessionSection implements SectionInterface, InjectableInterface
      */
     public function set(string $name, $value)
     {
-        $this->segment[$name] = $value;
+        $this->resumeSection();
+
+        $_SESSION[$this->section][$name] = $value;
     }
 
     /**
@@ -55,7 +74,9 @@ class SessionSection implements SectionInterface, InjectableInterface
      */
     public function has(string $name)
     {
-        return array_key_exists($name, $this->segment);
+        $this->resumeSection();
+
+        return array_key_exists($name, $_SESSION[$this->section]);
     }
 
     /**
@@ -67,7 +88,7 @@ class SessionSection implements SectionInterface, InjectableInterface
             return $default;
         }
 
-        return $this->segment[$name];
+        return $_SESSION[$this->section][$name];
     }
 
     /**
@@ -86,7 +107,56 @@ class SessionSection implements SectionInterface, InjectableInterface
      */
     public function delete(string $name)
     {
-        unset($this->segment[$name]);
+        $this->resumeSection();
+        unset($_SESSION[$this->session] [$name]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clear()
+    {
+        $this->resumeSection();
+        $_SESSION[$this->session] = [];
+    }
+
+    /**
+     * Shortcut for get.
+     *
+     * @param string $name
+     *
+     * @return mixed|null
+     */
+    public function __get(string $name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     */
+    public function __set(string $name, $value)
+    {
+        $this->set($name, $value);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function __isset(string $name)
+    {
+        return $this->has($name);
+    }
+
+    /**
+     * @param string $name
+     */
+    public function __unset(string $name)
+    {
+        $this->delete($name);
     }
 
     /**
@@ -119,5 +189,17 @@ class SessionSection implements SectionInterface, InjectableInterface
     public function offsetUnset($offset)
     {
         return $this->delete($offset);
+    }
+
+    /**
+     * Ensure that session have proper section.
+     */
+    private function resumeSection()
+    {
+        $this->session->resume();
+
+        if (!isset($_SESSION[$this->section])) {
+            $_SESSION[$this->section] = [];
+        }
     }
 }

@@ -7,10 +7,12 @@
 
 namespace Spiral\Session;
 
+use Spiral\Core\Container\InjectorInterface;
+
 /**
- * API wrapping for native php sessions. Must provide ability for segment injections.
+ * API wrapping for native php sessions. Must provide ability for section injections.
  */
-interface SessionInterface //extends InjectorInterface
+interface SessionInterface extends InjectorInterface
 {
     /**
      * @return bool
