@@ -17,7 +17,7 @@ use Symfony\Component\Translation\MessageCatalogue;
  * Similar to Symfony catalogue, however this one does not operate with fallback locale.
  * Provides ability to cache domains in memory.
  *
- * @todo bad incapsulation?
+ * @todo improve implementation by using original message catalogue and cache at higher level
  */
 class Catalogue
 {
