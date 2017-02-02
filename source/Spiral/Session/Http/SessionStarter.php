@@ -21,11 +21,9 @@ use Spiral\Session\SessionInterface;
 
 /**
  * HttpMiddleware used to create and commit session data using cookies as sessionID provider.
+ * Middleware can not work in nested queries.
  *
- * ATTENTION, YOU CAN NOT USE THIS MIDDLEWARE IN NESTED REQUESTS, DEFAULT PHP SESSION MECHANISM IS
- * USED.
- *
- * Manage session cookie protection on higher level.
+ * Note: each session is signed based on user headers.
  */
 class SessionStarter implements MiddlewareInterface
 {
