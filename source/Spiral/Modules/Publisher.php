@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Modules;
 
 use Spiral\Core\Component;
@@ -55,20 +56,16 @@ class Publisher extends Component implements PublisherInterface
             throw new PublishException("Given '{$filename}' is not valid file");
         }
 
-        //wtf? always empty
-        if (empty($relativeFilename)) {
-            $relativeFilename = $this->files->normalizePath(
-                $this->files->relativePath($filename, $this->directories->directory('root'))
-            );
-        }
+        //For logs
+        $relativeFilename = $this->files->normalizePath(
+            $this->files->relativePath($filename, $this->directories->directory('root'))
+        );
 
-        //wtf?
-        if (empty($relativeDestination)) {
-            $relativeDestination = $this->files->relativePath(
-                $destination,
-                $this->directories->directory('root')
-            );
-        }
+        //For logs
+        $relativeDestination = $this->files->relativePath(
+            $destination,
+            $this->directories->directory('root')
+        );
 
         if ($this->files->exists($destination)) {
             if ($this->files->md5($destination) == $this->files->md5($filename)) {
@@ -97,8 +94,8 @@ class Publisher extends Component implements PublisherInterface
             compact('relativeFilename', 'relativeDestination')
         );
 
+        //File manipulations
         $this->ensureDirectory(dirname($destination), $mode);
-
         $this->files->copy($filename, $destination);
         $this->files->setPermissions($destination, $mode);
 
