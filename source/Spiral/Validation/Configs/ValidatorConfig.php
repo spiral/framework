@@ -57,10 +57,9 @@ class ValidatorConfig extends InjectableConfig
     /**
      * @param string $checker
      *
-     * @return string
-     * @return string
+     * @return string|\Spiral\Core\Container\Autowire
      */
-    public function checkerClass(string $checker): string
+    public function checkerClass(string $checker)
     {
         return $this->config['checkers'][$checker];
     }

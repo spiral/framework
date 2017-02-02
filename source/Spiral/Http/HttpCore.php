@@ -11,6 +11,7 @@ namespace Spiral\Http;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Component;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Exceptions\ClientException;
@@ -193,7 +194,7 @@ class HttpCore extends Component implements HttpInterface
             return null;
         }
 
-        if (!is_string($this->endpoint)) {
+        if (!is_string($this->endpoint) && !$this->endpoint instanceof Autowire) {
             //Presumably callable
             return $this->endpoint;
         }

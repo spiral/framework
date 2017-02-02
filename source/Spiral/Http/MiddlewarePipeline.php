@@ -10,6 +10,7 @@ namespace Spiral\Http;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Http\Exceptions\MiddlewareException;
@@ -118,7 +119,7 @@ class MiddlewarePipeline
          */
         $next = $this->middlewares[$position];
 
-        if (is_string($next)) {
+        if (is_string($next) || $next instanceof Autowire) {
             //Resolve using container
             $next = $this->container->get($next);
         }

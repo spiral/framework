@@ -7,6 +7,7 @@
 
 namespace Spiral\Views\Engines;
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
@@ -188,8 +189,8 @@ class StemplerEngine extends AbstractEngine
             /**
              * @var ProcessorInterface
              */
-            if (!is_object($processor)) {
-                $processor = $this->container->make($processor);
+            if (!is_object($processor) || $processor instanceof Autowire) {
+                $processor = $this->container->get($processor);
             }
 
             $benchmark = $this->benchmark(
@@ -222,10 +223,10 @@ class StemplerEngine extends AbstractEngine
     {
         $processors = [];
         foreach ($this->modifiers as $modifier) {
-            if (is_object($modifier)) {
-                $processors[] = $modifier;
-            } else {
+            if (!is_object($modifier) || $modifier instanceof Autowire) {
                 $processors[] = $this->container->make($modifier);
+            } else {
+                $processors[] = $modifier;
             }
         }
 

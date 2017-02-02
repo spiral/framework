@@ -7,6 +7,7 @@
 
 namespace Spiral\Views\Engines;
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
@@ -217,10 +218,10 @@ class TwigEngine extends AbstractEngine
     {
         $modifiers = [];
         foreach ($this->modifiers as $modifier) {
-            if (is_object($modifier)) {
-                $modifiers[] = $modifier;
-            } else {
+            if (!is_object($modifier) || $modifier instanceof Autowire) {
                 $modifiers[] = $this->container->get($modifier);
+            } else {
+                $modifiers[] = $modifier;
             }
         }
 
