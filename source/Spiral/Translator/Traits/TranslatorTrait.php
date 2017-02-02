@@ -40,7 +40,7 @@ trait TranslatorTrait
     protected function say(string $string, array $options = [], $bundle = null): string
     {
         if (Translator::isMessage($string)) {
-            //This string was defined in class attributes
+            //Cut [[ and ]]
             $string = substr($string, 2, -2);
         }
 
