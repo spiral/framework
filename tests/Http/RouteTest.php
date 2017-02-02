@@ -8,9 +8,12 @@
 namespace Spiral\Tests\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Controller;
+use Spiral\Http\Routing\ControllersRoute;
 use Spiral\Http\Routing\Route;
 use Spiral\Http\Routing\RouteInterface;
 use TestApplication\Controllers\DummyController;
+use Zend\Diactoros\ServerRequest;
 
 class RouteTest extends HttpTest
 {
@@ -83,5 +86,19 @@ class RouteTest extends HttpTest
         $response = $this->get('http://sample.com/');
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('Hello, Dave.', (string)$response->getBody());
+    }
+
+    public function testHost()
+    {
+        $route = new Route(
+            'test',
+            '<name>.example.com/<action>',
+            DummyController::class . ':<action>'
+        );
+
+        $this->http->addRoute($route->withHost());
+
+        $response = (string)$this->get('http://john.example.com/index')->getBody();
+        $this->assertSame('Hello, john.', $response);
     }
 }
