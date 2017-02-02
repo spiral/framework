@@ -7,16 +7,22 @@
 
 namespace Spiral\Session;
 
+use Spiral\Core\Component;
+use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Session\Exceptions\SessionException;
 
 /**
  * Direct api to php session functionality. With segments support. Automatically provides access to
- * _SESSION global variable and fixates session using client signature.
+ * _SESSION global variable and signs session with user signature.
  *
  * Session will be automatically started upon first request.
+ *
+ * @see https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
  */
-class Session implements SessionInterface
+class Session extends Component implements SessionInterface
 {
+    use LoggerTrait;
+
     /**
      * Signs every session with user specific hash, provides ability to fixate session.
      */
@@ -60,7 +66,7 @@ class Session implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function isActive(): bool
+    public function isStarted(): bool
     {
         return $this->started;
     }
@@ -70,7 +76,7 @@ class Session implements SessionInterface
      */
     public function resume()
     {
-        if ($this->isActive()) {
+        if ($this->isStarted()) {
             return;
         }
 
@@ -92,11 +98,15 @@ class Session implements SessionInterface
             //Newly created session, let's sign it
             $_SESSION[self::CLIENT_SIGNATURE] = $this->clientSignature;
         } elseif (!hash_equals($_SESSION[self::CLIENT_SIGNATURE], $this->clientSignature)) {
-            //Flushing session id
-            session_abort();
+            $this->getLogger()->alert("Session and client signatures do not match, session id: {$this->id}");
 
-            $this->id = null;
-            $this->resume();
+            //Emptying session data
+            $_SESSION = [];
+
+            //Generating new session ID and flushing all existed data
+            $this->regenerateID(false);
+
+            $_SESSION[self::CLIENT_SIGNATURE] = $this->clientSignature;
         }
     }
 
@@ -119,7 +129,9 @@ class Session implements SessionInterface
      */
     public function regenerateID(bool $destruct = false): SessionInterface
     {
-        $this->resume();
+        if (!$this->isStarted()) {
+            $this->resume();
+        }
 
         session_regenerate_id($destruct);
         $this->id = session_id();
@@ -132,7 +144,7 @@ class Session implements SessionInterface
      */
     public function commit(): bool
     {
-        if (!$this->isActive()) {
+        if (!$this->isStarted()) {
             return false;
         }
 
@@ -147,7 +159,7 @@ class Session implements SessionInterface
      */
     public function destroy(): bool
     {
-        if (!$this->isActive() || empty($this->id)) {
+        if (!$this->isStarted() || empty($this->id)) {
             return false;
         }
 
@@ -167,15 +179,15 @@ class Session implements SessionInterface
         return [
             'id'        => $this->id,
             'signature' => $this->clientSignature,
-            'active'    => $this->isActive(),
-            'data'      => $this->isActive() ? $_SESSION : null
+            'active'    => $this->isStarted(),
+            'data'      => $this->isStarted() ? $_SESSION : null
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSection(string $name = null): SectionInterface
+    public function getSection(string $name = null): SessionSectionInterface
     {
         return new SessionSection($this, $name ?? static::DEFAULT_SECTION);
     }

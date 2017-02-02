@@ -188,7 +188,9 @@ class SessionStarter implements MiddlewareInterface
             $sessionID,
             $this->config->sessionLifetime(),
             $this->httpConfig->basePath(),
-            $this->httpConfig->cookiesDomain($uri)
+            $this->httpConfig->cookiesDomain($uri),
+            $this->config->sessionSecure(),
+            true
         );
     }
 }

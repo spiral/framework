@@ -26,6 +26,7 @@ class SessionConfig extends InjectableConfig
     protected $config = [
         'lifetime' => 86400,
         'cookie'   => 'SID',
+        'secure'   => false,
         'handler'  => null,
         'handlers' => []
     ];
@@ -57,6 +58,14 @@ class SessionConfig extends InjectableConfig
     public function sessionCookie(): string
     {
         return $this->config['cookie'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function sessionSecure(): bool
+    {
+        return $this->config['secure'] ?? false;
     }
 
     /**

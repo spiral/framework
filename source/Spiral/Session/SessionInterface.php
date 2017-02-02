@@ -17,7 +17,7 @@ interface SessionInterface extends InjectorInterface
     /**
      * @return bool
      */
-    public function isActive(): bool;
+    public function isStarted(): bool;
 
     /**
      * Resume session or start new one.
@@ -50,16 +50,16 @@ interface SessionInterface extends InjectorInterface
     public function commit(): bool;
 
     /**
-     * Must return true if session was destroyed.
+     * Destroys session and all associated data within it.
      *
      * @return bool
      */
     public function destroy(): bool;
 
-//    /**
-//     * @param string|null $name
-//     *
-//     * @return \Spiral\Session\SectionInterface
-//     */
-//    public function getSegment(string $name = null): SectionInterface;
+    /**
+     * @param string|null $name When null default section to be returned.
+     *
+     * @return SessionSectionInterface
+     */
+    public function getSection(string $name = null): SessionSectionInterface;
 }

@@ -12,7 +12,7 @@ use Spiral\Core\Container\InjectableInterface;
 /**
  * Represents part of _SESSION array.
  */
-class SessionSection implements SectionInterface, InjectableInterface
+class SessionSection implements SessionSectionInterface, InjectableInterface
 {
     /**
      * Automatic injections.
@@ -29,16 +29,16 @@ class SessionSection implements SectionInterface, InjectableInterface
      *
      * @var array
      */
-    private $section;
+    private $name;
 
     /**
      * @param \Spiral\Session\SessionInterface $session
-     * @param string                           $section
+     * @param string                           $name
      */
-    public function __construct(SessionInterface $session, string $section = null)
+    public function __construct(SessionInterface $session, string $name = null)
     {
         $this->session = $session;
-        $this->section = $section;
+        $this->name = $name;
     }
 
     /**
@@ -56,7 +56,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     {
         $this->resumeSection();
 
-        return $_SESSION[$this->section];
+        return $_SESSION[$this->name];
     }
 
     /**
@@ -66,7 +66,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     {
         $this->resumeSection();
 
-        $_SESSION[$this->section][$name] = $value;
+        $_SESSION[$this->name][$name] = $value;
     }
 
     /**
@@ -76,7 +76,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     {
         $this->resumeSection();
 
-        return array_key_exists($name, $_SESSION[$this->section]);
+        return array_key_exists($name, $_SESSION[$this->name]);
     }
 
     /**
@@ -88,7 +88,7 @@ class SessionSection implements SectionInterface, InjectableInterface
             return $default;
         }
 
-        return $_SESSION[$this->section][$name];
+        return $_SESSION[$this->name][$name];
     }
 
     /**
@@ -108,7 +108,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     public function delete(string $name)
     {
         $this->resumeSection();
-        unset($_SESSION[$this->session] [$name]);
+        unset($_SESSION[$this->name][$name]);
     }
 
     /**
@@ -117,7 +117,7 @@ class SessionSection implements SectionInterface, InjectableInterface
     public function clear()
     {
         $this->resumeSection();
-        $_SESSION[$this->session] = [];
+        $_SESSION[$this->name] = [];
     }
 
     /**
@@ -198,8 +198,8 @@ class SessionSection implements SectionInterface, InjectableInterface
     {
         $this->session->resume();
 
-        if (!isset($_SESSION[$this->section])) {
-            $_SESSION[$this->section] = [];
+        if (!isset($_SESSION[$this->name])) {
+            $_SESSION[$this->name] = [];
         }
     }
 }
