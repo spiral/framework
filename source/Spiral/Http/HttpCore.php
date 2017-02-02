@@ -125,7 +125,7 @@ class HttpCore extends Component implements HttpInterface
     }
 
     /**
-     * Running spiral as middleware.
+     * Run as middleware.
      *
      * @param Request  $request
      * @param Response $response
