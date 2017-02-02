@@ -8,13 +8,8 @@
 namespace Spiral\Tests;
 
 use Monolog\Handler\NullHandler;
-use Spiral\Core\Memory;
 use Spiral\Core\Traits\SharedTrait;
-use Spiral\Files\FilesInterface;
 use Spiral\Tests\Core\Fixtures\SharedComponent;
-use Spiral\Tokenizer\Configs\TokenizerConfig;
-use Spiral\Tokenizer\Tokenizer;
-use Spiral\Tokenizer\TokenizerInterface;
 
 /**
  * @property \Spiral\Core\MemoryInterface             $memory
@@ -46,6 +41,7 @@ use Spiral\Tokenizer\TokenizerInterface;
  * @property \Spiral\Security\PermissionsInterface    $permissions
  * @property \Spiral\Security\RulesInterface          $rules
  * @property \Spiral\Security\ActorInterface          $actor
+ * @property \Spiral\Session\SessionInterface         $session
  */
 abstract class BaseTest extends \PHPUnit_Framework_TestCase
 {

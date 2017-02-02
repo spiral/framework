@@ -212,7 +212,6 @@ class CookieManagerTest extends HttpTest
         $this->assertSame('cookie-value-!@$', $result->getBody()->__toString());
     }
 
-
     public function testInvalidCookie()
     {
         $config = $this->container->get(HttpConfig::class);

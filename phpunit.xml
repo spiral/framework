@@ -11,6 +11,7 @@
          stopOnFailure="false"
          stopOnError="false"
          syntaxCheck="true"
+         stderr="true"
 >
     <testsuites>
         <testsuite name="Spiral Framework Core Tests">

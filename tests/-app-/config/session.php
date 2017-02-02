@@ -12,12 +12,12 @@ return [
      * Default session lifetime is 1 day.
      */
     'lifetime' => 86400,
-    
+
     /*
      * Cookie name for sessions. Used by SessionStarter middleware.
      */
-    'cookie'   => env('SESSION_COOKIE', 'PHPSESSID'),
-    
+    'cookie'   => env('SESSION_COOKIE', 'SID'),
+
     /*
      * Default handler is set to file. You can switch this values based on your environments.
      * SessionStore will be initiated on demand to prevent performance issues. Since spiral provides
@@ -27,29 +27,21 @@ return [
      * You can set this value to "native" to disable custom session handler and use default php
      * mechanism.
      */
-    'handler'  => env('SESSION_HANDLER', false),
-    
+    'handler'  => env('SESSION_HANDLER', null),
+    /*
+     * Session handler.s
+     */
     'handlers' => [
-        'null'  => [
+        'null' => [
             'class' => Handlers\NullHandler::class
         ],
         /*
          * Think twice before using this session store in production.
          */
-        'file'  => [
+        'file' => [
             'class'   => Handlers\FileHandler::class,
             'options' => [
                 'directory' => directory('runtime') . '/sessions'
-            ]
-        ],
-        /*
-         * This handler provides ability to use any cache store as storage.
-         */
-        'cache' => [
-            'class'   => Handlers\CacheHandler::class,
-            'options' => [
-                'store'  => 'memcache',
-                'prefix' => 'session'
             ]
         ],
         /*{{handlers}}*/

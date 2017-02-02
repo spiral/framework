@@ -70,7 +70,7 @@ class SpiralBindings extends Bootloader
         //Http scope dependent
         'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
         'router'                             => 'Spiral\Http\Routing\RouterInterface',
-        //'session'                            => 'Spiral\Session\SessionInterface'
+        'session'                            => 'Spiral\Session\SessionInterface',
 
         //Pagination manager
         'paginators'                         => 'Spiral\Pagination\PaginatorsInterface',
