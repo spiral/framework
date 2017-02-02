@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Support;
 
 use Cocur\Slugify\SlugifyInterface;
@@ -23,8 +24,12 @@ class Strings
      */
     public static function random(int $length = 32): string
     {
-        if (empty($string = openssl_random_pseudo_bytes($length))) {
-            throw new \RuntimeException("Unable to generate random string");
+        try {
+            if (empty($string = random_bytes($length))) {
+                throw new \RuntimeException("Unable to generate random string");
+            }
+        } catch (\Throwable $e) {
+            throw new \RuntimeException("Unable to generate random string", $e->getCode(), $e);
         }
 
         return substr(base64_encode($string), 0, $length);

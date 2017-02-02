@@ -50,18 +50,6 @@ class EnvironmentTest extends BaseTest
         $this->assertFalse($environment->get('TEST_BOOLEAN_6'));
     }
 
-    /**
-     * @expectedException \Spiral\Core\Exceptions\EnvironmentException
-     */
-    public function testLoadMissing()
-    {
-        $environment = new Environment(
-            __DIR__ . '/Fixtures/.wrong',
-            $this->files,
-            new NullMemory()
-        );
-    }
-
     public function testLoadFromMemory()
     {
         $environment = new Environment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);

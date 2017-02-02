@@ -367,7 +367,7 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
     {
         if (!$this->config->hasChecker($name)) {
             throw new ValidationException(
-                "Unable to create validation checker defined by '{$name}' name."
+                "Unable to create validation checker defined by '{$name}' name"
             );
         }
 

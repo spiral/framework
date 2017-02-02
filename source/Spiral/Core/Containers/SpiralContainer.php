@@ -28,6 +28,7 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Core\InteropContainerInterface'             => ContainerInterface::class,
         'Spiral\Core\FactoryInterface'                      => ContainerInterface::class,
         'Spiral\Core\ResolverInterface'                     => ContainerInterface::class,
+        'Spiral\Core\ScoperInterface'                       => ContainerInterface::class,
 
         //Logging and debugging
         'Spiral\Debug\LogsInterface'                        => 'Spiral\Debug\LogManager',
@@ -63,7 +64,7 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Storage\BucketInterface'                    => 'Spiral\Storage\Entities\StorageBucket',
 
         //Session
-        'Spiral\Session\SessionInterface'                   => 'Spiral\Session\SessionStore',
+        'Spiral\Session\SessionInterface'                   => 'Spiral\Session\Session',
 
         //Default validator
         'Spiral\Validation\ValidatorInterface'              => 'Spiral\Validation\Validator',

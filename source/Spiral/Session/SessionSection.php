@@ -7,11 +7,18 @@
 
 namespace Spiral\Session;
 
+use Spiral\Core\Container\InjectableInterface;
+
 /**
  * Represents part of _SESSION array.
  */
-class SessionSegment implements SegmentInterface
+class SessionSection implements SectionInterface, InjectableInterface
 {
+    /**
+     * Automatic injections.
+     */
+    const INJECTOR = SessionInterface::class;
+
     /**
      * Reference to _SESSION segment.
      *

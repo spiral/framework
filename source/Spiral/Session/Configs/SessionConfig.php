@@ -31,6 +31,19 @@ class SessionConfig extends InjectableConfig
     ];
 
     /**
+     * List of headers to be used for session signature.
+     *
+     * @return array
+     */
+    public function signHeaders(): array
+    {
+        return [
+            'User-Agent',
+            'Accept-Language'
+        ];
+    }
+
+    /**
      * @return int
      */
     public function sessionLifetime(): int

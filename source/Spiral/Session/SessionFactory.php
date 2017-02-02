@@ -10,7 +10,6 @@ namespace Spiral\Session;
 use Spiral\Core\Component;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Session\Configs\SessionConfig;
 use Spiral\Session\Exceptions\MultipleSessionException;
 use Spiral\Session\Exceptions\SessionException;
@@ -20,8 +19,6 @@ use Spiral\Session\Exceptions\SessionException;
  */
 class SessionFactory extends Component implements SingletonInterface
 {
-    use BenchmarkTrait;
-
     /**
      * @var \Spiral\Session\Configs\SessionConfig
      */
@@ -31,13 +28,6 @@ class SessionFactory extends Component implements SingletonInterface
      * @var \Spiral\Core\FactoryInterface
      */
     private $factory;
-
-    /**
-     * Currently initiated session instance.
-     *
-     * @var SessionInterface
-     */
-    private $session = null;
 
     /**
      * @param \Spiral\Session\Configs\SessionConfig $config
@@ -50,13 +40,17 @@ class SessionFactory extends Component implements SingletonInterface
     }
 
     /**
+     * @param string $clientSignature User specific token, does not provide full security but
+     *                                hardens session transfer.
+     * @param string $id              When null - expect php to create session automatically.
+     *
      * @return \Spiral\Session\SessionInterface
      *
      * @throws \Spiral\Session\Exceptions\MultipleSessionException
      */
-    public function initSession(): SessionInterface
+    public function initSession(string $clientSignature, string $id = null): SessionInterface
     {
-        if (!empty($this->session)) {
+        if (session_status() == PHP_SESSION_ACTIVE) {
             throw new MultipleSessionException("Unable to initiate session, session already initiated");
         }
 
@@ -78,7 +72,10 @@ class SessionFactory extends Component implements SingletonInterface
             session_set_save_handler($handler, true);
         }
 
-        return $this->session = $this->factory->make(SessionInterface::class);
+        return $this->factory->make(
+            SessionInterface::class,
+            compact('clientSignature', 'id')
+        );
     }
 
     /**
@@ -88,15 +85,10 @@ class SessionFactory extends Component implements SingletonInterface
      */
     protected function initHandler(string $handler)
     {
-        $benchmark = $this->benchmark('handler', $handler);
-        try {
-            //Init handler
-            return $this->factory->make(
-                $this->config->handlerClass($handler),
-                $this->config->handlerOptions($handler)
-            );
-        } finally {
-            $this->benchmark($benchmark);
-        }
+        //Init handler
+        return $this->factory->make(
+            $this->config->handlerClass($handler),
+            $this->config->handlerOptions($handler)
+        );
     }
 }

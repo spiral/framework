@@ -13,7 +13,7 @@ use Spiral\Session\Exceptions\SessionException;
 /**
  * Singular session segment (session data isolator).
  */
-interface SegmentInterface extends \IteratorAggregate, \ArrayAccess
+interface SectionInterface extends \IteratorAggregate, \ArrayAccess
 {
     /**
      * Set data in session.

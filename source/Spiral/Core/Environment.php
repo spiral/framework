@@ -126,7 +126,8 @@ class Environment implements EnvironmentInterface
     protected function load()
     {
         if (!$this->files->exists($this->filename)) {
-            throw new EnvironmentException("Unable to load environment ({$this->filename})");
+            //Nothing to load
+            return;
         }
 
         //Unique env file hash
