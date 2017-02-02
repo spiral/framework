@@ -64,7 +64,7 @@ trait CoreTrait
         try {
             return $this->getCore()->callAction($controller, $action, $parameters, $scope);
         } catch (ControllerException $e) {
-            throw $this->convertException($e);
+            throw $this->wrapException($e);
         }
     }
 
@@ -75,7 +75,7 @@ trait CoreTrait
      *
      * @return ClientException
      */
-    protected function convertException(ControllerException $exception): ClientException
+    protected function wrapException(ControllerException $exception): ClientException
     {
         switch ($exception->getCode()) {
             case ControllerException::BAD_ACTION:
