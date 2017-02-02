@@ -13,7 +13,7 @@ namespace Spiral\Session;
  *
  *
  */
-class Session
+class SessionStore implements SessionInterface
 {
     private $started = false;
 

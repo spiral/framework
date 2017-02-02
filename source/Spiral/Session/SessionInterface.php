@@ -7,7 +7,8 @@
 
 namespace Spiral\Session;
 
-class SessionInterface
+interface SessionInterface
 {
+
 
 }
