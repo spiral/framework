@@ -204,34 +204,6 @@ public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInt
 }
 ```
 
-Extendable and programmable template markup language compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
-
-```html
-<spiral:grid source="<?= $uploads ?>" as="upload">
-    <grid:cell title="ID:" value="<?= $upload->getId() ?>"/>
-    <grid:cell title="Time Created:" value="<?= $upload->getTimeCreated() ?>"/>
-    <grid:cell title="Label:" value="<?= e($upload->getLabel()) ?>"/>
-
-    <grid:cell.bytes title="Filesize:" value="<?= $upload->getFilesize() ?>"/>
-
-    <grid:cell>
-        <a href="<?= uri('uploads::edit', $upload) ?>">Edit</a>
-    </grid:cell>
-</spiral:grid>
-```
-
-Includes
-=============
-Plug and Play extensions, small footprint, IDE friendly, frontend toolkit (ajax forms, asset manager), static analysis, loosely coupled, cloud storages, MongoDB, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profiling tools and much more.
-
-Modules
-=======
-[Scaffolder](https://github.com/spiral-modules/scaffolder) - provides set of console commands and extendable class declarations for application scaffolding.
-
-[Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS and Security component.
-
-[Auth](https://github.com/spiral-modules/auth) - authentication layer with multiple token operators and firewall middlewares.
-
 Inspired by
 ===========
 Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3, RoR ORM.
