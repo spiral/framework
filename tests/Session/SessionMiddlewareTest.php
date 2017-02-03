@@ -9,7 +9,9 @@ namespace Spiral\Tests\Session;
 
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Http\Configs\HttpConfig;
+use Spiral\Http\Cookies\CookieManager;
 use Spiral\Session\Http\SessionStarter;
+use Spiral\Session\SessionInterface;
 use Spiral\Tests\Http\HttpTest;
 
 class SessionMiddlewareTest extends HttpTest
@@ -53,15 +55,79 @@ class SessionMiddlewareTest extends HttpTest
         $this->assertArrayHasKey('SID', $cookies);
     }
 
-    private function fetchCookies(array $header)
+    public function testSessionResume()
     {
-        $result = [];
+        $this->http->riseMiddleware(SessionStarter::class);
 
-        foreach ($header as $line) {
-            $cookie = explode('=', $line);
-            $result[$cookie[0]] = substr($cookie[1], 0, strpos($cookie[1], ';'));
-        }
+        $this->http->setEndpoint(function () {
+            return ++$this->session->getSection('cli')->value;
+        });
 
-        return $result;
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('1', $result->getBody()->__toString());
+
+        $this->assertFalse($this->container->hasInstance(SessionInterface::class));
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('2', $result->getBody()->__toString());
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('3', $result->getBody()->__toString());
+    }
+
+    public function testSetSidWithCookieManager()
+    {
+        $this->http->riseMiddleware(SessionStarter::class);
+        $this->http->riseMiddleware(CookieManager::class);
+
+        $this->http->setEndpoint(function () {
+            return $this->session->getSection('cli')->value++;
+        });
+
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+    }
+
+    public function testSetSidWithCookieManagerResume()
+    {
+        $this->http->riseMiddleware(SessionStarter::class);
+        $this->http->riseMiddleware(CookieManager::class);
+
+        $this->http->setEndpoint(function () {
+            $this->assertInternalType('array', $this->session->__debugInfo());
+
+            return ++$this->session->getSection('cli')->value;
+        });
+
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('2', $result->getBody()->__toString());
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('3', $result->getBody()->__toString());
     }
 }

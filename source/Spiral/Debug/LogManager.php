@@ -64,6 +64,7 @@ class LogManager extends Component implements SingletonInterface, LogsInterface
     {
         $this->config = $config;
         $this->factory = $factory;
+
     }
 
     /**

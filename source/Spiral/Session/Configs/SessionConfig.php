@@ -95,6 +95,6 @@ class SessionConfig extends InjectableConfig
      */
     public function handlerOptions(string $handler): array
     {
-        return $this->config['handlers'][$handler] + ['lifetime' => $this->sessionLifetime()];
+        return $this->config['handlers'][$handler]['options'] + ['lifetime' => $this->sessionLifetime()];
     }
 }

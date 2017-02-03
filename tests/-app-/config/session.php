@@ -32,13 +32,13 @@ return [
      * Session handler.s
      */
     'handlers' => [
-        'null' => [
+        'null'  => [
             'class' => Handlers\NullHandler::class
         ],
         /*
          * Think twice before using this session store in production.
          */
-        'file' => [
+        'files' => [
             'class'   => Handlers\FileHandler::class,
             'options' => [
                 'directory' => directory('runtime') . '/sessions'

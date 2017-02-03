@@ -49,6 +49,17 @@ abstract class HttpTest extends BaseTest
             $headers, $cookies,
             $query
         );
+    }
 
+    protected function fetchCookies(array $header)
+    {
+        $result = [];
+
+        foreach ($header as $line) {
+            $cookie = explode('=', $line);
+            $result[$cookie[0]] = substr($cookie[1], 0, strpos($cookie[1], ';'));
+        }
+
+        return $result;
     }
 }
