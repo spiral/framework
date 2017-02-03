@@ -79,7 +79,7 @@ class FileHandler implements \SessionHandlerInterface
     {
         return $this->files->exists($this->getFilename($session_id))
             ? $this->files->read($this->getFilename($session_id))
-            : false;
+            : '';
     }
 
     /**

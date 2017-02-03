@@ -44,6 +44,8 @@ class SignaturesTest extends HttpTest
         $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
         $this->assertArrayHasKey('SID', $cookies);
 
+        $oldSID = $cookies['SID'];
+
         $result = $this->get('/', [], [
             'User-Agent' => 'new client'
         ], [
@@ -52,10 +54,22 @@ class SignaturesTest extends HttpTest
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('1', $result->getBody()->__toString());
 
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+
+        $this->assertNotEquals($oldSID, $cookies['SID']);
+
         $result = $this->get('/', [], [
             'User-Agent' => 'new client'
         ], [
             'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('2', $result->getBody()->__toString());
+
+        //Checking that old session is still OK
+        $result = $this->get('/', [], [], [
+            'SID' => $oldSID
         ]);
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('2', $result->getBody()->__toString());

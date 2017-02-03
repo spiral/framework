@@ -50,7 +50,7 @@ class NullHandler implements \SessionHandlerInterface
      */
     public function read($session_id)
     {
-        return true;
+        return '';
     }
 
     /**

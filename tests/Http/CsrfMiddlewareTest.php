@@ -165,11 +165,10 @@ class CsrfMiddlewareTest extends HttpTest
         $this->assertSame(200, $result->getStatusCode());
         $this->assertNotEmpty($token = $result->getBody()->__toString());
 
-
-        $cookie = substr(
+        $cookie = rawurldecode(substr(
             $result->getHeaderLine('Set-Cookie'),
             strlen($httpConfig->csrfCookie()) + 1
-        );
+        ));
 
         $cookie = substr($cookie, 0, strpos($cookie, ';'));
 

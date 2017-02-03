@@ -98,15 +98,7 @@ class Session extends Component implements SessionInterface
             //Newly created session, let's sign it
             $_SESSION[self::CLIENT_SIGNATURE] = $this->clientSignature;
         } elseif (!hash_equals($_SESSION[self::CLIENT_SIGNATURE], $this->clientSignature)) {
-            $this->getLogger()->alert("Session and client signatures do not match, session id: {$this->id}");
-
-            //Emptying session data
-            $_SESSION = [];
-
-            //Generating new session ID and flushing all existed data
-            $this->regenerateID(false);
-
-            $_SESSION[self::CLIENT_SIGNATURE] = $this->clientSignature;
+            $this->resetSession();
         }
     }
 
@@ -129,10 +121,7 @@ class Session extends Component implements SessionInterface
      */
     public function regenerateID(bool $destruct = false): SessionInterface
     {
-        if (!$this->isStarted()) {
-            $this->resume();
-        }
-
+        $this->resume();
         session_regenerate_id($destruct);
         $this->id = session_id();
 
@@ -210,5 +199,21 @@ class Session extends Component implements SessionInterface
     private function validID(string $id): bool
     {
         return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id);
+    }
+
+    /**
+     * To be called in cases when client does not supplied proper session signature.
+     */
+    protected function resetSession()
+    {
+        $this->getLogger()->alert(
+            "Session and client signatures do not match, session id: {$this->id}"
+        );
+
+        //Generating new session ID but keep old session intact
+        $this->regenerateID(false);
+
+        //Flush session state for a current user
+        $_SESSION = [self::CLIENT_SIGNATURE => $this->clientSignature];
     }
 }
