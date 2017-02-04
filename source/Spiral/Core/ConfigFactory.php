@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Exceptions\ConfiguratorException;
@@ -127,8 +128,7 @@ class ConfigFactory extends Component implements ConfiguratorInterface
     protected function loadConfig(string $config, string $filename): array
     {
         /**
-         * Altering this method will provide ability to support more config types, config classes
-         * can be left untouched.
+         * Alter this method to support more config types, config classes can be left untouched.
          */
         $data = require($this->files->localFilename($filename));
 

@@ -102,7 +102,7 @@ abstract class AbstractCommand extends Command
         $confirmation = $question->ask(
             $this->input,
             $this->output,
-            new ConfirmationQuestion("<question>{$question}</question> ")
+            new ConfirmationQuestion("<question>Would you like to continue?</question> ")
         );
 
         return $confirmation;
