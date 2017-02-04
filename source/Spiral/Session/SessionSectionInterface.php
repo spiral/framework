@@ -16,6 +16,13 @@ use Spiral\Session\Exceptions\SessionException;
 interface SessionSectionInterface extends \IteratorAggregate, \ArrayAccess
 {
     /**
+     * Section name.
+     *
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
      * All section data in a form of array.
      *
      * @return array

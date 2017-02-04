@@ -12,6 +12,7 @@ use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Cookies\CookieManager;
 use Spiral\Session\Http\SessionStarter;
 use Spiral\Session\SessionInterface;
+use Spiral\Session\SessionSectionInterface;
 use Spiral\Tests\Http\HttpTest;
 
 class SessionMiddlewareTest extends HttpTest
@@ -46,6 +47,24 @@ class SessionMiddlewareTest extends HttpTest
 
         $this->http->setEndpoint(function () {
             return $this->session->getSection('cli')->value++;
+        });
+
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+    }
+
+    public function testSectionByInjection()
+    {
+        $this->http->riseMiddleware(SessionStarter::class);
+
+        $this->http->setEndpoint(function () {
+            $this->assertSame(
+                'cli',
+                $this->container->get(SessionSectionInterface::class, 'cli')->getName()
+            );
         });
 
         $result = $this->get('/');

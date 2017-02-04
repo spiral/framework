@@ -44,6 +44,14 @@ class SessionSection implements SessionSectionInterface, InjectableInterface
     /**
      * {@inheritdoc}
      */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getIterator()
     {
         return new \ArrayIterator($this->all());
