@@ -27,9 +27,9 @@
     "vlucas/phpdotenv": "^2.1"
   },
   "require-dev": {
+    "spiral/odm": "^0.9",
     "phpunit/phpunit": "~5.0",
-    "mockery/mockery": "^0.9.4",
-    "spiral/odm": "^0.9"
+    "mockery/mockery": "^0.9.4"
   },
   "suggest": {
     "spiral/odm": "Compositable ODM"
