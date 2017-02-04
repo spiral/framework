@@ -1,5 +1,6 @@
 .idea/
 composer.lock
+.coveralls.yml
 vendor/
 tests/runtime/*
 clover.xml
