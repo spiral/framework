@@ -237,8 +237,8 @@ class Session extends Component implements SessionInterface
             !array_key_exists(self::CLIENT_SIGNATURE, $_SESSION)
             || !array_key_exists(self::SESSION_CREATED, $_SESSION)
         ) {
-            //Missing session signature!
-            return true;
+            //Missing session signature or timestamp!
+            return false;
         }
 
         if ($_SESSION[self::SESSION_CREATED] < time() + $this->lifetime) {
