@@ -185,6 +185,7 @@ class SessionMiddlewareTest extends HttpTest
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('2', $result->getBody()->__toString());
 
+
         $result = $this->get('/', [], [], [
             'SID' => $cookies['SID']
         ]);

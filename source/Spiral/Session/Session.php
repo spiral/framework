@@ -241,7 +241,7 @@ class Session extends Component implements SessionInterface
             return false;
         }
 
-        if ($_SESSION[self::SESSION_CREATED] < time() + $this->lifetime) {
+        if ($_SESSION[self::SESSION_CREATED] < time() - $this->lifetime) {
             //Session expired
             return false;
         }
