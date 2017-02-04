@@ -59,19 +59,24 @@ class SignaturesTest extends HttpTest
 
         $this->assertNotEquals($oldSID, $cookies['SID']);
 
+        //WILL DESTROY OLD SESSION DATA
+
         $result = $this->get('/', [], [
             'User-Agent' => 'new client'
         ], [
             'SID' => $cookies['SID']
         ]);
         $this->assertSame(200, $result->getStatusCode());
-        $this->assertSame('2', $result->getBody()->__toString());
+        $this->assertSame('1', $result->getBody()->__toString());
+
+        $newCookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertNotSame($cookies['SID'], $newCookies['SID']);
 
         //Checking that old session is still OK
         $result = $this->get('/', [], [], [
             'SID' => $oldSID
         ]);
         $this->assertSame(200, $result->getStatusCode());
-        $this->assertSame('2', $result->getBody()->__toString());
+        $this->assertSame('1', $result->getBody()->__toString());
     }
 }

@@ -85,6 +85,90 @@ class SessionMiddlewareTest extends HttpTest
         $this->assertSame('3', $result->getBody()->__toString());
     }
 
+    public function testSessionRegenerateId()
+    {
+        $this->http->riseMiddleware(SessionStarter::class);
+
+        $this->http->setEndpoint(function () {
+            return ++$this->session->getSection('cli')->value;
+        });
+
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('1', $result->getBody()->__toString());
+
+        $this->assertFalse($this->container->hasInstance(SessionInterface::class));
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('2', $result->getBody()->__toString());
+
+        $this->http->setEndpoint(function () {
+            $this->session->regenerateID(false);
+
+            return ++$this->session->getSection('cli')->value;
+        });
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+
+        $newCookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $newCookies);
+
+        $this->assertNotEquals($cookies['SID'], $newCookies['SID']);
+
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('3', $result->getBody()->__toString());
+    }
+
+    public function testSessionRegenerateIdAndDestroyData()
+    {
+        $this->http->riseMiddleware(SessionStarter::class);
+
+        $this->http->setEndpoint(function () {
+            return ++$this->session->getSection('cli')->value;
+        });
+
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('1', $result->getBody()->__toString());
+
+        $this->assertFalse($this->container->hasInstance(SessionInterface::class));
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('2', $result->getBody()->__toString());
+
+        $this->http->setEndpoint(function () {
+            $this->session->regenerateID(true);
+
+            return ++$this->session->getSection('cli')->value;
+        });
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+
+        $newCookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $newCookies);
+
+        $this->assertNotEquals($cookies['SID'], $newCookies['SID']);
+
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('1', $result->getBody()->__toString());
+    }
+
     public function testSetSidWithCookieManager()
     {
         $this->http->riseMiddleware(SessionStarter::class);
@@ -129,5 +213,42 @@ class SessionMiddlewareTest extends HttpTest
         ]);
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('3', $result->getBody()->__toString());
+    }
+
+    public function testDestroySession()
+    {
+        $this->http->riseMiddleware(SessionStarter::class);
+        $this->http->riseMiddleware(CookieManager::class);
+
+        $this->http->setEndpoint(function () {
+            $this->assertInternalType('array', $this->session->__debugInfo());
+
+            return ++$this->session->getSection('cli')->value;
+        });
+
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertArrayHasKey('SID', $cookies);
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('2', $result->getBody()->__toString());
+
+        $this->http->setEndpoint(function () {
+            $this->session->destroy();
+            $this->assertFalse($this->session->isStarted());
+
+            return ++$this->session->getSection('cli')->value;
+        });
+
+        $result = $this->get('/', [], [], [
+            'SID' => $cookies['SID']
+        ]);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('1', $result->getBody()->__toString());
     }
 }

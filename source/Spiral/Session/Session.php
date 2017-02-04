@@ -17,7 +17,8 @@ use Spiral\Session\Exceptions\SessionException;
  *
  * Session will be automatically started upon first request.
  *
- * @see https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
+ * @see  https://www.owasp.org/index.php/Session_Management_Cheat_Sheet
+ * @todo http://php.net/manual/en/function.session-create-id.php
  */
 class Session extends Component implements SessionInterface
 {
@@ -87,7 +88,7 @@ class Session extends Component implements SessionInterface
         try {
             session_start();
         } catch (\Throwable $e) {
-            throw new SessionException($e->getMessage(), $e->getCode(), $e);
+            throw new SessionException("Unable to start session", $e->getCode(), $e);
         }
 
         //We got new session
@@ -122,8 +123,17 @@ class Session extends Component implements SessionInterface
     public function regenerateID(bool $destruct = false): SessionInterface
     {
         $this->resume();
+
         session_regenerate_id($destruct);
         $this->id = session_id();
+
+        session_commit();
+
+        if ($destruct) {
+            $_SESSION = [];
+        }
+
+        $this->resume();
 
         return $this;
     }
@@ -148,12 +158,10 @@ class Session extends Component implements SessionInterface
      */
     public function destroy(): bool
     {
-        if (!$this->isStarted() || empty($this->id)) {
-            return false;
-        }
-
         $this->resume();
         session_destroy();
+
+        $_SESSION = [];
         $this->id = null;
         $this->started = false;
 
@@ -211,7 +219,7 @@ class Session extends Component implements SessionInterface
         );
 
         //Generating new session ID but keep old session intact
-        $this->regenerateID(false);
+        $this->regenerateID(true);
 
         //Flush session state for a current user
         $_SESSION = [self::CLIENT_SIGNATURE => $this->clientSignature];

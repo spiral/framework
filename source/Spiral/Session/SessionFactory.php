@@ -51,7 +51,7 @@ class SessionFactory extends Component implements SingletonInterface
     public function initSession(string $clientSignature, string $id = null): SessionInterface
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
-            throw new MultipleSessionException("Unable to initiate session, session already initiated");
+            throw new MultipleSessionException("Unable to initiate session, session already started");
         }
 
         //No automatic cookies
