@@ -124,11 +124,11 @@ class Session extends Component implements SessionInterface
     /**
      * {@inheritdoc}
      *
-     * @param bool $start
+     * @param bool $resume
      */
-    public function getID(bool $start = false)
+    public function getID(bool $resume = false)
     {
-        if ($start) {
+        if ($resume) {
             $this->resume();
         }
 
@@ -179,7 +179,7 @@ class Session extends Component implements SessionInterface
         $this->resume();
         $_SESSION = [
             self::CLIENT_SIGNATURE => $this->clientSignature,
-            self::SESSION_CREATED  => 0
+            self::SESSION_CREATED  => time()
         ];
 
         return $this->commit();
@@ -193,7 +193,7 @@ class Session extends Component implements SessionInterface
         return [
             'id'        => $this->id,
             'signature' => $this->clientSignature,
-            'active'    => $this->isStarted(),
+            'started'   => $this->isStarted(),
             'data'      => $this->isStarted() ? $_SESSION : null
         ];
     }

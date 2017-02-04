@@ -80,10 +80,9 @@ class FactoryTest extends BaseTest
 
         $c->bind(SessionInterface::class, Session::class);
 
-        $session = $factory->initSession('sig', 'sessionid');
+        $session = $factory->initSession('sig');
         $session->resume();
 
-        $session = $factory->initSession('sig', 'sessionid');
-
+        $session = $factory->initSession('sig', $session->getID());
     }
 }
