@@ -233,15 +233,15 @@ class Session extends Component implements SessionInterface
      */
     protected function validSession(): bool
     {
-        if (!isset($_SESSION[self::CLIENT_SIGNATURE])) {
+        if (
+            !array_key_exists(self::CLIENT_SIGNATURE, $_SESSION)
+            || !array_key_exists(self::SESSION_CREATED, $_SESSION)
+        ) {
             //Missing session signature!
             return true;
         }
 
-        if (
-            isset($_SESSION[self::SESSION_CREATED])
-            && $_SESSION[self::SESSION_CREATED] < time() + $this->lifetime
-        ) {
+        if ($_SESSION[self::SESSION_CREATED] < time() + $this->lifetime) {
             //Session expired
             return false;
         }
