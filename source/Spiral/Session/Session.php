@@ -179,7 +179,7 @@ class Session extends Component implements SessionInterface
         $this->resume();
         $_SESSION = [
             self::CLIENT_SIGNATURE => $this->clientSignature,
-            self::SESSION_CREATED  => time()
+            self::SESSION_CREATED  => 0
         ];
 
         return $this->commit();
