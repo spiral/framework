@@ -74,7 +74,11 @@ class SessionFactory extends Component implements SingletonInterface
 
         return $this->factory->make(
             SessionInterface::class,
-            compact('clientSignature', 'id')
+            [
+                'clientSignature' => $clientSignature,
+                'lifetime'        => $this->config->sessionLifetime(),
+                'id'              => $id
+            ]
         );
     }
 

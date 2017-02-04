@@ -34,13 +34,11 @@ interface SessionInterface extends InjectorInterface
     public function getID();
 
     /**
-     * Regenerate session id.
-     *
-     * @param bool $destruct Set to true to remove old session data.
+     * Regenerate session id without altering it's data.
      *
      * @return self
      */
-    public function regenerateID(bool $destruct = false): self;
+    public function regenerateID(): self;
 
     /**
      * Commit session data, must return true if data successfully saved.
@@ -50,7 +48,7 @@ interface SessionInterface extends InjectorInterface
     public function commit(): bool;
 
     /**
-     * Destroys session and all associated data within it.
+     * Destroys all data associated with session but does not regenerate it IDs.
      *
      * @return bool
      */

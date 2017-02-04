@@ -30,6 +30,11 @@ class Session extends Component implements SessionInterface
     const CLIENT_SIGNATURE = '_CLIENT_SIGNATURE';
 
     /**
+     * Time when session been created or refreshed.
+     */
+    const SESSION_CREATED = '_CREATED';
+
+    /**
      * Locations for unnamed segments i.e. default segment.
      */
     const DEFAULT_SECTION = '_DEFAULT';
@@ -40,6 +45,13 @@ class Session extends Component implements SessionInterface
      * @var string
      */
     private $clientSignature;
+
+    /**
+     * Session lifetime in seconds.
+     *
+     * @var int
+     */
+    private $lifetime;
 
     /**
      * @var string
@@ -53,9 +65,10 @@ class Session extends Component implements SessionInterface
 
     /**
      * @param string      $clientSignature
+     * @param int         $lifetime
      * @param string|null $id
      */
-    public function __construct(string $clientSignature, string $id = null)
+    public function __construct(string $clientSignature, int $lifetime, string $id = null)
     {
         $this->clientSignature = $clientSignature;
 
@@ -82,6 +95,7 @@ class Session extends Component implements SessionInterface
         }
 
         if (!empty($this->id)) {
+            //Add support for strict mode when switched to 7.1
             session_id($this->id);
         }
 
@@ -91,15 +105,19 @@ class Session extends Component implements SessionInterface
             throw new SessionException("Unable to start session", $e->getCode(), $e);
         }
 
+        if (empty($this->id)) {
+            //Sign newly created session
+            $_SESSION[self::CLIENT_SIGNATURE] = $this->clientSignature;
+            $_SESSION[self::SESSION_CREATED] = time();
+        }
+
         //We got new session
         $this->id = session_id();
         $this->started = true;
 
-        if (!isset($_SESSION[self::CLIENT_SIGNATURE])) {
-            //Newly created session, let's sign it
-            $_SESSION[self::CLIENT_SIGNATURE] = $this->clientSignature;
-        } elseif (!hash_equals($_SESSION[self::CLIENT_SIGNATURE], $this->clientSignature)) {
-            $this->resetSession();
+        //Ensure that session is valid
+        if (!$this->validSession()) {
+            $this->invalidateSession();
         }
     }
 
@@ -120,19 +138,19 @@ class Session extends Component implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerateID(bool $destruct = false): SessionInterface
+    public function regenerateID(): SessionInterface
     {
         $this->resume();
 
-        session_regenerate_id($destruct);
+        //Gaining new ID
+        session_regenerate_id();
         $this->id = session_id();
 
+        //Updating session duration
+        $_SESSION[self::SESSION_CREATED] = time();
         session_commit();
 
-        if ($destruct) {
-            $_SESSION = [];
-        }
-
+        //Restarting session under new ID
         $this->resume();
 
         return $this;
@@ -159,13 +177,12 @@ class Session extends Component implements SessionInterface
     public function destroy(): bool
     {
         $this->resume();
-        session_destroy();
+        $_SESSION = [
+            self::CLIENT_SIGNATURE => $this->clientSignature,
+            self::SESSION_CREATED  => time()
+        ];
 
-        $_SESSION = [];
-        $this->id = null;
-        $this->started = false;
-
-        return true;
+        return $this->commit();
     }
 
     /**
@@ -210,18 +227,46 @@ class Session extends Component implements SessionInterface
     }
 
     /**
+     * Check if session is valid for
+     *
+     * @return bool
+     */
+    protected function validSession(): bool
+    {
+        if (!isset($_SESSION[self::CLIENT_SIGNATURE])) {
+            //Missing session signature!
+            return true;
+        }
+
+        if (
+            isset($_SESSION[self::SESSION_CREATED])
+            && $_SESSION[self::SESSION_CREATED] < time() + $this->lifetime
+        ) {
+            //Session expired
+            return false;
+        }
+
+        if (!hash_equals($_SESSION[self::CLIENT_SIGNATURE], $this->clientSignature)) {
+            //Signatures do not match
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * To be called in cases when client does not supplied proper session signature.
      */
-    protected function resetSession()
+    protected function invalidateSession()
     {
         $this->getLogger()->alert(
             "Session and client signatures do not match, session id: {$this->id}"
         );
 
-        //Generating new session ID but keep old session intact
-        $this->regenerateID(true);
+        //Destroy all session data
+        $this->destroy();
 
-        //Flush session state for a current user
-        $_SESSION = [self::CLIENT_SIGNATURE => $this->clientSignature];
+        //Switch user to new session
+        $this->regenerateID();
     }
 }
