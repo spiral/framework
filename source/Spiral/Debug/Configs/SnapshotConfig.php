@@ -63,7 +63,7 @@ class SnapshotConfig extends InjectableConfig
      */
     public function reportingDirectory(): string
     {
-        return $this->config['reporting']['directory'];
+        return rtrim($this->config['reporting']['directory'], '/') . '/';
     }
 
     /**

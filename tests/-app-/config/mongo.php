@@ -3,6 +3,9 @@
  * Mongo databases. Attention, configs might include runtime code which depended on environment
  * values only.
  *
+ * Attention, this config is pre-placed in application, install spiral/odm in order to use Mongo
+ * databases and ODM models.
+ *
  * @see MongoConfig
  */
 

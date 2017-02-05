@@ -14,7 +14,9 @@ return [
     'lifetime' => 86400,
 
     /*
-     * Cookie name for sessions. Used by SessionStarter middleware.
+     * Cookie name for sessions. Used by SessionStarter middleware. Other cookies options will
+     * be gathered from HttpConfig. You can combine SessionStarter with CookieManager in order
+     * to protect your cookies.
      */
     'cookie'   => env('SESSION_COOKIE', 'SID'),
 
@@ -27,23 +29,30 @@ return [
      * You can set this value to "native" to disable custom session handler and use default php
      * mechanism.
      */
-    'handler'  => env('SESSION_HANDLER', null),
+    'handler'  => env('SESSION_HANDLER', 'files'),
+
     /*
-     * Session handler.s
+     * Session handler. You are able to use bind() function in handler options.
      */
     'handlers' => [
+        //Debug session handler without ability to save anything
         'null'  => [
             'class' => Handlers\NullHandler::class
         ],
-        /*
-         * Think twice before using this session store in production.
-         */
+        //File based session
         'files' => [
             'class'   => Handlers\FileHandler::class,
             'options' => [
-                'directory' => directory('runtime') . '/sessions'
+                'directory' => directory('runtime') . 'sessions'
             ]
         ],
+        //Session with data storage located in external simple cache adapter
+        'cache' => [
+            'class'   => Handlers\CacheHandler::class,
+            'options' => [
+                'cache' => bind(\Psr\SimpleCache\CacheInterface::class)
+            ]
+        ]
         /*{{handlers}}*/
     ]
 ];
