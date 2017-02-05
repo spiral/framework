@@ -8,12 +8,9 @@
 namespace Spiral\Tests\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Controller;
-use Spiral\Http\Routing\ControllersRoute;
 use Spiral\Http\Routing\Route;
 use Spiral\Http\Routing\RouteInterface;
 use TestApplication\Controllers\DummyController;
-use Zend\Diactoros\ServerRequest;
 
 class RouteTest extends HttpTest
 {

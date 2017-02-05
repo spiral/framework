@@ -89,7 +89,7 @@ class ControllersRoute extends AbstractRoute
     ) {
         parent::__construct($name, $defaults);
 
-        $this->pattern = $pattern;
+        $this->pattern = ltrim($pattern, '/');
         $this->namespace = $namespace;
         $this->postfix = $postfix;
         $this->controllers = $controllers;
