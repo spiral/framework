@@ -24,6 +24,13 @@ class RouteTest extends HttpTest
         $this->assertSame('Hello, Dave.', (string)$response->getBody());
     }
 
+    public function testRenaming()
+    {
+        $route = new Route('name', '/', 'target');
+        $this->assertSame('name', $route->getName());
+        $this->assertSame('new-name', $route->withName('new-name')->getName());
+    }
+
     public function testRouteToAction()
     {
         $this->http->addRoute(new Route('default', '', 'action'));

@@ -130,7 +130,7 @@ class HttpConfig extends InjectableConfig implements SingletonInterface
     public function routerOptions(): array
     {
         //Let's automatically add basePath value
-        return $this->config['router']['parameters'] + ['basePath' => $this->basePath()];
+        return $this->config['router']['options'] + ['basePath' => $this->basePath()];
     }
 
     /**

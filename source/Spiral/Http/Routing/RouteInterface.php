@@ -42,6 +42,8 @@ interface RouteInterface
     public function getName(): string;
 
     /**
+     * Prefix must always include back slash at the end of prefix!
+     *
      * @param string $prefix
      *
      * @return self

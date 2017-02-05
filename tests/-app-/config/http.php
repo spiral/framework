@@ -64,10 +64,8 @@ return [
      */
     'router'       => [
         //You can use your own router or entirely replace http endpoint using option above
-        'class'      => Http\Routing\Router::class,
-        'parameters' => [
-            'basePath' => '/'
-        ]
+        'class'   => Http\Routing\Router::class,
+        'options' => []
     ],
 
     /*

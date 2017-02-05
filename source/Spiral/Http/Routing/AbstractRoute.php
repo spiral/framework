@@ -143,7 +143,7 @@ abstract class AbstractRoute implements RouteInterface
     public function withPrefix(string $prefix): RouteInterface
     {
         $route = clone $this;
-        $route->prefix = $prefix;
+        $route->prefix = rtrim($prefix, '/') . '/';
 
         return $route;
     }
@@ -228,7 +228,6 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         if (preg_match($this->compiled['pattern'], $this->getSubject($request), $matches)) {
-
             //To get only named matches
             $matches = array_intersect_key($matches, $this->compiled['options']);
             $matches = array_merge($this->compiled['options'], $this->defaults, $matches);
@@ -272,10 +271,11 @@ abstract class AbstractRoute implements RouteInterface
         //Uri without empty blocks (pretty stupid implementation)
         $path = strtr(
             \Spiral\interpolate($this->compiled['template'], $parameters, '<', '>'),
-            ['[]' => '', '[/]' => '', '[' => '', ']' => '', '//' => '/']
+            ['[]' => '', '[/]' => '', '[' => '', ']' => '', '://' => '://', '//' => '/']
         );
 
-        $uri = new Uri(($this->withHost ? '' : $this->prefix) . rtrim($path, '/'));
+        //Uri with added prefix
+        $uri = new Uri(($this->withHost ? '' : $this->prefix) . trim($path, '/'));
 
         return empty($query) ? $uri : $uri->withQuery(http_build_query($query));
     }
@@ -423,6 +423,6 @@ abstract class AbstractRoute implements RouteInterface
             $uri = substr($path, strlen($this->prefix));
         }
 
-        return rtrim($uri, '/');
+        return trim($uri, '/');
     }
 }

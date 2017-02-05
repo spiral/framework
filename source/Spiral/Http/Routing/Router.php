@@ -49,13 +49,13 @@ class Router implements RouterInterface
     /**
      * {@inheritdoc}
      *
-     * @param RouteInterface|array $default Default route or options to construct instance of
-     *                                      DirectRoute.
-     * @param bool                 $keepOutput
+     * @param RouteInterface|array $default  Default route or options to construct instance of
+     *                                       DirectRoute.
+     * @param string               $basePath Automatically added to all urls.
      *
      * @throws RouterException
      */
-    public function __construct(ContainerInterface $container, $basePath = '/')
+    public function __construct(ContainerInterface $container, string $basePath = '/')
     {
         $this->basePath = $basePath;
         $this->container = $container;
@@ -111,6 +111,10 @@ class Router implements RouterInterface
      */
     public function getRoute(string $name): RouteInterface
     {
+        if (!empty($this->defaultRoute) && $this->defaultRoute->getName() == $name) {
+            return $this->defaultRoute;
+        }
+
         foreach ($this->routes as $route) {
             if ($route->getName() == $name) {
                 return $route;

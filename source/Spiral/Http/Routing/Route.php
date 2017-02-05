@@ -36,7 +36,8 @@ class Route extends AbstractRoute
     protected $target = null;
 
     /**
-     * New Route instance.
+     * New Route instance. Attention, you have to always include http:// or http:// protocol
+     * for routes used to match hostname.
      *
      * @param string          $name
      * @param string          $pattern
