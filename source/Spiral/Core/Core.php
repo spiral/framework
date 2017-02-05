@@ -223,19 +223,6 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
     }
 
     /**
-     * Change application environment. Attention, already loaded configs would not be altered!
-     *
-     * @param EnvironmentInterface $environment
-     */
-    public function setEnvironment(EnvironmentInterface $environment)
-    {
-        $this->environment = $environment;
-
-        //Making sure environment is available in container scope
-        $this->container->bindSingleton(EnvironmentInterface::class, $this->environment);
-    }
-
-    /**
      * @return EnvironmentInterface
      *
      * @throws CoreException
@@ -383,6 +370,19 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
         );
 
         return $this;
+    }
+
+    /**
+     * Change application environment. Attention, already loaded configs would not be altered!
+     *
+     * @param EnvironmentInterface $environment
+     */
+    private function setEnvironment(EnvironmentInterface $environment)
+    {
+        $this->environment = $environment;
+
+        //Making sure environment is available in container scope
+        $this->container->bindSingleton(EnvironmentInterface::class, $this->environment);
     }
 
     /**
