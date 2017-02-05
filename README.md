@@ -109,9 +109,7 @@ use Zend\Expressive\Application;
 use Zend\Stratigility\MiddlewarePipe;
 
 $app = new Application();
-$app->any('/spiral', function ($req, $res, $next) {
-    return MySpiralApp::init(...)->http->perform($req, $res);
-});
+$app->any('/spiral', SpiralApp::init(...)->http);
 ```
 
 StorageManager with deep PSR-7 streams integration:
