@@ -108,7 +108,13 @@ class SessionStarter implements MiddlewareInterface
         //Commit session data (if session active)
         $session->commit();
 
-        return $this->mountCookie($request, $response, $session->getID());
+        if ($this->fetchID($request) != $session->getID()) {
+            //SID changed
+            return $this->mountCookie($request, $response, $session->getID());
+        }
+
+        //Nothing to do
+        return $response;
     }
 
     /**
