@@ -71,7 +71,9 @@ class SessionMiddlewareTest extends HttpTest
         $this->assertSame(200, $result->getStatusCode());
 
         $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertArrayHasKey('SID', $cookies);
+
+        //Session never started!
+        $this->assertArrayNotHasKey('SID', $cookies);
     }
 
     public function testSessionResume()
