@@ -58,7 +58,7 @@ class SessionFactory extends Component implements SingletonInterface
         ini_set('session.use_cookies', false);
 
         //Initiating proper session handler
-        if ($this->config->sessionHandler() !== null) {
+        if (!empty($this->config->sessionHandler())) {
             try {
                 $handler = $this->initHandler($this->config->sessionHandler());
             } catch (\Throwable $e) {
