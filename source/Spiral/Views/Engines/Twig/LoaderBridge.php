@@ -54,7 +54,7 @@ class LoaderBridge implements \Twig_LoaderInterface
      */
     public function isFresh($name, $time)
     {
-        return !$this->loader->getSource($name)->isFresh($time);
+        return $this->loader->getSource($name)->isFresh($time);
     }
 
     /**
