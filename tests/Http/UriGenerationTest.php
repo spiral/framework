@@ -99,6 +99,11 @@ class UriGenerationTest extends HttpTest
         $this->assertSame('/home', (string)$router->uri('home:'));
         $this->assertSame('/home/action', (string)$router->uri('home:action'));
         $this->assertSame('/home/action/1', (string)$router->uri('home:action', ['id' => 1]));
+
+        $this->assertSame('/home/action/1?value=abc#test', (string)$router->uri('home:action', [
+            'id'    => 1,
+            'value' => 'abc'
+        ])->withFragment('test'));
     }
 
     public function testStrictUriWithQuery()
