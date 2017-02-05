@@ -14,8 +14,8 @@ use Spiral\Tests\BaseTest;
 class ConfigureCommandTest extends BaseTest
 {
     /**
-     * This is, in a fact, one of the most important tests in framework since it's basically complies
-     * application.
+     * This is, in a fact, one of the most important tests in framework since it's basically
+     * complies application.
      */
     public function testConfigure()
     {
@@ -29,7 +29,6 @@ class ConfigureCommandTest extends BaseTest
     {
         $environment = new DotenvEnvironment(
             directory('root') . '.env',
-            $this->files,
             new NullMemory()
         );
 
@@ -42,8 +41,7 @@ class ConfigureCommandTest extends BaseTest
         clearstatcache();
         $newEnvironment = new DotenvEnvironment(
             directory('root') . '.env',
-            $this->files,
-            new NullMemory()
+                new NullMemory()
         );
 
         $this->assertNotSame(
