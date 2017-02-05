@@ -66,7 +66,7 @@ class MyBootloader extends Bootloader
 Declarative/lazy singletons and services:
 
 ```php
-class SomeService implements SingletonInterface //or extends Service
+class SomeService implements SingletonInterface
 {
     private $reader;
     
