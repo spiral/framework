@@ -17,7 +17,7 @@ use Spiral\Core\Exceptions\EnvironmentException;
  *
  * Attention, this implementation works using global _ENV array.
  */
-class DotenvEnvironment implements EnvironmentInterface
+class DotenvEnvironment extends Environment
 {
     /**
      * Environment section.
@@ -37,11 +37,6 @@ class DotenvEnvironment implements EnvironmentInterface
     private $id = '';
 
     /**
-     * @var array
-     */
-    private $values = [];
-
-    /**
      * @invisible
      * @var MemoryInterface|null
      */
@@ -58,40 +53,7 @@ class DotenvEnvironment implements EnvironmentInterface
         $this->filename = $filename;
         $this->memory = $memory;
 
-        $this->load();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getID(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this
-     */
-    public function set(string $name, $value): DotenvEnvironment
-    {
-        $this->values[$name] = $_ENV[$name] = $value;
-        putenv("$name=$value");
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get(string $name, $default = null)
-    {
-        if (array_key_exists($name, $this->values)) {
-            return $this->values[$name];
-        }
-
-        return $default;
+        parent::__construct();
     }
 
     /**
@@ -154,41 +116,10 @@ class DotenvEnvironment implements EnvironmentInterface
     protected function initEnvironment(array $values): array
     {
         foreach ($values as $name => &$value) {
-            $value = $this->normalize($value);
             $this->set($name, $value);
             unset($value);
         }
 
         return $values;
-    }
-
-    /**
-     * Normalize env value.
-     *
-     * @param mixed $value
-     *
-     * @return bool|null|string
-     */
-    private function normalize($value)
-    {
-        switch (strtolower($value)) {
-            case 'true':
-            case '(true)':
-                return true;
-
-            case 'false':
-            case '(false)':
-                return false;
-
-            case 'null':
-            case '(null)':
-                return null;
-
-            case 'empty':
-            case '(empty)':
-                return '';
-        }
-
-        return $value;
     }
 }
