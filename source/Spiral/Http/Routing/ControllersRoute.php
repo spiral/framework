@@ -73,7 +73,8 @@ class ControllersRoute extends AbstractRoute
      *
      * @param string $name
      * @param string $pattern
-     * @param string $namespace   Default controllers namespace.
+     * @param string $namespace   Default controllers namespace. You must define define set of
+     *                            controllers using withController method if namespace empty.
      * @param string $postfix     Default controller postfix.
      * @param array  $defaults    Default values (including default controller).
      * @param array  $controllers Controllers aliased by their name, namespace and postfix will be
@@ -82,7 +83,7 @@ class ControllersRoute extends AbstractRoute
     public function __construct(
         string $name,
         string $pattern,
-        string $namespace,
+        string $namespace = '',
         string $postfix = 'Controller',
         array $defaults = [],
         array $controllers = []

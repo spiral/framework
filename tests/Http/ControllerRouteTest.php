@@ -9,6 +9,7 @@ namespace Spiral\Tests\Http;
 
 use Spiral\Http\RESTfulCore;
 use Spiral\Http\Routing\ControllersRoute;
+use TestApplication\Controllers\DummyController;
 use TestApplication\Controllers\MagicController;
 
 class ControllerRouteTest extends HttpTest
@@ -135,5 +136,41 @@ class ControllerRouteTest extends HttpTest
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('getAction:{"controller":"m","action":"action","id":"100"}',
             (string)$result->getBody());
+    }
+
+    public function testControllersRouteExplicitDefault()
+    {
+        $route = new ControllersRoute('controllers', '/[<controller>[/<action>[/<id>]]]');
+
+        $route = $route->withControllers([
+            'm' => MagicController::class,
+            'i' => DummyController::class
+        ])->withDefaults(['controller' => 'i']);
+
+        $this->http->defaultRoute($route);
+
+        //Default
+        $result = $this->get('/');
+
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('Hello, Dave.', (string)$result->getBody());
+    }
+
+    public function testControllersRouteExplicit()
+    {
+        $route = new ControllersRoute('controllers', '/[<controller>[/<action>[/<id>]]]');
+
+        $route = $route->withControllers([
+            'm' => MagicController::class,
+            'i' => DummyController::class
+        ])->withDefaults(['controller' => 'i']);
+
+        $this->http->defaultRoute($route);
+
+        //Default
+        $result = $this->get('/i');
+
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('Hello, Dave.', (string)$result->getBody());
     }
 }
