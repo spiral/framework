@@ -19,7 +19,7 @@ abstract class AbstractTimestamp extends \DateTime implements AccessorInterface
     /**
      * @var string
      */
-    const DEFAULT_FORMAT = 'F d, Y H:m';
+    const DEFAULT_FORMAT = 'F d, Y H:i';
 
     /**
      * @var \DateTimeInterface
