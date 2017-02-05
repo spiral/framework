@@ -4,6 +4,7 @@
  *
  * @author    Wolfy-J
  */
+
 namespace Spiral\Http;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -40,15 +41,9 @@ class RESTfulCore implements CoreInterface, SingletonInterface
         array $parameters = [],
         array $scope = []
     ) {
-        if (empty($scope[Request::class])) {
+        if (empty($scope[Request::class]) || !$scope[Request::class] instanceof Request) {
             throw new RESTfulException(
-                "RESTful core can only work in a proper http core, Request class is missing"
-            );
-        }
-
-        if (!$scope[Request::class] instanceof Request) {
-            throw new RESTfulException(
-                "RESTful core can only work in a proper http core, invalid Request scope"
+                "RESTful core can only work in a proper http core, Request class is missing or invalid"
             );
         }
 
@@ -69,7 +64,7 @@ class RESTfulCore implements CoreInterface, SingletonInterface
      *
      * @return string
      */
-    protected function defineAction(Request $request, array $parameters, string $action)
+    protected function defineAction(Request $request, array $parameters, string $action = null)
     {
         //methodAction [putPost, getPost]
         return strtolower($request->getMethod()) . ucfirst($action);
