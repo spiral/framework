@@ -46,7 +46,7 @@ abstract class AbstractTimestamp extends \DateTime implements AccessorInterface
      */
     public function setValue($data)
     {
-        $this->setTimestamp($this->fetchTimestamp($data));
+        $this->setTimestamp($this->castTimestamp($data, $this->getTimezone()));
     }
 
     /**
