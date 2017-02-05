@@ -46,6 +46,26 @@ class RESTfulCoreTest extends HttpTest
         $this->assertSame("getPost:{\"action\":\"post\"}", $result->getBody()->__toString());
     }
 
+    public function testRestfulRouteGetWithActionAndId()
+    {
+        $route = new Route(
+            'resful',
+            '/[<action>[/<id>]]',
+            "TestApplication\\Controllers\\MagicController::<action>"
+        );
+
+        $route = $route->withCore(RESTfulCore::class);
+
+        $this->http->addRoute($route);
+
+        $result = $this->get('/topic/12');
+
+        $this->assertSame(
+            "getTopic:{\"action\":\"topic\",\"id\":\"12\"}",
+            $result->getBody()->__toString()
+        );
+    }
+
     public function testRestfulRoutePost()
     {
         $route = new Route(
