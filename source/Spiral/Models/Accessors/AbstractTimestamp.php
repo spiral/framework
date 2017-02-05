@@ -33,9 +33,10 @@ abstract class AbstractTimestamp extends \DateTime implements AccessorInterface
     public function __construct($value, array $context)
     {
         //Datetime accessor default timezone is same as currently in application
-        parent::__construct(
-            "@" . $this->fetchTimestamp($value)
-        );
+        parent::__construct("@{$this->fetchTimestamp($value)}");
+
+        //Ensure that timestamp in default application timezone
+        $this->setTimezone(new \DateTimeZone(date_default_timezone_get()));
 
         $this->initial = clone $this;
     }
