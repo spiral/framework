@@ -72,7 +72,7 @@ class NativeView extends Component implements ViewInterface
             ob_end_clean();
 
             //Wrapping exception
-            throw new RenderException($e->getMessage(), $e->getCode(), $e);
+            throw new RenderException($e);
         } finally {
             //Closing all nested buffers
             while (ob_get_level() > $__outputLevel__) {
