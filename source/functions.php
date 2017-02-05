@@ -27,19 +27,19 @@ if (!function_exists('spiral')) {
     }
 }
 
-if (!function_exists('wire')) {
+if (!function_exists('bind')) {
     /**
      * Shortcut to container Autowire definition.
      *
      * Example:
-     * 'name' => wire(SomeClass::name, [...])
+     * 'name' => bind(SomeClass::name, [...])
      *
      * @param string $alias Class name or alias.
      * @param array  $parameters
      *
      * @return \Spiral\Core\Container\Autowire
      */
-    function wire(string $alias, array $parameters = [])
+    function bind(string $alias, array $parameters = [])
     {
         return new \Spiral\Core\Container\Autowire($alias, $parameters);
     }
