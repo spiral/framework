@@ -33,7 +33,7 @@ class BasePathTest extends HttpTest
         $this->http->defaultRoute(new Route('default', '/abc', DummyController::class . ':index'));
 
         $route = $this->http->getRouter()->getRoute('default');
-        $this->assertSame('/prefix', $route->getPrefix());
+        $this->assertSame('/prefix/', $route->getPrefix());
     }
 
     /**

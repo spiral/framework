@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Tests\Http\Routing;
 
 use Spiral\Core\Containers\SpiralContainer;
@@ -34,6 +35,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new Router(new SpiralContainer(), '/prefix');
         $router->addRoute(new Route('test', '/', 'abc'));
 
-        $this->assertEquals('/prefix', $router->getRoute('test')->getPrefix());
+        $this->assertEquals('/prefix/', $router->getRoute('test')->getPrefix());
+    }
+
+    public function testDefaultPrefix()
+    {
+        $router = new Router(new SpiralContainer(), '/');
+        $router->addRoute(new Route('test', '/', 'abc'));
+
+        $this->assertEquals('/', $router->getRoute('test')->getPrefix());
     }
 }
