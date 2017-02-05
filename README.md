@@ -112,18 +112,6 @@ $app = new Application();
 $app->any('/spiral', SpiralApp::init(...)->http);
 ```
 
-StorageManager with deep PSR-7 streams integration:
-
-```php
-public function downloadAction()
-{
-    return $this->responses->attachment(
-        $this->storage->open('cloud:filename.txt'), 
-        'filename.txt'
-    );
-}
-```
-
 ORM with adaptive scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
