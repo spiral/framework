@@ -17,7 +17,6 @@ class KeyCommandTest extends BaseTest
     {
         $environment = new DotenvEnvironment(
             directory('root') . '.env',
-            $this->files,
             new NullMemory()
         );
 
@@ -27,7 +26,6 @@ class KeyCommandTest extends BaseTest
         clearstatcache();
         $newEnvironment = new DotenvEnvironment(
             directory('root') . '.env',
-            $this->files,
             new NullMemory()
         );
 

@@ -41,7 +41,7 @@ class ConfigureCommandTest extends BaseTest
         clearstatcache();
         $newEnvironment = new DotenvEnvironment(
             directory('root') . '.env',
-                new NullMemory()
+            new NullMemory()
         );
 
         $this->assertNotSame(
