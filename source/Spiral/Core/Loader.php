@@ -37,6 +37,13 @@ class Loader extends Component implements SingletonInterface
     private $classes = [];
 
     /**
+     * Indication that loadmap changed.
+     *
+     * @var bool
+     */
+    private $changed = false;
+
+    /**
      * Association between class and it's location.
      *
      * @var array
@@ -118,7 +125,10 @@ class Loader extends Component implements SingletonInterface
 
         spl_autoload_unregister([$this, 'loadClass']);
 
-        $this->memory->saveData($this->name, $this->loadmap);
+        if ($this->changed) {
+            $this->memory->saveData($this->name, $this->loadmap);
+        }
+
         $this->enabled = false;
 
         return $this;
@@ -228,6 +238,7 @@ class Loader extends Component implements SingletonInterface
 
             if (file_exists($filename)) {
                 $this->loadmap[$class] = $this->classes[$class] = $filename;
+                $this->changed = true;
             }
         } catch (\Throwable $e) {
             //Get filename for classes located in PHARs might break reflection
