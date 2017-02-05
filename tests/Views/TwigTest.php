@@ -9,7 +9,7 @@ namespace Spiral\Tests\Views;
 
 use Spiral\Tests\BaseTest;
 use Spiral\Views\Engines\Twig\TwigView;
-use Spiral\Views\Loaders\FileLoader;
+use Spiral\Views\ViewLoader;
 
 class TwigTest extends BaseTest
 {
@@ -39,7 +39,7 @@ class TwigTest extends BaseTest
         $this->assertSame('abc', $this->views->render('isolated'));
 
         $views = $this->views->withLoader(
-            new FileLoader(
+            new ViewLoader(
                 ['default' => [directory('application') . 'alternative/']],
                 $this->files
             )

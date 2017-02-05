@@ -1,28 +1,45 @@
 <?php
 /**
- * spiral
+ * Spiral Framework.
  *
- * @author    Wolfy-J
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
  */
 
 namespace Spiral\Views\Engines\Stempler;
 
 use Spiral\Stempler\LoaderInterface;
 use Spiral\Stempler\StemplerSource;
+use Spiral\Views\Engines\Traits\ProcessorsTrait;
+use Spiral\Views\EnvironmentInterface;
 
 class LoaderBridge implements LoaderInterface
 {
+    use ProcessorsTrait;
+
     /**
-     * @var \Spiral\Views\LoaderInterface
+     * @var LoaderInterface
      */
     private $loader;
 
     /**
-     * @param \Spiral\Views\LoaderInterface $loader
+     * @var EnvironmentInterface
      */
-    public function __construct(\Spiral\Views\LoaderInterface $loader)
-    {
+    private $environment;
+
+    /**
+     * @param EnvironmentInterface          $environment
+     * @param \Spiral\Views\LoaderInterface $loader
+     * @param array                         $processors
+     */
+    public function __construct(
+        EnvironmentInterface $environment,
+        \Spiral\Views\LoaderInterface $loader,
+        array $processors
+    ) {
+        $this->environment = $environment;
         $this->loader = $loader;
+        $this->processors = $processors;
     }
 
     /**
@@ -32,8 +49,11 @@ class LoaderBridge implements LoaderInterface
      */
     public function getSource(string $path): StemplerSource
     {
-        $context = $this->loader->getSource($path);
+        $source = $this->loader->getSource($path);
 
-        return new StemplerSource($context->getFilename(), $context->getCode());
+        return new StemplerSource(
+            $source->getFilename(),
+            $this->processSource($this->environment, $source)->getCode()
+        );
     }
 }

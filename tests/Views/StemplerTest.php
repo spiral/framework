@@ -10,7 +10,7 @@ namespace Spiral\Tests\Views;
 use Spiral\Tests\BaseTest;
 use Spiral\Views\Engines\Stempler\StemplerCache;
 use Spiral\Views\Engines\Stempler\StemplerView;
-use Spiral\Views\Loaders\FileLoader;
+use Spiral\Views\ViewLoader;
 
 class StemplerTest extends BaseTest
 {
@@ -58,7 +58,7 @@ class StemplerTest extends BaseTest
         ]));
 
         $views = $this->views->withLoader(
-            new FileLoader(
+            new ViewLoader(
                 ['default' => [directory('application') . 'alternative/']],
                 $this->files
             )

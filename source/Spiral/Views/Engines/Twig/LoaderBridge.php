@@ -7,6 +7,8 @@
 
 namespace Spiral\Views\Engines\Twig;
 
+use Spiral\Views\Engines\Traits\ProcessorsTrait;
+use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
 
 /**
@@ -14,17 +16,33 @@ use Spiral\Views\LoaderInterface;
  */
 class LoaderBridge implements \Twig_LoaderInterface
 {
+    use ProcessorsTrait;
+
     /**
      * @var \Spiral\Views\LoaderInterface
      */
     private $loader;
 
     /**
-     * @param \Spiral\Views\LoaderInterface $loader
+     * @var \Spiral\Views\EnvironmentInterface
      */
-    public function __construct(LoaderInterface $loader)
-    {
+    private $environment;
+
+    /**
+     * LoaderBridge constructor.
+     *
+     * @param \Spiral\Views\EnvironmentInterface $environment
+     * @param \Spiral\Views\LoaderInterface      $loader
+     * @param array                              $processors
+     */
+    public function __construct(
+        EnvironmentInterface $environment,
+        LoaderInterface $loader,
+        array $processors
+    ) {
+        $this->environment = $environment;
         $this->loader = $loader;
+        $this->processors = $processors;
     }
 
     /**
@@ -32,12 +50,12 @@ class LoaderBridge implements \Twig_LoaderInterface
      */
     public function getSourceContext($name)
     {
-        $context = $this->loader->getSource($name);
+        $source = $this->processSource($this->environment, $this->loader->getSource($name));
 
         return new \Twig_Source(
-            $context->getCode(),
-            $context->getName(),
-            $context->getFilename()
+            $source->getCode(),
+            $source->getName(),
+            $source->getFilename()
         );
     }
 

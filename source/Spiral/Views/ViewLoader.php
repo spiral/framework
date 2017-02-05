@@ -6,23 +6,19 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Views\Loaders;
+namespace Spiral\Views;
 
 use Spiral\Core\Component;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Exceptions\LoaderException;
-use Spiral\Views\LoaderInterface;
-use Spiral\Views\SourceContextInterface;
-use Spiral\Views\ViewsInterface;
-use Spiral\Views\ViewSource;
 
 /**
  * Default views loader is very similar to twig loader (compatible), however it uses different view
  * namespace syntax, can change it's default namespace and force specified file extension. Plus it
  * works over FilesInterface.
  */
-class FileLoader extends Component implements LoaderInterface
+class ViewLoader extends Component implements LoaderInterface
 {
     use BenchmarkTrait;
 
@@ -218,7 +214,7 @@ class FileLoader extends Component implements LoaderInterface
      *
      * @return self
      */
-    protected function flushCache(): FileLoader
+    protected function flushCache(): ViewLoader
     {
         $this->sourceCache = [];
 

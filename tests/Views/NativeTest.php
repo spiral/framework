@@ -9,7 +9,7 @@ namespace Spiral\Tests\Views;
 
 use Spiral\Tests\BaseTest;
 use Spiral\Views\Exceptions\RenderException;
-use Spiral\Views\Loaders\FileLoader;
+use Spiral\Views\ViewLoader;
 
 class NativeTest extends BaseTest
 {
@@ -27,7 +27,7 @@ class NativeTest extends BaseTest
         ]));
 
         $views = $this->views->withLoader(
-            new FileLoader(
+            new ViewLoader(
                 ['default' => [directory('application') . 'alternative/']],
                 $this->files
             )

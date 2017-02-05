@@ -16,7 +16,6 @@ use Spiral\Files\FileManager;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\Configs\ViewsConfig;
 use Spiral\Views\Exceptions\ViewsException;
-use Spiral\Views\Loaders\FileLoader;
 
 /**
  * Provides ability to manage view engines, loaders and environment (cache dependencies).
@@ -78,7 +77,7 @@ class ViewManager extends Component implements ViewsInterface, SingletonInterfac
         $this->container = $container ?? new Container();
 
         //Define engine's behaviour
-        $this->loader = new FileLoader($config->getNamespaces(), $files, $container);
+        $this->loader = new ViewLoader($config->getNamespaces(), $files, $container);
         $this->environment = $this->createEnvironment($config);
     }
 

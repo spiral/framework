@@ -20,7 +20,6 @@ use Spiral\Views\Engines\Stempler\StemplerCache;
 use Spiral\Views\Engines\Stempler\StemplerView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
-use Spiral\Views\Loaders\ModifiableLoader;
 use Spiral\Views\ProcessorInterface;
 use Spiral\Views\ViewInterface;
 use Spiral\Views\ViewSource;
@@ -230,8 +229,6 @@ class StemplerEngine extends AbstractEngine
             }
         }
 
-        return new LoaderBridge(
-            new ModifiableLoader($this->environment, $this->loader, $processors)
-        );
+        return new LoaderBridge($this->environment, $this->loader, $processors);
     }
 }

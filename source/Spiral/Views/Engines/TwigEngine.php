@@ -225,9 +225,7 @@ class TwigEngine extends AbstractEngine
             }
         }
 
-        return new LoaderBridge(
-            new ModifiableLoader($this->environment, $this->loader, $modifiers)
-        );
+        return new LoaderBridge($this->environment, $this->loader, $modifiers);
     }
 
     /**
