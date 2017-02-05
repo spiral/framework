@@ -3,7 +3,16 @@ CHANGELOG for 0.9.0 RC
 
 0.9.0 (05.02.2017)
 -----
-**General**
+**Framework**
+  * Dropped support of PHP5+
+  * Added secure session implementation
+  * Code coverage improvements
+  * Twig updated to 2.0 branch
+  * PHPUnit updated to 5.0 branch
+  * Components split into separate repositories
+  * Symfony dependencies updated to 3.0 branch
+
+**Common**
   * Dropped support of PHP5+
   * Code coverage improvements
   * Cache component removed (replaced with PSR-16)
