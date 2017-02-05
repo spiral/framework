@@ -79,6 +79,12 @@ class EnvironmentTest extends BaseTest
         $this->assertNotSame($this->app->getEnvironment()->getID(), $environment->getID());
     }
 
+    public function testLoadWithoutFileExists()
+    {
+        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.missing', $this->memory);
+        $this->assertNotSame($this->app->getEnvironment()->getID(), $environment->getID());
+    }
+
     public function testSetAndGet()
     {
         unset($_ENV['TEST']);

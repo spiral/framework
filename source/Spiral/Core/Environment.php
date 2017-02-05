@@ -15,7 +15,7 @@ class Environment implements EnvironmentInterface
     /**
      * @var string
      */
-    private $id = '';
+    protected $id = '';
 
     /**
      * @var array
@@ -35,6 +35,10 @@ class Environment implements EnvironmentInterface
      */
     public function getID(): string
     {
+        if (empty($this->id)) {
+            $this->id = md5(serialize($this->values));
+        }
+
         return $this->id;
     }
 
@@ -69,7 +73,6 @@ class Environment implements EnvironmentInterface
     protected function load()
     {
         $this->values = $_ENV;
-        $this->id = md5(serialize($this->values));
     }
 
     /**
@@ -101,5 +104,4 @@ class Environment implements EnvironmentInterface
 
         return $value;
     }
-
 }

@@ -32,11 +32,6 @@ class DotenvEnvironment extends Environment
     private $filename = '';
 
     /**
-     * @var string
-     */
-    private $id = '';
-
-    /**
      * @invisible
      * @var MemoryInterface|null
      */
@@ -79,11 +74,13 @@ class DotenvEnvironment extends Environment
     protected function load()
     {
         if (!file_exists($this->filename)) {
+            parent::load();
+
             //Nothing to load
             return;
         }
 
-        //Unique env file hash
+        //Out env id is based on .env file content
         $this->id = md5_file($this->filename);
 
         if (
@@ -96,10 +93,9 @@ class DotenvEnvironment extends Environment
             return;
         }
 
-        //Load env values using DotEnv extension
-        $values = $this->initEnvironment(
-            $this->parseValues($this->filename)
-        );
+        //Load env variables from filename
+        $values = array_merge($this->parseValues($this->filename), $_ENV);
+        $this->initEnvironment($values);
 
         if (!empty($this->memory)) {
             $this->memory->saveData(static::MEMORY . '.' . $this->id, $values);
