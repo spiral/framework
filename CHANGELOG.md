@@ -1,6 +1,14 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+0.9.1 (05.02.2017)
+-----
+**Encrypter**
+  * Proper exception when encryption key is invalid
+  
+**Session**
+  * Session does not force session id in cookie when session not started
+
 0.9.0 (05.02.2017)
 -----
 **Framework**
