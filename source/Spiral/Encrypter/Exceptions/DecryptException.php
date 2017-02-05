@@ -8,12 +8,10 @@
 
 namespace Spiral\Encrypter\Exceptions;
 
-use Spiral\Core\Exceptions\RuntimeException;
-
 /**
  * Error while data decryption.
  */
-class DecryptException extends RuntimeException
+class DecryptException extends EncrypterException
 {
 
 }

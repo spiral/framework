@@ -5,14 +5,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Encrypter\Exceptions;
 
-use Spiral\Core\Exceptions\RuntimeException;
+namespace Spiral\Encrypter\Exceptions;
 
 /**
  * Error while data encryption.
  */
-class EncryptException extends RuntimeException
+class EncryptException extends EncrypterException
 {
 
 }
