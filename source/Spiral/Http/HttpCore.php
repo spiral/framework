@@ -126,7 +126,8 @@ class HttpCore extends Component implements HttpInterface
     }
 
     /**
-     * Run as middleware.
+     * Run as middleware. Attention, make sure you do NOT have ExceptionWrapper enabled as it will
+     * write 404 error page into response.
      *
      * @param Request  $request
      * @param Response $response
@@ -139,20 +140,16 @@ class HttpCore extends Component implements HttpInterface
     public function __invoke(Request $request, Response $response, callable $next): Response
     {
         try {
-            $response = $this->perform($request, $response);
+            return $this->perform($request, $response);
         } catch (ClientException $e) {
-            if ($e->getCode() != 404) {
-                //Server, forbidden and other exceptions
-                throw new $e;
+            if ($e->getCode() == 404) {
+                //Not found exception, passing control to next middleware
+                return $next($request, $response);
             }
-        }
 
-        if (!empty($response) && $response->getStatusCode() != 404) {
-            //Not empty response
-            return $response;
+            //Server, forbidden and other exceptions
+            throw new $e;
         }
-
-        return $next($request, $response);
     }
 
     /**
