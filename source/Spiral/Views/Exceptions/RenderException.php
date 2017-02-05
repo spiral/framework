@@ -16,10 +16,10 @@ class RenderException extends ViewsException
     /**
      * {@inheritdoc}
      */
-    public function __construct(\Exception $previous = null)
+    public function __construct(\Throwable $previous = null)
     {
         parent::__construct($previous->getMessage(), $previous->getCode(), $previous);
-        $this->file = $previous->file;
-        $this->line = $previous->line;
+        $this->file = $previous->getFile();
+        $this->line = $previous->getLine();
     }
 }
