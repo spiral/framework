@@ -5,51 +5,35 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Session\Handlers;
 
-use Spiral\Core\Component;
-use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Files\FilesInterface;
 
 /**
  * Stores session data in file.
  */
-class FileHandler extends Component implements \SessionHandlerInterface
+class FileHandler implements \SessionHandlerInterface
 {
     /**
-     * Additional constructor arguments.
+     * @var FilesInterface
      */
-    use SaturateTrait;
+    protected $files;
 
     /**
      * @var string
      */
-    protected $location = '';
+    protected $directory = '';
 
     /**
-     * @var FilesInterface
-     */
-    protected $files = null;
-
-    /**
-     * @param array          $options  Session handler options.
+     * @param FilesInterface $files
+     * @param string         $directory
      * @param int            $lifetime Default session lifetime.
-     * @param FilesInterface $files
      */
-    public function __construct(array $options, $lifetime = 0, FilesInterface $files = null)
-    {
-        $this->location = $options['directory'];
-
-        //Global container as fallback
-        $this->files = $this->saturate($files, FilesInterface::class);
-    }
-
-    /**
-     * @param FilesInterface $files
-     */
-    public function init(FilesInterface $files)
+    public function __construct(FilesInterface $files, string $directory, int $lifetime = 0)
     {
         $this->files = $files;
+        $this->directory = $directory;
     }
 
     /**
@@ -73,7 +57,7 @@ class FileHandler extends Component implements \SessionHandlerInterface
      */
     public function gc($maxlifetime)
     {
-        foreach ($this->files->getFiles($this->location) as $filename) {
+        foreach ($this->files->getFiles($this->directory) as $filename) {
             if ($this->files->time($filename) < time() - $maxlifetime) {
                 $this->files->delete($filename);
             }
@@ -95,7 +79,7 @@ class FileHandler extends Component implements \SessionHandlerInterface
     {
         return $this->files->exists($this->getFilename($session_id))
             ? $this->files->read($this->getFilename($session_id))
-            : false;
+            : '';
     }
 
     /**
@@ -115,10 +99,11 @@ class FileHandler extends Component implements \SessionHandlerInterface
      * Session data filename.
      *
      * @param string $session_id
+     *
      * @return string
      */
     protected function getFilename($session_id)
     {
-        return $this->location . FilesInterface::SEPARATOR . $session_id;
+        return "{$this->directory}/{$session_id}";
     }
 }

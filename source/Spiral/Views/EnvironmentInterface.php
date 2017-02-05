@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views;
 
 use Spiral\Views\Exceptions\EnvironmentException;
@@ -20,35 +21,40 @@ interface EnvironmentInterface
      *
      * @return bool
      */
-    public function cachable();
+    public function isCachable(): bool;
 
     /**
      * @return string
      */
-    public function cacheDirectory();
+    public function cacheDirectory(): string;
 
     /**
-     * New dependency.
+     * Create environment with new binded dependency. Must not affect existed environment
+     * dependencies.
      *
      * @param string   $dependency
      * @param callable $source
+     *
+     * @return self
+     *
      * @throws EnvironmentException
      */
-    public function addDependency($dependency, callable $source);
+    public function withDependency(string $dependency, callable $source): self;
 
     /**
      * Get calculated dependency value.
      *
      * @param string $dependency
+     *
      * @return mixed
      * @throws EnvironmentException
      */
-    public function getValue($dependency);
+    public function getValue(string $dependency);
 
     /**
      * Calculated environment id based on all dependencies.
      *
      * @return string
      */
-    public function getID();
+    public function getID(): string;
 }

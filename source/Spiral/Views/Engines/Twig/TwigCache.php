@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Engines\Twig;
 
 use Spiral\Files\FilesInterface;
@@ -26,8 +27,6 @@ class TwigCache implements \Twig_CacheInterface
     protected $environment = null;
 
     /**
-     * TwigCache constructor.
-     *
      * @param FilesInterface       $files
      * @param EnvironmentInterface $environment
      */
@@ -44,7 +43,7 @@ class TwigCache implements \Twig_CacheInterface
     {
         $hash = hash('md5', $className . '.' . $this->environment->getID());
 
-        return $this->environment->cacheDirectory() . '/' . $hash[0] . $hash[1] . '/' . $hash . '.php';
+        return "{$this->environment->cacheDirectory()}/{$hash}.php";
     }
 
     /**
@@ -52,7 +51,12 @@ class TwigCache implements \Twig_CacheInterface
      */
     public function write($key, $content)
     {
-        $this->files->write($key, $content, FilesInterface::RUNTIME, true);
+        $this->files->write(
+            $key,
+            $content,
+            FilesInterface::RUNTIME,
+            true
+        );
     }
 
     /**
@@ -61,7 +65,7 @@ class TwigCache implements \Twig_CacheInterface
     public function load($key)
     {
         if ($this->files->exists($key)) {
-            include_once $this->files->localUri($key);
+            include_once $this->files->localFilename($key);
         }
     }
 

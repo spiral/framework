@@ -1,108 +1,91 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Models\Accessors;
 
-use Spiral\Database\DatabaseManager;
-use Spiral\Database\Entities\Driver;
-use Spiral\Models\Accessors\Prototypes\AbstractTimestamp;
-use Spiral\Models\EntityInterface;
-use Spiral\ORM\Record;
+use Spiral\Models\Exceptions\AccessorException;
+use Spiral\ORM\ORMInterface;
 use Spiral\ORM\RecordAccessorInterface;
 
 /**
- * ORM record accessor used to mock database timestamps and date field using Carbon class. Field
- * timezone automatically resolved using default database timezone specified in database provider.
+ * Field to timestamp accessor for ORM Records. Automatically fetches database timezone and caches
+ * it.
  */
 class SqlTimestamp extends AbstractTimestamp implements RecordAccessorInterface
 {
     /**
-     * @invisible
-     * @var Record
-     */
-    protected $parent = null;
-
-    /**
-     * Original value.
+     * Cached list of record timezones.
      *
-     * @var mixed
+     * @var array
      */
-    protected $original = null;
+    private static $recordTimezones = [];
+
+    /**
+     * @var \DateTimeZone
+     */
+    private $sourceTimezone;
+
+    /**
+     * @param string $value
+     * @param array  $context
+     */
+    public function __construct($value, array $context)
+    {
+        $this->sourceTimezone = $this->fetchSourceTimezone($context);
+        parent::__construct($value, $context);
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function __construct($data = null, EntityInterface $parent = null)
+    protected function fetchTimestamp($value): int
     {
-        $this->parent = $parent;
-        if ($data instanceof \DateTime) {
-            parent::__construct(null, DatabaseManager::DEFAULT_TIMEZONE);
-            $this->setTimestamp($data->getTimestamp());
-        } else {
-            parent::__construct($data, DatabaseManager::DEFAULT_TIMEZONE);
+        return $this->castTimestamp($value, $this->sourceTimezone) ?? 0;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return \DateTimeInterface
+     */
+    public function compileUpdates(string $field = '')
+    {
+        return $this->packValue();
+    }
+
+    /**
+     * Must locate source timezone, but default checks cache and then performs fallback to
+     * Driver based check.
+     *
+     * @param array $context
+     *
+     * @return \DateTimeZone
+     */
+    private function fetchSourceTimezone(array $context): \DateTimeZone
+    {
+        if (empty($context['entity']) || empty($context['orm'])) {
+            throw new AccessorException("Invalid accessor context, expected [entity, orm]");
         }
 
-        if ($this->getTimestamp() === false) {
-            //Correcting default values
-            $this->setTimestamp(0);
+        $class = get_class($context['entity']);
+
+        if (!empty(self::$recordTimezones[$class])) {
+            //Found in static cache
+            return self::$recordTimezones[$class];
         }
 
-        $this->original = $this->getTimestamp();
-    }
+        $orm = $context['orm'];
+        if (!$orm instanceof ORMInterface) {
+            throw new AccessorException("Invalid accessor context, ORMInterface expected");
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function embed(EntityInterface $parent)
-    {
-        $accessor = clone $this;
-        $accessor->original = -1;
-        $accessor->parent = $parent;
-
-        return $accessor;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serializeData()
-    {
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function defaultValue(Driver $driver)
-    {
-        return $driver::DEFAULT_DATETIME;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasUpdates()
-    {
-        return $this->original != $this->getTimestamp();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function flushUpdates()
-    {
-        $this->original = $this->getTimestamp();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function compileUpdates($field = '')
-    {
-        return $this;
+        //Timezone thought driver
+        return $orm->database(
+            $orm->define($class, ORMInterface::R_DATABASE)
+        )->getDriver()->getTimezone();
     }
 }

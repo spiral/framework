@@ -1,86 +1,93 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Engines;
 
-use Spiral\Core\Component;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\ContainerInterface;
-use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EngineInterface;
-use Spiral\Views\Engines\Traits\ModifiersTrait;
-use Spiral\Views\Engines\Twig\Exceptions\SyntaxException;
+use Spiral\Views\Engines\Prototypes\AbstractEngine;
+use Spiral\Views\Engines\Twig\Exceptions\CompileException;
+use Spiral\Views\Engines\Twig\LoaderBridge;
 use Spiral\Views\Engines\Twig\TwigCache;
 use Spiral\Views\Engines\Twig\TwigView;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
 use Spiral\Views\Loaders\ModifiableLoader;
+use Spiral\Views\ViewInterface;
 
 /**
  * Wraps and control twig engine.
  */
-class TwigEngine extends Component implements EngineInterface
+class TwigEngine extends AbstractEngine
 {
-    /**
-     * Saturation of files.
-     */
-    use SaturateTrait, BenchmarkTrait, ModifiersTrait;
+    use BenchmarkTrait;
 
     /**
-     * @var LoaderInterface
+     * @var array
      */
-    protected $loader = null;
+    private $extensions = [];
 
     /**
-     * List of twig extensions.
+     * @var array
+     */
+    private $options = [];
+
+    /**
+     * Set of class names (processors) to be applied to view sources befor giving it to Twig.
      *
      * @var array
      */
-    protected $extensions = [];
+    protected $modifiers = [];
 
     /**
      * @var \Twig_Environment
      */
-    protected $twig = null;
+    protected $twig;
 
     /**
      * @var FilesInterface
      */
-    protected $files = null;
+    protected $files;
 
     /**
-     * @param LoaderInterface      $loader
-     * @param EnvironmentInterface $environment
-     * @param FilesInterface       $files
-     * @param ContainerInterface   $container
-     * @param array                $modifiers
-     * @param array                $extensions
-     * @param array                $options
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * TwigEngine constructor.
+     *
+     * @param EnvironmentInterface    $environment
+     * @param LoaderInterface         $loader
+     * @param FilesInterface|null     $files
+     * @param ContainerInterface|null $container
+     * @param array                   $modifiers
+     * @param array                   $extensions
+     * @param array                   $options
      */
     public function __construct(
-        LoaderInterface $loader,
         EnvironmentInterface $environment,
+        LoaderInterface $loader,
         FilesInterface $files = null,
         ContainerInterface $container = null,
         array $modifiers = [],
         array $extensions = [],
         array $options = []
     ) {
-        $this->twig = new \Twig_Environment($loader, $options);
-        $this->container = $this->saturate($container, ContainerInterface::class);
-        $this->files = $this->saturate($files, FilesInterface::class);
-
-        $this->setEnvironment($environment);
+        parent::__construct($environment, $loader);
+        $this->container = $container;
+        $this->files = $files;
         $this->modifiers = $modifiers;
-        $this->extensions = $extensions;
-        $this->setLoader($loader);
 
-        $this->configure($this->twig);
+        $this->extensions = $extensions;
+        $this->options = $options;
     }
 
     /**
@@ -88,24 +95,29 @@ class TwigEngine extends Component implements EngineInterface
      *
      * @return \Twig_Environment
      */
-    public function twig()
+    public function getTwig()
     {
+        if (empty($this->twig)) {
+            $this->twig = $this->makeTwig();
+        }
+
         return $this->twig;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws SyntaxException
+     * @throws CompileException
      */
-    public function get($path)
+    public function get(string $path): ViewInterface
     {
         $benchmark = $this->benchmark('load', $path);
+
         try {
-            return $this->twig->loadTemplate($path);
+            return new TwigView($this->getTwig()->load($path));
         } catch (\Twig_Error_Syntax $exception) {
             //Let's clarify exception location
-            throw SyntaxException::fromTwig($exception, $this->loader);
+            throw CompileException::fromTwig($exception);
         } finally {
             $this->benchmark($benchmark);
         }
@@ -114,7 +126,7 @@ class TwigEngine extends Component implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function render($path, array $context = [])
+    public function render(string $path, array $context = []): string
     {
         $benchmark = $this->benchmark('render', $path);
         try {
@@ -127,19 +139,32 @@ class TwigEngine extends Component implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function compile($path, $reset = false)
+    public function compile(string $path, bool $reset = false)
     {
         if ($reset) {
-            $cache = $this->twig->getCache();
-            $this->twig->setCache(false);
+            $this->getTwig()->setCache(false);
         }
 
+        //This must force twig to compile template
         $this->get($path);
-
         if ($reset && !empty($cache)) {
             //Restoring cache
-            $this->twig->setCache($cache);
+            $this->twig->setCache($this->makeCache());
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withLoader(LoaderInterface $loader): EngineInterface
+    {
+        /**
+         * @var self $engine
+         */
+        $engine = parent::withLoader($loader);
+        $engine->twig = $engine->makeTwig();
+
+        return $engine;
     }
 
     /**
@@ -147,55 +172,73 @@ class TwigEngine extends Component implements EngineInterface
      *
      * @return $this
      */
-    public function setLoader(LoaderInterface $loader)
+    public function withEnvironment(EnvironmentInterface $environment): EngineInterface
     {
-        if (!empty($this->modifiers)) {
-            //Let's prepare source before giving it to Stempler
-            //todo: make sure not used until needed?
-            $loader = new ModifiableLoader($loader, $this->getModifiers());
-        }
+        /**
+         * @var self $engine
+         */
+        $engine = parent::withEnvironment($environment);
+        $engine->twig = $engine->makeTwig();
 
-        $this->twig->setLoader($this->loader = $loader);
-
-        return $this;
+        return $engine;
     }
 
     /**
-     * {@inheritdoc}
+     * Initiate twig environment.
      *
-     * @return $this
-     */
-    public function setEnvironment(EnvironmentInterface $environment)
-    {
-        $this->environment = $environment;
-        if (!$environment->cachable()) {
-            $this->twig->setCache(false);
-
-            return $this;
-        }
-
-        $this->twig->setCache(new TwigCache($this->files, $environment));
-
-        return $this;
-    }
-
-    /**
-     * Configure twig environment.
-     *
-     * @param \Twig_Environment $environment
      * @return \Twig_Environment
      */
-    protected function configure(\Twig_Environment $environment)
+    protected function makeTwig(): \Twig_Environment
     {
-        $environment->setBaseTemplateClass(TwigView::class);
+        //Initiating Twig Environment
+        $twig = $this->container->make(\Twig_Environment::class, [
+            'loader'  => $this->makeLoader(),
+            'options' => $this->options
+        ]);
 
-        /**
-         * Registering extensions.
-         */
+        $twig->setCache($this->makeCache());
+
         foreach ($this->extensions as $extension) {
-            $environment->addExtension($this->container->get($extension));
+            //Each extension can be delivered thought container
+            $twig->addExtension($this->container->get($extension));
         }
 
-        return $environment;
+        $twig->setLoader($this->makeLoader());
+
+        return $twig;
+    }
+
+    /**
+     * In most of cases twig will get view processors to be executed before twig itself, to run
+     * such processors we need special wrapper at top of environment.
+     *
+     * @return \Twig_LoaderInterface
+     */
+    private function makeLoader(): \Twig_LoaderInterface
+    {
+        $modifiers = [];
+        foreach ($this->modifiers as $modifier) {
+            if (!is_object($modifier) || $modifier instanceof Autowire) {
+                $modifiers[] = $this->container->get($modifier);
+            } else {
+                $modifiers[] = $modifier;
+            }
+        }
+
+        return new LoaderBridge(
+            new ModifiableLoader($this->environment, $this->loader, $modifiers)
+        );
+    }
+
+    /**
+     * @return bool|TwigCache
+     */
+    private function makeCache()
+    {
+        if (!$this->environment->isCachable()) {
+            return false;
+        }
+
+        return new TwigCache($this->files, $this->environment);
     }
 }

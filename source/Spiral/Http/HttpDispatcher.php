@@ -1,34 +1,42 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Http;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\DispatcherInterface;
 use Spiral\Debug\SnapshotInterface;
+use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Exceptions\ClientExceptions\ServerErrorException;
 use Spiral\Http\Traits\RouterTrait;
-use Spiral\Views\ViewsInterface;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Basic spiral Http Dispatcher implementation. Used for web based applications and can route
  * requests to controllers or custom endpoints.
  *
- * HttpDispatcher, it's endpoing can be replaced on application level with any other
+ * HttpDispatcher, it's endpoint can be replaced on application level with any other
  * implementation.
  */
 class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonInterface
 {
-    use RouterTrait;
+    use RouterTrait, BenchmarkTrait;
+
+    /**
+     * Initial dispatcher request, used to track exceptions.
+     *
+     * @var ServerRequestInterface
+     */
+    private $request = null;
 
     /**
      * @var HttpConfig
@@ -39,11 +47,15 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      * @param HttpConfig         $config
      * @param ContainerInterface $container
      */
-    public function __construct(HttpConfig $config, ContainerInterface $container)
+    public function __construct(HttpConfig $config, ContainerInterface $container = null)
     {
         $this->config = $config;
 
-        parent::__construct($container, $config->defaultMiddlewares(), $config->defaultEndpoint());
+        parent::__construct(
+            $config->defaultEndpoint(),
+            $config->defaultMiddlewares(),
+            $container ?? new Container()
+        );
     }
 
     /**
@@ -51,7 +63,7 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      *
      * @return string
      */
-    public function basePath()
+    public function basePath(): string
     {
         return $this->config->basePath();
     }
@@ -63,8 +75,8 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     {
         //Now we can generate response using request
         $response = $this->perform(
-            $this->request(),
-            $this->response()
+            $this->request = $this->initRequest(),
+            $this->initResponse()
         );
 
         if (!empty($response)) {
@@ -78,16 +90,20 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
      */
     public function handleSnapshot(SnapshotInterface $snapshot)
     {
-        //Somewhere outside of dispatcher
-        $request = $this->request();
-        $response = $this->response();
-
-        $writer = $this->container->get(ErrorWriter::class);
-
         if (!$this->config->exposeErrors()) {
-            $response = $writer->writeException($request, $response, new ServerErrorException());
+            //Standard 500 error page
+            $response = $this->errorWriter()->writeException(
+                $this->request ?? $this->initRequest(),
+                $this->initResponse(),
+                new ServerErrorException()
+            );
         } else {
-            $response = $writer->writeSnapshot($request, $response, $snapshot);
+            //Rendering details about exception
+            $response = $this->errorWriter()->writeSnapshot(
+                $this->request ?? $this->initRequest(),
+                $this->initResponse(),
+                $snapshot
+            );
         }
 
         $this->dispatch($response);
@@ -96,11 +112,11 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * Get initial request instance or create new one.
      *
-     * @return Request
+     * @return ServerRequestInterface
      */
-    protected function request()
+    protected function initRequest(): ServerRequestInterface
     {
-        $benchmark = $this->benchmark('new:request');
+        $benchmark = $this->benchmark('init:request');
         try {
             /**
              * @see \Zend\Diactoros\ServerRequestFactory
@@ -114,11 +130,11 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * {@inheritdoc}
      */
-    protected function response()
+    protected function initResponse(): ResponseInterface
     {
-        $benchmark = $this->benchmark('new:response');
+        $benchmark = $this->benchmark('init:response');
         try {
-            $response = parent::response();
+            $response = parent::initResponse();
             foreach ($this->config->defaultHeaders() as $header => $value) {
                 $response = $response->withHeader($header, $value);
             }
@@ -132,15 +148,15 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     /**
      * {@inheritdoc}
      */
-    protected function endpoint()
+    protected function getEndpoint()
     {
-        if (!empty($endpoint = parent::endpoint())) {
+        if (!empty($endpoint = parent::getEndpoint())) {
             //Endpoint specified by user
             return $endpoint;
         }
 
         //We are using router as default endpoint
-        return $this->router();
+        return $this->getRouter();
     }
 
     /**
@@ -150,7 +166,17 @@ class HttpDispatcher extends HttpCore implements DispatcherInterface, SingletonI
     {
         return $this->container->make(
             $this->config->routerClass(),
-            $this->config->routerParameters()
+            $this->config->routerOptions()
         );
+    }
+
+    /**
+     * Instance of ErrorWriter.
+     *
+     * @return ErrorWriter
+     */
+    protected function errorWriter(): ErrorWriter
+    {
+        return $this->container->get(ErrorWriter::class);
     }
 }

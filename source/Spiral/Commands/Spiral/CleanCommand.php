@@ -19,12 +19,12 @@ class CleanCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'app:clean';
+    const NAME = 'app:clean';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Clean application runtime cache';
+    const DESCRIPTION = 'Clean application runtime cache';
 
     /**
      * @param FilesInterface       $files

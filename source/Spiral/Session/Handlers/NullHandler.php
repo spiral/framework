@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Session\Handlers;
 
 /**
@@ -49,7 +50,7 @@ class NullHandler implements \SessionHandlerInterface
      */
     public function read($session_id)
     {
-        return true;
+        return '';
     }
 
     /**

@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Bootloaders\BootloaderInterface;
@@ -29,18 +30,28 @@ class BootloadManager
 
     /**
      * @invisible
-     * @var HippocampusInterface
+     * @var MemoryInterface
      */
     protected $memory = null;
 
     /**
-     * @param ContainerInterface   $container
-     * @param HippocampusInterface $memory
+     * @param ContainerInterface $container
+     * @param MemoryInterface    $memory
      */
-    public function __construct(ContainerInterface $container, HippocampusInterface $memory)
+    public function __construct(ContainerInterface $container, MemoryInterface $memory)
     {
         $this->container = $container;
         $this->memory = $memory;
+    }
+
+    /**
+     * Get bootloaded classes.
+     *
+     * @return array
+     */
+    public function getClasses(): array
+    {
+        return $this->classes;
     }
 
     /**
@@ -50,12 +61,13 @@ class BootloadManager
      * @param string|null $memory Memory section to be used for caching, set to null to disable
      *                            caching.
      */
-    public function bootload(array $classes, $memory = null)
+    public function bootload(array $classes, string $memory = null)
     {
         if (!empty($memory)) {
             $schema = $this->memory->loadData($memory);
         }
 
+        //Checks if cached schema matches to booted services
         if (empty($schema) || $schema['snapshot'] != $classes) {
             //Schema expired or empty
             $schema = $this->generateSchema($classes, $this->container);
@@ -68,17 +80,7 @@ class BootloadManager
         }
 
         //We can initiate schema thought the cached schema
-        $this->schematicBootload($this->container, $schema);
-    }
-
-    /**
-     * Get bootloaded classes.
-     *
-     * @return array
-     */
-    public function getClasses()
-    {
-        return $this->classes;
+        $this->bootSchema($this->container, $schema);
     }
 
     /**
@@ -87,7 +89,7 @@ class BootloadManager
      * @param ContainerInterface $container
      * @param array              $schema
      */
-    protected function schematicBootload(ContainerInterface $container, array $schema)
+    protected function bootSchema(ContainerInterface $container, array $schema)
     {
         foreach ($schema['bootloaders'] as $bootloader => $options) {
             $this->classes[] = $bootloader;
@@ -99,8 +101,8 @@ class BootloadManager
             if ($options['init']) {
                 $object = $container->get($bootloader);
 
-                //Booting
                 if ($options['boot']) {
+                    //Booting
                     $boot = new \ReflectionMethod($object, 'boot');
                     $boot->invokeArgs($object, $container->resolveArguments($boot));
                 }
@@ -113,9 +115,10 @@ class BootloadManager
      *
      * @param array              $classes
      * @param ContainerInterface $container
+     *
      * @return array
      */
-    protected function generateSchema(array $classes, ContainerInterface $container)
+    protected function generateSchema(array $classes, ContainerInterface $container): array
     {
         $schema = [
             'snapshot'    => $classes,

@@ -5,20 +5,24 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;
-use Spiral\Core\Exceptions\Container\ContainerException;
 
 /**
  * Spiral IoC container interface. Used to resolve dependencies and etc.
  *
- * @todo different name?
+ * @see  InjectorInterface
+ * @see  SingletonInterface
  *
- * @see InjectorInterface
- * @see SingletonInterface
+ * Factory, Recolver and Scoper interfaces MIGHT be removed from extends in a later versions.
  */
-interface ContainerInterface extends FactoryInterface, ResolverInterface, InteropContainer
+interface ContainerInterface extends
+    FactoryInterface,
+    ResolverInterface,
+    InteropContainer,
+    ScoperInterface
 {
     /**
      * Bind value resolver to container alias. Resolver can be class name (will be constructed
@@ -28,7 +32,7 @@ interface ContainerInterface extends FactoryInterface, ResolverInterface, Intero
      * @param string                $alias
      * @param string|array|callable $resolver
      */
-    public function bind($alias, $resolver);
+    public function bind(string $alias, $resolver);
 
     /**
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
@@ -37,39 +41,19 @@ interface ContainerInterface extends FactoryInterface, ResolverInterface, Intero
      * @param string                $alias
      * @param string|array|callable $resolver
      */
-    public function bindSingleton($alias, $resolver);
-
-    /**
-     * Replace existed binding and return payload (implementation specific data) of previous
-     * binding, previous binding can be restored using restore() method and such payload.
-     *
-     * @see restore()
-     * @param string                $alias
-     * @param string|array|callable $resolver
-     * @return mixed
-     */
-    public function replace($alias, $resolver);
-
-    /**
-     * Restore previously pulled binding value using implementation specific payload. Method should
-     * only accept result of replace() method.
-     *
-     * @see replace
-     * @param mixed $replacePayload
-     * @throws ContainerException
-     */
-    public function restore($replacePayload);
+    public function bindSingleton(string $alias, $resolver);
 
     /**
      * Check if alias points to constructed instance (singleton).
      *
      * @param string $alias
+     *
      * @return bool
      */
-    public function hasInstance($alias);
+    public function hasInstance(string $alias);
 
     /**
      * @param string $alias
      */
-    public function removeBinding($alias);
+    public function removeBinding(string $alias);
 }

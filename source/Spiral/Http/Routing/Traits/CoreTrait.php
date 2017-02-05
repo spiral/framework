@@ -11,6 +11,10 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Http\Exceptions\ClientException;
+use Spiral\Http\Exceptions\ClientExceptions\BadRequestException;
+use Spiral\Http\Exceptions\ClientExceptions\ForbiddenException;
+use Spiral\Http\Exceptions\ClientExceptions\NotFoundException;
+use Spiral\Http\Routing\RouteInterface;
 
 /**
  * Provides ability to invoke core controllers as endpoint.
@@ -18,16 +22,19 @@ use Spiral\Http\Exceptions\ClientException;
 trait CoreTrait
 {
     /**
+     * Core class or class name. By default links to spiral CoreInterface.
+     *
      * @invisible
-     * @var CoreInterface|null
+     * @var CoreInterface|string
      */
-    private $core;
+    private $core = CoreInterface::class;
 
     /**
-     * @param CoreInterface $core
-     * @return self
+     * @param CoreInterface|string $core Core class or class name.
+     *
+     * @return $this|self|RouteInterface
      */
-    public function withCore(CoreInterface $core)
+    public function withCore($core): RouteInterface
     {
         $route = clone $this;
         $route->core = $core;
@@ -38,18 +45,26 @@ trait CoreTrait
     /**
      * Internal helper used to create execute controller action using associated core instance.
      *
+     * @see CoreInterface
+     *
      * @param string $controller
      * @param string $action
      * @param array  $parameters
+     * @param array  $scope
+     *
      * @return mixed
      * @throws ClientException
      */
-    protected function callAction($controller, $action, array $parameters = [])
-    {
+    protected function callAction(
+        string $controller,
+        string $action = null,
+        array $parameters = [],
+        array $scope = []
+    ) {
         try {
-            return $this->core()->callAction($controller, $action, $parameters);
+            return $this->getCore()->callAction($controller, $action, $parameters, $scope);
         } catch (ControllerException $e) {
-            throw $this->convertException($e);
+            throw $this->wrapException($e);
         }
     }
 
@@ -57,35 +72,37 @@ trait CoreTrait
      * Converts controller exceptions into client exceptions.
      *
      * @param ControllerException $exception
+     *
      * @return ClientException
      */
-    protected function convertException(ControllerException $exception)
+    protected function wrapException(ControllerException $exception): ClientException
     {
         switch ($exception->getCode()) {
             case ControllerException::BAD_ACTION:
+                //no break
             case ControllerException::NOT_FOUND:
-                return new ClientException(ClientException::NOT_FOUND, $exception->getMessage());
+                return new NotFoundException($exception->getMessage());
             case  ControllerException::FORBIDDEN:
-                return new ClientException(ClientException::FORBIDDEN, $exception->getMessage());
+                return new ForbiddenException($exception->getMessage());
             default:
-                return new ClientException(ClientException::BAD_DATA, $exception->getMessage());
+                return new BadRequestException($exception->getMessage());
         }
     }
 
     /**
      * @return CoreInterface
      */
-    protected function core()
+    protected function getCore(): CoreInterface
     {
-        if (!empty($this->core)) {
+        if ($this->core instanceof CoreInterface) {
             return $this->core;
         }
 
-        return $this->container()->get(CoreInterface::class);
+        return $this->iocContainer()->get($this->core);
     }
 
     /**
      * @return ContainerInterface
      */
-    abstract protected function container();
+    abstract protected function iocContainer(): ContainerInterface;
 }

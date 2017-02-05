@@ -5,8 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Routing;
 
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Http\Routing\Traits\CoreTrait;
 
 /**
@@ -33,18 +36,19 @@ class Route extends AbstractRoute
     protected $target = null;
 
     /**
-     * New Route instance.
+     * New Route instance. Attention, you have to always include http:// or http:// protocol
+     * for routes used to match hostname.
      *
      * @param string          $name
      * @param string          $pattern
      * @param string|callable $target Route target. Can be in a form of controler:action
      * @param array           $defaults
      */
-    public function __construct($name, $pattern, $target, array $defaults = [])
+    public function __construct(string $name, string $pattern, $target, array $defaults = [])
     {
         parent::__construct($name, $defaults);
 
-        $this->pattern = $pattern;
+        $this->pattern = ltrim($pattern, '/');
         $this->target = $target;
     }
 
@@ -58,20 +62,26 @@ class Route extends AbstractRoute
         }
 
         if (is_string($this->target) && strpos($this->target, ':') === false) {
-            //Endpoint
-            return $this->container()->get($this->target);
+            //Endpoint specified as string
+            return $this->iocContainer()->get($this->target);
         }
 
         $route = $this;
 
-        return function () use ($route) {
+        return function (Request $request, Response $response) use ($route) {
             list($controller, $action) = explode(':', str_replace('::', ':', $route->target));
 
             if ($action == self::DYNAMIC_ACTION) {
                 $action = $route->getMatches()['action'];
             }
 
-            return $route->callAction($controller, $action, $route->getMatches());
+            //Calling action with matched parameters and request/response scope
+            return $route->callAction(
+                $controller,
+                $action,
+                $route->getMatches(),
+                [Request::class => $request, Response::class => $response]
+            );
         };
     }
 }

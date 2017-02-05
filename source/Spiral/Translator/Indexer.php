@@ -5,16 +5,18 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Translator;
 
 use Spiral\Core\Component;
 use Spiral\Debug\Traits\LoggerTrait;
-use Spiral\Tokenizer\ClassLocatorInterface;
-use Spiral\Tokenizer\InvocationLocatorInterface;
+use Spiral\Tokenizer\ClassesInterface;
+use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Reflections\ReflectionArgument;
 use Spiral\Tokenizer\Reflections\ReflectionInvocation;
 use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Traits\TranslatorTrait;
+
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can
@@ -27,20 +29,22 @@ use Spiral\Translator\Traits\TranslatorTrait;
  */
 class Indexer extends Component
 {
-    /**
-     * Provides event "string" when new string is found.
-     */
     use LoggerTrait;
 
     /**
      * @var Translator
      */
-    protected $translator = null;
+    protected $translator;
+
+    /**
+     * @var TranslatorConfig
+     */
+    protected $config;
 
     /**
      * @var Catalogue
      */
-    protected $catalogue = null;
+    protected $catalogue;
 
     /**
      * @param Translator       $translator
@@ -49,6 +53,7 @@ class Indexer extends Component
     public function __construct(Translator $translator, TranslatorConfig $config)
     {
         $this->translator = $translator;
+        $this->config = $config;
 
         //Indexation into fallback (root) locale
         $this->catalogue = $translator->getCatalogue($config->fallbackLocale());
@@ -58,24 +63,24 @@ class Indexer extends Component
      * Indexing available method and function invocations, target: l, p, $this->translate()
      * functions.
      *
-     * @param InvocationLocatorInterface $locator
+     * @param InvocationsInterface $locator
      */
-    public function indexInvocations(InvocationLocatorInterface $locator)
+    public function indexInvocations(InvocationsInterface $locator)
     {
-        $this->logger()->info("Indexing invocations of 'l' function.");
-        $this->registerInvocations($locator->getInvocations(
-            new \ReflectionFunction('l')
-        ));
+        $this->logger()->info("Indexing usages of 'l' function.");
+        $this->registerInvocations(
+            $locator->getInvocations(new \ReflectionFunction('l'))
+        );
 
-        $this->logger()->info("Indexing invocations of 'p' function.");
-        $this->registerInvocations($locator->getInvocations(
-            new \ReflectionFunction('p')
-        ));
+        $this->logger()->info("Indexing usages of 'p' function.");
+        $this->registerInvocations(
+            $locator->getInvocations(new \ReflectionFunction('p'))
+        );
 
-        $this->logger()->info("Indexing invocations of 'say' method (TranslatorTrait).");
-        $this->registerInvocations($locator->getInvocations(
-            new \ReflectionMethod(TranslatorTrait::class, 'say')
-        ));
+        $this->logger()->info("Indexing usages of 'say' method (TranslatorTrait).");
+        $this->registerInvocations(
+            $locator->getInvocations(new \ReflectionMethod(TranslatorTrait::class, 'say'))
+        );
 
         $this->translator->getCatalogue()->saveDomains();
     }
@@ -84,9 +89,9 @@ class Indexer extends Component
      * Index and register i18n string located in default properties which belongs to TranslatorTrait
      * classes.
      *
-     * @param ClassLocatorInterface $locator
+     * @param ClassesInterface $locator
      */
-    public function indexClasses(ClassLocatorInterface $locator)
+    public function indexClasses(ClassesInterface $locator)
     {
         foreach ($locator->getClasses(TranslatorTrait::class) as $class => $options) {
             $reflection = new \ReflectionClass($class);
@@ -97,9 +102,10 @@ class Indexer extends Component
             );
 
             if (!empty($strings)) {
-                $this->logger()->info("Found translation string(s) in class '{class}'.", [
-                    'class' => $reflection->getName()
-                ]);
+                $this->logger()->info(
+                    "Found translation string(s) in class '{class}'.",
+                    ['class' => $reflection->getName()]
+                );
             }
 
             foreach ($strings as $string) {
@@ -121,12 +127,7 @@ class Indexer extends Component
     protected function registerInvocations(array $invocations)
     {
         foreach ($invocations as $invocation) {
-            if ($invocation->countArguments() < 1) {
-                //This is not valid invocation
-                continue;
-            }
-
-            if ($invocation->argument(0)->getType() != ReflectionArgument::STRING) {
+            if ($invocation->getArgument(0)->getType() != ReflectionArgument::STRING) {
                 //We can only index invocations with constant string arguments
                 continue;
             }
@@ -140,32 +141,10 @@ class Indexer extends Component
                 ]
             );
 
-            $string = $invocation->argument(0)->stringValue();
+            $string = $invocation->getArgument(0)->stringValue();
+            $string = $this->removeBraces($string);
 
-            if ($invocation->getName() == 'say') {
-                $string = $this->removeBraces($string);
-            }
-
-            //Translation using default bundle
-            $domain = TranslatorInterface::DEFAULT_DOMAIN;
-
-            if ($invocation->getName() == 'say') {
-                $domain = $this->translator->resolveDomain($invocation->getClass());
-            } else {
-                //L or P functions
-                if ($invocation->countArguments() >= 3) {
-                    if ($invocation->argument(2)->getType() != ReflectionArgument::STRING) {
-                        //Unable to resolve domain name
-                        continue;
-                    }
-
-                    $domain = $this->translator->resolveDomain(
-                        $invocation->argument(2)->stringValue()
-                    );
-                }
-            }
-
-            $this->register($domain, $string);
+            $this->register($this->resolveDomain($invocation), $string);
         }
     }
 
@@ -180,7 +159,47 @@ class Indexer extends Component
         //Automatically registering
         $this->catalogue->set($domain, $string, $string);
 
-        $this->logger()->debug("Found [{domain}]:'{string}'", compact('domain', 'string'));
+        $this->logger()->debug("Found [{domain}]: '{string}'", compact('domain', 'string'));
+    }
+
+    /**
+     * Get associated domain.
+     *
+     * @param \Spiral\Tokenizer\Reflections\ReflectionInvocation $invocation
+     *
+     * @return string
+     */
+    private function resolveDomain(ReflectionInvocation $invocation): string
+    {
+        //Translation using default bundle
+        $domain = $this->config->defaultDomain();
+
+        if ($invocation->getName() == 'say') {
+            //Let's try to confirm domain
+            $domain = $this->translator->resolveDomain($invocation->getClass());
+        }
+
+        //L and SAY functions
+        $argument = null;
+        switch (strtolower($invocation->getName())) {
+            case 'say':
+            case 'l':
+                if ($invocation->countArguments() >= 3) {
+                    $argument = $invocation->getArgument(2);
+                }
+                break;
+            case 'p':
+                if ($invocation->countArguments() >= 4) {
+                    $argument = $invocation->getArgument(3);
+                }
+        }
+
+        if (!empty($argument) && $argument->getType() == ReflectionArgument::STRING) {
+            //Domain specified in arguments
+            $domain = $this->translator->resolveDomain($argument->stringValue());
+        }
+
+        return $domain;
     }
 
     /**
@@ -188,20 +207,21 @@ class Indexer extends Component
      *
      * @param \ReflectionClass $reflection
      * @param bool             $recursively
+     *
      * @return array
      */
     private function fetchStrings(\ReflectionClass $reflection, $recursively = false)
     {
-        $defaultProperties = $reflection->getDefaultProperties();
+        $target = $reflection->getDefaultProperties() + $reflection->getConstants();
 
         foreach ($reflection->getProperties() as $property) {
             if (strpos($property->getDocComment(), "@do-not-index")) {
-                unset($defaultProperties[$property->getName()]);
+                unset($target[$property->getName()]);
             }
         }
 
         $strings = [];
-        array_walk_recursive($defaultProperties, function ($value) use (&$strings) {
+        array_walk_recursive($target, function ($value) use (&$strings) {
             if (is_string($value) && $this->hasBraces($value)) {
                 $strings[] = $this->removeBraces($value);
             }
@@ -223,6 +243,7 @@ class Indexer extends Component
      * Remove [[ and ]] braces from translated string.
      *
      * @param string $string
+     *
      * @return string
      */
     private function removeBraces($string)
@@ -239,11 +260,12 @@ class Indexer extends Component
      * Check if string has translation braces [[ and ]]/
      *
      * @param string $string
+     *
      * @return bool
      */
     private function hasBraces($string)
     {
         return substr($string, 0, 2) == Translator::I18N_PREFIX
-        && substr($string, -2) == Translator::I18N_POSTFIX;
+            && substr($string, -2) == Translator::I18N_POSTFIX;
     }
 }

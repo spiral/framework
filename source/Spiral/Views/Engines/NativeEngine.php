@@ -1,102 +1,60 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Engines;
 
-use Spiral\Core\Component;
 use Spiral\Core\ContainerInterface;
-use Spiral\Core\Traits\SaturateTrait;
-use Spiral\Views\EngineInterface;
 use Spiral\Views\Engines\Native\NativeView;
+use Spiral\Views\Engines\Prototypes\AbstractEngine;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
+use Spiral\Views\ViewInterface;
 
 /**
- * The simpliest view engine, simply renders php files.
+ * Default, php based view engine.
  */
-class NativeEngine extends Component implements EngineInterface
+class NativeEngine extends AbstractEngine
 {
-    /**
-     * Saturation of files.
-     */
-    use SaturateTrait;
-
-    /**
-     * @var LoaderInterface
-     */
-    protected $loader = null;
-
     /**
      * @invisible
      * @var ContainerInterface
      */
-    protected $container = null;
+    protected $container;
 
     /**
-     * @param LoaderInterface      $loader
+     * Container is needed to provide proper scope isolation at moment of rendering.
+     *
      * @param EnvironmentInterface $environment
-     * @param ContainerInterface   $files
+     * @param LoaderInterface      $loader
+     * @param ContainerInterface   $container
      */
     public function __construct(
-        LoaderInterface $loader,
         EnvironmentInterface $environment,
-        ContainerInterface $files = null
+        LoaderInterface $loader,
+        ContainerInterface $container
     ) {
-        $this->container = $this->saturate($files, ContainerInterface::class);
+        parent::__construct($environment, $loader);
 
-        $this->setEnvironment($environment);
+        $this->container = $container;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($path)
+    public function get(string $path): ViewInterface
     {
-        return new NativeView(
-            $this->loader->localFilename($path),
-            $this->loader->viewNamespace($path),
-            $this->loader->viewName($path),
-            $this->container
-        );
+        return new NativeView($this->loader->getSource($path), $this->container);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function render($path, array $context = [])
-    {
-        return $this->get($path)->render($context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function compile($path, $reset = false)
+    public function compile(string $path, bool $reset = false)
     {
         //Can not be compiled
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return $this
-     */
-    public function setLoader(LoaderInterface $loader)
-    {
-        $this->loader = $loader;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEnvironment(EnvironmentInterface $environment)
-    {
-        //Does not do anything
     }
 }

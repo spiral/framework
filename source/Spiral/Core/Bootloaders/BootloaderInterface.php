@@ -25,7 +25,7 @@ interface BootloaderInterface
      *
      * @return array
      */
-    public function defineBindings();
+    public function defineBindings(): array;
 
     /**
      * Singletons in string/array form, example:
@@ -40,5 +40,5 @@ interface BootloaderInterface
      *
      * @return array
      */
-    public function defineSingletons();
+    public function defineSingletons(): array;
 }

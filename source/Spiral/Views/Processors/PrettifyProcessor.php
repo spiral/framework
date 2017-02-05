@@ -5,12 +5,15 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Processors;
 
 use Spiral\Stempler\HtmlTokenizer;
 use Spiral\Support\Strings;
 use Spiral\Tokenizer\Isolator;
+use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ProcessorInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Cuts blank lines in template html code and normalize attrbiutes.
@@ -30,6 +33,7 @@ class PrettifyProcessor implements ProcessorInterface
             'normalize' => true,
             //Drop spaces
             'trim'      => ['class', 'style', 'id'],
+
             //Drop when empty
             'drop'      => ['class', 'style', 'id']
         ]
@@ -53,17 +57,20 @@ class PrettifyProcessor implements ProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function process($source, $namespace, $view, $cachedFilename = null)
-    {
+    public function modify(
+        EnvironmentInterface $environment,
+        ViewSource $view,
+        string $code
+    ): string {
         if ($this->options['endings']) {
-            $source = $this->normalizeEndings($source, new Isolator());
+            $code = $this->normalizeEndings($code, new Isolator());
         }
 
         if ($this->options['attributes']['normalize']) {
-            $source = $this->normalizeAttributes($source, $this->tokenizer);
+            $code = $this->normalizeAttributes($code, $this->tokenizer);
         }
 
-        return $source;
+        return $code;
     }
 
     /**
@@ -71,6 +78,7 @@ class PrettifyProcessor implements ProcessorInterface
      *
      * @param string   $source
      * @param Isolator $isolator
+     *
      * @return string
      */
     protected function normalizeEndings($source, Isolator $isolator)
@@ -97,6 +105,7 @@ class PrettifyProcessor implements ProcessorInterface
      *
      * @param string        $source
      * @param HtmlTokenizer $tokenizer
+     *
      * @return mixed
      */
     protected function normalizeAttributes($source, HtmlTokenizer $tokenizer)
@@ -104,7 +113,7 @@ class PrettifyProcessor implements ProcessorInterface
         $result = '';
         foreach ($tokenizer->parse($source) as $token) {
             if (empty($token[HtmlTokenizer::TOKEN_ATTRIBUTES])) {
-                $result .= $tokenizer->compile($token);
+                $result .= $tokenizer->compileToken($token);
                 continue;
             }
 
@@ -123,7 +132,7 @@ class PrettifyProcessor implements ProcessorInterface
             }
 
             $token[HtmlTokenizer::TOKEN_ATTRIBUTES] = $attributes;
-            $result .= $tokenizer->compile($token);
+            $result .= $tokenizer->compileToken($token);
         }
 
         return $result;

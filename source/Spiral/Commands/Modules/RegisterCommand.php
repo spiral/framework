@@ -5,14 +5,16 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Modules;
 
-use Interop\Container\ContainerInterface;
 use Spiral\Commands\Modules\Traits\ModuleTrait;
 use Spiral\Console\Command;
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Modules\Entities\Registrator;
+use Spiral\Modules\Registrator;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Configure all non-registered modules (alters configuration files).
@@ -22,44 +24,51 @@ class RegisterCommand extends Command
     use ModuleTrait;
 
     /**
-     * {@inheritdoc}
+     * Error codes.
      */
-    protected $name = 'register';
+    const INVALID_MODULE = 9;
+    const UNCONFIRMED    = 10;
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Register module configs and publish it\'s resources';
+    const NAME = 'register';
 
     /**
      * {@inheritdoc}
      */
-    protected $arguments = [
+    const DESCRIPTION = 'Register module configs and publish it\'s resources';
+
+    /**
+     * {@inheritdoc}
+     */
+    const ARGUMENTS = [
         ['module', InputArgument::REQUIRED, 'Module class name'],
     ];
 
     /**
      * @param Registrator       $registrator
      * @param ConsoleDispatcher $dispatcher
+     *
+     * @return int
      */
-    public function perform(Registrator $registrator, ConsoleDispatcher $dispatcher)
+    public function perform(Registrator $registrator, ConsoleDispatcher $dispatcher): int
     {
         $class = $this->guessClass($this->argument('module'));
         if (!$this->isModule($class)) {
             $this->writeln("<fg=red>Class '{$class}' is not valid module.</fg=red>");
 
-            return;
+            return self::INVALID_MODULE;
         }
 
         //Altering all requested module configurations
         $this->container->get($class)->register($registrator);
 
-
         /**
          * Sometimes modules request to alter some config files, we need user confirmation for that.
          */
         if (!empty($registrator->getInjected())) {
-            $table = $this->tableHelper(['Config', 'Section', 'Added Lines']);
+            $table = $this->table(['Config', 'Section', 'Added Lines']);
             foreach ($registrator->getInjected() as $injected) {
                 $table->addRow([
                     "<info>{$injected['config']}</info>",
@@ -68,13 +77,13 @@ class RegisterCommand extends Command
                 ]);
             }
 
-            //todo: better english
-            $this->writeln("<comment>Module requests following configs to be altered:</comment>");
+            $this->writeln("<comment>Following configs are being altered:</comment>");
             $table->render();
 
             $this->writeln("");
-            if (!$this->ask()->confirm("Confirm module registration (y/n)")) {
-                return;
+
+            if (!$this->askConfirmation()) {
+                return self::UNCONFIRMED;
             }
 
             $this->writeln("");
@@ -87,6 +96,23 @@ class RegisterCommand extends Command
             "<info>Module '<comment>{$class}</comment>' has been successfully registered.</info>"
         );
 
-        $dispatcher->command('publish', $this->input, $this->output);
+        $dispatcher->run('publish', $this->input, $this->output);
+
+        return 0;
+    }
+
+    /**
+     * @return string
+     */
+    protected function askConfirmation(): string
+    {
+        $question = new QuestionHelper();
+        $confirmation = $question->ask(
+            $this->input,
+            $this->output,
+            new ConfirmationQuestion("<question>Confirm module registration (y/n)</question> ")
+        );
+
+        return $confirmation;
     }
 }

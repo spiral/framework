@@ -7,10 +7,9 @@
  */
 namespace Spiral\Commands\Views;
 
+use Spiral\Commands\Views\Helpers\ViewLocator;
 use Spiral\Console\Command;
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Debug\Traits\BenchmarkTrait;
-use Spiral\Views\ViewLocator;
 use Spiral\Views\ViewManager;
 use Symfony\Component\Console\Helper\FormatterHelper;
 
@@ -20,19 +19,14 @@ use Symfony\Component\Console\Helper\FormatterHelper;
 class CompileCommand extends Command
 {
     /**
-     * Benchmarking compilation time.
+     * {@inheritdoc}
      */
-    use BenchmarkTrait;
+    const NAME = 'views:compile';
 
     /**
      * {@inheritdoc}
      */
-    protected $name = 'views:compile';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $description = 'Compile every available view file';
+    const DESCRIPTION = 'Compile every available view file';
 
     /**
      * @param ViewLocator       $locator
@@ -45,11 +39,7 @@ class CompileCommand extends Command
         ConsoleDispatcher $dispatcher
     ) {
         //To clean up cache
-        $dispatcher->command('views:reset', [], $this->output);
-
-        if ($this->isVerbosity()) {
-            $this->write("\n");
-        }
+        $dispatcher->run('views:reset', [], $this->output);
 
         /**
          * @var FormatterHelper $formatter
@@ -57,17 +47,15 @@ class CompileCommand extends Command
         $formatter = $this->getHelper('formatter');
         foreach ($locator->getNamespaces() as $namespace) {
             $this->isVerbosity() && $this->writeln(
-                "Compiling views in namespace '<comment>{$namespace}</comment>'."
+                "\n<info>Compiling views in namespace '<comment>{$namespace}</comment>'.</info>"
             );
 
-            foreach ($locator->namespaceViews($namespace) as $view => $engine) {
+            foreach ($locator->getViews($namespace) as $view => $engine) {
                 if ($this->isVerbosity()) {
-                    $this->write($formatter->formatSection(
-                        "{$namespace}:{$engine}", $view . ", ", 'fg=cyan'
-                    ));
+                    $this->write($formatter->formatSection("{$engine}", $view . ", ", 'fg=cyan'));
                 }
 
-                $benchmark = $this->benchmark('compile');
+                $start = microtime(true);
                 try {
                     //Compilation
                     $manager->engine($engine)->compile("{$namespace}:{$view}", true);
@@ -78,7 +66,7 @@ class CompileCommand extends Command
                         $this->write("<fg=red>error: {$exception->getMessage()}</fg=red>");
                     }
                 } finally {
-                    $elapsed = number_format($this->benchmark($benchmark) * 1000);
+                    $elapsed = number_format((microtime(true) - $start) * 1000);
                     if ($this->isVerbosity()) {
                         $this->writeln(" <comment>[{$elapsed} ms]</comment> ");
                     }

@@ -19,9 +19,10 @@ trait ModuleTrait
 {
     /**
      * @param string $module
+     *
      * @return string
      */
-    public function guessClass($module)
+    public function guessClass(string $module): string
     {
         $module = str_replace('/', '\\', $module);
         $module = explode('\\', $module);
@@ -37,9 +38,10 @@ trait ModuleTrait
      * Check if given class points to module.
      *
      * @param string $class
+     *
      * @return bool
      */
-    protected function isModule($class)
+    protected function isModule(string $class): bool
     {
         if (!class_exists($class)) {
             return false;

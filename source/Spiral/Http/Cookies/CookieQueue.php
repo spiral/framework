@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Cookies;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,6 +13,8 @@ use Spiral\Http\Configs\HttpConfig;
 
 class CookieQueue
 {
+    const ATTRIBUTE = 'cookieQueue';
+
     /**
      * Cookies has to be send (specified via global scope).
      *
@@ -26,7 +29,7 @@ class CookieQueue
     private $httpConfig = null;
 
     /**
-     * Associated request (to fetch domain name from).
+     * Associated request (to fetch domain name from). Will not be modified.
      *
      * @invisible
      * @var ServerRequestInterface
@@ -50,6 +53,7 @@ class CookieQueue
      * populate them automatically.
      *
      * @link http://php.net/manual/en/function.setcookie.php
+     *
      * @param string $name     The name of the cookie.
      * @param string $value    The value of the cookie. This value is stored on the clients
      *                         computer; do not store sensitive information.
@@ -82,20 +86,24 @@ class CookieQueue
      *                         languages, such as JavaScript. This setting can effectively help to
      *                         reduce identity theft through XSS attacks (although it is not
      *                         supported by all browsers).
+     *
      * @return $this
      */
     public function set(
-        $name,
-        $value = null,
-        $lifetime = null,
-        $path = null,
-        $domain = null,
-        $secure = null,
-        $httpOnly = true
+        string $name,
+        string $value = null,
+        int $lifetime = null,
+        string $path = null,
+        string $domain = null,
+        bool $secure = null,
+        bool $httpOnly = true
     ) {
         if (is_null($domain)) {
+            //Let's resolve domain via config
             $domain = $this->httpConfig->cookiesDomain($this->request->getUri());
         }
+
+        //Resolve cookie path?
 
         if (is_null($secure)) {
             $secure = $this->request->getMethod() == 'https';
@@ -110,9 +118,10 @@ class CookieQueue
      * Schedule new cookie instance to be send while dispatching request.
      *
      * @param Cookie $cookie
-     * @return $this
+     *
+     * @return self|$this
      */
-    public function schedule(Cookie $cookie)
+    public function schedule(Cookie $cookie): CookieQueue
     {
         $this->scheduled[] = $cookie;
 
@@ -124,7 +133,7 @@ class CookieQueue
      *
      * @param string $name
      */
-    public function delete($name)
+    public function delete(string $name)
     {
         foreach ($this->scheduled as $index => $cookie) {
             if ($cookie->getName() == $name) {
@@ -140,7 +149,7 @@ class CookieQueue
      *
      * @return Cookie[]
      */
-    public function getScheduled()
+    public function getScheduled(): array
     {
         return $this->scheduled;
     }

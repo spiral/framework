@@ -5,21 +5,17 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
-use Spiral\Core\Exceptions\SugarException;
-use Spiral\Core\Traits\SaturateTrait;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Files\FilesInterface;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Default implementation of HippocampusInterface.
+ * Default implementation of MemoryInterface.
  */
-class Memory extends Component implements HippocampusInterface
+class Memory implements MemoryInterface
 {
-    use SaturateTrait;
-
     /**
      * Extension for memory files.
      */
@@ -37,17 +33,18 @@ class Memory extends Component implements HippocampusInterface
      *
      * @var FilesInterface
      */
-    protected $files = null;
+    private $files = null;
 
     /**
-     * @param string              $directory
-     * @param FilesInterface|null $files Sugared.
-     * @throws SugarException
+     * @param string         $directory
+     * @param FilesInterface $files
+     *
+     * @throws ScopeException
      */
-    public function __construct($directory, FilesInterface $files = null)
+    public function __construct(string $directory, FilesInterface $files)
     {
         $this->directory = $directory;
-        $this->files = $this->saturate($files, FilesInterface::class);
+        $this->files = $files;
     }
 
     /**
@@ -55,9 +52,9 @@ class Memory extends Component implements HippocampusInterface
      *
      * @param string $filename Cache filename.
      */
-    public function loadData($section, $location = null, &$filename = null)
+    public function loadData(string $section, string &$filename = null)
     {
-        $filename = $this->memoryFilename($section, $location);
+        $filename = $this->memoryFilename($section);
 
         if (!file_exists($filename)) {
             return null;
@@ -65,7 +62,7 @@ class Memory extends Component implements HippocampusInterface
 
         try {
             return include($filename);
-        } catch (\ErrorException $exception) {
+        } catch (\Throwable $e) {
             return null;
         }
     }
@@ -73,9 +70,9 @@ class Memory extends Component implements HippocampusInterface
     /**
      * {@inheritdoc}
      */
-    public function saveData($section, $data, $location = null)
+    public function saveData(string $section, $data)
     {
-        $filename = $this->memoryFilename($section, $location);
+        $filename = $this->memoryFilename($section);
 
         //We are packing data into plain php
         $data = '<?php return ' . var_export($data, true) . ';';
@@ -85,56 +82,17 @@ class Memory extends Component implements HippocampusInterface
     }
 
     /**
-     * Get all memory sections belongs to given memory location (default location to be used if
-     * none specified).
-     *
-     * @param string $location
-     * @return array
-     */
-    public function getSections($location = null)
-    {
-        if (!empty($location)) {
-            $location = $this->directory . $location . '/';
-        } else {
-            $location = $this->directory;
-        }
-
-        if (!$this->files->exists($location)) {
-            return [];
-        }
-
-        $finder = new Finder();
-        $finder->in($location);
-
-        /**
-         * @var SplFileInfo $file
-         */
-        $sections = [];
-        foreach ($finder->name("*" . static::EXTENSION) as $file) {
-            $sections[] = substr($file->getRelativePathname(), 0, -1 * (strlen(static::EXTENSION)));
-        }
-
-        return $sections;
-    }
-
-    /**
      * Get extension to use for runtime data or configuration cache.
      *
-     * @param string $name     Runtime data file name (without extension).
-     * @param string $location Location to store data in.
+     * @param string $name Runtime data file name (without extension).
+     *
      * @return string
      */
-    private function memoryFilename($name, $location = null)
+    private function memoryFilename(string $name): string
     {
         $name = strtolower(str_replace(['/', '\\'], '-', $name));
 
-        if (!empty($location)) {
-            $location = $this->directory . $location . '/';
-        } else {
-            $location = $this->directory;
-        }
-
         //Runtime cache
-        return $location . $name . static::EXTENSION;
+        return $this->directory . $name . static::EXTENSION;
     }
 }

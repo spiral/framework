@@ -21,12 +21,12 @@ class KeyCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'app:key';
+    const NAME = 'app:key';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Update application encryption key';
+    const DESCRIPTION = 'Update application encryption key';
 
     /**
      * @param DirectoriesInterface $directories

@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core\Bootloaders;
 
 use Spiral\Core\Component;
@@ -29,6 +30,12 @@ abstract class Bootloader extends Component implements BootloaderInterface
     const BOOT = false;
 
     /**
+     * ALTERNATIVE DEFINITIONS OF BINDINGS.
+     */
+    const BINDINGS   = [];
+    const SINGLETONS = [];
+
+    /**
      * Bindings in string/array form, example:
      *
      * [
@@ -36,6 +43,7 @@ abstract class Bootloader extends Component implements BootloaderInterface
      *      'class' => [self::class, 'createMethod']
      * ]
      *
+     * @deprecated Use constant instead.
      * @return array
      */
     protected $bindings = [];
@@ -51,6 +59,7 @@ abstract class Bootloader extends Component implements BootloaderInterface
      * You don't need to bind classes which are declared with SINGLETON constant here, spiral will
      * resolve them as singleton automatically.
      *
+     * @deprecated Use constant instead.
      * @return array
      */
     protected $singletons = [];
@@ -58,16 +67,16 @@ abstract class Bootloader extends Component implements BootloaderInterface
     /**
      * {@inheritdoc}
      */
-    public function defineBindings()
+    public function defineBindings(): array
     {
-        return $this->bindings;
+        return $this->bindings + static::BINDINGS;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function defineSingletons()
+    public function defineSingletons(): array
     {
-        return $this->singletons;
+        return $this->singletons + static::SINGLETONS;
     }
 }

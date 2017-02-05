@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Support;
 
 use Cocur\Slugify\SlugifyInterface;
@@ -18,12 +19,17 @@ class Strings
      * Create a random string with desired length.
      *
      * @param int $length String length. 32 symbols by default.
+     *
      * @return string
      */
-    public static function random($length = 32)
+    public static function random(int $length = 32): string
     {
-        if (empty($string = openssl_random_pseudo_bytes($length))) {
-            throw new \RuntimeException("Unable to generate random string.");
+        try {
+            if (empty($string = random_bytes($length))) {
+                throw new \RuntimeException("Unable to generate random string");
+            }
+        } catch (\Throwable $e) {
+            throw new \RuntimeException("Unable to generate random string", $e->getCode(), $e);
         }
 
         return substr(base64_encode($string), 0, $length);
@@ -34,9 +40,10 @@ class Strings
      *
      * @param string $string
      * @param string $separator
+     *
      * @return string
      */
-    public static function slug($string, $separator = '-')
+    public static function slug(string $string, string $separator = '-'): string
     {
         return spiral(SlugifyInterface::class)->slugify($string, $separator);
     }
@@ -47,9 +54,10 @@ class Strings
      *
      * @param string $string    String to be escaped.
      * @param bool   $stripTags Will remove all tags using strip_tags(). Disabled by default.
+     *
      * @return string
      */
-    public static function escape($string, $stripTags = false)
+    public static function escape($string, bool $stripTags = false)
     {
         if (is_array($string) || is_object($string)) {
             return '';
@@ -68,9 +76,10 @@ class Strings
      *
      * @param string $string
      * @param int    $limit The max string length, 300 by default.
+     *
      * @return string
      */
-    public static function shorter($string, $limit = 300)
+    public static function shorter(string $string, int $limit = 300): string
     {
         if (mb_strlen($string) + 3 > $limit) {
             return trim(mb_substr($string, 0, $limit - 3, 'UTF-8')) . '...';
@@ -84,9 +93,10 @@ class Strings
      *
      * @param int $bytes    Size in bytes.
      * @param int $decimals The number of decimals include to output. Set to 1 by default.
+     *
      * @return string
      */
-    public static function bytes($bytes, $decimals = 1)
+    public static function bytes(int $bytes, int $decimals = 1): string
     {
         $pows = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         for ($unit = 0; $bytes > 1024; $unit++) {
@@ -102,9 +112,10 @@ class Strings
      *
      * @param string $string       String to be normalized.
      * @param bool   $joinMultiple Join multiple new lines into one.
-     * @return mixed
+     *
+     * @return string
      */
-    public static function normalizeEndings($string, $joinMultiple = true)
+    public static function normalizeEndings(string $string, bool $joinMultiple = true): string
     {
         if (!$joinMultiple) {
             return str_replace("\r\n", "\n", $string);
@@ -131,9 +142,10 @@ class Strings
      * @param string $string         Input string with multiple lines.
      * @param string $tabulationCost How to treat \t symbols relatively to spaces. By default, this
      *                               is set to 4 spaces.
+     *
      * @return string
      */
-    public static function normalizeIndents($string, $tabulationCost = "   ")
+    public static function normalizeIndents(string $string, string $tabulationCost = "   "): string
     {
         $string = self::normalizeEndings($string, false);
         $lines = explode("\n", $string);
@@ -157,10 +169,6 @@ class Strings
             }
 
             $minIndent = min($minIndent, strlen($matches[1]));
-        }
-
-        if (is_null($minIndent) || $minIndent === 0) {
-            return $string;
         }
 
         //Fixing indent

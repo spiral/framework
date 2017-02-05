@@ -25,24 +25,24 @@ class ServerCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'server';
+    const NAME = 'server';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Run development server on specified host and port';
+    const DESCRIPTION = 'Run development server on specified host and port';
 
     /**
      * {@inheritdoc}
      */
-    protected $arguments = [
+    const ARGUMENTS = [
         ['host', InputArgument::OPTIONAL, 'Host name', 'localhost']
     ];
 
     /**
      * {@inheritdoc}
      */
-    protected $options = [
+    const OPTIONS = [
         ['port', 'p', InputOption::VALUE_OPTIONAL, 'Port number', 8080],
         ['timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout to hang out server', 36000],
     ];

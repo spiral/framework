@@ -5,17 +5,19 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Core\Component;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\ContainerInterface;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Http\Exceptions\ClientException;
 use Spiral\Http\Exceptions\HttpException;
-use Spiral\Http\Responses\Emitter;
 use Spiral\Http\Traits\MiddlewaresTrait;
-use Zend\Diactoros\Response;
+use Zend\Diactoros\Response as ZendResponse;
 use Zend\Diactoros\Response\EmitterInterface;
 
 /**
@@ -44,36 +46,40 @@ class HttpCore extends Component implements HttpInterface
     protected $container = null;
 
     /**
-     * @param ContainerInterface   $container
-     * @param array                $middlewares
-     * @param callable|null|string $endpoint
+     * @param callable|null|string $endpoint    Default endpoint, Router in HttpDispatcher.
+     * @param array                $middlewares Set of http middlewares to run on every request.
+     * @param ContainerInterface   $container   Https requests are executed in a container scopes.
      */
     public function __construct(
-        ContainerInterface $container,
+        callable $endpoint = null,
         array $middlewares = [],
-        callable $endpoint = null
+        ContainerInterface $container = null
     ) {
         $this->container = $container;
         $this->middlewares = $middlewares;
-
         $this->endpoint = $endpoint;
     }
 
     /**
      * @param EmitterInterface $emitter
+     *
+     * @return $this|self
      */
-    public function setEmitter(EmitterInterface $emitter)
+    public function setEmitter(EmitterInterface $emitter): HttpCore
     {
         $this->emitter = $emitter;
+
+        return $this;
     }
 
     /**
      * Set endpoint as callable function or invokable class name (will be resolved using container).
      *
-     * @param callable $endpoint
-     * @return $this
+     * @param callable|string $endpoint
+     *
+     * @return $this|self
      */
-    public function setEndpoint(callable $endpoint)
+    public function setEndpoint($endpoint): HttpCore
     {
         $this->endpoint = $endpoint;
 
@@ -84,59 +90,79 @@ class HttpCore extends Component implements HttpInterface
      * Pass request thought all http middlewares to appropriate endpoint. Default endpoint will be
      * used as fallback. Can thrown an exception happen in internal code.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
-     * @return ResponseInterface
+     * @param Request  $request
+     * @param Response $response
+     *
+     * @return Response
+     *
      * @throws HttpException
      */
-    public function perform(ServerRequestInterface $request, ResponseInterface $response = null)
+    public function perform(Request $request, Response $response = null): Response
     {
-        $response = !empty($response) ? $response : $this->response();
+        //Init response with default headers and etc
+        $response = $response ?? $this->initResponse();
 
-        $endpoint = $this->endpoint();
+        $endpoint = $this->getEndpoint();
         if (empty($endpoint)) {
-            throw new HttpException("Unable to execute request without destination endpoint.");
+            throw new HttpException("Unable to execute request without destination endpoint");
         }
 
         $pipeline = new MiddlewarePipeline($this->middlewares, $this->container);
 
-        $benchmark = $this->benchmark('request', $request->getUri());
+        //Ensure global container scope
+        $scope = self::staticContainer($this->container);
 
-        //Container scope
-        $outerContainer = self::staticContainer($this->container);
+        //Working in a scope
+        $benchmark = $this->benchmark('request', $request->getUri());
         try {
             //Exceptions (including client one) must be handled by pipeline
             return $pipeline->target($endpoint)->run($request, $response);
         } finally {
             $this->benchmark($benchmark);
-            self::staticContainer($outerContainer);
+
+            //Restore global container scope
+            self::staticContainer($scope);
         }
     }
 
     /**
-     * Running spiral as middleware.
+     * Run as middleware. Attention, make sure you do NOT have ExceptionWrapper enabled as it will
+     * write 404 error page into response.
      *
-     * @todo add ability to call $next on NotFound exceptions
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
-     * @return ResponseInterface
+     * @param Request  $request
+     * @param Response $response
+     * @param callable $next
+     *
+     * @return Response
+     *
      * @throws HttpException
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
+    public function __invoke(Request $request, Response $response, callable $next): Response
     {
-        return $this->perform($request, $response);
+        try {
+            return $this->perform($request, $response);
+        } catch (ClientException $e) {
+            if ($e->getCode() == 404) {
+                //Not found exception, passing control to next middleware
+                return $next($request, $response);
+            }
+
+            //Server, forbidden and other exceptions
+            throw new $e;
+        }
     }
 
     /**
      * Dispatch response to client.
      *
-     * @param ResponseInterface $response
+     * @param Response $response
+     *
      * @return null Specifically.
      */
-    public function dispatch(ResponseInterface $response)
+    public function dispatch(Response $response)
     {
         if (empty($this->emitter)) {
-            $this->emitter = new Emitter();
+            $this->emitter = new ZendResponse\SapiEmitter();
         }
 
         $this->emitter->emit($response, ob_get_level());
@@ -147,11 +173,11 @@ class HttpCore extends Component implements HttpInterface
     /**
      * Create instance of initial response.
      *
-     * @return ResponseInterface
+     * @return Response
      */
-    protected function response()
+    protected function initResponse(): Response
     {
-        return new Response('php://memory');
+        return new ZendResponse('php://memory');
     }
 
     /**
@@ -159,9 +185,13 @@ class HttpCore extends Component implements HttpInterface
      *
      * @return callable|null
      */
-    protected function endpoint()
+    protected function getEndpoint()
     {
-        if (!is_string($this->endpoint)) {
+        if (empty($this->endpoint)) {
+            return null;
+        }
+
+        if (!is_string($this->endpoint) && !$this->endpoint instanceof Autowire) {
             //Presumably callable
             return $this->endpoint;
         }

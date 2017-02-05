@@ -5,28 +5,36 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 use Spiral\Core\Container\SingletonInterface;
 
 /**
  * Can speed up class loading in some conditions. Used by profiler to show all loadead classes.
+ *
+ * Implementation work
  */
 class Loader extends Component implements SingletonInterface
 {
+    /**
+     * Default memory segment.
+     */
+    const MEMORY = 'loadmap';
+
+    /**
+     * Loader memory segment.
+     *
+     * @var string
+     */
+    private $name = '';
+
     /**
      * List of classes loaded while this working session.
      *
      * @var array
      */
     private $classes = [];
-
-    /**
-     * Name of memory sections to be used.
-     *
-     * @var string
-     */
-    private $name = 'loadmap';
 
     /**
      * Association between class and it's location.
@@ -44,19 +52,22 @@ class Loader extends Component implements SingletonInterface
 
     /**
      * @invisible
-     * @var HippocampusInterface
+     * @var MemoryInterface
      */
     protected $memory = null;
 
     /**
      * Loader will automatically handle SPL autoload functions to start caching loadmap.
      *
-     * @param HippocampusInterface $memory
-     * @param string               $name   Memory section name.
-     * @param bool                 $enable Automatically enable.
+     * @param MemoryInterface $memory
+     * @param bool            $enable Automatically enable.
+     * @param string          $name
      */
-    public function __construct(HippocampusInterface $memory, $name = 'loadmap', $enable = true)
-    {
+    public function __construct(
+        MemoryInterface $memory,
+        bool $enable = true,
+        string $name = self::MEMORY
+    ) {
         $this->memory = $memory;
         $this->name = $name;
 
@@ -66,22 +77,30 @@ class Loader extends Component implements SingletonInterface
     }
 
     /**
+     * Check if loader is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
      * Handle SPL auto location, will go to top of spl chain.
      *
-     * @return $this
+     * @return $this|self
      */
-    public function enable()
+    public function enable(): Loader
     {
         if ($this->enabled) {
             return $this;
         }
 
-        if (!empty($this->name)) {
-            $this->loadmap = (array)$this->memory->loadData($this->name);
-        }
-
         spl_autoload_register([$this, 'loadClass'], true, true);
+
         $this->enabled = true;
+        $this->loadmap = (array)$this->memory->loadData(static::MEMORY);
 
         return $this;
     }
@@ -89,14 +108,17 @@ class Loader extends Component implements SingletonInterface
     /**
      * Stop handling SPL calls.
      *
-     * @return $this
+     * @return $this|self
      */
-    public function disable()
+    public function disable(): Loader
     {
-        if ($this->enabled) {
-            spl_autoload_unregister([$this, 'loadClass']);
+        if (!$this->enabled) {
+            return $this;
         }
 
+        spl_autoload_unregister([$this, 'loadClass']);
+
+        $this->memory->saveData($this->name, $this->loadmap);
         $this->enabled = false;
 
         return $this;
@@ -111,84 +133,25 @@ class Loader extends Component implements SingletonInterface
     }
 
     /**
-     * Set loadmap name (section to be used).
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        if ($this->name != $name && !empty($name)) {
-            if (empty($this->loadmap = (array)$this->memory->loadData($name))) {
-                $this->loadmap = [];
-            }
-        }
-
-        $this->name = $name;
-    }
-
-    /**
-     * Find class declaration and load it.
+     * Try to load class declaration from memory or delegate it to other auto-loaders.
      *
      * @param string $class Class name with namespace included.
-     * @return bool
      */
-    public function loadClass($class)
+    public function loadClass(string $class)
     {
         if (isset($this->loadmap[$class])) {
             try {
                 //We already know route to class declaration
                 include_once($this->classes[$class] = $this->loadmap[$class]);
-            } catch (\ErrorException $exception) {
-                //File was replaced or removed
-                unset($this->loadmap[$class]);
 
-                if (!empty($this->name)) {
-                    $this->memory->saveData($this->name, $this->loadmap);
-                }
-
-                //Try to update route to class
-                return $this->loadClass($class);
-            }
-
-            return true;
-        }
-
-        //Composer and other loaders.
-        foreach (spl_autoload_functions() as $function) {
-            if ($function instanceof \Closure || $function[0] != $this) {
-                //Calling loaders
-                call_user_func($function, $class);
-
-                if (
-                    class_exists($class, false)
-                    || interface_exists($class, false)
-                    || trait_exists($class, false)
-                ) {
-                    //Class has been successfully found by external loader
-                    //External loader are not going to provide us any information about class
-                    //location, let's get it via Reflection
-                    $reflector = new \ReflectionClass($class);
-
-                    try {
-                        $filename = str_replace('\\', '/', $reflector->getFileName());
-                        $filename = rtrim(str_replace('//', '/', $filename), '/');
-
-                        //Direct access to filesystem, yep.
-                        if (file_exists($filename)) {
-                            $this->loadmap[$class] = $this->classes[$class] = $filename;
-                            $this->memory->saveData($this->name, $this->loadmap);
-                        }
-                    } catch (\ErrorException $exception) {
-                        //getFileName can throw and exception, we can ignore it
-                    }
-
-                    //Class found
-                    return true;
-                }
+                return;
+            } catch (\Throwable $e) {
+                //Delegating to external loaders
             }
         }
 
-        return false;
+        $this->classes[$class] = null;
+        $this->loadExternal($class);
     }
 
     /**
@@ -196,7 +159,7 @@ class Loader extends Component implements SingletonInterface
      *
      * @return array
      */
-    public function getClasses()
+    public function getClasses(): array
     {
         return $this->classes;
     }
@@ -205,10 +168,69 @@ class Loader extends Component implements SingletonInterface
      * Check if desired class exists in loadmap.
      *
      * @param string $class
+     *
      * @return bool
      */
-    public function isKnown($class)
+    public function isKnown(string $class): bool
     {
-        return isset($this->classes[$class]);
+        return array_key_exists($class, $this->classes);
+    }
+
+    /**
+     * Destroy loader.
+     */
+    public function __destruct()
+    {
+        $this->disable();
+    }
+
+    /**
+     * Try to load class using external auto-loaders.
+     *
+     * @param string $class
+     */
+    protected function loadExternal(string $class)
+    {
+        foreach (spl_autoload_functions() as $function) {
+            if (is_array($function) && get_class($function[0]) == self::class) {
+                //Found ourselves
+                continue;
+            }
+
+            //Call inner loader
+            call_user_func($function, $class);
+
+            if (
+                class_exists($class, false)
+                || interface_exists($class, false)
+                || trait_exists($class, false)
+            ) {
+                $this->rememberFilename($class);
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param string $class
+     */
+    private function rememberFilename(string $class)
+    {
+        //We need reflection to find class location
+        $reflector = new \ReflectionClass($class);
+
+        try {
+            $filename = $reflector->getFileName();
+            $filename = rtrim(
+                str_replace(['\\', '//'], '/', $filename),
+                '/'
+            );
+
+            if (file_exists($filename)) {
+                $this->loadmap[$class] = $this->classes[$class] = $filename;
+            }
+        } catch (\Throwable $e) {
+            //Get filename for classes located in PHARs might break reflection
+        }
     }
 }

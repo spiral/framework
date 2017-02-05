@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Simple command output wrapper. Will be returned from ConsoleDispatcher->command method.
+ * Simple command output wrapper. Will be returned as output from ConsoleDispatcher->command method.
  */
 class CommandOutput extends Component
 {
@@ -30,7 +30,7 @@ class CommandOutput extends Component
      * @param int             $code
      * @param OutputInterface $output
      */
-    public function __construct($code, OutputInterface $output)
+    public function __construct(int $code, OutputInterface $output)
     {
         $this->code = $code;
         $this->output = $output;
@@ -39,7 +39,7 @@ class CommandOutput extends Component
     /**
      * @return int
      */
-    public function getCode()
+    public function getCode(): int
     {
         return $this->code;
     }
@@ -47,7 +47,7 @@ class CommandOutput extends Component
     /**
      * @return OutputInterface|BufferedOutput
      */
-    public function getOutput()
+    public function getOutput(): OutputInterface
     {
         return $this->output;
     }

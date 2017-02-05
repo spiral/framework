@@ -13,6 +13,7 @@ use Spiral\Translator\Translator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Translation\Dumper\DumperInterface;
+use Symfony\Component\Translation\Dumper\FileDumper;
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can
@@ -25,17 +26,17 @@ class DumpCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'i18n:dump';
+    const NAME = 'i18n:dump';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Dump given locale using specified dumper and path';
+    const DESCRIPTION = 'Dump given locale using specified dumper and path';
 
     /**
      * {@inheritdoc}
      */
-    protected $arguments = [
+    const ARGUMENTS = [
         ['locale', InputArgument::REQUIRED, 'Locale to be dumped'],
         ['path', InputArgument::REQUIRED, 'Export path']
     ];
@@ -43,7 +44,7 @@ class DumpCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $options = [
+    const OPTIONS = [
         ['dumper', 'd', InputOption::VALUE_OPTIONAL, 'Dumper name', 'php'],
         ['fallback', 'f', InputOption::VALUE_NONE, 'Merge messages from fallback locale'],
     ];
@@ -51,6 +52,7 @@ class DumpCommand extends Command
     /**
      * @param TranslatorConfig $config
      * @param Translator       $translator
+     *
      * @return void
      */
     public function perform(TranslatorConfig $config, Translator $translator)
@@ -74,9 +76,9 @@ class DumpCommand extends Command
         //Pre-loading all domains
         $messageCatalogue = $catalogue->toMessageCatalogue();
 
-        if ($this->isVerbosity() && !empty($catalogue->getDomains())) {
+        if ($this->isVerbosity() && !empty($messageCatalogue->getDomains())) {
             $this->writeln(
-                "<info>Dumping domain(s):</info> " . join(',', $catalogue->getDomains())
+                "<info>Dumping domain(s):</info> " . join(',', $messageCatalogue->getDomains())
             );
         }
 
@@ -86,6 +88,12 @@ class DumpCommand extends Command
          * @var DumperInterface $dumper
          */
         $dumper = new $dumper;
+
+        if ($dumper instanceof FileDumper) {
+            //Symfony why are you breaking compatibility in internal API?
+            $dumper->setBackup(false);
+        }
+
         $dumper->dump($messageCatalogue, [
             'path'           => $this->argument('path'),
             'default_locale' => $config->defaultLocale(),
@@ -94,6 +102,7 @@ class DumpCommand extends Command
             'xliff_version'  => '2.0'
         ]);
 
-        $this->writeln("Dump successfully completed.");
+        $this->writeln("Dump successfully completed using <info>" . get_class($dumper) . "</info>");
+        $this->writeln("Output directory: <comment>" . realpath($this->argument('path')) . "</comment>");
     }
 }

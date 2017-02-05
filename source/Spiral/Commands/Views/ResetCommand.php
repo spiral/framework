@@ -19,12 +19,12 @@ class ResetCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'views:reset';
+    const NAME = 'views:reset';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Clear view cache for all environments';
+    const DESCRIPTION = 'Clear view cache for all environments';
 
     /**
      * @param ViewsConfig    $config

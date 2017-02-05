@@ -18,19 +18,20 @@ class ReloadCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'i18n:reload';
+    const NAME = 'i18n:reload';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Force Translator to reload locales';
+    const DESCRIPTION = 'Force Translator to reload locales';
 
     /**
      * @param Translator $translator
      */
     public function perform(Translator $translator)
     {
-        $translator->flushLocales()->loadLocales();
+        $translator->flushLocales();
+        $translator->loadLocales();
 
         $this->writeln("Translation cache has been reloaded.");
     }

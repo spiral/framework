@@ -5,11 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Engines\Stempler;
 
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EnvironmentInterface;
-use Spiral\Views\LoaderInterface;
 
 /**
  * Very simple Stempler cache. Almost identical to twig cache except generateKey method.
@@ -27,77 +27,76 @@ class StemplerCache
     protected $environment = null;
 
     /**
-     * TwigCache constructor.
-     *
-     * @param FilesInterface       $files
      * @param EnvironmentInterface $environment
-     * @param LoaderInterface      $loader
+     * @param FilesInterface       $files
      */
-    public function __construct(
-        FilesInterface $files,
-        EnvironmentInterface $environment,
-        LoaderInterface $loader
-    ) {
+    public function __construct(EnvironmentInterface $environment, FilesInterface $files)
+    {
         $this->files = $files;
         $this->environment = $environment;
-        $this->loader = $loader;
     }
 
     /**
-     * Generate cache key for given path.
+     * @param EnvironmentInterface $environment
+     *
+     * @return StemplerCache
+     */
+    public function withEnvironment(EnvironmentInterface $environment): StemplerCache
+    {
+        $cache = clone $this;
+        $cache->environment = $environment;
+
+        return $cache;
+    }
+
+    /**
+     * Generate cache filename for given path.
      *
      * @param string $path
+     *
      * @return string
      */
-    public function generateKey($path)
+    public function cacheFilename(string $path): string
     {
-        $namespace = $this->loader->viewNamespace($path);
-        $name = $this->loader->viewName($path);
+        $hash = hash('md5', $path . '.' . $this->environment->getID());
 
-        $hash = hash('md5', $namespace . ':' . $name . '.' . $this->environment->getID());
-
-        return $this->environment->cacheDirectory() . '/' . $hash . '.php';
-    }
-
-    /**
-     * Get local cache filename (to be included in view).
-     *
-     * @param string $key
-     * @return string
-     */
-    public function cachedFilename($key)
-    {
-        return $this->files->localUri($key);
-    }
-
-    /**
-     * Store data into cache.
-     *
-     * @param string $key
-     * @param string $content
-     */
-    public function write($key, $content)
-    {
-        $this->files->write($key, $content, FilesInterface::RUNTIME, true);
+        return $this->environment->cacheDirectory() . $hash . '.php';
     }
 
     /**
      * Last update time.
      *
-     * @param string $key
+     * @param string $cacheFilename
+     *
      * @return int
      */
-    public function getTimestamp($key)
+    public function timeCached(string $cacheFilename): int
     {
-        if (!$this->environment->cachable()) {
+        if (!$this->environment->isCachable()) {
             //Always expired
             return 0;
         }
 
-        if ($this->files->exists($key)) {
-            return $this->files->time($key);
+        if ($this->files->exists($cacheFilename)) {
+            return $this->files->time($cacheFilename);
         }
 
         return 0;
+    }
+
+    /**
+     * Store data into cache.
+     *
+     * @param string $cacheFilename
+     * @param string $content
+     */
+    public function write(string $cacheFilename, string $content)
+    {
+        $this->files->write(
+            $cacheFilename,
+            $content,
+            FilesInterface::RUNTIME,
+            true
+        );
     }
 }

@@ -48,10 +48,14 @@ class ErrorWriter
      * @param Request         $request
      * @param Response        $response
      * @param ClientException $exception
-     * @return Request
+     *
+     * @return Response
      */
-    public function writeException(Request $request, Response $response, ClientException $exception)
-    {
+    public function writeException(
+        Request $request,
+        Response $response,
+        ClientException $exception
+    ): Response {
         //Has to contain valid http code
         $response = $response->withStatus($exception->getCode());
 
@@ -65,10 +69,11 @@ class ErrorWriter
             return $response;
         }
 
-        $errorPage = $this->views->render($this->config->errorView($exception->getCode()), [
-            'httpConfig' => $this->config,
-            'request'    => $request
-        ]);
+        //Generating error page using view file specified in a config
+        $errorPage = $this->views->render(
+            $this->config->errorView($exception->getCode()),
+            ['httpConfig' => $this->config, 'request' => $request]
+        );
 
         $response->getBody()->write($errorPage);
 
@@ -81,10 +86,14 @@ class ErrorWriter
      * @param Request           $request
      * @param Response          $response
      * @param SnapshotInterface $snapshot
+     *
      * @return Response
      */
-    public function writeSnapshot(Request $request, Response $response, SnapshotInterface $snapshot)
-    {
+    public function writeSnapshot(
+        Request $request,
+        Response $response,
+        SnapshotInterface $snapshot
+    ): Response {
         //Exposing exception
         if ($request->getHeaderLine('Accept') != 'application/json') {
             $response->getBody()->write($snapshot->render());

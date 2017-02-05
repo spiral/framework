@@ -7,12 +7,9 @@
  */
 namespace Spiral\Commands\ODM;
 
-use Psr\Log\NullLogger;
 use Spiral\Console\Command;
-use Spiral\Core\ContainerInterface;
-use Spiral\Debug\Debugger;
+use Spiral\Debug\Benchmarker;
 use Spiral\ODM\ODM;
-use Spiral\Tokenizer\ClassLocator;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -23,52 +20,47 @@ class SchemaCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'odm:schema';
+    const NAME = 'odm:schema';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Update ODM schema';
+    const DESCRIPTION = 'Update ODM schema';
 
     /**
      * {@inheritdoc}
      */
-    protected $options = [
-        ['sync', null, InputOption::VALUE_NONE, 'Syncronize database indexes']
+    const OPTIONS = [
+        ['indexes', 'i', InputOption::VALUE_NONE, 'Create requested database indexes']
     ];
 
     /**
-     * @param Debugger           $debugger
-     * @param ODM                $odm
-     * @param ContainerInterface $container
-     * @param ClassLocator       $locator
+     * @param Benchmarker $benchmarker
+     * @param ODM         $odm
      */
-    public function perform(
-        Debugger $debugger,
-        ODM $odm,
-        ContainerInterface $container,
-        ClassLocator $locator
-    ) {
-        //We don't really need location errors here
-        $locator->setLogger(new NullLogger());
+    public function perform(Benchmarker $benchmarker, ODM $odm)
+    {
+        $benchmark = $benchmarker->benchmark($this, 'update');
 
-        $benchmark = $debugger->benchmark($this, 'update');
-        $builder = $odm->schemaBuilder($locator);
+        $builder = $odm->schemaBuilder(true);
+        $odm->buildSchema($builder, true);
 
-        //To make builder available for other commands (in sequence)
-        $container->bind(get_class($builder), $builder);
+        $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
-        if (!$this->option('sync')) {
-            $this->writeln("<comment>Silent mode on, no mongo indexes to be created.</comment>");
-        }
-
-        //Save and syncronize
-        $odm->updateSchema($builder, $this->option('sync'));
-
-        $elapsed = number_format($debugger->benchmark($this, $benchmark), 3);
-
-        $countModels = count($builder->getDocuments());
-        $this->write("<info>ODM Schema has been updated: <comment>{$elapsed} s</comment>");
+        $countModels = count($builder->getSchemas());
+        $this->write("<info>ODM Schema have been updated: <comment>{$elapsed} s</comment>");
         $this->writeln(", found documents: <comment>{$countModels}</comment></info>");
+
+        if ($this->option('indexes')) {
+
+            $benchmark = $benchmarker->benchmark($this, 'update');
+            $builder->createIndexes();
+            $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
+
+            //todo: better language
+            $this->writeln("<info>Index creation is done:</info> <comment>{$elapsed} s</comment>");
+        } else {
+            $this->writeln("<info>Silent mode on, no mongo indexes to be created.</info>");
+        }
     }
 }

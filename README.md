@@ -1,14 +1,14 @@
-Spiral, modular RAD Framework (beta)
+Spiral, modular RAD Framework
 =======================
-[![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/spiral/spiral/badge.svg?branch=master)](https://coveralls.io/github/spiral/spiral?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/spiral/spiral/badge.svg?branch=09branch)](https://coveralls.io/github/spiral/spiral?branch=09branch)
 
-<img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="220px" alt="Spiral Framework" align="left"/>
+<img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
 The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using an HMVC architecture, layers separation, code re-usability, extremely friendly IoC, PSR-7, simple syntax and customizable scaffolding mechanisms.
 
-[**Skeleton App**](https://github.com/spiral-php/application) | [Guide](https://github.com/spiral-php/guide) | [Gitter](https://gitter.im/spiral/hotline) | [**Forum**](https://groups.google.com/forum/#!forum/spiral-framework) | [Twitter](https://twitter.com/spiralphp) | [**Components**](https://github.com/spiral/components) | [Modules](https://github.com/spiral-modules) | [**Contributing**](https://github.com/spiral/guide/blob/master/contributing.md)
+[**Skeleton App**](https://github.com/spiral-php/application) | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [**Contributing**](https://github.com/spiral/guide/blob/master/contributing.md)
 
-<br/><br/><br/>
+<br/><br/>
 
 Examples:
 --------
@@ -47,12 +47,12 @@ Bootloaders, Factory Methods:
 ```php
 class MyBootloader extends Bootloader
 {
-    protected $bindings = [
+    const BINDINGS = [
         ParserInterface::class => DefaultParser::class,
         'someService'          => SomeService::class
     ];
     
-    protected $singletons = [
+    const SINGLETONS = [
         ReaderInterface::class => [self::class, 'reader'],
     ];
     
@@ -126,25 +126,30 @@ public function downloadAction()
 }
 ```
 
-ORM with adaptive scaffolding (optional) for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with adaptive scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
-class Post extends Record //or RecordEntity without active record like methods
+class Post extends RecordEntity
 {
     use TimestampsTrait;
 
     //Database partitions, isolation and aliasing
-    protected $database = 'blog';
+    const DATABASE = 'blog';
 
-    protected $schema = [
+    const SCHEMA = [
         'id'     => 'bigPrimary',
         'title'  => 'string(64)',
         'status' => 'enum(published,draft)',
         'body'   => 'text',
         
         //Simple relation definition
-        'author'   => [self::BELONGS_TO => Author::class],
         'comments' => [self::HAS_MANY => Comment::class],
+        
+        //Relation thought interface
+        'author'   => [
+            self::BELONGS_TO   => AuthorInterface::class,
+            self::LATE_BINDING => true
+        ],
         
         //Not very simple relation definitions
         'collaborators' => [
@@ -161,60 +166,44 @@ class Post extends Record //or RecordEntity without active record like methods
 ```
 
 ```php
-//Post::find() == $this->orm->selector(Post::class) == PostSource->find() == Post::source()->find()
-$posts = Post::find()
-    ->distinct()
-    ->with('comments') //Automatic joins
-    ->with('author')->where('author.name', 'LIKE', $authorName) //Fluent
+$posts = $this->orm->source(Post::class)
+    ->find()->distinct()
+    ->with('comments', ['where' => ['{@}.approved' => true]]) //Automatic joins
+    ->with('author')->where('author_name', 'LIKE', $authorName) //Fluent
     ->load('comments.author') //Cascade eager-loading (joins or external query)
     ->paginate(10) //Quick pagination using active request
-    ->all();
+    ->fetchAll();
 
 foreach($posts as $post) {
     echo $post->author->getName();
 }
 ```
 
-Embedded functionality for static indexation of your code (foundation for many internal components):
+```php
+$post = new Post();
+$post->publish_at = 'tomorrow';
+$post->author = new User(['name' => 'Antony']);
+
+$post->tags->link(new Tag(['name' => 'tag A']));
+$post->tags->link($tags->findOne(['name' => 'tag B']));
+
+$transaction = new Transaction();
+$transaction->store($post);
+$transaction->run();
+
+dump($post);
+```
+
+Embedded functionality for static indexation of your code:
 
 ```php
 public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
 {
     dump($locator->getClasses(ControllerInterface::class));
+    dump($invocations->getInvocations(new \ReflectionFunction('dump')));
 }
 ```
 
-Extendable and programmable template markup language compatible with any command syntax ([plain PHP by default](https://github.com/spiral/spiral/issues/125)):
-
-```html
-<spiral:grid source="<?= $uploads ?>" as="upload">
-    <grid:cell title="ID:" value="<?= $upload->getId() ?>"/>
-    <grid:cell title="Time Created:" value="<?= $upload->getTimeCreated() ?>"/>
-    <grid:cell title="Label:" value="<?= e($upload->getLabel()) ?>"/>
-
-    <grid:cell.bytes title="Filesize:" value="<?= $upload->getFilesize() ?>"/>
-
-    <grid:cell>
-        <a href="<?= uri('uploads::edit', $upload) ?>">Edit</a>
-    </grid:cell>
-</spiral:grid>
-```
-> You can write your own virtual tags (similar to web components or [Polymer](https://www.polymer-project.org/1.0/) with server side compilation), layouts and wrappers with almost any functionality or connect external libraries like [Vault](https://github.com/spiral-modules/vault).
-
-Includes
-=============
-Plug and Play extensions, small footprint, IDE friendly, frontend toolkit (ajax forms, asset manager), static analysis, loosely coupled, cloud storages, MongoDB, auto-indexable translator, Interop Container, Zend Diactoros, Symfony Console, Symfony Translation (interfaces), Symfony Events, Monolog, Twig, debugging/profiling tools and much more.
-
-Modules
-=======
-[Scaffolder](https://github.com/spiral-modules/scaffolder) - provides set of console commands and extendable class declarations for application scaffolding.
-
-[Security Layer](https://github.com/spiral-modules/security) - flat RBAC security layer with Role-Permission-Rule association mechanism. 
-
-[Vault](https://github.com/spiral-modules/vault) - friendly and extendable administration panel based on Materialize CSS and Security component.
-
-[Auth](https://github.com/spiral-modules/auth) - authentication layer with multiple token operators and firewall middlewares.
-
 Inspired by
 ===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET.
+Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3, RoR ORM.

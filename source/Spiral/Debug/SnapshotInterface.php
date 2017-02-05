@@ -15,34 +15,34 @@ interface SnapshotInterface
     /**
      * Associated exception.
      *
-     * @return \Throwable
+     * @return \Throwable|\Exception
      */
-    public function getException();
+    public function getException(): \Throwable;
 
     /**
      * Must return formatted exception message including exception class, location and etc.
      *
      * @return string
      */
-    public function getMessage();
-
-    /**
-     * Report or store snapshot in known location. Used to store exception information for future
-     * analysis.
-     */
-    public function report();
+    public function getMessage(): string;
 
     /**
      * Get shortened exception description in array form.
      *
      * @return array
      */
-    public function describe();
+    public function describe(): array;
 
     /**
      * Render snapshot information into string or html.
      *
      * @return string
      */
-    public function render();
+    public function render(): string;
+
+    /**
+     * Report or store snapshot in known location. Used to store exception information for future
+     * analysis.
+     */
+    public function report();
 }

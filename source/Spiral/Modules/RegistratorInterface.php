@@ -22,7 +22,8 @@ interface RegistratorInterface
      * @param string $id Wrapper string must identify what module added configuration lines. In
      *                   some future wrappers can be used to un-register modules.
      * @param array  $lines
+     *
      * @throws RegistratorException
      */
-    public function configure($config, $placeholder, $id, array $lines);
+    public function configure(string $config, string $placeholder, string $id, array $lines);
 }

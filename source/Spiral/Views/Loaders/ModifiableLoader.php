@@ -1,61 +1,76 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Loaders;
 
 use Spiral\Core\Component;
 use Spiral\Debug\Traits\BenchmarkTrait;
+use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\LoaderInterface;
-use Spiral\Views\ModifierInterface;
+use Spiral\Views\ViewSource;
 
 /**
- * Wraps at top of views loader and applies source modifiers.
+ * Provides ability to wrap another loader in a given enviroment and process all view sources
+ * before giving them to engine.
+ *
+ * Modifiers executed on template source BEFORE providing it to engine.
  */
 class ModifiableLoader extends Component implements LoaderInterface
 {
-    /**
-     * Benchmarking modifiers.
-     */
     use BenchmarkTrait;
 
     /**
+     * Loaded to be used for file resolution.
+     *
      * @var LoaderInterface
      */
-    protected $loader = null;
+    private $parent = null;
 
     /**
-     * @var ModifierInterface[]
+     * Required in order to give processors some context.
+     *
+     * @var EnvironmentInterface
+     */
+    private $environment = null;
+
+    /**
+     * @var \Spiral\Views\ProcessorInterface[]
      */
     protected $modifiers = [];
 
     /**
-     * @param LoaderInterface     $loader
-     * @param ModifierInterface[] $modifiers
+     * ProcessableLoader constructor.
+     *
+     * @param EnvironmentInterface $environment
+     * @param LoaderInterface      $loader
+     * @param array                $modifiers
      */
-    public function __construct(LoaderInterface $loader, array $modifiers = [])
-    {
-        $this->loader = $loader;
+    public function __construct(
+        EnvironmentInterface $environment,
+        LoaderInterface $loader,
+        array $modifiers = []
+    ) {
+        $this->environment = $environment;
+        $this->parent = $loader;
         $this->modifiers = $modifiers;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSource($path)
+    public function getSource(string $path): ViewSource
     {
-        $source = $this->loader->getSource($path);
+        $source = $this->parent->getSource($path);
 
         foreach ($this->modifiers as $modifier) {
-            $benchmark = $this->benchmark('modify', $path . '@' . get_class($modifier));
+            $benchmark = $this->benchmark('process', $path . '@' . get_class($modifier));
             try {
-                $source = $modifier->modify(
-                    $source,
-                    $this->viewNamespace($path),
-                    $this->viewName($path)
+                $source = $source->withCode(
+                    $modifier->modify($this->environment, $source, $source->getCode())
                 );
             } finally {
                 $this->benchmark($benchmark);
@@ -68,59 +83,27 @@ class ModifiableLoader extends Component implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getCacheKey($name)
+    public function exists(string $path): bool
     {
-        return $this->loader->getCacheKey($name);
+        return $this->parent->exists($path);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isFresh($name, $time)
+    public function getNamespaces(): array
     {
-        return $this->loader->isFresh($name, $time);
+        return $this->parent->getNamespaces();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getNamespaces()
-    {
-        return $this->loader->getNamespaces();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function viewNamespace($path)
-    {
-        return $this->loader->viewNamespace($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function viewName($path)
-    {
-        return $this->loader->viewName($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withExtension($extension)
+    public function withExtension(string $extension = null): LoaderInterface
     {
         $wrapper = clone $this;
-        $wrapper->loader = $wrapper->loader->withExtension($extension);
+        $wrapper->parent = $wrapper->parent->withExtension($extension);
 
         return $wrapper;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function localFilename($path)
-    {
-        return $this->loader->localFilename($path);
     }
 }

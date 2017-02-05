@@ -19,7 +19,7 @@ class Parser extends Loader
      *
      * @return array
      */
-    public function parse()
+    public function parse(): array
     {
         $values = [];
 
@@ -36,18 +36,5 @@ class Parser extends Loader
         }
 
         return $values;
-    }
-
-    protected function parseLine($name, $value = null)
-    {
-        list($name, $value) = $this->normaliseEnvironmentVariable($name, $value);
-
-        // Don't overwrite existing environment variables if we're immutable
-        // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if ($this->immutable === true && !is_null($this->getEnvironmentVariable($name))) {
-            return;
-        }
-
-        return [$name, $value];
     }
 }

@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core\Containers;
 
 use Spiral\Core\Container;
@@ -27,6 +28,10 @@ class SpiralContainer extends Container implements ContainerInterface
         'Spiral\Core\InteropContainerInterface'             => ContainerInterface::class,
         'Spiral\Core\FactoryInterface'                      => ContainerInterface::class,
         'Spiral\Core\ResolverInterface'                     => ContainerInterface::class,
+        'Spiral\Core\ScoperInterface'                       => ContainerInterface::class,
+
+        //Logging and debugging
+        'Spiral\Debug\LogsInterface'                        => 'Spiral\Debug\LogManager',
 
         //Configurator
         'Spiral\Core\ConfiguratorInterface'                 => 'Spiral\Core\Configurator',
@@ -34,33 +39,14 @@ class SpiralContainer extends Container implements ContainerInterface
         //Files
         'Spiral\Files\FilesInterface'                       => 'Spiral\Files\FileManager',
 
-        //Instrumental bindings
-        'Psr\Log\LoggerInterface'                           => 'Spiral\Debug\SharedLogger',
-        'Spiral\Debug\LogsInterface'                        => 'Spiral\Debug\Debugger',
+        //Default instances
+        'Spiral\Cache\StoreInterface'                       => 'Spiral\Cache\Prototypes\CacheStore',
         'Spiral\Encrypter\EncrypterInterface'               => 'Spiral\Encrypter\Encrypter',
-
-        //Cache component bindings
-        'Spiral\Cache\CacheInterface'                       => 'Spiral\Cache\CacheManager',
-        'Spiral\Cache\StoreInterface'                       => 'Spiral\Cache\CacheStore',
-
-        //Views
-        'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',
-
-        //Storage manager interfaces
-        'Spiral\Storage\StorageInterface'                   => 'Spiral\Storage\StorageManager',
-        'Spiral\Storage\BucketInterface'                    => 'Spiral\Storage\Entities\StorageBucket',
-        'Spiral\Session\SessionInterface'                   => 'Spiral\Session\SessionStore',
 
         //Tokenization and class/invocation location
         'Spiral\Tokenizer\TokenizerInterface'               => 'Spiral\Tokenizer\Tokenizer',
-        'Spiral\Tokenizer\ClassLocatorInterface'            => 'Spiral\Tokenizer\ClassLocator',
-        'Spiral\Tokenizer\InvocationLocatorInterface'       => 'Spiral\Tokenizer\InvocationLocator',
-
-        //Validation and translation
-        'Spiral\Validation\ValidatorInterface'              => 'Spiral\Validation\Validator',
-        'Symfony\Component\Translation\TranslatorInterface' => 'Spiral\Translator\TranslatorInterface',
-        'Spiral\Translator\TranslatorInterface'             => 'Spiral\Translator\Translator',
-        'Spiral\Translator\SourceInterface'                 => 'Spiral\Translator\TranslationSource',
+        'Spiral\Tokenizer\ClassesInterface'                 => 'Spiral\Tokenizer\ClassLocator',
+        'Spiral\Tokenizer\InvocationsInterface'             => 'Spiral\Tokenizer\InvocationsLocator',
 
         //Databases
         'Spiral\Database\DatabaseInterface'                 => 'Spiral\Database\Entities\Database',
@@ -68,13 +54,82 @@ class SpiralContainer extends Container implements ContainerInterface
 
         //Http
         'Spiral\Http\HttpInterface'                         => 'Spiral\Http\HttpDispatcher',
-        'Spiral\Http\Request\InputInterface'                => 'Spiral\Http\Input\InputManager',
+        'Spiral\Http\Request\InputInterface'                => 'Spiral\Http\Request\InputManager',
+
+        //Http based pagination
+        'Spiral\Pagination\PaginatorsInterface'             => 'Spiral\Pagination\PaginationFactory',
+
+        //Storage manager interfaces
+        'Spiral\Storage\StorageInterface'                   => 'Spiral\Storage\StorageManager',
+        'Spiral\Storage\BucketInterface'                    => 'Spiral\Storage\Entities\StorageBucket',
+
+        //Session
+        'Spiral\Session\SessionInterface'                   => 'Spiral\Session\Session',
+        'Spiral\Session\SectionInterface'                   => 'Spiral\Session\SessionSection',
+
+        //Default validator
+        'Spiral\Validation\ValidatorInterface'              => 'Spiral\Validation\Validator',
+
+        //Translations and internalization
+        'Symfony\Component\Translation\TranslatorInterface' => 'Spiral\Translator\TranslatorInterface',
+        'Spiral\Translator\TranslatorInterface'             => 'Spiral\Translator\Translator',
+        'Spiral\Translator\LocatorInterface'                => 'Spiral\Translator\TranslationLocator',
+
+        //Views
+        'Spiral\Views\ViewsInterface'                       => 'Spiral\Views\ViewManager',
 
         //Modules
-        'Spiral\Modules\PublisherInterface'                 => 'Spiral\Modules\Entities\Publisher',
-        'Spiral\Modules\RegistratorInterface'               => 'Spiral\Modules\Entities\Registrator',
+        'Spiral\Modules\PublisherInterface'                 => 'Spiral\Modules\Publisher',
+        'Spiral\Modules\RegistratorInterface'               => 'Spiral\Modules\Registrator',
 
-        //Default snapshotter
-        'Spiral\Debug\SnapshotInterface'                    => 'Spiral\Debug\QuickSnapshot'
+        //Default snapshot handler
+        'Spiral\Debug\SnapshotInterface'                    => 'Spiral\Debug\QuickSnapshot',
+
+        //Security component
+        'Spiral\Security\PermissionsInterface'              => 'Spiral\Security\PermissionManager',
+        'Spiral\Security\RulesInterface'                    => 'Spiral\Security\RuleManager',
+        'Spiral\Security\GuardInterface'                    => 'Spiral\Security\Guard',
+
+        //ODM and ORM
+        'Spiral\ODM\ODMInterface'                           => 'Spiral\ODM\ODM',
+        'Spiral\ORM\ORMInterface'                           => 'Spiral\ORM\ORM',
+
+        //Migrations
+        'Spiral\Migrations\RepositoryInterface'             => 'Spiral\Migrations\FileRepository',
+
+        //Locators
+        'Spiral\Console\LocatorInterface'                   => 'Spiral\Console\CommandLocator',
+        'Spiral\ODM\Schemas\LocatorInterface'               => 'Spiral\ODM\Schemas\SchemaLocator',
+        'Spiral\ORM\Schemas\LocatorInterface'               => 'Spiral\ORM\Schemas\SchemaLocator',
     ];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function replace(string $alias, $resolver): array
+    {
+        $payload = [$alias, null];
+        if (isset($this->bindings[$alias])) {
+            $payload[1] = $this->bindings[$alias];
+        }
+
+        $this->bind($alias, $resolver);
+
+        return $payload;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function restore(array $payload)
+    {
+        list($alias, $resolver) = $payload;
+
+        unset($this->bindings[$alias]);
+
+        if (!empty($resolver)) {
+            //Restoring original value
+            $this->bindings[$alias] = $resolver;
+        }
+    }
 }

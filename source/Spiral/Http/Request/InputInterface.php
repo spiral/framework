@@ -7,12 +7,10 @@
  */
 namespace Spiral\Http\Request;
 
-use Spiral\Http\Exceptions\Request\InputException;
+use Spiral\Http\Exceptions\InputException;
 
 /**
  * Provides values for RequestFilter.
- * 
- * @todo move to higher level
  */
 interface InputInterface
 {
@@ -21,8 +19,24 @@ interface InputInterface
      *
      * @param string $source
      * @param string $name
+     *
      * @return mixed
+     *
      * @throws InputException
      */
-    public function getValue($source, $name = null);
+    public function getValue(string $source, string $name = null);
+
+    /**
+     * Create version of input isolated by a given prefix.
+     *
+     * In a given examples listed method must produce same result:
+     *
+     * $input->getValue('data', 'array.value')
+     * $input->withPrefix('array')->getValue('data', 'value')
+     *
+     * @param string $prefix
+     *
+     * @return InputInterface
+     */
+    public function withPrefix(string $prefix): InputInterface;
 }

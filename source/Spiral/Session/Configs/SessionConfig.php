@@ -5,12 +5,13 @@
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Session\Configs;
 
 use Spiral\Core\InjectableConfig;
 
 /**
- * Translation component configuration.
+ * SessionManager configuration.
  */
 class SessionConfig extends InjectableConfig
 {
@@ -20,24 +21,33 @@ class SessionConfig extends InjectableConfig
     const CONFIG = 'session';
 
     /**
-     * Default session handler.
-     */
-    const NATIVE_HANDLER = false;
-
-    /**
      * @var array
      */
     protected $config = [
         'lifetime' => 86400,
-        'cookie'   => 'spiral-session',
-        'handler'  => self::NATIVE_HANDLER,
+        'cookie'   => 'SID',
+        'secure'   => false,
+        'handler'  => null,
         'handlers' => []
     ];
 
     /**
+     * List of headers to be used for session signature.
+     *
+     * @return array
+     */
+    public function signHeaders(): array
+    {
+        return [
+            'User-Agent',
+            'Accept-Language'
+        ];
+    }
+
+    /**
      * @return int
      */
-    public function sessionLifetime()
+    public function sessionLifetime(): int
     {
         return $this->config['lifetime'];
     }
@@ -45,15 +55,23 @@ class SessionConfig extends InjectableConfig
     /**
      * @return string
      */
-    public function sessionCookie()
+    public function sessionCookie(): string
     {
         return $this->config['cookie'];
     }
 
     /**
-     * Default session handler.
+     * @return bool
+     */
+    public function sessionSecure(): bool
+    {
+        return $this->config['secure'] ?? false;
+    }
+
+    /**
+     * Default session handler. When NULL no handlers to be used.
      *
-     * @return string|mixed
+     * @return string|null
      */
     public function sessionHandler()
     {
@@ -61,19 +79,22 @@ class SessionConfig extends InjectableConfig
     }
 
     /**
+     * @param string $handler
+     *
      * @return string
      */
-    public function handlerClass()
+    public function handlerClass(string $handler): string
     {
-        return $this->config['handlers'][$this->sessionHandler()]['class'];
-
+        return $this->config['handlers'][$handler]['class'];
     }
 
     /**
+     * @param string $handler
+     *
      * @return array
      */
-    public function handlerParameters()
+    public function handlerOptions(string $handler): array
     {
-        return $this->config['handlers'][$this->sessionHandler()] + ['lifetime' => $this->sessionLifetime()];
+        return $this->config['handlers'][$handler]['options'] + ['lifetime' => $this->sessionLifetime()];
     }
 }

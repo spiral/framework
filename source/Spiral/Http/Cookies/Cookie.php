@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Cookies;
 
 /**
@@ -82,6 +83,7 @@ final class Cookie
      * New Cookie instance, cookies used to schedule cookie set while dispatching Response.
      *
      * @link http://php.net/manual/en/function.setcookie.php
+     *
      * @param string $name     The name of the cookie.
      * @param string $value    The value of the cookie. This value is stored on the clients
      *                         computer; do not store sensitive information.
@@ -116,13 +118,13 @@ final class Cookie
      *                         supported by all browsers).
      */
     public function __construct(
-        $name,
-        $value = null,
-        $lifetime = null,
-        $path = null,
-        $domain = null,
-        $secure = false,
-        $httpOnly = true
+        string $name,
+        string $value = null,
+        int $lifetime = null,
+        string $path = null,
+        string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = true
     ) {
         $this->name = $name;
         $this->value = $value;
@@ -138,7 +140,7 @@ final class Cookie
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -147,7 +149,7 @@ final class Cookie
      * The value of the cookie. This value is stored on the clients computer; do not store sensitive
      * information.
      *
-     * @return string
+     * @return string|null
      */
     public function getValue()
     {
@@ -193,7 +195,7 @@ final class Cookie
      * compatible with more browsers. Setting it to www.example.com will make the cookie only
      * available in the www subdomain. Refer to tail matching in the spec for details.
      *
-     * @return string
+     * @return string|null
      */
     public function getDomain()
     {
@@ -209,7 +211,7 @@ final class Cookie
      *
      * @return bool
      */
-    public function getSecure()
+    public function isSecure(): bool
     {
         return $this->secure;
     }
@@ -222,7 +224,7 @@ final class Cookie
      *
      * @return bool
      */
-    public function getHttpOnly()
+    public function isHttpOnly(): bool
     {
         return $this->httpOnly;
     }
@@ -231,9 +233,10 @@ final class Cookie
      * Get new cookie with altered value. Original cookie object should not be changed.
      *
      * @param string $value
+     *
      * @return Cookie
      */
-    public function withValue($value)
+    public function withValue(string $value): self
     {
         $cookie = clone $this;
         $cookie->value = $value;
@@ -247,7 +250,7 @@ final class Cookie
      * @link http://www.w3.org/Protocols/rfc2109/rfc2109
      * @return string
      */
-    public function createHeader()
+    public function createHeader(): string
     {
         $header = [
             rawurlencode($this->name) . '=' . rawurlencode($this->value)
@@ -282,6 +285,7 @@ final class Cookie
      * Static constructor.
      *
      * @link http://php.net/manual/en/function.setcookie.php
+     *
      * @param string $name     The name of the cookie.
      * @param string $value    The value of the cookie. This value is stored on the clients
      *                         computer; do not store sensitive information.
@@ -314,24 +318,25 @@ final class Cookie
      *                         languages, such as JavaScript. This setting can effectively help to
      *                         reduce identity theft through XSS attacks (although it is not
      *                         supported by all browsers).
+     *
      * @return Cookie
      */
     public static function create(
-        $name,
-        $value = null,
-        $lifetime = null,
-        $path = null,
-        $domain = null,
-        $secure = false,
-        $httpOnly = true
-    ) {
+        string $name,
+        string $value = null,
+        int $lifetime = null,
+        string $path = null,
+        string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = true
+    ): self {
         return new self($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->createHeader();
     }

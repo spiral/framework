@@ -10,7 +10,6 @@ namespace Spiral\Commands\Spiral;
 use Spiral\Console\Command;
 use Spiral\Core\Bootloaders\Bootloader;
 use Spiral\Core\BootloadManager;
-use Spiral\Modules\ModuleInterface;
 
 /**
  * List all bootloaded libraries and classes.
@@ -20,24 +19,19 @@ class BootloadsCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'app:bootloads';
+    const NAME = 'app:bootloads';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'List all bootloaded classes and libraries';
+    const DESCRIPTION = 'List all bootloaded classes and libraries';
 
     /**
      * @param BootloadManager $bootloader
      */
     public function perform(BootloadManager $bootloader)
     {
-        $grid = $this->tableHelper([
-            'Class:',
-            'Module:',
-            'Booted:',
-            'Location:'
-        ]);
+        $grid = $this->table(['Class:', 'Booted:', 'Location:']);
 
         foreach ($bootloader->getClasses() as $class) {
             $reflection = new \ReflectionClass($class);
@@ -46,7 +40,6 @@ class BootloadsCommand extends Command
 
             $grid->addRow([
                 $reflection->getName(),
-                $reflection->isSubclassOf(ModuleInterface::class) ? '<info>yes</info>' : 'no',
                 $booted ? 'yes' : '<info>no</info>',
                 $reflection->getFileName()
             ]);

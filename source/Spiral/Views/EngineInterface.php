@@ -13,24 +13,31 @@ namespace Spiral\Views;
 interface EngineInterface extends ViewsInterface
 {
     /**
-     * Change engine view loader.
+     * Create view engine with new loader. MUST no alter original engine settings.
      *
      * @param LoaderInterface $loader
+     *
+     * @return EngineInterface
      */
-    public function setLoader(LoaderInterface $loader);
+    public function withLoader(LoaderInterface $loader): EngineInterface;
 
     /**
-     * Change view environment (should change cache behaviour).
+     * Create engine version with new view environment (should change cache behaviour). MUST no
+     * alter original engine settings.
      *
      * @param EnvironmentInterface $environment
+     *
+     * @return EngineInterface
      */
-    public function setEnvironment(EnvironmentInterface $environment);
+    public function withEnvironment(EnvironmentInterface $environment): EngineInterface;
 
     /**
      * Pre-compile specified template/view.
      *
      * @param string $path
-     * @param bool   $reset
+     * @param bool   $reset Ignore cache.
+     *
+     * @throws \Spiral\Views\Exceptions\CompileException
      */
-    public function compile($path, $reset = false);
+    public function compile(string $path, bool $reset = false);
 }

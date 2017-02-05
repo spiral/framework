@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Database;
 
 use Spiral\Console\Command;
@@ -26,17 +27,17 @@ class ListCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'db:list';
+    const NAME = 'db:list';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Get list of available databases, their tables and records count';
+    const DESCRIPTION = 'Get list of available databases, their tables and records count';
 
     /**
      * {@inheritdoc}
      */
-    protected $arguments = [
+    const ARGUMENTS = [
         ['db', InputArgument::OPTIONAL, 'Database name']
     ];
 
@@ -59,7 +60,7 @@ class ListCommand extends Command
             return;
         }
 
-        $grid = $this->tableHelper([
+        $grid = $this->table([
             'Name (ID):',
             'Database:',
             'Driver:',
@@ -72,7 +73,7 @@ class ListCommand extends Command
         foreach ($databases as $database) {
             $database = $dbal->database($database);
 
-            $driver = $database->driver();
+            $driver = $database->getDriver();
 
             $header = [
                 $database->getName(),
@@ -99,8 +100,10 @@ class ListCommand extends Command
 
             $header[] = "<info>connected</info>";
             foreach ($database->getTables() as $table) {
-                $grid->addRow(array_merge($header,
-                    [$table->getName(), number_format($table->count())]));
+                $grid->addRow(array_merge(
+                    $header,
+                    [$table->getName(), number_format($table->count())]
+                ));
                 $header = ["", "", "", "", ""];
             }
 

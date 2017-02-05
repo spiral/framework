@@ -7,8 +7,8 @@
  */
 namespace Spiral\Http;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Spiral\Http\Exceptions\ClientException;
 
 /**
@@ -19,17 +19,18 @@ interface HttpInterface
     /**
      * Execute request using internal http logic.
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface      $response
-     * @return ResponseInterface
+     * @param Request  $request
+     * @param Response $response
+     *
+     * @return Response
      * @throws ClientException
      */
-    public function perform(ServerRequestInterface $request, ResponseInterface $response = null);
+    public function perform(Request $request, Response $response = null): Response;
 
     /**
      * Dispatch response to client.
      *
-     * @param ResponseInterface $response
+     * @param Response $response
      */
-    public function dispatch(ResponseInterface $response);
+    public function dispatch(Response $response);
 }

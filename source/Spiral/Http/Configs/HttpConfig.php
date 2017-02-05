@@ -5,16 +5,18 @@
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Configs;
 
 use Psr\Http\Message\UriInterface;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\InjectableConfig;
 use Spiral\Http\Routing\Router;
 
 /**
  * HttpDispatcher configuration.
  */
-class HttpConfig extends InjectableConfig
+class HttpConfig extends InjectableConfig implements SingletonInterface
 {
     /**
      * Configuration section.
@@ -67,7 +69,7 @@ class HttpConfig extends InjectableConfig
     /**
      * @return string
      */
-    public function basePath()
+    public function basePath(): string
     {
         return $this->config['basePath'];
     }
@@ -75,7 +77,7 @@ class HttpConfig extends InjectableConfig
     /**
      * @return bool
      */
-    public function exposeErrors()
+    public function exposeErrors(): bool
     {
         return $this->config['exposeErrors'];
     }
@@ -85,7 +87,7 @@ class HttpConfig extends InjectableConfig
      *
      * @return array
      */
-    public function defaultHeaders()
+    public function defaultHeaders(): array
     {
         return $this->config['headers'];
     }
@@ -95,7 +97,7 @@ class HttpConfig extends InjectableConfig
      *
      * @return array
      */
-    public function defaultMiddlewares()
+    public function defaultMiddlewares(): array
     {
         return $this->config['middlewares'];
     }
@@ -115,7 +117,7 @@ class HttpConfig extends InjectableConfig
      *
      * @return string
      */
-    public function routerClass()
+    public function routerClass(): string
     {
         return $this->config['router']['class'];
     }
@@ -125,26 +127,28 @@ class HttpConfig extends InjectableConfig
      *
      * @return array
      */
-    public function routerParameters()
+    public function routerOptions(): array
     {
         //Let's automatically add basePath value
-        return $this->config['router']['parameters'] + ['basePath' => $this->basePath()];
+        return $this->config['router']['options'] + ['basePath' => $this->basePath()];
     }
 
     /**
      * @param string $errorCode
+     *
      * @return bool
      */
-    public function hasView($errorCode)
+    public function hasView($errorCode): bool
     {
         return isset($this->config['httpErrors'][$errorCode]);
     }
 
     /**
      * @param string $errorCode
+     *
      * @return string
      */
-    public function errorView($errorCode)
+    public function errorView($errorCode): string
     {
         return $this->config['httpErrors'][$errorCode];
     }
@@ -153,7 +157,8 @@ class HttpConfig extends InjectableConfig
      * Return config and uri specific cookie domain.
      *
      * @param UriInterface $uri
-     * @return string
+     *
+     * @return string|null
      */
     public function cookiesDomain(UriInterface $uri)
     {
@@ -161,7 +166,7 @@ class HttpConfig extends InjectableConfig
 
         $pattern = $this->config['cookies']['domain'];
         if (filter_var($host, FILTER_VALIDATE_IP)) {
-            //We can't use sub domains
+            //We can't use sub-domains when website required by IP
             $pattern = ltrim($pattern, '.');
         }
 
@@ -182,7 +187,7 @@ class HttpConfig extends InjectableConfig
      *
      * @return int
      */
-    public function cookieProtection()
+    public function cookieProtection(): int
     {
         return $this->config['cookies']['method'];
     }
@@ -192,7 +197,7 @@ class HttpConfig extends InjectableConfig
      *
      * @return array
      */
-    public function excludedCookies()
+    public function excludedCookies(): array
     {
         if (empty($this->config['cookies']['excluded'])) {
             return [];
@@ -204,7 +209,7 @@ class HttpConfig extends InjectableConfig
     /**
      * @return string
      */
-    public function csrfCookie()
+    public function csrfCookie(): string
     {
         return $this->config['csrf']['cookie'];
     }
@@ -212,16 +217,24 @@ class HttpConfig extends InjectableConfig
     /**
      * @return int
      */
-    public function csrfLength()
+    public function csrfLength(): int
     {
         return $this->config['csrf']['length'];
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function csrfLifetime()
     {
         return $this->config['csrf']['lifetime'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function csrfSecure(): bool
+    {
+        return !empty($this->config['csrf']['secure']);
     }
 }

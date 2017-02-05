@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
 /**
@@ -13,31 +14,27 @@ namespace Spiral\Core;
 interface EnvironmentInterface
 {
     /**
+     * Unique environment ID.
+     *
+     * @return string
+     */
+    public function getID(): string;
+    
+    /**
      * Set environment value.
      *
      * @param string $name
      * @param mixed  $value
      */
-    public function set($name, $value);
+    public function set(string $name, $value);
 
     /**
      * Get environment value.
      *
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function get($name, $default = null);
-
-    /**
-     * Load environment values from associated storage.
-     */
-    public function load();
-
-    /**
-     * Unique environment identificator
-     *
-     * @return string
-     */
-    public function getID();
+    public function get(string $name, $default = null);
 }

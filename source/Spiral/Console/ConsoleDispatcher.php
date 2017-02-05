@@ -1,30 +1,26 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Console;
 
-use Monolog\Handler\HandlerInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\NullLogger;
+use Spiral\Console\Configs\ConsoleConfig;
 use Spiral\Console\Exceptions\ConsoleException;
-use Spiral\Console\Logging\ConsoleHandler;
+use Spiral\Console\Logging\DebugHandler;
 use Spiral\Core\Component;
+use Spiral\Core\Container;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DispatcherInterface;
-use Spiral\Core\HippocampusInterface;
-use Spiral\Debug\BenchmarkerInterface;
-use Spiral\Debug\Debugger;
-use Spiral\Debug\LogsInterface;
+use Spiral\Core\MemoryInterface;
+use Spiral\Core\NullMemory;
+use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Tokenizer\ClassLocatorInterface;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -34,8 +30,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Used as application dispatcher in console mode. Can execute automatically locate and execute
  * every available Symfony command.
- *
- * @todo optimize
  */
 class ConsoleDispatcher extends Component implements SingletonInterface, DispatcherInterface
 {
@@ -45,202 +39,155 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     const CODE_UNDEFINED = 102;
 
     /**
-     * @var Application
+     * @var ConsoleApplication
      */
     private $application = null;
 
     /**
-     * @var array
+     * Active console output.
+     *
+     * @var OutputInterface
      */
-    private $commands = [];
+    private $output = null;
 
     /**
-     * Needed to set valid scope for commands.
-     *
-     * @var mixed
+     * @var ConsoleConfig
      */
-    private $inputScope = null;
-
-    /**
-     * Needed to set valid scope for commands.
-     *
-     * @var mixed
-     */
-    private $outputScope = null;
+    protected $config;
 
     /**
      * @invisible
      * @var ContainerInterface
      */
-    protected $container = null;
+    protected $container;
 
     /**
      * @invisible
-     * @var HippocampusInterface
+     * @var MemoryInterface
      */
-    protected $memory = null;
+    protected $memory;
 
     /**
-     * @var ClassLocatorInterface
+     * @invisible
+     * @var LocatorInterface
      */
-    protected $locator = null;
+    protected $locator;
 
     /**
-     * @var Debugger
-     */
-    protected $debugger = null;
-
-    /**
-     * @param ContainerInterface    $container
-     * @param HippocampusInterface  $memory
-     * @param ClassLocatorInterface $locator
-     * @param Debugger              $debugger
+     * @param ConsoleConfig           $config
+     * @param ContainerInterface|null $container
+     * @param MemoryInterface|null    $memory
+     * @param LocatorInterface|null   $locator
      */
     public function __construct(
-        ContainerInterface $container,
-        HippocampusInterface $memory,
-        ClassLocatorInterface $locator,
-        Debugger $debugger
+        ConsoleConfig $config,
+        ContainerInterface $container = null,
+        MemoryInterface $memory = null,
+        LocatorInterface $locator = null
     ) {
-        $this->container = $container;
-        $this->memory = $memory;
-        $this->locator = $locator;
+        $this->config = $config;
+        $this->container = $container ?? new Container();
+        $this->memory = $memory ?? new NullMemory();
+        $this->locator = $locator ?? new NullLocator();
+    }
 
-        //Trying to load list of commands from memory cache
-        $this->commands = $memory->loadData('commands');
-        if (!is_array($this->commands)) {
-            $this->commands = [];
+    /**
+     * {@inheritdoc}
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    public function start(InputInterface $input = null, OutputInterface $output = null)
+    {
+        //Let's keep output reference to render exceptions
+        $this->output = $output ?? new ConsoleOutput();
+
+        $this->runScoped(function () use ($input) {
+            $this->consoleApplication()->run($input, $this->output);
+        }, $this->output);
+    }
+
+    /**
+     * Execute console command by it's name. Attention, this method will automatically set debug
+     * handler which will display log messages into console when verbosity is ON, hovewer, already
+     * existed Logger instances would not be affected.
+     *
+     * @param string|null          $command Default command when null.
+     * @param array|InputInterface $input
+     * @param OutputInterface      $output
+     *
+     * @return CommandOutput
+     *
+     * @throws ConsoleException
+     */
+    public function run(
+        string $command = null,
+        $input = [],
+        OutputInterface $output = null
+    ): CommandOutput {
+        if (is_array($input)) {
+            $input = new ArrayInput($input + compact('command'));
         }
 
-        $this->debugger = $debugger;
+        $output = $output ?? new BufferedOutput();
+
+        $code = $this->runScoped(function () use ($input, $output, $command) {
+            return $this->consoleApplication()->find($command)->run($input, $output);
+        }, $output);
+
+        return new CommandOutput($code ?? self::CODE_UNDEFINED, $output);
     }
 
     /**
      * Get or create instance of ConsoleApplication.
      *
-     * @return Application
+     * @return ConsoleApplication
      */
-    public function application()
+    public function consoleApplication()
     {
         if (!empty($this->application)) {
+            //Already initiated
             return $this->application;
         }
 
-        $this->application = new Application('Spiral Console Toolkit', Core::VERSION);
+        $this->application = new ConsoleApplication(
+            'Spiral, Console Toolkit',
+            Core::VERSION
+        );
 
-        //Commands lookup
-        if (empty($this->commands)) {
-            $this->locateCommands();
-        }
+        $this->application->setCatchExceptions(false);
 
-        foreach ($this->commands as $command) {
-            try {
-                //Constructing command class
-                $command = $this->container->make($command);
-                if (method_exists($command, 'isAvailable') && !$command->isAvailable()) {
-                    continue;
-                }
-            } catch (\Exception $exception) {
-                continue;
-            }
-
-            $this->application->add($command);
+        foreach ($this->getCommands() as $command) {
+            $this->application->add($this->container->get($command));
         }
 
         return $this->application;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function start(ConsoleHandler $handler = null)
-    {
-        //Some console commands utilizes benchmarking, let's help them
-        $this->container->bind(BenchmarkerInterface::class, Debugger::class);
-
-        $output = new ConsoleOutput();
-        $this->debugger->shareHandler($this->consoleHandler($output));
-
-        //Deprecated
-        $scope = $this->container->replace(LogsInterface::class, $this->debugger);
-
-        $outerContainer = self::staticContainer($this->container);
-        try {
-            $this->application()->run(null, $output);
-        } finally {
-            $this->container->restore($scope);
-            self::staticContainer($outerContainer);
-        }
-    }
-
-    /**
-     * Execute console command using it's name.
-     *
-     * @param string               $command
-     * @param array|InputInterface $input
-     * @param OutputInterface      $output
-     * @return CommandOutput
-     * @throws ConsoleException
-     */
-    public function command($command, $input = [], OutputInterface $output = null)
-    {
-        if (is_array($input)) {
-            $input = new ArrayInput(compact('command') + $input);
-        }
-
-        if (empty($output)) {
-            $output = new BufferedOutput();
-        }
-
-        //todo: do we need input scope?
-        $this->openScope($input, $output);
-        $code = self::CODE_UNDEFINED;
-
-        $outerContainer = self::staticContainer($this->container);
-        try {
-            /**
-             * Debug: this method creates scope for [[InputInterface]] and [[OutputInterface]].
-             */
-            $code = $this->application()->find($command)->run($input, $output);
-        } catch (\Exception $exception) {
-            $this->application->renderException($exception, $output);
-        } finally {
-            $this->restoreScope();
-            self::staticContainer($outerContainer);
-        }
-
-        return new CommandOutput($code, $output);
-    }
-
-    /**
      * Locate every available Symfony command using Tokenizer.
      *
-     * @return array
-     */
-    public function locateCommands()
-    {
-        $this->commands = [];
-        foreach ($this->locator->getClasses(SymfonyCommand::class) as $class) {
-            if ($class['abstract']) {
-                continue;
-            }
-
-            $this->commands[] = $class['name'];
-        }
-
-        $this->memory->saveData('commands', $this->commands);
-
-        return $this->commands;
-    }
-
-    /**
-     * List of all available command names.
+     * @param bool $reset Ignore cache.
      *
      * @return array
      */
-    public function getCommands()
+    public function getCommands(bool $reset = false): array
     {
-        return $this->commands;
+        $commands = (array)$this->memory->loadData('commands');
+        if (!empty($commands) && !$reset) {
+            //Reading from cache
+            return $commands + $this->config->userCommands();
+        }
+
+        if ($this->config->locateCommands()) {
+            //Automatically locate commands
+            $commands = $this->locator->locateCommands();
+        }
+
+        //Warming up cache
+        $this->memory->saveData('commands', $commands);
+
+        return $commands + $this->config->userCommands();
     }
 
     /**
@@ -250,42 +197,36 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      */
     public function handleSnapshot(SnapshotInterface $snapshot, OutputInterface $output = null)
     {
-        if (empty($output)) {
-            $output = new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
+        $output = $output ??  $this->output ?? new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
+
+        //Rendering exception in console
+        $this->consoleApplication()->renderException($snapshot->getException(), $output);
+    }
+
+    /**
+     * Run method in console IoC scope.
+     *
+     * @param \Closure                                          $closure
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return mixed
+     */
+    private function runScoped(\Closure $closure, OutputInterface $output)
+    {
+        //Each command are executed in a specific environment
+        $scope = self::staticContainer($this->container);
+
+        //This handler will allow us to enable verbosity mode
+        $debugHandler = $this->container->get(LogManager::class)->debugHandler(
+            new DebugHandler($output)
+        );
+
+        try {
+            return $closure->call($this);
+        } finally {
+            //Restore default debug handler and container scope
+            $this->container->get(LogManager::class)->debugHandler($debugHandler);
+            self::staticContainer($scope);
         }
-
-        $this->application()->renderException($snapshot->getException(), $output);
-    }
-
-    /**
-     * Console handler for Monolog logger.
-     *
-     * @param OutputInterface $output
-     * @return HandlerInterface
-     */
-    protected function consoleHandler(OutputInterface $output)
-    {
-        return new ConsoleHandler($output);
-    }
-
-    /**
-     * Creating input/output scope in container.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
-    private function openScope(InputInterface $input, OutputInterface $output)
-    {
-        $this->inputScope = $this->container->replace(InputInterface::class, $input);
-        $this->outputScope = $this->container->replace(OutputInterface::class, $output);
-    }
-
-    /**
-     * Restoring input and output scopes.
-     */
-    private function restoreScope()
-    {
-        $this->container->restore($this->inputScope);
-        $this->container->restore($this->outputScope);
     }
 }

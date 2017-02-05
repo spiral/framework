@@ -9,8 +9,7 @@ namespace Spiral\Core\Traits;
 
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\AutowireException;
-use Spiral\Core\Exceptions\Container\ContainerException;
-use Spiral\Core\Exceptions\SugarException;
+use Spiral\Core\Exceptions\ScopeException;
 
 /**
  * Trait provides access to set of shared components (using short bindings). You can create virtual
@@ -30,25 +29,28 @@ trait SharedTrait
      * Shortcut to Container get method.
      *
      * @see ContainerInterface::get()
+     *
      * @param string $alias
+     *
      * @return mixed|null|object
+     *
      * @throws AutowireException
-     * @throws SugarException
+     * @throws ScopeException
      */
     public function __get($alias)
     {
-        if ($this->container()->has($alias)) {
-            return $this->container()->get($alias);
+        if ($this->iocContainer()->has($alias)) {
+            return $this->iocContainer()->get($alias);
         }
 
-        throw new SugarException("Unable to get property binding '{$alias}'.");
+        throw new ScopeException("Unable to get property binding '{$alias}'");
 
         //no parent call, too dangerous
     }
 
     /**
      * @return InteropContainer
-     * @throws SugarException
+     * @throws ScopeException
      */
-    abstract protected function container();
+    abstract protected function iocContainer();
 }

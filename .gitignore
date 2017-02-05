@@ -1,4 +1,9 @@
 .idea/
 composer.lock
+.coveralls.yml
 vendor/
 tests/runtime/*
+clover.xml
+.coveralls.yml
+.env
+clover.json

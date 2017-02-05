@@ -7,7 +7,7 @@
  */
 namespace Spiral\Core;
 
-use Spiral\Core\Exceptions\UndefinedAliasException;
+use Spiral\Core\Exceptions\DirectoryException;
 
 /**
  * Manages application directories.
@@ -16,26 +16,34 @@ interface DirectoriesInterface
 {
     /**
      * @param string $alias
+     *
      * @return bool
      */
-    public function hasDirectory($alias);
+    public function hasDirectory(string $alias): bool;
 
     /**
      * @param string $alias Directory alias, ie. "framework".
      * @param string $path  Directory path without ending slash.
-     * @return $this
-     * @throws UndefinedAliasException
+     *
+     * @return self|$this
+     *
+     * @throws DirectoryException
      */
-    public function setDirectory($alias, $path);
+    public function setDirectory(string $alias, string $path): self;
 
     /**
+     * Get directory value.
+     *
      * @param string $alias
+     *
      * @return string
+     *
+     * @throws DirectoryException When no directory found.
      */
-    public function directory($alias);
+    public function directory(string $alias): string;
 
     /**
      * @return array
      */
-    public function getDirectories();
+    public function getDirectories(): array;
 }

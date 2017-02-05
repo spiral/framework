@@ -1,18 +1,17 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Views\Engines\Stempler;
 
 use Spiral\Views\Engines\Native\NativeView;
 
 /**
- * Identical to NativeView.
+ * No extra functionality.
  */
 class StemplerView extends NativeView
 {
-
 }

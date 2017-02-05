@@ -18,19 +18,21 @@ class ReloadCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'console:reload';
+    const NAME = 'console:reload';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Re-index console commands';
+    const DESCRIPTION = 'Re-index console commands';
 
     /**
      * @param ConsoleDispatcher $dispatcher
      */
     public function perform(ConsoleDispatcher $dispatcher)
     {
-        $commands = count($dispatcher->locateCommands());
-        $this->writeln("Console commands re-indexed, <comment>{$commands}</comment> commands found.");
+        $commands = count($dispatcher->getCommands(true));
+        $this->writeln(
+            "Console commands re-indexed, <comment>{$commands}</comment> commands found."
+        );
     }
 }

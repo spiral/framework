@@ -5,39 +5,28 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core;
 
-use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Core\Exceptions\Container\ArgumentException;
 use Spiral\Core\Exceptions\ControllerException;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Core\HMVC\ControllerInterface;
+use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\Traits\BenchmarkTrait;
 
 /**
  * Basic application controller class. Implements method injections and simplified access to
  * container bindings.
- *
- * @todo Potentially move resolver to callAction method? Maybe not.
  */
-abstract class Controller extends Service implements ControllerInterface
+abstract class Controller extends Component implements ControllerInterface
 {
-    /**
-     * To benchmark action execution time.
-     */
-    use BenchmarkTrait;
+    use SharedTrait, BenchmarkTrait;
 
     /**
-     * Action method prefix value.
-     *
-     * @var string
+     * Controller action prefixes and postfixes.
      */
-    const ACTION_PREFIX = '';
-
-    /**
-     * Action method postfix value.
-     *
-     * @var string
-     */
+    const ACTION_PREFIX  = '';
     const ACTION_POSTFIX = 'Action';
 
     /**
@@ -46,29 +35,31 @@ abstract class Controller extends Service implements ControllerInterface
      * @var string
      */
     protected $defaultAction = 'index';
-    
+
     /**
      * {@inheritdoc}
      */
-    public function callAction($action = '', array $parameters = [])
+    public function callAction(string $action = null, array $parameters = [])
     {
-        //Action should include prefix and be always specified
-        $action = static::ACTION_PREFIX
-            . (!empty($action) ? $action : $this->defaultAction)
-            . static::ACTION_POSTFIX;
+        if (empty($action)) {
+            //Backward compatibility
+            $action = null;
+        }
 
-        if (!method_exists($this, $action)) {
+        //Action should include prefix and be always specified
+        $method = static::ACTION_PREFIX . ($action ?? $this->defaultAction) . static::ACTION_POSTFIX;
+        if (!method_exists($this, $method)) {
             throw new ControllerException(
-                "No such action '{$action}'.", ControllerException::BAD_ACTION
+                "No such action '{$action}'", ControllerException::BAD_ACTION
             );
         }
 
-        $reflection = new \ReflectionMethod($this, $action);
+        $reflection = new \ReflectionMethod($this, $method);
 
         if (!$this->isExecutable($reflection)) {
             //Need different exception code here
             throw new ControllerException(
-                "Action '{$action}' can not be executed.",
+                "Action '{$action}' can not be executed",
                 ControllerException::BAD_ACTION
             );
         }
@@ -88,6 +79,7 @@ abstract class Controller extends Service implements ControllerInterface
      * @param \ReflectionMethod $method
      * @param array             $arguments
      * @param array             $parameters
+     *
      * @return mixed
      */
     protected function executeAction(\ReflectionMethod $method, array $arguments, array $parameters)
@@ -106,6 +98,7 @@ abstract class Controller extends Service implements ControllerInterface
      * Check if method is callable.
      *
      * @param \ReflectionMethod $method
+     *
      * @return bool
      */
     protected function isExecutable(\ReflectionMethod $method)
@@ -123,18 +116,25 @@ abstract class Controller extends Service implements ControllerInterface
      *
      * @param \ReflectionMethod $method
      * @param array             $parameters
+     *
      * @return array
      */
     private function resolveArguments(\ReflectionMethod $method, array $parameters)
     {
-        $resolver = $this->container->get(ResolverInterface::class);
-  
+        $container = $this->iocContainer();
+
+        if (empty($container)) {
+            throw new ScopeException("Controller can only be executed in a valid container scope");
+        }
+
+        $resolver = $container->get(ResolverInterface::class);
+
         try {
             //Getting set of arguments should be sent to requested method
             return $resolver->resolveArguments($method, $parameters);
-        } catch (ArgumentException $exception) {
+        } catch (ArgumentException $e) {
             throw new ControllerException(
-                "Missing/invalid parameter '{$exception->getParameter()->name}'.",
+                "Missing/invalid parameter '{$e->getParameter()->name}'",
                 ControllerException::BAD_ARGUMENT
             );
         }

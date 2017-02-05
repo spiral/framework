@@ -1,0 +1,35 @@
+{% extends "layouts/layout.twig" %}
+
+{% set git = 'https://github.com/spiral' %}
+
+{% block title %}[[Welcome to Spiral]]{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="@{basePath}resources/styles/welcome.css"/>
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper">
+        <div class="placeholder">
+            {# Local, original one is slow to load. %) #}
+            <a href="http://twig.sensiolabs.org/" target="_blank">
+                <img src="@{basePath}resources/images/twig-logo.png" style="width: 30%;"/>
+            </a>
+
+            <h2>[[Welcome to Spiral Framework]]</h2>
+
+            {% include 'partials/links.twig' %}
+
+            <div style="font-size: 12px; margin-top: 10px;">
+                [[This view file is located in]]
+                <a href="{{ git }}/application/blob/master/app/views/hello.twig">app/views/hello.twig</a>
+                [[and rendered by]] <b>Controllers\HomeController</b>.
+            </div>
+        </div>
+    </div>
+
+    <div>
+        Timezone: {{ spiral('Spiral\\Core\\Core').getTimezone().getName() }}
+    </div>
+{% endblock %}

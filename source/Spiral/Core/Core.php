@@ -1,25 +1,22 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Core;
 
 use Interop\Container\ContainerInterface as InteropContainer;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\Containers\SpiralContainer;
-use Spiral\Core\Exceptions\ControllerException;
 use Spiral\Core\Exceptions\CoreException;
+use Spiral\Core\Exceptions\DirectoryException;
 use Spiral\Core\Exceptions\FatalException;
-use Spiral\Core\Exceptions\SugarException;
-use Spiral\Core\Exceptions\UndefinedAliasException;
-use Spiral\Core\HMVC\ControllerInterface;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Core\HMVC\CoreInterface;
 use Spiral\Core\Traits\SharedTrait;
 use Spiral\Debug\SnapshotInterface;
-use Spiral\Debug\Traits\BenchmarkTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Http\HttpDispatcher;
 
@@ -30,33 +27,32 @@ use Spiral\Http\HttpDispatcher;
  * Btw, you can design your architecture any way you want: MVC, MMVC, HMVC, ADR, anything which can
  * be invoked and/or routed. Technically you can even invent your own, application specific,
  * architecture.
- *
- * @property-read ContainerInterface $container Protected.
- * @todo move start method and dispatcher property into trait
- * @todo potentially add more events and create common event dispatcher? or not?
  */
-abstract class Core extends Component implements CoreInterface, DirectoriesInterface
+abstract class Core extends AbstractCore implements DirectoriesInterface
 {
-    /**
-     * Simplified access to container bindings.
-     */
-    use SharedTrait, BenchmarkTrait;
+    use SharedTrait;
 
     /**
      * I need this constant for Symfony Console. :/
      */
-    const VERSION = '0.8.8-beta';
+    const VERSION = '0.9.0-rc';
 
     /**
      * Memory section for bootloaders cache.
      */
-    const MEMORY_SECTION = 'app';
+    const BOOT_MEMORY = 'app';
+
+    /**
+     * Components to be autoloader while application initialization. This property can be redefined
+     * on application level.
+     */
+    const LOAD = [];
 
     /**
      * Every application should have defined timezone.
      *
      * @see setTimezone()
-     * @see timezone()
+     * @see getTimezone()
      * @var string
      */
     private $timezone = 'UTC';
@@ -84,33 +80,34 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * @var BootloadManager
      */
-    private $bootloader = null;
+    protected $bootloader;
 
     /**
      * @var EnvironmentInterface
      */
-    private $environment = null;
-
-    /**
-     * Application memory.
-     *
-     * @whatif private
-     * @var HippocampusInterface
-     */
-    protected $memory = null;
+    protected $environment;
 
     /**
      * Not set until start method. Can be set manually in bootload.
      *
-     * @whatif private
-     * @var DispatcherInterface|null
+     * @var DispatcherInterface
      */
-    protected $dispatcher = null;
+    protected $dispatcher;
 
     /**
-     * Components to be autoloader while application initialization.
+     * Application memory.
      *
-     * @var array
+     * @invisible
+     * @var MemoryInterface
+     */
+    protected $memory;
+
+    /**
+     * Components to be autoloader while application initialization. This property can be redefined
+     * on application level.
+     *
+     * @deprecated use LOAD constant instead
+     * @invisible
      */
     protected $load = [];
 
@@ -118,15 +115,15 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      * Core class will extend default spiral container and initiate set of directories. You must
      * provide application, libraries and root directories to constructor.
      *
-     * @param array                $directories Core directories list. Every directory must have /
+     * @param array              $directories   Core directories list. Every directory must have /
      *                                          at the end.
-     * @param ContainerInterface   $container
-     * @param HippocampusInterface $memory
+     * @param ContainerInterface $container
+     * @param MemoryInterface    $memory
      */
     public function __construct(
         array $directories,
         ContainerInterface $container,
-        HippocampusInterface $memory = null
+        MemoryInterface $memory = null
     ) {
         $this->container = $container;
 
@@ -147,59 +144,29 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Every application needs timezone to be set, by default we are using UTC
         date_default_timezone_set($this->timezone);
 
-        if (empty($memory)) {
-            //Default memory implementation
-            $memory = new Memory($this->directory('cache'), $container->get(FilesInterface::class));
-        }
+        //Default memory implementation as fallback
+        $this->memory = $memory ?? new Memory(
+                $this->directory('cache'),
+                $container->get(FilesInterface::class)
+            );
 
-        $this->memory = $memory;
         $this->bootloader = new BootloadManager($this->container, $this->memory);
-    }
-
-    /**
-     * Set application environment.
-     *
-     * @param EnvironmentInterface $environment
-     */
-    public function setEnvironment(EnvironmentInterface $environment)
-    {
-        $this->environment = $environment;
-    }
-
-    /**
-     * @return EnvironmentInterface
-     * @throws CoreException
-     */
-    public function environment()
-    {
-        if (empty($this->environment)) {
-            throw new CoreException("Application environment not set.");
-        }
-
-        return $this->environment;
-    }
-
-    /**
-     * @return BootloadManager
-     */
-    public function bootloader()
-    {
-        return $this->bootloader;
     }
 
     /**
      * Change application timezone.
      *
      * @param string $timezone
-     * @return $this
+     *
+     * @return $this|self
      * @throws CoreException
      */
-    public function setTimezone($timezone)
+    public function setTimezone(string $timezone): Core
     {
         try {
             date_default_timezone_set($timezone);
-        } catch (\Exception $exception) {
-            throw new CoreException($exception->getMessage(), $exception->getCode(), $exception);
+        } catch (\Exception $e) {
+            throw new CoreException($e->getMessage(), $e->getCode(), $e);
         }
 
         $this->timezone = $timezone;
@@ -210,17 +177,17 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * Get active application timezone.
      *
-     * @return string
+     * @return \DateTimeZone
      */
-    public function timezone()
+    public function getTimezone(): \DateTimeZone
     {
-        return $this->timezone;
+        return new \DateTimeZone($this->timezone);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasDirectory($alias)
+    public function hasDirectory(string $alias): bool
     {
         return isset($this->directories[$alias]);
     }
@@ -228,7 +195,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * {@inheritdoc}
      */
-    public function setDirectory($alias, $path)
+    public function setDirectory(string $alias, string $path): DirectoriesInterface
     {
         $this->directories[$alias] = rtrim($path, '/\\') . '/';
 
@@ -238,10 +205,10 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * {@inheritdoc}
      */
-    public function directory($alias)
+    public function directory(string $alias): string
     {
         if (!$this->hasDirectory($alias)) {
-            throw new UndefinedAliasException("Undefined directory alias '{$alias}'");
+            throw new DirectoryException("Undefined directory alias '{$alias}'");
         }
 
         return $this->directories[$alias];
@@ -250,69 +217,45 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * {@inheritdoc}
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return $this->directories;
     }
 
     /**
-     * {@inheritdoc}
+     * @return EnvironmentInterface
      *
-     * todo: add ability to register exception bridges (custom module exception => controller
-     * exception)
+     * @throws CoreException
      */
-    public function callAction($controller, $action = '', array $parameters = [])
+    public function getEnvironment()
     {
-        if (!class_exists($controller)) {
-            throw new ControllerException(
-                "No such controller '{$controller}' found.",
-                ControllerException::NOT_FOUND
-            );
+        if (empty($this->environment)) {
+            throw new CoreException("Application environment not set");
         }
 
-        $benchmark = $this->benchmark('callAction', $controller . '::' . ($action ?: '~default~'));
-
-        $outerContainer = self::staticContainer($this->container);
-        try {
-            //Initiating controller with all required dependencies
-            $controller = $this->container->make($controller);
-
-            if (!$controller instanceof ControllerInterface) {
-                throw new ControllerException(
-                    "No such controller '{$controller}' found.",
-                    ControllerException::NOT_FOUND
-                );
-            }
-
-            return $controller->callAction($action, $parameters);
-        } finally {
-            $this->benchmark($benchmark);
-            self::staticContainer($outerContainer);
-        }
+        return $this->environment;
     }
 
     /**
-     * Start application using custom or default dispatcher.
+     * BootloadManager responsible for initiation of your application.
      *
-     * @param DispatcherInterface $dispatcher Custom dispatcher.
+     * @return BootloadManager
      */
-    public function start(DispatcherInterface $dispatcher = null)
+    public function getBootloader()
     {
-        //todo move dispatcher creation into core initialization method
-        $this->dispatcher = !empty($dispatcher) ? $dispatcher : $this->createDispatcher();
-        $this->dispatcher->start();
+        return $this->bootloader;
     }
-
-    /**
-     * Bootstrap application. Must be executed before start method.
-     */
-    abstract protected function bootstrap();
 
     /**
      * Handle php shutdown and search for fatal errors.
      */
     public function handleShutdown()
     {
+        if (!$this->container->has(SnapshotInterface::class)) {
+            //We are unable to handle exception without proper snaphotter
+            return;
+        }
+
         if (!empty($error = error_get_last())) {
             $this->handleException(new FatalException(
                 $error['message'], $error['type'], 0, $error['file'], $error['line']
@@ -327,6 +270,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      * @param string $message
      * @param string $filename
      * @param int    $line
+     *
      * @throws \ErrorException
      */
     public function handleError($code, $message, $filename = '', $line = 0)
@@ -337,16 +281,20 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     /**
      * Handle exception using associated application dispatcher and snapshot class.
      *
-     * @param \Exception $exception Works well in PHP7.
+     * @param \Throwable $exception
+     *
+     * @throws \Throwable
      */
-    public function handleException($exception)
+    public function handleException(\Throwable $exception)
     {
         restore_error_handler();
         restore_exception_handler();
 
-        if (empty($snapshot = $this->getSnapshot($exception))) {
+        $snapshot = $this->makeSnapshot($exception);
+
+        if (empty($snapshot)) {
             //No action is required
-            return;
+            throw $exception;
         }
 
         //Let's allow snapshot to report about itself
@@ -356,7 +304,7 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
             //Now dispatcher can handle snapshot it's own way
             $this->dispatcher->handleSnapshot($snapshot);
         } else {
-            echo $snapshot->getException();
+            echo $snapshot->render();
         }
     }
 
@@ -364,27 +312,40 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
      * Create appropriate snapshot for given exception. By default SnapshotInterface binding will be
      * used.
      *
-     * Method can return null, in this case exception will be ignored.
+     * Method can return null, in this case exception will be ignored and handled default way.
      *
      * @param \Throwable $exception
+     *
      * @return SnapshotInterface|null
      */
-    public function getSnapshot($exception)
+    public function makeSnapshot(\Throwable $exception)
     {
         if (!$this->container->has(SnapshotInterface::class)) {
             return null;
         }
 
-        return $this->container->make(
-            SnapshotInterface::class,
-            compact('exception')
-        );
+        return $this->container->make(SnapshotInterface::class, compact('exception'));
     }
+
+    /**
+     * Start application using custom or default dispatcher.
+     *
+     * @param DispatcherInterface $dispatcher Custom dispatcher.
+     */
+    public function start(DispatcherInterface $dispatcher = null)
+    {
+        $this->dispatcher = $dispatcher ?? $this->createDispatcher();
+        $this->dispatcher->start();
+    }
+
+    /**
+     * Bootstrap application. Must be executed before start method.
+     */
+    abstract protected function bootstrap();
 
     /**
      * Create default application dispatcher based on environment value.
      *
-     * @todo possibly split into two protected methods to let user define dispatcher easier
      * @return DispatcherInterface|ConsoleDispatcher|HttpDispatcher
      */
     protected function createDispatcher()
@@ -397,37 +358,70 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
     }
 
     /**
-     * Shared container instance (needed for helpers and etc).
+     * Bootload all registered classes using BootloadManager.
+     *
+     * @return $this
+     */
+    private function bootload()
+    {
+        $this->bootloader->bootload(
+            $this->load + static::LOAD,
+            $this->environment->get('CACHE_BOOTLOADERS', false) ? static::BOOT_MEMORY : null
+        );
+
+        return $this;
+    }
+
+    /**
+     * Change application environment. Attention, already loaded configs would not be altered!
+     *
+     * @param EnvironmentInterface $environment
+     */
+    private function setEnvironment(EnvironmentInterface $environment)
+    {
+        $this->environment = $environment;
+
+        //Making sure environment is available in container scope
+        $this->container->bindSingleton(EnvironmentInterface::class, $this->environment);
+    }
+
+    /**
+     * Shared container instance (needed for helpers and etc). Attention, method will fail if no
+     * global container is set.
      *
      * @return InteropContainer
+     *
+     * @throws ScopeException
      */
     public static function sharedContainer()
     {
-        if (empty(self::staticContainer())) {
-            throw new SugarException("No shared/static container are set.");
+        $container = self::staticContainer();
+        if (empty($container)) {
+            throw new ScopeException("No shared/global container scope are set");
         }
 
-        return self::staticContainer();
+        return $container;
     }
 
     /**
      * Initiate application core. Method will set global container if none exists.
      *
-     * @param array              $directories Spiral directories should include root, libraries and
-     *                                        application directories.
-     * @param ContainerInterface $container   Initial container instance.
-     * @param bool               $handleErrors
-     * @return static
+     * @param array                $directories Spiral directories should include root, libraries
+     *                                          and application directories.
+     * @param EnvironmentInterface $environment Application specific environment if any.
+     * @param ContainerInterface   $container   Initial container instance.
+     * @param bool                 $handleErrors
+     *
+     * @return self
      */
     public static function init(
         array $directories,
+        EnvironmentInterface $environment = null,
         ContainerInterface $container = null,
-        $handleErrors = true
-    ) {
-        if (empty($container)) {
-            //Default spiral container
-            $container = new SpiralContainer();
-        }
+        bool $handleErrors = true
+    ): self {
+        //Default spiral container
+        $container = $container ?? new SpiralContainer();
 
         //Spiral core interface, @see SpiralContainer
         $container->bindSingleton(ContainerInterface::class, $container);
@@ -440,58 +434,50 @@ abstract class Core extends Component implements CoreInterface, DirectoriesInter
         //Core binding
         $container->bindSingleton(self::class, $core);
         $container->bindSingleton(static::class, $core);
-        $container->bindSingleton(DirectoriesInterface::class, $core);
-        $container->bindSingleton(BootloadManager::class, $core->bootloader);
-        $container->bindSingleton(HippocampusInterface::class, $core->memory);
+
+        //Core shared interfaces
         $container->bindSingleton(CoreInterface::class, $core);
+        $container->bindSingleton(DirectoriesInterface::class, $core);
+
+        //Core shared components
+        $container->bindSingleton(BootloadManager::class, $core->bootloader);
+        $container->bindSingleton(MemoryInterface::class, $core->memory);
 
         //Setting environment (by default - dotenv extension)
-        $core->environment = new Environment(
-            $core->directory('root') . '.env',
-            $container->get(FilesInterface::class),
-            $core->memory
+        if (empty($environment)) {
+            /*
+             * Default spiral environment is based on .env file.
+             */
+            $environment = new DotenvEnvironment(
+                $core->directory('root') . '.env',
+                $core->memory
+            );
+        }
+
+        //Mounting environment to be available for other components
+        $core->setEnvironment($environment);
+
+        //Initiating config loader
+        $container->bindSingleton(
+            ConfiguratorInterface::class,
+            $container->make(ConfigFactory::class, ['directory' => $core->directory('config')])
         );
 
-        //Need way to redefine environment
-        $core->environment->load();
-
-        $container->bindSingleton(EnvironmentInterface::class, $core->environment);
-
-        $container->bindSingleton(Configurator::class, $container->make(
-            Configurator::class, ['directory' => $core->directory('config')]
-        ));
-
-        //Error and exception handlers
         if ($handleErrors) {
+            //Error and exception handlers
             register_shutdown_function([$core, 'handleShutdown']);
             set_error_handler([$core, 'handleError']);
             set_exception_handler([$core, 'handleException']);
         }
 
-        //Container scope
-        $outerContainer = self::staticContainer($container);
+        $scope = self::staticContainer($container);
         try {
+            //Bootloading our application in a defined GLOBAL container scope
             $core->bootload()->bootstrap();
         } finally {
-            self::staticContainer($outerContainer);
+            self::staticContainer($scope);
         }
 
         return $core;
-    }
-
-    /**
-     * Bootload all registered classes using BootloadManager.
-     *
-     * @return $this
-     */
-    private function bootload()
-    {
-        //Bootloading all needed components and extensions
-        $this->bootloader->bootload(
-            $this->load,
-            $this->environment->get('CACHE_BOOTLOADERS', false) ? static::MEMORY_SECTION : null
-        );
-
-        return $this;
     }
 }

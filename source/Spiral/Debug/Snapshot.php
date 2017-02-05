@@ -5,15 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Debug;
 
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Spiral\Core\Component;
-use Spiral\Core\Exceptions\SugarException;
-use Spiral\Core\Traits\SaturateTrait;
 use Spiral\Debug\Configs\SnapshotConfig;
-use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Files\FilesInterface;
 use Spiral\Views\ViewsInterface;
 
@@ -24,11 +20,6 @@ use Spiral\Views\ViewsInterface;
  */
 class Snapshot extends QuickSnapshot implements SnapshotInterface
 {
-    /**
-     * Additional constructor arguments.
-     */
-    use SaturateTrait;
-
     /**
      * @var SnapshotConfig
      */
@@ -53,27 +44,23 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
 
     /**
      * @param \Throwable      $exception
-     * @param LoggerInterface $logger Sugared.
-     * @param SnapshotConfig  $config Sugared.
-     * @param FilesInterface  $files  Sugared.
-     * @param ViewsInterface  $views  Sugared.
-     * @throws SugarException
+     * @param SnapshotConfig  $config
+     * @param LoggerInterface $logger
+     * @param FilesInterface  $files
+     * @param ViewsInterface  $views
      */
     public function __construct(
-        $exception,
-        LoggerInterface $logger = null,
-        SnapshotConfig $config = null,
-        FilesInterface $files = null,
-        ViewsInterface $views = null
+        \Throwable $exception,
+        SnapshotConfig $config,
+        LoggerInterface $logger,
+        FilesInterface $files,
+        ViewsInterface $views
     ) {
-        /**
-         * All this properties can be automatically populated using shared contaner.
-         */
-        $this->config = $this->saturate($config, SnapshotConfig::class);
-        $this->files = $this->saturate($files, FilesInterface::class);
-        $this->views = $this->saturate($views, ViewsInterface::class);
+        parent::__construct($exception, $logger);
 
-        parent::__construct($exception, $this->saturate($logger, LoggerInterface::class));
+        $this->config = $config;
+        $this->files = $files;
+        $this->views = $views;
     }
 
     /**
@@ -94,7 +81,7 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         if (!empty($this->rendered)) {
             return $this->rendered;
@@ -104,9 +91,10 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
             return parent::render();
         }
 
-        return $this->rendered = $this->views->render($this->config->viewName(), [
-            'exception' => $this->getException()
-        ]);
+        return $this->rendered = $this->views->render(
+            $this->config->viewName(),
+            ['exception' => $this->getException()]
+        );
     }
 
     /**
@@ -115,8 +103,15 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
     protected function saveSnapshot()
     {
         $filename = $this->config->snapshotFilename($this->getException(), time());
-        $this->files->write($filename, $this->render(), FilesInterface::RUNTIME, true);
 
+        $this->files->write(
+            $filename,
+            $this->render(),
+            FilesInterface::RUNTIME,
+            true
+        );
+
+        //Rotating files
         $snapshots = $this->files->getFiles($this->config->reportingDirectory());
         if (count($snapshots) > $this->config->maxSnapshots()) {
             $this->performRotation($snapshots);
@@ -126,7 +121,6 @@ class Snapshot extends QuickSnapshot implements SnapshotInterface
     /**
      * Clean old snapshots.
      *
-     * @todo Possibly need better implementation.
      * @param array $snapshots
      */
     protected function performRotation(array $snapshots)

@@ -5,10 +5,12 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Routing;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\UriInterface;
 use Spiral\Core\ContainerInterface;
 use Spiral\Http\Exceptions\RouteException;
 use Spiral\Http\MiddlewareInterface;
@@ -26,7 +28,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * Default segment pattern, this patter can be applied to controller names, actions and etc.
      */
-    const DEFAULT_SEGMENT = '[^\.\/]+';
+    const DEFAULT_SEGMENT = '[^\/]+';
 
     /**
      * @var string
@@ -55,19 +57,19 @@ abstract class AbstractRoute implements RouteInterface
     private $withHost = false;
 
     /**
-     * Route matches, populated after match() method executed. Internal.
-     *
-     * @var array
-     */
-    private $matches = [];
-
-    /**
      * Compiled route options, pattern and etc. Internal data.
      *
      * @invisible
      * @var array
      */
     private $compiled = [];
+
+    /**
+     * Route matches, populated after match() method executed. Internal.
+     *
+     * @var array
+     */
+    protected $matches = [];
 
     /**
      * Route pattern includes simplified regular expressing later compiled to real regexp.
@@ -93,7 +95,7 @@ abstract class AbstractRoute implements RouteInterface
      * @param string $name
      * @param array  $defaults
      */
-    public function __construct($name, array $defaults)
+    public function __construct(string $name, array $defaults)
     {
         $this->name = $name;
         $this->defaults = $defaults;
@@ -101,8 +103,10 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this|AbstractRoute
      */
-    public function withContainer(ContainerInterface $container)
+    public function withContainer(ContainerInterface $container): RouteInterface
     {
         $route = clone $this;
         $route->container = $container;
@@ -112,8 +116,10 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this|AbstractRoute
      */
-    public function withName($name)
+    public function withName(string $name): RouteInterface
     {
         $route = clone $this;
         $route->name = $name;
@@ -124,18 +130,20 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this|AbstractRoute
      */
-    public function withPrefix($prefix)
+    public function withPrefix(string $prefix): RouteInterface
     {
         $route = clone $this;
-        $route->prefix = $prefix;
+        $route->prefix = rtrim($prefix, '/') . '/';
 
         return $route;
     }
@@ -143,7 +151,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -152,9 +160,10 @@ abstract class AbstractRoute implements RouteInterface
      * If true (default) route will be matched against path + URI host. Returns new route instance.
      *
      * @param bool $withHost
-     * @return self
+     *
+     * @return $this|AbstractRoute
      */
-    public function withHost($withHost = true)
+    public function withHost(bool $withHost = true): AbstractRoute
     {
         $route = clone $this;
         $route->withHost = $withHost;
@@ -164,8 +173,10 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return $this|AbstractRoute
      */
-    public function withDefaults(array $defaults)
+    public function withDefaults(array $defaults): RouteInterface
     {
         $copy = clone $this;
         $copy->defaults = $defaults;
@@ -178,7 +189,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @return array
      */
-    public function getDefaults()
+    public function getDefaults(): array
     {
         return $this->defaults;
     }
@@ -192,9 +203,10 @@ abstract class AbstractRoute implements RouteInterface
      * $route->withMiddleware([ProxyMiddleware::class, OtherMiddleware::class]);
      *
      * @param callable|MiddlewareInterface|array $middleware
-     * @return self
+     *
+     * @return $this|AbstractRoute
      */
-    public function withMiddleware($middleware)
+    public function withMiddleware($middleware): AbstractRoute
     {
         $route = clone $this;
         if (is_array($middleware)) {
@@ -216,7 +228,6 @@ abstract class AbstractRoute implements RouteInterface
         }
 
         if (preg_match($this->compiled['pattern'], $this->getSubject($request), $matches)) {
-
             //To get only named matches
             $matches = array_intersect_key($matches, $this->compiled['options']);
             $matches = array_merge($this->compiled['options'], $this->defaults, $matches);
@@ -230,7 +241,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function perform(Request $request, Response $response)
+    public function perform(Request $request, Response $response): Response
     {
         if (empty($this->container)) {
             throw new RouteException("Unable to perform route endpoint without given container");
@@ -244,7 +255,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function uri($parameters = [])
+    public function uri($parameters = []): UriInterface
     {
         if (empty($this->compiled)) {
             $this->compile();
@@ -260,10 +271,11 @@ abstract class AbstractRoute implements RouteInterface
         //Uri without empty blocks (pretty stupid implementation)
         $path = strtr(
             \Spiral\interpolate($this->compiled['template'], $parameters, '<', '>'),
-            ['[]' => '', '[/]' => '', '[' => '', ']' => '', '//' => '/']
+            ['[]' => '', '[/]' => '', '[' => '', ']' => '', '://' => '://', '//' => '/']
         );
 
-        $uri = new Uri(($this->withHost ? '' : $this->prefix) . rtrim($path, '/'));
+        //Uri with added prefix
+        $uri = new Uri(($this->withHost ? '' : $this->prefix) . trim($path, '/'));
 
         return empty($query) ? $uri : $uri->withQuery(http_build_query($query));
     }
@@ -273,7 +285,7 @@ abstract class AbstractRoute implements RouteInterface
      *
      * @return array
      */
-    public function getMatches()
+    public function getMatches(): array
     {
         return $this->matches;
     }
@@ -281,9 +293,10 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * @param string $name
      * @param mixed  $default
+     *
      * @return mixed
      */
-    public function getMatch($name, $default = null)
+    public function getMatch(string $name, $default = null)
     {
         if (array_key_exists($name, $this->matches)) {
             return $this->matches[$name];
@@ -294,9 +307,10 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * @param array $matches
-     * @return AbstractRoute
+     *
+     * @return self|AbstractRoute
      */
-    protected function withMatches(array $matches)
+    protected function withMatches(array $matches): AbstractRoute
     {
         $route = clone $this;
         $route->matches = $matches;
@@ -308,15 +322,17 @@ abstract class AbstractRoute implements RouteInterface
      * Fetch uri segments and query parameters.
      *
      * @param \Traversable|array $parameters
-     * @param array              $query Query parameters.
+     * @param array|null         $query Query parameters.
+     *
      * @return array
      */
-    protected function fetchSegments($parameters, &$query)
+    protected function fetchSegments($parameters, &$query): array
     {
         $allowed = array_keys($this->compiled['options']);
 
         $result = [];
         foreach ($parameters as $key => $parameter) {
+            //This segment fetched keys from given parameters either by name or by position
             if (is_numeric($key) && isset($allowed[$key])) {
                 $key = $allowed[$key];
             } elseif (
@@ -327,6 +343,7 @@ abstract class AbstractRoute implements RouteInterface
                 continue;
             }
 
+            //String must be normalized here
             if (is_string($parameter) && !preg_match('/^[a-z\-_0-9]+$/i', $parameter)) {
                 $result[$key] = Strings::slug($parameter);
                 continue;
@@ -338,7 +355,6 @@ abstract class AbstractRoute implements RouteInterface
         return $result;
     }
 
-
     /**
      * Create callable route endpoint.
      *
@@ -349,7 +365,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    protected function container()
+    protected function iocContainer(): ContainerInterface
     {
         if (empty($this->container)) {
             throw new RouteException("Route context container has not been set");
@@ -387,10 +403,13 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
+     * Part of uri path which is being matched.
+     *
      * @param Request $request
+     *
      * @return string
      */
-    private function getSubject(Request $request)
+    private function getSubject(Request $request): string
     {
         $path = $request->getUri()->getPath();
 
@@ -404,6 +423,6 @@ abstract class AbstractRoute implements RouteInterface
             $uri = substr($path, strlen($this->prefix));
         }
 
-        return rtrim($uri, '/');
+        return trim($uri, '/');
     }
 }

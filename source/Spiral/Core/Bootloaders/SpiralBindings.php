@@ -5,13 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Core\Bootloaders;
 
-use Cocur\Slugify\Slugify;
-use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Core\Exceptions\Container\AutowireException;
-use Spiral\Core\Exceptions\SugarException;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Http\Routing\RouteInterface;
 
 /**
@@ -27,24 +25,30 @@ class SpiralBindings extends Bootloader
     /**
      * @var array
      */
-    protected $bindings = [
-        //Core components (see SharedTrait)
-        'memory'                             => 'Spiral\Core\HippocampusInterface',
-        'modules'                            => 'Spiral\Modules\ModuleManager',
-        'debugger'                           => 'Spiral\Debug\Debugger',
+    const BINDINGS = [
+        //How to resolve log instances
+        'Psr\Log\LoggerInterface'            => ['Spiral\Debug\LogsInterface', 'getLogger'],
+        'Monolog\Logger'                     => ['Spiral\Debug\LogsInterface', 'getLogger'],
 
-        //Container
+        //Core components (see SharedTrait)
+        'memory'                             => 'Spiral\Core\MemoryInterface',
         'container'                          => 'Spiral\Core\ContainerInterface',
+
+        //Logging
+        'logs'                               => 'Spiral\Debug\LogsInterface',
 
         //Dispatchers
         'http'                               => 'Spiral\Http\HttpDispatcher',
         'console'                            => 'Spiral\Console\ConsoleDispatcher',
 
+        //Alias for console
+        'commands'                           => 'Spiral\Console\ConsoleDispatcher',
+
         //Shared components
         'files'                              => 'Spiral\Files\FilesInterface',
         'tokenizer'                          => 'Spiral\Tokenizer\TokenizerInterface',
-        'locator'                            => 'Spiral\Tokenizer\ClassLocatorInterface',
-        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationLocatorInterface',
+        'locator'                            => 'Spiral\Tokenizer\ClassesInterface',
+        'invocationLocator'                  => 'Spiral\Tokenizer\InvocationsInterface',
         'storage'                            => 'Spiral\Storage\StorageInterface',
 
         //Concrete for now
@@ -56,9 +60,8 @@ class SpiralBindings extends Bootloader
         'orm'                                => 'Spiral\ORM\ORM',
         'odm'                                => 'Spiral\ODM\ODM',
 
-        //Entities
+        //Encryption
         'encrypter'                          => 'Spiral\Encrypter\EncrypterInterface',
-        'cache'                              => 'Spiral\Cache\StoreInterface',
 
         //Concrete for now, replace with better interface in future
         'db'                                 => 'Spiral\Database\Entities\Database',
@@ -67,53 +70,56 @@ class SpiralBindings extends Bootloader
         //Http scope dependent
         'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
         'router'                             => 'Spiral\Http\Routing\RouterInterface',
-        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
+        'session'                            => 'Spiral\Session\SessionInterface',
+
+        //Pagination manager
+        'paginators'                         => 'Spiral\Pagination\PaginatorsInterface',
 
         //Http scope depended data routes and wrappers
-        'input'                              => 'Spiral\Http\Input\InputManager',
-        'response'                           => 'Spiral\Http\Responses\Responder',
-        'responses'                          => 'Spiral\Http\Responses\Responder',
-        'responder'                          => 'Spiral\Http\Responses\Responder',
+        'request'                            => 'Psr\Http\Message\ServerRequestInterface',
+        'input'                              => 'Spiral\Http\Request\InputManager',
 
-        //Thought request attributes
-        'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],
+        //Response and response wrappers
+        'response'                           => 'Spiral\Http\Response\ResponseWrapper',
 
         //Short aliases
         'route'                              => 'Spiral\Http\Routing\RouteInterface',
-        'session'                            => 'Spiral\Session\SessionInterface'
+
+        //Security component
+        'permissions'                        => 'Spiral\Security\PermissionsInterface',
+        'rules'                              => 'Spiral\Security\RulesInterface',
+
+        //Scope depended
+        'actor'                              => 'Spiral\Security\ActorInterface',
+
+        //Thought request attributes
+        'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],
     ];
 
     /**
      * @var array
      */
-    protected $singletons = [
-        SlugifyInterface::class => [self::class, 'slugify']
+    const SINGLETONS = [
+        'Cocur\Slugify\SlugifyInterface' => 'Cocur\Slugify\Slugify'
     ];
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return RouteInterface
      */
     public function activeRoute(ServerRequestInterface $request = null)
     {
         if (empty($request)) {
-            throw new AutowireException("No active request found");
+            throw new ScopeException("No active request found");
         }
 
         $route = $request->getAttribute('route');
 
         if (!$route instanceof RouteInterface) {
-            throw new SugarException("Unable to resolve active route using active request");
+            throw new ScopeException("Unable to resolve active route using active request");
         }
 
         return $route;
-    }
-
-    /**
-     * @return Slugify
-     */
-    public function slugify()
-    {
-        return new Slugify();
     }
 }

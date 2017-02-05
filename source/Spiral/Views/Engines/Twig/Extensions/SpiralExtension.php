@@ -10,7 +10,7 @@ namespace Spiral\Views\Engines\Twig\Extensions;
 use Spiral\Core\ContainerInterface;
 
 /**
- * Provides simplified access to spiral container in twig templates using "spiral(id)" function.
+ * Provides simplified access to spiral container in twig templates using "spiral(alias)" function.
  */
 class SpiralExtension extends \Twig_Extension
 {

@@ -25,10 +25,14 @@ interface RouterInterface
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
+     *
      * @return ResponseInterface
      * @throws ClientException
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response);
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): ResponseInterface;
 
     /**
      * @param RouteInterface $route
@@ -46,18 +50,20 @@ interface RouterInterface
      * Get route by it's name.
      *
      * @param string $name
-     * @return Route
+     *
+     * @return RouteInterface
+     *
      * @throws RouterException
      * @throws UndefinedRouteException
      */
-    public function getRoute($name);
+    public function getRoute(string $name): RouteInterface;
 
     /**
      * Get all registered routes.
      *
      * @return RouteInterface[]
      */
-    public function getRoutes();
+    public function getRoutes(): array;
 
     /**
      * Generate valid route URL using route name and set of parameters. Should support controller
@@ -66,10 +72,11 @@ interface RouterInterface
      *
      * @param string             $route Route name.
      * @param array|\Traversable $parameters
+     *
      * @return UriInterface
      * @throws RouterException
      * @throws RouteException
      * @throws UndefinedRouteException
      */
-    public function uri($route, $parameters = []);
+    public function uri(string $route, $parameters = []): UriInterface;
 }

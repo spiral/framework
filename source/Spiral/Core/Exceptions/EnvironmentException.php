@@ -10,7 +10,7 @@ namespace Spiral\Core\Exceptions;
 /**
  * When env file is missing.
  */
-class EnvironmentException extends RuntimeException
+class EnvironmentException extends CoreException
 {
 
 }

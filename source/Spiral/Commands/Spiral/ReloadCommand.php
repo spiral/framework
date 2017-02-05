@@ -8,7 +8,8 @@
 namespace Spiral\Commands\Spiral;
 
 use Spiral\Console\Command;
-use Spiral\Core\HippocampusInterface;
+use Spiral\Core\Core;
+use Spiral\Core\MemoryInterface;
 
 /**
  * Reload application boot-loading list.
@@ -18,19 +19,19 @@ class ReloadCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'app:reload';
+    const NAME = 'app:reload';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Reload application boot-loading list';
+    const DESCRIPTION = 'Reload application boot-loading list';
 
     /**
-     * @param HippocampusInterface $memory
+     * @param MemoryInterface $memory
      */
-    public function perform(HippocampusInterface $memory)
+    public function perform(MemoryInterface $memory)
     {
-        $memory->saveData('bootloading', null);
+        $memory->saveData(Core::BOOT_MEMORY, null);
         $this->writeln("<info>Bootload cache has been cleared.</info>");
     }
 }

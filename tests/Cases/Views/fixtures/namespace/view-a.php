@@ -1,1 +1,0 @@
-This is view A in custom namespace.

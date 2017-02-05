@@ -20,44 +20,45 @@ class ConfigureCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'configure';
-    /**
-     * {@inheritdoc}
-     */
-    protected $description = 'Configure file permissions, install modules and render view files';
+    const NAME = 'configure';
 
     /**
      * {@inheritdoc}
      */
-    protected $options = [
+    const DESCRIPTION = 'Configure file permissions, install modules and render view files';
+
+    /**
+     * {@inheritdoc}
+     */
+    const OPTIONS = [
         ['key', 'k', InputOption::VALUE_NONE, 'Generate new encryption key']
     ];
 
     /**
      * @param ConsoleConfig        $config
-     * @param ConsoleDispatcher    $dispatcher
+     * @param ConsoleDispatcher    $console
      * @param DirectoriesInterface $directories
      * @param FilesInterface       $files
      */
     public function perform(
         ConsoleConfig $config,
-        ConsoleDispatcher $dispatcher,
+        ConsoleDispatcher $console,
         DirectoriesInterface $directories,
         FilesInterface $files
     ) {
         $this->ensurePermissions($directories, $files);
 
         $this->writeln("\n<info>Re-indexing available console commands...</info>");
-        $dispatcher->command('console:reload', [], $this->output);
+        $console->run('console:reload', [], $this->output);
 
         $this->writeln("\n<info>Reloading bootload cache...</info>");
-        $dispatcher->command('app:reload', [], $this->output);
+        $console->run('app:reload', [], $this->output);
 
         $this->writeln("\n<info>Re-loading translator locales cache...</info>");
-        $dispatcher->command('i18n:reload', [], $this->output);
+        $console->run('i18n:reload', [], $this->output);
 
         $this->writeln("\n<info>Scanning translate function and [[values]] usage...</info>");
-        $dispatcher->command('i18n:index', [], $this->output);
+        $console->run('i18n:index', [], $this->output);
 
         $this->writeln("");
 
@@ -67,7 +68,7 @@ class ConfigureCommand extends Command
                 $this->writeln($options['header']);
             }
 
-            $dispatcher->command($command, $options['options'], $this->output);
+            $console->run($command, $options['options'], $this->output);
             if (!empty($options['footer'])) {
                 $this->writeln($options['footer']);
             }
@@ -75,7 +76,7 @@ class ConfigureCommand extends Command
 
         if ($this->option('key')) {
             $this->writeln("");
-            $dispatcher->command('app:key', [], $this->output);
+            $console->run('app:key', [], $this->output);
         }
 
         $this->writeln("\n<info>All done!</info>");
@@ -95,14 +96,14 @@ class ConfigureCommand extends Command
 
         $runtime = $directories->directory('runtime');
 
-        if (!$files->exists(directory('runtime'))) {
-            $files->ensureDirectory(directory('runtime'));
+        if (!$files->exists($runtime)) {
+            $files->ensureDirectory($runtime);
             $this->writeln("Runtime data directory was created.");
 
             return;
         }
 
-        foreach ($files->getFiles(directory('runtime')) as $filename) {
+        foreach ($files->getFiles($runtime) as $filename) {
             //Both file and it's directory must be writable
             $files->setPermissions($filename, FilesInterface::RUNTIME);
             $files->setPermissions(dirname($filename), FilesInterface::RUNTIME);

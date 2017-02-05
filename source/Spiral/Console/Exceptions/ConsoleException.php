@@ -7,12 +7,12 @@
  */
 namespace Spiral\Console\Exceptions;
 
-use Spiral\Core\Exceptions\LogicException;
+use Spiral\Core\Exceptions\RuntimeException;
 
 /**
  * Generic console dispatcher exception.
  */
-class ConsoleException extends LogicException
+class ConsoleException extends RuntimeException
 {
 
 }

@@ -9,7 +9,6 @@ use Spiral\Core\Core;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Core\EnvironmentInterface;
 use Spiral\Debug\Dumper;
-use Spiral\Http\Routing\RouterInterface;
 use Spiral\Translator\Exceptions\TranslatorException;
 use Spiral\Translator\TranslatorInterface;
 
@@ -18,12 +17,31 @@ if (!function_exists('spiral')) {
      * Shortcut to shared container get method.
      *
      * @param string $alias Class name or alias.
+     *
      * @return object|null
      * @throws \Interop\Container\Exception\ContainerException
      */
-    function spiral($alias)
+    function spiral(string $alias)
     {
         return Core::sharedContainer()->get($alias);
+    }
+}
+
+if (!function_exists('bind')) {
+    /**
+     * Shortcut to container Autowire definition.
+     *
+     * Example:
+     * 'name' => bind(SomeClass::name, [...])
+     *
+     * @param string $alias Class name or alias.
+     * @param array  $parameters
+     *
+     * @return \Spiral\Core\Container\Autowire
+     */
+    function bind(string $alias, array $parameters = [])
+    {
+        return new \Spiral\Core\Container\Autowire($alias, $parameters);
     }
 }
 
@@ -32,11 +50,27 @@ if (!function_exists('directory')) {
      * Get directory alias value.
      *
      * @param string $alias Directory alias, ie. "framework".
+     *
      * @return string
      */
-    function directory($alias)
+    function directory(string $alias): string
     {
         return spiral(DirectoriesInterface::class)->directory($alias);
+    }
+}
+
+if (!function_exists('env')) {
+    /**
+     * Gets the value of an environment variable. Supports boolean, empty and null.
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    function env(string $key, $default = null)
+    {
+        return spiral(EnvironmentInterface::class)->get($key, $default);
     }
 }
 
@@ -48,11 +82,27 @@ if (!function_exists('e')) {
      * translated into these entities.
      *
      * @param string $string
+     *
      * @return string
      */
-    function e($string)
+    function e(string $string): string
     {
         return htmlentities($string, ENT_QUOTES, 'UTF-8', false);
+    }
+}
+
+if (!function_exists('dump')) {
+    /**
+     * Dump value.
+     *
+     * @param mixed $value Value to be dumped.
+     * @param int   $output
+     *
+     * @return string
+     */
+    function dump($value, $output = Dumper::OUTPUT_ECHO): string
+    {
+        return spiral(Dumper::class)->dump($value, $output);
     }
 }
 
@@ -72,25 +122,16 @@ if (!function_exists('interpolate')) {
      * @param array  $values  Arguments (key=>value). Will skip n
      * @param string $prefix  Value prefix, "{" by default.
      * @param string $postfix Value postfix "}" by default.
+     *
      * @return mixed
      */
-    function interpolate($format, array $values, $prefix = '{', $postfix = '}')
-    {
+    function interpolate(
+        string $format,
+        array $values,
+        string $prefix = '{',
+        string $postfix = '}'
+    ): string {
         return \Spiral\interpolate($format, $values, $prefix, $postfix);
-    }
-}
-
-if (!function_exists('dump')) {
-    /**
-     * Dump value.
-     *
-     * @param mixed $value Value to be dumped.
-     * @param int   $output
-     * @return null|string
-     */
-    function dump($value, $output = Dumper::OUTPUT_ECHO)
-    {
-        return spiral(Dumper::class)->dump($value, $output);
     }
 }
 
@@ -105,10 +146,11 @@ if (!function_exists('l')) {
      * @param string $string
      * @param array  $options
      * @param string $domain
+     *
      * @return string
      * @throws TranslatorException
      */
-    function l($string, array $options = [], $domain = TranslatorInterface::DEFAULT_DOMAIN)
+    function l(string $string, array $options = [], string $domain = null): string
     {
         return spiral(TranslatorInterface::class)->trans($string, $options, $domain);
     }
@@ -125,47 +167,16 @@ if (!function_exists('p')) {
      * @param int    $number
      * @param array  $options
      * @param string $domain
+     *
      * @return string
      * @throws TranslatorException
      */
     function p(
-        $string,
-        $number,
+        string $string,
+        int $number,
         array $options = [],
-        $domain = TranslatorInterface::DEFAULT_DOMAIN
-    ) {
+        string $domain = null
+    ): string {
         return spiral(TranslatorInterface::class)->transChoice($string, $number, $options, $domain);
-    }
-}
-
-if (!function_exists('env')) {
-    /**
-     * Gets the value of an environment variable. Supports boolean, empty and null.
-     *
-     * @param  string $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function env($key, $default = null)
-    {
-        return spiral(EnvironmentInterface::class)->get($key, $default);
-    }
-}
-
-if (!function_exists('uri')) {
-    /**
-     * Create uri for route and parameters.
-     *
-     * @param string $route
-     * @param array  $parameters
-     * @return \Psr\Http\Message\UriInterface
-     */
-    function uri($route, $parameters = [])
-    {
-        if (!is_array($parameters) && !$parameters instanceof Traversable) {
-            $parameters = array_slice(func_get_args(), 1);
-        }
-
-        return spiral(RouterInterface::class)->uri($route, $parameters);
     }
 }

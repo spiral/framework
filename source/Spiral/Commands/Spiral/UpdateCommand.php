@@ -20,12 +20,12 @@ class UpdateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected $name = 'update';
+    const NAME = 'update';
 
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Application schemas and cache update';
+    const DESCRIPTION = 'Application schemas and cache update';
 
     /**
      * @param ConsoleConfig     $config
@@ -36,9 +36,12 @@ class UpdateCommand extends Command
         foreach ($config->updateSequence() as $command => $options) {
             if (!empty($options['header'])) {
                 $this->writeln($options['header']);
+            } else {
+                //A bit of spacing
+                $this->writeln("");
             }
 
-            $dispatcher->command($command, $options['options'], $this->output);
+            $dispatcher->run($command, $options['options'], $this->output);
 
             if (!empty($options['footer'])) {
                 $this->writeln($options['footer']);

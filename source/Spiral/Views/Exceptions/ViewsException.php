@@ -10,9 +10,8 @@ namespace Spiral\Views\Exceptions;
 use Spiral\Core\Exceptions\RuntimeException;
 
 /**
- * Generic views exception.
+ * Generic view component exception (view file not found and etc).
  */
 class ViewsException extends RuntimeException
 {
-
 }

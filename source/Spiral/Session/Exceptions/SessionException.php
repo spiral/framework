@@ -1,10 +1,10 @@
 <?php
 /**
- * Spiral Framework.
+ * spiral
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author    Wolfy-J
  */
+
 namespace Spiral\Session\Exceptions;
 
 use Spiral\Core\Exceptions\RuntimeException;

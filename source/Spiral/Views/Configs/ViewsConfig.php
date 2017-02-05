@@ -5,10 +5,10 @@
  * @license MIT
  * @author  Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Views\Configs;
 
 use Spiral\Core\InjectableConfig;
-use Spiral\Views\Engines;
 
 /**
  * Translation component configuration.
@@ -34,26 +34,31 @@ class ViewsConfig extends InjectableConfig
     ];
 
     /**
+     * List of available view namespaces associated with list of directories.
+     *
      * @return array
      */
-    public function getNamespaces()
+    public function getNamespaces(): array
     {
         return $this->config['namespaces'];
     }
 
     /**
      * @param string $namespace
+     *
      * @return array
      */
-    public function namespaceDirectories($namespace)
+    public function namespaceDirectories(string $namespace): array
     {
         return $this->config['namespaces'][$namespace];
     }
 
     /**
+     * Environment dependencies.
+     *
      * @return array
      */
-    public function environmentDependencies()
+    public function environmentDependencies(): array
     {
         return $this->config['environment'];
     }
@@ -61,7 +66,7 @@ class ViewsConfig extends InjectableConfig
     /**
      * @return bool
      */
-    public function cacheEnabled()
+    public function cacheEnabled(): bool
     {
         return $this->config['cache']['enabled'];
     }
@@ -69,24 +74,27 @@ class ViewsConfig extends InjectableConfig
     /**
      * @return string
      */
-    public function cacheDirectory()
+    public function cacheDirectory(): string
     {
-        return $this->config['cache']['directory'];
+        return rtrim($this->config['cache']['directory'], '/') . '/';
     }
 
     /**
+     * List of available engine names.
+     *
      * @return array
      */
-    public function getEngines()
+    public function getEngines(): array
     {
         return array_keys($this->config['engines']);
     }
 
     /**
      * @param string $engine
+     *
      * @return bool
      */
-    public function hasEngine($engine)
+    public function hasEngine(string $engine): bool
     {
         return isset($this->config['engines'][$engine]);
 
@@ -94,27 +102,30 @@ class ViewsConfig extends InjectableConfig
 
     /**
      * @param string $engine
+     *
      * @return string
      */
-    public function engineClass($engine)
+    public function engineClass(string $engine): string
     {
         return $this->config['engines'][$engine]['class'];
     }
 
     /**
      * @param string $engine
+     *
      * @return string
      */
-    public function engineExtension($engine)
+    public function engineExtension(string $engine): string
     {
         return $this->config['engines'][$engine]['extension'];
     }
 
     /**
      * @param string $engine
+     *
      * @return array
      */
-    public function engineParameters($engine)
+    public function engineOptions(string $engine): array
     {
         return $this->config['engines'][$engine];
     }

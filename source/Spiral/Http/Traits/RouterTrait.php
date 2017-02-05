@@ -5,10 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Http\Traits;
 
-use Spiral\Core\Exceptions\SugarException;
-use Spiral\Core\InteropContainerInterface;
+use Spiral\Core\ContainerInterface;
+use Spiral\Core\Exceptions\ScopeException;
 use Spiral\Http\Routing\RouteInterface;
 use Spiral\Http\Routing\RouterInterface;
 
@@ -41,24 +42,25 @@ trait RouterTrait
      *
      * @return RouterInterface
      */
-    public function router()
+    public function getRouter(): RouterInterface
     {
-        if (!empty($this->router)) {
-            return $this->router;
+        if (empty($this->router)) {
+            $this->router = $this->createRouter();
         }
 
-        return $this->router = $this->createRouter();
+        return $this->router;
     }
 
     /**
      * Add new route.
      *
      * @param RouteInterface $route
-     * @return $this
+     *
+     * @return $this|self
      */
     public function addRoute(RouteInterface $route)
     {
-        $this->router()->addRoute($route);
+        $this->getRouter()->addRoute($route);
 
         return $this;
     }
@@ -67,36 +69,26 @@ trait RouterTrait
      * Default route is needed as fallback if no other route matched the request.
      *
      * @param RouteInterface $route
-     * @return RouteInterface
+     *
+     * @return $this|self
      */
     public function defaultRoute(RouteInterface $route)
     {
-        $this->router()->defaultRoute($route);
+        $this->getRouter()->defaultRoute($route);
 
-        return $route;
+        return $this;
     }
 
     /**
      * Create router instance using container.
      *
-     * @todo make abstract
      * @return RouterInterface
-     * @throws SugarException
+     * @throws ScopeException
      */
-    protected function createRouter()
-    {
-        if (empty($container = $this->container()) || !$container->has(RouterInterface::class)) {
-            throw new SugarException(
-                "Unable to create Router, container not set or binding is missing."
-            );
-        }
-
-        //Let's create default router
-        return $container->get(RouterInterface::class);
-    }
+    abstract protected function createRouter(): RouterInterface;
 
     /**
-     * @return InteropContainerInterface
+     * @return ContainerInterface
      */
-    abstract protected function container();
+    abstract protected function iocContainer();
 }
