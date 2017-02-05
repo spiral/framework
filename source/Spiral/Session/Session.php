@@ -71,6 +71,7 @@ class Session extends Component implements SessionInterface
     public function __construct(string $clientSignature, int $lifetime, string $id = null)
     {
         $this->clientSignature = $clientSignature;
+        $this->lifetime = $lifetime;
 
         if (!empty($id) && $this->validID($id)) {
             $this->id = $id;
