@@ -94,7 +94,7 @@ class DotenvEnvironment extends Environment
         }
 
         //Load env variables from filename
-        $values = array_merge($this->parseValues($this->filename), $_ENV);
+        $values = array_merge($_ENV, $this->parseValues($this->filename));
         $this->initEnvironment($values);
 
         if (!empty($this->memory)) {
