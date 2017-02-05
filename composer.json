@@ -15,7 +15,6 @@
     "spiral/security": "^1.0.0",
     "spiral/database": "^0.9",
     "spiral/orm": "^0.9",
-    "spiral/storage": "^0.9",
     "spiral/stempler": "^0.9",
     "zendframework/zend-diactoros": "^1.1",
     "twig/twig": "^2.1",
@@ -33,7 +32,8 @@
     "mockery/mockery": "^0.9.4"
   },
   "suggest": {
-    "spiral/odm": "Compositable ODM"
+    "spiral/odm": "Compositable ODM",
+    "spiral/storage": "Storage abstraction layer"
   },
   "autoload": {
     "files": [
