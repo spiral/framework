@@ -7,7 +7,7 @@
 
 namespace Spiral\Tests\Core;
 
-use Spiral\Core\Environment;
+use Spiral\Core\DotenvEnvironment;
 use Spiral\Core\EnvironmentInterface;
 use Spiral\Core\NullMemory;
 use Spiral\Tests\BaseTest;
@@ -21,7 +21,7 @@ class EnvironmentTest extends BaseTest
 
     public function testEmptyMapping()
     {
-        $environment = new Environment(
+        $environment = new DotenvEnvironment(
             __DIR__ . '/Fixtures/.env',
             $this->files,
             new NullMemory()
@@ -36,7 +36,7 @@ class EnvironmentTest extends BaseTest
 
     public function testBooleanMapping()
     {
-        $environment = new Environment(
+        $environment = new DotenvEnvironment(
             __DIR__ . '/Fixtures/.env',
             $this->files,
             new NullMemory()
@@ -52,14 +52,14 @@ class EnvironmentTest extends BaseTest
 
     public function testLoadFromMemory()
     {
-        $environment = new Environment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
 
         $this->assertNotEmpty(
-            $this->memory->loadData(Environment::MEMORY . '.' . $environment->getID())
+            $this->memory->loadData(DotenvEnvironment::MEMORY . '.' . $environment->getID())
         );
 
         //Re-init
-        $environment = new Environment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
 
         $this->assertSame('', $environment->get('TEST_EMPTY_1'));
         $this->assertSame('', $environment->get('TEST_EMPTY_2'));
@@ -77,7 +77,7 @@ class EnvironmentTest extends BaseTest
 
     public function testDifferentIDs()
     {
-        $environment = new Environment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
         $this->assertNotSame($this->app->getEnvironment()->getID(), $environment->getID());
     }
 

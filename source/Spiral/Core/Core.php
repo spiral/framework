@@ -448,9 +448,8 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
             /*
              * Default spiral environment is based on .env file.
              */
-            $environment = new Environment(
+            $environment = new DotenvEnvironment(
                 $core->directory('root') . '.env',
-                $container->get(FilesInterface::class),
                 $core->memory
             );
         }

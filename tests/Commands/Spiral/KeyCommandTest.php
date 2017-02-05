@@ -7,7 +7,7 @@
 
 namespace Spiral\Tests\Commands\Spiral;
 
-use Spiral\Core\Environment;
+use Spiral\Core\DotenvEnvironment;
 use Spiral\Core\NullMemory;
 use Spiral\Tests\BaseTest;
 
@@ -15,7 +15,7 @@ class KeyCommandTest extends BaseTest
 {
     public function testConfigureAndKey()
     {
-        $environment = new Environment(
+        $environment = new DotenvEnvironment(
             directory('root') . '.env',
             $this->files,
             new NullMemory()
@@ -25,7 +25,7 @@ class KeyCommandTest extends BaseTest
         $this->assertSame(0, $this->console->run('app:key')->getCode());
 
         clearstatcache();
-        $newEnvironment = new Environment(
+        $newEnvironment = new DotenvEnvironment(
             directory('root') . '.env',
             $this->files,
             new NullMemory()

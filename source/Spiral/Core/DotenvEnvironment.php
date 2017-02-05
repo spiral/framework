@@ -10,7 +10,6 @@ namespace Spiral\Core;
 
 use Spiral\Core\Environment\Parser;
 use Spiral\Core\Exceptions\EnvironmentException;
-use Spiral\Files\FilesInterface;
 
 /**
  * Default environment implementation wraps at top of DotEnv package and caches env values into
@@ -18,7 +17,7 @@ use Spiral\Files\FilesInterface;
  *
  * Attention, this implementation works using global _ENV array.
  */
-class Environment implements EnvironmentInterface
+class DotenvEnvironment implements EnvironmentInterface
 {
     /**
      * Environment section.
@@ -44,27 +43,19 @@ class Environment implements EnvironmentInterface
 
     /**
      * @invisible
-     * @var FilesInterface
-     */
-    protected $files = null;
-
-    /**
-     * @invisible
-     * @var MemoryInterface
+     * @var MemoryInterface|null
      */
     protected $memory = null;
 
     /**
-     * @param string          $filename
-     * @param FilesInterface  $files
-     * @param MemoryInterface $memory
+     * @param string               $filename
+     * @param MemoryInterface|null $memory Keep empty to disable cache.
      *
      * @throws EnvironmentException
      */
-    public function __construct(string $filename, FilesInterface $files, MemoryInterface $memory)
+    public function __construct(string $filename, MemoryInterface $memory = null)
     {
         $this->filename = $filename;
-        $this->files = $files;
         $this->memory = $memory;
 
         $this->load();
@@ -83,7 +74,7 @@ class Environment implements EnvironmentInterface
      *
      * @return $this
      */
-    public function set(string $name, $value): Environment
+    public function set(string $name, $value): DotenvEnvironment
     {
         $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
@@ -125,15 +116,18 @@ class Environment implements EnvironmentInterface
      */
     protected function load()
     {
-        if (!$this->files->exists($this->filename)) {
+        if (!file_exists($this->filename)) {
             //Nothing to load
             return;
         }
 
         //Unique env file hash
-        $this->id = $this->files->md5($this->filename);
+        $this->id = md5_file($this->filename);
 
-        if (!empty($values = $this->memory->loadData(static::MEMORY . '.' . $this->id))) {
+        if (
+            !empty($this->memory)
+            && !empty($values = $this->memory->loadData(static::MEMORY . '.' . $this->id))
+        ) {
             //Restore from cache
             $this->initEnvironment($values);
 
@@ -145,7 +139,9 @@ class Environment implements EnvironmentInterface
             $this->parseValues($this->filename)
         );
 
-        $this->memory->saveData(static::MEMORY . '.' . $this->id, $values);
+        if (!empty($this->memory)) {
+            $this->memory->saveData(static::MEMORY . '.' . $this->id, $values);
+        }
     }
 
     /**
