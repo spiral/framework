@@ -57,7 +57,7 @@ interface SessionInterface extends InjectorInterface
     /**
      * @param string|null $name When null default section to be returned.
      *
-     * @return SessionSectionInterface
+     * @return SectionInterface
      */
-    public function getSection(string $name = null): SessionSectionInterface;
+    public function getSection(string $name = null): SectionInterface;
 }

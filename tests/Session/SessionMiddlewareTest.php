@@ -12,7 +12,7 @@ use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Cookies\CookieManager;
 use Spiral\Session\Http\SessionStarter;
 use Spiral\Session\SessionInterface;
-use Spiral\Session\SessionSectionInterface;
+use Spiral\Session\SectionInterface;
 use Spiral\Tests\Http\HttpTest;
 
 class SessionMiddlewareTest extends HttpTest
@@ -63,7 +63,7 @@ class SessionMiddlewareTest extends HttpTest
         $this->http->setEndpoint(function () {
             $this->assertSame(
                 'cli',
-                $this->container->get(SessionSectionInterface::class, 'cli')->getName()
+                $this->container->get(SectionInterface::class, 'cli')->getName()
             );
         });
 

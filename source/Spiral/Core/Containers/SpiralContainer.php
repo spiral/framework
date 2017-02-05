@@ -65,7 +65,7 @@ class SpiralContainer extends Container implements ContainerInterface
 
         //Session
         'Spiral\Session\SessionInterface'                   => 'Spiral\Session\Session',
-        'Spiral\Session\SessionSectionInterface'            => 'Spiral\Session\SessionSection',
+        'Spiral\Session\SectionInterface'                   => 'Spiral\Session\SessionSection',
 
         //Default validator
         'Spiral\Validation\ValidatorInterface'              => 'Spiral\Validation\Validator',

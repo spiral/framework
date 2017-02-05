@@ -201,7 +201,7 @@ class Session extends Component implements SessionInterface
     /**
      * {@inheritdoc}
      */
-    public function getSection(string $name = null): SessionSectionInterface
+    public function getSection(string $name = null): SectionInterface
     {
         return new SessionSection($this, $name ?? static::DEFAULT_SECTION);
     }

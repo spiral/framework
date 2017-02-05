@@ -12,7 +12,7 @@ use Spiral\Core\Container\InjectableInterface;
 /**
  * Represents part of _SESSION array.
  */
-class SessionSection implements SessionSectionInterface, InjectableInterface
+class SessionSection implements SectionInterface, InjectableInterface
 {
     /**
      * Automatic injections.

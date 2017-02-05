@@ -6,4 +6,4 @@ tests/runtime/*
 clover.xml
 .coveralls.yml
 .env
-coveralls.json
+clover.json
