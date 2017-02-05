@@ -12,7 +12,6 @@ use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\Middlewares\JsonParser;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Stream;
-use function GuzzleHttp\json_encode;
 
 class JsonParserTest extends HttpTest
 {
