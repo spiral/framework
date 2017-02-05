@@ -23,7 +23,6 @@ class EnvironmentTest extends BaseTest
     {
         $environment = new DotenvEnvironment(
             __DIR__ . '/Fixtures/.env',
-            $this->files,
             new NullMemory()
         );
 
@@ -38,7 +37,6 @@ class EnvironmentTest extends BaseTest
     {
         $environment = new DotenvEnvironment(
             __DIR__ . '/Fixtures/.env',
-            $this->files,
             new NullMemory()
         );
 
@@ -52,14 +50,14 @@ class EnvironmentTest extends BaseTest
 
     public function testLoadFromMemory()
     {
-        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->memory);
 
         $this->assertNotEmpty(
             $this->memory->loadData(DotenvEnvironment::MEMORY . '.' . $environment->getID())
         );
 
         //Re-init
-        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->memory);
 
         $this->assertSame('', $environment->get('TEST_EMPTY_1'));
         $this->assertSame('', $environment->get('TEST_EMPTY_2'));
@@ -77,7 +75,7 @@ class EnvironmentTest extends BaseTest
 
     public function testDifferentIDs()
     {
-        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->files, $this->memory);
+        $environment = new DotenvEnvironment(__DIR__ . '/Fixtures/.env', $this->memory);
         $this->assertNotSame($this->app->getEnvironment()->getID(), $environment->getID());
     }
 
