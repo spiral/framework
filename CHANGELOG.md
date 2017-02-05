@@ -11,6 +11,7 @@ CHANGELOG for 0.9.0 RC
   * PHPUnit updated to 5.0 branch
   * Components split into separate repositories
   * Symfony dependencies updated to 3.0 branch
+  * added bind() function to specify IoC dependencies in configs
 
 **Common**
   * Dropped support of PHP5+
