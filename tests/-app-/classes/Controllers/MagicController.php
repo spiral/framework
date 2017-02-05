@@ -8,7 +8,6 @@
 namespace TestApplication\Controllers;
 
 use Spiral\Core\HMVC\ControllerInterface;
-use function GuzzleHttp\json_encode;
 
 //Simply response with given action and parameters
 class MagicController implements ControllerInterface
