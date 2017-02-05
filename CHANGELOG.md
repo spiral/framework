@@ -12,6 +12,7 @@ CHANGELOG for 0.9.0 RC
   * Components split into separate repositories
   * Symfony dependencies updated to 3.0 branch
   * added `bind()` function to specify IoC dependencies in configs
+  * ViewSource class added into views
 
 **Common**
   * Dropped support of PHP5+
@@ -32,6 +33,7 @@ CHANGELOG for 0.9.0 RC
   * Reactor component moved in
   * Debugger (log manager) component removed 
   * Improved implementation of Tokenizer component
+  * Lazy wire declaration for FactoryInterface
 
 **Core**
   * ScoperInterface moved into Framework bundle
@@ -46,6 +48,8 @@ CHANGELOG for 0.9.0 RC
     * Unions with ordering in SQLServer
     * Invalid parameter handling for update queries with nested selection
   * Pagination classes are immutable now
+  * Ability to use nested queries in JOIN statements
+  * on argument in join() methods is deprecated, use on() function directly
 
 **Models**
   * Removed features
@@ -74,7 +78,14 @@ CHANGELOG for 0.9.0 RC
   * Relation loaders and schemas are immutable now
   * Memory scope are optional now
   * Record does not have "source" method by default now (see SourceTrait)
+  * Optimizations in load method with "using" option
+  * Added late bindings (locate outer record based on Interface or role name)
+  * Added detach() method into HasMany relation
     
+**Stempler**
+  * StemplerLoader synced with Twig abstraction, StemplerSource introduced
+  * SourceContext (twig like) have been added
+  
 **ODM**
    * Moved to latest PHP7 mongo drivers
    * Removed features
