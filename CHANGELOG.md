@@ -1,6 +1,12 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+0.9.3 (07.02.2017)
+-----
+* Proper timezone detection for datetime accessors
+* RenderException now shows original error location in views
+* Improvements in cache management for Twig engine
+
 0.9.1 (05.02.2017)
 -----
 **Encrypter**
