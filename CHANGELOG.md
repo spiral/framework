@@ -1,7 +1,7 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
-0.9.3 (07.02.2017)
+0.9.5 (07.02.2017)
 -----
 * Proper timezone detection for datetime accessors
 * RenderException now shows original error location in views
