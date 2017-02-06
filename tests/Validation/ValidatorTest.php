@@ -11,6 +11,7 @@ namespace Spiral\Tests\Validation;
 use Interop\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Debug\LogsInterface;
+use Spiral\Tests\Validation\Fixtures\SimpleTestChecker;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Validation\Checkers\AddressChecker;
 use Spiral\Validation\Checkers\TypeChecker;
@@ -90,6 +91,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
                     return new TypeChecker($this->container);
                 case AddressChecker::class:
                     return new AddressChecker($this->container);
+                case SimpleTestChecker::class:
+                    return new SimpleTestChecker($this->container);
                 default:
                     // it actually must throw NotFoundException (interface), but it will not
                     // because there is no real reason for SomeException (interface)
@@ -165,6 +168,37 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->isValid());
         $validator->setData(['url' => 'http://example.com']);
         $this->assertTrue($validator->isValid());
+    }
+
+    public function testNotAliasChecker()
+    {
+        $validator = new Validator([], [], $this->config, $this->container);
+
+        //Test rule without arguments
+        $validator->setRules(['string' => [SimpleTestChecker::class . '::test']]);
+
+        $validator->setData(['string' => 'test']);
+        $this->assertTrue($validator->isValid());
+
+        $validator->setData(['string' => 'not a test']);
+        $this->assertFalse($validator->isValid());
+        $this->assertEquals(
+            substr(SimpleTestChecker::MESSAGES['test'], 2, -2),
+            $validator->getErrors()['string']
+        );
+
+        //Test rule with arguments
+        $validator->setRules(['string' => [[SimpleTestChecker::class . '::string', 'str']]]);
+
+        $validator->setData(['string' => 'str']);
+        $this->assertTrue($validator->isValid());
+
+        $validator->setData(['string' => 'another str']);
+        $this->assertFalse($validator->isValid());
+        $this->assertEquals(
+            substr(SimpleTestChecker::MESSAGES['string'], 2, -2),
+            $validator->getErrors()['string']
+        );
     }
 
     public function testRuleChain()
