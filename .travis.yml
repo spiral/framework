@@ -18,3 +18,7 @@ install:
 
 script:
   - phpunit
+
+after_script:
+  - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+  - php coveralls.phar --verbose --config .coveralls.yml
