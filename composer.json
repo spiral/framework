@@ -12,6 +12,7 @@
   "require": {
     "php": ">=7.0",
     "spiral/common": "^0.9",
+    "spiral/models": "^0.9",
     "spiral/tokenizer": "^0.9",
     "spiral/reactor": "^0.9",
     "spiral/security": "^1.0.0",
