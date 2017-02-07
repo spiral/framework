@@ -321,8 +321,7 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
         try {
             if (!is_array($condition) && strpos($condition, ':')) {
                 $condition = explode(':', $condition);
-                if ($this->config->hasChecker($condition[0])) {
-
+                if ($this->hasChecker($condition[0])) {
                     $checker = $this->getChecker($condition[0]);
                     $result = $checker->check($condition[1], $value, $arguments);
 
@@ -332,22 +331,6 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
                     }
 
                     return $result;
-                }
-
-                //If checker doesn't have registered alias
-                if (class_exists($condition[0])) {
-                    $checker = $this->container->get($condition[0])->withValidator($this);
-
-                    if ($checker instanceof CheckerInterface) {
-                        $result = $checker->check($condition[1], $value, $arguments);
-
-                        if ($result === false) {
-                            //To let validation() method know that message should be handled via Checker
-                            return $checker;
-                        }
-
-                        return $result;
-                    }
                 }
             }
 
@@ -372,6 +355,27 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
     }
 
     /**
+     * Does validation config has alias defined for a given checker name or class exists
+     *
+     * @param string $name
+     * @return bool
+     */
+    protected function hasChecker(string $name): bool
+    {
+        if ($this->config->hasChecker($name)) {
+            return true;
+        }
+
+        if (class_exists($name)) {
+            $checker = $this->container->get($name);
+
+            return $checker instanceof CheckerInterface;
+        }
+
+        return false;
+    }
+
+    /**
      * Get or create instance of validation checker.
      *
      * @param string $name
@@ -381,13 +385,15 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
      */
     protected function getChecker(string $name): CheckerInterface
     {
-        if (!$this->config->hasChecker($name)) {
+        if (!$this->hasChecker($name)) {
             throw new ValidationException(
                 "Unable to create validation checker defined by '{$name}' name"
             );
         }
 
-        return $this->container->get($this->config->checkerClass($name))->withValidator($this);
+        $name = $this->config->hasChecker($name) ? $this->config->checkerClass($name) : $name;
+
+        return $this->container->get($name)->withValidator($this);
     }
 
     /**

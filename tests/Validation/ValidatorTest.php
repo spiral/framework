@@ -91,8 +91,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
                     return new TypeChecker($this->container);
                 case AddressChecker::class:
                     return new AddressChecker($this->container);
-                case SimpleTestChecker::class:
-                    return new SimpleTestChecker($this->container);
                 default:
                     // it actually must throw NotFoundException (interface), but it will not
                     // because there is no real reason for SomeException (interface)
@@ -172,32 +170,39 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testNotAliasChecker()
     {
-        $validator = new Validator([], [], $this->config, $this->container);
+        $config = new ValidatorConfig([
+            'emptyConditions' => [],
+            'checkers'        => [],
+            'aliases'         => []
+        ]);
+        $validator = new Validator([], [], $config, $this->container);
 
         //Test rule without arguments
-        $validator->setRules(['string' => [SimpleTestChecker::class . '::test']]);
+        $validator->setRules(['url' => [AddressChecker::class . '::url']]);
 
-        $validator->setData(['string' => 'test']);
+        $validator->setData(['url' => 'http://example.com']);
         $this->assertTrue($validator->isValid());
 
-        $validator->setData(['string' => 'not a test']);
+        $validator->setData(['url' => 'example.com']);
         $this->assertFalse($validator->isValid());
+
         $this->assertEquals(
-            substr(SimpleTestChecker::MESSAGES['test'], 2, -2),
-            $validator->getErrors()['string']
+            substr(AddressChecker::MESSAGES['url'], 2, -2),
+            $validator->getErrors()['url']
         );
 
         //Test rule with arguments
-        $validator->setRules(['string' => [[SimpleTestChecker::class . '::string', 'str']]]);
+        $validator->setRules(['url' => [[AddressChecker::class . '::url', false]]]);
 
-        $validator->setData(['string' => 'str']);
+        $validator->setData(['url' => 'example.com']);
         $this->assertTrue($validator->isValid());
 
-        $validator->setData(['string' => 'another str']);
+        $validator->setData(['url' => 'before:after']);
         $this->assertFalse($validator->isValid());
+
         $this->assertEquals(
-            substr(SimpleTestChecker::MESSAGES['string'], 2, -2),
-            $validator->getErrors()['string']
+            substr(AddressChecker::MESSAGES['url'], 2, -2),
+            $validator->getErrors()['url']
         );
     }
 
