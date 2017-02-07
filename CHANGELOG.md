@@ -1,6 +1,11 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+0.9.6 (07.02.2017)
+-----
+* Dependencies update
+* Validator can now accept checkers outside of it's config
+
 0.9.5 (07.02.2017)
 -----
 * Proper timezone detection for datetime accessors
