@@ -391,6 +391,7 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
             );
         }
 
+        /** @var string $name */
         $name = $this->config->hasChecker($name) ? $this->config->checkerClass($name) : $name;
 
         return $this->container->get($name)->withValidator($this);
