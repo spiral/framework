@@ -13,7 +13,6 @@ use Spiral\Http\Response\ResponseWrapper;
 use Spiral\Http\Uri;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Stream;
-use function GuzzleHttp\json_encode;
 
 class ResponseWrapperTest extends \PHPUnit_Framework_TestCase
 {

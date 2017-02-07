@@ -109,21 +109,7 @@ use Zend\Expressive\Application;
 use Zend\Stratigility\MiddlewarePipe;
 
 $app = new Application();
-$app->any('/spiral', function ($req, $res, $next) {
-    return MySpiralApp::init(...)->http->perform($req, $res);
-});
-```
-
-StorageManager with deep PSR-7 streams integration:
-
-```php
-public function downloadAction()
-{
-    return $this->responses->attachment(
-        $this->storage->open('cloud:filename.txt'), 
-        'filename.txt'
-    );
-}
+$app->any('/spiral', SpiralApp::init(...)->http);
 ```
 
 ORM with adaptive scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
@@ -166,8 +152,7 @@ class Post extends RecordEntity
 ```
 
 ```php
-$posts = $this->orm->source(Post::class)
-    ->find()->distinct()
+$posts = $postSource->find()->distinct()
     ->with('comments', ['where' => ['{@}.approved' => true]]) //Automatic joins
     ->with('author')->where('author_name', 'LIKE', $authorName) //Fluent
     ->load('comments.author') //Cascade eager-loading (joins or external query)
@@ -181,7 +166,7 @@ foreach($posts as $post) {
 
 ```php
 $post = new Post();
-$post->publish_at = 'tomorrow';
+$post->publish_at = 'tomorrow 8am';
 $post->author = new User(['name' => 'Antony']);
 
 $post->tags->link(new Tag(['name' => 'tag A']));
