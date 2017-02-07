@@ -43,7 +43,7 @@ class SchemaCommand extends Command
         $benchmark = $benchmarker->benchmark($this, 'update');
 
         $builder = $odm->schemaBuilder(true);
-        $odm->buildSchema($builder, true);
+        $odm->setSchema($builder, true);
 
         $elapsed = number_format($benchmarker->benchmark($this, $benchmark), 3);
 
