@@ -11,6 +11,7 @@ namespace Spiral\Tests\Validation;
 use Interop\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Debug\LogsInterface;
+use Spiral\Tests\Validation\Fixtures\SimpleTestChecker;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Validation\Checkers\AddressChecker;
 use Spiral\Validation\Checkers\TypeChecker;
@@ -165,6 +166,44 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->isValid());
         $validator->setData(['url' => 'http://example.com']);
         $this->assertTrue($validator->isValid());
+    }
+
+    public function testNotAliasChecker()
+    {
+        $config = new ValidatorConfig([
+            'emptyConditions' => [],
+            'checkers'        => [],
+            'aliases'         => []
+        ]);
+        $validator = new Validator([], [], $config, $this->container);
+
+        //Test rule without arguments
+        $validator->setRules(['url' => [AddressChecker::class . '::url']]);
+
+        $validator->setData(['url' => 'http://example.com']);
+        $this->assertTrue($validator->isValid());
+
+        $validator->setData(['url' => 'example.com']);
+        $this->assertFalse($validator->isValid());
+
+        $this->assertEquals(
+            substr(AddressChecker::MESSAGES['url'], 2, -2),
+            $validator->getErrors()['url']
+        );
+
+        //Test rule with arguments
+        $validator->setRules(['url' => [[AddressChecker::class . '::url', false]]]);
+
+        $validator->setData(['url' => 'example.com']);
+        $this->assertTrue($validator->isValid());
+
+        $validator->setData(['url' => 'before:after']);
+        $this->assertFalse($validator->isValid());
+
+        $this->assertEquals(
+            substr(AddressChecker::MESSAGES['url'], 2, -2),
+            $validator->getErrors()['url']
+        );
     }
 
     public function testRuleChain()
