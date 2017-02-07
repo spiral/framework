@@ -12,8 +12,11 @@
   "require": {
     "php": ">=7.0",
     "spiral/common": "^0.9",
+    "spiral/tokenizer": "^0.9",
+    "spiral/reactor": "^0.9",
     "spiral/security": "^1.0.0",
     "spiral/database": "^0.9",
+    "spiral/migrations": "^0.9",
     "spiral/orm": "^0.9",
     "spiral/stempler": "^0.9",
     "zendframework/zend-diactoros": "^1.1",
