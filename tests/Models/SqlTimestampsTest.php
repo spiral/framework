@@ -64,11 +64,6 @@ class SqlTimestampsTest extends BaseTest
             (string)$sampleB->time_altered
         );
 
-        $this->assertSame(
-            json_encode($sample),
-            json_encode($sampleB)
-        );
-
         $this->assertInternalType('array', $sample->time_altered->__debugInfo());
     }
 
@@ -102,11 +97,6 @@ class SqlTimestampsTest extends BaseTest
         $this->assertSame(
             (string)$sample->time_nullable,
             (string)$sampleB->time_nullable
-        );
-
-        $this->assertSame(
-            json_encode($sample),
-            json_encode($sampleB)
         );
     }
 
