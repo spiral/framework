@@ -241,7 +241,7 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * {@inheritdoc}
      */
-    public function perform(Request $request, Response $response): Response
+    public function __invoke(Request $request, Response $response): Response
     {
         if (empty($this->container)) {
             throw new RouteException("Unable to perform route endpoint without given container");

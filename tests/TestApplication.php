@@ -20,7 +20,6 @@ use Spiral\Core\Core;
  * @property \Spiral\Tokenizer\TokenizerInterface     $tokenizer
  * @property \Spiral\Tokenizer\ClassesInterface       $locator
  * @property \Spiral\Tokenizer\InvocationsInterface   $invocationLocator
- * @property \Spiral\Storage\StorageInterface         $storage
  * @property \Spiral\Views\ViewManager                $views
  * @property \Spiral\Translator\Translator            $translator
  * @property \Spiral\Database\DatabaseManager         $dbal

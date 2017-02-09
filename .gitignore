@@ -1,7 +1,8 @@
 .idea/
 composer.lock
 vendor/
-tests/runtime/*
+clover.json
+clover.xml
+clover.json
 clover.xml
 .env
-clover.json

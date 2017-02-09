@@ -14,7 +14,7 @@ use Spiral\Core\ContainerInterface;
 use Spiral\Http\Exceptions\RouteException;
 
 /**
- * Declares ability to route.
+ * Declares ability to route. When no parent router exist route will behave as middleware.
  */
 interface RouteInterface
 {
@@ -90,7 +90,7 @@ interface RouteInterface
      *
      * @return ResponseInterface
      */
-    public function perform(
+    public function __invoke(
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface;

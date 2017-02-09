@@ -83,7 +83,7 @@ class Router implements RouterInterface
             $route = $route->withContainer($this->container);
 
             //Executing
-            return $route->perform($request->withAttribute('route', $route), $response);
+            return $route->__invoke($request->withAttribute('route', $route), $response);
         } finally {
             $this->container->restore($scope);
         }
