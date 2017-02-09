@@ -82,8 +82,11 @@ class Router implements RouterInterface
             //Route must be executed in a specific container scope
             $route = $route->withContainer($this->container);
 
-            //Executing
-            return $route->__invoke($request->withAttribute('route', $route), $response);
+            //Executing with route attribute (can be resolved via RouteInterface)
+            return $route->__invoke(
+                $request->withAttribute('route', $route),
+                $response
+            );
         } finally {
             $this->container->restore($scope);
         }
