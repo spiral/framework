@@ -189,12 +189,6 @@ public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInt
 }
 ```
 
-Available Modules
---------
-- [Profiler Panel](https://github.com/spiral-modules/profiler) - Profiler panel/middleware for Spiral Applications
-- [Hybrid DB](https://github.com/spiral-modules/hybrid-db) - ORM-to-ODM relation bridge with transaction support
-- [IDE Helper](https://github.com/spiral-modules/ide-helper) - Virtual documentation generator: ORM, ODM, RequestFilters, Container
-
 Inspired by
 ===========
 Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3, RoR ORM.
