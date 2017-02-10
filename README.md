@@ -112,7 +112,7 @@ $app = new Application();
 $app->any('/spiral', SpiralApp::init(...)->http);
 ```
 
-ORM with adaptive scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends RecordEntity
@@ -131,12 +131,6 @@ class Post extends RecordEntity
         //Simple relation definition
         'comments' => [self::HAS_MANY => Comment::class],
         
-        //Relation thought interface
-        'author'   => [
-            self::BELONGS_TO   => AuthorInterface::class,
-            self::LATE_BINDING => true
-        ],
-        
         //Not very simple relation definitions
         'collaborators' => [
             self::MANY_TO_MANY  => User::class,
@@ -146,6 +140,12 @@ class Post extends RecordEntity
                 'type'          => 'string, nullable',
             ],
             User::INVERSE       => 'collaborated_posts'
+        ],
+        
+        //Relation thought interface
+        'author'   => [
+            self::BELONGS_TO   => AuthorInterface::class,
+            self::LATE_BINDING => true
         ],
     ];
 }
