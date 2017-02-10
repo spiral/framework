@@ -409,7 +409,9 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
      * @param array                $directories Spiral directories should include root, libraries
      *                                          and application directories.
      * @param EnvironmentInterface $environment Application specific environment if any.
-     * @param ContainerInterface   $container   Initial container instance.
+     * @param InteropContainer     $container   DI container for application, will be wrapper by
+     *                                          spiral container in order to provide auto-wiring
+     *                                          layer.
      * @param bool                 $handleErrors
      *
      * @return self
@@ -417,11 +419,15 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
     public static function init(
         array $directories,
         EnvironmentInterface $environment = null,
-        ContainerInterface $container = null,
+        InteropContainer $container = null,
         bool $handleErrors = true
     ): self {
-        //Default spiral container
-        $container = $container ?? new SpiralContainer();
+        //Spiral requires specific DI layer, you can fully overwrite it by providing
+        //\Spiral\Core\ContainerInterface or rewrite it partially by using outer Interop compatible
+        //for dependency management (applied to get(), has() rules and argument resolution).
+        $container = $container instanceof ContainerInterface
+            ? $container
+            : new SpiralContainer($container);
 
         //Spiral core interface, @see SpiralContainer
         $container->bindSingleton(ContainerInterface::class, $container);
