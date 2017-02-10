@@ -406,15 +406,16 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
     /**
      * Initiate application core. Method will set global container if none exists.
      *
-     * @param array                               $directories Spiral directories should include
-     *                                                         root, libraries and application
-     *                                                         directories.
-     * @param EnvironmentInterface                $environment Application specific environment if
-     *                                                         any.
-     * @param InteropContainer|ContainerInterface $container   DI container for application, keep
-     *                                                         empty to use default spiral
-     *                                                         container.
-     * @param bool                                $handleErrors
+     * @param array                               $directories  Spiral directories should include
+     *                                                          root, libraries and application
+     *                                                          directories.
+     * @param EnvironmentInterface                $environment  Application specific environment if
+     *                                                          any.
+     * @param InteropContainer|ContainerInterface $container    DI container for application, keep
+     *                                                          empty to use default spiral
+     *                                                          container.
+     * @param bool                                $handleErrors DO NOT set to to TRUE when testing
+     *                                                          your application!
      *
      * @return self
      */
@@ -431,7 +432,7 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
             ? $container
             : new SpiralContainer($container);
 
-        //Spiral core interface, @see SpiralContainer
+        //Spiral core interface, @see SpiralContainer (still needed?)
         $container->bindSingleton(ContainerInterface::class, $container);
 
         /**
@@ -451,11 +452,8 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
         $container->bindSingleton(BootloadManager::class, $core->bootloader);
         $container->bindSingleton(MemoryInterface::class, $core->memory);
 
-        //Setting environment (by default - dotenv extension)
+        //Application environment (by default - dotenv extension, applied to all env() functions!)
         if (empty($environment)) {
-            /*
-             * Default spiral environment is based on .env file.
-             */
             $environment = new DotenvEnvironment(
                 $core->directory('root') . '.env',
                 $core->memory
@@ -468,7 +466,9 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
         //Initiating config loader
         $container->bindSingleton(
             ConfiguratorInterface::class,
-            $container->make(ConfigFactory::class, ['directory' => $core->directory('config')])
+            $container->make(ConfigFactory::class, [
+                'directory' => $core->directory('config')
+            ])
         );
 
         if ($handleErrors) {
