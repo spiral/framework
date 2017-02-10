@@ -179,12 +179,9 @@ $transaction->run();
 dump($post);
 ```
 
-Embedded functionality for static indexation of your code:
-
-```php
-public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
-{
-    dump($locator->getClasses(ControllerInterface::class));
-    dump($invocations->getInvocations(new \ReflectionFunction('dump')));
-}
+Tests
+-----
+```
+composer install
+phpunit
 ```
