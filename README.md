@@ -128,7 +128,7 @@ class Post extends RecordEntity
         'status' => 'enum(published,draft)',
         'body'   => 'text',
         
-        //Simple relation definition
+        //Simple relation definitions
         'comments' => [self::HAS_MANY => Comment::class],
         
         //Not very simple relation definitions
@@ -188,7 +188,3 @@ public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInt
     dump($invocations->getInvocations(new \ReflectionFunction('dump')));
 }
 ```
-
-Inspired by
-===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3, RoR ORM.
