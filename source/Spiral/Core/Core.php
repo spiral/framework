@@ -406,13 +406,15 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
     /**
      * Initiate application core. Method will set global container if none exists.
      *
-     * @param array                $directories Spiral directories should include root, libraries
-     *                                          and application directories.
-     * @param EnvironmentInterface $environment Application specific environment if any.
-     * @param InteropContainer     $container   DI container for application, will be wrapper by
-     *                                          spiral container in order to provide auto-wiring
-     *                                          layer.
-     * @param bool                 $handleErrors
+     * @param array                               $directories Spiral directories should include
+     *                                                         root, libraries and application
+     *                                                         directories.
+     * @param EnvironmentInterface                $environment Application specific environment if
+     *                                                         any.
+     * @param InteropContainer|ContainerInterface $container   DI container for application, keep
+     *                                                         empty to use default spiral
+     *                                                         container.
+     * @param bool                                $handleErrors
      *
      * @return self
      */
