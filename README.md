@@ -4,9 +4,9 @@ Spiral, modular RAD Framework
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
-The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using an HMVC architecture, layers separation, code re-usability, extremely friendly IoC, PSR-7, simple syntax and customizable scaffolding mechanisms.
+The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using an HMVC architecture, layers separation, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), PSR-7, simple syntax and customizable scaffolding mechanisms. 
 
-<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [**Contributing**](https://github.com/spiral/guide/blob/master/contributing.md)
+<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
 
 <br/><br/>
 
@@ -112,7 +112,7 @@ $app = new Application();
 $app->any('/spiral', SpiralApp::init(...)->http);
 ```
 
-ORM with adaptive scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
 
 ```php
 class Post extends RecordEntity
@@ -128,14 +128,8 @@ class Post extends RecordEntity
         'status' => 'enum(published,draft)',
         'body'   => 'text',
         
-        //Simple relation definition
+        //Simple relation definitions
         'comments' => [self::HAS_MANY => Comment::class],
-        
-        //Relation thought interface
-        'author'   => [
-            self::BELONGS_TO   => AuthorInterface::class,
-            self::LATE_BINDING => true
-        ],
         
         //Not very simple relation definitions
         'collaborators' => [
@@ -146,6 +140,12 @@ class Post extends RecordEntity
                 'type'          => 'string, nullable',
             ],
             User::INVERSE       => 'collaborated_posts'
+        ],
+        
+        //Relation thought interface
+        'author'   => [
+            self::BELONGS_TO   => AuthorInterface::class,
+            self::LATE_BINDING => true
         ],
     ];
 }
@@ -179,16 +179,9 @@ $transaction->run();
 dump($post);
 ```
 
-Embedded functionality for static indexation of your code:
-
-```php
-public function indexAction(ClassLocatorInterface $locator, InvocationLocatorInterface $invocations)
-{
-    dump($locator->getClasses(ControllerInterface::class));
-    dump($invocations->getInvocations(new \ReflectionFunction('dump')));
-}
+Tests
+-----
 ```
-
-Inspired by
-===========
-Laravel 5+, CodeIgniter, Yii 2, Symfony 2, ASP.NET 3, RoR ORM.
+composer install
+phpunit
+```
