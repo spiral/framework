@@ -21,6 +21,7 @@ use Spiral\Debug\Traits\BenchmarkTrait;
  */
 abstract class Controller extends Component implements ControllerInterface
 {
+    //Abstract controller without SharedTrait?
     use SharedTrait, BenchmarkTrait;
 
     /**
