@@ -53,6 +53,9 @@ class PaginationFactory implements SingletonInterface, PaginatorsInterface
         }
 
         //Initiating paginator
-        return $this->container->make(Paginator::class, compact('limit'))->withPage($page);
+        return $this->container->make(
+            Paginator::class,
+            compact('limit', 'parameter')
+        )->withPage($page);
     }
 }
