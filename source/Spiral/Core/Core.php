@@ -435,9 +435,7 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
         //Spiral core interface, @see SpiralContainer (still needed?)
         $container->bindSingleton(ContainerInterface::class, $container);
 
-        /**
-         * @var Core $core
-         */
+        /** @var Core $core */
         $core = new static($directories, $container);
 
         //Core binding
@@ -460,10 +458,9 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
             );
         }
 
-        //Mounting environment to be available for other components
         $core->setEnvironment($environment);
 
-        //Initiating config loader
+        //Config factory to intercept all configuration file loading
         $container->bindSingleton(
             ConfiguratorInterface::class,
             $container->make(ConfigFactory::class, [
@@ -472,7 +469,7 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
         );
 
         if ($handleErrors) {
-            //Error and exception handlers
+            //Do not enabled in tests
             register_shutdown_function([$core, 'handleShutdown']);
             set_error_handler([$core, 'handleError']);
             set_exception_handler([$core, 'handleException']);
