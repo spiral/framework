@@ -117,7 +117,7 @@ class ControllersRoute extends AbstractRoute
     /**
      * {@inheritdoc}
      */
-    protected function createEndpoint()
+    protected function createEndpoint(): callable
     {
         $route = $this;
 

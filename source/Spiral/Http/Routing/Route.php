@@ -55,7 +55,7 @@ class Route extends AbstractRoute
     /**
      * {@inheritdoc}
      */
-    protected function createEndpoint()
+    protected function createEndpoint(): callable
     {
         if (is_object($this->target) || is_array($this->target)) {
             return $this->target;
