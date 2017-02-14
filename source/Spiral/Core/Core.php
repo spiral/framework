@@ -112,11 +112,6 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
     protected $load = [];
 
     /**
-     * @var \Spiral\Core\ContainerInterface
-     */
-    protected $container;
-
-    /**
      * Core class will extend default spiral container and initiate set of directories. You must
      * provide application, libraries and root directories to constructor.
      *
