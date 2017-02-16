@@ -20,6 +20,8 @@ use Spiral\Views\Exceptions\ViewsException;
 /**
  * Provides ability to manage view engines, loaders and environment (cache dependencies).
  * Attention, this is immutable class.
+ *
+ * @todo improve engine location method (or add cache)
  */
 class ViewManager extends Component implements ViewsInterface, SingletonInterface
 {
