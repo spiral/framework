@@ -121,8 +121,8 @@ trait TimestampsTrait
             //Registering fields in schema
             switch (get_class($event->reflection())) {
                 case RecordSchema::class:
-                    $schema['time_created'] = 'timestamp,null';
-                    $schema['time_updated'] = 'timestamp,null';
+                    $schema['time_created'] = 'datetime,null';
+                    $schema['time_updated'] = 'datetime,null';
                     break;
                 case DocumentSchema::class:
                     $schema['timeCreated'] = 'timestamp';
