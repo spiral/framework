@@ -19,8 +19,10 @@ use Spiral\Translator\Exceptions\PluralizationException;
 use Symfony\Component\Translation\MessageSelector;
 
 /**
- * Simple implementation of Symfony\TranslatorInterface with memory caching and automatic message
+ * Implementation of Symfony\TranslatorInterface with memory caching and automatic message
  * registration.
+ *
+ * Immutable version is required.
  */
 class Translator extends Component implements SingletonInterface, TranslatorInterface
 {
@@ -124,8 +126,6 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
 
     /**
      * {@inheritdoc}
-     *
-     * Non immutable version of withLocale.
      *
      * @return $this
      *
