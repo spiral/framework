@@ -12,7 +12,7 @@ use Spiral\Encrypter\Exceptions\EncrypterException;
 use Spiral\Encrypter\Exceptions\EncryptException;
 
 /**
- * Basic interface for encrypting services.
+ * Immutable class reponsible for encryption services.
  */
 interface EncrypterInterface
 {
