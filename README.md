@@ -144,6 +144,11 @@ class Post extends RecordEntity
             self::BELONGS_TO   => AuthorInterface::class,
             self::LATE_BINDING => true
         ],
+        
+        //Hybrid databases
+        'metadata' => [
+            Document::ONE => Mongo\Metadata::class
+        ]
     ];
 }
 ```
