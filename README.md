@@ -72,7 +72,7 @@ class SomeService implements SingletonInterface
         $this->reader = $reader;
     }
 
-    public function readValue($value)
+    public function readValue(string $value)
     {
         return $this->reader->read($value);
     }
