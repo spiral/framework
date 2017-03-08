@@ -79,7 +79,7 @@ class SomeService implements SingletonInterface
 }
 ```
 
-JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts:
+JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts (including IDE helpers):
 
 ```php
 public function indexAction(ServerRequestInterface $request, SomeService $service)
