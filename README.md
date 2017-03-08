@@ -159,7 +159,7 @@ $posts = $postSource->find()->distinct()
     ->with('author')->where('author_name', 'LIKE', $authorName) //Fluent
     ->load('comments.author') //Cascade eager-loading (joins or external query)
     ->paginate(10) //Quick pagination using active request
-    ->fetchAll();
+    ->getIterator();
 
 foreach($posts as $post) {
     echo $post->author->getName();
