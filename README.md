@@ -178,7 +178,7 @@ $transaction = new Transaction();
 $transaction->store($post);
 $transaction->run();
 
-dump($post);
+dump($post); //Or ActiveRecord approach
 ```
 
 Tests
