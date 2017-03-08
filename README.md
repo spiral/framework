@@ -26,7 +26,7 @@ class HomeController extends Controller
      * @param HttpConfig $config   
      * @return string
      */
-    public function indexAction(Database $database, Database $logs, HttpConfig $config)
+    public function indexAction(Database $database, Database $logs, HttpConfig $config): string 
     {
         dump($config->basePath());
     
@@ -50,10 +50,10 @@ class MyBootloader extends Bootloader
     ];
     
     const SINGLETONS = [
-        ReaderInterface::class => [self::class, 'reader'],
+        ReaderInterface::class => [self::class, 'makeReader'],
     ];
     
-    protected function reader(ParserInterface $parser, Database $database)
+    protected function makeReader(ParserInterface $parser, Database $database): Reader
     {
         return new Reader($parser, $database->table('some'));
     }
@@ -72,7 +72,7 @@ class SomeService implements SingletonInterface
         $this->reader = $reader;
     }
 
-    public function readValue(string $value)
+    public function readValue(string $value): string
     {
         return $this->reader->read($value);
     }
@@ -82,7 +82,7 @@ class SomeService implements SingletonInterface
 JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts (including IDE helpers):
 
 ```php
-public function indexAction(ServerRequestInterface $request, SomeService $service)
+public function indexAction(ServerRequestInterface $request, SomeService $service): array
 {
     dump($service->readValue('abc'));
     
