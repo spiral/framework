@@ -181,7 +181,7 @@ $transaction->run();
 dump($post); //Or ActiveRecord approach
 ```
 
-And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
+And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
 
 Tests
 -----
