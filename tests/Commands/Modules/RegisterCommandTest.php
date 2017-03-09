@@ -68,7 +68,7 @@ class RegisterCommandTest extends BaseTest
         );
 
         $this->assertSame(0, $output->getCode());
-
+print_r($output->getOutput());
         clearstatcache();
         opcache_reset();
 
