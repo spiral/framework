@@ -63,7 +63,7 @@ class ConfigInjector extends Component
     public function inject(string $placeholder, string $wrapper, array $lines): ConfigInjector
     {
         if (!in_array($placeholder, $this->getPlaceholders())) {
-            throw new InjectorException("Undefined config placeholder '{$placeholder}'.");
+            throw new InjectorException("Undefined config placeholder '{$placeholder}'");
         }
 
         //Let's prepare lines to be injected
