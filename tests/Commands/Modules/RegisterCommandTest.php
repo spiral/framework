@@ -69,10 +69,12 @@ class RegisterCommandTest extends BaseTest
 
         $this->assertSame(0, $output->getCode());
 
-        clearstatcache();
+        clearstatcache(true, directory('application') . 'config/views.php');
         opcache_reset();
-print_r(file_get_contents(directory('application') . 'config/views.php'));
+
+        print_r($this->container->get(ConfiguratorInterface::class));
         $this->container->get(ConfiguratorInterface::class)->flushCache();
+        print_r($this->container->get(ConfiguratorInterface::class));
 
         $this->assertNotSame(
             $viewConfig,
