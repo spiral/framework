@@ -74,10 +74,10 @@ class RegisterCommandTest extends BaseTest
 
         $this->container->get(ConfiguratorInterface::class)->flushCache();
 
-        $this->assertNotSame(
-            $viewConfig,
-            $newConfig = $this->container->get(ConfiguratorInterface::class)->getConfig('views')
-        );
+//        $this->assertNotSame(
+//            $viewConfig,
+//            $newConfig = $this->container->get(ConfiguratorInterface::class)->getConfig('views')
+//        );
 
         $this->assertArrayHasKey(
             'profiler',
