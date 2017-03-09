@@ -26,6 +26,7 @@ class RegisterCommandTest extends BaseTest
     public function tearDown()
     {
         file_put_contents(directory('application') . 'config/views.php', $this->configBackup);
+        $this->files->delete(directory('application') . 'config/new-views.php');
 
         parent::tearDown();
     }
@@ -72,12 +73,17 @@ class RegisterCommandTest extends BaseTest
         clearstatcache(true, directory('application') . 'config/views.php');
         opcache_reset();
 
+        copy(
+            directory('application') . 'config/views.php',
+            directory('application') . 'config/new-views.php'
+        );
+
         $this->container->get(ConfiguratorInterface::class)->flushCache();
 
-//        $this->assertNotSame(
-//            $viewConfig,
-//            $newConfig = $this->container->get(ConfiguratorInterface::class)->getConfig('views')
-//        );
+        $this->assertNotSame(
+            $viewConfig,
+            $newConfig = $this->container->get(ConfiguratorInterface::class)->getConfig('new-views')
+        );
 
         $this->assertArrayHasKey(
             'profiler',
