@@ -4,7 +4,7 @@ Spiral, modular RAD Framework
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
-The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using an HMVC architecture, layers separation, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), PSR-7, simple syntax and customizable scaffolding mechanisms. 
+The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using domain driven architecture, database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), PSR-7, simple syntax and customizable scaffolding mechanisms. 
 
 <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
 
@@ -26,11 +26,11 @@ class HomeController extends Controller
      * @param HttpConfig $config   
      * @return string
      */
-    public function indexAction(Database $database, Database $logs, HttpConfig $config)
+    public function indexAction(Database $database, Database $logs, HttpConfig $config): string 
     {
         dump($config->basePath());
     
-        $logs->table('log')->insert(['message' => 'Yo!']);
+        $logs->table('log')->insertOne(['message' => 'Yo!']);
     
         return $this->views->render('welcome', [
             'users' => $database->table('users')->select()->where(['name' => 'John'])->all()
@@ -50,10 +50,10 @@ class MyBootloader extends Bootloader
     ];
     
     const SINGLETONS = [
-        ReaderInterface::class => [self::class, 'reader'],
+        ReaderInterface::class => [self::class, 'makeReader'],
     ];
     
-    protected function reader(ParserInterface $parser, Database $database)
+    protected function makeReader(ParserInterface $parser, Database $database): Reader
     {
         return new Reader($parser, $database->table('some'));
     }
@@ -72,17 +72,17 @@ class SomeService implements SingletonInterface
         $this->reader = $reader;
     }
 
-    public function readValue($value)
+    public function readValue(string $value): string
     {
         return $this->reader->read($value);
     }
 }
 ```
 
-JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts:
+JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts (including IDE helpers):
 
 ```php
-public function indexAction(ServerRequestInterface $request, SomeService $service)
+public function indexAction(ServerRequestInterface $request, SomeService $service): array
 {
     dump($service->readValue('abc'));
     
@@ -144,6 +144,11 @@ class Post extends RecordEntity
             self::BELONGS_TO   => AuthorInterface::class,
             self::LATE_BINDING => true
         ],
+        
+        //Hybrid databases
+        'metadata' => [
+            Document::ONE => Mongo\Metadata::class
+        ]
     ];
 }
 ```
@@ -154,7 +159,7 @@ $posts = $postSource->find()->distinct()
     ->with('author')->where('author_name', 'LIKE', $authorName) //Fluent
     ->load('comments.author') //Cascade eager-loading (joins or external query)
     ->paginate(10) //Quick pagination using active request
-    ->fetchAll();
+    ->getIterator();
 
 foreach($posts as $post) {
     echo $post->author->getName();
@@ -173,12 +178,14 @@ $transaction = new Transaction();
 $transaction->store($post);
 $transaction->run();
 
-dump($post);
+dump($post); //You can also use AR approach
 ```
+
+And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
 
 Tests
 -----
 ```
 composer install
-phpunit
+vendor/bin/phpunit
 ```
