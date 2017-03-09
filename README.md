@@ -187,5 +187,5 @@ Tests
 -----
 ```
 composer install
-phpunit
+vendor/bin/phpunit
 ```
