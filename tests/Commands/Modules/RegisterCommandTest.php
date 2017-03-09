@@ -67,8 +67,11 @@ class RegisterCommandTest extends BaseTest
             $input
         );
 
-
         $this->assertSame(0, $output->getCode());
+
+        clearstatcache();
+        opcache_reset();
+
         $this->container->get(ConfiguratorInterface::class)->flushCache();
 
         $this->assertNotSame(
