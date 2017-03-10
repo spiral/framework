@@ -1,6 +1,10 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+0.9.10 (10.03.2017)
+-----
+- DateTime accessors now can accept DateTimeInterface
+
 0.9.6 (07.02.2017)
 -----
 * Dependencies update
