@@ -122,7 +122,7 @@ abstract class AbstractTimestamp extends \DateTime implements AccessorInterface
      */
     protected function castTimestamp($datetime, \DateTimeZone $timezone = null)
     {
-        if ($datetime instanceof \DateTime) {
+        if ($datetime instanceof \DateTimeInterface) {
             return $datetime->getTimestamp();
         }
 
