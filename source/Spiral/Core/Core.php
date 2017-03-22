@@ -136,11 +136,15 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
                 'config'    => $directories['application'] . 'config/',
                 'views'     => $directories['application'] . 'views/',
                 'runtime'   => $directories['application'] . 'runtime/',
-                'cache'     => $directories['application'] . 'runtime/cache/',
                 'resources' => $directories['application'] . 'resources/',
                 'locales'   => $directories['application'] . 'resources/locales/'
             ];
 
+        //Default cache directory
+        if(!isset($this->directories['cache'])) {
+            $this->directories['cache'] = $this->directories['runtime'] . 'cache/';
+        }
+        
         //Every application needs timezone to be set, by default we are using UTC
         date_default_timezone_set($this->timezone);
 
