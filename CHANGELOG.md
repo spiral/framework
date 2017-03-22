@@ -1,6 +1,10 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+0.9.11 (22.03.2017)
+-----
+- Cache directory is now relative to runtime directory
+
 0.9.10 (10.03.2017)
 -----
 - DateTime accessors now can accept DateTimeInterface
