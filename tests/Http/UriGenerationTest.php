@@ -113,4 +113,12 @@ class UriGenerationTest extends HttpTest
 
         $this->assertSame('/pattern?a=1', (string)$router->uri('name', ['a' => 1]));
     }
+
+    public function testStrictUriWithQueryViaUri()
+    {
+        $router = $this->http->getRouter();
+        $router->addRoute(new Route('name', '/pattern', 'target'));
+
+        $this->assertSame('/pattern?a=1', (string)uri('name', ['a' => 1]));
+    }
 }

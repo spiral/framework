@@ -10,6 +10,7 @@ namespace Spiral\Core\Bootloaders;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exceptions\ScopeException;
+use Spiral\Http\HttpDispatcher;
 use Spiral\Http\Routing\RouteInterface;
 
 /**
@@ -69,7 +70,6 @@ class SpiralBindings extends Bootloader
 
         //Http scope dependent
         'cookies'                            => 'Spiral\Http\Cookies\CookieQueue',
-        'router'                             => 'Spiral\Http\Routing\RouterInterface',
         'session'                            => 'Spiral\Session\SessionInterface',
 
         //Pagination manager
@@ -91,6 +91,10 @@ class SpiralBindings extends Bootloader
 
         //Scope depended
         'actor'                              => 'Spiral\Security\ActorInterface',
+
+        //Default router is http specific
+        'Spiral\Http\Routing\RouterInterface' => [HttpDispatcher::class, 'getRouter'],
+        'router'                             => 'Spiral\Http\Routing\RouterInterface',
 
         //Thought request attributes
         'Spiral\Http\Routing\RouteInterface' => [self::class, 'activeRoute'],

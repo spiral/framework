@@ -5,10 +5,12 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+use Psr\Http\Message\UriInterface;
 use Spiral\Core\Core;
 use Spiral\Core\DirectoriesInterface;
 use Spiral\Core\EnvironmentInterface;
 use Spiral\Debug\Dumper;
+use Spiral\Http\Routing\RouterInterface;
 use Spiral\Translator\Exceptions\TranslatorException;
 use Spiral\Translator\TranslatorInterface;
 
@@ -132,6 +134,26 @@ if (!function_exists('interpolate')) {
         string $postfix = '}'
     ): string {
         return \Spiral\interpolate($format, $values, $prefix, $postfix);
+    }
+}
+
+if (!function_exists('uri')) {
+    /**
+     * Generate valid route URL using route name and set of parameters. Should support controller
+     * and action name separated by ":" - in this case router should find appropriate route and
+     * create url using it.
+     *
+     * @param string             $route Route name.
+     * @param array|\Traversable $parameters
+     *
+     * @return UriInterface
+     * @throws \Spiral\Http\Exceptions\RouterException
+     * @throws \Spiral\Http\Exceptions\RouteException
+     * @throws \Spiral\Http\Exceptions\UndefinedRouteException
+     */
+    function uri(string $route, $parameters = []): UriInterface
+    {
+        return spiral(RouterInterface::class)->uri($route, $parameters);
     }
 }
 
