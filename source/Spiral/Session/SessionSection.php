@@ -14,9 +14,6 @@ use Spiral\Core\Container\InjectableInterface;
  */
 class SessionSection implements SectionInterface, InjectableInterface
 {
-    /**
-     * Automatic injections.
-     */
     const INJECTOR = SessionInterface::class;
 
     /**
