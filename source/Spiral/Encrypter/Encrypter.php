@@ -30,8 +30,6 @@ class Encrypter implements EncrypterInterface, InjectableInterface
     private $key = null;
 
     /**
-     * Encrypter constructor.
-     *
      * @param string $key Loads a Key from its encoded form (ANSI).
      */
     public function __construct(string $key)
