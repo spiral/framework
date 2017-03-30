@@ -12,7 +12,7 @@ use Spiral\Debug\Traits\LoggerTrait;
 use Spiral\Session\Exceptions\SessionException;
 
 /**
- * Direct api to php session functionality. With segments support. Automatically provides access to
+ * Direct api to php session functionality with segmentation support. Automatically provides access to
  * _SESSION global variable and signs session with user signature.
  *
  * Session will be automatically started upon first request.
