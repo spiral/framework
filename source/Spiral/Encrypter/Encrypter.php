@@ -16,7 +16,7 @@ use Spiral\Encrypter\Exceptions\DecryptException;
 use Spiral\Encrypter\Exceptions\EncryptException;
 
 /**
- * Default implementation of spiral encrypter. Sugary implementation at top of defuse/php-encryption
+ * Default implementation of spiral encrypter. Facade at top of defuse/php-encryption
  *
  * @see  https://github.com/defuse/php-encryption
  */
