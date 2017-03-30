@@ -178,7 +178,7 @@ $transaction = new Transaction();
 $transaction->store($post);
 $transaction->run();
 
-dump($post); //You can also use AR approach
+dump($post); //You can also use AR or UoW approach
 ```
 
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
