@@ -6,7 +6,7 @@ Spiral, PSR7/PHP7 Framework
 
 The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using DDD architecture, database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), PSR-7, simple syntax and customizable scaffolding mechanisms. 
 
-<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
+<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md) | [Forum](https://groups.google.com/forum/#!forum/spiral-framework)
 
 <br/><br/>
 
