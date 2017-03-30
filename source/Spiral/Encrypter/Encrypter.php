@@ -22,9 +22,6 @@ use Spiral\Encrypter\Exceptions\EncryptException;
  */
 class Encrypter implements EncrypterInterface, InjectableInterface
 {
-    /**
-     * Injector is dedicated to outer class since Encrypter is pretty simple.
-     */
     const INJECTOR = EncrypterManager::class;
 
     /**
