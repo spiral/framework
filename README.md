@@ -1,12 +1,12 @@
-Spiral, modular RAD Framework
+Spiral, PSR7/PHP7 Framework
 =======================
 [![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/spiral/spiral/badge.svg?branch=master)](https://coveralls.io/github/spiral/spiral?branch=master)
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
-The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using domain driven architecture, database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), PSR-7, simple syntax and customizable scaffolding mechanisms. 
+The Spiral framework provides open and modular Rapid Application Development (RAD) platform to create applications using DDD architecture, database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), PSR-7, simple syntax and customizable scaffolding mechanisms. 
 
-<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
+<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md) | [Forum](https://groups.google.com/forum/#!forum/spiral-framework)
 
 <br/><br/>
 
@@ -17,7 +17,7 @@ Examples:
 class HomeController extends Controller
 {
     /**
-     * DI can automatically deside what database/cache/storage
+     * IoC Container can automatically deside what database/cache/storage
      * instance to provide for every action parameter based on it's 
      * name or type.
      *
@@ -79,7 +79,7 @@ class SomeService implements SingletonInterface
 }
 ```
 
-JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts (including IDE helpers):
+JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts, IDE helpers:
 
 ```php
 public function indexAction(ServerRequestInterface $request, SomeService $service): array
@@ -178,7 +178,7 @@ $transaction = new Transaction();
 $transaction->store($post);
 $transaction->run();
 
-dump($post); //You can also use AR approach
+dump($post); //You can also use AR or UoW approach
 ```
 
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)

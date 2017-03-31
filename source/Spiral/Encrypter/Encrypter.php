@@ -16,15 +16,12 @@ use Spiral\Encrypter\Exceptions\DecryptException;
 use Spiral\Encrypter\Exceptions\EncryptException;
 
 /**
- * Default implementation of spiral encrypter. Sugary implementation at top of defuse/php-encryption
+ * Default implementation of spiral encrypter. Facade at top of defuse/php-encryption
  *
  * @see  https://github.com/defuse/php-encryption
  */
 class Encrypter implements EncrypterInterface, InjectableInterface
 {
-    /**
-     * Injector is dedicated to outer class since Encrypter is pretty simple.
-     */
     const INJECTOR = EncrypterManager::class;
 
     /**
@@ -33,8 +30,6 @@ class Encrypter implements EncrypterInterface, InjectableInterface
     private $key = null;
 
     /**
-     * Encrypter constructor.
-     *
      * @param string $key Loads a Key from its encoded form (ANSI).
      */
     public function __construct(string $key)
