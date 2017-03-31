@@ -275,6 +275,18 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
     }
 
     /**
+     * Sync domains created in a current session with static memory, calling this method is required
+     * after indexation.
+     */
+    public function syncLocales()
+    {
+        foreach ($this->catalogues as $locale => $catalogue) {
+            $this->loadedLocales[$locale] = $catalogue->loadedDomains();
+            $this->memory->saveData(static::MEMORY, $this->loadedLocales);
+        }
+    }
+
+    /**
      * Get message from specific locale, add it into fallback locale cache (to be later exported) if
      * enabled (see TranslatorConfig) and no translations found.
      *

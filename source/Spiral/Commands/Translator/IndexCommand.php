@@ -5,14 +5,16 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 namespace Spiral\Commands\Translator;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\NullLogger;
-use Spiral\Translator\Indexer;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
+use Spiral\Translator\Indexer;
+use Spiral\Translator\Translator;
 
 /**
  * Index available classes and function calls to fetch every used string translation. Can
@@ -33,12 +35,14 @@ class IndexCommand extends Command
     const DESCRIPTION = 'Index all declared translation strings and usages';
 
     /**
-     * @param Indexer             $indexer
+     * @param Indexer              $indexer
+     * @param Translator           $translator
      * @param InvocationsInterface $invocations
-     * @param ClassesInterface    $classes
+     * @param ClassesInterface     $classes
      */
     public function perform(
         Indexer $indexer,
+        Translator $translator,
         InvocationsInterface $invocations,
         ClassesInterface $classes
     ) {
@@ -57,5 +61,8 @@ class IndexCommand extends Command
 
         $this->writeln("<info>Scanning Translatable classes...</info>");
         $indexer->indexClasses($classes);
+
+        //Make sure that all located messages are properly registered
+        $translator->syncLocales();
     }
 }
