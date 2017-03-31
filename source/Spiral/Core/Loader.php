@@ -202,8 +202,11 @@ class Loader extends Component implements SingletonInterface
     protected function loadExternal(string $class)
     {
         foreach (spl_autoload_functions() as $function) {
-            if (is_array($function) && get_class($function[0]) == self::class) {
-                //Found ourselves
+            if (
+                is_array($function)
+                && is_object($function[0]) 
+                && get_class($function[0]) == self::class) {
+                //Self
                 continue;
             }
 
