@@ -1,6 +1,15 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+0.9.13 (31.03.2017)
+-----
+- bugfix in Loader caused an exception with Swift::autoloader
+
+0.9.12 (24.03.2017)
+-----
+- `uri` function restored
+- Router is now available outside of http scope
+
 0.9.11 (22.03.2017)
 -----
 - Cache directory is now relative to runtime directory
