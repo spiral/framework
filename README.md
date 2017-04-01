@@ -139,12 +139,12 @@ class Post extends RecordEntity
             User::INVERSE       => 'collaborated_posts'
         ],
         
-        //Relation thought interface
+        //Pre-compiled relations
         'author'   => [
             self::BELONGS_TO   => AuthorInterface::class,
             self::LATE_BINDING => true
         ],
-        
+               
         //Hybrid databases
         'metadata' => [
             Document::ONE => Mongo\Metadata::class
