@@ -1,6 +1,10 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+1.0.0. (06.04.2017)
+-----
+- first public release, no BC changes
+
 0.9.14 (31.03.2017)
 -----
 - improvements in Translation indexations
