@@ -11,15 +11,13 @@
   ],
   "require": {
     "php": ">=7.0",
-    "spiral/common": "^0.9",
-    "spiral/models": "^0.9",
-    "spiral/tokenizer": "^0.9",
-    "spiral/reactor": "^0.9",
-    "spiral/security": "^1.0.0",
-    "spiral/database": "^0.9",
-    "spiral/migrations": "^0.9",
-    "spiral/orm": "^0.9",
-    "spiral/stempler": "^0.9",
+    "spiral/common": "^1.0",
+    "spiral/reactor": "^1.0",
+    "spiral/security": "^1.0",
+    "spiral/database": "^1.0",
+    "spiral/migrations": "^1.0",
+    "spiral/orm": "^1.0",
+    "spiral/stempler": "^1.0",
     "zendframework/zend-diactoros": "^1.1",
     "twig/twig": "^2.1",
     "symfony/console": "^3.2",
@@ -31,7 +29,7 @@
     "vlucas/phpdotenv": "^2.1"
   },
   "require-dev": {
-    "spiral/odm": "^0.9",
+    "spiral/odm": "^1.0",
     "phpunit/phpunit": "~5.0",
     "mockery/mockery": "^0.9.4"
   },
