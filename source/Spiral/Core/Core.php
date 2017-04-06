@@ -31,11 +31,8 @@ use Spiral\Http\HttpDispatcher;
 abstract class Core extends AbstractCore implements DirectoriesInterface
 {
     use SharedTrait;
-
-    /**
-     * I need this constant for Symfony Console. :/
-     */
-    const VERSION = '0.9.0-rc';
+    
+    const VERSION = '1.0.0';
 
     /**
      * Memory section for bootloaders cache.
