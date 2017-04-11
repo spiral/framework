@@ -109,7 +109,7 @@ $app = new Application();
 $app->any('/spiral', SpiralApp::init(...)->http);
 ```
 
-ORM with scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with scaffolding/migrations for MySQL, PostgreSQL, SQLite, SQL Server:
 
 ```php
 class Post extends RecordEntity
@@ -161,7 +161,7 @@ $posts = $postSource->find()->distinct()
     ->paginate(10) //Quick pagination using active request
     ->getIterator();
 
-foreach($posts as $post) {
+foreach ($posts as $post) {
     echo $post->author->getName();
 }
 ```
@@ -186,6 +186,6 @@ And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> 
 Tests
 -----
 ```
-composer install
-vendor/bin/phpunit
+$ composer install
+$ vendor/bin/phpunit
 ```
