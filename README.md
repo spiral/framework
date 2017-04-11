@@ -17,7 +17,7 @@ Examples:
 class HomeController extends Controller
 {
     /**
-     * IoC Container can automatically deside what database/cache/storage
+     * IoC Container can automatically decide what database/cache/storage
      * instance to provide for every action parameter based on it's 
      * name or type.
      *
