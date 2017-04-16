@@ -178,7 +178,7 @@ $transaction = new Transaction();
 $transaction->store($post);
 $transaction->run();
 
-//--or--: Active record
+//--or--: Active record (optional)
 $post->save();
 
 //--or--: request specific transaction
