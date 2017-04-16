@@ -33,7 +33,7 @@ class HomeController extends Controller
         $logs->table('log')->insertOne(['message' => 'Yo!']);
     
         return $this->views->render('welcome', [
-            'users' => $database->table('users')->select()->where(['name' => 'John'])->all()
+            'users' => $database->table('users')->select()->where(['name' => 'John'])->fetchAll()
         ]);
     }
 }
