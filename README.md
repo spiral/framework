@@ -185,6 +185,8 @@ $post->save();
 $this->transaction->store($post);
 ```
 
+> This example uses IoC scope to properly resolve ORM connection manager: `$this->orm->source(Post::class)->create([]);`
+
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
 
 Tests
