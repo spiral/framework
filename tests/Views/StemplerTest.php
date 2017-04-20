@@ -81,7 +81,7 @@ class StemplerTest extends BaseTest
             $this->files
         );
 
-        $source = $this->views->getLoader()->getSource('home');
+        $source = $this->views->getLoader()->withExtension('dark.php')->getSource('home');
 
         $cache->write($cache->cacheFilename($source), 'abc');
 
