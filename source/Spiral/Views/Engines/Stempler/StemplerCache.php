@@ -10,6 +10,7 @@ namespace Spiral\Views\Engines\Stempler;
 
 use Spiral\Files\FilesInterface;
 use Spiral\Views\EnvironmentInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Very simple Stempler cache. Almost identical to twig cache except generateKey method.
@@ -52,13 +53,13 @@ class StemplerCache
     /**
      * Generate cache filename for given path.
      *
-     * @param string $path
+     * @param ViewSource $context
      *
      * @return string
      */
-    public function cacheFilename(string $path): string
+    public function cacheFilename(ViewSource $context): string
     {
-        $hash = hash('md5', $path . '.' . $this->environment->getID());
+        $hash = hash('md5', $context->getFilename() . '.' . $this->environment->getID());
 
         return $this->environment->cacheDirectory() . $hash . '.php';
     }

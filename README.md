@@ -4,7 +4,7 @@ Spiral, PSR7/PHP7 Framework
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
-The Spiral framework provides open and modular Rapid Application Development (RAD) environment, database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), PSR-7, simple syntax and customizable scaffolding mechanisms. 
+The Spiral framework provides open and modular Rapid Application Development (RAD) environment, database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), IDE integration, PSR-7, simple syntax and customizable scaffolding mechanisms. 
 
 <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md) | [Forum](https://groups.google.com/forum/#!forum/spiral-framework)
 
@@ -17,7 +17,7 @@ Examples:
 class HomeController extends Controller
 {
     /**
-     * IoC Container can automatically deside what database/cache/storage
+     * IoC Container can automatically decide what database/cache/storage
      * instance to provide for every action parameter based on it's 
      * name or type.
      *
@@ -33,7 +33,7 @@ class HomeController extends Controller
         $logs->table('log')->insertOne(['message' => 'Yo!']);
     
         return $this->views->render('welcome', [
-            'users' => $database->table('users')->select()->where(['name' => 'John'])->all()
+            'users' => $database->table('users')->select()->where(['name' => 'John'])->fetchAll()
         ]);
     }
 }
@@ -109,7 +109,7 @@ $app = new Application();
 $app->any('/spiral', SpiralApp::init(...)->http);
 ```
 
-ORM with scaffolding/migrations for MySQL, PostgresSQL, SQLite, SQLServer:
+ORM with scaffolding/migrations for MySQL, PostgreSQL, SQLite, SQL Server:
 
 ```php
 class Post extends RecordEntity
@@ -161,7 +161,7 @@ $posts = $postSource->find()->distinct()
     ->paginate(10) //Quick pagination using active request
     ->getIterator();
 
-foreach($posts as $post) {
+foreach ($posts as $post) {
     echo $post->author->getName();
 }
 ```
@@ -178,14 +178,20 @@ $transaction = new Transaction();
 $transaction->store($post);
 $transaction->run();
 
-dump($post); //You can also use AR or UoW approach
+//--or--: Active record (optional)
+$post->save();
+
+//--or--: request specific transaction
+$this->transaction->store($post);
 ```
+
+> This example uses IoC scope to properly resolve ORM connection manager, "no magic" way - `$postSource->create([]);`
 
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
 
 Tests
 -----
 ```
-composer install
-vendor/bin/phpunit
+$ composer install
+$ vendor/bin/phpunit
 ```

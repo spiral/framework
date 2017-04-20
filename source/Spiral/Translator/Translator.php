@@ -91,7 +91,6 @@ class Translator extends Component implements SingletonInterface, TranslatorInte
      */
     public function __construct(
         TranslatorConfig $config,
-
         LocatorInterface $locator,
         MemoryInterface $memory = null,
         MessageSelector $selector = null
