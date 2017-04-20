@@ -103,7 +103,7 @@ class StemplerEngine extends AbstractEngine
     {
         $context = $this->loader->getSource($path);
         $cached = new ViewSource(
-            $this->cache->cacheFilename($path),
+            $this->cache->cacheFilename($context),
             $context->getName(),
             $context->getNamespace()
         );
