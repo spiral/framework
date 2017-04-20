@@ -1,7 +1,12 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
-1.0.0. (06.04.2017)
+1.0.1 (20.04.2017)
+-----
+- Improved cache management for StemplerEngine (stable cache)
+- Ability to force view recompilation
+
+1.0.0 (06.04.2017)
 -----
 - first public release, no BC changes
 
