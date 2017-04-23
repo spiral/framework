@@ -3,8 +3,8 @@ CHANGELOG for 0.9.0 RC
 
 1.0.1 (20.04.2017)
 -----
-- Improved cache management for StemplerEngine (stable cache)
-- Ability to force view recompilation
+- Improved cache management for StemplerEngine (fixed issue with non-stable cache key)
+- Ability to force view recompilation thought ViewManager
 
 1.0.0 (06.04.2017)
 -----
