@@ -127,6 +127,14 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
     /**
      * {@inheritdoc}
      */
+    public function withDataEntity(EntityInterface $entity) : ValidatorInterface
+    {
+        return $this->setData($entity->getFields());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setRules(array $rules): ValidatorInterface
     {
         if ($this->rules == $rules) {
@@ -243,7 +251,6 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
     {
         $this->errors = [];
         foreach ($this->rules as $field => $rules) {
-
             foreach ($rules as $rule) {
                 if (isset($this->errors[$field])) {
                     //We are validating field till first error

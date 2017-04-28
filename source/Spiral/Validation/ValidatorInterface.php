@@ -8,6 +8,7 @@
 
 namespace Spiral\Validation;
 
+use Spiral\Models\EntityInterface;
 use Spiral\Validation\Exceptions\ValidationException;
 
 /**
@@ -100,4 +101,11 @@ interface ValidatorInterface
      * @return array
      */
     public function getErrors(): array;
+
+    /**
+     * Update validation data (context) from a data entity.
+     * @param \Spiral\Models\EntityInterface $entity
+     * @return \Spiral\Validation\ValidatorInterface
+     */
+    public function withDataEntity(EntityInterface $entity): ValidatorInterface;
 }
