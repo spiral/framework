@@ -144,7 +144,8 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
      */
     public function setData($data): ValidatorInterface
     {
-        if ($this->data == $data) {
+        $data = $this->extractData($data);
+        if ($this->data === $data) {
             return $this;
         }
 
@@ -358,6 +359,7 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
      * Does validation config has alias defined for a given checker name or class exists
      *
      * @param string $name
+     *
      * @return bool
      */
     protected function hasChecker(string $name): bool
@@ -477,5 +479,28 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
             "Condition '{condition}' failed with '{e}' while checking '{field}' field.",
             compact('condition', 'field') + ['e' => $e->getMessage()]
         );
+    }
+
+    /**
+     * @param array|\ArrayAccess|EntityInterface $data
+     *
+     * @return array
+     */
+    private function extractData($data): array
+    {
+        if ($data instanceof EntityInterface) {
+            return $data->getFields();
+        }
+
+        if ($data instanceof \ArrayAccess) {
+            $result = [];
+            foreach ($data as $key => $value) {
+                $result[$key] = $value;
+            }
+
+            return $result;
+        }
+
+        return $data;
     }
 }

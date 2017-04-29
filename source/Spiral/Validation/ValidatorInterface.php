@@ -30,7 +30,7 @@ interface ValidatorInterface
     /**
      * Update validation data (context). Data change must reset validation state and all errors.
      *
-     * @param array|\ArrayAccess $data
+     * @param array|\ArrayAccess|\Spiral\Models\EntityInterface $data
      *
      * @return self
      *
