@@ -492,7 +492,7 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
             return $data->getFields();
         }
 
-        if ($data instanceof \ArrayAccess) {
+        if ($data instanceof \ArrayAccess && $data instanceof \Traversable) {
             $result = [];
             foreach ($data as $key => $value) {
                 $result[$key] = $value;
