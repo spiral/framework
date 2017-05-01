@@ -71,7 +71,7 @@ class RegisterCommandTest extends BaseTest
         $this->assertSame(0, $output->getCode());
 
         clearstatcache(true, directory('application') . 'config/views.php');
-        opcache_reset();
+        //opcache_reset();
 
         copy(
             directory('application') . 'config/views.php',

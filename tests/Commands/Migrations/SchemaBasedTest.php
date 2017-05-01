@@ -28,11 +28,15 @@ class SchemaBasedTest extends BaseTest
 
         $this->assertEmpty($this->db->getTables());
 
+        $this->assertContains('not configured yet', $this->commands->run('migrate:status')->getOutput()->fetch());
+
         $this->assertSame(0, $this->commands->run('migrate:init')->getCode());
         $this->assertCount(1, $this->db->getTables());
 
         $this->assertSame(0, $this->commands->run('migrate')->getCode());
         $this->assertCount(2, $this->db->getTables());
+
+        $this->assertContains('Migration', $this->commands->run('migrate:status')->getOutput()->fetch());
 
         $this->assertSame(0, $this->commands->run('migrate:rollback')->getCode());
         $this->assertCount(1, $this->db->getTables());
