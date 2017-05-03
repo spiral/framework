@@ -39,7 +39,9 @@ class ValidatesEntity extends DataEntity
     public function __construct(array $data, ValidatorInterface $validator = null)
     {
         parent::__construct($data);
-        $this->validator = $this->saturate($validator, ValidatorInterface::class);
+
+        //We always need validator instance, if not provided - resolve vis global scope
+        $this->setValidator($this->saturate($validator, ValidatorInterface::class));
     }
 
     /**
@@ -62,6 +64,7 @@ class ValidatesEntity extends DataEntity
     public function setValidator(ValidatorInterface $validator): ValidatesEntity
     {
         $this->validator = $validator;
+        $this->validator->setRules(static::VALIDATES);
 
         return $this;
     }
@@ -153,9 +156,9 @@ class ValidatesEntity extends DataEntity
     protected function validate()
     {
         //Configuring validator
-        $this->validator->setRules(static::VALIDATES)->setData($this->getFields());
+        $this->validator->setData($this->getFields());
 
-        //Dropping all validation errors set by user
+        //Drop all validation errors set by user
         $this->validator->flushRegistered();
     }
 }
