@@ -58,13 +58,19 @@ class ValidatesEntity extends DataEntity
      * Change associated entity validator.
      *
      * @param ValidatorInterface $validator
+     * @param bool               $setRules When true entity specific rules to be assigned.
      *
      * @return ValidatesEntity
      */
-    public function setValidator(ValidatorInterface $validator): ValidatesEntity
-    {
+    public function setValidator(
+        ValidatorInterface $validator,
+        bool $setRules = true
+    ): ValidatesEntity {
         $this->validator = $validator;
-        $this->validator->setRules(static::VALIDATES);
+
+        if ($setRules) {
+            $this->validator->setRules(static::VALIDATES);
+        }
 
         return $this;
     }
