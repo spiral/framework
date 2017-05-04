@@ -159,4 +159,26 @@ class ValidatesEntityTest extends BaseTest
         $this->assertInternalType('array', $e->getErrors()['nested']['one']);
         $this->assertArrayHasKey('thing', $e->getErrors()['nested']['one']);
     }
+
+    public function testValidationAndDataChange()
+    {
+        /** @var SampleEntity $e */
+        $e = $this->container->make(SampleEntity::class, [
+            'data' => [
+                'value'  => 123,
+                'string' => '123456789'
+            ]
+        ]);
+
+        $this->assertTrue($e->isValid());
+
+        //Cached
+        $this->assertTrue($e->isValid());
+
+        $e->setField('value', 0);
+        $this->assertFalse($e->isValid());
+
+        //Cached
+        $this->assertFalse($e->isValid());
+    }
 }

@@ -14,7 +14,8 @@ use Spiral\Validation\Exceptions\ValidationException;
  * Validators responsible for data validations. Validation rules are implementation dependent but
  * should always be specified in array form relative to validator implementation.
  *
- * Future updates: it's planned to make validator immutable in very far future.
+ * Future updates: it's planned to make validator immutable in a very far future or possible
+ * refactor it into stateless implementation.
  */
 interface ValidatorInterface
 {
