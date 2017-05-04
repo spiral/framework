@@ -31,6 +31,20 @@ class ValidatesEntity extends DataEntity
     private $validator;
 
     /**
+     * Indicates that entity have been validated.
+     *
+     * @var bool
+     */
+    private $validated = false;
+
+    /**
+     * Error cache holds last of errors unless entity value changed.
+     *
+     * @var array
+     */
+    private $errorsCache = [];
+
+    /**
      * @param array              $data
      * @param ValidatorInterface $validator
      *
@@ -76,6 +90,16 @@ class ValidatesEntity extends DataEntity
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setField(string $name, $value, bool $filter = true)
+    {
+        $this->validated = false;
+
+        return parent::setField($name, $value, $filter);
+    }
+
+    /**
      * Check if entity data is valid.
      *
      * @param string $field
@@ -111,25 +135,49 @@ class ValidatesEntity extends DataEntity
      */
     public function getErrors(): array
     {
-        //Configuring validator (validation will be performed on next step)
-        $this->validate();
+        $errors = $this->errorsCache;
 
-        /*
-         * Primary model errors.
-         */
-        $errors = $this->validator->getErrors();
-        foreach ($errors as &$error) {
-            if (is_string($error) && Translator::isMessage($error)) {
-                //Localizing error message
-                $error = $this->say($error);
+        if (!$this->validated) {
+            $this->validate();
+
+            $errors = $this->validator->getErrors();
+            foreach ($errors as &$error) {
+                if (is_string($error) && Translator::isMessage($error)) {
+                    //Localizing error message
+                    $error = $this->say($error);
+                }
+
+                unset($error);
             }
 
-            unset($error);
+            $this->errorsCache = $errors;
+            $this->validated = true;
         }
 
-        /*
-         * Nested models validation (if any).
-         */
+        return $this->validateInner($errors);
+    }
+
+    /**
+     * Perform data validation. Method might include custom validations and errors
+     */
+    protected function validate()
+    {
+        //Configuring validator
+        $this->validator->setData($this->getFields());
+
+        //Drop all validation errors set by user
+        $this->validator->flushRegistered();
+    }
+
+    /**
+     * Validate inner entities.
+     *
+     * @param array $errors
+     *
+     * @return array
+     */
+    private function validateInner(array $errors): array
+    {
         foreach ($this->getFields(false) as $index => $value) {
             if (isset($errors[$index])) {
                 //Invalid on parent level
@@ -138,12 +186,13 @@ class ValidatesEntity extends DataEntity
 
             if ($value instanceof ValidatesEntity) {
                 if (!$value->isValid()) {
+                    //Nested entities must deal with cache internally
                     $errors[$index] = $value->getErrors();
                 }
                 continue;
             }
 
-            //We also support array of nested entities for validation
+            //Array of nested entities for validation
             if (is_array($value) || $value instanceof \Traversable) {
                 foreach ($value as $nIndex => $nValue) {
                     if ($nValue instanceof ValidatesEntity && !$nValue->isValid()) {
@@ -154,17 +203,5 @@ class ValidatesEntity extends DataEntity
         }
 
         return $errors;
-    }
-
-    /**
-     * Perform data validation.
-     */
-    protected function validate()
-    {
-        //Configuring validator
-        $this->validator->setData($this->getFields());
-
-        //Drop all validation errors set by user
-        $this->validator->flushRegistered();
     }
 }
