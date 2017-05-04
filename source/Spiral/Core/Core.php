@@ -32,7 +32,7 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
 {
     use SharedTrait;
     
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.2';
 
     /**
      * Memory section for bootloaders cache.

@@ -11,6 +11,7 @@ namespace Spiral\Tests\Validation;
 use Interop\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Debug\LogsInterface;
+use Spiral\Models\DataEntity;
 use Spiral\Tests\Validation\Fixtures\SimpleTestChecker;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Validation\Checkers\AddressChecker;
@@ -274,6 +275,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->hasErrors());
 
         $this->assertEquals(['foo' => 'bar'], $validator->setData(['foo' => 'bar'])->getData());
+    }
+
+    public function testSetDataWithAnEntity()
+    {
+        $data = new DataEntity([
+            "name" => "Spiral",
+            "type" => "Framework",
+            "foo"  => "bar"
+        ]);
+
+        $val = new Validator([], [], $this->config, $this->container);
+        $validator = $val->setData($data);
+
+        $this->assertFalse($validator->hasErrors()); //No rules were registered
+        $this->assertEquals($data->getFields(), $validator->getData());
     }
 
     public function testCustomErrors()
