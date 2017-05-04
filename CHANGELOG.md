@@ -1,6 +1,11 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+1.0.2 (04.05.2017)
+-----
+- ValidatesEntity now caches last set of produced errors
+- Ability to use EntityInterface as parameter for ValidatorInterface->setData() method
+
 1.0.1 (20.04.2017)
 -----
 - Improved cache management for StemplerEngine (fixed issue with non-stable cache key)
