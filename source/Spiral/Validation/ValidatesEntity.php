@@ -54,7 +54,7 @@ class ValidatesEntity extends DataEntity
     {
         parent::__construct($data);
 
-        //We always need validator instance, if not provided - resolve vis global scope
+        //We always need validator instance, if not provided - resolve via global scope
         $this->setValidator($this->saturate($validator, ValidatorInterface::class));
     }
 
