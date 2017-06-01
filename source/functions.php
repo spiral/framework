@@ -83,12 +83,16 @@ if (!function_exists('e')) {
      * except with htmlentities(), all characters which have HTML character entity equivalents are
      * translated into these entities.
      *
-     * @param string $string
+     * @param string|null $string
      *
      * @return string
      */
-    function e(string $string): string
+    function e(string $string = null): string
     {
+        if (is_null($string)) {
+            return '';
+        }
+
         return htmlentities($string, ENT_QUOTES, 'UTF-8', false);
     }
 }
