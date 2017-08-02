@@ -329,7 +329,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->config,
             $this->container
         );
-
         $this->assertTrue($validator->isValid());
 
         $validator = new Validator(
@@ -343,30 +342,50 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             $this->config,
             $this->container
         );
+        $this->assertFalse($validator->isValid());
+
+        $validator = new Validator(
+            [
+                'email' => [
+                    ['notEmpty', 'condition' => IsLoadedCondition::class],
+                    ['address::email', 'condition' => IsLoadedCondition::class],
+                ]
+            ],
+            ['email' => null],
+            $this->config,
+            $this->container
+        );
+        $validator->setContext(['some', 'context']);
+        //should be entity
         $this->assertFalse($validator->isValid());
 
         $entity = new SampleRecord();
+        $validator->setContext($entity);
+        //should be loaded
+        $this->assertFalse($validator->isValid());
+
+        $entity = new SampleRecord();
+        $entity->save();
+        $validator->setContext($entity);
+        $this->assertTrue($validator->isValid());
 
         $validator = new Validator(
             [
                 'email' => [
-                    ['notEmpty', 'condition' => IsLoadedCondition::class],
-                    ['address::email', 'condition' => IsLoadedCondition::class],
+                    ['notEmpty', 'condition' => 'Some\Condition'],
+                    ['address::email', 'condition' => 'Some\Condition'],
                 ]
             ],
             ['email' => null],
             $this->config,
             $this->container
         );
-        $validator->setContext($entity);
-        $this->assertFalse($validator->isValid());
 
-        $validator->setContext(['some', 'context']);
-        $this->assertFalse($validator->isValid());
-
+        $entity = new SampleRecord();
         $entity->save();
-        $validator->setContext($entity);
 
-        $this->assertTrue($validator->isValid());
+        $validator->setContext($entity);
+        //should exist and be instance of \Spiral\Validation\CheckerConditionInterface::class
+        $this->assertFalse($validator->isValid());
     }
 }
