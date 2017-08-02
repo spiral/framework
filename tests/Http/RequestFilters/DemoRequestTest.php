@@ -207,4 +207,32 @@ class DemoRequestTest extends HttpTest
         $request->name = $name;
         $this->assertTrue($request->isValid(true));
     }
+
+    public function testContext()
+    {
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withParsedBody([
+            'name'    => 'Anton',
+            'address' => [
+                'countryCode' => '',
+                'city'        => 'San Francisco',
+                'address'     => 'Some street'
+            ],
+            'files'   => [
+                //Iterating over data
+                0 => [
+                    'label' => 'Some label'
+                ]
+            ]
+        ]);
+        $this->container->bind(ServerRequestInterface::class, $serverRequest);
+        /** @var DemoRequest $request */
+        $request = $this->container->get(DemoRequest::class);
+
+        $context = new \stdClass();
+        $context->data = 'some context';
+        $request->setContext($context);
+
+        $this->assertEquals($context, $request->getContext());
+    }
 }

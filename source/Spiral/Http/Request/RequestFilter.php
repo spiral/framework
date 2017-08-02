@@ -162,4 +162,24 @@ class RequestFilter extends ValidatesEntity
 
         return static::SCHEMA;
     }
+
+    /**
+     * Pass context to validator.
+     *
+     * @param mixed $context
+     */
+    public function setContext($context)
+    {
+        $this->getValidator()->setContext($context);
+    }
+
+    /**
+     * Get context from validator.
+     *
+     * @return mixed
+     */
+    public function getContext()
+    {
+        return $this->getValidator()->getContext();
+    }
 }
