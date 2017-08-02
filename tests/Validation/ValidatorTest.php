@@ -315,7 +315,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $context = new \StdClass();
         $context->data = 'some context';
 
-        $validator = new Validator();
+        $validator = new Validator([], [], $this->config, $this->container);
         $validator->setContext($context);
 
         $this->assertEquals($context, $validator->getContext());
