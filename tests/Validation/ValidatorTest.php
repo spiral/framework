@@ -12,12 +12,13 @@ use Interop\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Debug\LogsInterface;
 use Spiral\Models\DataEntity;
-use Spiral\Tests\Validation\Fixtures\SimpleTestChecker;
+use Spiral\Tests\Validation\Fixtures\IsLoadedCondition;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Validation\Checkers\AddressChecker;
 use Spiral\Validation\Checkers\TypeChecker;
 use Spiral\Validation\Configs\ValidatorConfig;
 use Spiral\Validation\Validator;
+use TestApplication\Database\SampleRecord;
 
 /**
  * Class ValidatorTest
@@ -307,5 +308,65 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($validator, $validator->flushRegistered());
         $this->assertEquals(substr(AddressChecker::MESSAGES['email'], 2, -2),
             $validator->getErrors()['email']);
+    }
+
+    public function testContext()
+    {
+        $context = new \StdClass();
+        $context->data = 'some context';
+
+        $validator = new Validator();
+        $validator->setContext($context);
+
+        $this->assertEquals($context, $validator->getContext());
+    }
+
+    public function testWithConditions()
+    {
+        $validator = new Validator(
+            ['email' => ['notEmpty', 'address::email']],
+            ['email' => 'some@email.com'],
+            $this->config,
+            $this->container
+        );
+
+        $this->assertTrue($validator->isValid());
+
+        $validator = new Validator(
+            [
+                'email' => [
+                    ['notEmpty', 'condition' => IsLoadedCondition::class],
+                    ['address::email', 'condition' => IsLoadedCondition::class],
+                ]
+            ],
+            ['email' => null],
+            $this->config,
+            $this->container
+        );
+        $this->assertFalse($validator->isValid());
+
+        $entity = new SampleRecord();
+
+        $validator = new Validator(
+            [
+                'email' => [
+                    ['notEmpty', 'condition' => IsLoadedCondition::class],
+                    ['address::email', 'condition' => IsLoadedCondition::class],
+                ]
+            ],
+            ['email' => null],
+            $this->config,
+            $this->container
+        );
+        $validator->setContext($entity);
+        $this->assertFalse($validator->isValid());
+
+        $validator->setContext(['some', 'context']);
+        $this->assertFalse($validator->isValid());
+
+        $entity->save();
+        $validator->setContext($entity);
+
+        $this->assertTrue($validator->isValid());
     }
 }
