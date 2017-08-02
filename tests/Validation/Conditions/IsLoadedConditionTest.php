@@ -33,6 +33,7 @@ class IsLoadedConditionTest extends BaseTest
         $this->assertFalse($condition->isMet());
 
         $entity = new SampleRecord();
+        $validator->setContext($entity);
         $this->assertFalse($condition->isMet());
 
         $entity->save();
