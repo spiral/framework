@@ -12,14 +12,11 @@ use Interop\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Debug\LogsInterface;
 use Spiral\Models\DataEntity;
-use Spiral\Tests\Validation\Fixtures\IsLoadedCondition;
 use Spiral\Translator\TranslatorInterface;
-use Spiral\Validation\CheckerConditionInterface;
 use Spiral\Validation\Checkers\AddressChecker;
 use Spiral\Validation\Checkers\TypeChecker;
 use Spiral\Validation\Configs\ValidatorConfig;
 use Spiral\Validation\Validator;
-use TestApplication\Database\SampleRecord;
 
 /**
  * Class ValidatorTest
@@ -94,8 +91,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
                     return new TypeChecker($this->container);
                 case AddressChecker::class:
                     return new AddressChecker($this->container);
-                case IsLoadedCondition::class:
-                    return new IsLoadedCondition();
                 default:
                     // it actually must throw NotFoundException (interface), but it will not
                     // because there is no real reason for SomeException (interface)
@@ -322,84 +317,5 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->setContext($context);
 
         $this->assertEquals($context, $validator->getContext());
-    }
-
-    public function testWithConditions()
-    {
-        //Validator works
-        $validator = new Validator(
-            ['email' => ['notEmpty', 'address::email']],
-            ['email' => 'some@email.com'],
-            $this->config,
-            $this->container
-        );
-        $this->assertTrue($validator->isValid());
-
-        $validator = new Validator(
-            ['email' => ['notEmpty', 'address::email']],
-            ['email' => null],
-            $this->config,
-            $this->container
-        );
-        $this->assertFalse($validator->isValid());
-
-        //Condition will not met because no context
-        $validator = new Validator(
-            [
-                'email' => [
-                    ['notEmpty', 'condition' => IsLoadedCondition::class],
-                    ['address::email', 'condition' => IsLoadedCondition::class],
-                ]
-            ],
-            ['email' => null],
-            $this->config,
-            $this->container
-        );
-        $this->assertTrue($validator->isValid());
-
-        //Condition will not met because context should be entity
-        $validator = new Validator(
-            [
-                'email' => [
-                    ['notEmpty', 'condition' => IsLoadedCondition::class],
-                    ['address::email', 'condition' => IsLoadedCondition::class],
-                ]
-            ],
-            ['email' => null],
-            $this->config,
-            $this->container
-        );
-        $validator->setContext(['some', 'context']);
-        $this->assertTrue($validator->isValid());
-
-        //Condition will not met because context should be loaded entity
-        $entity = new SampleRecord();
-        $validator->setContext($entity);
-        $this->assertTrue($validator->isValid());
-
-        //Condition will met and validator will fail check
-        $entity = new SampleRecord();
-        $entity->save();
-        $validator->setContext($entity);
-        $this->assertFalse($validator->isValid());
-
-        //Validator will fail because condition should exist and be instance of \Spiral\Validation\CheckerConditionInterface::class
-        $validator = new Validator(
-            [
-                'email' => [
-                    ['notEmpty', 'condition' => 'Some\Condition'],
-                    ['address::email', 'condition' => 'Some\Condition'],
-                ]
-            ],
-            ['email' => null],
-            $this->config,
-            $this->container
-        );
-
-        $entity = new SampleRecord();
-        $entity->save();
-
-        $validator->setContext($entity);
-        $this->assertFalse($validator->isValid());
     }
 }
