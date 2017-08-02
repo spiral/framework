@@ -14,6 +14,7 @@ use Spiral\Debug\LogsInterface;
 use Spiral\Models\DataEntity;
 use Spiral\Tests\Validation\Fixtures\IsLoadedCondition;
 use Spiral\Translator\TranslatorInterface;
+use Spiral\Validation\CheckerConditionInterface;
 use Spiral\Validation\Checkers\AddressChecker;
 use Spiral\Validation\Checkers\TypeChecker;
 use Spiral\Validation\Configs\ValidatorConfig;
@@ -93,6 +94,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
                     return new TypeChecker($this->container);
                 case AddressChecker::class:
                     return new AddressChecker($this->container);
+                case IsLoadedCondition::class:
+                    return new IsLoadedCondition();
                 default:
                     // it actually must throw NotFoundException (interface), but it will not
                     // because there is no real reason for SomeException (interface)

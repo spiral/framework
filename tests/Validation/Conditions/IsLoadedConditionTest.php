@@ -18,6 +18,10 @@ class IsLoadedConditionTest extends BaseTest
 {
     public function testIsMet()
     {
+        $this->commands->run('orm:schema', [
+            '--alter' => true
+        ]);
+
         $validator = new Validator();
 
         /** @var \Spiral\Validation\CheckerConditionInterface $condition */
