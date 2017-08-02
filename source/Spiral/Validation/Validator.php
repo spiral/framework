@@ -102,6 +102,13 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
     protected $container = null;
 
     /**
+     * Validation context. Not validated.
+     *
+     * @var mixed
+     */
+    protected $context;
+
+    /**
      * {@inheritdoc}
      *
      * @param array              $rules     Validation rules.
@@ -212,6 +219,22 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
      * Receive field from context data or return default value.
      *
      * @param string $field
@@ -258,6 +281,10 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
                 if (empty($this->getValue($field)) && !$this->config->emptyCondition($condition)) {
                     //There is no need to validate empty field except for special conditions
                     break;
+                }
+
+                if ($this->skipUnderEmptyCondition($rule)) {
+                    continue;
                 }
 
                 $result = $this->check($field, $this->getValue($field), $condition, $arguments);
@@ -503,5 +530,61 @@ class Validator extends Component implements ValidatorInterface, LoggerAwareInte
         }
 
         return $data;
+    }
+
+    /**
+     * Does rule have condition.
+     *
+     * @param $rule
+     *
+     * @return bool
+     */
+    protected function skipUnderEmptyCondition($rule)
+    {
+        if (is_array($rule) && !empty($rule['condition']) && $this->hasCondition($rule['condition'])) {
+            $condition = $this->getCondition($rule['condition']);
+            if (!$condition->isMet()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Does checker condition class exist.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    protected function hasCondition(string $name): bool
+    {
+        if (class_exists($name)) {
+            $condition = $this->container->get($name);
+
+            return $condition instanceof CheckerConditionInterface;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get or create instance of validation checker condition.
+     *
+     * @param string $name
+     *
+     * @return CheckerConditionInterface
+     * @throws ValidationException
+     */
+    protected function getCondition(string $name): CheckerConditionInterface
+    {
+        if (!$this->hasCondition($name)) {
+            throw new ValidationException(
+                "Unable to create validation checker condition defined by '{$name}' name"
+            );
+        }
+
+        return $this->container->get($name)->withValidator($this);
     }
 }

@@ -101,4 +101,20 @@ interface ValidatorInterface
      * @return array
      */
     public function getErrors(): array;
+
+    /**
+     * Get context data (not validated).
+     *
+     * @return mixed
+     */
+    public function getContext();
+
+    /**
+     * Set context data (not validated).
+     *
+     * @param $context
+     *
+     * @return mixed
+     */
+    public function setContext($context);
 }
