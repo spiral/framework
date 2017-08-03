@@ -12,7 +12,6 @@ use Interop\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Spiral\Debug\LogsInterface;
 use Spiral\Models\DataEntity;
-use Spiral\Tests\Validation\Fixtures\SimpleTestChecker;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Validation\Checkers\AddressChecker;
 use Spiral\Validation\Checkers\TypeChecker;
@@ -307,5 +306,16 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($validator, $validator->flushRegistered());
         $this->assertEquals(substr(AddressChecker::MESSAGES['email'], 2, -2),
             $validator->getErrors()['email']);
+    }
+
+    public function testContext()
+    {
+        $context = new \StdClass();
+        $context->data = 'some context';
+
+        $validator = new Validator([], [], $this->config, $this->container);
+        $validator->setContext($context);
+
+        $this->assertEquals($context, $validator->getContext());
     }
 }
