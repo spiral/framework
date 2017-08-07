@@ -9,13 +9,14 @@
 namespace Spiral\Views\Engines\Stempler;
 
 use Spiral\Files\FilesInterface;
+use Spiral\Views\AbstractViewCache;
 use Spiral\Views\EnvironmentInterface;
 use Spiral\Views\ViewSource;
 
 /**
  * Very simple Stempler cache. Almost identical to twig cache except generateKey method.
  */
-class StemplerCache
+class StemplerCache extends AbstractViewCache
 {
     /**
      * @var FilesInterface
@@ -61,7 +62,8 @@ class StemplerCache
     {
         $hash = hash('md5', $context->getFilename() . '.' . $this->environment->getID());
 
-        return $this->environment->cacheDirectory() . $hash . '.php';
+        return $this->environment->cacheDirectory() .
+            $this->getPrefix($context->getName(), $context->getNamespace()) . '-' . $hash . '.php';
     }
 
     /**
