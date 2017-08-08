@@ -63,7 +63,10 @@ class StemplerTest extends BaseTest
 
     public function testRenderFromOtherLoader()
     {
-        $this->assertSame('Hello, World!', $this->views->render('native', [
+        $this->deleteCacheFiles();
+        clearstatcache();
+
+        $this->assertContains('Hello, World!', $this->views->render('home', [
             'name' => 'World'
         ]));
 
@@ -74,7 +77,7 @@ class StemplerTest extends BaseTest
             )
         );
 
-        $this->assertSame('home alt', $views->render('home'));
+        $this->assertContains('home alt', $views->render('home'));
     }
 
     public function testRenderFromCache()
