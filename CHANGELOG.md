@@ -1,5 +1,8 @@
 CHANGELOG for 0.9.0 RC
 ======================
+1.0.5
+-----
+- ability to locate view cache files by view name and namespace
 
 1.0.4
 -----
