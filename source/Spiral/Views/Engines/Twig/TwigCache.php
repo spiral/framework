@@ -9,12 +9,13 @@
 namespace Spiral\Views\Engines\Twig;
 
 use Spiral\Files\FilesInterface;
+use Spiral\Views\AbstractViewCache;
 use Spiral\Views\EnvironmentInterface;
 
 /**
  * Spiral specific twig cache. OpCache reset not included yet.
  */
-class TwigCache implements \Twig_CacheInterface
+class TwigCache extends AbstractViewCache implements \Twig_CacheInterface
 {
     /**
      * @var FilesInterface
@@ -41,9 +42,10 @@ class TwigCache implements \Twig_CacheInterface
      */
     public function generateKey($name, $className)
     {
+        $prefix = $this->getPrefix($name);
         $hash = hash('md5', $className . '.' . $this->environment->getID());
 
-        return "{$this->environment->cacheDirectory()}/{$hash}.php";
+        return "{$this->environment->cacheDirectory()}/{$prefix}-{$hash}.php";
     }
 
     /**

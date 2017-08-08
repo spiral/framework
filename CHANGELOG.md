@@ -1,6 +1,10 @@
 CHANGELOG for 0.9.0 RC
 ======================
 
+1.0.4
+-----
+- ability to add conditions to skip validation rules
+
 1.0.2 (04.05.2017)
 -----
 - ValidatesEntity now caches last set of produced errors
