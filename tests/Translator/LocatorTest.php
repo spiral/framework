@@ -49,7 +49,12 @@ class LocatorTest extends \PHPUnit_Framework_TestCase
 
         $config->shouldReceive('localesDirectory')->andReturn(__DIR__ . '/fixtures/locales/');
 
-        $this->assertSame(['en', 'ru'], $source->getLocales());
+        $compared = $source->getLocales();
+        $shouldBe = ['en', 'ru'];
+        sort($shouldBe);
+        sort($compared);
+
+        $this->assertSame($shouldBe, $compared);
     }
 
     public function testLoadLocale()
