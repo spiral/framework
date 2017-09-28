@@ -387,10 +387,16 @@ class InputManager implements InputInterface, SingletonInterface
      *
      * @return self
      */
-    public function withPrefix(string $prefix): InputInterface
+    public function withPrefix(string $prefix, bool $add = true): InputInterface
     {
         $input = clone $this;
-        $input->prefix = $prefix;
+
+        if ($add) {
+            $input->prefix .= '.' . $prefix;
+            $input->prefix = trim($input->prefix, '.');
+        } else {
+            $input->prefix = $prefix;
+        }
 
         return $input;
     }

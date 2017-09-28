@@ -35,7 +35,7 @@ class ScopingTest extends BaseTest
                 }
             }
 
-            public function withPrefix(string $prefix): InputInterface
+            public function withPrefix(string $prefix, bool $add = true): InputInterface
             {
                 return $this;
             }
