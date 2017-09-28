@@ -1,4 +1,5 @@
 <?php
+
 namespace Spiral\Tests\Http\RequestFilters;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,7 +23,7 @@ class MultipleDepthRequestTest extends HttpTest
         $this->assertFalse($request->isValid());
         $this->assertArrayHasKey('first', $request->getErrors());
         $this->assertArrayHasKey('second', $request->getErrors()['first']);
-        $this->assertArrayHasKey('third', $request->getErrors()['second']);
+        $this->assertArrayHasKey('third', $request->getErrors()['first']['second']);
     }
 
     public function testDataPassed()
@@ -41,7 +42,13 @@ class MultipleDepthRequestTest extends HttpTest
         $request = $this->container->get(ThirdDepthRequest::class);
 
         $this->assertTrue($request->isValid());
-        $this->assertArrayHasKey(['city'], $request->getValidator()->getData()['first']['second']);
+        $this->assertArrayNotHasKey('first', $request->getErrors());
+        $this->assertArrayNotHasKey('second', $request->getErrors()['first']);
+        $this->assertArrayNotHasKey('third', $request->getErrors()['first']['second']);
+
+        $this->assertArrayHasKey('first', $request->getValidator()->getData());
+        $this->assertArrayHasKey('second', $request->getValidator()->getData()['first']);
+        $this->assertArrayHasKey('third', $request->getValidator()->getData()['first']['second']);
         $this->assertSame('3rd value', $request->getValidator()->getData()['first']['second']['third']);
     }
 }
