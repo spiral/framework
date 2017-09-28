@@ -39,7 +39,7 @@ class MultipleDepthRequestTest extends HttpTest
         $this->container->bind(ServerRequestInterface::class, $serverRequest);
 
         /** @var DemoRequest $request */
-        $request = $this->container->get(ThirdDepthRequest::class);
+        $request = $this->container->get(FirstDepthRequest::class);
 
         $this->assertTrue($request->isValid());
         $this->assertArrayNotHasKey('first', $request->getErrors());
