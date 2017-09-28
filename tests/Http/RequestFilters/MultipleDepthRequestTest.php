@@ -43,8 +43,6 @@ class MultipleDepthRequestTest extends HttpTest
 
         $this->assertTrue($request->isValid());
         $this->assertArrayNotHasKey('first', $request->getErrors());
-        $this->assertArrayNotHasKey('second', $request->getErrors()['first']);
-        $this->assertArrayNotHasKey('third', $request->getErrors()['first']['second']);
 
         $this->assertArrayHasKey('first', $request->getValidator()->getData());
         $this->assertArrayHasKey('second', $request->getValidator()->getData()['first']);
