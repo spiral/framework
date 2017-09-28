@@ -9,4 +9,8 @@ class ThirdDepthRequest extends RequestFilter
     const SCHEMA = [
         'third' => 'data:third'
     ];
+
+    const VALIDATES = [
+        'third' => ['notEmpty']
+    ];
 }
