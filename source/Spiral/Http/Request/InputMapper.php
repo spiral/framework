@@ -113,7 +113,7 @@ class InputMapper
                 $this->mountMessage($mapped, $this->schema[$field]['origin'], $message);
             } else {
                 //Custom error
-                $mapped[$field] = $mapped;
+                $mapped[$field] = $message;
             }
         }
 
