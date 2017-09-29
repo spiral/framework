@@ -1,5 +1,17 @@
 CHANGELOG for 0.9.0 RC
 ======================
+1.0.6 (28.09.2017)
+-----
+- Fixed a bug when error message was converted to empty array
+- Fixed a bug when multidepth requests contained invalid prefix (in case of depth more than 3)
+
+1.0.5
+-----
+- ability to locate view cache files by view name and namespace
+
+1.0.4
+-----
+- ability to add conditions to skip validation rules
 
 1.0.2 (04.05.2017)
 -----
