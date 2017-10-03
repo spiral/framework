@@ -28,6 +28,10 @@ trait JsonTrait
         $json,
         int $code = 200
     ): ResponseInterface {
+        if ($json instanceof \JsonSerializable) {
+            $json = $json->jsonSerialize();
+        }
+        
         if (is_array($json) && isset($json['status'])) {
             $code = $json['status'];
         }
