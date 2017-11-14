@@ -1,5 +1,10 @@
-CHANGELOG for 0.9.0 RC
+CHANGELOG for 1.0.0
 ======================
+
+1.0.7 (04.10.2017)
+-----
+- Ability to specify JSON response code inside jsonSerialize
+
 1.0.6 (28.09.2017)
 -----
 - Fixed a bug when error message was converted to empty array

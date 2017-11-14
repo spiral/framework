@@ -187,6 +187,12 @@ $this->transaction->store($post);
 
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
 
+Integration with Golang
+-----
+Check [here](https://github.com/spiral/goridge).
+
+Process supervisor is coming.
+
 Tests
 -----
 ```
