@@ -78,22 +78,22 @@ class SnapshotTest extends BaseTest
      * This test will perform crazy amount of calculations due amount of dump commands and PHPUnit
      * stack.
      */
-    public function testReportSlow()
-    {
-        /**@var SnapshotConfig $config */
-        $config = $this->container->get(SnapshotConfig::class);
+//     public function testReportSlow()
+//     {
+//         /**@var SnapshotConfig $config */
+//         $config = $this->container->get(SnapshotConfig::class);
 
-        $mock = m::mock($config);
-        $mock->shouldReceive('viewName')->andReturn('spiral:exceptions/light/slow');
+//         $mock = m::mock($config);
+//         $mock->shouldReceive('viewName')->andReturn('spiral:exceptions/light/slow');
 
-        $snaphot = $this->makeSnapshot($e = new \Error("Error"), [
-            'config' => $mock
-        ]);
+//         $snaphot = $this->makeSnapshot($e = new \Error("Error"), [
+//             'config' => $mock
+//         ]);
 
-        $this->assertEmpty($this->files->getFiles($config->reportingDirectory()));
-        $snaphot->report();
-        $this->assertNotEmpty($this->files->getFiles($config->reportingDirectory()));
-    }
+//         $this->assertEmpty($this->files->getFiles($config->reportingDirectory()));
+//         $snaphot->report();
+//         $this->assertNotEmpty($this->files->getFiles($config->reportingDirectory()));
+//     }
 
     public function testReportFallback()
     {
