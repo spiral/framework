@@ -187,10 +187,6 @@ $this->transaction->store($post);
 
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
 
-Integration with Golang
------
-Use [Goridge](https://github.com/spiral/goridge) for fast IPC with Golang applications. 
-
 Tests
 -----
 ```
