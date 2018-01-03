@@ -189,9 +189,7 @@ And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> 
 
 Integration with Golang
 -----
-Check [here](https://github.com/spiral/goridge).
-
-Process supervisor is coming.
+Use [Goridge](https://github.com/spiral/goridge) for fast IPC with Golang applications. 
 
 Tests
 -----
