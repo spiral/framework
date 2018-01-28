@@ -55,7 +55,6 @@ JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.co
 ```php
 public function indexAction(ServerRequestInterface $request, SomeService $service): array
 {    
-    //Shortcuts
     dump($this->someService === $service);
     
     return [
