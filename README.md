@@ -145,14 +145,9 @@ $post->author = new User(['name' => 'Antony']);
 $post->tags->link(new Tag(['name' => 'tag A']));
 $post->tags->link($tags->findOne(['name' => 'tag B']));
 
-$transaction = new Transaction();
-$transaction->store($post);
-$transaction->run();
-
-//--or--: Active record (optional)
 $post->save();
 
-//--or--: request specific transaction
+//Alternative: request specific transaction
 $this->transaction->store($post);
 ```
 
