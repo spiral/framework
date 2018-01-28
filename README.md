@@ -146,9 +146,6 @@ $post->tags->link(new Tag(['name' => 'tag A']));
 $post->tags->link($tags->findOne(['name' => 'tag B']));
 
 $post->save();
-
-//Alternative: request specific transaction
-$this->transaction->store($post);
 ```
 
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
