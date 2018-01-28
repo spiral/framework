@@ -16,16 +16,6 @@ Examples:
 ```php
 class HomeController extends Controller
 {
-    /**
-     * IoC Container can automatically decide what database/cache/storage
-     * instance to provide for every action parameter based on it's 
-     * name or type.
-     *
-     * @param Database   $database
-     * @param Database   $logs     Can be physical or virtual database
-     * @param HttpConfig $config   
-     * @return string
-     */
     public function indexAction(Database $database, Database $logs, HttpConfig $config): string 
     {
         dump($config->basePath());
