@@ -50,25 +50,6 @@ class MyBootloader extends Bootloader
 }
 ```
 
-Declarative/lazy singletons and services:
-
-```php
-class SomeService implements SingletonInterface
-{
-    private $reader;
-    
-    public function __construct(ReaderInterface $reader)
-    {
-        $this->reader = $reader;
-    }
-
-    public function readValue(string $value): string
-    {
-        return $this->reader->read($value);
-    }
-}
-```
-
 JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts, IDE helpers:
 
 ```php
