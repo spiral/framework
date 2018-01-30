@@ -114,9 +114,7 @@ class Post extends RecordEntity
         ],
                
         //Hybrid databases
-        'metadata' => [
-            Document::ONE => Mongo\Metadata::class
-        ]
+        'metadata' => [Document::ONE => Mongo\Metadata::class]
     ];
 }
 ```
@@ -142,6 +140,7 @@ $post->author = new User(['name' => 'Antony']);
 $post->tags->link(new Tag(['name' => 'tag A']));
 $post->tags->link($tags->findOne(['name' => 'tag B']));
 
+// automatic transaction management
 $post->save();
 
 // or: transactional approach
