@@ -107,7 +107,7 @@ class Post extends RecordEntity
             User::INVERSE       => 'collaborated_posts'
         ],
         
-        //Pre-compiled relations
+        //Statically binded relations
         'author'   => [
             self::BELONGS_TO   => AuthorInterface::class,
             self::LATE_BINDING => true
