@@ -57,6 +57,11 @@ abstract class AbstractRoute implements RouteInterface
     private $withHost = false;
 
     /**
+     * @var string[]
+     */
+    private $methods = [];
+
+    /**
      * Compiled route options, pattern and etc. Internal data.
      *
      * @invisible
@@ -157,6 +162,27 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @return $this|AbstractRoute
+     */
+    public function withMethod(string $method): AbstractRoute
+    {
+        $route = clone $this;
+        $route->methods[] = strtoupper($method);
+
+        return $route;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMethods(): array
+    {
+        return $this->methods;
+    }
+
+    /**
      * If true (default) route will be matched against path + URI host. Returns new route instance.
      *
      * @param bool $withHost
@@ -225,6 +251,10 @@ abstract class AbstractRoute implements RouteInterface
     {
         if (empty($this->compiled)) {
             $this->compile();
+        }
+
+        if (!empty($this->methods) && !in_array($request->getMethod(), $this->methods)) {
+            return null;
         }
 
         if (preg_match($this->compiled['pattern'], $this->getSubject($request), $matches)) {
