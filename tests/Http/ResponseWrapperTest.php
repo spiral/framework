@@ -112,7 +112,7 @@ class ResponseWrapperTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->assertSame('true', $response->getHeaderLine('Response'));
-        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $this->assertSame('text/html; charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertSame('Hello World!', $response->getBody()->__toString());
     }
 
