@@ -1,6 +1,11 @@
 CHANGELOG for 1.0.0
 ======================
 
+1.0.8 (03.06.2018)
+-----
+- Fixed bug with incorrect Request association for already exists bags
+- Added charset UTF-8 for response wrapper
+
 1.0.7 (04.10.2017)
 -----
 - Ability to specify JSON response code inside jsonSerialize
