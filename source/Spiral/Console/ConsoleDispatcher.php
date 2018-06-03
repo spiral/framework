@@ -21,6 +21,7 @@ use Spiral\Core\NullMemory;
 use Spiral\Debug\LogManager;
 use Spiral\Debug\SnapshotInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -46,7 +47,7 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
     /**
      * Active console output.
      *
-     * @var OutputInterface
+     * @var ConsoleOutput
      */
     private $output = null;
 
@@ -97,10 +98,12 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    public function start(InputInterface $input = null, OutputInterface $output = null)
+    public function start()
     {
         //Let's keep output reference to render exceptions
-        $this->output = $output ?? new ConsoleOutput();
+        $input = new ArgvInput();
+        $this->output = new ConsoleOutput();
+        $this->configureIO($input, $this->output);
 
         $this->runScoped(function () use ($input) {
             $this->consoleApplication()->run($input, $this->output);
@@ -150,16 +153,14 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             return $this->application;
         }
 
-        $this->application = new ConsoleApplication(
-            'Spiral, Console Toolkit',
-            Core::VERSION
-        );
-
-        $this->application->setCatchExceptions(false);
-
+        $commands = [];
         foreach ($this->getCommands() as $command) {
-            $this->application->add($this->container->get($command));
+            $commands[] = $this->container->get($command);
         }
+
+        $this->application = new ConsoleApplication('Spiral Framework', Core::VERSION);
+        $this->application->setCatchExceptions(false);
+        $this->application->addCommands($commands);
 
         return $this->application;
     }
@@ -195,12 +196,18 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      *
      * @param OutputInterface $output
      */
-    public function handleSnapshot(SnapshotInterface $snapshot, OutputInterface $output = null)
+    public function handleSnapshot(SnapshotInterface $snapshot)
     {
-        $output = $output ??  $this->output ?? new ConsoleOutput(OutputInterface::VERBOSITY_VERBOSE);
+        if ($this->output == null) {
+            // never started
+            return;
+        }
 
-        //Rendering exception in console
-        $this->consoleApplication()->renderException($snapshot->getException(), $output);
+        $this->output->writeln('', OutputInterface::VERBOSITY_QUIET);
+        $this->container->get(ErrorWriter::class)->renderException(
+            $this->output->getErrorOutput(),
+            $snapshot->getException()
+        );
     }
 
     /**
@@ -227,6 +234,50 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
             //Restore default debug handler and container scope
             $this->container->get(LogManager::class)->debugHandler($debugHandler);
             self::staticContainer($scope);
+        }
+    }
+
+    /**
+     * Reduced version of Symfony::configureIO.
+     *
+     * @source Symfony\Component\Console::configureIO()
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    private function configureIO(InputInterface $input, OutputInterface $output)
+    {
+        if (true === $input->hasParameterOption(['--ansi'], true)) {
+            $output->setDecorated(true);
+        } elseif (true === $input->hasParameterOption(['--no-ansi'], true)) {
+            $output->setDecorated(false);
+        }
+
+        if (true === $input->hasParameterOption(['--quiet', '-q'], true)) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
+
+            return;
+        }
+
+        if (
+            $input->hasParameterOption('-vvv', true)
+            || $input->hasParameterOption('--verbose=3', true)
+            || 3 === $input->getParameterOption('--verbose', false, true)
+        ) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
+        } elseif (
+            $input->hasParameterOption('-vv', true)
+            || $input->hasParameterOption('--verbose=2', true)
+            || 2 === $input->getParameterOption('--verbose', false, true)
+        ) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
+        } elseif (
+            $input->hasParameterOption('-v', true)
+            || $input->hasParameterOption('--verbose=1', true)
+            || $input->hasParameterOption('--verbose', true)
+            || $input->getParameterOption('--verbose', false, true)
+        ) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
     }
 }
