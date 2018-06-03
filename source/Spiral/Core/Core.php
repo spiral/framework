@@ -305,7 +305,7 @@ abstract class Core extends AbstractCore implements DirectoriesInterface
             //Now dispatcher can handle snapshot it's own way
             $this->dispatcher->handleSnapshot($snapshot);
         } else {
-            echo $snapshot->render();
+            echo $snapshot->getException();
         }
     }
 
