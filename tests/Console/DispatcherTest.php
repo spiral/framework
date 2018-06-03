@@ -32,6 +32,7 @@ class DispatcherTest extends BaseTest
 
         $this->console->handleSnapshot($snapshot, $output = new BufferedOutput());
         $output = $output->fetch();
+
         $this->assertContains('Hello world', $output);
     }
 }

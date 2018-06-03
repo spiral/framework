@@ -196,16 +196,21 @@ class ConsoleDispatcher extends Component implements SingletonInterface, Dispatc
      *
      * @param OutputInterface $output
      */
-    public function handleSnapshot(SnapshotInterface $snapshot)
+    public function handleSnapshot(SnapshotInterface $snapshot, OutputInterface $output = null)
     {
-        if ($this->output == null) {
-            // never started
+        $output = $output ?? $this->output;
+        if ($output == null) {
+            // unable to handle
             return;
         }
 
-        $this->output->writeln('', OutputInterface::VERBOSITY_QUIET);
+        if ($output instanceof ConsoleOutput) {
+            $output = $output->getErrorOutput();
+        }
+
+        $output->writeln('', OutputInterface::VERBOSITY_QUIET);
         $this->container->get(ErrorWriter::class)->renderException(
-            $this->output->getErrorOutput(),
+            $output,
             $snapshot->getException()
         );
     }
