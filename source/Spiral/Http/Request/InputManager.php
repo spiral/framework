@@ -230,6 +230,9 @@ class InputManager implements InputInterface, SingletonInterface
      */
     public function bag(string $name): InputBag
     {
+        // ensure proper request association
+        $this->request();
+        
         if (isset($this->bagInstances[$name])) {
             return $this->bagInstances[$name];
         }
