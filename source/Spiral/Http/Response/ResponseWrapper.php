@@ -140,7 +140,7 @@ class ResponseWrapper extends Component
     {
         $this->response->getBody()->write($body);
 
-        return $this->response->withHeader('Content-type', 'text/html');
+        return $this->response->withHeader('Content-type', 'text/html; charset=UTF-8');
     }
 
     /**
