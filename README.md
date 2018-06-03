@@ -1,12 +1,13 @@
 Spiral, PSR7/PHP7 Framework
 =======================
-[![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/spiral/spiral/badge.svg?branch=master)](https://coveralls.io/github/spiral/spiral?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/spiral/framework/v/stable)](https://packagist.org/packages/spiral/framework) [![Total Downloads](https://poser.pugx.org/spiral/framework/downloads)](https://packagist.org/packages/spiral/framework) [![License](https://poser.pugx.org/spiral/framework/license)](https://packagist.org/packages/spiral/framework) [![Build Status](https://travis-ci.org/spiral/spiral.svg?branch=master)](https://travis-ci.org/spiral/spiral) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/spiral/spiral/badge.svg?branch=develop)](https://coveralls.io/github/spiral/spiral?branch=develop)
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="170px" alt="Spiral Framework" align="left"/>
 
-The Spiral framework provides open and modular Rapid Application Development (RAD) environment, database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), IDE integration, PSR-\* standards, simple syntax and customizable scaffolding mechanisms.
+The Spiral framework provides open and modular Rapid Application Development (RAD) environment, powerful Database tools, code re-usability, extremely friendly [IoC](https://github.com/container-interop/container-interop), IDE integration, PSR-\* standards, simple syntax and customizable scaffolding mechanisms. 
 
-<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md) | [Forum](https://groups.google.com/forum/#!forum/spiral-framework)
+
+<b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide) | [Twitter](https://twitter.com/spiralphp) | [Modules](https://github.com/spiral-modules) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md) | [Forum](https://groups.google.com/forum/#!forum/spiral-framework) | [Video Tutorials](https://www.youtube.com/watch?v=zJ4fqW4M86I&list=PLHZNig4c1SXGVt8hUVHxZTrlJqqdn8ktW)
 
 <br/><br/>
 
@@ -16,16 +17,6 @@ Examples:
 ```php
 class HomeController extends Controller
 {
-    /**
-     * IoC Container can automatically decide what database/cache/storage
-     * instance to provide for every action parameter based on it's 
-     * name or type.
-     *
-     * @param Database   $database
-     * @param Database   $logs     Can be physical or virtual database
-     * @param HttpConfig $config   
-     * @return string
-     */
     public function indexAction(Database $database, Database $logs, HttpConfig $config): string 
     {
         dump($config->basePath());
@@ -60,33 +51,11 @@ class MyBootloader extends Bootloader
 }
 ```
 
-Declarative/lazy singletons and services:
-
-```php
-class SomeService implements SingletonInterface
-{
-    private $reader;
-    
-    public function __construct(ReaderInterface $reader)
-    {
-        $this->reader = $reader;
-    }
-
-    public function readValue(string $value): string
-    {
-        return $this->reader->read($value);
-    }
-}
-```
-
 JSON responses, method injections, [IoC scopes](https://raw.githubusercontent.com/spiral/guide/master/resources/scopes.png), container shortcuts, IDE helpers:
 
 ```php
 public function indexAction(ServerRequestInterface $request, SomeService $service): array
-{
-    dump($service->readValue('abc'));
-    
-    //Shortcuts
+{    
     dump($this->someService === $service);
     
     return [
@@ -139,16 +108,14 @@ class Post extends RecordEntity
             User::INVERSE       => 'collaborated_posts'
         ],
         
-        //Pre-compiled relations
+        //Statically binded relations
         'author'   => [
             self::BELONGS_TO   => AuthorInterface::class,
             self::LATE_BINDING => true
         ],
                
         //Hybrid databases
-        'metadata' => [
-            Document::ONE => Mongo\Metadata::class
-        ]
+        'metadata' => [Document::ONE => Mongo\Metadata::class]
     ];
 }
 ```
@@ -174,24 +141,14 @@ $post->author = new User(['name' => 'Antony']);
 $post->tags->link(new Tag(['name' => 'tag A']));
 $post->tags->link($tags->findOne(['name' => 'tag B']));
 
-$transaction = new Transaction();
-$transaction->store($post);
-$transaction->run();
-
-//--or--: Active record (optional)
+// automatic transaction management
 $post->save();
 
-//--or--: request specific transaction
-$this->transaction->store($post);
+// or: transactional approach
+$transaction->store($post);
 ```
 
 And much more: <b>[Skeleton App](https://github.com/spiral-php/application)</b> | [Guide](https://github.com/spiral-php/guide)
-
-Integration with Golang
------
-Check [here](https://github.com/spiral/goridge).
-
-Process supervisor is coming.
 
 Tests
 -----
