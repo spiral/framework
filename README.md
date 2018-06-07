@@ -15,6 +15,7 @@ Installation
 ------------
 ```
 composer create-project spiral/application
+cd application
 ```
 
 Once application installed you can ensure that it was configured properly by executing:
