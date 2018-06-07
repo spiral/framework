@@ -21,7 +21,7 @@ cd application
 Once application installed you can ensure that it was configured properly by executing:
 
 ```
-./spiral configure -k && phpunit
+./spiral configure -k && vendor/bin/phpunit
 ```
 
 Examples:
