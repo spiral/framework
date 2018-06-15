@@ -1,6 +1,10 @@
 CHANGELOG for 1.0.0
 ======================
 
+1.0.11 (15.06.2018)
+-----
+- Fixed bug with potential memory leak due usage of require instead of require_once.
+
 1.0.10 (03.06.2018)
 -----
 - Fixed bug with incorrect Request association for already exists bags
