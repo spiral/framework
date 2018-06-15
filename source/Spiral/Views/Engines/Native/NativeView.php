@@ -66,7 +66,7 @@ class NativeView extends Component implements ViewInterface
         $scope = self::staticContainer($this->container);
         try {
             extract($context, EXTR_OVERWRITE);
-            require $this->sourceContext->getFilename();
+            require_once $this->sourceContext->getFilename();
         } catch (\Throwable $e) {
             //Clear all rendered output (should we save it into exception?)
             ob_end_clean();
