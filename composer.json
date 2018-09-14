@@ -13,6 +13,7 @@
     "php": "^7.1",
     "spiral/core": "^1.0",
     "spiral/files": "^1.0",
+    "spiral/debug": "^1.1",
     "spiral/config": "^1.0"
   },
   "require-dev": {
