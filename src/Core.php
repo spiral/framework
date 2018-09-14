@@ -154,8 +154,10 @@ abstract class Core
         }
 
         $core = new static(new Container(), $directories);
-
-        $core->container->bindSingleton(EnvironmentInterface::class, $environment ?? new Environment());
+        $core->container->bindSingleton(
+            EnvironmentInterface::class,
+            $environment ?? new Environment()
+        );
 
         try {
             ContainerScope::runScope($core->container, function () use ($core) {

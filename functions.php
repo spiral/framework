@@ -40,6 +40,10 @@ if (!function_exists('spiral')) {
      */
     function spiral(string $alias)
     {
+        if (ContainerScope::getContainer() === null) {
+            throw new ScopeException('Container scope was not set.');
+        }
+
         try {
             return ContainerScope::getContainer()->get($alias);
         } catch (ContainerExceptionInterface $e) {

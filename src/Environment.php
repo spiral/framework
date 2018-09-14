@@ -10,8 +10,8 @@ namespace Spiral\Framework;
 
 final class Environment implements EnvironmentInterface
 {
-    /** @var string */
-    private $id = '';
+    /** @var string|null */
+    private $id = null;
 
     /** @var array */
     private $values = [];
@@ -21,7 +21,7 @@ final class Environment implements EnvironmentInterface
      */
     public function __construct(array $values = [])
     {
-        $this->values = $_ENV + $values;
+        $this->values = $values + $_ENV + $_SERVER;
     }
 
     /**
@@ -43,6 +43,8 @@ final class Environment implements EnvironmentInterface
     {
         $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
+
+        $this->id = null;
     }
 
     /**
