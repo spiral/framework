@@ -138,10 +138,10 @@ abstract class Core
     /**
      * Initiate application core.
      *
-     * @param array                $directories  Spiral directories should include root, libraries and application
-     *                                           directories.
-     * @param EnvironmentInterface $environment  Application specific environment if any.
-     * @param bool                 $handleErrors Enable global error handling.
+     * @param array                     $directories  Spiral directories should include root, libraries and application
+     *                                                directories.
+     * @param EnvironmentInterface|null $environment  Application specific environment if any.
+     * @param bool                      $handleErrors Enable global error handling.
      * @return self
      */
     public static function init(
