@@ -48,6 +48,6 @@ final class CoreBootloader extends Bootloader
         DirectoriesInterface $directories,
         FilesInterface $files
     ): MemoryInterface {
-        return new Memory($directories->get('runtime'), $files);
+        return new Memory($directories->get('cache'), $files);
     }
 }
