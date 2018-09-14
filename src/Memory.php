@@ -14,7 +14,7 @@ use Spiral\Files\FilesInterface;
 /**
  * File based memory storage.
  */
-class Memory implements MemoryInterface
+final class Memory implements MemoryInterface
 {
     // data file extension
     private const EXTENSION = 'php';

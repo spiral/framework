@@ -8,7 +8,7 @@
 
 namespace Spiral\Framework;
 
-class Environment
+class Environment implements EnvironmentInterface
 {
 
 }

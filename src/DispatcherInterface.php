@@ -19,10 +19,10 @@ interface DispatcherInterface
      *
      * @return bool
      */
-    public function enabled(): bool;
+    public function canServe(): bool;
 
     /**
      * Start request execution.
      */
-    public function start();
+    public function serve();
 }
