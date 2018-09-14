@@ -11,6 +11,10 @@ namespace Spiral\Framework;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Framework\Exceptions\FrameworkException;
 
+/**
+ * Core responsible for application initialization, bootloading of all required services, environment and directory
+ * management, exception handling.
+ */
 class Core implements SingletonInterface
 {
     /**
@@ -21,8 +25,6 @@ class Core implements SingletonInterface
 
     /** @var DispatcherInterface[] */
     private $dispatchers = [];
-
-
 
     /**
      * Add new dispatcher. This method must only be called before method `serve`

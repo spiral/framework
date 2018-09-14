@@ -8,9 +8,10 @@
 
 namespace Spiral\Framework;
 
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Framework\Exceptions\DirectoryException;
 
-class Directories implements DirectoriesInterface
+class Directories implements DirectoriesInterface, SingletonInterface
 {
     // todo: move to directory map
     public const DEFAULT_MAP = [
