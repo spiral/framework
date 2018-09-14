@@ -65,24 +65,21 @@ final class Environment implements EnvironmentInterface
      */
     protected function normalize($value)
     {
-        switch (strtolower($value)) {
+        switch (trim(strtolower($value), '()')) {
             case 'true':
-            case '(true)':
                 return true;
 
             case 'false':
-            case '(false)':
                 return false;
 
             case 'null':
-            case '(null)':
                 return null;
 
             case 'empty':
-            case '(empty)':
                 return '';
-        }
 
-        return $value;
+            default:
+                return $value;
+        }
     }
 }
