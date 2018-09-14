@@ -39,7 +39,7 @@ final class Environment implements EnvironmentInterface
     /**
      * @inheritdoc
      */
-    public function set(string $name, string $value)
+    public function set(string $name, $value)
     {
         $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
@@ -50,7 +50,7 @@ final class Environment implements EnvironmentInterface
     /**
      * @inheritdoc
      */
-    public function get(string $name, string $default = null): ?string
+    public function get(string $name, $default = null)
     {
         if (isset($this->values[$name])) {
             return $this->normalize($this->values[$name]);
@@ -63,8 +63,12 @@ final class Environment implements EnvironmentInterface
      * @param mixed $value
      * @return bool|null|string
      */
-    protected function normalize($value)
+    protected function normalize($value): ?string
     {
+        if (!is_string($value)) {
+            return $value;
+        }
+
         switch (trim(strtolower($value), '()')) {
             case 'true':
                 return true;

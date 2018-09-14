@@ -26,7 +26,7 @@ interface EnvironmentInterface
      * @param string $name
      * @param mixed  $value
      */
-    public function set(string $name, string $value);
+    public function set(string $name, $value);
 
     /**
      * Get environment value.
@@ -36,5 +36,5 @@ interface EnvironmentInterface
      *
      * @return mixed
      */
-    public function get(string $name, string $default = null): ?string;
+    public function get(string $name, $default = null);
 }
