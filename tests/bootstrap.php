@@ -15,12 +15,10 @@ class RealCore extends \Spiral\Framework\Core
 {
     protected function bootstrap()
     {
-        //   echo $aa;
-
-        // TODO: Implement bootstrap() method.
+       // echo $a;
     }
 }
 
 $c = RealCore::init(['root' => __DIR__]);
 
-echo memory_get_peak_usage(true) / 1024;
+echo memory_get_usage(false) / 1024;

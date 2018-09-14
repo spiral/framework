@@ -27,11 +27,6 @@ abstract class Core implements SingletonInterface
     protected const SYSTEM = [CoreBootloader::class];
 
     /**
-     * Function used to normalize directory list and automatically fill missing values.
-     */
-    protected const DIR_MAP = [DirectorySchema::class, 'default'];
-
-    /**
      * List of bootloaders to be called on application initialization (before `serve` method).
      * This constant must be redefined in child application.
      */
@@ -54,33 +49,16 @@ abstract class Core implements SingletonInterface
     {
         $this->container = $container;
 
-        // Init directory list using given mapper
-        $this->container->bindSingleton(
-            DirectoriesInterface::class,
-            new Directories(call_user_func(static::DIR_MAP, $directories))
-        );
-
         $this->container->bindSingleton(self::class, $this);
         $this->container->bindSingleton(static::class, $this);
 
+        $this->container->bindSingleton(
+            DirectoriesInterface::class,
+            new Directories($this->mapDirectories($directories))
+        );
+
         $this->bootloader = new BootloadManager($this->container);
         $this->bootloader->bootload(static::SYSTEM);
-    }
-
-    /**
-     * Bootstrap application. Must be executed before start method.
-     */
-    abstract protected function bootstrap();
-
-    /**
-     * Bootload all registered classes using BootloadManager.
-     *
-     * @return self
-     */
-    private function bootload(): self
-    {
-        $this->bootloader->bootload(static::LOAD);
-        return $this;
     }
 
     /**
@@ -113,12 +91,58 @@ abstract class Core implements SingletonInterface
     }
 
     /**
+     * Bootstrap application. Must be executed before start method.
+     */
+    abstract protected function bootstrap();
+
+    /**
+     * Normalizes directory list and adds all required alises.
+     *
+     * @param array $directories
+     * @return array
+     */
+    protected function mapDirectories(array $directories): array
+    {
+        if (!isset($directories['root'])) {
+            throw new FrameworkException("Missing required directory `root`.");
+        }
+
+        if (!isset($directories['app'])) {
+            $directories['app'] = $directories['root'] . '/app/';
+        }
+
+        return array_merge($directories, [
+            // public root
+            'public'    => $directories['root'] . '/public/',
+
+            // application directories
+            'config'    => $directories['app'] . '/config/',
+            'resources' => $directories['app'] . '/resources/',
+
+            // data directories
+            'runtime'   => $directories['app'] . '/runtime/',
+            'cache'     => $directories['app'] . '/runtime/cache/',
+        ]);
+    }
+
+    /**
+     * Bootload all registered classes using BootloadManager.
+     *
+     * @return self
+     */
+    private function bootload(): self
+    {
+        $this->bootloader->bootload(static::LOAD);
+        return $this;
+    }
+
+    /**
      * Initiate application core.
      *
-     * @param array                $directories Spiral directories should include root, libraries and application
-     *                                          directories.
-     * @param EnvironmentInterface $environment Application specific environment if any.
-     * @param bool                 $handleErrors
+     * @param array                $directories  Spiral directories should include root, libraries and application
+     *                                           directories.
+     * @param EnvironmentInterface $environment  Application specific environment if any.
+     * @param bool                 $handleErrors Enable global error handling.
      * @return self
      */
     public static function init(
