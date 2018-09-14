@@ -11,7 +11,9 @@
   ],
   "require": {
     "php": "^7.1",
-    "spiral/core": "^1.0"
+    "spiral/core": "^1.0",
+    "spiral/files": "^1.0",
+    "spiral/config": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
