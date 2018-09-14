@@ -11,19 +11,11 @@ namespace Spiral\Framework;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Framework\Exceptions\DirectoryException;
 
+/**
+ * Manage application directories set.
+ */
 class Directories implements DirectoriesInterface, SingletonInterface
 {
-    // todo: move to directory map
-    public const DEFAULT_MAP = [
-        'root'    => null,
-        'public'  => null,
-        'vendor'  => null,
-        'app'     => null,
-        'runtime' => null,
-        'config'  => null,
-        'cache'   => null
-    ];
-
     /** @var array */
     private $directories = [];
 
@@ -32,8 +24,9 @@ class Directories implements DirectoriesInterface, SingletonInterface
      */
     public function __construct(array $directories)
     {
-        // todo: additional mapping
-        $this->directories = $directories;
+        foreach ($directories as $name => $directory) {
+            $this->set($name, $directory);
+        }
     }
 
     /**
@@ -49,7 +42,8 @@ class Directories implements DirectoriesInterface, SingletonInterface
      */
     public function set(string $name, string $path): DirectoriesInterface
     {
-        $this->directories[$name] = rtrim($path, '/\\') . '/';
+        $path = str_replace(['\\', '//'], '/', $path);
+        $this->directories[$name] = rtrim($path, '/') . '/';
 
         return $this;
     }
