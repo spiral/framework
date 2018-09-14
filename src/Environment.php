@@ -65,6 +65,10 @@ final class Environment implements EnvironmentInterface
      */
     protected function normalize($value)
     {
+        if (!is_string($value)) {
+            return $value;
+        }
+
         switch (trim(strtolower($value), '()')) {
             case 'true':
                 return true;
