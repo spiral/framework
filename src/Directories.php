@@ -8,13 +8,12 @@
 
 namespace Spiral\Framework;
 
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Framework\Exceptions\DirectoryException;
 
 /**
  * Manage application directories set.
  */
-class Directories implements DirectoriesInterface, SingletonInterface
+final class Directories implements DirectoriesInterface
 {
     /** @var array */
     private $directories = [];

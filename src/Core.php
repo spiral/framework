@@ -10,7 +10,6 @@ namespace Spiral\Framework;
 
 use Spiral\Core\BootloadManager;
 use Spiral\Core\Container;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\ContainerScope;
 use Spiral\Framework\Bootloaders\CoreBootloader;
 use Spiral\Framework\Exceptions\FrameworkException;
@@ -19,7 +18,7 @@ use Spiral\Framework\Exceptions\FrameworkException;
  * Core responsible for application initialization, bootloading of all required services, environment and directory
  * management, exception handling.
  */
-abstract class Core implements SingletonInterface
+abstract class Core
 {
     /**
      * Defines list of bootloaders to be used for core initialisation and all system components.
@@ -156,9 +155,7 @@ abstract class Core implements SingletonInterface
 
         $core = new static(new Container(), $directories);
 
-        if (!empty($environment)) {
-            $core->container->bind(EnvironmentInterface::class, $environment);
-        }
+        $core->container->bindSingleton(EnvironmentInterface::class, $environment ?? new Environment());
 
         try {
             ContainerScope::runScope($core->container, function () use ($core) {

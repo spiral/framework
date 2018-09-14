@@ -17,7 +17,7 @@ use Spiral\Framework\Exceptions\FatalException;
  * ExceptionHandler is responsible for global error handling (outside of dispatchers). Handler usually used in case
  * of bootload errors.
  */
-class ExceptionHandler
+final class ExceptionHandler
 {
     /**
      * Enable global exception handling.
