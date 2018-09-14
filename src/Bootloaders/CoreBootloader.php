@@ -17,15 +17,12 @@ use Spiral\Core\MemoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Framework\DirectoriesInterface;
-use Spiral\Framework\Environment;
-use Spiral\Framework\EnvironmentInterface;
 use Spiral\Framework\Memory;
 
 final class CoreBootloader extends Bootloader
 {
     const SINGLETONS = [
         FilesInterface::class        => Files::class,
-        EnvironmentInterface::class  => Environment::class,
         MemoryInterface::class       => [self::class, 'memory'],
         ConfiguratorInterface::class => [self::class, 'configFactory'],
     ];
