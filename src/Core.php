@@ -129,13 +129,10 @@ abstract class Core
 
     /**
      * Bootload all registered classes using BootloadManager.
-     *
-     * @return self
      */
-    private function bootload(): self
+    private function bootload()
     {
         $this->bootloader->bootload(static::LOAD);
-        return $this;
     }
 
     /**
@@ -164,7 +161,8 @@ abstract class Core
 
         try {
             ContainerScope::runScope($core->container, function () use ($core) {
-                $core->bootload()->bootstrap();
+                $core->bootload();
+                $core->bootstrap();
             });
         } catch (\Throwable $e) {
             ExceptionHandler::handleException($e);
