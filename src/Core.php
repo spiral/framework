@@ -30,7 +30,7 @@ abstract class Core implements SingletonInterface
      * List of bootloaders to be called on application initialization (before `serve` method).
      * This constant must be redefined in child application.
      */
-    public const LOAD = [];
+    protected const LOAD = [];
 
     /** @var Container */
     protected $container;
