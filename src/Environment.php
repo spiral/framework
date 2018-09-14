@@ -10,6 +10,16 @@ namespace Spiral\Framework;
 
 final class Environment implements EnvironmentInterface
 {
+    const VALUE_MAP = [
+        'true'    => true,
+        '(true)'  => true,
+        'false'   => false,
+        '(false)' => false,
+        'null'    => null,
+        '(null)'  => null,
+        'empty'   => ''
+    ];
+
     /** @var string|null */
     private $id = null;
 
@@ -69,21 +79,11 @@ final class Environment implements EnvironmentInterface
             return $value;
         }
 
-        switch (trim(strtolower($value), '()')) {
-            case 'true':
-                return true;
-
-            case 'false':
-                return false;
-
-            case 'null':
-                return null;
-
-            case 'empty':
-                return '';
-
-            default:
-                return $value;
+        $alias = strtolower($value);
+        if (isset(self::VALUE_MAP[$alias])) {
+            return self::VALUE_MAP[$alias];
         }
+
+        return $value;
     }
 }
