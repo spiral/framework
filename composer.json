@@ -1,50 +1,30 @@
 {
   "name": "spiral/framework",
-  "type": "framework",
-  "description": "Spiral, PHP Framework",
+  "type": "library",
+  "description": "Spiral, High-Performance PHP Framework",
   "license": "MIT",
   "authors": [
     {
-      "name": "Anton Titov / Wolfy-J",
+      "name": "Wolfy-J",
       "email": "wolfy.jd@gmail.com"
     }
   ],
   "require": {
-    "php": ">=7.0",
-    "spiral/common": "^1.0",
-    "spiral/reactor": "^1.0",
-    "spiral/security": "^1.0",
-    "spiral/database": "^1.0",
-    "spiral/migrations": "^1.0",
-    "spiral/orm": "^1.0",
-    "spiral/stempler": "^1.0",
-    "zendframework/zend-diactoros": "^1.1",
-    "twig/twig": "^2.1",
-    "symfony/console": "^3.2",
-    "symfony/process": "^3.2",
-    "symfony/translation": "^3.2",
-    "cocur/slugify": "^2.3",
-    "defuse/php-encryption": "^2.0",
-    "monolog/monolog": "^1.22",
-    "vlucas/phpdotenv": "^2.1"
+    "php": "^7.1",
+    "spiral/core": "^1.0"
   },
   "require-dev": {
-    "spiral/odm": "^1.0",
-    "phpunit/phpunit": "~5.0",
-    "mockery/mockery": "^0.9.4"
-  },
-  "suggest": {
-    "spiral/odm": "Compositable ODM",
-    "spiral/storage": "Storage abstraction layer"
+    "phpunit/phpunit": "~7.0",
+    "mockery/mockery": "^1.1"
   },
   "autoload": {
-    "files": [
-      "source/functions.php"
-    ],
     "psr-4": {
-      "Spiral\\": "source/Spiral/",
-      "Spiral\\Tests\\": "tests/",
-      "TestApplication\\": "tests/-app-/classes/"
+      "Spiral\\Framework\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Spiral\\Framework\\Tests\\": "tests/Framework/"
     }
   }
 }

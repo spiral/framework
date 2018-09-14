@@ -1,2 +1,0 @@
-<yield:resources/>
-<yield:body/>
