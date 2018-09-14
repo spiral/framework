@@ -76,12 +76,15 @@ abstract class Core
      * an exception.
      *
      * @throws FrameworkException
+     * @throws \Throwable
      */
     public function serve()
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
-                $dispatcher->serve();
+                ContainerScope::runScope($this->container, function () use ($dispatcher) {
+                    $dispatcher->serve();
+                });
                 return;
             }
         }
