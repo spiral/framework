@@ -72,7 +72,7 @@ class ConsoleDispatcher implements DispatcherInterface
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $e) {
+        } catch (\Throwable|ContainerExceptionInterface $sne) {
             // no need to notify when unable to register an exception
         }
 
