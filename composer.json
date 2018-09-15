@@ -10,7 +10,15 @@
     }
   ],
   "require": {
-    "php": "^7.1"
+    "php": "^7.1",
+    "spiral/boot": "^1.0",
+    "spiral/debug": "^1.1",
+    "spiral/models": "^2.0",
+    "spiral/tokenizer": "^2.0",
+    "spiral/console": "^1.0",
+    "spiral/http": "^1.0",
+    "spiral/router": "^1.0",
+    "spiral/session": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",

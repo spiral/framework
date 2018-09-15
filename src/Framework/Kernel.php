@@ -8,7 +8,9 @@
 
 namespace Spiral\Framework;
 
-class Kernel
+use Spiral\Boot\AbstractKernel;
+
+abstract class Kernel extends AbstractKernel
 {
 
 }
