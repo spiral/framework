@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Framework\Exceptions;
+namespace Spiral\Framework;
 
-class FrameworkException extends \RuntimeException
+class Kernel
 {
 
 }
