@@ -13,6 +13,7 @@
     "php": "^7.1",
     "spiral/boot": "^1.0",
     "spiral/debug": "^1.1",
+    "spiral/encrypter": "^1.0",
     "spiral/tokenizer": "^2.0",
     "spiral/snapshots": "^1.0",
     "spiral/console": "^1.0",
