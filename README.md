@@ -4,7 +4,7 @@
 [![Codecov](https://codecov.io/gh/spiral/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/framework/)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master)
 
-## Underlying Components
+## Components
 
 | Component | Status        
 | ---       | ---
