@@ -60,7 +60,7 @@ class ConsoleDispatcher implements DispatcherInterface
         try {
             $core->start(new ArgvInput(), $output);
         } catch (\Throwable $e) {
-            $this->renderException($e, $output);
+            $this->handleException($e, $output);
         }
     }
 
@@ -68,24 +68,24 @@ class ConsoleDispatcher implements DispatcherInterface
      * @param \Throwable      $e
      * @param OutputInterface $output
      */
-    protected function renderException(\Throwable $e, OutputInterface $output)
+    protected function handleException(\Throwable $e, OutputInterface $output)
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $sne) {
+        } catch (\Throwable|ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
 
         // Explaining exception to the user
         $handler = new ConsoleHandler(STDERR);
-        $output->write($handler->renderException($e, $this->getVerbosity($output)));
+        $output->write($handler->renderException($e, $this->mapVerbosity($output)));
     }
 
     /**
      * @param OutputInterface $output
      * @return int
      */
-    private function getVerbosity(OutputInterface $output): int
+    private function mapVerbosity(OutputInterface $output): int
     {
         if ($output->isDebug() || $output->isVeryVerbose()) {
             return ConsoleHandler::VERBOSITY_DEBUG;
