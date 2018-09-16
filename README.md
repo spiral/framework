@@ -9,7 +9,6 @@
 | Component | Status        
 | ---       | ---
 spiral/filters | [![Latest Stable Version](https://poser.pugx.org/spiral/filters/version)](https://packagist.org/packages/spiral/filters) [![Build Status](https://travis-ci.org/spiral/filters.svg?branch=master)](https://travis-ci.org/spiral/filters) [![Codecov](https://codecov.io/gh/spiral/filters/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/filters/)
---- | ---
 spiral/validation | [![Latest Stable Version](https://poser.pugx.org/spiral/validation/version)](https://packagist.org/packages/spiral/validation) [![Build Status](https://travis-ci.org/spiral/validation.svg?branch=master)](https://travis-ci.org/spiral/validation) [![Codecov](https://codecov.io/gh/spiral/validation/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/validation/)
 --- | ---
 spiral/boot | [![Latest Stable Version](https://poser.pugx.org/spiral/boot/version)](https://packagist.org/packages/spiral/boot) [![Build Status](https://travis-ci.org/spiral/boot.svg?branch=master)](https://travis-ci.org/spiral/boot) [![Codecov](https://codecov.io/gh/spiral/boot/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/boot/)
