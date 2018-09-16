@@ -6,7 +6,7 @@
 
 ## Components
 
-| Component | Status        
+| Component | Current Status        
 | ---       | ---
 spiral/core | [![Latest Stable Version](https://poser.pugx.org/spiral/core/version)](https://packagist.org/packages/spiral/core) [![Build Status](https://travis-ci.org/spiral/core.svg?branch=master)](https://travis-ci.org/spiral/core) [![Codecov](https://codecov.io/gh/spiral/core/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/core/)
 spiral/boot | [![Latest Stable Version](https://poser.pugx.org/spiral/boot/version)](https://packagist.org/packages/spiral/boot) [![Build Status](https://travis-ci.org/spiral/boot.svg?branch=master)](https://travis-ci.org/spiral/boot) [![Codecov](https://codecov.io/gh/spiral/boot/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/boot/)
