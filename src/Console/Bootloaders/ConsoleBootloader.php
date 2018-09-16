@@ -42,14 +42,14 @@ class ConsoleBootloader extends Bootloader
         $modifier->modify('tokenizer', new AppendPatch(
             'directories',
             null,
-            directory('spiral') . '/console/src/'
+            directory('vendor') . '/spiral/console/src/'
         ));
 
         // register default framework commands
         $modifier->modify('tokenizer', new AppendPatch(
             'directories',
             null,
-            directory('spiral') . '/framework/src/'
+            directory('vendor') . '/spiral/framework/src/'
         ));
     }
 }
