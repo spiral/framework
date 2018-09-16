@@ -16,6 +16,7 @@
     "spiral/encrypter": "^1.0",
     "spiral/tokenizer": "^2.0",
     "spiral/snapshots": "^1.0",
+    "spiral/translator": "^1.0",
     "spiral/console": "^1.0",
     "spiral/http": "^1.0",
     "spiral/router": "^1.0",
