@@ -20,7 +20,7 @@ use Spiral\Router\Exceptions\RouteNotFoundException;
 /**
  * Wraps Client and Routing exceptions into proper response.
  */
-class ExceptionsMiddleware implements MiddlewareInterface
+class ExceptionWrapper implements MiddlewareInterface
 {
     use LoggerTrait;
 
