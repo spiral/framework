@@ -24,7 +24,7 @@ use Spiral\Snapshots\SnapshotterInterface;
  */
 class SnapshotBootloader extends Bootloader
 {
-    const DEFAULT_MAX_SNAPSHOTS = 5;
+    const DEFAULT_MAX_SNAPSHOTS = 25;
 
     const SINGLETONS = [
         SnapshotterInterface::class => [self::class, 'errorSnapshotter']
