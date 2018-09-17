@@ -16,6 +16,7 @@ use Spiral\Http\Errors\RendererInterface;
 use Spiral\Http\Exceptions\ClientException;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Router\Exceptions\RouteNotFoundException;
+use Spiral\Snapshots\SnapshotterInterface;
 
 /**
  * Wraps Client and Routing exceptions into proper response.
@@ -30,16 +31,22 @@ class ExceptionWrapper implements MiddlewareInterface
     /** @var bool */
     private $suppressErrors;
 
+    /** @var SnapshotterInterface|null */
+    private $snapshotter;
+
     /**
-     * @param RendererInterface $renderer
-     * @param bool              $suppressErrors
+     * @param RendererInterface         $renderer
+     * @param bool                      $suppressErrors
+     * @param SnapshotterInterface|null $snapshotter
      */
     public function __construct(
         RendererInterface $renderer,
-        bool $suppressErrors = true
+        bool $suppressErrors = true,
+        SnapshotterInterface $snapshotter = null
     ) {
         $this->renderer = $renderer;
         $this->suppressErrors = $suppressErrors;
+        $this->snapshotter = $snapshotter;
     }
 
     /**
@@ -57,6 +64,10 @@ class ExceptionWrapper implements MiddlewareInterface
         } catch (\Throwable $e) {
             if (!$this->suppressErrors) {
                 throw $e;
+            }
+
+            if (!empty($this->snapshotter)) {
+                $this->snapshotter->register($e);
             }
 
             $this->logError($request, 500, $e->getMessage());
