@@ -12,6 +12,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Console\Logger\DebugListener;
 use Spiral\Exceptions\ConsoleHandler;
 use Spiral\Snapshots\SnapshotterInterface;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -26,16 +27,24 @@ class ConsoleDispatcher implements DispatcherInterface
     /** @var EnvironmentInterface */
     private $environment;
 
+    /** @var DebugListener */
+    private $listener;
+
     /** @var ContainerInterface */
     private $container;
 
     /**
      * @param EnvironmentInterface $environment
+     * @param DebugListener        $listener
      * @param ContainerInterface   $container
      */
-    public function __construct(EnvironmentInterface $environment, ContainerInterface $container)
-    {
+    public function __construct(
+        EnvironmentInterface $environment,
+        DebugListener $listener,
+        ContainerInterface $container
+    ) {
         $this->environment = $environment;
+        $this->listener = $listener;
         $this->container = $container;
     }
 
@@ -54,10 +63,7 @@ class ConsoleDispatcher implements DispatcherInterface
     public function serve()
     {
         $output = new ConsoleOutput();
-
-        /** @var ConsoleDebug $debug */
-        $debug = $this->container->get(ConsoleDebug::class)->withOutput($output);
-        $debug->enable();
+        $listener = $this->listener->withOutput($output)->enable();
 
         /** @var ConsoleCore $core */
         $core = $this->container->get(ConsoleCore::class);
@@ -66,6 +72,8 @@ class ConsoleDispatcher implements DispatcherInterface
             $core->start(new ArgvInput(), $output);
         } catch (\Throwable $e) {
             $this->handleException($e, $output);
+        } finally {
+            $listener->disable();
         }
     }
 
@@ -105,10 +113,10 @@ class ConsoleDispatcher implements DispatcherInterface
 
     /**
      * @param OutputInterface $output
-     * @return ConsoleDebug
+     * @return DebugListener
      */
-    private function debugHandler(OutputInterface $output): ConsoleDebug
+    private function debugHandler(OutputInterface $output): DebugListener
     {
-        return $this->container->get(ConsoleDebug::class)->withOutput($output);
+        return $this->container->get(DebugListener::class)->withOutput($output);
     }
 }
