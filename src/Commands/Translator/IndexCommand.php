@@ -11,9 +11,9 @@ namespace Spiral\Commands\Translator;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
+use Spiral\Translator\CataloguesInterface;
 use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Indexer;
-use Spiral\Translator\Translator;
 
 class IndexCommand extends Command
 {
@@ -21,26 +21,20 @@ class IndexCommand extends Command
     const DESCRIPTION = 'Index all declared translation strings and usages';
 
     /**
+     * @param TranslatorConfig     $config
+     * @param CataloguesInterface  $catalogues
      * @param InvocationsInterface $invocations
      * @param ClassesInterface     $classes
      */
     public function perform(
-        InvocationsInterface $invocations,
-        ClassesInterface $classes,
         TranslatorConfig $config,
-        Translator $translator
+        CataloguesInterface $catalogues,
+        InvocationsInterface $invocations,
+        ClassesInterface $classes
     ) {
-        $c = $translator->getCatalogues()->load('en');
-        $indexer = new Indexer($config, $c);
+        $catalogue = $catalogues->load('en');
 
-//        if ($invocations instanceof LoggerAwareInterface) {
-//            //Way too much verbosity
-//            $invocations->setLogger(new NullLogger());
-//        }
-//        if ($classes instanceof LoggerAwareInterface) {
-//            //Way too much verbosity
-//            $classes->setLogger(new NullLogger());
-//        }
+        $indexer = new Indexer($config, $catalogue);
 
         $this->writeln("<info>Scanning translate function usages...</info>");
         $indexer->indexInvocations($invocations);
@@ -48,7 +42,6 @@ class IndexCommand extends Command
         $this->writeln("<info>Scanning Translatable classes...</info>");
         $indexer->indexClasses($classes);
 
-        //Make sure that all located messages are properly registered
-        //$translator->syncLocales();
+        $catalogues->save('en');
     }
 }
