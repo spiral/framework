@@ -93,18 +93,7 @@ class ExceptionWrapper implements MiddlewareInterface
             $request->getUri()->getPath(),
             $code,
             $message ?: '-not specified-',
-            $this->getIP($request)
+            $request->getServerParams()['REMOTE_ADDR'] ?? '127.0.0.1'
         ));
-    }
-
-    /**
-     * Try to locate client ip. For debug purposes only!
-     *
-     * @param Request $request
-     * @return string
-     */
-    private function getIP(Request $request): string
-    {
-        return $request->getServerParams()['REMOTE_ADDR'] ?? '127.0.0.1';
     }
 }
