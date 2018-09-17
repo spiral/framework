@@ -17,10 +17,13 @@ use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\InputInterface;
 use Spiral\Http\Configs\HttpConfig;
+use Spiral\Http\Errors\RendererInterface;
 use Spiral\Http\HttpCore;
 use Spiral\Http\HttpDispatcher;
 use Spiral\Http\Pipeline;
+use Spiral\Http\Errors\NullRenderer;
 use Spiral\Http\RequestInput;
+use Spiral\Http\ResponseFactory;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
@@ -31,11 +34,19 @@ class HttpBootloader extends Bootloader implements SingletonInterface
     const BOOT = true;
 
     const SINGLETONS = [
-        EmitterInterface::class         => SapiEmitter::class,
-        ResponseFactoryInterface::class => HttpCore::class,
+        // HMVC Core and routing
         CoreInterface::class            => Core::class,
-        HttpCore::class                 => [self::class, 'core'],
         RouterInterface::class          => [self::class, 'router'],
+
+        // Error Pages
+        RendererInterface::class        => NullRenderer::class,
+
+        // PSR-7 handlers and factories
+        EmitterInterface::class         => SapiEmitter::class,
+        ResponseFactoryInterface::class => ResponseFactory::class,
+        HttpCore::class                 => [self::class, 'core'],
+
+        // Filter input mapper
         InputInterface::class           => RequestInput::class
     ];
 
@@ -49,19 +60,21 @@ class HttpBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param HttpConfig         $config
-     * @param ContainerInterface $container
-     * @param RouterInterface    $router
-     * @param Pipeline           $pipeline
+     * @param RouterInterface          $router
+     * @param HttpConfig               $config
+     * @param Pipeline                 $pipeline
+     * @param ResponseFactoryInterface $responseFactory
+     * @param ContainerInterface       $container
      * @return HttpCore
      */
     protected function core(
-        HttpConfig $config,
-        ContainerInterface $container,
         RouterInterface $router,
-        Pipeline $pipeline
+        HttpConfig $config,
+        Pipeline $pipeline,
+        ResponseFactoryInterface $responseFactory,
+        ContainerInterface $container
     ): HttpCore {
-        $core = new HttpCore($config, $pipeline, $container);
+        $core = new HttpCore($config, $pipeline, $responseFactory, $container);
         $core->setHandler($router);
 
         return $core;

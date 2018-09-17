@@ -12,7 +12,6 @@ use Spiral\Config\ModifierInterface;
 use Spiral\Config\Patches\AppendPatch;
 use Spiral\Core\Bootloaders\Bootloader;
 use Spiral\Core\ConfiguratorInterface;
-use Spiral\Session\Configs\SessionConfig;
 use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SectionInterface;
 use Spiral\Session\Session;

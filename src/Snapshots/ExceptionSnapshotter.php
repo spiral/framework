@@ -15,7 +15,7 @@ use Spiral\Logger\Traits\LoggerTrait;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class ExceptionSnapshots implements SnapshotterInterface
+class ExceptionSnapshotter implements SnapshotterInterface
 {
     use LoggerTrait;
 

@@ -21,7 +21,8 @@ class RoadRunnerBootloader extends Bootloader implements SingletonInterface
 {
     const BOOT        = true;
     const RPC_DEFAULT = 'tcp://127.0.0.1:6001';
-    const SINGLETONS  = [
+
+    const SINGLETONS = [
         RoadRunnerDispatcher::class => RoadRunnerDispatcher::class,
         RPC::class                  => [self::class, 'rpc']
     ];
