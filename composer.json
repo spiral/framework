@@ -12,6 +12,7 @@
   "require": {
     "php": "^7.1",
     "spiral/boot": "^1.0",
+    "spiral/logger": "^1.0",
     "spiral/debug": "^1.1",
     "spiral/encrypter": "^1.0",
     "spiral/tokenizer": "^2.0",
@@ -24,8 +25,7 @@
     "spiral/roadrunner": "^1.2",
     "spiral/models": "^2.0",
     "spiral/validation": "^1.0",
-    "spiral/filters": "^1.0",
-    "spiral/logger": "^1.0"
+    "spiral/filters": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
