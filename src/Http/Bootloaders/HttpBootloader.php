@@ -14,10 +14,12 @@ use Spiral\Boot\KernelInterface;
 use Spiral\Core\Bootloaders\Bootloader;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
+use Spiral\Filters\InputInterface;
 use Spiral\Http\Configs\HttpConfig;
 use Spiral\Http\HttpCore;
 use Spiral\Http\HttpDispatcher;
 use Spiral\Http\Pipeline;
+use Spiral\Http\RequestInput;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
@@ -32,7 +34,8 @@ class HttpBootloader extends Bootloader
         ResponseFactoryInterface::class => HttpCore::class,
         CoreInterface::class            => Core::class,
         HttpCore::class                 => [self::class, 'core'],
-        RouterInterface::class          => [self::class, 'router']
+        RouterInterface::class          => [self::class, 'router'],
+        InputInterface::class           => RequestInput::class
     ];
 
     /**
