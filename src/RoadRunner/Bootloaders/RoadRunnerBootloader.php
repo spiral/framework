@@ -11,12 +11,13 @@ namespace Spiral\RoadRunner\Bootloaders;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Goridge\RPC;
 use Spiral\Goridge\SocketRelay;
 use Spiral\RoadRunner\Exceptions\RoadRunnerException;
 use Spiral\RoadRunner\RoadRunnerDispatcher;
 
-class RoadRunnerBootloader extends Bootloader
+class RoadRunnerBootloader extends Bootloader implements SingletonInterface
 {
     const BOOT        = true;
     const RPC_DEFAULT = 'tcp://127.0.0.1:6001';

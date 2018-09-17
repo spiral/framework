@@ -12,6 +12,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\InputInterface;
@@ -25,7 +26,7 @@ use Spiral\Router\RouterInterface;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
-class HttpBootloader extends Bootloader
+class HttpBootloader extends Bootloader implements SingletonInterface
 {
     const BOOT = true;
 

@@ -53,9 +53,14 @@ class ConsoleDispatcher implements DispatcherInterface
      */
     public function serve()
     {
+        $output = new ConsoleOutput();
+
+        /** @var ConsoleDebug $debug */
+        $debug = $this->container->get(ConsoleDebug::class)->withOutput($output);
+        $debug->enable();
+
         /** @var ConsoleCore $core */
         $core = $this->container->get(ConsoleCore::class);
-        $output = new ConsoleOutput();
 
         try {
             $core->start(new ArgvInput(), $output);
@@ -96,5 +101,14 @@ class ConsoleDispatcher implements DispatcherInterface
         }
 
         return ConsoleHandler::VERBOSITY_BASIC;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return ConsoleDebug
+     */
+    private function debugHandler(OutputInterface $output): ConsoleDebug
+    {
+        return $this->container->get(ConsoleDebug::class)->withOutput($output);
     }
 }
