@@ -6,15 +6,15 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Commands;
+namespace Spiral\Commands\Clean;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;
 use Spiral\Files\FilesInterface;
 
-class CleanCommand extends Command
+final class CleanCommand extends Command
 {
-    const NAME        = 'clean:runtime';
+    const NAME        = 'clean:cache';
     const DESCRIPTION = 'Clean application runtime cache';
 
     /**

@@ -10,7 +10,7 @@ namespace Spiral\Commands;
 
 use Spiral\Console\Command;
 
-class ExtensionsCommand extends Command
+final class ExtensionsCommand extends Command
 {
     const NAME        = 'php:extensions';
     const DESCRIPTION = 'Get list of available php extension';
