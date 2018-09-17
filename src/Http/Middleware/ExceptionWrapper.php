@@ -57,10 +57,11 @@ class ExceptionWrapper implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (ClientException|RouteNotFoundException $e) {
-            $code = $e instanceof ClientException ? $e->getCode() : 404;
-            $this->logError($request, $code, $e->getMessage());
-
-            return $this->renderer->renderException($request, $code, $e->getMessage());
+            if ($e instanceof ClientException) {
+                $code = $e->getCode();
+            } else {
+                $code = 404;
+            }
         } catch (\Throwable $e) {
             if (!$this->suppressErrors) {
                 throw $e;
@@ -70,10 +71,12 @@ class ExceptionWrapper implements MiddlewareInterface
                 $this->snapshotter->register($e);
             }
 
-            $this->logError($request, 500, $e->getMessage());
-
-            return $this->renderer->renderException($request, 500, $e->getMessage());
+            $code = 500;
         }
+
+        $this->logError($request, $code, $e->getMessage());
+
+        return $this->renderer->renderException($request, $code, $e->getMessage());
     }
 
     /**
