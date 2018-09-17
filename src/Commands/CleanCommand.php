@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Commands\Clean;
+namespace Spiral\Commands;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;
