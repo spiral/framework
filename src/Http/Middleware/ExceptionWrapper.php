@@ -27,12 +27,19 @@ class ExceptionWrapper implements MiddlewareInterface
     /** @var RendererInterface */
     private $renderer;
 
+    /** @var bool */
+    private $suppressErrors;
+
     /**
      * @param RendererInterface $renderer
+     * @param bool              $suppressErrors
      */
-    public function __construct(RendererInterface $renderer)
-    {
+    public function __construct(
+        RendererInterface $renderer,
+        bool $suppressErrors = true
+    ) {
         $this->renderer = $renderer;
+        $this->suppressErrors = $suppressErrors;
     }
 
     /**
@@ -47,6 +54,14 @@ class ExceptionWrapper implements MiddlewareInterface
             $this->logError($request, $code, $e->getMessage());
 
             return $this->renderer->renderException($request, $code, $e->getMessage());
+        } catch (\Throwable $e) {
+            if (!$this->suppressErrors) {
+                throw $e;
+            }
+
+            $this->logError($request, 500, $e->getMessage());
+
+            return $this->renderer->renderException($request, 500, $e->getMessage());
         }
     }
 
