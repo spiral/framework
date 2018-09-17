@@ -11,33 +11,28 @@ namespace Spiral\Commands\Translator;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
+use Spiral\Translator\Configs\TranslatorConfig;
 use Spiral\Translator\Indexer;
 use Spiral\Translator\Translator;
 
 class IndexCommand extends Command
 {
-    /**
-     * {@inheritdoc}
-     */
-    const NAME = 'i18n:index';
-    /**
-     * {@inheritdoc}
-     */
+    const NAME        = 'i18n:index';
     const DESCRIPTION = 'Index all declared translation strings and usages';
 
     /**
-     * @param Indexer              $indexer
-     * @param Translator           $translator
      * @param InvocationsInterface $invocations
      * @param ClassesInterface     $classes
      */
-    public
-    function perform(
-        Indexer $indexer,
-        Translator $translator,
+    public function perform(
         InvocationsInterface $invocations,
-        ClassesInterface $classes
+        ClassesInterface $classes,
+        TranslatorConfig $config,
+        Translator $translator
     ) {
+        $c = $translator->getCatalogues()->load('en');
+        $indexer = new Indexer($config, $c);
+
 //        if ($invocations instanceof LoggerAwareInterface) {
 //            //Way too much verbosity
 //            $invocations->setLogger(new NullLogger());

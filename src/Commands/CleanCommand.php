@@ -38,7 +38,7 @@ final class CleanCommand extends Command
             try {
                 $files->delete($filename);
             } catch (\Throwable $e) {
-                $this->sprintf("> <fg=red>errored</fg=red> `%s`: <fg=red>%s</fg=red>\n",
+                $this->sprintf("<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>\n",
                     $files->relativePath($filename, $cacheDirectory),
                     $e->getMessage()
                 );
@@ -48,7 +48,7 @@ final class CleanCommand extends Command
 
             if ($this->isVerbose()) {
                 $this->sprintf(
-                    "> <fg=green>deleted</fg=green> `%s`\n",
+                    "<fg=green>[deleted]</fg=green> `%s`\n",
                     $files->relativePath($filename, $cacheDirectory)
                 );
             }
