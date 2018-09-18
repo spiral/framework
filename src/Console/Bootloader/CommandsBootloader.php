@@ -16,6 +16,7 @@ use Spiral\Command\Translator\IndexCommand;
 use Spiral\Command\Translator\ResetCommand;
 use Spiral\Config\ModifierInterface;
 use Spiral\Console\Command\ConfigureCommand;
+use Spiral\Console\Command\ReloadCommand;
 use Spiral\Console\Command\UpdateCommand;
 use Spiral\Console\ConsoleConfigurator;
 use Spiral\Console\Sequence\RuntimeDirectory;
@@ -39,6 +40,7 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
     {
         $console = new ConsoleConfigurator($modifier);
 
+        $console->addCommand(ReloadCommand::class);
         $console->addCommand(ConfigureCommand::class);
         $console->addCommand(UpdateCommand::class);
 
