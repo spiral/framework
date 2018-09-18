@@ -85,6 +85,9 @@ class FileSnapshotter implements SnapshotterInterface
         );
     }
 
+    /**
+     * Remove older snapshots.
+     */
     protected function rotateSnapshots()
     {
         $finder = new Finder();
