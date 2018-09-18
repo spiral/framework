@@ -45,16 +45,13 @@ class IndexCommand extends Command
 
         $indexer = new Indexer($config, $catalogue);
 
-        $this->writeln("Scanning <comment>L/P</comment> functions usage...");
+        $this->writeln("Scanning <comment>l/p</comment> functions usage...");
         $indexer->indexInvocations($invocations);
 
-        $this->writeln("Scanning <comment>TranslatorTrait</comment> users...");
+        $this->writeln("Scanning <comment>TranslatorTrait</comment> usage...");
         $indexer->indexClasses($classes);
 
-        $this->sprintf(
-            "<info>Saving collected translations into `<comment>%s</comment>` locale.</info>\n",
-            $catalogue->getLocale()
-        );
+        $this->sprintf("Saving collected translations into `<comment>%s</comment>` locale.\n", $catalogue->getLocale());
 
         $manager->save($catalogue->getLocale());
     }

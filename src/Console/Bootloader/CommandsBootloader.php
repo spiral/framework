@@ -50,7 +50,7 @@ class CommandsBootloader extends Bootloader
             'configure',
             'console:reload',
             [],
-            '<fg=magenta>[console]</fg=magenta> re-index available console commands...'
+            '<fg=magenta>[console]</fg=magenta> <fg=cyan>re-index available console commands...</fg=cyan>'
         );
 
         if ($container->has(TranslatorInterface::class)) {
@@ -63,14 +63,14 @@ class CommandsBootloader extends Bootloader
                 'configure',
                 'i18n:reset',
                 [],
-                '<fg=magenta>[i18n]</fg=magenta> reset translator locales cache...');
+                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>reset translator locales cache...</fg=cyan>');
 
             $this->addCommandSequence(
                 $modifier,
                 'configure',
                 'i18n:index',
                 [],
-                '<fg=magenta>[i18n]</fg=magenta> scan translator function and [[values]] usage...'
+                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
             );
         }
     }
