@@ -13,6 +13,7 @@ use Spiral\Command\CleanCommand;
 use Spiral\Command\ExtensionsCommand;
 use Spiral\Command\Translator\ExportCommand;
 use Spiral\Command\Translator\IndexCommand;
+use Spiral\Command\Translator\ResetCommand;
 use Spiral\Config\ModifierInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
@@ -38,6 +39,7 @@ class CommandsBootloader extends Bootloader
         if ($container->has(TranslatorInterface::class)) {
             $this->addCommand($modifier, IndexCommand::class);
             $this->addCommand($modifier, ExportCommand::class);
+            $this->addCommand($modifier, ResetCommand::class);
         }
     }
 
