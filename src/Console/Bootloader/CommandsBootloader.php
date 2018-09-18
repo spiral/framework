@@ -39,11 +39,8 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
      */
     public function boot(ModifierInterface $modifier, ContainerInterface $container)
     {
-        // Console commands
         $this->addCommand($modifier, ConfigureCommand::class);
         $this->addCommand($modifier, UpdateCommand::class);
-
-        // Default commands
         $this->addCommand($modifier, CleanCommand::class);
         $this->addCommand($modifier, ExtensionsCommand::class);
 
@@ -52,7 +49,6 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
             $modifier,
             'configure',
             [RuntimeDirectory::class, 'ensure'],
-            [],
             '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>ensure `runtime` directory access</fg=cyan>'
         );
 
@@ -61,7 +57,6 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
             $modifier,
             'configure',
             'console:reload',
-            [],
             '<fg=magenta>[console]</fg=magenta> <fg=cyan>re-index available console commands...</fg=cyan>'
         );
 
@@ -74,14 +69,13 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
                 $modifier,
                 'configure',
                 'i18n:reset',
-                [],
-                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>reset translator locales cache...</fg=cyan>');
+                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>reset translator locales cache...</fg=cyan>'
+            );
 
             $this->addCommandSequence(
                 $modifier,
                 'configure',
                 'i18n:index',
-                [],
                 '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
             );
         }
@@ -93,7 +87,6 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
                 $modifier,
                 'update',
                 'filter:update',
-                [],
                 '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
             );
         }
@@ -112,17 +105,17 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
      * @param ModifierInterface $modifier
      * @param string            $target
      * @param string            $command
-     * @param array             $options
      * @param string            $header
      * @param string            $footer
+     * @param array             $options
      */
     private function addCommandSequence(
         ModifierInterface $modifier,
         string $target,
         string $command,
-        array $options = [],
         string $header = '',
-        string $footer = ''
+        string $footer = '',
+        array $options = []
     ) {
         $modifier->modify(
             "console",
@@ -134,17 +127,17 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
      * @param ModifierInterface $modifier
      * @param string            $target
      * @param                   $function
-     * @param array             $parameters
      * @param string            $header
      * @param string            $footer
+     * @param array             $parameters
      */
     private function addCallableSequence(
         ModifierInterface $modifier,
         string $target,
         $function,
-        array $parameters = [],
         string $header = '',
-        string $footer = ''
+        string $footer = '',
+        array $parameters = []
     ) {
         $modifier->modify(
             "console",
