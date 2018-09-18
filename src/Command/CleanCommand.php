@@ -10,11 +10,12 @@ namespace Spiral\Command;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Files\FilesInterface;
 
-final class CleanCommand extends Command
+final class CleanCommand extends Command implements SingletonInterface
 {
-    const NAME        = 'clean:cache';
+    const NAME = 'clean:cache';
     const DESCRIPTION = 'Clean application runtime cache';
 
     /**

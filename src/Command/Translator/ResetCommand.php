@@ -10,9 +10,10 @@ namespace Spiral\Command\Translator;
 
 
 use Spiral\Console\Command;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Catalogue\Manager;
 
-class ResetCommand extends Command
+class ResetCommand extends Command implements SingletonInterface
 {
     const NAME = 'i18n:reset';
     const DESCRIPTION = 'Reset translation cache';

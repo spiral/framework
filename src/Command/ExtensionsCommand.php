@@ -9,8 +9,9 @@
 namespace Spiral\Command;
 
 use Spiral\Console\Command;
+use Spiral\Core\Container\SingletonInterface;
 
-final class ExtensionsCommand extends Command
+final class ExtensionsCommand extends Command implements SingletonInterface
 {
     const NAME        = 'php:extensions';
     const DESCRIPTION = 'Get list of available php extension';

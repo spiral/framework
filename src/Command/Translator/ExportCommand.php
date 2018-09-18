@@ -9,13 +9,14 @@
 namespace Spiral\Command\Translator;
 
 use Spiral\Console\Command;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Catalogue\Manager;
 use Spiral\Translator\Config\TranslatorConfig;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class ExportCommand extends Command
+class ExportCommand extends Command implements SingletonInterface
 {
     const NAME = "i18n:export";
     const DESCRIPTION = 'Dump given locale using specified dumper and path';
