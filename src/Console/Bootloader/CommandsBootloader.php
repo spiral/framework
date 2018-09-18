@@ -23,6 +23,7 @@ use Spiral\Console\Sequence\CommandSequence;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Filters\MapperInterface;
 use Spiral\Translator\TranslatorInterface;
 
 /**
@@ -82,6 +83,18 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
                 'i18n:index',
                 [],
                 '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
+            );
+        }
+
+        if ($container->has(MapperInterface::class)) {
+            $this->addCommand($modifier, \Spiral\Command\Filters\UpdateCommand::class);
+
+            $this->addCommandSequence(
+                $modifier,
+                'update',
+                'filter:update',
+                [],
+                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
             );
         }
     }
