@@ -15,11 +15,9 @@ use Spiral\Command\Translator\ExportCommand;
 use Spiral\Command\Translator\IndexCommand;
 use Spiral\Command\Translator\ResetCommand;
 use Spiral\Config\ModifierInterface;
-use Spiral\Config\Patch\AppendPatch;
 use Spiral\Console\Command\ConfigureCommand;
 use Spiral\Console\Command\UpdateCommand;
-use Spiral\Console\Sequence\CallableSequence;
-use Spiral\Console\Sequence\CommandSequence;
+use Spiral\Console\ConsoleConfigurator;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
@@ -39,109 +37,63 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
      */
     public function boot(ModifierInterface $modifier, ContainerInterface $container)
     {
-        $this->addCommand($modifier, ConfigureCommand::class);
-        $this->addCommand($modifier, UpdateCommand::class);
-        $this->addCommand($modifier, CleanCommand::class);
-        $this->addCommand($modifier, ExtensionsCommand::class);
+        $console = new ConsoleConfigurator($modifier);
 
-        // Registering configure sequences
-        $this->addCallableSequence(
-            $modifier,
-            'configure',
+        $console->addCommand(ConfigureCommand::class);
+        $console->addCommand(UpdateCommand::class);
+
+        $console->addCommand(CleanCommand::class);
+        $console->addCommand(ExtensionsCommand::class);
+
+        $console->configureSequence(
             [RuntimeDirectory::class, 'ensure'],
             '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>ensure `runtime` directory access</fg=cyan>'
         );
 
-        // Registering configure sequences
-        $this->addCommandSequence(
-            $modifier,
-            'configure',
+        $console->configureSequence(
             'console:reload',
             '<fg=magenta>[console]</fg=magenta> <fg=cyan>re-index available console commands...</fg=cyan>'
         );
 
         if ($container->has(TranslatorInterface::class)) {
-            $this->addCommand($modifier, IndexCommand::class);
-            $this->addCommand($modifier, ExportCommand::class);
-            $this->addCommand($modifier, ResetCommand::class);
-
-            $this->addCommandSequence(
-                $modifier,
-                'configure',
-                'i18n:reset',
-                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>reset translator locales cache...</fg=cyan>'
-            );
-
-            $this->addCommandSequence(
-                $modifier,
-                'configure',
-                'i18n:index',
-                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
-            );
+            $this->configureTranslator($console);
         }
 
         if ($container->has(MapperInterface::class)) {
-            $this->addCommand($modifier, \Spiral\Command\Filters\UpdateCommand::class);
-
-            $this->addCommandSequence(
-                $modifier,
-                'update',
-                'filter:update',
-                '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
-            );
+            $this->configureFilters($console);
         }
     }
 
     /**
-     * @param ModifierInterface $modifier
-     * @param string            $command
+     * @param ConsoleConfigurator $console
      */
-    private function addCommand(ModifierInterface $modifier, string $command)
+    private function configureTranslator(ConsoleConfigurator $console)
     {
-        $modifier->modify('console', new AppendPatch('commands', null, $command));
-    }
+        $console->addCommand(IndexCommand::class);
+        $console->addCommand(ExportCommand::class);
+        $console->addCommand(ResetCommand::class);
 
-    /**
-     * @param ModifierInterface $modifier
-     * @param string            $target
-     * @param string            $command
-     * @param string            $header
-     * @param string            $footer
-     * @param array             $options
-     */
-    private function addCommandSequence(
-        ModifierInterface $modifier,
-        string $target,
-        string $command,
-        string $header = '',
-        string $footer = '',
-        array $options = []
-    ) {
-        $modifier->modify(
-            "console",
-            new AppendPatch($target, null, new CommandSequence($command, $options, $header, $footer))
+        $console->configureSequence(
+            'i18n:reset',
+            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>reset translator locales cache...</fg=cyan>'
+        );
+
+        $console->configureSequence(
+            'i18n:index',
+            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
         );
     }
 
     /**
-     * @param ModifierInterface $modifier
-     * @param string            $target
-     * @param                   $function
-     * @param string            $header
-     * @param string            $footer
-     * @param array             $parameters
+     * @param ConsoleConfigurator $console
      */
-    private function addCallableSequence(
-        ModifierInterface $modifier,
-        string $target,
-        $function,
-        string $header = '',
-        string $footer = '',
-        array $parameters = []
-    ) {
-        $modifier->modify(
-            "console",
-            new AppendPatch($target, null, new CallableSequence($function, $parameters, $header, $footer))
+    private function configureFilters(ConsoleConfigurator $console)
+    {
+        $console->addCommand(\Spiral\Command\Filters\UpdateCommand::class);
+
+        $console->updateSequence(
+            'filter:update',
+            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
         );
     }
 }
