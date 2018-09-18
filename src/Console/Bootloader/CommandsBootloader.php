@@ -95,7 +95,7 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
 
         $console->updateSequence(
             'filter:update',
-            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
+            '<fg=magenta>[filters]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
         );
     }
 }
