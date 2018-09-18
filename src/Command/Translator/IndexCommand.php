@@ -11,7 +11,7 @@ namespace Spiral\Command\Translator;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
-use Spiral\Translator\CataloguesInterface;
+use Spiral\Translator\Catalogue\Manager as CatalogueManager;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,17 +27,19 @@ class IndexCommand extends Command
 
     /**
      * @param TranslatorConfig     $config
-     * @param CataloguesInterface  $catalogues
+     * @param CatalogueManager     $manager
      * @param InvocationsInterface $invocations
      * @param ClassesInterface     $classes
      */
     public function perform(
         TranslatorConfig $config,
-        CataloguesInterface $catalogues,
+        CatalogueManager $manager,
         InvocationsInterface $invocations,
         ClassesInterface $classes
     ) {
-        $catalogue = $catalogues->load(
+        $manager->reset();
+
+        $catalogue = $manager->load(
             $this->argument('locale') ?? $config->defaultLocale()
         );
 
@@ -53,6 +55,7 @@ class IndexCommand extends Command
             "<info>Saving collected translations into `<comment>%s</comment>` locale.</info>\n",
             $catalogue->getLocale()
         );
-        $catalogues->save($catalogue->getLocale());
+
+        $manager->save($catalogue->getLocale());
     }
 }
