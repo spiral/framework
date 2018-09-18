@@ -20,13 +20,15 @@ use Spiral\Console\Command\ConfigureCommand;
 use Spiral\Console\Command\UpdateCommand;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
+use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\TranslatorInterface;
 
 /**
  * Register framework directories in tokenizer in order to locate default commands.
  */
-class CommandsBootloader extends Bootloader
+class CommandsBootloader extends Bootloader implements SingletonInterface
 {
     const BOOT = true;
 
@@ -43,6 +45,15 @@ class CommandsBootloader extends Bootloader
         // Default commands
         $this->addCommand($modifier, CleanCommand::class);
         $this->addCommand($modifier, ExtensionsCommand::class);
+
+        // Registering configure sequences
+        $this->addCallableSequence(
+            $modifier,
+            'configure',
+            [RuntimeDirectory::class, 'ensure'],
+            [],
+            '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>ensure `runtime` directory access</fg=cyan>'
+        );
 
         // Registering configure sequences
         $this->addCommandSequence(
