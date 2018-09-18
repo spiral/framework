@@ -11,7 +11,7 @@ namespace Spiral\Command\Translator;
 use Spiral\Console\Command;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\InvocationsInterface;
-use Spiral\Translator\Catalogue\Manager as CatalogueManager;
+use Spiral\Translator\Catalogue\Manager;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,13 +27,13 @@ class IndexCommand extends Command
 
     /**
      * @param TranslatorConfig     $config
-     * @param CatalogueManager     $manager
+     * @param Manager              $manager
      * @param InvocationsInterface $invocations
      * @param ClassesInterface     $classes
      */
     public function perform(
         TranslatorConfig $config,
-        CatalogueManager $manager,
+        Manager $manager,
         InvocationsInterface $invocations,
         ClassesInterface $classes
     ) {

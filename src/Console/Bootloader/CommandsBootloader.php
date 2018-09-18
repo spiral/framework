@@ -11,7 +11,7 @@ namespace Spiral\Console\Bootloader;
 use Psr\Container\ContainerInterface;
 use Spiral\Command\CleanCommand;
 use Spiral\Command\ExtensionsCommand;
-use Spiral\Command\Translator\DumpCommand;
+use Spiral\Command\Translator\ExportCommand;
 use Spiral\Command\Translator\IndexCommand;
 use Spiral\Config\ModifierInterface;
 use Spiral\Config\Patch\AppendPatch;
@@ -37,7 +37,7 @@ class CommandsBootloader extends Bootloader
 
         if ($container->has(TranslatorInterface::class)) {
             $this->addCommand($modifier, IndexCommand::class);
-            $this->addCommand($modifier, DumpCommand::class);
+            $this->addCommand($modifier, ExportCommand::class);
         }
     }
 
