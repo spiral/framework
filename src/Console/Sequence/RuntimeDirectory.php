@@ -66,7 +66,7 @@ class RuntimeDirectory
 
             if ($output->isVerbose()) {
                 $output->writeln(sprintf(
-                    "<fg=yellow>[updated]</fg=yellow> `%s`",
+                    "<fg=green>[updated]</fg=green> `%s`",
                     $this->files->relativePath($filename, $runtimeDirectory)
                 ));
             }
