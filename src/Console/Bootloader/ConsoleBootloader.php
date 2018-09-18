@@ -6,14 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Console\Bootloaders;
+namespace Spiral\Console\Bootloader;
 
 use Spiral\Boot\KernelInterface;
 use Spiral\Console\CommandLocator;
 use Spiral\Console\ConsoleCore;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Console\LocatorInterface;
-use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Core\Bootloader\Bootloader;
 
 class ConsoleBootloader extends Bootloader
 {

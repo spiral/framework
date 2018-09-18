@@ -8,7 +8,7 @@
 
 namespace Spiral\Core\Traits;
 
-use Spiral\Core\Exceptions\ControllerException;
+use Spiral\Core\Exception\ControllerException;
 use Spiral\Security\Traits\GuardedTrait;
 
 /**

@@ -9,13 +9,13 @@
 namespace Spiral\Snapshots;
 
 use Spiral\Exceptions\HandlerInterface;
-use Spiral\Files\Exceptions\FilesException;
+use Spiral\Files\Exception\FilesException;
 use Spiral\Files\FilesInterface;
 use Spiral\Logger\Traits\LoggerTrait;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class ExceptionSnapshotter implements SnapshotterInterface
+class FileSnapshotter implements SnapshotterInterface
 {
     use LoggerTrait;
 

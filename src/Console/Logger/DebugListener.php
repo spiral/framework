@@ -9,7 +9,7 @@
 namespace Spiral\Console\Logger;
 
 use Codedungeon\PHPCliColors\Color;
-use Spiral\Logger\Events\LogEvent;
+use Spiral\Logger\Event\LogEvent;
 use Spiral\Logger\LogsInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

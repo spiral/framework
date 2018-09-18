@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Session\Bootloaders;
+namespace Spiral\Session\Bootloader;
 
 use Spiral\Config\ModifierInterface;
-use Spiral\Config\Patches\AppendPatch;
-use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Config\Patch\AppendPatch;
+use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SectionInterface;

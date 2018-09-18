@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\RoadRunner\Bootloaders;
+namespace Spiral\RoadRunner\Bootloader;
 
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\KernelInterface;
-use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Goridge\RPC;
 use Spiral\Goridge\SocketRelay;
@@ -19,7 +19,7 @@ use Spiral\RoadRunner\RoadRunnerDispatcher;
 
 class RoadRunnerBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT        = true;
+    const BOOT = true;
     const RPC_DEFAULT = 'tcp://127.0.0.1:6001';
 
     const SINGLETONS = [

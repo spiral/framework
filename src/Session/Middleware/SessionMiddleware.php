@@ -14,9 +14,9 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\ScopeInterface;
-use Spiral\Http\Configs\HttpConfig;
-use Spiral\Http\Cookies\Cookie;
-use Spiral\Session\Configs\SessionConfig;
+use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Cookie\Cookie;
+use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 

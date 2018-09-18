@@ -6,15 +6,15 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Snapshots\Bootloaders;
+namespace Spiral\Snapshots\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Exceptions\HandlerInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Files\FilesInterface;
-use Spiral\Snapshots\ExceptionSnapshotter;
+use Spiral\Snapshots\FileSnapshotter;
 use Spiral\Snapshots\SnapshotterInterface;
 
 /**
@@ -22,7 +22,7 @@ use Spiral\Snapshots\SnapshotterInterface;
  * SNAPSHOT_MAX_FILES: defaults to 25
  * SNAPSHOT_VERBOSITY: defaults to HandlerInterface::VERBOSITY_VERBOSE (1)
  */
-class ExceptionSnapshotterBootloader extends Bootloader
+class FileSnapshotterBootloader extends Bootloader
 {
     const DEFAULT_MAX_SNAPSHOTS = 25;
 
@@ -34,14 +34,14 @@ class ExceptionSnapshotterBootloader extends Bootloader
      * @param DirectoriesInterface $directories
      * @param EnvironmentInterface $environment
      * @param FilesInterface       $files
-     * @return ExceptionSnapshotter
+     * @return FileSnapshotter
      */
     protected function exceptionSnapshotter(
         DirectoriesInterface $directories,
         EnvironmentInterface $environment,
         FilesInterface $files
     ) {
-        return new ExceptionSnapshotter(
+        return new FileSnapshotter(
             $directories->get('runtime') . '/snapshots/',
             $environment->get('SNAPSHOT_MAX_FILES', self::DEFAULT_MAX_SNAPSHOTS),
             $environment->get('SNAPSHOT_VERBOSITY', HandlerInterface::VERBOSITY_VERBOSE),

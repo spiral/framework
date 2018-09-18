@@ -9,10 +9,10 @@
 namespace Spiral\Framework;
 
 use Spiral\Boot\AbstractKernel;
-use Spiral\Boot\Bootloaders\CoreBootloader;
-use Spiral\Boot\Exceptions\FrameworkException;
-use Spiral\Encrypter\Bootloaders\EncrypterBootloader;
-use Spiral\Tokenizer\Bootloaders\TokenizerBootloader;
+use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\Exception\FrameworkException;
+use Spiral\Encrypter\Bootloader\EncrypterBootloader;
+use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
 
 abstract class Kernel extends AbstractKernel
 {

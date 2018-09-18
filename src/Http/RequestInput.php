@@ -8,7 +8,7 @@
 
 namespace Spiral\Http;
 
-use Spiral\Filters\Exceptions\InputException;
+use Spiral\Filters\Exception\InputException;
 use Spiral\Filters\InputInterface;
 use Spiral\Http\Request\InputManager;
 

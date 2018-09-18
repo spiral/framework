@@ -6,16 +6,16 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Console\Bootloaders;
+namespace Spiral\Console\Bootloader;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Commands\CleanCommand;
-use Spiral\Commands\ExtensionsCommand;
-use Spiral\Commands\Translator\DumpCommand;
-use Spiral\Commands\Translator\IndexCommand;
+use Spiral\Command\CleanCommand;
+use Spiral\Command\ExtensionsCommand;
+use Spiral\Command\Translator\DumpCommand;
+use Spiral\Command\Translator\IndexCommand;
 use Spiral\Config\ModifierInterface;
-use Spiral\Config\Patches\AppendPatch;
-use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Config\Patch\AppendPatch;
+use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Translator\TranslatorInterface;
 
 /**
