@@ -33,6 +33,9 @@
     "mockery/mockery": "^1.1"
   },
   "autoload": {
+    "files": [
+      "functions.php"
+    ],
     "psr-4": {
       "Spiral\\": "src/"
     }
