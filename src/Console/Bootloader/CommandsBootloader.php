@@ -110,5 +110,6 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
     private function configureDatabase(ConsoleConfigurator $console)
     {
         $console->addCommand(\Spiral\Command\Database\ListCommand::class);
+        $console->addCommand(\Spiral\Command\Database\TableCommand::class);
     }
 }

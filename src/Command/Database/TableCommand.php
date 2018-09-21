@@ -9,17 +9,14 @@
 namespace Spiral\Command\Database;
 
 use Spiral\Console\Command;
-use Spiral\Database\DatabaseManager;
-use Spiral\Database\Entities\Database;
-use Spiral\Database\Exceptions\DBALException;
-use Spiral\Database\Injections\FragmentInterface;
-use Spiral\Database\Schemas\Prototypes\AbstractTable;
+use Spiral\Database\Database;
+use Spiral\Database\DBAL;
+use Spiral\Database\Exception\DBALException;
+use Spiral\Database\Injection\FragmentInterface;
+use Spiral\Database\Schema\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-/**
- * Describe schema of specific table.
- */
 class TableCommand extends Command
 {
     /**
@@ -27,39 +24,21 @@ class TableCommand extends Command
      */
     const SKIP = '<comment>---</comment>';
 
-    /**
-     * {@inheritdoc}
-     */
-    const NAME = 'db:table';
-
-    /**
-     * {@inheritdoc}
-     */
+    const NAME        = 'db:table';
     const DESCRIPTION = 'Describe table schema of specific database';
-
-    /**
-     * {@inheritdoc}
-     */
-    const ARGUMENTS = [
+    const ARGUMENTS   = [
         ['table', InputArgument::REQUIRED, 'Table name']
     ];
-
-    /**
-     * {@inheritdoc}
-     */
-    const OPTIONS = [
-        ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database', 'default'],
+    const OPTIONS     = [
+        ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database', 'default']
     ];
 
     /**
-     * @param DatabaseManager $dbal
+     * @param DBAL $dbal
      */
-    public function perform(DatabaseManager $dbal)
+    public function perform(DBAL $dbal)
     {
-        //Database
         $database = $dbal->database($this->option('database'));
-
-        //Database schema
         $schema = $database->table($this->argument('table'))->getSchema();
 
         if (!$schema->exists()) {
@@ -68,8 +47,10 @@ class TableCommand extends Command
             );
         }
 
-        $this->writeln(
-            "Columns of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
+        $this->sprintf(
+            "\n<fg=cyan>Columns of </fg=cyan><comment>%s.%s</comment>:\n",
+            $database->getName(),
+            $this->argument('table')
         );
 
         $this->describeColumns($schema);
@@ -78,9 +59,11 @@ class TableCommand extends Command
             $this->describeIndexes($database, $indexes);
         }
 
-        if (!empty($foreigns = $schema->getForeigns())) {
-            $this->describeForeigns($database, $foreigns);
+        if (!empty($foreignKeys = $schema->getForeignKeys())) {
+            $this->describeForeignKeys($database, $foreignKeys);
         }
+
+        $this->write("\n");
     }
 
     /**
@@ -100,14 +83,14 @@ class TableCommand extends Command
             $name = $column->getName();
             $type = $column->getType();
 
-            $abstractType = $column->abstractType();
+            $abstractType = $column->getAbstractType();
             $defaultValue = $column->getDefaultValue();
 
             if ($column->getSize()) {
                 $type .= " ({$column->getSize()})";
             }
 
-            if ($column->abstractType() == 'decimal') {
+            if ($abstractType == 'decimal') {
                 $type .= " ({$column->getPrecision()}, {$column->getScale()})";
             }
 
@@ -145,8 +128,10 @@ class TableCommand extends Command
      */
     protected function describeIndexes(Database $database, array $indexes)
     {
-        $this->writeln(
-            "\nIndexes of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
+        $this->sprintf(
+            "\n<fg=cyan>Indexes of </fg=cyan><comment>%s.%s</comment>:\n",
+            $database->getName(),
+            $this->argument('table')
         );
 
         $indexesTable = $this->table(['Name:', 'Type:', 'Columns:']);
@@ -157,20 +142,22 @@ class TableCommand extends Command
                 join(", ", $index->getColumns())
             ]);
         }
+
         $indexesTable->render();
     }
 
     /**
      * @param Database $database
-     * @param array    $foreigns
+     * @param array    $foreignKeys
      */
-    protected function describeForeigns(Database $database, array $foreigns)
+    protected function describeForeignKeys(Database $database, array $foreignKeys)
     {
-        $this->writeln(
-            "\nForeign keys of <comment>{$database->getName()}.{$this->argument('table')}</comment>:"
+        $this->sprintf(
+            "\n<fg=cyan>Foreign Keys of </fg=cyan><comment>%s.%s</comment>:\n",
+            $database->getName(),
+            $this->argument('table')
         );
-
-        $foreignsTable = $this->table([
+        $foreignTable = $this->table([
             'Name:',
             'Column:',
             'Foreign Table:',
@@ -179,8 +166,8 @@ class TableCommand extends Command
             'On Update:'
         ]);
 
-        foreach ($foreigns as $reference) {
-            $foreignsTable->addRow([
+        foreach ($foreignKeys as $reference) {
+            $foreignTable->addRow([
                 $reference->getName(),
                 $reference->getColumn(),
                 $reference->getForeignTable(),
@@ -190,6 +177,6 @@ class TableCommand extends Command
             ]);
         }
 
-        $foreignsTable->render();
+        $foreignTable->render();
     }
 }

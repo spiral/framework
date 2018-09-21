@@ -15,15 +15,8 @@ use Spiral\Database\Driver\AbstractDriver;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
-/**
- * List of every configured database, it's tables and count of records.
- */
 class ListCommand extends Command
 {
-    /**
-     * No information available placeholder.
-     */
-    const SKIP        = '<comment>---</comment>';
     const NAME        = 'db:list';
     const DESCRIPTION = 'Get list of available databases, their tables and records count';
     const ARGUMENTS   = [
@@ -65,19 +58,23 @@ class ListCommand extends Command
 
             $header = [
                 $database->getName(),
-              '',//  $driver->getSource(),
+                $driver->getSource(),
                 $driver->getType(),
-                $database->getPrefix() ?: self::SKIP
+                $database->getPrefix() ?: '<comment>---</comment>'
             ];
 
             try {
+
                 $driver->connect();
             } catch (\Exception $exception) {
-                $grid->addRow(array_merge($header, [
-                    "<fg=red>{$exception->getMessage()}</fg=red>",
-                    self::SKIP,
-                    self::SKIP
-                ]));
+                $grid->addRow(array_merge(
+                    $header,
+                    [
+                        "<fg=red>{$exception->getMessage()}</fg=red>",
+                        '<comment>---</comment>',
+                        '<comment>---</comment>'
+                    ]
+                ));
 
                 if ($database->getName() != end($databases)) {
                     $grid->addRow(new TableSeparator());

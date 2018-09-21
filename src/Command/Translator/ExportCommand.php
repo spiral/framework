@@ -18,7 +18,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class ExportCommand extends Command implements SingletonInterface
 {
-    const NAME = "i18n:export";
+    const NAME        = "i18n:export";
     const DESCRIPTION = 'Dump given locale using specified dumper and path';
 
     const ARGUMENTS = [
