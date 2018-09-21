@@ -22,6 +22,7 @@ use Spiral\Console\ConsoleConfigurator;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Database\DatabaseInterface;
 use Spiral\Filters\MapperInterface;
 use Spiral\Translator\TranslatorInterface;
 
@@ -64,6 +65,10 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
         if ($container->has(MapperInterface::class)) {
             $this->configureFilters($console);
         }
+
+        if ($container->has(DatabaseInterface::class)) {
+            $this->configureDatabase($console);
+        }
     }
 
     /**
@@ -97,5 +102,13 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
             'filter:update',
             '<fg=magenta>[filters]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
         );
+    }
+
+    /**
+     * @param ConsoleConfigurator $console
+     */
+    private function configureDatabase(ConsoleConfigurator $console)
+    {
+        $console->addCommand(\Spiral\Command\Database\ListCommand::class);
     }
 }
