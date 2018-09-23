@@ -9,6 +9,7 @@
 namespace Spiral\Console\Logger;
 
 use Codedungeon\PHPCliColors\Color;
+use Psr\Log\LogLevel;
 use Spiral\Logger\Event\LogEvent;
 use Spiral\Logger\LogsInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,14 +17,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DebugListener
 {
     protected const STYLES = [
-        'DEBUG'     => 'fg=green',
-        'INFO'      => 'fg=cyan',
-        'NOTICE'    => 'fg=yellow',
-        'WARNING'   => 'fg=yellow',
-        'ERROR'     => 'fg=red',
-        'CRITICAL'  => 'fg=red',
-        'ALERT'     => 'fg=red',
-        'EMERGENCY' => 'fg=red',
+        LogLevel::DEBUG     => 'fg=green',
+        LogLevel::INFO      => 'fg=cyan',
+        LogLevel::NOTICE    => 'fg=yellow',
+        LogLevel::WARNING   => 'fg=yellow',
+        LogLevel::ERROR     => 'fg=red',
+        LogLevel::CRITICAL  => 'fg=red',
+        LogLevel::ALERT     => 'fg=red',
+        LogLevel::EMERGENCY => 'fg=red',
     ];
 
     /** @var LogsInterface|null */
@@ -61,7 +62,7 @@ class DebugListener
          */
         $this->output->writeln(sprintf(
             '<%1$s>%2$s</%1$s> %3$s',
-            $this->getStyle($event->getLevelName()),
+            $this->getStyle($event->getLevel()),
             $this->getChannel($event->getChannel()),
             $this->getMessage($this->output->isDecorated(), $event->getMessage())
         ));

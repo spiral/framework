@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\RoadRunner\Bootloader;
+namespace Spiral\Bootloader;
 
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\KernelInterface;
@@ -19,7 +19,7 @@ use Spiral\RoadRunner\RoadRunnerDispatcher;
 
 class RoadRunnerBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT = true;
+    const BOOT        = true;
     const RPC_DEFAULT = 'tcp://127.0.0.1:6001';
 
     const SINGLETONS = [

@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Http\Bootloader;
+namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -17,11 +17,11 @@ use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Filters\InputInterface;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Error\NullRenderer;
 use Spiral\Http\Error\RendererInterface;
 use Spiral\Http\HttpCore;
 use Spiral\Http\HttpDispatcher;
 use Spiral\Http\Pipeline;
-use Spiral\Http\Error\NullRenderer;
 use Spiral\Http\RequestInput;
 use Spiral\Http\ResponseFactory;
 use Spiral\Router\Router;

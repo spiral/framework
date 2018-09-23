@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Console\Bootloader;
+namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Command\CleanCommand;

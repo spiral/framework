@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Session\Bootloader;
+namespace Spiral\Bootloader;
 
 use Spiral\Config\ModifierInterface;
 use Spiral\Config\Patch\AppendPatch;

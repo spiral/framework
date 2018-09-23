@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Console\Bootloader;
+namespace Spiral\Bootloader;
 
 use Spiral\Boot\KernelInterface;
 use Spiral\Console\CommandLocator;

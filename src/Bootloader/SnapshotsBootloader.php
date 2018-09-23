@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Snapshots\Bootloader;
+namespace Spiral\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -22,7 +22,7 @@ use Spiral\Snapshots\SnapshotterInterface;
  * SNAPSHOT_MAX_FILES: defaults to 25
  * SNAPSHOT_VERBOSITY: defaults to HandlerInterface::VERBOSITY_VERBOSE (1)
  */
-class FileSnapshotterBootloader extends Bootloader
+class SnapshotsBootloader extends Bootloader
 {
     const DEFAULT_MAX_SNAPSHOTS = 25;
 
