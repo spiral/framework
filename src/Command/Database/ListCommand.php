@@ -9,8 +9,8 @@
 namespace Spiral\Command\Database;
 
 use Spiral\Console\Command;
-use Spiral\Database\Config\DBALConfig;
-use Spiral\Database\DBAL;
+use Spiral\Database\Config\DatabaseConfig;
+use Spiral\Database\DatabaseManager;
 use Spiral\Database\Driver\AbstractDriver;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,10 +24,10 @@ class ListCommand extends Command
     ];
 
     /**
-     * @param DBALConfig $config
-     * @param DBAL       $dbal
+     * @param DatabaseConfig  $config
+     * @param DatabaseManager $dbal
      */
-    public function perform(DBALConfig $config, DBAL $dbal)
+    public function perform(DatabaseConfig $config, DatabaseManager $dbal)
     {
         if ($this->argument('db')) {
             $databases = [$this->argument('db')];
@@ -37,6 +37,7 @@ class ListCommand extends Command
 
         if (empty($databases)) {
             $this->writeln("<fg=red>No databases found.</fg=red>");
+
             return;
         }
 

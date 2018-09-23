@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Command;
+namespace Spiral\Command\Framework;
 
 use Spiral\Console\Command;
 use Spiral\Core\Container\SingletonInterface;

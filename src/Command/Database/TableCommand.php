@@ -10,7 +10,7 @@ namespace Spiral\Command\Database;
 
 use Spiral\Console\Command;
 use Spiral\Database\Database;
-use Spiral\Database\DBAL;
+use Spiral\Database\DatabaseManager;
 use Spiral\Database\Exception\DBALException;
 use Spiral\Database\Injection\FragmentInterface;
 use Spiral\Database\Schema\AbstractTable;
@@ -34,9 +34,9 @@ class TableCommand extends Command
     ];
 
     /**
-     * @param DBAL $dbal
+     * @param DatabaseManager $dbal
      */
-    public function perform(DBAL $dbal)
+    public function perform(DatabaseManager $dbal)
     {
         $database = $dbal->database($this->option('database'));
         $schema = $database->table($this->argument('table'))->getSchema();

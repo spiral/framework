@@ -10,7 +10,7 @@ namespace Spiral\Command\Translator;
 
 use Spiral\Console\Command;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Translator\Catalogue\Manager;
+use Spiral\Translator\Catalogue\CatalogueManager;
 use Spiral\Translator\Config\TranslatorConfig;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,16 +32,14 @@ class ExportCommand extends Command implements SingletonInterface
 
     /**
      * @param TranslatorConfig $config
-     * @param Manager          $manager
-     *
-     * @return void
+     * @param CatalogueManager $manager
      */
-    public function perform(TranslatorConfig $config, Manager $manager)
+    public function perform(TranslatorConfig $config, CatalogueManager $manager)
     {
         if (!$config->hasDumper($this->option('dumper'))) {
             $this->writeln("<fg=red>Undefined dumper '{$this->option('dumper')}'.</fg=red>");
 
-            return null;
+            return;
         }
 
         $catalogue = $manager->get($this->argument('locale'));
@@ -52,7 +50,8 @@ class ExportCommand extends Command implements SingletonInterface
         );
 
         if ($this->isVerbose() && !empty($messageCatalogue->getDomains())) {
-            $this->sprintf("<info>Exporting domain(s):</info> %s\n", join(',', $messageCatalogue->getDomains())
+            $this->sprintf("<info>Exporting domain(s):</info> %s\n",
+                join(',', $messageCatalogue->getDomains())
             );
         }
 

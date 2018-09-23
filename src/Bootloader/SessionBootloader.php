@@ -33,6 +33,8 @@ class SessionBootloader extends Bootloader
      *
      * @param ConfiguratorInterface $configurator
      * @param ModifierInterface     $modifier
+     *
+     * @throws \Spiral\Core\Exception\ConfiguratorException
      */
     public function boot(ConfiguratorInterface $configurator, ModifierInterface $modifier)
     {

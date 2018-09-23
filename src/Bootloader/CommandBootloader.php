@@ -9,15 +9,12 @@
 namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Command\CleanCommand;
-use Spiral\Command\ExtensionsCommand;
-use Spiral\Command\Translator\ExportCommand;
-use Spiral\Command\Translator\IndexCommand;
-use Spiral\Command\Translator\ResetCommand;
+use Spiral\Command\Database;
+use Spiral\Command\Filters;
+use Spiral\Command\Framework;
+use Spiral\Command\Translator;
 use Spiral\Config\ModifierInterface;
-use Spiral\Console\Command\ConfigureCommand;
-use Spiral\Console\Command\ReloadCommand;
-use Spiral\Console\Command\UpdateCommand;
+use Spiral\Console;
 use Spiral\Console\ConsoleConfigurator;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Bootloader\Bootloader;
@@ -29,24 +26,26 @@ use Spiral\Translator\TranslatorInterface;
 /**
  * Register framework directories in tokenizer in order to locate default commands.
  */
-class CommandsBootloader extends Bootloader implements SingletonInterface
+class CommandBootloader extends Bootloader implements SingletonInterface
 {
     const BOOT = true;
 
     /**
      * @param ModifierInterface  $modifier
      * @param ContainerInterface $container
+     *
+     * @throws \Spiral\Core\Exception\ConfiguratorException
      */
     public function boot(ModifierInterface $modifier, ContainerInterface $container)
     {
         $console = new ConsoleConfigurator($modifier);
 
-        $console->addCommand(ReloadCommand::class);
-        $console->addCommand(ConfigureCommand::class);
-        $console->addCommand(UpdateCommand::class);
+        $console->addCommand(Console\Command\ReloadCommand::class);
+        $console->addCommand(Console\Command\ConfigureCommand::class);
+        $console->addCommand(Console\Command\UpdateCommand::class);
 
-        $console->addCommand(CleanCommand::class);
-        $console->addCommand(ExtensionsCommand::class);
+        $console->addCommand(Framework\CleanCommand::class);
+        $console->addCommand(Framework\ExtensionsCommand::class);
 
         $console->configureSequence(
             [RuntimeDirectory::class, 'ensure'],
@@ -73,12 +72,14 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
 
     /**
      * @param ConsoleConfigurator $console
+     *
+     * @throws \Spiral\Core\Exception\ConfiguratorException
      */
     private function configureTranslator(ConsoleConfigurator $console)
     {
-        $console->addCommand(IndexCommand::class);
-        $console->addCommand(ExportCommand::class);
-        $console->addCommand(ResetCommand::class);
+        $console->addCommand(Translator\IndexCommand::class);
+        $console->addCommand(Translator\ExportCommand::class);
+        $console->addCommand(Translator\ResetCommand::class);
 
         $console->configureSequence(
             'i18n:reset',
@@ -93,10 +94,12 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
 
     /**
      * @param ConsoleConfigurator $console
+     *
+     * @throws \Spiral\Core\Exception\ConfiguratorException
      */
     private function configureFilters(ConsoleConfigurator $console)
     {
-        $console->addCommand(\Spiral\Command\Filters\UpdateCommand::class);
+        $console->addCommand(Filters\UpdateCommand::class);
 
         $console->updateSequence(
             'filter:update',
@@ -106,10 +109,12 @@ class CommandsBootloader extends Bootloader implements SingletonInterface
 
     /**
      * @param ConsoleConfigurator $console
+     *
+     * @throws \Spiral\Core\Exception\ConfiguratorException
      */
     private function configureDatabase(ConsoleConfigurator $console)
     {
-        $console->addCommand(\Spiral\Command\Database\ListCommand::class);
-        $console->addCommand(\Spiral\Command\Database\TableCommand::class);
+        $console->addCommand(Database\ListCommand::class);
+        $console->addCommand(Database\TableCommand::class);
     }
 }
