@@ -14,7 +14,7 @@ use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Goridge\RPC;
 use Spiral\Goridge\SocketRelay;
-use Spiral\RoadRunner\Exceptions\RoadRunnerException;
+use Spiral\RoadRunner\Exception\RoadRunnerException;
 use Spiral\RoadRunner\RoadRunnerDispatcher;
 
 class RoadRunnerBootloader extends Bootloader implements SingletonInterface
