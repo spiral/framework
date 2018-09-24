@@ -110,6 +110,6 @@ class JobsDispatcher implements DispatcherInterface
 
         // Explaining exception to the user
         $handler = new ConsoleHandler(STDERR);
-        fwrite(STDERR, $handler->renderException($e, ConsoleHandler::VERBOSITY_VERBOSE));
+        $worker->error($handler->renderException($e, ConsoleHandler::VERBOSITY_VERBOSE));
     }
 }
