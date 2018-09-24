@@ -10,7 +10,7 @@ namespace Spiral\Bootloader;
 
 use Spiral\Boot\KernelInterface;
 use Spiral\Core\Bootloader\Bootloader;
-use Spiral\Jobs\JobsDispatcher;
+use Spiral\Jobs\JobDispatcher;
 use Spiral\Jobs\Queue;
 use Spiral\Jobs\QueueInterface;
 
@@ -24,9 +24,9 @@ class JobsBootloader extends Bootloader
 
     /**
      * @param KernelInterface $kernel
-     * @param JobsDispatcher  $jobs
+     * @param JobDispatcher   $jobs
      */
-    public function boot(KernelInterface $kernel, JobsDispatcher $jobs)
+    public function boot(KernelInterface $kernel, JobDispatcher $jobs)
     {
         $kernel->addDispatcher($jobs);
     }

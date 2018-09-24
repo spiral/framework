@@ -20,7 +20,7 @@ use Spiral\Jobs\Exception\JobException;
 use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotterInterface;
 
-class JobsDispatcher implements DispatcherInterface
+class JobDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */
     private $environment;
