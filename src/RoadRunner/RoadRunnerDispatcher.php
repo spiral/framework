@@ -27,9 +27,7 @@ class RoadRunnerDispatcher implements DispatcherInterface
     /** @var ContainerInterface */
     private $container;
 
-    /**
-     * @var callable[]
-     */
+    /** @var callable[] */
     private $finalizers = [];
 
     /**
@@ -58,7 +56,7 @@ class RoadRunnerDispatcher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->environment->get('RR') !== null);
+        return (php_sapi_name() == 'cli' && $this->environment->get('RR_HTTP') !== null);
     }
 
     /**
