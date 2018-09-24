@@ -13,6 +13,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Exceptions\HtmlHandler;
+use Spiral\Finalizer\FinalizerInterface;
 use Spiral\Goridge\StreamRelay;
 use Spiral\Http\HttpCore;
 use Spiral\Snapshots\SnapshotInterface;
@@ -24,31 +25,25 @@ class RoadRunnerDispatcher implements DispatcherInterface
     /** @var EnvironmentInterface */
     private $environment;
 
+    /** @var FinalizerInterface */
+    private $finalizer;
+
     /** @var ContainerInterface */
     private $container;
 
-    /** @var callable[] */
-    private $finalizers = [];
-
     /**
      * @param EnvironmentInterface $environment
+     * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
      */
-    public function __construct(EnvironmentInterface $environment, ContainerInterface $container)
-    {
+    public function __construct(
+        EnvironmentInterface $environment,
+        FinalizerInterface $finalizer,
+        ContainerInterface $container
+    ) {
         $this->environment = $environment;
+        $this->finalizer = $finalizer;
         $this->container = $container;
-    }
-
-    /**
-     * Finalizers are executed after every request and used for garbage collection
-     * or to close open connections.
-     *
-     * @param callable $finalizer
-     */
-    public function addFinalizer(callable $finalizer)
-    {
-        $this->finalizers[] = $finalizer;
     }
 
     /**
@@ -74,9 +69,7 @@ class RoadRunnerDispatcher implements DispatcherInterface
             } catch (\Throwable $e) {
                 $this->handleException($client, $e);
             } finally {
-                foreach ($this->finalizers as $finalizer) {
-                    call_user_func($finalizer);
-                }
+                $this->finalizer->finalize();
             }
         }
     }

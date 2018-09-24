@@ -13,11 +13,13 @@ use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\FrameworkException;
 use Spiral\Bootloader\EncrypterBootloader;
 use Spiral\Bootloader\TokenizerBootloader;
+use Spiral\Finalizer\FinalizerInterface;
 
 abstract class Kernel extends AbstractKernel
 {
     const SYSTEM = [
         CoreBootloader::class,
+        FinalizerInterface::class,
         EncrypterBootloader::class,
         TokenizerBootloader::class,
     ];

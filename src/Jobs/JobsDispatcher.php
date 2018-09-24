@@ -14,6 +14,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Exceptions\ConsoleHandler;
+use Spiral\Finalizer\FinalizerInterface;
 use Spiral\Goridge\StreamRelay;
 use Spiral\Jobs\Exception\JobException;
 use Spiral\RoadRunner\Worker;
@@ -24,19 +25,24 @@ class JobsDispatcher implements DispatcherInterface
     /** @var EnvironmentInterface */
     private $environment;
 
+    /** @var FinalizerInterface */
+    private $finalizer;
+
     /** @var ContainerInterface */
     private $container;
 
-    /** @var callable[] */
-    private $finalizers = [];
-
     /**
      * @param EnvironmentInterface $environment
+     * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
      */
-    public function __construct(EnvironmentInterface $environment, ContainerInterface $container)
-    {
+    public function __construct(
+        EnvironmentInterface $environment,
+        FinalizerInterface $finalizer,
+        ContainerInterface $container
+    ) {
         $this->environment = $environment;
+        $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
@@ -67,10 +73,7 @@ class JobsDispatcher implements DispatcherInterface
             } catch (\Throwable $e) {
                 $this->handleException($worker, $e);
             } finally {
-                // todo: move to external interface
-                foreach ($this->finalizers as $finalizer) {
-                    call_user_func($finalizer);
-                }
+                $this->finalizer->finalize();
             }
         }
     }

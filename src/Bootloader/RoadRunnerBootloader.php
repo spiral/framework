@@ -34,10 +34,6 @@ class RoadRunnerBootloader extends Bootloader implements SingletonInterface
     public function boot(KernelInterface $kernel, RoadRunnerDispatcher $rr)
     {
         $kernel->addDispatcher($rr);
-
-        if (function_exists('gc_collect_cycles')) {
-            $rr->addFinalizer('gc_collect_cycles');
-        }
     }
 
     /**
