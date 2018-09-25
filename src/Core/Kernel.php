@@ -12,20 +12,20 @@ use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\FrameworkException;
 use Spiral\Bootloader\EncrypterBootloader;
+use Spiral\Bootloader\FinalizerBootloader;
 use Spiral\Bootloader\TokenizerBootloader;
-use Spiral\Finalizer\FinalizerInterface;
 
 abstract class Kernel extends AbstractKernel
 {
     const SYSTEM = [
         CoreBootloader::class,
-        FinalizerInterface::class,
+        FinalizerBootloader::class,
         EncrypterBootloader::class,
         TokenizerBootloader::class,
     ];
 
     /**
-     * Normalizes directory list and adds all required alises.
+     * Normalizes directory list and adds all required aliases.
      *
      * @param array $directories
      * @return array

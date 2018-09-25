@@ -8,7 +8,7 @@
 
 namespace Spiral\Finalizer;
 
-class Finalizer implements FinalizerInterface
+final class Finalizer implements FinalizerInterface
 {
     /** @var callable[] */
     private $finalizers = [];

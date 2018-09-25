@@ -17,13 +17,14 @@ class FinalizerBootloader extends Bootloader
     const BOOT = true;
 
     const SINGLETONS = [
-        FinalizerInterface::class => Finalizer::class
+        FinalizerInterface::class => Finalizer::class,
+        Finalizer::class          => Finalizer::class
     ];
 
     /**
-     * @param FinalizerInterface $finalizer
+     * @param Finalizer $finalizer
      */
-    public function boot(FinalizerInterface $finalizer)
+    public function boot(Finalizer $finalizer)
     {
         if (function_exists('gc_collect_cycles')) {
             $finalizer->addFinalizer('gc_collect_cycles');
