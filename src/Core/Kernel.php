@@ -11,7 +11,6 @@ namespace Spiral\Core;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\FrameworkException;
-use Spiral\Bootloader\EncrypterBootloader;
 use Spiral\Bootloader\FinalizerBootloader;
 use Spiral\Bootloader\TokenizerBootloader;
 
@@ -20,7 +19,6 @@ abstract class Kernel extends AbstractKernel
     const SYSTEM = [
         CoreBootloader::class,
         FinalizerBootloader::class,
-        EncrypterBootloader::class,
         TokenizerBootloader::class,
     ];
 
