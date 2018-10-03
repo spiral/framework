@@ -31,15 +31,13 @@ class CommandBootloader extends Bootloader implements SingletonInterface
     const BOOT = true;
 
     /**
-     * @param ModifierInterface  $modifier
-     * @param ContainerInterface $container
+     * @param ConsoleConfigurator $console
+     * @param ContainerInterface  $container
      *
      * @throws \Spiral\Core\Exception\ConfiguratorException
      */
-    public function boot(ModifierInterface $modifier, ContainerInterface $container)
+    public function boot(ConsoleConfigurator $console, ContainerInterface $container)
     {
-        $console = new ConsoleConfigurator($modifier);
-
         $console->addCommand(Console\Command\ReloadCommand::class);
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);

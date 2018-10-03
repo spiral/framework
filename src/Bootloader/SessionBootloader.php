@@ -8,10 +8,10 @@
 
 namespace Spiral\Bootloader;
 
-use Spiral\Config\ModifierInterface;
+use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
-use Spiral\Core\ConfiguratorInterface;
+use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SectionInterface;
 use Spiral\Session\Session;
@@ -32,21 +32,31 @@ class SessionBootloader extends Bootloader
      * cookie protection.
      *
      * @param ConfiguratorInterface $configurator
-     * @param ModifierInterface     $modifier
      *
      * @throws \Spiral\Core\Exception\ConfiguratorException
      */
-    public function boot(ConfiguratorInterface $configurator, ModifierInterface $modifier)
+    public function boot(ConfiguratorInterface $configurator)
     {
+        $configurator->setDefaults('session', [
+            'lifetime' => 86400,
+            'cookie'   => 'session',
+            'secure'   => false,
+            'handler'  => bind(FileHandler::class, [
+                    'directory' => directory('runtime') . '/session/',
+                    'lifetime'  => 86400
+                ]
+            )
+        ]);
+
         $session = $configurator->getConfig('session');
 
-        $modifier->modify('http', new AppendPatch(
+        $configurator->modify('http', new AppendPatch(
             'cookies.excluded',
             null,
             $session['cookie']
         ));
 
-        $modifier->modify('http', new AppendPatch(
+        $configurator->modify('http', new AppendPatch(
             'middleware',
             null,
             SessionMiddleware::class

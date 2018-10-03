@@ -8,26 +8,26 @@
 
 namespace Spiral\Console;
 
-use Spiral\Config\ModifierInterface;
+use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Console\Sequence\CallableSequence;
 use Spiral\Console\Sequence\CommandSequence;
 
 class ConsoleConfigurator
 {
-    /** @var ModifierInterface */
-    private $modifier;
+    /** @var ConfiguratorInterface */
+    private $configurator;
 
     /** @var string */
     private $config;
 
     /**
-     * @param ModifierInterface $modifier
-     * @param string            $config
+     * @param ConfiguratorInterface $configurator
+     * @param string                $config
      */
-    public function __construct(ModifierInterface $modifier, string $config = 'console')
+    public function __construct(ConfiguratorInterface $configurator, string $config = 'console')
     {
-        $this->modifier = $modifier;
+        $this->configurator = $configurator;
         $this->config = $config;
     }
 
@@ -36,7 +36,7 @@ class ConsoleConfigurator
      */
     public function addCommand(string $command)
     {
-        $this->modifier->modify($this->config, new AppendPatch('commands', null, $command));
+        $this->configurator->modify($this->config, new AppendPatch('commands', null, $command));
     }
 
     /**
@@ -47,7 +47,7 @@ class ConsoleConfigurator
      */
     public function configureSequence($sequence, string $header, string $footer = '', array $options = [])
     {
-        $this->modifier->modify(
+        $this->configurator->modify(
             $this->config,
             $this->sequencePatch('configure', $sequence, $header, $footer, $options)
         );
@@ -61,7 +61,7 @@ class ConsoleConfigurator
      */
     public function updateSequence($sequence, string $header, string $footer = '', array $options = [])
     {
-        $this->modifier->modify(
+        $this->configurator->modify(
             $this->config,
             $this->sequencePatch('update', $sequence, $header, $footer, $options)
         );

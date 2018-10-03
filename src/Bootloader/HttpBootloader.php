@@ -10,7 +10,9 @@ namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\KernelInterface;
+use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Core;
@@ -21,6 +23,7 @@ use Spiral\Http\Error\NullRenderer;
 use Spiral\Http\Error\RendererInterface;
 use Spiral\Http\HttpCore;
 use Spiral\Http\HttpDispatcher;
+use Spiral\Http\Middleware;
 use Spiral\Http\Pipeline;
 use Spiral\Http\RequestInput;
 use Spiral\Http\ResponseFactory;
@@ -51,12 +54,42 @@ class HttpBootloader extends Bootloader implements SingletonInterface
     ];
 
     /**
-     * @param KernelInterface $kernel
-     * @param HttpDispatcher  $http
+     * @param KernelInterface       $kernel
+     * @param HttpDispatcher        $http
+     * @param ConfiguratorInterface $configurator
+     * @param EnvironmentInterface  $environment
      */
-    public function boot(KernelInterface $kernel, HttpDispatcher $http)
-    {
+    public function boot(
+        KernelInterface $kernel,
+        HttpDispatcher $http,
+        ConfiguratorInterface $configurator,
+        EnvironmentInterface $environment
+    ) {
         $kernel->addDispatcher($http);
+
+        $configurator->setDefaults('http', [
+            'basePath'   => '/',
+            'headers'    => [
+                'Content-Type' => 'text/html; charset=UTF-8'
+            ],
+            'middleware' => [
+                bind(Middleware\ExceptionWrapper::class, [
+                    'suppressErrors' => !$environment->get('DEBUG', false)
+                ]),
+                Middleware\CookiesMiddleware::class,
+                Middleware\CsrfMiddleware::class
+            ],
+            'cookies'    => [
+                'domain'   => '.%s',
+                'method'   => HttpConfig::COOKIE_ENCRYPT,
+                'excluded' => ['csrf-token']
+            ],
+            'csrf'       => [
+                'cookie'   => 'csrf-token',
+                'length'   => 16,
+                'lifetime' => 86400
+            ]
+        ]);
     }
 
     /**
