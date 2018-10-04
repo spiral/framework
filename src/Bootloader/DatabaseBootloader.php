@@ -9,12 +9,12 @@
 namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Database\DatabaseManager;
-use Spiral\Finalizer\FinalizerInterface;
 
 class DatabaseBootloader extends Bootloader
 {
