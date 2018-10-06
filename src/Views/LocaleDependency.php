@@ -8,7 +8,7 @@
 
 namespace Spiral\Views;
 
-use Spiral\Translator\CataloguesInterface;
+use Spiral\Translator\Catalogue\LoaderInterface as LocaleLoaderInterface;
 use Spiral\Translator\TranslatorInterface;
 
 /**
@@ -25,13 +25,13 @@ class LocaleDependency implements DependencyInterface
     private $locales = [];
 
     /**
-     * @param TranslatorInterface $translator
-     * @param CataloguesInterface $catalogues
+     * @param TranslatorInterface   $translator
+     * @param LocaleLoaderInterface $loader
      */
-    public function __construct(TranslatorInterface $translator, CataloguesInterface $catalogues)
+    public function __construct(TranslatorInterface $translator, LocaleLoaderInterface $loader)
     {
         $this->translator = $translator;
-        $this->locales = $catalogues->getLocales();
+        $this->locales = $loader->getLocales();
     }
 
     /**
@@ -56,5 +56,16 @@ class LocaleDependency implements DependencyInterface
     public function getVariants(): array
     {
         return $this->locales;
+    }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo(): array
+    {
+        return [
+            'current'  => $this->getValue(),
+            'variants' => $this->getVariants()
+        ];
     }
 }

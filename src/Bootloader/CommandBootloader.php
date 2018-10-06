@@ -13,6 +13,7 @@ use Spiral\Command\Database;
 use Spiral\Command\Filters;
 use Spiral\Command\Framework;
 use Spiral\Command\Translator;
+use Spiral\Command\Views;
 use Spiral\Console;
 use Spiral\Console\ConsoleConfigurator;
 use Spiral\Console\Sequence\RuntimeDirectory;
@@ -21,6 +22,7 @@ use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Filters\MapperInterface;
 use Spiral\Translator\TranslatorInterface;
+use Spiral\Views\ViewsInterface;
 
 /**
  * Register framework directories in tokenizer in order to locate default commands.
@@ -64,6 +66,10 @@ class CommandBootloader extends Bootloader implements SingletonInterface
 
         if ($container->has(DatabaseInterface::class)) {
             $this->configureDatabase($console);
+        }
+
+        if ($container->has(ViewsInterface::class)) {
+            $this->configureViews($console);
         }
     }
 
@@ -113,5 +119,21 @@ class CommandBootloader extends Bootloader implements SingletonInterface
     {
         $console->addCommand(Database\ListCommand::class);
         $console->addCommand(Database\TableCommand::class);
+    }
+
+    /**
+     * @param ConsoleConfigurator $console
+     *
+     * @throws \Spiral\Core\Exception\ConfiguratorException
+     */
+    private function configureViews(ConsoleConfigurator $console)
+    {
+        $console->addCommand(Views\ResetCommand::class);
+        $console->addCommand(Views\CompileCommand::class);
+
+        $console->configureSequence(
+            'views:compile',
+            '<fg=magenta>[views]</fg=magenta> <fg=cyan>warm up view cache...</fg=cyan>'
+        );
     }
 }
