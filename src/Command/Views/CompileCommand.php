@@ -20,6 +20,8 @@ use Spiral\Views\ViewManager;
  */
 class CompileCommand extends Command
 {
+    private const MIN_WIDTH = 8;
+
     const NAME        = 'views:compile';
     const DESCRIPTION = 'Warm-up view cache';
 
@@ -31,8 +33,6 @@ class CompileCommand extends Command
         $generator = new ContextGenerator($views->getContext());
 
         foreach ($generator->generate() as $context) {
-            $this->sprintf("<info>Context</info> {%s}\n", $this->packContext($context));
-
             foreach ($views->getEngines() as $engine) {
                 $this->compile($engine, $context);
             }
@@ -42,39 +42,20 @@ class CompileCommand extends Command
     }
 
     /**
-     * @param ContextInterface $context
-     * @return string
-     */
-    protected function packContext(ContextInterface $context): string
-    {
-        $values = [];
-
-        foreach ($context->getDependencies() as $dependency) {
-            $values[] = sprintf(
-                "%s%s%s:%s%s%s",
-                Color::LIGHT_WHITE,
-                $dependency->getName(),
-                Color::RESET,
-                Color::LIGHT_CYAN,
-                $dependency->getValue(),
-                Color::RESET
-            );
-        }
-
-        return join(', ', $values);
-    }
-
-    /**
      * @param EngineInterface  $engine
      * @param ContextInterface $context
      */
     protected function compile(EngineInterface $engine, ContextInterface $context)
     {
-        $name = (new \ReflectionObject($engine))->getShortName();
+        $this->sprintf(
+            "<fg=yellow>%s</fg=yellow> (%s)\n",
+            $this->describeEngine($engine),
+            $this->describeContext($context)
+        );
 
         foreach ($engine->getLoader()->list() as $path) {
             if ($this->isVerbose()) {
-                $this->sprintf("<fg=yellow>[%s]</fg=yellow> %s, ", $name, $path);
+                $this->sprintf(" %s, ", $path);
             }
 
             try {
@@ -97,5 +78,37 @@ class CompileCommand extends Command
                 }
             }
         }
+
+        $this->isVerbose() && $this->write("\n");
+    }
+
+    /**
+     * @param ContextInterface $context
+     * @return string
+     */
+    private function describeContext(ContextInterface $context): string
+    {
+        $values = [];
+
+        foreach ($context->getDependencies() as $dependency) {
+            $values[] = sprintf(
+                "%s%s%s:%s%s%s",
+                Color::LIGHT_WHITE,
+                $dependency->getName(),
+                Color::RESET,
+                Color::LIGHT_CYAN,
+                $dependency->getValue(),
+                Color::RESET
+            );
+        }
+
+        return join(', ', $values);
+    }
+
+    private function describeEngine(EngineInterface $engine): string
+    {
+        $refection = new \ReflectionObject($engine);
+
+        return $refection->getShortName();
     }
 }

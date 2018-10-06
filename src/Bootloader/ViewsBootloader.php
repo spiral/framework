@@ -48,7 +48,7 @@ class ViewsBootloader extends Bootloader
             'cache'        => [
                 'enabled'   => true,
                 'memory'    => false,
-                'directory' => $directories->get('cache')
+                'directory' => $directories->get('cache') . 'views'
             ],
             'namespaces'   => [
                 'default' => [$directories->get('views')]

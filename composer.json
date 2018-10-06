@@ -29,7 +29,8 @@
     "spiral/security": "^2.0",
     "spiral/database": "^2.0",
     "spiral/jobs": "2.0",
-    "spiral/views": "^1.0"
+    "spiral/views": "^1.0",
+    "twig/twig": "^2.5"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
