@@ -56,8 +56,8 @@ class ViewsBootloader extends Bootloader
             'engines'      => [NativeEngine::class]
         ]);
 
-        // enable locale based cache dependency
         if ($container->has(TranslatorInterface::class)) {
+            // enable locale based cache dependency
             $configurator->modify(
                 'views',
                 new AppendPatch('dependencies', null, LocaleDependency::class)
