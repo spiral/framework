@@ -8,6 +8,7 @@
 
 namespace Spiral\Bootloader;
 
+use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
@@ -32,17 +33,18 @@ class SessionBootloader extends Bootloader
      * cookie protection.
      *
      * @param ConfiguratorInterface $configurator
+     * @param DirectoriesInterface  $directories
      *
      * @throws \Spiral\Core\Exception\ConfiguratorException
      */
-    public function boot(ConfiguratorInterface $configurator)
+    public function boot(ConfiguratorInterface $configurator, DirectoriesInterface $directories)
     {
         $configurator->setDefaults('session', [
             'lifetime' => 86400,
             'cookie'   => 'session',
             'secure'   => false,
             'handler'  => bind(FileHandler::class, [
-                    'directory' => directory('runtime') . '/session/',
+                    'directory' => $directories->get('runtime') . '/session/',
                     'lifetime'  => 86400
                 ]
             )

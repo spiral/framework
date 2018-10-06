@@ -13,7 +13,6 @@ use Spiral\Command\Database;
 use Spiral\Command\Filters;
 use Spiral\Command\Framework;
 use Spiral\Command\Translator;
-use Spiral\Config\ModifierInterface;
 use Spiral\Console;
 use Spiral\Console\ConsoleConfigurator;
 use Spiral\Console\Sequence\RuntimeDirectory;
