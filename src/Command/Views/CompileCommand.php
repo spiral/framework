@@ -48,23 +48,27 @@ class CompileCommand extends Command
     protected function compile(EngineInterface $engine, ContextInterface $context)
     {
         $this->sprintf(
-            "<fg=yellow>%s</fg=yellow> (%s)\n",
+            "<fg=yellow>%s</fg=yellow> [%s]\n",
             $this->describeEngine($engine),
             $this->describeContext($context)
         );
 
         foreach ($engine->getLoader()->list() as $path) {
-            if ($this->isVerbose()) {
-                $this->sprintf(" %s, ", $path);
-            }
-
             try {
                 $start = microtime(true);
                 $engine->compile($path, $context);
-                $this->isVerbose() && $this->write("<info>ok</info>");
+
+                if ($this->isVerbose()) {
+                    $this->sprintf("<info>•</info> %s", $path);
+                }
             } catch (\Throwable $e) {
                 if ($this->isVerbose()) {
-                    $this->sprintf("<fg=red>error: %s</fg=red>", $e->getMessage());
+                    $this->sprintf(
+                        "<fg=red>•</fg=red> %s: <fg=red>%s at line %s</fg=red>",
+                        $path,
+                        $e->getMessage(),
+                        $e->getLine()
+                    );
                 }
                 continue;
             } finally {
