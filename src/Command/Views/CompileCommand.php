@@ -31,12 +31,7 @@ class CompileCommand extends Command
         $generator = new ContextGenerator($views->getContext());
 
         foreach ($generator->generate() as $context) {
-            if ($this->isVerbose()) {
-                $this->sprintf(
-                    "<info>[Context]</info> %s\n",
-                    $this->packContext($context)
-                );
-            }
+            $this->sprintf("<info>[Context]</info> %s\n", $this->packContext($context));
 
             foreach ($views->getEngines() as $engine) {
                 $this->compile($engine, $context);
