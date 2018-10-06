@@ -85,11 +85,6 @@ class CommandBootloader extends Bootloader implements SingletonInterface
         $console->addCommand(Translator\ResetCommand::class);
 
         $console->configureSequence(
-            'i18n:reset',
-            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>reset translator locales cache...</fg=cyan>'
-        );
-
-        $console->configureSequence(
             'i18n:index',
             '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
         );

@@ -9,11 +9,13 @@
 namespace Spiral\Twig;
 
 
+use Spiral\Core\ContainerScope;
 use Spiral\Twig\Exception\SyntaxException;
 use Spiral\Views\ContextInterface;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\Exception\EngineException;
 use Spiral\Views\LoaderInterface;
+use Spiral\Views\LocaleProcessor;
 use Spiral\Views\Processor\ContextProcessor;
 use Spiral\Views\ViewInterface;
 use Twig\Environment;
@@ -56,7 +58,10 @@ class TwigEngine implements EngineInterface
         // todo: add processors
         $engine->twigLoader = new TwigLoader(
             $engine->loader,
-            [new ContextProcessor()]
+            [
+                new ContextProcessor(),
+                ContainerScope::getContainer()->get(LocaleProcessor::class)
+            ]
         );
 
         $engine->twig = new Environment($engine->twigLoader);

@@ -38,8 +38,6 @@ class IndexCommand extends Command implements SingletonInterface
         InvocationsInterface $invocations,
         ClassesInterface $classes
     ) {
-        $manager->reset();
-
         $catalogue = $manager->load(
             $this->argument('locale') ?? $config->defaultLocale()
         );
@@ -52,8 +50,10 @@ class IndexCommand extends Command implements SingletonInterface
         $this->writeln("Scanning <comment>TranslatorTrait</comment> usage...");
         $indexer->indexClasses($classes);
 
-        $this->sprintf("Saving collected translations into `<comment>%s</comment>` locale.\n",
-            $catalogue->getLocale());
+        $this->sprintf(
+            "Saving collected translations into `<comment>%s</comment>` locale.\n",
+            $catalogue->getLocale()
+        );
 
         $manager->save($catalogue->getLocale());
     }
