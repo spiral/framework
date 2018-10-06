@@ -27,24 +27,16 @@ class ConsoleDispatcher implements DispatcherInterface
     /** @var EnvironmentInterface */
     private $environment;
 
-    /** @var DebugListener */
-    private $listener;
-
     /** @var ContainerInterface */
     private $container;
 
     /**
      * @param EnvironmentInterface $environment
-     * @param DebugListener        $listener
      * @param ContainerInterface   $container
      */
-    public function __construct(
-        EnvironmentInterface $environment,
-        DebugListener $listener,
-        ContainerInterface $container
-    ) {
+    public function __construct(EnvironmentInterface $environment, ContainerInterface $container)
+    {
         $this->environment = $environment;
-        $this->listener = $listener;
         $this->container = $container;
     }
 
@@ -63,7 +55,10 @@ class ConsoleDispatcher implements DispatcherInterface
     public function serve()
     {
         $output = new ConsoleOutput();
-        $listener = $this->listener->withOutput($output)->enable();
+
+        /** @var DebugListener $listener */
+        $listener = $this->container->get(DebugListener::class);
+        $listener = $listener->withOutput($output)->enable();
 
         /** @var ConsoleCore $core */
         $core = $this->container->get(ConsoleCore::class);

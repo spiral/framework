@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader;
+namespace Spiral\Bootloader\Security;
 
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Filters\FilterLocator;

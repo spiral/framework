@@ -6,11 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader;
+namespace Spiral\Bootloader\Dispatcher;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Bootloader\Bootloader;
@@ -23,7 +22,6 @@ use Spiral\Http\Error\NullRenderer;
 use Spiral\Http\Error\RendererInterface;
 use Spiral\Http\HttpCore;
 use Spiral\Http\HttpDispatcher;
-use Spiral\Http\Middleware;
 use Spiral\Http\Pipeline;
 use Spiral\Http\RequestInput;
 use Spiral\Http\ResponseFactory;
@@ -57,13 +55,11 @@ class HttpBootloader extends Bootloader implements SingletonInterface
      * @param KernelInterface       $kernel
      * @param HttpDispatcher        $http
      * @param ConfiguratorInterface $configurator
-     * @param EnvironmentInterface  $environment
      */
     public function boot(
         KernelInterface $kernel,
         HttpDispatcher $http,
-        ConfiguratorInterface $configurator,
-        EnvironmentInterface $environment
+        ConfiguratorInterface $configurator
     ) {
         $kernel->addDispatcher($http);
 
@@ -72,13 +68,7 @@ class HttpBootloader extends Bootloader implements SingletonInterface
             'headers'    => [
                 'Content-Type' => 'text/html; charset=UTF-8'
             ],
-            'middleware' => [
-                bind(Middleware\ExceptionWrapper::class, [
-                    'suppressErrors' => !$environment->get('DEBUG', false)
-                ]),
-                Middleware\CookiesMiddleware::class,
-                Middleware\CsrfMiddleware::class
-            ],
+            'middleware' => [],
             'cookies'    => [
                 'domain'   => '.%s',
                 'method'   => HttpConfig::COOKIE_ENCRYPT,

@@ -6,17 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader;
+namespace Spiral\Bootloader\Views;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
-use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\Engine\Native\NativeEngine;
-use Spiral\Views\LocaleDependency;
 use Spiral\Views\ViewManager;
 use Spiral\Views\ViewsInterface;
 
@@ -56,12 +53,12 @@ class ViewsBootloader extends Bootloader
             'engines'      => [NativeEngine::class]
         ]);
 
-        if ($container->has(TranslatorInterface::class)) {
-            // enable locale based cache dependency
-            $configurator->modify(
-                'views',
-                new AppendPatch('dependencies', null, LocaleDependency::class)
-            );
-        }
+//        if ($container->has(TranslatorInterface::class)) {
+//            // enable locale based cache dependency
+//            $configurator->modify(
+//                'views',
+//                new AppendPatch('dependencies', null, LocaleDependency::class)
+//            );
+//        }
     }
 }

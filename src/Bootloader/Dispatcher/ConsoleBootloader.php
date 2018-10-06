@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader;
+namespace Spiral\Bootloader\Dispatcher;
 
 use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfiguratorInterface;

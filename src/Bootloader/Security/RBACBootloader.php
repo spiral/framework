@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader;
+namespace Spiral\Bootloader\Security;
 
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Security\Guard;
@@ -19,7 +19,7 @@ use Spiral\Security\RulesInterface;
 /**
  * Security bootloader.
  */
-class SecurityBootloader extends Bootloader
+class RBACBootloader extends Bootloader
 {
     const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,

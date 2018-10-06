@@ -6,12 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Pagination;
+namespace Spiral\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Pagination\Paginator;
+use Spiral\Pagination\PaginatorsInterface;
 
 /**
  * Paginators factory binded to active request scope in order to select page number.

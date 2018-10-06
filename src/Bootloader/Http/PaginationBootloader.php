@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader;
+namespace Spiral\Bootloader\Http;
 
 use Spiral\Core\Bootloader\Bootloader;
-use Spiral\Pagination\PaginationFactory;
+use Spiral\Http\PaginationFactory;
 use Spiral\Pagination\PaginatorsInterface;
 
 class PaginationBootloader extends Bootloader

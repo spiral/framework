@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader;
+namespace Spiral\Bootloader\Security;
 
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
