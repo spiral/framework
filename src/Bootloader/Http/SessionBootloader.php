@@ -12,6 +12,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Core\Container\Autowire;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SectionInterface;
@@ -43,8 +44,8 @@ class SessionBootloader extends Bootloader
             'lifetime' => 86400,
             'cookie'   => 'session',
             'secure'   => false,
-            'handler'  => bind(FileHandler::class, [
-                    'directory' => $directories->get('runtime') . '/session/',
+            'handler'  => new Autowire(FileHandler::class, [
+                    'directory' => $directories->get('runtime') . 'session',
                     'lifetime'  => 86400
                 ]
             )
