@@ -42,6 +42,20 @@ class TwigCache implements TwigCacheInterface
     }
 
     /**
+     * Delete cached files.
+     *
+     * @param string $name
+     * @param string $className
+     */
+    public function delete($name, $className)
+    {
+        try {
+            $this->files->delete($this->generateKey($name, $className));
+        } catch (\Throwable $e) {
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function write($key, $content)

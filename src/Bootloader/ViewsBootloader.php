@@ -10,6 +10,7 @@ namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
@@ -29,11 +30,13 @@ class ViewsBootloader extends Bootloader
 
     /**
      * @param ConfiguratorInterface $configurator
+     * @param EnvironmentInterface  $environment
      * @param DirectoriesInterface  $directories
      * @param ContainerInterface    $container
      */
     public function boot(
         ConfiguratorInterface $configurator,
+        EnvironmentInterface $environment,
         DirectoriesInterface $directories,
         ContainerInterface $container
     ) {
@@ -46,24 +49,21 @@ class ViewsBootloader extends Bootloader
 
         $configurator->setDefaults('views', [
             'cache'        => [
-                'enabled'   => true,
-                'memory'    => false,
+                'enabled'   => !$environment->get('DEBUG', false),
+                'memory'    => !$environment->get('DEBUG', false),
                 'directory' => $directories->get('cache') . 'views'
             ],
-            'namespaces'   => [
-                'default' => [$directories->get('views')]
-            ],
-            'engines'      => [NativeEngine::class],
-            'dependencies' => []
+            'namespaces'   => ['default' => [$directories->get('views')]],
+            'dependencies' => [],
+            'engines'      => [NativeEngine::class]
         ]);
 
         // enable locale based cache dependency
         if ($container->has(TranslatorInterface::class)) {
-            $configurator->modify('views', new AppendPatch(
-                'dependencies',
-                null,
-                LocaleDependency::class
-            ));
+            $configurator->modify(
+                'views',
+                new AppendPatch('dependencies', null, LocaleDependency::class)
+            );
         }
     }
 }

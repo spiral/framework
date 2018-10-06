@@ -56,6 +56,7 @@ class CompileCommand extends Command
         foreach ($engine->getLoader()->list() as $path) {
             try {
                 $start = microtime(true);
+                $engine->reset($path, $context);
                 $engine->compile($path, $context);
 
                 if ($this->isVerbose()) {

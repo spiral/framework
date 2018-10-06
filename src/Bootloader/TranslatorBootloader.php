@@ -26,8 +26,9 @@ class TranslatorBootloader extends Bootloader
     const BOOT = true;
 
     const SINGLETONS = [
-        TranslatorInterface::class => Translator::class,
-        CataloguesInterface::class => CatalogueManager::class,
+        \Symfony\Component\Translation\TranslatorInterface::class => TranslatorInterface::class,
+        TranslatorInterface::class                                => Translator::class,
+        CataloguesInterface::class                                => CatalogueManager::class,
     ];
 
     const BINDINGS = [

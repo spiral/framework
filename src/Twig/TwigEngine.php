@@ -26,25 +26,24 @@ class TwigEngine implements EngineInterface
 {
     const EXTENSION = 'twig';
 
-    private $cache;
+    /** @var bool|null|TwigCache */
+    private $cache = false;
 
     /** @var LoaderInterface */
-    protected $loader;
-
-    /**
-     * @var TwigLoader
-     */
-    protected $twigLoader;
+    private $loader;
 
     /** @var Environment */
     private $twig;
+
+    /** @var TwigLoader */
+    private $twigLoader;
 
     /**
      * @param TwigCache|null $cache
      */
     public function __construct(TwigCache $cache = null)
     {
-        $this->cache = $cache;
+        $this->cache = $cache ?? false;
     }
 
     /**
@@ -82,10 +81,14 @@ class TwigEngine implements EngineInterface
         return $this->loader;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function compile(string $path, ContextInterface $context): TemplateWrapper
     {
         try {
             $this->twigLoader->setContext($context);
+            $path = $this->normalize($path);
 
             return $this->twig->load($path);
         } catch (SyntaxError $exception) {
@@ -94,13 +97,33 @@ class TwigEngine implements EngineInterface
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function reset(string $path, ContextInterface $context)
     {
-        // todo: find a way to reset
+        $this->twigLoader->setContext($context);
+        $path = $this->normalize($path);
+
+        $this->cache->delete($path, $this->twig->getTemplateClass($path));
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get(string $path, ContextInterface $context): ViewInterface
     {
         return new TwigView($this->compile($path, $context));
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private function normalize(string $path): string
+    {
+        $path = $this->loader->load($path);
+
+        return sprintf("%s:%s", $path->getNamespace(), $path->getName());
     }
 }

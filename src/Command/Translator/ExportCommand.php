@@ -27,7 +27,8 @@ class ExportCommand extends Command implements SingletonInterface
     ];
 
     const OPTIONS = [
-        ['dumper', 'd', InputOption::VALUE_OPTIONAL, 'Dumper name', 'php']
+        ['dumper', 'd', InputOption::VALUE_OPTIONAL, 'Dumper name', 'php'],
+        ['fallback', 'f', InputOption::VALUE_NONE, 'Merge messages from fallback catalogue'],
     ];
 
     /**
@@ -49,6 +50,16 @@ class ExportCommand extends Command implements SingletonInterface
             $catalogue->getData()
         );
 
+        if ($this->option('fallback')) {
+            foreach ($manager->get($config->fallbackLocale())->getData() as $domain => $messages) {
+                foreach ($messages as $id => $message) {
+                    if (!$messageCatalogue->defines($id, $domain)) {
+                        $messageCatalogue->set($id, $message, $domain);
+                    }
+                }
+            }
+        }
+
         if ($this->isVerbose() && !empty($messageCatalogue->getDomains())) {
             $this->sprintf("<info>Exporting domain(s):</info> %s\n",
                 join(',', $messageCatalogue->getDomains())
@@ -60,8 +71,7 @@ class ExportCommand extends Command implements SingletonInterface
         $dumper->dump($messageCatalogue, [
             'path'           => $this->argument('path'),
             'default_locale' => $config->defaultLocale(),
-            //Forcing default version for xliff dumper only
-            'xliff_version'  => '2.0'
+            'xliff_version'  => '2.0' // forcing default version for xliff dumper only
         ]);
 
         $this->writeln("Export successfully completed using <info>" . get_class($dumper) . "</info>");
