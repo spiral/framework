@@ -41,12 +41,10 @@ class ViewsBootloader extends Bootloader
         ContainerInterface $container
     ) {
         if (!$directories->has('views')) {
-            $directories->set(
-                'views',
-                $directories->get('app') . 'views'
-            );
+            $directories->set('views', $directories->get('app') . 'views');
         }
 
+        // default view config
         $configurator->setDefaults('views', [
             'cache'        => [
                 'enabled'   => !$environment->get('DEBUG', false),
