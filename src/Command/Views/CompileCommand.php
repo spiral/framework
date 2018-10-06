@@ -41,6 +41,10 @@ class CompileCommand extends Command
         $this->writeln("View cache has been generated.");
     }
 
+    /**
+     * @param ContextInterface $context
+     * @return string
+     */
     protected function packContext(ContextInterface $context): string
     {
         $values = [];
@@ -64,7 +68,7 @@ class CompileCommand extends Command
      * @param EngineInterface  $engine
      * @param ContextInterface $context
      */
-    public function compile(EngineInterface $engine, ContextInterface $context)
+    protected function compile(EngineInterface $engine, ContextInterface $context)
     {
         $name = (new \ReflectionObject($engine))->getShortName();
 
