@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Command\Migrations;
+namespace Spiral\Command\Migrate;
 
 use Spiral\Console\ConsoleCore;
 use Symfony\Component\Console\Input\InputOption;

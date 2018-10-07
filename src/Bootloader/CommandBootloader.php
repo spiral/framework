@@ -12,7 +12,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Command\Database;
 use Spiral\Command\Filters;
 use Spiral\Command\Framework;
-use Spiral\Command\Migrations;
+use Spiral\Command\Migrate;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
@@ -145,10 +145,10 @@ class CommandBootloader extends Bootloader implements SingletonInterface
      */
     private function configureMigrations(ConsoleConfigurator $console)
     {
-        $console->addCommand(Migrations\InitCommand::class);
-        $console->addCommand(Migrations\StatusCommand::class);
-        $console->addCommand(Migrations\MigrateCommand::class);
-        $console->addCommand(Migrations\RollbackCommand::class);
-        $console->addCommand(Migrations\ReplayCommand::class);
+        $console->addCommand(Migrate\InitCommand::class);
+        $console->addCommand(Migrate\StatusCommand::class);
+        $console->addCommand(Migrate\MigrateCommand::class);
+        $console->addCommand(Migrate\RollbackCommand::class);
+        $console->addCommand(Migrate\ReplayCommand::class);
     }
 }

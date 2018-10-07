@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Command\Migrations;
+namespace Spiral\Command\Migrate;
 
 use Spiral\Console\Command;
 use Spiral\Migrations\Config\MigrationConfig;
