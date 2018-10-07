@@ -17,7 +17,7 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 
-class RoutingBootloader extends Bootloader
+class RouterBootloader extends Bootloader
 {
     const SINGLETONS = [
         CoreInterface::class           => Core::class,

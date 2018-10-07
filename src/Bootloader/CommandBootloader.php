@@ -12,6 +12,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Command\Database;
 use Spiral\Command\Filters;
 use Spiral\Command\Framework;
+use Spiral\Command\Migrations;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
@@ -21,6 +22,7 @@ use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Filters\MapperInterface;
+use Spiral\Migrations\Migrator;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\ViewsInterface;
 
@@ -70,6 +72,10 @@ class CommandBootloader extends Bootloader implements SingletonInterface
 
         if ($container->has(ViewsInterface::class)) {
             $this->configureViews($console);
+        }
+
+        if ($container->has(Migrator::class)) {
+            $this->configureMigrations($console);
         }
     }
 
@@ -130,5 +136,19 @@ class CommandBootloader extends Bootloader implements SingletonInterface
             'views:compile',
             '<fg=magenta>[views]</fg=magenta> <fg=cyan>warm up view cache...</fg=cyan>'
         );
+    }
+
+    /**
+     * @param ConsoleConfigurator $console
+     *
+     * @throws \Spiral\Core\Exception\ConfiguratorException
+     */
+    private function configureMigrations(ConsoleConfigurator $console)
+    {
+        $console->addCommand(Migrations\InitCommand::class);
+        $console->addCommand(Migrations\StatusCommand::class);
+        $console->addCommand(Migrations\MigrateCommand::class);
+        $console->addCommand(Migrations\RollbackCommand::class);
+        $console->addCommand(Migrations\ReplayCommand::class);
     }
 }

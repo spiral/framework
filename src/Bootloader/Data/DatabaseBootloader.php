@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader\Storage;
+namespace Spiral\Bootloader\Data;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\FinalizerInterface;

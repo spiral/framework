@@ -33,6 +33,7 @@
     "spiral/filters": "^1.0",
     "spiral/security": "^2.0",
     "spiral/database": "^2.0",
+    "spiral/migrations": "^2.0",
     "spiral/jobs": "2.0",
     "spiral/views": "^1.0"
   },
