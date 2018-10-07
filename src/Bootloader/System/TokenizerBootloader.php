@@ -13,6 +13,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
+use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Tokenizer;
@@ -23,9 +24,9 @@ class TokenizerBootloader extends Bootloader
     const BOOT = true;
 
     const BINDINGS = [
-        TokenizerInterface::class   => Tokenizer::class,
         ClassesInterface::class     => ClassLocator::class,
-        InvocationsInterface::class => InvocationLocator::class
+        InvocationsInterface::class => InvocationLocator::class,
+        TokenizerInterface::class   => [self::class, 'tokenizer'],
     ];
 
     /**
@@ -42,5 +43,14 @@ class TokenizerBootloader extends Bootloader
                 'tests'
             ]
         ]);
+    }
+
+    /**
+     * @param TokenizerConfig $config
+     * @return Tokenizer
+     */
+    protected function tokenizer(TokenizerConfig $config): Tokenizer
+    {
+        return new Tokenizer($config);
     }
 }

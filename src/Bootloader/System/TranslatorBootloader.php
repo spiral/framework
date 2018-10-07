@@ -48,7 +48,7 @@ class TranslatorBootloader extends Bootloader
         $configurator->setDefaults('translator', [
             'locale'         => $environment->get('LOCALE', 'en'),
             'fallbackLocale' => $environment->get('LOCALE', 'en'),
-            'directory'      => $directories->get('app') . 'locale',
+            'directory'      => $directories->get('app') . 'locale/',
             'autoRegister'   => $environment->get('DEBUG', true),
             'loaders'        => [
                 'php'  => Loader\PhpFileLoader::class,

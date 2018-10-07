@@ -19,8 +19,6 @@ use Spiral\Router\RouterInterface;
 
 class RoutingBootloader extends Bootloader
 {
-    const BOOT = true;
-
     const SINGLETONS = [
         CoreInterface::class           => Core::class,
         RouterInterface::class         => [self::class, 'router'],

@@ -13,7 +13,7 @@ use Spiral\Core\Container\SingletonInterface;
 
 final class ExtensionsCommand extends Command implements SingletonInterface
 {
-    const NAME        = 'php:extensions';
+    const NAME        = 'php:ext';
     const DESCRIPTION = 'Get list of available php extension';
 
     /**
