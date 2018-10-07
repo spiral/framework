@@ -10,12 +10,11 @@ namespace Spiral\Bootloader\Dispatcher;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Core\Core;
-use Spiral\Core\CoreInterface;
 use Spiral\Filters\InputInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Error\NullRenderer;
@@ -25,8 +24,6 @@ use Spiral\Http\HttpDispatcher;
 use Spiral\Http\Pipeline;
 use Spiral\Http\RequestInput;
 use Spiral\Http\ResponseFactory;
-use Spiral\Router\Router;
-use Spiral\Router\RouterInterface;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -35,10 +32,6 @@ class HttpBootloader extends Bootloader implements SingletonInterface
     const BOOT = true;
 
     const SINGLETONS = [
-        // HMVC Core and routing
-        CoreInterface::class            => Core::class,
-        RouterInterface::class          => [self::class, 'router'],
-
         // Error Pages
         RendererInterface::class        => NullRenderer::class,
 
@@ -83,35 +76,23 @@ class HttpBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param RouterInterface          $router
      * @param HttpConfig               $config
      * @param Pipeline                 $pipeline
+     * @param RequestHandlerInterface  $handler
      * @param ResponseFactoryInterface $responseFactory
      * @param ContainerInterface       $container
      * @return HttpCore
      */
     protected function core(
-        RouterInterface $router,
         HttpConfig $config,
         Pipeline $pipeline,
+        RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
         ContainerInterface $container
     ): HttpCore {
         $core = new HttpCore($config, $pipeline, $responseFactory, $container);
-        $core->setHandler($router);
+        $core->setHandler($handler);
 
         return $core;
-    }
-
-    /**
-     * @param HttpConfig         $config
-     * @param ContainerInterface $container
-     * @return RouterInterface
-     */
-    protected function router(
-        HttpConfig $config,
-        ContainerInterface $container
-    ): RouterInterface {
-        return new Router($config->basePath(), $container);
     }
 }
