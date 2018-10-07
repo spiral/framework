@@ -14,10 +14,16 @@ use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\LocaleDependency;
+use Spiral\Views\LocaleProcessor;
 
 class TranslateBootloader extends Bootloader
 {
     const BOOT = true;
+
+    const SINGLETONS = [
+        // Each engine expect to mount this process by itself
+        LocaleProcessor::class => LocaleProcessor::class
+    ];
 
     /**
      * @param ConfiguratorInterface $configurator
@@ -32,7 +38,5 @@ class TranslateBootloader extends Bootloader
                 new AppendPatch('dependencies', null, LocaleDependency::class)
             );
         }
-
-        // todo: enable for twig and stempler
     }
 }
