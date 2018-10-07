@@ -84,7 +84,13 @@ class CompileCommand extends Command
             }
         }
 
-        $this->isVerbose() && $this->write("\n");
+        if ($this->isVerbose()) {
+            if (empty($path)) {
+                $this->writeln("• no views found");
+            }
+
+            $this->write("\n");
+        }
     }
 
     /**
