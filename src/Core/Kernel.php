@@ -18,6 +18,14 @@ abstract class Kernel extends AbstractKernel
     const SYSTEM = [CoreBootloader::class, TokenizerBootloader::class];
 
     /**
+     * Each application can define it's own boot sequence.
+     */
+    protected function bootstrap()
+    {
+
+    }
+
+    /**
      * Normalizes directory list and adds all required aliases.
      *
      * @param array $directories
