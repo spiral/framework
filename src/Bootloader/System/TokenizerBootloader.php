@@ -26,7 +26,8 @@ class TokenizerBootloader extends Bootloader
     const BINDINGS = [
         ClassesInterface::class     => ClassLocator::class,
         InvocationsInterface::class => InvocationLocator::class,
-        TokenizerInterface::class   => [self::class, 'tokenizer'],
+        TokenizerInterface::class   => Tokenizer::class,
+        Tokenizer::class            => [self::class, 'tokenizer'],
     ];
 
     /**
