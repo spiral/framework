@@ -32,7 +32,7 @@ import (
 	"github.com/spiral/roadrunner/service/rpc"
 	"github.com/spiral/roadrunner/service/static"
 
-    "github.com/spiral/jobs"
+        "github.com/spiral/jobs"
 	"github.com/spiral/jobs/broker/beanstalk"
 	"github.com/spiral/jobs/broker/local"
 	"github.com/spiral/jobs/broker/sqs"
