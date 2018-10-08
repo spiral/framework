@@ -14,8 +14,6 @@
     "spiral/boot": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~7.0",
-    "mockery/mockery": "^1.1",
     "spiral/tokenizer": "^2.0",
     "spiral/logger": "^1.0",
     "spiral/debug": "^1.1",
@@ -34,7 +32,9 @@
     "spiral/database": "^2.0",
     "spiral/migrations": "^2.0",
     "spiral/jobs": "2.0",
-    "spiral/views": "^1.0"
+    "spiral/views": "^1.0",
+    "phpunit/phpunit": "~7.0",
+    "mockery/mockery": "^1.1"
   },
   "autoload": {
     "files": [
