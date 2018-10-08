@@ -130,6 +130,7 @@ class DebugListener
         if (!class_exists($channel, false)) {
             return "[{$channel}]";
         }
+
         $reflection = new \ReflectionClass($channel);
 
         return "[{$reflection->getShortName()}]";
