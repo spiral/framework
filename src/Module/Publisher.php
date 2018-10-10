@@ -41,7 +41,7 @@ final class Publisher implements PublisherInterface
     public function publish(
         string $filename,
         string $destination,
-        bool $merge = self::FOLLOW,
+        string $mergeMode = self::FOLLOW,
         int $mode = FilesInterface::READONLY
     ) {
         if (!$this->files->isFile($filename)) {
@@ -54,14 +54,13 @@ final class Publisher implements PublisherInterface
                 return;
             }
 
-            if ($merge == self::FOLLOW) {
+            if ($mergeMode == self::FOLLOW) {
                 return;
             }
         }
 
-        //File manipulations
         $this->ensureDirectory(dirname($destination), $mode);
-
+        echo 1;
         $this->files->copy($filename, $destination);
         $this->files->setPermissions($destination, $mode);
 
@@ -74,7 +73,7 @@ final class Publisher implements PublisherInterface
     public function publishDirectory(
         string $directory,
         string $destination,
-        bool $merge = self::REPLACE,
+        string $mergeMode = self::REPLACE,
         int $mode = FilesInterface::READONLY
     ) {
         if (!$this->files->isDirectory($directory)) {
@@ -91,7 +90,7 @@ final class Publisher implements PublisherInterface
             $this->publish(
                 (string)$file,
                 $destination . '/' . $file->getRelativePathname(),
-                $merge,
+                $mergeMode,
                 $mode
             );
         }

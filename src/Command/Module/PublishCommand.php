@@ -92,7 +92,7 @@ class PublishCommand extends Command
     private function getSource(FilesInterface $files, DirectoriesInterface $directories): ?string
     {
         if (!$this->isDirectory()) {
-            return $this->argument('source');
+            return $files->normalizePath($this->argument('source'));
         }
 
         return $files->normalizePath(rtrim($this->argument('source'), '/*'), true);
@@ -150,10 +150,10 @@ class PublishCommand extends Command
     private function getFileMode(): int
     {
         switch ($this->argument('mode')) {
-            case 'runtime':
-                return FilesInterface::RUNTIME;
             case 'readonly':
                 return FilesInterface::READONLY;
+            case 'runtime':
+                return FilesInterface::RUNTIME;
             default:
                 return FilesInterface::RUNTIME;
         }

@@ -25,7 +25,7 @@ interface PublisherInterface
      *
      * @param string $filename
      * @param string $destination
-     * @param bool   $merge
+     * @param string $mergeMode
      * @param int    $mode
      *
      * @throws PublishException
@@ -33,7 +33,7 @@ interface PublisherInterface
     public function publish(
         string $filename,
         string $destination,
-        bool $merge = self::FOLLOW,
+        string $mergeMode = self::FOLLOW,
         int $mode = FilesInterface::READONLY
     );
 
@@ -42,7 +42,7 @@ interface PublisherInterface
      *
      * @param string $directory
      * @param string $destination
-     * @param bool   $merge
+     * @param string $mergeMode
      * @param int    $mode
      *
      * @throws PublishException
@@ -50,7 +50,7 @@ interface PublisherInterface
     public function publishDirectory(
         string $directory,
         string $destination,
-        bool $merge = self::REPLACE,
+        string $mergeMode = self::REPLACE,
         int $mode = FilesInterface::READONLY
     );
 
