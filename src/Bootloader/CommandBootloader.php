@@ -41,11 +41,8 @@ class CommandBootloader extends Bootloader implements SingletonInterface
      */
     public function boot(ConsoleConfigurator $console, ContainerInterface $container)
     {
-        $console->addCommand(Console\Command\ReloadCommand::class);
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
-
-        $console->addCommand(Framework\CleanCommand::class);
         $console->addCommand(Framework\ExtensionsCommand::class);
 
         $console->configureSequence(

@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Command\Framework;
+namespace Spiral\Command\Module;
 
 use Spiral\Console\Command;
-use Spiral\Modules\Publisher;
+use Spiral\Module\Publisher;
 use Symfony\Component\Console\Input\InputArgument;
 
 class PublishCommand extends Command
@@ -21,11 +21,10 @@ class PublishCommand extends Command
      * {@inheritdoc}
      */
     const ARGUMENTS = [
-        ['command', InputArgument::REQUIRED, 'Publish command [dir|file|ensure]'],
-        ['source', InputArgument::REQUIRED, 'Source file or directory'],
+        ['type', InputArgument::REQUIRED, 'Operation type [replace|follow|ensure]'],
         ['target', InputArgument::REQUIRED, 'Target file or directory'],
+        ['source', InputArgument::OPTIONAL, 'Source file or directory'],
         ['mode', InputArgument::OPTIONAL, 'runtime', 'File mode [readonly|runtime]'],
-        ['merge', InputArgument::OPTIONAL, 'follow', 'Merge option [replace|follow]'],
     ];
 
     /**
@@ -33,6 +32,16 @@ class PublishCommand extends Command
      */
     public function perform(Publisher $publisher)
     {
+//        switch ($this->argument('mode')) {
+//            case 'replace':
+//            case 'follow':
+//            case 'ensure':
+//
+//        }
 
+        dumP($this->argument('source'));
+        dumP($this->argument('target'));
+        dumP($this->argument('mode'));
+        dumP($this->argument('command'));
     }
 }

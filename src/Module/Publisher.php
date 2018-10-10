@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Modules;
+namespace Spiral\Module;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Modules\Exception\PublishException;
+use Spiral\Module\Exception\PublishException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 

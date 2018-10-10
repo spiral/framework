@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Modules;
+namespace Spiral\Module;
 
 use Spiral\Files\FilesInterface;
-use Spiral\Modules\Exception\PublishException;
+use Spiral\Module\Exception\PublishException;
 
 /**
  * Provides ability to publish module files such as configs, images and etc.

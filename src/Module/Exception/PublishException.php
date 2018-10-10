@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Modules\Exception;
+namespace Spiral\Module\Exception;
 
 class PublishException extends \RuntimeException
 {

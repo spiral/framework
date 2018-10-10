@@ -9,10 +9,14 @@
 namespace Spiral\Core;
 
 use Spiral\Boot\AbstractKernel;
+use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\FrameworkException;
+use Spiral\Bootloader\System\TokenizerBootloader;
 
 abstract class Kernel extends AbstractKernel
 {
+    const SYSTEM = [CoreBootloader::class, TokenizerBootloader::class];
+
     /**
      * Each application can define it's own boot sequence.
      */
@@ -51,6 +55,7 @@ abstract class Kernel extends AbstractKernel
             // application directories
             'config'    => $directories['app'] . '/config/',
             'resources' => $directories['app'] . '/resources/',
+            'locales'   => $directories['app'] . '/locales/',
         ], $directories);
     }
 }

@@ -9,7 +9,10 @@
 namespace Spiral\Bootloader\Dispatcher;
 
 use Spiral\Boot\KernelInterface;
+use Spiral\Command\Framework\CleanCommand;
+use Spiral\Command\Module\PublishCommand;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Console\Command\ReloadCommand;
 use Spiral\Console\CommandLocator;
 use Spiral\Console\ConsoleCore;
 use Spiral\Console\ConsoleDispatcher;
@@ -38,7 +41,11 @@ class ConsoleBootloader extends Bootloader
         $kernel->addDispatcher($console);
 
         $configurator->setDefaults('console', [
-            'commands'  => [],
+            'commands'  => [
+                ReloadCommand::class,
+                PublishCommand::class,
+                CleanCommand::class
+            ],
             'configure' => [],
             'update'    => []
         ]);
