@@ -18,7 +18,7 @@ use Spiral\Http\Middleware\ExceptionWrapper;
 /**
  * Enable exception wrapping within HTTP requests.
  */
-class ExceptionsBootloader extends Bootloader
+class ErrorPageBootloader extends Bootloader
 {
     const BOOT = true;
 
