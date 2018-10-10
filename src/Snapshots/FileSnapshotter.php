@@ -102,7 +102,7 @@ class FileSnapshotter implements SnapshotterInterface
                 try {
                     $this->files->delete($file->getRealPath());
                 } catch (FilesException $e) {
-
+                    // ignore
                 }
             }
         }
