@@ -6,8 +6,9 @@
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="120px" alt="Spiral Framework" align="left"/>
 
-Spiral is PHP micro-framework, set of components and [application server](https://github.com/spiral/roadrunner). Framework designed to rapidly 
-develop high-performance applications with native support of HTTP/2, GRPC and serverless computations. 
+Spiral is PHP micro-framework, set of components and [application server](https://github.com/spiral/roadrunner). 
+Framework designed to rapidly develop high-performance applications with native support of HTTP/2, GRPC
+ and serverless computations. 
 
 <br/>
 
