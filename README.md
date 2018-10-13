@@ -6,7 +6,7 @@
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="120px" alt="Spiral Framework" align="left"/>
 
-Spiral is PHP micro-framework, the set of open-source components and [an application server](https://github.com/spiral/roadrunner) designed to rapidly develop high-performance backends with native support of HTTP/2, [GRPC](https://grpc.io/)
+Spiral is PHP micro-framework core, the set of open-source components and [an application server](https://github.com/spiral/roadrunner) designed to rapidly develop high-performance backends with native support of HTTP/2, [GRPC](https://grpc.io/)
  and distributed computations for modern enterprise applications. 
 
 [Website](https://spiral-framework.com) | <b>[Make an App](https://github.com/spiral/webapp)</b> | [Guide](https://github.com/spiral/guide) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
