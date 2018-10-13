@@ -7,8 +7,8 @@
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="120px" alt="Spiral Framework" align="left"/>
 
 Spiral is PHP micro-framework, set of components and application server developed by SpiralScout. 
-Framework designed to rapidly create high-performance applications with native support for HTTP/2, 
-GRPC and distributed computations.
+Framework designed to rapidly create high-performance applications with native support of HTTP/2, 
+GRPC, distributed computations and custom modules written in Golang.
 
 <br/>
 
