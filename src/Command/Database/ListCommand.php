@@ -10,8 +10,10 @@ namespace Spiral\Command\Database;
 
 use Spiral\Console\Command;
 use Spiral\Database\Config\DatabaseConfig;
+use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Driver\AbstractDriver;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -65,17 +67,9 @@ class ListCommand extends Command
             ];
 
             try {
-
                 $driver->connect();
             } catch (\Exception $exception) {
-                $grid->addRow(array_merge(
-                    $header,
-                    [
-                        "<fg=red>{$exception->getMessage()}</fg=red>",
-                        '<comment>---</comment>',
-                        '<comment>---</comment>'
-                    ]
-                ));
+                $this->renderException($grid, $header, $exception);
 
                 if ($database->getName() != end($databases)) {
                     $grid->addRow(new TableSeparator());
@@ -85,20 +79,47 @@ class ListCommand extends Command
             }
 
             $header[] = "<info>connected</info>";
-            foreach ($database->getTables() as $table) {
-                $grid->addRow(array_merge(
-                    $header,
-                    [$table->getName(), number_format($table->count())]
-                ));
-                $header = ["", "", "", "", ""];
-            }
-
-            $header[1] && $grid->addRow(array_merge($header, ["no tables", "no records"]));
+            $this->renderTables($grid, $header, $database);
             if ($database->getName() != end($databases)) {
                 $grid->addRow(new TableSeparator());
             }
         }
 
         $grid->render();
+    }
+
+    /**
+     * @param Table      $grid
+     * @param array      $header
+     * @param \Throwable $exception
+     */
+    private function renderException(Table $grid, array $header, \Throwable $exception)
+    {
+        $grid->addRow(array_merge(
+            $header,
+            [
+                "<fg=red>{$exception->getMessage()}</fg=red>",
+                '<comment>---</comment>',
+                '<comment>---</comment>'
+            ]
+        ));
+    }
+
+    /**
+     * @param Table    $grid
+     * @param array    $header
+     * @param Database $database
+     */
+    private function renderTables(Table $grid, array $header, Database $database)
+    {
+        foreach ($database->getTables() as $table) {
+            $grid->addRow(array_merge(
+                $header,
+                [$table->getName(), number_format($table->count())]
+            ));
+            $header = ["", "", "", "", ""];
+        }
+
+        $header[1] && $grid->addRow(array_merge($header, ["no tables", "no records"]));
     }
 }
