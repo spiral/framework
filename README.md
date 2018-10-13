@@ -4,9 +4,13 @@
 [![Codecov](https://codecov.io/gh/spiral/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/framework/)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master)
 
+<img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="120px" alt="Spiral Framework" align="left"/>
+
 Spiral is PHP micro-framework, set of components and application server developed by SpiralScout. 
 Framework designed to rapidly create high-performance applications with native support for HTTP/2, 
 GRPC and distributed computations.
+
+<br/>
 
 ## Core
 | Component | Current Status        
