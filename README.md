@@ -4,6 +4,10 @@
 [![Codecov](https://codecov.io/gh/spiral/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/framework/)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/spiral/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/spiral/?branch=master)
 
+Spiral 2.0 is PHP micro-framework, set of components and application server developed by SpiralScout. 
+Framework designed to rapidly create high-performance applications with native support for HTTP/2, 
+GRPC and distributed computations.
+
 ## Core
 | Component | Current Status        
 | ---       | ---
