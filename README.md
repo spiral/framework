@@ -10,7 +10,7 @@ Spiral is PHP micro-framework, set of components and [application server](https:
 Framework designed to rapidly develop high-performance applications with native support of HTTP/2, GRPC
  and serverless computations. 
 
-<br/>
+<br/><br/>
 
 ## Core
 | Component | Current Status        
