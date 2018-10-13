@@ -6,9 +6,9 @@
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="120px" alt="Spiral Framework" align="left"/>
 
-Spiral is PHP micro-framework, set of components and application server developed by SpiralScout. 
-Framework designed to rapidly create high-performance applications with native support of HTTP/2, 
-GRPC, distributed computations and custom modules written in Golang.
+Spiral is PHP micro-framework, set of components and application server. Framework designed to rapidly 
+create high-performance applications with native support of HTTP/2, GRPC, distributed computations 
+and custom modules written in Golang.
 
 <br/>
 
@@ -57,3 +57,8 @@ spiral/helpers | [![Latest Stable Version](https://poser.pugx.org/spiral/helpers
 spiral/reactor | [![Latest Stable Version](https://poser.pugx.org/spiral/reactor/version)](https://packagist.org/packages/spiral/reactor) [![Build Status](https://travis-ci.org/spiral/reactor.svg?branch=master)](https://travis-ci.org/spiral/reactor) [![Codecov](https://codecov.io/gh/spiral/reactor/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/reactor/)
 spiral/twig | [![Latest Stable Version](https://poser.pugx.org/spiral/twig/version)](https://packagist.org/packages/spiral/twig) [![Build Status](https://travis-ci.org/spiral/twig-bridge.svg?branch=master)](https://travis-ci.org/spiral/twig-bridge) [![Codecov](https://codecov.io/gh/spiral/twig-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/twig-bridge/)
 spiral/stempler | [![Latest Stable Version](https://poser.pugx.org/spiral/stempler/version)](https://packagist.org/packages/spiral/stempler) [![Build Status](https://travis-ci.org/spiral/stempler.svg?branch=master)](https://travis-ci.org/spiral/stempler) [![Codecov](https://codecov.io/gh/spiral/stempler/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/stempler/)
+
+
+License:
+--------
+The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [SpiralScout](https://spiralscout.com).
