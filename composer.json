@@ -11,7 +11,8 @@
   ],
   "require": {
     "php": "^7.1",
-    "spiral/boot": "^1.0"
+    "spiral/boot": "^1.0",
+    "spiral/composer-publish-plugin": "^1.0"
   },
   "require-dev": {
     "spiral/tokenizer": "^2.0",
