@@ -32,12 +32,24 @@ class PublishCommand extends Command
     ];
 
     /**
+     * @param null|string $name
+     */
+    public function __construct(?string $name = null)
+    {
+        parent::__construct($name);
+        $this->setHidden(true);
+    }
+
+    /**
      * @param Publisher            $publisher
      * @param FilesInterface       $files
      * @param DirectoriesInterface $directories
      */
-    public function perform(Publisher $publisher, FilesInterface $files, DirectoriesInterface $directories)
-    {
+    public function perform(
+        Publisher $publisher,
+        FilesInterface $files,
+        DirectoriesInterface $directories
+    ) {
         switch ($this->argument('type')) {
             case 'replace':
             case 'follow':
@@ -76,7 +88,8 @@ class PublishCommand extends Command
                     $this->getTarget($files, $directories)
                 );
 
-                $publisher->ensureDirectory($this->getTarget($files, $directories), $this->getFileMode());
+                $publisher->ensureDirectory($this->getTarget($files, $directories),
+                    $this->getFileMode());
 
                 break;
             default:
