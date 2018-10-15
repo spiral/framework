@@ -8,7 +8,7 @@
 
 Spiral is Open-Source (MIT) PHP micro-framework core, the set of open-source components and [an application server](https://github.com/spiral/roadrunner) designed to rapidly develop high-performance applications with native support of HTTP/2, [GRPC](https://grpc.io/), distributed computations and Golang extensions. 
 
-[Website](https://spiral-framework.com) | <b>[Make an App](https://github.com/spiral/webapp)</b> | [Guide](https://github.com/spiral/guide) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
+[Website](https://spiral-framework.com) | <b>[Make an App](https://github.com/spiral/webapp)</b> | [Documentation](https://github.com/spiral/guide) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
 
 <br/>
 
