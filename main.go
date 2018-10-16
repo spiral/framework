@@ -48,7 +48,7 @@ func main() {
 	rr.Container.Register(http.ID, &http.Service{})
 	rr.Container.Register(static.ID, &static.Service{})
 
-    rr.Container.Register(jobs.ID, &jobs.Service{
+        rr.Container.Register(jobs.ID, &jobs.Service{
 		Brokers: map[string]jobs.Broker{
 			"local":     &local.Broker{},
 			"beanstalk": &beanstalk.Broker{},
