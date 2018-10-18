@@ -27,28 +27,32 @@ import (
 	rr "github.com/spiral/roadrunner/cmd/rr/cmd"
 
 	// services (plugins)
+	"github.com/spiral/grpc"
+
 	"github.com/spiral/roadrunner/service/env"
 	"github.com/spiral/roadrunner/service/http"
 	"github.com/spiral/roadrunner/service/rpc"
 	"github.com/spiral/roadrunner/service/static"
 
-        "github.com/spiral/jobs"
+	"github.com/spiral/jobs"
 	"github.com/spiral/jobs/broker/beanstalk"
 	"github.com/spiral/jobs/broker/local"
 	"github.com/spiral/jobs/broker/sqs"
 
 	// additional commands and debug handlers
+	_ "github.com/spiral/grpc/cmd/rgrpc/grpc"
+	_ "github.com/spiral/jobs/cmd/rjobs/jobs"
 	_ "github.com/spiral/roadrunner/cmd/rr/http"
-	_ "github.com/spiral/jobs/cmd"
 )
 
 func main() {
 	rr.Container.Register(env.ID, &env.Service{})
 	rr.Container.Register(rpc.ID, &rpc.Service{})
 	rr.Container.Register(http.ID, &http.Service{})
+	rr.Container.Register(grpc.ID, &grpc.Service{})
 	rr.Container.Register(static.ID, &static.Service{})
 
-       rr.Container.Register(jobs.ID, &jobs.Service{
+	rr.Container.Register(jobs.ID, &jobs.Service{
 		Brokers: map[string]jobs.Broker{
 			"local":     &local.Broker{},
 			"beanstalk": &beanstalk.Broker{},
