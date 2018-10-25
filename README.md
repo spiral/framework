@@ -62,4 +62,4 @@ spiral/profiler | [![Latest Stable Version](https://poser.pugx.org/spiral/profil
 
 License:
 --------
-The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [SpiralScout](https://spiralscout.com).
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).
