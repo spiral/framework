@@ -10,6 +10,7 @@ namespace Spiral\Core;
 
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\FrameworkException;
 use Spiral\Bootloader\System\TokenizerBootloader;
 
@@ -24,6 +25,22 @@ abstract class Kernel extends AbstractKernel
     protected function bootstrap()
     {
         $this->bootloader->bootload(static::APP);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebug(): bool
+    {
+        return !empty($this->getEnvironment()->get('DEBUG'));
+    }
+
+    /**
+     * @return EnvironmentInterface
+     */
+    public function getEnvironment(): EnvironmentInterface
+    {
+        return $this->container->get(EnvironmentInterface::class);
     }
 
     /**
