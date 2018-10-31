@@ -16,13 +16,14 @@ use Spiral\Bootloader\System\TokenizerBootloader;
 abstract class Kernel extends AbstractKernel
 {
     const SYSTEM = [CoreBootloader::class, TokenizerBootloader::class];
+    const APP    = [];
 
     /**
      * Each application can define it's own boot sequence.
      */
     protected function bootstrap()
     {
-
+        $this->bootloader->bootload(static::APP);
     }
 
     /**

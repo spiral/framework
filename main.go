@@ -40,8 +40,8 @@ import (
 	"github.com/spiral/jobs/broker/sqs"
 
 	// additional commands and debug handlers
-	_ "github.com/spiral/grpc/cmd/rgrpc/grpc"
-	_ "github.com/spiral/jobs/cmd/rjobs/jobs"
+	_ "github.com/spiral/grpc/cmd/rr-grpc/grpc"
+	_ "github.com/spiral/jobs/cmd/rr-jobs/jobs"
 	_ "github.com/spiral/roadrunner/cmd/rr/http"
 )
 
