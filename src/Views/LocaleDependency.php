@@ -64,7 +64,7 @@ class LocaleDependency implements DependencyInterface
     public function __debugInfo(): array
     {
         return [
-            'current'  => $this->getValue(),
+            'value'  => $this->getValue(),
             'variants' => $this->getVariants()
         ];
     }

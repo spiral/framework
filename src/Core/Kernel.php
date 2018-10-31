@@ -8,6 +8,7 @@
 
 namespace Spiral\Core;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\EnvironmentInterface;
@@ -41,6 +42,14 @@ abstract class Kernel extends AbstractKernel
     public function getEnvironment(): EnvironmentInterface
     {
         return $this->container->get(EnvironmentInterface::class);
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
     }
 
     /**
