@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Bootloader\Data;
+namespace Spiral\Bootloader\Database;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
