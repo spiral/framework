@@ -9,7 +9,8 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         stopOnError="false">
+         stopOnError="false"
+         stderr="true">
     <testsuites>
         <testsuite name="Config injector and configuration mutator">
             <directory>./tests/</directory>

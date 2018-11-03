@@ -8,9 +8,9 @@
 
 namespace Spiral\Framework\Command\Framework;
 
-use Spiral\Framework\Command\BaseCommandTest;
+use Spiral\Framework\ConsoleTest;
 
-class CleanTest extends BaseCommandTest
+class CleanTest extends ConsoleTest
 {
     public function testClean()
     {

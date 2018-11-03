@@ -15,8 +15,6 @@ use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\Autowire;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\SectionInterface;
-use Spiral\Session\Session;
-use Spiral\Session\SessionInterface;
 use Spiral\Session\SessionMiddleware;
 use Spiral\Session\SessionSection;
 
@@ -25,7 +23,6 @@ class SessionBootloader extends Bootloader
     const BOOT = true;
 
     const BINDINGS = [
-        SessionInterface::class => Session::class,
         SectionInterface::class => SessionSection::class
     ];
 

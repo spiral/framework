@@ -9,9 +9,9 @@
 namespace Spiral\Framework\Command\Database;
 
 use Spiral\Database\Database;
-use Spiral\Framework\Command\BaseCommandTest;
+use Spiral\Framework\ConsoleTest;
 
-class DescribeTest extends BaseCommandTest
+class DescribeTest extends ConsoleTest
 {
     /**
      * @expectedException \Spiral\Database\Exception\DBALException

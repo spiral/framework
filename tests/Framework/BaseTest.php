@@ -18,7 +18,7 @@ abstract class BaseTest extends TestCase
     {
         return TestApp::init([
             'root'    => __DIR__ . '/../..',
-            'app'     => __DIR__ . '/../App',
+            'app'     => __DIR__ . '/../app',
             'runtime' => sys_get_temp_dir() . '/spiral',
             'cache'   => sys_get_temp_dir() . '/spiral',
         ], new Environment($env), false);

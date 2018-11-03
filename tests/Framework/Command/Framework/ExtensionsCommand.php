@@ -8,9 +8,10 @@
 
 namespace Spiral\Framework\Command\Framework;
 
-use Spiral\Framework\Command\BaseCommandTest;
 
-class ExtensionsCommand extends BaseCommandTest
+use Spiral\Framework\ConsoleTest;
+
+class ExtensionsCommand extends ConsoleTest
 {
     public function testExtensions()
     {

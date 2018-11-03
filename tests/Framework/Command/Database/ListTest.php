@@ -9,9 +9,9 @@
 namespace Spiral\Framework\Command\Database;
 
 use Spiral\Database\Database;
-use Spiral\Framework\Command\BaseCommandTest;
+use Spiral\Framework\ConsoleTest;
 
-class ListTest extends BaseCommandTest
+class ListTest extends ConsoleTest
 {
     public function testList()
     {

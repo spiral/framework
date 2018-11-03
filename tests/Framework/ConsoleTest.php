@@ -6,14 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Framework\Command;
+namespace Spiral\Framework;
 
 use Spiral\App\TestApp;
-use Spiral\Framework\BaseTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-abstract class BaseCommandTest extends BaseTest
+abstract class ConsoleTest extends BaseTest
 {
     /** @var TestApp */
     protected $app;

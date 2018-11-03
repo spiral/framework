@@ -8,6 +8,7 @@
 
 namespace Spiral\App;
 
+use Spiral\App\Bootloader\AppBootloader;
 use Spiral\Bootloader;
 use Spiral\Console\ConsoleCore;
 use Spiral\Core\Kernel;
@@ -53,6 +54,8 @@ class TestApp extends Kernel
         // Framework commands
         Bootloader\CommandBootloader::class
     ];
+
+    const APP = [AppBootloader::class];
 
     /**
      * @param string $alias
