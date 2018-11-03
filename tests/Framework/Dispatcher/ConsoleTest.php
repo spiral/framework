@@ -34,7 +34,51 @@ class ConsoleTest extends BaseTest
 
         $result = $output->fetch();
 
+        $this->assertContains("dead", $result);
         $this->assertContains("php:ext", $result);
         $this->assertContains("console:reload", $result);
+    }
+
+    public function testException()
+    {
+        $output = new BufferedOutput();
+        $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
+            'command' => 'dead'
+        ]), $output);
+
+        $result = $output->fetch();
+
+        $this->assertContains("undefined", $result);
+        $this->assertContains("DeadCommand.php", $result);
+    }
+
+    public function testExceptionVerbose()
+    {
+        $output = new BufferedOutput();
+        $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
+        $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
+            'command' => 'dead'
+        ]), $output);
+
+        $result = $output->fetch();
+        $this->assertContains("undefined", $result);
+        $this->assertContains("DeadCommand.php", $result);
+        $this->assertContains("->perform()", $result);
+    }
+
+    public function testExceptionDebug()
+    {
+        $output = new BufferedOutput();
+        $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
+        $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
+            'command' => 'dead'
+        ]), $output);
+
+        $result = $output->fetch();
+        $this->assertContains("undefined", $result);
+        $this->assertContains("DeadCommand.php", $result);
+        $this->assertContains("->perform()", $result);
+
+        $this->assertContains("\$undefined", $result);
     }
 }
