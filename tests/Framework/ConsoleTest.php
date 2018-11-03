@@ -31,4 +31,15 @@ abstract class ConsoleTest extends BaseTest
 
         return $output->fetch();
     }
+
+    public function runCommandDebug(string $command, array $args = []): string
+    {
+        $input = new ArrayInput($args);
+        $output = new BufferedOutput();
+        $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
+
+        $this->app->console()->run($command, $input, $output);
+
+        return $output->fetch();
+    }
 }
