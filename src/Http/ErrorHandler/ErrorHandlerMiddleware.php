@@ -6,13 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Http;
+namespace Spiral\Http\ErrorHandler;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
-use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Router\Exception\RouteNotFoundException;

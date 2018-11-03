@@ -30,11 +30,10 @@ class TestApp extends Kernel
         // Dispatchers
         Bootloader\Dispatcher\HttpBootloader::class,
         Bootloader\Dispatcher\RoadRunnerBootloader::class,
-        Bootloader\Dispatcher\JobsBootloader::class,
         Bootloader\Dispatcher\ConsoleBootloader::class,
 
         // HTTP extensions
-        Bootloader\Http\ErrorPageBootloader::class,
+        Bootloader\Http\ErrorHandlerBootloader::class,
         Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CookiesBootloader::class,

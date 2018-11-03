@@ -13,12 +13,12 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\Autowire;
-use Spiral\Http\ErrorHandlerMiddleware;
+use Spiral\Http\ErrorHandler\ErrorHandlerMiddleware;
 
 /**
  * Enable exception wrapping within HTTP requests.
  */
-class ErrorPageBootloader extends Bootloader
+class ErrorHandlerBootloader extends Bootloader
 {
     const BOOT = true;
 
