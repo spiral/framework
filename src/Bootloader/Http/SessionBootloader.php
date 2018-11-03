@@ -13,9 +13,9 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\Autowire;
+use Spiral\Http\Middleware\SessionMiddleware;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\SectionInterface;
-use Spiral\Session\SessionMiddleware;
 use Spiral\Session\SessionSection;
 
 class SessionBootloader extends Bootloader

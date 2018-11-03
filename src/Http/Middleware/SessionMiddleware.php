@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Session;
+namespace Spiral\Http\Middleware;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -17,6 +17,8 @@ use Spiral\Core\ScopeInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Cookie\Cookie;
 use Spiral\Session\Config\SessionConfig;
+use Spiral\Session\SessionFactory;
+use Spiral\Session\SessionInterface;
 
 class SessionMiddleware implements MiddlewareInterface
 {

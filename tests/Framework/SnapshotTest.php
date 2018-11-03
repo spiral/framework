@@ -11,7 +11,7 @@ namespace Spiral\Framework;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
-class SnapshotsTest extends BaseTest
+class SnapshotTest extends BaseTest
 {
     public function testSnapshot()
     {

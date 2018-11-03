@@ -13,7 +13,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\Autowire;
-use Spiral\Http\ErrorHandler\ErrorHandlerMiddleware;
+use Spiral\Http\Middleware\ErrorHandlerMiddleware;
 
 /**
  * Enable exception wrapping within HTTP requests.
