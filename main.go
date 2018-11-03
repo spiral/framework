@@ -62,6 +62,5 @@ func main() {
 
 	rr.Logger.Formatter = &logrus.TextFormatter{ForceColors: true}
 
-	// you can register additional commands using cmd.CLI
 	rr.Execute()
 }

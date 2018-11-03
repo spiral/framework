@@ -35,6 +35,7 @@ class DatabaseBootloader extends Bootloader
         ContainerInterface $container
     ) {
         $configurator->setDefaults('database', [
+            'default'   => 'default',
             'aliases'   => [],
             'databases' => [],
             'drivers'   => []
