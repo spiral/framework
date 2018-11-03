@@ -33,11 +33,9 @@ class ViewsTest extends BaseTest
         $this->assertSame('Hello, English!', $views->render('home'));
 
         $app->get(TranslatorInterface::class)->setLocale('ru');
-
         $this->assertSame('Hello, Мир!', $views->render('home'));
 
         $app->get(TranslatorInterface::class)->setLocale('en');
-
         $this->assertSame('Hello, English!', $views->render('home'));
     }
 }

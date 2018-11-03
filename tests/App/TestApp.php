@@ -9,6 +9,7 @@
 namespace Spiral\App;
 
 use Spiral\Bootloader;
+use Spiral\Console\ConsoleCore;
 use Spiral\Core\Kernel;
 use Spiral\Stempler\Bootloader\StemplerBootloader;
 
@@ -58,5 +59,13 @@ class TestApp extends Kernel
     public function get(string $alias)
     {
         return $this->container->get($alias);
+    }
+
+    /**
+     * @return ConsoleCore
+     */
+    public function console(): ConsoleCore
+    {
+        return $this->get(ConsoleCore::class);
     }
 }
