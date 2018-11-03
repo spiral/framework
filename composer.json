@@ -34,7 +34,8 @@
     "spiral/jobs": "2.0",
     "spiral/views": "^1.0",
     "phpunit/phpunit": "~7.0",
-    "mockery/mockery": "^1.1"
+    "mockery/mockery": "^1.1",
+    "spiral/stempler": "^2.0"
   },
   "autoload": {
     "files": [

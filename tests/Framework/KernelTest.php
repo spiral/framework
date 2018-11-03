@@ -16,7 +16,7 @@ class KernelTest extends BaseTest
     {
         $configs = $this->makeApp([
             'TEST_VALUE' => 'HELLO WORLD'
-        ])->getContainer()->get(ConfiguratorInterface::class);
+        ])->get(ConfiguratorInterface::class);
 
         $this->assertSame([
             'key' => 'HELLO WORLD'

@@ -10,6 +10,7 @@ namespace Spiral\App;
 
 use Spiral\Bootloader;
 use Spiral\Core\Kernel;
+use Spiral\Stempler\Bootloader\StemplerBootloader;
 
 class TestApp extends Kernel
 {
@@ -45,5 +46,17 @@ class TestApp extends Kernel
         // Template engines and rendering
         Bootloader\Views\ViewsBootloader::class,
         Bootloader\Views\TranslateBootloader::class,
+
+        // Extensions
+        StemplerBootloader::class,
     ];
+
+    /**
+     * @param string $alias
+     * @return mixed|null|object
+     */
+    public function get(string $alias)
+    {
+        return $this->container->get($alias);
+    }
 }
