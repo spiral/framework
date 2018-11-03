@@ -56,12 +56,15 @@ class RoadRunnerDispatcher implements DispatcherInterface
 
     /**
      * @inheritdoc
+     *
+     * @param Worker|null $worker
      */
-    public function serve()
+    public function serve(Worker $worker = null)
     {
+        $client = new PSR7Client($worker ?? $this->getWorker());
+
         /** @var HttpCore $http */
         $http = $this->container->get(HttpCore::class);
-        $client = $this->psr7Client();
 
         while ($request = $client->acceptRequest()) {
             try {
@@ -75,13 +78,11 @@ class RoadRunnerDispatcher implements DispatcherInterface
     }
 
     /**
-     * @return PSR7Client
+     * @return Worker
      */
-    protected function psr7Client(): PSR7Client
+    protected function getWorker(): Worker
     {
-        $worker = new Worker(new StreamRelay(STDIN, STDOUT));
-
-        return new PSR7Client($worker);
+        return new Worker(new StreamRelay(STDIN, STDOUT));
     }
 
     /**
