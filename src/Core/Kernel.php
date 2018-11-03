@@ -82,7 +82,6 @@ abstract class Kernel extends AbstractKernel
             // application directories
             'config'    => $directories['app'] . '/config/',
             'resources' => $directories['app'] . '/resources/',
-            'locales'   => $directories['app'] . '/locales/',
         ], $directories);
     }
 }
