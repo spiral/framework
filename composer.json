@@ -31,7 +31,6 @@
     "spiral/security": "^2.0",
     "spiral/database": "^2.0",
     "spiral/migrations": "^2.0",
-    "spiral/jobs": "2.0",
     "spiral/views": "^1.0",
     "phpunit/phpunit": "~7.0",
     "mockery/mockery": "^1.1",
