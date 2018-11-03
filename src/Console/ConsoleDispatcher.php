@@ -52,9 +52,9 @@ class ConsoleDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve()
+    public function serve(OutputInterface $output = null)
     {
-        $output = new ConsoleOutput();
+        $output = $output ?? new ConsoleOutput();
 
         /** @var DebugListener $listener */
         $listener = $this->container->get(DebugListener::class);
