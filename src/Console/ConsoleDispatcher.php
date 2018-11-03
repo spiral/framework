@@ -16,6 +16,7 @@ use Spiral\Console\Logger\DebugListener;
 use Spiral\Exceptions\ConsoleHandler;
 use Spiral\Snapshots\SnapshotterInterface;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -52,7 +53,7 @@ class ConsoleDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve(OutputInterface $output = null)
+    public function serve(InputInterface $input = null, OutputInterface $output = null)
     {
         $output = $output ?? new ConsoleOutput();
 
@@ -64,7 +65,7 @@ class ConsoleDispatcher implements DispatcherInterface
         $core = $this->container->get(ConsoleCore::class);
 
         try {
-            $core->start(new ArgvInput(), $output);
+            $core->start($input ?? new ArgvInput(), $output);
         } catch (\Throwable $e) {
             $this->handleException($e, $output);
         } finally {
