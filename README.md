@@ -1,4 +1,4 @@
-# Spiral 2.0, High-Performance PHP/Go Framework
+# Spiral - High-Performance PHP/Go Framework
 [![Latest Stable Version](https://poser.pugx.org/spiral/framework/version)](https://packagist.org/packages/spiral/framework)
 [![Build Status](https://travis-ci.org/spiral/framework.svg?branch=master)](https://travis-ci.org/spiral/framework)
 [![Codecov](https://codecov.io/gh/spiral/framework/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/framework/)
@@ -6,9 +6,9 @@
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="120px" alt="Spiral Framework" align="left"/>
 
-Spiral is PHP micro-framework core, the set of open-source components and [an application server](https://github.com/spiral/roadrunner) designed to rapidly develop high-performance backends with native support of HTTP/2, [GRPC](https://grpc.io/), distributed computations and Golang extensions.
+Spiral is an open-source (MIT), PHP Micro-Framework core that uses a set of open-source components and [an application server](https://github.com/spiral/roadrunner) is designed to rapidly develop (RAD) high-performance applications that come with native support for HTTP/2, [GRPC](https://grpc.io/), distributed computations and Golang extensions. 
 
-[Website](https://spiral-framework.com) | <b>[Make an App](https://github.com/spiral/webapp)</b> | [Guide](https://github.com/spiral/guide) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
+[Website](https://spiral-framework.com) | <b>[Make an App (v1.0.0)](https://github.com/spiral/webapp)</b> | [Documentation (v1.0.0)](https://github.com/spiral/guide) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
 
 <br/>
 
@@ -36,6 +36,7 @@ spiral/jobs | [![Latest Stable Version](https://poser.pugx.org/spiral/jobs/versi
 spiral/hmvc | [![Latest Stable Version](https://poser.pugx.org/spiral/hmvc/version)](https://packagist.org/packages/spiral/hmvc) [![Build Status](https://travis-ci.org/spiral/hmvc.svg?branch=master)](https://travis-ci.org/spiral/hmvc) [![Codecov](https://codecov.io/gh/spiral/hmvc/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/hmvc/)
 spiral/router | [![Latest Stable Version](https://poser.pugx.org/spiral/router/version)](https://packagist.org/packages/spiral/router) [![Build Status](https://travis-ci.org/spiral/router.svg?branch=master)](https://travis-ci.org/spiral/router) [![Codecov](https://codecov.io/gh/spiral/router/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/router/)
 spiral/session | [![Latest Stable Version](https://poser.pugx.org/spiral/session/version)](https://packagist.org/packages/spiral/session) [![Build Status](https://travis-ci.org/spiral/session.svg?branch=master)](https://travis-ci.org/spiral/session) [![Codecov](https://codecov.io/gh/spiral/session/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/session/)
+spiral/php-grpc | [![Latest Stable Version](https://poser.pugx.org/spiral/php-grpc/version)](https://packagist.org/packages/spiral/php-grpc) [![Build Status](https://travis-ci.org/spiral/php-grpc.svg?branch=master)](https://travis-ci.org/spiral/php-grpc) [![Codecov](https://codecov.io/gh/spiral/php-grpc/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/php-grpc/)
 spiral/encryption | [![Latest Stable Version](https://poser.pugx.org/spiral/encrypter/version)](https://packagist.org/packages/spiral/encrypter) [![Build Status](https://travis-ci.org/spiral/encrypter.svg?branch=master)](https://travis-ci.org/spiral/encrypter) [![Codecov](https://codecov.io/gh/spiral/encrypter/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/encrypter/)
 spiral/security | [![Latest Stable Version](https://poser.pugx.org/spiral/security/version)](https://packagist.org/packages/spiral/security) [![Build Status](https://travis-ci.org/spiral/security.svg?branch=master)](https://travis-ci.org/spiral/security) [![Codecov](https://codecov.io/gh/spiral/security/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/security/)
 spiral/validation | [![Latest Stable Version](https://poser.pugx.org/spiral/validation/version)](https://packagist.org/packages/spiral/validation) [![Build Status](https://travis-ci.org/spiral/validation.svg?branch=master)](https://travis-ci.org/spiral/validation) [![Codecov](https://codecov.io/gh/spiral/validation/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/validation/)
@@ -57,7 +58,8 @@ spiral/helpers | [![Latest Stable Version](https://poser.pugx.org/spiral/helpers
 spiral/twig | [![Latest Stable Version](https://poser.pugx.org/spiral/twig/version)](https://packagist.org/packages/spiral/twig) [![Build Status](https://travis-ci.org/spiral/twig-bridge.svg?branch=master)](https://travis-ci.org/spiral/twig-bridge) [![Codecov](https://codecov.io/gh/spiral/twig-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/twig-bridge/)
 spiral/stempler | [![Latest Stable Version](https://poser.pugx.org/spiral/stempler/version)](https://packagist.org/packages/spiral/stempler) [![Build Status](https://travis-ci.org/spiral/stempler.svg?branch=master)](https://travis-ci.org/spiral/stempler) [![Codecov](https://codecov.io/gh/spiral/stempler/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/stempler/)
 spiral/composer-publish-plugin | [![Latest Stable Version](https://poser.pugx.org/spiral/composer-publish-plugin/version)](https://packagist.org/packages/spiral/composer-publish-plugin) [![Build Status](https://travis-ci.org/spiral/composer-publish-plugin.svg?branch=master)](https://travis-ci.org/spiral/composer-publish-plugin) [![Codecov](https://codecov.io/gh/spiral/composer-publish-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/composer-publish-plugin/)
+spiral/profiler | [![Latest Stable Version](https://poser.pugx.org/spiral/profiler/version)](https://packagist.org/packages/spiral/profiler) [![Build Status](https://travis-ci.org/spiral/profiler.svg?branch=master)](https://travis-ci.org/spiral/profiler) [![Codecov](https://codecov.io/gh/spiral/profiler/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/profiler/)
 
 License:
 --------
-The MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [SpiralScout](https://spiralscout.com).
+MIT License (MIT). Please see [`LICENSE`](./LICENSE) for more information. Maintained by [Spiral Scout](https://spiralscout.com).
