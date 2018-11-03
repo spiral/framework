@@ -50,6 +50,9 @@ class TestApp extends Kernel
 
         // Extensions
         StemplerBootloader::class,
+
+        // Framework commands
+        Bootloader\CommandBootloader::class
     ];
 
     /**
