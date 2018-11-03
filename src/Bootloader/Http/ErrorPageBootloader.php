@@ -13,7 +13,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\AppendPatch;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\Autowire;
-use Spiral\Http\Middleware\ExceptionWrapper;
+use Spiral\Http\ErrorHandlerMiddleware;
 
 /**
  * Enable exception wrapping within HTTP requests.
@@ -31,7 +31,7 @@ class ErrorPageBootloader extends Bootloader
         $configurator->modify(
             'http',
             new AppendPatch('middleware', null, new Autowire(
-                ExceptionWrapper::class,
+                ErrorHandlerMiddleware::class,
                 ['suppressErrors' => !$environment->get('DEBUG', false)]
             ))
         );
