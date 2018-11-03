@@ -21,6 +21,11 @@ class TestController extends Controller
         return "Hello, {$name}.";
     }
 
+    public function errorAction()
+    {
+        echo $undefined;
+    }
+
     public function routeAction(RouteInterface $route)
     {
         return $route->getMatches();

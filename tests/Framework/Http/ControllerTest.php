@@ -18,9 +18,18 @@ class ControllerTest extends HttpTest
         $this->assertSame('Hello, Antony.', (string)$this->get('/index/Antony')->getBody());
     }
 
-    public function testSession()
+    public function testRouteJson()
     {
-        $this->assertSame('Hello, Dave.', (string)$this->get('/index')->getBody());
-        $this->assertSame('Hello, Antony.', (string)$this->get('/index/Antony')->getBody());
+        $this->assertSame('{"action":"route","name":"Dave"}', (string)$this->get('/route')->getBody());
+    }
+
+    public function test404()
+    {
+        $this->assertSame('404', (string)$this->get('/undefined')->getStatusCode());
+    }
+
+    public function test500()
+    {
+        $this->assertSame('500', (string)$this->get('/error')->getStatusCode());
     }
 }
