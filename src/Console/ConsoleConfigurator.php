@@ -36,7 +36,10 @@ class ConsoleConfigurator
      */
     public function addCommand(string $command)
     {
-        $this->configurator->modify($this->config, new AppendPatch('commands', null, $command));
+        $this->configurator->modify(
+            $this->config,
+            new AppendPatch('commands', null, $command)
+        );
     }
 
     /**
@@ -45,8 +48,12 @@ class ConsoleConfigurator
      * @param string       $footer
      * @param array        $options
      */
-    public function configureSequence($sequence, string $header, string $footer = '', array $options = [])
-    {
+    public function configureSequence(
+        $sequence,
+        string $header,
+        string $footer = '',
+        array $options = []
+    ) {
         $this->configurator->modify(
             $this->config,
             $this->sequencePatch('configure', $sequence, $header, $footer, $options)
@@ -59,8 +66,12 @@ class ConsoleConfigurator
      * @param string       $footer
      * @param array        $options
      */
-    public function updateSequence($sequence, string $header, string $footer = '', array $options = [])
-    {
+    public function updateSequence(
+        $sequence,
+        string $header,
+        string $footer = '',
+        array $options = []
+    ) {
         $this->configurator->modify(
             $this->config,
             $this->sequencePatch('update', $sequence, $header, $footer, $options)
@@ -75,12 +86,25 @@ class ConsoleConfigurator
      * @param array  $options
      * @return AppendPatch
      */
-    private function sequencePatch(string $target, $sequence, string $header, string $footer, array $options)
-    {
+    private function sequencePatch(
+        string $target,
+        $sequence,
+        string $header,
+        string $footer,
+        array $options
+    ) {
         if (is_array($sequence)) {
-            return new AppendPatch($target, null, new CallableSequence($sequence, $options, $header, $footer));
+            return new AppendPatch(
+                $target,
+                null,
+                new CallableSequence($sequence, $options, $header, $footer)
+            );
         }
 
-        return new AppendPatch($target, null, new CommandSequence($sequence, $options, $header, $footer));
+        return new AppendPatch(
+            $target,
+            null,
+            new CommandSequence($sequence, $options, $header, $footer)
+        );
     }
 }

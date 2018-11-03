@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Pagination\Paginator;
+use Spiral\Pagination\PaginatorInterface;
 use Spiral\Pagination\PaginatorsInterface;
 
 /**

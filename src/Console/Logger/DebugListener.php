@@ -131,7 +131,11 @@ class DebugListener
             return "[{$channel}]";
         }
 
-        $reflection = new \ReflectionClass($channel);
+        try {
+            $reflection = new \ReflectionClass($channel);
+        } catch (\ReflectionException $e) {
+            return $channel;
+        }
 
         return "[{$reflection->getShortName()}]";
     }
