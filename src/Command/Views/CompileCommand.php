@@ -32,7 +32,12 @@ class CompileCommand extends Command
     {
         $generator = new ContextGenerator($views->getContext());
 
-        foreach ($generator->generate() as $context) {
+        $contexts = $generator->generate();
+        if (empty($contexts)) {
+            $contexts[] = $views->getContext();
+        }
+
+        foreach ($contexts as $context) {
             foreach ($views->getEngines() as $engine) {
                 $this->compile($engine, $context);
             }
