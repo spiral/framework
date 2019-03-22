@@ -55,7 +55,7 @@ class CompileCommand extends Command
         $this->sprintf(
             "<fg=yellow>%s</fg=yellow> [%s]\n",
             $this->describeEngine($engine),
-            $this->describeContext($context)
+            $this->describeContext($context) ?? "default"
         );
 
         foreach ($engine->getLoader()->list() as $path) {
