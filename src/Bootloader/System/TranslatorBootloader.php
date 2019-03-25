@@ -19,6 +19,7 @@ use Spiral\Translator\CataloguesInterface;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 use Symfony\Component\Translation\Dumper;
+use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\Loader;
 
 class TranslatorBootloader extends Bootloader
@@ -29,6 +30,7 @@ class TranslatorBootloader extends Bootloader
         \Symfony\Component\Translation\TranslatorInterface::class => TranslatorInterface::class,
         TranslatorInterface::class                                => Translator::class,
         CataloguesInterface::class                                => CatalogueManager::class,
+        IdentityTranslator::class                                 => [self::class, 'identityTranslator']
     ];
 
     const BINDINGS = [
@@ -71,5 +73,13 @@ class TranslatorBootloader extends Bootloader
                 'messages' => ['*']
             ]
         ]);
+    }
+
+    /**
+     * @return IdentityTranslator
+     */
+    protected function identityTranslator(): IdentityTranslator
+    {
+        return new IdentityTranslator();
     }
 }
