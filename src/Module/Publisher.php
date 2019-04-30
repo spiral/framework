@@ -24,7 +24,7 @@ final class Publisher implements PublisherInterface
     private $files = null;
 
     /** @var DirectoriesInterface */
-    private $directories = null;
+    private $dirs = null;
 
     /**
      * @param FilesInterface       $files
@@ -33,7 +33,7 @@ final class Publisher implements PublisherInterface
     public function __construct(FilesInterface $files, DirectoriesInterface $dirs)
     {
         $this->files = $files;
-        $this->directories = $dirs;
+        $this->dirs = $dirs;
     }
 
     /**

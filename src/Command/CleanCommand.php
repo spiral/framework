@@ -5,8 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Command\Framework;
+namespace Spiral\Command;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;
@@ -15,8 +16,8 @@ use Spiral\Files\FilesInterface;
 
 final class CleanCommand extends Command implements SingletonInterface
 {
-    const NAME = 'clean:cache';
-    const DESCRIPTION = 'Clean application runtime cache';
+    protected const NAME        = 'clean:cache';
+    protected const DESCRIPTION = 'Clean application runtime cache';
 
     /**
      * @param FilesInterface       $files

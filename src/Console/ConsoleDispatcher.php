@@ -23,21 +23,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Manages Console commands and exception. Lazy loads console service.
  */
-class ConsoleDispatcher implements DispatcherInterface
+final class ConsoleDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */
-    private $environment;
+    private $env;
 
     /** @var ContainerInterface */
     private $container;
 
     /**
-     * @param EnvironmentInterface $environment
+     * @param EnvironmentInterface $env
      * @param ContainerInterface   $container
      */
-    public function __construct(EnvironmentInterface $environment, ContainerInterface $container)
+    public function __construct(EnvironmentInterface $env, ContainerInterface $container)
     {
-        $this->environment = $environment;
+        $this->env = $env;
         $this->container = $container;
     }
 
@@ -47,7 +47,7 @@ class ConsoleDispatcher implements DispatcherInterface
     public function canServe(): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
-        return (php_sapi_name() == 'cli' && $this->environment->get('RR') === null);
+        return (php_sapi_name() == 'cli' && $this->env->get('RR') === null);
     }
 
     /**
@@ -61,8 +61,8 @@ class ConsoleDispatcher implements DispatcherInterface
         $listener = $this->container->get(DebugListener::class);
         $listener = $listener->withOutput($output)->enable();
 
-        /** @var ConsoleCore $core */
-        $core = $this->container->get(ConsoleCore::class);
+        /** @var Console $core */
+        $core = $this->container->get(Console::class);
 
         try {
             $core->start($input ?? new ArgvInput(), $output);

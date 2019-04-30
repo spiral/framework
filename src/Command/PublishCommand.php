@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Module;
 
@@ -16,10 +17,10 @@ use Spiral\Module\Publisher;
 use Spiral\Module\PublisherInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class PublishCommand extends Command
+final class PublishCommand extends Command
 {
-    const NAME        = 'publish';
-    const DESCRIPTION = 'Publish resources';
+    protected const NAME        = 'publish';
+    protected const DESCRIPTION = 'Publish resources';
 
     /**
      * {@inheritdoc}
