@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Core;
 
@@ -12,7 +13,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Boot\Exception\FrameworkException;
+use Spiral\Boot\Exception\BootException;
 use Spiral\Bootloader\System\TokenizerBootloader;
 
 abstract class Kernel extends AbstractKernel
@@ -61,7 +62,7 @@ abstract class Kernel extends AbstractKernel
     protected function mapDirectories(array $directories): array
     {
         if (!isset($directories['root'])) {
-            throw new FrameworkException("Missing required directory `root`.");
+            throw new BootException("Missing required directory `root`.");
         }
 
         if (!isset($directories['app'])) {
