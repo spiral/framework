@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Database;
 
@@ -17,7 +18,7 @@ use Spiral\Database\Schema\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class TableCommand extends Command
+final class TableCommand extends Command
 {
     /**
      * No information available placeholder.
@@ -114,7 +115,7 @@ class TableCommand extends Command
                 $name,
                 $type,
                 $abstractType,
-                $column->phpType(),
+                $column->getType(),
                 $defaultValue ?: self::SKIP
             ]);
         }
