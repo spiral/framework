@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Translator;
 
@@ -16,7 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class ExportCommand extends Command implements SingletonInterface
+final class ExportCommand extends Command implements SingletonInterface
 {
     const NAME        = "i18n:export";
     const DESCRIPTION = 'Dump given locale using specified dumper and path';

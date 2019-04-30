@@ -13,11 +13,13 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Command\Database;
 use Spiral\Command\Migrate;
+use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Database\DatabaseProviderInterface;
 use Spiral\Migrations\Migrator;
+use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\ViewsInterface;
 
 /**
@@ -45,9 +47,9 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
             $this->configureDatabase($console);
         }
 
-        //        if ($container->has(TranslatorInterface::class)) {
-        //            $this->configureTranslator($console);
-        //        }
+        if ($container->has(TranslatorInterface::class)) {
+            $this->configureTranslator($console);
+        }
 
         if ($container->has(ViewsInterface::class)) {
             $this->configureViews($console);
@@ -68,8 +70,6 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
 
     /**
      * @param ConsoleBootloader $console
-     *
-     * @throws \Spiral\Core\Exception\ConfiguratorException
      */
     private function configureDatabase(ConsoleBootloader $console)
     {
@@ -77,22 +77,20 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
         $console->addCommand(Database\TableCommand::class);
     }
 
-    //    /**
-    //     * @param ConsoleConfigurator $console
-    //     *
-    //     * @throws \Spiral\Core\Exception\ConfiguratorException
-    //     */
-    //    private function configureTranslator(ConsoleConfigurator $console)
-    //    {
-    //        $console->addCommand(Translator\IndexCommand::class);
-    //        $console->addCommand(Translator\ExportCommand::class);
-    //        $console->addCommand(Translator\ResetCommand::class);
-    //
-    //        $console->configureSequence(
-    //            'i18n:index',
-    //            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
-    //        );
-    //    }
+    /**
+     * @param ConsoleBootloader $console
+     **/
+    private function configureTranslator(ConsoleBootloader $console)
+    {
+        $console->addCommand(Translator\IndexCommand::class);
+        $console->addCommand(Translator\ExportCommand::class);
+        $console->addCommand(Translator\ResetCommand::class);
+
+        $console->addConfigureSequence(
+            'i18n:index',
+            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
+        );
+    }
 
     /**
      * @param ConsoleBootloader $console
