@@ -5,10 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Migrate;
 
-class InitCommand extends AbstractCommand
+final class InitCommand extends AbstractCommand
 {
     const NAME        = 'migrate:init';
     const DESCRIPTION = 'Init migrations component (create migrations table)';

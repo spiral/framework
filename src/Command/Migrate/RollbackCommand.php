@@ -5,12 +5,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Migrate;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class RollbackCommand extends AbstractCommand
+final class RollbackCommand extends AbstractCommand
 {
     const NAME        = 'migrate:rollback';
     const DESCRIPTION = 'Rollback one (default) or multiple migrations';

@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Migrate;
 
@@ -14,7 +15,7 @@ use Spiral\Migrations\State;
 /**
  * Show all available migrations and their statuses
  */
-class StatusCommand extends AbstractCommand
+final class StatusCommand extends AbstractCommand
 {
     const NAME        = 'migrate:status';
     const DESCRIPTION = 'Get list of all available migrations and their statuses';

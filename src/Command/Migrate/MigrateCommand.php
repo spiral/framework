@@ -5,12 +5,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Migrate;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class MigrateCommand extends AbstractCommand
+final class MigrateCommand extends AbstractCommand
 {
     const NAME        = 'migrate:migrate';
     const DESCRIPTION = 'Perform one or all outstanding migrations';

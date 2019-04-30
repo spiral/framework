@@ -12,10 +12,12 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Command\Database;
+use Spiral\Command\Migrate;
 use Spiral\Command\Views;
 use Spiral\Console;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Database\DatabaseProviderInterface;
+use Spiral\Migrations\Migrator;
 use Spiral\Views\ViewsInterface;
 
 /**
@@ -51,9 +53,9 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
             $this->configureViews($console);
         }
 
-        //        if ($container->has(Migrator::class)) {
-        //            $this->configureMigrations($console);
-        //        }
+        if ($container->has(Migrator::class)) {
+            $this->configureMigrations($console);
+        }
     }
 
     /**
@@ -106,17 +108,15 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
         );
     }
 
-    //    /**
-    //     * @param ConsoleConfigurator $console
-    //     *
-    //     * @throws \Spiral\Core\Exception\ConfiguratorException
-    //     */
-    //    private function configureMigrations(ConsoleConfigurator $console)
-    //    {
-    //        $console->addCommand(Migrate\InitCommand::class);
-    //        $console->addCommand(Migrate\StatusCommand::class);
-    //        $console->addCommand(Migrate\MigrateCommand::class);
-    //        $console->addCommand(Migrate\RollbackCommand::class);
-    //        $console->addCommand(Migrate\ReplayCommand::class);
-    //    }
+    /**
+     * @param ConsoleBootloader $console
+     */
+    private function configureMigrations(ConsoleBootloader $console)
+    {
+        $console->addCommand(Migrate\InitCommand::class);
+        $console->addCommand(Migrate\StatusCommand::class);
+        $console->addCommand(Migrate\MigrateCommand::class);
+        $console->addCommand(Migrate\RollbackCommand::class);
+        $console->addCommand(Migrate\ReplayCommand::class);
+    }
 }
