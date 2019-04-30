@@ -25,7 +25,7 @@ class TestApp extends Kernel
         Bootloader\Security\EncrypterBootloader::class,
         Bootloader\Security\ValidationBootloader::class,
         Bootloader\Security\FiltersBootloader::class,
-        Bootloader\Security\RBACBootloader::class,
+        Bootloader\Security\RbacBootloader::class,
 
         // Dispatchers
         Bootloader\Http\HttpBootloader::class,

@@ -5,21 +5,21 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Views;
 
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Views\Engine\Native\NativeEngine;
 use Spiral\Views\ViewManager;
 use Spiral\Views\ViewsInterface;
 
-class ViewsBootloader extends Bootloader
+final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT = true;
-
     const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
     ];
