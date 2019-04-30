@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Core\Traits;
+namespace Spiral\Controller\Traits;
 
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Security\Traits\GuardedTrait;
