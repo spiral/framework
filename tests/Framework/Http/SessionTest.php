@@ -39,7 +39,7 @@ class SessionTest extends HttpTest
         $this->assertSame('1', $result->getBody()->__toString());
 
         $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertArrayHasKey('session', $cookies);
+        $this->assertArrayHasKey('sid', $cookies);
     }
 
     public function testSessionResume()
@@ -53,15 +53,15 @@ class SessionTest extends HttpTest
         $this->assertSame('1', $result->getBody()->__toString());
 
         $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertArrayHasKey('session', $cookies);
+        $this->assertArrayHasKey('sid', $cookies);
         $result = $this->get('/', [], [], [
-            'session' => $cookies['session']
+            'sid' => $cookies['sid']
         ]);
 
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('2', $result->getBody()->__toString());
 
-        $result = $this->get('/', [], [], ['session' => $cookies['session']]);
+        $result = $this->get('/', [], [], ['sid' => $cookies['sid']]);
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('3', $result->getBody()->__toString());
     }
@@ -78,10 +78,10 @@ class SessionTest extends HttpTest
         $this->assertFalse($this->app->getContainer()->has(SessionInterface::class));
 
         $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertArrayHasKey('session', $cookies);
+        $this->assertArrayHasKey('sid', $cookies);
 
         $result = $this->get('/', [], [], [
-            'session' => $cookies['session']
+            'sid' => $cookies['sid']
         ]);
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('2', $result->getBody()->__toString());
@@ -93,12 +93,12 @@ class SessionTest extends HttpTest
         });
 
         $result = $this->get('/', [], [], [
-            'session' => $cookies['session']
+            'sid' => $cookies['sid']
         ]);
 
         $newCookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertArrayHasKey('session', $newCookies);
-        $this->assertNotEquals($cookies['session'], $newCookies['session']);
+        $this->assertArrayHasKey('sid', $newCookies);
+        $this->assertNotEquals($cookies['sid'], $newCookies['sid']);
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('3', $result->getBody()->__toString());
     }
@@ -114,9 +114,9 @@ class SessionTest extends HttpTest
         $result = $this->get('/');
         $this->assertSame(200, $result->getStatusCode());
         $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
-        $this->assertArrayHasKey('session', $cookies);
+        $this->assertArrayHasKey('sid', $cookies);
         $result = $this->get('/', [], [], [
-            'session' => $cookies['session']
+            'sid' => $cookies['sid']
         ]);
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('2', $result->getBody()->__toString());
@@ -127,7 +127,7 @@ class SessionTest extends HttpTest
             return ++$this->session()->getSection('cli')->value;
         });
         $result = $this->get('/', [], [], [
-            'session' => $cookies['session']
+            'sid' => $cookies['sid']
         ]);
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('1', $result->getBody()->__toString());

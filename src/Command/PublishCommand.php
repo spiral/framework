@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Command\Module;
+namespace Spiral\Command;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Console\Command;

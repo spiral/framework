@@ -35,8 +35,6 @@ class ConsoleTest extends BaseTest
         $result = $output->fetch();
 
         $this->assertContains("dead", $result);
-        $this->assertContains("php:ext", $result);
-        $this->assertContains("console:reload", $result);
     }
 
     public function testException()

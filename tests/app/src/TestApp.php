@@ -40,7 +40,7 @@ class TestApp extends Kernel
 
         // Data and Storage
         Bootloader\Database\DatabaseBootloader::class,
-        //  Bootloader\Database\MigrationsBootloader::class,
+        Bootloader\Database\MigrationsBootloader::class,
 
         // Template engines and rendering
         //  Bootloader\Views\ViewsBootloader::class,
@@ -50,7 +50,7 @@ class TestApp extends Kernel
         //  StemplerBootloader::class,
 
         // Framework commands
-        //   Bootloader\CommandBootloader::class
+        Bootloader\CommandsBootloader::class
     ];
 
     const APP = [AppBootloader::class];

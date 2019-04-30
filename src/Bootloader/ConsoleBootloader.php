@@ -13,7 +13,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Command\CleanCommand;
-use Spiral\Command\Module\PublishCommand;
+use Spiral\Command\PublishCommand;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Console\CommandLocator;

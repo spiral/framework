@@ -36,7 +36,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     const SINGLETONS = [
         EmitterInterface::class         => SapiEmitter::class,
         ResponseFactoryInterface::class => ResponseFactory::class,
-        HttpCore::class                 => [self::class, 'core'],
+        HttpCore::class                 => [self::class, 'httpCore'],
     ];
 
     /** @var ConfiguratorInterface */

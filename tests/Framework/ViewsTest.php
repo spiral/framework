@@ -11,7 +11,7 @@ namespace Spiral\Framework;
 use Spiral\Views\ViewsInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ViewsTest extends BaseTest
+abstract class ViewsTest extends BaseTest
 {
     public function testRenderViewWithTranslator()
     {
