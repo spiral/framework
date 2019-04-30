@@ -5,13 +5,14 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Bootloader\System;
+namespace Spiral\Bootloader;
 
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Debug\Dumper;
 
-class DebugBootloader extends Bootloader
+final class DebugBootloader extends Bootloader
 {
     const SINGLETONS = [
         Dumper::class => Dumper::class,

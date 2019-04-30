@@ -32,16 +32,16 @@ class RoadRunnerDispatcher implements DispatcherInterface
     private $container;
 
     /**
-     * @param EnvironmentInterface $environment
+     * @param EnvironmentInterface $env
      * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
      */
     public function __construct(
-        EnvironmentInterface $environment,
+        EnvironmentInterface $env,
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->environment = $environment;
+        $this->environment = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
