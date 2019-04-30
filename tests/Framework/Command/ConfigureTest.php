@@ -16,11 +16,9 @@ class ConfigureTest extends ConsoleTest
     {
         $output = $this->runCommandDebug('configure');
 
-        $this->assertTrue(true);
-        // todo: uncomment later
-        //  $this->assertContains('Verifying runtime directory', $output);
-        //$this->assertContains('StemplerEngine', $output);
-        // $this->assertContains('default:home', $output);
-        // $this->assertContains('NativeEngine', $output);
+        $this->assertContains('Verifying runtime directory', $output);
+        //todo: $this->assertContains('StemplerEngine', $output);
+        //$this->assertContains('default:home', $output);
+        $this->assertContains('NativeEngine', $output);
     }
 }

@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Views;
 
@@ -18,7 +19,7 @@ use Spiral\Views\ViewManager;
 /**
  * Warm up view cache.
  */
-class CompileCommand extends Command
+final class CompileCommand extends Command
 {
     private const MIN_WIDTH = 8;
 

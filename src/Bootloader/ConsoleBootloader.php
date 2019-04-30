@@ -88,7 +88,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface, 
      * @param string       $footer
      * @param array        $options
      */
-    public function registerConfigure(
+    public function addConfigureSequence(
         $sequence,
         string $header,
         string $footer = '',
@@ -106,7 +106,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface, 
      * @param string       $footer
      * @param array        $options
      */
-    public function registerUpdate(
+    public function addUpdateSequence(
         $sequence,
         string $header,
         string $footer = '',

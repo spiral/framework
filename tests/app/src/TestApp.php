@@ -43,7 +43,7 @@ class TestApp extends Kernel
         Bootloader\Database\MigrationsBootloader::class,
 
         // Template engines and rendering
-        //  Bootloader\Views\ViewsBootloader::class,
+        Bootloader\Views\ViewsBootloader::class,
         //    Bootloader\Views\TranslateBootloader::class,
 
         // Extensions

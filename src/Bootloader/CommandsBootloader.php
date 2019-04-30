@@ -12,9 +12,11 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Command\Database;
+use Spiral\Command\Views;
 use Spiral\Console;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Database\DatabaseProviderInterface;
+use Spiral\Views\ViewsInterface;
 
 /**
  * Register framework directories in tokenizer in order to locate default commands.
@@ -32,7 +34,7 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
 
-        $console->registerConfigure(
+        $console->addConfigureSequence(
             [RuntimeDirectory::class, 'ensure'],
             '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>ensure `runtime` directory access</fg=cyan>'
         );
@@ -44,17 +46,11 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
         //        if ($container->has(TranslatorInterface::class)) {
         //            $this->configureTranslator($console);
         //        }
-        //
-        //        if ($container->has(MapperInterface::class)) {
-        //            $this->configureFilters($console);
-        //        }
-        //
 
-        //
-        //        if ($container->has(ViewsInterface::class)) {
-        //            $this->configureViews($console);
-        //        }
-        //
+        if ($container->has(ViewsInterface::class)) {
+            $this->configureViews($console);
+        }
+
         //        if ($container->has(Migrator::class)) {
         //            $this->configureMigrations($console);
         //        }
@@ -95,39 +91,21 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
     //            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
     //        );
     //    }
-    //
-    //    /**
-    //     * @param ConsoleConfigurator $console
-    //     *
-    //     * @throws \Spiral\Core\Exception\ConfiguratorException
-    //     */
-    //    private function configureFilters(ConsoleConfigurator $console)
-    //    {
-    //        $console->addCommand(Filters\UpdateCommand::class);
-    //
-    //        $console->updateSequence(
-    //            'filter:update',
-    //            '<fg=magenta>[filters]</fg=magenta> <fg=cyan>update filters mapping schema</fg=cyan>'
-    //        );
-    //    }
-    //
 
-    //    /**
-    //     * @param ConsoleConfigurator $console
-    //     *
-    //     * @throws \Spiral\Core\Exception\ConfiguratorException
-    //     */
-    //    private function configureViews(ConsoleConfigurator $console)
-    //    {
-    //        $console->addCommand(Views\ResetCommand::class);
-    //        $console->addCommand(Views\CompileCommand::class);
-    //
-    //        $console->configureSequence(
-    //            'views:compile',
-    //            '<fg=magenta>[views]</fg=magenta> <fg=cyan>warm up view cache...</fg=cyan>'
-    //        );
-    //    }
-    //
+    /**
+     * @param ConsoleBootloader $console
+     */
+    private function configureViews(ConsoleBootloader $console)
+    {
+        $console->addCommand(Views\ResetCommand::class);
+        $console->addCommand(Views\CompileCommand::class);
+
+        $console->addConfigureSequence(
+            'views:compile',
+            '<fg=magenta>[views]</fg=magenta> <fg=cyan>warm up view cache...</fg=cyan>'
+        );
+    }
+
     //    /**
     //     * @param ConsoleConfigurator $console
     //     *
