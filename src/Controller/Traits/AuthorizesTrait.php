@@ -24,7 +24,6 @@ trait AuthorizesTrait
      *
      * @param string $permission
      * @param array  $context
-     *
      * @return bool
      *
      * @throws ControllerException
@@ -48,7 +47,6 @@ trait AuthorizesTrait
      *
      * @param string|null $action
      * @param array       $parameters
-     *
      * @return mixed
      */
     abstract public function callAction(string $action = null, array $parameters = []);

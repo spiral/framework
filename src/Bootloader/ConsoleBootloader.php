@@ -38,22 +38,11 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface, 
     private $config;
 
     /**
-     * @param ConfiguratorInterface $configurator
+     * @param ConfiguratorInterface $config
      */
-    public function __construct(ConfiguratorInterface $configurator)
+    public function __construct(ConfiguratorInterface $config)
     {
-        $this->config = $configurator;
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            // required to automatically locate available console commands
-            TokenizerBootloader::class
-        ];
+        $this->config = $config;
     }
 
     /**
@@ -72,6 +61,17 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface, 
 
         $this->addCommand(CleanCommand::class);
         $this->addCommand(PublishCommand::class);
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            // required to automatically locate available console commands
+            TokenizerBootloader::class
+        ];
     }
 
     /**

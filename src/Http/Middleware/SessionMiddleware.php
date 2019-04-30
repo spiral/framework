@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Http\Middleware;
 
@@ -20,12 +21,12 @@ use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 
-class SessionMiddleware implements MiddlewareInterface
+final class SessionMiddleware implements MiddlewareInterface
 {
-    const ATTRIBUTE = 'session';
+    public const ATTRIBUTE = 'session';
 
     // Header set used to sign session
-    const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
+    protected const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
 
     /** @var SessionConfig */
     private $config;
@@ -68,12 +69,18 @@ class SessionMiddleware implements MiddlewareInterface
             $this->fetchID($request)
         );
 
-        $response = $this->scope->runScope(
-            [SessionInterface::class => $session],
-            function () use ($session, $request, $handler) {
-                return $handler->handle($request->withAttribute(static::ATTRIBUTE, $session));
-            }
-        );
+        try {
+            $response = $this->scope->runScope(
+                [SessionInterface::class => $session],
+                function () use ($session, $request, $handler) {
+                    return $handler->handle($request->withAttribute(static::ATTRIBUTE, $session));
+                }
+            );
+        } catch (\Throwable $e) {
+            $session->abort();
+
+            throw new $e;
+        }
 
         return $this->commitSession($session, $request, $response);
     }
@@ -82,7 +89,6 @@ class SessionMiddleware implements MiddlewareInterface
      * @param SessionInterface $session
      * @param Request          $request
      * @param Response         $response
-     *
      * @return Response
      */
     protected function commitSession(
@@ -109,7 +115,6 @@ class SessionMiddleware implements MiddlewareInterface
      * Attempt to locate session ID in request.
      *
      * @param Request $request
-     *
      * @return string|null
      */
     protected function fetchID(Request $request): ?string
@@ -126,7 +131,6 @@ class SessionMiddleware implements MiddlewareInterface
      * @param Request  $request
      * @param Response $response
      * @param string   $id
-     *
      * @return Response
      */
     protected function withCookie(Request $request, Response $response, string $id = null): Response
@@ -144,7 +148,6 @@ class SessionMiddleware implements MiddlewareInterface
      * session fixation.
      *
      * @param Request $request
-     *
      * @return string
      */
     protected function clientSignature(Request $request): string
@@ -162,7 +165,6 @@ class SessionMiddleware implements MiddlewareInterface
      *
      * @param UriInterface $uri Incoming uri.
      * @param string|null  $id
-     *
      * @return Cookie
      */
     private function sessionCookie(UriInterface $uri, string $id = null): Cookie

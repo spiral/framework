@@ -5,58 +5,64 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Bootloader\Dispatcher;
+namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Filters\InputInterface;
+use Spiral\Core\FactoryInterface;
 use Spiral\Http\Config\HttpConfig;
-use Spiral\Http\ErrorHandler\NullRenderer;
-use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\HttpCore;
-use Spiral\Http\HttpDispatcher;
 use Spiral\Http\Pipeline;
-use Spiral\Http\RequestInput;
 use Spiral\Http\ResponseFactory;
+use Spiral\Http\RrDispacher;
+use Spiral\Http\SapiDispatcher;
+use Spiral\RoadRunner\PSR7Client;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
-class HttpBootloader extends Bootloader implements SingletonInterface
+/**
+ * Configures Http dispatcher in SAPI and RoadRunner modes (if available).
+ */
+final class HttpBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT = true;
-
     const SINGLETONS = [
-        // Error Pages
-        RendererInterface::class        => NullRenderer::class,
-
-        // PSR-7 handlers and factories
         EmitterInterface::class         => SapiEmitter::class,
         ResponseFactoryInterface::class => ResponseFactory::class,
         HttpCore::class                 => [self::class, 'core'],
-
-        // Filter input mapper
-        InputInterface::class           => RequestInput::class
     ];
 
-    /**
-     * @param KernelInterface       $kernel
-     * @param HttpDispatcher        $http
-     * @param ConfiguratorInterface $configurator
-     */
-    public function boot(
-        KernelInterface $kernel,
-        HttpDispatcher $http,
-        ConfiguratorInterface $configurator
-    ) {
-        $kernel->addDispatcher($http);
+    /** @var ConfiguratorInterface */
+    private $config;
 
-        $configurator->setDefaults('http', [
+    /**
+     * @param ConfiguratorInterface $config
+     */
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @param KernelInterface  $kernel
+     * @param FactoryInterface $factory
+     */
+    public function boot(KernelInterface $kernel, FactoryInterface $factory)
+    {
+        $kernel->addDispatcher($factory->make(SapiDispatcher::class));
+
+        if (class_exists(PSR7Client::class)) {
+            $kernel->addDispatcher($factory->make(RrDispacher::class));
+        }
+
+        $this->config->setDefaults('http', [
             'basePath'   => '/',
             'headers'    => [
                 'Content-Type' => 'text/html; charset=UTF-8'
@@ -83,7 +89,7 @@ class HttpBootloader extends Bootloader implements SingletonInterface
      * @param ContainerInterface       $container
      * @return HttpCore
      */
-    protected function core(
+    protected function httpCore(
         HttpConfig $config,
         Pipeline $pipeline,
         RequestHandlerInterface $handler,
@@ -94,5 +100,25 @@ class HttpBootloader extends Bootloader implements SingletonInterface
         $core->setHandler($handler);
 
         return $core;
+    }
+
+    /**
+     * Register new http middleware.
+     *
+     * @param mixed $middleware
+     */
+    public function addMiddleware($middleware)
+    {
+        $this->config->modify('http', new Append('middleware', null, $middleware));
+    }
+
+    /**
+     * Disable protection for given cookie.
+     *
+     * @param string $cookie
+     */
+    public function whitelistCookie(string $cookie)
+    {
+        $this->config->modify('http', new Append('cookies.excluded', null, $cookie));
     }
 }

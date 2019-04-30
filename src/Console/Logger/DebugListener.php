@@ -123,7 +123,6 @@ final class DebugListener
 
     /**
      * @param string $channel
-     *
      * @return string
      */
     private function getChannel(string $channel): string
