@@ -5,57 +5,61 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Bootloader\System;
+namespace Spiral\Bootloader;
 
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Catalogue\CatalogueLoader;
 use Spiral\Translator\Catalogue\CatalogueManager;
-use Spiral\Translator\Catalogue\LoaderInterface;
-use Spiral\Translator\CataloguesInterface;
+use Spiral\Translator\CatalogueManagerInterface;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
+use Spiral\Views\LoaderInterface;
 use Symfony\Component\Translation\Dumper;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\Loader;
 
-class TranslatorBootloader extends Bootloader
+final class TranslationBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT = true;
-
     const SINGLETONS = [
-        \Symfony\Component\Translation\TranslatorInterface::class => TranslatorInterface::class,
+        \Symfony\Contracts\Translation\TranslatorInterface::class => TranslatorInterface::class,
         TranslatorInterface::class                                => Translator::class,
-        CataloguesInterface::class                                => CatalogueManager::class,
+        CatalogueManagerInterface::class                          => CatalogueManager::class,
+        LoaderInterface::class                                    => CatalogueLoader::class,
         IdentityTranslator::class                                 => [self::class, 'identityTranslator']
     ];
 
-    const BINDINGS = [
-        LoaderInterface::class => CatalogueLoader::class
-    ];
+    /** @var ConfiguratorInterface */
+    private $config;
 
     /**
-     * @param ConfiguratorInterface $configurator
-     * @param DirectoriesInterface  $directories
-     * @param EnvironmentInterface  $environment
+     * @param ConfiguratorInterface $config
      */
-    public function boot(
-        ConfiguratorInterface $configurator,
-        DirectoriesInterface $directories,
-        EnvironmentInterface $environment
-    ) {
-        if (!$directories->has('locales')) {
-            $directories->set('locales', $directories->get('app') . 'locales/');
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @param EnvironmentInterface $env
+     * @param DirectoriesInterface $dirs
+     */
+    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs)
+    {
+        if (!$dirs->has('locale')) {
+            $dirs->set('locale', $dirs->get('app') . 'locale/');
         }
 
-        $configurator->setDefaults('translator', [
-            'locale'         => $environment->get('LOCALE', 'en'),
-            'fallbackLocale' => $environment->get('LOCALE', 'en'),
-            'directory'      => $directories->get('locales'),
-            'autoRegister'   => $environment->get('DEBUG', true),
+        $this->config->setDefaults('translator', [
+            'locale'         => $env->get('LOCALE', 'en'),
+            'fallbackLocale' => $env->get('LOCALE', 'en'),
+            'directory'      => $dirs->get('locale'),
+            'autoRegister'   => $env->get('DEBUG', true),
             'loaders'        => [
                 'php'  => Loader\PhpFileLoader::class,
                 'po'   => Loader\PoFileLoader::class,

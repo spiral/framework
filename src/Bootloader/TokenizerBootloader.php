@@ -12,14 +12,16 @@ namespace Spiral\Bootloader;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
 use Spiral\Core\Container;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationsInterface;
 use Spiral\Tokenizer\Tokenizer;
 
-final class TokenizerBootloader extends Bootloader
+final class TokenizerBootloader extends Bootloader implements SingletonInterface
 {
     const BOOT = true;
 
@@ -28,20 +30,27 @@ final class TokenizerBootloader extends Bootloader
         InvocationsInterface::class => InvocationLocator::class
     ];
 
+    /** @var ConfiguratorInterface */
+    private $config;
+
     /**
-     * @param Container             $container
-     * @param ConfiguratorInterface $cfg
-     * @param DirectoriesInterface  $dirs
+     * @param ConfiguratorInterface $config
      */
-    public function boot(
-        Container $container,
-        ConfiguratorInterface $cfg,
-        DirectoriesInterface $dirs
-    ) {
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @param Container            $container
+     * @param DirectoriesInterface $dirs
+     */
+    public function boot(Container $container, DirectoriesInterface $dirs)
+    {
         $container->bindInjector(ClassLocator::class, Tokenizer::class);
         $container->bindInjector(InvocationLocator::class, Tokenizer::class);
 
-        $cfg->setDefaults('tokenizer', [
+        $this->config->setDefaults('tokenizer', [
             'directories' => [$dirs->get('app')],
             'exclude'     => [
                 $dirs->get('resources'),
@@ -49,5 +58,15 @@ final class TokenizerBootloader extends Bootloader
                 'tests'
             ]
         ]);
+    }
+
+    /**
+     * Add directory for indexation.
+     *
+     * @param string $directory
+     */
+    public function addDirectory(string $directory)
+    {
+        $this->config->modify('tokenizer', new Append('directories', null, $directory));
     }
 }

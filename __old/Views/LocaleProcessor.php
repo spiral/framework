@@ -42,7 +42,6 @@ class LocaleProcessor implements ProcessorInterface
             str_replace(['/', '\\'], '-', $source->getName())
         ));
 
-
         //We are not forcing locale for now
         return $source->withCode(preg_replace_callback(
             self::REGEXP,

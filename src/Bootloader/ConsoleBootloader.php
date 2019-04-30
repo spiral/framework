@@ -68,10 +68,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface, 
      */
     public function defineDependencies(): array
     {
-        return [
-            // required to automatically locate available console commands
-            TokenizerBootloader::class
-        ];
+        return [TokenizerBootloader::class];
     }
 
     /**
