@@ -9,7 +9,7 @@
 namespace Spiral\App\Bootloader;
 
 use Spiral\App\Controller\TestController;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Controller;

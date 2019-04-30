@@ -40,7 +40,7 @@ final class SessionBootloader extends Bootloader implements DependedInterface
     ) {
         $config->setDefaults('session', [
             'lifetime' => 86400,
-            'cookie'   => 'session',
+            'cookie'   => 'sid',
             'secure'   => false,
             'handler'  => new Autowire(FileHandler::class, [
                     'directory' => $directories->get('runtime') . 'session',

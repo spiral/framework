@@ -14,7 +14,6 @@ use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Core\Container\SingletonInterface;
 
-
 final class CycleBootloader extends Bootloader implements DependedInterface, SingletonInterface
 {
     // todo: init cycle
