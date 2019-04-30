@@ -20,7 +20,10 @@ class AppBootloader extends Bootloader
 
     public function boot(RouterInterface $router)
     {
-        $route = new Route('/<action>[/<name>]', new Controller(TestController::class));
+        $route = new Route(
+            '/<action>[/<name>]',
+            new Controller(TestController::class)
+        );
 
         $router->setDefault($route->withDefaults(['name' => 'Dave']));
     }
