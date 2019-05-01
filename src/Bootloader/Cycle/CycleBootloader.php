@@ -20,6 +20,7 @@ use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Select\Repository;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Core\Container;
 use Spiral\Database\DatabaseProviderInterface;
 
@@ -32,11 +33,16 @@ final class CycleBootloader extends Bootloader implements DependedInterface
     ];
 
     /**
-     * @param Container       $container
-     * @param SchemaInterface $schema
+     * @param Container            $container
+     * @param FinalizerInterface   $finalizer
+     * @param SchemaInterface|null $schema
      */
-    public function boot(Container $container, SchemaInterface $schema = null)
+    public function boot(Container $container, FinalizerInterface $finalizer, SchemaInterface $schema = null)
     {
+        $finalizer->addFinalizer(function () use ($container) {
+            $container->get(ORMInterface::class)->getHeap()->clean();
+        });
+
         if ($schema === null) {
             return;
         }
