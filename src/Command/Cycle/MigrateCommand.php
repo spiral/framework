@@ -17,6 +17,7 @@ use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Console\Command;
+use Spiral\Console\Console;
 
 final class MigrateCommand extends Command
 {
@@ -28,12 +29,14 @@ final class MigrateCommand extends Command
      * @param Registry           $registry
      * @param MemoryInterface    $memory
      * @param GenerateMigrations $migrations
+     * @param Console            $console
      */
     public function perform(
         SchemaBootloader $bootloader,
         Registry $registry,
         MemoryInterface $memory,
-        GenerateMigrations $migrations
+        GenerateMigrations $migrations,
+        Console $console
     ) {
         $show = new ShowChanges($this->output);
 
@@ -46,7 +49,8 @@ final class MigrateCommand extends Command
 
         if ($show->hasChanges()) {
             (new Compiler())->compile($registry, [$migrations]);
-            $this->writeln("\n<info>Migrations has been generated, run using `migrate:migrate`</info>");
+
+            $console->run('migrate', [], $this->output);
         }
     }
 }

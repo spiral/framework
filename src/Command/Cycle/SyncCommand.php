@@ -26,8 +26,11 @@ final class SyncCommand extends Command
      * @param Registry         $registry
      * @param MemoryInterface  $memory
      */
-    public function perform(SchemaBootloader $bootloader, Registry $registry, MemoryInterface $memory)
-    {
+    public function perform(
+        SchemaBootloader $bootloader,
+        Registry $registry,
+        MemoryInterface $memory
+    ) {
         $show = new ShowChanges($this->output);
 
         $schema = (new Compiler())->compile(
