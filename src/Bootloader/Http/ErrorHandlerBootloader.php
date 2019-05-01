@@ -26,14 +26,6 @@ final class ErrorHandlerBootloader extends Bootloader implements DependedInterfa
     ];
 
     /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [HttpBootloader::class];
-    }
-
-    /**
      * @param HttpBootloader       $http
      * @param EnvironmentInterface $env
      */
@@ -43,5 +35,15 @@ final class ErrorHandlerBootloader extends Bootloader implements DependedInterfa
             ErrorHandlerMiddleware::class,
             ['suppressErrors' => !$env->get('DEBUG', false)]
         ));
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
     }
 }

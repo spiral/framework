@@ -25,6 +25,8 @@ final class PaginationBootloader extends Bootloader implements DependedInterface
      */
     public function defineDependencies(): array
     {
-        return [HttpBootloader::class];
+        return [
+            HttpBootloader::class
+        ];
     }
 }

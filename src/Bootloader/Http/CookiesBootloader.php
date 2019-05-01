@@ -16,14 +16,6 @@ use Spiral\Http\Middleware\CookiesMiddleware;
 final class CookiesBootloader extends Bootloader implements DependedInterface
 {
     /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [HttpBootloader::class];
-    }
-
-    /**
      * @param HttpBootloader $http
      */
     public function boot(HttpBootloader $http)
@@ -31,5 +23,13 @@ final class CookiesBootloader extends Bootloader implements DependedInterface
         $http->addMiddleware(CookiesMiddleware::class);
     }
 
-    // todo: cookies!
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
+    }
 }

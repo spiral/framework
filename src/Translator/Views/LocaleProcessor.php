@@ -5,15 +5,19 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Views;
+namespace Spiral\Translator\Views;
 
 use Spiral\Translator\TranslatorInterface;
+use Spiral\Views\ContextInterface;
+use Spiral\Views\ProcessorInterface;
+use Spiral\Views\ViewSource;
 
 /**
  * Injects locale values into the template based on locale specified by the context.
  */
-class LocaleProcessor implements ProcessorInterface
+final class LocaleProcessor implements ProcessorInterface
 {
     private const PREFIX = 'view';
     private const REGEXP = '/\[\[(.*?)\]\]/s';

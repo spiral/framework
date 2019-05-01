@@ -16,18 +16,20 @@ use Spiral\Http\Middleware\CsrfMiddleware;
 final class CsrfBootloader extends Bootloader implements DependedInterface
 {
     /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [HttpBootloader::class];
-    }
-
-    /**
      * @param HttpBootloader $http
      */
     public function boot(HttpBootloader $http)
     {
         $http->addMiddleware(CsrfMiddleware::class);
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
     }
 }

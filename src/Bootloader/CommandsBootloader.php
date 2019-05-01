@@ -68,7 +68,9 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
      */
     public function defineDependencies(): array
     {
-        return [ConsoleBootloader::class];
+        return [
+            ConsoleBootloader::class
+        ];
     }
 
     /**

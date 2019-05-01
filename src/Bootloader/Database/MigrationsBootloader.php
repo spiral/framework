@@ -52,6 +52,9 @@ final class MigrationsBootloader extends Bootloader implements DependedInterface
      */
     public function defineDependencies(): array
     {
-        return [TokenizerBootloader::class, DatabaseBootloader::class];
+        return [
+            TokenizerBootloader::class,
+            DatabaseBootloader::class
+        ];
     }
 }

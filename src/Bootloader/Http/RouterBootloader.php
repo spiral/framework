@@ -28,14 +28,6 @@ final class RouterBootloader extends Bootloader implements DependedInterface
     ];
 
     /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [HttpBootloader::class];
-    }
-
-    /**
      * @param HttpConfig         $config
      * @param ContainerInterface $container
      * @return RouterInterface
@@ -43,5 +35,15 @@ final class RouterBootloader extends Bootloader implements DependedInterface
     protected function router(HttpConfig $config, ContainerInterface $container): RouterInterface
     {
         return new Router($config->basePath(), $container);
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
     }
 }

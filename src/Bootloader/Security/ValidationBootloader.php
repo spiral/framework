@@ -107,6 +107,16 @@ final class ValidationBootloader extends Bootloader implements DependedInterface
     }
 
     /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            TokenizerBootloader::class
+        ];
+    }
+
+    /**
      * @param string $alias
      * @param mixed  $checker
      */
@@ -131,13 +141,5 @@ final class ValidationBootloader extends Bootloader implements DependedInterface
     public function addAlias(string $alias, string $target)
     {
         $this->config->modify('validation', new Append('aliases', $alias, $target));
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [TokenizerBootloader::class];
     }
 }
