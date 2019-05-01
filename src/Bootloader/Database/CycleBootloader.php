@@ -23,6 +23,10 @@ final class CycleBootloader extends Bootloader implements DependedInterface, Sin
      */
     public function defineDependencies(): array
     {
-        return [TokenizerBootloader::class, DatabaseBootloader::class];
+        return [
+            TokenizerBootloader::class,
+            DatabaseBootloader::class,
+            MigrationsBootloader::class
+        ];
     }
 }

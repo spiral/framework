@@ -14,9 +14,11 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Translator\Catalogue\CacheInterface;
 use Spiral\Translator\Catalogue\CatalogueLoader;
 use Spiral\Translator\Catalogue\CatalogueManager;
 use Spiral\Translator\CatalogueManagerInterface;
+use Spiral\Translator\MemoryCache;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\LoaderInterface;
@@ -31,6 +33,7 @@ final class TranslationBootloader extends Bootloader implements SingletonInterfa
         TranslatorInterface::class                                => Translator::class,
         CatalogueManagerInterface::class                          => CatalogueManager::class,
         LoaderInterface::class                                    => CatalogueLoader::class,
+        CacheInterface::class                                     => MemoryCache::class,
         IdentityTranslator::class                                 => [self::class, 'identityTranslator']
     ];
 
