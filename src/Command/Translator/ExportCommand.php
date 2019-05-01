@@ -52,7 +52,7 @@ final class ExportCommand extends Command implements SingletonInterface
         );
 
         if ($this->option('fallback')) {
-            foreach ($manager->get($config->fallbackLocale())->getData() as $domain => $messages) {
+            foreach ($manager->get($config->getFallbackLocale())->getData() as $domain => $messages) {
                 foreach ($messages as $id => $message) {
                     if (!$messageCatalogue->defines($id, $domain)) {
                         $messageCatalogue->set($id, $message, $domain);
@@ -71,7 +71,7 @@ final class ExportCommand extends Command implements SingletonInterface
 
         $dumper->dump($messageCatalogue, [
             'path'           => $this->argument('path'),
-            'default_locale' => $config->defaultLocale(),
+            'default_locale' => $config->getDefaultLocale(),
             'xliff_version'  => '2.0' // forcing default version for xliff dumper only
         ]);
 

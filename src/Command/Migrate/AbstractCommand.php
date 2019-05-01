@@ -86,9 +86,9 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    protected function askConfirmation(): string
+    protected function askConfirmation(): bool
     {
         $question = new QuestionHelper();
         $confirmation = $question->ask(

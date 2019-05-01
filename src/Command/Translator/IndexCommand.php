@@ -40,7 +40,7 @@ final class IndexCommand extends Command implements SingletonInterface
         ClassesInterface $classes
     ) {
         $catalogue = $manager->load(
-            $this->argument('locale') ?? $config->defaultLocale()
+            $this->argument('locale') ?? $config->getDefaultLocale()
         );
 
         $indexer = new Indexer($config, $catalogue);

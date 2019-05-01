@@ -11,10 +11,10 @@ namespace Spiral\Http;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\RequestFactoryInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\Core\FactoryInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Goridge\StreamRelay;
 use Spiral\RoadRunner\PSR7Client;
@@ -34,6 +34,9 @@ final class RrDispacher implements DispatcherInterface
     /** @var ContainerInterface */
     private $container;
 
+    /** @var FactoryInterface */
+    private $factory;
+
     /**
      * @param EnvironmentInterface $env
      * @param FinalizerInterface   $finalizer
@@ -42,11 +45,13 @@ final class RrDispacher implements DispatcherInterface
     public function __construct(
         EnvironmentInterface $env,
         FinalizerInterface $finalizer,
-        ContainerInterface $container
+        ContainerInterface $container,
+        FactoryInterface $factory
     ) {
         $this->env = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
+        $this->factory = $factory;
     }
 
     /**
@@ -64,10 +69,7 @@ final class RrDispacher implements DispatcherInterface
      */
     public function serve(Worker $worker = null)
     {
-        $client = new PSR7Client(
-            $worker ?? $this->getWorker(),
-            $this->container->get(RequestFactoryInterface::class)
-        );
+        $client = $this->factory->make(PSR7Client::class, ['worker' => $this->getWorker()]);
 
         /** @var HttpCore $http */
         $http = $this->container->get(HttpCore::class);
