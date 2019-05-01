@@ -41,6 +41,7 @@ final class RrDispacher implements DispatcherInterface
      * @param EnvironmentInterface $env
      * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
+     * @param FactoryInterface     $factory
      */
     public function __construct(
         EnvironmentInterface $env,
