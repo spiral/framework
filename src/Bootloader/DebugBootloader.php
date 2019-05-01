@@ -11,10 +11,13 @@ namespace Spiral\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Debug\Dumper;
+use Spiral\Logger\LogFactory;
+use Spiral\Logger\LogsInterface;
 
 final class DebugBootloader extends Bootloader
 {
     const SINGLETONS = [
-        Dumper::class => Dumper::class,
+        Dumper::class        => Dumper::class,
+        LogsInterface::class => LogFactory::class
     ];
 }

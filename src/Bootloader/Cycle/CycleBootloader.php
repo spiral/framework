@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Bootloader\Database;
+namespace Spiral\Bootloader\Cycle;
 
 use Cycle\ORM\Factory;
 use Cycle\ORM\FactoryInterface;
@@ -20,19 +20,15 @@ use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Select\Repository;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
-use Spiral\Boot\MemoryInterface;
-use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Core\Container;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\DatabaseProviderInterface;
 
-final class CycleBootloader extends Bootloader implements DependedInterface, SingletonInterface
+final class CycleBootloader extends Bootloader implements DependedInterface
 {
     public const SINGLETONS = [
         ORMInterface::class        => [self::class, 'orm'],
-        SchemaInterface::class     => [self::class, 'schema'],
         FactoryInterface::class    => [self::class, 'factory'],
-        RepositoryInterface::class => [self::class, 'repository']
+        RepositoryInterface::class => [self::class, 'repository'],
     ];
 
     /**
@@ -60,16 +56,13 @@ final class CycleBootloader extends Bootloader implements DependedInterface, Sin
         }
     }
 
-    // todo: compile sequence ?
-
     /**
      * @return array
      */
     public function defineDependencies(): array
     {
         return [
-            TokenizerBootloader::class,
-            DatabaseBootloader::class
+            SchemaBootloader::class
         ];
     }
 
@@ -101,22 +94,6 @@ final class CycleBootloader extends Bootloader implements DependedInterface, Sin
         }
 
         return $orm;
-    }
-
-    /**
-     * @param MemoryInterface $memory
-     * @return SchemaInterface|null
-     */
-    protected function schema(MemoryInterface $memory): ?SchemaInterface
-    {
-        $schema = $memory->loadData('orm');
-        if (is_null($schema)) {
-            return null;
-        }
-
-        // the ORM schema must be compiled in background (todo: for now)
-
-        return new Schema($schema);
     }
 
     /**

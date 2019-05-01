@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class MigrateCommand extends AbstractCommand
 {
-    const NAME        = 'migrate:migrate';
+    const NAME        = 'migrate';
     const DESCRIPTION = 'Perform one or all outstanding migrations';
     const OPTIONS     = [
         ['one', 'o', InputOption::VALUE_NONE, 'Execute only one (first) migration']

@@ -8,15 +8,19 @@
 
 namespace Spiral\Bootloader;
 
+use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
+use Spiral\Command\Cycle;
 use Spiral\Command\Database;
 use Spiral\Command\Migrate;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
+use Spiral\Console\Logger\LogFactory;
 use Spiral\Console\Sequence\RuntimeDirectory;
+use Spiral\Core\Container;
 use Spiral\Database\DatabaseProviderInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Migrations\Migrator;
@@ -31,12 +35,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class CommandsBootloader extends Bootloader implements DependedInterface
 {
     /**
-     * @param ConsoleBootloader  $console
-     * @param ContainerInterface $container
-     *
-     * @throws \Spiral\Core\Exception\ConfiguratorException
+     * @param ConsoleBootloader $console
+     * @param Container         $container
      */
-    public function boot(ConsoleBootloader $console, ContainerInterface $container)
+    public function boot(ConsoleBootloader $console, Container $container)
     {
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
@@ -48,6 +50,10 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
 
         if ($container->has(DatabaseProviderInterface::class)) {
             $this->configureDatabase($console);
+        }
+
+        if ($container->has(ORMInterface::class)) {
+            $this->configureCycle($console, $container);
         }
 
         if ($container->has(TranslatorInterface::class)) {
@@ -83,6 +89,26 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
     }
 
     /**
+     * @param ConsoleBootloader  $console
+     * @param ContainerInterface $container
+     */
+    private function configureCycle(ConsoleBootloader $console, ContainerInterface $container)
+    {
+        $console->addCommand(Cycle\LoadCommand::class);
+
+        $console->addUpdateSequence(
+            'cycle:load',
+            '<fg=magenta>[cycle]</fg=magenta> <fg=cyan>load Cycle schema...</fg=cyan>'
+        );
+
+        $console->addCommand(Cycle\SyncCommand::class);
+
+        if ($container->has(Migrator::class)) {
+            $console->addCommand(Cycle\MigrateCommand::class);
+        }
+    }
+
+    /**
      * @param ConsoleBootloader $console
      **/
     private function configureTranslator(ConsoleBootloader $console)
@@ -93,7 +119,7 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
 
         $console->addConfigureSequence(
             function (FilesInterface $files, TranslatorConfig $config, OutputInterface $output) {
-                $files->ensureDirectory($config->localeDirectory($config->defaultLocale()));
+                $files->ensureDirectory($config->getLocaleDirectory($config->getDefaultLocale()));
                 $output->writeln("<info>The default locale directory has been ensured.</info>");
             },
             '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>ensure default locale directory...</fg=cyan>'

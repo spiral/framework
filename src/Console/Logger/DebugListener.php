@@ -53,7 +53,6 @@ final class DebugListener
             return;
         }
 
-
         if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE) {
             return;
         }
