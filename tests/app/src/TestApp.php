@@ -44,10 +44,10 @@ class TestApp extends Kernel
 
         // Template engines and rendering
         Bootloader\Views\ViewsBootloader::class,
+        Bootloader\Views\TranslatedCacheBootloader::class,
 
         // Extensions
         //  StemplerBootloader::class,
-        //    Bootloader\Views\TranslateBootloader::class,
 
         // Framework commands
         Bootloader\CommandsBootloader::class

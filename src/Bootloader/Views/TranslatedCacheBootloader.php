@@ -18,7 +18,7 @@ use Spiral\Translator\Views\LocaleProcessor;
 /**
  * Generates unique cache path based on active translator locale.
  */
-final class TranslateCacheBootloader extends Bootloader implements DependedInterface
+final class TranslatedCacheBootloader extends Bootloader implements DependedInterface
 {
     const SINGLETONS = [
         // Each engine expect to mount this process by itself
