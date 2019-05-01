@@ -4,3 +4,4 @@ composer.lock
 vendor/
 *.db
 clover.xml
+go.sum

@@ -23,11 +23,10 @@
 package main
 
 import (
-	"github.com/sirupsen/logrus"
 	rr "github.com/spiral/roadrunner/cmd/rr/cmd"
 
 	// services (plugins)
-	"github.com/spiral/grpc"
+	"github.com/spiral/php-grpc"
 
 	"github.com/spiral/roadrunner/service/env"
 	"github.com/spiral/roadrunner/service/http"
@@ -35,13 +34,14 @@ import (
 	"github.com/spiral/roadrunner/service/static"
 
 	"github.com/spiral/jobs"
-	"github.com/spiral/jobs/broker/beanstalk"
-	"github.com/spiral/jobs/broker/local"
+	"github.com/spiral/jobs/broker/amqp"
+    "github.com/spiral/jobs/broker/beanstalk"
+	"github.com/spiral/jobs/broker/ephemeral"
 	"github.com/spiral/jobs/broker/sqs"
 
 	// additional commands and debug handlers
-	_ "github.com/spiral/grpc/cmd/rr-grpc/grpc"
-	_ "github.com/spiral/jobs/cmd/rr-jobs/jobs"
+	_ "github.com/spiral/php-grpc/cmd/rr-grpc/grpc"
+	_ "github.com/spiral/jobs/cmd/rr-jobs/cmd"
 	_ "github.com/spiral/roadrunner/cmd/rr/http"
 )
 
@@ -54,13 +54,12 @@ func main() {
 
 	rr.Container.Register(jobs.ID, &jobs.Service{
 		Brokers: map[string]jobs.Broker{
-			"local":     &local.Broker{},
+			"ephemeral": &ephemeral.Broker{},
+			"amqp":      &amqp.Broker{},
 			"beanstalk": &beanstalk.Broker{},
 			"sqs":       &sqs.Broker{},
 		},
 	})
-
-	rr.Logger.Formatter = &logrus.TextFormatter{ForceColors: true}
 
 	rr.Execute()
 }
