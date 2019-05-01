@@ -133,7 +133,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface, 
         string $footer,
         array $options
     ): Append {
-        if (is_array($sequence)) {
+        if (is_array($sequence) || $sequence instanceof \Closure) {
             return new Append(
                 $target,
                 null,

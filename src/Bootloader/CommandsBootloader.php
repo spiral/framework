@@ -18,9 +18,12 @@ use Spiral\Command\Views;
 use Spiral\Console;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Database\DatabaseProviderInterface;
+use Spiral\Files\FilesInterface;
 use Spiral\Migrations\Migrator;
+use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\ViewsInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Register framework directories in tokenizer in order to locate default commands.
@@ -85,6 +88,14 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
         $console->addCommand(Translator\IndexCommand::class);
         $console->addCommand(Translator\ExportCommand::class);
         $console->addCommand(Translator\ResetCommand::class);
+
+        $console->addConfigureSequence(
+            function (FilesInterface $files, TranslatorConfig $config, OutputInterface $output) {
+                $files->ensureDirectory($config->localeDirectory($config->defaultLocale()));
+                $output->writeln("<info>The default locale directory has been ensured.</info>");
+            },
+            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>ensure default locale directory...</fg=cyan>'
+        );
 
         $console->addConfigureSequence(
             'i18n:index',
