@@ -18,11 +18,16 @@ use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Console\Command;
 use Spiral\Console\Console;
+use Symfony\Component\Console\Input\InputOption;
 
 final class MigrateCommand extends Command
 {
     public const NAME        = "cycle:migrate";
     public const DESCRIPTION = "Generate ORM schema migrations";
+
+    const OPTIONS = [
+        ['run', 'r', InputOption::VALUE_NONE, 'Automatically run generated migration.']
+    ];
 
     /**
      * @param SchemaBootloader   $bootloader
@@ -50,7 +55,9 @@ final class MigrateCommand extends Command
         if ($show->hasChanges()) {
             (new Compiler())->compile($registry, [$migrations]);
 
-            $console->run('migrate', [], $this->output);
+            if ($this->option('run')) {
+                $console->run('migrate', [], $this->output);
+            }
         }
     }
 }
