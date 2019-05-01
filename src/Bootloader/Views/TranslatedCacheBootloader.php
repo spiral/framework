@@ -30,7 +30,7 @@ final class TranslatedCacheBootloader extends Bootloader implements DependedInte
      */
     public function boot(ViewsBootloader $views)
     {
-        $views->addDependency(LocaleDependency::class);
+        $views->addCacheDependency(LocaleDependency::class);
     }
 
     /**

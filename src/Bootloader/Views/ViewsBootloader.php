@@ -81,7 +81,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     /**
      * @param mixed $dependency
      */
-    public function addDependency($dependency)
+    public function addCacheDependency($dependency)
     {
         $this->config->modify('views', new Append('dependencies', null, $dependency));
     }
