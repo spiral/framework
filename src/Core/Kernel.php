@@ -14,19 +14,13 @@ use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\BootException;
-use Spiral\Bootloader\DebugBootloader;
 use Spiral\Bootloader\RpcBootloader;
 use Spiral\Bootloader\TokenizerBootloader;
 
 abstract class Kernel extends AbstractKernel
 {
     // framework specific bootloaders
-    protected const SYSTEM = [
-        CoreBootloader::class,
-        TokenizerBootloader::class,
-        RpcBootloader::class,
-        DebugBootloader::class
-    ];
+    protected const SYSTEM = [CoreBootloader::class, TokenizerBootloader::class, RpcBootloader::class];
 
     // application specific bootloaders
     protected const APP = [];

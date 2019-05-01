@@ -45,7 +45,7 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
 
         $console->addConfigureSequence(
             [RuntimeDirectory::class, 'ensure'],
-            '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>ensure `runtime` directory access</fg=cyan>'
+            '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>verify `runtime` directory access</fg=cyan>'
         );
 
         if ($container->has(DatabaseProviderInterface::class)) {
