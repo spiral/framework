@@ -5,13 +5,14 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Migrate;
 
-use Spiral\Console\ConsoleCore;
+use Spiral\Console\Console;
 use Symfony\Component\Console\Input\InputOption;
 
-class ReplayCommand extends AbstractCommand
+final class ReplayCommand extends AbstractCommand
 {
     const NAME        = 'migrate:replay';
     const DESCRIPTION = 'Replay (down, up) one or multiple migrations';
@@ -20,10 +21,10 @@ class ReplayCommand extends AbstractCommand
     ];
 
     /**
-     * @param ConsoleCore $console
+     * @param Console $console
      * @throws \Throwable
      */
-    public function perform(ConsoleCore $console)
+    public function perform(Console $console)
     {
         if (!$this->verifyEnvironment()) {
             //Making sure we can safely migrate in this environment

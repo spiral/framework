@@ -5,35 +5,45 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
+use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\Patch\AppendPatch;
-use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\Autowire;
+use Spiral\Http\ErrorHandler;
 use Spiral\Http\Middleware\ErrorHandlerMiddleware;
 
 /**
- * Enable exception wrapping within HTTP requests.
+ * Enable support for HTTP error pages.
  */
-class ErrorHandlerBootloader extends Bootloader
+final class ErrorHandlerBootloader extends Bootloader implements DependedInterface
 {
-    const BOOT = true;
+    const BINDINGS = [
+        ErrorHandler\RendererInterface::class => ErrorHandler\PlainRenderer::class,
+    ];
 
     /**
-     * @param ConfiguratorInterface $configurator
-     * @param EnvironmentInterface  $environment
+     * @param HttpBootloader       $http
+     * @param EnvironmentInterface $env
      */
-    public function boot(ConfiguratorInterface $configurator, EnvironmentInterface $environment)
+    public function boot(HttpBootloader $http, EnvironmentInterface $env)
     {
-        $configurator->modify(
-            'http',
-            new AppendPatch('middleware', null, new Autowire(
-                ErrorHandlerMiddleware::class,
-                ['suppressErrors' => !$environment->get('DEBUG', false)]
-            ))
-        );
+        $http->addMiddleware(new Autowire(
+            ErrorHandlerMiddleware::class,
+            ['suppressErrors' => !$env->get('DEBUG', false)]
+        ));
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
     }
 }

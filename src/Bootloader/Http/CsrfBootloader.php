@@ -5,29 +5,31 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
-use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\Patch\AppendPatch;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Http\Middleware\CsrfMiddleware;
 
-/**
- * Enable CSRF protection.
- */
-class CsrfBootloader extends Bootloader
+final class CsrfBootloader extends Bootloader implements DependedInterface
 {
-    const BOOT = true;
+    /**
+     * @param HttpBootloader $http
+     */
+    public function boot(HttpBootloader $http)
+    {
+        $http->addMiddleware(CsrfMiddleware::class);
+    }
 
     /**
-     * @param ConfiguratorInterface $configurator
+     * @return array
      */
-    public function boot(ConfiguratorInterface $configurator)
+    public function defineDependencies(): array
     {
-        $configurator->modify(
-            'http',
-            new AppendPatch('middleware', null, CsrfMiddleware::class)
-        );
+        return [
+            HttpBootloader::class
+        ];
     }
 }

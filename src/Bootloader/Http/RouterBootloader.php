@@ -5,19 +5,21 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 
-class RouterBootloader extends Bootloader
+final class RouterBootloader extends Bootloader implements DependedInterface
 {
     const SINGLETONS = [
         CoreInterface::class           => Core::class,
@@ -33,5 +35,15 @@ class RouterBootloader extends Bootloader
     protected function router(HttpConfig $config, ContainerInterface $container): RouterInterface
     {
         return new Router($config->basePath(), $container);
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
     }
 }

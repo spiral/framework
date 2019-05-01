@@ -5,38 +5,49 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
 
+use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\DependedInterface;
+use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\Patch\AppendPatch;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Config\Patch\Append;
+use Spiral\Core\Container\SingletonInterface;
+use Spiral\Security\RulesInterface;
 use Spiral\Validation\Checker;
 use Spiral\Validation\Condition;
 use Spiral\Validation\ParserInterface;
 use Spiral\Validation\RuleParser;
-use Spiral\Validation\RulesInterface;
 use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidationProvider;
 
-class ValidationBootloader extends Bootloader
+final class ValidationBootloader extends Bootloader implements DependedInterface, SingletonInterface
 {
-    const BOOT = true;
-
     const SINGLETONS = [
         ValidationInterface::class => ValidationProvider::class,
         RulesInterface::class      => ValidationProvider::class,
         ParserInterface::class     => RuleParser::class
     ];
 
+    /** @var ConfiguratorInterface */
+    private $config;
+
     /**
-     * @param ConfiguratorInterface $configurator
-     *
-     * @throws \Spiral\Core\Exception\ConfiguratorException
+     * @param ConfiguratorInterface $config
      */
-    public function boot(ConfiguratorInterface $configurator)
+    public function __construct(ConfiguratorInterface $config)
     {
-        $configurator->setDefaults('validation', [
+        $this->config = $config;
+    }
+
+    /**
+     * @param TokenizerBootloader $tokenizer
+     */
+    public function boot(TokenizerBootloader $tokenizer)
+    {
+        $this->config->setDefaults('validation', [
             // Checkers are resolved using container and provide ability to isolate some validation rules
             // under common name and class. You can register new checkers at any moment without any
             // performance issues.
@@ -92,10 +103,43 @@ class ValidationBootloader extends Bootloader
             ]
         ]);
 
-        $configurator->modify('tokenizer', new AppendPatch(
-            'directories',
-            null,
-            directory('vendor') . 'spiral/validation/src/'
-        ));
+        $tokenizer->addDirectory(directory('vendor') . 'spiral/validation/src/');
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            TokenizerBootloader::class
+        ];
+    }
+
+    /**
+     * @param string $alias
+     * @param mixed  $checker
+     */
+    public function addChecker(string $alias, $checker)
+    {
+        $this->config->modify('validation', new Append('checkers', $alias, $checker));
+    }
+
+    /**
+     * @param string $alias
+     * @param mixed  $condition
+     */
+    public function addCondition(string $alias, $condition)
+    {
+        $this->config->modify('validation', new Append('conditions', $alias, $condition));
+    }
+
+    /**
+     * @param string $alias
+     * @param string $target
+     */
+    public function addAlias(string $alias, string $target)
+    {
+        $this->config->modify('validation', new Append('aliases', $alias, $target));
     }
 }

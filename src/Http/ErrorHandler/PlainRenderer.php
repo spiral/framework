@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Http\ErrorHandler;
 
@@ -15,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Does not render any page body.
  */
-class NullRenderer implements RendererInterface
+final class PlainRenderer implements RendererInterface
 {
     /** @var ResponseFactoryInterface */
     private $responseFactory;
@@ -32,11 +33,13 @@ class NullRenderer implements RendererInterface
      * @param Request $request
      * @param int     $code
      * @param string  $message
-     *
      * @return Response
      */
     public function renderException(Request $request, int $code, string $message): Response
     {
-        return $this->responseFactory->createResponse($code);
+        $response = $this->responseFactory->createResponse($code);
+        $response->getBody()->write($message);
+
+        return $response;
     }
 }

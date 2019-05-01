@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Http;
 
@@ -12,7 +13,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
-use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -20,21 +21,21 @@ use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
-class HttpDispatcher implements DispatcherInterface
+final class SapiDispatcher implements DispatcherInterface
 {
-    /** @var EnvironmentInterface */
-    private $environment;
+    /** @var FinalizerInterface */
+    private $finalizer;
 
     /** @var ContainerInterface */
     private $container;
 
     /**
-     * @param EnvironmentInterface $environment
-     * @param ContainerInterface   $container
+     * @param FinalizerInterface $finalizer
+     * @param ContainerInterface $container
      */
-    public function __construct(EnvironmentInterface $environment, ContainerInterface $container)
+    public function __construct(FinalizerInterface $finalizer, ContainerInterface $container)
     {
-        $this->environment = $environment;
+        $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
@@ -63,6 +64,8 @@ class HttpDispatcher implements DispatcherInterface
             $emitter->emit($response);
         } catch (\Throwable $e) {
             $this->handleException($emitter, $e);
+        } finally {
+            $this->finalizer->finalize(true);
         }
     }
 

@@ -5,50 +5,49 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Database;
 
-use Psr\Container\ContainerInterface;
-use Spiral\Boot\FinalizerInterface;
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Database\DatabaseManager;
+use Spiral\Database\DatabaseProviderInterface;
 
-class DatabaseBootloader extends Bootloader
+final class DatabaseBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT = true;
+    const SINGLETONS = [
+        DatabaseProviderInterface::class => DatabaseManager::class
+    ];
 
     const BINDINGS = [
         DatabaseInterface::class => Database::class
     ];
 
+    /** @var ConfiguratorInterface */
+    private $config;
+
     /**
-     * @param ConfiguratorInterface $configurator
-     * @param FinalizerInterface    $finalizer
-     * @param ContainerInterface    $container
+     * @param ConfiguratorInterface $config
      */
-    public function boot(
-        ConfiguratorInterface $configurator,
-        FinalizerInterface $finalizer,
-        ContainerInterface $container
-    ) {
-        $configurator->setDefaults('database', [
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * Init default database config.
+     */
+    public function boot()
+    {
+        $this->config->setDefaults('database', [
             'default'   => 'default',
             'aliases'   => [],
             'databases' => [],
             'drivers'   => []
         ]);
-
-        $finalizer->addFinalizer(function () use ($container) {
-            /** @var DatabaseManager $dbal */
-            $dbal = $container->get(DatabaseManager::class);
-
-            // close all database connections
-            foreach ($dbal->getDrivers() as $driver) {
-                $driver->disconnect();
-            }
-        });
     }
 }

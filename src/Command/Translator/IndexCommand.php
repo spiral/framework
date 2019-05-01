@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Translator;
 
@@ -17,7 +18,7 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Indexer;
 use Symfony\Component\Console\Input\InputArgument;
 
-class IndexCommand extends Command implements SingletonInterface
+final class IndexCommand extends Command implements SingletonInterface
 {
     const NAME        = 'i18n:index';
     const DESCRIPTION = 'Index all declared translation strings and usages';

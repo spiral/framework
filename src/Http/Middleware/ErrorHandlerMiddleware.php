@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Http\Middleware;
 
@@ -25,28 +26,28 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     use LoggerTrait;
 
-    /** @var RendererInterface */
-    private $renderer;
-
     /** @var bool */
     private $suppressErrors;
+
+    /** @var RendererInterface */
+    private $renderer;
 
     /** @var SnapshotterInterface|null */
     private $snapshotter;
 
     /**
-     * @param RendererInterface         $renderer
      * @param bool                      $suppressErrors
-     * @param SnapshotterInterface|null $snapshotter
+     * @param RendererInterface         $renderer
+     * @param SnapshotterInterface|null $snapshots
      */
     public function __construct(
+        bool $suppressErrors,
         RendererInterface $renderer,
-        bool $suppressErrors = true,
-        SnapshotterInterface $snapshotter = null
+        SnapshotterInterface $snapshots = null
     ) {
-        $this->renderer = $renderer;
         $this->suppressErrors = $suppressErrors;
-        $this->snapshotter = $snapshotter;
+        $this->renderer = $renderer;
+        $this->snapshotter = $snapshots;
     }
 
     /**
@@ -69,7 +70,7 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
                 throw $e;
             }
 
-            if (!empty($this->snapshotter)) {
+            if ($this->snapshotter !== null) {
                 $this->snapshotter->register($e);
             }
 

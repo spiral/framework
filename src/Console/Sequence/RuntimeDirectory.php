@@ -5,9 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Console\Sequence;
-
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
@@ -16,22 +16,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Creates runtime directory or/and ensure proper permissions for it.
  */
-class RuntimeDirectory
+final class RuntimeDirectory
 {
     /** @var FilesInterface */
     private $files;
 
     /** @var DirectoriesInterface */
-    private $directories;
+    private $dirs;
 
     /**
      * @param FilesInterface       $files
-     * @param DirectoriesInterface $directories
+     * @param DirectoriesInterface $dirs
      */
-    public function __construct(FilesInterface $files, DirectoriesInterface $directories)
+    public function __construct(FilesInterface $files, DirectoriesInterface $dirs)
     {
         $this->files = $files;
-        $this->directories = $directories;
+        $this->dirs = $dirs;
     }
 
     /**
@@ -41,7 +41,7 @@ class RuntimeDirectory
     {
         $output->write("Verifying runtime directory... ");
 
-        $runtimeDirectory = $this->directories->get('runtime');
+        $runtimeDirectory = $this->dirs->get('runtime');
 
         if (!$this->files->exists($runtimeDirectory)) {
             $this->files->ensureDirectory($runtimeDirectory);

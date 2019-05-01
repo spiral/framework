@@ -5,34 +5,34 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Security;
 
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Encrypter\Encrypter;
 use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Encrypter\EncrypterInterface;
 use Spiral\Encrypter\EncryptionInterface;
 
-class EncrypterBootloader extends Bootloader
+final class EncrypterBootloader extends Bootloader
 {
-    const BOOT = true;
+    const SINGLETONS = [
+        EncryptionInterface::class => EncrypterFactory::class
+    ];
 
     const BINDINGS = [
-        EncryptionInterface::class => EncrypterFactory::class,
-        EncrypterInterface::class  => Encrypter::class
+        EncrypterInterface::class => Encrypter::class
     ];
 
     /**
-     * @param ConfiguratorInterface $configurator
-     * @param EnvironmentInterface  $environment
+     * @param ConfiguratorInterface $config
+     * @param EnvironmentInterface  $env
      */
-    public function boot(ConfiguratorInterface $configurator, EnvironmentInterface $environment)
+    public function boot(ConfiguratorInterface $config, EnvironmentInterface $env)
     {
-        $configurator->setDefaults('encrypter', [
-            'key' => $environment->get('ENCRYPTER_KEY')
-        ]);
+        $config->setDefaults('encrypter', ['key' => $env->get('ENCRYPTER_KEY')]);
     }
 }

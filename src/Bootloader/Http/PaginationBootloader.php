@@ -5,16 +5,28 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Http\PaginationFactory;
-use Spiral\Pagination\PaginatorsInterface;
+use Spiral\Pagination\PaginationProviderInterface;
 
-class PaginationBootloader extends Bootloader
+final class PaginationBootloader extends Bootloader implements DependedInterface
 {
     const SINGLETONS = [
-        PaginatorsInterface::class => PaginationFactory::class
+        PaginationProviderInterface::class => PaginationFactory::class
     ];
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
+    }
 }

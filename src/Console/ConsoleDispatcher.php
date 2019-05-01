@@ -12,6 +12,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
 use Spiral\Exceptions\ConsoleHandler;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -23,21 +24,29 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Manages Console commands and exception. Lazy loads console service.
  */
-class ConsoleDispatcher implements DispatcherInterface
+final class ConsoleDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */
-    private $environment;
+    private $env;
+
+    /** @var FinalizerInterface */
+    private $finalizer;
 
     /** @var ContainerInterface */
     private $container;
 
     /**
-     * @param EnvironmentInterface $environment
+     * @param EnvironmentInterface $env
+     * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
      */
-    public function __construct(EnvironmentInterface $environment, ContainerInterface $container)
-    {
-        $this->environment = $environment;
+    public function __construct(
+        EnvironmentInterface $env,
+        FinalizerInterface $finalizer,
+        ContainerInterface $container
+    ) {
+        $this->env = $env;
+        $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
@@ -47,7 +56,7 @@ class ConsoleDispatcher implements DispatcherInterface
     public function canServe(): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
-        return (php_sapi_name() == 'cli' && $this->environment->get('RR') === null);
+        return (php_sapi_name() == 'cli' && $this->env->get('RR') === null);
     }
 
     /**
@@ -61,8 +70,8 @@ class ConsoleDispatcher implements DispatcherInterface
         $listener = $this->container->get(DebugListener::class);
         $listener = $listener->withOutput($output)->enable();
 
-        /** @var ConsoleCore $core */
-        $core = $this->container->get(ConsoleCore::class);
+        /** @var Console $core */
+        $core = $this->container->get(Console::class);
 
         try {
             $core->start($input ?? new ArgvInput(), $output);
@@ -70,6 +79,7 @@ class ConsoleDispatcher implements DispatcherInterface
             $this->handleException($e, $output);
         } finally {
             $listener->disable();
+            $this->finalizer->finalize(true);
         }
     }
 

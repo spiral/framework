@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Database;
 
@@ -12,12 +13,12 @@ use Spiral\Console\Command;
 use Spiral\Database\Config\DatabaseConfig;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
-use Spiral\Database\Driver\AbstractDriver;
+use Spiral\Database\Driver\Driver;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ListCommand extends Command
+final class ListCommand extends Command
 {
     const NAME        = 'db:list';
     const DESCRIPTION = 'Get list of available databases, their tables and records count';
@@ -56,7 +57,7 @@ class ListCommand extends Command
         foreach ($databases as $database) {
             $database = $dbal->database($database);
 
-            /** @var AbstractDriver $driver */
+            /** @var Driver $driver */
             $driver = $database->getDriver();
 
             $header = [

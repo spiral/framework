@@ -5,12 +5,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Bootloader\System;
+namespace Spiral\Bootloader;
 
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Exceptions\HandlerInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Files\FilesInterface;
@@ -22,29 +23,30 @@ use Spiral\Snapshots\SnapshotterInterface;
  * SNAPSHOT_MAX_FILES: defaults to 25
  * SNAPSHOT_VERBOSITY: defaults to HandlerInterface::VERBOSITY_VERBOSE (1)
  */
-class SnapshotsBootloader extends Bootloader
+final class SnapshotsBootloader extends Bootloader
 {
-    const DEFAULT_MAX_SNAPSHOTS = 25;
+    protected const MAX_SNAPSHOTS = 25;
 
     const SINGLETONS = [
-        SnapshotterInterface::class => [self::class, 'exceptionSnapshotter']
+        SnapshotterInterface::class => [self::class, 'fileSnapshotter']
     ];
 
     /**
-     * @param DirectoriesInterface $directories
-     * @param EnvironmentInterface $environment
+     * @param EnvironmentInterface $env
+     * @param DirectoriesInterface $dirs
      * @param FilesInterface       $files
      * @return FileSnapshotter
      */
-    protected function exceptionSnapshotter(
-        DirectoriesInterface $directories,
-        EnvironmentInterface $environment,
+    protected function fileSnapshotter(
+        EnvironmentInterface $env,
+
+        DirectoriesInterface $dirs,
         FilesInterface $files
     ) {
         return new FileSnapshotter(
-            $directories->get('runtime') . '/snapshots/',
-            $environment->get('SNAPSHOT_MAX_FILES', self::DEFAULT_MAX_SNAPSHOTS),
-            $environment->get('SNAPSHOT_VERBOSITY', HandlerInterface::VERBOSITY_VERBOSE),
+            $dirs->get('runtime') . '/snapshots/',
+            $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
+            $env->get('SNAPSHOT_VERBOSITY', HandlerInterface::VERBOSITY_VERBOSE),
             new HtmlHandler(),
             $files
         );

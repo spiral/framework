@@ -5,48 +5,84 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Views;
 
+use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Bootloader\Bootloader;
+use Spiral\Config\Patch\Append;
+use Spiral\Core\Container\SingletonInterface;
 use Spiral\Views\Engine\Native\NativeEngine;
 use Spiral\Views\ViewManager;
 use Spiral\Views\ViewsInterface;
 
-class ViewsBootloader extends Bootloader
+final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT = true;
-
     const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
     ];
 
+    /** @var ConfiguratorInterface */
+    private $config;
+
     /**
-     * @param ConfiguratorInterface $configurator
-     * @param EnvironmentInterface  $environment
-     * @param DirectoriesInterface  $directories
+     * @param ConfiguratorInterface $config
      */
-    public function boot(
-        ConfiguratorInterface $configurator,
-        EnvironmentInterface $environment,
-        DirectoriesInterface $directories
-    ) {
-        if (!$directories->has('views')) {
-            $directories->set('views', $directories->get('app') . 'views');
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @param EnvironmentInterface $env
+     * @param DirectoriesInterface $dirs
+     */
+    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs)
+    {
+        if (!$dirs->has('views')) {
+            $dirs->set('views', $dirs->get('app') . 'views');
         }
 
         // default view config
-        $configurator->setDefaults('views', [
+        $this->config->setDefaults('views', [
             'cache'        => [
-                'enabled'   => !$environment->get('DEBUG', false),
-                'directory' => $directories->get('cache') . 'views'
+                'enabled'   => !$env->get('DEBUG', false),
+                'directory' => $dirs->get('cache') . 'views'
             ],
-            'namespaces'   => ['default' => [$directories->get('views')]],
+            'namespaces'   => [
+                'default' => [$dirs->get('views')]
+            ],
             'dependencies' => [],
             'engines'      => [NativeEngine::class]
         ]);
+    }
+
+    /**
+     * @param string $namespace
+     * @param string $directory
+     */
+    public function addDirectory(string $namespace, string $directory)
+    {
+        // todo: make it work
+        $this->config->modify('views', new Append('namespaces.' . $namespace, null, $directory));
+    }
+
+    /**
+     * @param mixed $engine
+     */
+    public function addEngine($engine)
+    {
+        $this->config->modify('views', new Append('engines', null, $engine));
+    }
+
+    /**
+     * @param mixed $dependency
+     */
+    public function addDependency($dependency)
+    {
+        $this->config->modify('views', new Append('dependencies', null, $dependency));
     }
 }

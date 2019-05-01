@@ -5,16 +5,17 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Views;
+namespace Spiral\Translator\Views;
 
-use Spiral\Translator\Catalogue\LoaderInterface as LocaleLoaderInterface;
 use Spiral\Translator\TranslatorInterface;
+use Spiral\Views\DependencyInterface;
 
 /**
  * Creates view cache dependency on translation locale.
  */
-class LocaleDependency implements DependencyInterface
+final class LocaleDependency implements DependencyInterface
 {
     public const NAME = 'locale';
 
@@ -25,13 +26,13 @@ class LocaleDependency implements DependencyInterface
     private $locales = [];
 
     /**
-     * @param TranslatorInterface   $translator
-     * @param LocaleLoaderInterface $loader
+     * @param TranslatorInterface $translator
      */
-    public function __construct(TranslatorInterface $translator, LocaleLoaderInterface $loader)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-        $this->locales = $loader->getLocales();
+
+        $this->locales = $translator->getCatalogueManager()->getLocales();
     }
 
     /**
@@ -64,7 +65,7 @@ class LocaleDependency implements DependencyInterface
     public function __debugInfo(): array
     {
         return [
-            'value'  => $this->getValue(),
+            'value'    => $this->getValue(),
             'variants' => $this->getVariants()
         ];
     }

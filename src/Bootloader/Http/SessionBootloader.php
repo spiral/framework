@@ -5,23 +5,22 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
+use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\Patch\AppendPatch;
-use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\Container\Autowire;
 use Spiral\Http\Middleware\SessionMiddleware;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\SectionInterface;
 use Spiral\Session\SessionSection;
 
-class SessionBootloader extends Bootloader
+final class SessionBootloader extends Bootloader implements DependedInterface
 {
-    const BOOT = true;
-
     const BINDINGS = [
         SectionInterface::class => SessionSection::class
     ];
@@ -30,16 +29,18 @@ class SessionBootloader extends Bootloader
      * Automatically registers session starter middleware and excludes session cookie from
      * cookie protection.
      *
-     * @param ConfiguratorInterface $configurator
+     * @param ConfiguratorInterface $config
+     * @param HttpBootloader        $http
      * @param DirectoriesInterface  $directories
-     *
-     * @throws \Spiral\Core\Exception\ConfiguratorException
      */
-    public function boot(ConfiguratorInterface $configurator, DirectoriesInterface $directories)
-    {
-        $configurator->setDefaults('session', [
+    public function boot(
+        ConfiguratorInterface $config,
+        HttpBootloader $http,
+        DirectoriesInterface $directories
+    ) {
+        $config->setDefaults('session', [
             'lifetime' => 86400,
-            'cookie'   => 'session',
+            'cookie'   => 'sid',
             'secure'   => false,
             'handler'  => new Autowire(FileHandler::class, [
                     'directory' => $directories->get('runtime') . 'session',
@@ -48,18 +49,19 @@ class SessionBootloader extends Bootloader
             )
         ]);
 
-        $session = $configurator->getConfig('session');
+        $session = $config->getConfig('session');
 
-        $configurator->modify('http', new AppendPatch(
-            'cookies.excluded',
-            null,
-            $session['cookie']
-        ));
+        $http->whitelistCookie($session['cookie']);
+        $http->addMiddleware(SessionMiddleware::class);
+    }
 
-        $configurator->modify('http', new AppendPatch(
-            'middleware',
-            null,
-            SessionMiddleware::class
-        ));
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            HttpBootloader::class
+        ];
     }
 }

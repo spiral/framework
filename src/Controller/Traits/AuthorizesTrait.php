@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Core\Traits;
+namespace Spiral\Controller\Traits;
 
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Security\Traits\GuardedTrait;
@@ -24,7 +24,6 @@ trait AuthorizesTrait
      *
      * @param string $permission
      * @param array  $context
-     *
      * @return bool
      *
      * @throws ControllerException
@@ -48,7 +47,6 @@ trait AuthorizesTrait
      *
      * @param string|null $action
      * @param array       $parameters
-     *
      * @return mixed
      */
     abstract public function callAction(string $action = null, array $parameters = []);

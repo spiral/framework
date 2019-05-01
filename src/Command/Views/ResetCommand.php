@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Command\Views;
 
@@ -15,7 +16,7 @@ use Spiral\Views\Config\ViewsConfig;
 /**
  * Remove every file located in view cache directory.
  */
-class ResetCommand extends Command
+final class ResetCommand extends Command
 {
     const NAME        = 'views:reset';
     const DESCRIPTION = 'Clear view cache';

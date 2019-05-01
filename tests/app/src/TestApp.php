@@ -10,28 +10,26 @@ namespace Spiral\App;
 
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\Bootloader;
-use Spiral\Console\ConsoleCore;
+use Spiral\Console\Console;
 use Spiral\Core\Kernel;
-use Spiral\Stempler\Bootloader\StemplerBootloader;
 
 class TestApp extends Kernel
 {
     const LOAD = [
         // Core Services
-        Bootloader\System\DebugBootloader::class,
-        Bootloader\System\SnapshotsBootloader::class,
-        Bootloader\System\TranslatorBootloader::class,
+        Bootloader\DebugBootloader::class,
+        Bootloader\SnapshotsBootloader::class,
+        Bootloader\TranslationBootloader::class,
 
         // Validation, filtration, security
         Bootloader\Security\EncrypterBootloader::class,
         Bootloader\Security\ValidationBootloader::class,
         Bootloader\Security\FiltersBootloader::class,
-        Bootloader\Security\RBACBootloader::class,
+        Bootloader\Security\RbacBootloader::class,
 
         // Dispatchers
-        Bootloader\Dispatcher\HttpBootloader::class,
-        Bootloader\Dispatcher\RoadRunnerBootloader::class,
-        Bootloader\Dispatcher\ConsoleBootloader::class,
+        Bootloader\Http\HttpBootloader::class,
+        Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
         Bootloader\Http\ErrorHandlerBootloader::class,
@@ -46,13 +44,13 @@ class TestApp extends Kernel
 
         // Template engines and rendering
         Bootloader\Views\ViewsBootloader::class,
-        Bootloader\Views\TranslateBootloader::class,
+        Bootloader\Views\TranslatedCacheBootloader::class,
 
         // Extensions
-        StemplerBootloader::class,
+        //  StemplerBootloader::class,
 
         // Framework commands
-        Bootloader\CommandBootloader::class
+        Bootloader\CommandsBootloader::class
     ];
 
     const APP = [AppBootloader::class];
@@ -67,10 +65,10 @@ class TestApp extends Kernel
     }
 
     /**
-     * @return ConsoleCore
+     * @return Console
      */
-    public function console(): ConsoleCore
+    public function console(): Console
     {
-        return $this->get(ConsoleCore::class);
+        return $this->get(Console::class);
     }
 }

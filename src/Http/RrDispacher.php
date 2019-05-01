@@ -5,25 +5,28 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\RoadRunner;
+namespace Spiral\Http;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Goridge\StreamRelay;
-use Spiral\Http\HttpCore;
+use Spiral\RoadRunner\PSR7Client;
+use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 use Zend\Diactoros\Response;
 
-class RoadRunnerDispatcher implements DispatcherInterface
+final class RrDispacher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */
-    private $environment;
+    private $env;
 
     /** @var FinalizerInterface */
     private $finalizer;
@@ -32,16 +35,16 @@ class RoadRunnerDispatcher implements DispatcherInterface
     private $container;
 
     /**
-     * @param EnvironmentInterface $environment
+     * @param EnvironmentInterface $env
      * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
      */
     public function __construct(
-        EnvironmentInterface $environment,
+        EnvironmentInterface $env,
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->environment = $environment;
+        $this->env = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
@@ -51,7 +54,7 @@ class RoadRunnerDispatcher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->environment->get('RR_HTTP') !== null);
+        return (php_sapi_name() == 'cli' && $this->env->get('RR_HTTP') !== null);
     }
 
     /**
@@ -61,20 +64,24 @@ class RoadRunnerDispatcher implements DispatcherInterface
      */
     public function serve(Worker $worker = null)
     {
-        $client = new PSR7Client($worker ?? $this->getWorker());
+        $client = new PSR7Client(
+            $worker ?? $this->getWorker(),
+            $this->container->get(RequestFactoryInterface::class)
+        );
 
         /** @var HttpCore $http */
         $http = $this->container->get(HttpCore::class);
-
         while ($request = $client->acceptRequest()) {
             try {
                 $client->respond($http->handle($request));
             } catch (\Throwable $e) {
                 $this->handleException($client, $e);
             } finally {
-                $this->finalizer->finalize();
+                $this->finalizer->finalize(false);
             }
         }
+
+        $this->finalizer->finalize(true);
     }
 
     /**

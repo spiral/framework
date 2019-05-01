@@ -5,14 +5,18 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Http;
+namespace Spiral\Filter;
 
 use Spiral\Filters\Exception\InputException;
 use Spiral\Filters\InputInterface;
 use Spiral\Http\Request\InputManager;
 
-class RequestInput implements InputInterface
+/**
+ * Provides ability to use http request as filters input.
+ */
+final class RequestInput implements InputInterface
 {
     /** @var InputManager */
     private $input;

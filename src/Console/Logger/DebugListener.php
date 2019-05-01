@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Console\Logger;
 
@@ -14,7 +15,7 @@ use Spiral\Logger\Event\LogEvent;
 use Spiral\Logger\LogsInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DebugListener
+final class DebugListener
 {
     protected const STYLES = [
         LogLevel::DEBUG     => 'fg=green',
@@ -122,7 +123,6 @@ class DebugListener
 
     /**
      * @param string $channel
-     *
      * @return string
      */
     private function getChannel(string $channel): string

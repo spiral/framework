@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Snapshots;
 
@@ -15,7 +16,7 @@ use Spiral\Logger\Traits\LoggerTrait;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class FileSnapshotter implements SnapshotterInterface
+final class FileSnapshotter implements SnapshotterInterface
 {
     use LoggerTrait;
 

@@ -12,14 +12,14 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Core\FactoryInterface;
+use Spiral\Pagination\PaginationProviderInterface;
 use Spiral\Pagination\Paginator;
 use Spiral\Pagination\PaginatorInterface;
-use Spiral\Pagination\PaginatorsInterface;
 
 /**
  * Paginators factory binded to active request scope in order to select page number.
  */
-class PaginationFactory implements PaginatorsInterface
+final class PaginationFactory implements PaginationProviderInterface
 {
     /** @var ContainerInterface */
     private $container;
@@ -58,9 +58,6 @@ class PaginationFactory implements PaginatorsInterface
             $page = (int)$query[$parameter];
         }
 
-        return $this->factory->make(
-            Paginator::class,
-            compact('limit', 'parameter')
-        )->withPage($page);
+        return $this->factory->make(Paginator::class, compact('limit', 'parameter'))->withPage($page);
     }
 }
