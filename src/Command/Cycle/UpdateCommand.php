@@ -14,10 +14,10 @@ use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Console\Command;
 
-final class LoadCommand extends Command
+final class UpdateCommand extends Command
 {
-    public const NAME        = "cycle:load";
-    public const DESCRIPTION = "Load (init) cycle schema from database and annotated classes";
+    public const NAME        = "cycle:update";
+    public const DESCRIPTION = "Update (init) cycle schema from database and annotated classes";
 
     /**
      * @param SchemaBootloader $bootloader
@@ -26,7 +26,7 @@ final class LoadCommand extends Command
      */
     public function perform(SchemaBootloader $bootloader, Registry $registry, MemoryInterface $memory)
     {
-        $this->write("Loading ORM schema... ");
+        $this->write("Updating ORM schema... ");
 
         $schema = (new Compiler())->compile($registry, $bootloader->getGenerators());
         $memory->saveData('cycle', $schema);

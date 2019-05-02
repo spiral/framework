@@ -94,11 +94,11 @@ final class CommandsBootloader extends Bootloader implements DependedInterface
      */
     private function configureCycle(ConsoleBootloader $console, ContainerInterface $container)
     {
-        $console->addCommand(Cycle\LoadCommand::class);
+        $console->addCommand(Cycle\UpdateCommand::class);
 
         $console->addUpdateSequence(
-            'cycle:load',
-            '<fg=magenta>[cycle]</fg=magenta> <fg=cyan>load Cycle schema...</fg=cyan>'
+            'cycle:update',
+            '<fg=magenta>[cycle]</fg=magenta> <fg=cyan>update Cycle schema...</fg=cyan>'
         );
 
         $console->addCommand(Cycle\SyncCommand::class);

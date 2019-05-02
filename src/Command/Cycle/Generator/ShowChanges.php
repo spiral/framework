@@ -103,6 +103,7 @@ final class ShowChanges implements GeneratorInterface
         }
 
         foreach ($cmp->alteredColumns() as $column) {
+            $column = $column[0];
             $this->output->writeln("    - alter column <fg=yellow>{$column->getName()}</fg=yellow>");
         }
 
@@ -116,6 +117,7 @@ final class ShowChanges implements GeneratorInterface
         }
 
         foreach ($cmp->alteredIndexes() as $index) {
+            $index = $index[0];
             $this->output->writeln("    - alter index on <fg=yellow>[{$index}]</fg=yellow>");
         }
 
@@ -128,6 +130,7 @@ final class ShowChanges implements GeneratorInterface
         }
 
         foreach ($cmp->alteredForeignKeys() as $fk) {
+            $fk = $fk[0];
             $this->output->writeln("    - alter foreign key <fg=yellow>{$fk->getColumn()}</fg=yellow>");
         }
     }
@@ -138,19 +141,9 @@ final class ShowChanges implements GeneratorInterface
      */
     protected function numChanges(AbstractTable $table): int
     {
-
-//        if (!$table->exists()) {
-//            return 1;
-//        }
-//
-//        if ($table->getStatus() === AbstractTable::STATUS_DECLARED_DROPPED) {
-//            return 1;
-//        }
-
         $cmp = $table->getComparator();
 
-        return
-            +count($cmp->addedColumns())
+        return count($cmp->addedColumns())
             + count($cmp->droppedColumns())
             + count($cmp->alteredColumns())
             + count($cmp->addedIndexes())
