@@ -19,7 +19,7 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 
-final class RouterBootloader extends Bootloader implements DependedInterface
+final class MvcBootloader extends Bootloader implements DependedInterface
 {
     const SINGLETONS = [
         CoreInterface::class           => Core::class,

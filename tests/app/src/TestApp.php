@@ -28,12 +28,11 @@ class TestApp extends Kernel
         Bootloader\Security\RbacBootloader::class,
 
         // Dispatchers
-        Bootloader\Http\HttpBootloader::class,
         Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
+        Bootloader\Http\MvcBootloader::class,
         Bootloader\Http\ErrorHandlerBootloader::class,
-        Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CookiesBootloader::class,
         Bootloader\Http\CsrfBootloader::class,
@@ -47,7 +46,6 @@ class TestApp extends Kernel
         Bootloader\Views\TranslatedCacheBootloader::class,
 
         // Extensions
-        //  StemplerBootloader::class,
 
         // Framework commands
         Bootloader\CommandsBootloader::class
