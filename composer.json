@@ -36,7 +36,6 @@
     "spiral/migrations": "^2.0",
     "spiral/views": "^1.0",
     "spiral/jobs": "^1.0",
-    "spiral/stempler": "^2.0",
     "phpunit/phpunit": "~7.0",
     "mockery/mockery": "^1.1",
     "cycle/orm": "^1.0",
