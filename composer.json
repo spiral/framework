@@ -35,7 +35,7 @@
     "spiral/database": "^2.0",
     "spiral/migrations": "^2.0",
     "spiral/views": "^1.0",
-    "spiral/twig-bridge": "^1.0",
+    "spiral/twig-bridge": "^1.0.3",
     "spiral/jobs": "^1.0",
     "cycle/orm": "^1.0",
     "cycle/annotated": "^1.0",
