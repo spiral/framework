@@ -18,10 +18,12 @@ return [
         'runtime' => [
             'driver'     => Driver\SQLite\SQLiteDriver::class,
             'connection' => 'sqlite::memory:',
+            'profiling'  => true
         ],
         'other'   => [
             'driver'     => Driver\SQLite\SQLiteDriver::class,
             'connection' => 'sqlite::broken:',
+            'profiling'  => true
         ],
     ]
 ];
