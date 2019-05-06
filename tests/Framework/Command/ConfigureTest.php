@@ -19,8 +19,8 @@ class ConfigureTest extends ConsoleTest
         $this->assertContains('Verifying runtime directory', $output);
         $this->assertContains('locale directory', $output);
 
-        //todo: $this->assertContains('StemplerEngine', $output);
-        //$this->assertContains('default:home', $output);
+        $this->assertContains('TwigEngine', $output);
+        $this->assertContains('default:home', $output);
         $this->assertContains('NativeEngine', $output);
     }
 }

@@ -35,12 +35,13 @@
     "spiral/database": "^2.0",
     "spiral/migrations": "^2.0",
     "spiral/views": "^1.0",
+    "spiral/twig-bridge": "^1.0",
     "spiral/jobs": "^1.0",
-    "phpunit/phpunit": "~7.0",
-    "mockery/mockery": "^1.1",
     "cycle/orm": "^1.0",
     "cycle/annotated": "^1.0",
-    "cycle/migrations": "^1.0"
+    "cycle/migrations": "^1.0",
+    "phpunit/phpunit": "~7.0",
+    "mockery/mockery": "^1.1"
   },
   "autoload": {
     "files": [

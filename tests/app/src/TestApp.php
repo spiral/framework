@@ -12,6 +12,7 @@ use Spiral\App\Bootloader\AppBootloader;
 use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Kernel;
+use Spiral\Twig;
 
 class TestApp extends Kernel
 {
@@ -44,8 +45,7 @@ class TestApp extends Kernel
         // Template engines and rendering
         Bootloader\Views\ViewsBootloader::class,
         Bootloader\Views\TranslatedCacheBootloader::class,
-
-        // Extensions
+        Twig\Bootloader\TwigBootloader::class,
 
         // Framework commands
         Bootloader\CommandsBootloader::class
