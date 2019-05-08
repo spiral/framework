@@ -18,6 +18,8 @@ use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Console\Command;
 use Spiral\Console\Console;
+use Spiral\Migrations\Migrator;
+use Spiral\Migrations\State;
 use Symfony\Component\Console\Input\InputOption;
 
 final class MigrateCommand extends Command
@@ -34,15 +36,25 @@ final class MigrateCommand extends Command
      * @param Registry           $registry
      * @param MemoryInterface    $memory
      * @param GenerateMigrations $migrations
+     * @param Migrator           $migrator
      * @param Console            $console
+     * @throws \Throwable
      */
     public function perform(
         SchemaBootloader $bootloader,
         Registry $registry,
         MemoryInterface $memory,
         GenerateMigrations $migrations,
+        Migrator $migrator,
         Console $console
     ) {
+        foreach ($migrator->getMigrations() as $migration) {
+            if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
+                $this->writeln("<fg=red>Outstanding migrations found, run `migrate` first.</fg=red>");
+                return;
+            }
+        }
+
         $show = new ShowChanges($this->output);
 
         $schema = (new Compiler())->compile(
