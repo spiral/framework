@@ -11,7 +11,7 @@ namespace Spiral\Bootloader\Views;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
-use Spiral\Bootloader\TranslationBootloader;
+use Spiral\Bootloader\I18nBootloader;
 use Spiral\Translator\Views\LocaleDependency;
 use Spiral\Translator\Views\LocaleProcessor;
 
@@ -39,7 +39,7 @@ final class TranslatedCacheBootloader extends Bootloader implements DependedInte
     public function defineDependencies(): array
     {
         return [
-            TranslationBootloader::class,
+            I18nBootloader::class,
             ViewsBootloader::class
         ];
     }

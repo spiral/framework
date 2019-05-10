@@ -18,7 +18,6 @@ use Spiral\Command\Migrate;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
-use Spiral\Console\Logger\LogFactory;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Container;
 use Spiral\Database\DatabaseProviderInterface;
@@ -32,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Register framework directories in tokenizer in order to locate default commands.
  */
-final class CommandsBootloader extends Bootloader implements DependedInterface
+final class CommandBootloader extends Bootloader implements DependedInterface
 {
     /**
      * @param ConsoleBootloader $console

@@ -19,7 +19,7 @@ class TestApp extends Kernel
         // Core Services
         Bootloader\DebugBootloader::class,
         Bootloader\SnapshotsBootloader::class,
-        Bootloader\TranslationBootloader::class,
+        Bootloader\I18nBootloader::class,
 
         // Validation, filtration, security
         Bootloader\Security\EncrypterBootloader::class,
@@ -46,7 +46,7 @@ class TestApp extends Kernel
         Bootloader\Views\TranslatedCacheBootloader::class,
 
         // Framework commands
-        Bootloader\CommandsBootloader::class
+        Bootloader\CommandBootloader::class
     ];
 
     const APP = [AppBootloader::class];

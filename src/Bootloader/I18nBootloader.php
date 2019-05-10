@@ -26,7 +26,7 @@ use Symfony\Component\Translation\Dumper;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\Loader;
 
-final class TranslationBootloader extends Bootloader implements SingletonInterface
+final class I18nBootloader extends Bootloader implements SingletonInterface
 {
     const SINGLETONS = [
         \Symfony\Contracts\Translation\TranslatorInterface::class => TranslatorInterface::class,

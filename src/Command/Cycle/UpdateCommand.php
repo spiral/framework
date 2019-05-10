@@ -16,7 +16,7 @@ use Spiral\Console\Command;
 
 final class UpdateCommand extends Command
 {
-    public const NAME        = "cycle:update";
+    public const NAME        = "cycle";
     public const DESCRIPTION = "Update (init) cycle schema from database and annotated classes";
 
     /**
