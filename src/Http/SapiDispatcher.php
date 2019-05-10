@@ -65,7 +65,7 @@ final class SapiDispatcher implements DispatcherInterface
         } catch (\Throwable $e) {
             $this->handleException($emitter, $e);
         } finally {
-            $this->finalizer->finalize(true);
+            $this->finalizer->finalize(false);
         }
     }
 

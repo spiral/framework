@@ -70,8 +70,6 @@ final class JobDispatcher implements DispatcherInterface
 
             $this->finalizer->finalize(false);
         });
-
-        $this->finalizer->finalize(true);
     }
 
     /**

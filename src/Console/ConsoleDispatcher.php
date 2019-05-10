@@ -79,7 +79,7 @@ final class ConsoleDispatcher implements DispatcherInterface
             $this->handleException($e, $output);
         } finally {
             $listener->disable();
-            $this->finalizer->finalize(true);
+            $this->finalizer->finalize(false);
         }
     }
 

@@ -14,7 +14,10 @@ use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Transaction;
 use Spiral\App\User\User;
 use Spiral\App\User\UserRepository;
+use Spiral\Console\ConsoleDispatcher;
 use Spiral\Framework\BaseTest;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class SchemaTest extends BaseTest
 {
@@ -46,6 +49,25 @@ class SchemaTest extends BaseTest
         $app = $this->makeApp();
         $output = $app->console()->run('cycle:sync');
         $this->assertContains('default.users', $output->getOutput()->fetch());
+
+        $u = new User('Antony');
+        $app->get(Transaction::class)->persist($u)->run();
+
+        $this->assertSame(1, $u->id);
+    }
+
+
+    public function testSyncDebug()
+    {
+        $output = new BufferedOutput();
+        $output->setVerbosity(BufferedOutput::VERBOSITY_VERY_VERBOSE);
+
+        $app = $this->makeApp();
+        $app->get(ConsoleDispatcher::class)->serve(new ArrayInput([
+            'command' => 'cycle:sync'
+        ]), $output);
+
+        $this->assertContains('Begin transaction', $output->fetch());
 
         $u = new User('Antony');
         $app->get(Transaction::class)->persist($u)->run();
