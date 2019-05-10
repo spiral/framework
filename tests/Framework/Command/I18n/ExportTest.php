@@ -18,6 +18,7 @@ class ExportTest extends ConsoleTest
         $this->assertFileNotExists(__DIR__ . '/messages.en.php');
 
         $this->runCommandDebug('i18n:index');
+        $this->runCommandDebug('configure');
         $this->runCommandDebug('i18n:export', [
             'locale' => 'en',
             'path'   => __DIR__
