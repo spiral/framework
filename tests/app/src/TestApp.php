@@ -9,6 +9,7 @@
 namespace Spiral\App;
 
 use Spiral\App\Bootloader\AppBootloader;
+use Spiral\Boot\BootloadManager;
 use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Kernel;
@@ -40,6 +41,7 @@ class TestApp extends Kernel
         // Data and Storage
         Bootloader\Database\DatabaseBootloader::class,
         Bootloader\Database\MigrationsBootloader::class,
+        Bootloader\Cycle\CycleBootloader::class,
 
         // Template engines and rendering
         Bootloader\Views\ViewsBootloader::class,
@@ -66,5 +68,10 @@ class TestApp extends Kernel
     public function console(): Console
     {
         return $this->get(Console::class);
+    }
+
+    public function getBootloadManager(): BootloadManager
+    {
+        return $this->bootloader;
     }
 }

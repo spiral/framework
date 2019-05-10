@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Database;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\Database;
@@ -39,10 +41,23 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * Init default database config.
+     * @param ContainerInterface $container
+     * @param FinalizerInterface $finalizer
      */
-    public function boot()
+    public function boot(ContainerInterface $container, FinalizerInterface $finalizer)
     {
+        $finalizer->addFinalizer(function ($terminate) use ($container) {
+            if (!$terminate || !$container->has(DatabaseManager::class)) {
+                return;
+            }
+
+            /** @var DatabaseManager $dbal */
+            $dbal = $container->get(DatabaseManager::class);
+            foreach ($dbal->getDrivers() as $driver) {
+                $driver->disconnect();
+            }
+        });
+
         $this->config->setDefaults('database', [
             'default'   => 'default',
             'aliases'   => [],

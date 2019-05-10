@@ -11,9 +11,20 @@ namespace Spiral\Framework;
 use PHPUnit\Framework\TestCase;
 use Spiral\App\TestApp;
 use Spiral\Boot\Environment;
+use Spiral\Files\Files;
 
 abstract class BaseTest extends TestCase
 {
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $fs = new Files();
+        foreach ($fs->getFiles(__DIR__ . '/../app/migrations') as $f) {
+            $fs->delete($f);
+        }
+    }
+
     public function makeApp(array $env = []): TestApp
     {
         return TestApp::init([

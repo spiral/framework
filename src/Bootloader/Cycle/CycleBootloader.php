@@ -40,7 +40,9 @@ final class CycleBootloader extends Bootloader implements DependedInterface
     public function boot(Container $container, FinalizerInterface $finalizer, SchemaInterface $schema = null)
     {
         $finalizer->addFinalizer(function () use ($container) {
-            $container->get(ORMInterface::class)->getHeap()->clean();
+            if ($container->hasInstance(ORMInterface::class)) {
+                $container->get(ORMInterface::class)->getHeap()->clean();
+            }
         });
 
         if ($schema === null) {

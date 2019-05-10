@@ -33,7 +33,6 @@ class ListTest extends ConsoleTest
         $output = $this->runCommand('db:list');
         $this->assertContains('SQLite', $output);
         $this->assertContains(':memory:', $output);
-        $this->assertContains('other', $output);
         $this->assertContains('sample', $output);
         $this->assertContains('outer', $output);
     }

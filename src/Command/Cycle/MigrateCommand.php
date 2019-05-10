@@ -48,6 +48,11 @@ final class MigrateCommand extends Command
         Migrator $migrator,
         Console $console
     ) {
+        if (!$migrator->isConfigured()) {
+            $this->writeln("<fg=red>Migrations are not configured, run `migrate:init` first.</fg=red>");
+            return;
+        }
+
         foreach ($migrator->getMigrations() as $migration) {
             if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
                 $this->writeln("<fg=red>Outstanding migrations found, run `migrate` first.</fg=red>");
