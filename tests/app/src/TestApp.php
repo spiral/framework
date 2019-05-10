@@ -41,6 +41,7 @@ class TestApp extends Kernel
         // Data and Storage
         Bootloader\Database\DatabaseBootloader::class,
         Bootloader\Database\MigrationsBootloader::class,
+        Bootloader\Http\PaginationBootloader::class,
         Bootloader\Cycle\CycleBootloader::class,
 
         // Template engines and rendering
