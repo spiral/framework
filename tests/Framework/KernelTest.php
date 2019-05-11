@@ -8,6 +8,8 @@
 
 namespace Spiral\Framework;
 
+use Spiral\App\TestApp;
+use Spiral\Boot\Environment;
 use Spiral\Config\ConfiguratorInterface;
 
 class KernelTest extends BaseTest
@@ -21,5 +23,33 @@ class KernelTest extends BaseTest
         $this->assertSame([
             'key' => 'HELLO WORLD'
         ], $configs->getConfig('test'));
+    }
+
+    public function testIsDebug()
+    {
+        $app = $this->makeApp([
+            'DEBUG' => true
+        ]);
+
+        $this->assertTrue($app->isDebug());
+    }
+
+    public function testGetEnv()
+    {
+        $app = $this->makeApp([
+            'DEBUG' => true,
+            'ENV'   => 123
+        ]);
+
+        $this->assertSame(123, $app->getEnvironment()->get('ENV'));
+    }
+
+    /**
+     * @expectedException \Spiral\Boot\Exception\BootException
+     */
+    public function testNoRootDirectory()
+    {
+        TestApp::init([
+        ], new Environment(), false);
     }
 }
