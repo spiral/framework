@@ -20,6 +20,8 @@ spiral/boot | [![Latest Stable Version](https://poser.pugx.org/spiral/boot/versi
 spiral/config | [![Latest Stable Version](https://poser.pugx.org/spiral/config/version)](https://packagist.org/packages/spiral/config) [![Build Status](https://travis-ci.org/spiral/config.svg?branch=master)](https://travis-ci.org/spiral/config) [![Codecov](https://codecov.io/gh/spiral/config/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/config/)
 
 ## Dispatchers
+| Component | Current Status        
+| ---       | ---
 spiral/http | [![Latest Stable Version](https://poser.pugx.org/spiral/http/version)](https://packagist.org/packages/spiral/http) [![Build Status](https://travis-ci.org/spiral/http.svg?branch=master)](https://travis-ci.org/spiral/http) [![Codecov](https://codecov.io/gh/spiral/http/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/http/)
 spiral/console | [![Latest Stable Version](https://poser.pugx.org/spiral/console/version)](https://packagist.org/packages/spiral/console) [![Build Status](https://travis-ci.org/spiral/console.svg?branch=master)](https://travis-ci.org/spiral/console) [![Codecov](https://codecov.io/gh/spiral/console/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/console/)
 spiral/roadrunner | [![Latest Stable Version](https://poser.pugx.org/spiral/roadrunner/version)](https://packagist.org/packages/spiral/roadrunner) [![Build Status](https://travis-ci.org/spiral/roadrunner.svg?branch=master)](https://travis-ci.org/spiral/roadrunner) [![Codecov](https://codecov.io/gh/spiral/roadrunner/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/roadrunner/)
@@ -27,17 +29,23 @@ spiral/jobs | [![Latest Stable Version](https://poser.pugx.org/spiral/jobs/versi
 spiral/php-grpc | [![Latest Stable Version](https://poser.pugx.org/spiral/php-grpc/version)](https://packagist.org/packages/spiral/php-grpc) [![Build Status](https://travis-ci.org/spiral/php-grpc.svg?branch=master)](https://travis-ci.org/spiral/php-grpc) [![Codecov](https://codecov.io/gh/spiral/php-grpc/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/php-grpc/)
 
 ## Http Extensions
+| Component | Current Status        
+| ---       | ---
 spiral/hmvc | [![Latest Stable Version](https://poser.pugx.org/spiral/hmvc/version)](https://packagist.org/packages/spiral/hmvc) [![Build Status](https://travis-ci.org/spiral/hmvc.svg?branch=master)](https://travis-ci.org/spiral/hmvc) [![Codecov](https://codecov.io/gh/spiral/hmvc/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/hmvc/)
 spiral/router | [![Latest Stable Version](https://poser.pugx.org/spiral/router/version)](https://packagist.org/packages/spiral/router) [![Build Status](https://travis-ci.org/spiral/router.svg?branch=master)](https://travis-ci.org/spiral/router) [![Codecov](https://codecov.io/gh/spiral/router/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/router/)
 spiral/session | [![Latest Stable Version](https://poser.pugx.org/spiral/session/version)](https://packagist.org/packages/spiral/session) [![Build Status](https://travis-ci.org/spiral/session.svg?branch=master)](https://travis-ci.org/spiral/session) [![Codecov](https://codecov.io/gh/spiral/session/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/session/)
 
 ## Security and Validation
+| Component | Current Status        
+| ---       | ---
 spiral/encryption | [![Latest Stable Version](https://poser.pugx.org/spiral/encrypter/version)](https://packagist.org/packages/spiral/encrypter) [![Build Status](https://travis-ci.org/spiral/encrypter.svg?branch=master)](https://travis-ci.org/spiral/encrypter) [![Codecov](https://codecov.io/gh/spiral/encrypter/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/encrypter/)
 spiral/security | [![Latest Stable Version](https://poser.pugx.org/spiral/security/version)](https://packagist.org/packages/spiral/security) [![Build Status](https://travis-ci.org/spiral/security.svg?branch=master)](https://travis-ci.org/spiral/security) [![Codecov](https://codecov.io/gh/spiral/security/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/security/)
 spiral/validation | [![Latest Stable Version](https://poser.pugx.org/spiral/validation/version)](https://packagist.org/packages/spiral/validation) [![Build Status](https://travis-ci.org/spiral/validation.svg?branch=master)](https://travis-ci.org/spiral/validation) [![Codecov](https://codecov.io/gh/spiral/validation/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/validation/)
 spiral/filters | [![Latest Stable Version](https://poser.pugx.org/spiral/filters/version)](https://packagist.org/packages/spiral/filters) [![Build Status](https://travis-ci.org/spiral/filters.svg?branch=master)](https://travis-ci.org/spiral/filters) [![Codecov](https://codecov.io/gh/spiral/filters/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/filters/)
 
 ## Database
+| Component | Current Status        
+| ---       | ---
 spiral/database | [![Latest Stable Version](https://poser.pugx.org/spiral/database/version)](https://packagist.org/packages/spiral/database) [![Build Status](https://travis-ci.org/spiral/database.svg?branch=master)](https://travis-ci.org/spiral/database) [![Codecov](https://codecov.io/gh/spiral/database/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/database/)
 spiral/migrations | [![Latest Stable Version](https://poser.pugx.org/spiral/migrations/version)](https://packagist.org/packages/spiral/migrations) [![Build Status](https://travis-ci.org/spiral/migrations.svg?branch=master)](https://travis-ci.org/spiral/migrations) [![Codecov](https://codecov.io/gh/spiral/migrations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/migrations/)
 
