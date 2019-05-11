@@ -13,13 +13,17 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Controller;
+use Spiral\Security\PermissionsInterface;
 
 class AppBootloader extends Bootloader
 {
     const BOOT = true;
 
-    public function boot(RouterInterface $router)
+    public function boot(RouterInterface $router, PermissionsInterface $rbac)
     {
+        $rbac->addRole('user');
+        $rbac->associate('user', '*');
+
         $route = new Route(
             '/<action>[/<name>]',
             new Controller(TestController::class)
