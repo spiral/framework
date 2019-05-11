@@ -12,9 +12,11 @@ namespace Spiral\Framework\Cycle;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Transaction;
+use Spiral\App\Controller\SelectController;
 use Spiral\App\User\User;
 use Spiral\App\User\UserRepository;
 use Spiral\Console\ConsoleDispatcher;
+use Spiral\Core\CoreInterface;
 use Spiral\Framework\ConsoleTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -56,7 +58,6 @@ class SchemaTest extends ConsoleTest
         $this->assertSame(1, $u->id);
     }
 
-
     public function testSyncDebug()
     {
         $output = new BufferedOutput();
@@ -75,10 +76,19 @@ class SchemaTest extends ConsoleTest
         $this->assertSame(1, $u->id);
     }
 
+    /**
+     * @expectedException \Cycle\ORM\Exception\ORMException
+     */
+    public function testSchemaMissing()
+    {
+        /** @var UserRepository $r */
+        $this->app->get(UserRepository::class);
+    }
+
     public function testGetRepository()
     {
         $app = $this->app;
-        $app->console()->run('cycle:sync');
+        $this->runCommandDebug('cycle:sync');
 
         $u = new User('Antony');
         $app->get(Transaction::class)->persist($u)->run();
@@ -90,5 +100,24 @@ class SchemaTest extends ConsoleTest
 
         // todo: need bugfix
         // $this->assertSame($u, $r->findOne());
+    }
+
+    public function testInjectedSelect()
+    {
+        $app = $this->app;
+        $this->runCommandDebug('cycle:sync');
+
+        $u = new User('Antony');
+        $app->get(Transaction::class)->persist($u)->run();
+        $this->assertSame(1, $u->id);
+
+        /** @var CoreInterface $c */
+        $c = $app->get(CoreInterface::class);
+        // $this->assertInstanceOf(UserRepository::class, $r);
+
+        $this->assertSame(1, $c->callAction(
+            SelectController::class,
+            'select'
+        ));
     }
 }

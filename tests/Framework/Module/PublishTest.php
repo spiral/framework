@@ -16,18 +16,7 @@ use Spiral\Framework\ConsoleTest;
 
 class PublishTest extends ConsoleTest
 {
-    protected const TEST_FILE = __FILE__ . 'test.txt';
-
-    private $remove = [];
-
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        foreach ($this->remove as $file) {
-            unlink($file);
-        }
-    }
+    protected const TEST_FILE = __DIR__ . '/test.txt';
 
     public function testPublish()
     {
@@ -49,6 +38,8 @@ class PublishTest extends ConsoleTest
 
     public function testReplace()
     {
+        $this->runCommandDebug('conf');
+
         $file = $this->file('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -65,6 +56,7 @@ class PublishTest extends ConsoleTest
 
     public function testFollow()
     {
+        $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
         file_put_contents($file, 'original');
         file_put_contents(self::TEST_FILE, 'test');
@@ -94,14 +86,8 @@ class PublishTest extends ConsoleTest
         rmdir($dir);
     }
 
-    protected function file(string $dir, string $name, bool $remove = true)
+    protected function file(string $dir, string $name)
     {
-        $file = $this->app->get(DirectoriesInterface::class)->get($dir) . $name;
-
-        if ($remove) {
-            $this->remove[] = $file;
-        }
-
-        return $file;
+        return $this->app->get(DirectoriesInterface::class)->get($dir) . $name;
     }
 }

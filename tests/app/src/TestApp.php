@@ -10,6 +10,7 @@ namespace Spiral\App;
 
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\Boot\BootloadManager;
+use Spiral\Boot\DirectoriesInterface;
 use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Kernel;
@@ -61,6 +62,15 @@ class TestApp extends Kernel
     public function get(string $alias)
     {
         return $this->container->get($alias);
+    }
+
+    /**
+     * @param string $alias
+     * @return string
+     */
+    public function dir(string $alias): string
+    {
+        return $this->container->get(DirectoriesInterface::class)->get($alias);
     }
 
     /**

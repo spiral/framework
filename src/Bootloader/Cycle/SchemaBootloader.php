@@ -12,8 +12,10 @@ namespace Spiral\Bootloader\Cycle;
 use Cycle\Annotated\Columns;
 use Cycle\Annotated\Entities;
 use Cycle\Annotated\Indexes;
+use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
+use Cycle\ORM\Select\Repository;
 use Cycle\Schema\Generator\GenerateRelations;
 use Cycle\Schema\Generator\GenerateTypecast;
 use Cycle\Schema\Generator\RenderRelations;
@@ -21,7 +23,6 @@ use Cycle\Schema\Generator\RenderTables;
 use Cycle\Schema\Generator\ResetTables;
 use Cycle\Schema\Generator\ValidateEntities;
 use Cycle\Schema\GeneratorInterface;
-use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\MemoryInterface;
@@ -45,7 +46,7 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
         GenerateRelations::class => [self::class, 'relations'],
     ];
 
-    /** @var ContainerInterface */
+    /** @var Container */
     private $container;
 
     /** @var ConfiguratorInterface */
@@ -54,9 +55,9 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     /**
      * CycleSchemaBootloader constructor.
      *
-     * @param ContainerInterface $container
+     * @param Container $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
         $this->generators = [
@@ -70,6 +71,36 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
             Indexes::class,
             GenerateTypecast::class
         ];
+    }
+
+    /**
+     * @param SchemaInterface|null $schema
+     */
+    public function boot(SchemaInterface $schema = null)
+    {
+        if (!is_null($schema)) {
+            $this->bootRepositories($schema);
+        }
+    }
+
+    /**
+     * @param SchemaInterface $schema
+     */
+    public function bootRepositories(SchemaInterface $schema)
+    {
+        foreach ($schema->getRoles() as $role) {
+            $repository = $schema->define($role, Schema::REPOSITORY);
+            if ($repository === Repository::class || $repository === null) {
+                // default repository can not be wired
+                continue;
+            }
+
+            // initiate all repository dependencies using factory method forwarded to ORM
+            $this->container->bind(
+                $repository,
+                new Container\Autowire(RepositoryInterface::class, ['role' => $role])
+            );
+        }
     }
 
     /**

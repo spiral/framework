@@ -8,6 +8,7 @@
 
 namespace Spiral\Command\Cycle;
 
+use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
@@ -32,5 +33,7 @@ final class UpdateCommand extends Command
         $memory->saveData('cycle', $schema);
 
         $this->writeln("<info>done</info>");
+
+        $bootloader->bootRepositories(new Schema($schema));
     }
 }

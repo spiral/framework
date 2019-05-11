@@ -11,18 +11,19 @@ declare(strict_types=1);
 namespace Spiral\Command\Cycle;
 
 use Cycle\Migrations\GenerateMigrations;
+use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
-use Spiral\Console\Command;
+use Spiral\Command\Migrate\AbstractCommand;
 use Spiral\Console\Console;
 use Spiral\Migrations\Migrator;
 use Spiral\Migrations\State;
 use Symfony\Component\Console\Input\InputOption;
 
-final class MigrateCommand extends Command
+final class MigrateCommand extends AbstractCommand
 {
     public const NAME        = "cycle:migrate";
     public const DESCRIPTION = "Generate ORM schema migrations";
@@ -48,8 +49,7 @@ final class MigrateCommand extends Command
         Migrator $migrator,
         Console $console
     ) {
-        if (!$migrator->isConfigured()) {
-            $this->writeln("<fg=red>Migrations are not configured, run `migrate:init` first.</fg=red>");
+        if (!$this->verifyConfigured() || !$this->verifyEnvironment()) {
             return;
         }
 
@@ -76,5 +76,7 @@ final class MigrateCommand extends Command
                 $console->run('migrate', [], $this->output);
             }
         }
+
+        $bootloader->bootRepositories(new Schema($schema));
     }
 }

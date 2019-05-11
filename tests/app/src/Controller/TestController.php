@@ -8,6 +8,7 @@
 
 namespace Spiral\App\Controller;
 
+use Cycle\ORM\Select;
 use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
 use Spiral\Core\Controller;

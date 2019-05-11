@@ -8,15 +8,16 @@
 
 namespace Spiral\Command\Cycle;
 
+use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
-use Spiral\Console\Command;
+use Spiral\Command\Migrate\AbstractCommand;
 
-final class SyncCommand extends Command
+final class SyncCommand extends AbstractCommand
 {
     public const NAME        = "cycle:sync";
     public const DESCRIPTION = "Sync Cycle ORM schema with database without intermediate migration (risk operation)";
@@ -31,6 +32,10 @@ final class SyncCommand extends Command
         Registry $registry,
         MemoryInterface $memory
     ) {
+        if (!$this->verifyEnvironment()) {
+            return;
+        }
+
         $show = new ShowChanges($this->output);
 
         $schema = (new Compiler())->compile(
@@ -43,5 +48,7 @@ final class SyncCommand extends Command
         if ($show->hasChanges()) {
             $this->writeln("\n<info>ORM Schema has been synchronized</info>");
         }
+
+        $bootloader->bootRepositories(new Schema($schema));
     }
 }

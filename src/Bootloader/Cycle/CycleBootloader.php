@@ -15,13 +15,13 @@ use Cycle\ORM\ORM;
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\PromiseFactoryInterface;
 use Cycle\ORM\RepositoryInterface;
-use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
-use Cycle\ORM\Select\Repository;
+use Cycle\ORM\Select;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Core\Container;
+use Spiral\Cycle\SelectInjector;
 use Spiral\Database\DatabaseProviderInterface;
 
 final class CycleBootloader extends Bootloader implements DependedInterface
@@ -33,11 +33,10 @@ final class CycleBootloader extends Bootloader implements DependedInterface
     ];
 
     /**
-     * @param Container            $container
-     * @param FinalizerInterface   $finalizer
-     * @param SchemaInterface|null $schema
+     * @param Container          $container
+     * @param FinalizerInterface $finalizer
      */
-    public function boot(Container $container, FinalizerInterface $finalizer, SchemaInterface $schema = null)
+    public function boot(Container $container, FinalizerInterface $finalizer)
     {
         $finalizer->addFinalizer(function () use ($container) {
             if ($container->hasInstance(ORMInterface::class)) {
@@ -45,23 +44,7 @@ final class CycleBootloader extends Bootloader implements DependedInterface
             }
         });
 
-        if ($schema === null) {
-            return;
-        }
-
-        foreach ($schema->getRoles() as $role) {
-            $repository = $schema->define($role, Schema::REPOSITORY);
-            if ($repository === Repository::class || $repository === null) {
-                // default repository can not be wired
-                continue;
-            }
-
-            // initiate all repository dependencies using factory method forwarded to ORM
-            $container->bind(
-                $repository,
-                new Container\Autowire(RepositoryInterface::class, ['role' => $role])
-            );
-        }
+        $container->bindInjector(Select::class, SelectInjector::class);
     }
 
     /**
