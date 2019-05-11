@@ -20,8 +20,13 @@ abstract class BaseTest extends TestCase
         parent::tearDown();
 
         $fs = new Files();
-        foreach ($fs->getFiles(__DIR__ . '/../app/migrations') as $f) {
-            $fs->delete($f);
+
+        if ($fs->isDirectory(__DIR__ . '/../app/migrations')) {
+            $fs->deleteDirectory(__DIR__ . '/../app/migrations');
+        }
+
+        if ($fs->isDirectory(__DIR__ . '/../runtime')) {
+            $fs->deleteDirectory(__DIR__ . '/../runtime');
         }
     }
 

@@ -61,7 +61,7 @@ final class Publisher implements PublisherInterface
         }
 
         $this->ensureDirectory(dirname($destination), $mode);
-        echo 1;
+
         $this->files->copy($filename, $destination);
         $this->files->setPermissions($destination, $mode);
 

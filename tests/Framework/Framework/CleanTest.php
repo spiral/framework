@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Framework\Command\Framework;
+namespace Spiral\Framework\Framework;
 
 use Spiral\Framework\ConsoleTest;
 

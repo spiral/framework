@@ -35,7 +35,6 @@ class SchemaTest extends ConsoleTest
         $app = $this->app;
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
-
         $output = $this->runCommandDebug('cycle:migrate', ['-r' => true]);
         $this->assertContains('default.users', $output);
 

@@ -13,7 +13,7 @@ use Spiral\Framework\BaseTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class ConsoleTest extends BaseTest
+class ConsoleDispatcherTest extends BaseTest
 {
     public function testCanServe()
     {

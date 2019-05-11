@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Framework\Command\Views;
+namespace Spiral\Framework\Views;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;

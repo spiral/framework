@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Framework\Command\I18n;
+namespace Spiral\Framework\I18n;
 
 use Spiral\Framework\ConsoleTest;
 

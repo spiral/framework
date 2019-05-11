@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Framework\Command\Database;
+namespace Spiral\Framework\Database;
 
 use Spiral\Database\Database;
 use Spiral\Framework\ConsoleTest;

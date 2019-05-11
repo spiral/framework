@@ -17,6 +17,9 @@ use Spiral\Module\Publisher;
 use Spiral\Module\PublisherInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Target path can be in form "@cache/path".
+ */
 final class PublishCommand extends Command
 {
     protected const NAME        = 'publish';
