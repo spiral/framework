@@ -60,4 +60,24 @@ class KernelTest extends BaseTest
         $rpc = $this->makeApp([])->get(RPC::class);
         $this->assertInstanceOf(RPC::class, $rpc);
     }
+
+    /**
+     * @expectedException \Spiral\Boot\Exception\BootException
+     */
+    public function testInvalidRPC()
+    {
+        $this->makeApp([
+            'RR_RPC' => 'invalid'
+        ])->get(RPC::class);
+    }
+
+    /**
+     * @expectedException \Spiral\Boot\Exception\BootException
+     */
+    public function testInvalidRPC2()
+    {
+        $this->makeApp([
+            'RR_RPC' => 'ftp://magic'
+        ])->get(RPC::class);
+    }
 }
