@@ -34,4 +34,19 @@ class CompileTest extends ConsoleTest
         $out = $this->runCommandDebug('views:reset');
         $this->assertContains('test.php', $out);
     }
+
+    public function testResetClean()
+    {
+        $out = $this->runCommandDebug('views:reset');
+        $this->assertContains('no cache', $out);
+    }
+
+    public function testClean()
+    {
+        $this->runCommandDebug('i18n:index');
+
+        $out = $this->runCommandDebug('cache:clean');
+        $this->assertContains('i18n.en', $out);
+        $this->assertContains('i18n.locales', $out);
+    }
 }

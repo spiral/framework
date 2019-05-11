@@ -16,7 +16,7 @@ use Spiral\Files\FilesInterface;
 
 final class CleanCommand extends Command implements SingletonInterface
 {
-    protected const NAME        = 'clean:cache';
+    protected const NAME        = 'cache:clean';
     protected const DESCRIPTION = 'Clean application runtime cache';
 
     /**

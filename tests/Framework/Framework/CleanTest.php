@@ -14,7 +14,7 @@ class CleanTest extends ConsoleTest
 {
     public function testClean()
     {
-        $output = $this->runCommand('clean:cache');
+        $output = $this->runCommand('cache:clean');
         $this->assertContains('Runtime cache has been cleared', $output);
     }
 }
