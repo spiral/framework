@@ -25,4 +25,17 @@ class FilterTest extends HttpTest
             'name' => "hello"
         ])->getBody());
     }
+
+    public function testDotNotation()
+    {
+        $this->assertSame('abc', (string)$this->post('/filter', [
+            'name'    => "hello",
+            'section' => ['value' => 'abc']
+        ])->getBody());
+    }
+
+    public function testBadRequest()
+    {
+        $this->assertSame(500, $this->get('/filter2')->getStatusCode());
+    }
 }

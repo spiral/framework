@@ -8,6 +8,7 @@
 
 namespace Spiral\App\Controller;
 
+use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
 use Spiral\Core\Controller;
 use Spiral\Router\RouteInterface;
@@ -24,7 +25,11 @@ class TestController extends Controller
 
     public function filterAction(TestRequest $r)
     {
-        return $r->isValid() ? 'ok' : json_encode($r->getErrors());
+        return $r->isValid() ? ($r->value ?? 'ok') : json_encode($r->getErrors());
+    }
+
+    public function filter2Action(BadRequest $r)
+    {
     }
 
     public function errorAction()

@@ -11,14 +11,9 @@ namespace Spiral\App\Request;
 
 use Spiral\Filters\Filter;
 
-class TestRequest extends Filter
+class BadRequest extends Filter
 {
     const SCHEMA = [
-        'name'  => 'data:name',
-        'value' => 'data:section.value'
-    ];
-
-    const VALIDATES = [
-        'name' => ['notEmpty', 'string']
+        'name' => 'invalid:section.name'
     ];
 }
