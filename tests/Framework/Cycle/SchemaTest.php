@@ -23,6 +23,13 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class SchemaTest extends ConsoleTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->app->getEnvironment()->set('SAFE_MIGRATIONS', true);
+    }
+
     public function testGetSchema()
     {
         $app = $this->app;

@@ -43,7 +43,7 @@ final class MigrationsBootloader extends Bootloader implements DependedInterface
         $config->setDefaults('migration', [
             'directory' => $dirs->get('migrations'),
             'table'     => 'migrations',
-            'safe'      => $env->get('SAFE_MIGRATIONS', true)
+            'safe'      => $env->get('SAFE_MIGRATIONS', false)
         ]);
     }
 
