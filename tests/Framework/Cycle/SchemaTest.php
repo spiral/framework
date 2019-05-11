@@ -15,15 +15,15 @@ use Cycle\ORM\Transaction;
 use Spiral\App\User\User;
 use Spiral\App\User\UserRepository;
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Framework\BaseTest;
+use Spiral\Framework\ConsoleTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class SchemaTest extends BaseTest
+class SchemaTest extends ConsoleTest
 {
     public function testGetSchema()
     {
-        $app = $this->makeApp();
+        $app = $this->app;
         $app->console()->run('cycle');
 
         $schema = $app->get(SchemaInterface::class);
@@ -32,11 +32,12 @@ class SchemaTest extends BaseTest
 
     public function testMigrate()
     {
-        $app = $this->makeApp();
-        $app->console()->run('migrate:init', ['-vvv' => true]);
+        $app = $this->app;
+        $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
-        $output = $app->console()->run('cycle:migrate', ['-r' => true]);
-        $this->assertContains('default.users', $output->getOutput()->fetch());
+
+        $output = $this->runCommandDebug('cycle:migrate', ['-r' => true]);
+        $this->assertContains('default.users', $output);
 
         $u = new User('Antony');
         $app->get(Transaction::class)->persist($u)->run();
@@ -46,7 +47,7 @@ class SchemaTest extends BaseTest
 
     public function testSync()
     {
-        $app = $this->makeApp();
+        $app = $this->app;
         $output = $app->console()->run('cycle:sync');
         $this->assertContains('default.users', $output->getOutput()->fetch());
 
@@ -62,7 +63,7 @@ class SchemaTest extends BaseTest
         $output = new BufferedOutput();
         $output->setVerbosity(BufferedOutput::VERBOSITY_VERY_VERBOSE);
 
-        $app = $this->makeApp();
+        $app = $this->app;
         $app->get(ConsoleDispatcher::class)->serve(new ArrayInput([
             'command' => 'cycle:sync'
         ]), $output);
@@ -77,7 +78,7 @@ class SchemaTest extends BaseTest
 
     public function testGetRepository()
     {
-        $app = $this->makeApp();
+        $app = $this->app;
         $app->console()->run('cycle:sync');
 
         $u = new User('Antony');
