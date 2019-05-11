@@ -17,18 +17,4 @@ class CleanTest extends ConsoleTest
         $output = $this->runCommand('cache:clean');
         $this->assertContains('Runtime cache has been cleared', $output);
     }
-
-    public function testCleanError()
-    {
-        $this->runCommand('configure');
-
-        $dir = $this->app->dir('cache');
-        $f = fopen($dir . 'lock', 'w+');
-        flock($f, LOCK_EX);
-
-        $output = $this->runCommandDebug('cache:clean');
-        $this->assertContains('[errored]', $output);
-
-        fclose($f);
-    }
 }
