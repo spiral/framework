@@ -9,6 +9,7 @@
 namespace Spiral\Framework\Command\Database;
 
 use Spiral\Database\Database;
+use Spiral\Database\DatabaseManager;
 use Spiral\Framework\ConsoleTest;
 
 class ListTest extends ConsoleTest
@@ -35,5 +36,24 @@ class ListTest extends ConsoleTest
         $this->assertContains(':memory:', $output);
         $this->assertContains('sample', $output);
         $this->assertContains('outer', $output);
+    }
+
+
+    public function testBrokenList()
+    {
+        /** @var DatabaseManager $dm */
+        $dm = $this->app->get(DatabaseManager::class);
+
+        $dm->addDatabase(new Database(
+            'other',
+            '',
+            $dm->driver('other')
+        ));
+
+        $output = $this->runCommand('db:list', ['db' => 'other']);
+        $this->assertContains('SQLite', $output);
+        $this->assertContains(':broken:', $output);
+        $this->assertContains('other', $output);
+        $this->assertContains('[HY000]', $output);
     }
 }
