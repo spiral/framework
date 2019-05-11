@@ -38,8 +38,6 @@ class MigrateTest extends ConsoleTest
         $this->runCommandDebug('migrate');
 
         $this->assertSame(2, count($db->getTables()));
-
-
     }
 
     public function testMigrateRollback()
