@@ -38,4 +38,11 @@ class FilterTest extends HttpTest
     {
         $this->assertSame(500, $this->get('/filter2')->getStatusCode());
     }
+
+    public function testInputTest()
+    {
+        $this->assertSame('value: abc', (string)$this->get('/input', [
+            'section' => ['value' => 'abc']
+        ])->getBody());
+    }
 }

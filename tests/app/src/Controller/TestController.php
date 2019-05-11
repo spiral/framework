@@ -11,6 +11,7 @@ namespace Spiral\App\Controller;
 use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
 use Spiral\Core\Controller;
+use Spiral\Filter\RequestInput;
 use Spiral\Router\RouteInterface;
 use Spiral\Translator\Traits\TranslatorTrait;
 
@@ -30,6 +31,11 @@ class TestController extends Controller
 
     public function filter2Action(BadRequest $r)
     {
+    }
+
+    public function inputAction(RequestInput $i)
+    {
+        return 'value: ' . $i->withPrefix('section')->getValue('query', 'value');
     }
 
     public function errorAction()
