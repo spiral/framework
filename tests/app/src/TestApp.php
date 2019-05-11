@@ -30,6 +30,7 @@ class TestApp extends Kernel
         Bootloader\Security\RbacBootloader::class,
 
         // Dispatchers
+        Bootloader\Jobs\JobsBootloader::class,
         Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
