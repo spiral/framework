@@ -1,4 +1,4 @@
-# Spiral 2.0 - High-Performance PHP/Go Framework
+# Spiral - High-Performance PHP/Go Framework
 [![Latest Stable Version](https://poser.pugx.org/spiral/framework/version)](https://packagist.org/packages/spiral/framework)
 [![Build Status](https://travis-ci.org/spiral/framework.svg?branch=master)](https://travis-ci.org/spiral/framework)
 [![Codecov](https://codecov.io/gh/spiral/framework/branch/2.0/graph/badge.svg)](https://codecov.io/gh/spiral/framework/branch/2.0)
