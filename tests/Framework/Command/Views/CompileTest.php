@@ -19,6 +19,7 @@ class CompileTest extends ConsoleTest
     {
         $out = $this->runCommandDebug('views:compile');
         $this->assertContains('default:native', $out);
+        $this->assertContains('locale:en', $out);
     }
 
     public function testReset()
