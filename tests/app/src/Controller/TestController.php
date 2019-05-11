@@ -8,6 +8,7 @@
 
 namespace Spiral\App\Controller;
 
+use Spiral\App\Request\TestRequest;
 use Spiral\Core\Controller;
 use Spiral\Router\RouteInterface;
 use Spiral\Translator\Traits\TranslatorTrait;
@@ -19,6 +20,11 @@ class TestController extends Controller
     public function indexAction(string $name = 'Dave')
     {
         return "Hello, {$name}.";
+    }
+
+    public function filterAction(TestRequest $r)
+    {
+        return $r->isValid() ? 'ok' : json_encode($r->getErrors());
     }
 
     public function errorAction()
