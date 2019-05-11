@@ -20,8 +20,8 @@ return [
             'profiling'  => true,
         ],
         'other'   => [
-            'driver'     => Driver\SQLite\SQLiteDriver::class,
-            'connection' => 'sqlite::broken:',
+            'driver'     => Driver\Postgres\PostgresDriver::class,
+            'connection' => 'pgsql:host=327.0.0.1;dbname=database',
             'profiling'  => true,
         ],
     ]

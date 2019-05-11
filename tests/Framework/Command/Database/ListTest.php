@@ -51,9 +51,8 @@ class ListTest extends ConsoleTest
         ));
 
         $output = $this->runCommand('db:list', ['db' => 'other']);
-        $this->assertContains('SQLite', $output);
-        $this->assertContains(':broken:', $output);
+        $this->assertContains('Postgres', $output);
+        $this->assertContains('database', $output);
         $this->assertContains('other', $output);
-        $this->assertContains('[HY000]', $output);
     }
 }
