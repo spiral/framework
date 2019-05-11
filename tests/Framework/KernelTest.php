@@ -11,6 +11,7 @@ namespace Spiral\Framework;
 use Spiral\App\TestApp;
 use Spiral\Boot\Environment;
 use Spiral\Config\ConfiguratorInterface;
+use Spiral\Goridge\RPC;
 
 class KernelTest extends BaseTest
 {
@@ -51,5 +52,12 @@ class KernelTest extends BaseTest
     {
         TestApp::init([
         ], new Environment(), false);
+    }
+
+    public function testDefaultRPC()
+    {
+        /** @var RPC $rpc */
+        $rpc = $this->makeApp([])->get(RPC::class);
+        $this->assertInstanceOf(RPC::class, $rpc);
     }
 }

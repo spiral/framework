@@ -48,7 +48,7 @@ final class RpcBootloader extends Bootloader
         if ($parts[1] == 'unix') {
             $relay = new SocketRelay($parts[2], null, SocketRelay::SOCK_UNIX);
         } else {
-            $relay = new SocketRelay($parts[2], $parts[3], SocketRelay::SOCK_TCP);
+            $relay = new SocketRelay($parts[2], (int)$parts[3], SocketRelay::SOCK_TCP);
         }
 
         return new RPC($relay);
