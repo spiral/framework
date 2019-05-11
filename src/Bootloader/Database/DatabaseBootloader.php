@@ -9,20 +9,19 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Database;
 
-use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\DatabaseProviderInterface;
+use Spiral\Database\Driver\SQLite\SQLiteDriver;
 
 final class DatabaseBootloader extends Bootloader implements SingletonInterface
 {
     const SINGLETONS = [
-        DatabaseProviderInterface::class => DatabaseManager::class
+        DatabaseProviderInterface::class => DatabaseManager::class,
     ];
 
     const BINDINGS = [
@@ -41,28 +40,23 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
-     * @param ContainerInterface $container
-     * @param FinalizerInterface $finalizer
+     * Init database config.
      */
-    public function boot(ContainerInterface $container, FinalizerInterface $finalizer)
+    public function boot()
     {
-        $finalizer->addFinalizer(function ($terminate) use ($container) {
-            if (!$terminate || !$container->has(DatabaseManager::class)) {
-                return;
-            }
-
-            /** @var DatabaseManager $dbal */
-            $dbal = $container->get(DatabaseManager::class);
-            foreach ($dbal->getDrivers() as $driver) {
-                $driver->disconnect();
-            }
-        });
-
         $this->config->setDefaults('database', [
             'default'   => 'default',
             'aliases'   => [],
-            'databases' => [],
-            'drivers'   => []
+            'databases' => [
+                'memory' => ['connection' => 'memory']
+            ],
+            'drivers'   => [
+                'memory' => [
+                    'driver'     => SQLiteDriver::class,
+                    'connection' => 'sqlite::memory:',
+                    'profiling'  => true,
+                ]
+            ]
         ]);
     }
 }
