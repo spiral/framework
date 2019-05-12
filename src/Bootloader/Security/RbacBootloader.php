@@ -11,7 +11,9 @@ namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Container\SingletonInterface;
-use Spiral\Security\Guard;
+use Spiral\Security\ScopeGuard;
+use Spiral\Security\Actor\Guest;
+use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
 use Spiral\Security\PermissionManager;
 use Spiral\Security\PermissionsInterface;
@@ -22,10 +24,11 @@ final class RbacBootloader extends Bootloader implements SingletonInterface
 {
     const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,
-        RulesInterface::class       => RuleManager::class
+        RulesInterface::class       => RuleManager::class,
+        GuardInterface::class       => ScopeGuard::class
     ];
 
     const BINDINGS = [
-        GuardInterface::class => Guard::class
+        ActorInterface::class => Guest::class
     ];
 }
