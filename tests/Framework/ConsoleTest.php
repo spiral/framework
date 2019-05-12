@@ -54,7 +54,7 @@ abstract class ConsoleTest extends BaseTest
     {
         $input = new ArrayInput($args);
         $output = new BufferedOutput();
-        $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
+        $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
 
         $this->app->console()->run($command, $input, $output);
 

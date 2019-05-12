@@ -70,11 +70,11 @@ final class ConsoleDispatcher implements DispatcherInterface
         $listener = $this->container->get(DebugListener::class);
         $listener = $listener->withOutput($output)->enable();
 
-        /** @var Console $core */
-        $core = $this->container->get(Console::class);
+        /** @var Console $console */
+        $console = $this->container->get(Console::class);
 
         try {
-            $core->start($input ?? new ArgvInput(), $output);
+            $console->start($input ?? new ArgvInput(), $output);
         } catch (\Throwable $e) {
             $this->handleException($e, $output);
         } finally {
@@ -106,11 +106,11 @@ final class ConsoleDispatcher implements DispatcherInterface
      */
     private function mapVerbosity(OutputInterface $output): int
     {
-        if ($output->isDebug()) {
+        if ($output->isDebug() || $output->isVeryVerbose()) {
             return ConsoleHandler::VERBOSITY_DEBUG;
         }
 
-        if ($output->isVerbose() || $output->isVeryVerbose()) {
+        if ($output->isVerbose()) {
             return ConsoleHandler::VERBOSITY_VERBOSE;
         }
 
