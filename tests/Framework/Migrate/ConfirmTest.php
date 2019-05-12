@@ -21,8 +21,9 @@ class ConfirmTest extends ConsoleTest
 {
     public function setUp()
     {
-        parent::setUp();
-        $this->app->getEnvironment()->set('SAFE_MIGRATIONS', false);
+        $this->app = $this->makeApp([
+            'SAFE_MIGRATIONS' => false
+        ]);
     }
 
     public function testConfirmMigrate()
