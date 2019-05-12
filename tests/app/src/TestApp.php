@@ -8,12 +8,15 @@
 
 namespace Spiral\App;
 
+use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader;
 use Spiral\Console\Console;
-use Spiral\Core\Kernel;
+use Spiral\Core\Container;
+use Spiral\Framework\Kernel;
 
 class TestApp extends Kernel
 {
@@ -80,6 +83,22 @@ class TestApp extends Kernel
     public function console(): Console
     {
         return $this->get(Console::class);
+    }
+
+    /**
+     * @return Container
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
+
+    /**
+     * @return EnvironmentInterface
+     */
+    public function getEnvironment(): EnvironmentInterface
+    {
+        return $this->container->get(EnvironmentInterface::class);
     }
 
     public function getBootloadManager(): BootloadManager

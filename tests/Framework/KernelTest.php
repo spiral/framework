@@ -26,15 +26,6 @@ class KernelTest extends BaseTest
         ], $configs->getConfig('test'));
     }
 
-    public function testIsDebug()
-    {
-        $app = $this->makeApp([
-            'DEBUG' => true
-        ]);
-
-        $this->assertTrue($app->isDebug());
-    }
-
     public function testGetEnv()
     {
         $app = $this->makeApp([
