@@ -24,6 +24,9 @@ class CompileTest extends ConsoleTest
         $this->assertContains('Unable to compile custom:error', $out);
     }
 
+    /**
+     * @covers \Spiral\Command\Views\ResetCommand::perform
+     */
     public function testReset()
     {
         /**
