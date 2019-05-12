@@ -12,6 +12,9 @@ use Spiral\Framework\ConsoleTest;
 
 class CleanTest extends ConsoleTest
 {
+    /**
+     * @covers \Spiral\Command\Views\ResetCommand::perform
+     */
     public function testClean()
     {
         $this->runCommand('configure');
