@@ -66,7 +66,10 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
      */
     public function addDirectory(string $namespace, string $directory)
     {
-        // todo: make sure it's working
+        if (!isset($this->config->getConfig('views')['namespaces'][$namespace])) {
+            $this->config->modify('views', new Append('namespaces', $namespace, []));
+        }
+
         $this->config->modify('views', new Append('namespaces.' . $namespace, null, $directory));
     }
 

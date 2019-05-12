@@ -19,6 +19,9 @@ class CompileTest extends ConsoleTest
     {
         $out = $this->runCommandDebug('views:compile');
         $this->assertContains('default:native', $out);
+
+        $this->assertContains('custom:error', $out);
+        $this->assertContains('Unable to compile custom:error', $out);
     }
 
     public function testReset()
