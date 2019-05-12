@@ -11,6 +11,7 @@ namespace Spiral\App\User;
 
 /**
  * @entity(repository=UserRepository)
+ * @table(indexes={(columns={name},unique=true)})
  */
 class User
 {

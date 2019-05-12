@@ -75,7 +75,12 @@ class SchemaTest extends ConsoleTest
             'command' => 'cycle:sync'
         ]), $output);
 
-        $this->assertContains('Begin transaction', $output->fetch());
+        $this->assertContains('Begin transaction', $out = $output->fetch());
+
+        $this->assertContains('default.users', $out);
+        $this->assertContains('create table', $out);
+        $this->assertContains('add column', $out);
+        $this->assertContains('add index', $out);
 
         $u = new User('Antony');
         $app->get(Transaction::class)->persist($u)->run();
