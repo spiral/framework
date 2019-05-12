@@ -13,6 +13,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\Files;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class ConsoleTest extends BaseTest
 {
@@ -50,10 +51,10 @@ abstract class ConsoleTest extends BaseTest
         return $output->fetch();
     }
 
-    public function runCommandDebug(string $command, array $args = []): string
+    public function runCommandDebug(string $command, array $args = [], OutputInterface $output = null): string
     {
         $input = new ArrayInput($args);
-        $output = new BufferedOutput();
+        $output = $output ?? new BufferedOutput();
         $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
 
         $this->app->console()->run($command, $input, $output);
