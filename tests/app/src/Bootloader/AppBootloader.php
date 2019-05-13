@@ -27,7 +27,7 @@ class AppBootloader extends Bootloader
     public function boot(
         RouterInterface $router,
         PermissionsInterface $rbac,
-        ViewsBootloader $bootloader,
+        ViewsBootloader $views,
         ValidationBootloader $validation
     ) {
         $rbac->addRole('user');
@@ -40,8 +40,8 @@ class AppBootloader extends Bootloader
 
         $router->setDefault($route->withDefaults(['name' => 'Dave']));
 
-        $bootloader->addDirectory('custom', __DIR__ . '/../../views/custom/');
-        $bootloader->addEngine(TestEngine::class);
+        $views->addDirectory('custom', __DIR__ . '/../../views/custom/');
+        $views->addEngine(TestEngine::class);
 
         $validation->addAlias('aliased', 'notEmpty');
         $validation->addChecker('my', MyChecker::class);
