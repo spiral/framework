@@ -12,6 +12,7 @@ namespace Spiral\Command\Cycle\Generator;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
 use Spiral\Database\Schema\AbstractTable;
+use Spiral\Database\Schema\Comparator;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class ShowChanges implements GeneratorInterface
@@ -94,6 +95,16 @@ final class ShowChanges implements GeneratorInterface
 
         $cmp = $table->getComparator();
 
+        $this->describeColumns($cmp);
+        $this->describeIndexes($cmp);
+        $this->describeFKs($cmp);
+    }
+
+    /**
+     * @param Comparator $cmp
+     */
+    protected function describeColumns(Comparator $cmp)
+    {
         foreach ($cmp->addedColumns() as $column) {
             $this->output->writeln("    - add column <fg=yellow>{$column->getName()}</fg=yellow>");
         }
@@ -106,7 +117,13 @@ final class ShowChanges implements GeneratorInterface
             $column = $column[0];
             $this->output->writeln("    - alter column <fg=yellow>{$column->getName()}</fg=yellow>");
         }
+    }
 
+    /**
+     * @param Comparator $cmp
+     */
+    protected function describeIndexes(Comparator $cmp)
+    {
         foreach ($cmp->addedIndexes() as $index) {
             $index = join(', ', $index->getColumns());
             $this->output->writeln("    - add index on <fg=yellow>[{$index}]</fg=yellow>");
@@ -120,7 +137,13 @@ final class ShowChanges implements GeneratorInterface
             $index = $index[0];
             $this->output->writeln("    - alter index on <fg=yellow>[{$index}]</fg=yellow>");
         }
+    }
 
+    /**
+     * @param Comparator $cmp
+     */
+    protected function describeFKs(Comparator $cmp)
+    {
         foreach ($cmp->addedForeignKeys() as $fk) {
             $this->output->writeln("    - add foreign key on <fg=yellow>{$fk->getColumn()}</fg=yellow>");
         }
