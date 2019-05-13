@@ -26,6 +26,10 @@ use Symfony\Component\Translation\Dumper;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\Loader;
 
+/**
+ * Attention, the default language would not be automatically reset in finalizers. Make sure to properly design your
+ * middleware.
+ */
 final class I18nBootloader extends Bootloader implements SingletonInterface
 {
     const SINGLETONS = [
