@@ -9,7 +9,7 @@
 namespace Spiral\App\User;
 
 /**
- * @entity
+ * @entity(role="role")
  */
 class Role
 {

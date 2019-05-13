@@ -35,7 +35,10 @@ final class SelectInjector implements InjectorInterface
      */
     public function createInjection(\ReflectionClass $class, string $context = null)
     {
-        $context = Inflector::singularize($context);
+        if (!$this->orm->getSchema()->defines($context)) {
+            $context = Inflector::singularize($context);
+        }
+
         if (!$this->orm->getSchema()->defines($context)) {
             throw new ORMException("Cycle schema is not initiated or role missing, run `cycle`");
         }
