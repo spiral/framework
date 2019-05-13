@@ -8,11 +8,12 @@
 
 namespace Spiral\App\Controller;
 
-use Cycle\ORM\Select;
 use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
 use Spiral\Core\Controller;
 use Spiral\Filter\RequestInput;
+use Spiral\Http\PaginationFactory;
+use Spiral\Pagination\Paginator;
 use Spiral\Router\RouteInterface;
 use Spiral\Translator\Traits\TranslatorTrait;
 
@@ -23,6 +24,14 @@ class TestController extends Controller
     public function indexAction(string $name = 'Dave')
     {
         return "Hello, {$name}.";
+    }
+
+    public function paginateAction(PaginationFactory $paginationFactory)
+    {
+        /** @var Paginator $p */
+        $p = $paginationFactory->createPaginator('page');
+
+        return $p->withCount(1000)->getPage();
     }
 
     public function filterAction(TestRequest $r)
