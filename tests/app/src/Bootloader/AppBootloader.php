@@ -8,9 +8,12 @@
 
 namespace Spiral\App\Bootloader;
 
+use Spiral\App\Checker\MyChecker;
+use Spiral\App\Condition\MyCondition;
 use Spiral\App\Controller\TestController;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Bootloader\Security\ValidationBootloader;
 use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
@@ -21,8 +24,12 @@ class AppBootloader extends Bootloader
 {
     const BOOT = true;
 
-    public function boot(RouterInterface $router, PermissionsInterface $rbac, ViewsBootloader $bootloader)
-    {
+    public function boot(
+        RouterInterface $router,
+        PermissionsInterface $rbac,
+        ViewsBootloader $bootloader,
+        ValidationBootloader $validation
+    ) {
         $rbac->addRole('user');
         $rbac->associate('user', '*');
 
@@ -35,5 +42,9 @@ class AppBootloader extends Bootloader
 
         $bootloader->addDirectory('custom', __DIR__ . '/../../views/custom/');
         $bootloader->addEngine(TestEngine::class);
+
+        $validation->addAlias('aliased', 'notEmpty');
+        $validation->addChecker('my', MyChecker::class);
+        $validation->addCondition('cond', MyCondition::class);
     }
 }
