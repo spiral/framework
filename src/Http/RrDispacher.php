@@ -64,9 +64,9 @@ final class RrDispacher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve()
+    public function serve(PSR7Client $client = null)
     {
-        $client = $this->factory->make(PSR7Client::class);
+        $client = $client ?? $this->factory->make(PSR7Client::class);
 
         /** @var HttpCore $http */
         $http = $this->container->get(HttpCore::class);
