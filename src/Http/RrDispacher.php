@@ -17,7 +17,6 @@ use Spiral\Boot\FinalizerInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\RoadRunner\PSR7Client;
-use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 use Zend\Diactoros\Response;
@@ -64,10 +63,8 @@ final class RrDispacher implements DispatcherInterface
 
     /**
      * @inheritdoc
-     *
-     * @param Worker|null $worker
      */
-    public function serve(Worker $worker = null)
+    public function serve()
     {
         $client = $this->factory->make(PSR7Client::class);
 

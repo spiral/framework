@@ -12,6 +12,8 @@ namespace Spiral\Bootloader\Jobs;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
+use Spiral\Jobs\Factory\SpiralFactory;
+use Spiral\Jobs\FactoryInterface;
 use Spiral\Jobs\JobDispatcher;
 use Spiral\Jobs\Queue;
 use Spiral\Jobs\QueueInterface;
@@ -19,7 +21,8 @@ use Spiral\Jobs\QueueInterface;
 final class JobsBootloader extends Bootloader
 {
     public const SINGLETONS = [
-        QueueInterface::class => Queue::class
+        QueueInterface::class   => Queue::class,
+        FactoryInterface::class => SpiralFactory::class
     ];
 
     /**
