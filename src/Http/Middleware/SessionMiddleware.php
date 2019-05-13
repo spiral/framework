@@ -78,8 +78,7 @@ final class SessionMiddleware implements MiddlewareInterface
             );
         } catch (\Throwable $e) {
             $session->abort();
-
-            throw new $e;
+            throw $e;
         }
 
         return $this->commitSession($session, $request, $response);

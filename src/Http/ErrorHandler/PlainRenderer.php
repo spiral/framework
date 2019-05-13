@@ -38,7 +38,7 @@ final class PlainRenderer implements RendererInterface
     public function renderException(Request $request, int $code, string $message): Response
     {
         $response = $this->responseFactory->createResponse($code);
-        $response->getBody()->write($message);
+        $response->getBody()->write("Error code: {$code}");
 
         return $response;
     }
