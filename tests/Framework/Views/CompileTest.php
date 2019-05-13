@@ -15,6 +15,7 @@ use Spiral\Framework\ConsoleTest;
 
 /**
  * @covers \Spiral\Command\Views\ResetCommand
+ * @covers \Spiral\Command\Views\CompileCommand
  */
 class CompileTest extends ConsoleTest
 {

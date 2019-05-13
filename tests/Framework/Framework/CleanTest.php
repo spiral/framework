@@ -11,7 +11,7 @@ namespace Spiral\Framework\Framework;
 use Spiral\Framework\ConsoleTest;
 
 /**
- * @covers \Spiral\Command\Views\ResetCommand
+ * @covers \Spiral\Command\CleanCommand
  */
 class CleanTest extends ConsoleTest
 {
