@@ -1,25 +1,18 @@
 language: php
 
-services:
-  - mongodb
-
 php:
-  - 7.0
   - 7.1
   - 7.2
+  - 7.3
 
 before_install:
   - composer self-update
-  - phpenv config-add tests/php-travis.ini
-  - mysql -e 'CREATE DATABASE spiral;'
-  - psql -c 'create database spiral;' -U postgres
 
 install:
-  - composer install --no-interaction --prefer-source
+  - composer install --no-interaction
 
 script:
-  - vendor/bin/phpunit --coverage-clover=clover.xml
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
 
-after_script:
-  - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
-  - php coveralls.phar --verbose --config .coveralls.yml
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -f coverage.xml

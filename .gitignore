@@ -1,8 +1,7 @@
 .idea/
+.env
 composer.lock
 vendor/
-clover.json
+*.db
 clover.xml
-clover.json
-clover.xml
-.env
+go.sum
