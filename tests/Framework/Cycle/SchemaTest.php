@@ -57,12 +57,11 @@ class SchemaTest extends ConsoleTest
 
     public function testSync()
     {
-        $app = $this->app;
-        $output = $app->console()->run('cycle:sync');
-        $this->assertContains('default.users', $output->getOutput()->fetch());
+        $output = $this->runCommand('cycle:sync');
+        $this->assertContains('default.users', $output);
 
         $u = new User('Antony');
-        $app->get(Transaction::class)->persist($u)->run();
+        $this->app->get(Transaction::class)->persist($u)->run();
 
         $this->assertSame(1, $u->id);
     }
