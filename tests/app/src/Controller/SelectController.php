@@ -7,16 +7,13 @@
  */
 declare(strict_types=1);
 
-
 namespace Spiral\App\Controller;
 
-
 use Cycle\ORM\Select;
-use Spiral\Core\Controller;
 
-class SelectController extends Controller
+class SelectController
 {
-    public function selectAction(Select $users)
+    public function select(Select $users)
     {
         return $users->count();
     }
