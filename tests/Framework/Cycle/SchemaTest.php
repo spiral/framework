@@ -126,12 +126,25 @@ class SchemaTest extends ConsoleTest
 
         /** @var CoreInterface $c */
         $c = $app->get(CoreInterface::class);
-        // $this->assertInstanceOf(UserRepository::class, $r);
 
         $this->assertSame(1, $c->callAction(
             SelectController::class,
             'select'
         ));
+    }
+
+    /**
+     * @expectedException \Cycle\ORM\Exception\ORMException
+     */
+    public function testInjectedSelectNoSchema()
+    {
+        /** @var CoreInterface $c */
+        $c = $this->app->get(CoreInterface::class);
+
+        $c->callAction(
+            SelectController::class,
+            'select'
+        );
     }
 
     public function testHeapReset()
