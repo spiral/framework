@@ -27,9 +27,9 @@ class SchemaTest extends ConsoleTest
 {
     public function setUp()
     {
-        parent::setUp();
-
-        $this->app->getEnvironment()->set('SAFE_MIGRATIONS', true);
+        $this->app = $this->makeApp([
+            'SAFE_MIGRATIONS' => true
+        ]);
     }
 
     public function testGetSchema()
