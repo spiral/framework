@@ -14,9 +14,6 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
-use Spiral\Goridge\StreamRelay;
-use Spiral\Jobs\Factory\SpiralFactory;
-use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotterInterface;
 
 final class JobDispatcher implements DispatcherInterface
@@ -58,10 +55,7 @@ final class JobDispatcher implements DispatcherInterface
      */
     public function serve()
     {
-        $consumer = new Consumer(
-            $this->getWorker(),
-            new SpiralFactory($this->container->get(\Spiral\Core\FactoryInterface::class))
-        );
+        $consumer = $this->container->get(Consumer::class);
 
         $consumer->serve(function (\Throwable $e = null) {
             if ($e !== null) {
@@ -70,14 +64,6 @@ final class JobDispatcher implements DispatcherInterface
 
             $this->finalizer->finalize(false);
         });
-    }
-
-    /**
-     * @return Worker
-     */
-    protected function getWorker(): Worker
-    {
-        return new Worker(new StreamRelay(STDIN, STDOUT));
     }
 
     /**

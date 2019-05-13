@@ -14,6 +14,8 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Goridge\RPC;
 use Spiral\Goridge\SocketRelay;
+use Spiral\Goridge\StreamRelay;
+use Spiral\RoadRunner\Worker;
 
 /**
  * Configures RPC connection to upper RoadRunner server.
@@ -22,7 +24,8 @@ final class RpcBootloader extends Bootloader
 {
     const RPC_DEFAULT = 'tcp://127.0.0.1:6001';
     const SINGLETONS  = [
-        RPC::class => [self::class, 'rpc']
+        RPC::class    => [self::class, 'rpc'],
+        Worker::class => [self::class, 'worker']
     ];
 
     /**
@@ -52,5 +55,13 @@ final class RpcBootloader extends Bootloader
         }
 
         return new RPC($relay);
+    }
+
+    /**
+     * @return Worker
+     */
+    protected function worker(): Worker
+    {
+        return new Worker(new StreamRelay(STDIN, STDOUT));
     }
 }

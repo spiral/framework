@@ -16,7 +16,6 @@ use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Exceptions\HtmlHandler;
-use Spiral\Goridge\StreamRelay;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotInterface;
@@ -70,7 +69,7 @@ final class RrDispacher implements DispatcherInterface
      */
     public function serve(Worker $worker = null)
     {
-        $client = $this->factory->make(PSR7Client::class, ['worker' => $this->getWorker()]);
+        $client = $this->factory->make(PSR7Client::class);
 
         /** @var HttpCore $http */
         $http = $this->container->get(HttpCore::class);
@@ -83,14 +82,6 @@ final class RrDispacher implements DispatcherInterface
                 $this->finalizer->finalize(false);
             }
         }
-    }
-
-    /**
-     * @return Worker
-     */
-    protected function getWorker(): Worker
-    {
-        return new Worker(new StreamRelay(STDIN, STDOUT));
     }
 
     /**
