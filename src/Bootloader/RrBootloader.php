@@ -20,7 +20,7 @@ use Spiral\RoadRunner\Worker;
 /**
  * Configures RPC connection to upper RoadRunner server.
  */
-final class RpcBootloader extends Bootloader
+final class RrBootloader extends Bootloader
 {
     const RPC_DEFAULT = 'tcp://127.0.0.1:6001';
     const SINGLETONS  = [
