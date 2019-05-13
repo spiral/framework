@@ -16,7 +16,6 @@ use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\DatabaseProviderInterface;
-use Spiral\Database\Driver\SQLite\SQLiteDriver;
 
 final class DatabaseBootloader extends Bootloader implements SingletonInterface
 {
@@ -47,16 +46,8 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
         $this->config->setDefaults('database', [
             'default'   => 'default',
             'aliases'   => [],
-            'databases' => [
-                'memory' => ['connection' => 'memory']
-            ],
-            'drivers'   => [
-                'memory' => [
-                    'driver'     => SQLiteDriver::class,
-                    'connection' => 'sqlite::memory:',
-                    'profiling'  => true,
-                ]
-            ]
+            'databases' => [],
+            'drivers'   => []
         ]);
     }
 }
