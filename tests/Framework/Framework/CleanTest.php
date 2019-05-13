@@ -28,4 +28,12 @@ class CleanTest extends ConsoleTest
         $output = $this->runCommand('cache:clean');
         $this->assertContains('Cache directory is missing', $output);
     }
+
+    public function testCleanVerbose()
+    {
+        $this->runCommand('configure');
+
+        $output = $this->runCommandDebug('cache:clean');
+        $this->assertContains('i18n', $output);
+    }
 }
