@@ -10,11 +10,11 @@ namespace Spiral\Framework\Framework;
 
 use Spiral\Framework\ConsoleTest;
 
+/**
+ * @covers \Spiral\Command\Views\ResetCommand
+ */
 class CleanTest extends ConsoleTest
 {
-    /**
-     * @covers \Spiral\Command\Views\ResetCommand
-     */
     public function testClean()
     {
         $this->runCommand('configure');

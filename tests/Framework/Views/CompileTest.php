@@ -13,6 +13,9 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Framework\ConsoleTest;
 
+/**
+ * @covers \Spiral\Command\Views\ResetCommand
+ */
 class CompileTest extends ConsoleTest
 {
     public function testCompile()
@@ -24,9 +27,6 @@ class CompileTest extends ConsoleTest
         $this->assertContains('Unable to compile custom:error', $out);
     }
 
-    /**
-     * @covers \Spiral\Command\Views\ResetCommand
-     */
     public function testReset()
     {
         /**
