@@ -18,7 +18,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\KernelInterface;
-use Spiral\Bootloader\RrBootloader;
+use Spiral\Bootloader\ServerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
@@ -99,7 +99,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface, Dep
      */
     public function defineDependencies(): array
     {
-        return [RrBootloader::class];
+        return [ServerBootloader::class];
     }
 
     /**

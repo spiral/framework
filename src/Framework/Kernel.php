@@ -12,7 +12,7 @@ namespace Spiral\Framework;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
-use Spiral\Bootloader\RrBootloader;
+use Spiral\Bootloader\ServerBootloader;
 use Spiral\Bootloader\TokenizerBootloader;
 
 abstract class Kernel extends AbstractKernel
@@ -21,7 +21,7 @@ abstract class Kernel extends AbstractKernel
     protected const SYSTEM = [
         CoreBootloader::class,
         TokenizerBootloader::class,
-        RrBootloader::class
+        ServerBootloader::class
     ];
 
     // application specific bootloaders
