@@ -56,12 +56,14 @@ final class RuntimeDirectory
                 $this->files->setPermissions($filename, FilesInterface::RUNTIME);
                 $this->files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
             } catch (\Throwable $e) {
+                // @codeCoverageIgnoreStart
                 $output->writeln(sprintf(
                     "<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>",
                     $this->files->relativePath($filename, $runtimeDirectory),
                     $e->getMessage()
                 ));
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             if ($output->isVerbose()) {
