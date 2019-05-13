@@ -18,7 +18,11 @@ use Spiral\Bootloader\TokenizerBootloader;
 abstract class Kernel extends AbstractKernel
 {
     // framework specific bootloaders
-    protected const SYSTEM = [CoreBootloader::class, TokenizerBootloader::class, RrBootloader::class];
+    protected const SYSTEM = [
+        CoreBootloader::class,
+        TokenizerBootloader::class,
+        RrBootloader::class
+    ];
 
     // application specific bootloaders
     protected const APP = [];
