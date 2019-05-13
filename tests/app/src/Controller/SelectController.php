@@ -16,8 +16,8 @@ use Spiral\Core\Controller;
 
 class SelectController extends Controller
 {
-    public function selectAction(Select $user)
+    public function selectAction(Select $users)
     {
-        return $user->count();
+        return $users->count();
     }
 }
