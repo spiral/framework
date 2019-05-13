@@ -37,7 +37,7 @@ class MigrateTest extends ConsoleTest
 
         $this->runCommandDebug('migrate');
 
-        $this->assertSame(2, count($db->getTables()));
+        $this->assertSame(3, count($db->getTables()));
     }
 
     public function testMigrateRollback()
@@ -57,7 +57,7 @@ class MigrateTest extends ConsoleTest
 
         $this->runCommandDebug('migrate');
 
-        $this->assertSame(2, count($db->getTables()));
+        $this->assertSame(3, count($db->getTables()));
 
         $this->runCommandDebug('migrate:rollback');
 
@@ -79,9 +79,9 @@ class MigrateTest extends ConsoleTest
         $this->assertSame(1, count($db->getTables()));
 
         $this->runCommandDebug('migrate');
-        $this->assertSame(2, count($db->getTables()));
+        $this->assertSame(3, count($db->getTables()));
 
         $this->runCommandDebug('migrate:replay');
-        $this->assertSame(2, count($db->getTables()));
+        $this->assertSame(3, count($db->getTables()));
     }
 }

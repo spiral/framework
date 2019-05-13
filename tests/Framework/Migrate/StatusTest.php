@@ -36,9 +36,7 @@ class StatusTest extends ConsoleTest
         $out = $this->runCommandDebug('migrate:status');
         $this->assertContains('not executed yet', $out);
 
-        $this->runCommandDebug('migrate');
-
-        $this->assertSame(2, count($db->getTables()));
+        $this->assertSame(3, count($db->getTables()));
 
         $out2 = $this->runCommandDebug('migrate:status');
         $this->assertNotSame($out, $out2);

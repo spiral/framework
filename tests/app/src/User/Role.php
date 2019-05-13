@@ -1,21 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-declare(strict_types=1);
 
 namespace Spiral\App\User;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
- * @entity(repository=UserRepository)
- * @table(indexes={(columns={name},unique=true)})
+ * @entity
  */
-class User
+class Role
 {
     /** @column(type=primary) */
     public $id;
@@ -23,13 +19,9 @@ class User
     /** @column(type=string) */
     protected $name;
 
-    /** @hasMany(target=Role) */
-    public $roles;
-
     public function __construct(string $name)
     {
         $this->name = $name;
-        $this->roles = new ArrayCollection();
     }
 
     /**
