@@ -1,7 +1,7 @@
 {
   "name": "spiral/framework",
   "type": "library",
-  "description": "Spiral, High-Performance PHP Framework",
+  "description": "Spiral, High-Performance PHP/Go Framework",
   "license": "MIT",
   "authors": [
     {
