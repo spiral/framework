@@ -9,6 +9,7 @@
 namespace Spiral\Framework\Http;
 
 use Spiral\Framework\HttpTest;
+use Spiral\Http\PaginationFactory;
 
 class PaginationTest extends HttpTest
 {
@@ -17,6 +18,14 @@ class PaginationTest extends HttpTest
         $this->assertSame('1', (string)$this->get('/paginate', [
 
         ])->getBody());
+    }
+
+    /**
+     * @expectedException \Spiral\Core\Exception\ScopeException
+     */
+    public function testPaginateError()
+    {
+        $this->app->get(PaginationFactory::class)->createPaginator('page');
     }
 
     public function testPaginate2()
