@@ -40,12 +40,14 @@ final class CleanCommand extends Command implements SingletonInterface
             try {
                 $files->delete($filename);
             } catch (\Throwable $e) {
+                // @codeCoverageIgnoreStart
                 $this->sprintf("<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>\n",
                     $files->relativePath($filename, $cacheDirectory),
                     $e->getMessage()
                 );
 
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             if ($this->isVerbose()) {
