@@ -25,7 +25,7 @@ class CompileTest extends ConsoleTest
     }
 
     /**
-     * @covers \Spiral\Command\Views\ResetCommand::perform
+     * @covers \Spiral\Command\Views\ResetCommand
      */
     public function testReset()
     {
