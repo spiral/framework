@@ -22,8 +22,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Manages Console commands and exception. Lazy loads console service. Console dispatcher does not throw finalize
- * event.
+ * Manages Console commands and exception. Lazy loads console service.
  */
 final class ConsoleDispatcher implements DispatcherInterface
 {

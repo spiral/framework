@@ -30,6 +30,19 @@ class MigrateTest extends ConsoleTest
         $this->assertContains('Outstanding migrations found', $output);
     }
 
+    public function testMigrateNoChanges()
+    {
+        $this->runCommandDebug('migrate:init', ['-vvv' => true]);
+
+        $output = $this->runCommandDebug('cycle:migrate');
+        $this->assertContains('default.users', $output);
+
+        $this->runCommand('migrate');
+
+        $output = $this->runCommandDebug('cycle:migrate');
+        $this->assertContains('no database changes', $output);
+    }
+
     public function testAlterSchema()
     {
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
