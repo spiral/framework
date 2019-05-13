@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace Spiral\Framework\Cycle;
 
+use Cycle\ORM\ORMInterface;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Transaction;
 use Spiral\App\Controller\SelectController;
 use Spiral\App\User\User;
 use Spiral\App\User\UserRepository;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\CoreInterface;
 use Spiral\Framework\ConsoleTest;
@@ -131,5 +133,25 @@ class SchemaTest extends ConsoleTest
             SelectController::class,
             'select'
         ));
+    }
+
+    public function testHeapReset()
+    {
+        $app = $this->app;
+        $this->runCommandDebug('cycle:sync');
+
+        $u = new User('Antony');
+        $app->get(Transaction::class)->persist($u)->run();
+        $this->assertSame(1, $u->id);
+
+        /** @var ORMInterface $orm */
+        $orm = $app->get(ORMInterface::class);
+
+        $heap = $orm->getHeap();
+        $this->assertTrue($heap->has($u));
+
+        $this->app->get(FinalizerInterface::class)->finalize();
+
+        $this->assertFalse($heap->has($u));
     }
 }
