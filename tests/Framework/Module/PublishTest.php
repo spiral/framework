@@ -14,13 +14,16 @@ use Spiral\Framework\ConsoleTest;
 
 class PublishTest extends ConsoleTest
 {
-    protected const TEST_FILE = __DIR__ . '/test.txt';
+    protected const TEST_FILE   = __DIR__ . '/test.txt';
+    protected const TEST_FILE_2 = __DIR__ . '/PublishTest.php';
 
     public function tearDown()
     {
         if (file_exists(self::TEST_FILE)) {
             unlink(self::TEST_FILE);
         }
+
+        $this->runCommand('cache:clean');
     }
 
     public function testPublish()
@@ -124,6 +127,78 @@ class PublishTest extends ConsoleTest
         $this->assertTrue(is_dir($dir));
 
         rmdir($dir);
+    }
+
+    public function testPublishDirectoryReplace()
+    {
+        $this->runCommandDebug('conf');
+        $file = $this->file('runtime', 'test.txt');
+        file_put_contents($file, 'original');
+        file_put_contents(self::TEST_FILE, 'test');
+
+        $this->runCommandDebug('publish', [
+            'type'   => 'replace',
+            'target' => '@runtime',
+            'source' => __DIR__,
+            'mode'   => 'runtime'
+        ]);
+
+        $this->assertSame('test', file_get_contents($file));
+        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+    }
+
+    public function testPublishDirectoryFollow()
+    {
+        $this->runCommandDebug('conf');
+        $file = $this->file('runtime', 'test.txt');
+        file_put_contents($file, 'original');
+        file_put_contents(self::TEST_FILE, 'test');
+
+        $this->runCommandDebug('publish', [
+            'type'   => 'follow',
+            'target' => '@runtime',
+            'source' => __DIR__,
+            'mode'   => 'runtime'
+        ]);
+
+        $this->assertSame('original', file_get_contents($file));
+        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+    }
+
+    public function testPublishDirectoryReplaceStar()
+    {
+        $this->runCommandDebug('conf');
+        $file = $this->file('runtime', 'test.txt');
+        file_put_contents($file, 'original');
+        file_put_contents(self::TEST_FILE, 'test');
+
+        $this->runCommandDebug('publish', [
+            'type'   => 'replace',
+            'target' => '@runtime',
+            'source' => __DIR__ . '/*',
+            'mode'   => 'runtime'
+        ]);
+
+        $this->assertSame('test', file_get_contents($file));
+        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+    }
+
+    public function testPublishDirectoryFollowStar()
+    {
+        $this->runCommandDebug('conf');
+        $file = $this->file('runtime', 'test.txt');
+        file_put_contents($file, 'original');
+        file_put_contents(self::TEST_FILE, 'test');
+
+        $this->runCommandDebug('publish', [
+            'type'   => 'follow',
+            'target' => '@runtime',
+            'source' => __DIR__ . '/*',
+            'mode'   => 'runtime'
+        ]);
+
+        $this->assertSame('original', file_get_contents($file));
+        $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
     protected function file(string $dir, string $name)
