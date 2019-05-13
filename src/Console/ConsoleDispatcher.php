@@ -12,7 +12,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
 use Spiral\Exceptions\ConsoleHandler;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -22,31 +21,26 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Manages Console commands and exception. Lazy loads console service.
+ * Manages Console commands and exception. Lazy loads console service. Console dispatcher does not throw finalize
+ * event.
  */
 final class ConsoleDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */
     private $env;
 
-    /** @var FinalizerInterface */
-    private $finalizer;
-
     /** @var ContainerInterface */
     private $container;
 
     /**
      * @param EnvironmentInterface $env
-     * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
      */
     public function __construct(
         EnvironmentInterface $env,
-        FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
         $this->env = $env;
-        $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
@@ -79,7 +73,6 @@ final class ConsoleDispatcher implements DispatcherInterface
             $this->handleException($e, $output);
         } finally {
             $listener->disable();
-            $this->finalizer->finalize(false);
         }
     }
 
