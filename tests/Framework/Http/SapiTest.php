@@ -17,6 +17,11 @@ use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
 class SapiTest extends ConsoleTest
 {
+    public function testCantServe()
+    {
+        $this->assertFalse($this->app->get(SapiDispatcher::class)->canServe());
+    }
+
     public function testDispatch()
     {
         $e = new BufferEmitter();
@@ -33,8 +38,6 @@ class SapiTest extends ConsoleTest
     {
         $e = new BufferEmitter();
 
-        $app = $this->makeApp();
-
         $files = $this->app->get(FilesInterface::class)->getFiles(
             $this->app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
         );
@@ -42,7 +45,7 @@ class SapiTest extends ConsoleTest
         $this->assertCount(0, $files);
 
         $_SERVER['REQUEST_URI'] = '/error';
-        $app->get(SapiDispatcher::class)->serve($e);
+        $this->app->get(SapiDispatcher::class)->serve($e);
 
         $files = $this->app->get(FilesInterface::class)->getFiles(
             $this->app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
@@ -61,8 +64,8 @@ class SapiTest extends ConsoleTest
             'DEBUG' => true
         ]);
 
-        $files = $this->app->get(FilesInterface::class)->getFiles(
-            $this->app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
+        $files = $app->get(FilesInterface::class)->getFiles(
+            $app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
         );
 
         $this->assertCount(0, $files);
@@ -70,8 +73,8 @@ class SapiTest extends ConsoleTest
         $_SERVER['REQUEST_URI'] = '/error';
         $app->get(SapiDispatcher::class)->serve($e);
 
-        $files = $this->app->get(FilesInterface::class)->getFiles(
-            $this->app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
+        $files = $app->get(FilesInterface::class)->getFiles(
+            $app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
         );
 
         $this->assertCount(1, $files);
