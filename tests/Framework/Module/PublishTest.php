@@ -201,6 +201,36 @@ class PublishTest extends ConsoleTest
         $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
+    /**
+     * @expectedException \Spiral\Module\Exception\PublishException
+     */
+    public function testInvalidFile()
+    {
+        $this->runCommandDebug('conf');
+
+        $this->runCommandDebug('publish', [
+            'type'   => 'follow',
+            'target' => '@runtime/test.txt',
+            'source' => self::TEST_FILE . 'invalid',
+            'mode'   => 'runtime'
+        ]);
+    }
+
+    /**
+     * @expectedException \Spiral\Module\Exception\PublishException
+     */
+    public function testInvalidDir()
+    {
+        $this->runCommandDebug('conf');
+
+        $this->runCommandDebug('publish', [
+            'type'   => 'follow',
+            'target' => '@runtime/test.txt',
+            'source' => self::TEST_FILE . 'invalid/*',
+            'mode'   => 'runtime'
+        ]);
+    }
+
     protected function file(string $dir, string $name)
     {
         return $this->app->get(DirectoriesInterface::class)->get($dir) . $name;
