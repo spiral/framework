@@ -130,11 +130,13 @@ final class ShowChanges implements GeneratorInterface
         }
 
         foreach ($cmp->droppedIndexes() as $index) {
+            $index = join(', ', $index->getColumns());
             $this->output->writeln("    - drop index on <fg=yellow>[{$index}]</fg=yellow>");
         }
 
         foreach ($cmp->alteredIndexes() as $index) {
             $index = $index[0];
+            $index = join(', ', $index->getColumns());
             $this->output->writeln("    - alter index on <fg=yellow>[{$index}]</fg=yellow>");
         }
     }

@@ -29,4 +29,21 @@ class MigrateTest extends ConsoleTest
         $output = $this->runCommandDebug('cycle:migrate');
         $this->assertContains('Outstanding migrations found', $output);
     }
+
+    public function testAlterSchema()
+    {
+        $this->runCommandDebug('migrate:init', ['-vvv' => true]);
+
+        $output = $this->runCommandDebug('cycle:migrate', ['-r' => true]);
+        $this->assertContains('default.users', $output);
+
+        $user = file_get_contents(__DIR__ . '/../../app/src/User/User.php');
+        unlink(__DIR__ . '/../../app/src/User/User.php');
+        try {
+            $output = $this->runCommandDebug('cycle:migrate', ['-r' => true]);
+            $this->assertContains('drop foreign key', $output);
+        } finally {
+            file_put_contents(__DIR__ . '/../../app/src/User/User.php', $user);
+        }
+    }
 }
