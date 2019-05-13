@@ -50,14 +50,14 @@ final class SapiDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve()
+    public function serve(EmitterInterface $emitter = null)
     {
         /**
          * @var HttpCore         $http
          * @var EmitterInterface $emitter
          */
         $http = $this->container->get(HttpCore::class);
-        $emitter = $this->container->get(EmitterInterface::class);
+        $emitter = $emitter ?? $this->container->get(EmitterInterface::class);
 
         try {
             $response = $http->handle($this->initRequest());

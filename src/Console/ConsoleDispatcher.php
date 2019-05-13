@@ -12,6 +12,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\Logger\DebugListener;
 use Spiral\Exceptions\ConsoleHandler;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -32,15 +33,21 @@ final class ConsoleDispatcher implements DispatcherInterface
     /** @var ContainerInterface */
     private $container;
 
+    /** @var FinalizerInterface */
+    private $finalizer;
+
     /**
      * @param EnvironmentInterface $env
+     * @param FinalizerInterface   $finalizer
      * @param ContainerInterface   $container
      */
     public function __construct(
         EnvironmentInterface $env,
+        FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
         $this->env = $env;
+        $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
@@ -73,6 +80,7 @@ final class ConsoleDispatcher implements DispatcherInterface
             $this->handleException($e, $output);
         } finally {
             $listener->disable();
+            $this->finalizer->finalize(false);
         }
     }
 

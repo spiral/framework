@@ -61,4 +61,15 @@ abstract class ConsoleTest extends BaseTest
 
         return $output->fetch();
     }
+
+    public function runCommandVeryVerbose(string $command, array $args = [], OutputInterface $output = null): string
+    {
+        $input = new ArrayInput($args);
+        $output = $output ?? new BufferedOutput();
+        $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
+
+        $this->app->console()->run($command, $input, $output);
+
+        return $output->fetch();
+    }
 }
