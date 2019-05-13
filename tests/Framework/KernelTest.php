@@ -12,6 +12,7 @@ use Spiral\App\TestApp;
 use Spiral\Boot\Environment;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Goridge\RPC;
+use Spiral\RoadRunner\Worker;
 
 class KernelTest extends BaseTest
 {
@@ -43,6 +44,13 @@ class KernelTest extends BaseTest
     {
         TestApp::init([
         ], new Environment(), false);
+    }
+
+    public function testWorker()
+    {
+        /** @var Worker $worker */
+        $worker = $this->makeApp([])->get(Worker::class);
+        $this->assertInstanceOf(Worker::class, $worker);
     }
 
     public function testDefaultRPC()
