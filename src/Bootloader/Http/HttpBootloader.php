@@ -16,7 +16,9 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\KernelInterface;
+use Spiral\Bootloader\RrBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
@@ -37,7 +39,7 @@ use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 /**
  * Configures Http dispatcher in SAPI and RoadRunner modes (if available).
  */
-final class HttpBootloader extends Bootloader implements SingletonInterface
+final class HttpBootloader extends Bootloader implements SingletonInterface, DependedInterface
 {
     const SINGLETONS = [
         EmitterInterface::class              => SapiEmitter::class,
@@ -90,6 +92,14 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
                 'lifetime' => 86400
             ]
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [RrBootloader::class];
     }
 
     /**
