@@ -16,7 +16,6 @@ use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Logger\Traits\LoggerTrait;
-use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;
 use Spiral\Snapshots\SnapshotterInterface;
 
@@ -60,15 +59,12 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
     {
         try {
             return $handler->handle($request);
-        } catch (ClientException|RouteNotFoundException $e) {
+        } catch (ClientException|RouterException $e) {
             if ($e instanceof ClientException) {
                 $code = $e->getCode();
             } else {
                 $code = 404;
             }
-        } catch (RouterException $e) {
-            // dump all router exceptions as bad request by default
-            $code = 400;
         } catch (\Throwable $e) {
             if (!$this->suppressErrors) {
                 throw $e;
