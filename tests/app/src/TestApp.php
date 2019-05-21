@@ -37,7 +37,7 @@ class TestApp extends Kernel
         Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
-        Bootloader\Http\MvcBootloader::class,
+        Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\ErrorHandlerBootloader::class,
         Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CookiesBootloader::class,
