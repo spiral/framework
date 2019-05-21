@@ -134,42 +134,6 @@ class ConfirmTest extends ConsoleTest
         $this->assertContains('No outstanding', $out);
     }
 
-    public function testConfirmCycleMigrate()
-    {
-        $this->runCommandDebug('migrate:init');
-
-        $mc = $this->app->get(\Spiral\Command\Cycle\MigrateCommand::class);
-        $mc->setContainer($this->app->getContainer());
-
-        $ct = new CommandTester($mc);
-        $ct->setInputs(['n']);
-        $ct->execute([]);
-
-        rewind($ct->getOutput()->getStream());
-        $out = fread($ct->getOutput()->getStream(), 9000);
-
-        $this->assertContains('Confirmation', $out);
-        $this->assertNotContains('default.users', $out);
-    }
-
-    public function testConfirmCycleMigrateY()
-    {
-        $this->runCommandDebug('migrate:init');
-
-        $mc = $this->app->get(\Spiral\Command\Cycle\MigrateCommand::class);
-        $mc->setContainer($this->app->getContainer());
-
-        $ct = new CommandTester($mc);
-        $ct->setInputs(['y']);
-        $ct->execute([]);
-
-        rewind($ct->getOutput()->getStream());
-        $out = fread($ct->getOutput()->getStream(), 9000);
-
-        $this->assertContains('Confirmation', $out);
-        $this->assertContains('default.users', $out);
-    }
-
     public function testConfirmCycleSync()
     {
         $mc = $this->app->get(SyncCommand::class);

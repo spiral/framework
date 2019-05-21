@@ -49,7 +49,7 @@ final class MigrateCommand extends AbstractCommand
         Migrator $migrator,
         Console $console
     ) {
-        if (!$this->verifyConfigured() || !$this->verifyEnvironment()) {
+        if (!$this->verifyConfigured()) {
             return;
         }
 
