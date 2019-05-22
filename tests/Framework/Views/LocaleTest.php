@@ -32,15 +32,17 @@ class LocaleTest extends BaseTest
         $this->assertSame('Hello Мир!', $out);
     }
 
-
     public function testLocaleDependency()
     {
         $app = $this->makeApp();
         $d = $app->get(LocaleDependency::class);
 
+        $d = $d->__debugInfo();
+        arsort($d['variants']);
+
         $this->assertSame([
             'value'    => 'en',
             'variants' => ['en', 'ru']
-        ], $d->__debugInfo());
+        ], $d);
     }
 }
