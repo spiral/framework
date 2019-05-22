@@ -38,11 +38,10 @@ class LocaleTest extends BaseTest
         $d = $app->get(LocaleDependency::class);
 
         $d = $d->__debugInfo();
-        arsort($d['variants']);
 
-        $this->assertSame([
-            'value'    => 'en',
-            'variants' => ['en', 'ru']
-        ], $d);
+        $this->assertSame('en', $d['value']);
+
+        $this->assertTrue(in_array('en', $d['variants']));
+        $this->assertTrue(in_array('ru', $d['variants']));
     }
 }
