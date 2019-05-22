@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2018 SpiralScout
+// Copyright (c) 2019 SpiralScout
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,25 @@ package main
 
 import (
 	rr "github.com/spiral/roadrunner/cmd/rr/cmd"
+	"github.com/spiral/roadrunner/service/limit"
 
 	// services (plugins)
+	"github.com/spiral/jobs"
+	"github.com/spiral/php-grpc"
 	"github.com/spiral/roadrunner/service/env"
 	"github.com/spiral/roadrunner/service/http"
-	"github.com/spiral/roadrunner/service/limit"
 	"github.com/spiral/roadrunner/service/rpc"
 	"github.com/spiral/roadrunner/service/static"
 
+	// queue brokers
+	"github.com/spiral/jobs/broker/amqp"
+	"github.com/spiral/jobs/broker/beanstalk"
+	"github.com/spiral/jobs/broker/ephemeral"
+	"github.com/spiral/jobs/broker/sqs"
+
 	// additional commands and debug handlers
+	_ "github.com/spiral/jobs/cmd/rr-jobs/jobs"
+	_ "github.com/spiral/php-grpc/cmd/rr-grpc/grpc"
 	_ "github.com/spiral/roadrunner/cmd/rr/http"
 	_ "github.com/spiral/roadrunner/cmd/rr/limit"
 )
@@ -42,6 +52,17 @@ func main() {
 	rr.Container.Register(rpc.ID, &rpc.Service{})
 	rr.Container.Register(http.ID, &http.Service{})
 	rr.Container.Register(static.ID, &static.Service{})
+	rr.Container.Register(grpc.ID, &grpc.Service{})
+	rr.Container.Register(jobs.ID, &jobs.Service{
+		Brokers: map[string]jobs.Broker{
+			"amqp":      &amqp.Broker{},
+			"ephemeral": &ephemeral.Broker{},
+			"beanstalk": &beanstalk.Broker{},
+			"sqs":       &sqs.Broker{},
+		},
+	})
+
+	// supervisor
 	rr.Container.Register(limit.ID, &limit.Service{})
 
 	// you can register additional commands using cmd.CLI
