@@ -76,7 +76,5 @@ final class JobDispatcher implements DispatcherInterface
         } catch (\Throwable|ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
-
-        // exception will be automatically thrown by Consumer
     }
 }
