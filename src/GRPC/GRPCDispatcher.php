@@ -7,16 +7,17 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Jobs;
+namespace Spiral\GRPC;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotterInterface;
 
-final class JobDispatcher implements DispatcherInterface
+final class GRPCDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */
     private $env;
@@ -47,7 +48,7 @@ final class JobDispatcher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->env->get('RR_JOBS') !== null);
+        return (php_sapi_name() == 'cli' && $this->env->get('RR_GRPC') !== null);
     }
 
     /**
@@ -55,9 +56,20 @@ final class JobDispatcher implements DispatcherInterface
      */
     public function serve()
     {
-        $consumer = $this->container->get(Consumer::class);
+        /**
+         * @var Server           $server
+         * @var Worker           $worker
+         * @var LocatorInterface $locator
+         */
+        $server = $this->container->get(Server::class);
+        $worker = $this->container->get(Worker::class);
+        $locator = $this->container->get(LocatorInterface::class);
 
-        $consumer->serve(function (\Throwable $e = null) {
+        foreach ($locator->getServices() as $interface => $service) {
+            $server->registerService($interface, $service);
+        }
+
+        $server->serve($worker, function (\Throwable $e = null) {
             if ($e !== null) {
                 $this->handleException($e);
             }
@@ -76,7 +88,5 @@ final class JobDispatcher implements DispatcherInterface
         } catch (\Throwable|ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
-
-        // exception will be automatically thrown by Consumer
     }
 }
