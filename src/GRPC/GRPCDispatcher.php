@@ -15,6 +15,7 @@ use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\RoadRunner\Worker;
+use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
 final class GRPCDispatcher implements DispatcherInterface
@@ -84,9 +85,11 @@ final class GRPCDispatcher implements DispatcherInterface
     protected function handleException(\Throwable $e)
     {
         try {
-            $this->container->get(SnapshotterInterface::class)->register($e);
+            /** @var SnapshotInterface $snapshot */
+            $snapshot = $this->container->get(SnapshotterInterface::class)->register($e);
+            error_log($snapshot->getMessage());
         } catch (\Throwable|ContainerExceptionInterface $se) {
-            // no need to notify when unable to register an exception
+            error_log((string)$e);
         }
     }
 }

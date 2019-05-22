@@ -94,7 +94,7 @@ final class RrDispacher implements DispatcherInterface
             $snapshot = $this->container->get(SnapshotterInterface::class)->register($e);
             error_log($snapshot->getMessage());
         } catch (\Throwable|ContainerExceptionInterface $se) {
-            error_log($handler->getMessage($e));
+            error_log((string)$e);
         }
 
         // Reporting system (non handled) exception directly to the client
