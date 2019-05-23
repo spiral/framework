@@ -49,9 +49,10 @@ final class ProtoCompiler
         $tmpDir = $this->tmpDir();
 
         exec(sprintf(
-            'protoc --php_out=%s --php-grpc_out=%s %s 2>&1',
+            'protoc --php_out=%s --php-grpc_out=%s -I %s %s 2>&1',
             escapeshellarg($tmpDir),
             escapeshellarg($tmpDir),
+            escapeshellarg(dirname($protoFile)),
             escapeshellarg($protoFile)
         ), $output);
 
