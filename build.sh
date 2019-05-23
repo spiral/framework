@@ -45,4 +45,4 @@ if [ "$1" == "all" ]; then
 	exit
 fi
 
-CGO_ENABLED=0 go build -ldflags "$LDFLAGS -extldflags '-static'" -o "$OD/spiral" cmd/spiral/main.go
+CGO_ENABLED=0 go build -ldflags "$LDFLAGS -extldflags '-static'" -o "$OD/spiral" main.go
