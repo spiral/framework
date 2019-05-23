@@ -51,6 +51,25 @@ final class CommandBootloader extends Bootloader implements DependedInterface
             '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>verify `runtime` directory access</fg=cyan>'
         );
 
+        $this->configureExtensions($console, $container);
+    }
+
+    /**
+     * @return array
+     */
+    public function defineDependencies(): array
+    {
+        return [
+            ConsoleBootloader::class
+        ];
+    }
+
+    /**
+     * @param ConsoleBootloader $console
+     * @param Container         $container
+     */
+    private function configureExtensions(ConsoleBootloader $console, Container $container): void
+    {
         if ($container->has(DatabaseProviderInterface::class)) {
             $this->configureDatabase($console);
         }
@@ -78,16 +97,6 @@ final class CommandBootloader extends Bootloader implements DependedInterface
         if ($container->has(EncryptionInterface::class)) {
             $this->configureEncrypter($console);
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            ConsoleBootloader::class
-        ];
     }
 
     /**
