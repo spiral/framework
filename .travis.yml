@@ -21,7 +21,7 @@ install:
   - pushd /home/travis
   - wget https://github.com/spiral/php-grpc/releases/download/v${GRPC_VERSION}/${PHP_GRPC_FILENAME}
   - tar -xf ${PHP_GRPC_FILENAME} protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc
-  - sudo mv protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc /usr/bin/protoc-gen-php-grpc
+  - mv protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc bin/protoc-gen-php-grpc
   - popd
   - composer install --no-interaction
 
