@@ -14,6 +14,7 @@ use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Exception\DBALException;
 use Spiral\Database\Injection\FragmentInterface;
+use Spiral\Database\Schema\AbstractColumn;
 use Spiral\Database\Schema\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -82,41 +83,17 @@ final class TableCommand extends Command
 
         foreach ($schema->getColumns() as $column) {
             $name = $column->getName();
-            $type = $column->getType();
-
-            $abstractType = $column->getAbstractType();
-            $defaultValue = $column->getDefaultValue();
-
-            if ($column->getSize()) {
-                $type .= " ({$column->getSize()})";
-            }
-
-            if ($abstractType == 'decimal') {
-                $type .= " ({$column->getPrecision()}, {$column->getScale()})";
-            }
 
             if (in_array($column->getName(), $schema->getPrimaryKeys())) {
                 $name = "<fg=magenta>{$name}</fg=magenta>";
             }
 
-            if (in_array($abstractType, ['primary', 'bigPrimary'])) {
-                $abstractType = "<fg=magenta>{$abstractType}</fg=magenta>";
-            }
-
-            if ($defaultValue instanceof FragmentInterface) {
-                $defaultValue = "<info>{$defaultValue}</info>";
-            }
-
-            if ($defaultValue instanceof \DateTimeInterface) {
-                $defaultValue = $defaultValue->format('c');
-            }
-
             $columnsTable->addRow([
                 $name,
-                $type,
-                $abstractType,
+                $this->describeType($column),
+                $this->describeAbstractType($column),
                 $column->getType(),
-                $defaultValue ?: self::SKIP
+                $this->describeDefaultValue($column) ?: self::SKIP
             ]);
         }
 
@@ -179,5 +156,60 @@ final class TableCommand extends Command
         }
 
         $foreignTable->render();
+    }
+
+    /**
+     * @param AbstractColumn $column
+     * @return string
+     */
+    private function describeType(AbstractColumn $column): string
+    {
+        $type = $column->getType();
+
+        $abstractType = $column->getAbstractType();
+
+        if ($column->getSize()) {
+            $type .= " ({$column->getSize()})";
+        }
+
+        if ($abstractType == 'decimal') {
+            $type .= " ({$column->getPrecision()}, {$column->getScale()})";
+        }
+
+        return $type;
+    }
+
+    /**
+     * @param AbstractColumn $column
+     * @return string
+     */
+    private function describeAbstractType(AbstractColumn $column): string
+    {
+        $abstractType = $column->getAbstractType();
+
+        if (in_array($abstractType, ['primary', 'bigPrimary'])) {
+            $abstractType = "<fg=magenta>{$abstractType}</fg=magenta>";
+        }
+
+        return $abstractType;
+    }
+
+    /**
+     * @param AbstractColumn $column
+     * @return string|null
+     */
+    protected function describeDefaultValue(AbstractColumn $column): ?string
+    {
+        $defaultValue = $column->getDefaultValue();
+
+        if ($defaultValue instanceof FragmentInterface) {
+            $defaultValue = "<info>{$defaultValue}</info>";
+        }
+
+        if ($defaultValue instanceof \DateTimeInterface) {
+            $defaultValue = $defaultValue->format('c');
+        }
+
+        return $defaultValue;
     }
 }
