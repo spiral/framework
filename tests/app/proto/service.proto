@@ -1,4 +1,8 @@
 syntax = "proto3";
+
+option php_namespace = "Spiral\\App\\Service";
+option php_metadata_namespace = "Spiral\\App\\GPBMetadata";
+
 package service;
 
 service Echo {

@@ -34,7 +34,7 @@ final class ProtoCompiler
     public function __construct(string $basePath, string $baseNamespace, FilesInterface $files)
     {
         $this->basePath = $basePath;
-        $this->baseNamespace = rtrim($baseNamespace, '\\');
+        $this->baseNamespace = str_replace('\\', '/', rtrim($baseNamespace, '\\'));
         $this->files = $files;
     }
 

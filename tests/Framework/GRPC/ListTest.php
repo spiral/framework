@@ -12,22 +12,9 @@ namespace Spiral\Framework\GRPC;
 use Spiral\Files\Files;
 use Spiral\Framework\ConsoleTest;
 
-class GenerateTest extends ConsoleTest
+class ListTest extends ConsoleTest
 {
     private $proto;
-
-    public const SERVICE = '<?php
-    namespace Spiral\App\Service;
-    use Spiral\GRPC;
-    
-    class EchoService implements EchoInterface 
-    {
-        public function Ping(GRPC\ContextInterface $ctx, Message $in): Message
-        {
-            return $in;
-        }
-    }
-    ';
 
     public function setUp()
     {
@@ -55,32 +42,24 @@ class GenerateTest extends ConsoleTest
         }
     }
 
-    public function testGenerateNotFound()
+    public function testListEmpty()
     {
-        $out = $this->runCommandDebug('grpc:generate', [
-            'proto' => 'notfound'
-        ]);
+        $out = $this->runCommandDebug('grpc:services');
 
-        $this->assertContains('not found', $out);
+        $this->assertContains('No GRPC services', $out);
     }
 
-    public function testGenerateError()
-    {
-        $out = $this->runCommandDebug('grpc:generate', [
-            'proto' => __FILE__
-        ]);
-
-        $this->assertContains('Error', $out);
-    }
-
-    public function testGenerate()
+    public function testListService()
     {
         $this->runCommandDebug('grpc:generate', [
             'proto' => $this->proto
         ]);
 
-        $this->assertFileExists($this->app->dir('app') . 'src/Service/EchoInterface.php');
-        $this->assertFileExists($this->app->dir('app') . 'src/Service/Message.php');
-        $this->assertFileExists($this->app->dir('app') . 'src/GPBMetadata/Service.php');
+        file_put_contents($this->app->dir('app') . 'src/Service/EchoService.php', GenerateTest::SERVICE);
+
+        $out = $this->runCommandDebug('grpc:services');
+
+        $this->assertContains('service.Echo', $out);
+        $this->assertContains('Spiral\App\Service\EchoService', $out);
     }
 }
