@@ -18,6 +18,12 @@ class ListTest extends ConsoleTest
 
     public function setUp()
     {
+        exec('protoc 2>&1', $out);
+        if (strpos(join("\n", $out), '--php_out') === false) {
+            $this->markTestSkipped('Protoc binary is missing');
+            return;
+        }
+
         parent::setUp();
 
         $fs = new Files();
