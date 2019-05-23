@@ -11,11 +11,29 @@ namespace Spiral\Command\Encrypter;
 
 use Spiral\Console\Command;
 use Spiral\Encrypter\EncrypterFactory;
+use Spiral\Files\FilesInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 final class KeyCommand extends Command
 {
     protected const NAME        = "encrypt:key";
     protected const DESCRIPTION = "Generate new encryption key";
+
+    const OPTIONS = [
+        [
+            'mount',
+            'm',
+            InputOption::VALUE_OPTIONAL,
+            'Mount encrypter key into given file'
+        ],
+        [
+            'placeholder',
+            'p',
+            InputOption::VALUE_OPTIONAL,
+            'Placeholder of encryption key (will attempt to use current encryption key)',
+            '{encrypt-key}'
+        ],
+    ];
 
     /**
      * @param null|string $name
@@ -28,9 +46,36 @@ final class KeyCommand extends Command
 
     /**
      * @param EncrypterFactory $enc
+     * @param FilesInterface   $files
      */
-    public function perform(EncrypterFactory $enc)
+    public function perform(EncrypterFactory $enc, FilesInterface $files)
     {
-        $this->writeln($enc->generateKey());
+        $key = $enc->generateKey();
+
+        $this->sprintf("<info>New encryption key:</info> <fg=cyan>%s</fg=cyan>\n", $enc->generateKey());
+
+        $file = $this->option('mount');
+
+        if ($file === null) {
+            return;
+        }
+
+        if (!$files->exists($file)) {
+            $this->sprintf("<error>Unable to find `%s`</error>", $file);
+            return;
+        }
+
+        $content = $files->read($file);
+
+        try {
+            $content = str_replace($this->option('placeholder'), $key, $content);
+            $content = str_replace($enc->getKey(), $key, $content);
+        } catch (\Throwable $e) {
+            // current keys is not set
+        }
+
+        $files->write($file, $content);
+
+        $this->writeln("<comment>Encryption key has been updated.</comment>");
     }
 }
