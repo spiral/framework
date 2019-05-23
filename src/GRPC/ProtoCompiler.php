@@ -57,7 +57,6 @@ final class ProtoCompiler
         ), $output);
 
         $output = trim(join("\n", $output), "\n ,");
-        dump($output);
 
         if ($output !== '') {
             $this->files->deleteDirectory($tmpDir);

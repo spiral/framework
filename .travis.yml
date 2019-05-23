@@ -2,8 +2,8 @@ language: php
 
 php:
   - 7.1
-  - 7.2
-  - 7.3
+  #- 7.2
+  #- 7.3
 
 before_install:
   - composer self-update
@@ -21,12 +21,12 @@ install:
   - pushd /home/travis
   - wget https://github.com/spiral/php-grpc/releases/download/v${GRPC_VERSION}/${PHP_GRPC_FILENAME}
   - tar -xf ${PHP_GRPC_FILENAME} protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc
-  - mv protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc protoc-gen-php-grpc
+  - mv protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc /usr/bin/protoc-gen-php-grpc
   - popd
   - composer install --no-interaction
 
 script:
-  - vendor/bin/phpunit --coverage-clover=coverage.xml
+  - vendor/bin/phpunit tests/Framework/GRPC --coverage-clover=coverage.xml
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -f coverage.xml
