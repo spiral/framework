@@ -52,10 +52,12 @@ final class KeyCommand extends Command
     {
         $key = $enc->generateKey();
 
-        $this->sprintf("<info>New encryption key:</info> <fg=cyan>%s</fg=cyan>\n", $enc->generateKey());
+        $this->sprintf(
+            "<info>New encryption key:</info> <fg=cyan>%s</fg=cyan>\n",
+            $enc->generateKey()
+        );
 
         $file = $this->option('mount');
-
         if ($file === null) {
             return;
         }
