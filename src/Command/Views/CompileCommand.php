@@ -21,8 +21,6 @@ use Spiral\Views\ViewManager;
  */
 final class CompileCommand extends Command
 {
-    private const MIN_WIDTH = 8;
-
     const NAME        = 'views:compile';
     const DESCRIPTION = 'Warm-up view cache';
 
@@ -60,8 +58,8 @@ final class CompileCommand extends Command
         );
 
         foreach ($engine->getLoader()->list() as $path) {
+            $start = microtime(true);
             try {
-                $start = microtime(true);
                 $engine->reset($path, $context);
                 $engine->compile($path, $context);
 
@@ -69,34 +67,14 @@ final class CompileCommand extends Command
                     $this->sprintf("<info>•</info> %s", $path);
                 }
             } catch (\Throwable $e) {
-                if ($this->isVerbose()) {
-                    $this->sprintf(
-                        "<fg=red>•</fg=red> %s: <fg=red>%s at line %s</fg=red>",
-                        $path,
-                        $e->getMessage(),
-                        $e->getLine()
-                    );
-                }
+                $this->renderError($path, $e);
                 continue;
             } finally {
-                if ($this->isVerbose()) {
-                    $this->sprintf(
-                        " %s[%s ms]%s\n",
-                        Color::GRAY,
-                        number_format((microtime(true) - $start) * 1000),
-                        Color::RESET
-                    );
-                }
+                $this->renderElapsed($start);
             }
         }
 
-        if ($this->isVerbose()) {
-            if (empty($path)) {
-                $this->writeln("• no views found");
-            }
-
-            $this->write("\n");
-        }
+        $this->renderSuccess($path ?? null);
     }
 
     /**
@@ -122,10 +100,65 @@ final class CompileCommand extends Command
         return join(', ', $values);
     }
 
+    /**
+     * @param EngineInterface $engine
+     * @return string
+     */
     private function describeEngine(EngineInterface $engine): string
     {
         $refection = new \ReflectionObject($engine);
 
         return $refection->getShortName();
+    }
+
+    /**
+     * @param string     $path
+     * @param \Throwable $e
+     */
+    protected function renderError(string $path, \Throwable $e): void
+    {
+        if (!$this->isVerbose()) {
+            return;
+        }
+
+        $this->sprintf(
+            "<fg=red>•</fg=red> %s: <fg=red>%s at line %s</fg=red>",
+            $path,
+            $e->getMessage(),
+            $e->getLine()
+        );
+    }
+
+    /**
+     * @param string $lastPath
+     */
+    private function renderSuccess(string $lastPath = null): void
+    {
+        if (!$this->isVerbose()) {
+            return;
+        }
+
+        if ($lastPath === null) {
+            $this->writeln("• no views found");
+        }
+
+        $this->write("\n");
+    }
+
+    /**
+     * @param float $start
+     */
+    private function renderElapsed(float $start): void
+    {
+        if (!$this->isVerbose()) {
+            return;
+        }
+
+        $this->sprintf(
+            " %s[%s ms]%s\n",
+            Color::GRAY,
+            number_format((microtime(true) - $start) * 1000),
+            Color::RESET
+        );
     }
 }
