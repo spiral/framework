@@ -12,6 +12,7 @@ namespace Spiral\Command\Translator;
 use Spiral\Console\Command;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Translator\Catalogue\CatalogueManager;
+use Spiral\Translator\CatalogueInterface;
 use Spiral\Translator\Config\TranslatorConfig;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,8 +45,41 @@ final class ExportCommand extends Command implements SingletonInterface
             return;
         }
 
-        $catalogue = $manager->get($this->argument('locale'));
+        $mc = $this->getMessageCatalogue(
+            $config,
+            $manager,
+            $manager->get($this->argument('locale'))
+        );
 
+        if ($this->isVerbose() && !empty($mc->getDomains())) {
+            $this->sprintf("<info>Exporting domain(s):</info> %s\n",
+                join(',', $mc->getDomains())
+            );
+        }
+
+        $dumper = $config->getDumper($this->option('dumper'));
+
+        $dumper->dump($mc, [
+            'path'           => $this->argument('path'),
+            'default_locale' => $config->getDefaultLocale(),
+            'xliff_version'  => '2.0' // forcing default version for xliff dumper only
+        ]);
+
+        $this->writeln("Export successfully completed using <info>" . get_class($dumper) . "</info>");
+        $this->writeln("Output: <comment>" . realpath($this->argument('path')) . "</comment>");
+    }
+
+    /**
+     * @param TranslatorConfig   $config
+     * @param CatalogueManager   $manager
+     * @param CatalogueInterface $catalogue
+     * @return MessageCatalogue
+     */
+    protected function getMessageCatalogue(
+        TranslatorConfig $config,
+        CatalogueManager $manager,
+        CatalogueInterface $catalogue
+    ): MessageCatalogue {
         $messageCatalogue = new MessageCatalogue(
             $catalogue->getLocale(),
             $catalogue->getData()
@@ -61,21 +95,6 @@ final class ExportCommand extends Command implements SingletonInterface
             }
         }
 
-        if ($this->isVerbose() && !empty($messageCatalogue->getDomains())) {
-            $this->sprintf("<info>Exporting domain(s):</info> %s\n",
-                join(',', $messageCatalogue->getDomains())
-            );
-        }
-
-        $dumper = $config->getDumper($this->option('dumper'));
-
-        $dumper->dump($messageCatalogue, [
-            'path'           => $this->argument('path'),
-            'default_locale' => $config->getDefaultLocale(),
-            'xliff_version'  => '2.0' // forcing default version for xliff dumper only
-        ]);
-
-        $this->writeln("Export successfully completed using <info>" . get_class($dumper) . "</info>");
-        $this->writeln("Output: <comment>" . realpath($this->argument('path')) . "</comment>");
+        return $messageCatalogue;
     }
 }
