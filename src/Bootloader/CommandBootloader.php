@@ -14,6 +14,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Command\Cycle;
 use Spiral\Command\Database;
+use Spiral\Command\GRPC;
 use Spiral\Command\Migrate;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
@@ -22,6 +23,7 @@ use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Container;
 use Spiral\Database\DatabaseProviderInterface;
 use Spiral\Files\FilesInterface;
+use Spiral\GRPC\InvokerInterface;
 use Spiral\Migrations\Migrator;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\TranslatorInterface;
@@ -65,6 +67,10 @@ final class CommandBootloader extends Bootloader implements DependedInterface
 
         if ($container->has(Migrator::class)) {
             $this->configureMigrations($console);
+        }
+
+        if ($container->has(InvokerInterface::class)) {
+            $this->configureGRPC($console);
         }
     }
 
@@ -154,5 +160,15 @@ final class CommandBootloader extends Bootloader implements DependedInterface
         $console->addCommand(Migrate\MigrateCommand::class);
         $console->addCommand(Migrate\RollbackCommand::class);
         $console->addCommand(Migrate\ReplayCommand::class);
+    }
+
+
+    /**
+     * @param ConsoleBootloader $console
+     */
+    private function configureGRPC(ConsoleBootloader $console)
+    {
+        $console->addCommand(GRPC\CompileCommand::class);
+        $console->addCommand(GRPC\ListCommand::class);
     }
 }
