@@ -56,9 +56,12 @@ final class ProtoCompiler
             escapeshellarg($protoFile)
         ), $output);
 
-        if (isset($output[0]) && trim($output[0]) !== '') {
+        $output = trim(join("\n", $output), "\n ,");
+        dump($output);
+
+        if ($output !== '') {
             $this->files->deleteDirectory($tmpDir);
-            throw new CompileException(trim($output[0], ' ,'));
+            throw new CompileException($output);
         }
 
         // copying files (using relative path and namespace)
