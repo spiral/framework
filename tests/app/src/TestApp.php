@@ -34,6 +34,7 @@ class TestApp extends Kernel
 
         // Dispatchers
         Bootloader\Jobs\JobsBootloader::class,
+        Bootloader\GRPC\GRPCBootloader::class,
         Bootloader\ConsoleBootloader::class,
 
         // HTTP extensions
