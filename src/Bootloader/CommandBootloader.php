@@ -14,6 +14,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Command\Cycle;
 use Spiral\Command\Database;
+use Spiral\Command\Encrypter;
 use Spiral\Command\GRPC;
 use Spiral\Command\Migrate;
 use Spiral\Command\Translator;
@@ -22,6 +23,7 @@ use Spiral\Console;
 use Spiral\Console\Sequence\RuntimeDirectory;
 use Spiral\Core\Container;
 use Spiral\Database\DatabaseProviderInterface;
+use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\GRPC\InvokerInterface;
 use Spiral\Migrations\Migrator;
@@ -71,6 +73,10 @@ final class CommandBootloader extends Bootloader implements DependedInterface
 
         if ($container->has(InvokerInterface::class)) {
             $this->configureGRPC($console);
+        }
+
+        if ($container->has(EncryptionInterface::class)) {
+            $this->configureEncrypter($console);
         }
     }
 
@@ -162,7 +168,6 @@ final class CommandBootloader extends Bootloader implements DependedInterface
         $console->addCommand(Migrate\ReplayCommand::class);
     }
 
-
     /**
      * @param ConsoleBootloader $console
      */
@@ -170,5 +175,13 @@ final class CommandBootloader extends Bootloader implements DependedInterface
     {
         $console->addCommand(GRPC\CompileCommand::class);
         $console->addCommand(GRPC\ListCommand::class);
+    }
+
+    /**
+     * @param ConsoleBootloader $console
+     */
+    private function configureEncrypter(ConsoleBootloader $console)
+    {
+        $console->addCommand(Encrypter\KeyCommand::class);
     }
 }
