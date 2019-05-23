@@ -173,7 +173,7 @@ final class CommandBootloader extends Bootloader implements DependedInterface
      */
     private function configureGRPC(ConsoleBootloader $console)
     {
-        $console->addCommand(GRPC\CompileCommand::class);
+        $console->addCommand(GRPC\GenerateCommand::class);
         $console->addCommand(GRPC\ListCommand::class);
     }
 

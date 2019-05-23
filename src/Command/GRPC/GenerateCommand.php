@@ -17,10 +17,10 @@ use Spiral\Files\FilesInterface;
 use Spiral\GRPC\ProtoCompiler;
 use Symfony\Component\Console\Input\InputArgument;
 
-final class CompileCommand extends Command
+final class GenerateCommand extends Command
 {
-    protected const NAME        = "grpc:compile";
-    protected const DESCRIPTION = "Compile GPRC service code using protobuf specification";
+    protected const NAME        = "grpc:generate";
+    protected const DESCRIPTION = "Generate GPRC service code using protobuf specification";
 
     /**
      * {@inheritdoc}
