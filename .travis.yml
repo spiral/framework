@@ -9,6 +9,20 @@ before_install:
   - composer self-update
 
 install:
+  - PROTOBUF_VERSION=3.7.0
+  - PROTOC_FILENAME=protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
+  - pushd /home/travis
+  - wget https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/${PROTOC_FILENAME}
+  - unzip ${PROTOC_FILENAME}
+  - bin/protoc --version
+  - popd
+  - GRPC_VERSION=1.0.7
+  - PHP_GRPC_FILENAME=protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64.tar.gz
+  - pushd /home/travis
+  - wget https://github.com/spiral/php-grpc/releases/download/v${GRPC_VERSION}/${PHP_GRPC_FILENAME}
+  - tar -xf ${PHP_GRPC_FILENAME} protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc
+  - mv protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64/protoc-gen-php-grpc protoc-gen-php-grpc
+  - popd
   - composer install --no-interaction
 
 script:
