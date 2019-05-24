@@ -5,7 +5,7 @@ option php_metadata_namespace = "Spiral\\App\\GPBMetadata";
 
 package service;
 
-import "sub/message.proto";
+import "import/message.proto";
 
 service Echo {
     rpc Ping (service.sub.Message) returns (service.sub.Message) {
