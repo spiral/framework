@@ -19,6 +19,7 @@ class GenerateTest extends ConsoleTest
     public const SERVICE = '<?php
     namespace Spiral\App\Service;
     use Spiral\GRPC;
+    use Spiral\App\Service\Sub\Message;
     
     class EchoService implements EchoInterface 
     {
@@ -52,11 +53,11 @@ class GenerateTest extends ConsoleTest
         $fs = new Files();
 
         if ($fs->isDirectory($this->app->dir('app') . 'src/Service')) {
-            //   $fs->deleteDirectory($this->app->dir('app') . 'src/Service');
+            $fs->deleteDirectory($this->app->dir('app') . 'src/Service');
         }
 
         if ($fs->isDirectory($this->app->dir('app') . 'src/GPBMetadata')) {
-            //   $fs->deleteDirectory($this->app->dir('app') . 'src/GPBMetadata');
+            $fs->deleteDirectory($this->app->dir('app') . 'src/GPBMetadata');
         }
     }
 

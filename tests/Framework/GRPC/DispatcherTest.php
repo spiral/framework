@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Spiral\Framework\GRPC;
 
 use Mockery as m;
-use Spiral\App\Service\Message;
+use Spiral\App\Service\Sub\Message;
 use Spiral\Files\Files;
 use Spiral\Framework\ConsoleTest;
 use Spiral\GRPC\GRPCDispatcher;
