@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.0.5 (24.05.2019)
+------
+- `grpc:generate` command now includes all proto files from given directory
+- `RbacBootloader` renamed to `GuardBootloader`
+
 v2.0.4 (24.05.2019)
 ------
 - added `vendor/bin/spiral get-binary` command to download application server by @Alex-Bond
