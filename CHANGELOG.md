@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.0.4 (24.05.2019)
+------
+- added `vendor/bin/spiral get-binary` command to download application server by @Alex-Bond
+
 v2.0.3 (23.05.2019)
 ------
 - added GRPC dispatcher
