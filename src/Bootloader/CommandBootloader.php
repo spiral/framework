@@ -117,7 +117,7 @@ final class CommandBootloader extends Bootloader implements DependedInterface
         $console->addCommand(Cycle\UpdateCommand::class);
 
         $console->addUpdateSequence(
-            'cycle:update',
+            'cycle',
             '<fg=magenta>[cycle]</fg=magenta> <fg=cyan>update Cycle schema...</fg=cyan>'
         );
 
