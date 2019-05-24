@@ -56,5 +56,8 @@
       "Spiral\\": "tests/",
       "Spiral\\App\\": "tests/app/src"
     }
-  }
+  },
+  "bin": [
+    "bin/spiral"
+  ]
 }
