@@ -53,7 +53,7 @@ final class ProtoCompiler
             escapeshellarg($tmpDir),
             escapeshellarg($tmpDir),
             escapeshellarg(dirname($protoFile)),
-            escapeshellarg($protoFile)
+            join(" ", array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
         ), $output);
 
         $output = trim(join("\n", $output), "\n ,");
@@ -103,5 +103,16 @@ final class ProtoCompiler
         $this->files->ensureDirectory($directory);
 
         return $this->files->normalizePath($directory, true);
+    }
+
+    /**
+     * Include all proto files from the directory.
+     *
+     * @param string $protoFile
+     * @return array
+     */
+    private function getProtoFiles(string $protoFile): array
+    {
+        return $this->files->getFiles(dirname($protoFile), '*.proto');
     }
 }

@@ -52,11 +52,11 @@ class GenerateTest extends ConsoleTest
         $fs = new Files();
 
         if ($fs->isDirectory($this->app->dir('app') . 'src/Service')) {
-            $fs->deleteDirectory($this->app->dir('app') . 'src/Service');
+            //   $fs->deleteDirectory($this->app->dir('app') . 'src/Service');
         }
 
         if ($fs->isDirectory($this->app->dir('app') . 'src/GPBMetadata')) {
-            $fs->deleteDirectory($this->app->dir('app') . 'src/GPBMetadata');
+            //   $fs->deleteDirectory($this->app->dir('app') . 'src/GPBMetadata');
         }
     }
 
@@ -85,7 +85,7 @@ class GenerateTest extends ConsoleTest
         ]);
 
         $this->assertFileExists($this->app->dir('app') . 'src/Service/EchoInterface.php');
-        $this->assertFileExists($this->app->dir('app') . 'src/Service/Message.php');
+        $this->assertFileExists($this->app->dir('app') . 'src/Service/Sub/Message.php');
         $this->assertFileExists($this->app->dir('app') . 'src/GPBMetadata/Service.php');
     }
 }
