@@ -6,8 +6,8 @@
 declare(strict_types=1);
 
 foreach ([
-             __DIR__ . '/../../../../autoload.php',
-             __DIR__ . '/../../vendor/autoload.php',
+             __DIR__ . '/../../../autoload.php',
+             __DIR__ . '/../vendor/autoload.php',
              __DIR__ . '/vendor/autoload.php'
          ] as $file) {
     if (file_exists($file)) {
@@ -181,20 +181,20 @@ class RRHelper
     }
 }
 
-(new Application('RoadRunner', RRHelper::getVersion()))
+(new Application('Spiral Server', RRHelper::getVersion()))
     ->register('get-binary')
     ->setDescription("Install or update Spiral binaries in specified folder (current folder by default)")
     ->addOption('location', 'l', InputArgument::OPTIONAL, 'destination folder', '.')
     ->setCode(function (InputInterface $input, OutputInterface $output) {
-        $output->writeln('<info>Updating binary file of RoadRunner</info>');
+        $output->writeln('<info>Updating binary file of Spiral Server</info>');
 
-        $finalFile = $input->getOption('location') . DIRECTORY_SEPARATOR . 'rr';
+        $finalFile = $input->getOption('location') . DIRECTORY_SEPARATOR . 'spiral';
         if (RRHelper::getOSType() == 'windows') {
             $finalFile .= '.exe';
         }
 
         if (is_file($finalFile)) {
-            $output->writeln('<error>RoadRunner binary file already exists!</error>');
+            $output->writeln('<error>Spiral Server binary file already exists!</error>');
             $helper = $this->getHelper('question');
             $question = new ConfirmationQuestion('Do you want overwrite it? [Y/n] ');
 
