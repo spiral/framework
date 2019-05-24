@@ -37,7 +37,7 @@ class CleanTest extends ConsoleTest
         $this->assertContains('i18n', $output);
     }
 
-    public function testUpdate()
+    public function testUpdateClean()
     {
         $out = $this->runCommand('update');
         $this->assertContains('Updating ORM schema', $out);
