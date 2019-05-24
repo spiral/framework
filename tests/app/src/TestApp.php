@@ -30,7 +30,7 @@ class TestApp extends Kernel
         Bootloader\Security\EncrypterBootloader::class,
         Bootloader\Security\ValidationBootloader::class,
         Bootloader\Security\FiltersBootloader::class,
-        Bootloader\Security\RbacBootloader::class,
+        Bootloader\Security\GuardBootloader::class,
 
         // Dispatchers
         Bootloader\Jobs\JobsBootloader::class,
