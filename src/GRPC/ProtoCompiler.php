@@ -113,6 +113,8 @@ final class ProtoCompiler
      */
     private function getProtoFiles(string $protoFile): array
     {
-        return $this->files->getFiles(dirname($protoFile), '*.proto');
+        return array_filter($this->files->getFiles(dirname($protoFile)), function ($file) {
+            return strpos($file, '.proto') !== false;
+        });
     }
 }
