@@ -4,7 +4,7 @@
 [![Codecov](https://codecov.io/gh/spiral/framework/graph/badge.svg)](https://codecov.io/gh/spiral/framework)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/framework/?branch=master)
 
-<img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="120px" alt="Spiral Framework" align="left"/>
+<img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="130px" alt="Spiral Framework" align="left"/>
 
 Spiral Framework is an open-source (MIT) micro-framework core that speeds up the development of high-performance PHP applications. It uses a combination of open-source components and Roadrunner, [an application server](https://github.com/spiral/roadrunner) designed for rapid application development (RAD), and also comes with native support for HTTP/2, [GRPC](https://grpc.io/), distributed computations ([Queue](https://github.com/spiral/jobs)) and Golang extensions.
 
