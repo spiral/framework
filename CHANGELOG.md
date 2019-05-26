@@ -1,5 +1,12 @@
 # CHANGELOG
 
+v2.0.6 (26.05.2019)
+------
+- no more migration warnings while running static analysis on a project
+- fixed container binding for cycle repository
+- migration command now adds `\n` after each migration
+- bugfix `vendor/bin/spiral get-binary` on linux machines
+
 v2.0.5 (24.05.2019)
 ------
 - `grpc:generate` command now includes all proto files from given directory
