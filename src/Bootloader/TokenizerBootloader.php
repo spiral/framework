@@ -55,7 +55,8 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
             'exclude'     => [
                 $dirs->get('resources'),
                 $dirs->get('config'),
-                'tests'
+                'tests',
+                'migrations'
             ]
         ]);
     }
