@@ -61,7 +61,6 @@ class ConsoleDispatcherTest extends BaseTest
         $result = $output->fetch();
         $this->assertContains("undefined", $result);
         $this->assertContains("DeadCommand.php", $result);
-        $this->assertContains("->perform()", $result);
     }
 
     public function testExceptionDebug()
