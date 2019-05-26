@@ -35,7 +35,7 @@ final class RollbackCommand extends AbstractCommand
             $found = true;
             $count--;
             $this->sprintf(
-                "<info>Migration <comment>%s</comment> was successfully rolled back.</info>",
+                "<info>Migration <comment>%s</comment> was successfully rolled back.</info>\n",
                 $migration->getState()->getName()
             );
         }
