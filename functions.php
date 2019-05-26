@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 use Spiral\Debug\Dumper;
-
-declare(strict_types=1);
 
 if (!function_exists('bind')) {
     /**
