@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.0.7 (27.05.2019)
+------
+- cycle:sync does not require configuration now
+- added `dumprr` function (dump to STDERR)
+
 v2.0.6 (26.05.2019)
 ------
 - no more migration warnings while running static analysis on a project
