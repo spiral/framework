@@ -15,9 +15,9 @@ use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
-use Spiral\Command\Migrate\AbstractCommand;
+use Spiral\Console\Command;
 
-final class SyncCommand extends AbstractCommand
+final class SyncCommand extends Command
 {
     public const NAME        = "cycle:sync";
     public const DESCRIPTION = "Sync Cycle ORM schema with database without intermediate migration (risk operation)";
@@ -32,10 +32,6 @@ final class SyncCommand extends AbstractCommand
         Registry $registry,
         MemoryInterface $memory
     ) {
-        if (!$this->verifyEnvironment()) {
-            return;
-        }
-
         $show = new ShowChanges($this->output);
 
         $schema = (new Compiler())->compile(
