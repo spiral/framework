@@ -173,10 +173,10 @@ class RRHelper
     protected function extractTAR(string $archive, string $target)
     {
         $arch = new PharData($archive);
-        $arch->extractTo('./', self::getSignature() . '/rr');
+        $arch->extractTo('./', self::getSignature() . '/spiral');
 
-        copy('./' . self::getSignature() . '/rr', $target);
-        unlink('./' . self::getSignature() . '/rr');
+        copy('./' . self::getSignature() . '/spiral', $target);
+        unlink('./' . self::getSignature() . '/spiral');
         rmdir('./' . self::getSignature());
     }
 }

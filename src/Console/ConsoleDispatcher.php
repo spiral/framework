@@ -110,10 +110,6 @@ final class ConsoleDispatcher implements DispatcherInterface
             return ConsoleHandler::VERBOSITY_DEBUG;
         }
 
-        if ($output->isVerbose()) {
-            return ConsoleHandler::VERBOSITY_VERBOSE;
-        }
-
         return ConsoleHandler::VERBOSITY_BASIC;
     }
 }

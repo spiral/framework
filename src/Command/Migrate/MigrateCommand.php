@@ -36,7 +36,7 @@ final class MigrateCommand extends AbstractCommand
             $count--;
 
             $this->sprintf(
-                "<info>Migration <comment>%s</comment> was successfully executed.</info>",
+                "<info>Migration <comment>%s</comment> was successfully executed.</info>\n",
                 $migration->getState()->getName()
             );
         }
