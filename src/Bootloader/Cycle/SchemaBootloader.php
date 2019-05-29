@@ -9,19 +9,12 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Cycle;
 
-use Cycle\Annotated\Columns;
-use Cycle\Annotated\Entities;
-use Cycle\Annotated\Indexes;
+use Cycle\Annotated;
 use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Select\Repository;
-use Cycle\Schema\Generator\GenerateRelations;
-use Cycle\Schema\Generator\GenerateTypecast;
-use Cycle\Schema\Generator\RenderRelations;
-use Cycle\Schema\Generator\RenderTables;
-use Cycle\Schema\Generator\ResetTables;
-use Cycle\Schema\Generator\ValidateEntities;
+use Cycle\Schema\Generator;
 use Cycle\Schema\GeneratorInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
@@ -35,15 +28,15 @@ use Spiral\Tokenizer\ClassesInterface;
 final class SchemaBootloader extends Bootloader implements DependedInterface, Container\SingletonInterface
 {
     public const BINDINGS = [
-        SchemaInterface::class   => [self::class, 'schema'],
+        SchemaInterface::class             => [self::class, 'schema'],
 
         // annotated entities
-        Entities::class          => [self::class, 'entities'],
-        Columns::class           => [self::class, 'columns'],
-        Indexes::class           => [self::class, 'indexes'],
+        Annotated\Entities::class          => [self::class, 'entities'],
+        Annotated\MergeColumns::class      => [self::class, 'mergeColumns'],
+        Annotated\MergeIndexes::class      => [self::class, 'mergeIndexes'],
 
         // relations
-        GenerateRelations::class => [self::class, 'relations'],
+        Generator\GenerateRelations::class => [self::class, 'relations'],
     ];
 
     /** @var Container */
@@ -61,15 +54,15 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     {
         $this->container = $container;
         $this->generators = [
-            Entities::class,
-            ResetTables::class,
-            Columns::class,
-            GenerateRelations::class,
-            ValidateEntities::class,
-            RenderTables::class,
-            RenderRelations::class,
-            Indexes::class,
-            GenerateTypecast::class
+            Annotated\Entities::class,
+            Generator\ResetTables::class,
+            Annotated\MergeColumns::class,
+            Generator\GenerateRelations::class,
+            Generator\ValidateEntities::class,
+            Generator\RenderTables::class,
+            Generator\RenderRelations::class,
+            Annotated\MergeIndexes::class,
+            Generator\GenerateTypecast::class
         ];
     }
 
@@ -155,34 +148,34 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
 
     /**
      * @param ClassesInterface $classes
-     * @return Entities
+     * @return Annotated\Entities
      */
-    protected function entities(ClassesInterface $classes): Entities
+    protected function entities(ClassesInterface $classes): Annotated\Entities
     {
-        return new Entities($classes);
+        return new Annotated\Entities($classes);
     }
 
     /**
-     * @return Columns
+     * @return Annotated\MergeColumns
      */
-    protected function columns(): Columns
+    protected function mergeColumns(): Annotated\MergeColumns
     {
-        return new Columns();
+        return new Annotated\MergeColumns();
     }
 
     /**
-     * @return Indexes
+     * @return Annotated\MergeIndexes
      */
-    protected function indexes(): Indexes
+    protected function mergeIndexes(): Annotated\MergeIndexes
     {
-        return new Indexes();
+        return new Annotated\MergeIndexes();
     }
 
     /**
-     * @return GenerateRelations
+     * @return Generator\GenerateRelations
      */
-    protected function relations(): GenerateRelations
+    protected function relations(): Generator\GenerateRelations
     {
-        return new GenerateRelations();
+        return new Generator\GenerateRelations();
     }
 }
