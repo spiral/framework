@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.0.8 (29.05.2019)
+------
+- added support for pre-loading specific relations using eager or lazy loading methods
+
 v2.0.7 (27.05.2019)
 ------
 - cycle:sync does not require configuration now
