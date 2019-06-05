@@ -13,9 +13,9 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Http\Diactoros\UploadedFileFactory;
 
 /**
  * @source https://github.com/yiisoft/yii-web/blob/master/src/ServerRequestFactory.php
@@ -48,31 +48,32 @@ final class SapiRequestFactory
     /** @var ServerRequestFactoryInterface */
     private $requestFactory;
 
+    /** @var UriFactoryInterface */
+    private $uriFactory;
+
     /** @var StreamFactoryInterface */
     private $streamFactory;
 
-    /** @var UploadedFileFactory */
+    /** @var UploadedFileFactoryInterface */
     private $uploadedFileFactory;
-
-    /** @var UriFactoryInterface */
-    private $uriFactory;
 
     /**
      * @param ServerRequestFactoryInterface $requestFactory
      * @param StreamFactoryInterface        $streamFactory
-     * @param UploadedFileFactory           $uploadedFileFactory
+     * @param UploadedFileFactoryInterface  $uploadedFileFactory
      * @param UriFactoryInterface           $uriFactory
      */
     public function __construct(
         ServerRequestFactoryInterface $requestFactory,
+        UriFactoryInterface $uriFactory,
         StreamFactoryInterface $streamFactory,
-        UploadedFileFactory $uploadedFileFactory,
-        UriFactoryInterface $uriFactory
+        UploadedFileFactoryInterface $uploadedFileFactory
+
     ) {
         $this->requestFactory = $requestFactory;
+        $this->uriFactory = $uriFactory;
         $this->streamFactory = $streamFactory;
         $this->uploadedFileFactory = $uploadedFileFactory;
-        $this->uriFactory = $uriFactory;
     }
 
     /**
@@ -140,7 +141,9 @@ final class SapiRequestFactory
         } elseif (\is_string($body)) {
             $body = $this->streamFactory->createStream($body);
         } elseif (!$body instanceof StreamInterface) {
-            throw new \InvalidArgumentException('Body parameter for ServerRequestFactory::createFromParameters() must be instance of StreamInterface, resource or null.');
+            throw new \InvalidArgumentException(
+                'Body parameter for ServerRequestFactory::createFromParameters() must be instance of StreamInterface, resource or null.'
+            );
         }
 
         return $request->withBody($body);
