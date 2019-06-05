@@ -54,6 +54,7 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     {
         $this->container = $container;
         $this->generators = [
+            Annotated\Embeddings::class,
             Annotated\Entities::class,
             Generator\ResetTables::class,
             Annotated\MergeColumns::class,
