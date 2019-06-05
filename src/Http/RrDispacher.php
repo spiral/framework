@@ -11,6 +11,7 @@ namespace Spiral\Http;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
@@ -19,7 +20,6 @@ use Spiral\Exceptions\HtmlHandler;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
-use Zend\Diactoros\Response;
 
 final class RrDispacher implements DispatcherInterface
 {
@@ -97,8 +97,11 @@ final class RrDispacher implements DispatcherInterface
             error_log((string)$e);
         }
 
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->container->get(ResponseFactoryInterface::class);
+        $response = $responseFactory->createResponse(500);
+
         // Reporting system (non handled) exception directly to the client
-        $response = new Response('php://memory', 500);
         $response->getBody()->write(
             $handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE)
         );

@@ -11,9 +11,6 @@ namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
@@ -24,17 +21,13 @@ use Spiral\Config\Patch\Append;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Http\Config\HttpConfig;
+use Spiral\Http\Emitter\SapiEmitter;
+use Spiral\Http\EmitterInterface;
 use Spiral\Http\HttpCore;
 use Spiral\Http\Pipeline;
-use Spiral\Http\ResponseFactory;
 use Spiral\Http\RrDispacher;
 use Spiral\Http\SapiDispatcher;
-use Spiral\Http\ServerRequestFactory;
-use Spiral\RoadRunner\Diactoros\StreamFactory;
-use Spiral\RoadRunner\Diactoros\UploadedFileFactory;
 use Spiral\RoadRunner\PSR7Client;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 /**
  * Configures Http dispatcher in SAPI and RoadRunner modes (if available).
@@ -42,14 +35,8 @@ use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 final class HttpBootloader extends Bootloader implements SingletonInterface, DependedInterface
 {
     const SINGLETONS = [
-        EmitterInterface::class              => SapiEmitter::class,
-        HttpCore::class                      => [self::class, 'httpCore'],
-
-        // factories
-        ServerRequestFactoryInterface::class => ServerRequestFactory::class,
-        ResponseFactoryInterface::class      => ResponseFactory::class,
-        StreamFactoryInterface::class        => StreamFactory::class,
-        UploadedFileFactoryInterface::class  => UploadedFileFactory::class
+        HttpCore::class         => [self::class, 'httpCore'],
+        EmitterInterface::class => SapiEmitter::class,
     ];
 
     /** @var ConfiguratorInterface */

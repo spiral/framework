@@ -12,8 +12,8 @@ use Psr\Http\Message\ResponseInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Framework\ConsoleTest;
+use Spiral\Http\EmitterInterface;
 use Spiral\Http\SapiDispatcher;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
 class SapiTest extends ConsoleTest
 {

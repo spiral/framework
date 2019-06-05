@@ -11,15 +11,13 @@ namespace Spiral\Http;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class SapiDispatcher implements DispatcherInterface
 {
@@ -74,7 +72,7 @@ final class SapiDispatcher implements DispatcherInterface
      */
     protected function initRequest(): ServerRequestInterface
     {
-        return ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+        return $this->container->get(SapiRequestFactory::class)->fromGlobals();
     }
 
     /**
@@ -92,8 +90,11 @@ final class SapiDispatcher implements DispatcherInterface
             // nothing to report
         }
 
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->container->get(ResponseFactoryInterface::class);
+        $response = $responseFactory->createResponse(500);
+
         // Reporting system (non handled) exception directly to the client
-        $response = new Response('php://memory', 500);
         $response->getBody()->write(
             $handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE)
         );

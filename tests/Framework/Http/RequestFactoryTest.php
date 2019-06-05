@@ -9,7 +9,7 @@
 namespace Spiral\Framework\Http;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Http\ServerRequestFactory;
+use Spiral\Http\Diactoros\ServerRequestFactory;
 
 class RequestFactoryTest extends TestCase
 {
