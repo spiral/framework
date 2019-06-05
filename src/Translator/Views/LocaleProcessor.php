@@ -39,7 +39,7 @@ final class LocaleProcessor implements ProcessorInterface
     public function process(ViewSource $source, ContextInterface $context): ViewSource
     {
         //Translator options must automatically route this view name to specific domain
-        $domain = $this->translator->resolveDomain(sprintf(
+        $domain = $this->translator->getDomain(sprintf(
             "%s-%s-%s",
             self::PREFIX,
             str_replace(['/', '\\'], '-', $source->getNamespace()),
