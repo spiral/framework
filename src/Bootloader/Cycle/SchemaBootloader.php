@@ -31,6 +31,7 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
         SchemaInterface::class             => [self::class, 'schema'],
 
         // annotated entities
+        Annotated\Embeddings::class        => [self::class, 'embeddings'],
         Annotated\Entities::class          => [self::class, 'entities'],
         Annotated\MergeColumns::class      => [self::class, 'mergeColumns'],
         Annotated\MergeIndexes::class      => [self::class, 'mergeIndexes'],
@@ -145,6 +146,15 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
         }
 
         return new Schema($schema);
+    }
+
+    /**
+     * @param ClassesInterface $classes
+     * @return Annotated\Embeddings
+     */
+    protected function embeddings(ClassesInterface $classes): Annotated\Embeddings
+    {
+        return new Annotated\Embeddings($classes);
     }
 
     /**
