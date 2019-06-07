@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.0.8 (07.06.2019)
+------
+- http component split into cookies and csrf packages
+- decoupled from zend/diactoros
+
 v2.0.8 (29.05.2019)
 ------
 - added support for pre-loading specific relations using eager or lazy loading methods
