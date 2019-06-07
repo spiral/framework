@@ -25,16 +25,29 @@ final class SessionBootloader extends Bootloader implements DependedInterface
         SectionInterface::class => SessionSection::class
     ];
 
+    /** @var ConfiguratorInterface */
+    private $config;
+
+    /**
+     * @param ConfiguratorInterface $config
+     */
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * Automatically registers session starter middleware and excludes session cookie from
      * cookie protection.
      *
      * @param ConfiguratorInterface $config
+     * @param CookiesBootloader     $cookies
      * @param HttpBootloader        $http
      * @param DirectoriesInterface  $directories
      */
     public function boot(
         ConfiguratorInterface $config,
+        CookiesBootloader $cookies,
         HttpBootloader $http,
         DirectoriesInterface $directories
     ) {
@@ -51,8 +64,8 @@ final class SessionBootloader extends Bootloader implements DependedInterface
 
         $session = $config->getConfig('session');
 
-        $http->whitelistCookie($session['cookie']);
         $http->addMiddleware(SessionMiddleware::class);
+        $cookies->whitelistCookie($session['cookie']);
     }
 
     /**
@@ -61,7 +74,8 @@ final class SessionBootloader extends Bootloader implements DependedInterface
     public function defineDependencies(): array
     {
         return [
-            HttpBootloader::class
+            HttpBootloader::class,
+            CookiesBootloader::class
         ];
     }
 }

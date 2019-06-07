@@ -18,6 +18,7 @@ use Spiral\Core\CoreInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
+use Spiral\Router\UriHandler;
 
 final class RouterBootloader extends Bootloader implements DependedInterface
 {
@@ -29,12 +30,16 @@ final class RouterBootloader extends Bootloader implements DependedInterface
 
     /**
      * @param HttpConfig         $config
+     * @param UriHandler         $uriHandler
      * @param ContainerInterface $container
      * @return RouterInterface
      */
-    protected function router(HttpConfig $config, ContainerInterface $container): RouterInterface
-    {
-        return new Router($config->basePath(), $container);
+    protected function router(
+        HttpConfig $config,
+        UriHandler $uriHandler,
+        ContainerInterface $container
+    ): RouterInterface {
+        return new Router($config->getBasePath(), $uriHandler, $container);
     }
 
     /**

@@ -25,6 +25,8 @@
     "spiral/translator": "^1.0",
     "spiral/console": "^1.0",
     "spiral/http": "^1.0",
+    "spiral/cookies": "^1.0",
+    "spiral/csrf": "^1.0",
     "spiral/router": "^1.0",
     "spiral/session": "^1.1",
     "spiral/roadrunner": "^1.2",
@@ -40,7 +42,7 @@
     "cycle/orm": "^1.0",
     "cycle/annotated": "^1.0",
     "cycle/migrations": "^1.0",
-    "cycle/proxy-factory": "^0.5.0",
+    "cycle/proxy-factory": "^1.0",
     "phpunit/phpunit": "~7.0",
     "mockery/mockery": "^1.1"
   },

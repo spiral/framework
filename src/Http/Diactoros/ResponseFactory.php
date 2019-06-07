@@ -30,7 +30,6 @@ final class ResponseFactory implements ResponseFactoryInterface
     /**
      * @param int    $code
      * @param string $reasonPhrase
-     *
      * @return ResponseInterface
      */
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
@@ -38,7 +37,7 @@ final class ResponseFactory implements ResponseFactoryInterface
         $response = new Response('php://memory', $code, []);
         $response = $response->withStatus($code, $reasonPhrase);
 
-        foreach ($this->config->baseHeaders() as $header => $value) {
+        foreach ($this->config->getBaseHeaders() as $header => $value) {
             $response = $response->withAddedHeader($header, $value);
         }
 

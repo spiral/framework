@@ -41,8 +41,8 @@ class TestApp extends Kernel
         Bootloader\Http\DiactorosBootloader::class,
         Bootloader\Http\RouterBootloader::class,
         Bootloader\Http\ErrorHandlerBootloader::class,
-        Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CookiesBootloader::class,
+        Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CsrfBootloader::class,
 
         // Data and Storage

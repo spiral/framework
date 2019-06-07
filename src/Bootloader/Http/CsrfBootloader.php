@@ -11,15 +11,23 @@ namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
-use Spiral\Http\Middleware\CsrfMiddleware;
+use Spiral\Config\ConfiguratorInterface;
+use Spiral\Csrf\Middleware\CsrfMiddleware;
 
 final class CsrfBootloader extends Bootloader implements DependedInterface
 {
     /**
-     * @param HttpBootloader $http
+     * @param ConfiguratorInterface $config
+     * @param HttpBootloader        $http
      */
-    public function boot(HttpBootloader $http)
+    public function boot(ConfiguratorInterface $config, HttpBootloader $http)
     {
+        $config->setDefaults('csrf', [
+            'cookie'   => 'csrf-token',
+            'length'   => 16,
+            'lifetime' => 86400
+        ]);
+
         $http->addMiddleware(CsrfMiddleware::class);
     }
 

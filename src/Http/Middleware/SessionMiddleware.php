@@ -14,9 +14,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
+use Spiral\Cookies\Config\CookiesConfig;
+use Spiral\Cookies\Cookie;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Config\HttpConfig;
-use Spiral\Http\Cookie\Cookie;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
@@ -34,6 +35,9 @@ final class SessionMiddleware implements MiddlewareInterface
     /** @var HttpConfig */
     private $httpConfig;
 
+    /** @var CookiesConfig */
+    private $cookiesConfig;
+
     /** @var SessionFactory */
     private $factory;
 
@@ -43,17 +47,20 @@ final class SessionMiddleware implements MiddlewareInterface
     /**
      * @param SessionConfig  $config
      * @param HttpConfig     $httpConfig
+     * @param CookiesConfig  $cookiesConfig
      * @param SessionFactory $factory
      * @param ScopeInterface $scope
      */
     public function __construct(
         SessionConfig $config,
         HttpConfig $httpConfig,
+        CookiesConfig $cookiesConfig,
         SessionFactory $factory,
         ScopeInterface $scope
     ) {
         $this->config = $config;
         $this->httpConfig = $httpConfig;
+        $this->cookiesConfig = $cookiesConfig;
         $this->factory = $factory;
         $this->scope = $scope;
     }
@@ -172,8 +179,8 @@ final class SessionMiddleware implements MiddlewareInterface
             $this->config->getCookie(),
             $id,
             $this->config->getLifetime(),
-            $this->httpConfig->basePath(),
-            $this->httpConfig->cookieDomain($uri),
+            $this->httpConfig->getBasePath(),
+            $this->cookiesConfig->resolveDomain($uri),
             $this->config->isSecure(),
             true
         );

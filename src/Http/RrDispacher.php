@@ -68,8 +68,8 @@ final class RrDispacher implements DispatcherInterface
     {
         $client = $client ?? $this->factory->make(PSR7Client::class);
 
-        /** @var HttpCore $http */
-        $http = $this->container->get(HttpCore::class);
+        /** @var Http $http */
+        $http = $this->container->get(Http::class);
         while ($request = $client->acceptRequest()) {
             try {
                 $client->respond($http->handle($request));

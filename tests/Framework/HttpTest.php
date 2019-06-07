@@ -10,7 +10,7 @@ namespace Spiral\Framework;
 
 use Psr\Http\Message\ResponseInterface;
 use Spiral\App\TestApp;
-use Spiral\Http\HttpCore;
+use Spiral\Http\Http;
 use Zend\Diactoros\ServerRequest;
 
 abstract class HttpTest extends BaseTest
@@ -18,13 +18,13 @@ abstract class HttpTest extends BaseTest
     /** @var TestApp */
     protected $app;
 
-    /** @var HttpCore */
+    /** @var Http */
     protected $http;
 
     public function setUp()
     {
         $this->app = $this->makeApp();
-        $this->http = $this->app->get(HttpCore::class);
+        $this->http = $this->app->get(Http::class);
     }
 
     protected function get(

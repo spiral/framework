@@ -23,7 +23,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Emitter\SapiEmitter;
 use Spiral\Http\EmitterInterface;
-use Spiral\Http\HttpCore;
+use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Http\RrDispacher;
 use Spiral\Http\SapiDispatcher;
@@ -35,7 +35,7 @@ use Spiral\RoadRunner\PSR7Client;
 final class HttpBootloader extends Bootloader implements SingletonInterface, DependedInterface
 {
     const SINGLETONS = [
-        HttpCore::class         => [self::class, 'httpCore'],
+        Http::class             => [self::class, 'httpCore'],
         EmitterInterface::class => SapiEmitter::class,
     ];
 
@@ -56,29 +56,19 @@ final class HttpBootloader extends Bootloader implements SingletonInterface, Dep
      */
     public function boot(KernelInterface $kernel, FactoryInterface $factory)
     {
-        $kernel->addDispatcher($factory->make(SapiDispatcher::class));
-
-        if (class_exists(PSR7Client::class)) {
-            $kernel->addDispatcher($factory->make(RrDispacher::class));
-        }
-
         $this->config->setDefaults('http', [
             'basePath'   => '/',
             'headers'    => [
                 'Content-Type' => 'text/html; charset=UTF-8'
             ],
             'middleware' => [],
-            'cookies'    => [
-                'domain'   => '.%s',
-                'method'   => HttpConfig::COOKIE_ENCRYPT,
-                'excluded' => ['csrf-token']
-            ],
-            'csrf'       => [
-                'cookie'   => 'csrf-token',
-                'length'   => 16,
-                'lifetime' => 86400
-            ]
         ]);
+
+        $kernel->addDispatcher($factory->make(SapiDispatcher::class));
+
+        if (class_exists(PSR7Client::class)) {
+            $kernel->addDispatcher($factory->make(RrDispacher::class));
+        }
     }
 
     /**
@@ -86,7 +76,9 @@ final class HttpBootloader extends Bootloader implements SingletonInterface, Dep
      */
     public function defineDependencies(): array
     {
-        return [ServerBootloader::class];
+        return [
+            ServerBootloader::class
+        ];
     }
 
     /**
@@ -95,7 +87,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface, Dep
      * @param RequestHandlerInterface  $handler
      * @param ResponseFactoryInterface $responseFactory
      * @param ContainerInterface       $container
-     * @return HttpCore
+     * @return Http
      */
     protected function httpCore(
         HttpConfig $config,
@@ -103,8 +95,8 @@ final class HttpBootloader extends Bootloader implements SingletonInterface, Dep
         RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
         ContainerInterface $container
-    ): HttpCore {
-        $core = new HttpCore($config, $pipeline, $responseFactory, $container);
+    ): Http {
+        $core = new Http($config, $pipeline, $responseFactory, $container);
         $core->setHandler($handler);
 
         return $core;
@@ -118,15 +110,5 @@ final class HttpBootloader extends Bootloader implements SingletonInterface, Dep
     public function addMiddleware($middleware)
     {
         $this->config->modify('http', new Append('middleware', null, $middleware));
-    }
-
-    /**
-     * Disable protection for given cookie.
-     *
-     * @param string $cookie
-     */
-    public function whitelistCookie(string $cookie)
-    {
-        $this->config->modify('http', new Append('cookies.excluded', null, $cookie));
     }
 }

@@ -11,15 +11,36 @@ namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
-use Spiral\Http\Middleware\CookiesMiddleware;
+use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Patch\Append;
+use Spiral\Cookies\Config\CookiesConfig;
+use Spiral\Cookies\Middleware\CookiesMiddleware;
+use Spiral\Core\Container\SingletonInterface;
 
-final class CookiesBootloader extends Bootloader implements DependedInterface
+final class CookiesBootloader extends Bootloader implements SingletonInterface, DependedInterface
 {
+    /** @var ConfiguratorInterface */
+    private $config;
+
+    /**
+     * @param ConfiguratorInterface $config
+     */
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * @param HttpBootloader $http
      */
     public function boot(HttpBootloader $http)
     {
+        $this->config->setDefaults('cookies', [
+            'domain'   => '.%s',
+            'method'   => CookiesConfig::COOKIE_ENCRYPT,
+            'excluded' => ['PHPSESSID', 'csrf-token']
+        ]);
+
         $http->addMiddleware(CookiesMiddleware::class);
     }
 
@@ -31,5 +52,15 @@ final class CookiesBootloader extends Bootloader implements DependedInterface
         return [
             HttpBootloader::class
         ];
+    }
+
+    /**
+     * Disable protection for given cookie.
+     *
+     * @param string $cookie
+     */
+    public function whitelistCookie(string $cookie)
+    {
+        $this->config->modify('cookies', new Append('excluded', null, $cookie));
     }
 }
