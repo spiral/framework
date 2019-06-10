@@ -30,7 +30,7 @@ if (!defined('RR_COMPOSER_INSTALL')) {
     die(1);
 }
 
-if (!class_exists('ZipArchive')) {
+if (RRHelper::getOSType() !== 'linux' && !class_exists('ZipArchive')) {
     fwrite(STDERR, 'Extension `php-zip` is required.' . PHP_EOL);
     die(1);
 }
@@ -143,7 +143,7 @@ class RRHelper
      * @param string $target
      * @throws Exception
      */
-    protected function extractZIP(string $archive, string $target)
+    protected static function extractZIP(string $archive, string $target)
     {
         $zip = new ZipArchive();
         $zip->open($archive);
@@ -170,7 +170,7 @@ class RRHelper
      * @param string $target
      * @throws Exception
      */
-    protected function extractTAR(string $archive, string $target)
+    protected static function extractTAR(string $archive, string $target)
     {
         $arch = new PharData($archive);
         $arch->extractTo('./', self::getSignature() . '/spiral');
