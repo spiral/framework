@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Cycle;
 
-use Cycle\ORM\Promise\Factory as ProxyFactory;
 use Cycle\ORM\Promise\MaterializerInterface;
 use Cycle\ORM\Promise\Materizalizer\EvalMaterializer;
+use Cycle\ORM\Promise\ProxyFactory;
 use Cycle\ORM\PromiseFactoryInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
