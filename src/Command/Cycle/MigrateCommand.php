@@ -7,7 +7,6 @@
  */
 declare(strict_types=1);
 
-
 namespace Spiral\Command\Cycle;
 
 use Cycle\Migrations\GenerateMigrations;
