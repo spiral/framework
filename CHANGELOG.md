@@ -1,5 +1,21 @@
 # CHANGELOG
 
+v2.0.11 (01.07.2019)
+------
+- added MetricsInterface service for Prometheus
+- fixed i18n tests
+- updated RoadRunnder dependency
+- added RR services: headers, metrics
+
+v2.0.10 (19.06.2019)
+------
+- updated dependency (and interfaces) with cycle/proxy-factory
+
+v2.0.9 (07.06.2019)
+------
+- http component split into cookies and csrf packages
+- decoupled from zend/diactoros
+
 v2.0.8 (07.06.2019)
 ------
 - http component split into cookies and csrf packages
