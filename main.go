@@ -33,8 +33,8 @@ import (
 	"github.com/spiral/roadrunner/service/http"
 	"github.com/spiral/roadrunner/service/rpc"
 	"github.com/spiral/roadrunner/service/static"
-    "github.com/spiral/roadrunner/service/limit"
-    "github.com/spiral/roadrunner/service/metrics"
+	"github.com/spiral/roadrunner/service/limit"
+	"github.com/spiral/roadrunner/service/metrics"
 
 	// queue brokers
 	"github.com/spiral/jobs/broker/amqp"
@@ -53,10 +53,10 @@ func main() {
 	rr.Container.Register(env.ID, &env.Service{})
 	rr.Container.Register(rpc.ID, &rpc.Service{})
 
-    // http
+	// http
 	rr.Container.Register(http.ID, &http.Service{})
 	rr.Container.Register(headers.ID, &headers.Service{})
-    rr.Container.Register(static.ID, &static.Service{})
+	rr.Container.Register(static.ID, &static.Service{})
 
 	rr.Container.Register(grpc.ID, &grpc.Service{})
 
@@ -71,7 +71,7 @@ func main() {
 
 	// supervisor and metrics
 	rr.Container.Register(limit.ID, &limit.Service{})
-    rr.Container.Register(metrics.ID, &metrics.Service{})
+	rr.Container.Register(metrics.ID, &metrics.Service{})
 
 	// you can register additional commands using cmd.CLI
 	rr.Execute()
