@@ -22,7 +22,7 @@
     "spiral/debug": "^1.1",
     "spiral/encrypter": "^1.0",
     "spiral/snapshots": "^1.0",
-    "spiral/translator": "^1.0",
+    "spiral/translator": "^1.2",
     "spiral/console": "^1.0",
     "spiral/http": "^1.0",
     "spiral/cookies": "^1.0",

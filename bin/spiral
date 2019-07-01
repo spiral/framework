@@ -51,6 +51,10 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class RRHelper
 {
+    public function __construct()
+    {
+    }
+
     /**
      * Returns version of RoadRunner based on build.sh file
      *

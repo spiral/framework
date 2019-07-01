@@ -9,7 +9,6 @@
 namespace Spiral\Framework\Views;
 
 use Spiral\Framework\BaseTest;
-use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Translator\Views\LocaleDependency;
 use Spiral\Views\ViewsInterface;
@@ -28,12 +27,10 @@ class LocaleTest extends BaseTest
     {
         $app = $this->makeApp();
 
-        $app->getContainer()->runScope([
-            TranslatorInterface::class => $app->get(Translator::class)->withLocale('ru')
-        ], function () use ($app) {
-            $out = $app->get(ViewsInterface::class)->render('custom:locale');
-            $this->assertSame('Hello Мир!', $out);
-        });
+        $app->get(TranslatorInterface::class)->setLocale('ru');
+
+        $out = $app->get(ViewsInterface::class)->render('custom:locale');
+        $this->assertSame('Hello Мир!', $out);
     }
 
     public function testLocaleDependency()
