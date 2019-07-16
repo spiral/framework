@@ -50,6 +50,7 @@ class TestApp extends Kernel
         Bootloader\Database\MigrationsBootloader::class,
         Bootloader\Http\PaginationBootloader::class,
         Bootloader\Cycle\CycleBootloader::class,
+        Bootloader\Cycle\AnnotatedBootloader::class,
         Bootloader\Cycle\ProxiesBootloader::class,
 
         // Template engines and rendering

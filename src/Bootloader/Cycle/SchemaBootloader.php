@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Cycle;
 
-use Cycle\Annotated;
 use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
@@ -23,18 +22,15 @@ use Spiral\Bootloader\Database\DatabaseBootloader;
 use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
-use Spiral\Tokenizer\ClassesInterface;
 
 final class SchemaBootloader extends Bootloader implements DependedInterface, Container\SingletonInterface
 {
+    public const GROUP_INDEX       = 'index';
+    public const GROUP_RENDER      = 'render';
+    public const GROUP_POSTPROCESS = 'postprocess';
+
     public const BINDINGS = [
         SchemaInterface::class             => [self::class, 'schema'],
-
-        // annotated entities
-        Annotated\Embeddings::class        => [self::class, 'embeddings'],
-        Annotated\Entities::class          => [self::class, 'entities'],
-        Annotated\MergeColumns::class      => [self::class, 'mergeColumns'],
-        Annotated\MergeIndexes::class      => [self::class, 'mergeIndexes'],
 
         // relations
         Generator\GenerateRelations::class => [self::class, 'relations'],
@@ -44,7 +40,7 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     private $container;
 
     /** @var ConfiguratorInterface */
-    private $generators;
+    private $generators = [];
 
     /**
      * CycleSchemaBootloader constructor.
@@ -55,16 +51,21 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     {
         $this->container = $container;
         $this->generators = [
-            Annotated\Embeddings::class,
-            Annotated\Entities::class,
-            Generator\ResetTables::class,
-            Annotated\MergeColumns::class,
-            Generator\GenerateRelations::class,
-            Generator\ValidateEntities::class,
-            Generator\RenderTables::class,
-            Generator\RenderRelations::class,
-            Annotated\MergeIndexes::class,
-            Generator\GenerateTypecast::class
+            self::GROUP_INDEX       => [
+                // find available entities
+            ],
+            self::GROUP_RENDER      => [
+                // render tables and relations
+                Generator\ResetTables::class,
+                Generator\GenerateRelations::class,
+                Generator\ValidateEntities::class,
+                Generator\RenderTables::class,
+                Generator\RenderRelations::class,
+            ],
+            self::GROUP_POSTPROCESS => [
+                // post processing
+                Generator\GenerateTypecast::class
+            ],
         ];
     }
 
@@ -110,11 +111,12 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     }
 
     /**
-     * @param mixed $generator
+     * @param string $group
+     * @param mixed  $generator
      */
-    public function addGenerator($generator)
+    public function addGenerator(string $group, $generator)
     {
-        $this->generators[] = $generator;
+        $this->generators[$group] = $generator;
     }
 
     /**
@@ -123,11 +125,13 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     public function getGenerators(): array
     {
         $result = [];
-        foreach ($this->generators as $generator) {
-            if (is_object($generator) && !$generator instanceof Container\Autowire) {
-                $result[] = $generator;
-            } else {
-                $result[] = $this->container->get($generator);
+        foreach ($this->generators as $group) {
+            foreach ($group as $generator) {
+                if (is_object($generator) && !$generator instanceof Container\Autowire) {
+                    $result[] = $generator;
+                } else {
+                    $result[] = $this->container->get($generator);
+                }
             }
         }
 
@@ -146,40 +150,6 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
         }
 
         return new Schema($schema);
-    }
-
-    /**
-     * @param ClassesInterface $classes
-     * @return Annotated\Embeddings
-     */
-    protected function embeddings(ClassesInterface $classes): Annotated\Embeddings
-    {
-        return new Annotated\Embeddings($classes);
-    }
-
-    /**
-     * @param ClassesInterface $classes
-     * @return Annotated\Entities
-     */
-    protected function entities(ClassesInterface $classes): Annotated\Entities
-    {
-        return new Annotated\Entities($classes);
-    }
-
-    /**
-     * @return Annotated\MergeColumns
-     */
-    protected function mergeColumns(): Annotated\MergeColumns
-    {
-        return new Annotated\MergeColumns();
-    }
-
-    /**
-     * @return Annotated\MergeIndexes
-     */
-    protected function mergeIndexes(): Annotated\MergeIndexes
-    {
-        return new Annotated\MergeIndexes();
     }
 
     /**
