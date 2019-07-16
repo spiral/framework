@@ -116,7 +116,7 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
      */
     public function addGenerator(string $group, $generator)
     {
-        $this->generators[$group] = $generator;
+        $this->generators[$group][] = $generator;
     }
 
     /**

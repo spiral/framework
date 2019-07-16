@@ -25,14 +25,14 @@ final class AnnotatedBootloader extends Bootloader implements DependedInterface
     ];
 
     /**
-     * @param SchemaBootloader $cycle
+     * @param SchemaBootloader $schema
      */
-    public function boot(SchemaBootloader $cycle)
+    public function boot(SchemaBootloader $schema)
     {
-        $cycle->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\Embeddings::class);
-        $cycle->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\Entities::class);
-        $cycle->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\MergeColumns::class);
-        $cycle->addGenerator(SchemaBootloader::GROUP_RENDER, Annotated\MergeIndexes::class);
+        $schema->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\Embeddings::class);
+        $schema->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\Entities::class);
+        $schema->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\MergeColumns::class);
+        $schema->addGenerator(SchemaBootloader::GROUP_RENDER, Annotated\MergeIndexes::class);
     }
 
     /**

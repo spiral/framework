@@ -50,7 +50,7 @@ final class CycleBootloader extends Bootloader implements DependedInterface
         $container->bindInjector(Select::class, SelectInjector::class);
     }
 
-    /**
+      /**
      * @return array
      */
     public function defineDependencies(): array
