@@ -49,7 +49,7 @@ class DescribeTest extends ConsoleTest
         $table = $db->table('sample')->getSchema();
         $table->primary('primary_id');
         $table->integer('primary1_id');
-        $table->foreignKey('primary1_id')->references('sample1', 'primary_id');
+        $table->foreignKey(['primary1_id'])->references('sample1', ['primary_id']);
         $table->integer('some_int');
         $table->index(['some_int'])->setName('custom_index');
         $table->save();

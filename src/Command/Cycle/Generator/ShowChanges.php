@@ -147,16 +147,19 @@ final class ShowChanges implements GeneratorInterface
     protected function describeFKs(Comparator $cmp)
     {
         foreach ($cmp->addedForeignKeys() as $fk) {
-            $this->output->writeln("    - add foreign key on <fg=yellow>{$fk->getColumn()}</fg=yellow>");
+            $fkColumns = join(', ', $fk->getColumns());
+            $this->output->writeln("    - add foreign key on <fg=yellow>{$fkColumns}</fg=yellow>");
         }
 
         foreach ($cmp->droppedForeignKeys() as $fk) {
-            $this->output->writeln("    - drop foreign key <fg=yellow>{$fk->getColumn()}</fg=yellow>");
+            $fkColumns = join(', ', $fk->getColumns());
+            $this->output->writeln("    - drop foreign key <fg=yellow>{$fkColumns}</fg=yellow>");
         }
 
         foreach ($cmp->alteredForeignKeys() as $fk) {
             $fk = $fk[0];
-            $this->output->writeln("    - alter foreign key <fg=yellow>{$fk->getColumn()}</fg=yellow>");
+            $fkColumns = join(', ', $fk->getColumns());
+            $this->output->writeln("    - alter foreign key <fg=yellow>{$fkColumns}</fg=yellow>");
         }
     }
 

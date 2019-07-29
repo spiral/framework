@@ -106,8 +106,12 @@ final class ConsoleDispatcher implements DispatcherInterface
      */
     private function mapVerbosity(OutputInterface $output): int
     {
-        if ($output->isDebug() || $output->isVeryVerbose()) {
+        if ($output->isDebug()) {
             return ConsoleHandler::VERBOSITY_DEBUG;
+        }
+
+        if ($output->isVeryVerbose()) {
+            return ConsoleHandler::VERBOSITY_VERBOSE;
         }
 
         return ConsoleHandler::VERBOSITY_BASIC;

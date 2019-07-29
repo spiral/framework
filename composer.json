@@ -34,7 +34,7 @@
     "spiral/validation": "^1.0",
     "spiral/filters": "^1.0",
     "spiral/security": "^2.0",
-    "spiral/database": "^2.0",
+    "spiral/database": "^2.4",
     "spiral/migrations": "^2.0",
     "spiral/views": "^1.0",
     "spiral/jobs": "^1.0",

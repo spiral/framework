@@ -28,7 +28,7 @@ class ListTest extends ConsoleTest
         $table->string('some_string');
         $table->index(['some_string'])->setName('custom_index');
         $table->integer('b_id');
-        $table->foreignKey('b_id')->references('outer', 'id');
+        $table->foreignKey(['b_id'])->references('outer', ['id']);
         $table->save();
 
         $output = $this->runCommand('db:list');
