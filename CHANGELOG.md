@@ -8,6 +8,7 @@ v2.0.13 (29.07.2019)
 ------
 - DatabaseTable command has been modified to display composite FKs
 - added ability to configure worker relay using ENV RR_WORKER by @myavchik 
+- automatically configure worker based on rr relay settings
 
 v2.0.12 (16.07.2019)
 ------
