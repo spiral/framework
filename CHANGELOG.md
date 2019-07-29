@@ -18,7 +18,7 @@ v2.0.11 (01.07.2019)
 ------
 - added MetricsInterface service for Prometheus
 - fixed i18n tests
-- updated RoadRunnder dependency
+- updated RoadRunner dependency
 - added RR services: headers, metrics
 
 v2.0.10 (19.06.2019)
