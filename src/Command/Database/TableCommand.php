@@ -147,9 +147,9 @@ final class TableCommand extends Command
         foreach ($foreignKeys as $reference) {
             $foreignTable->addRow([
                 $reference->getName(),
-                $reference->getColumn(),
+                join(', ', $reference->getColumns()),
                 $reference->getForeignTable(),
-                $reference->getForeignKey(),
+                join(', ', $reference->getForeignKeys()),
                 $reference->getDeleteRule(),
                 $reference->getUpdateRule()
             ]);

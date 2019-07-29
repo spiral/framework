@@ -4,6 +4,11 @@ v2.0.12 (16.07.2019)
 ------
 - cycle/annotated is not required to work with cycle anymore
 
+v2.0.12 (29.07.2019)
+------
+- DatabaseTable command has been modified to display composite FKs
+- added ability to configure worker relay using ENV RR_WORKER by @myavchik 
+
 v2.0.11 (01.07.2019)
 ------
 - added MetricsInterface service for Prometheus
