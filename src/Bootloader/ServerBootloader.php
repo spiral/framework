@@ -69,7 +69,7 @@ final class ServerBootloader extends Bootloader
     {
         $conn = $env->get('RR_WORKER', static::WORKER_DEFAULT);
 
-        if ($conn === 'pipes') {
+        if ($conn === 'pipes' || empty($conn)) {
             $relay = new StreamRelay(STDIN, STDOUT);
         } else {
             if (!preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
