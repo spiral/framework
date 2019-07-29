@@ -25,6 +25,7 @@ use Spiral\RoadRunner\Worker;
 final class ServerBootloader extends Bootloader
 {
     const RPC_DEFAULT = 'tcp://127.0.0.1:6001';
+    const WORKER_DEFAULT = 'pipes';
     const SINGLETONS  = [
         RPC::class              => [self::class, 'rpc'],
         Worker::class           => [self::class, 'worker'],
@@ -61,10 +62,35 @@ final class ServerBootloader extends Bootloader
     }
 
     /**
+     * @param EnvironmentInterface $env
      * @return Worker
      */
-    protected function worker(): Worker
+    protected function worker(EnvironmentInterface $env): Worker
     {
-        return new Worker(new StreamRelay(STDIN, STDOUT));
+        $conn = $env->get('RR_WORKER', static::WORKER_DEFAULT);
+
+        if ($conn === 'pipes') {
+            $relay = new StreamRelay(STDIN, STDOUT);
+        } else {
+            if (!preg_match('#^([a-z]+)://([^:]+):?(\d+)?$#i', $conn, $parts)) {
+                throw new BootException(
+                    "Unable to configure Worker connection, invalid DSN given `{$conn}`."
+                );
+            }
+
+            if (!in_array($parts[1], ['tcp', 'unix'])) {
+                throw new BootException(
+                    "Unable to configure Worker connection, invalid DSN given `{$conn}`."
+                );
+            }
+
+            if ($parts[1] == 'unix') {
+                $relay = new SocketRelay($parts[2], null, SocketRelay::SOCK_UNIX);
+            } else {
+                $relay = new SocketRelay($parts[2], (int)$parts[3], SocketRelay::SOCK_TCP);
+            }
+        }
+
+        return new Worker($relay);
     }
 }
