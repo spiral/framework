@@ -9,21 +9,26 @@ declare(strict_types=1);
 
 namespace Spiral\App\User;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\HasMany;
+use Cycle\Annotated\Annotation\Table;
+use Cycle\Annotated\Annotation\Table\Index;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @entity(repository=UserRepository)
- * @table(indexes={(columns={name},unique=true)})
+ * @Entity(repository="UserRepository")
+ * @Table(indexes={@Index(columns={"name"},unique=true)})
  */
 class User
 {
-    /** @column(type=primary) */
+    /** @Column(type="primary") */
     public $id;
 
-    /** @column(type=string) */
+    /** @Column(type="string") */
     protected $name;
 
-    /** @hasMany(target=Role) */
+    /** @HasMany(target="Role") */
     public $roles;
 
     public function __construct(string $name)

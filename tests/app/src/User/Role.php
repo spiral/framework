@@ -8,15 +8,18 @@
 
 namespace Spiral\App\User;
 
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+
 /**
- * @entity(role="role")
+ * @Entity(role="role")
  */
 class Role
 {
-    /** @column(type=primary) */
+    /** @Column(type="primary") */
     public $id;
 
-    /** @column(type=string) */
+    /** @Column(type="string") */
     protected $name;
 
     public function __construct(string $name)
