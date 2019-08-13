@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.0.14 (16.07.2019)
+------
+- cycle/annotated is now based on doctrine/annotations
+
 v2.0.12 (16.07.2019)
 ------
 - cycle/annotated is not required to work with cycle anymore
