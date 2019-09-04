@@ -63,8 +63,7 @@ cycle/migrations | [![Latest Stable Version](https://poser.pugx.org/cycle/migrat
 
 ## Components
 | Component | Current Status        
-| ---       | ---
-spiral/annotations | [![Latest Stable Version](https://poser.pugx.org/spiral/annotations/version)](https://packagist.org/packages/spiral/annotations) [![Build Status](https://travis-ci.org/spiral/annotations.svg?branch=master)](https://travis-ci.org/spiral/annotations) [![Codecov](https://codecov.io/gh/spiral/annotations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/annotations/)
+| ---       | ——-
 spiral/pagination | [![Latest Stable Version](https://poser.pugx.org/spiral/pagination/version)](https://packagist.org/packages/spiral/pagination) [![Build Status](https://travis-ci.org/spiral/pagination.svg?branch=master)](https://travis-ci.org/spiral/pagination) [![Codecov](https://codecov.io/gh/spiral/pagination/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/pagination/)
 spiral/files | [![Latest Stable Version](https://poser.pugx.org/spiral/files/version)](https://packagist.org/packages/spiral/files) [![Build Status](https://travis-ci.org/spiral/files.svg?branch=master)](https://travis-ci.org/spiral/files) [![Codecov](https://codecov.io/gh/spiral/files/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/files/)
 spiral/exceptions | [![Latest Stable Version](https://poser.pugx.org/spiral/exceptions/version)](https://packagist.org/packages/spiral/exceptions) [![Build Status](https://travis-ci.org/spiral/exceptions.svg?branch=master)](https://travis-ci.org/spiral/exceptions) [![Codecov](https://codecov.io/gh/spiral/exceptions/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/exceptions/)
