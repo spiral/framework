@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.0.15 (16.07.2019) - no binary
+------
+- fixed config method names in spiral/views
+
 v2.0.14 (16.07.2019)
 ------
 - cycle/annotated is now based on doctrine/annotations
