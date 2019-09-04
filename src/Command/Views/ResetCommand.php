@@ -27,7 +27,7 @@ final class ResetCommand extends Command
      */
     public function perform(ViewsConfig $config, FilesInterface $files)
     {
-        if (!$files->exists($config->cacheDirectory())) {
+        if (!$files->exists($config->getCacheDirectory())) {
             $this->writeln("Cache directory is missing, no cache to be cleaned.");
 
             return;
@@ -37,13 +37,13 @@ final class ResetCommand extends Command
             $this->writeln("<info>Cleaning view cache:</info>");
         }
 
-        foreach ($files->getFiles($config->cacheDirectory()) as $filename) {
+        foreach ($files->getFiles($config->getCacheDirectory()) as $filename) {
             try {
                 $files->delete($filename);
             } catch (\Throwable $e) {
                 // @codeCoverageIgnoreStart
                 $this->sprintf("<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>\n",
-                    $files->relativePath($filename, $config->cacheDirectory()),
+                    $files->relativePath($filename, $config->getCacheDirectory()),
                     $e->getMessage()
                 );
 
@@ -55,7 +55,7 @@ final class ResetCommand extends Command
             if ($this->isVerbose()) {
                 $this->sprintf(
                     "<fg=green>[deleted]</fg=green> `%s`\n",
-                    $files->relativePath($filename, $config->cacheDirectory())
+                    $files->relativePath($filename, $config->getCacheDirectory())
                 );
             }
         }
