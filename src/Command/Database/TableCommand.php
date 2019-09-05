@@ -197,7 +197,8 @@ final class TableCommand extends Command
     }
 
     /**
-     * @param AbstractColumn $column
+     * @param AbstractColumn  $column
+     * @param DriverInterface $driver
      * @return string|null
      */
     protected function describeDefaultValue(AbstractColumn $column, DriverInterface $driver): ?string
