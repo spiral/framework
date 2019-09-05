@@ -87,7 +87,7 @@ final class RrDispacher implements DispatcherInterface
      */
     protected function handleException(PSR7Client $client, \Throwable $e)
     {
-        $handler = new HtmlHandler(HtmlHandler::INVERTED);
+        $handler = new HtmlHandler(HtmlHandler::DEFAULT);
 
         try {
             /** @var SnapshotInterface $snapshot */
