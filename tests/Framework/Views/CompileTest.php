@@ -22,7 +22,7 @@ class CompileTest extends ConsoleTest
     public function testCompile()
     {
         $out = $this->runCommandDebug('views:compile');
-        $this->assertContains('default:native', $out);
+        $this->assertContains('default:custom/file', $out);
 
         $this->assertContains('custom:error', $out);
         $this->assertContains('Unable to compile custom:error', $out);

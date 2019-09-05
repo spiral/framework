@@ -13,6 +13,7 @@ use Codedungeon\PHPCliColors\Color;
 use Spiral\Console\Command;
 use Spiral\Views\ContextGenerator;
 use Spiral\Views\ContextInterface;
+use Spiral\Views\Engine\Native\NativeEngine;
 use Spiral\Views\EngineInterface;
 use Spiral\Views\ViewManager;
 
@@ -38,6 +39,11 @@ final class CompileCommand extends Command
 
         foreach ($contexts as $context) {
             foreach ($views->getEngines() as $engine) {
+                if ($engine instanceof NativeEngine) {
+                    // no need to compile
+                    continue;
+                }
+
                 $this->compile($engine, $context);
             }
         }

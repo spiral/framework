@@ -18,6 +18,5 @@ class ConfigureTest extends ConsoleTest
 
         $this->assertContains('Verifying runtime directory', $output);
         $this->assertContains('locale directory', $output);
-        $this->assertContains('NativeEngine', $output);
     }
 }
