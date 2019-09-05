@@ -23,8 +23,6 @@ final class StatusCommand extends AbstractCommand
 
     /**
      * @param FilesInterface $files
-     *
-     * @throws \ReflectionException
      */
     public function perform(FilesInterface $files)
     {
@@ -38,17 +36,12 @@ final class StatusCommand extends AbstractCommand
             return;
         }
 
-        $table = $this->table(['Migration', 'Filename', 'Created at', 'Executed at']);
+        $table = $this->table(['Migration', 'Created at', 'Executed at']);
         foreach ($this->migrator->getMigrations() as $migration) {
-            $filename = (new \ReflectionClass($migration))->getFileName();
-
             $state = $migration->getState();
 
             $table->addRow([
                 $state->getName(),
-                '<comment>'
-                . $files->relativePath($filename, $this->config->getDirectory())
-                . '</comment>',
                 $state->getTimeCreated()->format('Y-m-d H:i:s'),
                 $state->getStatus() == State::STATUS_PENDING
                     ? self::PENDING

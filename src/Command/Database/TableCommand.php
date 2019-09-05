@@ -95,7 +95,7 @@ final class TableCommand extends Command
                 $this->describeType($column),
                 $this->describeAbstractType($column),
                 $column->getType(),
-                $this->describeDefaultValue($column) ?: self::SKIP
+                $this->describeDefaultValue($column, $schema->getDriver()) ?: self::SKIP
             ]);
         }
 
