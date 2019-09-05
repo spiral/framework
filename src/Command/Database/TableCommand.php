@@ -12,6 +12,8 @@ namespace Spiral\Command\Database;
 use Spiral\Console\Command;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
+use Spiral\Database\Driver\DriverInterface;
+use Spiral\Database\Driver\QueryBindings;
 use Spiral\Database\Exception\DBALException;
 use Spiral\Database\Injection\FragmentInterface;
 use Spiral\Database\Schema\AbstractColumn;
@@ -198,12 +200,13 @@ final class TableCommand extends Command
      * @param AbstractColumn $column
      * @return string|null
      */
-    protected function describeDefaultValue(AbstractColumn $column): ?string
+    protected function describeDefaultValue(AbstractColumn $column, DriverInterface $driver): ?string
     {
         $defaultValue = $column->getDefaultValue();
 
         if ($defaultValue instanceof FragmentInterface) {
-            $defaultValue = "<info>{$defaultValue}</info>";
+            $value = $defaultValue->compile(new QueryBindings(), $driver->getCompiler());
+            return "<info>{$value}</info>";
         }
 
         if ($defaultValue instanceof \DateTimeInterface) {
