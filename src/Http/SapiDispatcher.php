@@ -81,7 +81,7 @@ final class SapiDispatcher implements DispatcherInterface
      */
     protected function handleException(EmitterInterface $emitter, \Throwable $e)
     {
-        $handler = new HtmlHandler(HtmlHandler::DEFAULT);
+        $handler = new HtmlHandler();
 
         try {
             /** @var SnapshotInterface $snapshot */
