@@ -32,7 +32,7 @@ use Spiral\RoadRunner\PSR7Client;
 /**
  * Configures Http dispatcher in SAPI and RoadRunner modes (if available).
  */
-final class HttpBootloader extends Bootloader implements SingletonInterface, DependedInterface
+final class HttpBootloader extends Bootloader implements DependedInterface, SingletonInterface
 {
     const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
