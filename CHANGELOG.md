@@ -1,5 +1,13 @@
 # CHANGELOG
 
+v2.0.16 (06.09.2019)
+------
+- added support for Prometheus metrics for `jobs` (queue) and `grpc` services
+- exceptions will use default style
+- bugfix: inability to render `FragmentInterface` in `db:table` command
+- `view:compile` won't compile `NativeEngine` templates anymore
+- ability to skip server download if version did not change
+
 v2.0.15 (16.07.2019) - no binary
 ------
 - fixed config method names in spiral/views
