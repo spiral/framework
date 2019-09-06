@@ -65,6 +65,7 @@ class RRHelper
     {
         $file = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'build.sh';
         $fileResource = fopen($file, 'r') or die(1);
+
         while (!feof($fileResource)) {
             $line = fgets($fileResource, 4096);
             $matches = [];
@@ -72,6 +73,7 @@ class RRHelper
                 return trim($matches[1]);
             }
         }
+
         fclose($fileResource);
         throw new Exception("Can't find version of Spiral Server");
     }
@@ -198,12 +200,30 @@ class RRHelper
         }
 
         if (is_file($finalFile)) {
-            $output->writeln('<error>Spiral Server binary file already exists!</error>');
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('Do you want overwrite it? [Y/n] ');
+            $version = RRHelper::getVersion();
 
-            if (!$helper->ask($input, $output, $question)) {
-                return;
+            $previousVersion = preg_match(
+                '#Version:.+(\d+\.\d+\.\d+)#',
+                (string)shell_exec($finalFile),
+                $matches
+            ) ? $matches[1] : "";
+
+            $output->writeln('<error>RoadRunner binary file already exists!</error>');
+            $helper = $this->getHelper('question');
+
+            if (version_compare($previousVersion, $version) === 0) {
+                $output->writeln(sprintf('<info>Current version: %s</info>', $previousVersion));
+                $question = new ConfirmationQuestion(
+                    sprintf('Skip update to the same version: %s ? [Y/n]', $version)
+                );
+                if ($helper->ask($input, $output, $question)) {
+                    return;
+                }
+            } else {
+                $question = new ConfirmationQuestion('Do you want overwrite it? [Y/n]');
+                if (!$helper->ask($input, $output, $question)) {
+                    return;
+                }
             }
         }
 
@@ -212,7 +232,7 @@ class RRHelper
         $progressBar = new ProgressBar($output);
         $progressBar->setFormat('verbose');
 
-        $zipFileName = tempnam('.', "rr_zip");
+        $zipFileName = 'rr_zip_'.random_int(0, 10000);
         if (RRHelper::getOSType() == 'linux') {
             $zipFileName .= '.tar.gz';
         }
