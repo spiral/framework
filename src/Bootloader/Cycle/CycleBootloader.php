@@ -9,12 +9,12 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Cycle;
 
+use Cycle\ORM\Config\RelationConfig;
 use Cycle\ORM\Factory;
 use Cycle\ORM\FactoryInterface;
 use Cycle\ORM\ORM;
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\PromiseFactoryInterface;
-use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Select;
 use Cycle\ORM\Transaction;
@@ -22,6 +22,7 @@ use Cycle\ORM\TransactionInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\Bootloader\Database\DatabaseBootloader;
 use Spiral\Core\Container;
 use Spiral\Cycle\SelectInjector;
 use Spiral\Database\DatabaseProviderInterface;
@@ -29,8 +30,7 @@ use Spiral\Database\DatabaseProviderInterface;
 final class CycleBootloader extends Bootloader implements DependedInterface
 {
     public const BINDINGS = [
-        RepositoryInterface::class  => [self::class, 'repository'],
-        TransactionInterface::class => Transaction::class
+        TransactionInterface::class => Transaction::class,
     ];
 
     public const SINGLETONS = [
@@ -39,10 +39,11 @@ final class CycleBootloader extends Bootloader implements DependedInterface
     ];
 
     /**
-     * @param Container          $container
-     * @param FinalizerInterface $finalizer
+     * @param Container            $container
+     * @param FinalizerInterface   $finalizer
+     * @param SchemaInterface|null $schema
      */
-    public function boot(Container $container, FinalizerInterface $finalizer)
+    public function boot(Container $container, FinalizerInterface $finalizer, SchemaInterface $schema = null)
     {
         $finalizer->addFinalizer(function () use ($container) {
             if ($container->hasInstance(ORMInterface::class)) {
@@ -51,6 +52,38 @@ final class CycleBootloader extends Bootloader implements DependedInterface
         });
 
         $container->bindInjector(Select::class, SelectInjector::class);
+
+        if ($schema !== null) {
+            $this->bootRepositories($container, $schema);
+        }
+    }
+
+    /**
+     * @param Container       $container
+     * @param SchemaInterface $schema
+     */
+    public function bootRepositories(Container $container, SchemaInterface $schema)
+    {
+        foreach ($schema->getRoles() as $role) {
+            $repository = $schema->define($role, SchemaInterface::REPOSITORY);
+            if ($repository === Select\Repository::class || $repository === null) {
+                // default repository can not be wired
+                continue;
+            }
+
+            // initiate all repository dependencies using factory method forwarded to ORM
+            $container->bindSingleton($repository, function (ORMInterface $orm) use ($role, $container, $repository) {
+                // to avoid cyclic dependency since ORM use factory to resolve needed dependencies
+                $binding = $container->getBindings()[$repository];
+                $container->removeBinding($repository);
+
+                try {
+                    return $orm->getRepository($role);
+                } finally {
+                    $container->bind($repository, $binding);
+                }
+            });
+        }
     }
 
     /**
@@ -59,18 +92,9 @@ final class CycleBootloader extends Bootloader implements DependedInterface
     public function defineDependencies(): array
     {
         return [
+            DatabaseBootloader::class,
             SchemaBootloader::class
         ];
-    }
-
-    /**
-     * @param ORMInterface $orm
-     * @param string       $role
-     * @return RepositoryInterface
-     */
-    protected function repository(ORMInterface $orm, string $role = null): RepositoryInterface
-    {
-        return $orm->getRepository($role);
     }
 
     /**
@@ -95,10 +119,11 @@ final class CycleBootloader extends Bootloader implements DependedInterface
 
     /**
      * @param DatabaseProviderInterface $dbal
+     * @param Container                 $container
      * @return FactoryInterface
      */
-    protected function factory(DatabaseProviderInterface $dbal): FactoryInterface
+    protected function factory(DatabaseProviderInterface $dbal, Container $container): FactoryInterface
     {
-        return new Factory($dbal);
+        return new Factory($dbal, RelationConfig::getDefault(), $container, $container);
     }
 }

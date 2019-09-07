@@ -9,16 +9,13 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Cycle;
 
-use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
-use Cycle\ORM\Select\Repository;
 use Cycle\Schema\Generator;
 use Cycle\Schema\GeneratorInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Bootloader\Database\DatabaseBootloader;
 use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
@@ -31,9 +28,7 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
 
     public const BINDINGS = [
         SchemaInterface::class             => [self::class, 'schema'],
-
-        // relations
-        Generator\GenerateRelations::class => [self::class, 'relations'],
+        Generator\GenerateRelations::class => [self::class, 'relationGenerator'],
     ];
 
     /** @var Container */
@@ -70,43 +65,12 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     }
 
     /**
-     * @param SchemaInterface|null $schema
-     */
-    public function boot(SchemaInterface $schema = null)
-    {
-        if (!is_null($schema)) {
-            $this->bootRepositories($schema);
-        }
-    }
-
-    /**
-     * @param SchemaInterface $schema
-     */
-    public function bootRepositories(SchemaInterface $schema)
-    {
-        foreach ($schema->getRoles() as $role) {
-            $repository = $schema->define($role, Schema::REPOSITORY);
-            if ($repository === Repository::class || $repository === null) {
-                // default repository can not be wired
-                continue;
-            }
-
-            // initiate all repository dependencies using factory method forwarded to ORM
-            $this->container->bind(
-                $repository,
-                new Container\Autowire(RepositoryInterface::class, ['role' => $role])
-            );
-        }
-    }
-
-    /**
      * @return array
      */
     public function defineDependencies(): array
     {
         return [
-            TokenizerBootloader::class,
-            DatabaseBootloader::class
+            TokenizerBootloader::class
         ];
     }
 
@@ -155,7 +119,7 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
     /**
      * @return Generator\GenerateRelations
      */
-    protected function relations(): Generator\GenerateRelations
+    protected function relationGenerator(): Generator\GenerateRelations
     {
         return new Generator\GenerateRelations();
     }

@@ -12,8 +12,10 @@ use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
+use Spiral\Bootloader\Cycle\CycleBootloader;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Console\Command;
+use Spiral\Core\Container;
 
 final class UpdateCommand extends Command
 {
@@ -22,11 +24,18 @@ final class UpdateCommand extends Command
 
     /**
      * @param SchemaBootloader $bootloader
+     * @param Container        $container
+     * @param CycleBootloader  $cycleBootloader
      * @param Registry         $registry
      * @param MemoryInterface  $memory
      */
-    public function perform(SchemaBootloader $bootloader, Registry $registry, MemoryInterface $memory)
-    {
+    public function perform(
+        SchemaBootloader $bootloader,
+        Container $container,
+        CycleBootloader $cycleBootloader,
+        Registry $registry,
+        MemoryInterface $memory
+    ) {
         $this->write("Updating ORM schema... ");
 
         $schema = (new Compiler())->compile($registry, $bootloader->getGenerators());
@@ -34,6 +43,6 @@ final class UpdateCommand extends Command
 
         $this->writeln("<info>done</info>");
 
-        $bootloader->bootRepositories(new Schema($schema));
+        $cycleBootloader->bootRepositories($container, new Schema($schema));
     }
 }

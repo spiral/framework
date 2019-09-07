@@ -109,10 +109,9 @@ class SchemaTest extends ConsoleTest
 
         /** @var UserRepository $r */
         $r = $app->get(UserRepository::class);
-        $this->assertInstanceOf(UserRepository::class, $r);
 
-        // todo: need bugfix
-        // $this->assertSame($u, $r->findOne());
+        $this->assertInstanceOf(UserRepository::class, $r);
+        $this->assertSame($u, $r->findOne());
     }
 
     public function testInjectedSelect()
