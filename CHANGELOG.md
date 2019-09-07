@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.0.17 (07.09.2019) - no binary
+------
+- ability to inject constructor dependencies into cycle repositories and classes from app container
+
 v2.0.16 (06.09.2019)
 ------
 - added support for Prometheus metrics for `jobs` (queue) and `grpc` services
