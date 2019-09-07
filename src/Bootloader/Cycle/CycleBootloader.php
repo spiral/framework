@@ -54,15 +54,17 @@ final class CycleBootloader extends Bootloader implements DependedInterface
         $container->bindInjector(Select::class, SelectInjector::class);
 
         if ($schema !== null) {
-            $this->bootRepositories($container, $schema);
+            $this->bindRepositories($container, $schema);
         }
     }
 
     /**
+     * Create container bindings to resolve repositories by they class names.
+     *
      * @param Container       $container
      * @param SchemaInterface $schema
      */
-    public function bootRepositories(Container $container, SchemaInterface $schema)
+    public function bindRepositories(Container $container, SchemaInterface $schema)
     {
         foreach ($schema->getRoles() as $role) {
             $repository = $schema->define($role, SchemaInterface::REPOSITORY);
@@ -72,16 +74,8 @@ final class CycleBootloader extends Bootloader implements DependedInterface
             }
 
             // initiate all repository dependencies using factory method forwarded to ORM
-            $container->bindSingleton($repository, function (ORMInterface $orm) use ($role, $container, $repository) {
-                // to avoid cyclic dependency since ORM use factory to resolve needed dependencies
-                $binding = $container->getBindings()[$repository];
-                $container->removeBinding($repository);
-
-                try {
-                    return $orm->getRepository($role);
-                } finally {
-                    $container->bind($repository, $binding);
-                }
+            $container->bindSingleton($repository, function (ORMInterface $orm) use ($role) {
+                return $orm->getRepository($role);
             });
         }
     }

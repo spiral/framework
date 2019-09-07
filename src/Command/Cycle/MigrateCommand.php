@@ -83,6 +83,6 @@ final class MigrateCommand extends AbstractCommand
             }
         }
 
-        $cycleBootloader->bootRepositories($container, new Schema($schema));
+        $cycleBootloader->bindRepositories($container, new Schema($schema));
     }
 }

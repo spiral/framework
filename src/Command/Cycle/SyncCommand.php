@@ -51,6 +51,6 @@ final class SyncCommand extends Command
             $this->writeln("\n<info>ORM Schema has been synchronized</info>");
         }
 
-        $cycleBootloader->bootRepositories($container, new Schema($schema));
+        $cycleBootloader->bindRepositories($container, new Schema($schema));
     }
 }

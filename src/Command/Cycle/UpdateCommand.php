@@ -43,6 +43,6 @@ final class UpdateCommand extends Command
 
         $this->writeln("<info>done</info>");
 
-        $cycleBootloader->bootRepositories($container, new Schema($schema));
+        $cycleBootloader->bindRepositories($container, new Schema($schema));
     }
 }
