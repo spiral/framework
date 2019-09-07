@@ -17,6 +17,8 @@ use Cycle\ORM\PromiseFactoryInterface;
 use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Select;
+use Cycle\ORM\Transaction;
+use Cycle\ORM\TransactionInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\FinalizerInterface;
@@ -27,7 +29,8 @@ use Spiral\Database\DatabaseProviderInterface;
 final class CycleBootloader extends Bootloader implements DependedInterface
 {
     public const BINDINGS = [
-        RepositoryInterface::class => [self::class, 'repository'],
+        RepositoryInterface::class  => [self::class, 'repository'],
+        TransactionInterface::class => Transaction::class
     ];
 
     public const SINGLETONS = [
@@ -50,7 +53,7 @@ final class CycleBootloader extends Bootloader implements DependedInterface
         $container->bindInjector(Select::class, SelectInjector::class);
     }
 
-      /**
+    /**
      * @return array
      */
     public function defineDependencies(): array
