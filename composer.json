@@ -44,7 +44,8 @@
     "cycle/migrations": "^1.0",
     "cycle/proxy-factory": "^1.0",
     "phpunit/phpunit": "~7.0",
-    "mockery/mockery": "^1.1"
+    "mockery/mockery": "^1.1",
+    "squizlabs/php_codesniffer": "^3.4"
   },
   "autoload": {
     "files": [

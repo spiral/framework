@@ -14,5 +14,4 @@ use Cycle\ORM\Select\Repository;
 
 class UserRepository extends Repository
 {
-
 }

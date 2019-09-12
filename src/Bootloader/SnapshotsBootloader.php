@@ -39,7 +39,6 @@ final class SnapshotsBootloader extends Bootloader
      */
     protected function fileSnapshotter(
         EnvironmentInterface $env,
-
         DirectoriesInterface $dirs,
         FilesInterface $files
     ) {

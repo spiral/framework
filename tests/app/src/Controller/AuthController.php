@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Spiral\App\Controller;
 
-
 use Spiral\Controller\Traits\AuthorizesTrait;
 use Spiral\Core\Controller;
 

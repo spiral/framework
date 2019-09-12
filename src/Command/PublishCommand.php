@@ -92,8 +92,10 @@ final class PublishCommand extends Command
                     $this->getTarget($files, $directories)
                 );
 
-                $publisher->ensureDirectory($this->getTarget($files, $directories),
-                    $this->getFileMode());
+                $publisher->ensureDirectory(
+                    $this->getTarget($files, $directories),
+                    $this->getFileMode()
+                );
 
                 break;
             default:

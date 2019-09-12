@@ -55,7 +55,9 @@ final class SessionBootloader extends Bootloader implements DependedInterface
             'lifetime' => 86400,
             'cookie'   => 'sid',
             'secure'   => false,
-            'handler'  => new Autowire(FileHandler::class, [
+            'handler'  => new Autowire(
+                FileHandler::class,
+                [
                     'directory' => $directories->get('runtime') . 'session',
                     'lifetime'  => 86400
                 ]

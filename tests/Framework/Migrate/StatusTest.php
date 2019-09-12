@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Spiral\Framework\Migrate;
 
-
 use Spiral\Database\Database;
 use Spiral\Framework\ConsoleTest;
 

@@ -8,7 +8,6 @@
 
 namespace Spiral\App\ViewEngine;
 
-
 use Spiral\Views\ViewInterface;
 use Spiral\Views\ViewSource;
 
