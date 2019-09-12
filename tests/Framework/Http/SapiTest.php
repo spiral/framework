@@ -42,7 +42,7 @@ class SapiTest extends ConsoleTest
 
     public function testDispatch()
     {
-        $e = new BufferEmitter();
+        $e = $this->bufferEmitter;
 
         $app = $this->makeApp();
 
@@ -54,7 +54,7 @@ class SapiTest extends ConsoleTest
 
     public function testDispatchError()
     {
-        $e = new BufferEmitter();
+        $e = $this->bufferEmitter;
 
         $files = $this->app->get(FilesInterface::class)->getFiles(
             $this->app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
@@ -76,7 +76,7 @@ class SapiTest extends ConsoleTest
 
     public function testDispatchNativeError()
     {
-        $e = new BufferEmitter();
+        $e = $this->bufferEmitter;
 
         $app = $this->makeApp([
             'DEBUG' => true
