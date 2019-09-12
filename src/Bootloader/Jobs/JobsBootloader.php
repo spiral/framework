@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Jobs;
 
-
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\KernelInterface;
 use Spiral\Jobs\Factory\SpiralFactory;

@@ -17,6 +17,24 @@ use Spiral\Http\SapiDispatcher;
 
 class SapiTest extends ConsoleTest
 {
+    /** @var EmitterInterface */
+    private $bufferEmitter;
+
+    public function setUp()
+    {
+        $this->bufferEmitter = new class implements EmitterInterface
+        {
+            public $response;
+
+            public function emit(ResponseInterface $response): bool
+            {
+                $this->response = $response;
+                return true;
+            }
+        };
+        parent::setUp();
+    }
+
     public function testCantServe()
     {
         $this->assertFalse($this->app->get(SapiDispatcher::class)->canServe());
@@ -80,16 +98,5 @@ class SapiTest extends ConsoleTest
         $this->assertCount(1, $files);
 
         $this->assertContains('undefined', (string)$e->response->getBody());
-    }
-}
-
-class BufferEmitter implements EmitterInterface
-{
-    public $response;
-
-    public function emit(ResponseInterface $response): bool
-    {
-        $this->response = $response;
-        return true;
     }
 }

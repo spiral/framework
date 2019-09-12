@@ -60,7 +60,8 @@ abstract class HttpTest extends BaseTest
             $uri,
             $method,
             'php://input',
-            $headers, $cookies,
+            $headers,
+            $cookies,
             $query
         );
     }

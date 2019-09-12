@@ -8,7 +8,6 @@
 
 namespace Spiral\App\Condition;
 
-
 use Spiral\Validation\AbstractCondition;
 use Spiral\Validation\ValidatorInterface;
 

@@ -89,7 +89,6 @@ class DispatcherTest extends ConsoleTest
 
         $w->shouldReceive('send')->once()->with(
             \Mockery::on(function ($out) {
-
                 $msg = new Message();
                 $msg->mergeFromString($out);
                 $this->assertSame("hello", $msg->getMsg());

@@ -11,5 +11,4 @@ namespace Spiral\GRPC\Exception;
 
 class CompileException extends \RuntimeException
 {
-
 }

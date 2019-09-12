@@ -8,7 +8,6 @@
 
 namespace Spiral\App\Checker;
 
-
 use Spiral\Validation\AbstractChecker;
 
 class MyChecker extends AbstractChecker
