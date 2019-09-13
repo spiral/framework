@@ -84,7 +84,6 @@ spiral/dumper | [![Latest Stable Version](https://poser.pugx.org/spiral/dumper/v
 spiral/views | [![Latest Stable Version](https://poser.pugx.org/spiral/views/version)](https://packagist.org/packages/spiral/views) [![Build Status](https://travis-ci.org/spiral/views.svg?branch=master)](https://travis-ci.org/spiral/views) [![Codecov](https://codecov.io/gh/spiral/views/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/views/)
 spiral/storage | [![Latest Stable Version](https://poser.pugx.org/spiral/storage/version)](https://packagist.org/packages/spiral/storage) [![Build Status](https://travis-ci.org/spiral/storage.svg?branch=master)](https://travis-ci.org/spiral/storage) [![Codecov](https://codecov.io/gh/spiral/storage/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/storage/)
 spiral/reactor | [![Latest Stable Version](https://poser.pugx.org/spiral/reactor/version)](https://packagist.org/packages/spiral/reactor) [![Build Status](https://travis-ci.org/spiral/reactor.svg?branch=master)](https://travis-ci.org/spiral/reactor) [![Codecov](https://codecov.io/gh/spiral/reactor/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/reactor/)
-spiral/prototype | [![Latest Stable Version](https://poser.pugx.org/spiral/prototype/version)](https://packagist.org/packages/spiral/prototype) [![Build Status](https://travis-ci.org/spiral/prototype.svg?branch=master)](https://travis-ci.org/spiral/prototype) [![Codecov](https://codecov.io/gh/spiral/prototype/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/prototype/)
 
 ## Integrations
 | Component | Current Status        
@@ -93,9 +92,12 @@ spiral/dotenv-bridge | [![Latest Stable Version](https://poser.pugx.org/spiral/d
 spiral/monolog-bridge | [![Latest Stable Version](https://poser.pugx.org/spiral/monolog-bridge/version)](https://packagist.org/packages/spiral/monolog-bridge) [![Build Status](https://travis-ci.org/spiral/monolog-bridge.svg?branch=master)](https://travis-ci.org/spiral/monolog-bridge) [![Codecov](https://codecov.io/gh/spiral/monolog-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/monolog-bridge/)
 spiral/twig-bridge | [![Latest Stable Version](https://poser.pugx.org/spiral/twig-bridge/version)](https://packagist.org/packages/spiral/twig-bridge) [![Build Status](https://travis-ci.org/spiral/twig-bridge.svg?branch=master)](https://travis-ci.org/spiral/twig-bridge) [![Codecov](https://codecov.io/gh/spiral/twig-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/twig-bridge/)
 
-## Assembly
+## Development and Assembly
 | Component | Current Status        
 | ---       | ---
+spiral/scaffolder | [![Latest Stable Version](https://poser.pugx.org/spiral/scaffolder/v/stable)](https://packagist.org/packages/spiral/scaffolder) [![Build Status](https://travis-ci.org/spiral/scaffolder.svg?branch=master)](https://travis-ci.org/spiral/scaffolder) [![Codecov](https://codecov.io/gh/spiral/scaffolder/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/scaffolder/)
+spiral/prototype | [![Latest Stable Version](https://poser.pugx.org/spiral/prototype/version)](https://packagist.org/packages/spiral/prototype) [![Build Status](https://travis-ci.org/spiral/prototype.svg?branch=master)](https://travis-ci.org/spiral/prototype) [![Codecov](https://codecov.io/gh/spiral/prototype/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/prototype/)
+spiral/annotations | [![Build Status](https://travis-ci.org/spiral/annotations.svg?branch=master)](https://travis-ci.org/spiral/annotations) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/annotations/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/spiral/annotations/?branch=master) [![Codecov](https://codecov.io/gh/spiral/annotations/graph/badge.svg)](https://codecov.io/gh/spiral/annotations)
 spiral/composer-publish-plugin | [![Latest Stable Version](https://poser.pugx.org/spiral/composer-publish-plugin/version)](https://packagist.org/packages/spiral/composer-publish-plugin) [![Build Status](https://travis-ci.org/spiral/composer-publish-plugin.svg?branch=master)](https://travis-ci.org/spiral/composer-publish-plugin) [![Codecov](https://codecov.io/gh/spiral/composer-publish-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/composer-publish-plugin/)
 
 License:
