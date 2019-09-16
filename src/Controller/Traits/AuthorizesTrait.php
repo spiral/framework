@@ -14,8 +14,6 @@ use Spiral\Security\Traits\GuardedTrait;
 
 /**
  * Authorizes method and throws an exception in case of failure. Relies on global container scope.
- *
- * @prototype
  */
 trait AuthorizesTrait
 {
