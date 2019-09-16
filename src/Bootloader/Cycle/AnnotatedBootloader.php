@@ -12,10 +12,13 @@ namespace Spiral\Bootloader\Cycle;
 use Cycle\Annotated;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 
-final class AnnotatedBootloader extends Bootloader implements DependedInterface
+final class AnnotatedBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        SchemaBootloader::class
+    ];
+
     /**
      * @param SchemaBootloader $schema
      */
@@ -27,15 +30,5 @@ final class AnnotatedBootloader extends Bootloader implements DependedInterface
         $schema->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\Entities::class);
         $schema->addGenerator(SchemaBootloader::GROUP_INDEX, Annotated\MergeColumns::class);
         $schema->addGenerator(SchemaBootloader::GROUP_RENDER, Annotated\MergeIndexes::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            SchemaBootloader::class
-        ];
     }
 }

@@ -89,7 +89,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
     /**
      * @return IdentityTranslator
      */
-    protected function identityTranslator(): IdentityTranslator
+    private function identityTranslator(): IdentityTranslator
     {
         return new IdentityTranslator();
     }

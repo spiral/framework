@@ -12,7 +12,6 @@ namespace Spiral\Bootloader\Http;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Http\Config\HttpConfig;
@@ -20,8 +19,12 @@ use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\UriHandler;
 
-final class RouterBootloader extends Bootloader implements DependedInterface
+final class RouterBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        HttpBootloader::class
+    ];
+
     const SINGLETONS = [
         CoreInterface::class           => Core::class,
         RouterInterface::class         => [self::class, 'router'],
@@ -40,15 +43,5 @@ final class RouterBootloader extends Bootloader implements DependedInterface
         ContainerInterface $container
     ): RouterInterface {
         return new Router($config->getBasePath(), $uriHandler, $container);
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            HttpBootloader::class
-        ];
     }
 }

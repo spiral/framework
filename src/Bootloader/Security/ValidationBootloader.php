@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
@@ -23,8 +22,12 @@ use Spiral\Validation\RuleParser;
 use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidationProvider;
 
-final class ValidationBootloader extends Bootloader implements DependedInterface, SingletonInterface
+final class ValidationBootloader extends Bootloader implements SingletonInterface
 {
+    const DEPENDENCIES = [
+        TokenizerBootloader::class
+    ];
+
     const SINGLETONS = [
         ValidationInterface::class => ValidationProvider::class,
         RulesInterface::class      => ValidationProvider::class,
@@ -104,16 +107,6 @@ final class ValidationBootloader extends Bootloader implements DependedInterface
         ]);
 
         $tokenizer->addDirectory(directory('vendor') . 'spiral/validation/src/');
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            TokenizerBootloader::class
-        ];
     }
 
     /**

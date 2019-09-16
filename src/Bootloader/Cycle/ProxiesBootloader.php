@@ -14,22 +14,15 @@ use Cycle\ORM\Promise\Materizalizer\EvalMaterializer;
 use Cycle\ORM\Promise\ProxyFactory;
 use Cycle\ORM\PromiseFactoryInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 
-final class ProxiesBootloader extends Bootloader implements DependedInterface
+final class ProxiesBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        CycleBootloader::class
+    ];
+
     public const SINGLETONS = [
         PromiseFactoryInterface::class => ProxyFactory::class,
         MaterializerInterface::class   => EvalMaterializer::class
     ];
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            CycleBootloader::class
-        ];
-    }
 }

@@ -10,15 +10,18 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
 use Spiral\Cookies\Config\CookiesConfig;
 use Spiral\Cookies\Middleware\CookiesMiddleware;
 use Spiral\Core\Container\SingletonInterface;
 
-final class CookiesBootloader extends Bootloader implements SingletonInterface, DependedInterface
+final class CookiesBootloader extends Bootloader implements SingletonInterface
 {
+    const DEPENDENCIES = [
+        HttpBootloader::class
+    ];
+
     /** @var ConfiguratorInterface */
     private $config;
 
@@ -42,16 +45,6 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface, 
         ]);
 
         $http->addMiddleware(CookiesMiddleware::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            HttpBootloader::class
-        ];
     }
 
     /**

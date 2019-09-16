@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Http\ErrorHandler;
@@ -19,8 +18,12 @@ use Spiral\Http\Middleware\ErrorHandlerMiddleware;
 /**
  * Enable support for HTTP error pages.
  */
-final class ErrorHandlerBootloader extends Bootloader implements DependedInterface
+final class ErrorHandlerBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        HttpBootloader::class
+    ];
+
     const BINDINGS = [
         ErrorHandler\RendererInterface::class => ErrorHandler\PlainRenderer::class,
     ];
@@ -35,15 +38,5 @@ final class ErrorHandlerBootloader extends Bootloader implements DependedInterfa
             ErrorHandlerMiddleware::class,
             ['suppressErrors' => !$env->get('DEBUG', false)]
         ));
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            HttpBootloader::class
-        ];
     }
 }

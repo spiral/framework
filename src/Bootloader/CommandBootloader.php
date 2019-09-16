@@ -11,7 +11,6 @@ namespace Spiral\Bootloader;
 use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Command\Cycle;
 use Spiral\Command\Database;
 use Spiral\Command\Encrypter;
@@ -35,8 +34,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Register framework directories in tokenizer in order to locate default commands.
  */
-final class CommandBootloader extends Bootloader implements DependedInterface
+final class CommandBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        ConsoleBootloader::class,
+    ];
+
     /**
      * @param ConsoleBootloader $console
      * @param Container         $container

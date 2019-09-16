@@ -10,23 +10,16 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Http\PaginationFactory;
 use Spiral\Pagination\PaginationProviderInterface;
 
-final class PaginationBootloader extends Bootloader implements DependedInterface
+final class PaginationBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        HttpBootloader::class
+    ];
+
     const SINGLETONS = [
         PaginationProviderInterface::class => PaginationFactory::class
     ];
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            HttpBootloader::class
-        ];
-    }
 }

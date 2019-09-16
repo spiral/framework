@@ -23,8 +23,6 @@ use Spiral\Tokenizer\Tokenizer;
 
 final class TokenizerBootloader extends Bootloader implements SingletonInterface
 {
-    const BOOT = true;
-
     const BINDINGS = [
         ClassesInterface::class     => ClassLocator::class,
         InvocationsInterface::class => InvocationLocator::class

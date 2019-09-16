@@ -14,19 +14,22 @@ use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Generator;
 use Cycle\Schema\GeneratorInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 
-final class SchemaBootloader extends Bootloader implements DependedInterface, Container\SingletonInterface
+final class SchemaBootloader extends Bootloader implements Container\SingletonInterface
 {
     public const GROUP_INDEX       = 'index';
     public const GROUP_RENDER      = 'render';
     public const GROUP_POSTPROCESS = 'postprocess';
 
-    public const BINDINGS = [
+    public const DEPENDENCIES = [
+        TokenizerBootloader::class
+    ];
+
+    const BINDINGS = [
         SchemaInterface::class             => [self::class, 'schema'],
         Generator\GenerateRelations::class => [self::class, 'relationGenerator'],
     ];
@@ -61,16 +64,6 @@ final class SchemaBootloader extends Bootloader implements DependedInterface, Co
                 // post processing
                 Generator\GenerateTypecast::class
             ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            TokenizerBootloader::class
         ];
     }
 

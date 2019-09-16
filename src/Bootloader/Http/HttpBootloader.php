@@ -13,7 +13,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Bootloader\ServerBootloader;
 use Spiral\Config\ConfiguratorInterface;
@@ -32,8 +31,12 @@ use Spiral\RoadRunner\PSR7Client;
 /**
  * Configures Http dispatcher in SAPI and RoadRunner modes (if available).
  */
-final class HttpBootloader extends Bootloader implements DependedInterface, SingletonInterface
+final class HttpBootloader extends Bootloader implements SingletonInterface
 {
+    const DEPENDENCIES = [
+        ServerBootloader::class
+    ];
+
     const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
         EmitterInterface::class => SapiEmitter::class,
@@ -69,16 +72,6 @@ final class HttpBootloader extends Bootloader implements DependedInterface, Sing
         if (class_exists(PSR7Client::class)) {
             $kernel->addDispatcher($factory->make(RrDispacher::class));
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            ServerBootloader::class
-        ];
     }
 
     /**

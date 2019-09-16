@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Spiral\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\KernelInterface;
 use Spiral\Command\CleanCommand;
 use Spiral\Command\PublishCommand;
@@ -27,9 +26,13 @@ use Spiral\Core\Container\SingletonInterface;
 /**
  * Bootloads console and provides ability to register custom bootload commands.
  */
-final class ConsoleBootloader extends Bootloader implements SingletonInterface, DependedInterface
+final class ConsoleBootloader extends Bootloader implements SingletonInterface
 {
-    public const SINGLETONS = [
+    const DEPENDENCIES = [
+        TokenizerBootloader::class,
+    ];
+
+    const SINGLETONS = [
         Console::class          => Console::class,
         LocatorInterface::class => CommandLocator::class
     ];
@@ -61,14 +64,6 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface, 
 
         $this->addCommand(CleanCommand::class);
         $this->addCommand(PublishCommand::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [TokenizerBootloader::class];
     }
 
     /**

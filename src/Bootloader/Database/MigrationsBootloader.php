@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Database;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Bootloader\TokenizerBootloader;
@@ -19,8 +18,13 @@ use Spiral\Migrations\FileRepository;
 use Spiral\Migrations\Migrator;
 use Spiral\Migrations\RepositoryInterface;
 
-final class MigrationsBootloader extends Bootloader implements DependedInterface
+final class MigrationsBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        TokenizerBootloader::class,
+        DatabaseBootloader::class
+    ];
+
     const SINGLETONS = [
         Migrator::class            => Migrator::class,
         RepositoryInterface::class => FileRepository::class
@@ -45,16 +49,5 @@ final class MigrationsBootloader extends Bootloader implements DependedInterface
             'table'     => 'migrations',
             'safe'      => $env->get('SAFE_MIGRATIONS', false)
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            TokenizerBootloader::class,
-            DatabaseBootloader::class
-        ];
     }
 }

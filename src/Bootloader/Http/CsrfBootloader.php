@@ -10,12 +10,15 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Csrf\Middleware\CsrfMiddleware;
 
-final class CsrfBootloader extends Bootloader implements DependedInterface
+final class CsrfBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        HttpBootloader::class
+    ];
+
     /**
      * @param ConfiguratorInterface $config
      * @param HttpBootloader        $http
@@ -29,15 +32,5 @@ final class CsrfBootloader extends Bootloader implements DependedInterface
         ]);
 
         $http->addMiddleware(CsrfMiddleware::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            HttpBootloader::class
-        ];
     }
 }

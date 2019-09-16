@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\Autowire;
@@ -19,8 +18,13 @@ use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\SectionInterface;
 use Spiral\Session\SessionSection;
 
-final class SessionBootloader extends Bootloader implements DependedInterface
+final class SessionBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        HttpBootloader::class,
+        CookiesBootloader::class
+    ];
+
     const BINDINGS = [
         SectionInterface::class => SessionSection::class
     ];
@@ -68,16 +72,5 @@ final class SessionBootloader extends Bootloader implements DependedInterface
 
         $http->addMiddleware(SessionMiddleware::class);
         $cookies->whitelistCookie($session['cookie']);
-    }
-
-    /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            HttpBootloader::class,
-            CookiesBootloader::class
-        ];
     }
 }

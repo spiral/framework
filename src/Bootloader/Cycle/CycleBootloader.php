@@ -20,15 +20,19 @@ use Cycle\ORM\Select;
 use Cycle\ORM\Transaction;
 use Cycle\ORM\TransactionInterface;
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\Bootloader\DependedInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Database\DatabaseBootloader;
 use Spiral\Core\Container;
 use Spiral\Cycle\SelectInjector;
 use Spiral\Database\DatabaseProviderInterface;
 
-final class CycleBootloader extends Bootloader implements DependedInterface
+final class CycleBootloader extends Bootloader
 {
+    const DEPENDENCIES = [
+        DatabaseBootloader::class,
+        SchemaBootloader::class
+    ];
+
     public const BINDINGS = [
         TransactionInterface::class => Transaction::class,
     ];
@@ -81,23 +85,12 @@ final class CycleBootloader extends Bootloader implements DependedInterface
     }
 
     /**
-     * @return array
-     */
-    public function defineDependencies(): array
-    {
-        return [
-            DatabaseBootloader::class,
-            SchemaBootloader::class
-        ];
-    }
-
-    /**
      * @param FactoryInterface             $factory
      * @param SchemaInterface              $schema
      * @param PromiseFactoryInterface|null $promiseFactory
      * @return ORMInterface
      */
-    protected function orm(
+    private function orm(
         FactoryInterface $factory,
         SchemaInterface $schema = null,
         PromiseFactoryInterface $promiseFactory = null
@@ -116,7 +109,7 @@ final class CycleBootloader extends Bootloader implements DependedInterface
      * @param Container                 $container
      * @return FactoryInterface
      */
-    protected function factory(DatabaseProviderInterface $dbal, Container $container): FactoryInterface
+    private function factory(DatabaseProviderInterface $dbal, Container $container): FactoryInterface
     {
         return new Factory($dbal, RelationConfig::getDefault(), $container, $container);
     }

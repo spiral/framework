@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Core\Container\SingletonInterface;
 use Spiral\Security\Actor\Guest;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
@@ -20,7 +19,7 @@ use Spiral\Security\RuleManager;
 use Spiral\Security\RulesInterface;
 use Spiral\Security\ScopeGuard;
 
-final class GuardBootloader extends Bootloader implements SingletonInterface
+final class GuardBootloader extends Bootloader
 {
     const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,
