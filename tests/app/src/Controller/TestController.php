@@ -8,6 +8,7 @@
 
 namespace Spiral\App\Controller;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
 use Spiral\Core\Controller;
@@ -56,6 +57,11 @@ class TestController extends Controller
     public function routeAction(RouteInterface $route)
     {
         return $route->getMatches();
+    }
+
+    public function payloadAction(ServerRequestInterface $request)
+    {
+        return $request->getParsedBody();
     }
 
     public function requiredAction(int $id)

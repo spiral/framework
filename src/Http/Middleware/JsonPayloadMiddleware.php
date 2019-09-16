@@ -28,9 +28,8 @@ final class JsonPayloadMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->isJsonPayload($request)) {
-            try {
-                $request = $request->withParsedBody(json_decode($request->getBody()->getContents(), true));
-            } catch (\Throwable $exception) {
+            $request = $request->withParsedBody(json_decode($request->getBody()->getContents(), true));
+            if (json_last_error() !== 0) {
                 throw new ClientException(400, 'invalid json payload');
             }
         }
