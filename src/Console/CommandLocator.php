@@ -11,6 +11,7 @@ namespace Spiral\Console;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Tokenizer\ClassesInterface;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 final class CommandLocator implements LocatorInterface
 {
@@ -36,7 +37,7 @@ final class CommandLocator implements LocatorInterface
     public function locateCommands(): array
     {
         $commands = [];
-        foreach ($this->classes->getClasses(\Symfony\Component\Console\Command\Command::class) as $class) {
+        foreach ($this->classes->getClasses(SymfonyCommand::class) as $class) {
             if ($class->isAbstract()) {
                 continue;
             }
