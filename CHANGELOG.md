@@ -1,5 +1,12 @@
 # CHANGELOG
 
+v2.0.18 (16.09.2019) - no binary
+------
+- added `JsonPayloadMiddleware` and `JsonPayloadsBootloader`
+- more tests
+- added 7.4 tests to travis
+- 7.1 support is officially dropped
+
 v2.0.17 (07.09.2019) - no binary
 ------
 - ability to inject constructor dependencies into cycle repositories and classes from app container
