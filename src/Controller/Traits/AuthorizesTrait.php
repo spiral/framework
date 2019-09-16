@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Spiral\Controller\Traits;
 
-use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Security\Traits\GuardedTrait;
 
@@ -44,14 +43,4 @@ trait AuthorizesTrait
 
         return true;
     }
-
-    /**
-     * Ensuring that trait can only be associated with controllers.
-     *
-     * @param ContainerInterface $container
-     * @param string|null        $action
-     * @param array              $parameters
-     * @return mixed
-     */
-    abstract public function callAction(ContainerInterface $container, string $action = null, array $parameters = []);
 }
