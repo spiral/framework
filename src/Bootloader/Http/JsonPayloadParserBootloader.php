@@ -12,7 +12,7 @@ namespace Spiral\Bootloader\Http;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Http\Middleware\JsonPayloadMiddleware;
 
-final class JsonPayloadBootload extends Bootloader
+final class JsonPayloadParserBootloader extends Bootloader
 {
     const DEPENDENCIES = [
         HttpBootloader::class

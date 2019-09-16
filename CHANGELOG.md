@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.0.19 (16.09.2019) - no binary
+------
+- typo fix: `JsonPayloadBootload` to `JsonPayloadParserBootloader` 
+
 v2.0.18 (16.09.2019) - no binary
 ------
 - added `JsonPayloadMiddleware` and `JsonPayloadBootloader`
