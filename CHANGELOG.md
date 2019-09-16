@@ -2,7 +2,7 @@
 
 v2.0.18 (16.09.2019) - no binary
 ------
-- added `JsonPayloadMiddleware` and `JsonPayloadsBootloader`
+- added `JsonPayloadMiddleware` and `JsonPayloadBootloader`
 - more tests
 - added 7.4 tests to travis
 - 7.1 support is officially dropped
