@@ -27,7 +27,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - RBAC security, validation, and encryption
 - can be extended on PHP or on Golang
 - template engine lets you create your own HTML tags
-- or twig
+- or just use twig
 - MVC, HMVC, ADR, Micro, Queue-oriented, RPC-oriented, CLI apps... any apps
 
 ## Skeletons
