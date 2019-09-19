@@ -17,7 +17,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - resident memory framework, RAM is your cache
 - PSR-{2,3,4,6,7,11,15,17} compliant
 - built on loosely coupled components
-- native support of queue (AMQP, SQS) and background php workers
+- native support of queue (AMQP, SQS, Beanstalk) and background php workers
 - GRPC
 - HTTPS, HTTP/2+Push, encrypted cookies, sessions, csrf
 - MySQL, MariaDB, SQLite, Postgres, SQLServer, auto-migrations
