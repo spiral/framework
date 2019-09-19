@@ -28,6 +28,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - template engine allows you to create your own html tags
 - or twig
 - MVC, HMVC, ADR, Micro, Queue-oriented, RPC-oriented, CLI apps... any apps
+- loosely coupled components
 
 ## Skeletons
 | App Type | Current Status | Install       
