@@ -12,6 +12,23 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 
 <br/>
 
+## Features
+- battle tested
+- resident memory framework, RAM is your cache
+- PSR-{2,3,4,6,7,11,15,17} compliant
+- native support of queue (AMQP, SQS) and async php workers
+- grpc
+- https, http2, encrypted cookies, sessions, csrf
+- MySQL, SQLite, Postgres, SQLServer, auto-migrations
+- data mapper orm which be configured at runtime
+- class discovery via static analysis
+- scaffolding and prototyping (it literally write code for you)
+- rbac security, validation and encryption
+- can be extended on PHP or Golang, or both
+- template engine allows you to create your own html tags
+- or twig
+- MVC, HMVC, ADR, Micro, Queue-oriented, RPC-oriented, CLI apps... any apps
+
 ## Core
 | Component | Current Status        
 | ---       | ---
