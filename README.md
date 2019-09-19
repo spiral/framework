@@ -23,7 +23,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - MySQL, MariaDB, SQLite, Postgres, SQLServer support, auto-migrations
 - data-mapper ORM which can be configured at runtime
 - class discovery via static analysis
-- scaffolding and prototyping (it literally write code for you)
+- scaffolding and prototyping (it literally writes code for you)
 - RBAC security, validation, and encryption
 - can be extended on PHP or on Golang
 - template engine lets you create your own HTML tags
