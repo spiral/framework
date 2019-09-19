@@ -25,7 +25,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - class discovery via static analysis
 - scaffolding and prototyping (it literally write code for you)
 - RBAC security, validation, and encryption
-- can be extended on PHP or Golang
+- can be extended on PHP or on Golang
 - template engine lets you create your own HTML tags
 - or twig
 - MVC, HMVC, ADR, Micro, Queue-oriented, RPC-oriented, CLI apps... any apps
