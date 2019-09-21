@@ -28,7 +28,7 @@ final class GRPCBootloader extends Bootloader
      * @param KernelInterface $kernel
      * @param GRPCDispatcher  $grpc
      */
-    public function boot(KernelInterface $kernel, GRPCDispatcher $grpc): void
+    public function boot(KernelInterface $kernel, GRPCDispatcher $grpc)
     {
         $kernel->addDispatcher($grpc);
     }

@@ -33,11 +33,11 @@ use Spiral\RoadRunner\PSR7Client;
  */
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         ServerBootloader::class
     ];
 
-    public const SINGLETONS = [
+    const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
         EmitterInterface::class => SapiEmitter::class,
     ];
@@ -57,11 +57,11 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
      * @param KernelInterface  $kernel
      * @param FactoryInterface $factory
      */
-    public function boot(KernelInterface $kernel, FactoryInterface $factory): void
+    public function boot(KernelInterface $kernel, FactoryInterface $factory)
     {
         $this->config->setDefaults('http', [
-            'basePath' => '/',
-            'headers'  => [
+            'basePath'   => '/',
+            'headers'    => [
                 'Content-Type' => 'text/html; charset=UTF-8'
             ],
             'middleware' => [],
@@ -100,7 +100,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
      *
      * @param mixed $middleware
      */
-    public function addMiddleware($middleware): void
+    public function addMiddleware($middleware)
     {
         $this->config->modify('http', new Append('middleware', null, $middleware));
     }

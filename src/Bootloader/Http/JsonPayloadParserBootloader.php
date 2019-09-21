@@ -14,14 +14,14 @@ use Spiral\Http\Middleware\JsonPayloadMiddleware;
 
 final class JsonPayloadParserBootloader extends Bootloader
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         HttpBootloader::class
     ];
 
     /**
      * @param HttpBootloader $http
      */
-    public function boot(HttpBootloader $http): void
+    public function boot(HttpBootloader $http)
     {
         $http->addMiddleware(JsonPayloadMiddleware::class);
     }

@@ -17,7 +17,7 @@ use Zend\Diactoros\Response;
 final class ResponseFactory implements ResponseFactoryInterface
 {
     /** @var HttpConfig */
-    private $config;
+    protected $config;
 
     /**
      * @param HttpConfig $config

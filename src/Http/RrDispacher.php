@@ -47,24 +47,24 @@ final class RrDispacher implements DispatcherInterface
         ContainerInterface $container,
         FactoryInterface $factory
     ) {
-        $this->env       = $env;
+        $this->env = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
-        $this->factory   = $factory;
+        $this->factory = $factory;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function canServe(): bool
     {
-        return PHP_SAPI == 'cli' && $this->env->get('RR_HTTP') !== null;
+        return (php_sapi_name() == 'cli' && $this->env->get('RR_HTTP') !== null);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function serve(PSR7Client $client = null): void
+    public function serve(PSR7Client $client = null)
     {
         $client = $client ?? $this->factory->make(PSR7Client::class);
 
@@ -85,7 +85,7 @@ final class RrDispacher implements DispatcherInterface
      * @param PSR7Client $client
      * @param \Throwable $e
      */
-    private function handleException(PSR7Client $client, \Throwable $e): void
+    protected function handleException(PSR7Client $client, \Throwable $e)
     {
         $handler = new HtmlHandler();
 
@@ -93,13 +93,13 @@ final class RrDispacher implements DispatcherInterface
             /** @var SnapshotInterface $snapshot */
             $snapshot = $this->container->get(SnapshotterInterface::class)->register($e);
             error_log($snapshot->getMessage());
-        } catch (\Throwable | ContainerExceptionInterface $se) {
+        } catch (\Throwable|ContainerExceptionInterface $se) {
             error_log((string)$e);
         }
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);
-        $response        = $responseFactory->createResponse(500);
+        $response = $responseFactory->createResponse(500);
 
         // Reporting system (non handled) exception directly to the client
         $response->getBody()->write(

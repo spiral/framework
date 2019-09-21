@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class DebugListener
 {
-    private const STYLES = [
+    protected const STYLES = [
         LogLevel::DEBUG     => 'fg=green',
         LogLevel::INFO      => 'fg=cyan',
         LogLevel::NOTICE    => 'fg=yellow',
@@ -47,7 +47,7 @@ final class DebugListener
      *
      * @param LogEvent $event
      */
-    public function __invoke(LogEvent $event): void
+    public function __invoke(LogEvent $event)
     {
         if (empty($this->output)) {
             return;
@@ -76,7 +76,7 @@ final class DebugListener
      */
     public function withOutput(OutputInterface $output): self
     {
-        $listener         = clone $this;
+        $listener = clone $this;
         $listener->output = $output;
 
         return $listener;
@@ -115,7 +115,7 @@ final class DebugListener
      *
      * @return string
      */
-    private function getStyle(string $level): string
+    protected function getStyle(string $level): string
     {
         return self::STYLES[$level];
     }

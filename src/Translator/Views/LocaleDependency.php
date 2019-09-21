@@ -31,11 +31,11 @@ final class LocaleDependency implements DependencyInterface
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-        $this->locales    = $translator->getCatalogueManager()->getLocales();
+        $this->locales = $translator->getCatalogueManager()->getLocales();
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName(): string
     {
@@ -43,7 +43,7 @@ final class LocaleDependency implements DependencyInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getValue()
     {
@@ -51,7 +51,7 @@ final class LocaleDependency implements DependencyInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getVariants(): array
     {

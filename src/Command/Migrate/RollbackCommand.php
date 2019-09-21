@@ -13,16 +13,16 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class RollbackCommand extends AbstractCommand
 {
-    public const NAME        = 'migrate:rollback';
-    public const DESCRIPTION = 'Rollback one (default) or multiple migrations';
-    public const OPTIONS     = [
+    const NAME        = 'migrate:rollback';
+    const DESCRIPTION = 'Rollback one (default) or multiple migrations';
+    const OPTIONS     = [
         ['all', 'a', InputOption::VALUE_NONE, 'Rollback all executed migrations']
     ];
 
     /**
      * Perform command.
      */
-    public function perform(): void
+    public function perform()
     {
         if (!$this->verifyConfigured() || !$this->verifyEnvironment()) {
             //Making sure we can safely migrate in this environment
@@ -33,7 +33,7 @@ final class RollbackCommand extends AbstractCommand
         $count = !$this->option('all') ? 1 : PHP_INT_MAX;
         while ($count > 0 && ($migration = $this->migrator->rollback())) {
             $found = true;
-            --$count;
+            $count--;
             $this->sprintf(
                 "<info>Migration <comment>%s</comment> was successfully rolled back.</info>\n",
                 $migration->getState()->getName()
@@ -41,7 +41,7 @@ final class RollbackCommand extends AbstractCommand
         }
 
         if (!$found) {
-            $this->writeln('<fg=red>No executed migrations were found.</fg=red>');
+            $this->writeln("<fg=red>No executed migrations were found.</fg=red>");
         }
     }
 }

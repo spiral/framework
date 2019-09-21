@@ -19,12 +19,12 @@ use Spiral\Translator\Views\LocaleProcessor;
  */
 final class TranslatedCacheBootloader extends Bootloader
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         I18nBootloader::class,
         ViewsBootloader::class
     ];
 
-    public const SINGLETONS = [
+    const SINGLETONS = [
         // Each engine expect to mount this process by itself
         LocaleProcessor::class => LocaleProcessor::class
     ];
@@ -32,7 +32,7 @@ final class TranslatedCacheBootloader extends Bootloader
     /**
      * @param ViewsBootloader $views
      */
-    public function boot(ViewsBootloader $views): void
+    public function boot(ViewsBootloader $views)
     {
         $views->addCacheDependency(LocaleDependency::class);
     }

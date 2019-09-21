@@ -28,7 +28,7 @@ final class PublishCommand extends Command
     /**
      * {@inheritdoc}
      */
-    public const ARGUMENTS = [
+    const ARGUMENTS = [
         ['type', InputArgument::REQUIRED, 'Operation type [replace|follow|ensure]'],
         ['target', InputArgument::REQUIRED, 'Target file or directory'],
         ['source', InputArgument::OPTIONAL, 'Source file or directory'],
@@ -36,7 +36,7 @@ final class PublishCommand extends Command
     ];
 
     /**
-     * @param string|null $name
+     * @param null|string $name
      */
     public function __construct(?string $name = null)
     {
@@ -53,13 +53,13 @@ final class PublishCommand extends Command
         Publisher $publisher,
         FilesInterface $files,
         DirectoriesInterface $directories
-    ): void {
+    ) {
         switch ($this->argument('type')) {
             case 'replace':
             case 'follow':
                 if ($this->isDirectory()) {
                     $this->sprintf(
-                        '<fg=cyan>•</fg=cyan> publish directory <comment>%s</comment> to <comment>%s</comment>',
+                        "<fg=cyan>•</fg=cyan> publish directory <comment>%s</comment> to <comment>%s</comment>",
                         $this->getSource($files, $directories),
                         $this->getTarget($files, $directories)
                     );
@@ -72,7 +72,7 @@ final class PublishCommand extends Command
                     );
                 } else {
                     $this->sprintf(
-                        '<fg=cyan>•</fg=cyan> publish file <comment>%s</comment> to <comment>%s</comment>',
+                        "<fg=cyan>•</fg=cyan> publish file <comment>%s</comment> to <comment>%s</comment>",
                         $this->getSource($files, $directories),
                         $this->getTarget($files, $directories)
                     );
@@ -88,7 +88,7 @@ final class PublishCommand extends Command
                 break;
             case 'ensure':
                 $this->sprintf(
-                    '<fg=cyan>•</fg=cyan> ensure directory <comment>%s</comment>',
+                    "<fg=cyan>•</fg=cyan> ensure directory <comment>%s</comment>",
                     $this->getTarget($files, $directories)
                 );
 
@@ -106,7 +106,7 @@ final class PublishCommand extends Command
     /**
      * @param FilesInterface       $files
      * @param DirectoriesInterface $directories
-     * @return string|null
+     * @return null|string
      */
     private function getSource(FilesInterface $files, DirectoriesInterface $directories): ?string
     {
@@ -120,7 +120,7 @@ final class PublishCommand extends Command
     /**
      * @param FilesInterface       $files
      * @param DirectoriesInterface $directories
-     * @return string|null
+     * @return null|string
      */
     private function getTarget(FilesInterface $files, DirectoriesInterface $directories): ?string
     {

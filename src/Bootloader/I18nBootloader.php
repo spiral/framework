@@ -32,7 +32,7 @@ use Symfony\Component\Translation\Loader;
  */
 final class I18nBootloader extends Bootloader implements SingletonInterface
 {
-    public const SINGLETONS = [
+    const SINGLETONS = [
         \Symfony\Contracts\Translation\TranslatorInterface::class => TranslatorInterface::class,
         TranslatorInterface::class                                => Translator::class,
         CatalogueManagerInterface::class                          => CatalogueManager::class,
@@ -56,7 +56,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
      * @param EnvironmentInterface $env
      * @param DirectoriesInterface $dirs
      */
-    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs)
     {
         if (!$dirs->has('locale')) {
             $dirs->set('locale', $dirs->get('app') . 'locale/');
@@ -73,13 +73,13 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
                 'csv'  => Loader\CsvFileLoader::class,
                 'json' => Loader\JsonFileLoader::class
             ],
-            'dumpers' => [
+            'dumpers'        => [
                 'php'  => Dumper\PhpFileDumper::class,
                 'po'   => Dumper\PoFileDumper::class,
                 'csv'  => Dumper\CsvFileDumper::class,
                 'json' => Dumper\JsonFileDumper::class,
             ],
-            'domains' => [
+            'domains'        => [
                 // by default we can store all messages in one domain
                 'messages' => ['*']
             ]

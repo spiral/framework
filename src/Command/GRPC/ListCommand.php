@@ -14,19 +14,18 @@ use Spiral\GRPC\LocatorInterface;
 
 final class ListCommand extends Command
 {
-    protected const NAME        = 'grpc:services';
-    protected const DESCRIPTION = 'List available GRPC services';
+    protected const NAME        = "grpc:services";
+    protected const DESCRIPTION = "List available GRPC services";
 
     /**
      * @param LocatorInterface $locator
      */
-    public function perform(LocatorInterface $locator): void
+    public function perform(LocatorInterface $locator)
     {
         $services = $locator->getServices();
 
         if ($services === []) {
-            $this->writeln('<comment>No GRPC services were found.</comment>');
-
+            $this->writeln("<comment>No GRPC services were found.</comment>");
             return;
         }
 

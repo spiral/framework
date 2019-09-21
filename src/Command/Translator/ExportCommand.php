@@ -20,15 +20,15 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 final class ExportCommand extends Command implements SingletonInterface
 {
-    public const NAME        = 'i18n:export';
-    public const DESCRIPTION = 'Dump given locale using specified dumper and path';
+    const NAME        = "i18n:export";
+    const DESCRIPTION = 'Dump given locale using specified dumper and path';
 
-    public const ARGUMENTS = [
+    const ARGUMENTS = [
         ['locale', InputArgument::REQUIRED, 'Locale to be dumped'],
         ['path', InputArgument::REQUIRED, 'Export path']
     ];
 
-    public const OPTIONS = [
+    const OPTIONS = [
         ['dumper', 'd', InputOption::VALUE_OPTIONAL, 'Dumper name', 'php'],
         ['fallback', 'f', InputOption::VALUE_NONE, 'Merge messages from fallback catalogue'],
     ];
@@ -37,7 +37,7 @@ final class ExportCommand extends Command implements SingletonInterface
      * @param TranslatorConfig $config
      * @param CatalogueManager $manager
      */
-    public function perform(TranslatorConfig $config, CatalogueManager $manager): void
+    public function perform(TranslatorConfig $config, CatalogueManager $manager)
     {
         if (!$config->hasDumper($this->option('dumper'))) {
             $this->writeln("<fg=red>Undefined dumper '{$this->option('dumper')}'.</fg=red>");
@@ -54,7 +54,7 @@ final class ExportCommand extends Command implements SingletonInterface
         if ($this->isVerbose() && !empty($mc->getDomains())) {
             $this->sprintf(
                 "<info>Exporting domain(s):</info> %s\n",
-                implode(',', $mc->getDomains())
+                join(',', $mc->getDomains())
             );
         }
 
@@ -66,8 +66,8 @@ final class ExportCommand extends Command implements SingletonInterface
             'xliff_version'  => '2.0' // forcing default version for xliff dumper only
         ]);
 
-        $this->writeln('Export successfully completed using <info>' . get_class($dumper) . '</info>');
-        $this->writeln('Output: <comment>' . realpath($this->argument('path')) . '</comment>');
+        $this->writeln("Export successfully completed using <info>" . get_class($dumper) . "</info>");
+        $this->writeln("Output: <comment>" . realpath($this->argument('path')) . "</comment>");
     }
 
     /**

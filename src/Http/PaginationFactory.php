@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * Spiral Framework.
  *
@@ -36,21 +34,21 @@ final class PaginationFactory implements PaginationProviderInterface
     public function __construct(ContainerInterface $container, FactoryInterface $factory)
     {
         $this->container = $container;
-        $this->factory   = $factory;
+        $this->factory = $factory;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws ScopeException when no request are available
+     * @throws ScopeException When no request are available.
      */
     public function createPaginator(string $parameter, int $limit = 25): PaginatorInterface
     {
         if (!$this->container->has(ServerRequestInterface::class)) {
-            throw new ScopeException('Unable to create paginator, no request scope found');
+            throw new ScopeException("Unable to create paginator, no request scope found");
         }
         /**
-         * @var array
+         * @var array $query
          */
         $query = $this->container->get(ServerRequestInterface::class)->getQueryParams();
 

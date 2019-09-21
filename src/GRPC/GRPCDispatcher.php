@@ -38,38 +38,38 @@ final class GRPCDispatcher implements DispatcherInterface
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->env       = $env;
+        $this->env = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function canServe(): bool
     {
-        return PHP_SAPI == 'cli' && $this->env->get('RR_GRPC') !== null;
+        return (php_sapi_name() == 'cli' && $this->env->get('RR_GRPC') !== null);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function serve(): void
+    public function serve()
     {
         /**
-         * @var Server
+         * @var Server           $server
          * @var Worker           $worker
          * @var LocatorInterface $locator
          */
-        $server  = $this->container->get(Server::class);
-        $worker  = $this->container->get(Worker::class);
+        $server = $this->container->get(Server::class);
+        $worker = $this->container->get(Worker::class);
         $locator = $this->container->get(LocatorInterface::class);
 
         foreach ($locator->getServices() as $interface => $service) {
             $server->registerService($interface, $service);
         }
 
-        $server->serve($worker, function (\Throwable $e = null): void {
+        $server->serve($worker, function (\Throwable $e = null) {
             if ($e !== null) {
                 $this->handleException($e);
             }
@@ -81,11 +81,11 @@ final class GRPCDispatcher implements DispatcherInterface
     /**
      * @param \Throwable $e
      */
-    private function handleException(\Throwable $e): void
+    protected function handleException(\Throwable $e)
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable | ContainerExceptionInterface $se) {
+        } catch (\Throwable|ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
     }

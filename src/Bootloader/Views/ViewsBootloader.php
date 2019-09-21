@@ -21,7 +21,7 @@ use Spiral\Views\ViewsInterface;
 
 final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
-    public const SINGLETONS = [
+    const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
     ];
 
@@ -40,7 +40,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
      * @param EnvironmentInterface $env
      * @param DirectoriesInterface $dirs
      */
-    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
+    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs)
     {
         if (!$dirs->has('views')) {
             $dirs->set('views', $dirs->get('app') . 'views');
@@ -48,11 +48,11 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
 
         // default view config
         $this->config->setDefaults('views', [
-            'cache' => [
+            'cache'        => [
                 'enabled'   => !$env->get('DEBUG', false),
                 'directory' => $dirs->get('cache') . 'views'
             ],
-            'namespaces' => [
+            'namespaces'   => [
                 'default' => [$dirs->get('views')]
             ],
             'dependencies' => [],
@@ -64,7 +64,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
      * @param string $namespace
      * @param string $directory
      */
-    public function addDirectory(string $namespace, string $directory): void
+    public function addDirectory(string $namespace, string $directory)
     {
         if (!isset($this->config->getConfig('views')['namespaces'][$namespace])) {
             $this->config->modify('views', new Append('namespaces', $namespace, []));
@@ -76,7 +76,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     /**
      * @param mixed $engine
      */
-    public function addEngine($engine): void
+    public function addEngine($engine)
     {
         $this->config->modify('views', new Append('engines', null, $engine));
     }
@@ -84,7 +84,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     /**
      * @param mixed $dependency
      */
-    public function addCacheDependency($dependency): void
+    public function addCacheDependency($dependency)
     {
         $this->config->modify('views', new Append('dependencies', null, $dependency));
     }
