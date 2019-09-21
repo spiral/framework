@@ -19,11 +19,11 @@ use Spiral\Encrypter\EncryptionInterface;
 
 final class EncrypterBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    public const SINGLETONS = [
         EncryptionInterface::class => EncrypterFactory::class
     ];
 
-    const BINDINGS = [
+    public const BINDINGS = [
         EncrypterInterface::class => Encrypter::class
     ];
 
@@ -31,7 +31,7 @@ final class EncrypterBootloader extends Bootloader
      * @param ConfiguratorInterface $config
      * @param EnvironmentInterface  $env
      */
-    public function boot(ConfiguratorInterface $config, EnvironmentInterface $env)
+    public function boot(ConfiguratorInterface $config, EnvironmentInterface $env): void
     {
         $config->setDefaults('encrypter', ['key' => $env->get('ENCRYPTER_KEY')]);
     }

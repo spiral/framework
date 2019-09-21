@@ -18,7 +18,7 @@ use Spiral\Core\Container\SingletonInterface;
 
 final class CookiesBootloader extends Bootloader implements SingletonInterface
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         HttpBootloader::class
     ];
 
@@ -36,7 +36,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
     /**
      * @param HttpBootloader $http
      */
-    public function boot(HttpBootloader $http)
+    public function boot(HttpBootloader $http): void
     {
         $this->config->setDefaults('cookies', [
             'domain'   => '.%s',
@@ -52,7 +52,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
      *
      * @param string $cookie
      */
-    public function whitelistCookie(string $cookie)
+    public function whitelistCookie(string $cookie): void
     {
         $this->config->modify('cookies', new Append('excluded', null, $cookie));
     }

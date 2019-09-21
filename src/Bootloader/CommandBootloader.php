@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Spiral Framework.
  *
@@ -36,7 +38,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CommandBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         ConsoleBootloader::class,
     ];
 
@@ -44,7 +46,7 @@ final class CommandBootloader extends Bootloader
      * @param ConsoleBootloader $console
      * @param Container         $container
      */
-    public function boot(ConsoleBootloader $console, Container $container)
+    public function boot(ConsoleBootloader $console, Container $container): void
     {
         $console->addCommand(Console\Command\ConfigureCommand::class);
         $console->addCommand(Console\Command\UpdateCommand::class);
@@ -105,7 +107,7 @@ final class CommandBootloader extends Bootloader
     /**
      * @param ConsoleBootloader $console
      */
-    private function configureDatabase(ConsoleBootloader $console)
+    private function configureDatabase(ConsoleBootloader $console): void
     {
         $console->addCommand(Database\ListCommand::class);
         $console->addCommand(Database\TableCommand::class);
@@ -115,7 +117,7 @@ final class CommandBootloader extends Bootloader
      * @param ConsoleBootloader  $console
      * @param ContainerInterface $container
      */
-    private function configureCycle(ConsoleBootloader $console, ContainerInterface $container)
+    private function configureCycle(ConsoleBootloader $console, ContainerInterface $container): void
     {
         $console->addCommand(Cycle\UpdateCommand::class);
 
@@ -134,16 +136,16 @@ final class CommandBootloader extends Bootloader
     /**
      * @param ConsoleBootloader $console
      **/
-    private function configureTranslator(ConsoleBootloader $console)
+    private function configureTranslator(ConsoleBootloader $console): void
     {
         $console->addCommand(Translator\IndexCommand::class);
         $console->addCommand(Translator\ExportCommand::class);
         $console->addCommand(Translator\ResetCommand::class);
 
         $console->addConfigureSequence(
-            function (FilesInterface $files, TranslatorConfig $config, OutputInterface $output) {
+            function (FilesInterface $files, TranslatorConfig $config, OutputInterface $output): void {
                 $files->ensureDirectory($config->getLocaleDirectory($config->getDefaultLocale()));
-                $output->writeln("<info>The default locale directory has been ensured.</info>");
+                $output->writeln('<info>The default locale directory has been ensured.</info>');
             },
             '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>ensure default locale directory...</fg=cyan>'
         );
@@ -157,7 +159,7 @@ final class CommandBootloader extends Bootloader
     /**
      * @param ConsoleBootloader $console
      */
-    private function configureViews(ConsoleBootloader $console)
+    private function configureViews(ConsoleBootloader $console): void
     {
         $console->addCommand(Views\ResetCommand::class);
         $console->addCommand(Views\CompileCommand::class);
@@ -171,7 +173,7 @@ final class CommandBootloader extends Bootloader
     /**
      * @param ConsoleBootloader $console
      */
-    private function configureMigrations(ConsoleBootloader $console)
+    private function configureMigrations(ConsoleBootloader $console): void
     {
         $console->addCommand(Migrate\InitCommand::class);
         $console->addCommand(Migrate\StatusCommand::class);
@@ -183,7 +185,7 @@ final class CommandBootloader extends Bootloader
     /**
      * @param ConsoleBootloader $console
      */
-    private function configureGRPC(ConsoleBootloader $console)
+    private function configureGRPC(ConsoleBootloader $console): void
     {
         $console->addCommand(GRPC\GenerateCommand::class);
         $console->addCommand(GRPC\ListCommand::class);
@@ -192,7 +194,7 @@ final class CommandBootloader extends Bootloader
     /**
      * @param ConsoleBootloader $console
      */
-    private function configureEncrypter(ConsoleBootloader $console)
+    private function configureEncrypter(ConsoleBootloader $console): void
     {
         $console->addCommand(Encrypter\KeyCommand::class);
     }

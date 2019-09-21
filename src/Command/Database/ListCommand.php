@@ -20,9 +20,9 @@ use Symfony\Component\Console\Input\InputArgument;
 
 final class ListCommand extends Command
 {
-    const NAME        = 'db:list';
-    const DESCRIPTION = 'Get list of available databases, their tables and records count';
-    const ARGUMENTS   = [
+    public const NAME        = 'db:list';
+    public const DESCRIPTION = 'Get list of available databases, their tables and records count';
+    public const ARGUMENTS   = [
         ['db', InputArgument::OPTIONAL, 'Database name']
     ];
 
@@ -30,7 +30,7 @@ final class ListCommand extends Command
      * @param DatabaseConfig  $config
      * @param DatabaseManager $dbal
      */
-    public function perform(DatabaseConfig $config, DatabaseManager $dbal)
+    public function perform(DatabaseConfig $config, DatabaseManager $dbal): void
     {
         if ($this->argument('db')) {
             $databases = [$this->argument('db')];
@@ -39,7 +39,7 @@ final class ListCommand extends Command
         }
 
         if (empty($databases)) {
-            $this->writeln("<fg=red>No databases found.</fg=red>");
+            $this->writeln('<fg=red>No databases found.</fg=red>');
 
             return;
         }
@@ -79,7 +79,7 @@ final class ListCommand extends Command
                 continue;
             }
 
-            $header[] = "<info>connected</info>";
+            $header[] = '<info>connected</info>';
             $this->renderTables($grid, $header, $database);
             if ($database->getName() != end($databases)) {
                 $grid->addRow(new TableSeparator());
@@ -94,7 +94,7 @@ final class ListCommand extends Command
      * @param array      $header
      * @param \Throwable $exception
      */
-    private function renderException(Table $grid, array $header, \Throwable $exception)
+    private function renderException(Table $grid, array $header, \Throwable $exception): void
     {
         $grid->addRow(array_merge(
             $header,
@@ -111,16 +111,16 @@ final class ListCommand extends Command
      * @param array    $header
      * @param Database $database
      */
-    private function renderTables(Table $grid, array $header, Database $database)
+    private function renderTables(Table $grid, array $header, Database $database): void
     {
         foreach ($database->getTables() as $table) {
             $grid->addRow(array_merge(
                 $header,
                 [$table->getName(), number_format($table->count())]
             ));
-            $header = ["", "", "", "", ""];
+            $header = ['', '', '', '', ''];
         }
 
-        $header[1] && $grid->addRow(array_merge($header, ["no tables", "no records"]));
+        $header[1] && $grid->addRow(array_merge($header, ['no tables', 'no records']));
     }
 }

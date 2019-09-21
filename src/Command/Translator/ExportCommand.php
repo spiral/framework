@@ -20,15 +20,15 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 final class ExportCommand extends Command implements SingletonInterface
 {
-    const NAME        = "i18n:export";
-    const DESCRIPTION = 'Dump given locale using specified dumper and path';
+    public const NAME        = 'i18n:export';
+    public const DESCRIPTION = 'Dump given locale using specified dumper and path';
 
-    const ARGUMENTS = [
+    public const ARGUMENTS = [
         ['locale', InputArgument::REQUIRED, 'Locale to be dumped'],
         ['path', InputArgument::REQUIRED, 'Export path']
     ];
 
-    const OPTIONS = [
+    public const OPTIONS = [
         ['dumper', 'd', InputOption::VALUE_OPTIONAL, 'Dumper name', 'php'],
         ['fallback', 'f', InputOption::VALUE_NONE, 'Merge messages from fallback catalogue'],
     ];
@@ -37,7 +37,7 @@ final class ExportCommand extends Command implements SingletonInterface
      * @param TranslatorConfig $config
      * @param CatalogueManager $manager
      */
-    public function perform(TranslatorConfig $config, CatalogueManager $manager)
+    public function perform(TranslatorConfig $config, CatalogueManager $manager): void
     {
         if (!$config->hasDumper($this->option('dumper'))) {
             $this->writeln("<fg=red>Undefined dumper '{$this->option('dumper')}'.</fg=red>");
@@ -66,8 +66,8 @@ final class ExportCommand extends Command implements SingletonInterface
             'xliff_version'  => '2.0' // forcing default version for xliff dumper only
         ]);
 
-        $this->writeln("Export successfully completed using <info>" . get_class($dumper) . "</info>");
-        $this->writeln("Output: <comment>" . realpath($this->argument('path')) . "</comment>");
+        $this->writeln('Export successfully completed using <info>' . get_class($dumper) . '</info>');
+        $this->writeln('Output: <comment>' . realpath($this->argument('path')) . '</comment>');
     }
 
     /**

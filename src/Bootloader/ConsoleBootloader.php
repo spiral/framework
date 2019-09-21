@@ -28,11 +28,11 @@ use Spiral\Core\Container\SingletonInterface;
  */
 final class ConsoleBootloader extends Bootloader implements SingletonInterface
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         TokenizerBootloader::class,
     ];
 
-    const SINGLETONS = [
+    public const SINGLETONS = [
         Console::class          => Console::class,
         LocatorInterface::class => CommandLocator::class
     ];
@@ -52,7 +52,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
      * @param KernelInterface   $kernel
      * @param ConsoleDispatcher $console
      */
-    public function boot(KernelInterface $kernel, ConsoleDispatcher $console)
+    public function boot(KernelInterface $kernel, ConsoleDispatcher $console): void
     {
         $kernel->addDispatcher($console);
 
@@ -69,7 +69,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     /**
      * @param string $command
      */
-    public function addCommand(string $command)
+    public function addCommand(string $command): void
     {
         $this->config->modify(
             'console',
@@ -88,7 +88,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $header,
         string $footer = '',
         array $options = []
-    ) {
+    ): void {
         $this->config->modify(
             'console',
             $this->sequence('configure', $sequence, $header, $footer, $options)
@@ -106,7 +106,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $header,
         string $footer = '',
         array $options = []
-    ) {
+    ): void {
         $this->config->modify(
             'console',
             $this->sequence('update', $sequence, $header, $footer, $options)
