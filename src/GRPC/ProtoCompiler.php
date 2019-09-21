@@ -33,9 +33,9 @@ final class ProtoCompiler
      */
     public function __construct(string $basePath, string $baseNamespace, FilesInterface $files)
     {
-        $this->basePath = $basePath;
+        $this->basePath      = $basePath;
         $this->baseNamespace = str_replace('\\', '/', rtrim($baseNamespace, '\\'));
-        $this->files = $files;
+        $this->files         = $files;
     }
 
     /**
@@ -53,7 +53,7 @@ final class ProtoCompiler
             escapeshellarg($tmpDir),
             escapeshellarg($tmpDir),
             escapeshellarg(dirname($protoFile)),
-            join(" ", array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
+            join(' ', array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
         ), $output);
 
         $output = trim(join("\n", $output), "\n ,");

@@ -21,7 +21,7 @@ use Spiral\Views\ViewsInterface;
 
 final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
-    const SINGLETONS = [
+    public const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
     ];
 
@@ -40,7 +40,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
      * @param EnvironmentInterface $env
      * @param DirectoriesInterface $dirs
      */
-    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs)
+    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         if (!$dirs->has('views')) {
             $dirs->set('views', $dirs->get('app') . 'views');
@@ -64,7 +64,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
      * @param string $namespace
      * @param string $directory
      */
-    public function addDirectory(string $namespace, string $directory)
+    public function addDirectory(string $namespace, string $directory): void
     {
         if (!isset($this->config->getConfig('views')['namespaces'][$namespace])) {
             $this->config->modify('views', new Append('namespaces', $namespace, []));
@@ -76,7 +76,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     /**
      * @param mixed $engine
      */
-    public function addEngine($engine)
+    public function addEngine($engine): void
     {
         $this->config->modify('views', new Append('engines', null, $engine));
     }
@@ -84,7 +84,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
     /**
      * @param mixed $dependency
      */
-    public function addCacheDependency($dependency)
+    public function addCacheDependency($dependency): void
     {
         $this->config->modify('views', new Append('dependencies', null, $dependency));
     }

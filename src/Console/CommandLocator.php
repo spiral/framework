@@ -27,7 +27,7 @@ final class CommandLocator implements LocatorInterface
      */
     public function __construct(ClassesInterface $classes, ContainerInterface $container)
     {
-        $this->classes = $classes;
+        $this->classes   = $classes;
         $this->container = $container;
     }
 

@@ -38,7 +38,7 @@ final class GRPCDispatcher implements DispatcherInterface
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->env = $env;
+        $this->env       = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
@@ -48,28 +48,28 @@ final class GRPCDispatcher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->env->get('RR_GRPC') !== null);
+        return php_sapi_name() == 'cli' && $this->env->get('RR_GRPC') !== null;
     }
 
     /**
      * @inheritdoc
      */
-    public function serve()
+    public function serve(): void
     {
         /**
-         * @var Server           $server
+         * @var Server
          * @var Worker           $worker
          * @var LocatorInterface $locator
          */
-        $server = $this->container->get(Server::class);
-        $worker = $this->container->get(Worker::class);
+        $server  = $this->container->get(Server::class);
+        $worker  = $this->container->get(Worker::class);
         $locator = $this->container->get(LocatorInterface::class);
 
         foreach ($locator->getServices() as $interface => $service) {
             $server->registerService($interface, $service);
         }
 
-        $server->serve($worker, function (\Throwable $e = null) {
+        $server->serve($worker, function (\Throwable $e = null): void {
             if ($e !== null) {
                 $this->handleException($e);
             }
@@ -81,7 +81,7 @@ final class GRPCDispatcher implements DispatcherInterface
     /**
      * @param \Throwable $e
      */
-    protected function handleException(\Throwable $e)
+    protected function handleException(\Throwable $e): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);

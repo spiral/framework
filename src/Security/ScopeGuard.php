@@ -28,7 +28,7 @@ final class ScopeGuard implements GuardInterface
     /** @var PermissionsInterface */
     private $permissions = null;
 
-    /**@var array */
+    /** @var array */
     private $roles = [];
 
     /**
@@ -41,8 +41,8 @@ final class ScopeGuard implements GuardInterface
         ContainerInterface $actorScope,
         array $roles = []
     ) {
-        $this->roles = $roles;
-        $this->container = $actorScope;
+        $this->roles       = $roles;
+        $this->container   = $actorScope;
         $this->permissions = $permissions;
     }
 
@@ -86,7 +86,7 @@ final class ScopeGuard implements GuardInterface
      */
     public function withRoles(array $roles): ScopeGuard
     {
-        $guard = clone $this;
+        $guard        = clone $this;
         $guard->roles = $roles;
 
         return $guard;
@@ -106,7 +106,7 @@ final class ScopeGuard implements GuardInterface
         try {
             return $this->container->get(ActorInterface::class);
         } catch (ContainerException $e) {
-            throw new ScopeException("Unable to resolve Actor from the scope", $e->getCode(), $e);
+            throw new ScopeException('Unable to resolve Actor from the scope', $e->getCode(), $e);
         }
     }
 
@@ -115,7 +115,7 @@ final class ScopeGuard implements GuardInterface
      */
     public function withActor(ActorInterface $actor): GuardInterface
     {
-        $guard = clone $this;
+        $guard        = clone $this;
         $guard->actor = $actor;
 
         return $guard;

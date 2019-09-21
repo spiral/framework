@@ -23,7 +23,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 final class TokenizerBootloader extends Bootloader implements SingletonInterface
 {
-    const BINDINGS = [
+    public const BINDINGS = [
         ClassesInterface::class     => ClassLocator::class,
         InvocationsInterface::class => InvocationLocator::class
     ];
@@ -43,7 +43,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
      * @param Container            $container
      * @param DirectoriesInterface $dirs
      */
-    public function boot(Container $container, DirectoriesInterface $dirs)
+    public function boot(Container $container, DirectoriesInterface $dirs): void
     {
         $container->bindInjector(ClassLocator::class, Tokenizer::class);
         $container->bindInjector(InvocationLocator::class, Tokenizer::class);
@@ -64,7 +64,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
      *
      * @param string $directory
      */
-    public function addDirectory(string $directory)
+    public function addDirectory(string $directory): void
     {
         $this->config->modify('tokenizer', new Append('directories', null, $directory));
     }

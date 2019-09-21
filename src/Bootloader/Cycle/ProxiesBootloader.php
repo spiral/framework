@@ -17,7 +17,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 
 final class ProxiesBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         CycleBootloader::class
     ];
 

@@ -29,7 +29,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
         TokenizerBootloader::class
     ];
 
-    const BINDINGS = [
+    public const BINDINGS = [
         SchemaInterface::class             => [self::class, 'schema'],
         Generator\GenerateRelations::class => [self::class, 'relationGenerator'],
     ];
@@ -47,7 +47,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
      */
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        $this->container  = $container;
         $this->generators = [
             self::GROUP_INDEX       => [
                 // find available entities
@@ -71,7 +71,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
      * @param string $group
      * @param mixed  $generator
      */
-    public function addGenerator(string $group, $generator)
+    public function addGenerator(string $group, $generator): void
     {
         $this->generators[$group][] = $generator;
     }
