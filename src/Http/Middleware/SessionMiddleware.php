@@ -27,7 +27,7 @@ final class SessionMiddleware implements MiddlewareInterface
     public const ATTRIBUTE = 'session';
 
     // Header set used to sign session
-    protected const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
+    private const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
 
     /** @var SessionConfig */
     private $config;
@@ -58,15 +58,15 @@ final class SessionMiddleware implements MiddlewareInterface
         SessionFactory $factory,
         ScopeInterface $scope
     ) {
-        $this->config = $config;
-        $this->httpConfig = $httpConfig;
+        $this->config        = $config;
+        $this->httpConfig    = $httpConfig;
         $this->cookiesConfig = $cookiesConfig;
-        $this->factory = $factory;
-        $this->scope = $scope;
+        $this->factory       = $factory;
+        $this->scope         = $scope;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function process(Request $request, Handler $handler): Response
     {
@@ -97,7 +97,7 @@ final class SessionMiddleware implements MiddlewareInterface
      * @param Response         $response
      * @return Response
      */
-    protected function commitSession(
+    private function commitSession(
         SessionInterface $session,
         Request $request,
         Response $response
@@ -123,7 +123,7 @@ final class SessionMiddleware implements MiddlewareInterface
      * @param Request $request
      * @return string|null
      */
-    protected function fetchID(Request $request): ?string
+    private function fetchID(Request $request): ?string
     {
         $cookies = $request->getCookieParams();
         if (empty($cookies[$this->config->getCookie()])) {
@@ -139,7 +139,7 @@ final class SessionMiddleware implements MiddlewareInterface
      * @param string   $id
      * @return Response
      */
-    protected function withCookie(Request $request, Response $response, string $id = null): Response
+    private function withCookie(Request $request, Response $response, string $id = null): Response
     {
         $response = $response->withAddedHeader(
             'Set-Cookie',
@@ -156,7 +156,7 @@ final class SessionMiddleware implements MiddlewareInterface
      * @param Request $request
      * @return string
      */
-    protected function clientSignature(Request $request): string
+    private function clientSignature(Request $request): string
     {
         $signature = '';
         foreach (static::SIGNATURE_HEADERS as $header) {
@@ -169,7 +169,7 @@ final class SessionMiddleware implements MiddlewareInterface
     /**
      * Generate session cookie.
      *
-     * @param UriInterface $uri Incoming uri.
+     * @param UriInterface $uri incoming uri
      * @param string|null  $id
      * @return Cookie
      */

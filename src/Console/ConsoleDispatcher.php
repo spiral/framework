@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Spiral Framework.
  *
@@ -45,24 +47,24 @@ final class ConsoleDispatcher implements DispatcherInterface
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->env = $env;
+        $this->env       = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canServe(): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
-        return (php_sapi_name() == 'cli' && $this->env->get('RR') === null);
+        return PHP_SAPI == 'cli' && $this->env->get('RR') === null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function serve(InputInterface $input = null, OutputInterface $output = null)
+    public function serve(InputInterface $input = null, OutputInterface $output = null): void
     {
         $output = $output ?? new ConsoleOutput();
 
@@ -87,11 +89,11 @@ final class ConsoleDispatcher implements DispatcherInterface
      * @param \Throwable      $e
      * @param OutputInterface $output
      */
-    protected function handleException(\Throwable $e, OutputInterface $output)
+    private function handleException(\Throwable $e, OutputInterface $output): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
 

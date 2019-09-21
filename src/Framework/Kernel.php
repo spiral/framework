@@ -30,7 +30,7 @@ abstract class Kernel extends AbstractKernel
     /**
      * Each application can define it's own boot sequence.
      */
-    protected function bootstrap()
+    protected function bootstrap(): void
     {
         $this->bootloader->bootload(static::APP);
     }
@@ -44,7 +44,7 @@ abstract class Kernel extends AbstractKernel
     protected function mapDirectories(array $directories): array
     {
         if (!isset($directories['root'])) {
-            throw new BootException("Missing required directory `root`.");
+            throw new BootException('Missing required directory `root`.');
         }
 
         if (!isset($directories['app'])) {
@@ -53,14 +53,14 @@ abstract class Kernel extends AbstractKernel
 
         return array_merge([
             // public root
-            'public'    => $directories['root'] . '/public/',
+            'public' => $directories['root'] . '/public/',
 
             // vendor libraries
-            'vendor'    => $directories['root'] . '/vendor/',
+            'vendor' => $directories['root'] . '/vendor/',
 
             // data directories
-            'runtime'   => $directories['root'] . '/runtime/',
-            'cache'     => $directories['root'] . '/runtime/cache/',
+            'runtime' => $directories['root'] . '/runtime/',
+            'cache'   => $directories['root'] . '/runtime/cache/',
 
             // application directories
             'config'    => $directories['app'] . '/config/',

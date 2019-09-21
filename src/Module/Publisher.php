@@ -33,7 +33,7 @@ final class Publisher implements PublisherInterface
     public function __construct(FilesInterface $files, DirectoriesInterface $dirs)
     {
         $this->files = $files;
-        $this->dirs = $dirs;
+        $this->dirs  = $dirs;
     }
 
     /**
@@ -44,7 +44,7 @@ final class Publisher implements PublisherInterface
         string $destination,
         string $mergeMode = self::FOLLOW,
         int $mode = FilesInterface::READONLY
-    ) {
+    ): void {
         if (!$this->files->isFile($filename)) {
             throw new PublishException("Given '{$filename}' is not valid file");
         }
@@ -76,7 +76,7 @@ final class Publisher implements PublisherInterface
         string $destination,
         string $mergeMode = self::REPLACE,
         int $mode = FilesInterface::READONLY
-    ) {
+    ): void {
         if (!$this->files->isDirectory($directory)) {
             throw new PublishException("Given '{$directory}' is not valid directory");
         }
@@ -85,7 +85,7 @@ final class Publisher implements PublisherInterface
         $finder->files()->in($directory);
 
         /**
-         * @var SplFileInfo $file
+         * @var SplFileInfo
          */
         foreach ($finder->getIterator() as $file) {
             $this->publish(
@@ -100,7 +100,7 @@ final class Publisher implements PublisherInterface
     /**
      * {@inheritdoc}
      */
-    public function ensureDirectory(string $directory, int $mode = FilesInterface::READONLY)
+    public function ensureDirectory(string $directory, int $mode = FilesInterface::READONLY): void
     {
         $this->files->ensureDirectory($directory, $mode);
     }

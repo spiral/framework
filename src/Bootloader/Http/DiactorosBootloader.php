@@ -26,7 +26,7 @@ use Spiral\Http\Diactoros\UriFactory;
  */
 final class DiactorosBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    public const SINGLETONS = [
         ServerRequestFactoryInterface::class => ServerRequestFactory::class,
         ResponseFactoryInterface::class      => ResponseFactory::class,
         StreamFactoryInterface::class        => StreamFactory::class,

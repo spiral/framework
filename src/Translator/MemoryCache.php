@@ -26,31 +26,31 @@ final class MemoryCache implements CacheInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function setLocales(?array $locales)
+    public function setLocales(?array $locales): void
     {
-        $this->memory->saveData("i18n.locales", $locales);
+        $this->memory->saveData('i18n.locales', $locales);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getLocales(): ?array
     {
-        return $this->memory->loadData("i18n.locales") ?? null;
+        return $this->memory->loadData('i18n.locales') ?? null;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function saveLocale(string $locale, ?array $data)
+    public function saveLocale(string $locale, ?array $data): void
     {
         $this->memory->saveData("i18n.{$locale}", $data);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function loadLocale(string $locale): ?array
     {

@@ -18,23 +18,23 @@ use Spiral\Views\Config\ViewsConfig;
  */
 final class ResetCommand extends Command
 {
-    const NAME        = 'views:reset';
-    const DESCRIPTION = 'Clear view cache';
+    public const NAME        = 'views:reset';
+    public const DESCRIPTION = 'Clear view cache';
 
     /**
      * @param ViewsConfig    $config
      * @param FilesInterface $files
      */
-    public function perform(ViewsConfig $config, FilesInterface $files)
+    public function perform(ViewsConfig $config, FilesInterface $files): void
     {
         if (!$files->exists($config->getCacheDirectory())) {
-            $this->writeln("Cache directory is missing, no cache to be cleaned.");
+            $this->writeln('Cache directory is missing, no cache to be cleaned.');
 
             return;
         }
 
         if ($this->isVerbose()) {
-            $this->writeln("<info>Cleaning view cache:</info>");
+            $this->writeln('<info>Cleaning view cache:</info>');
         }
 
         foreach ($files->getFiles($config->getCacheDirectory()) as $filename) {
@@ -61,6 +61,6 @@ final class ResetCommand extends Command
             }
         }
 
-        $this->writeln("<info>View cache has been cleared.</info>");
+        $this->writeln('<info>View cache has been cleared.</info>');
     }
 }

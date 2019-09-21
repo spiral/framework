@@ -21,13 +21,13 @@ use Spiral\Snapshots\SnapshotterInterface;
 /**
  * Depends on environment variables:
  * SNAPSHOT_MAX_FILES: defaults to 25
- * SNAPSHOT_VERBOSITY: defaults to HandlerInterface::VERBOSITY_VERBOSE (1)
+ * SNAPSHOT_VERBOSITY: defaults to HandlerInterface::VERBOSITY_VERBOSE (1).
  */
 final class SnapshotsBootloader extends Bootloader
 {
     private const MAX_SNAPSHOTS = 25;
 
-    const SINGLETONS = [
+    public const SINGLETONS = [
         SnapshotterInterface::class => [self::class, 'fileSnapshotter']
     ];
 

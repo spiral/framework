@@ -20,11 +20,11 @@ use Spiral\Http\Middleware\ErrorHandlerMiddleware;
  */
 final class ErrorHandlerBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         HttpBootloader::class
     ];
 
-    const BINDINGS = [
+    public const BINDINGS = [
         ErrorHandler\RendererInterface::class => ErrorHandler\PlainRenderer::class,
     ];
 
@@ -32,7 +32,7 @@ final class ErrorHandlerBootloader extends Bootloader
      * @param HttpBootloader       $http
      * @param EnvironmentInterface $env
      */
-    public function boot(HttpBootloader $http, EnvironmentInterface $env)
+    public function boot(HttpBootloader $http, EnvironmentInterface $env): void
     {
         $http->addMiddleware(new Autowire(
             ErrorHandlerMiddleware::class,

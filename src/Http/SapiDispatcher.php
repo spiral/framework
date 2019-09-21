@@ -38,23 +38,23 @@ final class SapiDispatcher implements DispatcherInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canServe(): bool
     {
-        return php_sapi_name() != 'cli';
+        return PHP_SAPI != 'cli';
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function serve(EmitterInterface $emitter = null)
+    public function serve(EmitterInterface $emitter = null): void
     {
         /**
-         * @var Http             $http
+         * @var Http
          * @var EmitterInterface $emitter
          */
-        $http = $this->container->get(Http::class);
+        $http    = $this->container->get(Http::class);
         $emitter = $emitter ?? $this->container->get(EmitterInterface::class);
 
         try {
@@ -68,9 +68,9 @@ final class SapiDispatcher implements DispatcherInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    protected function initRequest(): ServerRequestInterface
+    private function initRequest(): ServerRequestInterface
     {
         return $this->container->get(SapiRequestFactory::class)->fromGlobals();
     }
@@ -79,20 +79,20 @@ final class SapiDispatcher implements DispatcherInterface
      * @param EmitterInterface $emitter
      * @param \Throwable       $e
      */
-    protected function handleException(EmitterInterface $emitter, \Throwable $e)
+    private function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
         $handler = new HtmlHandler();
 
         try {
             /** @var SnapshotInterface $snapshot */
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             // nothing to report
         }
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);
-        $response = $responseFactory->createResponse(500);
+        $response        = $responseFactory->createResponse(500);
 
         // Reporting system (non handled) exception directly to the client
         $response->getBody()->write(

@@ -50,14 +50,14 @@ final class FileSnapshotter implements SnapshotterInterface
         FilesInterface $files
     ) {
         $this->directory = $directory;
-        $this->maxFiles = $maxFiles;
+        $this->maxFiles  = $maxFiles;
         $this->verbosity = $verbosity;
-        $this->handler = $handler;
-        $this->files = $files;
+        $this->handler   = $handler;
+        $this->files     = $files;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function register(\Throwable $e): SnapshotInterface
     {
@@ -74,7 +74,7 @@ final class FileSnapshotter implements SnapshotterInterface
     /**
      * @param SnapshotInterface $snapshot
      */
-    protected function saveSnapshot(SnapshotInterface $snapshot)
+    protected function saveSnapshot(SnapshotInterface $snapshot): void
     {
         $filename = $this->getFilename($snapshot, new \DateTime());
 
@@ -89,7 +89,7 @@ final class FileSnapshotter implements SnapshotterInterface
     /**
      * Remove older snapshots.
      */
-    protected function rotateSnapshots()
+    protected function rotateSnapshots(): void
     {
         $finder = new Finder();
         $finder->in($this->directory)->sort(function (SplFileInfo $a, SplFileInfo $b) {
@@ -98,7 +98,7 @@ final class FileSnapshotter implements SnapshotterInterface
 
         $count = 0;
         foreach ($finder as $file) {
-            $count++;
+            ++$count;
             if ($count > $this->maxFiles) {
                 try {
                     $this->files->delete($file->getRealPath());
@@ -117,9 +117,9 @@ final class FileSnapshotter implements SnapshotterInterface
     protected function getFilename(SnapshotInterface $snapshot, \DateTimeInterface $time): string
     {
         return sprintf(
-            "%s/%s-%s.html",
+            '%s/%s-%s.html',
             $this->directory,
-            $time->format("d.m.Y-Hi.s"),
+            $time->format('d.m.Y-Hi.s'),
             (new \ReflectionClass($snapshot->getException()))->getShortName()
         );
     }
@@ -130,6 +130,6 @@ final class FileSnapshotter implements SnapshotterInterface
      */
     protected function getID(\Throwable $e): string
     {
-        return md5(join('|', [$e->getMessage(), $e->getFile(), $e->getLine()]));
+        return md5(implode('|', [$e->getMessage(), $e->getFile(), $e->getLine()]));
     }
 }

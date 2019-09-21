@@ -37,27 +37,27 @@ final class JobDispatcher implements DispatcherInterface
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->env = $env;
+        $this->env       = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->env->get('RR_JOBS') !== null);
+        return PHP_SAPI == 'cli' && $this->env->get('RR_JOBS') !== null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function serve()
+    public function serve(): void
     {
         $consumer = $this->container->get(Consumer::class);
 
-        $consumer->serve(function (\Throwable $e = null) {
+        $consumer->serve(function (\Throwable $e = null): void {
             if ($e !== null) {
                 $this->handleException($e);
             }
@@ -69,11 +69,11 @@ final class JobDispatcher implements DispatcherInterface
     /**
      * @param \Throwable $e
      */
-    protected function handleException(\Throwable $e)
+    private function handleException(\Throwable $e): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
     }

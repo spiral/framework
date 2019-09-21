@@ -17,7 +17,7 @@ use Zend\Diactoros\UploadedFile;
 final class UploadedFileFactory implements UploadedFileFactoryInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function createUploadedFile(
         StreamInterface $stream,
