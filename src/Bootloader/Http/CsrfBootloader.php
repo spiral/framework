@@ -15,7 +15,7 @@ use Spiral\Csrf\Middleware\CsrfMiddleware;
 
 final class CsrfBootloader extends Bootloader
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         HttpBootloader::class
     ];
 
@@ -23,7 +23,7 @@ final class CsrfBootloader extends Bootloader
      * @param ConfiguratorInterface $config
      * @param HttpBootloader        $http
      */
-    public function boot(ConfiguratorInterface $config, HttpBootloader $http): void
+    public function boot(ConfiguratorInterface $config, HttpBootloader $http)
     {
         $config->setDefaults('csrf', [
             'cookie'   => 'csrf-token',

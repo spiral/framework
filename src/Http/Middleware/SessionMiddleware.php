@@ -58,11 +58,11 @@ final class SessionMiddleware implements MiddlewareInterface
         SessionFactory $factory,
         ScopeInterface $scope
     ) {
-        $this->config        = $config;
-        $this->httpConfig    = $httpConfig;
+        $this->config = $config;
+        $this->httpConfig = $httpConfig;
         $this->cookiesConfig = $cookiesConfig;
-        $this->factory       = $factory;
-        $this->scope         = $scope;
+        $this->factory = $factory;
+        $this->scope = $scope;
     }
 
     /**

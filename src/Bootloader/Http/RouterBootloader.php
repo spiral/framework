@@ -21,11 +21,11 @@ use Spiral\Router\UriHandler;
 
 final class RouterBootloader extends Bootloader
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         HttpBootloader::class
     ];
 
-    public const SINGLETONS = [
+    const SINGLETONS = [
         CoreInterface::class           => Core::class,
         RouterInterface::class         => [self::class, 'router'],
         RequestHandlerInterface::class => RouterInterface::class,

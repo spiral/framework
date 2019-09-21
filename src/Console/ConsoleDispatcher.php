@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * Spiral Framework.
  *
@@ -47,7 +45,7 @@ final class ConsoleDispatcher implements DispatcherInterface
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->env       = $env;
+        $this->env = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
@@ -58,13 +56,13 @@ final class ConsoleDispatcher implements DispatcherInterface
     public function canServe(): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
-        return php_sapi_name() == 'cli' && $this->env->get('RR') === null;
+        return (php_sapi_name() == 'cli' && $this->env->get('RR') === null);
     }
 
     /**
      * @inheritdoc
      */
-    public function serve(InputInterface $input = null, OutputInterface $output = null): void
+    public function serve(InputInterface $input = null, OutputInterface $output = null)
     {
         $output = $output ?? new ConsoleOutput();
 
@@ -89,7 +87,7 @@ final class ConsoleDispatcher implements DispatcherInterface
      * @param \Throwable      $e
      * @param OutputInterface $output
      */
-    protected function handleException(\Throwable $e, OutputInterface $output): void
+    protected function handleException(\Throwable $e, OutputInterface $output)
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);

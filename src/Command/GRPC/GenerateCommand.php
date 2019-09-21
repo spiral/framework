@@ -19,13 +19,13 @@ use Symfony\Component\Console\Input\InputArgument;
 
 final class GenerateCommand extends Command
 {
-    protected const NAME        = 'grpc:generate';
-    protected const DESCRIPTION = 'Generate GPRC service code using protobuf specification';
+    protected const NAME        = "grpc:generate";
+    protected const DESCRIPTION = "Generate GPRC service code using protobuf specification";
 
     /**
      * {@inheritdoc}
      */
-    public const ARGUMENTS = [
+    const ARGUMENTS = [
         ['proto', InputArgument::REQUIRED, 'Protobuf specification file'],
         ['path', InputArgument::OPTIONAL, 'Base path for generated service code', 'auto'],
         ['namespace', InputArgument::OPTIONAL, 'Base namespace for generated service code', 'auto'],
@@ -36,12 +36,11 @@ final class GenerateCommand extends Command
      * @param FilesInterface       $files
      * @param DirectoriesInterface $dirs
      */
-    public function perform(KernelInterface $kernel, FilesInterface $files, DirectoriesInterface $dirs): void
+    public function perform(KernelInterface $kernel, FilesInterface $files, DirectoriesInterface $dirs)
     {
         $protoFile = $this->argument('proto');
         if (!file_exists($protoFile)) {
-            $this->sprintf('<error>File `%s` not found.</error>', $protoFile);
-
+            $this->sprintf("<error>File `%s` not found.</error>", $protoFile);
             return;
         }
 
@@ -57,13 +56,11 @@ final class GenerateCommand extends Command
             $result = $compiler->compile($protoFile);
         } catch (\Throwable $e) {
             $this->sprintf("<error>Error:</error> <fg=red>%s</fg=red>\n", $e->getMessage());
-
             return;
         }
 
         if ($result === []) {
             $this->sprintf("<info>No files were generated.</info>\n", $protoFile);
-
             return;
         }
 

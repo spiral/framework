@@ -40,7 +40,7 @@ final class SelectInjector implements InjectorInterface
         }
 
         if (!$this->orm->getSchema()->defines($context)) {
-            throw new ORMException('Cycle schema is not initiated or role missing, run `cycle`');
+            throw new ORMException("Cycle schema is not initiated or role missing, run `cycle`");
         }
 
         $select = new Select($this->orm, $context);

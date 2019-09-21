@@ -46,8 +46,8 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         SnapshotterInterface $snapshots = null
     ) {
         $this->suppressErrors = $suppressErrors;
-        $this->renderer       = $renderer;
-        $this->snapshotter    = $snapshots;
+        $this->renderer = $renderer;
+        $this->snapshotter = $snapshots;
     }
 
     /**
@@ -87,10 +87,10 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
      * @param int     $code
      * @param string  $message
      */
-    private function logError(Request $request, int $code, string $message): void
+    private function logError(Request $request, int $code, string $message)
     {
         $this->getLogger()->error(sprintf(
-            '%s://%s%s caused the error %s (%s) by client %s.',
+            "%s://%s%s caused the error %s (%s) by client %s.",
             $request->getUri()->getScheme(),
             $request->getUri()->getHost(),
             $request->getUri()->getPath(),

@@ -31,7 +31,7 @@ abstract class AbstractCommand extends Command
     public function __construct(Migrator $migrator, MigrationConfig $config)
     {
         $this->migrator = $migrator;
-        $this->config   = $config;
+        $this->config = $config;
 
         parent::__construct();
     }
@@ -64,10 +64,10 @@ abstract class AbstractCommand extends Command
             return true;
         }
 
-        $this->writeln('<fg=red>Confirmation is required to run migrations!</fg=red>');
+        $this->writeln("<fg=red>Confirmation is required to run migrations!</fg=red>");
 
         if (!$this->askConfirmation()) {
-            $this->writeln('<comment>Cancelling operation...</comment>');
+            $this->writeln("<comment>Cancelling operation...</comment>");
 
             return false;
         }
@@ -90,11 +90,11 @@ abstract class AbstractCommand extends Command
      */
     protected function askConfirmation(): bool
     {
-        $question     = new QuestionHelper();
+        $question = new QuestionHelper();
         $confirmation = $question->ask(
             $this->input,
             $this->output,
-            new ConfirmationQuestion('<question>Would you like to continue?</question> ')
+            new ConfirmationQuestion("<question>Would you like to continue?</question> ")
         );
 
         return $confirmation;

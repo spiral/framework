@@ -31,7 +31,7 @@ final class LocaleDependency implements DependencyInterface
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-        $this->locales    = $translator->getCatalogueManager()->getLocales();
+        $this->locales = $translator->getCatalogueManager()->getLocales();
     }
 
     /**

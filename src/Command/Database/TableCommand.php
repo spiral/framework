@@ -26,24 +26,24 @@ final class TableCommand extends Command
     /**
      * No information available placeholder.
      */
-    public const SKIP = '<comment>---</comment>';
+    const SKIP = '<comment>---</comment>';
 
-    public const NAME        = 'db:table';
-    public const DESCRIPTION = 'Describe table schema of specific database';
-    public const ARGUMENTS   = [
+    const NAME        = 'db:table';
+    const DESCRIPTION = 'Describe table schema of specific database';
+    const ARGUMENTS   = [
         ['table', InputArgument::REQUIRED, 'Table name']
     ];
-    public const OPTIONS     = [
+    const OPTIONS     = [
         ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database', 'default']
     ];
 
     /**
      * @param DatabaseManager $dbal
      */
-    public function perform(DatabaseManager $dbal): void
+    public function perform(DatabaseManager $dbal)
     {
         $database = $dbal->database($this->option('database'));
-        $schema   = $database->table($this->argument('table'))->getSchema();
+        $schema = $database->table($this->argument('table'))->getSchema();
 
         if (!$schema->exists()) {
             throw new DBALException(
@@ -73,7 +73,7 @@ final class TableCommand extends Command
     /**
      * @param AbstractTable $schema
      */
-    protected function describeColumns(AbstractTable $schema): void
+    protected function describeColumns(AbstractTable $schema)
     {
         $columnsTable = $this->table([
             'Column:',
@@ -106,7 +106,7 @@ final class TableCommand extends Command
      * @param Database $database
      * @param array    $indexes
      */
-    protected function describeIndexes(Database $database, array $indexes): void
+    protected function describeIndexes(Database $database, array $indexes)
     {
         $this->sprintf(
             "\n<fg=cyan>Indexes of </fg=cyan><comment>%s.%s</comment>:\n",
@@ -119,7 +119,7 @@ final class TableCommand extends Command
             $indexesTable->addRow([
                 $index->getName(),
                 $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
-                join(', ', $index->getColumns())
+                join(", ", $index->getColumns())
             ]);
         }
 
@@ -130,7 +130,7 @@ final class TableCommand extends Command
      * @param Database $database
      * @param array    $foreignKeys
      */
-    protected function describeForeignKeys(Database $database, array $foreignKeys): void
+    protected function describeForeignKeys(Database $database, array $foreignKeys)
     {
         $this->sprintf(
             "\n<fg=cyan>Foreign Keys of </fg=cyan><comment>%s.%s</comment>:\n",
@@ -207,7 +207,6 @@ final class TableCommand extends Command
 
         if ($defaultValue instanceof FragmentInterface) {
             $value = $defaultValue->compile(new QueryBindings(), $driver->getCompiler());
-
             return "<info>{$value}</info>";
         }
 

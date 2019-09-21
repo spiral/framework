@@ -28,7 +28,7 @@ use Spiral\Database\DatabaseProviderInterface;
 
 final class CycleBootloader extends Bootloader
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         DatabaseBootloader::class,
         SchemaBootloader::class
     ];
@@ -47,9 +47,9 @@ final class CycleBootloader extends Bootloader
      * @param FinalizerInterface   $finalizer
      * @param SchemaInterface|null $schema
      */
-    public function boot(Container $container, FinalizerInterface $finalizer, SchemaInterface $schema = null): void
+    public function boot(Container $container, FinalizerInterface $finalizer, SchemaInterface $schema = null)
     {
-        $finalizer->addFinalizer(function () use ($container): void {
+        $finalizer->addFinalizer(function () use ($container) {
             if ($container->hasInstance(ORMInterface::class)) {
                 $container->get(ORMInterface::class)->getHeap()->clean();
             }
@@ -68,7 +68,7 @@ final class CycleBootloader extends Bootloader
      * @param Container       $container
      * @param SchemaInterface $schema
      */
-    public function bindRepositories(Container $container, SchemaInterface $schema): void
+    public function bindRepositories(Container $container, SchemaInterface $schema)
     {
         foreach ($schema->getRoles() as $role) {
             $repository = $schema->define($role, SchemaInterface::REPOSITORY);

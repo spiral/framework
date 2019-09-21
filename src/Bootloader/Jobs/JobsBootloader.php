@@ -20,7 +20,7 @@ use Spiral\Jobs\QueueInterface;
 
 final class JobsBootloader extends Bootloader
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         ServerBootloader::class
     ];
 
@@ -33,7 +33,7 @@ final class JobsBootloader extends Bootloader
      * @param KernelInterface $kernel
      * @param JobDispatcher   $jobs
      */
-    public function boot(KernelInterface $kernel, JobDispatcher $jobs): void
+    public function boot(KernelInterface $kernel, JobDispatcher $jobs)
     {
         $kernel->addDispatcher($jobs);
     }
