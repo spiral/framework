@@ -14,7 +14,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 
 ## Features
 - battle-tested since 2013
-- very fast resident memory framework
+- very fast, resident memory framework
 - PSR-{2,3,4,6,7,11,15,16,17} compliant
 - built on loosely coupled components
 - native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
