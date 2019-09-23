@@ -14,6 +14,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotterInterface;
 
 final class JobDispatcher implements DispatcherInterface
@@ -55,9 +56,14 @@ final class JobDispatcher implements DispatcherInterface
      */
     public function serve()
     {
+        /**
+         * @var Consumer $consumer
+         * @var Worker   $worker
+         */
         $consumer = $this->container->get(Consumer::class);
+        $worker = $this->container->get(Worker::class);
 
-        $consumer->serve(function (\Throwable $e = null) {
+        $consumer->serve($worker, function (\Throwable $e = null) {
             if ($e !== null) {
                 $this->handleException($e);
             }

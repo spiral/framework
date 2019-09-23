@@ -1,18 +1,19 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\App\Job;
 
-use Spiral\Jobs\AbstractJob;
+use Spiral\Jobs\JobHandler;
 
-class ErrorJob extends AbstractJob
+class ErrorJob extends JobHandler
 {
-    public function do()
+    public function invoke()
     {
         throw new \ErrorException("bad job");
     }

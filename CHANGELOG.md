@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.1.0 (23.09.2019)
+------
+- `spiral/jobs` updated to `2.0`
+- job handlers introduced
+
 v2.0.19 (16.09.2019) - no binary
 ------
 - typo fix: `JsonPayloadBootload` to `JsonPayloadParserBootloader` 
