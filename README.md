@@ -16,7 +16,6 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - battle-tested since 2013
 - [very fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=7704a0a2-d91c-40f4-927e-62ddad7ab36f&hw=ph&test=fortune&l=zik073-v&c=6&o=e)
 - PSR-{2,3,4,6,7,11,15,16,17} compliant
-- built on loosely coupled components
 - [application server](https://roadrunner.dev/) and resident memory application kernel
 - native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
 - GRPC server and client
@@ -26,7 +25,6 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - class discovery via static analysis
 - scaffolding and prototyping (it literally writes code for you)
 - RBAC security, validation, and encryption
-- can be extended on PHP or on Golang
 - template engine lets you create your own HTML tags
 - or just use Twig
 - MVC, HMVC, ADR, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
