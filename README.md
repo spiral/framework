@@ -15,7 +15,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 ## Features
 - battle-tested since 2013
 - [very fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=7704a0a2-d91c-40f4-927e-62ddad7ab36f&hw=ph&test=fortune&l=zik073-v&c=6&o=e)
-- application server and resident memory application kernel
+- [application server](https://roadrunner.dev/) and resident memory application kernel
 - PSR-{2,3,4,6,7,11,15,16,17} compliant
 - built on loosely coupled components
 - native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
