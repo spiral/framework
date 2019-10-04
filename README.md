@@ -13,21 +13,20 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 <br/>
 
 ## Features
-- battle-tested since 2013
-- [very fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=7704a0a2-d91c-40f4-927e-62ddad7ab36f&hw=ph&test=fortune&l=zik073-v&c=6&o=e)
+- Battle-tested since 2013
+- [Lightning fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=7704a0a2-d91c-40f4-927e-62ddad7ab36f&hw=ph&test=fortune&l=zik073-v&c=6&o=e)
 - PSR-{2,3,4,6,7,11,15,16,17} compliant
-- [application server](https://roadrunner.dev/) and resident memory application kernel
-- native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
+- Powerful [application server](https://roadrunner.dev/) and resident memory application kernel
+- Native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
 - GRPC server and client
 - HTTPS, HTTP/2+Push, encrypted cookies, sessions, CSRF-guard
 - MySQL, MariaDB, SQLite, Postgres, SQLServer support, auto-migrations
-- very powerful [Data-Mapper ORM](https://github.com/cycle/orm)
-- scaffolding and prototyping (it literally writes code for you)
-- class discovery via static analysis
+- The [ORM](https://github.com/cycle/orm) you will use for the next 25 years
+- Intuitive scaffolding and prototyping (it literally writes code for you)
+- Helpful class discovery via static analysis
 - RBAC security, validation, and encryption
-- template engine lets you create your own HTML tags
-- or just use Twig
-- MVC, HMVC, ADR, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
+- Dynamic template engine to create your own HTML tags (or just use Twig)
+- MVC, HMVC, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
 
 ## Skeletons
 | App Type | Current Status | Install       
