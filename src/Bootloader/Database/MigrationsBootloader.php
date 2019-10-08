@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -20,12 +21,12 @@ use Spiral\Migrations\RepositoryInterface;
 
 final class MigrationsBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         TokenizerBootloader::class,
         DatabaseBootloader::class
     ];
 
-    const SINGLETONS = [
+    public const SINGLETONS = [
         Migrator::class            => Migrator::class,
         RepositoryInterface::class => FileRepository::class
     ];
@@ -39,7 +40,7 @@ final class MigrationsBootloader extends Bootloader
         ConfiguratorInterface $config,
         EnvironmentInterface $env,
         DirectoriesInterface $dirs
-    ) {
+    ): void {
         if (!$dirs->has('migrations')) {
             $dirs->set('migrations', $dirs->get('app') . 'migrations');
         }

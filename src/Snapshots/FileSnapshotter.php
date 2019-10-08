@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -74,7 +75,7 @@ final class FileSnapshotter implements SnapshotterInterface
     /**
      * @param SnapshotInterface $snapshot
      */
-    protected function saveSnapshot(SnapshotInterface $snapshot)
+    protected function saveSnapshot(SnapshotInterface $snapshot): void
     {
         $filename = $this->getFilename($snapshot, new \DateTime());
 
@@ -89,7 +90,7 @@ final class FileSnapshotter implements SnapshotterInterface
     /**
      * Remove older snapshots.
      */
-    protected function rotateSnapshots()
+    protected function rotateSnapshots(): void
     {
         $finder = new Finder();
         $finder->in($this->directory)->sort(function (SplFileInfo $a, SplFileInfo $b) {
@@ -117,9 +118,9 @@ final class FileSnapshotter implements SnapshotterInterface
     protected function getFilename(SnapshotInterface $snapshot, \DateTimeInterface $time): string
     {
         return sprintf(
-            "%s/%s-%s.html",
+            '%s/%s-%s.html',
             $this->directory,
-            $time->format("d.m.Y-Hi.s"),
+            $time->format('d.m.Y-Hi.s'),
             (new \ReflectionClass($snapshot->getException()))->getShortName()
         );
     }

@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +16,7 @@ use Spiral\Http\PaginationFactory;
 
 class PaginationTest extends HttpTest
 {
-    public function testPaginate()
+    public function testPaginate(): void
     {
         $this->assertSame('1', (string)$this->get('/paginate', [
 
@@ -23,12 +26,12 @@ class PaginationTest extends HttpTest
     /**
      * @expectedException \Spiral\Core\Exception\ScopeException
      */
-    public function testPaginateError()
+    public function testPaginateError(): void
     {
         $this->app->get(PaginationFactory::class)->createPaginator('page');
     }
 
-    public function testPaginate2()
+    public function testPaginate2(): void
     {
         $this->assertSame('2', (string)$this->get('/paginate', [
             'page' => 2

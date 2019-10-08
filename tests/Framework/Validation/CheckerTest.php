@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -14,7 +17,7 @@ use Spiral\Validation\ValidatorInterface;
 
 class CheckerTest extends BaseTest
 {
-    public function testEmpty()
+    public function testEmpty(): void
     {
         $app = $this->makeApp();
 

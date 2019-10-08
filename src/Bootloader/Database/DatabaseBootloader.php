@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -19,11 +20,11 @@ use Spiral\Database\DatabaseProviderInterface;
 
 final class DatabaseBootloader extends Bootloader implements SingletonInterface
 {
-    const SINGLETONS = [
+    public const SINGLETONS = [
         DatabaseProviderInterface::class => DatabaseManager::class,
     ];
 
-    const BINDINGS = [
+    public const BINDINGS = [
         DatabaseInterface::class => Database::class
     ];
 
@@ -41,7 +42,7 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
     /**
      * Init database config.
      */
-    public function boot()
+    public function boot(): void
     {
         $this->config->setDefaults('database', [
             'default'   => 'default',

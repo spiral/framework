@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -21,11 +22,11 @@ use Spiral\Router\UriHandler;
 
 final class RouterBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         HttpBootloader::class
     ];
 
-    const SINGLETONS = [
+    public const SINGLETONS = [
         CoreInterface::class           => Core::class,
         RouterInterface::class         => [self::class, 'router'],
         RequestHandlerInterface::class => RouterInterface::class,

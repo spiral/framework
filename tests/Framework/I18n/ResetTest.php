@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +14,7 @@ use Spiral\Framework\ConsoleTest;
 
 class ResetTest extends ConsoleTest
 {
-    public function testReset()
+    public function testReset(): void
     {
         $this->runCommandDebug('i18n:index');
         $output = $this->runCommandDebug('i18n:reset');

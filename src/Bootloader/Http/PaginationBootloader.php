@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -15,11 +16,11 @@ use Spiral\Pagination\PaginationProviderInterface;
 
 final class PaginationBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         HttpBootloader::class
     ];
 
-    const SINGLETONS = [
+    public const SINGLETONS = [
         PaginationProviderInterface::class => PaginationFactory::class
     ];
 }

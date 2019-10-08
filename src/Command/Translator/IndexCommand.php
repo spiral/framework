@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -20,10 +21,10 @@ use Symfony\Component\Console\Input\InputArgument;
 
 final class IndexCommand extends Command implements SingletonInterface
 {
-    const NAME        = 'i18n:index';
-    const DESCRIPTION = 'Index all declared translation strings and usages';
+    public const NAME        = 'i18n:index';
+    public const DESCRIPTION = 'Index all declared translation strings and usages';
 
-    const ARGUMENTS = [
+    public const ARGUMENTS = [
         ['locale', InputArgument::OPTIONAL, 'Locale to aggregate indexed translations into']
     ];
 
@@ -38,17 +39,17 @@ final class IndexCommand extends Command implements SingletonInterface
         CatalogueManager $manager,
         InvocationsInterface $invocations,
         ClassesInterface $classes
-    ) {
+    ): void {
         $catalogue = $manager->load(
             $this->argument('locale') ?? $config->getDefaultLocale()
         );
 
         $indexer = new Indexer($config, $catalogue);
 
-        $this->writeln("Scanning <comment>l/p</comment> functions usage...");
+        $this->writeln('Scanning <comment>l/p</comment> functions usage...');
         $indexer->indexInvocations($invocations);
 
-        $this->writeln("Scanning <comment>TranslatorTrait</comment> usage...");
+        $this->writeln('Scanning <comment>TranslatorTrait</comment> usage...');
         $indexer->indexClasses($classes);
 
         $this->sprintf(

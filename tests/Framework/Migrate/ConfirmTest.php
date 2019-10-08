@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,7 +7,6 @@
  * @author    Anton Titov (Wolfy-J)
  */
 declare(strict_types=1);
-
 
 namespace Spiral\Framework\Migrate;
 
@@ -18,14 +18,14 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ConfirmTest extends ConsoleTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->makeApp([
             'SAFE_MIGRATIONS' => false
         ]);
     }
 
-    public function testConfirmMigrate()
+    public function testConfirmMigrate(): void
     {
         $this->runCommandDebug('migrate:init');
 
@@ -43,7 +43,7 @@ class ConfirmTest extends ConsoleTest
         $this->assertNotContains('No outstanding', $out);
     }
 
-    public function testConfirmMigrateY()
+    public function testConfirmMigrateY(): void
     {
         $this->runCommandDebug('migrate:init');
 
@@ -61,7 +61,7 @@ class ConfirmTest extends ConsoleTest
         $this->assertContains('No outstanding', $out);
     }
 
-    public function testConfirmRollbackMigrate()
+    public function testConfirmRollbackMigrate(): void
     {
         $this->runCommandDebug('migrate:init');
 
@@ -79,7 +79,7 @@ class ConfirmTest extends ConsoleTest
         $this->assertNotContains('No executed', $out);
     }
 
-    public function testConfirmRollbackMigrateY()
+    public function testConfirmRollbackMigrateY(): void
     {
         $this->runCommandDebug('migrate:init');
 
@@ -97,7 +97,7 @@ class ConfirmTest extends ConsoleTest
         $this->assertContains('No executed', $out);
     }
 
-    public function testConfirmReplayMigrate()
+    public function testConfirmReplayMigrate(): void
     {
         $this->runCommandDebug('migrate:init');
 
@@ -115,7 +115,7 @@ class ConfirmTest extends ConsoleTest
         $this->assertNotContains('No outstanding', $out);
     }
 
-    public function testConfirmReplayMigrateY()
+    public function testConfirmReplayMigrateY(): void
     {
         $this->runCommandDebug('migrate:init');
 

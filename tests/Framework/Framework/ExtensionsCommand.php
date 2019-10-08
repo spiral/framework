@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -12,7 +15,7 @@ use Spiral\Framework\ConsoleTest;
 
 class ExtensionsCommand extends ConsoleTest
 {
-    public function testExtensions()
+    public function testExtensions(): void
     {
         $output = $this->runCommand('php:extensions');
 

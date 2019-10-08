@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -19,28 +20,28 @@ use Symfony\Component\Console\Input\InputArgument;
 
 final class GenerateCommand extends Command
 {
-    protected const NAME        = "grpc:generate";
-    protected const DESCRIPTION = "Generate GPRC service code using protobuf specification";
 
     /**
      * {@inheritdoc}
      */
-    const ARGUMENTS = [
+    public const ARGUMENTS = [
         ['proto', InputArgument::REQUIRED, 'Protobuf specification file'],
         ['path', InputArgument::OPTIONAL, 'Base path for generated service code', 'auto'],
         ['namespace', InputArgument::OPTIONAL, 'Base namespace for generated service code', 'auto'],
     ];
+    protected const NAME        = 'grpc:generate';
+    protected const DESCRIPTION = 'Generate GPRC service code using protobuf specification';
 
     /**
      * @param KernelInterface      $kernel
      * @param FilesInterface       $files
      * @param DirectoriesInterface $dirs
      */
-    public function perform(KernelInterface $kernel, FilesInterface $files, DirectoriesInterface $dirs)
+    public function perform(KernelInterface $kernel, FilesInterface $files, DirectoriesInterface $dirs): void
     {
         $protoFile = $this->argument('proto');
         if (!file_exists($protoFile)) {
-            $this->sprintf("<error>File `%s` not found.</error>", $protoFile);
+            $this->sprintf('<error>File `%s` not found.</error>', $protoFile);
             return;
         }
 

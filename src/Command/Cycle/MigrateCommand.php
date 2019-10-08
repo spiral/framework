@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -26,10 +27,10 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class MigrateCommand extends AbstractCommand
 {
-    public const NAME        = "cycle:migrate";
-    public const DESCRIPTION = "Generate ORM schema migrations";
+    public const NAME        = 'cycle:migrate';
+    public const DESCRIPTION = 'Generate ORM schema migrations';
 
-    const OPTIONS = [
+    public const OPTIONS = [
         ['run', 'r', InputOption::VALUE_NONE, 'Automatically run generated migration.']
     ];
 
@@ -54,14 +55,14 @@ final class MigrateCommand extends AbstractCommand
         GenerateMigrations $migrations,
         Migrator $migrator,
         Console $console
-    ) {
+    ): void {
         if (!$this->verifyConfigured()) {
             return;
         }
 
         foreach ($migrator->getMigrations() as $migration) {
             if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
-                $this->writeln("<fg=red>Outstanding migrations found, run `migrate` first.</fg=red>");
+                $this->writeln('<fg=red>Outstanding migrations found, run `migrate` first.</fg=red>');
                 return;
             }
         }

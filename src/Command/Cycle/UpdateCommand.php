@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -19,8 +22,8 @@ use Spiral\Core\Container;
 
 final class UpdateCommand extends Command
 {
-    public const NAME        = "cycle";
-    public const DESCRIPTION = "Update (init) cycle schema from database and annotated classes";
+    public const NAME        = 'cycle';
+    public const DESCRIPTION = 'Update (init) cycle schema from database and annotated classes';
 
     /**
      * @param SchemaBootloader $bootloader
@@ -35,13 +38,13 @@ final class UpdateCommand extends Command
         CycleBootloader $cycleBootloader,
         Registry $registry,
         MemoryInterface $memory
-    ) {
-        $this->write("Updating ORM schema... ");
+    ): void {
+        $this->write('Updating ORM schema... ');
 
         $schema = (new Compiler())->compile($registry, $bootloader->getGenerators());
         $memory->saveData('cycle', $schema);
 
-        $this->writeln("<info>done</info>");
+        $this->writeln('<info>done</info>');
 
         $cycleBootloader->bindRepositories($container, new Schema($schema));
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -17,21 +18,21 @@ use Spiral\Migrations\State;
  */
 final class StatusCommand extends AbstractCommand
 {
-    const NAME        = 'migrate:status';
-    const DESCRIPTION = 'Get list of all available migrations and their statuses';
-    const PENDING     = '<fg=red>not executed yet</fg=red>';
+    public const NAME        = 'migrate:status';
+    public const DESCRIPTION = 'Get list of all available migrations and their statuses';
+    public const PENDING     = '<fg=red>not executed yet</fg=red>';
 
     /**
      * @param FilesInterface $files
      */
-    public function perform(FilesInterface $files)
+    public function perform(FilesInterface $files): void
     {
         if (!$this->verifyConfigured()) {
             return;
         }
 
         if (empty($this->migrator->getMigrations())) {
-            $this->writeln("<comment>No migrations were found.</comment>");
+            $this->writeln('<comment>No migrations were found.</comment>');
 
             return;
         }

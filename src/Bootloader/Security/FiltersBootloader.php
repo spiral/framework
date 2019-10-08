@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -19,11 +20,11 @@ use Spiral\Filters\MapperInterface;
 
 final class FiltersBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         ValidationBootloader::class
     ];
 
-    const SINGLETONS = [
+    public const SINGLETONS = [
         MapperInterface::class  => FilterMapper::class,
         LocatorInterface::class => FilterLocator::class,
         InputInterface::class   => RequestInput::class

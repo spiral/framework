@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,16 +14,16 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class MigrateCommand extends AbstractCommand
 {
-    const NAME        = 'migrate';
-    const DESCRIPTION = 'Perform one or all outstanding migrations';
-    const OPTIONS     = [
+    public const NAME        = 'migrate';
+    public const DESCRIPTION = 'Perform one or all outstanding migrations';
+    public const OPTIONS     = [
         ['one', 'o', InputOption::VALUE_NONE, 'Execute only one (first) migration']
     ];
 
     /**
      * Execute one or multiple migrations.
      */
-    public function perform()
+    public function perform(): void
     {
         if (!$this->verifyConfigured() || !$this->verifyEnvironment()) {
             return;
@@ -42,7 +43,7 @@ final class MigrateCommand extends AbstractCommand
         }
 
         if (!$found) {
-            $this->writeln("<fg=red>No outstanding migrations were found.</fg=red>");
+            $this->writeln('<fg=red>No outstanding migrations were found.</fg=red>');
         }
     }
 }

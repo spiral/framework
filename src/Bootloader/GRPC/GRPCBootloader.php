@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -28,7 +29,7 @@ final class GRPCBootloader extends Bootloader
      * @param KernelInterface $kernel
      * @param GRPCDispatcher  $grpc
      */
-    public function boot(KernelInterface $kernel, GRPCDispatcher $grpc)
+    public function boot(KernelInterface $kernel, GRPCDispatcher $grpc): void
     {
         $kernel->addDispatcher($grpc);
     }

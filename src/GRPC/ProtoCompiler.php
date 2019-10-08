@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -53,7 +54,7 @@ final class ProtoCompiler
             escapeshellarg($tmpDir),
             escapeshellarg($tmpDir),
             escapeshellarg(dirname($protoFile)),
-            join(" ", array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
+            join(' ', array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
         ), $output);
 
         $output = trim(join("\n", $output), "\n ,");

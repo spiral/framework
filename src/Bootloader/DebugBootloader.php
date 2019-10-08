@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -16,7 +17,7 @@ use Spiral\Logger\LogsInterface;
 
 final class DebugBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    public const SINGLETONS = [
         Dumper::class        => Dumper::class,
         LogsInterface::class => LogFactory::class
     ];

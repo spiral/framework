@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -47,7 +48,7 @@ final class DebugListener
      *
      * @param LogEvent $event
      */
-    public function __invoke(LogEvent $event)
+    public function __invoke(LogEvent $event): void
     {
         if (empty($this->output)) {
             return;

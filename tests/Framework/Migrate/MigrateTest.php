@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,14 +15,14 @@ use Spiral\Framework\ConsoleTest;
 
 class MigrateTest extends ConsoleTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->app->getEnvironment()->set('SAFE_MIGRATIONS', true);
     }
 
-    public function testMigrate()
+    public function testMigrate(): void
     {
         /** @var Database $db */
         $db = $this->app->get(Database::class);
@@ -40,7 +41,7 @@ class MigrateTest extends ConsoleTest
         $this->assertSame(3, count($db->getTables()));
     }
 
-    public function testMigrateRollback()
+    public function testMigrateRollback(): void
     {
         /** @var Database $db */
         $db = $this->app->get(Database::class);
@@ -64,7 +65,7 @@ class MigrateTest extends ConsoleTest
         $this->assertSame(1, count($db->getTables()));
     }
 
-    public function testMigrateReplay()
+    public function testMigrateReplay(): void
     {
         /** @var Database $db */
         $db = $this->app->get(Database::class);

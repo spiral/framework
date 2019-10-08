@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -33,11 +34,11 @@ use Spiral\RoadRunner\PSR7Client;
  */
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         ServerBootloader::class
     ];
 
-    const SINGLETONS = [
+    public const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
         EmitterInterface::class => SapiEmitter::class,
     ];
@@ -57,7 +58,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
      * @param KernelInterface  $kernel
      * @param FactoryInterface $factory
      */
-    public function boot(KernelInterface $kernel, FactoryInterface $factory)
+    public function boot(KernelInterface $kernel, FactoryInterface $factory): void
     {
         $this->config->setDefaults('http', [
             'basePath'   => '/',
@@ -72,6 +73,16 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         if (class_exists(PSR7Client::class)) {
             $kernel->addDispatcher($factory->make(RrDispacher::class));
         }
+    }
+
+    /**
+     * Register new http middleware.
+     *
+     * @param mixed $middleware
+     */
+    public function addMiddleware($middleware): void
+    {
+        $this->config->modify('http', new Append('middleware', null, $middleware));
     }
 
     /**
@@ -93,15 +104,5 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         $core->setHandler($handler);
 
         return $core;
-    }
-
-    /**
-     * Register new http middleware.
-     *
-     * @param mixed $middleware
-     */
-    public function addMiddleware($middleware)
-    {
-        $this->config->modify('http', new Append('middleware', null, $middleware));
     }
 }

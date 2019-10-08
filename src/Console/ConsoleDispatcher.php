@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -62,7 +65,7 @@ final class ConsoleDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve(InputInterface $input = null, OutputInterface $output = null)
+    public function serve(InputInterface $input = null, OutputInterface $output = null): void
     {
         $output = $output ?? new ConsoleOutput();
 
@@ -87,11 +90,11 @@ final class ConsoleDispatcher implements DispatcherInterface
      * @param \Throwable      $e
      * @param OutputInterface $output
      */
-    protected function handleException(\Throwable $e, OutputInterface $output)
+    protected function handleException(\Throwable $e, OutputInterface $output): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
 

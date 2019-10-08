@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -20,12 +23,12 @@ abstract class ConsoleTest extends BaseTest
     /** @var TestApp */
     protected $app;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->makeApp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 

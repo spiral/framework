@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +16,7 @@ use Spiral\Session\SessionInterface;
 
 class SessionTest extends HttpTest
 {
-    public function testNotSidWhenNotStarted()
+    public function testNotSidWhenNotStarted(): void
     {
         $this->http->setHandler(function () {
             $this->assertTrue($this->app->getContainer()->has(SessionInterface::class));
@@ -28,7 +31,7 @@ class SessionTest extends HttpTest
         $this->assertSame(200, $result->getStatusCode());
     }
 
-    public function testSetSid()
+    public function testSetSid(): void
     {
         $this->http->setHandler(function () {
             return ++$this->session()->getSection('cli')->value;
@@ -42,7 +45,7 @@ class SessionTest extends HttpTest
         $this->assertArrayHasKey('sid', $cookies);
     }
 
-    public function testSessionResume()
+    public function testSessionResume(): void
     {
         $this->http->setHandler(function () {
             return ++$this->session()->getSection('cli')->value;
@@ -66,7 +69,7 @@ class SessionTest extends HttpTest
         $this->assertSame('3', $result->getBody()->__toString());
     }
 
-    public function testSessionRegenerateId()
+    public function testSessionRegenerateId(): void
     {
         $this->http->setHandler(function () {
             return ++$this->session()->getSection('cli')->value;
@@ -103,7 +106,7 @@ class SessionTest extends HttpTest
         $this->assertSame('3', $result->getBody()->__toString());
     }
 
-    public function testDestroySession()
+    public function testDestroySession(): void
     {
         $this->http->setHandler(function () {
             $this->assertInternalType('array', $this->session()->__debugInfo());

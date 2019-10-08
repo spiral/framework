@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -21,13 +22,13 @@ use Spiral\Security\ScopeGuard;
 
 final class GuardBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    public const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,
         RulesInterface::class       => RuleManager::class,
         GuardInterface::class       => ScopeGuard::class
     ];
 
-    const BINDINGS = [
+    public const BINDINGS = [
         ActorInterface::class => Guest::class
     ];
 }

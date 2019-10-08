@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +14,7 @@ use Spiral\Filters\Filter;
 
 class BadRequest extends Filter
 {
-    const SCHEMA = [
+    public const SCHEMA = [
         'name' => 'invalid:section.name'
     ];
 }

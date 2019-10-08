@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -22,18 +23,18 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 final class PublishCommand extends Command
 {
-    protected const NAME        = 'publish';
-    protected const DESCRIPTION = 'Publish resources';
 
     /**
      * {@inheritdoc}
      */
-    const ARGUMENTS = [
+    public const ARGUMENTS = [
         ['type', InputArgument::REQUIRED, 'Operation type [replace|follow|ensure]'],
         ['target', InputArgument::REQUIRED, 'Target file or directory'],
         ['source', InputArgument::OPTIONAL, 'Source file or directory'],
         ['mode', InputArgument::OPTIONAL, 'runtime', 'File mode [readonly|runtime]'],
     ];
+    protected const NAME        = 'publish';
+    protected const DESCRIPTION = 'Publish resources';
 
     /**
      * @param null|string $name
@@ -53,13 +54,13 @@ final class PublishCommand extends Command
         Publisher $publisher,
         FilesInterface $files,
         DirectoriesInterface $directories
-    ) {
+    ): void {
         switch ($this->argument('type')) {
             case 'replace':
             case 'follow':
                 if ($this->isDirectory()) {
                     $this->sprintf(
-                        "<fg=cyan>•</fg=cyan> publish directory <comment>%s</comment> to <comment>%s</comment>",
+                        '<fg=cyan>•</fg=cyan> publish directory <comment>%s</comment> to <comment>%s</comment>',
                         $this->getSource($files, $directories),
                         $this->getTarget($files, $directories)
                     );
@@ -72,7 +73,7 @@ final class PublishCommand extends Command
                     );
                 } else {
                     $this->sprintf(
-                        "<fg=cyan>•</fg=cyan> publish file <comment>%s</comment> to <comment>%s</comment>",
+                        '<fg=cyan>•</fg=cyan> publish file <comment>%s</comment> to <comment>%s</comment>',
                         $this->getSource($files, $directories),
                         $this->getTarget($files, $directories)
                     );
@@ -88,7 +89,7 @@ final class PublishCommand extends Command
                 break;
             case 'ensure':
                 $this->sprintf(
-                    "<fg=cyan>•</fg=cyan> ensure directory <comment>%s</comment>",
+                    '<fg=cyan>•</fg=cyan> ensure directory <comment>%s</comment>',
                     $this->getTarget($files, $directories)
                 );
 

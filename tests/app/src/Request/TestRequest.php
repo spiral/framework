@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,12 +14,12 @@ use Spiral\Filters\Filter;
 
 class TestRequest extends Filter
 {
-    const SCHEMA = [
+    public const SCHEMA = [
         'name'  => 'data:name',
         'value' => 'data:section.value'
     ];
 
-    const VALIDATES = [
+    public const VALIDATES = [
         'name' => ['notEmpty', 'string']
     ];
 }

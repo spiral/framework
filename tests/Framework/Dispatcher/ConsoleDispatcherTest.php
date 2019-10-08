@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -15,29 +18,29 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class ConsoleDispatcherTest extends BaseTest
 {
-    public function testCanServe()
+    public function testCanServe(): void
     {
         $this->assertTrue($this->makeApp()->get(ConsoleDispatcher::class)->canServe());
     }
 
-    public function testCanNotServe()
+    public function testCanNotServe(): void
     {
         $this->assertFalse($this->makeApp([
             'RR' => true
         ])->get(ConsoleDispatcher::class)->canServe());
     }
 
-    public function testListCommands()
+    public function testListCommands(): void
     {
         $output = new BufferedOutput();
         $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([]), $output);
 
         $result = $output->fetch();
 
-        $this->assertContains("dead", $result);
+        $this->assertContains('dead', $result);
     }
 
-    public function testException()
+    public function testException(): void
     {
         $output = new BufferedOutput();
         $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
@@ -46,11 +49,11 @@ class ConsoleDispatcherTest extends BaseTest
 
         $result = $output->fetch();
 
-        $this->assertContains("undefined", $result);
-        $this->assertContains("DeadCommand.php", $result);
+        $this->assertContains('undefined', $result);
+        $this->assertContains('DeadCommand.php', $result);
     }
 
-    public function testExceptionVerbose()
+    public function testExceptionVerbose(): void
     {
         $output = new BufferedOutput();
         $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
@@ -59,11 +62,11 @@ class ConsoleDispatcherTest extends BaseTest
         ]), $output);
 
         $result = $output->fetch();
-        $this->assertContains("undefined", $result);
-        $this->assertContains("DeadCommand.php", $result);
+        $this->assertContains('undefined', $result);
+        $this->assertContains('DeadCommand.php', $result);
     }
 
-    public function testExceptionDebug()
+    public function testExceptionDebug(): void
     {
         $output = new BufferedOutput();
         $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
@@ -72,10 +75,10 @@ class ConsoleDispatcherTest extends BaseTest
         ]), $output);
 
         $result = $output->fetch();
-        $this->assertContains("undefined", $result);
-        $this->assertContains("DeadCommand.php", $result);
-        $this->assertContains("->perform()", $result);
+        $this->assertContains('undefined', $result);
+        $this->assertContains('DeadCommand.php', $result);
+        $this->assertContains('->perform()', $result);
 
-        $this->assertContains("\$undefined", $result);
+        $this->assertContains('$undefined', $result);
     }
 }

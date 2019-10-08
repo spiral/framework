@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -16,10 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class KeyCommand extends Command
 {
-    protected const NAME        = "encrypt:key";
-    protected const DESCRIPTION = "Generate new encryption key";
-
-    const OPTIONS = [
+    public const OPTIONS = [
         [
             'mount',
             'm',
@@ -34,6 +32,8 @@ final class KeyCommand extends Command
             '{encrypt-key}'
         ],
     ];
+    protected const NAME        = 'encrypt:key';
+    protected const DESCRIPTION = 'Generate new encryption key';
 
     /**
      * @param null|string $name
@@ -48,7 +48,7 @@ final class KeyCommand extends Command
      * @param EncrypterFactory $enc
      * @param FilesInterface   $files
      */
-    public function perform(EncrypterFactory $enc, FilesInterface $files)
+    public function perform(EncrypterFactory $enc, FilesInterface $files): void
     {
         $key = $enc->generateKey();
 
@@ -60,7 +60,7 @@ final class KeyCommand extends Command
         }
 
         if (!$files->exists($file)) {
-            $this->sprintf("<error>Unable to find `%s`</error>", $file);
+            $this->sprintf('<error>Unable to find `%s`</error>', $file);
             return;
         }
 
@@ -75,6 +75,6 @@ final class KeyCommand extends Command
 
         $files->write($file, $content);
 
-        $this->writeln("<comment>Encryption key has been updated.</comment>");
+        $this->writeln('<comment>Encryption key has been updated.</comment>');
     }
 }

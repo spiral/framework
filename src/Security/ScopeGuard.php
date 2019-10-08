@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -106,7 +107,7 @@ final class ScopeGuard implements GuardInterface
         try {
             return $this->container->get(ActorInterface::class);
         } catch (ContainerException $e) {
-            throw new ScopeException("Unable to resolve Actor from the scope", $e->getCode(), $e);
+            throw new ScopeException('Unable to resolve Actor from the scope', $e->getCode(), $e);
         }
     }
 

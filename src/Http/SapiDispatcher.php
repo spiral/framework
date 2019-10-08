@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -48,7 +49,7 @@ final class SapiDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve(EmitterInterface $emitter = null)
+    public function serve(EmitterInterface $emitter = null): void
     {
         /**
          * @var Http             $http
@@ -79,14 +80,14 @@ final class SapiDispatcher implements DispatcherInterface
      * @param EmitterInterface $emitter
      * @param \Throwable       $e
      */
-    protected function handleException(EmitterInterface $emitter, \Throwable $e)
+    protected function handleException(EmitterInterface $emitter, \Throwable $e): void
     {
         $handler = new HtmlHandler();
 
         try {
             /** @var SnapshotInterface $snapshot */
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             // nothing to report
         }
 

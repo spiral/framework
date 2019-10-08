@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,8 +14,8 @@ use Spiral\Jobs\JobHandler;
 
 class ErrorJob extends JobHandler
 {
-    public function invoke()
+    public function invoke(): void
     {
-        throw new \ErrorException("bad job");
+        throw new \ErrorException('bad job');
     }
 }

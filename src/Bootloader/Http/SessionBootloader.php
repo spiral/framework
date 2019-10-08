@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -20,12 +21,12 @@ use Spiral\Session\SessionSection;
 
 final class SessionBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    public const DEPENDENCIES = [
         HttpBootloader::class,
         CookiesBootloader::class
     ];
 
-    const BINDINGS = [
+    public const BINDINGS = [
         SectionInterface::class => SessionSection::class
     ];
 
@@ -54,7 +55,7 @@ final class SessionBootloader extends Bootloader
         CookiesBootloader $cookies,
         HttpBootloader $http,
         DirectoriesInterface $directories
-    ) {
+    ): void {
         $config->setDefaults('session', [
             'lifetime' => 86400,
             'cookie'   => 'sid',

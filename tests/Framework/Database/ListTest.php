@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -14,7 +17,7 @@ use Spiral\Framework\ConsoleTest;
 
 class ListTest extends ConsoleTest
 {
-    public function testList()
+    public function testList(): void
     {
         /** @var Database $db */
         $db = $this->app->get(Database::class);
@@ -39,7 +42,7 @@ class ListTest extends ConsoleTest
     }
 
 
-    public function testBrokenList()
+    public function testBrokenList(): void
     {
         /** @var DatabaseManager $dm */
         $dm = $this->app->get(DatabaseManager::class);

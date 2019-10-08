@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -22,13 +23,13 @@ use Spiral\Views\ViewManager;
  */
 final class CompileCommand extends Command
 {
-    const NAME        = 'views:compile';
-    const DESCRIPTION = 'Warm-up view cache';
+    public const NAME        = 'views:compile';
+    public const DESCRIPTION = 'Warm-up view cache';
 
     /**
      * @param ViewManager $views
      */
-    public function perform(ViewManager $views)
+    public function perform(ViewManager $views): void
     {
         $generator = new ContextGenerator($views->getContext());
 
@@ -48,19 +49,19 @@ final class CompileCommand extends Command
             }
         }
 
-        $this->writeln("View cache has been generated.");
+        $this->writeln('View cache has been generated.');
     }
 
     /**
      * @param EngineInterface  $engine
      * @param ContextInterface $context
      */
-    protected function compile(EngineInterface $engine, ContextInterface $context)
+    protected function compile(EngineInterface $engine, ContextInterface $context): void
     {
         $this->sprintf(
             "<fg=yellow>%s</fg=yellow> [%s]\n",
             $this->describeEngine($engine),
-            $this->describeContext($context) ?? "default"
+            $this->describeContext($context) ?? 'default'
         );
 
         foreach ($engine->getLoader()->list() as $path) {
@@ -70,7 +71,7 @@ final class CompileCommand extends Command
                 $engine->compile($path, $context);
 
                 if ($this->isVerbose()) {
-                    $this->sprintf("<info>•</info> %s", $path);
+                    $this->sprintf('<info>•</info> %s', $path);
                 }
             } catch (\Throwable $e) {
                 $this->renderError($path, $e);
@@ -84,6 +85,24 @@ final class CompileCommand extends Command
     }
 
     /**
+     * @param string     $path
+     * @param \Throwable $e
+     */
+    protected function renderError(string $path, \Throwable $e): void
+    {
+        if (!$this->isVerbose()) {
+            return;
+        }
+
+        $this->sprintf(
+            '<fg=red>•</fg=red> %s: <fg=red>%s at line %s</fg=red>',
+            $path,
+            $e->getMessage(),
+            $e->getLine()
+        );
+    }
+
+    /**
      * @param ContextInterface $context
      * @return string
      */
@@ -93,7 +112,7 @@ final class CompileCommand extends Command
 
         foreach ($context->getDependencies() as $dependency) {
             $values[] = sprintf(
-                "%s%s%s:%s%s%s",
+                '%s%s%s:%s%s%s',
                 Color::LIGHT_WHITE,
                 $dependency->getName(),
                 Color::RESET,
@@ -118,24 +137,6 @@ final class CompileCommand extends Command
     }
 
     /**
-     * @param string     $path
-     * @param \Throwable $e
-     */
-    protected function renderError(string $path, \Throwable $e): void
-    {
-        if (!$this->isVerbose()) {
-            return;
-        }
-
-        $this->sprintf(
-            "<fg=red>•</fg=red> %s: <fg=red>%s at line %s</fg=red>",
-            $path,
-            $e->getMessage(),
-            $e->getLine()
-        );
-    }
-
-    /**
      * @param string $lastPath
      */
     private function renderSuccess(string $lastPath = null): void
@@ -145,7 +146,7 @@ final class CompileCommand extends Command
         }
 
         if ($lastPath === null) {
-            $this->writeln("• no views found");
+            $this->writeln('• no views found');
         }
 
         $this->write("\n");

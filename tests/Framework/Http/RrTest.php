@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -18,13 +21,13 @@ use Zend\Diactoros\ServerRequest;
 
 class RrTest extends ConsoleTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         ini_set('error_log', __DIR__ . '/err.log');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         ini_set('error_log', 'stderr');
@@ -34,18 +37,18 @@ class RrTest extends ConsoleTest
         }
     }
 
-    public function testCanServe()
+    public function testCanServe(): void
     {
         $this->assertFalse($this->app->get(RrDispacher::class)->canServe());
     }
 
-    public function testCanServe2()
+    public function testCanServe2(): void
     {
         $this->app->getEnvironment()->set('RR_HTTP', true);
         $this->assertTrue($this->app->get(RrDispacher::class)->canServe());
     }
 
-    public function testServe()
+    public function testServe(): void
     {
         $this->app->getEnvironment()->set('RR_HTTP', true);
 
@@ -67,7 +70,7 @@ class RrTest extends ConsoleTest
         $this->app->get(RrDispacher::class)->serve($psr);
     }
 
-    public function testServeError()
+    public function testServeError(): void
     {
         $this->app->getEnvironment()->set('RR_HTTP', true);
 
@@ -101,7 +104,7 @@ class RrTest extends ConsoleTest
         $this->assertCount(1, $files);
     }
 
-    public function testServeErrorDebug()
+    public function testServeErrorDebug(): void
     {
         $this->app = $this->makeApp([
             'DEBUG' => true

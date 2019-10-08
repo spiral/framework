@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -21,7 +24,7 @@ abstract class HttpTest extends BaseTest
     /** @var Http */
     protected $http;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->makeApp();
         $this->http = $this->app->get(Http::class);

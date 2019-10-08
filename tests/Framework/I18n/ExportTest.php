@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +14,7 @@ use Spiral\Framework\ConsoleTest;
 
 class ExportTest extends ConsoleTest
 {
-    public function testReset()
+    public function testReset(): void
     {
         $this->assertFileNotExists(__DIR__ . '/messages.ru.php');
 

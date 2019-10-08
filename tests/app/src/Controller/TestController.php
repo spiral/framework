@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -40,7 +43,7 @@ class TestController extends Controller
         return $r->isValid() ? ($r->value ?? 'ok') : json_encode($r->getErrors());
     }
 
-    public function filter2Action(BadRequest $r)
+    public function filter2Action(BadRequest $r): void
     {
     }
 
@@ -49,7 +52,7 @@ class TestController extends Controller
         return 'value: ' . $i->withPrefix('section')->getValue('query', 'value');
     }
 
-    public function errorAction()
+    public function errorAction(): void
     {
         echo $undefined;
     }

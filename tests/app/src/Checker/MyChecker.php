@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -15,7 +18,7 @@ class MyChecker extends AbstractChecker
     /**
      * Error messages associated with checker method by name.
      */
-    const MESSAGES = [
+    public const MESSAGES = [
         'abc' => 'Not ABC'
     ];
 

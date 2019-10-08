@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -32,7 +33,7 @@ use Symfony\Component\Translation\Loader;
  */
 final class I18nBootloader extends Bootloader implements SingletonInterface
 {
-    const SINGLETONS = [
+    public const SINGLETONS = [
         \Symfony\Contracts\Translation\TranslatorInterface::class => TranslatorInterface::class,
         TranslatorInterface::class                                => Translator::class,
         CatalogueManagerInterface::class                          => CatalogueManager::class,
@@ -56,7 +57,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
      * @param EnvironmentInterface $env
      * @param DirectoriesInterface $dirs
      */
-    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs)
+    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         if (!$dirs->has('locale')) {
             $dirs->set('locale', $dirs->get('app') . 'locale/');
