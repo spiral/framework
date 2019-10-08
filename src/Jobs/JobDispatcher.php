@@ -14,6 +14,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\RoadRunner\Worker;
 use Spiral\Snapshots\SnapshotterInterface;
 
 final class JobDispatcher implements DispatcherInterface
@@ -37,7 +38,7 @@ final class JobDispatcher implements DispatcherInterface
         FinalizerInterface $finalizer,
         ContainerInterface $container
     ) {
-        $this->env       = $env;
+        $this->env = $env;
         $this->finalizer = $finalizer;
         $this->container = $container;
     }
@@ -47,17 +48,22 @@ final class JobDispatcher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return php_sapi_name() == 'cli' && $this->env->get('RR_JOBS') !== null;
+        return (php_sapi_name() == 'cli' && $this->env->get('RR_JOBS') !== null);
     }
 
     /**
      * @inheritdoc
      */
-    public function serve(): void
+    public function serve()
     {
+        /**
+         * @var Consumer $consumer
+         * @var Worker   $worker
+         */
         $consumer = $this->container->get(Consumer::class);
+        $worker = $this->container->get(Worker::class);
 
-        $consumer->serve(function (\Throwable $e = null): void {
+        $consumer->serve($worker, function (\Throwable $e = null) {
             if ($e !== null) {
                 $this->handleException($e);
             }
@@ -69,7 +75,7 @@ final class JobDispatcher implements DispatcherInterface
     /**
      * @param \Throwable $e
      */
-    protected function handleException(\Throwable $e): void
+    protected function handleException(\Throwable $e)
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);

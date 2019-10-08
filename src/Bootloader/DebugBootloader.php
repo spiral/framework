@@ -16,7 +16,7 @@ use Spiral\Logger\LogsInterface;
 
 final class DebugBootloader extends Bootloader
 {
-    public const SINGLETONS = [
+    const SINGLETONS = [
         Dumper::class        => Dumper::class,
         LogsInterface::class => LogFactory::class
     ];

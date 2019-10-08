@@ -2,38 +2,36 @@
 [![Latest Stable Version](https://poser.pugx.org/spiral/framework/version)](https://packagist.org/packages/spiral/framework)
 [![Build Status](https://travis-ci.org/spiral/framework.svg?branch=master)](https://travis-ci.org/spiral/framework)
 [![Codecov](https://codecov.io/gh/spiral/framework/graph/badge.svg)](https://codecov.io/gh/spiral/framework)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/framework/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiral/framework/badges/quality-score.png)](https://scrutinizer-ci.com/g/spiral/framework/?branch=master) <a href="https://discord.gg/TFeEmCs"><img src="https://img.shields.io/badge/discord-chat-magenta.svg"></a>
 
 <img src="https://raw.githubusercontent.com/spiral/guide/master/resources/logo.png" height="135px" alt="Spiral Framework" align="left"/>
 
 Spiral Framework makes developing in PHP exciting again. It optimizes on the power of PHP to quickly develop business logic while uniquely leveraging Golang to craft an elegant infrastructure layer with native support for HTTP/2, GRPC, Queue, and more. Build faster, more efficient applications with this flexible and PSR compliant PHP7 framework (and have fun while you’re at it). 
 
-[Website](https://spiral-framework.com) | <b>[App Skeleton](https://github.com/spiral/app)</b> ([cli](https://github.com/spiral/app-cli), [grpc](https://github.com/spiral/app-grpc)) | [Documentation](https://github.com/spiral/guide) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
+[App Skeleton](https://github.com/spiral/app) ([CLI](https://github.com/spiral/app-cli), [GRPC](https://github.com/spiral/app-grpc)) | [**Documentation**](https://github.com/spiral/guide) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
 
 <br/>
 
 ## Features
-- battle-tested since 2013
-- resident memory framework, RAM is your cache
+- Battle-tested since 2013
+- [Lightning fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=7704a0a2-d91c-40f4-927e-62ddad7ab36f&hw=ph&test=fortune&l=zik073-v&c=6&o=e)
 - PSR-{2,3,4,6,7,11,15,16,17} compliant
-- built on loosely coupled components
-- native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
+- Powerful [application server](https://roadrunner.dev/) and resident memory application kernel
+- Native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
 - GRPC server and client
 - HTTPS, HTTP/2+Push, encrypted cookies, sessions, CSRF-guard
 - MySQL, MariaDB, SQLite, Postgres, SQLServer support, auto-migrations
-- data-mapper ORM which can be configured at runtime
-- class discovery via static analysis
-- scaffolding and prototyping (it literally writes code for you)
+- The [ORM](https://github.com/cycle/orm) you will use for the next 25 years
+- Intuitive scaffolding and prototyping (it literally writes code for you)
+- Helpful class discovery via static analysis
 - RBAC security, validation, and encryption
-- can be extended on PHP or on Golang
-- template engine lets you create your own HTML tags
-- or just use twig
-- MVC, HMVC, ADR, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
+- Dynamic template engine to create your own HTML tags (or just use Twig)
+- MVC, HMVC, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
 
 ## Skeletons
 | App Type | Current Status | Install       
 | ---       | --- | ---
-spiral/app | [![Latest Stable Version](https://poser.pugx.org/spiral/app/version)](https://packagist.org/packages/app/core) | https://github.com/spiral/app
+spiral/app | [![Latest Stable Version](https://poser.pugx.org/spiral/app/version)](https://packagist.org/packages/spiral/app) | https://github.com/spiral/app
 spiral/app-cli | [![Latest Stable Version](https://poser.pugx.org/spiral/app-cli/version)](https://packagist.org/packages/spiral/app-cli) | https://github.com/spiral/app-cli
 spiral/app-grpc | [![Latest Stable Version](https://poser.pugx.org/spiral/app-grpc/version)](https://packagist.org/packages/spiral/app-grpc) | https://github.com/spiral/app-grpc
 
@@ -62,6 +60,7 @@ spiral/hmvc | [![Latest Stable Version](https://poser.pugx.org/spiral/hmvc/versi
 spiral/router | [![Latest Stable Version](https://poser.pugx.org/spiral/router/version)](https://packagist.org/packages/spiral/router) [![Build Status](https://travis-ci.org/spiral/router.svg?branch=master)](https://travis-ci.org/spiral/router) [![Codecov](https://codecov.io/gh/spiral/router/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/router/)
 spiral/session | [![Latest Stable Version](https://poser.pugx.org/spiral/session/version)](https://packagist.org/packages/spiral/session) [![Build Status](https://travis-ci.org/spiral/session.svg?branch=master)](https://travis-ci.org/spiral/session) [![Codecov](https://codecov.io/gh/spiral/session/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/session/)
 spiral/nyholm-bridge | [![Latest Stable Version](https://poser.pugx.org/spiral/nyholm-bridge/version)](https://packagist.org/packages/spiral/nyholm-bridge) [![Build Status](https://travis-ci.org/spiral/nyholm-bridge.svg?branch=master)](https://travis-ci.org/spiral/nyholm-bridge) [![Codecov](https://codecov.io/gh/spiral/nyholm-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/nyholm-bridge/)
+spiral/boardcast | [![Latest Stable Version](https://poser.pugx.org/spiral/broadcast/version)](https://packagist.org/packages/spiral/broadcast) [![Build Status](https://travis-ci.org/spiral/broadcast.svg?branch=master)](https://travis-ci.org/spiral/broadcast) [![Codecov](https://codecov.io/gh/spiral/broadcast/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/broadcast/)
 
 ## Security and Validation
 | Component | Current Status        
@@ -109,6 +108,7 @@ spiral/dumper | [![Latest Stable Version](https://poser.pugx.org/spiral/dumper/v
 spiral/views | [![Latest Stable Version](https://poser.pugx.org/spiral/views/version)](https://packagist.org/packages/spiral/views) [![Build Status](https://travis-ci.org/spiral/views.svg?branch=master)](https://travis-ci.org/spiral/views) [![Codecov](https://codecov.io/gh/spiral/views/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/views/)
 spiral/storage | [![Latest Stable Version](https://poser.pugx.org/spiral/storage/version)](https://packagist.org/packages/spiral/storage) [![Build Status](https://travis-ci.org/spiral/storage.svg?branch=master)](https://travis-ci.org/spiral/storage) [![Codecov](https://codecov.io/gh/spiral/storage/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/storage/)
 spiral/reactor | [![Latest Stable Version](https://poser.pugx.org/spiral/reactor/version)](https://packagist.org/packages/spiral/reactor) [![Build Status](https://travis-ci.org/spiral/reactor.svg?branch=master)](https://travis-ci.org/spiral/reactor) [![Codecov](https://codecov.io/gh/spiral/reactor/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/reactor/)
+spiral/annotations | [![Latest Stable Version](https://poser.pugx.org/spiral/annotations/version)](https://packagist.org/packages/spiral/annotations) [![Build Status](https://travis-ci.org/spiral/annotations.svg?branch=master)](https://travis-ci.org/spiral/annotations) [![Codecov](https://codecov.io/gh/spiral/annotations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/annotations/)
 
 ## Integrations
 | Component | Current Status        

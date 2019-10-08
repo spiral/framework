@@ -24,11 +24,11 @@ use Spiral\Validation\ValidationProvider;
 
 final class ValidationBootloader extends Bootloader implements SingletonInterface
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         TokenizerBootloader::class
     ];
 
-    public const SINGLETONS = [
+    const SINGLETONS = [
         ValidationInterface::class => ValidationProvider::class,
         RulesInterface::class      => ValidationProvider::class,
         ParserInterface::class     => RuleParser::class
@@ -48,20 +48,20 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
     /**
      * @param TokenizerBootloader $tokenizer
      */
-    public function boot(TokenizerBootloader $tokenizer): void
+    public function boot(TokenizerBootloader $tokenizer)
     {
         $this->config->setDefaults('validation', [
             // Checkers are resolved using container and provide ability to isolate some validation rules
             // under common name and class. You can register new checkers at any moment without any
             // performance issues.
             'checkers'   => [
-                'type'    => Checker\TypeChecker::class,
-                'number'  => Checker\NumberChecker::class,
-                'mixed'   => Checker\MixedChecker::class,
-                'address' => Checker\AddressChecker::class,
-                'string'  => Checker\StringChecker::class,
-                'file'    => Checker\FileChecker::class,
-                'image'   => Checker\ImageChecker::class,
+                "type"    => Checker\TypeChecker::class,
+                "number"  => Checker\NumberChecker::class,
+                "mixed"   => Checker\MixedChecker::class,
+                "address" => Checker\AddressChecker::class,
+                "string"  => Checker\StringChecker::class,
+                "file"    => Checker\FileChecker::class,
+                "image"   => Checker\ImageChecker::class,
             ],
 
             // Enable/disable validation conditions
@@ -74,35 +74,35 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
 
             // Aliases are only used to simplify developer life.
             'aliases'    => [
-                'notEmpty'   => 'type::notEmpty',
-                'required'   => 'type::notEmpty',
-                'datetime'   => 'type::datetime',
-                'timezone'   => 'type::timezone',
-                'bool'       => 'type::boolean',
-                'boolean'    => 'type::boolean',
-                'cardNumber' => 'mixed::cardNumber',
-                'regexp'     => 'string::regexp',
-                'email'      => 'address::email',
-                'url'        => 'address::url',
-                'file'       => 'file::exists',
-                'uploaded'   => 'file::uploaded',
-                'filesize'   => 'file::size',
-                'image'      => 'image::valid',
-                'array'      => 'is_array',
-                'callable'   => 'is_callable',
-                'double'     => 'is_double',
-                'float'      => 'is_float',
-                'int'        => 'is_int',
-                'integer'    => 'is_integer',
-                'numeric'    => 'is_numeric',
-                'long'       => 'is_long',
-                'null'       => 'is_null',
-                'object'     => 'is_object',
-                'real'       => 'is_real',
-                'resource'   => 'is_resource',
-                'scalar'     => 'is_scalar',
-                'string'     => 'is_string',
-                'match'      => 'mixed::match',
+                "notEmpty"   => "type::notEmpty",
+                "required"   => "type::notEmpty",
+                "datetime"   => "type::datetime",
+                "timezone"   => "type::timezone",
+                "bool"       => "type::boolean",
+                "boolean"    => "type::boolean",
+                "cardNumber" => "mixed::cardNumber",
+                "regexp"     => "string::regexp",
+                "email"      => "address::email",
+                "url"        => "address::url",
+                "file"       => "file::exists",
+                "uploaded"   => "file::uploaded",
+                "filesize"   => "file::size",
+                "image"      => "image::valid",
+                "array"      => "is_array",
+                "callable"   => "is_callable",
+                "double"     => "is_double",
+                "float"      => "is_float",
+                "int"        => "is_int",
+                "integer"    => "is_integer",
+                "numeric"    => "is_numeric",
+                "long"       => "is_long",
+                "null"       => "is_null",
+                "object"     => "is_object",
+                "real"       => "is_real",
+                "resource"   => "is_resource",
+                "scalar"     => "is_scalar",
+                "string"     => "is_string",
+                "match"      => "mixed::match",
             ]
         ]);
 
@@ -113,7 +113,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
      * @param string $alias
      * @param mixed  $checker
      */
-    public function addChecker(string $alias, $checker): void
+    public function addChecker(string $alias, $checker)
     {
         $this->config->modify('validation', new Append('checkers', $alias, $checker));
     }
@@ -122,7 +122,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
      * @param string $alias
      * @param mixed  $condition
      */
-    public function addCondition(string $alias, $condition): void
+    public function addCondition(string $alias, $condition)
     {
         $this->config->modify('validation', new Append('conditions', $alias, $condition));
     }
@@ -131,7 +131,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
      * @param string $alias
      * @param string $target
      */
-    public function addAlias(string $alias, string $target): void
+    public function addAlias(string $alias, string $target)
     {
         $this->config->modify('validation', new Append('aliases', $alias, $target));
     }

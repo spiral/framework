@@ -47,7 +47,7 @@ final class DebugListener
      *
      * @param LogEvent $event
      */
-    public function __invoke(LogEvent $event): void
+    public function __invoke(LogEvent $event)
     {
         if (empty($this->output)) {
             return;
@@ -76,7 +76,7 @@ final class DebugListener
      */
     public function withOutput(OutputInterface $output): self
     {
-        $listener         = clone $this;
+        $listener = clone $this;
         $listener->output = $output;
 
         return $listener;

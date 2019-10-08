@@ -15,14 +15,14 @@ use Spiral\Boot\Bootloader\Bootloader;
 
 final class AnnotatedBootloader extends Bootloader
 {
-    public const DEPENDENCIES = [
+    const DEPENDENCIES = [
         SchemaBootloader::class
     ];
 
     /**
      * @param SchemaBootloader $schema
      */
-    public function boot(SchemaBootloader $schema): void
+    public function boot(SchemaBootloader $schema)
     {
         AnnotationRegistry::registerLoader('class_exists');
 

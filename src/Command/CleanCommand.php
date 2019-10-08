@@ -23,17 +23,17 @@ final class CleanCommand extends Command implements SingletonInterface
      * @param FilesInterface       $files
      * @param DirectoriesInterface $directories
      */
-    public function perform(FilesInterface $files, DirectoriesInterface $directories): void
+    public function perform(FilesInterface $files, DirectoriesInterface $directories)
     {
         $cacheDirectory = $directories->get('cache');
         if (!$files->exists($cacheDirectory)) {
-            $this->writeln('Cache directory is missing, no cache to be cleaned.');
+            $this->writeln("Cache directory is missing, no cache to be cleaned.");
 
             return;
         }
 
         if ($this->isVerbose()) {
-            $this->writeln('<info>Cleaning application cache:</info>');
+            $this->writeln("<info>Cleaning application cache:</info>");
         }
 
         foreach ($files->getFiles($cacheDirectory) as $filename) {
@@ -59,6 +59,6 @@ final class CleanCommand extends Command implements SingletonInterface
             }
         }
 
-        $this->writeln('<info>Runtime cache has been cleared.</info>');
+        $this->writeln("<info>Runtime cache has been cleared.</info>");
     }
 }

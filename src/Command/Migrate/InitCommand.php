@@ -11,15 +11,15 @@ namespace Spiral\Command\Migrate;
 
 final class InitCommand extends AbstractCommand
 {
-    public const NAME        = 'migrate:init';
-    public const DESCRIPTION = 'Init migrations component (create migrations table)';
+    const NAME        = 'migrate:init';
+    const DESCRIPTION = 'Init migrations component (create migrations table)';
 
     /**
      * Perform command.
      */
-    public function perform(): void
+    public function perform()
     {
         $this->migrator->configure();
-        $this->writeln('<info>Migrations table were successfully created</info>');
+        $this->writeln("<info>Migrations table were successfully created</info>");
     }
 }

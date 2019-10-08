@@ -16,10 +16,10 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class KeyCommand extends Command
 {
-    protected const NAME        = 'encrypt:key';
-    protected const DESCRIPTION = 'Generate new encryption key';
+    protected const NAME        = "encrypt:key";
+    protected const DESCRIPTION = "Generate new encryption key";
 
-    public const OPTIONS = [
+    const OPTIONS = [
         [
             'mount',
             'm',
@@ -36,7 +36,7 @@ final class KeyCommand extends Command
     ];
 
     /**
-     * @param string|null $name
+     * @param null|string $name
      */
     public function __construct(?string $name = null)
     {
@@ -48,7 +48,7 @@ final class KeyCommand extends Command
      * @param EncrypterFactory $enc
      * @param FilesInterface   $files
      */
-    public function perform(EncrypterFactory $enc, FilesInterface $files): void
+    public function perform(EncrypterFactory $enc, FilesInterface $files)
     {
         $key = $enc->generateKey();
 
@@ -60,8 +60,7 @@ final class KeyCommand extends Command
         }
 
         if (!$files->exists($file)) {
-            $this->sprintf('<error>Unable to find `%s`</error>', $file);
-
+            $this->sprintf("<error>Unable to find `%s`</error>", $file);
             return;
         }
 
@@ -76,6 +75,6 @@ final class KeyCommand extends Command
 
         $files->write($file, $content);
 
-        $this->writeln('<comment>Encryption key has been updated.</comment>');
+        $this->writeln("<comment>Encryption key has been updated.</comment>");
     }
 }

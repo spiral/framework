@@ -34,7 +34,7 @@ final class RequestInput implements InputInterface
      */
     public function withPrefix(string $prefix, bool $add = true): InputInterface
     {
-        $input        = clone $this;
+        $input = clone $this;
         $input->input = $this->input->withPrefix($prefix, $add);
 
         return $input;

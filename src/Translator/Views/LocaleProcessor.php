@@ -40,7 +40,7 @@ final class LocaleProcessor implements ProcessorInterface
     {
         //Translator options must automatically route this view name to specific domain
         $domain = $this->translator->getDomain(sprintf(
-            '%s-%s-%s',
+            "%s-%s-%s",
             self::PREFIX,
             str_replace(['/', '\\'], '-', $source->getNamespace()),
             str_replace(['/', '\\'], '-', $source->getName())
