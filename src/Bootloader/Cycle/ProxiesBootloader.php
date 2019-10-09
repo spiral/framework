@@ -17,11 +17,11 @@ use Spiral\Boot\Bootloader\Bootloader;
 
 final class ProxiesBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         CycleBootloader::class
     ];
 
-    public const SINGLETONS = [
+    protected const SINGLETONS = [
         PromiseFactoryInterface::class => ProxyFactory::class,
         MaterializerInterface::class   => EvalMaterializer::class
     ];

@@ -21,7 +21,7 @@ use Spiral\Views\ViewsInterface;
 
 final class ViewsBootloader extends Bootloader implements SingletonInterface
 {
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         ViewsInterface::class => ViewManager::class,
     ];
 

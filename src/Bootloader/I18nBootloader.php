@@ -32,7 +32,7 @@ use Symfony\Component\Translation\Loader;
  */
 final class I18nBootloader extends Bootloader implements SingletonInterface
 {
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         \Symfony\Contracts\Translation\TranslatorInterface::class => TranslatorInterface::class,
         TranslatorInterface::class                                => Translator::class,
         CatalogueManagerInterface::class                          => CatalogueManager::class,

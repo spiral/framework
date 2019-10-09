@@ -20,11 +20,11 @@ use Spiral\Jobs\Registry\ContainerRegistry;
 
 final class JobsBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         ServerBootloader::class
     ];
 
-    public const SINGLETONS = [
+    protected  const SINGLETONS = [
         QueueInterface::class           => Queue::class,
         HandlerRegistryInterface::class => ContainerRegistry::class
     ];

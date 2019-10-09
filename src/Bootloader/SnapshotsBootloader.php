@@ -27,7 +27,7 @@ final class SnapshotsBootloader extends Bootloader
 {
     private const MAX_SNAPSHOTS = 25;
 
-    const SINGLETONS = [
+    protected  const SINGLETONS = [
         SnapshotterInterface::class => [self::class, 'fileSnapshotter']
     ];
 

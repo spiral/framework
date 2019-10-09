@@ -28,11 +28,11 @@ use Spiral\Core\Container\SingletonInterface;
  */
 final class ConsoleBootloader extends Bootloader implements SingletonInterface
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         TokenizerBootloader::class,
     ];
 
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         Console::class          => Console::class,
         LocatorInterface::class => CommandLocator::class
     ];

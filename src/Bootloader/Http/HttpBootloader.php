@@ -33,11 +33,11 @@ use Spiral\RoadRunner\PSR7Client;
  */
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         ServerBootloader::class
     ];
 
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         Http::class             => [self::class, 'httpCore'],
         EmitterInterface::class => SapiEmitter::class,
     ];

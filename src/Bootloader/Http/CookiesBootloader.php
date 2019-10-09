@@ -18,7 +18,7 @@ use Spiral\Core\Container\SingletonInterface;
 
 final class CookiesBootloader extends Bootloader implements SingletonInterface
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         HttpBootloader::class
     ];
 

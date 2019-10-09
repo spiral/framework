@@ -28,16 +28,16 @@ use Spiral\Database\DatabaseProviderInterface;
 
 final class CycleBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         DatabaseBootloader::class,
         SchemaBootloader::class
     ];
 
-    public const BINDINGS = [
+    protected const BINDINGS = [
         TransactionInterface::class => Transaction::class,
     ];
 
-    public const SINGLETONS = [
+    protected const SINGLETONS = [
         ORMInterface::class     => [self::class, 'orm'],
         FactoryInterface::class => [self::class, 'factory'],
     ];

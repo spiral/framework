@@ -19,12 +19,12 @@ use Spiral\Translator\Views\LocaleProcessor;
  */
 final class TranslatedCacheBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         I18nBootloader::class,
         ViewsBootloader::class
     ];
 
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         // Each engine expect to mount this process by itself
         LocaleProcessor::class => LocaleProcessor::class
     ];

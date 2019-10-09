@@ -20,12 +20,12 @@ use Spiral\Session\SessionSection;
 
 final class SessionBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         HttpBootloader::class,
         CookiesBootloader::class
     ];
 
-    const BINDINGS = [
+    protected const BINDINGS = [
         SectionInterface::class => SessionSection::class
     ];
 

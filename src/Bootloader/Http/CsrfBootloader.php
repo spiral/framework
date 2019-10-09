@@ -15,7 +15,7 @@ use Spiral\Csrf\Middleware\CsrfMiddleware;
 
 final class CsrfBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         HttpBootloader::class
     ];
 

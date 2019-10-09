@@ -19,7 +19,7 @@ use Spiral\GRPC\ServiceLocator;
 
 final class GRPCBootloader extends Bootloader
 {
-    public const SINGLETONS = [
+    protected const SINGLETONS = [
         InvokerInterface::class => Invoker::class,
         LocatorInterface::class => ServiceLocator::class
     ];

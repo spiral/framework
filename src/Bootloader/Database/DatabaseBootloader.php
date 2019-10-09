@@ -19,11 +19,11 @@ use Spiral\Database\DatabaseProviderInterface;
 
 final class DatabaseBootloader extends Bootloader implements SingletonInterface
 {
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         DatabaseProviderInterface::class => DatabaseManager::class,
     ];
 
-    const BINDINGS = [
+    protected const BINDINGS = [
         DatabaseInterface::class => Database::class
     ];
 

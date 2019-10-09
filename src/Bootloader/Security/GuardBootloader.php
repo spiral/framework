@@ -21,13 +21,13 @@ use Spiral\Security\ScopeGuard;
 
 final class GuardBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,
         RulesInterface::class       => RuleManager::class,
         GuardInterface::class       => ScopeGuard::class
     ];
 
-    const BINDINGS = [
+    protected const BINDINGS = [
         ActorInterface::class => Guest::class
     ];
 }

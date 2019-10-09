@@ -14,7 +14,7 @@ use Spiral\Http\Middleware\JsonPayloadMiddleware;
 
 final class JsonPayloadParserBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         HttpBootloader::class
     ];
 

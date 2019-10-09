@@ -37,7 +37,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CommandBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         ConsoleBootloader::class,
     ];
 

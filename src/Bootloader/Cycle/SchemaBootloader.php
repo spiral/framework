@@ -25,11 +25,11 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
     public const GROUP_RENDER      = 'render';
     public const GROUP_POSTPROCESS = 'postprocess';
 
-    public const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         TokenizerBootloader::class
     ];
 
-    const BINDINGS = [
+    protected const BINDINGS = [
         SchemaInterface::class             => [self::class, 'schema'],
         Generator\GenerateRelations::class => [self::class, 'relationGenerator'],
     ];

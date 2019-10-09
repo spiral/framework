@@ -21,12 +21,12 @@ use Spiral\Http\Middleware\ErrorHandlerMiddleware;
  */
 final class ErrorHandlerBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         SnapshotsBootloader::class,
         HttpBootloader::class
     ];
 
-    const BINDINGS = [
+    protected const BINDINGS = [
         ErrorHandler\RendererInterface::class => ErrorHandler\PlainRenderer::class,
     ];
 

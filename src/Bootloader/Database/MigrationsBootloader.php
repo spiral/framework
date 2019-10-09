@@ -20,12 +20,12 @@ use Spiral\Migrations\RepositoryInterface;
 
 final class MigrationsBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         TokenizerBootloader::class,
         DatabaseBootloader::class
     ];
 
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         Migrator::class            => Migrator::class,
         RepositoryInterface::class => FileRepository::class
     ];

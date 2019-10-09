@@ -24,9 +24,10 @@ use Spiral\RoadRunner\Worker;
  */
 final class ServerBootloader extends Bootloader
 {
-    const RPC_DEFAULT    = 'tcp://127.0.0.1:6001';
-    const WORKER_DEFAULT = 'pipes';
-    const SINGLETONS     = [
+    private const RPC_DEFAULT    = 'tcp://127.0.0.1:6001';
+    private const WORKER_DEFAULT = 'pipes';
+
+    protected const SINGLETONS = [
         RPC::class              => [self::class, 'rpc'],
         Worker::class           => [self::class, 'worker'],
         MetricsInterface::class => Metrics::class

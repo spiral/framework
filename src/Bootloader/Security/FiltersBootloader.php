@@ -19,11 +19,11 @@ use Spiral\Filters\MapperInterface;
 
 final class FiltersBootloader extends Bootloader
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         ValidationBootloader::class
     ];
 
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         MapperInterface::class  => FilterMapper::class,
         LocatorInterface::class => FilterLocator::class,
         InputInterface::class   => RequestInput::class

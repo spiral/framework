@@ -24,11 +24,11 @@ use Spiral\Validation\ValidationProvider;
 
 final class ValidationBootloader extends Bootloader implements SingletonInterface
 {
-    const DEPENDENCIES = [
+    protected const DEPENDENCIES = [
         TokenizerBootloader::class
     ];
 
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         ValidationInterface::class => ValidationProvider::class,
         RulesInterface::class      => ValidationProvider::class,
         ParserInterface::class     => RuleParser::class
