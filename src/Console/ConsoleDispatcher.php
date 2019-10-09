@@ -59,7 +59,7 @@ final class ConsoleDispatcher implements DispatcherInterface
     public function canServe(): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
-        return (php_sapi_name() == 'cli' && $this->env->get('RR') === null);
+        return (php_sapi_name() === 'cli' && $this->env->get('RR') === null);
     }
 
     /**

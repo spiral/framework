@@ -196,7 +196,7 @@ final class TableCommand extends Command
             $type .= " ({$column->getSize()})";
         }
 
-        if ($abstractType == 'decimal') {
+        if ($abstractType === 'decimal') {
             $type .= " ({$column->getPrecision()}, {$column->getScale()})";
         }
 

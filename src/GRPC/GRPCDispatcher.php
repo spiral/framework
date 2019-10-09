@@ -49,7 +49,7 @@ final class GRPCDispatcher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->env->get('RR_GRPC') !== null);
+        return (php_sapi_name() === 'cli' && $this->env->get('RR_GRPC') !== null);
     }
 
     /**

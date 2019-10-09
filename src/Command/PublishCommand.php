@@ -138,7 +138,7 @@ final class PublishCommand extends Command
      */
     private function isDirectory(): bool
     {
-        if ($this->argument('type') == 'ensure') {
+        if ($this->argument('type') === 'ensure') {
             return true;
         }
 

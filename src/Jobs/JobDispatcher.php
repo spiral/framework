@@ -49,7 +49,7 @@ final class JobDispatcher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->env->get('RR_JOBS') !== null);
+        return (php_sapi_name() === 'cli' && $this->env->get('RR_JOBS') !== null);
     }
 
     /**

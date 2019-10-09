@@ -59,7 +59,7 @@ final class RrDispacher implements DispatcherInterface
      */
     public function canServe(): bool
     {
-        return (php_sapi_name() == 'cli' && $this->env->get('RR_HTTP') !== null);
+        return (php_sapi_name() === 'cli' && $this->env->get('RR_HTTP') !== null);
     }
 
     /**
