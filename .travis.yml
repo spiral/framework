@@ -27,7 +27,7 @@ install:
 
 script:
   - vendor/bin/phpunit --coverage-clover=coverage.xml
-  - vendor/bin/spiral-cs fix src tests functions.php
+  - vendor/bin/spiral-cs check src tests functions.php
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -f coverage.xml
