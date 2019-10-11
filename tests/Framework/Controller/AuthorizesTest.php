@@ -18,7 +18,7 @@ use Spiral\Security\Actor\Actor;
 use Spiral\Security\Actor\Guest;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
-use Spiral\Security\ScopeGuard;
+use Spiral\Security\GuardScope;
 
 class AuthorizesTest extends BaseTest
 {
@@ -58,7 +58,7 @@ class AuthorizesTest extends BaseTest
     {
         $app = $this->makeApp();
         $g = $app->get(GuardInterface::class);
-        $this->assertInstanceOf(ScopeGuard::class, $g);
+        $this->assertInstanceOf(GuardScope::class, $g);
 
         $this->assertSame(['guest'], $g->getRoles());
 
@@ -72,7 +72,7 @@ class AuthorizesTest extends BaseTest
     {
         $app = $this->makeApp();
         $g = $app->get(GuardInterface::class);
-        $this->assertInstanceOf(ScopeGuard::class, $g);
+        $this->assertInstanceOf(GuardScope::class, $g);
 
         $this->assertSame(['guest'], $g->getRoles());
 

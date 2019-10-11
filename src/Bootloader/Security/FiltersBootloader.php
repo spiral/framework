@@ -11,7 +11,7 @@ namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Console\LocatorInterface;
-use Spiral\Filter\RequestInput;
+use Spiral\Filter\InputScope;
 use Spiral\Filters\FilterLocator;
 use Spiral\Filters\FilterMapper;
 use Spiral\Filters\InputInterface;
@@ -26,6 +26,6 @@ final class FiltersBootloader extends Bootloader
     protected const SINGLETONS = [
         MapperInterface::class  => FilterMapper::class,
         LocatorInterface::class => FilterLocator::class,
-        InputInterface::class   => RequestInput::class
+        InputInterface::class   => InputScope::class
     ];
 }

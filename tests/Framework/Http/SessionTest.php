@@ -13,21 +13,6 @@ use Spiral\Session\SessionInterface;
 
 class SessionTest extends HttpTest
 {
-    public function testNotSidWhenNotStarted()
-    {
-        $this->http->setHandler(function () {
-            $this->assertTrue($this->app->getContainer()->has(SessionInterface::class));
-
-            return 'all good';
-        });
-
-        $this->assertFalse($this->app->getContainer()->has(SessionInterface::class));
-        $result = $this->get('/');
-        $this->assertFalse($this->app->getContainer()->has(SessionInterface::class));
-
-        $this->assertSame(200, $result->getStatusCode());
-    }
-
     public function testSetSid()
     {
         $this->http->setHandler(function () {
@@ -75,7 +60,6 @@ class SessionTest extends HttpTest
         $result = $this->get('/');
         $this->assertSame(200, $result->getStatusCode());
         $this->assertSame('1', $result->getBody()->__toString());
-        $this->assertFalse($this->app->getContainer()->has(SessionInterface::class));
 
         $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
         $this->assertArrayHasKey('sid', $cookies);
@@ -106,8 +90,6 @@ class SessionTest extends HttpTest
     public function testDestroySession()
     {
         $this->http->setHandler(function () {
-            $this->assertInternalType('array', $this->session()->__debugInfo());
-
             return ++$this->session()->getSection('cli')->value;
         });
 

@@ -17,7 +17,7 @@ use Spiral\Security\Exception\GuardException;
 /**
  * Resolves Actor dynamically, using current active IoC scope.
  */
-final class ScopeGuard implements GuardInterface
+final class GuardScope implements GuardInterface
 {
     /** @var ActorInterface|null */
     private $actor = null;
@@ -48,6 +48,8 @@ final class ScopeGuard implements GuardInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ScopeException
      */
     public function allows(string $permission, array $context = []): bool
     {
@@ -72,6 +74,7 @@ final class ScopeGuard implements GuardInterface
      * @return array
      *
      * @throws GuardException
+     * @throws ScopeException
      */
     public function getRoles(): array
     {
@@ -82,9 +85,9 @@ final class ScopeGuard implements GuardInterface
      * Create instance of guard with session specific roles (existed roles will be droppped).
      *
      * @param array $roles
-     * @return ScopeGuard
+     * @return GuardScope
      */
-    public function withRoles(array $roles): ScopeGuard
+    public function withRoles(array $roles): GuardScope
     {
         $guard = clone $this;
         $guard->roles = $roles;

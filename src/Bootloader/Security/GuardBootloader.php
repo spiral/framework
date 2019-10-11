@@ -17,14 +17,14 @@ use Spiral\Security\PermissionManager;
 use Spiral\Security\PermissionsInterface;
 use Spiral\Security\RuleManager;
 use Spiral\Security\RulesInterface;
-use Spiral\Security\ScopeGuard;
+use Spiral\Security\GuardScope;
 
 final class GuardBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,
         RulesInterface::class       => RuleManager::class,
-        GuardInterface::class       => ScopeGuard::class
+        GuardInterface::class       => GuardScope::class
     ];
 
     protected const BINDINGS = [

@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Http\Middleware;
+namespace Spiral\Session\Middleware;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -77,12 +77,7 @@ final class SessionMiddleware implements MiddlewareInterface
         );
 
         try {
-            $response = $this->scope->runScope(
-                [SessionInterface::class => $session],
-                function () use ($session, $request, $handler) {
-                    return $handler->handle($request->withAttribute(static::ATTRIBUTE, $session));
-                }
-            );
+            $response = $handler->handle($request->withAttribute(static::ATTRIBUTE, $session));
         } catch (\Throwable $e) {
             $session->abort();
             throw $e;

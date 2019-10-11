@@ -13,10 +13,12 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\Autowire;
-use Spiral\Http\Middleware\SessionMiddleware;
 use Spiral\Session\Handler\FileHandler;
-use Spiral\Session\SectionInterface;
-use Spiral\Session\SessionSection;
+use Spiral\Session\Middleware\SessionMiddleware;
+use Spiral\Session\SessionInterface;
+use Spiral\Session\SessionScope;
+
+//use Spiral\Session\SectionInterface;
 
 final class SessionBootloader extends Bootloader
 {
@@ -25,8 +27,8 @@ final class SessionBootloader extends Bootloader
         CookiesBootloader::class
     ];
 
-    protected const BINDINGS = [
-        SectionInterface::class => SessionSection::class
+    protected const SINGLETONS = [
+        SessionInterface::class => SessionScope::class
     ];
 
     /** @var ConfiguratorInterface */

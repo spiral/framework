@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
 use Spiral\Core\Controller;
-use Spiral\Filter\RequestInput;
+use Spiral\Filter\InputScope;
 use Spiral\Http\PaginationFactory;
 use Spiral\Pagination\Paginator;
 use Spiral\Router\RouteInterface;
@@ -44,7 +44,7 @@ class TestController extends Controller
     {
     }
 
-    public function inputAction(RequestInput $i)
+    public function inputAction(InputScope $i)
     {
         return 'value: ' . $i->withPrefix('section')->getValue('query', 'value');
     }

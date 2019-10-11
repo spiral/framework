@@ -14,9 +14,9 @@ use Spiral\Filters\InputInterface;
 use Spiral\Http\Request\InputManager;
 
 /**
- * Provides ability to use http request as filters input.
+ * Provides ability to use http request scope as filters input.
  */
-final class RequestInput implements InputInterface
+final class InputScope implements InputInterface
 {
     /** @var InputManager */
     private $input;
