@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -59,7 +60,7 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
     {
         try {
             return $handler->handle($request);
-        } catch (ClientException|RouterException $e) {
+        } catch (ClientException | RouterException $e) {
             if ($e instanceof ClientException) {
                 $code = $e->getCode();
             } else {
@@ -87,10 +88,10 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
      * @param int     $code
      * @param string  $message
      */
-    private function logError(Request $request, int $code, string $message)
+    private function logError(Request $request, int $code, string $message): void
     {
         $this->getLogger()->error(sprintf(
-            "%s://%s%s caused the error %s (%s) by client %s.",
+            '%s://%s%s caused the error %s (%s) by client %s.',
             $request->getUri()->getScheme(),
             $request->getUri()->getHost(),
             $request->getUri()->getPath(),

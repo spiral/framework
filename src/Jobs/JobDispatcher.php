@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -54,7 +55,7 @@ final class JobDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve()
+    public function serve(): void
     {
         /**
          * @var Consumer $consumer
@@ -63,7 +64,7 @@ final class JobDispatcher implements DispatcherInterface
         $consumer = $this->container->get(Consumer::class);
         $worker = $this->container->get(Worker::class);
 
-        $consumer->serve($worker, function (\Throwable $e = null) {
+        $consumer->serve($worker, function (\Throwable $e = null): void {
             if ($e !== null) {
                 $this->handleException($e);
             }
@@ -75,11 +76,11 @@ final class JobDispatcher implements DispatcherInterface
     /**
      * @param \Throwable $e
      */
-    protected function handleException(\Throwable $e)
+    protected function handleException(\Throwable $e): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
     }

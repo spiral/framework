@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -25,11 +26,11 @@ use Spiral\Snapshots\SnapshotterInterface;
  */
 final class SnapshotsBootloader extends Bootloader
 {
-    private const MAX_SNAPSHOTS = 25;
-
-    protected  const SINGLETONS = [
+    protected const SINGLETONS = [
         SnapshotterInterface::class => [self::class, 'fileSnapshotter']
     ];
+
+    private const MAX_SNAPSHOTS = 25;
 
     /**
      * @param EnvironmentInterface $env

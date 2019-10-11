@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,16 +14,16 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class RollbackCommand extends AbstractCommand
 {
-    const NAME        = 'migrate:rollback';
-    const DESCRIPTION = 'Rollback one (default) or multiple migrations';
-    const OPTIONS     = [
+    protected const NAME        = 'migrate:rollback';
+    protected const DESCRIPTION = 'Rollback one (default) or multiple migrations';
+    protected const OPTIONS     = [
         ['all', 'a', InputOption::VALUE_NONE, 'Rollback all executed migrations']
     ];
 
     /**
      * Perform command.
      */
-    public function perform()
+    public function perform(): void
     {
         if (!$this->verifyConfigured() || !$this->verifyEnvironment()) {
             //Making sure we can safely migrate in this environment
@@ -41,7 +42,7 @@ final class RollbackCommand extends AbstractCommand
         }
 
         if (!$found) {
-            $this->writeln("<fg=red>No executed migrations were found.</fg=red>");
+            $this->writeln('<fg=red>No executed migrations were found.</fg=red>');
         }
     }
 }

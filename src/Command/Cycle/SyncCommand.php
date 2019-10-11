@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -21,8 +24,8 @@ use Spiral\Core\Container;
 
 final class SyncCommand extends Command
 {
-    public const NAME        = "cycle:sync";
-    public const DESCRIPTION = "Sync Cycle ORM schema with database without intermediate migration (risk operation)";
+    protected const NAME        = 'cycle:sync';
+    protected const DESCRIPTION = 'Sync Cycle ORM schema with database without intermediate migration (risk operation)';
 
     /**
      * @param SchemaBootloader $bootloader
@@ -37,7 +40,7 @@ final class SyncCommand extends Command
         CycleBootloader $cycleBootloader,
         Registry $registry,
         MemoryInterface $memory
-    ) {
+    ): void {
         $show = new ShowChanges($this->output);
 
         $schema = (new Compiler())->compile(

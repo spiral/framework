@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -12,14 +15,14 @@ use Spiral\Framework\ConsoleTest;
 
 class MigrateTest extends ConsoleTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->makeApp([
             'SAFE_MIGRATIONS' => true
         ]);
     }
 
-    public function testMigrate()
+    public function testMigrate(): void
     {
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
@@ -30,7 +33,7 @@ class MigrateTest extends ConsoleTest
         $this->assertContains('Outstanding migrations found', $output);
     }
 
-    public function testMigrateNoChanges()
+    public function testMigrateNoChanges(): void
     {
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
@@ -43,7 +46,7 @@ class MigrateTest extends ConsoleTest
         $this->assertContains('no database changes', $output);
     }
 
-    public function testAlterSchema()
+    public function testAlterSchema(): void
     {
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 

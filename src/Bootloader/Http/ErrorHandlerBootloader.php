@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -34,7 +35,7 @@ final class ErrorHandlerBootloader extends Bootloader
      * @param HttpBootloader       $http
      * @param EnvironmentInterface $env
      */
-    public function boot(HttpBootloader $http, EnvironmentInterface $env)
+    public function boot(HttpBootloader $http, EnvironmentInterface $env): void
     {
         $http->addMiddleware(new Autowire(
             ErrorHandlerMiddleware::class,

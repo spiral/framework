@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -17,18 +20,18 @@ use Spiral\RoadRunner\Worker;
 
 class DispatcherTest extends ConsoleTest
 {
-    public function testCanServe()
+    public function testCanServe(): void
     {
         $this->assertFalse($this->app->get(JobDispatcher::class)->canServe());
     }
 
-    public function testCanServe2()
+    public function testCanServe2(): void
     {
         $this->app->getEnvironment()->set('RR_JOBS', true);
         $this->assertTrue($this->app->get(JobDispatcher::class)->canServe());
     }
 
-    public function testServe()
+    public function testServe(): void
     {
         $w = m::mock(Worker::class);
 
@@ -40,13 +43,13 @@ class DispatcherTest extends ConsoleTest
         $w->shouldReceive('receive')->once()->with(
             \Mockery::on(function (&$context) {
                 $context = '{
-                  "id": "1", 
+                  "id": "1",
                   "job": "spiral.app.job.TestJob"
                 }';
 
                 return true;
             })
-        )->andReturn("[]");
+        )->andReturn('[]');
 
         $w->shouldReceive('send')->once()->andReturn(true);
 
@@ -58,7 +61,7 @@ class DispatcherTest extends ConsoleTest
         $this->assertTrue($this->app->getEnvironment()->get('FIRED'));
     }
 
-    public function testError()
+    public function testError(): void
     {
         $w = m::mock(Worker::class);
 
@@ -68,13 +71,13 @@ class DispatcherTest extends ConsoleTest
         $w->shouldReceive('receive')->once()->with(
             \Mockery::on(function (&$context) {
                 $context = '{
-                  "id": "1", 
+                  "id": "1",
                   "job": "spiral.app.job.ErrorJob"
                 }';
 
                 return true;
             })
-        )->andReturn("[]");
+        )->andReturn('[]');
 
         $w->shouldReceive('error')->once()->andReturn(true);
 

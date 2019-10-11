@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -20,10 +23,9 @@ class SapiTest extends ConsoleTest
     /** @var EmitterInterface */
     private $bufferEmitter;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->bufferEmitter = new class implements EmitterInterface
-        {
+        $this->bufferEmitter = new class() implements EmitterInterface {
             public $response;
 
             public function emit(ResponseInterface $response): bool
@@ -35,12 +37,12 @@ class SapiTest extends ConsoleTest
         parent::setUp();
     }
 
-    public function testCantServe()
+    public function testCantServe(): void
     {
         $this->assertFalse($this->app->get(SapiDispatcher::class)->canServe());
     }
 
-    public function testDispatch()
+    public function testDispatch(): void
     {
         $e = $this->bufferEmitter;
 
@@ -52,7 +54,7 @@ class SapiTest extends ConsoleTest
         $this->assertSame('Hello, dave.', (string)$e->response->getBody());
     }
 
-    public function testDispatchError()
+    public function testDispatchError(): void
     {
         $e = $this->bufferEmitter;
 
@@ -74,7 +76,7 @@ class SapiTest extends ConsoleTest
         $this->assertContains('500', (string)$e->response->getBody());
     }
 
-    public function testDispatchNativeError()
+    public function testDispatchNativeError(): void
     {
         $e = $this->bufferEmitter;
 

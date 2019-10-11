@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -24,14 +25,14 @@ use Spiral\RoadRunner\Worker;
  */
 final class ServerBootloader extends Bootloader
 {
-    private const RPC_DEFAULT    = 'tcp://127.0.0.1:6001';
-    private const WORKER_DEFAULT = 'pipes';
-
     protected const SINGLETONS = [
         RPC::class              => [self::class, 'rpc'],
         Worker::class           => [self::class, 'worker'],
         MetricsInterface::class => Metrics::class
     ];
+
+    private const RPC_DEFAULT    = 'tcp://127.0.0.1:6001';
+    private const WORKER_DEFAULT = 'pipes';
 
     /**
      * @param EnvironmentInterface $env

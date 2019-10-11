@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -35,6 +36,17 @@ final class LocaleDependency implements DependencyInterface
     }
 
     /**
+     * @return array
+     */
+    public function __debugInfo(): array
+    {
+        return [
+            'value'    => $this->getValue(),
+            'variants' => $this->getVariants()
+        ];
+    }
+
+    /**
      * @inheritdoc
      */
     public function getName(): string
@@ -56,16 +68,5 @@ final class LocaleDependency implements DependencyInterface
     public function getVariants(): array
     {
         return $this->locales;
-    }
-
-    /**
-     * @return array
-     */
-    public function __debugInfo(): array
-    {
-        return [
-            'value'    => $this->getValue(),
-            'variants' => $this->getVariants()
-        ];
     }
 }

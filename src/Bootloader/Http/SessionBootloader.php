@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -56,7 +57,7 @@ final class SessionBootloader extends Bootloader
         CookiesBootloader $cookies,
         HttpBootloader $http,
         DirectoriesInterface $directories
-    ) {
+    ): void {
         $config->setDefaults('session', [
             'lifetime' => 86400,
             'cookie'   => 'sid',

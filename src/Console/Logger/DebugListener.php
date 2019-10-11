@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -17,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class DebugListener
 {
-    protected const STYLES = [
+    private const STYLES = [
         LogLevel::DEBUG     => 'fg=green',
         LogLevel::INFO      => 'fg=cyan',
         LogLevel::NOTICE    => 'fg=yellow',
@@ -47,7 +48,7 @@ final class DebugListener
      *
      * @param LogEvent $event
      */
-    public function __invoke(LogEvent $event)
+    public function __invoke(LogEvent $event): void
     {
         if (empty($this->output)) {
             return;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -17,7 +18,7 @@ use Zend\Diactoros\Response;
 final class ResponseFactory implements ResponseFactoryInterface
 {
     /** @var HttpConfig */
-    protected $config;
+    private $config;
 
     /**
      * @param HttpConfig $config

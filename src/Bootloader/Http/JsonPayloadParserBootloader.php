@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -21,7 +22,7 @@ final class JsonPayloadParserBootloader extends Bootloader
     /**
      * @param HttpBootloader $http
      */
-    public function boot(HttpBootloader $http)
+    public function boot(HttpBootloader $http): void
     {
         $http->addMiddleware(JsonPayloadMiddleware::class);
     }

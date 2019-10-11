@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,13 +15,13 @@ use Spiral\Framework\ConsoleTest;
 
 class KeyCommandTest extends ConsoleTest
 {
-    public function testKey()
+    public function testKey(): void
     {
         $key = $this->runCommand('encrypt:key');
         $this->assertNotEmpty($key);
     }
 
-    public function testMountFileNotFound()
+    public function testMountFileNotFound(): void
     {
         $out = $this->runCommand('encrypt:key', [
             '-m' => __DIR__ . '/.env'
@@ -29,7 +30,7 @@ class KeyCommandTest extends ConsoleTest
         $this->assertContains('Unable to find', $out);
     }
 
-    public function testReplace()
+    public function testReplace(): void
     {
         file_put_contents(__DIR__ . '/.env', '{encrypt-key}');
 
@@ -45,7 +46,7 @@ class KeyCommandTest extends ConsoleTest
         unlink(__DIR__ . '/.env');
     }
 
-    public function testReplaceCurrent()
+    public function testReplaceCurrent(): void
     {
         $key = $this->app->get(EncrypterFactory::class)->generateKey();
 

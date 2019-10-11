@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -24,10 +25,11 @@ use Spiral\Session\SessionInterface;
 
 final class SessionMiddleware implements MiddlewareInterface
 {
+    // request attribute
     public const ATTRIBUTE = 'session';
 
     // Header set used to sign session
-    protected const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
+    private const SIGNATURE_HEADERS = ['User-Agent', 'Accept-Language', 'Accept-Encoding'];
 
     /** @var SessionConfig */
     private $config;

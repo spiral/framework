@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +16,7 @@ use Spiral\Http\Diactoros\ServerRequestFactory;
 
 class RequestFactoryTest extends TestCase
 {
-    public function testCreateRequest()
+    public function testCreateRequest(): void
     {
         $r = (new ServerRequestFactory())->createServerRequest('GET', '/home');
         $this->assertSame('GET', $r->getMethod());

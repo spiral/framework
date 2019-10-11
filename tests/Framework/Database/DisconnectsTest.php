@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -15,7 +18,7 @@ use Spiral\Framework\BaseTest;
 
 class DisconnectsTest extends BaseTest
 {
-    public function testConnected()
+    public function testConnected(): void
     {
         $app = $this->makeApp();
         $db = $app->get(DatabaseInterface::class);
@@ -24,7 +27,7 @@ class DisconnectsTest extends BaseTest
         $this->assertTrue($db->getDriver()->isConnected());
     }
 
-    public function testDisconnected()
+    public function testDisconnected(): void
     {
         $app = $this->makeApp();
         $db = $app->get(DatabaseInterface::class);

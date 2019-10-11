@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -37,19 +38,19 @@ final class RuntimeDirectory
     /**
      * @param OutputInterface $output
      */
-    public function ensure(OutputInterface $output)
+    public function ensure(OutputInterface $output): void
     {
-        $output->write("Verifying runtime directory... ");
+        $output->write('Verifying runtime directory... ');
 
         $runtimeDirectory = $this->dirs->get('runtime');
 
         if (!$this->files->exists($runtimeDirectory)) {
             $this->files->ensureDirectory($runtimeDirectory);
-            $output->writeln("<comment>created</comment>");
+            $output->writeln('<comment>created</comment>');
             return;
-        } else {
-            $output->writeln("<info>exists</info>");
         }
+        $output->writeln('<info>exists</info>');
+
 
         foreach ($this->files->getFiles($runtimeDirectory) as $filename) {
             try {
@@ -58,7 +59,7 @@ final class RuntimeDirectory
             } catch (\Throwable $e) {
                 // @codeCoverageIgnoreStart
                 $output->writeln(sprintf(
-                    "<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>",
+                    '<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>',
                     $this->files->relativePath($filename, $runtimeDirectory),
                     $e->getMessage()
                 ));
@@ -68,12 +69,12 @@ final class RuntimeDirectory
 
             if ($output->isVerbose()) {
                 $output->writeln(sprintf(
-                    "<fg=green>[updated]</fg=green> `%s`",
+                    '<fg=green>[updated]</fg=green> `%s`',
                     $this->files->relativePath($filename, $runtimeDirectory)
                 ));
             }
         }
 
-        $output->writeln("Runtime directory permissions were updated.");
+        $output->writeln('Runtime directory permissions were updated.');
     }
 }

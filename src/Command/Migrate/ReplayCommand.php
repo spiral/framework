@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,9 +15,9 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class ReplayCommand extends AbstractCommand
 {
-    const NAME        = 'migrate:replay';
-    const DESCRIPTION = 'Replay (down, up) one or multiple migrations';
-    const OPTIONS     = [
+    protected const NAME        = 'migrate:replay';
+    protected const DESCRIPTION = 'Replay (down, up) one or multiple migrations';
+    protected const OPTIONS     = [
         ['all', 'a', InputOption::VALUE_NONE, 'Replay all migrations.']
     ];
 
@@ -24,7 +25,7 @@ final class ReplayCommand extends AbstractCommand
      * @param Console $console
      * @throws \Throwable
      */
-    public function perform(Console $console)
+    public function perform(Console $console): void
     {
         if (!$this->verifyEnvironment()) {
             //Making sure we can safely migrate in this environment
@@ -40,12 +41,12 @@ final class ReplayCommand extends AbstractCommand
             $migrate['--one'] = true;
         }
 
-        $this->writeln("Rolling back executed migration(s)...");
+        $this->writeln('Rolling back executed migration(s)...');
         $console->run('migrate:rollback', $rollback, $this->output);
 
-        $this->writeln("");
+        $this->writeln('');
 
-        $this->writeln("Executing outstanding migration(s)...");
+        $this->writeln('Executing outstanding migration(s)...');
         $console->run('migrate', $migrate, $this->output);
     }
 }

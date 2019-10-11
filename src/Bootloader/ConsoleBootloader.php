@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -52,7 +53,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
      * @param KernelInterface   $kernel
      * @param ConsoleDispatcher $console
      */
-    public function boot(KernelInterface $kernel, ConsoleDispatcher $console)
+    public function boot(KernelInterface $kernel, ConsoleDispatcher $console): void
     {
         $kernel->addDispatcher($console);
 
@@ -69,7 +70,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     /**
      * @param string $command
      */
-    public function addCommand(string $command)
+    public function addCommand(string $command): void
     {
         $this->config->modify(
             'console',
@@ -88,7 +89,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $header,
         string $footer = '',
         array $options = []
-    ) {
+    ): void {
         $this->config->modify(
             'console',
             $this->sequence('configure', $sequence, $header, $footer, $options)
@@ -106,7 +107,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
         string $header,
         string $footer = '',
         array $options = []
-    ) {
+    ): void {
         $this->config->modify(
             'console',
             $this->sequence('update', $sequence, $header, $footer, $options)

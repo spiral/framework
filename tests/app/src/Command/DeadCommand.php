@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -12,9 +15,9 @@ use Spiral\Console\Command;
 
 class DeadCommand extends Command
 {
-    const NAME = "dead";
+    public const NAME = 'dead';
 
-    public function perform()
+    public function perform(): void
     {
         echo $undefined;
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -22,14 +25,14 @@ use Spiral\Security\PermissionsInterface;
 
 class AppBootloader extends Bootloader
 {
-    const BOOT = true;
+    public const BOOT = true;
 
     public function boot(
         RouterInterface $router,
         PermissionsInterface $rbac,
         ViewsBootloader $views,
         ValidationBootloader $validation
-    ) {
+    ): void {
         $rbac->addRole('user');
         $rbac->associate('user', '*');
 

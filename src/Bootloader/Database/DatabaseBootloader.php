@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -41,7 +42,7 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
     /**
      * Init database config.
      */
-    public function boot()
+    public function boot(): void
     {
         $this->config->setDefaults('database', [
             'default'   => 'default',

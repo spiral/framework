@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -12,7 +15,7 @@ use Spiral\Framework\ConsoleTest;
 
 class ConfigureTest extends ConsoleTest
 {
-    public function testConfigure()
+    public function testConfigure(): void
     {
         $output = $this->runCommandDebug('configure');
 

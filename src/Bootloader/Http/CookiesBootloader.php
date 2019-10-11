@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -43,7 +44,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
     /**
      * @param HttpBootloader $http
      */
-    public function boot(HttpBootloader $http)
+    public function boot(HttpBootloader $http): void
     {
         $this->config->setDefaults('cookies', [
             'domain'   => '.%s',
@@ -59,7 +60,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
      *
      * @param string $cookie
      */
-    public function whitelistCookie(string $cookie)
+    public function whitelistCookie(string $cookie): void
     {
         $this->config->modify('cookies', new Append('excluded', null, $cookie));
     }
@@ -72,7 +73,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
     {
         $cookieQueue = $request->getAttribute(CookieQueue::ATTRIBUTE, null);
         if ($cookieQueue === null) {
-            throw new ScopeException("Unable to resolve CookieQueue, invalid request scope");
+            throw new ScopeException('Unable to resolve CookieQueue, invalid request scope');
         }
 
         return $cookieQueue;

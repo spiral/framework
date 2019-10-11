@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -23,7 +24,7 @@ final class CsrfBootloader extends Bootloader
      * @param ConfiguratorInterface $config
      * @param HttpBootloader        $http
      */
-    public function boot(ConfiguratorInterface $config, HttpBootloader $http)
+    public function boot(ConfiguratorInterface $config, HttpBootloader $http): void
     {
         $config->setDefaults('csrf', [
             'cookie'   => 'csrf-token',

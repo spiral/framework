@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,14 +15,12 @@ use Spiral\Framework\ConsoleTest;
 
 class GenerateTest extends ConsoleTest
 {
-    private $proto;
-
     public const SERVICE = '<?php
     namespace Spiral\App\Service;
     use Spiral\GRPC;
     use Spiral\App\Service\Sub\Message;
-    
-    class EchoService implements EchoInterface 
+
+    class EchoService implements EchoInterface
     {
         public function Ping(GRPC\ContextInterface $ctx, Message $in): Message
         {
@@ -29,8 +28,9 @@ class GenerateTest extends ConsoleTest
         }
     }
     ';
+    private $proto;
 
-    public function setUp()
+    public function setUp(): void
     {
         exec('protoc 2>&1', $out);
         if (strpos(join("\n", $out), '--php_out') === false) {
@@ -46,7 +46,7 @@ class GenerateTest extends ConsoleTest
         $this->proto = str_replace('Framework/../', '', $this->proto);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 
@@ -61,7 +61,7 @@ class GenerateTest extends ConsoleTest
         }
     }
 
-    public function testGenerateNotFound()
+    public function testGenerateNotFound(): void
     {
         $out = $this->runCommandDebug('grpc:generate', [
             'proto' => 'notfound'
@@ -70,7 +70,7 @@ class GenerateTest extends ConsoleTest
         $this->assertContains('not found', $out);
     }
 
-    public function testGenerateError()
+    public function testGenerateError(): void
     {
         $out = $this->runCommandDebug('grpc:generate', [
             'proto' => __FILE__
@@ -79,7 +79,7 @@ class GenerateTest extends ConsoleTest
         $this->assertContains('Error', $out);
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->runCommandDebug('grpc:generate', [
             'proto' => $this->proto

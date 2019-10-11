@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -7,7 +8,6 @@
  */
 declare(strict_types=1);
 
-
 namespace Spiral\Framework\Migrate;
 
 use Spiral\Database\Database;
@@ -15,14 +15,14 @@ use Spiral\Framework\ConsoleTest;
 
 class InitTest extends ConsoleTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->app->getEnvironment()->set('SAFE_MIGRATIONS', true);
     }
 
-    public function testInit()
+    public function testInit(): void
     {
         /** @var Database $db */
         $db = $this->app->get(Database::class);

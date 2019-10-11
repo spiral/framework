@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,7 +15,7 @@ use Spiral\Jobs\JobHandler;
 
 class TestJob extends JobHandler
 {
-    public function invoke(EnvironmentInterface $env)
+    public function invoke(EnvironmentInterface $env): void
     {
         $env->set('FIRED', true);
     }

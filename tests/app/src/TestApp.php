@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -20,7 +23,7 @@ use Spiral\Framework\Kernel;
 
 class TestApp extends Kernel
 {
-    const LOAD = [
+    public const LOAD = [
         // Core Services
         Bootloader\DebugBootloader::class,
         Bootloader\SnapshotsBootloader::class,
@@ -62,7 +65,7 @@ class TestApp extends Kernel
         Bootloader\CommandBootloader::class
     ];
 
-    const APP = [AppBootloader::class];
+    public const APP = [AppBootloader::class];
 
     /**
      * @param string $alias

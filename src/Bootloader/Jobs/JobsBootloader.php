@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -24,7 +25,7 @@ final class JobsBootloader extends Bootloader
         ServerBootloader::class
     ];
 
-    protected  const SINGLETONS = [
+    protected const SINGLETONS = [
         QueueInterface::class           => Queue::class,
         HandlerRegistryInterface::class => ContainerRegistry::class
     ];
@@ -33,7 +34,7 @@ final class JobsBootloader extends Bootloader
      * @param KernelInterface $kernel
      * @param JobDispatcher   $jobs
      */
-    public function boot(KernelInterface $kernel, JobDispatcher $jobs)
+    public function boot(KernelInterface $kernel, JobDispatcher $jobs): void
     {
         $kernel->addDispatcher($jobs);
     }

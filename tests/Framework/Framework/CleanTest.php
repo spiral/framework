@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -15,7 +18,7 @@ use Spiral\Framework\ConsoleTest;
  */
 class CleanTest extends ConsoleTest
 {
-    public function testClean()
+    public function testClean(): void
     {
         $this->runCommand('configure');
 
@@ -23,13 +26,13 @@ class CleanTest extends ConsoleTest
         $this->assertContains('Runtime cache has been cleared', $output);
     }
 
-    public function testClean2()
+    public function testClean2(): void
     {
         $output = $this->runCommand('cache:clean');
         $this->assertContains('Cache directory is missing', $output);
     }
 
-    public function testCleanVerbose()
+    public function testCleanVerbose(): void
     {
         $this->runCommand('configure');
 
@@ -37,7 +40,7 @@ class CleanTest extends ConsoleTest
         $this->assertContains('i18n', $output);
     }
 
-    public function testUpdateClean()
+    public function testUpdateClean(): void
     {
         $out = $this->runCommand('update');
         $this->assertContains('Updating ORM schema', $out);

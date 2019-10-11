@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -7,39 +8,38 @@
  */
 declare(strict_types=1);
 
-
 namespace Spiral\Framework\Http;
 
 use Spiral\Framework\HttpTest;
 
 class FilterTest extends HttpTest
 {
-    public function testNotEmpty()
+    public function testNotEmpty(): void
     {
         $this->assertSame('{"name":"This value is required."}', (string)$this->get('/filter')->getBody());
     }
 
-    public function testValid()
+    public function testValid(): void
     {
         $this->assertSame('ok', (string)$this->post('/filter', [
-            'name' => "hello"
+            'name' => 'hello'
         ])->getBody());
     }
 
-    public function testDotNotation()
+    public function testDotNotation(): void
     {
         $this->assertSame('abc', (string)$this->post('/filter', [
-            'name'    => "hello",
+            'name'    => 'hello',
             'section' => ['value' => 'abc']
         ])->getBody());
     }
 
-    public function testBadRequest()
+    public function testBadRequest(): void
     {
         $this->assertSame(500, $this->get('/filter2')->getStatusCode());
     }
 
-    public function testInputTest()
+    public function testInputTest(): void
     {
         $this->assertSame('value: abc', (string)$this->get('/input', [
             'section' => ['value' => 'abc']

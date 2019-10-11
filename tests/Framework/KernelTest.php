@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -16,7 +19,7 @@ use Spiral\RoadRunner\Worker;
 
 class KernelTest extends BaseTest
 {
-    public function testBypassEnvironmentToConfig()
+    public function testBypassEnvironmentToConfig(): void
     {
         $configs = $this->makeApp([
             'TEST_VALUE' => 'HELLO WORLD'
@@ -27,7 +30,7 @@ class KernelTest extends BaseTest
         ], $configs->getConfig('test'));
     }
 
-    public function testGetEnv()
+    public function testGetEnv(): void
     {
         $app = $this->makeApp([
             'DEBUG' => true,
@@ -40,20 +43,20 @@ class KernelTest extends BaseTest
     /**
      * @expectedException \Spiral\Boot\Exception\BootException
      */
-    public function testNoRootDirectory()
+    public function testNoRootDirectory(): void
     {
         TestApp::init([
         ], new Environment(), false);
     }
 
-    public function testWorker()
+    public function testWorker(): void
     {
         /** @var Worker $worker */
         $worker = $this->makeApp([])->get(Worker::class);
         $this->assertInstanceOf(Worker::class, $worker);
     }
 
-    public function testDefaultRPC()
+    public function testDefaultRPC(): void
     {
         /** @var RPC $rpc */
         $rpc = $this->makeApp([])->get(RPC::class);
@@ -63,7 +66,7 @@ class KernelTest extends BaseTest
     /**
      * @expectedException \Spiral\Boot\Exception\BootException
      */
-    public function testInvalidRPC()
+    public function testInvalidRPC(): void
     {
         $this->makeApp([
             'RR_RPC' => 'invalid'
@@ -73,7 +76,7 @@ class KernelTest extends BaseTest
     /**
      * @expectedException \Spiral\Boot\Exception\BootException
      */
-    public function testInvalidRPC2()
+    public function testInvalidRPC2(): void
     {
         $this->makeApp([
             'RR_RPC' => 'ftp://magic'

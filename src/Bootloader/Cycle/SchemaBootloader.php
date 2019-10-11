@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -71,7 +72,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
      * @param string $group
      * @param mixed  $generator
      */
-    public function addGenerator(string $group, $generator)
+    public function addGenerator(string $group, $generator): void
     {
         $this->generators[$group][] = $generator;
     }

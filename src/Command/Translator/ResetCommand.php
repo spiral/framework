@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -15,15 +16,15 @@ use Spiral\Translator\Catalogue\CatalogueManager;
 
 final class ResetCommand extends Command implements SingletonInterface
 {
-    const NAME        = 'i18n:reset';
-    const DESCRIPTION = 'Reset translation cache';
+    protected const NAME        = 'i18n:reset';
+    protected const DESCRIPTION = 'Reset translation cache';
 
     /**
      * @param CatalogueManager $manager
      */
-    public function perform(CatalogueManager $manager)
+    public function perform(CatalogueManager $manager): void
     {
         $manager->reset();
-        $this->writeln("Translation cache has been reset.");
+        $this->writeln('Translation cache has been reset.');
     }
 }

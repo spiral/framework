@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -13,12 +16,12 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 class SnapshotTest extends BaseTest
 {
-    public function testSnapshot()
+    public function testSnapshot(): void
     {
         $app = $this->makeApp();
 
         try {
-            throw new \Error("test error");
+            throw new \Error('test error');
         } catch (\Error $e) {
             /** @var SnapshotInterface $s */
             $s = $app->get(SnapshotterInterface::class)->register($e);

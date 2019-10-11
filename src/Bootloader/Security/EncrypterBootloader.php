@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -31,7 +32,7 @@ final class EncrypterBootloader extends Bootloader
      * @param ConfiguratorInterface $config
      * @param EnvironmentInterface  $env
      */
-    public function boot(ConfiguratorInterface $config, EnvironmentInterface $env)
+    public function boot(ConfiguratorInterface $config, EnvironmentInterface $env): void
     {
         $config->setDefaults('encrypter', ['key' => $env->get('ENCRYPTER_KEY')]);
     }

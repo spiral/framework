@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,7 +7,6 @@
  * @author    Anton Titov (Wolfy-J)
  */
 declare(strict_types=1);
-
 
 namespace Spiral\Framework\Controller;
 
@@ -26,7 +26,7 @@ class AuthorizesTest extends BaseTest
      * @expectedException \Spiral\Core\Exception\ControllerException
      * @expectedExceptionMessage Unauthorized permission 'do'
      */
-    public function testAuthException()
+    public function testAuthException(): void
     {
         $app = $this->makeApp();
         $app->get(Container::class)->bind(ActorInterface::class, new Guest());
@@ -34,7 +34,7 @@ class AuthorizesTest extends BaseTest
         $r = $app->get(CoreInterface::class)->callAction(AuthController::class, 'do');
     }
 
-    public function testAuth()
+    public function testAuth(): void
     {
         $app = $this->makeApp();
         $app->get(Container::class)->bind(ActorInterface::class, new Actor(['user']));
@@ -46,7 +46,7 @@ class AuthorizesTest extends BaseTest
     /**
      * @expectedException \Spiral\Core\Exception\ScopeException
      */
-    public function testAuthNoActor()
+    public function testAuthNoActor(): void
     {
         $app = $this->makeApp();
         $app->getContainer()->removeBinding(ActorInterface::class);
@@ -54,7 +54,7 @@ class AuthorizesTest extends BaseTest
         $app->get(CoreInterface::class)->callAction(AuthController::class, 'do');
     }
 
-    public function testWithRoles()
+    public function testWithRoles(): void
     {
         $app = $this->makeApp();
         $g = $app->get(GuardInterface::class);
@@ -68,7 +68,7 @@ class AuthorizesTest extends BaseTest
         $this->assertSame(['user', 'guest'], $g2->getRoles());
     }
 
-    public function testWithActor()
+    public function testWithActor(): void
     {
         $app = $this->makeApp();
         $g = $app->get(GuardInterface::class);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -17,7 +18,7 @@ class PublishTest extends ConsoleTest
     protected const TEST_FILE   = __DIR__ . '/test.txt';
     protected const TEST_FILE_2 = __DIR__ . '/PublishTest.php';
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (file_exists(self::TEST_FILE)) {
             unlink(self::TEST_FILE);
@@ -26,7 +27,7 @@ class PublishTest extends ConsoleTest
         $this->runCommand('cache:clean');
     }
 
-    public function testPublish()
+    public function testPublish(): void
     {
         $file = $this->file('runtime', 'test.txt');
         file_put_contents(self::TEST_FILE, 'test');
@@ -44,7 +45,7 @@ class PublishTest extends ConsoleTest
         $this->assertSame('test', file_get_contents($file));
     }
 
-    public function testReplace()
+    public function testReplace(): void
     {
         $this->runCommandDebug('conf');
 
@@ -62,7 +63,7 @@ class PublishTest extends ConsoleTest
         $this->assertSame('test', file_get_contents($file));
     }
 
-    public function testFollow()
+    public function testFollow(): void
     {
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
@@ -82,7 +83,7 @@ class PublishTest extends ConsoleTest
     /**
      * @expectedException \Spiral\Module\Exception\PublishException
      */
-    public function testInvalid()
+    public function testInvalid(): void
     {
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
@@ -97,7 +98,7 @@ class PublishTest extends ConsoleTest
         ]);
     }
 
-    public function testReadonly()
+    public function testReadonly(): void
     {
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
@@ -114,7 +115,7 @@ class PublishTest extends ConsoleTest
         $this->assertSame('test', file_get_contents($file));
     }
 
-    public function testEnsure()
+    public function testEnsure(): void
     {
         $dir = $this->file('runtime', 'dir', false);
         $this->assertFalse(is_dir($dir));
@@ -129,7 +130,7 @@ class PublishTest extends ConsoleTest
         rmdir($dir);
     }
 
-    public function testPublishDirectoryReplace()
+    public function testPublishDirectoryReplace(): void
     {
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
@@ -147,7 +148,7 @@ class PublishTest extends ConsoleTest
         $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
-    public function testPublishDirectoryFollow()
+    public function testPublishDirectoryFollow(): void
     {
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
@@ -165,7 +166,7 @@ class PublishTest extends ConsoleTest
         $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
-    public function testPublishDirectoryReplaceStar()
+    public function testPublishDirectoryReplaceStar(): void
     {
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
@@ -183,7 +184,7 @@ class PublishTest extends ConsoleTest
         $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
-    public function testPublishDirectoryFollowStar()
+    public function testPublishDirectoryFollowStar(): void
     {
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
@@ -204,7 +205,7 @@ class PublishTest extends ConsoleTest
     /**
      * @expectedException \Spiral\Module\Exception\PublishException
      */
-    public function testInvalidFile()
+    public function testInvalidFile(): void
     {
         $this->runCommandDebug('conf');
 
@@ -219,7 +220,7 @@ class PublishTest extends ConsoleTest
     /**
      * @expectedException \Spiral\Module\Exception\PublishException
      */
-    public function testInvalidDir()
+    public function testInvalidDir(): void
     {
         $this->runCommandDebug('conf');
 

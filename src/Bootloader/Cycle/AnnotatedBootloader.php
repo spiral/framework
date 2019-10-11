@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -22,7 +23,7 @@ final class AnnotatedBootloader extends Bootloader
     /**
      * @param SchemaBootloader $schema
      */
-    public function boot(SchemaBootloader $schema)
+    public function boot(SchemaBootloader $schema): void
     {
         AnnotationRegistry::registerLoader('class_exists');
 

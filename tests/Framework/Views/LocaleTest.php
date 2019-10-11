@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -15,7 +18,7 @@ use Spiral\Views\ViewsInterface;
 
 class LocaleTest extends BaseTest
 {
-    public function testRenderEn()
+    public function testRenderEn(): void
     {
         $app = $this->makeApp();
 
@@ -23,7 +26,7 @@ class LocaleTest extends BaseTest
         $this->assertSame('Hello English!', $out);
     }
 
-    public function testRenderRu()
+    public function testRenderRu(): void
     {
         $app = $this->makeApp();
 
@@ -33,7 +36,7 @@ class LocaleTest extends BaseTest
         $this->assertSame('Hello Мир!', $out);
     }
 
-    public function testLocaleDependency()
+    public function testLocaleDependency(): void
     {
         $app = $this->makeApp();
         $d = $app->get(LocaleDependency::class);

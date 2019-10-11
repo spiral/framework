@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -25,11 +26,11 @@ class User
     /** @Column(type="primary") */
     public $id;
 
-    /** @Column(type="string") */
-    protected $name;
-
     /** @HasMany(target="Role") */
     public $roles;
+
+    /** @Column(type="string") */
+    protected $name;
 
     public function __construct(string $name)
     {

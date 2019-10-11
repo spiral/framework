@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -57,7 +58,7 @@ final class RouterBootloader extends Bootloader
     {
         $route = $request->getAttribute(Router::ROUTE_ATTRIBUTE, null);
         if ($route === null) {
-            throw new ScopeException("Unable to resolve Route, invalid request scope");
+            throw new ScopeException('Unable to resolve Route, invalid request scope');
         }
 
         return $route;

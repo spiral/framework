@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -23,24 +24,21 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class TableCommand extends Command
 {
-    /**
-     * No information available placeholder.
-     */
-    const SKIP = '<comment>---</comment>';
-
-    const NAME        = 'db:table';
-    const DESCRIPTION = 'Describe table schema of specific database';
-    const ARGUMENTS   = [
+    protected const NAME        = 'db:table';
+    protected const DESCRIPTION = 'Describe table schema of specific database';
+    protected const ARGUMENTS   = [
         ['table', InputArgument::REQUIRED, 'Table name']
     ];
-    const OPTIONS     = [
+    protected const OPTIONS     = [
         ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database', 'default']
     ];
+
+    private const SKIP = '<comment>---</comment>';
 
     /**
      * @param DatabaseManager $dbal
      */
-    public function perform(DatabaseManager $dbal)
+    public function perform(DatabaseManager $dbal): void
     {
         $database = $dbal->database($this->option('database'));
         $schema = $database->table($this->argument('table'))->getSchema();
@@ -73,7 +71,7 @@ final class TableCommand extends Command
     /**
      * @param AbstractTable $schema
      */
-    protected function describeColumns(AbstractTable $schema)
+    protected function describeColumns(AbstractTable $schema): void
     {
         $columnsTable = $this->table([
             'Column:',
@@ -106,7 +104,7 @@ final class TableCommand extends Command
      * @param Database $database
      * @param array    $indexes
      */
-    protected function describeIndexes(Database $database, array $indexes)
+    protected function describeIndexes(Database $database, array $indexes): void
     {
         $this->sprintf(
             "\n<fg=cyan>Indexes of </fg=cyan><comment>%s.%s</comment>:\n",
@@ -119,7 +117,7 @@ final class TableCommand extends Command
             $indexesTable->addRow([
                 $index->getName(),
                 $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
-                join(", ", $index->getColumns())
+                join(', ', $index->getColumns())
             ]);
         }
 
@@ -130,7 +128,7 @@ final class TableCommand extends Command
      * @param Database $database
      * @param array    $foreignKeys
      */
-    protected function describeForeignKeys(Database $database, array $foreignKeys)
+    protected function describeForeignKeys(Database $database, array $foreignKeys): void
     {
         $this->sprintf(
             "\n<fg=cyan>Foreign Keys of </fg=cyan><comment>%s.%s</comment>:\n",
@@ -158,6 +156,27 @@ final class TableCommand extends Command
         }
 
         $foreignTable->render();
+    }
+
+    /**
+     * @param AbstractColumn  $column
+     * @param DriverInterface $driver
+     * @return string|null
+     */
+    protected function describeDefaultValue(AbstractColumn $column, DriverInterface $driver): ?string
+    {
+        $defaultValue = $column->getDefaultValue();
+
+        if ($defaultValue instanceof FragmentInterface) {
+            $value = $defaultValue->compile(new QueryBindings(), $driver->getCompiler());
+            return "<info>{$value}</info>";
+        }
+
+        if ($defaultValue instanceof \DateTimeInterface) {
+            $defaultValue = $defaultValue->format('c');
+        }
+
+        return $defaultValue;
     }
 
     /**
@@ -194,26 +213,5 @@ final class TableCommand extends Command
         }
 
         return $abstractType;
-    }
-
-    /**
-     * @param AbstractColumn  $column
-     * @param DriverInterface $driver
-     * @return string|null
-     */
-    protected function describeDefaultValue(AbstractColumn $column, DriverInterface $driver): ?string
-    {
-        $defaultValue = $column->getDefaultValue();
-
-        if ($defaultValue instanceof FragmentInterface) {
-            $value = $defaultValue->compile(new QueryBindings(), $driver->getCompiler());
-            return "<info>{$value}</info>";
-        }
-
-        if ($defaultValue instanceof \DateTimeInterface) {
-            $defaultValue = $defaultValue->format('c');
-        }
-
-        return $defaultValue;
     }
 }

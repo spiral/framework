@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -39,7 +40,7 @@ final class MigrationsBootloader extends Bootloader
         ConfiguratorInterface $config,
         EnvironmentInterface $env,
         DirectoriesInterface $dirs
-    ) {
+    ): void {
         if (!$dirs->has('migrations')) {
             $dirs->set('migrations', $dirs->get('app') . 'migrations');
         }

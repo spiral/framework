@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -7,7 +8,6 @@
  */
 declare(strict_types=1);
 
-
 namespace Spiral\Framework\Migrate;
 
 use Spiral\Database\Database;
@@ -15,7 +15,7 @@ use Spiral\Framework\ConsoleTest;
 
 class StatusTest extends ConsoleTest
 {
-    public function testMigrate()
+    public function testMigrate(): void
     {
         /** @var Database $db */
         $db = $this->app->get(Database::class);

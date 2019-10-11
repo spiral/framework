@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -56,7 +57,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
      * @param EnvironmentInterface $env
      * @param DirectoriesInterface $dirs
      */
-    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs)
+    public function boot(EnvironmentInterface $env, DirectoriesInterface $dirs): void
     {
         if (!$dirs->has('locale')) {
             $dirs->set('locale', $dirs->get('app') . 'locale/');

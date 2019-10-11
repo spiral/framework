@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -124,12 +125,12 @@ final class SessionScope implements SessionInterface
             $request = $this->container->get(ServerRequestInterface::class);
             $session = $request->getAttribute(SessionMiddleware::ATTRIBUTE);
             if ($session === null) {
-                throw new ScopeException("Unable to receive active Session, invalid request scope");
+                throw new ScopeException('Unable to receive active Session, invalid request scope');
             }
 
             return $session;
         } catch (NotFoundExceptionInterface $e) {
-            throw new ScopeException("Unable to receive active session", $e->getCode(), $e);
+            throw new ScopeException('Unable to receive active session', $e->getCode(), $e);
         }
     }
 }

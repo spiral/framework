@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -54,7 +55,7 @@ final class GRPCDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve()
+    public function serve(): void
     {
         /**
          * @var Server           $server
@@ -69,7 +70,7 @@ final class GRPCDispatcher implements DispatcherInterface
             $server->registerService($interface, $service);
         }
 
-        $server->serve($worker, function (\Throwable $e = null) {
+        $server->serve($worker, function (\Throwable $e = null): void {
             if ($e !== null) {
                 $this->handleException($e);
             }
@@ -81,11 +82,11 @@ final class GRPCDispatcher implements DispatcherInterface
     /**
      * @param \Throwable $e
      */
-    protected function handleException(\Throwable $e)
+    protected function handleException(\Throwable $e): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
     }

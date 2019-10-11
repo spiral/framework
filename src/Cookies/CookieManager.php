@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -161,7 +162,7 @@ final class CookieManager implements SingletonInterface
         try {
             return $this->container->get(ServerRequestInterface::class);
         } catch (NotFoundExceptionInterface $e) {
-            throw new ScopeException("Unable to receive active request", $e->getCode(), $e);
+            throw new ScopeException('Unable to receive active request', $e->getCode(), $e);
         }
     }
 
@@ -175,7 +176,7 @@ final class CookieManager implements SingletonInterface
         $request = $this->getRequest();
         $queue = $request->getAttribute(CookieQueue::ATTRIBUTE, null);
         if ($queue === null) {
-            throw new ScopeException("Unable to receive cookie queue, invalid request scope");
+            throw new ScopeException('Unable to receive cookie queue, invalid request scope');
         }
 
         return $queue;

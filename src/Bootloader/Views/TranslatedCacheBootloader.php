@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -32,7 +33,7 @@ final class TranslatedCacheBootloader extends Bootloader
     /**
      * @param ViewsBootloader $views
      */
-    public function boot(ViewsBootloader $views)
+    public function boot(ViewsBootloader $views): void
     {
         $views->addCacheDependency(LocaleDependency::class);
     }

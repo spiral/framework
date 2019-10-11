@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -16,7 +19,7 @@ class DescribeTest extends ConsoleTest
     /**
      * @expectedException \Spiral\Database\Exception\DBALException
      */
-    public function testDescribeWrongDB()
+    public function testDescribeWrongDB(): void
     {
         $this->runCommand('db:table', [
             '--database' => 'missing',
@@ -27,7 +30,7 @@ class DescribeTest extends ConsoleTest
     /**
      * @expectedException \Spiral\Database\Exception\DBALException
      */
-    public function testDescribeWrongTable()
+    public function testDescribeWrongTable(): void
     {
         $this->runCommand('db:table', [
             '--database' => 'runtime',
@@ -35,7 +38,7 @@ class DescribeTest extends ConsoleTest
         ]);
     }
 
-    public function testDescribeExisted()
+    public function testDescribeExisted(): void
     {
         /** @var Database $db */
         $db = $this->app->get(Database::class);

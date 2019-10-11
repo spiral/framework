@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -64,7 +65,7 @@ final class RrDispacher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve(PSR7Client $client = null)
+    public function serve(PSR7Client $client = null): void
     {
         $client = $client ?? $this->factory->make(PSR7Client::class);
 
@@ -85,7 +86,7 @@ final class RrDispacher implements DispatcherInterface
      * @param PSR7Client $client
      * @param \Throwable $e
      */
-    protected function handleException(PSR7Client $client, \Throwable $e)
+    protected function handleException(PSR7Client $client, \Throwable $e): void
     {
         $handler = new HtmlHandler();
 
@@ -93,7 +94,7 @@ final class RrDispacher implements DispatcherInterface
             /** @var SnapshotInterface $snapshot */
             $snapshot = $this->container->get(SnapshotterInterface::class)->register($e);
             error_log($snapshot->getMessage());
-        } catch (\Throwable|ContainerExceptionInterface $se) {
+        } catch (\Throwable | ContainerExceptionInterface $se) {
             error_log((string)$e);
         }
 

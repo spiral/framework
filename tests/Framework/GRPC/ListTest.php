@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -16,7 +17,7 @@ class ListTest extends ConsoleTest
 {
     private $proto;
 
-    public function setUp()
+    public function setUp(): void
     {
         exec('protoc 2>&1', $out);
         if (strpos(join("\n", $out), '--php_out') === false) {
@@ -33,7 +34,7 @@ class ListTest extends ConsoleTest
         $this->proto = str_replace('Framework/../', '', $this->proto);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 
@@ -48,14 +49,14 @@ class ListTest extends ConsoleTest
         }
     }
 
-    public function testListEmpty()
+    public function testListEmpty(): void
     {
         $out = $this->runCommandDebug('grpc:services');
 
         $this->assertContains('No GRPC services', $out);
     }
 
-    public function testListService()
+    public function testListService(): void
     {
         $this->runCommandDebug('grpc:generate', [
             'proto' => $this->proto

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +16,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class ViewsTest extends BaseTest
 {
-    public function testRenderViewWithTranslator()
+    public function testRenderViewWithTranslator(): void
     {
         $app = $this->makeApp();
 
@@ -23,7 +26,7 @@ abstract class ViewsTest extends BaseTest
         $this->assertSame('Hello, English!', $views->render('home'));
     }
 
-    public function testRenderViewWithAnotherLanguage()
+    public function testRenderViewWithAnotherLanguage(): void
     {
         $app = $this->makeApp();
 

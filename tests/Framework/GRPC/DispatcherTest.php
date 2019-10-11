@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -18,7 +19,7 @@ use Spiral\RoadRunner\Worker;
 
 class DispatcherTest extends ConsoleTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         exec('protoc 2>&1', $out);
         if (strpos(join("\n", $out), '--php_out') === false) {
@@ -40,7 +41,7 @@ class DispatcherTest extends ConsoleTest
         file_put_contents($this->app->dir('app') . 'src/Service/EchoService.php', GenerateTest::SERVICE);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 
@@ -55,18 +56,18 @@ class DispatcherTest extends ConsoleTest
         }
     }
 
-    public function testCanServe()
+    public function testCanServe(): void
     {
         $this->assertFalse($this->app->get(GRPCDispatcher::class)->canServe());
     }
 
-    public function testCanServe2()
+    public function testCanServe2(): void
     {
         $this->app->getEnvironment()->set('RR_GRPC', true);
         $this->assertTrue($this->app->get(GRPCDispatcher::class)->canServe());
     }
 
-    public function testServe()
+    public function testServe(): void
     {
         $w = m::mock(Worker::class);
 
@@ -74,13 +75,13 @@ class DispatcherTest extends ConsoleTest
         $this->app->getContainer()->bind(Worker::class, $w);
 
         $msg = new Message();
-        $msg->setMsg("hello");
+        $msg->setMsg('hello');
 
         $w->shouldReceive('receive')->once()->with(
             \Mockery::on(function (&$context) {
                 $context = '{
                   "service": "service.Echo",
-                  "method": "Ping"               
+                  "method": "Ping"
                 }';
 
                 return true;
@@ -91,7 +92,7 @@ class DispatcherTest extends ConsoleTest
             \Mockery::on(function ($out) {
                 $msg = new Message();
                 $msg->mergeFromString($out);
-                $this->assertSame("hello", $msg->getMsg());
+                $this->assertSame('hello', $msg->getMsg());
 
                 return true;
             })
@@ -108,7 +109,7 @@ class DispatcherTest extends ConsoleTest
         $this->app->get(GRPCDispatcher::class)->serve();
     }
 
-    public function testError()
+    public function testError(): void
     {
         $w = m::mock(Worker::class);
 
@@ -116,13 +117,13 @@ class DispatcherTest extends ConsoleTest
         $this->app->getContainer()->bind(Worker::class, $w);
 
         $msg = new Message();
-        $msg->setMsg("hello");
+        $msg->setMsg('hello');
 
         $w->shouldReceive('receive')->once()->with(
             \Mockery::on(function (&$context) {
                 $context = '{
                   "service": "service.Echo",
-                  "method": "Invalid"               
+                  "method": "Invalid"
                 }';
 
                 return true;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -19,7 +20,7 @@ use Spiral\Framework\ConsoleTest;
  */
 class CompileTest extends ConsoleTest
 {
-    public function testCompile()
+    public function testCompile(): void
     {
         $out = $this->runCommandDebug('views:compile');
         $this->assertContains('default:custom/file', $out);
@@ -28,7 +29,7 @@ class CompileTest extends ConsoleTest
         $this->assertContains('Unable to compile custom:error', $out);
     }
 
-    public function testReset()
+    public function testReset(): void
     {
         /**
          * @var DirectoriesInterface $dirs
@@ -42,13 +43,13 @@ class CompileTest extends ConsoleTest
         $this->assertContains('test.php', $out);
     }
 
-    public function testResetClean()
+    public function testResetClean(): void
     {
         $out = $this->runCommandDebug('views:reset');
         $this->assertContains('no cache', $out);
     }
 
-    public function testClean()
+    public function testClean(): void
     {
         $this->runCommandDebug('i18n:index');
 

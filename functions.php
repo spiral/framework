@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -33,7 +34,7 @@ if (!function_exists('dumprr')) {
      *
      * @param mixed $value
      */
-    function dumprr($value)
+    function dumprr($value): void
     {
         dump($value, Dumper::ERROR_LOG);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -28,14 +29,14 @@ class TestEngine extends AbstractEngine
         $this->processors[] = $localeProcessor;
     }
 
-    public function compile(string $path, ContextInterface $context)
+    public function compile(string $path, ContextInterface $context): void
     {
         if ($path == 'custom:error') {
-            throw new EngineException("Unable to compile custom:error");
+            throw new EngineException('Unable to compile custom:error');
         }
     }
 
-    public function reset(string $path, ContextInterface $context)
+    public function reset(string $path, ContextInterface $context): void
     {
     }
 

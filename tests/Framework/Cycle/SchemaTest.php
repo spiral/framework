@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -25,14 +26,14 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class SchemaTest extends ConsoleTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->makeApp([
             'SAFE_MIGRATIONS' => true
         ]);
     }
 
-    public function testGetSchema()
+    public function testGetSchema(): void
     {
         $app = $this->app;
         $app->console()->run('cycle');
@@ -41,7 +42,7 @@ class SchemaTest extends ConsoleTest
         $this->assertSame(User::class, $schema->define('user', Schema::ENTITY));
     }
 
-    public function testMigrate()
+    public function testMigrate(): void
     {
         $app = $this->app;
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
@@ -55,7 +56,7 @@ class SchemaTest extends ConsoleTest
         $this->assertSame(1, $u->id);
     }
 
-    public function testSync()
+    public function testSync(): void
     {
         $output = $this->runCommand('cycle:sync');
         $this->assertContains('default.users', $output);
@@ -66,7 +67,7 @@ class SchemaTest extends ConsoleTest
         $this->assertSame(1, $u->id);
     }
 
-    public function testSyncDebug()
+    public function testSyncDebug(): void
     {
         $output = new BufferedOutput();
         $output->setVerbosity(BufferedOutput::VERBOSITY_VERY_VERBOSE);
@@ -92,13 +93,13 @@ class SchemaTest extends ConsoleTest
     /**
      * @expectedException \Cycle\ORM\Exception\ORMException
      */
-    public function testSchemaMissing()
+    public function testSchemaMissing(): void
     {
         /** @var UserRepository $r */
         $this->app->get(UserRepository::class);
     }
 
-    public function testGetRepository()
+    public function testGetRepository(): void
     {
         $app = $this->app;
         $this->runCommandDebug('cycle:sync');
@@ -114,7 +115,7 @@ class SchemaTest extends ConsoleTest
         $this->assertSame($u, $r->findOne());
     }
 
-    public function testInjectedSelect()
+    public function testInjectedSelect(): void
     {
         $app = $this->app;
         $this->runCommandDebug('cycle:sync');
@@ -135,7 +136,7 @@ class SchemaTest extends ConsoleTest
     /**
      * @expectedException \Cycle\ORM\Exception\ORMException
      */
-    public function testInjectedSelectNoSchema()
+    public function testInjectedSelectNoSchema(): void
     {
         /** @var CoreInterface $c */
         $c = $this->app->get(CoreInterface::class);
@@ -146,7 +147,7 @@ class SchemaTest extends ConsoleTest
         );
     }
 
-    public function testHeapReset()
+    public function testHeapReset(): void
     {
         $app = $this->app;
         $this->runCommandDebug('cycle:sync');
