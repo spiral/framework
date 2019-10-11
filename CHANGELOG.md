@@ -1,5 +1,11 @@
 # CHANGELOG
 
+v2.1.1 (11.10.2019)
+------
+- added CookieManager for simpler access to cookies in request scope
+- added SessionScope for simpler access to session in request scope
+- added automatic CS formatting
+
 v2.1.0 (23.09.2019)
 ------
 - `spiral/jobs` updated to `2.0`
