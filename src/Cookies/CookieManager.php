@@ -108,15 +108,7 @@ final class CookieManager implements SingletonInterface
         bool $secure = null,
         bool $httpOnly = true
     ) {
-        $this->getCookieQueue()->set(
-            $name,
-            $value,
-            $lifetime,
-            $path,
-            $domain,
-            $secure,
-            $httpOnly
-        );
+        $this->getCookieQueue()->set($name, $value, $lifetime, $path, $domain, $secure, $httpOnly);
 
         return $this;
     }
