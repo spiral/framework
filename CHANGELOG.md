@@ -1,10 +1,14 @@
 # CHANGELOG
 
-v2.1.1 (11.10.2019)
+v2.1.2 (11.10.2019) - no binary
 ------
 - added CookieManager for simpler access to cookies in request scope
 - added SessionScope for simpler access to session in request scope
 - added automatic CS formatting
+
+v2.1.1 (26.09.2019) - no binary
+------
+- update `cycle/proxy-factory` dependency
 
 v2.1.0 (23.09.2019)
 ------
