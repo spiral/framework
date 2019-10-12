@@ -21,6 +21,9 @@ use Spiral\Session\Middleware\SessionMiddleware;
  */
 final class SessionScope implements SessionInterface
 {
+    /** Locations for unnamed segments i.e. default segment. */
+    private const DEFAULT_SECTION = '_DEFAULT';
+
     /** @var ContainerInterface */
     private $container;
 
@@ -39,7 +42,7 @@ final class SessionScope implements SessionInterface
      */
     public function isStarted(): bool
     {
-        return $this->getSession()->isStarted();
+        return $this->getActiveSession()->isStarted();
     }
 
     /**
@@ -49,7 +52,7 @@ final class SessionScope implements SessionInterface
      */
     public function resume()
     {
-        return $this->getSession()->resume();
+        return $this->getActiveSession()->resume();
     }
 
     /**
@@ -59,7 +62,7 @@ final class SessionScope implements SessionInterface
      */
     public function getID(): ?string
     {
-        return $this->getSession()->getID();
+        return $this->getActiveSession()->getID();
     }
 
     /**
@@ -69,7 +72,7 @@ final class SessionScope implements SessionInterface
      */
     public function regenerateID(): SessionInterface
     {
-        $this->getSession()->regenerateID();
+        $this->getActiveSession()->regenerateID();
 
         return $this;
     }
@@ -81,7 +84,7 @@ final class SessionScope implements SessionInterface
      */
     public function commit(): bool
     {
-        return $this->getSession()->commit();
+        return $this->getActiveSession()->commit();
     }
 
     /**
@@ -91,7 +94,7 @@ final class SessionScope implements SessionInterface
      */
     public function abort(): bool
     {
-        return $this->getSession()->abort();
+        return $this->getActiveSession()->abort();
     }
 
     /**
@@ -101,7 +104,7 @@ final class SessionScope implements SessionInterface
      */
     public function destroy(): bool
     {
-        return $this->getSession()->destroy();
+        return $this->getActiveSession()->destroy();
     }
 
     /**
@@ -111,7 +114,7 @@ final class SessionScope implements SessionInterface
      */
     public function getSection(string $name = null): SessionSectionInterface
     {
-        return $this->getSession()->getSection($name);
+        return new SectionScope($this, $name ?? self::DEFAULT_SECTION);
     }
 
     /**
@@ -119,7 +122,7 @@ final class SessionScope implements SessionInterface
      *
      * @throws ScopeException
      */
-    private function getSession(): SessionInterface
+    public function getActiveSession(): SessionInterface
     {
         try {
             $request = $this->container->get(ServerRequestInterface::class);

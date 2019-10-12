@@ -113,6 +113,7 @@ class CookiesTest extends HttpTest
 
         $this->http->setHandler(function () {
             $this->cookies()->schedule(Cookie::create('a', 'value'));
+            $this->assertSame([], $this->cookies()->getAll());
 
             return 'ok';
         });
