@@ -27,7 +27,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - Helpful class discovery via static analysis
 - RBAC security, validation, and encryption
 - Dynamic template engine to create your own HTML tags (or just use Twig)
-- MVC, HMVC, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps via modular approach
+- MVC, HMVC, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
 
 ## Skeletons
 | App Type | Current Status | Install       
