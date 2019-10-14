@@ -28,9 +28,9 @@ final class SessionBootloader extends Bootloader
         CookiesBootloader::class
     ];
 
-    protected const SINGLETONS = [
-        SessionInterface::class => SessionScope::class
-    ];
+    //protected const SINGLETONS = [
+    //    SessionInterface::class => SessionScope::class
+    //];
 
     /** @var ConfiguratorInterface */
     private $config;
