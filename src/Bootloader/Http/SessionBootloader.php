@@ -10,14 +10,15 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Http;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Exception\ScopeException;
 use Spiral\Session\Handler\FileHandler;
 use Spiral\Session\Middleware\SessionMiddleware;
 use Spiral\Session\SessionInterface;
-use Spiral\Session\SessionScope;
 
 //use Spiral\Session\SectionInterface;
 
@@ -28,9 +29,9 @@ final class SessionBootloader extends Bootloader
         CookiesBootloader::class
     ];
 
-    //protected const SINGLETONS = [
-    //    SessionInterface::class => SessionScope::class
-    //];
+    protected const BINDINGS = [
+        SessionInterface::class => [self::class, 'session']
+    ];
 
     /** @var ConfiguratorInterface */
     private $config;
@@ -75,5 +76,19 @@ final class SessionBootloader extends Bootloader
 
         $http->addMiddleware(SessionMiddleware::class);
         $cookies->whitelistCookie($session['cookie']);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return SessionInterface
+     */
+    private function session(ServerRequestInterface $request): SessionInterface
+    {
+        $session = $request->getAttribute(SessionMiddleware::ATTRIBUTE, null);
+        if ($session === null) {
+            throw new ScopeException('Unable to resolve Session, invalid request scope');
+        }
+
+        return $session;
     }
 }
