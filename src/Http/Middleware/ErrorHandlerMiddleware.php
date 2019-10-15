@@ -23,7 +23,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 /**
  * Wraps Client and Routing exceptions into proper response.
  */
-class ErrorHandlerMiddleware implements MiddlewareInterface
+final class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     use LoggerTrait;
 
@@ -34,7 +34,7 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
     private $renderer;
 
     /** @var SnapshotterInterface|null */
-    private $snapshotter;
+    private $snapshots;
 
     /**
      * @param bool                      $suppressErrors
@@ -48,7 +48,7 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
     ) {
         $this->suppressErrors = $suppressErrors;
         $this->renderer = $renderer;
-        $this->snapshotter = $snapshots;
+        $this->snapshots = $snapshots;
     }
 
     /**
@@ -71,8 +71,8 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
                 throw $e;
             }
 
-            if ($this->snapshotter !== null) {
-                $this->snapshotter->register($e);
+            if ($this->snapshots !== null) {
+                $this->snapshots->register($e);
             }
 
             $code = 500;
