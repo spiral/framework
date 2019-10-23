@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -54,11 +55,19 @@ final class Token implements TokenInterface, \JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->id;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getID(): string
     {
-        return sprintf("%s:%s", $this->id, $this->hash);
+        return sprintf('%s:%s', $this->id, $this->hash);
     }
 
     /**
@@ -84,14 +93,6 @@ final class Token implements TokenInterface, \JsonSerializable
     public function getPayload(): array
     {
         return json_decode($this->payload, true);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->id;
     }
 
     /**

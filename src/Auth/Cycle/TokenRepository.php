@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -78,7 +79,7 @@ final class TokenRepository extends Repository implements TokenStorageInterface
 
             return $token;
         } catch (\Throwable $e) {
-            throw new TokenStorageException("Unable to create token", $e->getCode(), $e);
+            throw new TokenStorageException('Unable to create token', $e->getCode(), $e);
         }
     }
 
@@ -90,7 +91,7 @@ final class TokenRepository extends Repository implements TokenStorageInterface
         try {
             (new Transaction($this->orm))->delete($token)->run();
         } catch (\Throwable $e) {
-            throw new TokenStorageException("Unable to delete token", $e->getCode(), $e);
+            throw new TokenStorageException('Unable to delete token', $e->getCode(), $e);
         }
     }
 

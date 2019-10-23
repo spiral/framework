@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -53,7 +54,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
         foreach ($this->getProviders() as $provider) {
             if (!$provider instanceof ActorProviderInterface) {
                 throw new AuthException(sprintf(
-                    "Expected `ActorProviderInterface`, got `%s`",
+                    'Expected `ActorProviderInterface`, got `%s`',
                     get_class($provider)
                 ));
             }
@@ -72,7 +73,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
      *
      * @param ActorProviderInterface|Autowire|string $actorProvider
      */
-    public function addActorProvider($actorProvider)
+    public function addActorProvider($actorProvider): void
     {
         $this->actorProvider = $actorProvider;
     }

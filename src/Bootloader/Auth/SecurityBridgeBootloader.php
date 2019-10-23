@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -16,7 +17,10 @@ use Spiral\Bootloader\Security\GuardBootloader;
 use Spiral\Security\Actor\Guest;
 use Spiral\Security\ActorInterface;
 
-final class SecurityActorBootloader extends Bootloader
+/**
+ * Bridges the auth actor to RBAC Security actor.
+ */
+final class SecurityBridgeBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         AuthBootloader::class,
@@ -27,9 +31,16 @@ final class SecurityActorBootloader extends Bootloader
         ActorInterface::class => [self::class, 'actor']
     ];
 
+    /**
+     * @param AuthContextInterface $context
+     * @return ActorInterface
+     */
     private function actor(AuthContextInterface $context): ActorInterface
     {
-        // todo: get the actor from the context
+        $actor = $context->getActor();
+        if ($actor instanceof ActorInterface) {
+            return $actor;
+        }
 
         return new Guest();
     }

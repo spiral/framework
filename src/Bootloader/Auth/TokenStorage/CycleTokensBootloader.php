@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,5 +14,4 @@ use Spiral\Boot\Bootloader\Bootloader;
 
 final class CycleTokensBootloader extends Bootloader
 {
-
 }

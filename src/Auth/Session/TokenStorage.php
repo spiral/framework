@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -45,9 +46,8 @@ final class TokenStorage implements TokenStorageInterface
         try {
             $tokenData = $this->getAuthSection()->get('token');
             $token = Token::unpack($tokenData);
-
         } catch (\Throwable $e) {
-            throw new TokenStorageException("Unable to load session token", $e->getCode(), $e);
+            throw new TokenStorageException('Unable to load session token', $e->getCode(), $e);
         }
 
         if ($token->getID() !== $id) {
@@ -73,7 +73,7 @@ final class TokenStorage implements TokenStorageInterface
 
             return $token;
         } catch (\Throwable $e) {
-            throw new TokenStorageException("Unable to create session token", $e->getCode(), $e);
+            throw new TokenStorageException('Unable to create session token', $e->getCode(), $e);
         }
     }
 
@@ -96,7 +96,7 @@ final class TokenStorage implements TokenStorageInterface
             /** @var SessionInterface $session */
             return $session->getSection(self::SESSION_SECTION);
         } catch (ContainerExceptionInterface $e) {
-            throw new ScopeException("Unable to find auth token, invalid session scope", $e->getCode(), $e);
+            throw new ScopeException('Unable to find auth token, invalid session scope', $e->getCode(), $e);
         }
     }
 
