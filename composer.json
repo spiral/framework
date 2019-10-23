@@ -46,7 +46,8 @@
     "phpunit/phpunit": "~7.0",
     "mockery/mockery": "^1.1",
     "spiral/code-style": "^1.0",
-    "spiral/auth": "^1.0"
+    "spiral/auth": "^1.0",
+    "spiral/auth-http": "^1.0"
   },
   "autoload": {
     "files": [
