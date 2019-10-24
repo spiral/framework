@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Session\Middleware;
@@ -79,7 +80,12 @@ final class SessionMiddleware implements MiddlewareInterface
         );
 
         try {
-            $response = $handler->handle($request->withAttribute(static::ATTRIBUTE, $session));
+            $response = $this->scope->runScope(
+                [SessionInterface::class => $session],
+                function () use ($handler, $request, $session) {
+                    return $handler->handle($request->withAttribute(static::ATTRIBUTE, $session));
+                }
+            );
         } catch (\Throwable $e) {
             $session->abort();
             throw $e;

@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Auth\Config;
@@ -21,7 +22,7 @@ final class AuthConfig extends InjectableConfig
 {
     public const CONFIG = 'auth';
 
-    private $config = [
+    protected $config = [
         'defaultTransport' => '',
         'transports'       => []
     ];
@@ -40,13 +41,13 @@ final class AuthConfig extends InjectableConfig
     public function getTransports(): array
     {
         $transports = [];
-        foreach ($this->config['transports'] as $transport) {
+        foreach ($this->config['transports'] as $name => $transport) {
             if (is_object($transport) && !$transport instanceof Autowire) {
-                $transports[] = $transport;
+                $transports[$name] = $transport;
                 continue;
             }
 
-            $transports[] = $this->wire($transport);
+            $transports[$name] = $this->wire($transport);
         }
 
         return $transports;

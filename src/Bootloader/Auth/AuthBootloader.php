@@ -6,9 +6,10 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
-namespace Spiral\Auth\Bootloader;
+namespace Spiral\Bootloader\Auth;
 
 use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\AuthScope;
@@ -75,7 +76,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
      */
     public function addActorProvider($actorProvider): void
     {
-        $this->actorProvider = $actorProvider;
+        $this->actorProvider[] = $actorProvider;
     }
 
     /**

@@ -6,18 +6,15 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Auth\Session;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Spiral\Auth\Exception\TokenStorageException;
 use Spiral\Auth\TokenInterface;
 use Spiral\Auth\TokenStorageInterface;
-use Spiral\Core\Exception\ScopeException;
-use Spiral\Session\SessionInterface;
-use Spiral\Session\SessionSectionInterface;
+use Spiral\Session\SessionScope;
 
 /**
  * Store tokens in active session segment (received via scope).
@@ -27,15 +24,15 @@ final class TokenStorage implements TokenStorageInterface
     // session section to store session information
     private const SESSION_SECTION = 'auth';
 
-    /** @var ContainerInterface */
-    private $container;
+    /** @var SessionScope */
+    private $session;
 
     /**
-     * @param ContainerInterface $container
+     * @param SessionScope $session
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SessionScope $session)
     {
-        $this->container = $container;
+        $this->session = $session;
     }
 
     /**
@@ -44,7 +41,7 @@ final class TokenStorage implements TokenStorageInterface
     public function load(string $id): ?TokenInterface
     {
         try {
-            $tokenData = $this->getAuthSection()->get('token');
+            $tokenData = $this->session->getSection(self::SESSION_SECTION)->get('token');
             $token = Token::unpack($tokenData);
         } catch (\Throwable $e) {
             throw new TokenStorageException('Unable to load session token', $e->getCode(), $e);
@@ -69,7 +66,7 @@ final class TokenStorage implements TokenStorageInterface
     {
         try {
             $token = new Token($this->randomHash(123), $payload, $expiresAt);
-            $this->getAuthSection()->set('token', $token->pack());
+            $this->session->getSection(self::SESSION_SECTION)->set('token', $token->pack());
 
             return $token;
         } catch (\Throwable $e) {
@@ -82,22 +79,7 @@ final class TokenStorage implements TokenStorageInterface
      */
     public function delete(TokenInterface $token): void
     {
-        $this->getAuthSection()->delete('token');
-    }
-
-    /**
-     * @return SessionSectionInterface
-     */
-    private function getAuthSection(): SessionSectionInterface
-    {
-        try {
-            $session = $this->container->get(SessionInterface::class);
-
-            /** @var SessionInterface $session */
-            return $session->getSection(self::SESSION_SECTION);
-        } catch (ContainerExceptionInterface $e) {
-            throw new ScopeException('Unable to find auth token, invalid session scope', $e->getCode(), $e);
-        }
+        $this->session->getSection(self::SESSION_SECTION)->delete('token');
     }
 
     /**

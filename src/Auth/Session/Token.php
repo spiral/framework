@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Auth\Session;
@@ -99,8 +100,8 @@ final class Token implements TokenInterface, \JsonSerializable
     public static function unpack(array $data): Token
     {
         $expiresAt = null;
-        if ($data['expiredAt'] != null) {
-            $expiresAt = (new \DateTimeImmutable())->setTimestamp($data['expiredAt']);
+        if ($data['expiresAt'] != null) {
+            $expiresAt = (new \DateTimeImmutable())->setTimestamp($data['expiresAt']);
         }
 
         return new Token($data['id'], $data['payload'], $expiresAt);

@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Auth\Cycle;
@@ -14,9 +15,9 @@ use Cycle\Annotated\Annotation as Cycle;
 use Spiral\Auth\TokenInterface;
 
 /**
- * @Cycle\Entity(table="auth_tokens", repository="TokenRepository")
+ * @Cycle\Entity(table="auth_tokens")
  * @Cycle\Table(indexes={
- *     @Cycle\Index(columns={"id", "hash"}, unique=true)
+ *     @Cycle\Table\Index(columns={"id", "hash"}, unique=true)
  * })
  */
 final class Token implements TokenInterface, \JsonSerializable
@@ -24,7 +25,7 @@ final class Token implements TokenInterface, \JsonSerializable
     /** @Cycle\Column(type="bigPrimary") */
     private $id;
 
-    /** @Cycle\Column(type="varchar(128)") */
+    /** @Cycle\Column(type="string(128)") */
     private $hash;
 
     /** @Cycle\Column(type="datetime") */

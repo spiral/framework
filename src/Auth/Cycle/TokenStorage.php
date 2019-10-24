@@ -6,13 +6,12 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Auth\Cycle;
 
 use Cycle\ORM\ORMInterface;
-use Cycle\ORM\Select;
-use Cycle\ORM\Select\Repository;
 use Cycle\ORM\Transaction;
 use Spiral\Auth\Exception\TokenStorageException;
 use Spiral\Auth\TokenInterface;
@@ -21,18 +20,16 @@ use Spiral\Auth\TokenStorageInterface;
 /**
  * Provides the ability to fetch token information from the database via Cycle ORM.
  */
-final class TokenRepository extends Repository implements TokenStorageInterface
+final class TokenStorage implements TokenStorageInterface
 {
     /** @var ORMInterface */
     private $orm;
 
     /**
-     * @param Select       $select
      * @param ORMInterface $orm
      */
-    public function __construct(Select $select, ORMInterface $orm)
+    public function __construct(ORMInterface $orm)
     {
-        parent::__construct($select);
         $this->orm = $orm;
     }
 
@@ -47,12 +44,12 @@ final class TokenRepository extends Repository implements TokenStorageInterface
 
         list($pk, $hash) = explode(':', $id, 2);
 
-        if (!is_numeric($id)) {
+        if (!is_numeric($pk)) {
             return null;
         }
 
         /** @var TokenInterface $token */
-        $token = $this->findByPK((int)$pk);
+        $token = $this->orm->getRepository(Token::class)->findByPK((int)$pk);
 
         if ($token === null || $token->getID() !== $id) {
             // hijacked or deleted

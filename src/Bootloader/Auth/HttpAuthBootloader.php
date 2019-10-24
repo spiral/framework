@@ -6,11 +6,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Bootloader\Auth;
 
-use Spiral\Auth\Bootloader\AuthBootloader;
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\HttpTransportInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;
