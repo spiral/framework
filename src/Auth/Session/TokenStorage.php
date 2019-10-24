@@ -65,7 +65,7 @@ final class TokenStorage implements TokenStorageInterface
     public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface
     {
         try {
-            $token = new Token($this->randomHash(123), $payload, $expiresAt);
+            $token = new Token($this->randomHash(128), $payload, $expiresAt);
             $this->session->getSection(self::SESSION_SECTION)->set('token', $token->pack());
 
             return $token;
