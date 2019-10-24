@@ -1,5 +1,12 @@
 # CHANGELOG
 
+v2.2.0 (24.10.2019)
+-----
+- added auth component
+- new CS fixes in compliance with PSR-12
+- minor improvements in session scopes
+- added health service to the app server
+
 v2.1.2 (11.10.2019) - no binary
 ------
 - added CookieManager for simpler access to cookies in request scope

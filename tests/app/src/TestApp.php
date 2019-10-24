@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Spiral Framework.
  *
@@ -9,10 +7,13 @@ declare(strict_types=1);
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\App;
 
 use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
+use Spiral\App\Bootloader\AuthBootloader;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -48,6 +49,12 @@ class TestApp extends Kernel
         Bootloader\Http\CookiesBootloader::class,
         Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CsrfBootloader::class,
+
+        // Auth
+        Bootloader\Auth\HttpAuthBootloader::class,
+
+        // selects between session and cycle based on env configuration
+        AuthBootloader::class,
 
         // Data and Storage
         Bootloader\Database\DatabaseBootloader::class,

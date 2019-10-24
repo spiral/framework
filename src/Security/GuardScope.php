@@ -6,12 +6,13 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Security;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Exception\Container\ContainerException;
+use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Security\Exception\GuardException;
 
@@ -109,7 +110,7 @@ final class GuardScope implements GuardInterface
 
         try {
             return $this->container->get(ActorInterface::class);
-        } catch (ContainerException $e) {
+        } catch (NotFoundExceptionInterface $e) {
             throw new ScopeException('Unable to resolve Actor from the scope', $e->getCode(), $e);
         }
     }

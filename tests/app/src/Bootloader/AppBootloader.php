@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Spiral Framework.
  *
@@ -9,10 +7,13 @@ declare(strict_types=1);
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\App\Bootloader;
 
 use Spiral\App\Checker\MyChecker;
 use Spiral\App\Condition\MyCondition;
+use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\TestController;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -42,6 +43,11 @@ class AppBootloader extends Bootloader
         );
 
         $router->setDefault($route->withDefaults(['name' => 'Dave']));
+
+        $router->setRoute(
+            'auth',
+            new Route('/auth/<action>', new Controller(AuthController::class))
+        );
 
         $views->addDirectory('custom', __DIR__ . '/../../views/custom/');
         $views->addEngine(TestEngine::class);

@@ -6,16 +6,15 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Session;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Session\Middleware\SessionMiddleware;
 
 /**
  * Provides access to the currently active session scope.
@@ -126,15 +125,9 @@ final class SessionScope implements SessionInterface, SingletonInterface
     public function getActiveSession(): SessionInterface
     {
         try {
-            $request = $this->container->get(ServerRequestInterface::class);
-            $session = $request->getAttribute(SessionMiddleware::ATTRIBUTE);
-            if ($session === null) {
-                throw new ScopeException('Unable to receive active Session, invalid request scope');
-            }
-
-            return $session;
+            return $this->container->get(SessionInterface::class);
         } catch (NotFoundExceptionInterface $e) {
-            throw new ScopeException('Unable to receive active session', $e->getCode(), $e);
+            throw new ScopeException('Unable to receive active session, invalid request scope', $e->getCode(), $e);
         }
     }
 }

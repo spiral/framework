@@ -29,7 +29,8 @@ import (
 	"github.com/spiral/jobs"
 	"github.com/spiral/php-grpc"
 	"github.com/spiral/roadrunner/service/env"
-	"github.com/spiral/roadrunner/service/headers"
+    "github.com/spiral/roadrunner/service/headers"
+    "github.com/spiral/roadrunner/service/health"
 	"github.com/spiral/roadrunner/service/http"
 	"github.com/spiral/roadrunner/service/rpc"
 	"github.com/spiral/roadrunner/service/static"
@@ -72,6 +73,7 @@ func main() {
 	// supervisor and metrics
 	rr.Container.Register(limit.ID, &limit.Service{})
 	rr.Container.Register(metrics.ID, &metrics.Service{})
+	rr.Container.Register(health.ID, &health.Service{})
 
 	// you can register additional commands using cmd.CLI
 	rr.Execute()

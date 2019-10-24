@@ -18,6 +18,9 @@
     "spiral/composer-publish-plugin": "^1.0"
   },
   "require-dev": {
+    "phpunit/phpunit": "~7.0",
+    "mockery/mockery": "^1.1",
+    "spiral/code-style": "^1.0",
     "spiral/logger": "^1.0",
     "spiral/debug": "^1.1",
     "spiral/encrypter": "^1.0",
@@ -43,9 +46,9 @@
     "cycle/annotated": "^2.0",
     "cycle/migrations": "^1.0",
     "cycle/proxy-factory": "^1.0",
-    "phpunit/phpunit": "~7.0",
-    "mockery/mockery": "^1.1",
-    "spiral/code-style": "^1.0"
+    "spiral/auth": "^1.0",
+    "spiral/auth-http": "^1.0",
+    "spiral/broadcast": "^1.0"
   },
   "autoload": {
     "files": [

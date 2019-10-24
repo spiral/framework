@@ -1,8 +1,10 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Download spiral application server binary.
  */
+
 declare(strict_types=1);
 
 foreach ([
