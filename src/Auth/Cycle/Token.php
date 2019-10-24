@@ -16,17 +16,17 @@ use Spiral\Auth\TokenInterface;
 
 /**
  * @Cycle\Entity(table="auth_tokens")
- * @Cycle\Table(indexes={
- *     @Cycle\Table\Index(columns={"id", "hash"}, unique=true)
- * })
  */
 final class Token implements TokenInterface, \JsonSerializable
 {
-    /** @Cycle\Column(type="bigPrimary") */
+    /** @Cycle\Column(type="string(64)", primary=true) */
     private $id;
 
-    /** @Cycle\Column(type="string(128)") */
-    private $hash;
+    /** @var string */
+    private $secretValue;
+
+    /** @Cycle\Column(type="string(128)", name="hashed_value") */
+    private $hashedValue;
 
     /** @Cycle\Column(type="datetime") */
     private $createdAt;
@@ -38,20 +38,27 @@ final class Token implements TokenInterface, \JsonSerializable
     private $payload;
 
     /**
-     * @param string                  $hash
+     * @param string                  $id
+     * @param string                  $secretValue
      * @param array                   $payload
      * @param \DateTimeImmutable      $createdAt
      * @param \DateTimeInterface|null $expiresAt
      */
     public function __construct(
-        string $hash,
+        string $id,
+        string $secretValue,
         array $payload,
         \DateTimeImmutable $createdAt,
         \DateTimeInterface $expiresAt = null
     ) {
-        $this->hash = $hash;
+        $this->id = $id;
+
+        $this->secretValue = $secretValue;
+        $this->hashedValue = hash('sha512', $secretValue);
+
         $this->createdAt = $createdAt;
         $this->expiresAt = $expiresAt;
+
         $this->payload = json_encode($payload);
     }
 
@@ -60,7 +67,15 @@ final class Token implements TokenInterface, \JsonSerializable
      */
     public function __toString(): string
     {
-        return $this->id;
+        return $this->getID();
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setSecretValue(string $value): void
+    {
+        $this->secretValue = $value;
     }
 
     /**
@@ -68,7 +83,15 @@ final class Token implements TokenInterface, \JsonSerializable
      */
     public function getID(): string
     {
-        return sprintf('%s:%s', $this->id, $this->hash);
+        return sprintf('%s:%s', $this->id, $this->secretValue);
+    }
+
+    /**
+     * @return string
+     */
+    public function getHashedValue(): string
+    {
+        return $this->hashedValue;
     }
 
     /**
@@ -86,7 +109,6 @@ final class Token implements TokenInterface, \JsonSerializable
     {
         return $this->expiresAt;
     }
-
 
     /**
      * @inheritDoc

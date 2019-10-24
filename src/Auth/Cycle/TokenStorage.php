@@ -44,17 +44,15 @@ final class TokenStorage implements TokenStorageInterface
 
         [$pk, $hash] = explode(':', $id, 2);
 
-        if (!is_numeric($pk)) {
-            return null;
-        }
+        /** @var Token $token */
+        $token = $this->orm->getRepository(Token::class)->findByPK($pk);
 
-        /** @var TokenInterface $token */
-        $token = $this->orm->getRepository(Token::class)->findByPK((int)$pk);
-
-        if ($token === null || !hash_equals($token->getID(), $id)) {
+        if ($token === null || !hash_equals($token->getHashedValue(), hash('sha512', $hash))) {
             // hijacked or deleted
             return null;
         }
+
+        $token->setSecretValue($hash);
 
         if ($token->getExpiresAt() !== null && $token->getExpiresAt() < new \DateTime()) {
             $this->delete($token);
@@ -70,7 +68,13 @@ final class TokenStorage implements TokenStorageInterface
     public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface
     {
         try {
-            $token = new Token($this->randomHash(128), $payload, new \DateTimeImmutable(), $expiresAt);
+            $token = new Token(
+                $this->issueID(),
+                $this->randomHash(128),
+                $payload,
+                new \DateTimeImmutable(),
+                $expiresAt
+            );
 
             (new Transaction($this->orm))->persist($token)->run();
 
@@ -90,6 +94,27 @@ final class TokenStorage implements TokenStorageInterface
         } catch (\Throwable $e) {
             throw new TokenStorageException('Unable to delete token', $e->getCode(), $e);
         }
+    }
+
+    /**
+     * Issue unique token id.
+     *
+     * @return string
+     * @throws \Exception
+     */
+    private function issueID(): string
+    {
+        $id = $this->randomHash(64);
+
+        $query = $this->orm->getSource(Token::class)->getDatabase()->select()->from(
+            $this->orm->getSource(Token::class)->getTable()
+        );
+
+        while ((clone $query)->where('id', $id)->count('id') !== 0) {
+            $id = $this->randomHash(64);
+        }
+
+        return $id;
     }
 
     /**
