@@ -52,6 +52,7 @@ class AuthCycleTest extends HttpTest
         $this->assertTrue(isset($cookies['token']));
 
         $token = $this->app->get(ORMInterface::class)->getRepository(Token::class)->findOne();
+
         $this->assertSame(['userID' => 1], $token->getPayload());
 
         $result = $this->get('/auth/token', [], [], $cookies);

@@ -47,7 +47,7 @@ final class TokenStorage implements TokenStorageInterface
             throw new TokenStorageException('Unable to load session token', $e->getCode(), $e);
         }
 
-        if ($token->getID() !== $id) {
+        if (!hash_equals($token->getID(), $id)) {
             return null;
         }
 

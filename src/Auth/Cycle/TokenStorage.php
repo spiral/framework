@@ -42,7 +42,7 @@ final class TokenStorage implements TokenStorageInterface
             return null;
         }
 
-        list($pk, $hash) = explode(':', $id, 2);
+        [$pk, $hash] = explode(':', $id, 2);
 
         if (!is_numeric($pk)) {
             return null;
@@ -51,7 +51,7 @@ final class TokenStorage implements TokenStorageInterface
         /** @var TokenInterface $token */
         $token = $this->orm->getRepository(Token::class)->findByPK((int)$pk);
 
-        if ($token === null || $token->getID() !== $id) {
+        if ($token === null || !hash_equals($token->getID(), $id)) {
             // hijacked or deleted
             return null;
         }
