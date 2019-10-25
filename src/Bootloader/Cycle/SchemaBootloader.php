@@ -39,7 +39,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
     /** @var Container */
     private $container;
 
-    /** @var ConfiguratorInterface */
+    /** @var string[]|GeneratorInterface[] */
     private $generators = [];
 
     /**
