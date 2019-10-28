@@ -22,22 +22,12 @@ final class RepositoryInjector implements InjectorInterface
     /** @var ORMInterface */
     private $orm;
 
-    /** @var array */
-    private $mapping = [];
-
     /**
      * @param ORMInterface $orm
      */
     public function __construct(ORMInterface $orm)
     {
         $this->orm = $orm;
-
-        foreach ($orm->getSchema()->getRoles() as $role) {
-            $repository = $orm->getSchema()->define($role, Schema::REPOSITORY);
-            if ($repository !== Select\Repository::class && $repository !== null) {
-                $this->mapping[$repository] = $role;
-            }
-        }
     }
 
     /**
@@ -47,10 +37,14 @@ final class RepositoryInjector implements InjectorInterface
      */
     public function createInjection(\ReflectionClass $class, string $context = null)
     {
-        if (!isset($this->mapping[$class->getName()])) {
-            throw new ORMException("Unable to find Entity role for repository {$class->getName()}");
+        $schema = $this->orm->getSchema();
+        foreach ($schema->getRoles() as $role) {
+            $repository = $schema->define($role, Schema::REPOSITORY);
+            if ($repository !== Select\Repository::class && $repository === $class->getName()) {
+                return $this->orm->getRepository($role);
+            }
         }
 
-        return $this->orm->getRepository($this->mapping[$class->getName()]);
+        throw new ORMException("Unable to find Entity role for repository {$class->getName()}");
     }
 }
