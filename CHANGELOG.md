@@ -1,6 +1,6 @@
 # CHANGELOG
 
-v2.2.1 (28.10.2019) - no binary
+v2.2.2 (28.10.2019) - no binary
 -----
 - the ORM schema can be pre-heated automatically
 - ability to create injectors to interfaces 
