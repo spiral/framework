@@ -40,16 +40,16 @@ final class CycleBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
-        ORMInterface::class     => [self::class, 'orm'],
+        ORMInterface::class     => ORM::class,
+        ORM::class              => [self::class, 'orm'],
         FactoryInterface::class => [self::class, 'factory'],
     ];
 
     /**
-     * @param Container            $container
-     * @param FinalizerInterface   $finalizer
-     * @param SchemaInterface|null $schema
+     * @param Container          $container
+     * @param FinalizerInterface $finalizer
      */
-    public function boot(Container $container, FinalizerInterface $finalizer, SchemaInterface $schema = null): void
+    public function boot(Container $container, FinalizerInterface $finalizer): void
     {
         $finalizer->addFinalizer(function () use ($container): void {
             if ($container->hasInstance(ORMInterface::class)) {
