@@ -13,12 +13,13 @@ namespace Spiral\Bootloader\Cycle;
 
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
+use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator;
 use Cycle\Schema\GeneratorInterface;
+use Cycle\Schema\Registry;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\TokenizerBootloader;
-use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Container;
 
 final class SchemaBootloader extends Bootloader implements Container\SingletonInterface
@@ -99,13 +100,18 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
 
     /**
      * @param MemoryInterface $memory
-     * @return SchemaInterface|null
+     * @return SchemaInterface
      */
-    protected function schema(MemoryInterface $memory): ?SchemaInterface
+    protected function schema(MemoryInterface $memory): SchemaInterface
     {
         $schema = $memory->loadData('cycle');
         if (is_null($schema)) {
-            return null;
+            $schema = (new Compiler())->compile(
+                $this->container->get(Registry::class),
+                $this->getGenerators()
+            );
+
+            $memory->saveData('cycle', $schema);
         }
 
         return new Schema($schema);

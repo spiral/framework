@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.2.1 (28.10.2019) - no binary
+-----
+- the ORM schema can be pre-heated automatically
+
 v2.2.0 (24.10.2019)
 -----
 - added auth component

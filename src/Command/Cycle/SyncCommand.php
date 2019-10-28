@@ -11,16 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Command\Cycle;
 
-use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator\SyncTables;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Bootloader\Cycle\CycleBootloader;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Console\Command;
-use Spiral\Core\Container;
 
 final class SyncCommand extends Command
 {
@@ -29,15 +26,11 @@ final class SyncCommand extends Command
 
     /**
      * @param SchemaBootloader $bootloader
-     * @param Container        $container
-     * @param CycleBootloader  $cycleBootloader
      * @param Registry         $registry
      * @param MemoryInterface  $memory
      */
     public function perform(
         SchemaBootloader $bootloader,
-        Container $container,
-        CycleBootloader $cycleBootloader,
         Registry $registry,
         MemoryInterface $memory
     ): void {
@@ -53,7 +46,5 @@ final class SyncCommand extends Command
         if ($show->hasChanges()) {
             $this->writeln("\n<info>ORM Schema has been synchronized</info>");
         }
-
-        $cycleBootloader->bindRepositories($container, new Schema($schema));
     }
 }

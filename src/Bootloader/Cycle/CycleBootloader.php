@@ -17,15 +17,15 @@ use Cycle\ORM\FactoryInterface;
 use Cycle\ORM\ORM;
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\PromiseFactoryInterface;
+use Cycle\ORM\RepositoryInterface;
 use Cycle\ORM\SchemaInterface;
-use Cycle\ORM\Select;
 use Cycle\ORM\Transaction;
 use Cycle\ORM\TransactionInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Database\DatabaseBootloader;
 use Spiral\Core\Container;
-use Spiral\Cycle\SelectInjector;
+use Spiral\Cycle\RepositoryInjector;
 use Spiral\Database\DatabaseProviderInterface;
 
 final class CycleBootloader extends Bootloader
@@ -57,33 +57,7 @@ final class CycleBootloader extends Bootloader
             }
         });
 
-        $container->bindInjector(Select::class, SelectInjector::class);
-
-        if ($schema !== null) {
-            $this->bindRepositories($container, $schema);
-        }
-    }
-
-    /**
-     * Create container bindings to resolve repositories by they class names.
-     *
-     * @param Container       $container
-     * @param SchemaInterface $schema
-     */
-    public function bindRepositories(Container $container, SchemaInterface $schema): void
-    {
-        foreach ($schema->getRoles() as $role) {
-            $repository = $schema->define($role, SchemaInterface::REPOSITORY);
-            if ($repository === Select\Repository::class || $repository === null) {
-                // default repository can not be wired
-                continue;
-            }
-
-            // initiate all repository dependencies using factory method forwarded to ORM
-            $container->bindSingleton($repository, function (ORMInterface $orm) use ($role) {
-                return $orm->getRepository($role);
-            });
-        }
+        $container->bindInjector(RepositoryInterface::class, RepositoryInjector::class);
     }
 
     /**

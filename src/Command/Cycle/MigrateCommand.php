@@ -12,16 +12,13 @@ declare(strict_types=1);
 namespace Spiral\Command\Cycle;
 
 use Cycle\Migrations\GenerateMigrations;
-use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Bootloader\Cycle\CycleBootloader;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Command\Migrate\AbstractCommand;
 use Spiral\Console\Console;
-use Spiral\Core\Container;
 use Spiral\Migrations\Migrator;
 use Spiral\Migrations\State;
 use Symfony\Component\Console\Input\InputOption;
@@ -36,8 +33,6 @@ final class MigrateCommand extends AbstractCommand
 
     /**
      * @param SchemaBootloader   $bootloader
-     * @param Container          $container
-     * @param CycleBootloader    $cycleBootloader
      * @param Registry           $registry
      * @param MemoryInterface    $memory
      * @param GenerateMigrations $migrations
@@ -48,8 +43,6 @@ final class MigrateCommand extends AbstractCommand
      */
     public function perform(
         SchemaBootloader $bootloader,
-        Container $container,
-        CycleBootloader $cycleBootloader,
         Registry $registry,
         MemoryInterface $memory,
         GenerateMigrations $migrations,
@@ -83,7 +76,5 @@ final class MigrateCommand extends AbstractCommand
                 $console->run('migrate', [], $this->output);
             }
         }
-
-        $cycleBootloader->bindRepositories($container, new Schema($schema));
     }
 }

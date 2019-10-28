@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace Spiral\App\Controller;
 
-use Cycle\ORM\Select;
+use Spiral\App\User\UserRepository;
 
 class SelectController
 {
-    public function select(Select $users)
+    public function select(UserRepository $users)
     {
-        return $users->count();
+        return $users->select()->count();
     }
 }

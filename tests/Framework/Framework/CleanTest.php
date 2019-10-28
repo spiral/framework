@@ -29,7 +29,7 @@ class CleanTest extends ConsoleTest
     public function testClean2(): void
     {
         $output = $this->runCommand('cache:clean');
-        $this->assertContains('Cache directory is missing', $output);
+        $this->assertContains('cycle.php', $output);
     }
 
     public function testCleanVerbose(): void

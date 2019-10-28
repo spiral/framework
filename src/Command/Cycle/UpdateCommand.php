@@ -11,14 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Command\Cycle;
 
-use Cycle\ORM\Schema;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
-use Spiral\Bootloader\Cycle\CycleBootloader;
 use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Console\Command;
-use Spiral\Core\Container;
 
 final class UpdateCommand extends Command
 {
@@ -27,15 +24,11 @@ final class UpdateCommand extends Command
 
     /**
      * @param SchemaBootloader $bootloader
-     * @param Container        $container
-     * @param CycleBootloader  $cycleBootloader
      * @param Registry         $registry
      * @param MemoryInterface  $memory
      */
     public function perform(
         SchemaBootloader $bootloader,
-        Container $container,
-        CycleBootloader $cycleBootloader,
         Registry $registry,
         MemoryInterface $memory
     ): void {
@@ -45,7 +38,5 @@ final class UpdateCommand extends Command
         $memory->saveData('cycle', $schema);
 
         $this->writeln('<info>done</info>');
-
-        $cycleBootloader->bindRepositories($container, new Schema($schema));
     }
 }

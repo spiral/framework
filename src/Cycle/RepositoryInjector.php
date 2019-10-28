@@ -13,14 +13,17 @@ namespace Spiral\Cycle;
 
 use Cycle\ORM\Exception\ORMException;
 use Cycle\ORM\ORMInterface;
+use Cycle\ORM\Schema;
 use Cycle\ORM\Select;
-use Doctrine\Common\Inflector\Inflector;
 use Spiral\Core\Container\InjectorInterface;
 
-final class SelectInjector implements InjectorInterface
+final class RepositoryInjector implements InjectorInterface
 {
     /** @var ORMInterface */
     private $orm;
+
+    /** @var array */
+    private $mapping = [];
 
     /**
      * @param ORMInterface $orm
@@ -28,6 +31,13 @@ final class SelectInjector implements InjectorInterface
     public function __construct(ORMInterface $orm)
     {
         $this->orm = $orm;
+
+        foreach ($orm->getSchema()->getRoles() as $role) {
+            $repository = $orm->getSchema()->define($role, Schema::REPOSITORY);
+            if ($repository !== Select\Repository::class && $repository !== null) {
+                $this->mapping[$repository] = $role;
+            }
+        }
     }
 
     /**
@@ -37,17 +47,10 @@ final class SelectInjector implements InjectorInterface
      */
     public function createInjection(\ReflectionClass $class, string $context = null)
     {
-        if (!$this->orm->getSchema()->defines($context)) {
-            $context = Inflector::singularize($context);
+        if (!isset($this->mapping[$class->getName()])) {
+            throw new ORMException("Unable to find Entity role for repository {$class->getName()}");
         }
 
-        if (!$this->orm->getSchema()->defines($context)) {
-            throw new ORMException('Cycle schema is not initiated or role missing, run `cycle`');
-        }
-
-        $select = new Select($this->orm, $context);
-        $select->constrain($this->orm->getSource($context)->getConstrain());
-
-        return $select;
+        return $this->orm->getRepository($this->mapping[$class->getName()]);
     }
 }
