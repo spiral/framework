@@ -91,15 +91,6 @@ class SchemaTest extends ConsoleTest
         $this->assertSame(1, $u->id);
     }
 
-    /**
-     * @expectedException \Cycle\ORM\Exception\ORMException
-     */
-    public function testSchemaMissing(): void
-    {
-        /** @var UserRepository $r */
-        $this->app->get(UserRepository::class);
-    }
-
     public function testGetRepository(): void
     {
         $app = $this->app;
@@ -132,20 +123,6 @@ class SchemaTest extends ConsoleTest
             SelectController::class,
             'select'
         ));
-    }
-
-    /**
-     * @expectedException \Cycle\ORM\Exception\ORMException
-     */
-    public function testInjectedSelectNoSchema(): void
-    {
-        /** @var CoreInterface $c */
-        $c = $this->app->get(CoreInterface::class);
-
-        $c->callAction(
-            SelectController::class,
-            'select'
-        );
     }
 
     public function testHeapReset(): void
