@@ -101,6 +101,8 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
     /**
      * @param MemoryInterface $memory
      * @return SchemaInterface
+     *
+     * @throws \Throwable
      */
     protected function schema(MemoryInterface $memory): SchemaInterface
     {
