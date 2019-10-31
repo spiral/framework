@@ -1,8 +1,13 @@
 # CHANGELOG
 
+v2.2.4 (30.10.2019) - no binary
+-----
+- authorizes trait removed in favor of core interceptors
+- Auth Cycle\TokenStorage now requests TransactionInterface directly, for simpler testing
+
 v2.2.3 (30.10.2019) - no binary
 -----
-- json payload middleware read stream content via (string) conversion …
+- json payload middleware read stream content via (string) conversion
 - JsonPayloadParserBootloader renamed to JsonPayloadsBootloader
 
 v2.2.2 (28.10.2019) - no binary
