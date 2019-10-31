@@ -13,20 +13,21 @@ namespace Spiral\App\Controller;
 
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\TokenStorageInterface;
-use Spiral\Controller\Traits\AuthorizesTrait;
-use Spiral\Core\Controller;
+use Spiral\Core\Exception\ControllerException;
+use Spiral\Security\GuardInterface;
 
-class AuthController extends Controller
+class AuthController
 {
-    use AuthorizesTrait;
-
-    public function doAction()
+    public function do(GuardInterface $guard)
     {
-        $this->authorize('do');
+        if (!$guard->allows('do')) {
+            throw new ControllerException("Unauthorized permission 'do'", ControllerException::FORBIDDEN);
+        }
+
         return 'ok';
     }
 
-    public function tokenAction(AuthContextInterface $authContext)
+    public function token(AuthContextInterface $authContext)
     {
         if ($authContext->getToken() !== null) {
             return $authContext->getToken()->getID();
@@ -35,7 +36,7 @@ class AuthController extends Controller
         return 'none';
     }
 
-    public function loginAction(AuthContextInterface $authContext, TokenStorageInterface $tokenStorage)
+    public function login(AuthContextInterface $authContext, TokenStorageInterface $tokenStorage)
     {
         $authContext->start(
             $tokenStorage->create(['userID' => 1])

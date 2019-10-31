@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Auth\Cycle;
 
 use Cycle\ORM\ORMInterface;
-use Cycle\ORM\Transaction;
+use Cycle\ORM\TransactionInterface;
 use Spiral\Auth\Exception\TokenStorageException;
 use Spiral\Auth\TokenInterface;
 use Spiral\Auth\TokenStorageInterface;
@@ -25,12 +25,17 @@ final class TokenStorage implements TokenStorageInterface
     /** @var ORMInterface */
     private $orm;
 
+    /** @var TransactionInterface */
+    private $em;
+
     /**
-     * @param ORMInterface $orm
+     * @param ORMInterface         $orm
+     * @param TransactionInterface $transaction
      */
-    public function __construct(ORMInterface $orm)
+    public function __construct(ORMInterface $orm, TransactionInterface $transaction)
     {
         $this->orm = $orm;
+        $this->em = $transaction;
     }
 
     /**
@@ -76,7 +81,7 @@ final class TokenStorage implements TokenStorageInterface
                 $expiresAt
             );
 
-            (new Transaction($this->orm))->persist($token)->run();
+            $this->em->persist($token)->run();
 
             return $token;
         } catch (\Throwable $e) {
@@ -90,7 +95,7 @@ final class TokenStorage implements TokenStorageInterface
     public function delete(TokenInterface $token): void
     {
         try {
-            (new Transaction($this->orm))->delete($token)->run();
+            $this->em->delete($token)->run();
         } catch (\Throwable $e) {
             throw new TokenStorageException('Unable to delete token', $e->getCode(), $e);
         }

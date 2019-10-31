@@ -14,23 +14,22 @@ namespace Spiral\App\Controller;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\App\Request\BadRequest;
 use Spiral\App\Request\TestRequest;
-use Spiral\Core\Controller;
 use Spiral\Filter\InputScope;
 use Spiral\Http\PaginationFactory;
 use Spiral\Pagination\Paginator;
 use Spiral\Router\RouteInterface;
 use Spiral\Translator\Traits\TranslatorTrait;
 
-class TestController extends Controller
+class TestController
 {
     use TranslatorTrait;
 
-    public function indexAction(string $name = 'Dave')
+    public function index(string $name = 'Dave')
     {
         return "Hello, {$name}.";
     }
 
-    public function paginateAction(PaginationFactory $paginationFactory)
+    public function paginate(PaginationFactory $paginationFactory)
     {
         /** @var Paginator $p */
         $p = $paginationFactory->createPaginator('page');
@@ -38,36 +37,36 @@ class TestController extends Controller
         return $p->withCount(1000)->getPage();
     }
 
-    public function filterAction(TestRequest $r)
+    public function filter(TestRequest $r)
     {
         return $r->isValid() ? ($r->value ?? 'ok') : json_encode($r->getErrors());
     }
 
-    public function filter2Action(BadRequest $r): void
+    public function filter2(BadRequest $r): void
     {
     }
 
-    public function inputAction(InputScope $i)
+    public function input(InputScope $i)
     {
         return 'value: ' . $i->withPrefix('section')->getValue('query', 'value');
     }
 
-    public function errorAction(): void
+    public function error(): void
     {
         echo $undefined;
     }
 
-    public function routeAction(RouteInterface $route)
+    public function route(RouteInterface $route)
     {
         return $route->getMatches();
     }
 
-    public function payloadAction(ServerRequestInterface $request)
+    public function payload(ServerRequestInterface $request)
     {
         return $request->getParsedBody();
     }
 
-    public function requiredAction(int $id)
+    public function required(int $id)
     {
         //no index
         $this->say(get_class($this));
