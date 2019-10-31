@@ -25,7 +25,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - The [ORM](https://github.com/cycle/orm) you will use for the next 25 years
 - Intuitive scaffolding and prototyping (it literally writes code for you)
 - Helpful class discovery via static analysis
-- RBAC security, validation, and encryption
+- Authentication, RBAC security, validation, and encryption
 - Dynamic template engine to create your own HTML tags (or just use Twig)
 - MVC, HMVC, CQRS, Queue-oriented, RPC-oriented, CLI apps... any apps
 
