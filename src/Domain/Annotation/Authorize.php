@@ -17,7 +17,7 @@ namespace Spiral\Domain\Annotation;
  *      @Attribute("error", type="string"),
  * })
  */
-final class Authorized
+final class Authorize
 {
     /** @var string */
     public $permission;
