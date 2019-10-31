@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.2.3 (30.10.2019) - no binary
+-----
+- json payload middleware read stream content via (string) conversion …
+- JsonPayloadParserBootloader renamed to JsonPayloadsBootloader
+
 v2.2.2 (28.10.2019) - no binary
 -----
 - minor CS in CycleBootloader, cleaner dependencies
