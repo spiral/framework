@@ -26,8 +26,8 @@ install:
   - composer install --no-interaction
 
 script:
-  - vendor/bin/phpunit --coverage-clover=coverage.xml
   - vendor/bin/spiral-cs check src tests functions.php
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -f coverage.xml
