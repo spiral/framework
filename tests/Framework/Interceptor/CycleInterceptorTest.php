@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Framework\Interceptor;
@@ -31,7 +33,7 @@ class CycleInterceptorTest extends ConsoleTest
         $this->app->get(Transaction::class)->persist($u)->run();
     }
 
-    public function testInjectedInstance()
+    public function testInjectedInstance(): void
     {
         /** @var CoreInterface $core */
         $core = $this->app->get(CoreInterface::class);
@@ -40,7 +42,7 @@ class CycleInterceptorTest extends ConsoleTest
         $core->callAction(DemoController::class, 'entity', []);
     }
 
-    public function testInjectedInstance1()
+    public function testInjectedInstance1(): void
     {
         /** @var CoreInterface $core */
         $core = $this->app->get(CoreInterface::class);
@@ -49,7 +51,7 @@ class CycleInterceptorTest extends ConsoleTest
         $core->callAction(DemoController::class, 'entity', ['user' => 2]);
     }
 
-    public function testInjectedInstance2()
+    public function testInjectedInstance2(): void
     {
         /** @var CoreInterface $core */
         $core = $this->app->get(CoreInterface::class);
@@ -61,7 +63,7 @@ class CycleInterceptorTest extends ConsoleTest
     }
 
     // singular entity
-    public function testInjectedInstance3()
+    public function testInjectedInstance3(): void
     {
         /** @var CoreInterface $core */
         $core = $this->app->get(CoreInterface::class);
@@ -72,7 +74,7 @@ class CycleInterceptorTest extends ConsoleTest
         );
     }
 
-    public function testMultipleEntitiesButID()
+    public function testMultipleEntitiesButID(): void
     {
         /** @var CoreInterface $core */
         $core = $this->app->get(CoreInterface::class);
@@ -82,7 +84,7 @@ class CycleInterceptorTest extends ConsoleTest
     }
 
     // singular entity
-    public function testMultipleEntities()
+    public function testMultipleEntities(): void
     {
         /** @var CoreInterface $core */
         $core = $this->app->get(CoreInterface::class);
@@ -94,7 +96,7 @@ class CycleInterceptorTest extends ConsoleTest
     }
 
     // singular entity
-    public function testBypass()
+    public function testBypass(): void
     {
         /** @var CoreInterface $core */
         $core = $this->app->get(CoreInterface::class);
