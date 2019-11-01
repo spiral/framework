@@ -20,13 +20,17 @@ use Spiral\Domain\Annotation\Guarded;
 use Spiral\Domain\Annotation\GuardNamespace;
 use Spiral\Security\GuardInterface;
 
-class GuardInterceptor implements CoreInterceptorInterface
+/**
+ * Interceptor provides the ability to check the access to the controllers and controller methods using security
+ * component and annotations "Guarded" and "GuardNamespace".
+ */
+final class GuardInterceptor implements CoreInterceptorInterface
 {
     /** @var GuardInterface */
     private $guard;
 
     /** @var array */
-    private $permissionCache = [];
+    private $cache = [];
 
     /**
      * @param GuardInterface $guard
@@ -70,11 +74,11 @@ class GuardInterceptor implements CoreInterceptorInterface
     private function getPermissions(string $controller, string $action): ?array
     {
         $key = sprintf('%s:%s', $controller, $action);
-        if (array_key_exists($key, $this->permissionCache)) {
-            return $this->permissionCache[$key];
+        if (array_key_exists($key, $this->cache)) {
+            return $this->cache[$key];
         }
 
-        $this->permissionCache[$key] = null;
+        $this->cache[$key] = null;
         try {
             $method = new \ReflectionMethod($controller, $action);
         } catch (\ReflectionException $e) {
@@ -83,29 +87,58 @@ class GuardInterceptor implements CoreInterceptorInterface
 
         $reader = new AnnotationReader();
 
-        /** @var GuardNamespace $guardNamespace */
-        $guardNamespace = $reader->getClassAnnotation($method->getDeclaringClass(), GuardNamespace::class);
+        /** @var GuardNamespace $namespace */
+        $namespace = $reader->getClassAnnotation(
+            $method->getDeclaringClass(),
+            GuardNamespace::class
+        );
 
-        /** @var Guarded $guarded */
-        $guarded = $reader->getMethodAnnotation($method, Guarded::class);
+        /** @var Guarded $action */
+        $action = $reader->getMethodAnnotation(
+            $method,
+            Guarded::class
+        );
 
-        if ($guarded === null) {
+        if ($action === null) {
             return null;
         }
 
-        if ($guarded->permission === null && $guardNamespace === null) {
+        if ($action->permission === null && $namespace === null) {
             throw new InterceptorException(
                 'Unable to apply @Guarded annotation without specified permission name or @GuardNamespace'
             );
         }
 
+        $this->cache[$key] = $this->makePermission($action, $method, $namespace);
+
+        return $this->cache[$key];
+    }
+
+    /**
+     * Generates permissions for the method or controller.
+     *
+     * @param Guarded             $guarded
+     * @param \ReflectionMethod   $method
+     * @param GuardNamespace|null $ns
+     * @return array
+     */
+    private function makePermission(Guarded $guarded, \ReflectionMethod $method, ?GuardNamespace $ns): array
+    {
         $permission = [
-            $guarded->permission ?? $action,
+            $guarded->permission ?? $method->getName(),
             ControllerException::FORBIDDEN
         ];
 
-        if ($guardNamespace !== null) {
-            $permission[0] = sprintf('%s.%s', $guardNamespace->namespace, $permission[0]);
+        if ($guarded->permission === null && $ns === null) {
+            throw new InterceptorException(sprintf(
+                'Unable to apply @Guarded without name or @GuardNamespace on `%s`->`%s`',
+                $method->getDeclaringClass()->getName(),
+                $method->getName()
+            ));
+        }
+
+        if ($ns !== null) {
+            $permission[0] = sprintf('%s.%s', $ns->namespace, $permission[0]);
         }
 
         switch ($guarded->else) {
@@ -119,8 +152,6 @@ class GuardInterceptor implements CoreInterceptorInterface
                 $permission[1] = ControllerException::ERROR;
                 break;
         }
-
-        $this->permissionCache[$key] = $permission;
 
         return $permission;
     }
