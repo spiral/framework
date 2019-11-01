@@ -51,4 +51,34 @@ class AuthSessionTest extends HttpTest
 
         $this->assertNotSame('none', (string)$result->getBody());
     }
+
+    public function testLoginScope(): void
+    {
+        $result = $this->get('/auth/login2');
+
+        $this->assertSame('OK', (string)$result->getBody());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertTrue(isset($cookies['token']));
+        $this->assertTrue(isset($cookies['sid']));
+
+        $result = $this->get('/auth/token2', [], [], $cookies);
+
+        $this->assertNotSame('none', (string)$result->getBody());
+    }
+
+    public function testLoginPayload(): void
+    {
+        $result = $this->get('/auth/login2');
+
+        $this->assertSame('OK', (string)$result->getBody());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertTrue(isset($cookies['token']));
+        $this->assertTrue(isset($cookies['sid']));
+
+        $result = $this->get('/auth/token3', [], [], $cookies);
+
+        $this->assertSame('{"userID":1}', (string)$result->getBody());
+    }
 }

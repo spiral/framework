@@ -59,4 +59,36 @@ class AuthCycleTest extends HttpTest
 
         $this->assertNotSame('none', (string)$result->getBody());
     }
+
+    public function testLoginScope(): void
+    {
+        $result = $this->get('/auth/login2');
+
+        $this->assertSame('OK', (string)$result->getBody());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertTrue(isset($cookies['token']));
+
+        $token = $this->app->get(ORMInterface::class)->getRepository(Token::class)->findOne();
+
+        $this->assertSame(['userID' => 1], $token->getPayload());
+
+        $result = $this->get('/auth/token2', [], [], $cookies);
+
+        $this->assertNotSame('none', (string)$result->getBody());
+    }
+
+    public function testLoginPayload(): void
+    {
+        $result = $this->get('/auth/login2');
+
+        $this->assertSame('OK', (string)$result->getBody());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertTrue(isset($cookies['token']));
+
+        $result = $this->get('/auth/token3', [], [], $cookies);
+
+        $this->assertSame('{"userID":1}', (string)$result->getBody());
+    }
 }

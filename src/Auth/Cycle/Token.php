@@ -17,7 +17,7 @@ use Spiral\Auth\TokenInterface;
 /**
  * @Cycle\Entity(table="auth_tokens")
  */
-final class Token implements TokenInterface, \JsonSerializable
+final class Token implements TokenInterface
 {
     /** @Cycle\Column(type="string(64)", primary=true) */
     private $id;
@@ -60,14 +60,6 @@ final class Token implements TokenInterface, \JsonSerializable
         $this->expiresAt = $expiresAt;
 
         $this->payload = json_encode($payload);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->getID();
     }
 
     /**
@@ -116,13 +108,5 @@ final class Token implements TokenInterface, \JsonSerializable
     public function getPayload(): array
     {
         return json_decode($this->payload, true);
-    }
-
-    /**
-     * @return string
-     */
-    public function jsonSerialize(): string
-    {
-        return $this->getID();
     }
 }

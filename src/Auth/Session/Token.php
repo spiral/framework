@@ -13,7 +13,7 @@ namespace Spiral\Auth\Session;
 
 use Spiral\Auth\TokenInterface;
 
-final class Token implements TokenInterface, \JsonSerializable
+final class Token implements TokenInterface
 {
     /** @var string */
     private $id;
@@ -34,14 +34,6 @@ final class Token implements TokenInterface, \JsonSerializable
         $this->id = $id;
         $this->expiresAt = $expiresAt;
         $this->payload = $payload;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->id;
     }
 
     /**
@@ -66,14 +58,6 @@ final class Token implements TokenInterface, \JsonSerializable
     public function getPayload(): array
     {
         return $this->payload;
-    }
-
-    /**
-     * @return string
-     */
-    public function jsonSerialize(): string
-    {
-        return $this->getID();
     }
 
     /**

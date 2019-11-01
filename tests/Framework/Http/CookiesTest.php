@@ -115,6 +115,7 @@ class CookiesTest extends HttpTest
         $this->http->setHandler(function () {
             $this->cookies()->schedule(Cookie::create('a', 'value'));
             $this->assertSame([], $this->cookies()->getAll());
+            $this->assertCount(1, $this->cookies()->getScheduled());
 
             return 'ok';
         });
@@ -129,6 +130,27 @@ class CookiesTest extends HttpTest
             'value',
             $this->app->get(EncrypterInterface::class)->decrypt($cookies['a'])
         );
+    }
+
+    public function testDeleteCookie(): void
+    {
+        $key = $this->app->get(EncrypterFactory::class)->generateKey();
+        $this->app = $this->makeApp(['ENCRYPTER_KEY' => $key]);
+        $this->http = $this->app->get(Http::class);
+
+        $this->http->setHandler(function () {
+            $this->cookies()->delete('cookie');
+
+            return 'ok';
+        });
+
+        $result = $this->get('/');
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame('ok', $result->getBody()->__toString());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+
+        $this->assertSame('', $cookies['cookie']);
     }
 
     private function cookies(): CookieManager
