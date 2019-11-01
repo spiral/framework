@@ -49,6 +49,9 @@ class AppBootloader extends DomainBootloader
         $rbac->addRole('user');
         $rbac->associate('user', '*');
 
+        $rbac->addRole('demo');
+        $rbac->associate('demo', 'demo.*');
+
         $route = new Route(
             '/<action>[/<name>]',
             new Controller(TestController::class)

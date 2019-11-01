@@ -60,6 +60,25 @@ class AuthCycleTest extends HttpTest
         $this->assertNotSame('none', (string)$result->getBody());
     }
 
+    public function testLogout(): void
+    {
+        $result = $this->get('/auth/login');
+
+        $this->assertSame('OK', (string)$result->getBody());
+
+        $cookies = $this->fetchCookies($result->getHeader('Set-Cookie'));
+        $this->assertTrue(isset($cookies['token']));
+
+        $result = $this->get('/auth/token', [], [], $cookies);
+        $this->assertNotSame('none', (string)$result->getBody());
+
+        $result = $this->get('/auth/logout', [], [], $cookies);
+        $this->assertSame('closed', (string)$result->getBody());
+
+        $result = $this->get('/auth/token', [], [], $cookies);
+        $this->assertSame('none', (string)$result->getBody());
+    }
+
     public function testLoginScope(): void
     {
         $result = $this->get('/auth/login2');

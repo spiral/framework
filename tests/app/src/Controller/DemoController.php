@@ -13,6 +13,7 @@ namespace Spiral\App\Controller;
 
 use Spiral\App\User\Role;
 use Spiral\App\User\User;
+use Spiral\Domain\Annotation\Guarded;
 
 class DemoController
 {
@@ -22,6 +23,24 @@ class DemoController
     }
 
     public function entity2(User $user, Role $role)
+    {
+        return 'ok';
+    }
+
+    /**
+     * @Guarded()
+     * @return string
+     */
+    public function guardedButNoName()
+    {
+        return 'ok';
+    }
+
+    /**
+     * @Guarded("do")
+     * @return string
+     */
+    public function do()
     {
         return 'ok';
     }

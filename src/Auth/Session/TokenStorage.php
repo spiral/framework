@@ -42,6 +42,10 @@ final class TokenStorage implements TokenStorageInterface
     {
         try {
             $tokenData = $this->session->getSection(self::SESSION_SECTION)->get('token');
+            if ($tokenData === null) {
+                return null;
+            }
+
             $token = Token::unpack($tokenData);
         } catch (\Throwable $e) {
             throw new TokenStorageException('Unable to load session token', $e->getCode(), $e);

@@ -53,6 +53,13 @@ class AuthController
         return 'OK';
     }
 
+    public function logout()
+    {
+        $this->auth->close();
+
+        return 'closed';
+    }
+
     public function token2()
     {
         if ($this->auth->getToken() !== null) {
