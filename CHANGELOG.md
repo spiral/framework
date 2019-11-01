@@ -1,5 +1,13 @@
 # CHANGELOG
 
+v2.3.0 (01.11.2019) - no binary
+-----
+- added interceptable core support and DomainBootloader
+- the ability to automatically inject Cycle entity via route parameter
+- the ability to automatically pre-validate Filters
+- the ability to authorize controller methods using @Guarded annotation
+- improving the Cycle TokenStorage for better testing capabilities
+
 v2.2.4 (30.10.2019) - no binary
 -----
 - authorizes trait removed in favor of core interceptors
