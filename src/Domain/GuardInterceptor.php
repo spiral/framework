@@ -103,15 +103,7 @@ final class GuardInterceptor implements CoreInterceptorInterface
             return null;
         }
 
-        if ($action->permission === null && $namespace === null) {
-            throw new InterceptorException(
-                'Unable to apply @Guarded annotation without specified permission name or @GuardNamespace'
-            );
-        }
-
-        $this->cache[$key] = $this->makePermission($action, $method, $namespace);
-
-        return $this->cache[$key];
+        return $this->cache[$key] = $this->makePermission($action, $method, $namespace);
     }
 
     /**
