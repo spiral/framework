@@ -54,6 +54,11 @@ class CycleInterceptor implements CoreInterceptorInterface
                 );
             }
 
+            if (is_object($value)) {
+                // pre-filled
+                continue;
+            }
+
             $entity = $this->resolveEntity($role, $value);
             if ($entity === null) {
                 throw new ControllerException(
