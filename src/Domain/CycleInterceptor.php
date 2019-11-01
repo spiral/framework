@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Domain;
@@ -17,13 +19,16 @@ use Spiral\Core\Exception\ControllerException;
 /**
  * Automatically resolves cycle entities based on given parameter.
  */
-final class CycleInterceptor implements CoreInterceptorInterface
+class CycleInterceptor implements CoreInterceptorInterface
 {
-    /** @var ORMInterface */
-    private $orm;
+    // when only one entity is presented the default parameter will be checked
+    protected const DEFAULT_PARAMETER = 'id';
+
+    /** @var ORMInterface @internal */
+    protected $orm;
 
     /** @var array */
-    private $entityCache = [];
+    private $cache = [];
 
     /**
      * @param ORMInterface $orm
@@ -38,16 +43,18 @@ final class CycleInterceptor implements CoreInterceptorInterface
      */
     public function process(string $controller, string $action, array $parameters, CoreInterface $core)
     {
-        // todo: support singular ID
-        foreach ($this->getDeclaredEntities($controller, $action) as $parameter => $role) {
-            if (!isset($parameters[$parameter])) {
+        $entities = $this->getDeclaredEntities($controller, $action);
+
+        foreach ($entities as $parameter => $role) {
+            $value = $this->getParameter($role, $parameters, count($entities) === 1);
+            if ($value === null) {
                 throw new ControllerException(
                     "Entity `{$role}` can not be found",
                     ControllerException::NOT_FOUND
                 );
             }
 
-            $entity = $this->orm->getRepository($role)->findByPK($parameters[$parameter]);
+            $entity = $this->resolveEntity($role, $value);
             if ($entity === null) {
                 throw new ControllerException(
                     "Entity `{$role}` can not be found",
@@ -62,18 +69,43 @@ final class CycleInterceptor implements CoreInterceptorInterface
     }
 
     /**
+     * @param string $role
+     * @param array  $parameters
+     * @param bool   $useDefault
+     * @return mixed
+     */
+    protected function getParameter(string $role, array $parameters, bool $useDefault = false)
+    {
+        if (!$useDefault) {
+            return $parameters[$role] ?? null;
+        }
+
+        return $parameters[$role] ?? $parameters[self::DEFAULT_PARAMETER] ?? null;
+    }
+
+    /**
+     * @param string $role
+     * @param mixed  $parameter
+     * @return object|null
+     */
+    protected function resolveEntity(string $role, $parameter): ?object
+    {
+        return $this->orm->getRepository($role)->findByPK($parameter);
+    }
+
+    /**
      * @param string $controller
      * @param string $action
      * @return array
      */
     private function getDeclaredEntities(string $controller, string $action): array
     {
-        $key = sprintf("%s:%s", $controller, $action);
-        if (array_key_exists($key, $this->entityCache)) {
-            return $this->entityCache[$key];
+        $key = sprintf('%s:%s', $controller, $action);
+        if (array_key_exists($key, $this->cache)) {
+            return $this->cache[$key];
         }
 
-        $this->entityCache[$key] = [];
+        $this->cache[$key] = [];
         try {
             $method = new \ReflectionMethod($controller, $action);
         } catch (\ReflectionException $e) {
@@ -86,10 +118,10 @@ final class CycleInterceptor implements CoreInterceptorInterface
             }
 
             if ($this->orm->getSchema()->defines($parameter->getClass()->getName())) {
-                $this->entityCache[$key][$parameter->getName()] = $parameter->getClass()->getName();
+                $this->cache[$key][$parameter->getName()] = $this->orm->resolveRole($parameter->getClass()->getName());
             }
         }
 
-        return $this->entityCache[$key];
+        return $this->cache[$key];
     }
 }

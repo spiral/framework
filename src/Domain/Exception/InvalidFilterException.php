@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Domain\Exception;
@@ -29,7 +31,7 @@ final class InvalidFilterException extends ControllerException
     {
         $this->errors = $filter->getErrors();
 
-        parent::__construct(sprintf("Invalid `%s`", get_class($filter)), self::BAD_ARGUMENT);
+        parent::__construct(sprintf('Invalid `%s`', get_class($filter)), self::BAD_ARGUMENT);
     }
 
     /**

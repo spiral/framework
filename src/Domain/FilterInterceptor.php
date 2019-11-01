@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Domain;
@@ -16,22 +18,21 @@ use Spiral\Domain\Exception\InvalidFilterException;
 use Spiral\Filters\FilterInterface;
 
 /**
- * Automatically validate all Filters and return array error in case of failure. Currently returns http compatible
- * array
+ * Automatically validate all Filters and return array error in case of failure.
  */
-final class FilterInterceptor implements CoreInterceptorInterface
+class FilterInterceptor implements CoreInterceptorInterface
 {
     public const STRATEGY_JSON_RESPONSE = 1;
     public const STRATEGY_EXCEPTION     = 2;
 
-    /** @var ContainerInterface */
+    /** @var ContainerInterface @internal */
     private $container;
 
     /** @var int */
     private $strategy;
 
-    /** @var array */
-    private $filterCache = [];
+    /** @var array @internal */
+    private $cache = [];
 
     /**
      * @param ContainerInterface $container
@@ -68,9 +69,11 @@ final class FilterInterceptor implements CoreInterceptorInterface
 
     /**
      * @param FilterInterface $filter
-     * @return array
+     * @return mixed
+     *
+     * @throws InvalidFilterException
      */
-    private function renderInvalid(FilterInterface $filter)
+    protected function renderInvalid(FilterInterface $filter)
     {
         switch ($this->strategy) {
             case self::STRATEGY_JSON_RESPONSE:
@@ -90,12 +93,12 @@ final class FilterInterceptor implements CoreInterceptorInterface
      */
     private function getDeclaredFilters(string $controller, string $action): array
     {
-        $key = sprintf("%s:%s", $controller, $action);
-        if (array_key_exists($key, $this->filterCache)) {
-            return $this->filterCache[$key];
+        $key = sprintf('%s:%s', $controller, $action);
+        if (array_key_exists($key, $this->cache)) {
+            return $this->cache[$key];
         }
 
-        $this->filterCache[$key] = [];
+        $this->cache[$key] = [];
         try {
             $method = new \ReflectionMethod($controller, $action);
         } catch (\ReflectionException $e) {
@@ -108,10 +111,10 @@ final class FilterInterceptor implements CoreInterceptorInterface
             }
 
             if ($parameter->getClass()->implementsInterface(FilterInterface::class)) {
-                $this->filterCache[$key][$parameter->getName()] = $parameter->getClass()->getName();
+                $this->cache[$key][$parameter->getName()] = $parameter->getClass()->getName();
             }
         }
 
-        return $this->filterCache[$key];
+        return $this->cache[$key];
     }
 }
