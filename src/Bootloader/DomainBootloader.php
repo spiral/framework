@@ -14,18 +14,15 @@ namespace Spiral\Bootloader;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\Core;
-use Spiral\Core\CoreInterface;
 use Spiral\Core\InterceptableCore;
 
 /**
  * Configures global domain core (CoreInterface) with the set of interceptors to alter domain layer functionality.
+ *
+ * The CoreInterface binding must be complete in child implementation.
  */
 abstract class DomainBootloader extends Bootloader
 {
-    protected const SINGLETONS = [
-        CoreInterface::class => [self::class, 'domainCore']
-    ];
-
     // the set of interceptors for the domain code
     protected const INTERCEPTORS = [];
 
@@ -34,7 +31,7 @@ abstract class DomainBootloader extends Bootloader
      * @param ContainerInterface $container
      * @return InterceptableCore
      */
-    protected function domainCore(Core $core, ContainerInterface $container)
+    protected static function domainCore(Core $core, ContainerInterface $container)
     {
         $core = new InterceptableCore($core);
 

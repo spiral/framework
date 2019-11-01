@@ -82,7 +82,7 @@ final class GuardInterceptor implements CoreInterceptorInterface
         try {
             $method = new \ReflectionMethod($controller, $action);
         } catch (\ReflectionException $e) {
-            return [];
+            return null;
         }
 
         $reader = new AnnotationReader();

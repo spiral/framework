@@ -17,7 +17,11 @@ class FilterTest extends HttpTest
 {
     public function testNotEmpty(): void
     {
-        $this->assertSame('{"name":"This value is required."}', (string)$this->get('/filter')->getBody());
+        // pre-validated
+        $this->assertSame(
+            '{"status":400,"errors":{"name":"This value is required."}}',
+            (string)$this->get('/filter')->getBody()
+        );
     }
 
     public function testValid(): void

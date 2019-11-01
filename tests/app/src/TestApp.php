@@ -72,7 +72,9 @@ class TestApp extends Kernel
         Bootloader\CommandBootloader::class
     ];
 
-    public const APP = [AppBootloader::class];
+    public const APP = [
+        AppBootloader::class
+    ];
 
     /**
      * @param string $alias

@@ -16,17 +16,29 @@ use Spiral\App\Condition\MyCondition;
 use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\TestController;
 use Spiral\App\ViewEngine\TestEngine;
-use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Security\ValidationBootloader;
 use Spiral\Bootloader\Views\ViewsBootloader;
+use Spiral\Core\CoreInterface;
+use Spiral\Domain\CycleInterceptor;
+use Spiral\Domain\FilterInterceptor;
+use Spiral\Domain\GuardInterceptor;
 use Spiral\Router\Route;
 use Spiral\Router\RouterInterface;
 use Spiral\Router\Target\Controller;
 use Spiral\Security\PermissionsInterface;
 
-class AppBootloader extends Bootloader
+class AppBootloader extends DomainBootloader
 {
-    public const BOOT = true;
+    protected const SINGLETONS = [
+        CoreInterface::class => [self::class, 'domainCore']
+    ];
+
+    protected const INTERCEPTORS = [
+        CycleInterceptor::class,
+        GuardInterceptor::class,
+        FilterInterceptor::class
+    ];
 
     public function boot(
         RouterInterface $router,
