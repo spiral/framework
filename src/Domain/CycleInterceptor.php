@@ -49,7 +49,7 @@ class CycleInterceptor implements CoreInterceptorInterface
             $value = $this->getParameter($parameter, $parameters, count($entities) === 1);
             if ($value === null) {
                 throw new ControllerException(
-                    "Entity `{$role}` can not be found",
+                    "Entity `{$parameter}` can not be found",
                     ControllerException::NOT_FOUND
                 );
             }
@@ -62,7 +62,7 @@ class CycleInterceptor implements CoreInterceptorInterface
             $entity = $this->resolveEntity($role, $value);
             if ($entity === null) {
                 throw new ControllerException(
-                    "Entity `{$role}` can not be found",
+                    "Entity `{$parameter}` can not be found",
                     ControllerException::NOT_FOUND
                 );
             }
