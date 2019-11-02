@@ -11,17 +11,15 @@ declare(strict_types=1);
 
 namespace Spiral\Snapshots;
 
+use Psr\Log\LoggerInterface;
 use Spiral\Exceptions\HandlerInterface;
 use Spiral\Files\Exception\FilesException;
 use Spiral\Files\FilesInterface;
-use Spiral\Logger\Traits\LoggerTrait;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 final class FileSnapshotter implements SnapshotterInterface
 {
-    use LoggerTrait;
-
     /** @var string */
     private $directory;
 
@@ -37,25 +35,31 @@ final class FileSnapshotter implements SnapshotterInterface
     /** @var FilesInterface */
     private $files;
 
+    /** @var LoggerInterface|null */
+    private $logger;
+
     /**
-     * @param string           $directory
-     * @param int              $maxFiles
-     * @param int              $verbosity
-     * @param HandlerInterface $handler
-     * @param FilesInterface   $files
+     * @param string               $directory
+     * @param int                  $maxFiles
+     * @param int                  $verbosity
+     * @param HandlerInterface     $handler
+     * @param FilesInterface       $files
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         string $directory,
         int $maxFiles,
         int $verbosity,
         HandlerInterface $handler,
-        FilesInterface $files
+        FilesInterface $files,
+        LoggerInterface $logger = null
     ) {
         $this->directory = $directory;
         $this->maxFiles = $maxFiles;
         $this->verbosity = $verbosity;
         $this->handler = $handler;
         $this->files = $files;
+        $this->logger = $logger;
     }
 
     /**
@@ -65,7 +69,9 @@ final class FileSnapshotter implements SnapshotterInterface
     {
         $snapshot = new Snapshot($this->getID($e), $e);
 
-        $this->getLogger()->error($snapshot->getMessage());
+        if ($this->logger !== null) {
+            $this->logger->error($snapshot->getMessage());
+        }
 
         $this->saveSnapshot($snapshot);
         $this->rotateSnapshots();
@@ -75,6 +81,7 @@ final class FileSnapshotter implements SnapshotterInterface
 
     /**
      * @param SnapshotInterface $snapshot
+     * @throws \Exception
      */
     protected function saveSnapshot(SnapshotInterface $snapshot): void
     {

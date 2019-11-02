@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.3.1 (02.11.2019) - no binary
+- FileSnapshotter now sends logs into "default" log channel
+- CycleInterceptor use parameter as entity value instead of entity role
+
 v2.3.0 (01.11.2019) - no binary
 -----
 - added interceptable core support and DomainBootloader

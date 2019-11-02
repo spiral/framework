@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
+use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -37,19 +38,22 @@ final class SnapshotsBootloader extends Bootloader
      * @param EnvironmentInterface $env
      * @param DirectoriesInterface $dirs
      * @param FilesInterface       $files
+     * @param LoggerInterface|null $logger
      * @return FileSnapshotter
      */
     protected function fileSnapshotter(
         EnvironmentInterface $env,
         DirectoriesInterface $dirs,
-        FilesInterface $files
+        FilesInterface $files,
+        LoggerInterface $logger = null
     ) {
         return new FileSnapshotter(
             $dirs->get('runtime') . '/snapshots/',
             $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
             $env->get('SNAPSHOT_VERBOSITY', HandlerInterface::VERBOSITY_VERBOSE),
             new HtmlHandler(),
-            $files
+            $files,
+            $logger
         );
     }
 }
