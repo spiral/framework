@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.3.2 (02.11.2019) - no binary
+-----
+- lighter API and abstract class base injection for `spiral/filters`
+
 v2.3.1 (02.11.2019) - no binary
 -----
 - FileSnapshotter now sends logs into "default" log channel

@@ -12,22 +12,56 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Security;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Console\LocatorInterface;
+use Spiral\Core\Container;
 use Spiral\Filter\InputScope;
-use Spiral\Filters\FilterLocator;
-use Spiral\Filters\FilterMapper;
+use Spiral\Filters\Filter;
+use Spiral\Filters\FilterInterface;
+use Spiral\Filters\FilterProvider;
 use Spiral\Filters\InputInterface;
-use Spiral\Filters\MapperInterface;
+use Zend\Hydrator\Filter\FilterProviderInterface;
 
-final class FiltersBootloader extends Bootloader
+final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
     protected const DEPENDENCIES = [
         ValidationBootloader::class
     ];
 
     protected const SINGLETONS = [
-        MapperInterface::class  => FilterMapper::class,
-        LocatorInterface::class => FilterLocator::class,
-        InputInterface::class   => InputScope::class
+        FilterProviderInterface::class => FilterProvider::class,
+        InputInterface::class          => InputScope::class
     ];
+
+    /** @var Container */
+    private $container;
+
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Declare Filter injection.
+     */
+    public function boot(): void
+    {
+        $this->container->bindInjector(Filter::class, self::class);
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     * @param string|null      $context
+     * @return FilterInterface
+     *
+     * @throws \Throwable
+     */
+    public function createInjection(\ReflectionClass $class, string $context = null): FilterInterface
+    {
+        return $this->container->get(FilterProviderInterface::class)->createFilter(
+            $class->getName(),
+            $this->container->get(InputInterface::class)
+        );
+    }
 }
