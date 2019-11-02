@@ -29,15 +29,20 @@ final class GuardInterceptor implements CoreInterceptorInterface
     /** @var GuardInterface */
     private $guard;
 
+    /** @var string|null */
+    private $namespace;
+
     /** @var array */
     private $cache = [];
 
     /**
      * @param GuardInterface $guard
+     * @param string|null    $namespace
      */
-    public function __construct(GuardInterface $guard)
+    public function __construct(GuardInterface $guard, string $namespace = null)
     {
         $this->guard = $guard;
+        $this->namespace = $namespace;
     }
 
     /**
@@ -131,6 +136,11 @@ final class GuardInterceptor implements CoreInterceptorInterface
 
         if ($ns !== null) {
             $permission[0] = sprintf('%s.%s', $ns->namespace, $permission[0]);
+        }
+
+        if ($this->namespace !== null) {
+            // global namespace
+            $permission[0] = sprintf('%s.%s', $this->namespace, $permission[0]);
         }
 
         switch ($guarded->else) {
