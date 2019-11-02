@@ -138,6 +138,8 @@ final class DebugListener
             return $channel;
         }
 
+        // TODO: SQL Colorization and Infection
+
         return "[{$reflection->getShortName()}]";
     }
 

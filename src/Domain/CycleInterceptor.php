@@ -46,7 +46,7 @@ class CycleInterceptor implements CoreInterceptorInterface
         $entities = $this->getDeclaredEntities($controller, $action);
 
         foreach ($entities as $parameter => $role) {
-            $value = $this->getParameter($role, $parameters, count($entities) === 1);
+            $value = $this->getParameter($parameter, $parameters, count($entities) === 1);
             if ($value === null) {
                 throw new ControllerException(
                     "Entity `{$role}` can not be found",
