@@ -17,8 +17,8 @@ use Spiral\Filter\InputScope;
 use Spiral\Filters\Filter;
 use Spiral\Filters\FilterInterface;
 use Spiral\Filters\FilterProvider;
+use Spiral\Filters\FilterProviderInterface;
 use Spiral\Filters\InputInterface;
-use Zend\Hydrator\Filter\FilterProviderInterface;
 
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
