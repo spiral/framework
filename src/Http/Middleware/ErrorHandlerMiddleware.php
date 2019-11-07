@@ -107,11 +107,18 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         if ($request->getHeaderLine('Accept') == 'application/json') {
             $response = $response->withHeader('Content-Type', 'application/json');
             $handler = new JsonHandler();
+            $response->getBody()->write(json_encode(
+                ['status' => 500]
+                + json_decode(
+                    $handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE),
+                    true
+                )
+            ));
         } else {
             $handler = new HtmlHandler();
+            $response->getBody()->write($handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE));
         }
 
-        $response->getBody()->write($handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE));
         return $response;
     }
 
