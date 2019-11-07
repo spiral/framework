@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.3.3 (02.11.2019) - no binary
+-----
+- the plain snapshots enabled by default instead of HTML based
+- improved error handling for JSON requests
+
 v2.3.2 (02.11.2019) - no binary
 -----
 - lighter API and abstract class base injection for `spiral/filters`

@@ -16,7 +16,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Exceptions\HandlerInterface;
-use Spiral\Exceptions\HtmlHandler;
+use Spiral\Exceptions\PlainHandler;
 use Spiral\Files\FilesInterface;
 use Spiral\Snapshots\FileSnapshotter;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -41,7 +41,7 @@ final class SnapshotsBootloader extends Bootloader
      * @param LoggerInterface|null $logger
      * @return FileSnapshotter
      */
-    protected function fileSnapshotter(
+    private function fileSnapshotter(
         EnvironmentInterface $env,
         DirectoriesInterface $dirs,
         FilesInterface $files,
@@ -51,7 +51,7 @@ final class SnapshotsBootloader extends Bootloader
             $dirs->get('runtime') . '/snapshots/',
             $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
             $env->get('SNAPSHOT_VERBOSITY', HandlerInterface::VERBOSITY_VERBOSE),
-            new HtmlHandler(),
+            new PlainHandler(),
             $files,
             $logger
         );

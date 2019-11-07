@@ -56,6 +56,5 @@ class CompileTest extends ConsoleTest
 
         $out = $this->runCommandDebug('cache:clean');
         $this->assertContains('i18n.en', $out);
-        $this->assertContains('i18n.locales', $out);
     }
 }

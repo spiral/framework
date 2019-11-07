@@ -21,22 +21,6 @@ use Zend\Diactoros\ServerRequest;
 
 class RrTest extends ConsoleTest
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        ini_set('error_log', __DIR__ . '/err.log');
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        ini_set('error_log', 'stderr');
-
-        if (file_exists(__DIR__ . '/err.log')) {
-            unlink(__DIR__ . '/err.log');
-        }
-    }
-
     public function testCanServe(): void
     {
         $this->assertFalse($this->app->get(RrDispacher::class)->canServe());
@@ -140,7 +124,5 @@ class RrTest extends ConsoleTest
         );
 
         $this->assertCount(1, $files);
-
-        $this->assertContains('undefined', file_get_contents(__DIR__ . '/err.log'));
     }
 }

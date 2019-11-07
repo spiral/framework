@@ -122,11 +122,13 @@ final class FileSnapshotter implements SnapshotterInterface
      * @param SnapshotInterface  $snapshot
      * @param \DateTimeInterface $time
      * @return string
+     *
+     * @throws \Exception
      */
     protected function getFilename(SnapshotInterface $snapshot, \DateTimeInterface $time): string
     {
         return sprintf(
-            '%s/%s-%s.html',
+            '%s/%s-%s.txt',
             $this->directory,
             $time->format('d.m.Y-Hi.s'),
             (new \ReflectionClass($snapshot->getException()))->getShortName()

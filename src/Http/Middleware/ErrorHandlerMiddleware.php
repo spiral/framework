@@ -11,10 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Middleware;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
+use Spiral\Exceptions\HtmlHandler;
+use Spiral\Exceptions\JsonHandler;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Logger\Traits\LoggerTrait;
@@ -28,6 +31,9 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     use LoggerTrait;
 
+    /** @var ResponseFactoryInterface */
+    private $responseFactory;
+
     /** @var bool */
     private $suppressErrors;
 
@@ -40,15 +46,18 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     /**
      * @param bool                      $suppressErrors
      * @param RendererInterface         $renderer
+     * @param ResponseFactoryInterface  $responseFactory
      * @param SnapshotterInterface|null $snapshots
      */
     public function __construct(
         bool $suppressErrors,
         RendererInterface $renderer,
+        ResponseFactoryInterface $responseFactory,
         SnapshotterInterface $snapshots = null
     ) {
         $this->suppressErrors = $suppressErrors;
         $this->renderer = $renderer;
+        $this->responseFactory = $responseFactory;
         $this->snapshots = $snapshots;
     }
 
@@ -68,20 +77,42 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 $code = 404;
             }
         } catch (\Throwable $e) {
-            if (!$this->suppressErrors) {
-                throw $e;
-            }
-
             if ($this->snapshots !== null) {
                 $this->snapshots->register($e);
             }
 
             $code = 500;
+
+            if (!$this->suppressErrors) {
+                return $this->renderException($request, $e);
+            }
         }
 
         $this->logError($request, $code, $e->getMessage());
 
         return $this->renderer->renderException($request, $code, $e->getMessage());
+    }
+
+    /**
+     * @param Request    $request
+     * @param \Throwable $e
+     * @return Response
+     *
+     * @throws \Throwable
+     */
+    private function renderException(Request $request, \Throwable $e): Response
+    {
+        $response = $this->responseFactory->createResponse(500);
+
+        if ($request->getHeaderLine('Accept') == 'application/json') {
+            $response = $response->withHeader('Content-Type', 'application/json');
+            $handler = new JsonHandler();
+        } else {
+            $handler = new HtmlHandler();
+        }
+
+        $response->getBody()->write($handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE));
+        return $response;
     }
 
     /**
