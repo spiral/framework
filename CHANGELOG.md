@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.3.6 (08.11.2019) - no binary
+-----
+- the framework can work without any snapshotter
+
 v2.3.5 (08.11.2019) - no binary
 -----
 - improved code coverage
