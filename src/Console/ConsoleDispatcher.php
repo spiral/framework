@@ -67,6 +67,8 @@ final class ConsoleDispatcher implements DispatcherInterface
      */
     public function serve(InputInterface $input = null, OutputInterface $output = null): void
     {
+        // On demand to save some memory.
+
         $output = $output ?? new ConsoleOutput();
 
         /** @var DebugListener $listener */

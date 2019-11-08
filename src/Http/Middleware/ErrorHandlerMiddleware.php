@@ -11,11 +11,14 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Middleware;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
+use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Exceptions\JsonHandler;
 use Spiral\Http\ErrorHandler\RendererInterface;
@@ -40,25 +43,25 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     /** @var RendererInterface */
     private $renderer;
 
-    /** @var SnapshotterInterface|null */
-    private $snapshots;
+    /** @var ContainerInterface @internal */
+    private $container;
 
     /**
-     * @param bool                      $suppressErrors
-     * @param RendererInterface         $renderer
-     * @param ResponseFactoryInterface  $responseFactory
-     * @param SnapshotterInterface|null $snapshots
+     * @param bool                     $suppressErrors
+     * @param RendererInterface        $renderer
+     * @param ResponseFactoryInterface $responseFactory
+     * @param ContainerInterface       $container
      */
     public function __construct(
         bool $suppressErrors,
         RendererInterface $renderer,
         ResponseFactoryInterface $responseFactory,
-        SnapshotterInterface $snapshots = null
+        ContainerInterface $container
     ) {
         $this->suppressErrors = $suppressErrors;
         $this->renderer = $renderer;
         $this->responseFactory = $responseFactory;
-        $this->snapshots = $snapshots;
+        $this->container = $container;
     }
 
     /**
@@ -77,8 +80,10 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 $code = 404;
             }
         } catch (\Throwable $e) {
-            if ($this->snapshots !== null) {
-                $this->snapshots->register($e);
+            $snapshotter = $this->getOptional(SnapshotterInterface::class);
+            if ($snapshotter !== null) {
+                /** @var SnapshotterInterface $snapshotter */
+                $snapshotter->register($e);
             }
 
             $code = 500;
@@ -116,6 +121,11 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
             ));
         } else {
             $handler = new HtmlHandler();
+            $state = $this->getOptional(StateInterface::class);
+            if ($state !== null) {
+                $handler = $handler->withState($state);
+            }
+
             $response->getBody()->write($handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE));
         }
 
@@ -138,5 +148,18 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
             $message ?: '-not specified-',
             $request->getServerParams()['REMOTE_ADDR'] ?? '127.0.0.1'
         ));
+    }
+
+    /**
+     * @param string $class
+     * @return mixed|null
+     */
+    private function getOptional(string $class)
+    {
+        try {
+            return $this->container->get($class);
+        } catch (\Throwable | ContainerExceptionInterface $se) {
+            return null;
+        }
     }
 }

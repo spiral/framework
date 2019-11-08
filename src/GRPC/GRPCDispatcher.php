@@ -58,6 +58,8 @@ final class GRPCDispatcher implements DispatcherInterface
      */
     public function serve(): void
     {
+        // On demand to save some memory.
+
         /**
          * @var Server           $server
          * @var Worker           $worker

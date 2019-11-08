@@ -18,6 +18,7 @@ use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Core\FactoryInterface;
+use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Snapshots\SnapshotInterface;
@@ -68,6 +69,8 @@ final class RrDispacher implements DispatcherInterface
      */
     public function serve(PSR7Client $client = null): void
     {
+        // On demand to save some memory.
+
         $client = $client ?? $this->factory->make(PSR7Client::class);
 
         /** @var Http $http */
@@ -95,6 +98,12 @@ final class RrDispacher implements DispatcherInterface
             /** @var SnapshotInterface $snapshot */
             $snapshot = $this->container->get(SnapshotterInterface::class)->register($e);
             error_log($snapshot->getMessage());
+
+            // on demand
+            $state = $this->container->get(StateInterface::class);
+            if ($state !== null) {
+                $handler = $handler->withState($state);
+            }
         } catch (\Throwable | ContainerExceptionInterface $se) {
             error_log((string)$e);
         }

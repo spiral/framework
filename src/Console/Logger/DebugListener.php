@@ -14,7 +14,7 @@ namespace Spiral\Console\Logger;
 use Codedungeon\PHPCliColors\Color;
 use Psr\Log\LogLevel;
 use Spiral\Logger\Event\LogEvent;
-use Spiral\Logger\LogsInterface;
+use Spiral\Logger\ListenerRegistryInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class DebugListener
@@ -30,18 +30,18 @@ final class DebugListener
         LogLevel::EMERGENCY => 'fg=red',
     ];
 
-    /** @var LogsInterface|null */
-    private $logs;
+    /** @var ListenerRegistryInterface */
+    private $listenerRegistry;
 
     /** @var OutputInterface|null */
     private $output;
 
     /**
-     * @param LogsInterface|null $logs
+     * @param ListenerRegistryInterface $listenerRegistry
      */
-    public function __construct(LogsInterface $logs = null)
+    public function __construct(ListenerRegistryInterface $listenerRegistry)
     {
-        $this->logs = $logs;
+        $this->listenerRegistry = $listenerRegistry;
     }
 
     /**
@@ -91,8 +91,8 @@ final class DebugListener
      */
     public function enable(): self
     {
-        if (!empty($this->logs)) {
-            $this->logs->addListener($this);
+        if (!empty($this->listenerRegistry)) {
+            $this->listenerRegistry->addListener($this);
         }
 
         return $this;
@@ -105,8 +105,8 @@ final class DebugListener
      */
     public function disable(): self
     {
-        if (!empty($this->logs)) {
-            $this->logs->removeListener($this);
+        if (!empty($this->listenerRegistry)) {
+            $this->listenerRegistry->removeListener($this);
         }
 
         return $this;

@@ -58,6 +58,8 @@ final class JobDispatcher implements DispatcherInterface
      */
     public function serve(): void
     {
+        // On demand to save some memory.
+
         /**
          * @var Consumer $consumer
          * @var Worker   $worker

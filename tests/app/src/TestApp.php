@@ -26,7 +26,6 @@ class TestApp extends Kernel
 {
     public const LOAD = [
         // Core Services
-        Bootloader\DebugBootloader::class,
         Bootloader\SnapshotsBootloader::class,
         Bootloader\I18nBootloader::class,
 
@@ -69,7 +68,8 @@ class TestApp extends Kernel
         Bootloader\Views\TranslatedCacheBootloader::class,
 
         // Framework commands
-        Bootloader\CommandBootloader::class
+        Bootloader\CommandBootloader::class,
+        Bootloader\DebugBootloader::class
     ];
 
     public const APP = [

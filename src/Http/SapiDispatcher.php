@@ -17,6 +17,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Boot\DispatcherInterface;
 use Spiral\Boot\FinalizerInterface;
+use Spiral\Debug\StateInterface;
 use Spiral\Exceptions\HtmlHandler;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -52,6 +53,8 @@ final class SapiDispatcher implements DispatcherInterface
      */
     public function serve(EmitterInterface $emitter = null): void
     {
+        // On demand to save some memory.
+
         /**
          * @var Http             $http
          * @var EmitterInterface $emitter
@@ -88,9 +91,16 @@ final class SapiDispatcher implements DispatcherInterface
         try {
             /** @var SnapshotInterface $snapshot */
             $this->container->get(SnapshotterInterface::class)->register($e);
+
+            // on demand
+            $state = $this->container->get(StateInterface::class);
+            if ($state !== null) {
+                $handler = $handler->withState($state);
+            }
         } catch (\Throwable | ContainerExceptionInterface $se) {
             // nothing to report
         }
+
 
         /** @var ResponseFactoryInterface $responseFactory */
         $responseFactory = $this->container->get(ResponseFactoryInterface::class);
