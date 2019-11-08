@@ -18,7 +18,7 @@ use Spiral\Files\FilesInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-final class FileSnapshotter implements SnapshotterInterface
+final class FileSnapshooter implements SnapshotterInterface
 {
     /** @var string */
     private $directory;
