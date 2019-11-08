@@ -13,7 +13,6 @@ namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Bootloader\SnapshotsBootloader;
 use Spiral\Core\Container\Autowire;
 use Spiral\Http\ErrorHandler;
 use Spiral\Http\Middleware\ErrorHandlerMiddleware;
@@ -24,7 +23,6 @@ use Spiral\Http\Middleware\ErrorHandlerMiddleware;
 final class ErrorHandlerBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        SnapshotsBootloader::class,
         HttpBootloader::class
     ];
 
