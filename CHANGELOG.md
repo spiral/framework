@@ -1,5 +1,11 @@
 # CHANGELOG
 
+v2.3.4 (08.11.2019) - no binary
+-----
+- improved debug state management
+- exceptions are able to display current request state, logs and etc.
+- ability to register custom debug state collectors
+
 v2.3.3 (02.11.2019) - no binary
 -----
 - the plain snapshots enabled by default instead of HTML based
