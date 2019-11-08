@@ -69,7 +69,11 @@ class TestApp extends Kernel
 
         // Framework commands
         Bootloader\CommandBootloader::class,
-        Bootloader\DebugBootloader::class
+
+        // Debug and debug extensions
+        Bootloader\DebugBootloader::class,
+        Bootloader\Debug\LogCollectorBootloader::class,
+        Bootloader\Debug\HttpCollectorBootloader::class
     ];
 
     public const APP = [

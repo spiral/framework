@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.3.5 (08.11.2019) - no binary
+-----
+- improved code coverage
+- fixed invalid middleware association for http state collector
+
 v2.3.4 (08.11.2019) - no binary
 -----
 - improved debug state management
