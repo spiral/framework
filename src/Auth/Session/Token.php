@@ -69,7 +69,7 @@ final class Token implements TokenInterface
     {
         return [
             'id'        => $this->id,
-            'expiresAt' => $this->expiresAt,
+            'expiresAt' => $this->expiresAt ? $this->expiresAt->getTimestamp() : null,
             'payload'   => $this->payload
         ];
     }

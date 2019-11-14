@@ -55,7 +55,7 @@ final class TokenStorage implements TokenStorageInterface
             return null;
         }
 
-        if ($token->getExpiresAt() !== null && $token->getExpiresAt() > new \DateTime()) {
+        if ($token->getExpiresAt() !== null && $token->getExpiresAt() < new \DateTime()) {
             $this->delete($token);
             return null;
         }
