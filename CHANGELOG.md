@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.3.7 (14.11.2019) - no binary
+-----
+- bugfix: client exceptions no longer sent with 500 code in application/json payloads
+- bugfix: fixed issue with forced expiration of session auth tokens
+
 v2.3.6 (08.11.2019) - no binary
 -----
 - the framework can work without any snapshooter
