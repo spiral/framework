@@ -86,7 +86,11 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 $snapshotter->register($e);
             }
 
-            $code = 500;
+            if ($e instanceof ClientException) {
+                $code = $e->getCode();
+            } else {
+                $code = 500;
+            }
 
             if (!$this->suppressErrors) {
                 return $this->renderException($request, $e);
