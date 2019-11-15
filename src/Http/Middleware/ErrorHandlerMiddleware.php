@@ -86,15 +86,11 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 $snapshotter->register($e);
             }
 
-            if ($e instanceof ClientException) {
-                $code = $e->getCode();
-            } else {
-                $code = 500;
+            if (!$this->suppressErrors) {
+                return $this->renderError($request, $e);
             }
 
-            if (!$this->suppressErrors) {
-                return $this->renderException($request, $e);
-            }
+            $code = 500;
         }
 
         $this->logError($request, $code, $e->getMessage());
@@ -109,7 +105,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      *
      * @throws \Throwable
      */
-    private function renderException(Request $request, \Throwable $e): Response
+    private function renderError(Request $request, \Throwable $e): Response
     {
         $response = $this->responseFactory->createResponse(500);
 
@@ -119,7 +115,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
             $response->getBody()->write(json_encode(
                 ['status' => 500]
                 + json_decode(
-                    $handler->renderException($e, HtmlHandler::VERBOSITY_VERBOSE),
+                    $handler->renderException($e, JsonHandler::VERBOSITY_VERBOSE),
                     true
                 )
             ));

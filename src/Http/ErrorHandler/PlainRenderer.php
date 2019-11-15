@@ -41,7 +41,7 @@ final class PlainRenderer implements RendererInterface
     {
         $response = $this->responseFactory->createResponse($code);
         if ($request->getHeaderLine('Accept') == 'application/json') {
-            $response->getBody()->write(json_encode(['status' => 500, 'error' => $message]));
+            $response->getBody()->write(json_encode(['status' => $code, 'error' => $message]));
         } else {
             $response->getBody()->write("Error code: {$code}");
         }
