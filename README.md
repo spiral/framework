@@ -21,7 +21,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - GRPC server and client
 - Pub/Sub, event broadcasting
 - HTTPS, HTTP/2+Push, encrypted cookies, sessions, CSRF-guard
-- MySQL, MariaDB, SQLite, Postgres, SQLServer support, auto-migrations
+- MySQL, MariaDB, SQLite, PostgreSQL, SQLServer support, auto-migrations
 - The [ORM](https://github.com/cycle/orm) you will use for the next 25 years
 - Intuitive scaffolding and prototyping (it literally writes code for you)
 - Helpful class discovery via static analysis
