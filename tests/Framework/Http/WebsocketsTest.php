@@ -79,7 +79,6 @@ class WebsocketsTest extends HttpTest
         ])->getStatusCode());
     }
 
-
     public function testServerAccessCallback(): void
     {
         $this->init([$this, 'ok']);
@@ -91,6 +90,21 @@ class WebsocketsTest extends HttpTest
     }
 
     public function ok(ServerRequestInterface $request)
+    {
+        return $request instanceof ServerRequestInterface;
+    }
+
+    public function testServerAccessStaticCallback(): void
+    {
+        $this->init([self::class, 'ok2']);
+
+        $this->assertSame(403, $this->get('/ws/')->getStatusCode());
+        $this->assertSame(200, $this->getAttribute('/ws/', [
+            'ws:joinServer' => true
+        ])->getStatusCode());
+    }
+
+    public static function ok2(ServerRequestInterface $request)
     {
         return $request instanceof ServerRequestInterface;
     }
