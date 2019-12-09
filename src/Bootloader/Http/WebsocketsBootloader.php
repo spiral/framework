@@ -49,9 +49,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
     {
         $this->config->setDefaults('websockets', [
             'path'            => $env->get('RR_BROADCAST_PATH', null),
-            'authorizeServer' => static function () {
-                return true;
-            },
+            'authorizeServer' => null,
             'authorizeTopics' => []
         ]);
 
@@ -65,10 +63,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
      */
     public function setServerCallback(?callable $callback): void
     {
-        $this->config->modify(
-            'websockets',
-            new Set('authorizeServer', $callback)
-        );
+        $this->config->modify('websockets', new Set('authorizeServer', $callback));
     }
 
     /**
@@ -77,9 +72,6 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
      */
     public function addTopicCallback(string $topic, callable $callback): void
     {
-        $this->config->modify(
-            'websockets',
-            new Append('authorizeTopics', $topic, $callback)
-        );
+        $this->config->modify('websockets', new Append('authorizeTopics', $topic, $callback));
     }
 }
