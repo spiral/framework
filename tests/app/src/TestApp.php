@@ -14,6 +14,7 @@ namespace Spiral\App;
 use Psr\Container\ContainerInterface;
 use Spiral\App\Bootloader\AppBootloader;
 use Spiral\App\Bootloader\AuthBootloader;
+use Spiral\App\Bootloader\WSBootloader;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -43,14 +44,18 @@ class TestApp extends Kernel
         // HTTP extensions
         Bootloader\Http\DiactorosBootloader::class,
         Bootloader\Http\RouterBootloader::class,
-        Bootloader\Http\ErrorHandlerBootloader::class,
+        //Bootloader\Http\ErrorHandlerBootloader::class,
         Bootloader\Http\JsonPayloadsBootloader::class,
         Bootloader\Http\CookiesBootloader::class,
         Bootloader\Http\SessionBootloader::class,
         Bootloader\Http\CsrfBootloader::class,
+        Bootloader\Http\PaginationBootloader::class,
 
         // Auth
         Bootloader\Auth\HttpAuthBootloader::class,
+
+        // Websocket authentication
+        Bootloader\Http\WebsocketsBootloader::class,
 
         // selects between session and cycle based on env configuration
         AuthBootloader::class,
@@ -58,7 +63,7 @@ class TestApp extends Kernel
         // Data and Storage
         Bootloader\Database\DatabaseBootloader::class,
         Bootloader\Database\MigrationsBootloader::class,
-        Bootloader\Http\PaginationBootloader::class,
+
         Bootloader\Cycle\CycleBootloader::class,
         Bootloader\Cycle\AnnotatedBootloader::class,
         Bootloader\Cycle\ProxiesBootloader::class,
@@ -77,7 +82,8 @@ class TestApp extends Kernel
     ];
 
     public const APP = [
-        AppBootloader::class
+        AppBootloader::class,
+        WSBootloader::class
     ];
 
     /**

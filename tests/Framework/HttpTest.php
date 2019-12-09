@@ -39,6 +39,19 @@ abstract class HttpTest extends BaseTest
         return $this->http->handle($this->request($uri, 'GET', $query, $headers, $cookies));
     }
 
+    protected function getAttribute(
+        $uri,
+        array $attributes
+    ): ResponseInterface {
+        $r = $this->request($uri, 'GET', [], [], []);
+        foreach ($attributes as $k => $v) {
+            $r = $r->withAttribute($k, $v);
+        }
+
+        return $this->http->handle($r);
+    }
+
+
     protected function post(
         $uri,
         array $data = [],
