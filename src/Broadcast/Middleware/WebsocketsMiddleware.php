@@ -119,6 +119,8 @@ final class WebsocketsMiddleware implements MiddlewareInterface
             // todo: match
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -146,7 +148,6 @@ final class WebsocketsMiddleware implements MiddlewareInterface
             default:
                 throw new LogicException('Unable to invoke callable function');
         }
-
 
         return $this->scope->runScope(
             [
