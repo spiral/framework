@@ -15,6 +15,9 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Broadcast\Broadcast;
 use Spiral\Broadcast\BroadcastInterface;
 
+/**
+ * Enables support for event/message publishing.
+ */
 final class BroadcastBootloader extends Bootloader
 {
     protected const SINGLETONS = [
