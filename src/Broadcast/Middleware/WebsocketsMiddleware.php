@@ -131,29 +131,32 @@ final class WebsocketsMiddleware implements MiddlewareInterface
      */
     private function invoke(ServerRequestInterface $request, callable $callback, array $parameters = []): bool
     {
-        /** @var \ReflectionFunctionAbstract $call */
-        $call = null;
+        /** @var \ReflectionFunctionAbstract $reflection */
+        $reflection = null;
         switch (true) {
             case $callback instanceof \Closure || is_string($callback):
-                $call = new \ReflectionFunction($callback);
+                $reflection = new \ReflectionFunction($callback);
                 break;
             case is_array($callback) && is_object($callback[0]):
-                $call = (new \ReflectionObject($callback[0]))->getMethod($callback[1]);
+                $reflection = (new \ReflectionObject($callback[0]))->getMethod($callback[1]);
                 break;
             case is_array($callback):
-                $call = (new \ReflectionClass($callback[0]))->getMethod($callback[1]);
+                $reflection = (new \ReflectionClass($callback[0]))->getMethod($callback[1]);
                 break;
             default:
                 throw new LogicException('Unable to invoke callable function');
         }
 
+
         return $this->scope->runScope(
             [
                 ServerRequestInterface::class => $request
             ],
-            function () use ($call, $parameters) {
-                $arguments = $this->resolver->resolveArguments($call, $parameters);
-                return $call->invokeArgs($arguments);
+            function () use ($reflection, $parameters, $callback) {
+                return call_user_func_array(
+                    $callback,
+                    $this->resolver->resolveArguments($reflection, $parameters)
+                );
             }
         );
     }

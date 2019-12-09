@@ -69,6 +69,32 @@ class WebsocketsTest extends HttpTest
         ])->getStatusCode());
     }
 
+    public function testServerAccessFunction(): void
+    {
+        $this->init('closelog');
+
+        $this->assertSame(403, $this->get('/ws/')->getStatusCode());
+        $this->assertSame(200, $this->getAttribute('/ws/', [
+            'ws:joinServer' => true
+        ])->getStatusCode());
+    }
+
+
+    public function testServerAccessCallback(): void
+    {
+        $this->init([$this, 'ok']);
+
+        $this->assertSame(403, $this->get('/ws/')->getStatusCode());
+        $this->assertSame(200, $this->getAttribute('/ws/', [
+            'ws:joinServer' => true
+        ])->getStatusCode());
+    }
+
+    public function ok(ServerRequestInterface $request)
+    {
+        return $request instanceof ServerRequestInterface;
+    }
+
     private function init(callable $server = null, callable $topic = null, callable $topicWildcard = null): void
     {
         $this->app = $this->makeApp([
