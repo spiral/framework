@@ -26,16 +26,18 @@ import (
 	rr "github.com/spiral/roadrunner/cmd/rr/cmd"
 
 	// services (plugins)
+	"github.com/spiral/broadcast"
+	"github.com/spiral/broadcast-ws"
 	"github.com/spiral/jobs"
 	"github.com/spiral/php-grpc"
 	"github.com/spiral/roadrunner/service/env"
-    "github.com/spiral/roadrunner/service/headers"
-    "github.com/spiral/roadrunner/service/health"
+	"github.com/spiral/roadrunner/service/headers"
+	"github.com/spiral/roadrunner/service/health"
 	"github.com/spiral/roadrunner/service/http"
-	"github.com/spiral/roadrunner/service/rpc"
-	"github.com/spiral/roadrunner/service/static"
 	"github.com/spiral/roadrunner/service/limit"
 	"github.com/spiral/roadrunner/service/metrics"
+	"github.com/spiral/roadrunner/service/rpc"
+	"github.com/spiral/roadrunner/service/static"
 
 	// queue brokers
 	"github.com/spiral/jobs/broker/amqp"
@@ -44,6 +46,7 @@ import (
 	"github.com/spiral/jobs/broker/sqs"
 
 	// additional commands and debug handlers
+	_ "github.com/spiral/broadcast-ws/cmd/rr-ws/ws"
 	_ "github.com/spiral/jobs/cmd/rr-jobs/jobs"
 	_ "github.com/spiral/php-grpc/cmd/rr-grpc/grpc"
 	_ "github.com/spiral/roadrunner/cmd/rr/http"
@@ -69,6 +72,10 @@ func main() {
 			"sqs":       &sqs.Broker{},
 		},
 	})
+
+	// pub-sub
+	rr.Container.Register(broadcast.ID, &broadcast.Service{})
+	rr.Container.Register(ws.ID, &ws.Service{})
 
 	// supervisor and metrics
 	rr.Container.Register(limit.ID, &limit.Service{})

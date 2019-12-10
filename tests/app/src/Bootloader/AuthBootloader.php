@@ -19,8 +19,10 @@ use Spiral\Bootloader\Auth\TokenStorage\SessionTokensBootloader;
 
 class AuthBootloader extends Bootloader
 {
-    public function boot(EnvironmentInterface $env, BootloadManager $bootloadManager): void
-    {
+    public function boot(
+        EnvironmentInterface $env,
+        BootloadManager $bootloadManager
+    ): void {
         if ($env->get('CYCLE_AUTH')) {
             $bootloadManager->bootload([CycleTokensBootloader::class]);
             return;

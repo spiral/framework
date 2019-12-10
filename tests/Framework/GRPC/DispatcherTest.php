@@ -82,7 +82,8 @@ class DispatcherTest extends ConsoleTest
             \Mockery::on(function (&$context) {
                 $context = '{
                   "service": "service.Echo",
-                  "method": "Ping"
+                  "method": "Ping",
+                  "context": {}
                 }';
 
                 return true;
@@ -96,7 +97,8 @@ class DispatcherTest extends ConsoleTest
                 $this->assertSame('hello', $msg->getMsg());
 
                 return true;
-            })
+            }),
+            '{}'
         )->andReturn(true);
 
         // one command only
@@ -124,7 +126,8 @@ class DispatcherTest extends ConsoleTest
             \Mockery::on(function (&$context) {
                 $context = '{
                   "service": "service.Echo",
-                  "method": "Invalid"
+                  "method": "Invalid",
+                  "context": {}
                 }';
 
                 return true;
