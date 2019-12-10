@@ -15,6 +15,7 @@ use Spiral\App\Checker\MyChecker;
 use Spiral\App\Condition\MyCondition;
 use Spiral\App\Controller\AuthController;
 use Spiral\App\Controller\TestController;
+use Spiral\App\User\UserRepository;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Security\ValidationBootloader;
@@ -41,11 +42,14 @@ class AppBootloader extends DomainBootloader
     ];
 
     public function boot(
+        \Spiral\Bootloader\Auth\AuthBootloader $authBootloader,
         RouterInterface $router,
         PermissionsInterface $rbac,
         ViewsBootloader $views,
         ValidationBootloader $validation
     ): void {
+        $authBootloader->addActorProvider(UserRepository::class);
+
         $rbac->addRole('user');
         $rbac->associate('user', '*');
 

@@ -82,4 +82,10 @@ class AuthController
 
         return 'OK';
     }
+
+    public function actor()
+    {
+        $actor = $this->auth->getActor();
+        return $actor ? $actor->getName() : 'none';
+    }
 }

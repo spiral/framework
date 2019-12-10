@@ -31,7 +31,7 @@ class User
     public $roles;
 
     /** @Column(type="string") */
-    protected $name;
+    private $name;
 
     public function __construct(string $name)
     {
