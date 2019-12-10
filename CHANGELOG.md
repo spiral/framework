@@ -1,13 +1,17 @@
 # CHANGELOG
 
-v2.3.8 (15.11.2019) - no binary
+v2.4.1 (10.12.2019)
 -----
-- minor refactoring in json exception handler
+- refactor in WebsocketBootloader 
 
 v2.4.0 (10.12.2019)
 -----
 - added broadcast service
 - added WebSocket server
+
+v2.3.8 (15.11.2019) - no binary
+-----
+- minor refactoring in json exception handler
 
 v2.3.7 (14.11.2019) - no binary
 -----
