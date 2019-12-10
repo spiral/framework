@@ -63,6 +63,7 @@ final class WebsocketsMiddleware implements MiddlewareInterface
      * @return ResponseInterface
      *
      * @throws ClientException
+     * @throws \Throwable
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -82,8 +83,10 @@ final class WebsocketsMiddleware implements MiddlewareInterface
         // topic authorization
         if (is_string($request->getAttribute('ws:joinTopics', null))) {
             $topics = explode(',', $request->getAttribute('ws:joinTopics'));
-            if (!$this->authorizeTopics($request, $topics)) {
-                return $this->responseFactory->createResponse(403);
+            foreach ($topics as $topic) {
+                if (!$this->authorizeTopic($request, $topic)) {
+                    return $this->responseFactory->createResponse(403);
+                }
             }
 
             return $this->responseFactory->createResponse(200);
@@ -110,17 +113,20 @@ final class WebsocketsMiddleware implements MiddlewareInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @param array                  $topics
+     * @param string                 $topic
      * @return bool
+     *
+     * @throws \Throwable
      */
-    private function authorizeTopics(ServerRequestInterface $request, array $topics): bool
+    private function authorizeTopic(ServerRequestInterface $request, string $topic): bool
     {
-        foreach ($topics as $topic) {
-            // todo: match
+        $parameters = [];
+        $callback = $this->config->findTopicCallback($topic, $parameters);
+        if ($callback === null) {
             return false;
         }
 
-        return true;
+        return $this->invoke($request, $callback, $parameters + ['topic' => $topic]);
     }
 
     /**

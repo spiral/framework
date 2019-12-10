@@ -24,6 +24,21 @@ final class WebsocketsConfig extends InjectableConfig
         'authorizeTopics' => []
     ];
 
+    /** @var array */
+    private $patterns = [];
+
+    /**
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+
+        foreach ($config['authorizeTopics'] as $topic => $callback) {
+            $this->patterns[$this->compilePattern($topic)] = $callback;
+        }
+    }
+
     /**
      * @return string|null
      */
@@ -41,10 +56,35 @@ final class WebsocketsConfig extends InjectableConfig
     }
 
     /**
-     * @return callable[]
+     * @param string $topic
+     * @param array  $matches
+     * @return callable|null
      */
-    public function getTopicCallbacks(): array
+    public function findTopicCallback(string $topic, array &$matches): ?callable
     {
-        return $this->config['authorizeTopics'];
+        foreach ($this->patterns as $pattern => $callback) {
+            if (preg_match($pattern, $topic, $matches)) {
+                return $callback;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $topic
+     * @return string
+     */
+    private function compilePattern(string $topic): string
+    {
+        $replaces = [];
+        if (preg_match_all('/\{(\w+):?(.*?)?\}/', $topic, $matches)) {
+            $variables = array_combine($matches[1], $matches[2]);
+            foreach ($variables as $key => $segment) {
+                $replaces['{' . $key . '}'] = '(?P<' . $key . '>[^\/\.]+)';
+            }
+        }
+
+        return '/^' . strtr($topic, $replaces + ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.']) . '$/iu';
     }
 }
