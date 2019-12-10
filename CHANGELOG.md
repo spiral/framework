@@ -4,6 +4,11 @@ v2.3.8 (15.11.2019) - no binary
 -----
 - minor refactoring in json exception handler
 
+v2.4.0 (10.12.2019)
+-----
+- added broadcast service
+- added WebSocket server
+
 v2.3.7 (14.11.2019) - no binary
 -----
 - bugfix: client exceptions no longer sent with 500 code in application/json payloads
