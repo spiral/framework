@@ -2,7 +2,8 @@
 
 v2.4.1 (10.12.2019)
 -----
-- refactor in WebsocketBootloader 
+- refactor in WebsocketBootloader
+- fixed bug in stop sequence of ws roadrunner service
 
 v2.4.0 (10.12.2019)
 -----
