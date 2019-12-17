@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.4.2 (17.12.2019)
+-----
+- added striker payload validation for jobs
+- added support for SerializerRegistryInterface for spiral/jobs 
+
 v2.4.1 (10.12.2019)
 -----
 - refactor in WebsocketBootloader
