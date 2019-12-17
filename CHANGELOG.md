@@ -1,13 +1,23 @@
 # CHANGELOG
 
-v2.3.8 (15.11.2019) - no binary
+v2.4.2 (17.12.2019)
 -----
-- minor refactoring in json exception handler
+- added striker payload validation for jobs
+- added support for SerializerRegistryInterface for spiral/jobs 
+
+v2.4.1 (10.12.2019)
+-----
+- refactor in WebsocketBootloader
+- fixed bug in stop sequence of ws roadrunner service
 
 v2.4.0 (10.12.2019)
 -----
 - added broadcast service
 - added WebSocket server
+
+v2.3.8 (15.11.2019) - no binary
+-----
+- minor refactoring in json exception handler
 
 v2.3.7 (14.11.2019) - no binary
 -----

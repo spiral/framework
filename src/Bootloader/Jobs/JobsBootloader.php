@@ -19,6 +19,7 @@ use Spiral\Jobs\JobDispatcher;
 use Spiral\Jobs\Queue;
 use Spiral\Jobs\QueueInterface;
 use Spiral\Jobs\Registry\ContainerRegistry;
+use Spiral\Jobs\SerializerRegistryInterface;
 
 final class JobsBootloader extends Bootloader
 {
@@ -27,8 +28,9 @@ final class JobsBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
-        QueueInterface::class           => Queue::class,
-        HandlerRegistryInterface::class => ContainerRegistry::class
+        QueueInterface::class              => Queue::class,
+        HandlerRegistryInterface::class    => ContainerRegistry::class,
+        SerializerRegistryInterface::class => ContainerRegistry::class
     ];
 
     /**
