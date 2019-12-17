@@ -25,14 +25,14 @@ class WSBootloader extends Bootloader
             return;
         }
 
-        $ws->setServerCallback($env->get('WS_SERVER_CALLBACK'));
+        $ws->authorizeServer($env->get('WS_SERVER_CALLBACK'));
 
         if ($env->get('WS_TOPIC_CALLBACK') !== null) {
-            $ws->addTopicCallback('topic', $env->get('WS_TOPIC_CALLBACK'));
+            $ws->authorizeTopic('topic', $env->get('WS_TOPIC_CALLBACK'));
         }
 
         if ($env->get('WS_TOPIC_WILDCARD_CALLBACK') !== null) {
-            $ws->addTopicCallback('wildcard.{id}', $env->get('WS_TOPIC_WILDCARD_CALLBACK'));
+            $ws->authorizeTopic('wildcard.{id}', $env->get('WS_TOPIC_WILDCARD_CALLBACK'));
         }
     }
 }

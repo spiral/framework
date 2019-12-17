@@ -61,7 +61,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
     /**
      * @param callable|null $callback
      */
-    public function setServerCallback(?callable $callback): void
+    public function authorizeServer(?callable $callback): void
     {
         $this->config->modify('websockets', new Set('authorizeServer', $callback));
     }
@@ -70,7 +70,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
      * @param string   $topic
      * @param callable $callback
      */
-    public function addTopicCallback(string $topic, callable $callback): void
+    public function authorizeTopic(string $topic, callable $callback): void
     {
         $this->config->modify('websockets', new Append('authorizeTopics', $topic, $callback));
     }
