@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.4.3 (17.12.2019) - no binary
+-----
+- bump `spiral/validation` dependency
+- register `DatetimeChecker` in the `ValidationBootloader`
+
 v2.4.2 (17.12.2019)
 -----
 - added striker payload validation for jobs
