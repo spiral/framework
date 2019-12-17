@@ -56,14 +56,15 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
             // Checkers are resolved using container and provide ability to isolate some validation rules
             // under common name and class. You can register new checkers at any moment without any
             // performance issues.
-            'checkers'   => [
-                'type'    => Checker\TypeChecker::class,
-                'number'  => Checker\NumberChecker::class,
-                'mixed'   => Checker\MixedChecker::class,
-                'address' => Checker\AddressChecker::class,
-                'string'  => Checker\StringChecker::class,
-                'file'    => Checker\FileChecker::class,
-                'image'   => Checker\ImageChecker::class,
+            'checkers' => [
+                'type'     => Checker\TypeChecker::class,
+                'number'   => Checker\NumberChecker::class,
+                'mixed'    => Checker\MixedChecker::class,
+                'address'  => Checker\AddressChecker::class,
+                'string'   => Checker\StringChecker::class,
+                'file'     => Checker\FileChecker::class,
+                'image'    => Checker\ImageChecker::class,
+                'datetime' => Checker\DatetimeChecker::class,
             ],
 
             // Enable/disable validation conditions
