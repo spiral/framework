@@ -50,15 +50,18 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
         $container->bindInjector(ClassLocator::class, Tokenizer::class);
         $container->bindInjector(InvocationLocator::class, Tokenizer::class);
 
-        $this->config->setDefaults('tokenizer', [
-            'directories' => [$dirs->get('app')],
-            'exclude'     => [
-                $dirs->get('resources'),
-                $dirs->get('config'),
-                'tests',
-                'migrations'
+        $this->config->setDefaults(
+            'tokenizer',
+            [
+                'directories' => [$dirs->get('app')],
+                'exclude'     => [
+                    $dirs->get('resources'),
+                    $dirs->get('config'),
+                    'tests',
+                    'migrations'
+                ]
             ]
-        ]);
+        );
     }
 
     /**

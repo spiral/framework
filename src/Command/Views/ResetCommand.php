@@ -51,7 +51,6 @@ final class ResetCommand extends Command
                 );
 
                 continue;
-
                 // @codeCoverageIgnoreEnd
             }
 

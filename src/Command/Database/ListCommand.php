@@ -46,15 +46,17 @@ final class ListCommand extends Command
             return;
         }
 
-        $grid = $this->table([
-            'Name (ID):',
-            'Database:',
-            'Driver:',
-            'Prefix:',
-            'Status:',
-            'Tables:',
-            'Count Records:'
-        ]);
+        $grid = $this->table(
+            [
+                'Name (ID):',
+                'Database:',
+                'Driver:',
+                'Prefix:',
+                'Status:',
+                'Tables:',
+                'Count Records:'
+            ]
+        );
 
         foreach ($databases as $database) {
             $database = $dbal->database($database);
@@ -98,14 +100,16 @@ final class ListCommand extends Command
      */
     private function renderException(Table $grid, array $header, \Throwable $exception): void
     {
-        $grid->addRow(array_merge(
-            $header,
-            [
-                "<fg=red>{$exception->getMessage()}</fg=red>",
-                '<comment>---</comment>',
-                '<comment>---</comment>'
-            ]
-        ));
+        $grid->addRow(
+            array_merge(
+                $header,
+                [
+                    "<fg=red>{$exception->getMessage()}</fg=red>",
+                    '<comment>---</comment>',
+                    '<comment>---</comment>'
+                ]
+            )
+        );
     }
 
     /**
@@ -116,10 +120,12 @@ final class ListCommand extends Command
     private function renderTables(Table $grid, array $header, Database $database): void
     {
         foreach ($database->getTables() as $table) {
-            $grid->addRow(array_merge(
-                $header,
-                [$table->getName(), number_format($table->count())]
-            ));
+            $grid->addRow(
+                array_merge(
+                    $header,
+                    [$table->getName(), number_format($table->count())]
+                )
+            );
             $header = ['', '', '', '', ''];
         }
 

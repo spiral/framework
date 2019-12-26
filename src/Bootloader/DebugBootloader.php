@@ -80,10 +80,12 @@ final class DebugBootloader extends Bootloader implements SingletonInterface
             }
 
             if (!$collector instanceof StateCollectorInterface) {
-                throw new StateException(sprintf(
-                    'Unable to populate state, invalid state collector %s',
-                    is_object($collector) ? get_class($collector) : gettype($collector)
-                ));
+                throw new StateException(
+                    sprintf(
+                        'Unable to populate state, invalid state collector %s',
+                        is_object($collector) ? get_class($collector) : gettype($collector)
+                    )
+                );
             }
 
             $collector->populate($state);

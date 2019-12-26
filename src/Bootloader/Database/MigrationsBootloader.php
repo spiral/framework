@@ -46,10 +46,13 @@ final class MigrationsBootloader extends Bootloader
             $dirs->set('migrations', $dirs->get('app') . 'migrations');
         }
 
-        $config->setDefaults('migration', [
-            'directory' => $dirs->get('migrations'),
-            'table'     => 'migrations',
-            'safe'      => $env->get('SAFE_MIGRATIONS', false)
-        ]);
+        $config->setDefaults(
+            'migration',
+            [
+                'directory' => $dirs->get('migrations'),
+                'table'     => 'migrations',
+                'safe'      => $env->get('SAFE_MIGRATIONS', false)
+            ]
+        );
     }
 }

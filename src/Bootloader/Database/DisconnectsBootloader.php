@@ -27,12 +27,14 @@ final class DisconnectsBootloader extends Bootloader
      */
     public function boot(FinalizerInterface $finalizer, ContainerInterface $container): void
     {
-        $finalizer->addFinalizer(function () use ($container): void {
-            /** @var DatabaseManager $dbal */
-            $dbal = $container->get(DatabaseManager::class);
-            foreach ($dbal->getDrivers() as $driver) {
-                $driver->disconnect();
+        $finalizer->addFinalizer(
+            function () use ($container): void {
+                /** @var DatabaseManager $dbal */
+                $dbal = $container->get(DatabaseManager::class);
+                foreach ($dbal->getDrivers() as $driver) {
+                    $driver->disconnect();
+                }
             }
-        });
+        );
     }
 }

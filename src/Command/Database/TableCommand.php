@@ -74,28 +74,34 @@ final class TableCommand extends Command
      */
     protected function describeColumns(AbstractTable $schema): void
     {
-        $columnsTable = $this->table([
-            'Column:',
-            'Database Type:',
-            'Abstract Type:',
-            'PHP Type:',
-            'Default Value:'
-        ]);
+        $columnsTable = $this->table(
+            [
+                'Column:',
+                'Database Type:',
+                'Abstract Type:',
+                'PHP Type:',
+                'Default Value:'
+            ]
+        );
 
         foreach ($schema->getColumns() as $column) {
             $name = $column->getName();
 
-            if (in_array($column->getName(), $schema->getPrimaryKeys())) {
+            if (in_array($column->getName(), $schema->getPrimaryKeys(), true)) {
                 $name = "<fg=magenta>{$name}</fg=magenta>";
             }
 
-            $columnsTable->addRow([
-                $name,
-                $this->describeType($column),
-                $this->describeAbstractType($column),
-                $column->getType(),
-                $this->describeDefaultValue($column, $schema->getDriver()) ?: self::SKIP
-            ]);
+            $defaultValue = $this->describeDefaultValue($column, $schema->getDriver());
+
+            $columnsTable->addRow(
+                [
+                    $name,
+                    $this->describeType($column),
+                    $this->describeAbstractType($column),
+                    $column->getType(),
+                    $defaultValue ?? self::SKIP
+                ]
+            );
         }
 
         $columnsTable->render();
@@ -115,11 +121,13 @@ final class TableCommand extends Command
 
         $indexesTable = $this->table(['Name:', 'Type:', 'Columns:']);
         foreach ($indexes as $index) {
-            $indexesTable->addRow([
-                $index->getName(),
-                $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
-                join(', ', $index->getColumns())
-            ]);
+            $indexesTable->addRow(
+                [
+                    $index->getName(),
+                    $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
+                    join(', ', $index->getColumns())
+                ]
+            );
         }
 
         $indexesTable->render();
@@ -136,24 +144,28 @@ final class TableCommand extends Command
             $database->getName(),
             $this->argument('table')
         );
-        $foreignTable = $this->table([
-            'Name:',
-            'Column:',
-            'Foreign Table:',
-            'Foreign Column:',
-            'On Delete:',
-            'On Update:'
-        ]);
+        $foreignTable = $this->table(
+            [
+                'Name:',
+                'Column:',
+                'Foreign Table:',
+                'Foreign Column:',
+                'On Delete:',
+                'On Update:'
+            ]
+        );
 
         foreach ($foreignKeys as $reference) {
-            $foreignTable->addRow([
-                $reference->getName(),
-                join(', ', $reference->getColumns()),
-                $reference->getForeignTable(),
-                join(', ', $reference->getForeignKeys()),
-                $reference->getDeleteRule(),
-                $reference->getUpdateRule()
-            ]);
+            $foreignTable->addRow(
+                [
+                    $reference->getName(),
+                    join(', ', $reference->getColumns()),
+                    $reference->getForeignTable(),
+                    join(', ', $reference->getForeignKeys()),
+                    $reference->getDeleteRule(),
+                    $reference->getUpdateRule()
+                ]
+            );
         }
 
         $foreignTable->render();
@@ -164,7 +176,7 @@ final class TableCommand extends Command
      * @param DriverInterface $driver
      * @return string|null
      */
-    protected function describeDefaultValue(AbstractColumn $column, DriverInterface $driver): ?string
+    protected function describeDefaultValue(AbstractColumn $column, DriverInterface $driver)
     {
         $defaultValue = $column->getDefaultValue();
 
@@ -194,7 +206,7 @@ final class TableCommand extends Command
             $type .= " ({$column->getSize()})";
         }
 
-        if ($abstractType == 'decimal') {
+        if ($abstractType === 'decimal') {
             $type .= " ({$column->getPrecision()}, {$column->getScale()})";
         }
 

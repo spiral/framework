@@ -64,28 +64,31 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
             $dirs->set('locale', $dirs->get('app') . 'locale/');
         }
 
-        $this->config->setDefaults('translator', [
-            'locale'         => $env->get('LOCALE', 'en'),
-            'fallbackLocale' => $env->get('LOCALE', 'en'),
-            'directory'      => $dirs->get('locale'),
-            'autoRegister'   => $env->get('DEBUG', true),
-            'loaders'        => [
-                'php'  => Loader\PhpFileLoader::class,
-                'po'   => Loader\PoFileLoader::class,
-                'csv'  => Loader\CsvFileLoader::class,
-                'json' => Loader\JsonFileLoader::class
-            ],
-            'dumpers'        => [
-                'php'  => Dumper\PhpFileDumper::class,
-                'po'   => Dumper\PoFileDumper::class,
-                'csv'  => Dumper\CsvFileDumper::class,
-                'json' => Dumper\JsonFileDumper::class,
-            ],
-            'domains'        => [
-                // by default we can store all messages in one domain
-                'messages' => ['*']
+        $this->config->setDefaults(
+            'translator',
+            [
+                'locale'         => $env->get('LOCALE', 'en'),
+                'fallbackLocale' => $env->get('LOCALE', 'en'),
+                'directory'      => $dirs->get('locale'),
+                'autoRegister'   => $env->get('DEBUG', true),
+                'loaders'        => [
+                    'php'  => Loader\PhpFileLoader::class,
+                    'po'   => Loader\PoFileLoader::class,
+                    'csv'  => Loader\CsvFileLoader::class,
+                    'json' => Loader\JsonFileLoader::class
+                ],
+                'dumpers'        => [
+                    'php'  => Dumper\PhpFileDumper::class,
+                    'po'   => Dumper\PoFileDumper::class,
+                    'csv'  => Dumper\CsvFileDumper::class,
+                    'json' => Dumper\JsonFileDumper::class,
+                ],
+                'domains'        => [
+                    // by default we can store all messages in one domain
+                    'messages' => ['*']
+                ]
             ]
-        ]);
+        );
     }
 
     /**

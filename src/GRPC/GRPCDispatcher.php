@@ -73,13 +73,16 @@ final class GRPCDispatcher implements DispatcherInterface
             $server->registerService($interface, $service);
         }
 
-        $server->serve($worker, function (\Throwable $e = null): void {
-            if ($e !== null) {
-                $this->handleException($e);
-            }
+        $server->serve(
+            $worker,
+            function (\Throwable $e = null): void {
+                if ($e !== null) {
+                    $this->handleException($e);
+                }
 
-            $this->finalizer->finalize(false);
-        });
+                $this->finalizer->finalize(false);
+            }
+        );
     }
 
     /**

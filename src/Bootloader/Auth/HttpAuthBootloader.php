@@ -57,13 +57,16 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
     {
         $http->addMiddleware(AuthMiddleware::class);
 
-        $this->config->setDefaults('auth', [
-            'defaultTransport' => 'cookie',
-            'transports'       => [
-                'cookie' => new CookieTransport('token'),
-                'header' => new HeaderTransport('X-Auth-Token')
+        $this->config->setDefaults(
+            'auth',
+            [
+                'defaultTransport' => 'cookie',
+                'transports'       => [
+                    'cookie' => new CookieTransport('token'),
+                    'header' => new HeaderTransport('X-Auth-Token')
+                ]
             ]
-        ]);
+        );
     }
 
     /**

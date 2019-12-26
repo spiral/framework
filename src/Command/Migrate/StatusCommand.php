@@ -42,13 +42,15 @@ final class StatusCommand extends AbstractCommand
         foreach ($this->migrator->getMigrations() as $migration) {
             $state = $migration->getState();
 
-            $table->addRow([
-                $state->getName(),
-                $state->getTimeCreated()->format('Y-m-d H:i:s'),
-                $state->getStatus() == State::STATUS_PENDING
-                    ? self::PENDING
-                    : '<info>' . $state->getTimeExecuted()->format('Y-m-d H:i:s') . '</info>'
-            ]);
+            $table->addRow(
+                [
+                    $state->getName(),
+                    $state->getTimeCreated()->format('Y-m-d H:i:s'),
+                    $state->getStatus() == State::STATUS_PENDING
+                        ? self::PENDING
+                        : '<info>' . $state->getTimeExecuted()->format('Y-m-d H:i:s') . '</info>'
+                ]
+            );
         }
 
         $table->render();

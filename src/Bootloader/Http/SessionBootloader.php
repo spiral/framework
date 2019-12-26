@@ -53,18 +53,21 @@ final class SessionBootloader extends Bootloader
         HttpBootloader $http,
         DirectoriesInterface $directories
     ): void {
-        $config->setDefaults('session', [
-            'lifetime' => 86400,
-            'cookie'   => 'sid',
-            'secure'   => false,
-            'handler'  => new Autowire(
-                FileHandler::class,
-                [
-                    'directory' => $directories->get('runtime') . 'session',
-                    'lifetime'  => 86400
-                ]
-            )
-        ]);
+        $config->setDefaults(
+            'session',
+            [
+                'lifetime' => 86400,
+                'cookie'   => 'sid',
+                'secure'   => false,
+                'handler'  => new Autowire(
+                    FileHandler::class,
+                    [
+                        'directory' => $directories->get('runtime') . 'session',
+                        'lifetime'  => 86400
+                    ]
+                )
+            ]
+        );
 
         $session = $config->getConfig('session');
 

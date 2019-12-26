@@ -47,11 +47,14 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
      */
     public function boot(HttpBootloader $http): void
     {
-        $this->config->setDefaults('cookies', [
-            'domain'   => '.%s',
-            'method'   => CookiesConfig::COOKIE_ENCRYPT,
-            'excluded' => ['PHPSESSID', 'csrf-token']
-        ]);
+        $this->config->setDefaults(
+            'cookies',
+            [
+                'domain'   => '.%s',
+                'method'   => CookiesConfig::COOKIE_ENCRYPT,
+                'excluded' => ['PHPSESSID', 'csrf-token']
+            ]
+        );
 
         $http->addMiddleware(CookiesMiddleware::class);
     }

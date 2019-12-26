@@ -41,25 +41,29 @@ final class LocaleProcessor implements ProcessorInterface
     public function process(ViewSource $source, ContextInterface $context): ViewSource
     {
         //Translator options must automatically route this view name to specific domain
-        $domain = $this->translator->getDomain(sprintf(
-            '%s-%s-%s',
-            self::PREFIX,
-            str_replace(['/', '\\'], '-', $source->getNamespace()),
-            str_replace(['/', '\\'], '-', $source->getName())
-        ));
+        $domain = $this->translator->getDomain(
+            sprintf(
+                '%s-%s-%s',
+                self::PREFIX,
+                str_replace(['/', '\\'], '-', $source->getNamespace()),
+                str_replace(['/', '\\'], '-', $source->getName())
+            )
+        );
 
         //We are not forcing locale for now
-        return $source->withCode(preg_replace_callback(
-            self::REGEXP,
-            function ($matches) use ($domain, $context) {
-                return $this->translator->trans(
-                    $matches[1],
-                    [],
-                    $domain,
-                    $context->resolveValue(LocaleDependency::NAME)
-                );
-            },
-            $source->getCode()
-        ));
+        return $source->withCode(
+            preg_replace_callback(
+                self::REGEXP,
+                function ($matches) use ($domain, $context) {
+                    return $this->translator->trans(
+                        $matches[1],
+                        [],
+                        $domain,
+                        $context->resolveValue(LocaleDependency::NAME)
+                    );
+                },
+                $source->getCode()
+            )
+        );
     }
 }

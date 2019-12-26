@@ -15,11 +15,11 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Security\Actor\Guest;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
+use Spiral\Security\GuardScope;
 use Spiral\Security\PermissionManager;
 use Spiral\Security\PermissionsInterface;
 use Spiral\Security\RuleManager;
 use Spiral\Security\RulesInterface;
-use Spiral\Security\GuardScope;
 
 final class GuardBootloader extends Bootloader
 {

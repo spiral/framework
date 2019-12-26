@@ -51,11 +51,13 @@ final class CycleBootloader extends Bootloader
      */
     public function boot(Container $container, FinalizerInterface $finalizer): void
     {
-        $finalizer->addFinalizer(function () use ($container): void {
-            if ($container->hasInstance(ORMInterface::class)) {
-                $container->get(ORMInterface::class)->getHeap()->clean();
+        $finalizer->addFinalizer(
+            function () use ($container): void {
+                if ($container->hasInstance(ORMInterface::class)) {
+                    $container->get(ORMInterface::class)->getHeap()->clean();
+                }
             }
-        });
+        );
 
         $container->bindInjector(RepositoryInterface::class, RepositoryInjector::class);
     }

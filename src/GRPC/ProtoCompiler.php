@@ -50,13 +50,16 @@ final class ProtoCompiler
     {
         $tmpDir = $this->tmpDir();
 
-        exec(sprintf(
-            'protoc --php_out=%s --php-grpc_out=%s -I %s %s 2>&1',
-            escapeshellarg($tmpDir),
-            escapeshellarg($tmpDir),
-            escapeshellarg(dirname($protoFile)),
-            join(' ', array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
-        ), $output);
+        exec(
+            sprintf(
+                'protoc --php_out=%s --php-grpc_out=%s -I %s %s 2>&1',
+                escapeshellarg($tmpDir),
+                escapeshellarg($tmpDir),
+                escapeshellarg(dirname($protoFile)),
+                join(' ', array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
+            ),
+            $output
+        );
 
         $output = trim(join("\n", $output), "\n ,");
 
@@ -115,8 +118,11 @@ final class ProtoCompiler
      */
     private function getProtoFiles(string $protoFile): array
     {
-        return array_filter($this->files->getFiles(dirname($protoFile)), function ($file) {
-            return strpos($file, '.proto') !== false;
-        });
+        return array_filter(
+            $this->files->getFiles(dirname($protoFile)),
+            function ($file) {
+                return strpos($file, '.proto') !== false;
+            }
+        );
     }
 }

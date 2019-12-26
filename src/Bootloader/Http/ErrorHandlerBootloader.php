@@ -36,9 +36,11 @@ final class ErrorHandlerBootloader extends Bootloader
      */
     public function boot(HttpBootloader $http, EnvironmentInterface $env): void
     {
-        $http->addMiddleware(new Autowire(
-            ErrorHandlerMiddleware::class,
-            ['suppressErrors' => !$env->get('DEBUG', false)]
-        ));
+        $http->addMiddleware(
+            new Autowire(
+                ErrorHandlerMiddleware::class,
+                ['suppressErrors' => !$env->get('DEBUG', false)]
+            )
+        );
     }
 }

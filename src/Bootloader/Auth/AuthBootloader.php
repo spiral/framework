@@ -54,10 +54,12 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
     {
         foreach ($this->getProviders() as $provider) {
             if (!$provider instanceof ActorProviderInterface) {
-                throw new AuthException(sprintf(
-                    'Expected `ActorProviderInterface`, got `%s`',
-                    get_class($provider)
-                ));
+                throw new AuthException(
+                    sprintf(
+                        'Expected `ActorProviderInterface`, got `%s`',
+                        get_class($provider)
+                    )
+                );
             }
 
             $actor = $provider->getActor($token);

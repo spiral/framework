@@ -31,18 +31,22 @@ final class ListCommand extends Command
             return;
         }
 
-        $grid = $this->table([
-            'Service:',
-            'Implementation:',
-            'File:',
-        ]);
+        $grid = $this->table(
+            [
+                'Service:',
+                'Implementation:',
+                'File:',
+            ]
+        );
 
         foreach ($services as $interface => $instance) {
-            $grid->addRow([
-                $interface::NAME,
-                get_class($instance),
-                (new \ReflectionObject($instance))->getFileName()
-            ]);
+            $grid->addRow(
+                [
+                    $interface::NAME,
+                    get_class($instance),
+                    (new \ReflectionObject($instance))->getFileName()
+                ]
+            );
         }
 
         $grid->render();

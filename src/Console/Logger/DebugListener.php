@@ -62,12 +62,14 @@ final class DebugListener
         /**
          * We are going to format message our own style.
          */
-        $this->output->writeln(sprintf(
-            '<%1$s>%2$s</%1$s> %3$s',
-            $this->getStyle($event->getLevel()),
-            $this->getChannel($event->getChannel()),
-            $this->getMessage($this->output->isDecorated(), $event->getMessage())
-        ));
+        $this->output->writeln(
+            sprintf(
+                '<%1$s>%2$s</%1$s> %3$s',
+                $this->getStyle($event->getLevel()),
+                $this->getChannel($event->getChannel()),
+                $this->getMessage($this->output->isDecorated(), $event->getMessage())
+            )
+        );
     }
 
     /**

@@ -112,13 +112,15 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
         if ($request->getHeaderLine('Accept') == 'application/json') {
             $response = $response->withHeader('Content-Type', 'application/json');
             $handler = new JsonHandler();
-            $response->getBody()->write(json_encode(
-                ['status' => 500]
-                + json_decode(
-                    $handler->renderException($e, JsonHandler::VERBOSITY_VERBOSE),
-                    true
+            $response->getBody()->write(
+                json_encode(
+                    ['status' => 500]
+                    + json_decode(
+                        $handler->renderException($e, JsonHandler::VERBOSITY_VERBOSE),
+                        true
+                    )
                 )
-            ));
+            );
         } else {
             $handler = new HtmlHandler();
             $state = $this->getOptional(StateInterface::class);
@@ -139,15 +141,17 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     private function logError(Request $request, int $code, string $message): void
     {
-        $this->getLogger()->error(sprintf(
-            '%s://%s%s caused the error %s (%s) by client %s.',
-            $request->getUri()->getScheme(),
-            $request->getUri()->getHost(),
-            $request->getUri()->getPath(),
-            $code,
-            $message ?: '-not specified-',
-            $request->getServerParams()['REMOTE_ADDR'] ?? '127.0.0.1'
-        ));
+        $this->getLogger()->error(
+            sprintf(
+                '%s://%s%s caused the error %s (%s) by client %s.',
+                $request->getUri()->getScheme(),
+                $request->getUri()->getHost(),
+                $request->getUri()->getPath(),
+                $code,
+                $message ?: '-not specified-',
+                $request->getServerParams()['REMOTE_ADDR'] ?? '127.0.0.1'
+            )
+        );
     }
 
     /**

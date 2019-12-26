@@ -59,20 +59,24 @@ final class RuntimeDirectory
                 $this->files->setPermissions(dirname($filename), FilesInterface::RUNTIME);
             } catch (\Throwable $e) {
                 // @codeCoverageIgnoreStart
-                $output->writeln(sprintf(
-                    '<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>',
-                    $this->files->relativePath($filename, $runtimeDirectory),
-                    $e->getMessage()
-                ));
+                $output->writeln(
+                    sprintf(
+                        '<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>',
+                        $this->files->relativePath($filename, $runtimeDirectory),
+                        $e->getMessage()
+                    )
+                );
                 continue;
                 // @codeCoverageIgnoreEnd
             }
 
             if ($output->isVerbose()) {
-                $output->writeln(sprintf(
-                    '<fg=green>[updated]</fg=green> `%s`',
-                    $this->files->relativePath($filename, $runtimeDirectory)
-                ));
+                $output->writeln(
+                    sprintf(
+                        '<fg=green>[updated]</fg=green> `%s`',
+                        $this->files->relativePath($filename, $runtimeDirectory)
+                    )
+                );
             }
         }
 

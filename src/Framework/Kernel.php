@@ -51,20 +51,23 @@ abstract class Kernel extends AbstractKernel
             $directories['app'] = $directories['root'] . '/app/';
         }
 
-        return array_merge([
-            // public root
-            'public'    => $directories['root'] . '/public/',
+        return array_merge(
+            [
+                // public root
+                'public'    => $directories['root'] . '/public/',
 
-            // vendor libraries
-            'vendor'    => $directories['root'] . '/vendor/',
+                // vendor libraries
+                'vendor'    => $directories['root'] . '/vendor/',
 
-            // data directories
-            'runtime'   => $directories['root'] . '/runtime/',
-            'cache'     => $directories['root'] . '/runtime/cache/',
+                // data directories
+                'runtime'   => $directories['root'] . '/runtime/',
+                'cache'     => $directories['root'] . '/runtime/cache/',
 
-            // application directories
-            'config'    => $directories['app'] . '/config/',
-            'resources' => $directories['app'] . '/resources/',
-        ], $directories);
+                // application directories
+                'config'    => $directories['app'] . '/config/',
+                'resources' => $directories['app'] . '/resources/',
+            ],
+            $directories
+        );
     }
 }

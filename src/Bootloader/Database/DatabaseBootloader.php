@@ -45,11 +45,14 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
      */
     public function boot(): void
     {
-        $this->config->setDefaults('database', [
-            'default'   => 'default',
-            'aliases'   => [],
-            'databases' => [],
-            'drivers'   => []
-        ]);
+        $this->config->setDefaults(
+            'database',
+            [
+                'default'   => 'default',
+                'aliases'   => [],
+                'databases' => [],
+                'drivers'   => []
+            ]
+        );
     }
 }

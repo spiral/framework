@@ -60,11 +60,14 @@ final class ExportCommand extends Command implements SingletonInterface
 
         $dumper = $config->getDumper($this->option('dumper'));
 
-        $dumper->dump($mc, [
-            'path'           => $this->argument('path'),
-            'default_locale' => $config->getDefaultLocale(),
-            'xliff_version'  => '2.0' // forcing default version for xliff dumper only
-        ]);
+        $dumper->dump(
+            $mc,
+            [
+                'path'           => $this->argument('path'),
+                'default_locale' => $config->getDefaultLocale(),
+                'xliff_version'  => '2.0' // forcing default version for xliff dumper only
+            ]
+        );
 
         $this->writeln('Export successfully completed using <info>' . get_class($dumper) . '</info>');
         $this->writeln('Output: <comment>' . realpath($this->argument('path')) . '</comment>');

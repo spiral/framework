@@ -49,17 +49,20 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
         }
 
         // default view config
-        $this->config->setDefaults('views', [
-            'cache'        => [
-                'enabled'   => !$env->get('DEBUG', false),
-                'directory' => $dirs->get('cache') . 'views'
-            ],
-            'namespaces'   => [
-                'default' => [$dirs->get('views')]
-            ],
-            'dependencies' => [],
-            'engines'      => [NativeEngine::class]
-        ]);
+        $this->config->setDefaults(
+            'views',
+            [
+                'cache'        => [
+                    'enabled'   => !$env->get('DEBUG', false),
+                    'directory' => $dirs->get('cache') . 'views'
+                ],
+                'namespaces'   => [
+                    'default' => [$dirs->get('views')]
+                ],
+                'dependencies' => [],
+                'engines'      => [NativeEngine::class]
+            ]
+        );
     }
 
     /**

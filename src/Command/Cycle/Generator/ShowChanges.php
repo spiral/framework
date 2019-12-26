@@ -84,10 +84,12 @@ final class ShowChanges implements GeneratorInterface
     protected function describeChanges(AbstractTable $table): void
     {
         if (!$this->output->isVerbose()) {
-            $this->output->writeln(sprintf(
-                ': <fg=green>%s</fg=green> change(s) detected',
-                $this->numChanges($table)
-            ));
+            $this->output->writeln(
+                sprintf(
+                    ': <fg=green>%s</fg=green> change(s) detected',
+                    $this->numChanges($table)
+                )
+            );
 
             return;
         }

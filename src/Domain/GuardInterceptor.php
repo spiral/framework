@@ -127,11 +127,13 @@ final class GuardInterceptor implements CoreInterceptorInterface
         ];
 
         if ($guarded->permission === null && $ns === null) {
-            throw new InterceptorException(sprintf(
-                'Unable to apply @Guarded without name or @GuardNamespace on `%s`->`%s`',
-                $method->getDeclaringClass()->getName(),
-                $method->getName()
-            ));
+            throw new InterceptorException(
+                sprintf(
+                    'Unable to apply @Guarded without name or @GuardNamespace on `%s`->`%s`',
+                    $method->getDeclaringClass()->getName(),
+                    $method->getName()
+                )
+            );
         }
 
         if ($ns !== null) {

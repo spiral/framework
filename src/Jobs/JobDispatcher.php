@@ -67,13 +67,16 @@ final class JobDispatcher implements DispatcherInterface
         $consumer = $this->container->get(Consumer::class);
         $worker = $this->container->get(Worker::class);
 
-        $consumer->serve($worker, function (\Throwable $e = null): void {
-            if ($e !== null) {
-                $this->handleException($e);
-            }
+        $consumer->serve(
+            $worker,
+            function (\Throwable $e = null): void {
+                if ($e !== null) {
+                    $this->handleException($e);
+                }
 
-            $this->finalizer->finalize(false);
-        });
+                $this->finalizer->finalize(false);
+            }
+        );
     }
 
     /**

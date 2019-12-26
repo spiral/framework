@@ -61,13 +61,16 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
      */
     public function boot(KernelInterface $kernel, FactoryInterface $factory): void
     {
-        $this->config->setDefaults('http', [
-            'basePath'   => '/',
-            'headers'    => [
-                'Content-Type' => 'text/html; charset=UTF-8'
-            ],
-            'middleware' => [],
-        ]);
+        $this->config->setDefaults(
+            'http',
+            [
+                'basePath'   => '/',
+                'headers'    => [
+                    'Content-Type' => 'text/html; charset=UTF-8'
+                ],
+                'middleware' => [],
+            ]
+        );
 
         $kernel->addDispatcher($factory->make(SapiDispatcher::class));
 

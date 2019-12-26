@@ -58,11 +58,14 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
     {
         $kernel->addDispatcher($console);
 
-        $this->config->setDefaults('console', [
-            'commands'  => [],
-            'configure' => [],
-            'update'    => []
-        ]);
+        $this->config->setDefaults(
+            'console',
+            [
+                'commands'  => [],
+                'configure' => [],
+                'update'    => []
+            ]
+        );
 
         $this->addCommand(CleanCommand::class);
         $this->addCommand(PublishCommand::class);

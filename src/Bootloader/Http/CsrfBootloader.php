@@ -27,11 +27,14 @@ final class CsrfBootloader extends Bootloader
      */
     public function boot(ConfiguratorInterface $config, HttpBootloader $http): void
     {
-        $config->setDefaults('csrf', [
-            'cookie'   => 'csrf-token',
-            'length'   => 16,
-            'lifetime' => 86400
-        ]);
+        $config->setDefaults(
+            'csrf',
+            [
+                'cookie'   => 'csrf-token',
+                'length'   => 16,
+                'lifetime' => 86400
+            ]
+        );
 
         $http->addMiddleware(CsrfMiddleware::class);
     }

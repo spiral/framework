@@ -47,11 +47,14 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
      */
     public function boot(HttpBootloader $http, EnvironmentInterface $env): void
     {
-        $this->config->setDefaults('websockets', [
-            'path'            => $env->get('RR_BROADCAST_PATH', null),
-            'authorizeServer' => null,
-            'authorizeTopics' => []
-        ]);
+        $this->config->setDefaults(
+            'websockets',
+            [
+                'path'            => $env->get('RR_BROADCAST_PATH', null),
+                'authorizeServer' => null,
+                'authorizeTopics' => []
+            ]
+        );
 
         if ($env->get('RR_BROADCAST_PATH', null) !== null) {
             $http->addMiddleware(WebsocketsMiddleware::class);

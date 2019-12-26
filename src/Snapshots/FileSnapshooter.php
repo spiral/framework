@@ -101,9 +101,11 @@ final class FileSnapshooter implements SnapshotterInterface
     protected function rotateSnapshots(): void
     {
         $finder = new Finder();
-        $finder->in($this->directory)->sort(function (SplFileInfo $a, SplFileInfo $b) {
-            return $b->getMTime() - $a->getMTime();
-        });
+        $finder->in($this->directory)->sort(
+            function (SplFileInfo $a, SplFileInfo $b) {
+                return $b->getMTime() - $a->getMTime();
+            }
+        );
 
         $count = 0;
         foreach ($finder as $file) {
