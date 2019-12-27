@@ -17,19 +17,19 @@ class ExportTest extends ConsoleTest
 {
     public function testReset(): void
     {
-        $this->assertFileNotExists(__DIR__ . '/messages.ru.php');
+        $this->assertFileNotExists(sys_get_temp_dir() . '/messages.ru.php');
 
         $this->runCommandDebug('i18n:index');
         $this->runCommandDebug('configure');
         $this->runCommandDebug('i18n:export', [
             'locale'     => 'ru',
-            'path'       => __DIR__,
+            'path'       => sys_get_temp_dir(),
             '--fallback' => 'en',
         ]);
 
-        $this->assertFileExists(__DIR__ . '/messages.ru.php');
+        $this->assertFileExists(sys_get_temp_dir() . '/messages.ru.php');
 
-        $exp = (require __DIR__ . '/messages.ru.php');
+        $exp = (require sys_get_temp_dir() . '/messages.ru.php');
 
         $this->assertArrayHasKey('World', $exp);
         $this->assertSame('Мир', $exp['World']);
@@ -37,6 +37,6 @@ class ExportTest extends ConsoleTest
         $this->assertArrayHasKey('%s unit|%s units', $exp);
         $this->assertArrayHasKey('This value is required.', $exp);
 
-        unlink(__DIR__ . '/messages.ru.php');
+        unlink(sys_get_temp_dir() . '/messages.ru.php');
     }
 }
