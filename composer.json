@@ -18,6 +18,7 @@
     "spiral/composer-publish-plugin": "^1.0"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-master",
     "phpunit/phpunit": "~7.0",
     "mockery/mockery": "^1.1",
     "spiral/code-style": "^1.0",

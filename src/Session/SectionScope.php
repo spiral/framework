@@ -79,7 +79,7 @@ final class SectionScope implements SessionSectionInterface
     /**
      * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->getActiveSection()->offsetExists($offset);
     }

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+v2.4.4 (27.12.2019)
+-----
+- minor code-base quality improvements
+- added `route:list` command
+- app server updated with recent roadrunner version
+- queue server does not show `PUSH` message anymore
+- added `roave/security-advisories`
+
 v2.4.3 (17.12.2019) - no binary
 -----
 - bump `spiral/validation` dependency

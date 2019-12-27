@@ -140,8 +140,6 @@ final class DebugListener
             return $channel;
         }
 
-        // TODO: SQL Colorization and Infection
-
         return "[{$reflection->getShortName()}]";
     }
 
@@ -150,7 +148,7 @@ final class DebugListener
      * @param string $message
      * @return string
      */
-    private function getMessage(bool $decorated, string $message)
+    private function getMessage(bool $decorated, string $message): string
     {
         if (!$decorated) {
             return $message;

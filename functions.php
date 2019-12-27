@@ -9,6 +9,7 @@
 
 declare(strict_types=1);
 
+use Spiral\Core\Container\Autowire;
 use Spiral\Debug\Dumper;
 
 if (!function_exists('bind')) {
@@ -21,11 +22,11 @@ if (!function_exists('bind')) {
      * @param string $alias Class name or alias.
      * @param array  $parameters
      *
-     * @return \Spiral\Core\Container\Autowire
+     * @return Autowire
      */
-    function bind(string $alias, array $parameters = [])
+    function bind(string $alias, array $parameters = []): Autowire
     {
-        return new \Spiral\Core\Container\Autowire($alias, $parameters);
+        return new Autowire($alias, $parameters);
     }
 }
 

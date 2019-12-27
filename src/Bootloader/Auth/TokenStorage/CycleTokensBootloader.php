@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Auth\TokenStorage;
 
+use ReflectionClass;
+use ReflectionException;
 use Spiral\Auth\Cycle\Token;
 use Spiral\Auth\Cycle\TokenStorage as CycleStorage;
 use Spiral\Auth\TokenStorageInterface;
@@ -38,11 +40,11 @@ final class CycleTokensBootloader extends Bootloader
     /**
      * @param TokenizerBootloader $tokenizer
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function boot(TokenizerBootloader $tokenizer): void
     {
-        $tokenClass = new \ReflectionClass(Token::class);
+        $tokenClass = new ReflectionClass(Token::class);
         $tokenizer->addDirectory(dirname($tokenClass->getFileName()));
     }
 }

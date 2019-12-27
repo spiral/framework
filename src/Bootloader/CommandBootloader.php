@@ -19,6 +19,7 @@ use Spiral\Command\Database;
 use Spiral\Command\Encrypter;
 use Spiral\Command\GRPC;
 use Spiral\Command\Migrate;
+use Spiral\Command\Router;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
 use Spiral\Console;
@@ -29,6 +30,7 @@ use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\GRPC\InvokerInterface;
 use Spiral\Migrations\Migrator;
+use Spiral\Router\RouterInterface;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Views\ViewsInterface;
@@ -102,6 +104,10 @@ final class CommandBootloader extends Bootloader
 
         if ($container->has(EncryptionInterface::class)) {
             $this->configureEncrypter($console);
+        }
+
+        if ($container->has(RouterInterface::class)) {
+            $console->addCommand(Router\ListCommand::class);
         }
     }
 

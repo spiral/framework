@@ -127,7 +127,11 @@ final class SessionScope implements SessionInterface, SingletonInterface
         try {
             return $this->container->get(SessionInterface::class);
         } catch (NotFoundExceptionInterface $e) {
-            throw new ScopeException('Unable to receive active session, invalid request scope', $e->getCode(), $e);
+            throw new ScopeException(
+                'Unable to receive active session, invalid request scope',
+                $e->getCode(),
+                $e
+            );
         }
     }
 }

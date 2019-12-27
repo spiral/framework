@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Auth\Cycle;
 
 use Cycle\Annotated\Annotation as Cycle;
+use DateTimeInterface;
 use Spiral\Auth\TokenInterface;
 
 /**
@@ -38,18 +39,18 @@ final class Token implements TokenInterface
     private $payload;
 
     /**
-     * @param string                  $id
-     * @param string                  $secretValue
-     * @param array                   $payload
-     * @param \DateTimeImmutable      $createdAt
-     * @param \DateTimeInterface|null $expiresAt
+     * @param string                 $id
+     * @param string                 $secretValue
+     * @param array                  $payload
+     * @param DateTimeInterface      $createdAt
+     * @param DateTimeInterface|null $expiresAt
      */
     public function __construct(
         string $id,
         string $secretValue,
         array $payload,
-        \DateTimeImmutable $createdAt,
-        \DateTimeInterface $expiresAt = null
+        DateTimeInterface $createdAt,
+        DateTimeInterface $expiresAt = null
     ) {
         $this->id = $id;
 
@@ -87,9 +88,9 @@ final class Token implements TokenInterface
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -97,7 +98,7 @@ final class Token implements TokenInterface
     /**
      * @inheritDoc
      */
-    public function getExpiresAt(): ?\DateTimeInterface
+    public function getExpiresAt(): ?DateTimeInterface
     {
         return $this->expiresAt;
     }

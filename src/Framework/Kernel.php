@@ -44,7 +44,7 @@ abstract class Kernel extends AbstractKernel
     protected function mapDirectories(array $directories): array
     {
         if (!isset($directories['root'])) {
-            throw new BootException('Missing required directory `root`.');
+            throw new BootException('Missing required directory `root`');
         }
 
         if (!isset($directories['app'])) {

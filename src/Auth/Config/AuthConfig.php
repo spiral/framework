@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Spiral\Auth\Config;
 
 use Spiral\Core\Container\Autowire;
-use Spiral\Core\Exception\ConfigException;
 use Spiral\Core\InjectableConfig;
 
 /**
@@ -20,12 +19,8 @@ use Spiral\Core\InjectableConfig;
  */
 final class AuthConfig extends InjectableConfig
 {
+    // Configuration source.
     public const CONFIG = 'auth';
-
-    protected $config = [
-        'defaultTransport' => '',
-        'transports'       => []
-    ];
 
     /**
      * @return string
@@ -36,43 +31,10 @@ final class AuthConfig extends InjectableConfig
     }
 
     /**
-     * @return array
+     * @return Autowire[]
      */
     public function getTransports(): array
     {
-        $transports = [];
-        foreach ($this->config['transports'] as $name => $transport) {
-            if (is_object($transport) && !$transport instanceof Autowire) {
-                $transports[$name] = $transport;
-                continue;
-            }
-
-            $transports[$name] = $this->wire($transport);
-        }
-
-        return $transports;
-    }
-
-    /**
-     * @param mixed $item
-     * @return Autowire
-     *
-     * @throws ConfigException
-     */
-    private function wire($item): Autowire
-    {
-        if ($item instanceof Autowire) {
-            return $item;
-        }
-
-        if (is_string($item)) {
-            return new Autowire($item);
-        }
-
-        if (is_array($item) && isset($item['class'])) {
-            return new Autowire($item['class'], $item['options'] ?? []);
-        }
-
-        throw new ConfigException('Invalid class reference in auth config');
+        return array_map([Autowire::class, 'wire'], $this->config['transports']);
     }
 }

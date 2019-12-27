@@ -25,7 +25,7 @@ final class LocaleDependency implements DependencyInterface
     private $translator;
 
     /** @var array */
-    private $locales = [];
+    private $locales;
 
     /**
      * @param TranslatorInterface $translator

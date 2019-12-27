@@ -13,9 +13,12 @@ namespace Spiral\Auth\Cycle;
 
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\TransactionInterface;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Spiral\Auth\Exception\TokenStorageException;
 use Spiral\Auth\TokenInterface;
 use Spiral\Auth\TokenStorageInterface;
+use Throwable;
 
 /**
  * Provides the ability to fetch token information from the database via Cycle ORM.
@@ -59,7 +62,8 @@ final class TokenStorage implements TokenStorageInterface
 
         $token->setSecretValue($hash);
 
-        if ($token->getExpiresAt() !== null && $token->getExpiresAt() < new \DateTime()) {
+        $expiresAt = $token->getExpiresAt();
+        if ($expiresAt !== null && $expiresAt < new DateTimeImmutable()) {
             $this->delete($token);
             return null;
         }
@@ -70,21 +74,22 @@ final class TokenStorage implements TokenStorageInterface
     /**
      * @inheritDoc
      */
-    public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface
+    public function create(array $payload, DateTimeInterface $expiresAt = null): TokenInterface
     {
         try {
             $token = new Token(
                 $this->issueID(),
                 $this->randomHash(128),
                 $payload,
-                new \DateTimeImmutable(),
+                new DateTimeImmutable(),
                 $expiresAt
             );
 
-            $this->em->persist($token)->run();
+            $this->em->persist($token);
+            $this->em->run();
 
             return $token;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new TokenStorageException('Unable to create token', $e->getCode(), $e);
         }
     }
@@ -95,8 +100,9 @@ final class TokenStorage implements TokenStorageInterface
     public function delete(TokenInterface $token): void
     {
         try {
-            $this->em->delete($token)->run();
-        } catch (\Throwable $e) {
+            $this->em->delete($token);
+            $this->em->run();
+        } catch (Throwable $e) {
             throw new TokenStorageException('Unable to delete token', $e->getCode(), $e);
         }
     }
@@ -105,15 +111,16 @@ final class TokenStorage implements TokenStorageInterface
      * Issue unique token id.
      *
      * @return string
-     * @throws \Exception
+     * @throws Throwable
      */
     private function issueID(): string
     {
         $id = $this->randomHash(64);
 
-        $query = $this->orm->getSource(Token::class)->getDatabase()->select()->from(
-            $this->orm->getSource(Token::class)->getTable()
-        );
+        $query = $this->orm->getSource(Token::class)
+            ->getDatabase()
+            ->select()
+            ->from($this->orm->getSource(Token::class)->getTable());
 
         while ((clone $query)->where('id', $id)->count('id') !== 0) {
             $id = $this->randomHash(64);
@@ -126,7 +133,7 @@ final class TokenStorage implements TokenStorageInterface
      * @param int $length
      * @return string
      *
-     * @throws \Exception
+     * @throws Throwable
      */
     private function randomHash(int $length): string
     {

@@ -11,25 +11,28 @@ declare(strict_types=1);
 
 namespace Spiral\Auth\Session;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use Spiral\Auth\TokenInterface;
+use Throwable;
 
 final class Token implements TokenInterface
 {
     /** @var string */
     private $id;
 
-    /** @var \DateTimeInterface|null */
+    /** @var DateTimeInterface|null */
     private $expiresAt;
 
     /** @var array */
     private $payload;
 
     /**
-     * @param string                  $id
-     * @param array                   $payload
-     * @param \DateTimeInterface|null $expiresAt
+     * @param string                 $id
+     * @param array                  $payload
+     * @param DateTimeInterface|null $expiresAt
      */
-    public function __construct(string $id, array $payload, \DateTimeInterface $expiresAt = null)
+    public function __construct(string $id, array $payload, DateTimeInterface $expiresAt = null)
     {
         $this->id = $id;
         $this->expiresAt = $expiresAt;
@@ -47,7 +50,7 @@ final class Token implements TokenInterface
     /**
      * @inheritDoc
      */
-    public function getExpiresAt(): ?\DateTimeInterface
+    public function getExpiresAt(): ?DateTimeInterface
     {
         return $this->expiresAt;
     }
@@ -79,13 +82,13 @@ final class Token implements TokenInterface
      *
      * @param array $data
      * @return Token
-     * @throws \Exception
+     * @throws Throwable
      */
     public static function unpack(array $data): Token
     {
         $expiresAt = null;
-        if ($data['expiresAt'] != null) {
-            $expiresAt = (new \DateTimeImmutable())->setTimestamp($data['expiresAt']);
+        if ($data['expiresAt'] !== null) {
+            $expiresAt = (new DateTimeImmutable())->setTimestamp($data['expiresAt']);
         }
 
         return new Token($data['id'], $data['payload'], $expiresAt);
