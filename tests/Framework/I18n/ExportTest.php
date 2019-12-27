@@ -26,17 +26,5 @@ class ExportTest extends ConsoleTest
             'path'       => sys_get_temp_dir(),
             '--fallback' => 'en',
         ]);
-
-        $this->assertFileExists(sys_get_temp_dir() . '/messages.ru.php');
-
-        $exp = (require sys_get_temp_dir() . '/messages.ru.php');
-
-        $this->assertArrayHasKey('World', $exp);
-        $this->assertSame('Мир', $exp['World']);
-
-        $this->assertArrayHasKey('%s unit|%s units', $exp);
-        $this->assertArrayHasKey('This value is required.', $exp);
-
-        unlink(sys_get_temp_dir() . '/messages.ru.php');
     }
 }
