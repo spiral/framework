@@ -15,16 +15,29 @@ use Spiral\Framework\ConsoleTest;
 
 class ExportTest extends ConsoleTest
 {
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (file_exists(sys_get_temp_dir() . '/messages.ru.php')) {
+            unlink(sys_get_temp_dir() . '/messages.ru.php');
+        }
+    }
+
     public function testReset(): void
     {
         $this->assertFileNotExists(sys_get_temp_dir() . '/messages.ru.php');
 
         $this->runCommandDebug('i18n:index');
         $this->runCommandDebug('configure');
-        $this->runCommandDebug('i18n:export', [
-            'locale'     => 'ru',
-            'path'       => sys_get_temp_dir(),
-            '--fallback' => 'en',
-        ]);
+
+        $this->runCommandDebug(
+            'i18n:export',
+            [
+                'locale'     => 'ru',
+                'path'       => sys_get_temp_dir(),
+                '--fallback' => 'en',
+            ]
+        );
     }
 }
