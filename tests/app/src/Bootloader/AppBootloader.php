@@ -13,8 +13,6 @@ namespace Spiral\App\Bootloader;
 
 use Spiral\App\Checker\MyChecker;
 use Spiral\App\Condition\MyCondition;
-use Spiral\App\Controller\AuthController;
-use Spiral\App\Controller\TestController;
 use Spiral\App\User\UserRepository;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
@@ -24,9 +22,6 @@ use Spiral\Core\CoreInterface;
 use Spiral\Domain\CycleInterceptor;
 use Spiral\Domain\FilterInterceptor;
 use Spiral\Domain\GuardInterceptor;
-use Spiral\Router\Route;
-use Spiral\Router\RouterInterface;
-use Spiral\Router\Target\Controller;
 use Spiral\Security\PermissionsInterface;
 
 class AppBootloader extends DomainBootloader
@@ -43,7 +38,6 @@ class AppBootloader extends DomainBootloader
 
     public function boot(
         \Spiral\Bootloader\Auth\AuthBootloader $authBootloader,
-        RouterInterface $router,
         PermissionsInterface $rbac,
         ViewsBootloader $views,
         ValidationBootloader $validation
@@ -55,18 +49,6 @@ class AppBootloader extends DomainBootloader
 
         $rbac->addRole('demo');
         $rbac->associate('demo', 'demo.*');
-
-        $route = new Route(
-            '/<action>[/<name>]',
-            new Controller(TestController::class)
-        );
-
-        $router->setDefault($route->withDefaults(['name' => 'Dave']));
-
-        $router->setRoute(
-            'auth',
-            new Route('/auth/<action>', new Controller(AuthController::class))
-        );
 
         $views->addDirectory('custom', __DIR__ . '/../../views/custom/');
         $views->addEngine(TestEngine::class);
