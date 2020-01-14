@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Exception\ClientException;
 
 /**
@@ -22,6 +23,17 @@ use Spiral\Http\Exception\ClientException;
  */
 final class JsonPayloadMiddleware implements MiddlewareInterface
 {
+    /** @var HttpConfig HttpConfig */
+    protected $httpConfig;
+
+    /**
+     * @param HttpConfig $httpConfig
+     */
+    public function __construct(HttpConfig $httpConfig)
+    {
+        $this->httpConfig = $httpConfig;
+    }
+
     /**
      * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
@@ -47,6 +59,12 @@ final class JsonPayloadMiddleware implements MiddlewareInterface
     {
         $contentType = $request->getHeaderLine('Content-Type');
 
-        return stripos($contentType, 'application/json') === 0;
+        foreach ($this->httpConfig->getJsonContentType() as $allowedType) {
+            if (stripos($contentType, $allowedType) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

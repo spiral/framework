@@ -16,6 +16,7 @@ use Spiral\App\Condition\MyCondition;
 use Spiral\App\User\UserRepository;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
+use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Bootloader\Security\ValidationBootloader;
 use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\Core\CoreInterface;
@@ -40,7 +41,8 @@ class AppBootloader extends DomainBootloader
         \Spiral\Bootloader\Auth\AuthBootloader $authBootloader,
         PermissionsInterface $rbac,
         ViewsBootloader $views,
-        ValidationBootloader $validation
+        ValidationBootloader $validation,
+        HttpBootloader $http
     ): void {
         $authBootloader->addActorProvider(UserRepository::class);
 
@@ -56,5 +58,7 @@ class AppBootloader extends DomainBootloader
         $validation->addAlias('aliased', 'notEmpty');
         $validation->addChecker('my', MyChecker::class);
         $validation->addCondition('cond', MyCondition::class);
+
+        $http->addJsonContentType('application/vnd.api+json');
     }
 }

@@ -69,6 +69,11 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
                     'Content-Type' => 'text/html; charset=UTF-8'
                 ],
                 'middleware' => [],
+                'json'       => [
+                    'contentType' => [
+                        'application/json'
+                    ]
+                ]
             ]
         );
 
@@ -87,6 +92,16 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
     public function addMiddleware($middleware): void
     {
         $this->config->modify('http', new Append('middleware', null, $middleware));
+    }
+
+    /**
+     * Add new JSON content type.
+     *
+     * @param string $contentType
+     */
+    public function addJsonContentType(string $contentType): void
+    {
+        $this->config->modify('http', new Append('json.contentType', null, $contentType));
     }
 
     /**

@@ -43,6 +43,17 @@ class ControllerTest extends HttpTest
         $this->assertSame('{"a":"b"}', (string)$response->getBody());
     }
 
+    public function testPayloadWithCustomJsonHeader(): void
+    {
+        $factory = new StreamFactory();
+
+        $response = $this->http->handle($this->request('/payload', 'POST', [], [
+            'Content-Type' => 'application/vnd.api+json;charset=UTF-8;'
+        ], [])->withBody($factory->createStream('{"a":"b"}')));
+
+        $this->assertSame('{"a":"b"}', (string)$response->getBody());
+    }
+
     public function testPayloadActionBad(): void
     {
         $factory = new StreamFactory();
