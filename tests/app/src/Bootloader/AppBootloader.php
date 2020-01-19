@@ -18,6 +18,7 @@ use Spiral\App\Controller\TestController;
 use Spiral\App\User\UserRepository;
 use Spiral\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
+use Spiral\Bootloader\Http\JsonPayloadsBootloader;
 use Spiral\Bootloader\Security\ValidationBootloader;
 use Spiral\Bootloader\Views\ViewsBootloader;
 use Spiral\Core\CoreInterface;
@@ -46,7 +47,8 @@ class AppBootloader extends DomainBootloader
         RouterInterface $router,
         PermissionsInterface $rbac,
         ViewsBootloader $views,
-        ValidationBootloader $validation
+        ValidationBootloader $validation,
+        JsonPayloadsBootloader $json
     ): void {
         $authBootloader->addActorProvider(UserRepository::class);
 
@@ -74,5 +76,7 @@ class AppBootloader extends DomainBootloader
         $validation->addAlias('aliased', 'notEmpty');
         $validation->addChecker('my', MyChecker::class);
         $validation->addCondition('cond', MyCondition::class);
+
+        $json->addContentType('application/vnd.api+json');
     }
 }
