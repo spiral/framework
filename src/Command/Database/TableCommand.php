@@ -125,7 +125,7 @@ final class TableCommand extends Command
                 [
                     $index->getName(),
                     $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
-                    join(', ', $index->getColumns())
+                    implode(', ', $index->getColumns())
                 ]
             );
         }
@@ -159,9 +159,9 @@ final class TableCommand extends Command
             $foreignTable->addRow(
                 [
                     $reference->getName(),
-                    join(', ', $reference->getColumns()),
+                    implode(', ', $reference->getColumns()),
                     $reference->getForeignTable(),
-                    join(', ', $reference->getForeignKeys()),
+                    implode(', ', $reference->getForeignKeys()),
                     $reference->getDeleteRule(),
                     $reference->getUpdateRule()
                 ]
@@ -174,7 +174,7 @@ final class TableCommand extends Command
     /**
      * @param AbstractColumn  $column
      * @param DriverInterface $driver
-     * @return string|null
+     * @return mixed
      */
     protected function describeDefaultValue(AbstractColumn $column, DriverInterface $driver)
     {

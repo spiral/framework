@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Manages Console commands and exception. Lazy loads console service.
@@ -59,13 +60,13 @@ final class ConsoleDispatcher implements DispatcherInterface
     public function canServe(): bool
     {
         // only run in pure CLI more, ignore under RoadRunner
-        return (php_sapi_name() == 'cli' && $this->env->get('RR') === null);
+        return (PHP_SAPI === 'cli' && $this->env->get('RR') === null);
     }
 
     /**
      * @inheritdoc
      */
-    public function serve(InputInterface $input = null, OutputInterface $output = null): void
+    public function serve(InputInterface $input = null, OutputInterface $output = null, bool $exit = true): void
     {
         // On demand to save some memory.
 
@@ -78,25 +79,30 @@ final class ConsoleDispatcher implements DispatcherInterface
         /** @var Console $console */
         $console = $this->container->get(Console::class);
 
+        $code = 0;
         try {
-            $console->start($input ?? new ArgvInput(), $output);
-        } catch (\Throwable $e) {
+            $code = $console->start($input ?? new ArgvInput(), $output);
+        } catch (Throwable $e) {
             $this->handleException($e, $output);
         } finally {
             $listener->disable();
             $this->finalizer->finalize(false);
         }
+
+        if ($exit) {
+            exit($code);
+        }
     }
 
     /**
-     * @param \Throwable      $e
+     * @param Throwable      $e
      * @param OutputInterface $output
      */
-    protected function handleException(\Throwable $e, OutputInterface $output): void
+    protected function handleException(Throwable $e, OutputInterface $output): void
     {
         try {
             $this->container->get(SnapshotterInterface::class)->register($e);
-        } catch (\Throwable | ContainerExceptionInterface $se) {
+        } catch (Throwable | ContainerExceptionInterface $se) {
             // no need to notify when unable to register an exception
         }
 
