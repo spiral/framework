@@ -15,9 +15,9 @@ use Spiral\Console\Command;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseManager;
 use Spiral\Database\Driver\DriverInterface;
-use Spiral\Database\Driver\QueryBindings;
 use Spiral\Database\Exception\DBALException;
 use Spiral\Database\Injection\FragmentInterface;
+use Spiral\Database\Query\QueryParameters;
 use Spiral\Database\Schema\AbstractColumn;
 use Spiral\Database\Schema\AbstractTable;
 use Symfony\Component\Console\Input\InputArgument;
@@ -181,7 +181,8 @@ final class TableCommand extends Command
         $defaultValue = $column->getDefaultValue();
 
         if ($defaultValue instanceof FragmentInterface) {
-            $value = $defaultValue->compile(new QueryBindings(), $driver->getCompiler());
+            $value = $driver->getQueryCompiler()->compile(new QueryParameters(), '', $defaultValue);
+
             return "<info>{$value}</info>";
         }
 
