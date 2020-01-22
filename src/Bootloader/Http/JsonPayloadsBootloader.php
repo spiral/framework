@@ -25,7 +25,7 @@ final class JsonPayloadsBootloader extends Bootloader
     ];
 
     /** @var ConfiguratorInterface */
-    protected $config;
+    private $config;
 
     /**
      * JsonPayloadsBootloader constructor.

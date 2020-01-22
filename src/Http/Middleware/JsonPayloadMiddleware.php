@@ -24,7 +24,7 @@ use Spiral\Http\Exception\ClientException;
 final class JsonPayloadMiddleware implements MiddlewareInterface
 {
     /** @var JsonPayloadConfig */
-    protected $config;
+    private $config;
 
     /**
      * JsonPayloadMiddleware constructor.
