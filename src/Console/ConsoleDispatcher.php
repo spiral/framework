@@ -66,7 +66,7 @@ final class ConsoleDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve(InputInterface $input = null, OutputInterface $output = null, bool $exit = true): void
+    public function serve(InputInterface $input = null, OutputInterface $output = null, bool $exit = false): void
     {
         // On demand to save some memory.
 
