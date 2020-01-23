@@ -66,7 +66,7 @@ final class ConsoleDispatcher implements DispatcherInterface
     /**
      * @inheritdoc
      */
-    public function serve(InputInterface $input = null, OutputInterface $output = null, bool $exit = false): void
+    public function serve(InputInterface $input = null, OutputInterface $output = null): int
     {
         // On demand to save some memory.
 
@@ -79,18 +79,15 @@ final class ConsoleDispatcher implements DispatcherInterface
         /** @var Console $console */
         $console = $this->container->get(Console::class);
 
-        $code = 0;
         try {
-            $code = $console->start($input ?? new ArgvInput(), $output);
+            return $console->start($input ?? new ArgvInput(), $output);
         } catch (Throwable $e) {
             $this->handleException($e, $output);
+
+            return 255;
         } finally {
             $listener->disable();
             $this->finalizer->finalize(false);
-        }
-
-        if ($exit) {
-            exit($code);
         }
     }
 
