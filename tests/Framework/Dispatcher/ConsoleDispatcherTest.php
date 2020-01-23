@@ -33,52 +33,53 @@ class ConsoleDispatcherTest extends BaseTest
     public function testListCommands(): void
     {
         $output = new BufferedOutput();
-        $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([]), $output);
-
+        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([]), $output);
         $result = $output->fetch();
 
         $this->assertContains('dead', $result);
+        $this->assertSame(0, $serveResult);
     }
 
     public function testException(): void
     {
         $output = new BufferedOutput();
-        $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
+        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
             'command' => 'dead'
         ]), $output);
-
         $result = $output->fetch();
 
         $this->assertContains('undefined', $result);
         $this->assertContains('DeadCommand.php', $result);
+        $this->assertNotEquals(0, $serveResult);
     }
 
     public function testExceptionVerbose(): void
     {
         $output = new BufferedOutput();
         $output->setVerbosity(BufferedOutput::VERBOSITY_VERBOSE);
-        $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
+        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
             'command' => 'dead'
         ]), $output);
-
         $result = $output->fetch();
+
         $this->assertContains('undefined', $result);
         $this->assertContains('DeadCommand.php', $result);
+        $this->assertNotEquals(0, $serveResult);
     }
 
     public function testExceptionDebug(): void
     {
         $output = new BufferedOutput();
         $output->setVerbosity(BufferedOutput::VERBOSITY_DEBUG);
-        $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
+        $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([
             'command' => 'dead'
         ]), $output);
-
         $result = $output->fetch();
+
         $this->assertContains('undefined', $result);
         $this->assertContains('DeadCommand.php', $result);
         $this->assertContains('->perform()', $result);
-
         $this->assertContains('$undefined', $result);
+        $this->assertNotEquals(0, $serveResult);
     }
 }
