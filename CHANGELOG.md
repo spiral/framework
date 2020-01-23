@@ -1,5 +1,11 @@
 # CHANGELOG
 
+
+v2.4.7 (23.01.2020)
+-----
+- fix `TableCommand` render for fragments
+- Add return status code to the ConsoleDispatcher.php
+
 v2.4.4 (27.12.2019)
 -----
 - minor code-base quality improvements
