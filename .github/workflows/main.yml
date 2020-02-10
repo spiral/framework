@@ -1,0 +1,56 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: pcov
+          tools: pecl
+      - name: Setup Protobuf
+        run: |
+          PROTOC_VERSION=3.11.3
+          PROTOC_FILENAME=protoc-${PROTOC_VERSION}-linux-x86_64.zip
+          curl -sSL "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/${PROTOC_FILENAME}" -o ${PROTOC_FILENAME}
+          unzip ${PROTOC_FILENAME}
+          bin/protoc --version
+      - name: Setup gRPC
+        run: |
+          GRPC_VERSION=1.2.0
+          PHP_GRPC_DIR=protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64
+          curl -sSL "https://github.com/spiral/php-grpc/releases/download/v${GRPC_VERSION}/${PHP_GRPC_DIR}.tar.gz" -o ${PHP_GRPC_DIR}.tar.gz
+          tar -xf ${PHP_GRPC_DIR}.tar.gz ${PHP_GRPC_DIR}/protoc-gen-php-grpc
+          mv ${PHP_GRPC_DIR}/protoc-gen-php-grpc bin/protoc-gen-php-grpc
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Restore Composer Cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+      - name: Check coding standards
+        run: |
+          vendor/bin/spiral-cs check src tests functions.php
+      - name: Execute Tests
+        run: |
+          vendor/bin/phpunit --coverage-clover=coverage.xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
