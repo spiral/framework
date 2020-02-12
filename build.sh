@@ -8,31 +8,33 @@ SPIRAL_VERSION=2.4.4
 # Hardcode some values to the core package
 LDFLAGS="$LDFLAGS -X github.com/spiral/roadrunner/cmd/rr/cmd.Version=${SPIRAL_VERSION}"
 LDFLAGS="$LDFLAGS -X github.com/spiral/roadrunner/cmd/rr/cmd.BuildTime=$(date +%FT%T%z)"
+# remove debug (DWARF) info from binary as well as string and symbol tables
+LDFLAGS="$LDFLAGS -s"
 
 build(){
-	echo Packaging $1 Build
+	echo Packaging "$1" Build
 	bdir=spiral-${SPIRAL_VERSION}-$2-$3
-	rm -rf builds/$bdir && mkdir -p builds/$bdir
+	rm -rf builds/"$bdir" && mkdir -p builds/"$bdir"
 	GOOS=$2 GOARCH=$3 ./build.sh
 
 	if [ "$2" == "windows" ]; then
-		mv spiral builds/$bdir/spiral.exe
+		mv spiral builds/"$bdir"/spiral.exe
 	else
-		mv spiral builds/$bdir
+		mv spiral builds/"$bdir"
 	fi
 
-	cp README.md builds/$bdir
-	cp CHANGELOG.md builds/$bdir
-	cp LICENSE builds/$bdir
+	cp README.md builds/"$bdir"
+	cp CHANGELOG.md builds/"$bdir"
+	cp LICENSE builds/"$bdir"
 	cd builds
 
 	if [ "$2" == "linux" ]; then
-		tar -zcf $bdir.tar.gz $bdir
+		tar -zcf "$bdir".tar.gz "$bdir"
 	else
-		zip -r -q $bdir.zip $bdir
+		zip -r -q "$bdir".zip "$bdir"
 	fi
 
-	rm -rf $bdir
+	rm -rf "$bdir"
 	cd ..
 }
 
@@ -45,4 +47,4 @@ if [ "$1" == "all" ]; then
 	exit
 fi
 
-CGO_ENABLED=0 go build -ldflags "$LDFLAGS -extldflags '-static'" -o "$OD/spiral" main.go
+go build -ldflags "$LDFLAGS" -o "$OD/spiral" main.go
