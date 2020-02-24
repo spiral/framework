@@ -36,6 +36,7 @@ import (
 	"github.com/spiral/roadrunner/service/http"
 	"github.com/spiral/roadrunner/service/limit"
 	"github.com/spiral/roadrunner/service/metrics"
+	"github.com/spiral/roadrunner/service/reload"
 	"github.com/spiral/roadrunner/service/rpc"
 	"github.com/spiral/roadrunner/service/static"
 
@@ -81,6 +82,9 @@ func main() {
 	rr.Container.Register(limit.ID, &limit.Service{})
 	rr.Container.Register(metrics.ID, &metrics.Service{})
 	rr.Container.Register(health.ID, &health.Service{})
+
+    // auto reloading
+    rr.Container.Register(reload.ID, &reload.Service{})
 
 	// you can register additional commands using cmd.CLI
 	rr.Execute()
