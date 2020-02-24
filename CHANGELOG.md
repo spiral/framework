@@ -1,5 +1,8 @@
 # CHANGELOG
 
+v2.4.8 (24.02.2020)
+-----
+- added reload module
 
 v2.4.7 (23.01.2020)
 -----
