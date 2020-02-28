@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.4.9 (28.02.2020)
+-----
+- WebSocket module updated to v1.1.0
+
 v2.4.8 (24.02.2020)
 -----
 - added reload module
