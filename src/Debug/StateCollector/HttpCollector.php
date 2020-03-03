@@ -39,7 +39,7 @@ final class HttpCollector implements MiddlewareInterface, StateCollectorInterfac
      */
     public function populate(StateInterface $state): void
     {
-        if (!$this->request === null) {
+        if ($this->request === null) {
             return;
         }
 
