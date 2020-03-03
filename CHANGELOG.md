@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.4.10 (03.03.2020)
+-----
+- fix issue with debug http collector fail in console mode
+
 v2.4.9 (28.02.2020)
 -----
 - WebSocket module updated to v1.1.0
