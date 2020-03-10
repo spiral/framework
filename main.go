@@ -28,7 +28,7 @@ import (
 	// services (plugins)
 	"github.com/spiral/broadcast"
 	"github.com/spiral/broadcast-ws"
-	"github.com/spiral/jobs"
+	"github.com/spiral/jobs/v2"
 	"github.com/spiral/php-grpc"
 	"github.com/spiral/roadrunner/service/env"
 	"github.com/spiral/roadrunner/service/headers"
@@ -41,14 +41,14 @@ import (
 	"github.com/spiral/roadrunner/service/static"
 
 	// queue brokers
-	"github.com/spiral/jobs/broker/amqp"
-	"github.com/spiral/jobs/broker/beanstalk"
-	"github.com/spiral/jobs/broker/ephemeral"
-	"github.com/spiral/jobs/broker/sqs"
+	"github.com/spiral/jobs/v2/broker/amqp"
+	"github.com/spiral/jobs/v2/broker/beanstalk"
+	"github.com/spiral/jobs/v2/broker/ephemeral"
+	"github.com/spiral/jobs/v2/broker/sqs"
 
 	// additional commands and debug handlers
 	_ "github.com/spiral/broadcast-ws/cmd/rr-ws/ws"
-	_ "github.com/spiral/jobs/cmd/rr-jobs/jobs"
+	_ "github.com/spiral/jobs/v2/cmd/rr-jobs/jobs"
 	_ "github.com/spiral/php-grpc/cmd/rr-grpc/grpc"
 	_ "github.com/spiral/roadrunner/cmd/rr/http"
 	_ "github.com/spiral/roadrunner/cmd/rr/limit"
