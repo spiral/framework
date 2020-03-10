@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.4.11 (10.03.2020)
+-----
+- jobs updated to version 2.1.3
+- roadrunner updated to version 1.6.3
+
 v2.4.10 (03.03.2020)
 -----
 - fix issue with debug http collector fail in console mode

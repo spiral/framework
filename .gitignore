@@ -5,3 +5,4 @@ vendor/
 *.db
 clover.xml
 .php_cs.cache
+builds
