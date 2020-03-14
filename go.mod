@@ -5,7 +5,7 @@ require (
 	github.com/spiral/broadcast-ws v1.1.0
 	github.com/spiral/jobs/v2 v2.1.3
 	github.com/spiral/php-grpc v1.1.0
-	github.com/spiral/roadrunner v1.6.3
+	github.com/spiral/roadrunner v1.6.4
 	google.golang.org/genproto v0.0.0-20181016170114-94acd270e44e // indirect
 )
 

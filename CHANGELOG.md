@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.4.12 (14.03.2020)
+-----
+- build.sh script updated. Included `-trimpath` and `musl` target
+- RoadRunner version updated to 1.6.4
+
 v2.4.11 (10.03.2020)
 -----
 - jobs updated to version 2.1.3
