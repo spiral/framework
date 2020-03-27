@@ -78,7 +78,7 @@ spiral/auth-http | [![Latest Stable Version](https://poser.pugx.org/spiral/auth-
 | Component | Current Status        
 | ---       | ---
 spiral/database | [![Latest Stable Version](https://poser.pugx.org/spiral/database/version)](https://packagist.org/packages/spiral/database) [![Build Status](https://github.com/spiral/database/workflows/build/badge.svg)](https://github.com/spiral/database/actions) [![Codecov](https://codecov.io/gh/spiral/database/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/database/)
-spiral/migrations | [![Latest Stable Version](https://poser.pugx.org/spiral/migrations/version)](https://packagist.org/packages/spiral/migrations) [![Build Status](https://travis-ci.org/spiral/migrations.svg?branch=master)](https://travis-ci.org/spiral/migrations) [![Codecov](https://codecov.io/gh/spiral/migrations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/migrations/)
+spiral/migrations | [![Latest Stable Version](https://poser.pugx.org/spiral/migrations/version)](https://packagist.org/packages/spiral/migrations) [![Build Status](https://github.com/spiral/migrations/workflows/build/badge.svg)](https://github.com/spiral/migrations/actions) [![Codecov](https://codecov.io/gh/spiral/migrations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/migrations/)
 
 ## Cycle ORM
 | Component | Current Status        
