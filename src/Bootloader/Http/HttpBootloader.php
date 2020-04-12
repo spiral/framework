@@ -26,7 +26,7 @@ use Spiral\Http\Emitter\SapiEmitter;
 use Spiral\Http\EmitterInterface;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Spiral\Http\RrDispacher;
+use Spiral\Http\RrDispatcher;
 use Spiral\Http\SapiDispatcher;
 use Spiral\RoadRunner\PSR7Client;
 
@@ -75,7 +75,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
         $kernel->addDispatcher($factory->make(SapiDispatcher::class));
 
         if (class_exists(PSR7Client::class)) {
-            $kernel->addDispatcher($factory->make(RrDispacher::class));
+            $kernel->addDispatcher($factory->make(RrDispatcher::class));
         }
     }
 

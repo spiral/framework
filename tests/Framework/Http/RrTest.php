@@ -15,7 +15,7 @@ use Mockery as m;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Framework\ConsoleTest;
-use Spiral\Http\RrDispacher;
+use Spiral\Http\RrDispatcher;
 use Spiral\RoadRunner\PSR7Client;
 use Zend\Diactoros\ServerRequest;
 
@@ -23,13 +23,13 @@ class RrTest extends ConsoleTest
 {
     public function testCanServe(): void
     {
-        $this->assertFalse($this->app->get(RrDispacher::class)->canServe());
+        $this->assertFalse($this->app->get(RrDispatcher::class)->canServe());
     }
 
     public function testCanServe2(): void
     {
         $this->app->getEnvironment()->set('RR_HTTP', true);
-        $this->assertTrue($this->app->get(RrDispacher::class)->canServe());
+        $this->assertTrue($this->app->get(RrDispatcher::class)->canServe());
     }
 
     public function testServe(): void
@@ -51,7 +51,7 @@ class RrTest extends ConsoleTest
 
         $psr->shouldReceive('acceptRequest')->once()->andReturn(null);
 
-        $this->app->get(RrDispacher::class)->serve($psr);
+        $this->app->get(RrDispatcher::class)->serve($psr);
     }
 
     public function testServeError(): void
@@ -79,7 +79,7 @@ class RrTest extends ConsoleTest
 
         $this->assertCount(0, $files);
 
-        $this->app->get(RrDispacher::class)->serve($psr);
+        $this->app->get(RrDispatcher::class)->serve($psr);
 
         $files = $this->app->get(FilesInterface::class)->getFiles(
             $this->app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'
@@ -117,7 +117,7 @@ class RrTest extends ConsoleTest
 
         $this->assertCount(0, $files);
 
-        $this->app->get(RrDispacher::class)->serve($psr);
+        $this->app->get(RrDispatcher::class)->serve($psr);
 
         $files = $this->app->get(FilesInterface::class)->getFiles(
             $this->app->get(DirectoriesInterface::class)->get('runtime') . '/snapshots/'

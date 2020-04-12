@@ -24,7 +24,7 @@ use Spiral\RoadRunner\PSR7Client;
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;
 
-final class RrDispacher implements DispatcherInterface
+final class RrDispatcher implements DispatcherInterface
 {
     /** @var EnvironmentInterface */
     private $env;
