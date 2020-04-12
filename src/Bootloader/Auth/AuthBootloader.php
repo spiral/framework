@@ -68,6 +68,10 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
             }
         }
 
+        if ($this->actorProvider === []) {
+            throw new AuthException("No actor provider");
+        }
+
         return null;
     }
 
