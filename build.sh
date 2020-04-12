@@ -3,7 +3,7 @@ cd $(dirname "${BASH_SOURCE[0]}")
 OD="$(pwd)"
 
 # Pushes application version into the build information.
-SPIRAL_VERSION=2.4.8
+SPIRAL_VERSION=2.4.13
 
 # Hardcode some values to the core package
 LDFLAGS="$LDFLAGS -X github.com/spiral/roadrunner/cmd/rr/cmd.Version=${SPIRAL_VERSION}"
@@ -38,13 +38,34 @@ build(){
 	cd ..
 }
 
+# For musl build you should have musl-gcc installed. If not, please, use:
+# go build -a -ldflags "-linkmode external -extldflags '-static' -s"
+build_musl() {
+  echo Packaging "$2" Build
+  bdir=spiral-${SPIRAL_VERSION}-$1-$2-$3
+  rm -rf builds/"$bdir" && mkdir -p builds/"$bdir"
+  CC=musl-gcc GOARCH=amd64 go build -trimpath -ldflags "$LDFLAGS" -o "$OD/spiral" main.go
+
+  mv spiral builds/"$bdir"
+
+	cp README.md builds/"$bdir"
+	cp CHANGELOG.md builds/"$bdir"
+	cp LICENSE builds/"$bdir"
+  cd builds
+  zip -r -q "$bdir".zip "$bdir"
+
+  rm -rf "$bdir"
+  cd ..
+}
+
 if [ "$1" == "all" ]; then
-	rm -rf builds/
-	build "Windows" "windows" "amd64"
-	build "Mac" "darwin" "amd64"
-	build "Linux" "linux" "amd64"
-	build "FreeBSD" "freebsd" "amd64"
-	exit
+  rm -rf builds/
+  build "Windows" "windows" "amd64"
+  build "Mac" "darwin" "amd64"
+  build "Linux" "linux" "amd64"
+  build "FreeBSD" "freebsd" "amd64"
+  build_musl "unknown" "musl" "amd64"
+  exit
 fi
 
-go build -ldflags "$LDFLAGS" -o "$OD/spiral" main.go
+CGO_ENABLED=0 go build -trimpath -ldflags "$LDFLAGS" -o "$OD/spiral" main.go

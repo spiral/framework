@@ -1,5 +1,27 @@
 # CHANGELOG
 
+v2.4.13 (21.03.2020)
+-----
+- RoadRunner version updated to 1.7.0
+
+v2.4.12 (14.03.2020)
+-----
+- build.sh script updated. Included `-trimpath` and `musl` target
+- RoadRunner version updated to 1.6.4
+
+v2.4.11 (10.03.2020)
+-----
+- jobs updated to version 2.1.3
+- roadrunner updated to version 1.6.3
+
+v2.4.10 (03.03.2020)
+-----
+- fix issue with debug http collector fail in console mode
+
+v2.4.9 (28.02.2020)
+-----
+- WebSocket module updated to v1.1.0
+
 v2.4.8 (24.02.2020)
 -----
 - added reload module

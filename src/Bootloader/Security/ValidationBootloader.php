@@ -80,6 +80,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                 // Aliases are only used to simplify developer life.
                 'aliases'    => [
                     'notEmpty'   => 'type::notEmpty',
+                    'notNull'    => 'type::notNull',
                     'required'   => 'type::notEmpty',
                     'datetime'   => 'type::datetime',
                     'timezone'   => 'type::timezone',

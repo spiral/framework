@@ -80,7 +80,7 @@ final class GenerateCommand extends Command
      */
     protected function getPath(KernelInterface $kernel): string
     {
-        $path = $this->argument('namespace');
+        $path = $this->argument('path');
         if ($path !== 'auto') {
             return $path;
         }

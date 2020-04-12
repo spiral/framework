@@ -6,7 +6,7 @@
 
 <img src="https://user-images.githubusercontent.com/796136/67560465-9d827780-f723-11e9-91ac-9b2fafb027f2.png" height="135px" alt="Spiral Framework" align="left"/>
 
-Spiral Framework makes developing in PHP exciting again. It optimizes on the power of PHP to quickly develop business logic while uniquely leveraging Golang to craft an elegant infrastructure layer with native support for HTTP/2, GRPC, Queue, and more. Build faster, more efficient applications with this flexible and PSR compliant PHP7 framework (and have fun while you’re at it). 
+Spiral Framework makes developing in PHP exciting again. It optimizes on the power of PHP to quickly develop business logic while uniquely leveraging Golang to craft an elegant infrastructure layer with native support for HTTP/2, GRPC, Queue, and more. Build faster, more efficient applications with this flexible and PSR compliant PHP framework (and have fun while you’re at it). 
 
 [App Skeleton](https://github.com/spiral/app) ([CLI](https://github.com/spiral/app-cli), [GRPC](https://github.com/spiral/app-grpc)) | [spiral.dev](https://spiral.dev/) | [**Documentation**](https://spiral.dev/docs) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
 
@@ -21,7 +21,7 @@ Spiral Framework makes developing in PHP exciting again. It optimizes on the pow
 - GRPC server and client
 - Pub/Sub, event broadcasting
 - HTTPS, HTTP/2+Push, FastCGI
-- encrypted cookies, signed sessions, CSRF-guard
+- Encrypted cookies, signed sessions, CSRF-guard
 - MySQL, MariaDB, SQLite, PostgreSQL, SQLServer support, auto-migrations
 - The [ORM](https://github.com/cycle/orm) you will use for the next 25 years
 - Intuitive scaffolding and prototyping (it literally writes code for you)
@@ -78,7 +78,7 @@ spiral/auth-http | [![Latest Stable Version](https://poser.pugx.org/spiral/auth-
 | Component | Current Status        
 | ---       | ---
 spiral/database | [![Latest Stable Version](https://poser.pugx.org/spiral/database/version)](https://packagist.org/packages/spiral/database) [![Build Status](https://github.com/spiral/database/workflows/build/badge.svg)](https://github.com/spiral/database/actions) [![Codecov](https://codecov.io/gh/spiral/database/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/database/)
-spiral/migrations | [![Latest Stable Version](https://poser.pugx.org/spiral/migrations/version)](https://packagist.org/packages/spiral/migrations) [![Build Status](https://travis-ci.org/spiral/migrations.svg?branch=master)](https://travis-ci.org/spiral/migrations) [![Codecov](https://codecov.io/gh/spiral/migrations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/migrations/)
+spiral/migrations | [![Latest Stable Version](https://poser.pugx.org/spiral/migrations/version)](https://packagist.org/packages/spiral/migrations) [![Build Status](https://github.com/spiral/migrations/workflows/build/badge.svg)](https://github.com/spiral/migrations/actions) [![Codecov](https://codecov.io/gh/spiral/migrations/branch/master/graph/badge.svg)](https://codecov.io/gh/spiral/migrations/)
 
 ## Cycle ORM
 | Component | Current Status        
