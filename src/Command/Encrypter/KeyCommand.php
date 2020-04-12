@@ -37,15 +37,6 @@ final class KeyCommand extends Command
     ];
 
     /**
-     * @param null|string $name
-     */
-    public function __construct(?string $name = null)
-    {
-        parent::__construct($name);
-        $this->setHidden(true);
-    }
-
-    /**
      * @param EncrypterFactory $enc
      * @param FilesInterface   $files
      */
