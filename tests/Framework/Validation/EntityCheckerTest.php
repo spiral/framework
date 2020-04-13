@@ -17,7 +17,7 @@ class EntityCheckerTest extends BaseTest
 {
     private $app;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->makeApp();
 
@@ -68,7 +68,13 @@ class EntityCheckerTest extends BaseTest
         $this->assertFalse($this->uniqueValidatorResult('Valentin', 'name', ['name' => 'John'], ['id']));
 
         //With additional fields
-        $this->assertTrue($this->uniqueValidatorResult('Valentin', 'name', ['name' => 'Valentin'], ['id'], ['id' => 2]));
+        $this->assertTrue($this->uniqueValidatorResult(
+            'Valentin',
+            'name',
+            ['name' => 'Valentin'],
+            ['id'],
+            ['id' => 2]
+        ));
         //No match name:Valentin+id:2
         $this->assertTrue($this->uniqueValidatorResult(
             'Valentin',
