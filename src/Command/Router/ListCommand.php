@@ -136,7 +136,7 @@ final class ListCommand extends Command implements SingletonInterface
                 return sprintf(
                     '%s->%s',
                     $this->relativeClass($this->getValue($target, 'controller'), $kernel),
-                    $this->getValue($target, 'action')
+                    join('|', (array) $this->getValue($target, 'action'))
                 );
 
             case $target instanceof Controller:
