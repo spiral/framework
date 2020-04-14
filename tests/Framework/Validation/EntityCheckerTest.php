@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Framework\Validation;
 
 use Cycle\ORM\TransactionInterface;
+use Spiral\App\TestApp;
 use Spiral\App\User\User;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
@@ -15,6 +16,7 @@ use Throwable;
 
 class EntityCheckerTest extends BaseTest
 {
+    /** @var TestApp */
     private $app;
 
     public function setUp(): void
@@ -40,14 +42,14 @@ class EntityCheckerTest extends BaseTest
         $transaction->persist(new User('Valentin'));
         $transaction->run();
 
-        $this->assertFalse($this->existsValidatorResult(2));
-        $this->assertTrue($this->existsValidatorResult(1));
+        $this->assertFalse($this->exists(2));
+        $this->assertTrue($this->exists(1));
     }
 
     /**
      * @throws Throwable
      */
-    public function testUnique(): void
+    public function testSimpleUnique(): void
     {
         /** @var TransactionInterface $transaction */
         $transaction = $this->app->get(TransactionInterface::class);
@@ -55,72 +57,40 @@ class EntityCheckerTest extends BaseTest
         $transaction->persist(new User('Anton'));
         $transaction->run();
 
-        //with/without context
-        $this->assertTrue($this->uniqueValidatorResult('John', 'name'));
-        $this->assertFalse($this->uniqueValidatorResult('Valentin', 'name'));
-        $this->assertTrue($this->uniqueValidatorResult('Valentin', 'name', ['name' => 'Valentin']));
+        $this->assertTrue($this->isUnique('John', 'name'));
+        $this->assertFalse($this->isUnique('Valentin', 'name'));
+    }
 
-        //additional fields, but they are not in the context
-        $this->assertTrue($this->uniqueValidatorResult('Valentin', 'name', ['name' => 'Valentin'], ['id']));
+    /**
+     * @throws Throwable
+     */
+    public function testContextualUnique(): void
+    {
+        /** @var TransactionInterface $transaction */
+        $transaction = $this->app->get(TransactionInterface::class);
+        $transaction->persist(new User('Valentin'));
+        $transaction->persist(new User('Anton'));
+        $transaction->run();
 
-        //With context (and if additional fields without values in the validator)
-        $this->assertFalse($this->uniqueValidatorResult('Valentin', 'name', ['name' => 'John']));
-        $this->assertFalse($this->uniqueValidatorResult('Valentin', 'name', ['name' => 'John'], ['id']));
+        //context match
+        $this->assertTrue($this->isUnique('Valentin', 'name', [], ['name' => 'Valentin']));
+        $this->assertTrue($this->isUnique('Valentin', 'name', [], ['name' => 'Valentin'], ['id']));
+        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 2], ['id' => 2, 'name' => 'Valentin'], ['id']));
+        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 1], ['id' => 1, 'name' => 'Valentin'], ['id']));
 
-        //With additional fields
-        $this->assertTrue($this->uniqueValidatorResult(
-            'Valentin',
-            'name',
-            ['name' => 'Valentin'],
-            ['id'],
-            ['id' => 2]
-        ));
-        //No match name:Valentin+id:2
-        $this->assertTrue($this->uniqueValidatorResult(
-            'Valentin',
-            'name',
-            ['name' => 'John'],
-            ['id'],
-            ['id' => 2]
-        ));
-        $this->assertTrue($this->uniqueValidatorResult(
-            'Valentin',
-            'name',
-            ['name' => 'Valentin', 'id' => 2],
-            ['id'],
-            ['id' => 2] //invalid ID given, but it is not in the context
-        ));
-        $this->assertTrue($this->uniqueValidatorResult(
-            'Valentin',
-            'name',
-            ['name' => 'Valentin', 'id' => 1],
-            ['id'],
-            ['id' => 1] //invalid ID given, it is in the context
-        ));
-
-        //name:Valentin+id:1 is taken
-        $this->assertFalse($this->uniqueValidatorResult(
-            'Valentin',
-            'name',
-            ['name' => 'Valentin'],
-            ['id'],
-            ['id' => 1]
-        ));
-        //No match name:John+id:2
-        $this->assertFalse($this->uniqueValidatorResult(
-            'Valentin',
-            'name',
-            ['name' => 'John'],
-            ['id'],
-            ['id' => 1]
-        ));
+        //context mismatch, unique in db
+        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 2], ['name' => 'Valentin'], ['id']));
+        //context mismatch, not unique in db
+        $this->assertFalse($this->isUnique('Valentin', 'name', ['id' => 1], ['name' => 'Valentin'], ['id']));
+        $this->assertFalse($this->isUnique('Valentin', 'name', [], ['name' => 'John']));
+        $this->assertFalse($this->isUnique('Valentin', 'name', [], ['name' => 'John'], ['id']));
     }
 
     /**
      * @param int $value
      * @return bool
      */
-    private function existsValidatorResult(int $value): bool
+    private function exists(int $value): bool
     {
         /** @var ValidationInterface $validator */
         $validator = $this->app->get(ValidationInterface::class);
@@ -140,12 +110,12 @@ class EntityCheckerTest extends BaseTest
      * @param array    $data
      * @return bool
      */
-    private function uniqueValidatorResult(
+    private function isUnique(
         string $value,
         string $field,
+        array $data = [],
         array $context = [],
-        array $fields = [],
-        array $data = []
+        array $fields = []
     ): bool {
         /** @var ValidationInterface $validator */
         $validator = $this->app->get(ValidationInterface::class);

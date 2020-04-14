@@ -43,19 +43,15 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
      * @param mixed    $value
      * @param string   $class
      * @param string   $field
-     * @param string[] $fields
+     * @param string[] $withFields
      * @return bool
      */
-    public function unique($value, string $class, string $field, array $fields = []): bool
+    public function unique($value, string $class, string $field, array $withFields = []): bool
     {
-        /** @var array $contextual */
-        $contextual = $this->getValidator()->getContext()[static::class] ?? [];
-
-        $values = $this->validatorValues($fields);
+        $values = $this->withValues($withFields);
         $values[$field] = $value;
 
-        //Entity is passed and its value hasn't changed.
-        if ($contextual !== null && $this->valuesEqual($values, $contextual)) {
+        if ($this->isProvidedByContext($values)) {
             return true;
         }
 
@@ -66,7 +62,7 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
      * @param string[] $fields
      * @return array
      */
-    private function validatorValues(array $fields): array
+    private function withValues(array $fields): array
     {
         $values = [];
         foreach ($fields as $field) {
@@ -81,13 +77,17 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
 
     /**
      * @param array $values
-     * @param array $contextualValues
      * @return bool
      */
-    private function valuesEqual(array $values, array $contextualValues): bool
+    private function isProvidedByContext(array $values): bool
     {
+        $context = $this->getValidator()->getContext()[static::class] ?? [];
+        if (!is_array($context)) {
+            return false;
+        }
+
         foreach ($values as $field => $value) {
-            if (!isset($contextualValues[$field]) || $contextualValues[$field] !== $value) {
+            if (!isset($context[$field]) || $context[$field] !== $value) {
                 return false;
             }
         }
