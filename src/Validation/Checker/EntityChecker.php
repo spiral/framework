@@ -66,8 +66,9 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
     {
         $values = [];
         foreach ($fields as $field) {
-            $value = $this->getValidator()->getValue($field);
-            if ($value !== null) {
+            $validator = $this->getValidator();
+            $value = $validator->getValue($field);
+            if ((method_exists($validator, 'hasValue') && $validator->hasValue($field)) || $value !== null) {
                 $values[$field] = $value;
             }
         }
