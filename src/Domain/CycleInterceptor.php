@@ -45,6 +45,7 @@ class CycleInterceptor implements CoreInterceptorInterface
     {
         $entities = $this->getDeclaredEntities($controller, $action);
 
+        $contextCandidates = [];
         foreach ($entities as $parameter => $role) {
             $value = $this->getParameter($parameter, $parameters, count($entities) === 1);
             if ($value === null) {
@@ -55,6 +56,10 @@ class CycleInterceptor implements CoreInterceptorInterface
             }
 
             if (is_object($value)) {
+                if ($this->orm->getHeap()->has($value)) {
+                    $contextCandidates[] = $value;
+                }
+
                 // pre-filled
                 continue;
             }
@@ -68,6 +73,13 @@ class CycleInterceptor implements CoreInterceptorInterface
             }
 
             $parameters[$parameter] = $entity;
+            if ($this->orm->getHeap()->has($value)) {
+                $contextCandidates[] = $value;
+            }
+        }
+
+        if (!isset($parameters['@context']) && count($contextCandidates) === 1) {
+            $parameters['@context'] = current($contextCandidates);
         }
 
         return $core->callAction($controller, $action, $parameters);

@@ -10,7 +10,6 @@ use Spiral\App\User\User;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
 use Spiral\Framework\BaseTest;
-use Spiral\Validation\Checker\EntityChecker;
 use Spiral\Validation\ValidationInterface;
 use Throwable;
 
@@ -35,7 +34,7 @@ class EntityCheckerTest extends BaseTest
     /**
      * @throws Throwable
      */
-    public function testExists(): void
+    public function testExistsByPK(): void
     {
         /** @var TransactionInterface $transaction */
         $transaction = $this->app->get(TransactionInterface::class);
@@ -44,6 +43,20 @@ class EntityCheckerTest extends BaseTest
 
         $this->assertFalse($this->exists(2));
         $this->assertTrue($this->exists(1));
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function testExistsByField(): void
+    {
+        /** @var TransactionInterface $transaction */
+        $transaction = $this->app->get(TransactionInterface::class);
+        $transaction->persist(new User('Valentin'));
+        $transaction->run();
+
+        $this->assertFalse($this->exists('John', 'name'));
+        $this->assertTrue($this->exists('Valentin', 'name'));
     }
 
     /**
@@ -66,55 +79,61 @@ class EntityCheckerTest extends BaseTest
      */
     public function testContextualUnique(): void
     {
+        $user1 = new User('Valentin');
+        $user2 = new User('Anton');
+        $user3 = new User('John');
+
         /** @var TransactionInterface $transaction */
         $transaction = $this->app->get(TransactionInterface::class);
-        $transaction->persist(new User('Valentin'));
-        $transaction->persist(new User('Anton'));
+        $transaction->persist($user1);
+        $transaction->persist($user2);
+        $transaction->persist($user3);
         $transaction->run();
 
         //context match
-        $this->assertTrue($this->isUnique('Valentin', 'name', [], ['name' => 'Valentin']));
-        $this->assertTrue($this->isUnique('Valentin', 'name', [], ['name' => 'Valentin'], ['id']));
-        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 2], ['id' => 2, 'name' => 'Valentin'], ['id']));
-        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 1], ['id' => 1, 'name' => 'Valentin'], ['id']));
+        $this->assertTrue($this->isUnique('Valentin', 'name', [], $user1));
+        $this->assertTrue($this->isUnique('Valentin', 'name', [], $user1, ['id']));
+        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 1], $user1, ['id']));
 
         //context mismatch, unique in db
-        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 2], ['name' => 'Valentin'], ['id']));
+        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 2], $user1, ['id']));
+        $this->assertTrue($this->isUnique('Valentin', 'name', ['id' => 2], $user3, ['id']));
+
         //context mismatch, not unique in db
-        $this->assertFalse($this->isUnique('Valentin', 'name', ['id' => 1], ['name' => 'Valentin'], ['id']));
-        $this->assertFalse($this->isUnique('Valentin', 'name', [], ['name' => 'John']));
-        $this->assertFalse($this->isUnique('Valentin', 'name', [], ['name' => 'John'], ['id']));
+        $this->assertFalse($this->isUnique('Valentin', 'name', [], $user2));
+        $this->assertFalse($this->isUnique('Valentin', 'name', [], $user2, ['id']));
     }
 
     /**
-     * @param int $value
+     * @param mixed       $value
+     * @param string|null $field
      * @return bool
      */
-    private function exists(int $value): bool
+    private function exists($value, ?string $field = null): bool
     {
         /** @var ValidationInterface $validator */
         $validator = $this->app->get(ValidationInterface::class);
         $validator = $validator->validate(
             ['value' => $value],
-            ['value' => [['entity::exists', User::class]]]
+            ['value' => [['entity::exists', User::class, $field]]]
         );
 
         return $validator->isValid();
     }
 
     /**
-     * @param string   $value
-     * @param string   $field
-     * @param array    $context
-     * @param string[] $fields
-     * @param array    $data
+     * @param string      $value
+     * @param string      $field
+     * @param array       $data
+     * @param object|null $context
+     * @param string[]    $fields
      * @return bool
      */
     private function isUnique(
         string $value,
         string $field,
         array $data = [],
-        array $context = [],
+        ?object $context = null,
         array $fields = []
     ): bool {
         /** @var ValidationInterface $validator */
@@ -122,7 +141,10 @@ class EntityCheckerTest extends BaseTest
         $validator = $validator->validate(
             ['value' => $value] + $data,
             ['value' => [['entity::unique', User::class, $field, $fields]]]
-        )->withContext([EntityChecker::class => $context]);
+        );
+        if ($context !== null) {
+            $validator = $validator->withContext($context);
+        }
 
         return $validator->isValid();
     }

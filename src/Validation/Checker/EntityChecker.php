@@ -30,32 +30,38 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
     }
 
     /**
-     * @param string|int $value
-     * @param string     $class
+     * @param string|int  $value
+     * @param string      $role
+     * @param string|null $field
      * @return bool
      */
-    public function exists($value, string $class): bool
+    public function exists($value, string $role, ?string $field = null): bool
     {
-        return $this->orm->getRepository($class)->findByPK($value) !== null;
+        $repository = $this->orm->getRepository($role);
+        if ($field === null) {
+            return $repository->findByPK($value) !== null;
+        }
+
+        return $repository->findOne([$field => $value]) !== null;
     }
 
     /**
      * @param mixed    $value
-     * @param string   $class
+     * @param string   $role
      * @param string   $field
      * @param string[] $withFields
      * @return bool
      */
-    public function unique($value, string $class, string $field, array $withFields = []): bool
+    public function unique($value, string $role, string $field, array $withFields = []): bool
     {
         $values = $this->withValues($withFields);
         $values[$field] = $value;
 
-        if ($this->isProvidedByContext($values)) {
+        if ($this->isProvidedByContext($role, $values)) {
             return true;
         }
 
-        return $this->orm->getRepository($class)->findOne($values) === null;
+        return $this->orm->getRepository($role)->findOne($values) === null;
     }
 
     /**
@@ -75,18 +81,20 @@ class EntityChecker extends AbstractChecker implements SingletonInterface
     }
 
     /**
-     * @param array $values
+     * @param string $role
+     * @param array  $values
      * @return bool
      */
-    private function isProvidedByContext(array $values): bool
+    private function isProvidedByContext(string $role, array $values): bool
     {
-        $context = $this->getValidator()->getContext()[static::class] ?? [];
-        if (!is_array($context)) {
+        $entity = $this->getValidator()->getContext();
+        if (!is_object($entity) || !$this->orm->getHeap()->has($entity)) {
             return false;
         }
 
+        $extract = $this->orm->getMapper($role)->extract($entity);
         foreach ($values as $field => $value) {
-            if (!isset($context[$field]) || $context[$field] !== $value) {
+            if (!isset($extract[$field]) || $extract[$field] !== $value) {
                 return false;
             }
         }
