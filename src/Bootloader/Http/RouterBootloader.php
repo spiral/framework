@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Config\ConfiguratorInterface;
 use Spiral\Core\Core;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ScopeException;
@@ -37,18 +38,27 @@ final class RouterBootloader extends Bootloader
         RequestHandlerInterface::class => RouterInterface::class,
     ];
 
+    /** @var ConfiguratorInterface */
+    private $config;
+
     /**
-     * @param HttpConfig         $config
+     * @param ConfiguratorInterface $config
+     */
+    public function __construct(ConfiguratorInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
      * @param UriHandler         $uriHandler
      * @param ContainerInterface $container
      * @return RouterInterface
      */
     private function router(
-        HttpConfig $config,
         UriHandler $uriHandler,
         ContainerInterface $container
     ): RouterInterface {
-        return new Router($config->getBasePath(), $uriHandler, $container);
+        return new Router($this->config->getConfig('http')['basePath'], $uriHandler, $container);
     }
 
     /**
