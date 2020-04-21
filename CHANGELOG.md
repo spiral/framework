@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.4.15 (21.04.2020) - no binary
+-----
+- [bugfix] invalid value associated with validation context by CycleInterceptor
+
 v2.4.14 (21.04.2020) - no binary
 -----
 - added `JobRegistry` with the ability to route jobs into custom pipelines
