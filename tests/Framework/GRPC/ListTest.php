@@ -54,7 +54,7 @@ class ListTest extends ConsoleTest
     {
         $out = $this->runCommandDebug('grpc:services');
 
-        $this->assertContains('No GRPC services', $out);
+        $this->assertStringContainsString('No GRPC services', $out);
     }
 
     public function testListService(): void
@@ -67,7 +67,7 @@ class ListTest extends ConsoleTest
 
         $out = $this->runCommandDebug('grpc:services');
 
-        $this->assertContains('service.Echo', $out);
-        $this->assertContains('Spiral\App\Service\EchoService', $out);
+        $this->assertStringContainsString('service.Echo', $out);
+        $this->assertStringContainsString('Spiral\App\Service\EchoService', $out);
     }
 }

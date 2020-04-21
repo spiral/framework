@@ -28,7 +28,7 @@ class KeyCommandTest extends ConsoleTest
             '-m' => __DIR__ . '/.env'
         ]);
 
-        $this->assertContains('Unable to find', $out);
+        $this->assertStringContainsString('Unable to find', $out);
     }
 
     public function testReplace(): void
@@ -39,10 +39,10 @@ class KeyCommandTest extends ConsoleTest
             '-m' => __DIR__ . '/.env'
         ]);
 
-        $this->assertContains('key has been updated', $out);
+        $this->assertStringContainsString('key has been updated', $out);
 
         $body = file_get_contents(__DIR__ . '/.env');
-        $this->assertContains($body, $out);
+        $this->assertStringContainsString($body, $out);
 
         unlink(__DIR__ . '/.env');
     }
@@ -62,10 +62,10 @@ class KeyCommandTest extends ConsoleTest
         ]);
         $out = $out->getOutput()->fetch();
 
-        $this->assertContains('key has been updated', $out);
+        $this->assertStringContainsString('key has been updated', $out);
 
         $body = file_get_contents(__DIR__ . '/.env');
-        $this->assertContains($body, $out);
+        $this->assertStringContainsString($body, $out);
 
         unlink(__DIR__ . '/.env');
     }

@@ -19,6 +19,6 @@ class ResetTest extends ConsoleTest
     {
         $this->runCommandDebug('i18n:index');
         $output = $this->runCommandDebug('i18n:reset');
-        $this->assertContains('cache has been reset', $output);
+        $this->assertStringContainsString('cache has been reset', $output);
     }
 }

@@ -49,7 +49,7 @@ class SchemaTest extends ConsoleTest
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
         $output = $this->runCommandDebug('cycle:migrate', ['-r' => true]);
-        $this->assertContains('default.users', $output);
+        $this->assertStringContainsString('default.users', $output);
 
         $u = new User('Antony');
         $app->get(Transaction::class)->persist($u)->run();
@@ -60,7 +60,7 @@ class SchemaTest extends ConsoleTest
     public function testSync(): void
     {
         $output = $this->runCommand('cycle:sync');
-        $this->assertContains('default.users', $output);
+        $this->assertStringContainsString('default.users', $output);
 
         $u = new User('Antony');
         $this->app->get(Transaction::class)->persist($u)->run();
@@ -78,12 +78,12 @@ class SchemaTest extends ConsoleTest
             'command' => 'cycle:sync'
         ]), $output);
 
-        $this->assertContains('Begin transaction', $out = $output->fetch());
+        $this->assertStringContainsString('Begin transaction', $out = $output->fetch());
 
-        $this->assertContains('default.users', $out);
-        $this->assertContains('create table', $out);
-        $this->assertContains('add column', $out);
-        $this->assertContains('add index', $out);
+        $this->assertStringContainsString('default.users', $out);
+        $this->assertStringContainsString('create table', $out);
+        $this->assertStringContainsString('add column', $out);
+        $this->assertStringContainsString('add index', $out);
 
         $u = new User('Antony');
         $app->get(Transaction::class)->persist($u)->run();

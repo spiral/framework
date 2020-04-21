@@ -40,7 +40,7 @@ class ConfirmTest extends ConsoleTest
         rewind($ct->getOutput()->getStream());
         $out = fread($ct->getOutput()->getStream(), 9000);
 
-        $this->assertContains('Confirmation', $out);
+        $this->assertStringContainsString('Confirmation', $out);
         $this->assertNotContains('No outstanding', $out);
     }
 
@@ -58,8 +58,8 @@ class ConfirmTest extends ConsoleTest
         rewind($ct->getOutput()->getStream());
         $out = fread($ct->getOutput()->getStream(), 9000);
 
-        $this->assertContains('Confirmation', $out);
-        $this->assertContains('No outstanding', $out);
+        $this->assertStringContainsString('Confirmation', $out);
+        $this->assertStringContainsString('No outstanding', $out);
     }
 
     public function testConfirmRollbackMigrate(): void
@@ -76,7 +76,7 @@ class ConfirmTest extends ConsoleTest
         rewind($ct->getOutput()->getStream());
         $out = fread($ct->getOutput()->getStream(), 9000);
 
-        $this->assertContains('Confirmation', $out);
+        $this->assertStringContainsString('Confirmation', $out);
         $this->assertNotContains('No executed', $out);
     }
 
@@ -94,8 +94,8 @@ class ConfirmTest extends ConsoleTest
         rewind($ct->getOutput()->getStream());
         $out = fread($ct->getOutput()->getStream(), 9000);
 
-        $this->assertContains('Confirmation', $out);
-        $this->assertContains('No executed', $out);
+        $this->assertStringContainsString('Confirmation', $out);
+        $this->assertStringContainsString('No executed', $out);
     }
 
     public function testConfirmReplayMigrate(): void
@@ -112,7 +112,7 @@ class ConfirmTest extends ConsoleTest
         rewind($ct->getOutput()->getStream());
         $out = fread($ct->getOutput()->getStream(), 9000);
 
-        $this->assertContains('Confirmation', $out);
+        $this->assertStringContainsString('Confirmation', $out);
         $this->assertNotContains('No outstanding', $out);
     }
 
@@ -130,7 +130,7 @@ class ConfirmTest extends ConsoleTest
         rewind($ct->getOutput()->getStream());
         $out = fread($ct->getOutput()->getStream(), 9000);
 
-        $this->assertContains('Confirmation', $out);
-        $this->assertContains('No outstanding', $out);
+        $this->assertStringContainsString('Confirmation', $out);
+        $this->assertStringContainsString('No outstanding', $out);
     }
 }

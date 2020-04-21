@@ -30,7 +30,7 @@ class MigrateTest extends ConsoleTest
         $this->assertSame([], $db->getTables());
 
         $out = $this->runCommandDebug('migrate');
-        $this->assertContains('not', $out);
+        $this->assertStringContainsString('not', $out);
 
         $this->runCommandDebug('migrate:init');
         $this->runCommandDebug('cycle:migrate');
@@ -51,7 +51,7 @@ class MigrateTest extends ConsoleTest
         $this->runCommandDebug('migrate:init');
 
         $out = $this->runCommandDebug('migrate:rollback');
-        $this->assertContains('No', $out);
+        $this->assertStringContainsString('No', $out);
 
         $this->runCommandDebug('cycle:migrate');
 
@@ -75,7 +75,7 @@ class MigrateTest extends ConsoleTest
         $this->runCommandDebug('migrate:init');
 
         $out = $this->runCommandDebug('migrate:replay');
-        $this->assertContains('No', $out);
+        $this->assertStringContainsString('No', $out);
 
         $this->runCommandDebug('cycle:migrate');
         $this->assertSame(1, count($db->getTables()));

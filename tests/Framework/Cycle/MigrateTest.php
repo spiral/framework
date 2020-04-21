@@ -27,10 +27,10 @@ class MigrateTest extends ConsoleTest
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
         $output = $this->runCommandDebug('cycle:migrate');
-        $this->assertContains('default.users', $output);
+        $this->assertStringContainsString('default.users', $output);
 
         $output = $this->runCommandDebug('cycle:migrate');
-        $this->assertContains('Outstanding migrations found', $output);
+        $this->assertStringContainsString('Outstanding migrations found', $output);
     }
 
     public function testMigrateNoChanges(): void
@@ -38,12 +38,12 @@ class MigrateTest extends ConsoleTest
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
         $output = $this->runCommandDebug('cycle:migrate');
-        $this->assertContains('default.users', $output);
+        $this->assertStringContainsString('default.users', $output);
 
         $this->runCommand('migrate');
 
         $output = $this->runCommandDebug('cycle:migrate');
-        $this->assertContains('no database changes', $output);
+        $this->assertStringContainsString('no database changes', $output);
     }
 
     public function testAlterSchema(): void
@@ -51,13 +51,13 @@ class MigrateTest extends ConsoleTest
         $this->runCommandDebug('migrate:init', ['-vvv' => true]);
 
         $output = $this->runCommandDebug('cycle:migrate', ['-r' => true]);
-        $this->assertContains('default.users', $output);
+        $this->assertStringContainsString('default.users', $output);
 
         $user = file_get_contents(__DIR__ . '/../../app/src/User/User.php');
         unlink(__DIR__ . '/../../app/src/User/User.php');
         try {
             $output = $this->runCommandDebug('cycle:migrate', ['-r' => true]);
-            $this->assertContains('drop foreign key', $output);
+            $this->assertStringContainsString('drop foreign key', $output);
         } finally {
             file_put_contents(__DIR__ . '/../../app/src/User/User.php', $user);
         }

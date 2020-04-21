@@ -6,3 +6,4 @@ vendor/
 clover.xml
 .php_cs.cache
 builds
+.phpunit.result.cache

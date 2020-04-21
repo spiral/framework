@@ -68,7 +68,7 @@ class GenerateTest extends ConsoleTest
             'proto' => 'notfound'
         ]);
 
-        $this->assertContains('not found', $out);
+        $this->assertStringContainsString('not found', $out);
     }
 
     public function testGenerateError(): void
@@ -77,7 +77,7 @@ class GenerateTest extends ConsoleTest
             'proto' => __FILE__
         ]);
 
-        $this->assertContains('Error', $out);
+        $this->assertStringContainsString('Error', $out);
     }
 
     public function testGenerate(): void

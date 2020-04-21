@@ -136,7 +136,7 @@ class DispatcherTest extends ConsoleTest
 
         $w->shouldReceive('error')->once()->with(
             \Mockery::on(function ($out) {
-                $this->assertContains('Method `Invalid` not found', $out);
+                $this->assertStringContainsString('Method `Invalid` not found', $out);
                 return true;
             })
         )->andReturn(true);

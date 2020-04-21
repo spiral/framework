@@ -14,6 +14,8 @@ namespace Spiral\Framework\Controller;
 use Spiral\App\Controller\AuthController;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\Exception\ControllerException;
+use Spiral\Core\Exception\ScopeException;
 use Spiral\Framework\BaseTest;
 use Spiral\Security\Actor\Actor;
 use Spiral\Security\Actor\Guest;
@@ -23,12 +25,11 @@ use Spiral\Security\GuardScope;
 
 class AuthorizesTest extends BaseTest
 {
-    /**
-     * @expectedException \Spiral\Core\Exception\ControllerException
-     * @expectedExceptionMessage Unauthorized permission 'do'
-     */
     public function testAuthException(): void
     {
+        $this->expectException(ControllerException::class);
+        $this->expectDeprecationMessage("Unauthorized permission 'do'");
+
         $app = $this->makeApp();
         $app->get(Container::class)->bind(ActorInterface::class, new Guest());
 
@@ -44,11 +45,10 @@ class AuthorizesTest extends BaseTest
         $this->assertSame('ok', $r);
     }
 
-    /**
-     * @expectedException \Spiral\Core\Exception\ScopeException
-     */
     public function testAuthNoActor(): void
     {
+        $this->expectException(ScopeException::class);
+
         $app = $this->makeApp();
         $app->getContainer()->removeBinding(ActorInterface::class);
 

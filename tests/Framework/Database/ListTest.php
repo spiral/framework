@@ -35,10 +35,10 @@ class ListTest extends ConsoleTest
         $table->save();
 
         $output = $this->runCommand('db:list');
-        $this->assertContains('SQLite', $output);
-        $this->assertContains(':memory:', $output);
-        $this->assertContains('sample', $output);
-        $this->assertContains('outer', $output);
+        $this->assertStringContainsString('SQLite', $output);
+        $this->assertStringContainsString(':memory:', $output);
+        $this->assertStringContainsString('sample', $output);
+        $this->assertStringContainsString('outer', $output);
     }
 
 
@@ -54,8 +54,8 @@ class ListTest extends ConsoleTest
         ));
 
         $output = $this->runCommand('db:list', ['db' => 'other']);
-        $this->assertContains('Postgres', $output);
-        $this->assertContains('database', $output);
-        $this->assertContains('other', $output);
+        $this->assertStringContainsString('Postgres', $output);
+        $this->assertStringContainsString('database', $output);
+        $this->assertStringContainsString('other', $output);
     }
 }

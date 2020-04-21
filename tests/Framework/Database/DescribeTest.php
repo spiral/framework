@@ -12,26 +12,25 @@ declare(strict_types=1);
 namespace Spiral\Framework\Database;
 
 use Spiral\Database\Database;
+use Spiral\Database\Exception\DBALException;
 use Spiral\Framework\ConsoleTest;
 
 class DescribeTest extends ConsoleTest
 {
-    /**
-     * @expectedException \Spiral\Database\Exception\DBALException
-     */
     public function testDescribeWrongDB(): void
     {
+        $this->expectException(DBALException::class);
+
         $this->runCommand('db:table', [
             '--database' => 'missing',
             'table'      => 'missing'
         ]);
     }
 
-    /**
-     * @expectedException \Spiral\Database\Exception\DBALException
-     */
     public function testDescribeWrongTable(): void
     {
+        $this->expectException(DBALException::class);
+
         $this->runCommand('db:table', [
             '--database' => 'runtime',
             'table'      => 'missing'
@@ -62,9 +61,9 @@ class DescribeTest extends ConsoleTest
             'table'      => 'sample'
         ]);
 
-        $this->assertContains('primary_id', $output);
-        $this->assertContains('some_int', $output);
-        $this->assertContains('custom_index', $output);
-        $this->assertContains('sample1', $output);
+        $this->assertStringContainsString('primary_id', $output);
+        $this->assertStringContainsString('some_int', $output);
+        $this->assertStringContainsString('custom_index', $output);
+        $this->assertStringContainsString('sample1', $output);
     }
 }

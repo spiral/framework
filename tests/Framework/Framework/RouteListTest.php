@@ -19,6 +19,6 @@ class RouteListTest extends ConsoleTest
     {
         $output = $this->runCommand('route:list');
 
-        $this->assertContains('AuthController', $output);
+        $this->assertStringContainsString('AuthController', $output);
     }
 }

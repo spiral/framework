@@ -66,7 +66,7 @@ class RrTest extends ConsoleTest
 
         $psr->shouldReceive('respond')->once()->with(
             \Mockery::on(function ($r) {
-                $this->assertContains('500', (string)$r->getBody());
+                $this->assertStringContainsString('500', (string)$r->getBody());
                 return true;
             })
         )->andReturn(true);
@@ -104,7 +104,7 @@ class RrTest extends ConsoleTest
 
         $psr->shouldReceive('respond')->once()->with(
             \Mockery::on(function ($r) {
-                $this->assertContains('undefined', (string)$r->getBody());
+                $this->assertStringContainsString('undefined', (string)$r->getBody());
                 return true;
             })
         )->andReturn(true);

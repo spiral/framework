@@ -23,13 +23,13 @@ class CleanTest extends ConsoleTest
         $this->runCommand('configure');
 
         $output = $this->runCommand('cache:clean');
-        $this->assertContains('Runtime cache has been cleared', $output);
+        $this->assertStringContainsString('Runtime cache has been cleared', $output);
     }
 
     public function testClean2(): void
     {
         $output = $this->runCommand('cache:clean');
-        $this->assertContains('directory is missing', $output);
+        $this->assertStringContainsString('directory is missing', $output);
     }
 
     public function testCleanVerbose(): void
@@ -37,15 +37,15 @@ class CleanTest extends ConsoleTest
         $this->runCommand('configure');
 
         $output = $this->runCommandDebug('cache:clean');
-        $this->assertContains('i18n', $output);
+        $this->assertStringContainsString('i18n', $output);
     }
 
     public function testUpdateClean(): void
     {
         $out = $this->runCommand('update');
-        $this->assertContains('Updating ORM schema', $out);
+        $this->assertStringContainsString('Updating ORM schema', $out);
 
         $output = $this->runCommandDebug('cache:clean');
-        $this->assertContains('cycle.php', $output);
+        $this->assertStringContainsString('cycle.php', $output);
     }
 }

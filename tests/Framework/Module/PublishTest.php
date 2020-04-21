@@ -13,6 +13,7 @@ namespace Spiral\Framework\Module;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Framework\ConsoleTest;
+use Spiral\Module\Exception\PublishException;
 
 class PublishTest extends ConsoleTest
 {
@@ -81,11 +82,10 @@ class PublishTest extends ConsoleTest
         $this->assertSame('original', file_get_contents($file));
     }
 
-    /**
-     * @expectedException \Spiral\Module\Exception\PublishException
-     */
     public function testInvalid(): void
     {
+        $this->expectException(PublishException::class);
+
         $this->runCommandDebug('conf');
         $file = $this->file('runtime', 'test.txt');
         file_put_contents($file, 'original');
@@ -203,11 +203,10 @@ class PublishTest extends ConsoleTest
         $this->assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
     }
 
-    /**
-     * @expectedException \Spiral\Module\Exception\PublishException
-     */
     public function testInvalidFile(): void
     {
+        $this->expectException(PublishException::class);
+
         $this->runCommandDebug('conf');
 
         $this->runCommandDebug('publish', [
@@ -218,11 +217,10 @@ class PublishTest extends ConsoleTest
         ]);
     }
 
-    /**
-     * @expectedException \Spiral\Module\Exception\PublishException
-     */
     public function testInvalidDir(): void
     {
+        $this->expectException(PublishException::class);
+
         $this->runCommandDebug('conf');
 
         $this->runCommandDebug('publish', [

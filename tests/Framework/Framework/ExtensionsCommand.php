@@ -20,7 +20,7 @@ class ExtensionsCommand extends ConsoleTest
         $output = $this->runCommand('php:extensions');
 
         foreach (get_loaded_extensions() as $extension) {
-            $this->assertContains($extension, $output);
+            $this->assertStringContainsString($extension, $output);
         }
     }
 }

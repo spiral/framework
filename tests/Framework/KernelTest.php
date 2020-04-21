@@ -13,6 +13,7 @@ namespace Spiral\Framework;
 
 use Spiral\App\TestApp;
 use Spiral\Boot\Environment;
+use Spiral\Boot\Exception\BootException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Goridge\RPC;
 use Spiral\RoadRunner\Worker;
@@ -40,11 +41,10 @@ class KernelTest extends BaseTest
         $this->assertSame(123, $app->getEnvironment()->get('ENV'));
     }
 
-    /**
-     * @expectedException \Spiral\Boot\Exception\BootException
-     */
     public function testNoRootDirectory(): void
     {
+        $this->expectException(BootException::class);
+
         TestApp::init([
         ], new Environment(), false);
     }
@@ -63,21 +63,19 @@ class KernelTest extends BaseTest
         $this->assertInstanceOf(RPC::class, $rpc);
     }
 
-    /**
-     * @expectedException \Spiral\Boot\Exception\BootException
-     */
     public function testInvalidRPC(): void
     {
+        $this->expectException(BootException::class);
+
         $this->makeApp([
             'RR_RPC' => 'invalid'
         ])->get(RPC::class);
     }
 
-    /**
-     * @expectedException \Spiral\Boot\Exception\BootException
-     */
     public function testInvalidRPC2(): void
     {
+        $this->expectException(BootException::class);
+
         $this->makeApp([
             'RR_RPC' => 'ftp://magic'
         ])->get(RPC::class);

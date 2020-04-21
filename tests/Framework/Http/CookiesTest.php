@@ -13,6 +13,7 @@ namespace Spiral\Framework\Http;
 
 use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
+use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Encrypter\EncrypterInterface;
 use Spiral\Framework\HttpTest;
@@ -26,18 +27,17 @@ class CookiesTest extends HttpTest
         $this->assertInstanceOf(CookieManager::class, $cookies);
     }
 
-    /**
-     * @expectedException \Spiral\Core\Exception\ScopeException
-     */
     public function testOutsideOfScopeFail(): void
     {
+        $this->expectException(ScopeException::class);
+
         $this->cookies()->get('name');
     }
 
     public function testHasCookie(): void
     {
         $this->http->setHandler(function () {
-            return (int)$this->cookies()->has('a');
+            return (int) $this->cookies()->has('a');
         });
 
         $result = $this->get('/');
@@ -55,7 +55,7 @@ class CookiesTest extends HttpTest
         $this->http = $this->app->get(Http::class);
 
         $this->http->setHandler(function () {
-            return (int)$this->cookies()->has('a');
+            return (int) $this->cookies()->has('a');
         });
 
         $result = $this->get('/', [], [], [

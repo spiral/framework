@@ -36,7 +36,7 @@ class ConsoleDispatcherTest extends BaseTest
         $serveResult = $this->makeApp()->get(ConsoleDispatcher::class)->serve(new ArrayInput([]), $output);
         $result = $output->fetch();
 
-        $this->assertContains('dead', $result);
+        $this->assertStringContainsString('dead', $result);
         $this->assertSame(0, $serveResult);
     }
 
@@ -48,8 +48,8 @@ class ConsoleDispatcherTest extends BaseTest
         ]), $output);
         $result = $output->fetch();
 
-        $this->assertContains('undefined', $result);
-        $this->assertContains('DeadCommand.php', $result);
+        $this->assertStringContainsString('undefined', $result);
+        $this->assertStringContainsString('DeadCommand.php', $result);
         $this->assertNotEquals(0, $serveResult);
     }
 
@@ -62,8 +62,8 @@ class ConsoleDispatcherTest extends BaseTest
         ]), $output);
         $result = $output->fetch();
 
-        $this->assertContains('undefined', $result);
-        $this->assertContains('DeadCommand.php', $result);
+        $this->assertStringContainsString('undefined', $result);
+        $this->assertStringContainsString('DeadCommand.php', $result);
         $this->assertNotEquals(0, $serveResult);
     }
 
@@ -76,10 +76,10 @@ class ConsoleDispatcherTest extends BaseTest
         ]), $output);
         $result = $output->fetch();
 
-        $this->assertContains('undefined', $result);
-        $this->assertContains('DeadCommand.php', $result);
-        $this->assertContains('->perform()', $result);
-        $this->assertContains('$undefined', $result);
+        $this->assertStringContainsString('undefined', $result);
+        $this->assertStringContainsString('DeadCommand.php', $result);
+        $this->assertStringContainsString('->perform()', $result);
+        $this->assertStringContainsString('$undefined', $result);
         $this->assertNotEquals(0, $serveResult);
     }
 }

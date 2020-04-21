@@ -19,7 +19,7 @@ class ConfigureTest extends ConsoleTest
     {
         $output = $this->runCommandDebug('configure');
 
-        $this->assertContains('Verifying runtime directory', $output);
-        $this->assertContains('locale directory', $output);
+        $this->assertStringContainsString('Verifying runtime directory', $output);
+        $this->assertStringContainsString('locale directory', $output);
     }
 }

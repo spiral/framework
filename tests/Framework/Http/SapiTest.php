@@ -73,7 +73,7 @@ class SapiTest extends ConsoleTest
 
         $this->assertCount(1, $files);
 
-        $this->assertContains('500', (string)$e->response->getBody());
+        $this->assertStringContainsString('500', (string)$e->response->getBody());
     }
 
     public function testDispatchNativeError(): void
@@ -99,6 +99,6 @@ class SapiTest extends ConsoleTest
 
         $this->assertCount(1, $files);
 
-        $this->assertContains('undefined', (string)$e->response->getBody());
+        $this->assertStringContainsString('undefined', (string)$e->response->getBody());
     }
 }
