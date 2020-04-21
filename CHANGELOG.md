@@ -13,6 +13,7 @@ v2.4.14 (21.04.2020) - no binary
 - show list of actions in multi-action routes in `route:list` by @ncou
 - added default alias for `notNull` validation rule
 - fixed path behaviour in `grpc:generate` command by @matthewhall-ca 
+- FilterInterceptor can automatically detect the validation context
 
 v2.4.13 (21.03.2020)
 -----
