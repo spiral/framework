@@ -24,10 +24,10 @@ class CompileTest extends ConsoleTest
     public function testCompile(): void
     {
         $out = $this->runCommandDebug('views:compile');
-        $this->assertContains('default:custom/file', $out);
+        $this->assertStringContainsString('default:custom/file', $out);
 
-        $this->assertContains('custom:error', $out);
-        $this->assertContains('Unable to compile custom:error', $out);
+        $this->assertStringContainsString('custom:error', $out);
+        $this->assertStringContainsString('Unable to compile custom:error', $out);
     }
 
     public function testReset(): void
@@ -41,13 +41,13 @@ class CompileTest extends ConsoleTest
         $fs->write($dirs->get('cache') . '/views/test.php', 'test', null, true);
 
         $out = $this->runCommandDebug('views:reset');
-        $this->assertContains('test.php', $out);
+        $this->assertStringContainsString('test.php', $out);
     }
 
     public function testResetClean(): void
     {
         $out = $this->runCommandDebug('views:reset');
-        $this->assertContains('no cache', $out);
+        $this->assertStringContainsString('no cache', $out);
     }
 
     public function testClean(): void
@@ -55,6 +55,6 @@ class CompileTest extends ConsoleTest
         $this->runCommandDebug('i18n:index');
 
         $out = $this->runCommandDebug('cache:clean');
-        $this->assertContains('i18n.en', $out);
+        $this->assertStringContainsString('i18n.en', $out);
     }
 }

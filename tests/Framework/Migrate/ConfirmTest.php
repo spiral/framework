@@ -41,7 +41,7 @@ class ConfirmTest extends ConsoleTest
         $out = fread($ct->getOutput()->getStream(), 9000);
 
         $this->assertStringContainsString('Confirmation', $out);
-        $this->assertNotContains('No outstanding', $out);
+        $this->assertStringNotContainsString('No outstanding', $out);
     }
 
     public function testConfirmMigrateY(): void
@@ -77,7 +77,7 @@ class ConfirmTest extends ConsoleTest
         $out = fread($ct->getOutput()->getStream(), 9000);
 
         $this->assertStringContainsString('Confirmation', $out);
-        $this->assertNotContains('No executed', $out);
+        $this->assertStringNotContainsString('No executed', $out);
     }
 
     public function testConfirmRollbackMigrateY(): void
@@ -113,7 +113,7 @@ class ConfirmTest extends ConsoleTest
         $out = fread($ct->getOutput()->getStream(), 9000);
 
         $this->assertStringContainsString('Confirmation', $out);
-        $this->assertNotContains('No outstanding', $out);
+        $this->assertStringNotContainsString('No outstanding', $out);
     }
 
     public function testConfirmReplayMigrateY(): void
