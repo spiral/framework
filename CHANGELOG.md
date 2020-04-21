@@ -6,13 +6,13 @@ v2.4.14 (21.04.2020) - no binary
 - added the ability to bind job name to the concrete implementation
 - added EntityChecker to check the existence and uniqueness of ORM entities
 - the Auth/CookieTransport will respect the application base path
-- command `encrypt:key` is no longer private
+- the command `encrypt:key` is no longer private
 - cleaned up the Publisher extension by @ncou
 - fixed a number of PHPUnit 8.0 warnings
-- RouterBootloader not longer blocks the HttpConfig (easier middleware creation)
+- RouterBootloader no longer blocks the HttpConfig (easier middleware creation)
 - show list of actions in multi-action routes in `route:list` by @ncou
 - added default alias for `notNull` validation rule
-- fixed path behaviour in `grpc:generate` command by @matthewhall-ca 
+- fixed path behavior in `grpc:generate` command by @matthewhall-ca 
 - FilterInterceptor can automatically detect the validation context
 
 v2.4.13 (21.03.2020)
