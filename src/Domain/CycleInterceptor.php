@@ -73,7 +73,7 @@ class CycleInterceptor implements CoreInterceptorInterface
             }
 
             $parameters[$parameter] = $entity;
-            $contextCandidates[] = $value;
+            $contextCandidates[] = $entity;
         }
 
         if (!isset($parameters['@context']) && count($contextCandidates) === 1) {
