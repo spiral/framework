@@ -56,7 +56,9 @@ class FilterInterceptor implements CoreInterceptorInterface
 
             /** @var FilterInterface $filter */
             $filter = $this->container->get($filterClass);
+
             if (isset($parameters['@context'])) {
+                // other interceptors can define the validation contex
                 $filter->setContext($parameters['@context']);
             }
 

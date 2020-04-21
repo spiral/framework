@@ -73,9 +73,7 @@ class CycleInterceptor implements CoreInterceptorInterface
             }
 
             $parameters[$parameter] = $entity;
-            if ($this->orm->getHeap()->has($value)) {
-                $contextCandidates[] = $value;
-            }
+            $contextCandidates[] = $value;
         }
 
         if (!isset($parameters['@context']) && count($contextCandidates) === 1) {
@@ -87,8 +85,8 @@ class CycleInterceptor implements CoreInterceptorInterface
 
     /**
      * @param string $role
-     * @param array  $parameters
-     * @param bool   $useDefault
+     * @param array $parameters
+     * @param bool $useDefault
      * @return mixed
      */
     protected function getParameter(string $role, array $parameters, bool $useDefault = false)
@@ -102,7 +100,7 @@ class CycleInterceptor implements CoreInterceptorInterface
 
     /**
      * @param string $role
-     * @param mixed  $parameter
+     * @param mixed $parameter
      * @return object|null
      */
     protected function resolveEntity(string $role, $parameter): ?object
