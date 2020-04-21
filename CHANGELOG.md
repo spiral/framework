@@ -12,7 +12,7 @@ v2.4.14 (21.04.2020) - no binary
 - RouterBootloader not longer blocks the HttpConfig (easier middleware creation)
 - show list of actions in multi-action routes in `route:list` by @ncou
 - added default alias for `notNull` validation rule
-- fixed path behaviour in `grpc:generate` command
+- fixed path behaviour in `grpc:generate` command by @matthewhall-ca 
 
 v2.4.13 (21.03.2020)
 -----
