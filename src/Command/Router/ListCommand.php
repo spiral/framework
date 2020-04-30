@@ -163,8 +163,6 @@ final class ListCommand extends Command implements SingletonInterface
             default:
                 return get_class($target);
         }
-
-        return '';
     }
 
     /**
