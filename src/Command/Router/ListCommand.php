@@ -40,12 +40,13 @@ final class ListCommand extends Command implements SingletonInterface
      */
     public function perform(RouterInterface $router, KernelInterface $kernel): void
     {
-        $grid = $this->table(['Verbs:', 'Pattern:', 'Target:']);
+        $grid = $this->table(['Name:', 'Verbs:', 'Pattern:', 'Target:']);
 
-        foreach ($router->getRoutes() as $route) {
+        foreach ($router->getRoutes() as $name => $route) {
             if ($route instanceof Route) {
                 $grid->addRow(
                     [
+                        $name,
                         $this->getVerbs($route),
                         $this->getPattern($route),
                         $this->getTarget($route, $kernel)
@@ -159,6 +160,8 @@ final class ListCommand extends Command implements SingletonInterface
                     $this->relativeClass($this->getValue($target, 'namespace'), $kernel),
                     $this->getValue($target, 'postfix')
                 );
+            default:
+                return get_class($target);
         }
 
         return '';
