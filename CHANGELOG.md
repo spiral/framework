@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.4.16 (05.05.2020)
+-----
+- Update RR to 1.8.0
+
 v2.4.15 (21.04.2020) - no binary
 -----
 - [bugfix] invalid value associated with validation context by CycleInterceptor
