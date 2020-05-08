@@ -26,7 +26,7 @@ final class Guarded
     public $permission;
 
     /**
-     * @Enum({"notFound","forbidden","badAction","error"})
+     * @Enum({"notFound","unauthorized","forbidden","badAction","error"})
      * @type string
      */
     public $else = 'forbidden';
