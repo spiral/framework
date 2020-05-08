@@ -146,7 +146,7 @@ final class GuardInterceptor implements CoreInterceptorInterface
         }
 
         switch ($guarded->else) {
-            case 'unauthenticated':
+            case 'unauthorized':
                 $permission[1] = ControllerException::UNAUTHORIZED;
                 break;
             case 'badAction':
