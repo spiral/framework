@@ -53,15 +53,7 @@ final class GuardInterceptor implements CoreInterceptorInterface
         $permission = $this->getPermissions($controller, $action);
 
         if ($permission !== null && !$this->guard->allows($permission[0], $parameters)) {
-            throw new ControllerException(
-                sprintf(
-                    'Unauthorized permission `%s` for action `%s`->`%s`',
-                    $permission[0],
-                    $controller,
-                    $action
-                ),
-                $permission[1]
-            );
+            throw new ControllerException($permission[2], $permission[1]);
         }
 
         return $core->callAction($controller, $action, $parameters);
@@ -123,7 +115,8 @@ final class GuardInterceptor implements CoreInterceptorInterface
     {
         $permission = [
             $guarded->permission ?? $method->getName(),
-            ControllerException::FORBIDDEN
+            ControllerException::FORBIDDEN,
+            $guarded->errorMessage ?? sprintf('Unauthorized access `%s`', $guarded->permission ?? $method->getName())
         ];
 
         if ($guarded->permission === null && $ns === null) {

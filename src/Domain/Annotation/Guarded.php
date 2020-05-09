@@ -30,4 +30,12 @@ final class Guarded
      * @type string
      */
     public $else = 'forbidden';
+
+    /**
+     * Error message in case of error.
+     *
+     * @Attribute(name="errorMessage", type="string")
+     * @type string
+     */
+    public $errorMessage;
 }

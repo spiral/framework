@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.4.17 (09.05.2020)
+-----
+- added support for Postgres Cycle Auth tokens
+- added the ability to redefine the error message in Guarded annotation
+
 v2.4.16 (05.05.2020)
 -----
 - Update RR to 1.8.0
