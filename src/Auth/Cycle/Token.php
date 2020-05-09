@@ -108,6 +108,11 @@ final class Token implements TokenInterface
      */
     public function getPayload(): array
     {
+        if (is_resource($this->payload)) {
+            // postgres
+            return json_decode(stream_get_contents($this->payload), true);
+        }
+
         return json_decode($this->payload, true);
     }
 }
