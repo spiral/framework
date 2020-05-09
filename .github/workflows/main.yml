@@ -24,14 +24,15 @@ jobs:
           PROTOC_FILENAME=protoc-${PROTOC_VERSION}-linux-x86_64.zip
           curl -sSL "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/${PROTOC_FILENAME}" -o ${PROTOC_FILENAME}
           unzip ${PROTOC_FILENAME}
-          bin/protoc --version
+          sudo mv bin/protoc /usr/bin
+          protoc --version
       - name: Setup gRPC
         run: |
           GRPC_VERSION=1.2.0
           PHP_GRPC_DIR=protoc-gen-php-grpc-${GRPC_VERSION}-linux-amd64
           curl -sSL "https://github.com/spiral/php-grpc/releases/download/v${GRPC_VERSION}/${PHP_GRPC_DIR}.tar.gz" -o ${PHP_GRPC_DIR}.tar.gz
           tar -xf ${PHP_GRPC_DIR}.tar.gz ${PHP_GRPC_DIR}/protoc-gen-php-grpc
-          mv ${PHP_GRPC_DIR}/protoc-gen-php-grpc bin/protoc-gen-php-grpc
+          sudo mv ${PHP_GRPC_DIR}/protoc-gen-php-grpc /usr/bin/protoc-gen-php-grpc
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
