@@ -53,7 +53,7 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
             'views',
             [
                 'cache'        => [
-                    'enabled'   => !$env->get('DEBUG', false),
+                    'enabled'   => $env->get('VIEW_CACHE', !$env->get('DEBUG', false)),
                     'directory' => $dirs->get('cache') . 'views'
                 ],
                 'namespaces'   => [
