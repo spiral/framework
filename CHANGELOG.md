@@ -254,7 +254,7 @@ v2.0.6 (26.05.2019)
 - no more migration warnings while running static analysis on a project
 - fixed container binding for cycle repository
 - migration command now adds `\n` after each migration
-- bugfix `vendor_php/bin/spiral get-binary` on linux machines
+- bugfix `vendor/bin/spiral get-binary` on linux machines
 
 v2.0.5 (24.05.2019)
 ------
@@ -263,7 +263,7 @@ v2.0.5 (24.05.2019)
 
 v2.0.4 (24.05.2019)
 ------
-- added `vendor_php/bin/spiral get-binary` command to download application server by @Alex-Bond
+- added `vendor/bin/spiral get-binary` command to download application server by @Alex-Bond
 
 v2.0.3 (23.05.2019)
 ------

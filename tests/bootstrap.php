@@ -12,4 +12,4 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', '1');
 
 //Composer
-require dirname(__DIR__) . '/vendor_php/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';

@@ -250,8 +250,11 @@ github.com/spiral/broadcast v0.0.0-20191206140608-766959683e74 h1:VV42Fj8QUQdMnf
 github.com/spiral/broadcast v0.0.0-20191206140608-766959683e74/go.mod h1:jF8bc8nD4WRsPDxKJjxWAOAw8PFqURsS+FyDMqMTY9g=
 github.com/spiral/broadcast-ws v1.1.0 h1:ptcRpf7dJDi+AtJ6VQh7uyi0xJoIfmbko9bJ9qwDC3I=
 github.com/spiral/broadcast-ws v1.1.0/go.mod h1:Qh444kkaxDzKdj8L+/EV8LwP27oCEIz565J0CtpIPhs=
+github.com/spiral/broadcast/v2 v2.0.3/go.mod h1:NkkwVwwE3VQVzwmudDmxlhmhW6sukEDzcT4758sudGs=
 github.com/spiral/goridge v2.1.3+incompatible h1:TV3B42ilftx9eR3n8wW0zCRcgSfCi5zCBDcOWdQnLUQ=
 github.com/spiral/goridge v2.1.3+incompatible/go.mod h1:prfLTN9qOpQxO6dtfCMJZ+uguUdCxb/ntS8ML/s5U2U=
+github.com/spiral/goridge v2.1.4+incompatible h1:L15TKrbPEp/G6JfS3jjuvY6whkhfD292XX+1iy9mO2k=
+github.com/spiral/goridge v2.1.4+incompatible/go.mod h1:prfLTN9qOpQxO6dtfCMJZ+uguUdCxb/ntS8ML/s5U2U=
 github.com/spiral/goridge/v2 v2.3.0 h1:oQs0Njior19jCt88YAMmcnpyiZCApF1lMrYLS7O313U=
 github.com/spiral/goridge/v2 v2.3.0/go.mod h1:NxcCipXONzZ6smmLUl9SsnT/YJjIjDphIfbzRJICLd8=
 github.com/spiral/goridge/v2 v2.4.2 h1:/WluKIwbnuVZkRXJupTiLPuQAsOj10WKXvDq2fDrQs0=
@@ -263,6 +266,7 @@ github.com/spiral/php-grpc v1.1.0/go.mod h1:3CnvZUf5fyapANNTa8DFTHiRMXNWxLdIMiBy
 github.com/spiral/roadrunner v1.4.8/go.mod h1:e1lCkU/DwM5PhF8ngdR/nLklON7VHL6qJcjgQN0iqi4=
 github.com/spiral/roadrunner v1.5.1/go.mod h1:TsADlOcWB97BwVVOhyVxZKpPWbpBkcguqgyRxu/FDfg=
 github.com/spiral/roadrunner v1.5.2/go.mod h1:TsADlOcWB97BwVVOhyVxZKpPWbpBkcguqgyRxu/FDfg=
+github.com/spiral/roadrunner v1.6.4/go.mod h1:Kd6SkGuqElGuS1UqObWJn3UamE/jpZMdNGsa8ZS0Axc=
 github.com/spiral/roadrunner v1.8.0/go.mod h1:74R7jkvz7L9Mp6n/8liQUDd5uyA5f7uo8XHPSQmeOfg=
 github.com/spiral/roadrunner v1.8.1 h1:3nGbTyvKJle8XAkJCqdWVXtE+jjA7CbGabfBKAI0ss8=
 github.com/spiral/roadrunner v1.8.1/go.mod h1:jvwToqx4Wvx/+8WOVG9f+/MMOjtvSOANGsJaqt0chGs=

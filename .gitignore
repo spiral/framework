@@ -2,7 +2,6 @@
 .env
 composer.lock
 vendor/
-vendor_php
 *.db
 clover.xml
 .php_cs.cache
