@@ -114,7 +114,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
             ]
         );
 
-        $tokenizer->addDirectory(directory('vendor') . 'spiral/validation/src/');
+        $tokenizer->addDirectory(directory('vendor_php') . 'spiral/validation/src/');
     }
 
     /**

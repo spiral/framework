@@ -3,7 +3,7 @@ cd $(dirname "${BASH_SOURCE[0]}")
 OD="$(pwd)"
 
 # Pushes application version into the build information.
-SPIRAL_VERSION=2.4.16
+SPIRAL_VERSION=2.4.18
 
 # Hardcode some values to the core package
 LDFLAGS="$LDFLAGS -X github.com/spiral/roadrunner/cmd/rr/cmd.Version=${SPIRAL_VERSION}"

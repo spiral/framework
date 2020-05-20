@@ -10,4 +10,4 @@ uninstall:
 	rm -f /usr/local/bin/spiral
 test:
 	composer update
-	vendor/bin/phpunit
+	vendor_php/bin/phpunit

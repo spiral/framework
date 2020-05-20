@@ -57,7 +57,7 @@ abstract class Kernel extends AbstractKernel
                 'public'    => $directories['root'] . '/public/',
 
                 // vendor libraries
-                'vendor'    => $directories['root'] . '/vendor/',
+                'vendor_php'    => $directories['root'] . '/vendor_php/',
 
                 // data directories
                 'runtime'   => $directories['root'] . '/runtime/',

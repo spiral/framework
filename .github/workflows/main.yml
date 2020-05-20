@@ -46,10 +46,10 @@ jobs:
         run: composer install --no-interaction --prefer-dist
       - name: Check coding standards
         run: |
-          vendor/bin/spiral-cs check src tests functions.php
+          vendor_php/bin/spiral-cs check src tests functions.php
       - name: Execute Tests
         run: |
-          vendor/bin/phpunit --coverage-clover=coverage.xml
+          vendor_php/bin/phpunit --coverage-clover=coverage.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
