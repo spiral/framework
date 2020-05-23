@@ -3,7 +3,6 @@
 v2.4.18 (21.05.2020)
 -----
 - Add the ability to control view cache separately from DEBUG via VIEW_CACHE env variable
-- Update RR to 1.8.1
 
 v2.4.17 (09.05.2020)
 -----
