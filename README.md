@@ -6,7 +6,7 @@
 
 <img src="https://user-images.githubusercontent.com/796136/67560465-9d827780-f723-11e9-91ac-9b2fafb027f2.png" height="135px" alt="Spiral Framework" align="left"/>
 
-Spiral Framework is a High-Performance PHP/Go Full-Stack framework and over sixty PSR compatible components. The Framework execution model is based on a hybrid runtime where some services (GRPC, Queue, WebSockets, etc) handled on Application Server - RoadRunner. The PHP code of your application will stay in memory between the requests (the framework provides a set of instruments to avoid memory leaks). 
+Spiral Framework is a High-Performance PHP/Go Full-Stack framework and group of over sixty PSR compatible components. The Framework execution model is based on a hybrid runtime where some services (GRPC, Queue, WebSockets, etc) handled on Application Server - RoadRunner. The PHP code of your application will stay in memory between the requests (the framework provides a set of instruments to avoid memory leaks). 
 
 
 [App Skeleton](https://github.com/spiral/app) ([CLI](https://github.com/spiral/app-cli), [GRPC](https://github.com/spiral/app-grpc), [Admin Panel](https://github.com/spiral/app-keeper)) | [spiral.dev](https://spiral.dev/) | [**Documentation**](https://spiral.dev/docs) | [Twitter](https://twitter.com/spiralphp) | [CHANGELOG](/CHANGELOG.md) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
