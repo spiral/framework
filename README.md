@@ -14,7 +14,7 @@ Spiral Framework is a High-Performance PHP/Go Full-Stack framework and group of 
 
 ## Features
 - Battle-tested since 2013
-- [Lightning fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=034c641b-4057-43d6-93ff-a93b9f98120d&hw=ph&test=fortune&l=zik073-1r&c=6&d=d&o=e)
+- [Lightning fast full-stack PHP framework](https://www.techempower.com/benchmarks/#section=test&runid=ba6c12a4-d54d-4a9e-825b-abde0ef6d6a2&hw=ph&test=fortune&l=zg24n3-f&c=6&a=2&o=e)
 - PSR-{2,3,4,6,7,11,15,16,17} compliant
 - Powerful [application server](https://roadrunner.dev/) and resident memory application kernel
 - Native support of queue (AMQP, SQS, Beanstalk) and background PHP workers
