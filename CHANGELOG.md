@@ -1,5 +1,9 @@
 # CHANGELOG
 
+v2.4.19 (18.06.2020)
+-----
+- Allow json requests with empty body by @rauanmayemir
+
 v2.4.18 (21.05.2020)
 -----
 - Add the ability to control view cache separately from DEBUG via VIEW_CACHE env variable
