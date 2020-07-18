@@ -1,5 +1,10 @@
 # CHANGELOG
 
+v2.5.0 (18.07.2020)
+-----
+- RR updated to 1.8.2 (don't use broken 1.8.1 tag)
+- Jobs plugin updated to 2.2.0 (see the [changelog](https://github.com/spiral/jobs/releases/tag/v2.2.0))
+
 v2.4.19 (18.06.2020)
 -----
 - Allow json requests with empty body by @rauanmayemir

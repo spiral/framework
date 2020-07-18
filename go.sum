@@ -259,8 +259,12 @@ github.com/spiral/goridge/v2 v2.3.0 h1:oQs0Njior19jCt88YAMmcnpyiZCApF1lMrYLS7O31
 github.com/spiral/goridge/v2 v2.3.0/go.mod h1:NxcCipXONzZ6smmLUl9SsnT/YJjIjDphIfbzRJICLd8=
 github.com/spiral/goridge/v2 v2.4.2 h1:/WluKIwbnuVZkRXJupTiLPuQAsOj10WKXvDq2fDrQs0=
 github.com/spiral/goridge/v2 v2.4.2/go.mod h1:C/EZKFPON9lypi8QO7I5ObgVmrIzTmhZqFz/tmypcGc=
+github.com/spiral/goridge/v2 v2.4.4 h1:9wV6YtvwIj8mbCLadJ1g4/Zh3YQ29alvxL5cuPWY90I=
+github.com/spiral/goridge/v2 v2.4.4/go.mod h1:C/EZKFPON9lypi8QO7I5ObgVmrIzTmhZqFz/tmypcGc=
 github.com/spiral/jobs/v2 v2.1.7 h1:lpc+4fKWE2jXtEWndZ1A+fQQf8iGIKoo311e9YVzFz8=
 github.com/spiral/jobs/v2 v2.1.7/go.mod h1:Ll4PCa8H1i0ikFw34HDJmizGZSfmm5DUmzsuAij9b1o=
+github.com/spiral/jobs/v2 v2.2.0 h1:wIQbC6F2sdgkpalHLeAfuFX/PQpvVMslVO/r826xw8k=
+github.com/spiral/jobs/v2 v2.2.0/go.mod h1:Ll4PCa8H1i0ikFw34HDJmizGZSfmm5DUmzsuAij9b1o=
 github.com/spiral/php-grpc v1.1.0 h1:iPzFDjVlnQPxUhChOCws6jcogmUzyFJlGLXKQh2xd/8=
 github.com/spiral/php-grpc v1.1.0/go.mod h1:3CnvZUf5fyapANNTa8DFTHiRMXNWxLdIMiByQwt20bI=
 github.com/spiral/roadrunner v1.4.8/go.mod h1:e1lCkU/DwM5PhF8ngdR/nLklON7VHL6qJcjgQN0iqi4=
@@ -270,6 +274,8 @@ github.com/spiral/roadrunner v1.6.4/go.mod h1:Kd6SkGuqElGuS1UqObWJn3UamE/jpZMdNG
 github.com/spiral/roadrunner v1.8.0/go.mod h1:74R7jkvz7L9Mp6n/8liQUDd5uyA5f7uo8XHPSQmeOfg=
 github.com/spiral/roadrunner v1.8.1 h1:3nGbTyvKJle8XAkJCqdWVXtE+jjA7CbGabfBKAI0ss8=
 github.com/spiral/roadrunner v1.8.1/go.mod h1:jvwToqx4Wvx/+8WOVG9f+/MMOjtvSOANGsJaqt0chGs=
+github.com/spiral/roadrunner v1.8.2 h1:mtcgedwFGhx6efzufd21zicxr55gD13O6sY8hlTc1p0=
+github.com/spiral/roadrunner v1.8.2/go.mod h1:nnDzkts1lr5rvXSORjcm30BwlPiIbobKCt1s9EjMDU4=
 github.com/streadway/amqp v0.0.0-20181205114330-a314942b2fd9 h1:37QTz/gdHBLQcsmgMTnQDSWCtKzJ7YnfI2M2yTdr4BQ=
 github.com/streadway/amqp v0.0.0-20181205114330-a314942b2fd9/go.mod h1:1WNBiOZtZQLpVAyu0iTduoJL9hEsMloAK5XWrtW0xdY=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
