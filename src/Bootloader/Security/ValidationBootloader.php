@@ -72,6 +72,8 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
 
                 // Enable/disable validation conditions
                 'conditions' => [
+                    'absent'     => Condition\AbsentCondition::class,
+                    'present'    => Condition\PresentCondition::class,
                     'withAny'    => Condition\WithAnyCondition::class,
                     'withoutAny' => Condition\WithoutAnyCondition::class,
                     'withAll'    => Condition\WithAllCondition::class,
