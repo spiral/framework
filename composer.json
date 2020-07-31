@@ -35,7 +35,7 @@
     "spiral/session": "^1.1",
     "spiral/roadrunner": "^1.2",
     "spiral/models": "^2.0",
-    "spiral/validation": "^1.4.3",
+    "spiral/validation": "^1.4.4",
     "spiral/filters": "^1.0",
     "spiral/security": "^2.0",
     "spiral/database": "^2.4",
