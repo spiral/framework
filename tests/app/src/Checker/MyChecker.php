@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Checker;
+namespace Spiral\Tests\App\Checker;
 
 use Spiral\Validation\AbstractChecker;
 

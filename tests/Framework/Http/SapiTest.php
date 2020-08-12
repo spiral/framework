@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Framework\ConsoleTest;
 use Spiral\Http\EmitterInterface;
 use Spiral\Http\SapiDispatcher;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class SapiTest extends ConsoleTest
 {

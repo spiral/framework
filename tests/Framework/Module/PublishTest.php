@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Module;
+namespace Spiral\Tests\Framework\Module;
 
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Framework\ConsoleTest;
 use Spiral\Module\Exception\PublishException;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class PublishTest extends ConsoleTest
 {

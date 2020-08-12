@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\User;
+namespace Spiral\Tests\App\User;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

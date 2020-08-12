@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Condition;
+namespace Spiral\Tests\App\Condition;
 
 use Spiral\Validation\AbstractCondition;
 use Spiral\Validation\ValidatorInterface;

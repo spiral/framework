@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Command;
+namespace Spiral\Tests\App\Command;
 
 use Spiral\Console\Command;
 

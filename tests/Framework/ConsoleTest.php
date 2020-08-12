@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework;
+namespace Spiral\Tests\Framework;
 
-use Spiral\App\TestApp;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\Files;
+use Spiral\Tests\App\TestApp;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;

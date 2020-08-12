@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Encrypter\Encrypter;
 use Spiral\Encrypter\EncrypterFactory;
-use Spiral\Framework\HttpTest;
 use Spiral\Http\Http;
+use Spiral\Tests\Framework\HttpTest;
 
 class WebsocketsTest extends HttpTest
 {

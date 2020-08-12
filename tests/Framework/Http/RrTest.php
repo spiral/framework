@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
 use Mockery as m;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Framework\ConsoleTest;
 use Spiral\Http\RrDispatcher;
 use Spiral\RoadRunner\PSR7Client;
+use Spiral\Tests\Framework\ConsoleTest;
 use Zend\Diactoros\ServerRequest;
 
 class RrTest extends ConsoleTest

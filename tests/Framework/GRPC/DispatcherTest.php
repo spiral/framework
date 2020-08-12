@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\GRPC;
+namespace Spiral\Tests\Framework\GRPC;
 
 use Mockery as m;
-use Spiral\App\Service\Sub\Message;
 use Spiral\Files\Files;
-use Spiral\Framework\ConsoleTest;
 use Spiral\GRPC\GRPCDispatcher;
 use Spiral\RoadRunner\Worker;
+use Spiral\Tests\App\Service\Sub\Message;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class DispatcherTest extends ConsoleTest
 {

@@ -9,15 +9,15 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
 use Spiral\Cookies\Cookie;
 use Spiral\Cookies\CookieManager;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Encrypter\EncrypterInterface;
-use Spiral\Framework\HttpTest;
 use Spiral\Http\Http;
+use Spiral\Tests\Framework\HttpTest;
 
 class CookiesTest extends HttpTest
 {

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Request;
+namespace Spiral\Tests\App\Request;
 
 use Spiral\Filters\Filter;
 

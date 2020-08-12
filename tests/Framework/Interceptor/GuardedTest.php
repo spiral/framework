@@ -9,16 +9,16 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Interceptor;
+namespace Spiral\Tests\Framework\Interceptor;
 
-use Spiral\App\Controller\Demo2Controller;
-use Spiral\App\Controller\DemoController;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\InterceptorException;
-use Spiral\Framework\ConsoleTest;
 use Spiral\Security\Actor\Actor;
 use Spiral\Security\ActorInterface;
+use Spiral\Tests\App\Controller\Demo2Controller;
+use Spiral\Tests\App\Controller\DemoController;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class GuardedTest extends ConsoleTest
 {

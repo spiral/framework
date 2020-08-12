@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\ViewEngine;
+namespace Spiral\Tests\App\ViewEngine;
 
 use Spiral\Translator\Views\LocaleProcessor;
 use Spiral\Views\ContextInterface;

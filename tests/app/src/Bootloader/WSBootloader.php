@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Bootloader;
+namespace Spiral\Tests\App\Bootloader;
 
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;

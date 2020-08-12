@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Dispatcher;
+namespace Spiral\Tests\Framework\Dispatcher;
 
 use Spiral\Console\ConsoleDispatcher;
-use Spiral\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 

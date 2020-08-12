@@ -9,9 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Command;
-
-use Spiral\Framework\ConsoleTest;
+namespace Spiral\Tests\Framework;
 
 class ConfigureTest extends ConsoleTest
 {

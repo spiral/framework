@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\GRPC;
+namespace Spiral\Tests\Framework\GRPC;
 
 use Spiral\Files\Files;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class GenerateTest extends ConsoleTest
 {

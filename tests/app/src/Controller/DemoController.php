@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Controller;
+namespace Spiral\Tests\App\Controller;
 
-use Spiral\App\User\Role;
-use Spiral\App\User\User;
+use Spiral\Tests\App\User\Role;
+use Spiral\Tests\App\User\User;
 use Spiral\Domain\Annotation\Guarded;
 
 class DemoController

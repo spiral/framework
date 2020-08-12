@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Encrypter;
+namespace Spiral\Tests\Framework\Encrypter;
 
 use Spiral\Encrypter\EncrypterFactory;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class KeyCommandTest extends ConsoleTest
 {

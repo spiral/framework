@@ -9,12 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Database;
+namespace Spiral\Tests\Framework\Database;
 
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\Database\DisconnectsBootloader;
 use Spiral\Database\DatabaseInterface;
-use Spiral\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTest;
 
 class DisconnectsTest extends BaseTest
 {

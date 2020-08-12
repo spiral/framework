@@ -9,15 +9,15 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Interceptor;
+namespace Spiral\Tests\Framework\Interceptor;
 
 use Cycle\ORM\Transaction;
-use Spiral\App\Controller\DemoController;
-use Spiral\App\User\Role;
-use Spiral\App\User\User;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\App\Controller\DemoController;
+use Spiral\Tests\App\User\Role;
+use Spiral\Tests\App\User\User;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class CycleInterceptorTest extends ConsoleTest
 {

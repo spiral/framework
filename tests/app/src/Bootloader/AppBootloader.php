@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Bootloader;
+namespace Spiral\Tests\App\Bootloader;
 
-use Spiral\App\Checker\MyChecker;
-use Spiral\App\Condition\MyCondition;
-use Spiral\App\Controller\AuthController;
-use Spiral\App\Controller\TestController;
-use Spiral\App\User\UserRepository;
-use Spiral\App\ViewEngine\TestEngine;
+use Spiral\Tests\App\Checker\MyChecker;
+use Spiral\Tests\App\Condition\MyCondition;
+use Spiral\Tests\App\Controller\AuthController;
+use Spiral\Tests\App\Controller\TestController;
+use Spiral\Tests\App\User\UserRepository;
+use Spiral\Tests\App\ViewEngine\TestEngine;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Bootloader\Http\JsonPayloadsBootloader;
 use Spiral\Bootloader\Security\ValidationBootloader;

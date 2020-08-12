@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\App\Controller;
+namespace Spiral\Tests\App\Controller;
 
 use Spiral\Domain\Annotation\Guarded;
 use Spiral\Domain\Annotation\GuardNamespace;

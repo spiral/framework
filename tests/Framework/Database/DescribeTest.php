@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Database;
+namespace Spiral\Tests\Framework\Database;
 
 use Spiral\Database\Database;
 use Spiral\Database\Exception\DBALException;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class DescribeTest extends ConsoleTest
 {

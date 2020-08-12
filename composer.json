@@ -1,72 +1,87 @@
 {
-  "name": "spiral/framework",
-  "type": "library",
-  "description": "Spiral, High-Performance PHP/Go Framework",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Wolfy-J",
-      "email": "wolfy.jd@gmail.com"
-    }
-  ],
-  "require": {
-    "php": "^7.2",
-    "ext-json": "*",
-    "ext-mbstring": "*",
-    "spiral/boot": "^1.1",
-    "spiral/tokenizer": "^2.0",
-    "spiral/composer-publish-plugin": "^1.0"
-  },
-  "require-dev": {
-    "roave/security-advisories": "dev-master",
-    "phpunit/phpunit": "~8.0",
-    "mockery/mockery": "^1.1",
-    "spiral/code-style": "^1.0",
-    "spiral/logger": "^1.0",
-    "spiral/debug": "^1.1",
-    "spiral/encrypter": "^1.0",
-    "spiral/snapshots": "^1.0",
-    "spiral/translator": "^1.2",
-    "spiral/console": "^1.0",
-    "spiral/http": "^1.0",
-    "spiral/cookies": "^1.0",
-    "spiral/csrf": "^1.0",
-    "spiral/router": "^1.0",
-    "spiral/session": "^1.1",
-    "spiral/roadrunner": "^1.2",
-    "spiral/models": "^2.0",
-    "spiral/validation": "^1.4.4",
-    "spiral/filters": "^1.0",
-    "spiral/security": "^2.0",
-    "spiral/database": "^2.4",
-    "spiral/migrations": "^2.0",
-    "spiral/views": "^1.0",
-    "spiral/php-grpc": "^1.0",
-    "spiral/jobs": "^2.0",
-    "cycle/orm": "^1.0",
-    "cycle/annotated": "^2.0",
-    "cycle/migrations": "^1.0",
-    "cycle/proxy-factory": "^1.0",
-    "spiral/auth": "^1.0",
-    "spiral/auth-http": "^1.0",
-    "spiral/broadcast": "^2.0",
-    "spiral/broadcast-ws": "^1.0"
-  },
-  "autoload": {
-    "files": [
-      "functions.php"
+    "name": "spiral/framework",
+    "type": "library",
+    "description": "Spiral, High-Performance PHP/Go Framework",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/framework"
+    },
+    "authors": [
+        {
+            "name": "Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        }
     ],
-    "psr-4": {
-      "Spiral\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Spiral\\": "tests/",
-      "Spiral\\App\\": "tests/app/src"
-    }
-  },
-  "bin": [
-    "bin/spiral"
-  ]
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "spiral/boot": "^1.1",
+        "spiral/tokenizer": "^2.0",
+        "spiral/composer-publish-plugin": "^1.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "phpunit/phpunit": "~8.0",
+        "mockery/mockery": "^1.1",
+        "spiral/code-style": "^1.0",
+        "spiral/logger": "^1.0",
+        "spiral/debug": "^1.1",
+        "spiral/encrypter": "^1.0",
+        "spiral/snapshots": "^1.0",
+        "spiral/translator": "^1.2",
+        "spiral/console": "^1.0",
+        "spiral/http": "^1.0",
+        "spiral/cookies": "^1.0",
+        "spiral/csrf": "^1.0",
+        "spiral/router": "^1.0",
+        "spiral/session": "^1.1",
+        "spiral/roadrunner": "^1.2",
+        "spiral/models": "^2.0",
+        "spiral/validation": "^1.4.4",
+        "spiral/filters": "^1.0",
+        "spiral/security": "^2.0",
+        "spiral/database": "^2.4",
+        "spiral/migrations": "^2.0",
+        "spiral/views": "^1.0",
+        "spiral/php-grpc": "^1.0",
+        "spiral/jobs": "^2.0",
+        "cycle/orm": "^1.0",
+        "cycle/annotated": "^2.0",
+        "cycle/migrations": "^1.0",
+        "cycle/proxy-factory": "^1.0",
+        "spiral/auth": "^1.0",
+        "spiral/auth-http": "^1.0",
+        "spiral/broadcast": "^2.0",
+        "spiral/broadcast-ws": "^1.0"
+    },
+    "autoload": {
+        "files": [
+            "functions.php"
+        ],
+        "psr-4": {
+            "Spiral\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Framework\\": "tests/Framework",
+            "Spiral\\Tests\\App\\": "tests/App/src"
+        }
+    },
+    "bin": [
+        "bin/spiral"
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.6-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

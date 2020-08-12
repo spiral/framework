@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Validation;
+namespace Spiral\Tests\Framework\Validation;
 
 use Cycle\ORM\TransactionInterface;
-use Spiral\App\TestApp;
-use Spiral\App\User\User;
 use Spiral\Database\Database;
 use Spiral\Database\DatabaseInterface;
-use Spiral\Framework\BaseTest;
+use Spiral\Tests\App\TestApp;
+use Spiral\Tests\App\User\User;
+use Spiral\Tests\Framework\BaseTest;
 use Spiral\Validation\ValidationInterface;
 use Throwable;
 

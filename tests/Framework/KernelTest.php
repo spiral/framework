@@ -9,14 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework;
+namespace Spiral\Tests\Framework;
 
-use Spiral\App\TestApp;
 use Spiral\Boot\Environment;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Goridge\RPC;
 use Spiral\RoadRunner\Worker;
+use Spiral\Tests\App\TestApp;
 
 class KernelTest extends BaseTest
 {
