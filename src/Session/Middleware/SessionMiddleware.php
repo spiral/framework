@@ -185,7 +185,8 @@ final class SessionMiddleware implements MiddlewareInterface
             $this->httpConfig->getBasePath(),
             $this->cookiesConfig->resolveDomain($uri),
             $this->config->isSecure(),
-            true
+            true,
+            $this->config->getSameSite()
         );
     }
 }

@@ -32,7 +32,9 @@ final class CsrfBootloader extends Bootloader
             [
                 'cookie'   => 'csrf-token',
                 'length'   => 16,
-                'lifetime' => 86400
+                'lifetime' => 86400,
+                'secure'   => true,
+                'sameSite' => null
             ]
         );
 

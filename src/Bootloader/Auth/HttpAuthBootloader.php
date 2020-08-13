@@ -62,7 +62,14 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
             [
                 'defaultTransport' => 'cookie',
                 'transports'       => [
-                    'cookie' => new CookieTransport('token', $this->config->getConfig('http')['basePath']),
+                    'cookie' => new CookieTransport(
+                        'token',
+                        $this->config->getConfig('http')['basePath'],
+                        null,
+                        true,
+                        true,
+                        null
+                    ),
                     'header' => new HeaderTransport('X-Auth-Token')
                 ]
             ]

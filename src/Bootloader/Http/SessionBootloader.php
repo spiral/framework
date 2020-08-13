@@ -58,7 +58,8 @@ final class SessionBootloader extends Bootloader
             [
                 'lifetime' => 86400,
                 'cookie'   => 'sid',
-                'secure'   => false,
+                'secure'   => true,
+                'sameSite' => null,
                 'handler'  => new Autowire(
                     FileHandler::class,
                     [
