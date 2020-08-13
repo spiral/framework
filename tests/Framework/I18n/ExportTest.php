@@ -26,7 +26,7 @@ class ExportTest extends ConsoleTest
 
     public function testReset(): void
     {
-        $this->assertFileNotExists(sys_get_temp_dir() . '/messages.ru.php');
+        $this->assertFileDoesNotExist(sys_get_temp_dir() . '/messages.ru.php');
 
         $this->runCommandDebug('i18n:index');
         $this->runCommandDebug('configure');

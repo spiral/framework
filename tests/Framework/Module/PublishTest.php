@@ -34,7 +34,7 @@ class PublishTest extends ConsoleTest
         $file = $this->file('runtime', 'test.txt');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->assertFileNotExists($file);
+        $this->assertFileDoesNotExist($file);
 
         $this->runCommandDebug('publish', [
             'type'   => 'replace',
