@@ -26,6 +26,15 @@
         "spiral/composer-publish-plugin": "^1.0",
         "spiral/tokenizer": "^2.0"
     },
+    "autoload": {
+        "files": [
+            "src/Framework/helpers.php"
+        ],
+        "psr-4": {
+            "Spiral\\": "src/Framework",
+            "Spiral\\Core\\": "src/Core/src"
+        }
+    },
     "require-dev": {
         "cycle/annotated": "^2.0",
         "cycle/migrations": "^1.0",
@@ -62,23 +71,14 @@
         "spiral/views": "^1.0",
         "symplify/monorepo-builder": "^8.0"
     },
-    "autoload": {
-        "files": [
-            "src/Framework/helpers.php"
-        ],
-        "psr-4": {
-            "Spiral\\": "src/Framework",
-            "Spiral\\Core\\": "src/Core/src/"
-        }
-    },
     "autoload-dev": {
         "files": [
             "resources/patches/ComposerJson.php",
             "resources/patches/ComposerJsonFactory.php"
         ],
         "psr-4": {
-            "Spiral\\Core\\Tests\\": "src/Core/tests/Core/",
             "Spiral\\Tests\\App\\": "tests/app/src",
+            "Spiral\\Tests\\Core\\": "src/Core/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework"
         }
     },
