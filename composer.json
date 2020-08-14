@@ -87,7 +87,8 @@
     },
     "scripts": {
         "cs": "spiral-cs check src tests",
-        "merge": "monorepo-builder merge -c resources/monorepo-builder.yml"
+        "merge": "monorepo-builder merge",
+        "split": "monorepo-builder split"
     },
     "extra": {
         "branch-alias": {
