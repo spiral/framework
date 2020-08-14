@@ -16,7 +16,7 @@ use Spiral\Boot\Exception\BootException;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Goridge\RPC;
 use Spiral\RoadRunner\Worker;
-use Spiral\Tests\App\TestApp;
+use Spiral\App\TestApp;
 
 class KernelTest extends BaseTest
 {

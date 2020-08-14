@@ -36,7 +36,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::PACKAGE_ALIAS_FORMAT, '<major>.<minor>.x-dev');
 
     $parameters->set(Option::PACKAGE_DIRECTORIES, [
-        __DIR__ . '/src'
+        __DIR__ . '/src',
     ]);
 
     $parameters->set(Option::DATA_TO_APPEND, [
@@ -57,7 +57,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'autoload-dev' => [
                 'psr-4' => [
                     'Spiral\\Tests\\Framework\\' => 'tests/Framework',
-                    'Spiral\\Tests\\App\\'       => 'tests/app/src',
+                    'Spiral\\Tests\\'            => 'tests/app/src',
                 ],
             ],
             'require-dev'  => [
@@ -100,6 +100,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $parameters->set(Option::DIRECTORIES_TO_REPOSITORIES, [
-        __DIR__ . '/src/Core' => 'git@github.com:spiral/core.git'
+        __DIR__ . '/src/Core' => 'git@github.com:spiral/core.git',
     ]);
 };

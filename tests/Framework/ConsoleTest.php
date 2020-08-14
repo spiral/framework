@@ -13,7 +13,7 @@ namespace Spiral\Tests\Framework;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\Files;
-use Spiral\Tests\App\TestApp;
+use Spiral\App\TestApp;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;

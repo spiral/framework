@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\App\Controller;
+namespace Spiral\App\Controller;
 
-use Spiral\Tests\App\User\UserRepository;
+use Spiral\App\User\UserRepository;
 
 class SelectController
 {

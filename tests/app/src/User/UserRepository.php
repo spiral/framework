@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\App\User;
+namespace Spiral\App\User;
 
 use Cycle\ORM\Select\Repository;
 use Spiral\Auth\ActorProviderInterface;

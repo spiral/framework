@@ -16,7 +16,7 @@ use Cycle\ORM\TransactionInterface;
 use Spiral\Auth\Cycle\Token;
 use Spiral\Encrypter\EncrypterFactory;
 use Spiral\Http\Http;
-use Spiral\Tests\App\User\User;
+use Spiral\App\User\User;
 use Spiral\Tests\Framework\HttpTest;
 
 class AuthCycleTest extends HttpTest

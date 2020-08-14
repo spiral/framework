@@ -73,7 +73,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Spiral\\Tests\\App\\": "tests/app/src",
+            "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework"
         }

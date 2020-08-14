@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\App\ViewEngine;
+namespace Spiral\App\ViewEngine;
 
 use Spiral\Views\ViewInterface;
 use Spiral\Views\ViewSource;

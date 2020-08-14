@@ -63,11 +63,12 @@ class ListTest extends ConsoleTest
             'proto' => $this->proto
         ]);
 
-        file_put_contents($this->app->dir('app') . 'src/Service/EchoService.php', GenerateTest::SERVICE);
+        $output = $this->app->dir('app') . 'src/Service/EchoService.php';
+        file_put_contents($output, GenerateTest::SERVICE);
 
         $out = $this->runCommandDebug('grpc:services');
 
         $this->assertStringContainsString('service.Echo', $out);
-        $this->assertStringContainsString('Spiral\Tests\App\Service\EchoService', $out);
+        $this->assertStringContainsString('Spiral\App\Service\EchoService', $out);
     }
 }

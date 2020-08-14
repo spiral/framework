@@ -13,7 +13,7 @@ namespace Spiral\Tests\Framework;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Environment;
-use Spiral\Tests\App\TestApp;
+use Spiral\App\TestApp;
 
 abstract class BaseTest extends TestCase
 {

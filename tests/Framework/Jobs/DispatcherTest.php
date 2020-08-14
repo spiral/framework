@@ -16,8 +16,8 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Jobs\JobDispatcher;
 use Spiral\RoadRunner\Worker;
-use Spiral\Tests\App\Job\ErrorJob;
-use Spiral\Tests\App\Job\TestJob;
+use Spiral\App\Job\ErrorJob;
+use Spiral\App\Job\TestJob;
 use Spiral\Tests\Framework\ConsoleTest;
 
 class DispatcherTest extends ConsoleTest

@@ -17,10 +17,10 @@ use Spiral\Tests\Framework\ConsoleTest;
 class GenerateTest extends ConsoleTest
 {
     public const SERVICE = '<?php
-    namespace Spiral\Tests\App\Service;
+    namespace Spiral\App\Service;
     
     use Spiral\GRPC;
-    use Spiral\Tests\App\Service\Sub\Message;
+    use Spiral\App\Service\Sub\Message;
 
     class EchoService implements EchoInterface
     {
@@ -35,17 +35,15 @@ class GenerateTest extends ConsoleTest
     public function setUp(): void
     {
         exec('protoc 2>&1', $out);
-        if (strpos(join("\n", $out), '--php_out') === false) {
+
+        if (strpos(implode("\n", $out), '--php_out') === false) {
             $this->markTestSkipped('Protoc binary is missing');
         }
 
         parent::setUp();
 
         $fs = new Files();
-        $this->proto = $fs->normalizePath($this->app->dir('app') . 'proto/service.proto');
-
-        // protoc can't figure relative paths
-        $this->proto = str_replace('Framework/../', '', $this->proto);
+        $this->proto = \realpath($fs->normalizePath($this->app->dir('app') . 'proto/service.proto'));
     }
 
     public function tearDown(): void

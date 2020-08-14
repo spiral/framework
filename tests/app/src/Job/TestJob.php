@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\App\Job;
+namespace Spiral\App\Job;
 
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Jobs\JobHandler;

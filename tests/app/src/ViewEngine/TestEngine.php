@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\App\ViewEngine;
+namespace Spiral\App\ViewEngine;
 
 use Spiral\Translator\Views\LocaleProcessor;
 use Spiral\Views\ContextInterface;
@@ -32,7 +32,7 @@ class TestEngine extends AbstractEngine
 
     public function compile(string $path, ContextInterface $context): void
     {
-        if ($path == 'custom:error') {
+        if ($path === 'custom:error') {
             throw new EngineException('Unable to compile custom:error');
         }
     }

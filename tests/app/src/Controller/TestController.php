@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\App\Controller;
+namespace Spiral\App\Controller;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Spiral\Tests\App\Request\BadRequest;
-use Spiral\Tests\App\Request\TestRequest;
+use Spiral\App\Request\BadRequest;
+use Spiral\App\Request\TestRequest;
 use Spiral\Filter\InputScope;
 use Spiral\Http\PaginationFactory;
 use Spiral\Pagination\Paginator;

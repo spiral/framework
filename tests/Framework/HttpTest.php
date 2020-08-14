@@ -13,7 +13,7 @@ namespace Spiral\Tests\Framework;
 
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Http\Http;
-use Spiral\Tests\App\TestApp;
+use Spiral\App\TestApp;
 use Zend\Diactoros\ServerRequest;
 
 abstract class HttpTest extends BaseTest

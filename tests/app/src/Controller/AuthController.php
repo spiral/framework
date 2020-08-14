@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\App\Controller;
+namespace Spiral\App\Controller;
 
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Auth\AuthScope;

@@ -20,7 +20,7 @@ use Spiral\Security\Actor\Guest;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
 use Spiral\Security\GuardScope;
-use Spiral\Tests\App\Controller\AuthController;
+use Spiral\App\Controller\AuthController;
 use Spiral\Tests\Framework\BaseTest;
 
 class AuthorizesTest extends BaseTest
