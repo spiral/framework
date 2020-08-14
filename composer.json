@@ -72,10 +72,6 @@
         "symplify/monorepo-builder": "^8.0"
     },
     "autoload-dev": {
-        "files": [
-            "resources/patches/ComposerJson.php",
-            "resources/patches/ComposerJsonFactory.php"
-        ],
         "psr-4": {
             "Spiral\\Tests\\App\\": "tests/app/src",
             "Spiral\\Tests\\Core\\": "src/Core/tests",

@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
-use Spiral\Tests\Core\Fixtures\TestConfig;
+use Spiral\Core\Exception\ConfigException;
 use Spiral\Core\Traits\Config\AliasTrait;
+use Spiral\Tests\Core\Fixtures\TestConfig;
 
 class InjectableConfigTest extends TestCase
 {
@@ -23,8 +25,8 @@ class InjectableConfigTest extends TestCase
         'aliases' => [
             'default' => 'value',
             'value'   => 'another',
-            'another' => 'test'
-        ]
+            'another' => 'test',
+        ],
     ];
 
     public function testArrayAccess(): void
@@ -60,20 +62,16 @@ class InjectableConfigTest extends TestCase
         ]);
 
         $iterator = $config->getIterator();
-        $this->assertInstanceOf(\ArrayIterator::class, $iterator);
+        $this->assertInstanceOf(ArrayIterator::class, $iterator);
         $this->assertSame($iterator->getArrayCopy(), $config->toArray());
     }
 
-    /**
-     *
-     *
-     *                           immutable by default
-     */
     public function testWriteError(): void
     {
-        $this->expectExceptionMessage("Unable to change configuration data, configs are treated as
-                           immutable by default");
-        $this->expectException(\Spiral\Core\Exception\ConfigException::class);
+        $excepted = 'Unable to change configuration data, configs are treated as immutable by default';
+        $this->expectExceptionMessage($excepted);
+
+        $this->expectException(ConfigException::class);
         $config = new TestConfig([
             'keyA' => 'value',
             'keyB' => 'valueB',
@@ -82,16 +80,11 @@ class InjectableConfigTest extends TestCase
         $config['keyA'] = 'abc';
     }
 
-    /**
-     *
-     *
-     *                           immutable by default
-     */
     public function testUnsetError(): void
     {
-        $this->expectException(\Spiral\Core\Exception\ConfigException::class);// immutable by default
-        $this->expectExceptionMessage("Unable to change configuration data, configs are treated as
-                           immutable by default");
+        $excepted = 'Unable to change configuration data, configs are treated as immutable by default';
+        $this->expectExceptionMessage($excepted);
+
         $config = new TestConfig([
             'keyA' => 'value',
             'keyB' => 'valueB',
@@ -102,8 +95,9 @@ class InjectableConfigTest extends TestCase
 
     public function testGetError(): void
     {
-        $this->expectException(\Spiral\Core\Exception\ConfigException::class);
+        $this->expectException(ConfigException::class);
         $this->expectExceptionMessage("Undefined configuration key 'keyC'");
+
         $config = new TestConfig([
             'keyA' => 'value',
             'keyB' => 'valueB',
@@ -129,7 +123,7 @@ class InjectableConfigTest extends TestCase
             'config' => [
                 'keyA' => 'value',
                 'keyB' => 'valueB',
-            ]
+            ],
         ]));
     }
 

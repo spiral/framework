@@ -13,6 +13,8 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Container\ArgumentException;
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\DependedClass;
 use Spiral\Tests\Core\Fixtures\ExtendedSample;
@@ -49,19 +51,14 @@ class AutowireTest extends TestCase
         $this->assertInstanceOf(ExtendedSample::class, $container->make(SampleClass::class, []));
     }
 
-    /**
-     *
-     *
-     *                           'Spiral\Tests\Fixtures\Bucket::__construct'
-     */
     public function testArgumentException(): void
     {
-        $this->expectExceptionMessage("Unable to resolve 'name' argument in
-                           'Spiral\Tests\Fixtures\Bucket::__construct'");
-        $this->expectException(\Spiral\Core\Exception\Container\ArgumentException::class);
-        $container = new Container();
+        $expected = "Unable to resolve 'name' argument in 'Spiral\Tests\Core\Fixtures\Bucket::__construct'";
+        $this->expectExceptionMessage($expected);
+        $this->expectException(ArgumentException::class);
 
-        $bucket = $container->get(Bucket::class);
+        $container = new Container();
+        $container->get(Bucket::class);
     }
 
     public function testDefaultValue(): void
@@ -82,7 +79,7 @@ class AutowireTest extends TestCase
         $object = $container->make(
             DependedClass::class,
             [
-                'name' => 'some-name'
+                'name' => 'some-name',
             ]
         );
 
@@ -120,7 +117,7 @@ class AutowireTest extends TestCase
         $object = $container->make(
             DependedClass::class,
             [
-                'name' => 'some-name'
+                'name' => 'some-name',
             ]
         );
 
@@ -132,14 +129,14 @@ class AutowireTest extends TestCase
     public function testAutowireException(): void
     {
         $this->expectExceptionMessage("Undefined class or binding 'WrongClass'");
-        $this->expectException(\Spiral\Core\Exception\Container\NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $container = new Container();
 
         $container->bind(SampleClass::class, \WrongClass::class);
         $container->make(
             DependedClass::class,
             [
-                'name' => 'some-name'
+                'name' => 'some-name',
             ]
         );
     }
@@ -157,7 +154,7 @@ class AutowireTest extends TestCase
         $object = $container->make(
             SoftDependedClass::class,
             [
-                'name' => 'some-name'
+                'name' => 'some-name',
             ]
         );
 
@@ -176,7 +173,7 @@ class AutowireTest extends TestCase
                 'string' => 'string',
                 'int'    => 123,
                 'float'  => 123.00,
-                'bool'   => true
+                'bool'   => true,
             ]
         );
 
@@ -190,7 +187,7 @@ class AutowireTest extends TestCase
                 'string' => 'string',
                 'int'    => '123',
                 'float'  => '123.00',
-                'bool'   => 1
+                'bool'   => 1,
             ]
         );
 
@@ -204,23 +201,19 @@ class AutowireTest extends TestCase
                 'string' => 'string',
                 'int'    => 123,
                 'float'  => 123.00,
-                'bool'   => 0
+                'bool'   => 0,
             ]
         );
 
         $this->assertInstanceOf(TypedClass::class, $object);
     }
 
-    /**
-     *
-     *
-     *                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'
-     */
     public function testAutowireTypecastingAndValidatingWrongString(): void
     {
-        $this->expectExceptionMessage("Unable to resolve 'string' argument in
-                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'");
-        $this->expectException(\Spiral\Core\Exception\Container\ArgumentException::class);
+        $expected = "Unable to resolve 'string' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
+        $this->expectExceptionMessage($expected);
+        $this->expectException(ArgumentException::class);
+
         $container = new Container();
 
         $object = $container->make(
@@ -229,23 +222,19 @@ class AutowireTest extends TestCase
                 'string' => null,
                 'int'    => 123,
                 'float'  => 123.00,
-                'bool'   => true
+                'bool'   => true,
             ]
         );
 
         $this->assertInstanceOf(TypedClass::class, $object);
     }
 
-    /**
-     *
-     *
-     *                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'
-     */
     public function testAutowireTypecastingAndValidatingWrongInt(): void
     {
-        $this->expectExceptionMessage("Unable to resolve 'int' argument in
-                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'");
-        $this->expectException(\Spiral\Core\Exception\Container\ArgumentException::class);
+        $expected = "Unable to resolve 'int' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
+        $this->expectExceptionMessage($expected);
+        $this->expectException(ArgumentException::class);
+
         $container = new Container();
 
         $object = $container->make(
@@ -254,23 +243,19 @@ class AutowireTest extends TestCase
                 'string' => '',
                 'int'    => 'yo!',
                 'float'  => 123.00,
-                'bool'   => true
+                'bool'   => true,
             ]
         );
 
         $this->assertInstanceOf(TypedClass::class, $object);
     }
 
-    /**
-     *
-     *
-     *                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'
-     */
     public function testAutowireTypecastingAndValidatingWrongFloat(): void
     {
-        $this->expectExceptionMessage("Unable to resolve 'float' argument in
-                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'");
-        $this->expectException(\Spiral\Core\Exception\Container\ArgumentException::class);
+        $expected = "Unable to resolve 'float' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
+        $this->expectExceptionMessage($expected);
+        $this->expectException(ArgumentException::class);
+
         $container = new Container();
 
         $object = $container->make(
@@ -279,23 +264,19 @@ class AutowireTest extends TestCase
                 'string' => '',
                 'int'    => 123,
                 'float'  => '~',
-                'bool'   => true
+                'bool'   => true,
             ]
         );
 
         $this->assertInstanceOf(TypedClass::class, $object);
     }
 
-    /**
-     *
-     *
-     *                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'
-     */
     public function testAutowireTypecastingAndValidatingWrongBool(): void
     {
-        $this->expectExceptionMessage("Unable to resolve 'bool' argument in
-                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'");
-        $this->expectException(\Spiral\Core\Exception\Container\ArgumentException::class);
+        $expected = "Unable to resolve 'bool' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
+        $this->expectExceptionMessage($expected);
+        $this->expectException(ArgumentException::class);
+
         $container = new Container();
 
         $object = $container->make(
@@ -304,23 +285,19 @@ class AutowireTest extends TestCase
                 'string' => '',
                 'int'    => 123,
                 'float'  => 1.00,
-                'bool'   => 'true'
+                'bool'   => 'true',
             ]
         );
 
         $this->assertInstanceOf(TypedClass::class, $object);
     }
 
-    /**
-     *
-     *
-     *                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'
-     */
     public function testAutowireTypecastingAndValidatingWrongArray(): void
     {
-        $this->expectExceptionMessage("Unable to resolve 'array' argument in
-                            'Spiral\Tests\Core\Fixtures\TypedClass::__construct'");
-        $this->expectException(\Spiral\Core\Exception\Container\ArgumentException::class);
+        $expected = "Unable to resolve 'array' argument in 'Spiral\Tests\Core\Fixtures\TypedClass::__construct'";
+        $this->expectExceptionMessage($expected);
+        $this->expectException(ArgumentException::class);
+
         $container = new Container();
 
         $object = $container->make(
@@ -330,7 +307,7 @@ class AutowireTest extends TestCase
                 'int'    => 123,
                 'float'  => 1.00,
                 'bool'   => true,
-                'array'  => 'not array'
+                'array'  => 'not array',
             ]
         );
 
@@ -347,7 +324,7 @@ class AutowireTest extends TestCase
                 'string' => '',
                 'int'    => 123,
                 'float'  => 1.00,
-                'bool'   => true
+                'bool'   => true,
             ]
         );
 
@@ -365,7 +342,7 @@ class AutowireTest extends TestCase
                 'int'    => 123,
                 'float'  => 1.00,
                 'bool'   => true,
-                'pong'   => null
+                'pong'   => null,
             ]
         );
 
@@ -382,7 +359,7 @@ class AutowireTest extends TestCase
             SoftDependedClass::class,
             [
                 'name'   => 'some-name',
-                'sample' => new Container\Autowire('sample-binding')
+                'sample' => new Container\Autowire('sample-binding'),
             ]
         );
 
@@ -406,7 +383,7 @@ class AutowireTest extends TestCase
             new Container\Autowire(
                 SoftDependedClass::class,
                 [
-                'name' => 'Fixed'
+                    'name' => 'Fixed',
                 ]
             )
         );
@@ -430,7 +407,7 @@ class AutowireTest extends TestCase
             new Container\Autowire(
                 SoftDependedClass::class,
                 [
-                'name' => 'Fixed'
+                    'name' => 'Fixed',
                 ]
             )
         );
@@ -446,7 +423,7 @@ class AutowireTest extends TestCase
             new Container\Autowire(
                 SoftDependedClass::class,
                 [
-                'name' => 'Fixed'
+                    'name' => 'Fixed',
                 ]
             )
         );
@@ -468,8 +445,8 @@ class AutowireTest extends TestCase
                 [
                     'class'   => SoftDependedClass::class,
                     'options' => [
-                        'name' => 'Fixed'
-                    ]
+                        'name' => 'Fixed',
+                    ],
                 ]
             )
         );
@@ -488,14 +465,14 @@ class AutowireTest extends TestCase
         $a = new Container\Autowire(
             SoftDependedClass::class,
             [
-            'name' => 'Fixed'
+                'name' => 'Fixed',
             ]
         );
 
         $b = Container\Autowire::__set_state(
             [
                 'alias'      => SoftDependedClass::class,
-                'parameters' => ['name' => 'Fixed']
+                'parameters' => ['name' => 'Fixed'],
             ]
         );
         $this->assertEquals($a, $b);

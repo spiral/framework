@@ -55,10 +55,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'spiral/composer-publish-plugin' => '^1.0',
             ],
             'autoload-dev' => [
-                'files' => [
-                    'resources/patches/ComposerJson.php',
-                    'resources/patches/ComposerJsonFactory.php',
-                ],
                 'psr-4' => [
                     'Spiral\\Tests\\Framework\\' => 'tests/Framework',
                     'Spiral\\Tests\\App\\'       => 'tests/app/src',
@@ -77,10 +73,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'spiral/translator'         => '^1.2',
                 'spiral/console'            => '^1.0',
                 'spiral/http'               => '^1.0',
-                'spiral/cookies'            => '^1.0',
-                'spiral/csrf'               => '^1.0',
+                'spiral/cookies'            => '^1.2',
+                'spiral/csrf'               => '^1.1',
                 'spiral/router'             => '^1.0',
-                'spiral/session'            => '^1.1',
+                'spiral/session'            => '^1.2.2',
                 'spiral/roadrunner'         => '^1.2',
                 'spiral/models'             => '^2.0',
                 'spiral/validation'         => '^1.4.4',
@@ -96,7 +92,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'cycle/migrations'          => '^1.0',
                 'cycle/proxy-factory'       => '^1.0',
                 'spiral/auth'               => '^1.0',
-                'spiral/auth-http'          => '^1.0',
+                'spiral/auth-http'          => '^1.1',
                 'spiral/broadcast'          => '^2.0',
                 'spiral/broadcast-ws'       => '^1.0',
             ],
