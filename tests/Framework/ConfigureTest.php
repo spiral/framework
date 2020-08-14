@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework;
 
+use Spiral\Tests\Framework\GRPC\GenerateTest;
+
 class ConfigureTest extends ConsoleTest
 {
     public function testConfigure(): void

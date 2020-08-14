@@ -68,6 +68,6 @@ class ListTest extends ConsoleTest
         $out = $this->runCommandDebug('grpc:services');
 
         $this->assertStringContainsString('service.Echo', $out);
-        $this->assertStringContainsString('Spiral\App\Service\EchoService', $out);
+        $this->assertStringContainsString('Spiral\Tests\App\Service\EchoService', $out);
     }
 }

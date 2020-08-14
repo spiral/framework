@@ -17,9 +17,10 @@ use Spiral\Tests\Framework\ConsoleTest;
 class GenerateTest extends ConsoleTest
 {
     public const SERVICE = '<?php
-    namespace Spiral\App\Service;
+    namespace Spiral\Tests\App\Service;
+    
     use Spiral\GRPC;
-    use Spiral\App\Service\Sub\Message;
+    use Spiral\Tests\App\Service\Sub\Message;
 
     class EchoService implements EchoInterface
     {
