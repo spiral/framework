@@ -69,7 +69,7 @@
         "spiral/translator": "^1.2",
         "spiral/validation": "^1.4.4",
         "spiral/views": "^1.0",
-        "symplify/monorepo-builder": "^8.0"
+        "symplify/monorepo-builder": "^7.0"
     },
     "autoload-dev": {
         "psr-4": {
