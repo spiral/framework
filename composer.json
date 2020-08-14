@@ -44,13 +44,13 @@
         "phpunit/phpunit": "^8.5|^9.0",
         "roave/security-advisories": "dev-master",
         "spiral/auth": "^1.0",
-        "spiral/auth-http": "^1.0",
+        "spiral/auth-http": "^1.1",
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
         "spiral/console": "^1.0",
-        "spiral/cookies": "^1.0",
-        "spiral/csrf": "^1.0",
+        "spiral/cookies": "^1.2",
+        "spiral/csrf": "^1.1",
         "spiral/database": "^2.4",
         "spiral/debug": "^1.1",
         "spiral/encrypter": "^1.0",
@@ -64,7 +64,7 @@
         "spiral/roadrunner": "^1.2",
         "spiral/router": "^1.0",
         "spiral/security": "^2.0",
-        "spiral/session": "^1.1",
+        "spiral/session": "^1.2.2",
         "spiral/snapshots": "^1.0",
         "spiral/translator": "^1.2",
         "spiral/validation": "^1.4.4",
@@ -83,7 +83,10 @@
     },
     "scripts": {
         "cs": "spiral-cs check src tests",
-        "merge": "monorepo-builder merge",
+        "merge": [
+            "monorepo-builder merge",
+            "@php bin/sync"
+        ],
         "split": "monorepo-builder split"
     },
     "extra": {
