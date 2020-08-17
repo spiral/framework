@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Config;
 
+use Spiral\Config\Exception\LoaderException;
+use Spiral\Core\Container\Autowire;
+
 class PhpLoaderTest extends BaseTest
 {
     public function testGetConfig(): void
@@ -20,26 +23,24 @@ class PhpLoaderTest extends BaseTest
         $this->assertEquals(
             [
                 'id'       => 'hello world',
-                'autowire' => new \Spiral\Core\Container\Autowire('something')
+                'autowire' => new Autowire('something'),
             ],
             $cf->getConfig('test')
         );
     }
 
-    /**
-     * @expectedException \Spiral\Config\Exception\LoaderException
-     */
     public function testEmpty(): void
     {
+        $this->expectException(LoaderException::class);
+
         $cf = $this->getFactory();
         $cf->getConfig('empty');
     }
 
-    /**
-     * @expectedException \Spiral\Config\Exception\LoaderException
-     */
     public function testBroken(): void
     {
+        $this->expectException(LoaderException::class);
+
         $cf = $this->getFactory();
         $cf->getConfig('broken');
     }

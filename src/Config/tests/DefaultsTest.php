@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Config;
 
+use Spiral\Core\Container\Autowire;
+use Spiral\Core\Exception\ConfiguratorException;
+
 class DefaultsTest extends BaseTest
 {
     public function testGetNonExistedByDefaultConfig(): void
@@ -28,21 +31,19 @@ class DefaultsTest extends BaseTest
         $this->assertSame($config, $cf->getConfig('magic'));
     }
 
-    /**
-     * @expectedException \Spiral\Core\Exception\ConfiguratorException
-     */
     public function testDefaultsTwice(): void
     {
+        $this->expectException(ConfiguratorException::class);
+
         $cf = $this->getFactory();
         $cf->setDefaults('magic', ['key' => 'value']);
         $cf->setDefaults('magic', ['key' => 'value']);
     }
 
-    /**
-     * @expectedException \Spiral\Core\Exception\ConfiguratorException
-     */
     public function testDefaultToAlreadyLoaded(): void
     {
+        $this->expectException(ConfiguratorException::class);
+
         $cf = $this->getFactory();
 
         $cf->getConfig('test');
@@ -54,7 +55,7 @@ class DefaultsTest extends BaseTest
         $cf = $this->getFactory();
 
         $cf->setDefaults('test', [
-            'key' => 'value'
+            'key' => 'value',
         ]);
 
         $config = $cf->getConfig('test');
@@ -63,7 +64,7 @@ class DefaultsTest extends BaseTest
             [
                 'key'      => 'value',
                 'id'       => 'hello world',
-                'autowire' => new \Spiral\Core\Container\Autowire('something')
+                'autowire' => new Autowire('something'),
             ],
             $config
         );
