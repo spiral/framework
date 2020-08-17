@@ -9,37 +9,34 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\GRPC;
+namespace Spiral\Tests\Framework\GRPC;
 
 use Mockery as m;
-use Spiral\App\Service\Sub\Message;
 use Spiral\Files\Files;
-use Spiral\Framework\ConsoleTest;
 use Spiral\GRPC\GRPCDispatcher;
 use Spiral\RoadRunner\Worker;
+use Spiral\App\Service\Sub\Message;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class DispatcherTest extends ConsoleTest
 {
     public function setUp(): void
     {
         exec('protoc 2>&1', $out);
-        if (strpos(join("\n", $out), '--php_out') === false) {
+        if (strpos(implode("\n", $out), '--php_out') === false) {
             $this->markTestSkipped('Protoc binary is missing');
         }
 
         parent::setUp();
 
         $fs = new Files();
-        $proto = $fs->normalizePath($this->app->dir('app') . 'proto/service.proto');
-
-        // protoc can't figure relative paths
-        $proto = str_replace('Framework/../', '', $proto);
 
         $this->runCommandDebug('grpc:generate', [
-            'proto' => $proto
+            'proto' => realpath($fs->normalizePath($this->app->dir('app') . 'proto/service.proto'))
         ]);
 
-        file_put_contents($this->app->dir('app') . 'src/Service/EchoService.php', GenerateTest::SERVICE);
+        $output = $this->app->dir('app') . 'src/Service/EchoService.php';
+        file_put_contents($output, GenerateTest::SERVICE);
     }
 
     public function tearDown(): void

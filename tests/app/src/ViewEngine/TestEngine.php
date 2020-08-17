@@ -32,7 +32,7 @@ class TestEngine extends AbstractEngine
 
     public function compile(string $path, ContextInterface $context): void
     {
-        if ($path == 'custom:error') {
+        if ($path === 'custom:error') {
             throw new EngineException('Unable to compile custom:error');
         }
     }

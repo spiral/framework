@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Framework;
+namespace Spiral\Tests\Framework\Framework;
 
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class RouteListTest extends ConsoleTest
 {

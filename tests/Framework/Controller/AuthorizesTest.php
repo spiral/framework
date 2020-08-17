@@ -9,19 +9,19 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Controller;
+namespace Spiral\Tests\Framework\Controller;
 
-use Spiral\App\Controller\AuthController;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Framework\BaseTest;
 use Spiral\Security\Actor\Actor;
 use Spiral\Security\Actor\Guest;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
 use Spiral\Security\GuardScope;
+use Spiral\App\Controller\AuthController;
+use Spiral\Tests\Framework\BaseTest;
 
 class AuthorizesTest extends BaseTest
 {

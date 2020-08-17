@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Views;
+namespace Spiral\Tests\Framework\Views;
 
-use Spiral\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTest;
 use Spiral\Translator\TranslatorInterface;
 use Spiral\Translator\Views\LocaleDependency;
 use Spiral\Views\ViewsInterface;

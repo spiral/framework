@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\GRPC;
+namespace Spiral\Tests\Framework\GRPC;
 
 use Spiral\Files\Files;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class ListTest extends ConsoleTest
 {
@@ -63,7 +63,8 @@ class ListTest extends ConsoleTest
             'proto' => $this->proto
         ]);
 
-        file_put_contents($this->app->dir('app') . 'src/Service/EchoService.php', GenerateTest::SERVICE);
+        $output = $this->app->dir('app') . 'src/Service/EchoService.php';
+        file_put_contents($output, GenerateTest::SERVICE);
 
         $out = $this->runCommandDebug('grpc:services');
 

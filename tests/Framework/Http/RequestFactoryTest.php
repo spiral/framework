@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Diactoros\ServerRequestFactory;

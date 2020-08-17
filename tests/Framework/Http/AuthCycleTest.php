@@ -9,15 +9,15 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\TransactionInterface;
-use Spiral\App\User\User;
 use Spiral\Auth\Cycle\Token;
 use Spiral\Encrypter\EncrypterFactory;
-use Spiral\Framework\HttpTest;
 use Spiral\Http\Http;
+use Spiral\App\User\User;
+use Spiral\Tests\Framework\HttpTest;
 
 class AuthCycleTest extends HttpTest
 {

@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\I18n;
+namespace Spiral\Tests\Framework\I18n;
 
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class ResetTest extends ConsoleTest
 {

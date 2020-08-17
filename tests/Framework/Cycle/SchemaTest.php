@@ -9,19 +9,19 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Cycle;
+namespace Spiral\Tests\Framework\Cycle;
 
 use Cycle\ORM\ORMInterface;
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\ORM\Transaction;
-use Spiral\App\Controller\SelectController;
-use Spiral\App\User\User;
-use Spiral\App\User\UserRepository;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Console\ConsoleDispatcher;
 use Spiral\Core\CoreInterface;
-use Spiral\Framework\ConsoleTest;
+use Spiral\App\Controller\SelectController;
+use Spiral\App\User\User;
+use Spiral\App\User\UserRepository;
+use Spiral\Tests\Framework\ConsoleTest;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 

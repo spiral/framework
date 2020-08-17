@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Migrate;
+namespace Spiral\Tests\Framework\Migrate;
 
 use Spiral\Database\Database;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class InitTest extends ConsoleTest
 {

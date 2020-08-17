@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Validation;
+namespace Spiral\Tests\Framework\Validation;
 
-use Spiral\Framework\BaseTest;
+use Spiral\Tests\Framework\BaseTest;
 use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidatorInterface;
 

@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Command;
+namespace Spiral\Tests\Framework;
 
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\GRPC\GenerateTest;
 
 class ConfigureTest extends ConsoleTest
 {

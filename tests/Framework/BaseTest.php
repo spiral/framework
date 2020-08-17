@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework;
+namespace Spiral\Tests\Framework;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\App\TestApp;
 use Spiral\Boot\Environment;
+use Spiral\App\TestApp;
 
 abstract class BaseTest extends TestCase
 {

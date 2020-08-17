@@ -9,14 +9,16 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Jobs;
+namespace Spiral\Tests\Framework\Jobs;
 
 use Mockery as m;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Framework\ConsoleTest;
 use Spiral\Jobs\JobDispatcher;
 use Spiral\RoadRunner\Worker;
+use Spiral\App\Job\ErrorJob;
+use Spiral\App\Job\TestJob;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class DispatcherTest extends ConsoleTest
 {
@@ -42,10 +44,7 @@ class DispatcherTest extends ConsoleTest
 
         $w->shouldReceive('receive')->once()->with(
             \Mockery::on(function (&$context) {
-                $context = '{
-                  "id": "1",
-                  "job": "spiral.app.job.TestJob"
-                }';
+                $context = $this->arrayToContextString(TestJob::class);
 
                 return true;
             })
@@ -70,10 +69,7 @@ class DispatcherTest extends ConsoleTest
 
         $w->shouldReceive('receive')->once()->with(
             \Mockery::on(function (&$context) {
-                $context = '{
-                  "id": "1",
-                  "job": "spiral.app.job.ErrorJob"
-                }';
+                $context = $this->arrayToContextString(ErrorJob::class);
 
                 return true;
             })
@@ -97,5 +93,21 @@ class DispatcherTest extends ConsoleTest
         );
 
         $this->assertCount(1, $files);
+    }
+
+    /**
+     * @param string $class
+     * @param int $id
+     * @return string
+     */
+    protected function arrayToContextString(string $class, int $id = 1): string
+    {
+        $signature = \explode('\\', $class);
+        $class = \array_pop($signature);
+
+        return \json_encode([
+            'id'  => (string)$id,
+            'job' => \strtolower(\implode('.', $signature)) . '.' . $class
+        ]);
     }
 }

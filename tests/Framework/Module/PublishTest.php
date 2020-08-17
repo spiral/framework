@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Module;
+namespace Spiral\Tests\Framework\Module;
 
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Framework\ConsoleTest;
 use Spiral\Module\Exception\PublishException;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class PublishTest extends ConsoleTest
 {
@@ -34,7 +34,7 @@ class PublishTest extends ConsoleTest
         $file = $this->file('runtime', 'test.txt');
         file_put_contents(self::TEST_FILE, 'test');
 
-        $this->assertFileNotExists($file);
+        $this->assertFalse(is_file($file));
 
         $this->runCommandDebug('publish', [
             'type'   => 'replace',

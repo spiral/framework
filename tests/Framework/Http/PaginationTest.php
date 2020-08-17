@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Framework\HttpTest;
 use Spiral\Http\PaginationFactory;
+use Spiral\Tests\Framework\HttpTest;
 
 class PaginationTest extends HttpTest
 {

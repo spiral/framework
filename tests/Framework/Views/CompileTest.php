@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Views;
+namespace Spiral\Tests\Framework\Views;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 /**
  * @covers \Spiral\Command\Views\ResetCommand

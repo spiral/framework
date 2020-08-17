@@ -9,12 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Migrate;
+namespace Spiral\Tests\Framework\Migrate;
 
 use Spiral\Command\Migrate\MigrateCommand;
 use Spiral\Command\Migrate\ReplayCommand;
 use Spiral\Command\Migrate\RollbackCommand;
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ConfirmTest extends ConsoleTest

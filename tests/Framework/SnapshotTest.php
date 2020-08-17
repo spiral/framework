@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework;
+namespace Spiral\Tests\Framework;
 
 use Spiral\Snapshots\SnapshotInterface;
 use Spiral\Snapshots\SnapshotterInterface;

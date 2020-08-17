@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\I18n;
+namespace Spiral\Tests\Framework\I18n;
 
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class ExportTest extends ConsoleTest
 {
@@ -26,7 +26,7 @@ class ExportTest extends ConsoleTest
 
     public function testReset(): void
     {
-        $this->assertFileNotExists(sys_get_temp_dir() . '/messages.ru.php');
+        $this->assertFalse(is_file(sys_get_temp_dir() . '/messages.ru.php'));
 
         $this->runCommandDebug('i18n:index');
         $this->runCommandDebug('configure');

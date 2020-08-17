@@ -12,9 +12,6 @@ declare(strict_types=1);
 namespace Spiral\App;
 
 use Psr\Container\ContainerInterface;
-use Spiral\App\Bootloader\AppBootloader;
-use Spiral\App\Bootloader\AuthBootloader;
-use Spiral\App\Bootloader\WSBootloader;
 use Spiral\Boot\BootloadManager;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
@@ -22,6 +19,9 @@ use Spiral\Bootloader;
 use Spiral\Console\Console;
 use Spiral\Core\Container;
 use Spiral\Framework\Kernel;
+use Spiral\App\Bootloader\AppBootloader;
+use Spiral\App\Bootloader\AuthBootloader;
+use Spiral\App\Bootloader\WSBootloader;
 
 class TestApp extends Kernel
 {

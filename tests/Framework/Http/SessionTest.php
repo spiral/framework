@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Framework\HttpTest;
 use Spiral\Session\SessionInterface;
+use Spiral\Tests\Framework\HttpTest;
 
 class SessionTest extends HttpTest
 {

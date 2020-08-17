@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Cycle;
+namespace Spiral\Tests\Framework\Cycle;
 
-use Spiral\Framework\ConsoleTest;
+use Spiral\Tests\Framework\ConsoleTest;
 
 class MigrateTest extends ConsoleTest
 {

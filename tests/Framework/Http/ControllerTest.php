@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Framework\Http;
+namespace Spiral\Tests\Framework\Http;
 
-use Spiral\Framework\HttpTest;
 use Spiral\Http\Diactoros\StreamFactory;
+use Spiral\Tests\Framework\HttpTest;
 
 class ControllerTest extends HttpTest
 {

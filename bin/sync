@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * This file is part of Spiral Framework package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+$dest = \json_decode(\file_get_contents(__DIR__ . '/../composer.json'), true);
+
+$result = [
+    'name'              => 'spiral/framework',
+    'type'              => 'library',
+    'description'       => $dest['description'] ?? [],
+    'homepage'          => 'https://spiral.dev',
+    'license'           => 'MIT',
+    'support'           => [
+        'issues' => 'https://github.com/spiral/framework/issues',
+        'source' => 'https://github.com/spiral/framework',
+    ],
+    'authors'           => [
+        [
+            'name'  => 'Wolfy-J',
+            'email' => 'wolfy.jd@gmail.com',
+        ],
+    ],
+    'bin'               => [
+        'bin/spiral',
+    ],
+    'require'           => $dest['require'] ?? [],
+    'autoload'          => $dest['autoload'] ?? [],
+    'require-dev'       => $dest['require-dev'] ?? [],
+    'autoload-dev'      => $dest['autoload-dev'] ?? [],
+    'replace'           => $dest['replace'] ?? [],
+    'scripts'           => $dest['scripts'] ?? [],
+    'extra'             => $dest['extra'] ?? [],
+    'config'            => $dest['config'] ?? [],
+    'minimum-stability' => $dest['minimum-stability'] ?? [],
+    'prefer-stable'     => $dest['prefer-stable'] ?? [],
+];
+
+\file_put_contents(__DIR__ . '/../composer.json',
+    \json_encode($result, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES)
+);
