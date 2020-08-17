@@ -33,7 +33,8 @@
         "psr-4": {
             "Spiral\\": "src/Framework",
             "Spiral\\Config\\": "src/Config/src",
-            "Spiral\\Core\\": "src/Core/src"
+            "Spiral\\Core\\": "src/Core/src",
+            "Spiral\\Files\\": "src/Files/src"
         }
     },
     "require-dev": {
@@ -77,15 +78,18 @@
             "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
+            "Spiral\\Tests\\Files\\": "src/Files/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework"
         }
     },
     "replace": {
         "spiral/config": "*",
-        "spiral/core": "*"
+        "spiral/core": "*",
+        "spiral/files": "*"
     },
     "scripts": {
         "cs": "spiral-cs check src tests",
+        "cs-fix": "spiral-cs fix src tests",
         "merge": [
             "monorepo-builder merge",
             "@php bin/sync"

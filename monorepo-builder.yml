@@ -62,3 +62,4 @@ parameters:
   directories_to_repositories:
     src/Core: 'git@github.com:spiral/core.git'
     src/Config: 'git@github.com:spiral/config.git'
+    src/Files: 'git@github.com:spiral/files.git'
