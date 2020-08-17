@@ -60,6 +60,7 @@ parameters:
       spiral/broadcast: '^2.0'
       spiral/broadcast-ws: '^1.0'
   directories_to_repositories:
-    src/Core: 'git@github.com:spiral/core.git'
     src/Config: 'git@github.com:spiral/config.git'
+    src/Core: 'git@github.com:spiral/core.git'
+    src/Encrypter: 'git@github.com:spiral/encrypter.git'
     src/Files: 'git@github.com:spiral/files.git'

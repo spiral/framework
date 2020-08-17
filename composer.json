@@ -21,6 +21,7 @@
         "php": "^7.2",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "defuse/php-encryption": "^2.2",
         "psr/container": "^1.0",
         "spiral/boot": "^1.1",
         "spiral/composer-publish-plugin": "^1.0",
@@ -34,6 +35,7 @@
             "Spiral\\": "src/Framework",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Core\\": "src/Core/src",
+            "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Files\\": "src/Files/src"
         }
     },
@@ -55,7 +57,6 @@
         "spiral/csrf": "^1.1",
         "spiral/database": "^2.4",
         "spiral/debug": "^1.1",
-        "spiral/encrypter": "^1.0",
         "spiral/filters": "^1.0",
         "spiral/http": "^1.0",
         "spiral/jobs": "^2.0",
@@ -78,6 +79,7 @@
             "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
+            "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework"
         }
@@ -85,6 +87,7 @@
     "replace": {
         "spiral/config": "*",
         "spiral/core": "*",
+        "spiral/encrypter": "*",
         "spiral/files": "*"
     },
     "scripts": {
