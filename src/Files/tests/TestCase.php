@@ -18,5 +18,5 @@ abstract class TestCase extends BaseTestCase
     /**
      * @var string
      */
-    protected const FIXTURE_DIRECTORY = __DIR__ . '/fixtures';
+    protected const FIXTURE_DIRECTORY = __DIR__ . '/fixtures/';
 }
