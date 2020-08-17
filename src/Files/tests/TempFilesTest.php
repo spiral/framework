@@ -84,6 +84,10 @@ class TempFilesTest extends TestCase
         $this->assertSame('sample-data', $files->read($tempFilename));
 
         $files->__destruct();
-        $this->assertFileNotExists($tempFilename);
+
+        // Note: assertFileNotExists() is deprecated since phpunit 9.0, but
+        // assertFileDoesNotExist() no implemented in phpunit 8.0
+        // (for PHP 7.2 compatibility).
+        $this->assertFalse(is_file($tempFilename));
     }
 }

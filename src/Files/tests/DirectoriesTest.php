@@ -232,7 +232,8 @@ class DirectoriesTest extends TestCase
     public function testGetFilesRecursivePattern(): void
     {
         $files = new Files();
-        $this->assertEmpty($files->getFiles(dirname(__DIR__), '*.jpg'));
-        $this->assertNotEmpty($files->getFiles(dirname(__DIR__), '*.php'));
+
+        $this->assertEmpty($files->getFiles(__DIR__, '*.jpg'));
+        $this->assertNotEmpty($files->getFiles(__DIR__, '*.php'));
     }
 }
