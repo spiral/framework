@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Config;
 
+use Spiral\Config\Exception\LoaderException;
+
 class JsonLoaderTest extends BaseTest
 {
     public function testGetConfig(): void
@@ -20,20 +22,18 @@ class JsonLoaderTest extends BaseTest
         $this->assertEquals(['name' => 'value'], $cf->getConfig('json'));
     }
 
-    /**
-     * @expectedException \Spiral\Config\Exception\LoaderException
-     */
     public function testEmpty(): void
     {
+        $this->expectException(LoaderException::class);
+
         $cf = $this->getFactory();
         $cf->getConfig('empty-json');
     }
 
-    /**
-     * @expectedException \Spiral\Config\Exception\LoaderException
-     */
     public function testBroken(): void
     {
+        $this->expectException(LoaderException::class);
+
         $cf = $this->getFactory();
         $cf->getConfig('broken-json');
     }

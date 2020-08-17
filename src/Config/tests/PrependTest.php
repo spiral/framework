@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Config;
 
+use Spiral\Config\Exception\PatchException;
 use Spiral\Config\Patch\Prepend;
 
 class PrependTest extends BaseTest
@@ -39,11 +40,10 @@ class PrependTest extends BaseTest
         ], $cf->getConfig('scope'));
     }
 
-    /**
-     * @expectedException \Spiral\Config\Exception\PatchException
-     */
     public function testException(): void
     {
+        $this->expectException(PatchException::class);
+
         $cf = $this->getFactory();
         $config = $cf->getConfig('scope');
         $this->assertEquals(['value' => 'value!'], $config);

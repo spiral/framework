@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Config;
 
+use Spiral\Config\Exception\PatchException;
 use Spiral\Config\Patch\Append;
 
 class AppendTest extends BaseTest
@@ -25,7 +26,7 @@ class AppendTest extends BaseTest
 
         $this->assertSame([
             'value' => 'value!',
-            'other' => ['a' => 'b']
+            'other' => ['a' => 'b'],
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('other.', null, 'c'));
@@ -34,16 +35,15 @@ class AppendTest extends BaseTest
             'value' => 'value!',
             'other' => [
                 'a' => 'b',
-                'c'
-            ]
+                'c',
+            ],
         ], $cf->getConfig('scope'));
     }
 
-    /**
-     * @expectedException \Spiral\Config\Exception\PatchException
-     */
     public function testException(): void
     {
+        $this->expectException(PatchException::class);
+
         $cf = $this->getFactory();
         $config = $cf->getConfig('scope');
         $this->assertEquals(['value' => 'value!'], $config);

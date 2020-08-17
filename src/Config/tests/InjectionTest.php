@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Config;
 
+use Spiral\Config\Exception\ConfigDeliveredException;
 use Spiral\Config\Patch\Append;
 use Spiral\Core\ConfigsInterface;
+use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 
 class InjectionTest extends BaseTest
@@ -27,7 +29,7 @@ class InjectionTest extends BaseTest
         $this->assertEquals(
             [
                 'id'       => 'hello world',
-                'autowire' => new \Spiral\Core\Container\Autowire('something')
+                'autowire' => new Autowire('something'),
             ],
             $config->toArray()
         );
@@ -35,11 +37,10 @@ class InjectionTest extends BaseTest
         $this->assertSame($config, $this->container->get(TestConfig::class));
     }
 
-    /**
-     * @expectedException \Spiral\Config\Exception\ConfigDeliveredException
-     */
     public function testModifyAfterInjection(): void
     {
+        $this->expectException(ConfigDeliveredException::class);
+
         $cf = $this->getFactory();
         $this->container->bind(ConfigsInterface::class, $cf);
 
@@ -48,7 +49,7 @@ class InjectionTest extends BaseTest
         $this->assertEquals(
             [
                 'id'       => 'hello world',
-                'autowire' => new \Spiral\Core\Container\Autowire('something')
+                'autowire' => new Autowire('something'),
             ],
             $config->toArray()
         );
@@ -66,7 +67,7 @@ class InjectionTest extends BaseTest
         $this->assertEquals(
             [
                 'id'       => 'hello world',
-                'autowire' => new \Spiral\Core\Container\Autowire('something')
+                'autowire' => new Autowire('something'),
             ],
             $config->toArray()
         );
@@ -78,8 +79,8 @@ class InjectionTest extends BaseTest
         $this->assertEquals(
             [
                 'id'       => 'hello world',
-                'autowire' => new \Spiral\Core\Container\Autowire('something'),
-                'key'      => 'value'
+                'autowire' => new Autowire('something'),
+                'key'      => 'value',
             ],
             $config->toArray()
         );
