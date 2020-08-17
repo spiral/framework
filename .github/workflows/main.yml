@@ -49,7 +49,7 @@ jobs:
           vendor/bin/spiral-cs check src tests
       - name: Execute Tests
         run: |
-          vendor/bin/phpunit --coverage-clover=coverage.xml
+          vendor/bin/phpunit --coverage-clover=coverage.xml --testdox
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
