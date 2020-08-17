@@ -61,3 +61,4 @@ parameters:
       spiral/broadcast-ws: '^1.0'
   directories_to_repositories:
     src/Core: 'git@github.com:spiral/core.git'
+    src/Config: 'git@github.com:spiral/config.git'
