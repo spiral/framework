@@ -33,6 +33,7 @@
         ],
         "psr-4": {
             "Spiral\\": "src/Framework",
+            "Spiral\\Auth\\": "src/Auth/src",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Core\\": "src/Core/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
@@ -77,6 +78,7 @@
     "autoload-dev": {
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
+            "Spiral\\Tests\\Auth\\": "src/Auth/tests",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
@@ -86,6 +88,7 @@
         }
     },
     "replace": {
+        "spiral/auth": "self.version",
         "spiral/config": "*",
         "spiral/core": "*",
         "spiral/encrypter": "*",
