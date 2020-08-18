@@ -1,36 +1,34 @@
 {
-    "name": "spiral/encrypter",
+    "name": "spiral/models",
     "type": "library",
-    "description": "Encrypter Component",
+    "description": "DataEntity models",
     "license": "MIT",
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
-        "source": "https://github.com/spiral/encrypter"
+        "source": "https://github.com/spiral/models"
     },
     "authors": [
         {
-            "name": "Wolfy-J",
+            "name": "Anton Titov / Wolfy-J",
             "email": "wolfy.jd@gmail.com"
         }
     ],
     "require": {
-        "php": "^7.2",
-        "ext-json": "*",
-        "spiral/core": "^2.6",
-        "defuse/php-encryption": "^2.2"
+        "php": "^7.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.0"
+        "phpunit/phpunit": "^8.5|^9.0",
+        "mockery/mockery": "^1.1"
     },
     "autoload": {
         "psr-4": {
-            "Spiral\\Encrypter\\": "src"
+            "Spiral\\Models\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spiral\\Tests\\Encrypter\\": "tests"
+            "Spiral\\Tests\\Models\\": "tests"
         }
     },
     "extra": {

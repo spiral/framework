@@ -36,7 +36,8 @@
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Core\\": "src/Core/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
-            "Spiral\\Files\\": "src/Files/src"
+            "Spiral\\Files\\": "src/Files/src",
+            "Spiral\\Models\\": "src/Models/src"
         }
     },
     "require-dev": {
@@ -62,7 +63,6 @@
         "spiral/jobs": "^2.0",
         "spiral/logger": "^1.0",
         "spiral/migrations": "^2.0",
-        "spiral/models": "^2.0",
         "spiral/php-grpc": "^1.0",
         "spiral/roadrunner": "^1.2",
         "spiral/router": "^1.0",
@@ -81,14 +81,16 @@
             "Spiral\\Tests\\Core\\": "src/Core/tests",
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
-            "Spiral\\Tests\\Framework\\": "tests/Framework"
+            "Spiral\\Tests\\Framework\\": "tests/Framework",
+            "Spiral\\Tests\\Models\\": "src/Models/tests"
         }
     },
     "replace": {
         "spiral/config": "*",
         "spiral/core": "*",
         "spiral/encrypter": "*",
-        "spiral/files": "*"
+        "spiral/files": "*",
+        "spiral/models": "*"
     },
     "scripts": {
         "cs": "spiral-cs check src tests",
