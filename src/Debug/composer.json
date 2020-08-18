@@ -1,0 +1,44 @@
+{
+    "name": "spiral/debug",
+    "type": "library",
+    "description": "Debug Toolkit: Log factory interface, variable dumper, benchmarker",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/debug"
+    },
+    "authors": [
+        {
+            "name": "Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "spiral/logger": "^2.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Debug\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Debug\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.6.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

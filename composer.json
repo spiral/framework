@@ -20,7 +20,6 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "ext-mbstring": "*",
         "codedungeon/php-cli-colors": "~1.0",
         "defuse/php-encryption": "^2.2",
         "psr/container": "^1.0",
@@ -39,7 +38,10 @@
             "Spiral\\Auth\\": "src/Auth/src",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Core\\": "src/Core/src",
-            "Spiral\\Debug\\": "src/Dumper/src",
+            "Spiral\\Debug\\": [
+                "src/Debug/src",
+                "src/Dumper/src"
+            ],
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Files\\": "src/Files/src",
             "Spiral\\Logger\\": "src/Logger/src",
@@ -62,7 +64,6 @@
         "spiral/cookies": "^1.2",
         "spiral/csrf": "^1.1",
         "spiral/database": "^2.4",
-        "spiral/debug": "^1.1",
         "spiral/filters": "^1.0",
         "spiral/http": "^1.0",
         "spiral/jobs": "^2.0",
@@ -84,7 +85,10 @@
             "Spiral\\Tests\\Auth\\": "src/Auth/tests",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
-            "Spiral\\Tests\\Debug\\": "src/Dumper/tests",
+            "Spiral\\Tests\\Debug\\": [
+                "src/Debug/tests",
+                "src/Dumper/tests"
+            ],
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
@@ -96,6 +100,7 @@
         "spiral/auth": "*",
         "spiral/config": "*",
         "spiral/core": "*",
+        "spiral/debug": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
         "spiral/files": "*",
