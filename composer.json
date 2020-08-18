@@ -49,7 +49,6 @@
         "mockery/mockery": "^1.1",
         "phpunit/phpunit": "^8.5|^9.0",
         "roave/security-advisories": "dev-master",
-        "spiral/auth": "^1.0",
         "spiral/auth-http": "^1.1",
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
