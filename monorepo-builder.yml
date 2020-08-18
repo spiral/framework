@@ -61,6 +61,7 @@ parameters:
     src/Auth: 'git@github.com:spiral/auth.git'
     src/Config: 'git@github.com:spiral/config.git'
     src/Core: 'git@github.com:spiral/core.git'
+    src/Dumper: 'git@github.com:spiral/dumper.git'
     src/Encrypter: 'git@github.com:spiral/encrypter.git'
     src/Files: 'git@github.com:spiral/files.git'
     src/Models: 'git@github.com:spiral/models.git'
