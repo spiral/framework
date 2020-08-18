@@ -18,7 +18,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           coverage: pcov
           tools: pecl
-          ini-values: max_execution_time=0
+          ini-values: "memory_limit=-1"
       - name: Setup Protobuf
         run: |
           PROTOC_VERSION=3.11.3
@@ -44,7 +44,7 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
-        run: composer install --no-interaction --prefer-dist
+        run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
       - name: Check coding standards
         run: |
           composer cs:check
