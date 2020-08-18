@@ -145,6 +145,8 @@ class HandlerTest extends TestCase
 
     public function testConsoleHandlerWithColorsDebug(): void
     {
+        $this->markTestSkipped('Temporary skipped');
+
         $handler = new ConsoleHandler();
         $handler->setColorsSupport(true);
 
