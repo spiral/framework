@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Debug;
+namespace Spiral\Tests\Exceptions;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Exceptions\Highlighter;

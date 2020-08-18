@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Debug;
+namespace Spiral\Tests\Exceptions;
 
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\TestCase;
@@ -245,6 +245,8 @@ class HandlerTest extends TestCase
 
     public function testHtmlHandlerStacktrace(): void
     {
+        $this->markTestSkipped('FIXME: Very long execution time');
+
         $handler = new HtmlHandler(HtmlHandler::DEFAULT);
 
         try {
@@ -261,6 +263,8 @@ class HandlerTest extends TestCase
 
     public function testHtmlHandlerInvertedStacktrace(): void
     {
+        $this->markTestSkipped('FIXME: Very long execution time');
+
         $handler = new HtmlHandler(HtmlHandler::INVERTED);
 
         try {
