@@ -75,11 +75,11 @@ class SchematicEntityTest extends TestCase
         $entity = new SchematicEntity([], $schema);
         $entity->setField('a', '123');
 
-        $this->assertInternalType('int', $entity->getField('a'));
+        $this->assertIsInt($entity->getField('a'));
         $this->assertSame(123, $entity->getField('a'));
 
         $entity->a = '800';
-        $this->assertInternalType('int', $entity->a);
+        $this->assertIsInt($entity->a);
         $this->assertSame(800, $entity->a);
     }
 
@@ -94,11 +94,11 @@ class SchematicEntityTest extends TestCase
         $entity = new SchematicEntity([], $schema);
 
         $entity->setField('a', false);
-        $this->assertInternalType('int', $entity->getField('a'));
-        $this->assertInternalType('bool', $entity->getValue()['a']);
+        $this->assertIsInt($entity->getField('a'));
+        $this->assertIsBool($entity->getValue()['a']);
 
         $entity->a = 8000.1;
-        $this->assertInternalType('int', $entity->a);
-        $this->assertInternalType('float', $entity->getValue()['a']);
+        $this->assertIsInt($entity->a);
+        $this->assertIsBool($entity->getValue()['a']);
     }
 }
