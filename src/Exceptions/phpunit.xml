@@ -12,7 +12,7 @@
          stopOnError="false"
          stderr="true">
     <testsuites>
-        <testsuite name="Core Test Suite">
+        <testsuite name="Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
