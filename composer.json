@@ -20,22 +20,24 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "codedungeon/php-cli-colors": "~1.0",
         "defuse/php-encryption": "^2.2",
         "psr/container": "^1.0",
         "psr/log": "^1.0",
-        "spiral/boot": "^1.1",
         "spiral/composer-publish-plugin": "^1.0",
         "spiral/tokenizer": "^2.0"
     },
     "autoload": {
         "files": [
+            "src/Boot/src/helpers.php",
             "src/Dumper/src/helpers.php",
             "src/Framework/helpers.php"
         ],
         "psr-4": {
             "Spiral\\": "src/Framework",
             "Spiral\\Auth\\": "src/Auth/src",
+            "Spiral\\Boot\\": "src/Boot/src",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Core\\": "src/Core/src",
             "Spiral\\Debug\\": [
@@ -43,6 +45,7 @@
                 "src/Dumper/src"
             ],
             "Spiral\\Encrypter\\": "src/Encrypter/src",
+            "Spiral\\Exceptions\\": "src/Exceptions/src",
             "Spiral\\Files\\": "src/Files/src",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Models\\": "src/Models/src"
@@ -83,6 +86,7 @@
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
             "Spiral\\Tests\\Auth\\": "src/Auth/tests",
+            "Spiral\\Tests\\Boot\\": "src/Boot/tests",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
             "Spiral\\Tests\\Debug\\": [
@@ -90,6 +94,7 @@
                 "src/Dumper/tests"
             ],
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
+            "Spiral\\Tests\\Exceptions\\": "src/Exceptions/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
@@ -98,11 +103,13 @@
     },
     "replace": {
         "spiral/auth": "*",
+        "spiral/boot": "*",
         "spiral/config": "*",
         "spiral/core": "*",
         "spiral/debug": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
+        "spiral/exceptions": "*",
         "spiral/files": "*",
         "spiral/logger": "*",
         "spiral/models": "*"
