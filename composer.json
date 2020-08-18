@@ -115,8 +115,20 @@
         "spiral/models": "*"
     },
     "scripts": {
-        "cs": "spiral-cs check src tests",
-        "cs-fix": "spiral-cs fix src tests",
+        "cs:check": [
+            "spiral-cs check src/Framework",
+            "spiral-cs check src/Auth/src",
+            "spiral-cs check src/Boot/src",
+            "spiral-cs check src/Config/src",
+            "spiral-cs check src/Core/src",
+            "spiral-cs check src/Debug/src",
+            "spiral-cs check src/Dumper/src",
+            "spiral-cs check src/Encrypter/src",
+            "spiral-cs check src/Exceptions/src",
+            "spiral-cs check src/Files/src",
+            "spiral-cs check src/Logger/src",
+            "spiral-cs check src/Models/src"
+        ],
         "merge": [
             "monorepo-builder merge",
             "@php bin/sync"
