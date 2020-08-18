@@ -145,8 +145,6 @@ class HandlerTest extends TestCase
 
     public function testConsoleHandlerWithColorsDebug(): void
     {
-        $this->markTestSkipped('Temporary skipped');
-
         $handler = new ConsoleHandler();
         $handler->setColorsSupport(true);
 
@@ -164,7 +162,7 @@ class HandlerTest extends TestCase
 
     public function testHtmlHandlerDefaultDebug(): void
     {
-        $this->markTestSkipped('Temporary skipped (x2)');
+        $this->markTestSkipped('FIXME: Very long execution time');
 
         $handler = new HtmlHandler(HtmlHandler::DEFAULT);
 
@@ -182,6 +180,8 @@ class HandlerTest extends TestCase
 
     public function testHtmlHandlerInvertedDebug(): void
     {
+        $this->markTestSkipped('FIXME: Very long execution time');
+
         $handler = new HtmlHandler(HtmlHandler::INVERTED);
 
         $result = $handler->renderException(new Error(
