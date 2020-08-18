@@ -42,6 +42,7 @@
             "Spiral\\Debug\\": "src/Dumper/src",
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Files\\": "src/Files/src",
+            "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Models\\": "src/Models/src"
         }
     },
@@ -65,7 +66,6 @@
         "spiral/filters": "^1.0",
         "spiral/http": "^1.0",
         "spiral/jobs": "^2.0",
-        "spiral/logger": "^1.0",
         "spiral/migrations": "^2.0",
         "spiral/php-grpc": "^1.0",
         "spiral/roadrunner": "^1.2",
@@ -88,6 +88,7 @@
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
+            "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests"
         }
     },
@@ -98,6 +99,7 @@
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
         "spiral/files": "*",
+        "spiral/logger": "*",
         "spiral/models": "*"
     },
     "scripts": {

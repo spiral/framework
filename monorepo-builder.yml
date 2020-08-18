@@ -30,7 +30,6 @@ parameters:
       mockery/mockery: '^1.1'
       symplify/monorepo-builder: '^7.0'
       spiral/code-style: '^1.0'
-      spiral/logger: '^1.0'
       spiral/debug: '^1.1'
       spiral/encrypter: '^1.0'
       spiral/snapshots: '^1.0'
@@ -64,4 +63,5 @@ parameters:
     src/Dumper: 'git@github.com:spiral/dumper.git'
     src/Encrypter: 'git@github.com:spiral/encrypter.git'
     src/Files: 'git@github.com:spiral/files.git'
+    src/Logger: 'git@github.com:spiral/logger.git'
     src/Models: 'git@github.com:spiral/models.git'
