@@ -87,7 +87,7 @@
         }
     },
     "replace": {
-        "spiral/auth": "self.version",
+        "spiral/auth": "*",
         "spiral/config": "*",
         "spiral/core": "*",
         "spiral/encrypter": "*",
