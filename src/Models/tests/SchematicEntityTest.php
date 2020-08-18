@@ -99,6 +99,6 @@ class SchematicEntityTest extends TestCase
 
         $entity->a = 8000.1;
         $this->assertIsInt($entity->a);
-        $this->assertIsBool($entity->getValue()['a']);
+        $this->assertIsFloat($entity->getValue()['a']);
     }
 }
