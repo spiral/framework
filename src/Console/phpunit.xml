@@ -12,17 +12,13 @@
          stopOnError="false"
          stderr="true">
     <testsuites>
-        <testsuite name="Components Test Suite">
-            <directory>src/*/tests</directory>
-        </testsuite>
-        <testsuite name="Framework Test Suite">
+        <testsuite name="Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
             <directory>src</directory>
-            <directory>src/*/src</directory>
         </whitelist>
     </filter>
     <php>

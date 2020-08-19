@@ -26,7 +26,8 @@
         "psr/container": "^1.0",
         "psr/log": "^1.0",
         "spiral/composer-publish-plugin": "^1.0",
-        "spiral/tokenizer": "^2.0"
+        "spiral/tokenizer": "^2.0",
+        "symfony/console": "^2.5|^3.0|^4.0|^5.0"
     },
     "autoload": {
         "files": [
@@ -39,6 +40,7 @@
             "Spiral\\Auth\\": "src/Auth/src",
             "Spiral\\Boot\\": "src/Boot/src",
             "Spiral\\Config\\": "src/Config/src",
+            "Spiral\\Console\\": "src/Console/src",
             "Spiral\\Core\\": "src/Core/src",
             "Spiral\\Debug\\": [
                 "src/Debug/src",
@@ -88,6 +90,7 @@
             "Spiral\\Tests\\Auth\\": "src/Auth/tests",
             "Spiral\\Tests\\Boot\\": "src/Boot/tests",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
+            "Spiral\\Tests\\Console\\": "src/Console/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
             "Spiral\\Tests\\Debug\\": [
                 "src/Debug/tests",
@@ -105,6 +108,7 @@
         "spiral/auth": "*",
         "spiral/boot": "*",
         "spiral/config": "*",
+        "spiral/console": "*",
         "spiral/core": "*",
         "spiral/debug": "*",
         "spiral/dumper": "*",
@@ -115,20 +119,6 @@
         "spiral/models": "*"
     },
     "scripts": {
-        "cs:check": [
-            "spiral-cs check src/Framework",
-            "spiral-cs check src/Auth/src",
-            "spiral-cs check src/Boot/src",
-            "spiral-cs check src/Config/src",
-            "spiral-cs check src/Core/src",
-            "spiral-cs check src/Debug/src",
-            "spiral-cs check src/Dumper/src",
-            "spiral-cs check src/Encrypter/src",
-            "spiral-cs check src/Exceptions/src",
-            "spiral-cs check src/Files/src",
-            "spiral-cs check src/Logger/src",
-            "spiral-cs check src/Models/src"
-        ],
         "merge": [
             "monorepo-builder merge",
             "@php bin/sync"
