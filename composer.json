@@ -24,11 +24,14 @@
         "codedungeon/php-cli-colors": "~1.0",
         "defuse/php-encryption": "^2.2",
         "psr/container": "^1.0",
+        "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0",
         "psr/log": "^1.0",
         "spiral/composer-publish-plugin": "^1.0",
         "spiral/tokenizer": "^2.0",
-        "symfony/console": "^2.5|^3.0|^4.0|^5.0"
+        "symfony/console": "^2.5|^3.0|^4.0|^5.0",
+        "symfony/polyfill-php80": "^1.18"
     },
     "autoload": {
         "files": [
@@ -50,6 +53,7 @@
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Exceptions\\": "src/Exceptions/src",
             "Spiral\\Files\\": "src/Files/src",
+            "Spiral\\Http\\": "src/Http/src",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Models\\": "src/Models/src",
             "Spiral\\Streams\\": "src/Streams/src"
@@ -72,7 +76,6 @@
         "spiral/csrf": "^1.1",
         "spiral/database": "^2.4",
         "spiral/filters": "^1.0",
-        "spiral/http": "^1.0",
         "spiral/jobs": "^2.0",
         "spiral/migrations": "^2.0",
         "spiral/php-grpc": "^1.0",
@@ -102,6 +105,7 @@
             "Spiral\\Tests\\Exceptions\\": "src/Exceptions/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
+            "Spiral\\Tests\\Http\\": "src/Http/tests",
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",
             "Spiral\\Tests\\Streams\\": "src/Streams/tests"
@@ -118,6 +122,7 @@
         "spiral/encrypter": "*",
         "spiral/exceptions": "*",
         "spiral/files": "*",
+        "spiral/http": "*",
         "spiral/logger": "*",
         "spiral/models": "*",
         "spiral/streams": "*"
