@@ -45,6 +45,7 @@
             "Spiral\\Boot\\": "src/Boot/src",
             "Spiral\\Config\\": "src/Config/src",
             "Spiral\\Console\\": "src/Console/src",
+            "Spiral\\Cookies\\": "src/Cookies/src",
             "Spiral\\Core\\": "src/Core/src",
             "Spiral\\Debug\\": [
                 "src/Debug/src",
@@ -72,7 +73,6 @@
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
-        "spiral/cookies": "^1.2",
         "spiral/csrf": "^1.1",
         "spiral/database": "^2.4",
         "spiral/filters": "^1.0",
@@ -96,6 +96,7 @@
             "Spiral\\Tests\\Boot\\": "src/Boot/tests",
             "Spiral\\Tests\\Config\\": "src/Config/tests",
             "Spiral\\Tests\\Console\\": "src/Console/tests",
+            "Spiral\\Tests\\Cookies\\": "src/Cookies/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
             "Spiral\\Tests\\Debug\\": [
                 "src/Debug/tests",
@@ -116,6 +117,7 @@
         "spiral/boot": "*",
         "spiral/config": "*",
         "spiral/console": "*",
+        "spiral/cookies": "self.version",
         "spiral/core": "*",
         "spiral/debug": "*",
         "spiral/dumper": "*",

@@ -31,10 +31,8 @@ parameters:
       symplify/monorepo-builder: '^7.0'
       spiral/code-style: '^1.0'
       # Components
-      spiral/encrypter: '^1.0'
       spiral/snapshots: '^1.0'
       spiral/translator: '^1.2'
-      spiral/cookies: '^1.2'
       spiral/csrf: '^1.1'
       spiral/router: '^1.0'
       spiral/session: '^1.2.2'
