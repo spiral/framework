@@ -24,6 +24,7 @@
         "codedungeon/php-cli-colors": "~1.0",
         "defuse/php-encryption": "^2.2",
         "psr/container": "^1.0",
+        "psr/http-message": "^1.0",
         "psr/log": "^1.0",
         "spiral/composer-publish-plugin": "^1.0",
         "spiral/tokenizer": "^2.0",
@@ -50,7 +51,8 @@
             "Spiral\\Exceptions\\": "src/Exceptions/src",
             "Spiral\\Files\\": "src/Files/src",
             "Spiral\\Logger\\": "src/Logger/src",
-            "Spiral\\Models\\": "src/Models/src"
+            "Spiral\\Models\\": "src/Models/src",
+            "Spiral\\Streams\\": "src/Streams/src"
         }
     },
     "require-dev": {
@@ -58,6 +60,7 @@
         "cycle/migrations": "^1.0",
         "cycle/orm": "^1.0",
         "cycle/proxy-factory": "^1.0",
+        "laminas/laminas-diactoros": "^2.3",
         "mockery/mockery": "^1.1",
         "phpunit/phpunit": "^8.5|^9.0",
         "roave/security-advisories": "dev-master",
@@ -65,7 +68,6 @@
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
-        "spiral/console": "^1.0",
         "spiral/cookies": "^1.2",
         "spiral/csrf": "^1.1",
         "spiral/database": "^2.4",
@@ -101,7 +103,8 @@
             "Spiral\\Tests\\Files\\": "src/Files/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
-            "Spiral\\Tests\\Models\\": "src/Models/tests"
+            "Spiral\\Tests\\Models\\": "src/Models/tests",
+            "Spiral\\Tests\\Streams\\": "src/Streams/tests"
         }
     },
     "replace": {
@@ -116,7 +119,8 @@
         "spiral/exceptions": "*",
         "spiral/files": "*",
         "spiral/logger": "*",
-        "spiral/models": "*"
+        "spiral/models": "*",
+        "spiral/streams": "*"
     },
     "scripts": {
         "merge": [
