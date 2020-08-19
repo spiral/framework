@@ -60,7 +60,7 @@ jobs:
           vendor/bin/spiral-cs check src/Exceptions/src
           vendor/bin/spiral-cs check src/Files/src
           vendor/bin/spiral-cs check src/Logger/src
-          vendor/bin/spiral-cs check src/Models/sr
+          vendor/bin/spiral-cs check src/Models/src
 
 
   #
