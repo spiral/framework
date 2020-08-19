@@ -58,6 +58,7 @@ parameters:
     src/Auth: 'git@github.com:spiral/auth.git'
     src/Boot: 'git@github.com:spiral/boot.git'
     src/Config: 'git@github.com:spiral/config.git'
+    src/Console: 'git@github.com:spiral/console.git'
     src/Core: 'git@github.com:spiral/core.git'
     src/Debug: 'git@github.com:spiral/debug.git'
     src/Dumper: 'git@github.com:spiral/dumper.git'
