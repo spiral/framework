@@ -132,10 +132,6 @@
         "spiral/streams": "*"
     },
     "scripts": {
-        "test-all": [
-            "@phpcs",
-            "@test"
-        ],
         "test": "phpunit --testdox",
         "phpcs": "phpcs --standard=phpcs.xml",
         "phpcbf": "phpcbf --standard=phpcs.xml",
