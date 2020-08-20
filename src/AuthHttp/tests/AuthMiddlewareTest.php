@@ -23,8 +23,8 @@ use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
-use Spiral\Tests\Auth\Stub\TestProvider;
-use Spiral\Tests\Auth\Stub\TestStorage;
+use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
+use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
 class AuthMiddlewareTest extends TestCase
 {
@@ -41,8 +41,8 @@ class AuthMiddlewareTest extends TestCase
         $http->getPipeline()->pushMiddleware(
             new AuthMiddleware(
                 $this->container,
-                new TestProvider(),
-                new TestStorage(),
+                new TestAuthHttpProvider(),
+                new TestAuthHttpStorage(),
                 new TransportRegistry()
             )
         );
@@ -67,8 +67,8 @@ class AuthMiddlewareTest extends TestCase
         $http->getPipeline()->pushMiddleware(
             new AuthMiddleware(
                 $this->container,
-                new TestProvider(),
-                new TestStorage(),
+                new TestAuthHttpProvider(),
+                new TestAuthHttpStorage(),
                 new TransportRegistry()
             )
         );

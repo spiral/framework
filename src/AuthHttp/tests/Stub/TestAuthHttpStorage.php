@@ -14,7 +14,7 @@ namespace Spiral\Tests\Auth\Stub;
 use Spiral\Auth\TokenInterface;
 use Spiral\Auth\TokenStorageInterface;
 
-class TestStorage implements TokenStorageInterface
+class TestAuthHttpStorage implements TokenStorageInterface
 {
     public function load(string $id): ?TokenInterface
     {
@@ -22,12 +22,12 @@ class TestStorage implements TokenStorageInterface
             return null;
         }
 
-        return new TestToken($id, ['id' => $id]);
+        return new TestAuthHttpToken($id, ['id' => $id]);
     }
 
     public function create(array $payload, \DateTimeInterface $expiresAt = null): TokenInterface
     {
-        return new TestToken(
+        return new TestAuthHttpToken(
             $payload['id'],
             $payload,
             $expiresAt

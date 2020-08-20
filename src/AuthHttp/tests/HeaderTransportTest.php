@@ -24,9 +24,9 @@ use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
-use Spiral\Tests\Auth\Stub\TestProvider;
-use Spiral\Tests\Auth\Stub\TestStorage;
-use Spiral\Tests\Auth\Stub\TestToken;
+use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
+use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
+use Spiral\Tests\Auth\Stub\TestAuthHttpToken;
 
 class HeaderTransportTest extends TestCase
 {
@@ -110,7 +110,7 @@ class HeaderTransportTest extends TestCase
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
                 $request->getAttribute('authContext')->start(
-                    new TestToken('new-token', ['ok' => 1])
+                    new TestAuthHttpToken('new-token', ['ok' => 1])
                 );
             }
         );
@@ -140,8 +140,8 @@ class HeaderTransportTest extends TestCase
         $http->getPipeline()->pushMiddleware(
             new AuthMiddleware(
                 $this->container,
-                new TestProvider(),
-                new TestStorage(),
+                new TestAuthHttpProvider(),
+                new TestAuthHttpStorage(),
                 $reg = new TransportRegistry()
             )
         );

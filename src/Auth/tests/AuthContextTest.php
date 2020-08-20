@@ -14,14 +14,14 @@ namespace Spiral\Tests\Auth;
 use PHPUnit\Framework\TestCase;
 use Spiral\Auth\AuthContext;
 use Spiral\Auth\TokenInterface;
-use Spiral\Tests\Auth\Stub\TestProvider;
-use Spiral\Tests\Auth\Stub\TestToken;
+use Spiral\Tests\Auth\Stub\TestAuthProvider;
+use Spiral\Tests\Auth\Stub\TestAuthToken;
 
 class AuthContextTest extends TestCase
 {
     public function testNull(): void
     {
-        $context = new AuthContext(new TestProvider());
+        $context = new AuthContext(new TestAuthProvider());
 
         $this->assertNull($context->getToken());
         $this->assertNull($context->getActor());
@@ -32,8 +32,8 @@ class AuthContextTest extends TestCase
 
     public function testTokenButNoActor(): void
     {
-        $context = new AuthContext(new TestProvider());
-        $context->start(new TestToken('1', ['ok' => false]), 'cookie');
+        $context = new AuthContext(new TestAuthProvider());
+        $context->start(new TestAuthToken('1', ['ok' => false]), 'cookie');
 
         $this->assertInstanceOf(TokenInterface::class, $context->getToken());
         $this->assertNull($context->getActor());
@@ -42,8 +42,8 @@ class AuthContextTest extends TestCase
 
     public function testActor(): void
     {
-        $context = new AuthContext(new TestProvider());
-        $context->start(new TestToken('1', ['ok' => true]), 'cookie');
+        $context = new AuthContext(new TestAuthProvider());
+        $context->start(new TestAuthToken('ok', ['ok' => true]), 'cookie');
 
         $this->assertInstanceOf(TokenInterface::class, $context->getToken());
         $this->assertInstanceOf(\stdClass::class, $context->getActor());
@@ -52,8 +52,8 @@ class AuthContextTest extends TestCase
 
     public function testClosed(): void
     {
-        $context = new AuthContext(new TestProvider());
-        $context->start(new TestToken('1', ['ok' => true]), 'cookie');
+        $context = new AuthContext(new TestAuthProvider());
+        $context->start(new TestAuthToken('1', ['ok' => true]), 'cookie');
 
         $this->assertInstanceOf(TokenInterface::class, $context->getToken());
         $this->assertInstanceOf(\stdClass::class, $context->getActor());

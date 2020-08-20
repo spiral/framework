@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Auth;
+namespace Spiral\Tests\Auth\Stub;
 
 use Spiral\Auth\TokenInterface;
 
-class TestToken implements TokenInterface
+class TestAuthToken implements TokenInterface
 {
     /** @var string */
     private $id;

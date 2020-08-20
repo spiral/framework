@@ -29,8 +29,8 @@ use Spiral\Http\Pipeline;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
-use Spiral\Tests\Auth\Stub\TestProvider;
-use Spiral\Tests\Auth\Stub\TestStorage;
+use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
+use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
 class FirewallTest extends TestCase
 {
@@ -47,6 +47,7 @@ class FirewallTest extends TestCase
             new ExceptionFirewall(new AuthException()),
             new HeaderTransport()
         );
+
 
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
@@ -183,8 +184,8 @@ class FirewallTest extends TestCase
         $http->getPipeline()->pushMiddleware(
             new AuthMiddleware(
                 $this->container,
-                new TestProvider(),
-                new TestStorage(),
+                new TestAuthHttpProvider(),
+                new TestAuthHttpStorage(),
                 $reg = new TransportRegistry()
             )
         );
