@@ -131,6 +131,7 @@
     },
     "scripts": {
         "phpcs": "phpcs --standard=phpcs.xml",
+        "phpcbf": "phpcbf --standard=phpcs.xml",
         "merge": [
             "monorepo-builder merge",
             "@php bin/sync"
