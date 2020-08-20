@@ -14,6 +14,8 @@ namespace Spiral\Tests\Auth;
 use PHPUnit\Framework\TestCase;
 use Spiral\Auth\AuthContext;
 use Spiral\Auth\TokenInterface;
+use Spiral\Tests\Auth\Stub\TestProvider;
+use Spiral\Tests\Auth\Stub\TestToken;
 
 class AuthContextTest extends TestCase
 {
@@ -47,7 +49,6 @@ class AuthContextTest extends TestCase
         $this->assertInstanceOf(\stdClass::class, $context->getActor());
         $this->assertSame('cookie', $context->getTransport());
     }
-
 
     public function testClosed(): void
     {

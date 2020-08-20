@@ -41,7 +41,6 @@ parameters:
       spiral/database: '^2.4'
       spiral/migrations: '^2.0'
       spiral/views: '^1.0'
-      spiral/auth-http: '^1.1'
       # RoadRunner Dependencies
       spiral/roadrunner: '^1.2'
       spiral/php-grpc: '^1.0'
@@ -55,6 +54,7 @@ parameters:
       cycle/proxy-factory: '^1.0'
   directories_to_repositories:
     src/Auth: 'git@github.com:spiral/auth.git'
+    src/AuthHttp: 'git@github.com:spiral/auth-http.git'
     src/Boot: 'git@github.com:spiral/boot.git'
     src/Config: 'git@github.com:spiral/config.git'
     src/Console: 'git@github.com:spiral/console.git'
