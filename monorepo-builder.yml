@@ -33,7 +33,6 @@ parameters:
       # Components
       spiral/snapshots: '^1.0'
       spiral/translator: '^1.2'
-      spiral/csrf: '^1.1'
       spiral/router: '^1.0'
       spiral/session: '^1.2.2'
       spiral/validation: '^1.4.4'
@@ -61,6 +60,7 @@ parameters:
     src/Console: 'git@github.com:spiral/console.git'
     src/Cookies: 'git@github.com:spiral/cookies.git'
     src/Core: 'git@github.com:spiral/core.git'
+    src/Csrf: 'git@github.com:spiral/csrf.git'
     src/Debug: 'git@github.com:spiral/debug.git'
     src/Dumper: 'git@github.com:spiral/dumper.git'
     src/Encrypter: 'git@github.com:spiral/encrypter.git'

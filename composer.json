@@ -47,6 +47,7 @@
             "Spiral\\Console\\": "src/Console/src",
             "Spiral\\Cookies\\": "src/Cookies/src",
             "Spiral\\Core\\": "src/Core/src",
+            "Spiral\\Csrf\\": "src/Csrf/src",
             "Spiral\\Debug\\": [
                 "src/Debug/src",
                 "src/Dumper/src"
@@ -73,7 +74,6 @@
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
-        "spiral/csrf": "^1.1",
         "spiral/database": "^2.4",
         "spiral/filters": "^1.0",
         "spiral/jobs": "^2.0",
@@ -98,6 +98,7 @@
             "Spiral\\Tests\\Console\\": "src/Console/tests",
             "Spiral\\Tests\\Cookies\\": "src/Cookies/tests",
             "Spiral\\Tests\\Core\\": "src/Core/tests",
+            "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
             "Spiral\\Tests\\Debug\\": [
                 "src/Debug/tests",
                 "src/Dumper/tests"
@@ -119,6 +120,7 @@
         "spiral/console": "*",
         "spiral/cookies": "*",
         "spiral/core": "*",
+        "spiral/csrf": "*",
         "spiral/debug": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
@@ -130,6 +132,11 @@
         "spiral/streams": "*"
     },
     "scripts": {
+        "test-all": [
+            "@phpcs",
+            "@test"
+        ],
+        "test": "phpunit --testdox",
         "phpcs": "phpcs --standard=phpcs.xml",
         "phpcbf": "phpcbf --standard=phpcs.xml",
         "merge": [
