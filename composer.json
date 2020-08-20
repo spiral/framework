@@ -117,7 +117,7 @@
         "spiral/boot": "*",
         "spiral/config": "*",
         "spiral/console": "*",
-        "spiral/cookies": "self.version",
+        "spiral/cookies": "*",
         "spiral/core": "*",
         "spiral/debug": "*",
         "spiral/dumper": "*",
