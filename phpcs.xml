@@ -6,6 +6,7 @@
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
             <property name="forbiddenFunctions" type="array" extend="true">
+                <!-- deprecated/aliased functions -->
                 <element key="join" value="implode" />
                 <element key="chop" value="rtrim" />
                 <element key="strchr" value="strstr" />
@@ -28,6 +29,11 @@
                 <element key="is_writeable" value="is_writable" />
                 <element key="pos" value="current" />
                 <element key="sizeof" value="count" />
+
+                <!-- deprecated/aliased operators -->
+                <element key="delete" value="unset" />
+                <element key="print" value="echo" />
+                <element key="create_function" value="null" />
             </property>
         </properties>
     </rule>
