@@ -56,12 +56,12 @@ final class ProtoCompiler
                 escapeshellarg($tmpDir),
                 escapeshellarg($tmpDir),
                 escapeshellarg(dirname($protoFile)),
-                join(' ', array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
+                implode(' ', array_map('escapeshellarg', $this->getProtoFiles($protoFile)))
             ),
             $output
         );
 
-        $output = trim(join("\n", $output), "\n ,");
+        $output = trim(implode("\n", $output), "\n ,");
 
         if ($output !== '') {
             $this->files->deleteDirectory($tmpDir);

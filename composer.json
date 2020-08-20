@@ -130,6 +130,7 @@
         "spiral/streams": "*"
     },
     "scripts": {
+        "phpcs": "phpcs --standard=phpcs.xml",
         "merge": [
             "monorepo-builder merge",
             "@php bin/sync"

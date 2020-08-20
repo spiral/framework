@@ -123,7 +123,7 @@ final class CompileCommand extends Command
             );
         }
 
-        return join(', ', $values);
+        return implode(', ', $values);
     }
 
     /**

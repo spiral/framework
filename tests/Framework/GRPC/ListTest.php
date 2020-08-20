@@ -21,7 +21,7 @@ class ListTest extends ConsoleTest
     public function setUp(): void
     {
         exec('protoc 2>&1', $out);
-        if (strpos(join("\n", $out), '--php_out') === false) {
+        if (strpos(implode("\n", $out), '--php_out') === false) {
             $this->markTestSkipped('Protoc binary is missing');
             return;
         }

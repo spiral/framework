@@ -143,6 +143,6 @@ final class FileSnapshooter implements SnapshotterInterface
      */
     protected function getID(\Throwable $e): string
     {
-        return md5(join('|', [$e->getMessage(), $e->getFile(), $e->getLine()]));
+        return md5(implode('|', [$e->getMessage(), $e->getFile(), $e->getLine()]));
     }
 }

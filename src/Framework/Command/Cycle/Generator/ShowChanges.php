@@ -137,18 +137,18 @@ final class ShowChanges implements GeneratorInterface
     protected function describeIndexes(Comparator $cmp): void
     {
         foreach ($cmp->addedIndexes() as $index) {
-            $index = join(', ', $index->getColumns());
+            $index = implode(', ', $index->getColumns());
             $this->output->writeln("    - add index on <fg=yellow>[{$index}]</fg=yellow>");
         }
 
         foreach ($cmp->droppedIndexes() as $index) {
-            $index = join(', ', $index->getColumns());
+            $index = implode(', ', $index->getColumns());
             $this->output->writeln("    - drop index on <fg=yellow>[{$index}]</fg=yellow>");
         }
 
         foreach ($cmp->alteredIndexes() as $index) {
             $index = $index[0];
-            $index = join(', ', $index->getColumns());
+            $index = implode(', ', $index->getColumns());
             $this->output->writeln("    - alter index on <fg=yellow>[{$index}]</fg=yellow>");
         }
     }
@@ -159,18 +159,18 @@ final class ShowChanges implements GeneratorInterface
     protected function describeFKs(Comparator $cmp): void
     {
         foreach ($cmp->addedForeignKeys() as $fk) {
-            $fkColumns = join(', ', $fk->getColumns());
+            $fkColumns = implode(', ', $fk->getColumns());
             $this->output->writeln("    - add foreign key on <fg=yellow>{$fkColumns}</fg=yellow>");
         }
 
         foreach ($cmp->droppedForeignKeys() as $fk) {
-            $fkColumns = join(', ', $fk->getColumns());
+            $fkColumns = implode(', ', $fk->getColumns());
             $this->output->writeln("    - drop foreign key <fg=yellow>{$fkColumns}</fg=yellow>");
         }
 
         foreach ($cmp->alteredForeignKeys() as $fk) {
             $fk = $fk[0];
-            $fkColumns = join(', ', $fk->getColumns());
+            $fkColumns = implode(', ', $fk->getColumns());
             $this->output->writeln("    - alter foreign key <fg=yellow>{$fkColumns}</fg=yellow>");
         }
     }

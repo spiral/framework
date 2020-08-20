@@ -54,7 +54,7 @@ final class ExportCommand extends Command implements SingletonInterface
         if ($this->isVerbose() && !empty($mc->getDomains())) {
             $this->sprintf(
                 "<info>Exporting domain(s):</info> %s\n",
-                join(',', $mc->getDomains())
+                implode(',', $mc->getDomains())
             );
         }
 
