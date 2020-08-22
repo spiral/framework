@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Config;
 
+use Spiral\Config\Exception\ConfigDeliveredException;
 use Spiral\Core\ConfigsInterface;
+use Spiral\Core\Exception\ConfiguratorException;
 
 /**
  * Provides ability to modify configs values in runtime.
@@ -51,8 +53,8 @@ interface ConfiguratorInterface extends ConfigsInterface
      * @param string $section
      * @param array  $data
      *
-     * @throws \Spiral\Core\Exception\ConfiguratorException
-     * @throws \Spiral\Config\Exception\ConfigDeliveredException
+     * @throws ConfiguratorException
+     * @throws ConfigDeliveredException
      */
     public function setDefaults(string $section, array $data);
 
@@ -64,8 +66,8 @@ interface ConfiguratorInterface extends ConfigsInterface
      * @param PatchInterface $patch
      * @return array
      *
-     * @throws \Spiral\Core\Exception\ConfiguratorException
-     * @throws \Spiral\Config\Exception\ConfigDeliveredException
+     * @throws ConfiguratorException
+     * @throws ConfigDeliveredException
      */
     public function modify(string $section, PatchInterface $patch): array;
 }

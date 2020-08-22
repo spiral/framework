@@ -66,7 +66,6 @@ final class GuardInterceptor implements CoreInterceptorInterface
      * @param string $action
      * @return array|null
      *
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     private function getPermissions(string $controller, string $action): ?array
     {

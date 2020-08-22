@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Http\Exception;
+namespace Spiral\Cookies\Exception;
 
 class CookieException extends \RuntimeException
 {

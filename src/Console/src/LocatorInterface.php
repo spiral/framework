@@ -11,14 +11,17 @@ declare(strict_types=1);
 
 namespace Spiral\Console;
 
+use Spiral\Console\Exception\LocatorException;
+use Symfony\Component\Console\Command\Command as CommandAlias;
+
 interface LocatorInterface
 {
     /**
      * Get all available command class names.
      *
-     * @return \Symfony\Component\Console\Command\Command[]
+     * @return CommandAlias[]
      *
-     * @throws \Spiral\Console\Exception\LocatorException
+     * @throws LocatorException
      */
     public function locateCommands(): array;
 }

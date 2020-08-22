@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Config;
 
+use Spiral\Config\Exception\PatchException;
+
 interface PatchInterface
 {
     /**
@@ -21,7 +23,7 @@ interface PatchInterface
      *
      * @return array
      *
-     * @throws \Spiral\Config\Exception\PatchException
+     * @throws PatchException
      */
     public function patch(array $config): array;
 }

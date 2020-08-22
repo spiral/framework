@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Config;
 
+use Spiral\Config\Exception\LoaderException;
+
 interface LoaderInterface
 {
     /**
@@ -25,7 +27,7 @@ interface LoaderInterface
      * @param string $section
      * @return array
      *
-     * @throws \Spiral\Config\Exception\LoaderException
+     * @throws LoaderException
      */
     public function load(string $section): array;
 }

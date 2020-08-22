@@ -13,6 +13,7 @@ namespace Spiral\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Tests\Core\Fixtures\BadClass;
 use Spiral\Tests\Core\Fixtures\Bucket;
@@ -91,7 +92,7 @@ class FactoryTest extends TestCase
 
     public function testConstructAbstract(): void
     {
-        $this->expectException(\Spiral\Core\Exception\Container\ContainerException::class);
+        $this->expectException(ContainerException::class);
         $container = new Container();
         $container->make(BadClass::class);
     }

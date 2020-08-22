@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Console\Traits;
 
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -31,7 +32,7 @@ trait HelpersTrait
      * InputInterface is the interface implemented by all input classes. Only exists when command
      * are being executed.
      *
-     * @var \Symfony\Component\Console\Input\InputInterface
+     * @var InputInterface
      */
     protected $input = null;
 
