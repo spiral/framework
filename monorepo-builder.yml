@@ -18,7 +18,6 @@ parameters:
         Spiral\: 'src/Framework'
     require:
       spiral/composer-publish-plugin: '^1.0'
-      spiral/tokenizer: '^2.0'
     autoload-dev:
       psr-4:
         Spiral\Tests\Framework\: 'tests/Framework'
@@ -32,11 +31,8 @@ parameters:
       spiral/code-style: '^1.0'
       # Components
       spiral/snapshots: '^1.0'
-      spiral/translator: '^1.2'
       spiral/router: '^1.0'
       spiral/session: '^1.2.2'
-      spiral/validation: '^1.4.4'
-      spiral/filters: '^1.0'
       spiral/security: '^2.0'
       spiral/database: '^2.4'
       spiral/migrations: '^2.0'
@@ -66,7 +62,11 @@ parameters:
     src/Encrypter: 'git@github.com:spiral/encrypter.git'
     src/Exceptions: 'git@github.com:spiral/exceptions.git'
     src/Files: 'git@github.com:spiral/files.git'
+    src/Filters: 'git@github.com:spiral/filters.git'
     src/Http: 'git@github.com:spiral/http.git'
     src/Logger: 'git@github.com:spiral/logger.git'
     src/Models: 'git@github.com:spiral/models.git'
     src/Streams: 'git@github.com:spiral/streams.git'
+    src/Tokenizer: 'git@github.com:spiral/tokenizer.git'
+    src/Translator: 'git@github.com:spiral/translator.git'
+    src/Validation: 'git@github.com:spiral/validation.git'

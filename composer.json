@@ -29,15 +29,17 @@
         "psr/http-server-middleware": "^1.0",
         "psr/log": "^1.0",
         "spiral/composer-publish-plugin": "^1.0",
-        "spiral/tokenizer": "^2.0",
         "symfony/console": "^2.5|^3.0|^4.0|^5.0",
-        "symfony/polyfill-php80": "^1.18"
+        "symfony/finder": "^4.1|^5.0",
+        "symfony/polyfill-php80": "^1.18",
+        "symfony/translation": "^4.0|^5.0"
     },
     "autoload": {
         "files": [
             "src/Boot/src/helpers.php",
             "src/Dumper/src/helpers.php",
-            "src/Framework/helpers.php"
+            "src/Framework/helpers.php",
+            "src/Translator/src/helpers.php"
         ],
         "psr-4": {
             "Spiral\\": "src/Framework",
@@ -58,10 +60,14 @@
             "Spiral\\Encrypter\\": "src/Encrypter/src",
             "Spiral\\Exceptions\\": "src/Exceptions/src",
             "Spiral\\Files\\": "src/Files/src",
+            "Spiral\\Filters\\": "src/Filters/src",
             "Spiral\\Http\\": "src/Http/src",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Models\\": "src/Models/src",
-            "Spiral\\Streams\\": "src/Streams/src"
+            "Spiral\\Streams\\": "src/Streams/src",
+            "Spiral\\Tokenizer\\": "src/Tokenizer/src",
+            "Spiral\\Translator\\": "src/Translator/src",
+            "Spiral\\Validation\\": "src/Validation/src"
         }
     },
     "require-dev": {
@@ -77,7 +83,6 @@
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
         "spiral/database": "^2.4",
-        "spiral/filters": "^1.0",
         "spiral/jobs": "^2.0",
         "spiral/migrations": "^2.0",
         "spiral/php-grpc": "^1.0",
@@ -86,8 +91,6 @@
         "spiral/security": "^2.0",
         "spiral/session": "^1.2.2",
         "spiral/snapshots": "^1.0",
-        "spiral/translator": "^1.2",
-        "spiral/validation": "^1.4.4",
         "spiral/views": "^1.0",
         "symplify/monorepo-builder": "^7.0"
     },
@@ -111,11 +114,15 @@
             "Spiral\\Tests\\Encrypter\\": "src/Encrypter/tests",
             "Spiral\\Tests\\Exceptions\\": "src/Exceptions/tests",
             "Spiral\\Tests\\Files\\": "src/Files/tests",
+            "Spiral\\Tests\\Filters\\": "src/Filters/tests",
             "Spiral\\Tests\\Framework\\": "tests/Framework",
             "Spiral\\Tests\\Http\\": "src/Http/tests",
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",
-            "Spiral\\Tests\\Streams\\": "src/Streams/tests"
+            "Spiral\\Tests\\Streams\\": "src/Streams/tests",
+            "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
+            "Spiral\\Tests\\Translator\\": "src/Translator/tests",
+            "Spiral\\Tests\\Validation\\": "src/Validation/tests"
         }
     },
     "replace": {
@@ -132,10 +139,14 @@
         "spiral/encrypter": "*",
         "spiral/exceptions": "*",
         "spiral/files": "*",
+        "spiral/filters": "*",
         "spiral/http": "*",
         "spiral/logger": "*",
         "spiral/models": "*",
-        "spiral/streams": "*"
+        "spiral/streams": "*",
+        "spiral/tokenizer": "*",
+        "spiral/translator": "*",
+        "spiral/validation": "*"
     },
     "scripts": {
         "test": "phpunit --testdox",
