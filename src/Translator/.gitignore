@@ -1,0 +1,6 @@
+.idea/
+.env
+composer.lock
+vendor/
+*.db
+clover.xml

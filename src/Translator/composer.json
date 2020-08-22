@@ -1,0 +1,51 @@
+{
+    "name": "spiral/translator",
+    "type": "library",
+    "description": "Translator, Static Analysis and Auto-Indexation",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/translator"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov / Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "spiral/core": "^2.6",
+        "spiral/logger": "^2.6",
+        "spiral/tokenizer": "^2.6",
+        "symfony/translation": "^4.0|^5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "mockery/mockery": "^1.1"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "Spiral\\Translator\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Translator\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.6.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
