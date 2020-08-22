@@ -23,6 +23,7 @@ use Spiral\Validation\ParserInterface;
 use Spiral\Validation\RuleParser;
 use Spiral\Validation\ValidationInterface;
 use Spiral\Validation\ValidationProvider;
+use Spiral\Validation\ValidatorInterface;
 
 final class ValidationBootloader extends Bootloader implements SingletonInterface
 {
@@ -116,7 +117,11 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
             ]
         );
 
-        $tokenizer->addDirectory(directory('vendor') . 'spiral/validation/src/');
+
+        $tokenizer->addDirectory(\dirname(
+            (new \ReflectionClass(ValidatorInterface::class))
+                ->getFileName()
+        ));
     }
 
     /**
