@@ -103,7 +103,7 @@ jobs:
         run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
 
       - name: Execute Tests
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml --testdox
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
