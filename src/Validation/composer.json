@@ -1,0 +1,50 @@
+{
+    "name": "spiral/validation",
+    "type": "library",
+    "description": "Nested validation, Checkers, Conditional Validation",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/validation"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov / Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "spiral/core": "^2.6",
+        "spiral/files": "^2.6",
+        "spiral/streams": "^2.6",
+        "spiral/translator": "^2.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "mockery/mockery": "^1.1",
+        "laminas/laminas-diactoros": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Validation\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Validation\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.6.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
