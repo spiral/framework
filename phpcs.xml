@@ -49,4 +49,7 @@
 
     <!-- spiral/streams -->
     <exclude-pattern type="relative">Streams/src/StreamWrapper.php</exclude-pattern>
+
+    <!-- spiral/tokenizer -->
+    <exclude-pattern type="relative">Tokenizer/tests/Classes/*</exclude-pattern>
 </ruleset>
