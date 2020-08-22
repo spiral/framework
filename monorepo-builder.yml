@@ -31,7 +31,6 @@ parameters:
       spiral/code-style: '^1.0'
       # Components
       spiral/snapshots: '^1.0'
-      spiral/session: '^1.2.2'
       spiral/security: '^2.0'
       spiral/database: '^2.4'
       spiral/migrations: '^2.0'
@@ -67,6 +66,7 @@ parameters:
     src/Logger: 'git@github.com:spiral/logger.git'
     src/Models: 'git@github.com:spiral/models.git'
     src/Router: 'git@github.com:spiral/router.git'
+    src/Session: 'git@github.com:spiral/session.git'
     src/Streams: 'git@github.com:spiral/streams.git'
     src/Tokenizer: 'git@github.com:spiral/tokenizer.git'
     src/Translator: 'git@github.com:spiral/translator.git'
