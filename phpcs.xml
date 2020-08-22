@@ -52,4 +52,7 @@
 
     <!-- spiral/tokenizer -->
     <exclude-pattern type="relative">Tokenizer/tests/Classes/*</exclude-pattern>
+
+    <!-- spiral/views -->
+    <exclude-pattern type="relative">Views/tests/fixtures/*</exclude-pattern>
 </ruleset>

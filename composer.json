@@ -74,7 +74,8 @@
             "Spiral\\Streams\\": "src/Streams/src",
             "Spiral\\Tokenizer\\": "src/Tokenizer/src",
             "Spiral\\Translator\\": "src/Translator/src",
-            "Spiral\\Validation\\": "src/Validation/src"
+            "Spiral\\Validation\\": "src/Validation/src",
+            "Spiral\\Views\\": "src/Views/src"
         }
     },
     "require-dev": {
@@ -96,7 +97,6 @@
         "spiral/roadrunner": "^1.2",
         "spiral/security": "^2.0",
         "spiral/snapshots": "^1.0",
-        "spiral/views": "^1.0",
         "symplify/monorepo-builder": "^7.0"
     },
     "autoload-dev": {
@@ -132,7 +132,8 @@
             "Spiral\\Tests\\Streams\\": "src/Streams/tests",
             "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
             "Spiral\\Tests\\Translator\\": "src/Translator/tests",
-            "Spiral\\Tests\\Validation\\": "src/Validation/tests"
+            "Spiral\\Tests\\Validation\\": "src/Validation/tests",
+            "Spiral\\Tests\\Views\\": "src/Views/tests"
         }
     },
     "replace": {
@@ -159,7 +160,8 @@
         "spiral/streams": "*",
         "spiral/tokenizer": "*",
         "spiral/translator": "*",
-        "spiral/validation": "*"
+        "spiral/validation": "*",
+        "spiral/views": "*"
     },
     "scripts": {
         "test": "phpunit --testdox",
