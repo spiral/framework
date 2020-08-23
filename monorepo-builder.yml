@@ -30,7 +30,6 @@ parameters:
       symplify/monorepo-builder: '^7.0'
       spiral/code-style: '^1.0'
       # Components
-      spiral/snapshots: '^1.0'
       spiral/database: '^2.4'
       spiral/migrations: '^2.0'
       # RoadRunner Dependencies
@@ -66,6 +65,7 @@ parameters:
     src/Router: 'git@github.com:spiral/router.git'
     src/Security: 'git@github.com:spiral/security.git'
     src/Session: 'git@github.com:spiral/session.git'
+    src/Snapshots: 'git@github.com:spiral/snapshots.git'
     src/Streams: 'git@github.com:spiral/streams.git'
     src/Tokenizer: 'git@github.com:spiral/tokenizer.git'
     src/Translator: 'git@github.com:spiral/translator.git'
