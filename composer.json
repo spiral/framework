@@ -69,6 +69,7 @@
             "Spiral\\Http\\": "src/Http/src",
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Models\\": "src/Models/src",
+            "Spiral\\Pagination\\": "src/Pagination/src",
             "Spiral\\Router\\": "src/Router/src",
             "Spiral\\Security\\": "src/Security/src",
             "Spiral\\Session\\": "src/Session/src",
@@ -97,7 +98,6 @@
         "spiral/migrations": "^2.0",
         "spiral/php-grpc": "^1.0",
         "spiral/roadrunner": "^1.2",
-        "spiral/snapshots": "^1.0",
         "symplify/monorepo-builder": "^7.0"
     },
     "autoload-dev": {
@@ -128,6 +128,7 @@
             "Spiral\\Tests\\Http\\": "src/Http/tests",
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",
+            "Spiral\\Tests\\Pagination\\": "src/Pagination/tests",
             "Spiral\\Tests\\Router\\": "src/Router/tests",
             "Spiral\\Tests\\Security\\": "src/Security/tests",
             "Spiral\\Tests\\Session\\": "src/Session/tests",
@@ -158,6 +159,7 @@
         "spiral/http": "*",
         "spiral/logger": "*",
         "spiral/models": "*",
+        "spiral/pagination": "*",
         "spiral/router": "*",
         "spiral/security": "*",
         "spiral/session": "*",

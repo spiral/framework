@@ -62,6 +62,7 @@ parameters:
     src/Http: 'git@github.com:spiral/http.git'
     src/Logger: 'git@github.com:spiral/logger.git'
     src/Models: 'git@github.com:spiral/models.git'
+    src/Pagination: 'git@github.com:spiral/pagination.git'
     src/Router: 'git@github.com:spiral/router.git'
     src/Security: 'git@github.com:spiral/security.git'
     src/Session: 'git@github.com:spiral/session.git'

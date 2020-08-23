@@ -1,0 +1,44 @@
+{
+    "name": "spiral/pagination",
+    "type": "library",
+    "description": "Common pagination interfaces",
+    "license": "MIT",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/pagination"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov / Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "mockery/mockery": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Pagination\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Pagination\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.6.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
