@@ -84,7 +84,7 @@
     },
     "require-dev": {
         "cycle/annotated": "^2.0",
-        "cycle/migrations": "^1.2",
+        "cycle/migrations": "^1.0",
         "cycle/orm": "^1.2",
         "cycle/proxy-factory": "^1.0",
         "laminas/laminas-diactoros": "^2.3",

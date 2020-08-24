@@ -41,7 +41,7 @@ parameters:
       # Cycle ORM
       cycle/orm: '^1.2'
       cycle/annotated: '^2.0'
-      cycle/migrations: '^1.2'
+      cycle/migrations: '^1.0'
       cycle/proxy-factory: '^1.0'
   directories_to_repositories:
     src/Auth: 'git@github.com:spiral/auth.git'
