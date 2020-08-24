@@ -86,7 +86,7 @@
         "cycle/annotated": "^2.0",
         "cycle/migrations": "^1.0",
         "cycle/orm": "^1.2",
-        "cycle/proxy-factory": "^1.0",
+        "cycle/proxy-factory": "^1.2",
         "laminas/laminas-diactoros": "^2.3",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5|^9.0",
