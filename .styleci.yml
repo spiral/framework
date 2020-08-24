@@ -24,8 +24,6 @@ enabled:
   - no_useless_return
   - void_return
   - trailing_comma_in_multiline_array
-disabled:
-  - yoda_style
 finder:
   exclude:
     - "tests"
