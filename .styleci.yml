@@ -1,28 +1,16 @@
 risky: false
 preset: psr12
 enabled:
-  - ordered_class_elements
+  # Risky Fixers
   # - declare_strict_types
+  # - void_return
+  - ordered_class_elements
   - linebreak_after_opening_tag
-  - blank_line_after_opening_tag
   - single_quote
-  - lowercase_cast
-  - short_scalaphpdoc_separationr_cast
-  - no_leading_import_slash
-  - declare_equal_normalize
-  - new_with_braces
   - no_blank_lines_after_phpdoc
-  - single_blank_line_before_namespace
-  - method_visibility_required
-  - property_visibility_required
-  - const_visibility_required
-  - ternary_operator_spaces
   - unary_operator_spaces
-  - return_type_declaration
-  - concat_with_spaces
   - no_useless_else
   - no_useless_return
-  - void_return
   - trailing_comma_in_multiline_array
 finder:
   exclude:
