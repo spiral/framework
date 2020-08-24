@@ -7,7 +7,7 @@ enabled:
   - blank_line_after_opening_tag
   - single_quote
   - lowercase_cast
-  - short_scalar_cast
+  - short_scalaphpdoc_separationr_cast
   - no_leading_import_slash
   - declare_equal_normalize
   - new_with_braces
@@ -25,7 +25,6 @@ enabled:
   - void_return
   - trailing_comma_in_multiline_array
 disabled:
-  - phpdoc_separation
   - yoda_style
 finder:
   exclude:
