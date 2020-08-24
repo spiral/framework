@@ -43,6 +43,7 @@ parameters:
       cycle/annotated: '^2.0'
       cycle/migrations: '^1.0'
       cycle/proxy-factory: '^1.2'
+      cycle/schema-builder: '^1.1'
   directories_to_repositories:
     src/Auth: 'git@github.com:spiral/auth.git'
     src/AuthHttp: 'git@github.com:spiral/auth-http.git'
