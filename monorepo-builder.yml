@@ -41,7 +41,7 @@ parameters:
       # Cycle ORM
       cycle/orm: '^1.2'
       cycle/annotated: '^2.0.6'
-      cycle/migrations: '^1.0'
+      cycle/migrations: '^1.0.1'
       cycle/proxy-factory: '^1.2'
       cycle/schema-builder: '^1.1'
   directories_to_repositories:
