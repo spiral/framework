@@ -1,7 +1,6 @@
-php:
-  risky: false
-  preset: psr12
-  finder:
-    exclude:
-      - "tests"
-      - "src/*/tests"
+risky: false
+preset: psr12
+finder:
+  exclude:
+    - "tests"
+    - "src/*/tests"
