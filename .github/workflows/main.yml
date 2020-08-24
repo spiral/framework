@@ -54,11 +54,14 @@ jobs:
   # Execute unit tests on all valid PHP versions.
   #
   test:
-    name: Tests (PHP ${{ matrix.php-versions }})
+    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
     runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: true
       matrix:
         php-versions: ['7.2', '7.3', '7.4']
+        stability: [prefer-lowest, prefer-stable]
 
     steps:
       - name: Checkout
@@ -100,7 +103,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Dependencies
-        run: composer install --no-interaction --no-progress --no-suggest --prefer-dist
+        run: composer update --${{ matrix.stability }} --no-interaction --no-progress --no-suggest --prefer-dist
 
       - name: Execute Tests
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
