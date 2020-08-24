@@ -13,8 +13,6 @@ namespace Spiral\Tests\Translator;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Core\MemoryInterface;
-use Spiral\Core\NullMemory;
 use Spiral\Translator\Catalogue;
 use Spiral\Translator\Catalogue\LoaderInterface;
 use Spiral\Translator\Catalogue\RuntimeLoader;

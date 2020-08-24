@@ -17,7 +17,7 @@
     "require": {
         "php": "^7.2",
         "psr/log": "^1.0",
-        "codedungeon/php-cli-colors": "^1.10"
+        "codedungeon/php-cli-colors": "^1.11"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0"

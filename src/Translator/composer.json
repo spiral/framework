@@ -19,11 +19,11 @@
         "spiral/core": "^2.6",
         "spiral/logger": "^2.6",
         "spiral/tokenizer": "^2.6",
-        "symfony/translation": "^4.0|^5.0"
+        "symfony/translation": "^5.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
-        "mockery/mockery": "^1.1"
+        "mockery/mockery": "^1.4"
     },
     "autoload": {
         "files": [
