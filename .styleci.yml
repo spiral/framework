@@ -2,7 +2,7 @@ risky: false
 preset: psr12
 enabled:
   - ordered_class_elements
-  - declare_strict_types
+  # - declare_strict_types
   - linebreak_after_opening_tag
   - blank_line_after_opening_tag
   - single_quote
