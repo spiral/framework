@@ -84,7 +84,7 @@
     },
     "require-dev": {
         "cycle/annotated": "^2.0.6",
-        "cycle/migrations": "^1.0",
+        "cycle/migrations": "^1.0.8",
         "cycle/orm": "^1.2",
         "cycle/proxy-factory": "^1.2",
         "cycle/schema-builder": "^1.1",
