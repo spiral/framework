@@ -84,7 +84,7 @@
     },
     "require-dev": {
         "cycle/annotated": "^2.0.6",
-        "cycle/migrations": "^1.0.8",
+        "cycle/migrations": "^1.0",
         "cycle/orm": "^1.2",
         "cycle/proxy-factory": "^1.2",
         "cycle/schema-builder": "^1.1",
@@ -95,7 +95,7 @@
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
-        "spiral/database": "^2.7",
+        "spiral/database": "^2.7.3",
         "spiral/jobs": "^2.2",
         "spiral/migrations": "^2.1",
         "spiral/php-grpc": "^1.4",

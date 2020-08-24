@@ -30,7 +30,7 @@ parameters:
       symplify/monorepo-builder: '^7.3.18'
       spiral/code-style: '^1.0'
       # Components
-      spiral/database: '^2.7'
+      spiral/database: '^2.7.3'
       spiral/migrations: '^2.1'
       # RoadRunner Dependencies
       spiral/roadrunner: '^1.8'
@@ -41,7 +41,7 @@ parameters:
       # Cycle ORM
       cycle/orm: '^1.2'
       cycle/annotated: '^2.0.6'
-      cycle/migrations: '^1.0.8'
+      cycle/migrations: '^1.0'
       cycle/proxy-factory: '^1.2'
       cycle/schema-builder: '^1.1'
   directories_to_repositories:
