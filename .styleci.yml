@@ -4,4 +4,4 @@ finder:
   exclude:
     - "tests"
     - "src/*/tests"
-    - "src/Exceptions/views/*"
+    - "src/Exceptions/views"
