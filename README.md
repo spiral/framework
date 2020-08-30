@@ -21,6 +21,7 @@ Spiral Framework is a High-Performance PHP/Go Full-Stack framework and group of 
 - GRPC server and client
 - Pub/Sub, event broadcasting
 - HTTPS, HTTP/2+Push, FastCGI
+- PCI DSS compliant
 - Encrypted cookies, signed sessions, CSRF-guard
 - MySQL, MariaDB, SQLite, PostgreSQL, SQLServer support, auto-migrations
 - The [ORM](https://github.com/cycle/orm) you will use for the next 25 years
