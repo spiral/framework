@@ -25,7 +25,7 @@ final class IndexCommand extends Command implements SingletonInterface
     protected const NAME        = 'i18n:index';
     protected const DESCRIPTION = 'Index all declared translation strings and usages';
     protected const ARGUMENTS   = [
-        ['locale', InputArgument::OPTIONAL, 'Locale to aggregate indexed translations into']
+        ['locale', InputArgument::OPTIONAL, 'Locale to aggregate indexed translations into'],
     ];
 
     /**

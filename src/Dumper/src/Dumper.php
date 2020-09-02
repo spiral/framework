@@ -386,7 +386,7 @@ class Dumper implements LoggerAwareInterface
         return [
             'name' => $r->getName() . " (lines {$r->getStartLine()}:{$r->getEndLine()})",
             'file' => $r->getFileName(),
-            'this' => $r->getClosureThis()
+            'this' => $r->getClosureThis(),
         ];
     }
 

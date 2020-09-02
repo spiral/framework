@@ -82,7 +82,7 @@ final class SchemaBuilder
                     [$source, $origin] = $this->parseDefinition($filter, $field, $definition);
                     $result[$field] = [
                         FilterProvider::SOURCE => $source,
-                        FilterProvider::ORIGIN => $origin
+                        FilterProvider::ORIGIN => $origin,
                     ];
                     continue;
                 }
@@ -92,7 +92,7 @@ final class SchemaBuilder
                     FilterProvider::SOURCE => null,
                     FilterProvider::ORIGIN => $field,
                     FilterProvider::FILTER => $definition,
-                    FilterProvider::ARRAY  => false
+                    FilterProvider::ARRAY  => false,
                 ];
 
                 continue;
@@ -121,7 +121,7 @@ final class SchemaBuilder
                 FilterProvider::FILTER => $definition[self::NESTED],
                 FilterProvider::SOURCE => null,
                 FilterProvider::ORIGIN => $origin,
-                FilterProvider::ARRAY  => $iterate
+                FilterProvider::ARRAY  => $iterate,
             ];
 
             if ($iterate) {

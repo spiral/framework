@@ -25,7 +25,7 @@ final class ListCommand extends Command
     protected const NAME        = 'db:list';
     protected const DESCRIPTION = 'Get list of available databases, their tables and records count';
     protected const ARGUMENTS   = [
-        ['db', InputArgument::OPTIONAL, 'Database name']
+        ['db', InputArgument::OPTIONAL, 'Database name'],
     ];
 
     /**
@@ -54,7 +54,7 @@ final class ListCommand extends Command
                 'Prefix:',
                 'Status:',
                 'Tables:',
-                'Count Records:'
+                'Count Records:',
             ]
         );
 
@@ -68,7 +68,7 @@ final class ListCommand extends Command
                 $database->getName(),
                 $driver->getSource(),
                 $driver->getType(),
-                $database->getPrefix() ?: '<comment>---</comment>'
+                $database->getPrefix() ?: '<comment>---</comment>',
             ];
 
             try {
@@ -106,7 +106,7 @@ final class ListCommand extends Command
                 [
                     "<fg=red>{$exception->getMessage()}</fg=red>",
                     '<comment>---</comment>',
-                    '<comment>---</comment>'
+                    '<comment>---</comment>',
                 ]
             )
         );

@@ -28,7 +28,7 @@ final class JsonHandler extends AbstractHandler
                 $e->getFile(),
                 $e->getLine()
             ),
-            'stacktrace' => iterator_to_array($this->renderTrace($e->getTrace(), $verbosity))
+            'stacktrace' => iterator_to_array($this->renderTrace($e->getTrace(), $verbosity)),
         ]);
     }
 
@@ -59,7 +59,7 @@ final class JsonHandler extends AbstractHandler
             if ($verbosity >= self::VERBOSITY_VERBOSE && isset($item['file'])) {
                 $result['at'] = [
                     'file' => $item['file'] ?? null,
-                    'line' => $item['line'] ?? null
+                    'line' => $item['line'] ?? null,
                 ];
             }
 

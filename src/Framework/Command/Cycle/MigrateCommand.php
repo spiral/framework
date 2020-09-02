@@ -28,7 +28,7 @@ final class MigrateCommand extends AbstractCommand
     protected const NAME        = 'cycle:migrate';
     protected const DESCRIPTION = 'Generate ORM schema migrations';
     protected const OPTIONS     = [
-        ['run', 'r', InputOption::VALUE_NONE, 'Automatically run generated migration.']
+        ['run', 'r', InputOption::VALUE_NONE, 'Automatically run generated migration.'],
     ];
 
     /**

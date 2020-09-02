@@ -231,7 +231,7 @@ final class Router implements RouterInterface
         return $routeObject->withDefaults(
             [
                 'controller' => $matches['controller'],
-                'action'     => $matches['action']
+                'action'     => $matches['action'],
             ]
         );
     }

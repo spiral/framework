@@ -49,7 +49,7 @@ final class ListCommand extends Command implements SingletonInterface
                         $name,
                         $this->getVerbs($route),
                         $this->getPattern($route),
-                        $this->getTarget($route, $kernel)
+                        $this->getTarget($route, $kernel),
                     ]
                 );
             }

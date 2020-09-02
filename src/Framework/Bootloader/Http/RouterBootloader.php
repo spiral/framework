@@ -28,7 +28,7 @@ use Spiral\Router\UriHandler;
 final class RouterBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        HttpBootloader::class
+        HttpBootloader::class,
     ];
 
     protected const SINGLETONS = [

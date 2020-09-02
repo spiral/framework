@@ -27,7 +27,7 @@ final class EncrypterConfig extends InjectableConfig
      * @var array
      */
     protected $config = [
-        'key' => ''
+        'key' => '',
     ];
 
     /**

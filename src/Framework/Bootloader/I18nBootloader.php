@@ -40,7 +40,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
         CatalogueManagerInterface::class                          => CatalogueManager::class,
         LoaderInterface::class                                    => CatalogueLoader::class,
         CacheInterface::class                                     => MemoryCache::class,
-        IdentityTranslator::class                                 => [self::class, 'identityTranslator']
+        IdentityTranslator::class                                 => [self::class, 'identityTranslator'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -75,7 +75,7 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
                     'php'  => Loader\PhpFileLoader::class,
                     'po'   => Loader\PoFileLoader::class,
                     'csv'  => Loader\CsvFileLoader::class,
-                    'json' => Loader\JsonFileLoader::class
+                    'json' => Loader\JsonFileLoader::class,
                 ],
                 'dumpers'        => [
                     'php'  => Dumper\PhpFileDumper::class,
@@ -85,8 +85,8 @@ final class I18nBootloader extends Bootloader implements SingletonInterface
                 ],
                 'domains'        => [
                     // by default we can store all messages in one domain
-                    'messages' => ['*']
-                ]
+                    'messages' => ['*'],
+                ],
             ]
         );
     }

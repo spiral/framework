@@ -23,11 +23,11 @@ use Spiral\Logger\ListenerRegistryInterface;
 final class LogCollectorBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        DebugBootloader::class
+        DebugBootloader::class,
     ];
 
     protected const SINGLETONS = [
-        LogCollector::class => LogCollector::class
+        LogCollector::class => LogCollector::class,
     ];
 
     /**

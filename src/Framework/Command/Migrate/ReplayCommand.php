@@ -19,7 +19,7 @@ final class ReplayCommand extends AbstractCommand
     protected const NAME        = 'migrate:replay';
     protected const DESCRIPTION = 'Replay (down, up) one or multiple migrations';
     protected const OPTIONS     = [
-        ['all', 'a', InputOption::VALUE_NONE, 'Replay all migrations.']
+        ['all', 'a', InputOption::VALUE_NONE, 'Replay all migrations.'],
     ];
 
     /**

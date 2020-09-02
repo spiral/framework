@@ -39,7 +39,7 @@ abstract class Rule implements RuleInterface
      * @var array
      */
     protected const ALIASES = [
-        'user' => 'actor'
+        'user' => 'actor',
     ];
 
     /* @var ResolverInterface */

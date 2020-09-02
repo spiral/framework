@@ -23,12 +23,12 @@ final class TranslatedCacheBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         I18nBootloader::class,
-        ViewsBootloader::class
+        ViewsBootloader::class,
     ];
 
     protected const SINGLETONS = [
         // Each engine expect to mount this process by itself
-        LocaleProcessor::class => LocaleProcessor::class
+        LocaleProcessor::class => LocaleProcessor::class,
     ];
 
     /**

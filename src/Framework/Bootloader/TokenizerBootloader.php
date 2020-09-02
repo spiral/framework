@@ -27,7 +27,7 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
 {
     protected const BINDINGS = [
         ClassesInterface::class     => ClassLocator::class,
-        InvocationsInterface::class => InvocationLocator::class
+        InvocationsInterface::class => InvocationLocator::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -58,8 +58,8 @@ final class TokenizerBootloader extends Bootloader implements SingletonInterface
                     $dirs->get('resources'),
                     $dirs->get('config'),
                     'tests',
-                    'migrations'
-                ]
+                    'migrations',
+                ],
             ]
         );
     }

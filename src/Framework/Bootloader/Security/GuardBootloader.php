@@ -26,10 +26,10 @@ final class GuardBootloader extends Bootloader
     protected const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,
         RulesInterface::class       => RuleManager::class,
-        GuardInterface::class       => GuardScope::class
+        GuardInterface::class       => GuardScope::class,
     ];
 
     protected const BINDINGS = [
-        ActorInterface::class => Guest::class
+        ActorInterface::class => Guest::class,
     ];
 }

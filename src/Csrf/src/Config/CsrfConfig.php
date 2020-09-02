@@ -24,7 +24,7 @@ final class CsrfConfig extends InjectableConfig
     protected $config = [
         'cookie'   => 'csrf-token',
         'length'   => 16,
-        'lifetime' => 86400
+        'lifetime' => 86400,
     ];
 
     /**

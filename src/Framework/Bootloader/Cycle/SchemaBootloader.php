@@ -29,7 +29,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
     public const GROUP_POSTPROCESS = 'postprocess';
 
     protected const DEPENDENCIES = [
-        TokenizerBootloader::class
+        TokenizerBootloader::class,
     ];
 
     protected const BINDINGS = [
@@ -65,7 +65,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
             ],
             self::GROUP_POSTPROCESS => [
                 // post processing
-                Generator\GenerateTypecast::class
+                Generator\GenerateTypecast::class,
             ],
         ];
     }

@@ -40,7 +40,7 @@ abstract class AbstractHandler implements HandlerInterface
         //Let's let's clarify exception location
         $header = [
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ] + $stacktrace[0];
 
         if ($stacktrace[0] != $header) {

@@ -23,7 +23,7 @@ use Spiral\Http\Middleware\ErrorHandlerMiddleware;
 final class ErrorHandlerBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        HttpBootloader::class
+        HttpBootloader::class,
     ];
 
     protected const BINDINGS = [

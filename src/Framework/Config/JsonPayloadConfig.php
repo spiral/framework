@@ -20,8 +20,8 @@ class JsonPayloadConfig extends InjectableConfig
     /** @var array */
     protected $config = [
         'contentTypes' => [
-            'application/json'
-        ]
+            'application/json',
+        ],
     ];
 
     /**

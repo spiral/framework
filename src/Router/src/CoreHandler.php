@@ -118,7 +118,7 @@ final class CoreHandler implements RequestHandlerInterface
             $result = $this->scope->runScope(
                 [
                     Request::class  => $request,
-                    Response::class => $response
+                    Response::class => $response,
                 ],
                 function () use ($request) {
                     return $this->core->callAction(

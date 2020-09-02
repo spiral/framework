@@ -48,7 +48,7 @@ final class StatusCommand extends AbstractCommand
                     $state->getTimeCreated()->format('Y-m-d H:i:s'),
                     $state->getStatus() == State::STATUS_PENDING
                         ? self::PENDING
-                        : '<info>' . $state->getTimeExecuted()->format('Y-m-d H:i:s') . '</info>'
+                        : '<info>' . $state->getTimeExecuted()->format('Y-m-d H:i:s') . '</info>',
                 ]
             );
         }

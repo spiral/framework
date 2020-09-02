@@ -21,7 +21,7 @@ final class JsonPayloadsBootloader extends Bootloader
 {
     /** @var array */
     protected const DEPENDENCIES = [
-        HttpBootloader::class
+        HttpBootloader::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -45,8 +45,8 @@ final class JsonPayloadsBootloader extends Bootloader
             JsonPayloadConfig::CONFIG,
             [
                 'contentTypes' => [
-                    'application/json'
-                ]
+                    'application/json',
+                ],
             ]
         );
 

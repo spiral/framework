@@ -24,11 +24,11 @@ use Spiral\Core\Exception\ScopeException;
 final class CookiesBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
-        HttpBootloader::class
+        HttpBootloader::class,
     ];
 
     protected const BINDINGS = [
-        CookieQueue::class => [self::class, 'cookieQueue']
+        CookieQueue::class => [self::class, 'cookieQueue'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -52,7 +52,7 @@ final class CookiesBootloader extends Bootloader implements SingletonInterface
             [
                 'domain'   => '.%s',
                 'method'   => CookiesConfig::COOKIE_ENCRYPT,
-                'excluded' => ['PHPSESSID', 'csrf-token']
+                'excluded' => ['PHPSESSID', 'csrf-token'],
             ]
         );
 

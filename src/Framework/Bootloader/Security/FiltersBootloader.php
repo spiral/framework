@@ -23,12 +23,12 @@ use Spiral\Filters\InputInterface;
 final class FiltersBootloader extends Bootloader implements Container\InjectorInterface, Container\SingletonInterface
 {
     protected const DEPENDENCIES = [
-        ValidationBootloader::class
+        ValidationBootloader::class,
     ];
 
     protected const SINGLETONS = [
         FilterProviderInterface::class => FilterProvider::class,
-        InputInterface::class          => InputScope::class
+        InputInterface::class          => InputScope::class,
     ];
 
     /** @var Container */

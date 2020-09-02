@@ -36,7 +36,7 @@ use Spiral\RoadRunner\PSR7Client;
 final class HttpBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
-        ServerBootloader::class
+        ServerBootloader::class,
     ];
 
     protected const SINGLETONS = [
@@ -66,7 +66,7 @@ final class HttpBootloader extends Bootloader implements SingletonInterface
             [
                 'basePath'   => '/',
                 'headers'    => [
-                    'Content-Type' => 'text/html; charset=UTF-8'
+                    'Content-Type' => 'text/html; charset=UTF-8',
                 ],
                 'middleware' => [],
             ]

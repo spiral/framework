@@ -84,7 +84,7 @@ class FilterInterceptor implements CoreInterceptorInterface
             case self::STRATEGY_JSON_RESPONSE:
                 return [
                     'status' => 400,
-                    'errors' => $filter->getErrors()
+                    'errors' => $filter->getErrors(),
                 ];
             default:
                 throw new InvalidFilterException($filter);

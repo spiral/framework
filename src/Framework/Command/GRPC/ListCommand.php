@@ -44,7 +44,7 @@ final class ListCommand extends Command
                 [
                     $interface::NAME,
                     get_class($instance),
-                    (new \ReflectionObject($instance))->getFileName()
+                    (new \ReflectionObject($instance))->getFileName(),
                 ]
             );
         }

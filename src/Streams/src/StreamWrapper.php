@@ -19,6 +19,12 @@ use Spiral\Streams\Exception\WrapperException;
  */
 final class StreamWrapper
 {
+    /**
+     * Stream context.
+     *
+     * @var resource
+     */
+    public $context = null;
     /** @var bool */
     private static $registered = false;
 
@@ -36,7 +42,7 @@ final class StreamWrapper
         'r+'  => 33206,
         'rb+' => 33206,
         'w'   => 33188,
-        'wb'  => 33188
+        'wb'  => 33188,
     ];
 
     /** @var StreamInterface */
@@ -44,13 +50,6 @@ final class StreamWrapper
 
     /** @var int */
     private $mode = 0;
-
-    /**
-     * Stream context.
-     *
-     * @var resource
-     */
-    public $context = null;
 
     /**
      * Check if StreamInterface ended.
@@ -165,42 +164,6 @@ final class StreamWrapper
     }
 
     /**
-     * Helper method used to correctly resolve StreamInterface stats.
-     *
-     * @param StreamInterface $stream
-     * @return array
-     */
-    private function getStreamStats(StreamInterface $stream)
-    {
-        $mode = $this->mode;
-        if (empty($mode)) {
-            if ($stream->isReadable()) {
-                $mode = 'r';
-            }
-
-            if ($stream->isWritable()) {
-                $mode = !empty($mode) ? 'r+' : 'w';
-            }
-        }
-
-        return [
-            'dev'     => 0,
-            'ino'     => 0,
-            'mode'    => self::$modes[$mode],
-            'nlink'   => 0,
-            'uid'     => 0,
-            'gid'     => 0,
-            'rdev'    => 0,
-            'size'    => (string)$stream->getSize(),
-            'atime'   => 0,
-            'mtime'   => 0,
-            'ctime'   => 0,
-            'blksize' => 0,
-            'blocks'  => 0
-        ];
-    }
-
-    /**
      * Register stream wrapper.
      */
     public static function register()
@@ -248,7 +211,7 @@ final class StreamWrapper
         }
 
         if (empty($mode)) {
-            throw new WrapperException("Stream is not available in read or write modes");
+            throw new WrapperException('Stream is not available in read or write modes');
         }
 
         return fopen(self::getFilename($stream), $mode);
@@ -283,5 +246,41 @@ final class StreamWrapper
         }
 
         unset(self::$uris[$file]);
+    }
+
+    /**
+     * Helper method used to correctly resolve StreamInterface stats.
+     *
+     * @param StreamInterface $stream
+     * @return array
+     */
+    private function getStreamStats(StreamInterface $stream)
+    {
+        $mode = $this->mode;
+        if (empty($mode)) {
+            if ($stream->isReadable()) {
+                $mode = 'r';
+            }
+
+            if ($stream->isWritable()) {
+                $mode = !empty($mode) ? 'r+' : 'w';
+            }
+        }
+
+        return [
+            'dev'     => 0,
+            'ino'     => 0,
+            'mode'    => self::$modes[$mode],
+            'nlink'   => 0,
+            'uid'     => 0,
+            'gid'     => 0,
+            'rdev'    => 0,
+            'size'    => (string)$stream->getSize(),
+            'atime'   => 0,
+            'mtime'   => 0,
+            'ctime'   => 0,
+            'blksize' => 0,
+            'blocks'  => 0,
+        ];
     }
 }

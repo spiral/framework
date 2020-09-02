@@ -19,7 +19,6 @@ use Spiral\Validation\AbstractChecker;
  */
 final class DatetimeChecker extends AbstractChecker implements SingletonInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -34,7 +33,7 @@ final class DatetimeChecker extends AbstractChecker implements SingletonInterfac
     ];
     //Possible format mapping
     private const MAP_FORMAT = [
-        'c' => 'Y-m-d\TH:i:sT'
+        'c' => 'Y-m-d\TH:i:sT',
     ];
 
     /**

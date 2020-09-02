@@ -25,14 +25,14 @@ final class KeyCommand extends Command
             'mount',
             'm',
             InputOption::VALUE_OPTIONAL,
-            'Mount encrypter key into given file'
+            'Mount encrypter key into given file',
         ],
         [
             'placeholder',
             'p',
             InputOption::VALUE_OPTIONAL,
             'Placeholder of encryption key (will attempt to use current encryption key)',
-            '{encrypt-key}'
+            '{encrypt-key}',
         ],
     ];
 

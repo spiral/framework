@@ -34,7 +34,7 @@ final class TranslatorConfig extends InjectableConfig
         'autoRegister'   => true,
         'domains'        => [],
         'loaders'        => [],
-        'dumpers'        => []
+        'dumpers'        => [],
     ];
 
     /** @var Matcher */

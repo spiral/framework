@@ -36,7 +36,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
 
     protected const SINGLETONS = [
         Console::class          => Console::class,
-        LocatorInterface::class => CommandLocator::class
+        LocatorInterface::class => CommandLocator::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -63,7 +63,7 @@ final class ConsoleBootloader extends Bootloader implements SingletonInterface
             [
                 'commands'  => [],
                 'configure' => [],
-                'update'    => []
+                'update'    => [],
             ]
         );
 

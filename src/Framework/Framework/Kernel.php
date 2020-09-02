@@ -21,7 +21,7 @@ abstract class Kernel extends AbstractKernel
     // framework specific bootloaders
     protected const SYSTEM = [
         CoreBootloader::class,
-        TokenizerBootloader::class
+        TokenizerBootloader::class,
     ];
 
     // application specific bootloaders

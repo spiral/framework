@@ -41,7 +41,7 @@ final class ViewManager implements ViewsInterface
         $this->config = $config;
         $this->context = new ViewContext();
         $this->loader = $factory->make(ViewLoader::class, [
-            'namespaces' => $config->getNamespaces()
+            'namespaces' => $config->getNamespaces(),
         ]);
 
         foreach ($this->config->getDependencies() as $dependency) {

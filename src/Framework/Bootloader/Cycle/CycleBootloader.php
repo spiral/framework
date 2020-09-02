@@ -32,7 +32,7 @@ final class CycleBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         DatabaseBootloader::class,
-        SchemaBootloader::class
+        SchemaBootloader::class,
     ];
 
     protected const BINDINGS = [

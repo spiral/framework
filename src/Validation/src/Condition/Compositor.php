@@ -44,8 +44,8 @@ final class Compositor
                 $field => [
                     static function (): void {
                     },
-                    'if' => $options
-                ]
+                    'if' => $options,
+                ],
             ])
         );
 

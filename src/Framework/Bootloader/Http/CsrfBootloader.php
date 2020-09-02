@@ -18,7 +18,7 @@ use Spiral\Csrf\Middleware\CsrfMiddleware;
 final class CsrfBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        HttpBootloader::class
+        HttpBootloader::class,
     ];
 
     /**
@@ -34,7 +34,7 @@ final class CsrfBootloader extends Bootloader
                 'length'   => 16,
                 'lifetime' => 86400,
                 'secure'   => true,
-                'sameSite' => null
+                'sameSite' => null,
             ]
         );
 

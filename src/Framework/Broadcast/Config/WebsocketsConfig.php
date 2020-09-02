@@ -21,7 +21,7 @@ final class WebsocketsConfig extends InjectableConfig
     protected $config = [
         'path'            => '',
         'authorizeServer' => null,
-        'authorizeTopics' => []
+        'authorizeTopics' => [],
     ];
 
     /** @var array */

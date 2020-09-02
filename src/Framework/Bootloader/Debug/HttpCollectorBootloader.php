@@ -24,11 +24,11 @@ final class HttpCollectorBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         HttpBootloader::class,
-        DebugBootloader::class
+        DebugBootloader::class,
     ];
 
     protected const SINGLETONS = [
-        HttpCollector::class => HttpCollector::class
+        HttpCollector::class => HttpCollector::class,
     ];
 
     /**

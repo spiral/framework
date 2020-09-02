@@ -24,7 +24,7 @@ final class MixedChecker extends AbstractChecker implements SingletonInterface
      */
     public const MESSAGES = [
         'cardNumber' => '[[Please enter valid card number.]]',
-        'match'      => '[[Fields {1} and {2} do not match.]]'
+        'match'      => '[[Fields {1} and {2} do not match.]]',
     ];
 
     /**

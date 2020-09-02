@@ -109,7 +109,7 @@ abstract class Filter extends SchematicEntity implements FilterInterface
         return [
             'valid'  => $this->isValid(),
             'fields' => $this->getFields(),
-            'errors' => $this->getErrors()
+            'errors' => $this->getErrors(),
         ];
     }
 

@@ -21,7 +21,7 @@ abstract class SequenceCommand extends Command
 {
     public const    OPTIONS = [
         ['ignore', 'i', InputOption::VALUE_NONE, 'Ignore any errors'],
-        ['break', 'b', InputOption::VALUE_NONE, 'Break on first error, works if ignore is disabled']
+        ['break', 'b', InputOption::VALUE_NONE, 'Break on first error, works if ignore is disabled'],
     ];
 
     /**

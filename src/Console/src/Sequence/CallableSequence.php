@@ -64,7 +64,7 @@ final class CallableSequence extends AbstractSequence
         if (is_array($function)) {
             $reflection = new \ReflectionMethod($function[0], $function[1]);
             $reflection->invokeArgs($function[0], $resolver->resolveArguments($reflection, [
-                'output' => $output
+                'output' => $output,
             ]));
 
             return;
@@ -72,7 +72,7 @@ final class CallableSequence extends AbstractSequence
 
         $reflection = new \ReflectionFunction($function);
         $reflection->invokeArgs($resolver->resolveArguments($reflection, [
-            'output' => $output
+            'output' => $output,
         ]));
     }
 }

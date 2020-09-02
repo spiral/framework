@@ -26,7 +26,7 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
     ];
 
     protected const BINDINGS = [
-        DatabaseInterface::class => Database::class
+        DatabaseInterface::class => Database::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -51,7 +51,7 @@ final class DatabaseBootloader extends Bootloader implements SingletonInterface
                 'default'   => 'default',
                 'aliases'   => [],
                 'databases' => [],
-                'drivers'   => []
+                'drivers'   => [],
             ]
         );
     }

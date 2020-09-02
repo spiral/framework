@@ -85,7 +85,7 @@ abstract class AbstractCommand extends Command
         return array_merge(
             static::OPTIONS,
             [
-                ['force', 's', InputOption::VALUE_NONE, 'Skip safe environment check']
+                ['force', 's', InputOption::VALUE_NONE, 'Skip safe environment check'],
             ]
         );
     }

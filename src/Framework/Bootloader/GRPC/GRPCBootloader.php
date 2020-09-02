@@ -23,7 +23,7 @@ final class GRPCBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         InvokerInterface::class => Invoker::class,
-        LocatorInterface::class => ServiceLocator::class
+        LocatorInterface::class => ServiceLocator::class,
     ];
 
     /**
