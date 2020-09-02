@@ -29,7 +29,7 @@ final class ConsoleConfig extends InjectableConfig
         'version'   => null,
         'commands'  => [],
         'configure' => [],
-        'update'    => []
+        'update'    => [],
     ];
 
     /**

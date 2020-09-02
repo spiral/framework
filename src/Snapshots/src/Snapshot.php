@@ -71,9 +71,9 @@ final class Snapshot implements SnapshotInterface
             'error'    => $this->getMessage(),
             'location' => [
                 'file' => $this->exception->getFile(),
-                'line' => $this->exception->getLine()
+                'line' => $this->exception->getLine(),
             ],
-            'trace'    => $this->exception->getTrace()
+            'trace'    => $this->exception->getTrace(),
         ];
     }
 }

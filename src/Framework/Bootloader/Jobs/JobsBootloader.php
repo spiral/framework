@@ -26,14 +26,14 @@ use Spiral\Jobs\SerializerRegistryInterface;
 final class JobsBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        ServerBootloader::class
+        ServerBootloader::class,
     ];
 
     protected const SINGLETONS = [
         QueueInterface::class              => JobQueue::class,
         HandlerRegistryInterface::class    => JobRegistry::class,
         SerializerRegistryInterface::class => JobRegistry::class,
-        JobRegistry::class                 => [self::class, 'jobRegistry']
+        JobRegistry::class                 => [self::class, 'jobRegistry'],
     ];
 
     /**

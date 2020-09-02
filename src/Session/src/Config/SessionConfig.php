@@ -30,7 +30,7 @@ final class SessionConfig extends InjectableConfig
         'secure'   => false,
         'sameSite' => null,
         'handler'  => null,
-        'handlers' => []
+        'handlers' => [],
     ];
 
     /**

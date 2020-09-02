@@ -49,32 +49,32 @@ final class InputManager implements SingletonInterface
     protected $bagAssociations = [
         'headers'    => [
             'class'  => HeadersBag::class,
-            'source' => 'getHeaders'
+            'source' => 'getHeaders',
         ],
         'data'       => [
             'class'  => InputBag::class,
-            'source' => 'getParsedBody'
+            'source' => 'getParsedBody',
         ],
         'query'      => [
             'class'  => InputBag::class,
-            'source' => 'getQueryParams'
+            'source' => 'getQueryParams',
         ],
         'cookies'    => [
             'class'  => InputBag::class,
-            'source' => 'getCookieParams'
+            'source' => 'getCookieParams',
         ],
         'files'      => [
             'class'  => FilesBag::class,
-            'source' => 'getUploadedFiles'
+            'source' => 'getUploadedFiles',
         ],
         'server'     => [
             'class'  => ServerBag::class,
-            'source' => 'getServerParams'
+            'source' => 'getServerParams',
         ],
         'attributes' => [
             'class'  => InputBag::class,
-            'source' => 'getAttributes'
-        ]
+            'source' => 'getAttributes',
+        ],
     ];
     /**
      * @invisible
@@ -104,7 +104,7 @@ final class InputManager implements SingletonInterface
      * @var array
      */
     private $jsonTypes = [
-        'application/json'
+        'application/json',
     ];
 
     /**

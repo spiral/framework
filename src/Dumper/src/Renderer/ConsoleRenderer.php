@@ -54,7 +54,7 @@ final class ConsoleRenderer extends AbstractRenderer
             'null'     => Color::LIGHT_PURPLE,
             'resource' => Color::PURPLE,
         ],
-        'access'   => Color::GRAY
+        'access'   => Color::GRAY,
     ];
 
     /**

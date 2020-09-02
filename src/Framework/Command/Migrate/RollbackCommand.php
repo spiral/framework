@@ -18,7 +18,7 @@ final class RollbackCommand extends AbstractCommand
     protected const NAME        = 'migrate:rollback';
     protected const DESCRIPTION = 'Rollback one (default) or multiple migrations';
     protected const OPTIONS     = [
-        ['all', 'a', InputOption::VALUE_NONE, 'Rollback all executed migrations']
+        ['all', 'a', InputOption::VALUE_NONE, 'Rollback all executed migrations'],
     ];
 
     /**

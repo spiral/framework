@@ -27,7 +27,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
 {
     protected const DEPENDENCIES = [
         HttpBootloader::class,
-        BroadcastBootloader::class
+        BroadcastBootloader::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -52,7 +52,7 @@ final class WebsocketsBootloader extends Bootloader implements SingletonInterfac
             [
                 'path'            => $env->get('RR_BROADCAST_PATH', null),
                 'authorizeServer' => null,
-                'authorizeTopics' => []
+                'authorizeTopics' => [],
             ]
         );
 

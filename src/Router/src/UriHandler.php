@@ -30,7 +30,7 @@ final class UriHandler
     private const SEGMENT_TYPES    = [
         'int'     => '\d+',
         'integer' => '\d+',
-        'uuid'    => '0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+        'uuid'    => '0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}',
     ];
     private const URI_FIXERS       = [
         '[]'  => '',
@@ -38,7 +38,7 @@ final class UriHandler
         '['   => '',
         ']'   => '',
         '://' => '://',
-        '//'  => '/'
+        '//'  => '/',
     ];
 
     /** @var UriFactoryInterface */

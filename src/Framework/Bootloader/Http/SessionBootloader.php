@@ -24,7 +24,7 @@ final class SessionBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         HttpBootloader::class,
-        CookiesBootloader::class
+        CookiesBootloader::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -64,9 +64,9 @@ final class SessionBootloader extends Bootloader
                     FileHandler::class,
                     [
                         'directory' => $directories->get('runtime') . 'session',
-                        'lifetime'  => 86400
+                        'lifetime'  => 86400,
                     ]
-                )
+                ),
             ]
         );
 

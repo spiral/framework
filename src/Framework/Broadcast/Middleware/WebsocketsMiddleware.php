@@ -157,7 +157,7 @@ final class WebsocketsMiddleware implements MiddlewareInterface
 
         return $this->scope->runScope(
             [
-                ServerRequestInterface::class => $request
+                ServerRequestInterface::class => $request,
             ],
             function () use ($reflection, $parameters, $callback) {
                 return call_user_func_array(

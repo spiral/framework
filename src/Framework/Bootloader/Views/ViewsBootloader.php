@@ -54,13 +54,13 @@ final class ViewsBootloader extends Bootloader implements SingletonInterface
             [
                 'cache'        => [
                     'enabled'   => $env->get('VIEW_CACHE', !$env->get('DEBUG', false)),
-                    'directory' => $dirs->get('cache') . 'views'
+                    'directory' => $dirs->get('cache') . 'views',
                 ],
                 'namespaces'   => [
-                    'default' => [$dirs->get('views')]
+                    'default' => [$dirs->get('views')],
                 ],
                 'dependencies' => [],
-                'engines'      => [NativeEngine::class]
+                'engines'      => [NativeEngine::class],
             ]
         );
     }

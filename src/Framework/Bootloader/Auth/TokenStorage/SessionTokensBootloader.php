@@ -24,10 +24,10 @@ final class SessionTokensBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         HttpAuthBootloader::class,
-        SessionBootloader::class
+        SessionBootloader::class,
     ];
 
     protected const SINGLETONS = [
-        TokenStorageInterface::class => SessionStorage::class
+        TokenStorageInterface::class => SessionStorage::class,
     ];
 }

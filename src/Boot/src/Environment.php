@@ -20,7 +20,7 @@ final class Environment implements EnvironmentInterface
         '(false)' => false,
         'null'    => null,
         '(null)'  => null,
-        'empty'   => ''
+        'empty'   => '',
     ];
 
     /** @var string|null */

@@ -29,7 +29,7 @@ final class ServerBootloader extends Bootloader
     protected const SINGLETONS = [
         RPC::class              => [self::class, 'rpc'],
         Worker::class           => [self::class, 'worker'],
-        MetricsInterface::class => Metrics::class
+        MetricsInterface::class => Metrics::class,
     ];
 
     private const RPC_DEFAULT    = 'tcp://127.0.0.1:6001';

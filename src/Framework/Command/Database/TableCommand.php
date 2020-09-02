@@ -28,10 +28,10 @@ final class TableCommand extends Command
     protected const NAME        = 'db:table';
     protected const DESCRIPTION = 'Describe table schema of specific database';
     protected const ARGUMENTS   = [
-        ['table', InputArgument::REQUIRED, 'Table name']
+        ['table', InputArgument::REQUIRED, 'Table name'],
     ];
     protected const OPTIONS     = [
-        ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database', 'default']
+        ['database', 'db', InputOption::VALUE_OPTIONAL, 'Source database', 'default'],
     ];
 
     private const SKIP = '<comment>---</comment>';
@@ -80,7 +80,7 @@ final class TableCommand extends Command
                 'Database Type:',
                 'Abstract Type:',
                 'PHP Type:',
-                'Default Value:'
+                'Default Value:',
             ]
         );
 
@@ -99,7 +99,7 @@ final class TableCommand extends Command
                     $this->describeType($column),
                     $this->describeAbstractType($column),
                     $column->getType(),
-                    $defaultValue ?? self::SKIP
+                    $defaultValue ?? self::SKIP,
                 ]
             );
         }
@@ -125,7 +125,7 @@ final class TableCommand extends Command
                 [
                     $index->getName(),
                     $index->isUnique() ? 'UNIQUE INDEX' : 'INDEX',
-                    implode(', ', $index->getColumns())
+                    implode(', ', $index->getColumns()),
                 ]
             );
         }
@@ -151,7 +151,7 @@ final class TableCommand extends Command
                 'Foreign Table:',
                 'Foreign Column:',
                 'On Delete:',
-                'On Update:'
+                'On Update:',
             ]
         );
 
@@ -163,7 +163,7 @@ final class TableCommand extends Command
                     $reference->getForeignTable(),
                     implode(', ', $reference->getForeignKeys()),
                     $reference->getDeleteRule(),
-                    $reference->getUpdateRule()
+                    $reference->getUpdateRule(),
                 ]
             );
         }

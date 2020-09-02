@@ -66,7 +66,7 @@ final class SessionFactory implements SingletonInterface
         return $this->factory->make(Session::class, [
             'clientSignature' => $clientSignature,
             'lifetime'        => $this->config->getLifetime(),
-            'id'              => $id
+            'id'              => $id,
         ]);
     }
 }

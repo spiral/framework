@@ -41,7 +41,7 @@ final class CookiesConfig extends InjectableConfig
     protected $config = [
         'domain'   => '.%s',
         'method'   => self::COOKIE_ENCRYPT,
-        'excluded' => ['PHPSESSID', 'csrf-token']
+        'excluded' => ['PHPSESSID', 'csrf-token'],
     ];
 
     /**

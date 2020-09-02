@@ -32,11 +32,11 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
         AuthBootloader::class,
-        HttpBootloader::class
+        HttpBootloader::class,
     ];
 
     protected const SINGLETONS = [
-        TransportRegistry::class => [self::class, 'transportRegistry']
+        TransportRegistry::class => [self::class, 'transportRegistry'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -70,8 +70,8 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
                         true,
                         null
                     ),
-                    'header' => new HeaderTransport('X-Auth-Token')
-                ]
+                    'header' => new HeaderTransport('X-Auth-Token'),
+                ],
             ]
         );
     }

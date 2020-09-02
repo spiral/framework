@@ -96,7 +96,7 @@ class HtmlHandler extends AbstractHandler
             'renderer'     => $this->renderer,
             'highlighter'  => $this->highlighter,
             'valueWrapper' => $options['valueWrapper'],
-            'showSource'   => $verbosity >= self::VERBOSITY_VERBOSE
+            'showSource'   => $verbosity >= self::VERBOSITY_VERBOSE,
         ]);
 
         $options['chain'] = $this->render('partials/chain', [
@@ -108,19 +108,19 @@ class HtmlHandler extends AbstractHandler
         if ($this->state !== null) {
             if ($this->state->getTags() !== []) {
                 $options['tags'] = $this->render('partials/tags', [
-                    'tags' => $this->state->getTags()
+                    'tags' => $this->state->getTags(),
                 ]);
             }
 
             if ($this->state->getLogEvents() !== []) {
                 $options['logs'] = $this->render('partials/logs', [
-                    'logEvents' => $this->state->getLogEvents()
+                    'logEvents' => $this->state->getLogEvents(),
                 ]);
             }
 
             if ($this->state->getVariables() !== []) {
                 $options['variables'] = $this->render('partials/variables', [
-                    'variables' => $this->state->getVariables()
+                    'variables' => $this->state->getVariables(),
                 ]);
             }
         }

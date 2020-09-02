@@ -42,7 +42,7 @@ class NamespaceDeclaration extends AbstractDeclaration implements ReplaceableInt
         $this->elements = new Aggregator([
             ClassDeclaration::class,
             Comment::class,
-            Source::class
+            Source::class,
         ]);
 
         $this->initComment($comment);

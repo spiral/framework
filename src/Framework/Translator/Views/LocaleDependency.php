@@ -43,7 +43,7 @@ final class LocaleDependency implements DependencyInterface
     {
         return [
             'value'    => $this->getValue(),
-            'variants' => $this->getVariants()
+            'variants' => $this->getVariants(),
         ];
     }
 

@@ -64,7 +64,7 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
     ) {
         $this->setName($name);
 
-        if (! empty($extends)) {
+        if (!empty($extends)) {
             $this->setExtends($extends);
         }
 
@@ -293,7 +293,7 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
     {
         $result = '';
 
-        if (! $this->docComment->isEmpty()) {
+        if (!$this->docComment->isEmpty()) {
             $result .= $this->docComment->render($indentLevel) . "\n";
         }
 
@@ -301,11 +301,11 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
         $header = "class {$this->getName()}";
 
         //Rendering extends
-        if (! empty($this->extends)) {
+        if (!empty($this->extends)) {
             $header .= " extends {$this->extends}";
         }
 
-        if (! empty($this->interfaces)) {
+        if (!empty($this->interfaces)) {
             $interfaces = implode(', ', array_keys($this->interfaces));
             $header .= " implements {$interfaces}";
         }
@@ -329,19 +329,19 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
     protected function renderBody(int $indentLevel): string
     {
         $result = '';
-        if (! empty($this->traits)) {
+        if (!empty($this->traits)) {
             $result .= $this->renderTraits($indentLevel + 1) . "\n\n";
         }
 
-        if (! $this->constants->isEmpty()) {
+        if (!$this->constants->isEmpty()) {
             $result .= $this->constants->render($indentLevel + 1) . "\n\n";
         }
 
-        if (! $this->properties->isEmpty()) {
+        if (!$this->properties->isEmpty()) {
             $result .= $this->properties->render($indentLevel + 1) . "\n\n";
         }
 
-        if (! $this->methods->isEmpty()) {
+        if (!$this->methods->isEmpty()) {
             $result .= $this->methods->render($indentLevel + 1) . "\n\n";
         }
 

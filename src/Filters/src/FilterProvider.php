@@ -75,7 +75,7 @@ final class FilterProvider implements FilterProviderInterface
             'data'        => [],
             'schema'      => $schema,
             'validator'   => $this->getValidator($filter),
-            'errorMapper' => $this->getErrorMapper($filter)
+            'errorMapper' => $this->getErrorMapper($filter),
         ]);
 
         $instance->setValue($this->initValues($schema[self::MAPPING], $input));

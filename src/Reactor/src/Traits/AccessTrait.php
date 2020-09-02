@@ -36,7 +36,7 @@ trait AccessTrait
             !in_array($access, [
             AbstractDeclaration::ACCESS_PRIVATE,
             AbstractDeclaration::ACCESS_PROTECTED,
-            AbstractDeclaration::ACCESS_PUBLIC
+            AbstractDeclaration::ACCESS_PUBLIC,
             ], true)
         ) {
             throw new ReactorException("Invalid declaration level '{$access}'");

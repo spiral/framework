@@ -29,7 +29,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 final class SnapshotsBootloader extends Bootloader
 {
     protected const SINGLETONS = [
-        SnapshotterInterface::class => [self::class, 'fileSnapshooter']
+        SnapshotterInterface::class => [self::class, 'fileSnapshooter'],
     ];
 
     private const MAX_SNAPSHOTS = 25;

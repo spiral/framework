@@ -22,11 +22,11 @@ use Spiral\Encrypter\EncryptionInterface;
 final class EncrypterBootloader extends Bootloader
 {
     protected const SINGLETONS = [
-        EncryptionInterface::class => EncrypterFactory::class
+        EncryptionInterface::class => EncrypterFactory::class,
     ];
 
     protected const BINDINGS = [
-        EncrypterInterface::class => Encrypter::class
+        EncrypterInterface::class => Encrypter::class,
     ];
 
     /**

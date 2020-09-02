@@ -69,7 +69,7 @@ class ConsoleStyle implements StyleInterface
             T_CLOSE_TAG,
             T_OPEN_TAG_WITH_ECHO,
             ';',
-            ','
+            ',',
         ],
         Color::LIGHT_BLUE    => [
             T_DNUMBER,
@@ -88,8 +88,8 @@ class ConsoleStyle implements StyleInterface
         ],
         Color::LIGHT_YELLOW  => [
             '->' . T_STRING,
-            '::' . T_STRING
-        ]
+            '::' . T_STRING,
+        ],
     ];
 
     /**

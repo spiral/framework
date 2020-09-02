@@ -24,12 +24,12 @@ final class MigrationsBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         TokenizerBootloader::class,
-        DatabaseBootloader::class
+        DatabaseBootloader::class,
     ];
 
     protected const SINGLETONS = [
         Migrator::class            => Migrator::class,
-        RepositoryInterface::class => FileRepository::class
+        RepositoryInterface::class => FileRepository::class,
     ];
 
     /**
@@ -51,7 +51,7 @@ final class MigrationsBootloader extends Bootloader
             [
                 'directory' => $dirs->get('migrations'),
                 'table'     => 'migrations',
-                'safe'      => $env->get('SAFE_MIGRATIONS', false)
+                'safe'      => $env->get('SAFE_MIGRATIONS', false),
             ]
         );
     }

@@ -30,11 +30,11 @@ final class CycleTokensBootloader extends Bootloader
     protected const DEPENDENCIES = [
         HttpAuthBootloader::class,
         CycleBootloader::class,
-        AnnotatedBootloader::class
+        AnnotatedBootloader::class,
     ];
 
     protected const SINGLETONS = [
-        TokenStorageInterface::class => CycleStorage::class
+        TokenStorageInterface::class => CycleStorage::class,
     ];
 
     /**

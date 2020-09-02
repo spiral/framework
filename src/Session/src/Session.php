@@ -86,7 +86,7 @@ final class Session implements SessionInterface
             'id'        => $this->id,
             'signature' => $this->clientSignature,
             'started'   => $this->isStarted(),
-            'data'      => $this->isStarted() ? $_SESSION : null
+            'data'      => $this->isStarted() ? $_SESSION : null,
         ];
     }
 
@@ -204,7 +204,7 @@ final class Session implements SessionInterface
         $this->resume();
         $_SESSION = [
             self::CLIENT_SIGNATURE => $this->clientSignature,
-            self::SESSION_CREATED  => time()
+            self::SESSION_CREATED  => time(),
         ];
 
         return $this->commit();

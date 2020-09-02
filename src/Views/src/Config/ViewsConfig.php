@@ -24,13 +24,13 @@ final class ViewsConfig extends InjectableConfig
     protected $config = [
         'cache'        => [
             'enable'    => false,
-            'directory' => '/tmp'
+            'directory' => '/tmp',
         ],
         'namespaces'   => [],
         'dependencies' => [],
         'engines'      => [
-            NativeEngine::class
-        ]
+            NativeEngine::class,
+        ],
     ];
 
     /**

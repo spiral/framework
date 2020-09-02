@@ -52,7 +52,7 @@ class FileDeclaration extends AbstractDeclaration implements ReplaceableInterfac
             ClassDeclaration::class,
             NamespaceDeclaration::class,
             Comment::class,
-            Source::class
+            Source::class,
         ]);
 
         $this->initComment($comment);

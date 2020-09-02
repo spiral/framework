@@ -115,7 +115,7 @@ final class GuardInterceptor implements CoreInterceptorInterface
         $permission = [
             $guarded->permission ?? $method->getName(),
             ControllerException::FORBIDDEN,
-            $guarded->errorMessage ?? sprintf('Unauthorized access `%s`', $guarded->permission ?? $method->getName())
+            $guarded->errorMessage ?? sprintf('Unauthorized access `%s`', $guarded->permission ?? $method->getName()),
         ];
 
         if ($guarded->permission === null && $ns === null) {

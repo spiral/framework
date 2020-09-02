@@ -24,7 +24,7 @@ final class HttpConfig extends InjectableConfig
     protected $config = [
         'basePath'   => '/',
         'headers'    => [
-            'Content-Type' => 'text/html; charset=UTF-8'
+            'Content-Type' => 'text/html; charset=UTF-8',
         ],
         'middleware' => [],
     ];

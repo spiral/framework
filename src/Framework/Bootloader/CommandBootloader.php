@@ -68,7 +68,7 @@ final class CommandBootloader extends Bootloader
     public function defineDependencies(): array
     {
         return [
-            ConsoleBootloader::class
+            ConsoleBootloader::class,
         ];
     }
 

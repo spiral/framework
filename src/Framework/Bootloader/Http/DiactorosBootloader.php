@@ -33,6 +33,6 @@ final class DiactorosBootloader extends Bootloader
         ResponseFactoryInterface::class      => ResponseFactory::class,
         StreamFactoryInterface::class        => StreamFactory::class,
         UploadedFileFactoryInterface::class  => UploadedFileFactory::class,
-        UriFactoryInterface::class           => UriFactory::class
+        UriFactoryInterface::class           => UriFactory::class,
     ];
 }

@@ -28,13 +28,13 @@ use Spiral\Validation\ValidatorInterface;
 final class ValidationBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
-        TokenizerBootloader::class
+        TokenizerBootloader::class,
     ];
 
     protected const SINGLETONS = [
         ValidationInterface::class => ValidationProvider::class,
         RulesInterface::class      => ValidationProvider::class,
-        ParserInterface::class     => RuleParser::class
+        ParserInterface::class     => RuleParser::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -113,7 +113,7 @@ final class ValidationBootloader extends Bootloader implements SingletonInterfac
                     'scalar'     => 'is_scalar',
                     'string'     => 'is_string',
                     'match'      => 'mixed::match',
-                ]
+                ],
             ]
         );
 

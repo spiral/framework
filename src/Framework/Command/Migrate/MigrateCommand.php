@@ -18,7 +18,7 @@ final class MigrateCommand extends AbstractCommand
     protected const NAME        = 'migrate';
     protected const DESCRIPTION = 'Perform one or all outstanding migrations';
     protected const OPTIONS     = [
-        ['one', 'o', InputOption::VALUE_NONE, 'Execute only one (first) migration']
+        ['one', 'o', InputOption::VALUE_NONE, 'Execute only one (first) migration'],
     ];
 
     /**

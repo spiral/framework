@@ -18,7 +18,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 final class AnnotatedBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
-        SchemaBootloader::class
+        SchemaBootloader::class,
     ];
 
     /**

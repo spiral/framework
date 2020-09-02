@@ -149,8 +149,8 @@ class HtmlStyle implements StyleInterface
         ],
         'color: #E6D100;'                    => [
             '->' . T_STRING,
-            '::' . T_STRING
-        ]
+            '::' . T_STRING,
+        ],
     ];
 
     /**

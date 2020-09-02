@@ -27,7 +27,7 @@ final class AuthBootloader extends Bootloader implements ActorProviderInterface,
 {
     protected const SINGLETONS = [
         AuthScope::class              => AuthScope::class,
-        ActorProviderInterface::class => self::class
+        ActorProviderInterface::class => self::class,
     ];
 
     /** @var FactoryInterface */

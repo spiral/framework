@@ -20,7 +20,6 @@ use Spiral\Core\Container;
  */
 final class BootloadManager implements Container\SingletonInterface
 {
-
     /* @var Container @internal */
     protected $container;
 

@@ -26,7 +26,7 @@ final class ExportCommand extends Command implements SingletonInterface
     protected const DESCRIPTION = 'Dump given locale using specified dumper and path';
     protected const ARGUMENTS   = [
         ['locale', InputArgument::REQUIRED, 'Locale to be dumped'],
-        ['path', InputArgument::REQUIRED, 'Export path']
+        ['path', InputArgument::REQUIRED, 'Export path'],
     ];
     protected const OPTIONS     = [
         ['dumper', 'd', InputOption::VALUE_OPTIONAL, 'Dumper name', 'php'],
@@ -65,7 +65,7 @@ final class ExportCommand extends Command implements SingletonInterface
             [
                 'path'           => $this->argument('path'),
                 'default_locale' => $config->getDefaultLocale(),
-                'xliff_version'  => '2.0' // forcing default version for xliff dumper only
+                'xliff_version'  => '2.0', // forcing default version for xliff dumper only
             ]
         );
 

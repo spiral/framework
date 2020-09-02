@@ -24,11 +24,11 @@ final class SecurityActorBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         AuthBootloader::class,
-        GuardBootloader::class
+        GuardBootloader::class,
     ];
 
     protected const BINDINGS = [
-        ActorInterface::class => [self::class, 'actor']
+        ActorInterface::class => [self::class, 'actor'],
     ];
 
     /**

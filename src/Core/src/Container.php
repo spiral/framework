@@ -64,7 +64,7 @@ final class Container implements
         BinderInterface::class    => self::class,
         FactoryInterface::class   => self::class,
         ScopeInterface::class     => self::class,
-        ResolverInterface::class  => self::class
+        ResolverInterface::class  => self::class,
     ];
 
     /**
