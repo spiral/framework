@@ -1,5 +1,16 @@
 # CHANGELOG
 
+v2.6.0 (17.09.2020)
+-----
+- Dumper
+    - Dumper class marked as `final`
+- Http
+    - [Implementation of RFC7231 "Accept" header parser](https://github.com/spiral/framework/issues/231)
+- Reactor
+    - [Fix render comment for namespace declaration](https://github.com/spiral/reactor/pull/7) 
+- Validation
+    - [Add `any`, `none` conditions](https://github.com/spiral/validation/pull/13)
+
 v2.5.0 (18.07.2020)
 -----
 - RR updated to 1.8.2 (don't use broken 1.8.1 tag)
