@@ -5,6 +5,7 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
+ * @author    Valentin V (Vvval)
  */
 
 declare(strict_types=1);
@@ -23,6 +24,7 @@ use Spiral\Exceptions\HtmlHandler;
 use Spiral\Exceptions\JsonHandler;
 use Spiral\Http\ErrorHandler\RendererInterface;
 use Spiral\Http\Exception\ClientException;
+use Spiral\Http\Middleware\ErrorHandlerMiddleware\SuppressErrorsInterface;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Router\Exception\RouterException;
 use Spiral\Snapshots\SnapshotterInterface;
@@ -37,7 +39,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     /** @var ResponseFactoryInterface */
     private $responseFactory;
 
-    /** @var bool */
+    /** @var SuppressErrorsInterface */
     private $suppressErrors;
 
     /** @var RendererInterface */
@@ -47,13 +49,13 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     private $container;
 
     /**
-     * @param bool                     $suppressErrors
+     * @param SuppressErrorsInterface  $suppressErrors
      * @param RendererInterface        $renderer
      * @param ResponseFactoryInterface $responseFactory
      * @param ContainerInterface       $container
      */
     public function __construct(
-        bool $suppressErrors,
+        SuppressErrorsInterface $suppressErrors,
         RendererInterface $renderer,
         ResponseFactoryInterface $responseFactory,
         ContainerInterface $container
@@ -86,7 +88,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 $snapshotter->register($e);
             }
 
-            if (!$this->suppressErrors) {
+            if (!$this->suppressErrors->suppressed()) {
                 return $this->renderError($request, $e);
             }
 
@@ -109,7 +111,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     {
         $response = $this->responseFactory->createResponse(500);
 
-        if ($request->getHeaderLine('Accept') == 'application/json') {
+        if ($request->getHeaderLine('Accept') === 'application/json') {
             $response = $response->withHeader('Content-Type', 'application/json');
             $handler = new JsonHandler();
             $response->getBody()->write(
