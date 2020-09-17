@@ -5,6 +5,7 @@
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
+ * @author    Valentin V (Vvval)
  */
 
 declare(strict_types=1);
@@ -12,8 +13,6 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\EnvironmentInterface;
-use Spiral\Core\Container\Autowire;
 use Spiral\Http\ErrorHandler;
 use Spiral\Http\Middleware\ErrorHandlerMiddleware;
 
@@ -27,20 +26,15 @@ final class ErrorHandlerBootloader extends Bootloader
     ];
 
     protected const BINDINGS = [
-        ErrorHandler\RendererInterface::class => ErrorHandler\PlainRenderer::class,
+        ErrorHandlerMiddleware\SuppressErrorsInterface::class => ErrorHandlerMiddleware\EnvSuppressErrors::class,
+        ErrorHandler\RendererInterface::class                 => ErrorHandler\PlainRenderer::class,
     ];
 
     /**
-     * @param HttpBootloader       $http
-     * @param EnvironmentInterface $env
+     * @param HttpBootloader $http
      */
-    public function boot(HttpBootloader $http, EnvironmentInterface $env): void
+    public function boot(HttpBootloader $http): void
     {
-        $http->addMiddleware(
-            new Autowire(
-                ErrorHandlerMiddleware::class,
-                ['suppressErrors' => !$env->get('DEBUG', false)]
-            )
-        );
+        $http->addMiddleware(ErrorHandlerMiddleware::class);
     }
 }
