@@ -6,6 +6,7 @@ v2.6.0 (17.09.2020)
     - Dumper class marked as `final`
 - Http
     - [Implementation of RFC7231 "Accept" header parser](https://github.com/spiral/framework/issues/231)
+    - [Simplified ErrorHandlerMiddleware injection](https://github.com/spiral/framework/issues/295)
 - Reactor
     - [Fix render comment for namespace declaration](https://github.com/spiral/reactor/pull/7) 
 - Validation
