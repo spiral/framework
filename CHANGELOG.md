@@ -2,15 +2,20 @@
 
 v2.6.0 (17.09.2020)
 -----
-- Dumper
-    - Dumper class marked as `final`
-- Http
-    - [Implementation of RFC7231 "Accept" header parser](https://github.com/spiral/framework/issues/231)
-    - [Simplified ErrorHandlerMiddleware injection](https://github.com/spiral/framework/issues/295)
-- Reactor
-    - [Fix render comment for namespace declaration](https://github.com/spiral/reactor/pull/7) 
-- Validation
-    - [Add `any`, `none` conditions](https://github.com/spiral/validation/pull/13)
+- **High Impact Changes**
+    - A minimal version of `symfony/translation` increased to `^5.1`
+    - A minimal version of `symfony/console` increased to `^5.1`
+    - A minimal version of `symfony/finder` increased to `^5.1`
+
+- **Medium Impact Changes**
+    - Dependence of `zend/zend-diactoros` was replaced by `laminas/laminas-diactoros ^2.3`
+    - [spiral/dumper] `Spiral\Debug\Dumper` class marked as `final`
+
+- **Other Features**
+    - [spiral/http] [Implementation of RFC7231 "Accept" header parser](https://github.com/spiral/framework/issues/231)
+    - [spiral/http] [Simplified ErrorHandlerMiddleware injection](https://github.com/spiral/framework/issues/295)
+    - [spiral/reactor] [Fix render comment for namespace declaration](https://github.com/spiral/reactor/pull/7) 
+    - [spiral/validation] [Add `any`, `none` conditions](https://github.com/spiral/validation/pull/13)
 
 v2.5.0 (18.07.2020)
 -----
