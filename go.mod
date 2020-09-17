@@ -9,7 +9,7 @@ require (
 	github.com/spiral/broadcast/v2 v2.0.3 // indirect
 	github.com/spiral/jobs/v2 v2.2.0
 	github.com/spiral/php-grpc v1.1.0
-	github.com/spiral/roadrunner v1.8.2
+	github.com/spiral/roadrunner v1.8.3
 	google.golang.org/genproto v0.0.0-20181016170114-94acd270e44e // indirect
 )
 
