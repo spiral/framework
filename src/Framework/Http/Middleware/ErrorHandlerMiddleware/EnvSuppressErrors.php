@@ -13,7 +13,7 @@ namespace Spiral\Http\Middleware\ErrorHandlerMiddleware;
 
 use Spiral\Boot\EnvironmentInterface;
 
-class EnvSuppressErrors
+class EnvSuppressErrors implements SuppressErrorsInterface
 {
     /** @var EnvironmentInterface */
     private $environment;
