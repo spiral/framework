@@ -49,7 +49,6 @@ final class Container implements
     ScopeInterface
 {
     /**
-     * @internal
      * @var array
      */
     private $bindings = [
@@ -64,7 +63,6 @@ final class Container implements
      * List of classes responsible for handling specific instance or interface. Provides ability to
      * delegate container functionality.
      *
-     * @internal
      * @var array
      */
     private $injectors = [];
@@ -72,7 +70,6 @@ final class Container implements
     /**
      * Contains names of all classes which were checked for the available injectors.
      *
-     * @internal
      * @var array
      */
     private $injectorsCache = [];
