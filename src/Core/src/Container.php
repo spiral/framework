@@ -178,17 +178,10 @@ final class Container implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param string $context
-     *
-     * @throws Throwable
+     * {@inheritDoc}
      */
-    public function resolveArguments(
-        ContextFunction $reflection,
-        array $parameters = [],
-        string $context = null
-    ): array {
+    public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
+    {
         $arguments = [];
         foreach ($reflection->getParameters() as $parameter) {
             try {
