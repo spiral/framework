@@ -41,12 +41,16 @@ class DatetimeTest extends TestCase
      */
     public function futureProvider(): array
     {
+        $future = static function () {
+            return time() + 10;
+        };
+
         return [
             //the date is 100% in the future
-            [true, function() { return time() + 10; }, false, false],
-            [true, function() { return time() + 10; }, true, false],
-            [true, function() { return time() + 10; }, false, true],
-            [true, function() { return time() + 10; }, true, true],
+            [true, $future, false, false],
+            [true, $future, true, false],
+            [true, $future, false, true],
+            [true, $future, true, true],
 
             [true, 'tomorrow 10am', false, false],
             [true, 'now + 10 seconds', false, false],
