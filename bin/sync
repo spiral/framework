@@ -15,7 +15,7 @@ $dest = \json_decode(\file_get_contents(__DIR__ . '/../composer.json'), true);
 $result = [
     'name'              => 'spiral/framework',
     'type'              => 'library',
-    'description'       => $dest['description'] ?? [],
+    'description'       => $dest['description'] ?? '',
     'homepage'          => 'https://spiral.dev',
     'license'           => 'MIT',
     'support'           => [
@@ -39,8 +39,8 @@ $result = [
     'scripts'           => $dest['scripts'] ?? [],
     'extra'             => $dest['extra'] ?? [],
     'config'            => $dest['config'] ?? [],
-    'minimum-stability' => $dest['minimum-stability'] ?? [],
-    'prefer-stable'     => $dest['prefer-stable'] ?? [],
+    'minimum-stability' => $dest['minimum-stability'] ?? 'dev',
+    'prefer-stable'     => $dest['prefer-stable'] ?? true,
 ];
 
 \file_put_contents(__DIR__ . '/../composer.json',
