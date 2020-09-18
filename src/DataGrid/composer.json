@@ -1,0 +1,51 @@
+{
+    "name": "spiral/data-grid",
+    "type": "library",
+    "license": "MIT",
+    "description": "Data Grid specification builder",
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/data-grid"
+    },
+    "authors": [
+        {
+            "name": "Valentin Vintsukevich (vvval)",
+            "email": "valentin@spiralscout.com"
+        },
+        {
+            "name": "Anton Tsitou (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "ramsey/uuid": "^3.9"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "Spiral\\DataGrid\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\DataGrid\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
