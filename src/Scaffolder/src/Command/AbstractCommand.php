@@ -70,7 +70,7 @@ abstract class AbstractCommand extends Command
             $this->declarationClass(static::ELEMENT),
             [
                 'name'    => $this->getClass(),
-                'comment' => (string)$this->option('comment')
+                'comment' => (string)$this->option('comment'),
             ] + $parameters + $this->config->declarationOptions(static::ELEMENT)
         );
     }

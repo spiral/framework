@@ -25,8 +25,8 @@ class ConfigCommand extends AbstractCommand
         [
             'name',
             InputArgument::REQUIRED,
-            'config name, or a config filename if "-r" flag is set ({path/to/configs/directory/}{config/filename}.php)'
-        ]
+            'config name, or a config filename if "-r" flag is set ({path/to/configs/directory/}{config/filename}.php)',
+        ],
     ];
 
     protected const OPTIONS = [
@@ -34,13 +34,13 @@ class ConfigCommand extends AbstractCommand
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
+            'Optional comment to add as class header',
         ],
         [
             'reverse',
             'r',
             InputOption::VALUE_NONE,
-            'Create config class based on a given config filename'
+            'Create config class based on a given config filename',
         ],
     ];
 

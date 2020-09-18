@@ -31,11 +31,11 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
 
     protected const DEPENDENCIES = [
         RouterBootloader::class,
-        ConsoleBootloader::class
+        ConsoleBootloader::class,
     ];
 
     protected const SINGLETONS = [
-        GroupRegistry::class => [self::class, 'getGroups']
+        GroupRegistry::class => [self::class, 'getGroups'],
     ];
 
     /** @var MemoryInterface */

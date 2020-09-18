@@ -38,7 +38,7 @@ final class RemoveTrait extends NodeVisitorAbstract
                 if (
                     in_array($name, [
                     $this->trimSlashes(PrototypeTrait::class),
-                    Utils::shortName(PrototypeTrait::class)
+                    Utils::shortName(PrototypeTrait::class),
                     ], true)
                 ) {
                     unset($node->traits[$index]);

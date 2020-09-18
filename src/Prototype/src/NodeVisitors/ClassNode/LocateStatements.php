@@ -32,7 +32,7 @@ final class LocateStatements extends NodeVisitorAbstract
             foreach ($node->uses as $use) {
                 $this->imports[] = [
                     'name'  => join('\\', $use->name->parts),
-                    'alias' => !empty($use->alias) ? $use->alias->name : null
+                    'alias' => !empty($use->alias) ? $use->alias->name : null,
                 ];
             }
         }

@@ -239,7 +239,7 @@ final class HTMLGrammar implements GrammarInterface
     private function parseGrammar(Buffer $src): ?array
     {
         $this->tokens = [
-            new Token(self::TYPE_OPEN, $src->getOffset(), '<')
+            new Token(self::TYPE_OPEN, $src->getOffset(), '<'),
         ];
 
         if ($src->lookaheadByte() === '/') {

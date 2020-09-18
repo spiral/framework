@@ -93,7 +93,7 @@ class ScaffolderConfig extends InjectableConfig
         return $this->joinPathChunks([
             $this->baseDirectory(),
             str_replace('\\', '/', $namespace),
-            $this->className($element, $name) . '.php'
+            $this->className($element, $name) . '.php',
         ], '/');
     }
 

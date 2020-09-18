@@ -25,7 +25,7 @@ use Spiral\Scaffolder\Declaration;
 class ScaffolderBootloader extends Bootloader
 {
     protected const BINDINGS = [
-        SlugifyInterface::class => Slugify::class
+        SlugifyInterface::class => Slugify::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -76,7 +76,7 @@ class ScaffolderBootloader extends Bootloader
             'header'       => [
                 '{project-name}',
                 '',
-                '@author {author-name}'
+                '@author {author-name}',
             ],
 
             /*
@@ -100,7 +100,7 @@ class ScaffolderBootloader extends Bootloader
                 'bootloader' => [
                     'namespace' => 'Bootloader',
                     'postfix'   => 'Bootloader',
-                    'class'     => Declaration\BootloaderDeclaration::class
+                    'class'     => Declaration\BootloaderDeclaration::class,
                 ],
                 'config'     => [
                     'namespace' => 'Config',
@@ -108,32 +108,32 @@ class ScaffolderBootloader extends Bootloader
                     'class'     => Declaration\ConfigDeclaration::class,
                     'options'   => [
                         'directory' => directory('config'),
-                    ]
+                    ],
                 ],
                 'controller' => [
                     'namespace' => 'Controller',
                     'postfix'   => 'Controller',
-                    'class'     => Declaration\ControllerDeclaration::class
+                    'class'     => Declaration\ControllerDeclaration::class,
                 ],
                 'middleware' => [
                     'namespace' => 'Middleware',
                     'postfix'   => '',
-                    'class'     => Declaration\MiddlewareDeclaration::class
+                    'class'     => Declaration\MiddlewareDeclaration::class,
                 ],
                 'command'    => [
                     'namespace' => 'Command',
                     'postfix'   => 'Command',
-                    'class'     => Declaration\CommandDeclaration::class
+                    'class'     => Declaration\CommandDeclaration::class,
                 ],
                 'jobHandler' => [
                     'namespace' => 'Job',
                     'postfix'   => 'Job',
-                    'class'     => Declaration\JobHandlerDeclaration::class
+                    'class'     => Declaration\JobHandlerDeclaration::class,
                 ],
                 'migration'  => [
                     'namespace' => '',
                     'postfix'   => 'Migration',
-                    'class'     => Declaration\MigrationDeclaration::class
+                    'class'     => Declaration\MigrationDeclaration::class,
                 ],
                 'filter'     => [
                     'namespace' => 'Request',
@@ -145,64 +145,64 @@ class ScaffolderBootloader extends Bootloader
                             'int'     => [
                                 'source'    => 'data',
                                 'setter'    => 'intval',
-                                'validates' => ['notEmpty', 'integer']
+                                'validates' => ['notEmpty', 'integer'],
                             ],
                             'integer' => [
                                 'source'    => 'data',
                                 'setter'    => 'intval',
-                                'validates' => ['notEmpty', 'integer']
+                                'validates' => ['notEmpty', 'integer'],
                             ],
                             'float'   => [
                                 'source'    => 'data',
                                 'setter'    => 'floatval',
-                                'validates' => ['notEmpty', 'float']
+                                'validates' => ['notEmpty', 'float'],
                             ],
                             'double'  => [
                                 'source'    => 'data',
                                 'setter'    => 'floatval',
-                                'validates' => ['notEmpty', 'float']
+                                'validates' => ['notEmpty', 'float'],
                             ],
                             'string'  => [
                                 'source'    => 'data',
                                 'setter'    => 'strval',
-                                'validates' => ['notEmpty', 'string']
+                                'validates' => ['notEmpty', 'string'],
                             ],
                             'bool'    => [
                                 'source'    => 'data',
                                 'setter'    => 'boolval',
-                                'validates' => ['notEmpty', 'boolean']
+                                'validates' => ['notEmpty', 'boolean'],
                             ],
                             'boolean' => [
                                 'source'    => 'data',
                                 'setter'    => 'boolval',
-                                'validates' => ['notEmpty', 'boolean']
+                                'validates' => ['notEmpty', 'boolean'],
                             ],
                             'email'   => [
                                 'source'    => 'data',
                                 'setter'    => 'strval',
-                                'validates' => ['notEmpty', 'string', 'email']
+                                'validates' => ['notEmpty', 'string', 'email'],
                             ],
                             'file'    => [
                                 'source'    => 'file',
-                                'validates' => ['file::uploaded']
+                                'validates' => ['file::uploaded'],
                             ],
                             'image'   => [
                                 'source'    => 'file',
-                                'validates' => ['image::uploaded', 'image::valid']
+                                'validates' => ['image::uploaded', 'image::valid'],
                             ],
                             null      => [
                                 'source'    => 'data',
                                 'setter'    => 'strval',
-                                'validates' => ['notEmpty', 'string']
+                                'validates' => ['notEmpty', 'string'],
                             ],
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'entity'     => [
                     'namespace' => 'Database',
                     'postfix'   => '',
                     'options'   => [
-                        'annotated' => Declaration\Database\Entity\AnnotatedDeclaration::class
+                        'annotated' => Declaration\Database\Entity\AnnotatedDeclaration::class,
                     ],
                 ],
                 'repository' => [

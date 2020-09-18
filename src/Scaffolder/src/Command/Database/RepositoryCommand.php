@@ -23,15 +23,15 @@ class RepositoryCommand extends AbstractCommand
     protected const NAME        = 'create:repository';
     protected const DESCRIPTION = 'Create repository declaration';
     protected const ARGUMENTS   = [
-        ['name', InputArgument::REQUIRED, 'Repository name']
+        ['name', InputArgument::REQUIRED, 'Repository name'],
     ];
     protected const OPTIONS     = [
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**

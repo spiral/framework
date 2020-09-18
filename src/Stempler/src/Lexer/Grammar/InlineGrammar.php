@@ -95,7 +95,7 @@ final class InlineGrammar implements GrammarInterface
     private function parseGrammar(Buffer $src, int $offset): ?array
     {
         $this->tokens = [
-            new Token(self::TYPE_OPEN_TAG, $offset, '$' . $src->next()->char)
+            new Token(self::TYPE_OPEN_TAG, $offset, '$' . $src->next()->char),
         ];
 
         while ($n = $src->next()) {

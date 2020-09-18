@@ -22,15 +22,15 @@ class JobHandlerCommand extends AbstractCommand
     protected const NAME        = 'create:jobHandler';
     protected const DESCRIPTION = 'Create job handler declaration';
     protected const ARGUMENTS   = [
-        ['name', InputArgument::REQUIRED, 'job handler name']
+        ['name', InputArgument::REQUIRED, 'job handler name'],
     ];
     protected const OPTIONS     = [
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**

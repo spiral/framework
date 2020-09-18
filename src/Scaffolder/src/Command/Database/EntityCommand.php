@@ -38,13 +38,13 @@ class EntityCommand extends AbstractCommand
             'role',
             'r',
             InputOption::VALUE_OPTIONAL,
-            'Entity role, defaults to lowercase class name without a namespace'
+            'Entity role, defaults to lowercase class name without a namespace',
         ],
         [
             'mapper',
             'm',
             InputOption::VALUE_OPTIONAL,
-            'Mapper class name, defaults to Cycle\ORM\Mapper\Mapper'
+            'Mapper class name, defaults to Cycle\ORM\Mapper\Mapper',
         ],
         [
             'repository',
@@ -56,13 +56,13 @@ class EntityCommand extends AbstractCommand
             'table',
             't',
             InputOption::VALUE_OPTIONAL,
-            'Entity source table, defaults to plural form of entity role'
+            'Entity source table, defaults to plural form of entity role',
         ],
         [
             'database',
             'd',
             InputOption::VALUE_OPTIONAL,
-            'Database name, defaults to null (default database)'
+            'Database name, defaults to null (default database)',
         ],
         [
             'accessibility',
@@ -76,20 +76,20 @@ class EntityCommand extends AbstractCommand
             'i',
             InputOption::VALUE_OPTIONAL,
             'Column name inflection, allowed values: tableize (t), camelize (c)',
-            'tableize'
+            'tableize',
         ],
         [
             'field',
             'f',
             InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-            'Add field in a format "name:type"'
+            'Add field in a format "name:type"',
         ],
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**
@@ -137,7 +137,7 @@ class EntityCommand extends AbstractCommand
 
         if ($this->option('repository')) {
             $console->run('create:repository', [
-                'name' => $repository ?? $this->argument('name')
+                'name' => $repository ?? $this->argument('name'),
             ]);
         }
     }
@@ -160,7 +160,7 @@ class EntityCommand extends AbstractCommand
             !in_array($accessibility, [
             AbstractDeclaration::ACCESS_PUBLIC,
             AbstractDeclaration::ACCESS_PROTECTED,
-            AbstractDeclaration::ACCESS_PRIVATE
+            AbstractDeclaration::ACCESS_PRIVATE,
             ], true)
         ) {
             throw new ScaffolderException("Invalid accessibility value `$accessibility`");

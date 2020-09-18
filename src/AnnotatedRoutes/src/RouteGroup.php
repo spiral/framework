@@ -133,7 +133,7 @@ final class RouteGroup
             'action'     => $action,
             'verbs'      => $verbs,
             'defaults'   => $defaults,
-            'middleware' => $middleware
+            'middleware' => $middleware,
         ];
     }
 

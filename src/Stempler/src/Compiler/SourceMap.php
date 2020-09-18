@@ -84,7 +84,7 @@ final class SourceMap implements \Serializable
     {
         return json_encode([
             'paths' => $this->paths,
-            'lines' => $this->lines
+            'lines' => $this->lines,
         ]);
     }
 

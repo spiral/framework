@@ -22,15 +22,15 @@ class BootloaderCommand extends AbstractCommand
     protected const NAME        = 'create:bootloader';
     protected const DESCRIPTION = 'Create bootloader declaration';
     protected const ARGUMENTS   = [
-        ['name', InputArgument::REQUIRED, 'bootloader name']
+        ['name', InputArgument::REQUIRED, 'bootloader name'],
     ];
     protected const OPTIONS     = [
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**

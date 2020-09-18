@@ -23,15 +23,15 @@ class MiddlewareCommand extends AbstractCommand
     protected const NAME        = 'create:middleware';
     protected const DESCRIPTION = 'Create middleware declaration';
     protected const ARGUMENTS   = [
-        ['name', InputArgument::REQUIRED, 'Middleware name']
+        ['name', InputArgument::REQUIRED, 'Middleware name'],
     ];
     protected const OPTIONS     = [
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**

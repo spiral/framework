@@ -33,20 +33,20 @@ class MigrationCommand extends AbstractCommand
             'table',
             't',
             InputOption::VALUE_OPTIONAL,
-            'Table to be created table'
+            'Table to be created table',
         ],
         [
             'field',
             'f',
             InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-            'Create field in a format "name:type"'
+            'Create field in a format "name:type"',
         ],
         [
             'comment',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**

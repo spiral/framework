@@ -239,7 +239,7 @@ class ConfigDeclaration extends ClassDeclaration implements DependedInterface
         $method->setReturn($valueType);
         $method->setComment([
             "@param {$this->typeAnnotations->mapType($keyType)} $singularKey",
-            "@return {$this->typeAnnotations->getAnnotation(array_values($value)[0])}"
+            "@return {$this->typeAnnotations->getAnnotation(array_values($value)[0])}",
         ]);
 
         $param = $method->parameter($singularKey);

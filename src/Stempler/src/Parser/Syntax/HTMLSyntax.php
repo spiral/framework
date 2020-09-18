@@ -46,13 +46,13 @@ final class HTMLSyntax implements SyntaxInterface
         'param',
         'source',
         'track',
-        'wbr'
+        'wbr',
     ];
 
     // list of attributes which define verbatim blocks (https://www.w3schools.com/tags/ref_eventattributes.asp)
     private const VERBATIM_ATTRIBUTES = [
         'style',
-        'on*'
+        'on*',
     ];
 
     /** @var Tag|null */

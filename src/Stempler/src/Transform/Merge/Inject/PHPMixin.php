@@ -171,7 +171,7 @@ final class PHPMixin
                         $this->blocks[$name] = [
                             'start' => $start,
                             'value' => trim($value),
-                            'end'   => $position
+                            'end'   => $position,
                         ];
 
                         // reset

@@ -44,7 +44,7 @@ final class RouteLocator
                 'group'      => $route->group,
                 'verbs'      => (array) $route->methods,
                 'defaults'   => $route->defaults,
-                'middleware' => (array) $route->middleware
+                'middleware' => (array) $route->middleware,
             ];
         }
 

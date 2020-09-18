@@ -140,7 +140,7 @@ final class BracesGrammar
                 $this->startToken,
                 $n->offset,
                 $n->char . $this->nextBytes($src, strlen($this->startSequence) - 1)
-            )
+            ),
         ];
 
         while ($n = $src->next()) {

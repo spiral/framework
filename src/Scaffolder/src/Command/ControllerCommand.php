@@ -23,27 +23,27 @@ class ControllerCommand extends AbstractCommand
     protected const NAME        = 'create:controller';
     protected const DESCRIPTION = 'Create controller declaration';
     protected const ARGUMENTS   = [
-        ['name', InputArgument::REQUIRED, 'Controller name']
+        ['name', InputArgument::REQUIRED, 'Controller name'],
     ];
     protected const OPTIONS     = [
         [
             'action',
             'a',
             InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-            'Pre-create controller action'
+            'Pre-create controller action',
         ],
         [
             'prototype',
             'p',
             InputOption::VALUE_NONE,
-            'Add \Spiral\Prototype\Traits\PrototypeTrait to controller'
+            'Add \Spiral\Prototype\Traits\PrototypeTrait to controller',
         ],
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**

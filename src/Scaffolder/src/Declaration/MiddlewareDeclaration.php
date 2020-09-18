@@ -44,7 +44,7 @@ class MiddlewareDeclaration extends ClassDeclaration implements DependedInterfac
             MiddlewareInterface::class     => null,
             RequestHandlerInterface::class => null,
             ResponseInterface::class       => 'Response',
-            ServerRequestInterface::class  => 'Request'
+            ServerRequestInterface::class  => 'Request',
         ];
     }
 

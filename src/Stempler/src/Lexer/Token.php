@@ -55,7 +55,7 @@ final class Token
         $token = [
             'type'    => $this->type,
             'offset'  => $this->offset,
-            'content' => $this->content
+            'content' => $this->content,
         ];
 
         if ($this->grammar !== null) {

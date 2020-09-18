@@ -67,7 +67,7 @@ final class InjectBlocks implements VisitorInterface
         if ($node->name !== 'parent') {
             $traverser = new Traverser();
             $traverser->addVisitor(new InjectBlocks(new BlockClaims([
-                'parent' => $node->nodes
+                'parent' => $node->nodes,
             ])));
 
             $inject = $traverser->traverse($inject);

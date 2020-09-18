@@ -31,14 +31,14 @@ class CommandCommand extends AbstractCommand
             'description',
             'd',
             InputOption::VALUE_OPTIONAL,
-            'Command description'
+            'Command description',
         ],
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     /**

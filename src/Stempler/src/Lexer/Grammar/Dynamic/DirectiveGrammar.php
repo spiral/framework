@@ -45,7 +45,7 @@ final class DirectiveGrammar implements \IteratorAggregate
     public function parse(Buffer $src, int $offset): bool
     {
         $this->tokens = [
-            new Token(DynamicGrammar::TYPE_DIRECTIVE, $offset, self::DIRECTIVE_CHAR)
+            new Token(DynamicGrammar::TYPE_DIRECTIVE, $offset, self::DIRECTIVE_CHAR),
         ];
 
         $this->body = null;

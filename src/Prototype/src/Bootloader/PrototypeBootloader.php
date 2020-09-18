@@ -65,7 +65,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader implements Contain
         'validator'    => 'Spiral\Validation\ValidationInterface',
         'views'        => 'Spiral\Views\ViewsInterface',
         'auth'         => ['resolve' => 'Spiral\Auth\AuthScope', 'with' => ['Spiral\Auth\AuthContextInterface']],
-        'authTokens'   => 'Spiral\Auth\TokenStorageInterface'
+        'authTokens'   => 'Spiral\Auth\TokenStorageInterface',
     ];
 
     /** @var MemoryInterface */

@@ -34,24 +34,24 @@ class FilterCommand extends AbstractCommand
             'entity',
             'e',
             InputOption::VALUE_OPTIONAL,
-            'Source entity. Is a prior to the fields.'
+            'Source entity. Is a prior to the fields.',
         ],
         [
             'field',
             'f',
             InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-            'Input field in a format "field:type(source:origin)" or "field(source)".'
+            'Input field in a format "field:type(source:origin)" or "field(source)".',
         ],
         [
             'comment',
             'c',
             InputOption::VALUE_OPTIONAL,
-            'Optional comment to add as class header'
-        ]
+            'Optional comment to add as class header',
+        ],
     ];
 
     private const   NATIVE_TYPES = [
-        'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'array'
+        'string', 'int', 'integer', 'float', 'double', 'bool', 'boolean', 'array',
     ];
 
     /**
