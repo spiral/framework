@@ -1,6 +1,7 @@
 ---
 name: ❓ Question
-about: Use if you have problems and don't know how to formulate them.
+about: Use if you have problems and don't know how to formulate them
+labels: Question
 
 ---
 

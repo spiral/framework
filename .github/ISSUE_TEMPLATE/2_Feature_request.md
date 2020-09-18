@@ -1,6 +1,7 @@
 ---
 name: 🚀 Feature Request
 about: RFC and ideas for new features and improvements
+labels: Feature
 
 ---
 ## Description
