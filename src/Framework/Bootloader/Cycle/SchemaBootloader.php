@@ -37,11 +37,13 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
         Generator\GenerateRelations::class => [self::class, 'relationGenerator'],
     ];
 
+    private const EMPTY_SCHEMA = [':empty:'];
+
     /** @var Container */
     private $container;
 
-    /** @var string[]|GeneratorInterface[] */
-    private $generators = [];
+    /** @var string[][]|GeneratorInterface[][] */
+    private $generators;
 
     /**
      * CycleSchemaBootloader constructor.
@@ -81,6 +83,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
 
     /**
      * @return GeneratorInterface[]
+     * @throws \Throwable
      */
     public function getGenerators(): array
     {
@@ -107,13 +110,21 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
     protected function schema(MemoryInterface $memory): SchemaInterface
     {
         $schema = $memory->loadData('cycle');
-        if (is_null($schema)) {
+        if (empty($schema)) {
             $schema = (new Compiler())->compile(
                 $this->container->get(Registry::class),
                 $this->getGenerators()
             );
 
+            if (empty($schema)) {
+                $schema = self::EMPTY_SCHEMA;
+            }
+
             $memory->saveData('cycle', $schema);
+        }
+
+        if ($schema === self::EMPTY_SCHEMA) {
+            $schema = [];
         }
 
         return new Schema($schema);
