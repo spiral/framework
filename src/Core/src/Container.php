@@ -92,82 +92,6 @@ final class Container implements
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function has($alias): bool
-    {
-        return \array_key_exists($alias, $this->bindings);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Context parameter will be passed to class injectors, which makes possible to use this method
-     * as:
-     *
-     * $this->container->get(DatabaseInterface::class, 'default');
-     *
-     * Attention, context ignored when outer container has instance by alias.
-     *
-     * @param string|null $context Call context.
-     *
-     * @throws ContainerException
-     * @throws \Throwable
-     */
-    public function get($alias, string $context = null)
-    {
-        if ($alias instanceof Autowire) {
-            return $alias->resolve($this);
-        }
-
-        return $this->make($alias, [], $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|null $context Related to parameter caused injection if any.
-     *
-     * @throws \Throwable
-     */
-    public function make(string $alias, array $parameters = [], string $context = null)
-    {
-        if (!isset($this->bindings[$alias])) {
-            //No direct instructions how to construct class, make is automatically
-            return $this->autowire($alias, $parameters, $context);
-        }
-
-        $binding = $this->bindings[$alias];
-        if (\is_object($binding)) {
-            //When binding is instance, assuming singleton
-            return $binding;
-        }
-
-        if (\is_string($binding)) {
-            //Binding is pointing to something else
-            return $this->make($binding, $parameters, $context);
-        }
-
-        unset($this->bindings[$alias]);
-        try {
-            if ($binding[0] === $alias) {
-                $instance = $this->autowire($alias, $parameters, $context);
-            } else {
-                $instance = $this->evaluateBinding($alias, $binding[0], $parameters, $context);
-            }
-        } finally {
-            $this->bindings[$alias] = $binding;
-        }
-
-        if ($binding[1]) {
-            //Indicates singleton
-            $this->bindings[$alias] = $instance;
-        }
-
-        return $instance;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
@@ -242,153 +166,120 @@ final class Container implements
     }
 
     /**
-     * @inheritdoc
-     */
-    public function runScope(array $bindings, callable $scope)
-    {
-        $cleanup = $previous = [];
-        foreach ($bindings as $alias => $resolver) {
-            if (isset($this->bindings[$alias])) {
-                $previous[$alias] = $this->bindings[$alias];
-            } else {
-                $cleanup[] = $alias;
-            }
-
-            $this->bind($alias, $resolver);
-        }
-
-        try {
-            if (ContainerScope::getContainer() !== $this) {
-                return ContainerScope::runScope($this, $scope);
-            }
-
-            return $scope();
-        } finally {
-            foreach (\array_reverse($previous) as $alias => $resolver) {
-                $this->bindings[$alias] = $resolver;
-            }
-
-            foreach ($cleanup as $alias) {
-                unset($this->bindings[$alias]);
-            }
-        }
-    }
-
-    /**
-     * Bind value resolver to container alias. Resolver can be class name (will be constructed
-     * for each method call), function array or Closure (executed every call). Only object resolvers
-     * supported by this method.
+     * Assert that given value are matched parameter type.
      *
-     * @param string                $alias
-     * @param string|array|callable $resolver
+     * @param \ReflectionParameter $parameter
+     * @param ContextFunction $context
+     * @param mixed $value
+     *
+     * @throws ArgumentException
+     * @throws \ReflectionException
      */
-    public function bind(string $alias, $resolver): void
+    private function assertType(\ReflectionParameter $parameter, ContextFunction $context, $value): void
     {
-        if (\is_array($resolver) || $resolver instanceof \Closure || $resolver instanceof Autowire) {
-            // array means = execute me, false = not singleton
-            $this->bindings[$alias] = [$resolver, false];
+        if ($value === null) {
+            if (
+                !$parameter->isOptional() &&
+                !($parameter->isDefaultValueAvailable() && $parameter->getDefaultValue() === null)
+            ) {
+                throw new ArgumentException($parameter, $context);
+            }
+
             return;
         }
 
-        $this->bindings[$alias] = $resolver;
-    }
-
-    /**
-     * Bind value resolver to container alias to be executed as cached. Resolver can be class name
-     * (will be constructed only once), function array or Closure (executed only once call).
-     *
-     * @param string                $alias
-     * @param string|array|callable $resolver
-     */
-    public function bindSingleton(string $alias, $resolver): void
-    {
-        if (\is_object($resolver) && !$resolver instanceof \Closure && !$resolver instanceof Autowire) {
-            // direct binding to an instance
-            $this->bindings[$alias] = $resolver;
+        $type = $parameter->getType();
+        if ($type === null) {
             return;
         }
 
-        $this->bindings[$alias] = [$resolver, true];
+        $typeName = $type->getName();
+        if ($typeName === 'array' && !\is_array($value)) {
+            throw new ArgumentException($parameter, $context);
+        }
+
+        if (($typeName === 'int' || $typeName === 'float') && !\is_numeric($value)) {
+            throw new ArgumentException($parameter, $context);
+        }
+
+        if ($typeName === 'bool' && !\is_bool($value) && !\is_numeric($value)) {
+            throw new ArgumentException($parameter, $context);
+        }
     }
 
     /**
-     * Check if alias points to constructed instance (singleton).
+     * {@inheritdoc}
      *
-     * @param string $alias
-     * @return bool
+     * Context parameter will be passed to class injectors, which makes possible to use this method
+     * as:
+     *
+     * $this->container->get(DatabaseInterface::class, 'default');
+     *
+     * Attention, context ignored when outer container has instance by alias.
+     *
+     * @param string|null $context Call context.
+     *
+     * @throws ContainerException
+     * @throws \Throwable
      */
-    public function hasInstance(string $alias): bool
+    public function get($alias, string $context = null)
     {
-        if (!$this->has($alias)) {
-            return false;
+        if ($alias instanceof Autowire) {
+            return $alias->resolve($this);
         }
 
-        while (isset($this->bindings[$alias]) && \is_string($this->bindings[$alias])) {
-            //Checking alias tree
-            $alias = $this->bindings[$alias];
-        }
-
-        return isset($this->bindings[$alias]) && \is_object($this->bindings[$alias]);
+        return $this->make($alias, [], $context);
     }
 
     /**
-     * @param string $alias
+     * {@inheritdoc}
+     *
+     * @param string|null $context Related to parameter caused injection if any.
+     *
+     * @throws \Throwable
      */
-    public function removeBinding(string $alias): void
+    public function make(string $alias, array $parameters = [], string $context = null)
     {
+        if (!isset($this->bindings[$alias])) {
+            //No direct instructions how to construct class, make is automatically
+            return $this->autowire($alias, $parameters, $context);
+        }
+
+        $binding = $this->bindings[$alias];
+        if (\is_object($binding)) {
+            //When binding is instance, assuming singleton
+            return $binding;
+        }
+
+        if (\is_string($binding)) {
+            //Binding is pointing to something else
+            return $this->make($binding, $parameters, $context);
+        }
+
         unset($this->bindings[$alias]);
-    }
+        try {
+            if ($binding[0] === $alias) {
+                $instance = $this->autowire($alias, $parameters, $context);
+            } else {
+                $instance = $this->evaluateBinding($alias, $binding[0], $parameters, $context);
+            }
+        } finally {
+            $this->bindings[$alias] = $binding;
+        }
 
-    /**
-     * Bind class or class interface to the injector source (InjectorInterface).
-     *
-     * @param string $class
-     * @param string $injector
-     * @return self
-     */
-    public function bindInjector(string $class, string $injector): Container
-    {
-        $this->injectors[$class] = $injector;
-        $this->injectorsCache = [];
+        if ($binding[1]) {
+            //Indicates singleton
+            $this->bindings[$alias] = $instance;
+        }
 
-        return $this;
-    }
-
-    /**
-     * @param string $class
-     */
-    public function removeInjector(string $class): void
-    {
-        unset($this->injectors[$class]);
-        $this->injectorsCache = [];
-    }
-
-    /**
-     * Every declared Container binding. Must not be used in production code due container format is
-     * vary.
-     *
-     * @return array
-     */
-    public function getBindings(): array
-    {
-        return $this->bindings;
-    }
-
-    /**
-     * Every binded injector.
-     *
-     * @return array
-     */
-    public function getInjectors(): array
-    {
-        return $this->injectors;
+        return $instance;
     }
 
     /**
      * Automatically create class.
      *
      * @param string $class
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $context
      * @return object
      *
@@ -409,95 +300,10 @@ final class Container implements
     }
 
     /**
-     * Register instance in container, might perform methods like auto-singletons, log populations
-     * and etc. Can be extended.
-     *
-     * @param object $instance   Created object.
-     * @param array  $parameters Parameters which been passed with created instance.
-     * @return object
-     */
-    private function registerInstance($instance, array $parameters)
-    {
-        //Declarative singletons (only when class received via direct get)
-        if ($parameters === [] && $instance instanceof SingletonInterface) {
-            $alias = \get_class($instance);
-            if (!isset($this->bindings[$alias])) {
-                $this->bindings[$alias] = $instance;
-            }
-        }
-
-        //Your code can go here (for example LoggerAwareInterface, custom hydration and etc)
-        return $instance;
-    }
-
-    /**
-     * @param string      $alias
-     * @param mixed       $target Value binded by user.
-     * @param array       $parameters
-     * @param string|null $context
-     * @return mixed|null|object
-     *
-     * @throws ContainerExceptionInterface
-     * @throws \Throwable
-     */
-    private function evaluateBinding(
-        string $alias,
-        $target,
-        array $parameters,
-        string $context = null
-    ) {
-        if (\is_string($target)) {
-            //Reference
-            return $this->make($target, $parameters, $context);
-        }
-
-        if ($target instanceof Autowire) {
-            return $target->resolve($this, $parameters);
-        }
-
-        if ($target instanceof \Closure) {
-            try {
-                $reflection = new \ReflectionFunction($target);
-            } catch (\ReflectionException $e) {
-                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            //Invoking Closure with resolved arguments
-            return $reflection->invokeArgs(
-                $this->resolveArguments($reflection, $parameters)
-            );
-        }
-
-        if (is_array($target) && isset($target[1])) {
-            //In a form of resolver and method
-            [$resolver, $method] = $target;
-
-            //Resolver instance (i.e. [ClassName::class, 'method'])
-            $resolver = $this->get($resolver);
-
-            try {
-                $method = new \ReflectionMethod($resolver, $method);
-            } catch (\ReflectionException $e) {
-                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
-            }
-
-            $method->setAccessible(true);
-
-            //Invoking factory method with resolved arguments
-            return $method->invokeArgs(
-                $resolver,
-                $this->resolveArguments($method, $parameters)
-            );
-        }
-
-        throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias));
-    }
-
-    /**
      * Create instance of desired class.
      *
-     * @param string      $class
-     * @param array       $parameters Constructor parameters.
+     * @param string $class
+     * @param array $parameters Constructor parameters.
      * @param string|null $context
      * @return object
      *
@@ -582,6 +388,7 @@ final class Container implements
             && $reflection->hasConstant('INJECTOR')
         ) {
             $this->injectors[$class] = $reflection->getConstant('INJECTOR');
+
             return true;
         }
 
@@ -595,6 +402,7 @@ final class Container implements
                     && $reflection->isSubclassOf($target)
                 ) {
                     $this->injectors[$class] = $injector;
+
                     return true;
                 }
 
@@ -603,6 +411,7 @@ final class Container implements
                     && $reflection->implementsInterface($target)
                 ) {
                     $this->injectors[$class] = $injector;
+
                     return true;
                 }
             }
@@ -612,44 +421,240 @@ final class Container implements
     }
 
     /**
-     * Assert that given value are matched parameter type.
+     * Register instance in container, might perform methods like auto-singletons, log populations
+     * and etc. Can be extended.
      *
-     * @param \ReflectionParameter $parameter
-     * @param ContextFunction     $context
-     * @param mixed               $value
-     *
-     * @throws ArgumentException
-     * @throws \ReflectionException
+     * @param object $instance  Created object.
+     * @param array $parameters Parameters which been passed with created instance.
+     * @return object
      */
-    private function assertType(\ReflectionParameter $parameter, ContextFunction $context, $value): void
+    private function registerInstance($instance, array $parameters)
     {
-        if ($value === null) {
-            if (
-                !$parameter->isOptional() &&
-                !($parameter->isDefaultValueAvailable() && $parameter->getDefaultValue() === null)
-            ) {
-                throw new ArgumentException($parameter, $context);
+        //Declarative singletons (only when class received via direct get)
+        if ($parameters === [] && $instance instanceof SingletonInterface) {
+            $alias = \get_class($instance);
+            if (!isset($this->bindings[$alias])) {
+                $this->bindings[$alias] = $instance;
+            }
+        }
+
+        //Your code can go here (for example LoggerAwareInterface, custom hydration and etc)
+        return $instance;
+    }
+
+    /**
+     * @param string $alias
+     * @param mixed $target Value binded by user.
+     * @param array $parameters
+     * @param string|null $context
+     * @return mixed|null|object
+     *
+     * @throws ContainerExceptionInterface
+     * @throws \Throwable
+     */
+    private function evaluateBinding(
+        string $alias,
+        $target,
+        array $parameters,
+        string $context = null
+    ) {
+        if (\is_string($target)) {
+            //Reference
+            return $this->make($target, $parameters, $context);
+        }
+
+        if ($target instanceof Autowire) {
+            return $target->resolve($this, $parameters);
+        }
+
+        if ($target instanceof \Closure) {
+            try {
+                $reflection = new \ReflectionFunction($target);
+            } catch (\ReflectionException $e) {
+                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
             }
 
+            //Invoking Closure with resolved arguments
+            return $reflection->invokeArgs(
+                $this->resolveArguments($reflection, $parameters)
+            );
+        }
+
+        if (is_array($target) && isset($target[1])) {
+            //In a form of resolver and method
+            [$resolver, $method] = $target;
+
+            //Resolver instance (i.e. [ClassName::class, 'method'])
+            $resolver = $this->get($resolver);
+
+            try {
+                $method = new \ReflectionMethod($resolver, $method);
+            } catch (\ReflectionException $e) {
+                throw new ContainerException($e->getMessage(), $e->getCode(), $e);
+            }
+
+            $method->setAccessible(true);
+
+            //Invoking factory method with resolved arguments
+            return $method->invokeArgs(
+                $resolver,
+                $this->resolveArguments($method, $parameters)
+            );
+        }
+
+        throw new ContainerException(\sprintf("Invalid binding for '%s'", $alias));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function runScope(array $bindings, callable $scope)
+    {
+        $cleanup = $previous = [];
+        foreach ($bindings as $alias => $resolver) {
+            if (isset($this->bindings[$alias])) {
+                $previous[$alias] = $this->bindings[$alias];
+            } else {
+                $cleanup[] = $alias;
+            }
+
+            $this->bind($alias, $resolver);
+        }
+
+        try {
+            if (ContainerScope::getContainer() !== $this) {
+                return ContainerScope::runScope($this, $scope);
+            }
+
+            return $scope();
+        } finally {
+            foreach (\array_reverse($previous) as $alias => $resolver) {
+                $this->bindings[$alias] = $resolver;
+            }
+
+            foreach ($cleanup as $alias) {
+                unset($this->bindings[$alias]);
+            }
+        }
+    }
+
+    /**
+     * Bind value resolver to container alias. Resolver can be class name (will be constructed
+     * for each method call), function array or Closure (executed every call). Only object resolvers
+     * supported by this method.
+     *
+     * @param string $alias
+     * @param string|array|callable $resolver
+     */
+    public function bind(string $alias, $resolver): void
+    {
+        if (\is_array($resolver) || $resolver instanceof \Closure || $resolver instanceof Autowire) {
+            // array means = execute me, false = not singleton
+            $this->bindings[$alias] = [$resolver, false];
+
             return;
         }
 
-        $type = $parameter->getType();
-        if ($type === null) {
+        $this->bindings[$alias] = $resolver;
+    }
+
+    /**
+     * Bind value resolver to container alias to be executed as cached. Resolver can be class name
+     * (will be constructed only once), function array or Closure (executed only once call).
+     *
+     * @param string $alias
+     * @param string|array|callable $resolver
+     */
+    public function bindSingleton(string $alias, $resolver): void
+    {
+        if (\is_object($resolver) && !$resolver instanceof \Closure && !$resolver instanceof Autowire) {
+            // direct binding to an instance
+            $this->bindings[$alias] = $resolver;
+
             return;
         }
 
-        $typeName = $type->getName();
-        if ($typeName === 'array' && !\is_array($value)) {
-            throw new ArgumentException($parameter, $context);
+        $this->bindings[$alias] = [$resolver, true];
+    }
+
+    /**
+     * Check if alias points to constructed instance (singleton).
+     *
+     * @param string $alias
+     * @return bool
+     */
+    public function hasInstance(string $alias): bool
+    {
+        if (!$this->has($alias)) {
+            return false;
         }
 
-        if (($typeName === 'int' || $typeName === 'float') && !\is_numeric($value)) {
-            throw new ArgumentException($parameter, $context);
+        while (isset($this->bindings[$alias]) && \is_string($this->bindings[$alias])) {
+            //Checking alias tree
+            $alias = $this->bindings[$alias];
         }
 
-        if ($typeName === 'bool' && !\is_bool($value) && !\is_numeric($value)) {
-            throw new ArgumentException($parameter, $context);
-        }
+        return isset($this->bindings[$alias]) && \is_object($this->bindings[$alias]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has($alias): bool
+    {
+        return \array_key_exists($alias, $this->bindings);
+    }
+
+    /**
+     * @param string $alias
+     */
+    public function removeBinding(string $alias): void
+    {
+        unset($this->bindings[$alias]);
+    }
+
+    /**
+     * Bind class or class interface to the injector source (InjectorInterface).
+     *
+     * @param string $class
+     * @param string $injector
+     * @return self
+     */
+    public function bindInjector(string $class, string $injector): Container
+    {
+        $this->injectors[$class] = $injector;
+        $this->injectorsCache = [];
+
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     */
+    public function removeInjector(string $class): void
+    {
+        unset($this->injectors[$class]);
+        $this->injectorsCache = [];
+    }
+
+    /**
+     * Every declared Container binding. Must not be used in production code due container format is
+     * vary.
+     *
+     * @return array
+     */
+    public function getBindings(): array
+    {
+        return $this->bindings;
+    }
+
+    /**
+     * Every binded injector.
+     *
+     * @return array
+     */
+    public function getInjectors(): array
+    {
+        return $this->injectors;
     }
 }
