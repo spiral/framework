@@ -190,7 +190,10 @@ class ConfigTest extends AbstractCommandTest
     {
         $filename = $this->createConfig('sample', 'Sample Config');
         $this->assertStringContainsString('strict_types=1', $this->files()->read($filename));
-        $this->assertStringContainsString('@see \\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig', $this->files()->read($filename));
+        $this->assertStringContainsString(
+            '@see \\Spiral\\Tests\\Scaffolder\\App\\Config\\SampleConfig',
+            $this->files()->read($filename)
+        );
 
         $this->deleteConfigFile($filename);
     }

@@ -55,4 +55,7 @@
 
     <!-- spiral/views -->
     <exclude-pattern type="relative">Views/tests/fixtures/*</exclude-pattern>
+
+    <!-- spiral/stempler -->
+    <exclude-pattern type="relative">Stempler/tests/fixtures/*</exclude-pattern>
 </ruleset>
