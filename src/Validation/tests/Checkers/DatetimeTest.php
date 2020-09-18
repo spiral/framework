@@ -19,6 +19,7 @@ class DatetimeTest extends TestCase
 {
     /**
      * @dataProvider futureProvider
+     *
      * @param bool  $expected
      * @param mixed $value
      * @param bool  $orNow
@@ -26,6 +27,10 @@ class DatetimeTest extends TestCase
      */
     public function testFuture(bool $expected, $value, bool $orNow, bool $useMicroseconds): void
     {
+        if ($value instanceof \Closure) {
+            $value = $value();
+        }
+
         $checker = new DatetimeChecker();
 
         $this->assertSame($expected, $checker->future($value, $orNow, $useMicroseconds));
@@ -38,15 +43,15 @@ class DatetimeTest extends TestCase
     {
         return [
             //the date is 100% in the future
-            [true, time() + 10, false, false],
-            [true, time() + 10, true, false],
-            [true, time() + 10, false, true],
-            [true, time() + 10, true, true],
+            [true, function() { return time() + 10; }, false, false],
+            [true, function() { return time() + 10; }, true, false],
+            [true, function() { return time() + 10; }, false, true],
+            [true, function() { return time() + 10; }, true, true],
 
             [true, 'tomorrow 10am', false, false],
             [true, 'now + 10 seconds', false, false],
 
-            //the "now" date can differ in ms
+            // the "now" date can differ in ms
             [false, 'now', false, false],
             [false, 'now', false, true], //the threshold date comes a little bit later (in ms)
             [true, 'now', true, false],
