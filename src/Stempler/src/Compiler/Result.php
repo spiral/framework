@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ */
+
+declare(strict_types=1);
+
+namespace Spiral\Stempler\Compiler;
+
+use Spiral\Stempler\Loader\LoaderInterface;
+use Spiral\Stempler\Parser\Context;
+
+/**
+ * Result contains generated template content and line numbers associated with root template and
+ * with the source line for imported templates.
+ *
+ * The map is generated using set of Contexts associated with each imported block.
+ */
+final class Result
+{
+    /** @var string */
+    private $content = '';
+
+    /** @var Location[] */
+    private $locations = [];
+
+    /** @var Location|null */
+    private $parent = null;
+
+    /**
+     * @param Context|null $ctx
+     * @param callable     $body
+     */
+    public function withinContext(?Context $ctx, callable $body): void
+    {
+        if ($ctx === null || $ctx->getPath() === null) {
+            $body($this);
+            return;
+        }
+
+        try {
+            $this->parent = Location::fromContext($ctx, $this->parent);
+            $body($this);
+        } finally {
+            $this->parent = $this->parent->parent;
+        }
+    }
+
+    /**
+     * @param string       $content
+     * @param Context|null $ctx
+     */
+    public function push(string $content, Context $ctx = null): void
+    {
+        if ($ctx !== null && $ctx->getPath() !== null) {
+            $this->locations[strlen($this->content)] = Location::fromContext($ctx, $this->parent);
+        }
+
+        $this->content .= $content;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    /**
+     * Get all template paths involved in final template.
+     *
+     * @return array
+     */
+    public function getPaths(): array
+    {
+        $paths = [];
+
+        // We can scan top level only
+
+        /** @var Location $loc */
+        foreach ($this->locations as $offset => $loc) {
+            if (!in_array($loc->path, $paths, true)) {
+                $paths[] = $loc->path;
+            }
+        }
+
+        return $paths;
+    }
+
+    /**
+     * Generates sourcemap for exception handling and cache invalidation.
+     *
+     * @param LoaderInterface $loader
+     * @return SourceMap
+     */
+    public function getSourceMap(LoaderInterface $loader): SourceMap
+    {
+        $locations = [];
+
+        foreach ($this->locations as $offset => $location) {
+            $locations[$offset] = $location;
+        }
+
+        return SourceMap::calculate($this->content, $locations, $loader);
+    }
+}

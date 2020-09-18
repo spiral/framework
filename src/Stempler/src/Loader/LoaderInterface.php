@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ */
+
+declare(strict_types=1);
+
+namespace Spiral\Stempler\Loader;
+
+use Spiral\Stempler\Exception\LoaderException;
+
+interface LoaderInterface
+{
+    /**
+     * Load document content by it's path.
+     *
+     * @param string $path
+     * @return Source
+     *
+     * @throws LoaderException
+     */
+    public function load(string $path): Source;
+}
