@@ -75,7 +75,7 @@ abstract class AbstractCommand extends Command
      */
     protected function mergeNames(array $properties): string
     {
-        return join("\n", array_keys($properties));
+        return implode("\n", array_keys($properties));
     }
 
     /**
@@ -105,6 +105,6 @@ abstract class AbstractCommand extends Command
             $result[] = $target->type->fullName;
         }
 
-        return join("\n", $result);
+        return implode("\n", $result);
     }
 }

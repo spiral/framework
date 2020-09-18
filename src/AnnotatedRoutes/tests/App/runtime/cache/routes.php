@@ -1,35 +1,37 @@
-<?php return array (
-  'index' => 
+<?php
+
+return array (
+  'index' =>
   array (
     'pattern' => '/',
     'controller' => 'Spiral\\Tests\\Router\\App\\Controller\\HomeController',
     'action' => 'index',
     'group' => 'default',
-    'verbs' => 
+    'verbs' =>
     array (
       0 => 'GET',
     ),
-    'defaults' => 
+    'defaults' =>
     array (
     ),
-    'middleware' => 
+    'middleware' =>
     array (
     ),
   ),
-  'method' => 
+  'method' =>
   array (
     'pattern' => '/',
     'controller' => 'Spiral\\Tests\\Router\\App\\Controller\\HomeController',
     'action' => 'method',
     'group' => 'default',
-    'verbs' => 
+    'verbs' =>
     array (
       0 => 'POST',
     ),
-    'defaults' => 
+    'defaults' =>
     array (
     ),
-    'middleware' => 
+    'middleware' =>
     array (
     ),
   ),

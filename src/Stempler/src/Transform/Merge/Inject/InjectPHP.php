@@ -153,7 +153,7 @@ final class InjectPHP implements VisitorInterface
                     $result[] = $this->trimPHP($child);
                 }
 
-                return join('.', $result);
+                return implode('.', $result);
 
             case $node instanceof Mixin:
                 $result = [];
@@ -161,7 +161,7 @@ final class InjectPHP implements VisitorInterface
                     $result[] = $this->trimPHP($child);
                 }
 
-                return join('.', $result);
+                return implode('.', $result);
 
             case $node instanceof Raw:
                 return $this->exportValue($node);

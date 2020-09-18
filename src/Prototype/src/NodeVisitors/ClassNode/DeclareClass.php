@@ -27,7 +27,7 @@ final class DeclareClass extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\Stmt\Namespace_) {
-            $this->namespace = join('\\', $node->name->parts);
+            $this->namespace = implode('\\', $node->name->parts);
         }
 
         if ($node instanceof Node\Stmt\Class_) {

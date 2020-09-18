@@ -30,7 +30,7 @@ foreach ($stacktrace as $index => $trace) {
 
     if (!isset($trace['file']) || !file_exists($trace['file'])) { ?>
         <div class="container no-trace">
-            <?= $function ?>(<span class="arguments"><?= join(', ', $args) ?></span>)
+            <?= $function ?>(<span class="arguments"><?= implode(', ', $args) ?></span>)
         </div>
         <?php
         continue;
@@ -60,7 +60,7 @@ foreach ($stacktrace as $index => $trace) {
     ?>
     <div class="container">
         <div class="location">
-            <?= $function ?>(<span class="arguments"><?= join(', ', $args) ?></span>)<br/>
+            <?= $function ?>(<span class="arguments"><?= implode(', ', $args) ?></span>)<br/>
             <em>In&nbsp;<?= $trace['file'] ?>&nbsp;at&nbsp;<strong>line <?= $trace['line'] ?></strong></em>
         </div>
         <?php if ($showSource && file_exists($trace['file'])) : ?>

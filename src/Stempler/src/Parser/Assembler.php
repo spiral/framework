@@ -55,7 +55,7 @@ final class Assembler
             $path[] = $this->nodeName($tuple[0]);
         }
 
-        return join('.', array_reverse($path));
+        return implode('.', array_reverse($path));
     }
 
     /**
