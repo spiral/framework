@@ -21,10 +21,13 @@
         "php": "^7.2",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "cocur/slugify": "^3.1",
+        "cocur/slugify": "^3.2",
         "codedungeon/php-cli-colors": "^1.11",
         "defuse/php-encryption": "^2.2",
+        "doctrine/annotations": "^1.7",
         "doctrine/inflector": "^1.4|^2.0",
+        "myclabs/deep-copy": "^1.9",
+        "nikic/php-parser": "^4.1",
         "psr/container": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
@@ -39,12 +42,16 @@
     "autoload": {
         "files": [
             "src/Boot/src/helpers.php",
+            "src/DataGrid/src/helpers.php",
             "src/Dumper/src/helpers.php",
             "src/Framework/helpers.php",
+            "src/Scaffolder/src/helpers.php",
+            "src/Stempler/src/helpers.php",
             "src/Translator/src/helpers.php"
         ],
         "psr-4": {
             "Spiral\\": "src/Framework",
+            "Spiral\\Annotations\\": "src/Annotations/src",
             "Spiral\\Auth\\": [
                 "src/Auth/src",
                 "src/AuthHttp/src"
@@ -58,6 +65,7 @@
                 "src/Hmvc/src"
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
+            "Spiral\\DataGrid\\": "src/DataGrid/src",
             "Spiral\\Debug\\": [
                 "src/Debug/src",
                 "src/Dumper/src"
@@ -70,11 +78,17 @@
             "Spiral\\Logger\\": "src/Logger/src",
             "Spiral\\Models\\": "src/Models/src",
             "Spiral\\Pagination\\": "src/Pagination/src",
+            "Spiral\\Prototype\\": "src/Prototype/src",
             "Spiral\\Reactor\\": "src/Reactor/src",
-            "Spiral\\Router\\": "src/Router/src",
+            "Spiral\\Router\\": [
+                "src/AnnotatedRoutes/src",
+                "src/Router/src"
+            ],
+            "Spiral\\Scaffolder\\": "src/Scaffolder/src",
             "Spiral\\Security\\": "src/Security/src",
             "Spiral\\Session\\": "src/Session/src",
             "Spiral\\Snapshots\\": "src/Snapshots/src",
+            "Spiral\\Stempler\\": "src/Stempler/src",
             "Spiral\\Streams\\": "src/Streams/src",
             "Spiral\\Tokenizer\\": "src/Tokenizer/src",
             "Spiral\\Translator\\": "src/Translator/src",
@@ -92,6 +106,7 @@
         "laminas/laminas-hydrator": "^3.0",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5|^9.0",
+        "ramsey/uuid": "^3.9",
         "roave/security-advisories": "dev-master",
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
@@ -106,6 +121,7 @@
     "autoload-dev": {
         "psr-4": {
             "Spiral\\App\\": "tests/app/src",
+            "Spiral\\Tests\\Annotations\\": "src/Annotations/tests",
             "Spiral\\Tests\\Auth\\": [
                 "src/Auth/tests",
                 "src/AuthHttp/tests"
@@ -119,6 +135,7 @@
                 "src/Hmvc/tests"
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
+            "Spiral\\Tests\\DataGrid\\": "src/DataGrid/tests",
             "Spiral\\Tests\\Debug\\": [
                 "src/Debug/tests",
                 "src/Dumper/tests"
@@ -132,19 +149,28 @@
             "Spiral\\Tests\\Logger\\": "src/Logger/tests",
             "Spiral\\Tests\\Models\\": "src/Models/tests",
             "Spiral\\Tests\\Pagination\\": "src/Pagination/tests",
+            "Spiral\\Tests\\Prototype\\": "src/Prototype/tests",
             "Spiral\\Tests\\Reactor\\": "src/Reactor/tests",
-            "Spiral\\Tests\\Router\\": "src/Router/tests",
+            "Spiral\\Tests\\Router\\": [
+                "src/AnnotatedRoutes/tests",
+                "src/Router/tests"
+            ],
+            "Spiral\\Tests\\Scaffolder\\": "src/Scaffolder/tests",
             "Spiral\\Tests\\Security\\": "src/Security/tests",
             "Spiral\\Tests\\Session\\": "src/Session/tests",
             "Spiral\\Tests\\Snapshots\\": "src/Snapshots/tests",
+            "Spiral\\Tests\\Stempler\\": "src/Stempler/tests",
             "Spiral\\Tests\\Streams\\": "src/Streams/tests",
             "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
             "Spiral\\Tests\\Translator\\": "src/Translator/tests",
             "Spiral\\Tests\\Validation\\": "src/Validation/tests",
-            "Spiral\\Tests\\Views\\": "src/Views/tests"
+            "Spiral\\Tests\\Views\\": "src/Views/tests",
+            "TestApp\\": "src/Scaffolder/tests/app/classes"
         }
     },
     "replace": {
+        "spiral/annotated-routes": "*",
+        "spiral/annotations": "*",
         "spiral/auth": "*",
         "spiral/auth-http": "*",
         "spiral/boot": "*",
@@ -153,6 +179,7 @@
         "spiral/cookies": "*",
         "spiral/core": "*",
         "spiral/csrf": "*",
+        "spiral/data-grid": "*",
         "spiral/debug": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
@@ -164,11 +191,14 @@
         "spiral/logger": "*",
         "spiral/models": "*",
         "spiral/pagination": "*",
+        "spiral/prototype": "*",
         "spiral/reactor": "*",
         "spiral/router": "*",
+        "spiral/scaffolder": "*",
         "spiral/security": "*",
         "spiral/session": "*",
         "spiral/snapshots": "*",
+        "spiral/stempler": "*",
         "spiral/streams": "*",
         "spiral/tokenizer": "*",
         "spiral/translator": "*",
