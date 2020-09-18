@@ -30,7 +30,7 @@ interface InjectorInterface
      * database name or config section to be used to construct requested instance.
      *
      * @param ReflectionClass $class   Request class type.
-     * @param string          $context Parameter or alias name.
+     * @param string|null     $context Parameter or alias name.
      * @return object
      *
      * @throws ContainerException
