@@ -164,8 +164,7 @@
             "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
             "Spiral\\Tests\\Translator\\": "src/Translator/tests",
             "Spiral\\Tests\\Validation\\": "src/Validation/tests",
-            "Spiral\\Tests\\Views\\": "src/Views/tests",
-            "TestApp\\": "src/Scaffolder/tests/app/classes"
+            "Spiral\\Tests\\Views\\": "src/Views/tests"
         }
     },
     "replace": {
