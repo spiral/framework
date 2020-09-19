@@ -66,6 +66,7 @@ parameters:
     src/Hmvc: 'git@github.com:spiral/hmvc.git'
     src/Http: 'git@github.com:spiral/http.git'
     src/Logger: 'git@github.com:spiral/logger.git'
+    src/Mailer: 'git@github.com:spiral/mailer.git'
     src/Models: 'git@github.com:spiral/models.git'
     src/Pagination: 'git@github.com:spiral/pagination.git'
     src/Prototype: 'git@github.com:spiral/prototype.git'
