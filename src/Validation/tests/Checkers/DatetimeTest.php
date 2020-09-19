@@ -27,9 +27,7 @@ class DatetimeTest extends TestCase
      */
     public function testFuture(bool $expected, $value, bool $orNow, bool $useMicroseconds): void
     {
-        if ($value instanceof \Closure) {
-            $value = $value();
-        }
+        $value = $value instanceof \Closure ? $value() : $value;
 
         $checker = new DatetimeChecker();
 
@@ -41,16 +39,12 @@ class DatetimeTest extends TestCase
      */
     public function futureProvider(): array
     {
-        $future = static function () {
-            return time() + 10;
-        };
-
         return [
             //the date is 100% in the future
-            [true, $future, false, false],
-            [true, $future, true, false],
-            [true, $future, false, true],
-            [true, $future, true, true],
+            [true, $this->inFuture(10), false, false],
+            [true, $this->inFuture(10), true, false],
+            [true, $this->inFuture(10), false, true],
+            [true, $this->inFuture(10), true, true],
 
             [true, 'tomorrow 10am', false, false],
             [true, 'now + 10 seconds', false, false],
@@ -88,9 +82,18 @@ class DatetimeTest extends TestCase
      */
     public function testPast(bool $expected, $value, bool $orNow, bool $useMicroseconds): void
     {
+        $value = $value instanceof \Closure ? $value() : $value;
+
         $checker = new DatetimeChecker();
 
         $this->assertSame($expected, $checker->past($value, $orNow, $useMicroseconds));
+    }
+
+    private function inFuture(int $seconds): \Closure
+    {
+        return static function () use ($seconds) {
+            return \time() + $seconds;
+        };
     }
 
     /**
@@ -114,7 +117,7 @@ class DatetimeTest extends TestCase
             [true, 'now', true, false],
             [true, 'now', true, true], //the threshold date comes a little bit later (in ms)
 
-            [false, time() + 10, false, false],
+            [false, $this->inFuture(10), false, false],
             [true, '', false, false],
             [true, 0, false, false],
             [true, 1.1, false, false],
@@ -226,6 +229,8 @@ class DatetimeTest extends TestCase
      */
     public function testBefore(bool $expected, $value, $threshold, bool $orEquals, bool $useMicroseconds): void
     {
+        $value = $value instanceof \Closure ? $value() : $value;
+
         $checker = new DatetimeChecker();
 
         $mock = $this->getMockBuilder(ValidatorInterface::class)->disableOriginalConstructor()->getMock();
@@ -287,6 +292,8 @@ class DatetimeTest extends TestCase
      */
     public function testAfter(bool $expected, $value, $threshold, bool $orEquals, bool $useMicroseconds): void
     {
+        $value = $value instanceof \Closure ? $value() : $value;
+
         $checker = new DatetimeChecker();
 
         $mock = $this->getMockBuilder(ValidatorInterface::class)->disableOriginalConstructor()->getMock();
@@ -308,10 +315,10 @@ class DatetimeTest extends TestCase
     public function afterProvider(): array
     {
         return [
-            [true, time() + 10, 'now', false, false],
-            [true, time() + 10, 'now', true, false],
-            [true, time() + 10, 'now', false, true],
-            [true, time() + 10, 'now', true, true],
+            [true, $this->inFuture(10), 'now', false, false],
+            [true, $this->inFuture(10), 'now', true, false],
+            [true, $this->inFuture(10), 'now', false, true],
+            [true, $this->inFuture(10), 'now', true, true],
 
             [true, 'tomorrow 10am', 'now', false, false],
             [true, 'now + 10 seconds', 'now', false, false],
