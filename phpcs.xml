@@ -58,4 +58,7 @@
 
     <!-- spiral/stempler -->
     <exclude-pattern type="relative">Stempler/tests/fixtures/*</exclude-pattern>
+
+    <!-- spiral/core -->
+    <exclude-pattern type="relative">Core/tests/Fixtures/*</exclude-pattern>
 </ruleset>
