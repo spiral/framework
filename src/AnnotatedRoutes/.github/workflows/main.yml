@@ -29,9 +29,6 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist
-      - name: Check coding standards
-        run: |
-          vendor/bin/spiral-cs check src tests
       - name: Execute Tests
         run: |
           vendor/bin/phpunit --coverage-clover=coverage.xml
