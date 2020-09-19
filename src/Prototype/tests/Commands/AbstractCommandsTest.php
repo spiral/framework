@@ -15,6 +15,9 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Tests\Prototype\Fixtures\TestApp;
 use Spiral\Tests\Prototype\Storage;
 
+/**
+ * @requires function \Spiral\Framework\Kernel::init
+ */
 abstract class AbstractCommandsTest extends TestCase
 {
     protected const STORE = [

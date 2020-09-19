@@ -14,6 +14,9 @@ namespace Spiral\Tests\Router;
 use Laminas\Diactoros\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @requires function \Spiral\Framework\Kernel::init
+ */
 class IntegrationTest extends TestCase
 {
     private $app;
