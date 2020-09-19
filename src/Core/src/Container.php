@@ -119,7 +119,9 @@ final class Container implements
                     $class = new \ReflectionClass($type->getName());
                 } catch (\ReflectionException $e) {
                     $location = $this->getLocationString($reflection);
-                    $error = "Unable to resolve `\${$parameter->getName()}` parameter in {$location}: {$e->getMessage()}";
+
+                    $error = 'Unable to resolve `\$%s` parameter in %s: %s';
+                    $error = \sprintf($error, $parameter->getName(), $location, $e->getMessage());
 
                     throw new ContainerException($error, $e->getCode(), $e);
                 }
