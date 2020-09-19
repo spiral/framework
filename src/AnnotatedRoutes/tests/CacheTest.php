@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-/**
- * @requires function \Spiral\Framework\Kernel::init
- */
 class CacheTest extends TestCase
 {
     private $app;
