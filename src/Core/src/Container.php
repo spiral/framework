@@ -92,21 +92,6 @@ final class Container implements
     }
 
     /**
-     * @param ContextFunction $reflection
-     * @return string
-     */
-    private function getLocationString(ContextFunction $reflection): string
-    {
-        $location = $reflection->getName();
-
-        if ($reflection instanceof \ReflectionMethod) {
-            return "{$reflection->getDeclaringClass()->getName()}::{$location}()";
-        }
-
-        return $location;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
@@ -129,7 +114,7 @@ final class Container implements
                 throw new ContainerException($error);
             }
 
-            if ($type instanceof \ReflectionNamedType && ! $type->isBuiltin()) {
+            if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
                 try {
                     $class = new \ReflectionClass($type->getName());
                 } catch (\ReflectionException $e) {
@@ -432,6 +417,21 @@ final class Container implements
 
         // apply registration functions to created instance
         return $this->registerInstance($instance, $parameters);
+    }
+
+    /**
+     * @param ContextFunction $reflection
+     * @return string
+     */
+    private function getLocationString(ContextFunction $reflection): string
+    {
+        $location = $reflection->getName();
+
+        if ($reflection instanceof \ReflectionMethod) {
+            return "{$reflection->getDeclaringClass()->getName()}::{$location}()";
+        }
+
+        return $location;
     }
 
     /**
