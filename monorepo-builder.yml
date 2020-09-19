@@ -73,6 +73,7 @@ parameters:
     src/Router: 'git@github.com:spiral/router.git'
     src/Scaffolder: 'git@github.com:spiral/scaffolder.git'
     src/Security: 'git@github.com:spiral/security.git'
+    src/SendIt: 'git@github.com:spiral/sendit.git'
     src/Session: 'git@github.com:spiral/session.git'
     src/Snapshots: 'git@github.com:spiral/snapshots.git'
     src/Stempler: 'git@github.com:spiral/stempler.git'
