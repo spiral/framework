@@ -37,7 +37,7 @@ final class MailerBootloader extends Bootloader
     protected const SINGLETONS = [
         MailerInterface::class => MailQueue::class,
         MailJob::class         => MailJob::class,
-        SymfonyMailer::class   => [self::class, 'mailer']
+        SymfonyMailer::class   => [self::class, 'mailer'],
     ];
 
     /** @var ConfiguratorInterface */

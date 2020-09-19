@@ -40,7 +40,7 @@ final class MessageSerializer implements SerializerInterface
             'cc'      => $message->getCC(),
             'bcc'     => $message->getBCC(),
             'from'    => $message->getFrom(),
-            'replyTo' => $message->getReplyTo()
+            'replyTo' => $message->getReplyTo(),
         ];
     }
 

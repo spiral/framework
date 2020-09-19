@@ -5,7 +5,6 @@
  *
  * @var \Symfony\Component\Mime\Email $_msg_
  */
-
 $_msg_->subject(\Spiral\SendIt\Renderer\ViewRenderer::escapeSubject(inject('subject')));
 
 if (injected('from')) {
