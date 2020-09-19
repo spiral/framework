@@ -69,7 +69,7 @@ final class MailJob implements HandlerInterface
                 sprintf(
                     'Failed to send `%s` to "%s": %s',
                     $message->getSubject(),
-                    join('", "', $recipients),
+                    implode('", "', $recipients),
                     $e->getMessage()
                 ),
                 ['emails' => $recipients]
@@ -82,7 +82,7 @@ final class MailJob implements HandlerInterface
             sprintf(
                 'Sent `%s` to "%s"',
                 $message->getSubject(),
-                join('", "', $recipients)
+                implode('", "', $recipients)
             ),
             ['emails' => $recipients]
         );
