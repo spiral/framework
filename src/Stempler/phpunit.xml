@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/bootstrap.php"
+<phpunit bootstrap="vendor/autoload.php"
          backupGlobals="false"
          backupStaticAttributes="false"
          colors="true"
@@ -9,17 +9,20 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         stopOnError="false">
-
+         stopOnError="false"
+         stderr="true">
     <testsuites>
-        <testsuite name="Stempler, HTML markup processor and template engine">
-            <directory>./tests/</directory>
+        <testsuite name="Test Suite">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
-
     <filter>
         <whitelist>
             <directory>src</directory>
         </whitelist>
     </filter>
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <ini name="memory_limit" value="-1"/>
+    </php>
 </phpunit>
