@@ -92,28 +92,52 @@ final class Container implements
     }
 
     /**
+     * @param ContextFunction $reflection
+     * @return string
+     */
+    private function getLocationString(ContextFunction $reflection): string
+    {
+        $location = $reflection->getName();
+
+        if ($reflection instanceof \ReflectionMethod) {
+            return "{$reflection->getDeclaringClass()->getName()}::{$location}()";
+        }
+
+        return $location;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function resolveArguments(ContextFunction $reflection, array $parameters = []): array
     {
         $arguments = [];
+
         foreach ($reflection->getParameters() as $parameter) {
-            try {
-                //Information we need to know about argument in order to resolve it's value
-                $name = $parameter->getName();
-                $class = $parameter->getClass();
-            } catch (\Throwable $e) {
-                //Possibly invalid class definition or syntax error
-                $location = $reflection->getName();
-                if ($reflection instanceof \ReflectionMethod) {
-                    $location = "{$reflection->getDeclaringClass()->getName()}->{$location}";
+            $type = $parameter->getType();
+            $name = $parameter->getName();
+            $class = null;
+
+            //
+            // Container do not currently support union types. In the future, we
+            // can provide the possibility of autowiring based on priorities (TBD).
+            //
+            if ($type instanceof \ReflectionUnionType) {
+                $error = 'Parameter $%s in %s contain union type hint which cannot be inferred unambiguously';
+                $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
+
+                throw new ContainerException($error);
+            }
+
+            if ($type instanceof \ReflectionNamedType && ! $type->isBuiltin()) {
+                try {
+                    $class = new \ReflectionClass($type->getName());
+                } catch (\ReflectionException $e) {
+                    $location = $this->getLocationString($reflection);
+                    $error = "Unable to resolve `\${$parameter->getName()}` parameter in {$location}: {$e->getMessage()}";
+
+                    throw new ContainerException($error, $e->getCode(), $e);
                 }
-                //Possibly invalid class definition or syntax error
-                throw new ContainerException(
-                    "Unable to resolve `{$parameter->getName()}` in {$location}: " . $e->getMessage(),
-                    $e->getCode(),
-                    $e
-                );
             }
 
             if (isset($parameters[$name]) && is_object($parameters[$name])) {
