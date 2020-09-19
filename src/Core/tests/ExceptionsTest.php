@@ -59,7 +59,7 @@ class ExceptionsTest extends TestCase
     public function testInjectionUsingUnionTypes(): void
     {
         $this->expectException(ContainerException::class);
-        $this->expectExceptionMessage('union type hint which cannot be inferred unambiguously');
+        $this->expectExceptionMessage('union type hint that cannot be inferred unambiguously');
 
         $container = new Container();
 

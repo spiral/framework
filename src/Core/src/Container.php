@@ -108,7 +108,7 @@ final class Container implements
             // can provide the possibility of autowiring based on priorities (TBD).
             //
             if ($type instanceof \ReflectionUnionType) {
-                $error = 'Parameter $%s in %s contain union type hint which cannot be inferred unambiguously';
+                $error = 'Parameter $%s in %s contains a union type hint that cannot be inferred unambiguously';
                 $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
 
                 throw new ContainerException($error);
