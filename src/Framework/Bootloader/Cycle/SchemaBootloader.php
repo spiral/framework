@@ -37,7 +37,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
         Generator\GenerateRelations::class => [self::class, 'relationGenerator'],
     ];
 
-    private const EMPTY_SCHEMA = [':empty:'];
+    private const EMPTY_SCHEMA = ':empty:';
 
     /** @var Container */
     private $container;
