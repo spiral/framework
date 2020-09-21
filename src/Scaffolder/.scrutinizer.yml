@@ -1,0 +1,25 @@
+checks:
+  php:
+    code_rating: true
+    duplication: true
+
+build:
+  environment:
+    php: "7.3"
+
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+
+  tests:
+    before:
+      - "phpunit"
+
+before_commands:
+  - "composer install --no-interaction --prefer-source"
+
+filter:
+  excluded_paths:
+    - tests/

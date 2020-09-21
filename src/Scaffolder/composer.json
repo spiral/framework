@@ -1,0 +1,64 @@
+{
+    "name": "spiral/scaffolder",
+    "type": "library",
+    "license": "MIT",
+    "description": "Spiral, Code Scaffolding module",
+    "keywords": ["scaffolding"],
+    "homepage": "https://spiral.dev",
+    "support": {
+        "issues": "https://github.com/spiral/framework/issues",
+        "source": "https://github.com/spiral/scaffolder"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov / Wolfy-J",
+            "email": "wolfy.jd@gmail.com"
+        },
+        {
+            "name": "Valentin Vintsukevich (vvval)",
+            "email": "valentin@spiralscout.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "spiral/reactor": "^2.7",
+        "cocur/slugify": "^3.2",
+        "doctrine/inflector": "^1.4|^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5|^9.0",
+        "cycle/orm": "^1.2.6",
+        "cycle/annotated": "^2.0.6",
+        "spiral/boot": "^2.7",
+        "spiral/console": "^2.7",
+        "spiral/core": "^2.7",
+        "spiral/filters": "^2.7",
+        "spiral/http": "^2.7",
+        "spiral/migrations": "^2.1",
+        "spiral/prototype": "^2.7",
+        "spiral/jobs": "^2.2"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "Spiral\\Scaffolder\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\Scaffolder\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

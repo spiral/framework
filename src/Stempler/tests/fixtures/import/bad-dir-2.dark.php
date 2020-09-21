@@ -1,0 +1,2 @@
+hello
+<use:dir dir="/"/>

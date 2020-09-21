@@ -44,15 +44,11 @@
     <file>./src</file>
     <file>./tests</file>
 
-    <!-- spiral/exceptions -->
-    <exclude-pattern type="relative">Exceptions/views/*</exclude-pattern>
+    <!-- general excludes -->
+    <exclude-pattern type="relative">*/tests/*</exclude-pattern>
+    <exclude-pattern type="relative">*/cache/*</exclude-pattern>
+    <exclude-pattern type="relative">*/views/*</exclude-pattern>
 
     <!-- spiral/streams -->
     <exclude-pattern type="relative">Streams/src/StreamWrapper.php</exclude-pattern>
-
-    <!-- spiral/tokenizer -->
-    <exclude-pattern type="relative">Tokenizer/tests/Classes/*</exclude-pattern>
-
-    <!-- spiral/views -->
-    <exclude-pattern type="relative">Views/tests/fixtures/*</exclude-pattern>
 </ruleset>
