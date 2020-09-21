@@ -40,11 +40,7 @@ final class SchemaCompiler
 
     public function toSchema(): SchemaInterface
     {
-        return new Schema(
-            ($this->schema === self::EMPTY_SCHEMA || !is_array($this->schema))
-                ? []
-                : $this->schema
-        );
+        return new Schema($this->isWriteableSchema() ? $this->schema : []);
     }
 
     public function toMemory(MemoryInterface $memory)
@@ -53,5 +49,10 @@ final class SchemaCompiler
             self::MEMORY_SECTION,
             empty($this->schema) ? self::EMPTY_SCHEMA : $this->schema
         );
+    }
+
+    private function isWriteableSchema(): bool
+    {
+        return is_array($this->schema) && $this->schema !== self::EMPTY_SCHEMA;
     }
 }
