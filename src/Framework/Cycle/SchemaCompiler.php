@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Cycle;
 
+use Cycle\ORM\Schema;
+use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Compiler;
 use Cycle\Schema\Registry;
 use Spiral\Boot\MemoryInterface;
@@ -36,9 +38,13 @@ final class SchemaCompiler
         return empty($this->schema);
     }
 
-    public function toSchema(): array
+    public function toSchema(): SchemaInterface
     {
-        return ($this->schema === self::EMPTY_SCHEMA || !is_array($this->schema)) ? [] : $this->schema;
+        return new Schema(
+            ($this->schema === self::EMPTY_SCHEMA || !is_array($this->schema))
+                ? []
+                : $this->schema
+        );
     }
 
     public function toMemory(MemoryInterface $memory)

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader\Cycle;
 
-use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
 use Cycle\Schema\Generator;
 use Cycle\Schema\GeneratorInterface;
@@ -116,7 +115,7 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
             $schemaCompiler->toMemory($memory);
         }
 
-        return new Schema($schemaCompiler->toSchema());
+        return $schemaCompiler->toSchema();
     }
 
     /**
