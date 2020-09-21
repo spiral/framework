@@ -19,6 +19,7 @@ use Spiral\Bootloader\Cycle\SchemaBootloader;
 use Spiral\Command\Cycle\Generator\ShowChanges;
 use Spiral\Command\Migrate\AbstractCommand;
 use Spiral\Console\Console;
+use Spiral\Cycle\SchemaCompiler;
 use Spiral\Migrations\Migrator;
 use Spiral\Migrations\State;
 use Symfony\Component\Console\Input\InputOption;
@@ -62,12 +63,11 @@ final class MigrateCommand extends AbstractCommand
 
         $show = new ShowChanges($this->output);
 
-        $schema = (new Compiler())->compile(
+        $schemaCompiler = SchemaCompiler::compile(
             $registry,
             array_merge($bootloader->getGenerators(), [$show])
         );
-
-        $memory->saveData('cycle', $schema);
+        $schemaCompiler->toMemory($memory);
 
         if ($show->hasChanges()) {
             (new Compiler())->compile($registry, [$migrations]);

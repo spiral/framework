@@ -13,7 +13,6 @@ namespace Spiral\Bootloader\Cycle;
 
 use Cycle\ORM\Schema;
 use Cycle\ORM\SchemaInterface;
-use Cycle\Schema\Compiler;
 use Cycle\Schema\Generator;
 use Cycle\Schema\GeneratorInterface;
 use Cycle\Schema\Registry;
@@ -21,6 +20,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Bootloader\TokenizerBootloader;
 use Spiral\Core\Container;
+use Spiral\Cycle\SchemaCompiler;
 
 final class SchemaBootloader extends Bootloader implements Container\SingletonInterface
 {
@@ -109,19 +109,16 @@ final class SchemaBootloader extends Bootloader implements Container\SingletonIn
      */
     protected function schema(MemoryInterface $memory): SchemaInterface
     {
-        $schema = $memory->loadData('cycle');
-        if (!empty($schema)) {
-            return new Schema($schema === self::EMPTY_SCHEMA ? [] : $schema);
+        $schemaCompiler = SchemaCompiler::fromMemory($memory);
+        if ($schemaCompiler->isEmpty()) {
+            $schemaCompiler = SchemaCompiler::compile(
+                $this->container->get(Registry::class),
+                $this->getGenerators()
+            );
+            $schemaCompiler->toMemory($memory);
         }
 
-        $schema = (new Compiler())->compile(
-            $this->container->get(Registry::class),
-            $this->getGenerators()
-        );
-
-        $memory->saveData('cycle', empty($schema) ? self::EMPTY_SCHEMA : $schema);
-
-        return new Schema($schema);
+        return new Schema($schemaCompiler->toSchema());
     }
 
     /**
