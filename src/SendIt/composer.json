@@ -1,12 +1,12 @@
 {
-    "name": "spiral/annotated-routes",
+    "name": "spiral/sendit",
     "type": "library",
-    "description": "Annotated routes for Spiral Framework",
+    "description": "Email builder and queue handler",
     "license": "MIT",
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
-        "source": "https://github.com/spiral/annotated-routes"
+        "source": "https://github.com/spiral/sendit"
     },
     "authors": [
         {
@@ -16,24 +16,29 @@
     ],
     "require": {
         "php": "^7.2",
-        "spiral/router": "^2.7",
-        "spiral/annotations": "^2.7"
+        "ext-json": "*",
+        "spiral/logger": "^2.7",
+        "spiral/mailer": "^2.7",
+        "symfony/mailer": "^5.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",
         "mockery/mockery": "^1.3",
-        "laminas/laminas-diactoros": "^2.3"
+        "spiral/jobs": "^2.2",
+        "spiral/views": "^2.7",
+        "spiral/stempler-bridge": "^1.2"
     },
     "autoload": {
         "psr-4": {
-            "Spiral\\Router\\": "src"
+            "Spiral\\SendIt\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spiral\\Tests\\Router\\": "tests"
+            "Spiral\\Tests\\SendIt\\": "tests"
         }
     },
+
     "extra": {
         "branch-alias": {
             "dev-master": "2.7.x-dev"

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Prototype\Commands;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Framework\Kernel;
 use Spiral\Tests\Prototype\Fixtures\TestApp;
 use Spiral\Tests\Prototype\Storage;
 
@@ -44,6 +45,10 @@ abstract class AbstractCommandsTest extends TestCase
 
     public function setUp(): void
     {
+        if (! \class_exists(Kernel::class)) {
+            $this->markTestSkipped('A "spiral/framework" dependency is required to run these tests');
+        }
+
         $this->app = TestApp::init([
             'root'   => $this->dir(),
             'config' => $this->dir(),
