@@ -70,6 +70,17 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
     }
 
     /**
+     * Add new Http token transport.
+     *
+     * @param string                                 $name
+     * @param HttpTransportInterface|Autowire|string $transport
+     */
+    public function addTransport(string $name, $transport): void
+    {
+        $this->config->modify('auth', new Append('transports', $name, $transport));
+    }
+
+    /**
      * Creates default cookie transport when "transports" section is empty.
      *
      * @return CookieTransport
@@ -79,17 +90,6 @@ final class HttpAuthBootloader extends Bootloader implements SingletonInterface
         $config = $this->config->getConfig('http');
 
         return new CookieTransport('token', $config['basePath'] ?? '/');
-    }
-
-    /**
-     * Add new Http token transport.
-     *
-     * @param string                                 $name
-     * @param HttpTransportInterface|Autowire|string $transport
-     */
-    public function addTransport(string $name, $transport): void
-    {
-        $this->config->modify('auth', new Append('transports', $name, $transport));
     }
 
     /**
