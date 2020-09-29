@@ -17,10 +17,10 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "spiral/core": "^2.6",
-        "spiral/files": "^2.6",
-        "spiral/streams": "^2.6",
-        "spiral/translator": "^2.6"
+        "spiral/core": "^2.6.1",
+        "spiral/files": "^2.6.1",
+        "spiral/streams": "^2.6.1",
+        "spiral/translator": "^2.6.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.0",

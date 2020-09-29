@@ -16,8 +16,8 @@
     ],
     "require": {
         "php": "^7.2",
-        "spiral/core": "^2.6",
-        "spiral/logger": "^2.6",
+        "spiral/core": "^2.6.1",
+        "spiral/logger": "^2.6.1",
         "symfony/finder": "^5.1"
     },
     "require-dev": {
