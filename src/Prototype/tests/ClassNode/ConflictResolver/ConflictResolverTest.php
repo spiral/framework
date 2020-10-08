@@ -47,25 +47,6 @@ class ConflictResolverTest extends TestCase
     }
 
     /**
-     * @param string $filename
-     * @param array $dependencies
-     *
-     * @return ClassNode
-     * @throws ClassNotDeclaredException|\ReflectionException
-     */
-    private function getDefinition(string $filename, array $dependencies): ClassNode
-    {
-        return $this->getExtractor()->extract($filename, Dependencies::convert($dependencies));
-    }
-
-    private function getExtractor(): NodeExtractor
-    {
-        $container = new Container();
-
-        return $container->get(NodeExtractor::class);
-    }
-
-    /**
      * @throws ClassNotDeclaredException
      */
     public function testResolveImportConflicts(): void
@@ -128,5 +109,24 @@ class ConflictResolverTest extends TestCase
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
         $this->assertMatchesRegularExpression('/@var ATestAlias[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param ATestAlias $test3', $r);
+    }
+
+    /**
+     * @param string $filename
+     * @param array $dependencies
+     *
+     * @return ClassNode
+     * @throws ClassNotDeclaredException|\ReflectionException
+     */
+    private function getDefinition(string $filename, array $dependencies): ClassNode
+    {
+        return $this->getExtractor()->extract($filename, Dependencies::convert($dependencies));
+    }
+
+    private function getExtractor(): NodeExtractor
+    {
+        $container = new Container();
+
+        return $container->get(NodeExtractor::class);
     }
 }
