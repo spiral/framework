@@ -55,7 +55,7 @@ final class InjectCommand extends AbstractCommand
                     $targets[] = [
                         $class->getName(),
                         $target->getMessage(),
-                        "{$target->getFile()}:L{$target->getLine()}"
+                        "{$target->getFile()}:L{$target->getLine()}",
                     ];
                     continue 2;
                 }
