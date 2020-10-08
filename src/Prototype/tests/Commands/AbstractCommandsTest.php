@@ -45,7 +45,7 @@ abstract class AbstractCommandsTest extends TestCase
 
     public function setUp(): void
     {
-        if (! \class_exists(Kernel::class)) {
+        if (!\class_exists(Kernel::class)) {
             $this->markTestSkipped('A "spiral/framework" dependency is required to run these tests');
         }
 
