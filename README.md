@@ -8,7 +8,7 @@
 
 Spiral Framework is a High-Performance PHP/Go Full-Stack framework and group of over sixty PSR-compatible components. The Framework execution model based on a hybrid runtime where some services (GRPC, Queue, WebSockets, etc.) handled by [RoadRunner](https://github.com/spiral/roadrunner) application server and the PHP code of your application stays in memory permanently (anti-memory leak tools included).
 
-[App Skeleton](https://github.com/spiral/app) ([CLI](https://github.com/spiral/app-cli), [GRPC](https://github.com/spiral/app-grpc), [Admin Panel](https://github.com/spiral/app-keeper)) | [spiral.dev](https://spiral.dev/) | [**Documentation**](https://spiral.dev/docs) | [Twitter](https://twitter.com/spiralphp) | [Contributing](https://github.com/spiral/guide/blob/master/contributing.md)
+[App Skeleton](https://github.com/spiral/app) ([CLI](https://github.com/spiral/app-cli), [GRPC](https://github.com/spiral/app-grpc), [Admin Panel](https://github.com/spiral/app-keeper)) | [spiral.dev](https://spiral.dev/) | [**Documentation**](https://spiral.dev/docs) | [Twitter](https://twitter.com/spiralphp)
 
 <br/>
 
