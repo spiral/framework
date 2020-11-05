@@ -17,7 +17,7 @@ use Spiral\Core\FactoryInterface;
 /**
  * Manages the presets for various route groups.
  */
-final class GroupRegistry implements \IteratorAggregate
+final class GroupRegistry implements GroupRegistryInterface
 {
     /** @var ContainerInterface */
     private $factory;
@@ -35,9 +35,9 @@ final class GroupRegistry implements \IteratorAggregate
 
     /**
      * @param string $name
-     * @return RouteGroup
+     * @return RouteGroupInterface
      */
-    public function getGroup(string $name): RouteGroup
+    public function getGroup(string $name): RouteGroupInterface
     {
         if (!isset($this->groups[$name])) {
             $this->groups[$name] = $this->factory->make(RouteGroup::class);
@@ -47,7 +47,7 @@ final class GroupRegistry implements \IteratorAggregate
     }
 
     /**
-     * @return RouteGroup[]|\ArrayIterator
+     * @return RouteGroupInterface[]|\ArrayIterator
      */
     public function getIterator()
     {

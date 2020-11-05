@@ -21,7 +21,7 @@ use Spiral\Router\Target\Action;
 /**
  * RouteGroup provides the ability to configure multiple routes to controller/actions using same presets.
  */
-final class RouteGroup
+final class RouteGroup implements RouteGroupInterface
 {
     /** @var ContainerInterface */
     private $container;
@@ -62,7 +62,7 @@ final class RouteGroup
      * @param string $prefix
      * @return $this
      */
-    public function setPrefix(string $prefix): self
+    public function setPrefix(string $prefix): RouteGroupInterface
     {
         $this->prefix = $prefix;
 
@@ -76,7 +76,7 @@ final class RouteGroup
      * @param CoreInterface|string|Autowire $core
      * @return $this
      */
-    public function setCore($core): self
+    public function setCore($core): RouteGroupInterface
     {
         if (!$core instanceof CoreInterface) {
             $core = $this->container->get($core);
@@ -93,7 +93,7 @@ final class RouteGroup
      * @param MiddlewareInterface|string $middleware
      * @return $this
      */
-    public function addMiddleware($middleware): self
+    public function addMiddleware($middleware): RouteGroupInterface
     {
         if (!$middleware instanceof MiddlewareInterface) {
             $middleware = $this->container->get($middleware);
@@ -126,7 +126,7 @@ final class RouteGroup
         array $verbs,
         array $defaults,
         array $middleware
-    ) {
+    ): void {
         $this->routes[$name] = [
             'pattern'    => $pattern,
             'controller' => $controller,
@@ -140,7 +140,7 @@ final class RouteGroup
     /**
      * Push routes to router.
      */
-    public function flushRoutes()
+    public function flushRoutes(): void
     {
         foreach ($this->routes as $name => $schema) {
             $route = $this->createRoute($schema['pattern'], $schema['controller'], $schema['action']);
@@ -162,14 +162,14 @@ final class RouteGroup
      * @param string $action
      * @return Route
      */
-    public function createRoute(string $pattern, string $controller, string $action): Route
+    public function createRoute(string $pattern, string $controller, string $action): RouteInterface
     {
-        $action = new Action($controller, $action);
+        $target = new Action($controller, $action);
         if ($this->core !== null) {
-            $action = $action->withCore($this->core);
+            $target = $target->withCore($this->core);
         }
 
-        $route = new Route($this->prefix . $pattern, $action);
+        $route = new Route($this->prefix . $pattern, $target);
 
         // all routes within group share the same middleware pipeline
         $route = $route->withMiddleware($this->pipeline);

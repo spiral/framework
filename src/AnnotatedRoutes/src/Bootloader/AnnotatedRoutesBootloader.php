@@ -20,6 +20,7 @@ use Spiral\Bootloader\Http\RouterBootloader;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Router\Command\ResetCommand;
 use Spiral\Router\GroupRegistry;
+use Spiral\Router\GroupRegistryInterface;
 use Spiral\Router\RouteLocator;
 
 /**
@@ -35,7 +36,7 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
     ];
 
     protected const SINGLETONS = [
-        GroupRegistry::class => [self::class, 'getGroups'],
+        GroupRegistryInterface::class => [self::class, 'getGroups'],
     ];
 
     /** @var MemoryInterface */
@@ -80,9 +81,9 @@ final class AnnotatedRoutesBootloader extends Bootloader implements SingletonInt
     }
 
     /**
-     * @return GroupRegistry
+     * @return GroupRegistryInterface
      */
-    public function getGroups(): GroupRegistry
+    public function getGroups(): GroupRegistryInterface
     {
         return $this->groups;
     }
