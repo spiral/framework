@@ -147,7 +147,18 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
+
+      # Update PHP 7.x
       - name: Install Dependencies
+        if: ${{ matrix.php != '8.0' }}
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
+      # Update PHP 8.x
+      - name: Install Dependencies
+        if: ${{ matrix.php == '8.0' }}
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
