@@ -31,26 +31,6 @@ class DoctrineReader extends BaseReader
     }
 
     /**
-     * @param string|null $name
-     * @param iterable|object[] $annotations
-     * @return object[]
-     */
-    private function filter(?string $name, iterable $annotations): iterable
-    {
-        if ($name === null) {
-            yield from $annotations;
-
-            return;
-        }
-
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof $name) {
-                yield $annotation;
-            }
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
@@ -78,5 +58,25 @@ class DoctrineReader extends BaseReader
         $result = $this->reader->getPropertyAnnotations($property);
 
         return $this->filter($name, $result);
+    }
+
+    /**
+     * @param string|null $name
+     * @param iterable|object[] $annotations
+     * @return object[]
+     */
+    private function filter(?string $name, iterable $annotations): iterable
+    {
+        if ($name === null) {
+            yield from $annotations;
+
+            return;
+        }
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $name) {
+                yield $annotation;
+            }
+        }
     }
 }

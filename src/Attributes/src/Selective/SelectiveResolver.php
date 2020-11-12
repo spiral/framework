@@ -35,7 +35,7 @@ class SelectiveResolver implements ResolverInterface
     public function isSupported(): bool
     {
         foreach ($this->resolvers as $resolver) {
-            if (! $resolver->isSupported()) {
+            if (!$resolver->isSupported()) {
                 return false;
             }
         }

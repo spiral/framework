@@ -40,6 +40,26 @@ class SelectiveReader extends Reader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getMethodMetadata(\ReflectionMethod $method, string $name = null): iterable
+    {
+        return $this->resolve(static function (ReaderInterface $reader) use ($method, $name): iterable {
+            return $reader->getMethodMetadata($method, $name);
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
+    {
+        return $this->resolve(static function (ReaderInterface $reader) use ($property, $name): iterable {
+            return $reader->getPropertyMetadata($property, $name);
+        });
+    }
+
+    /**
      * @psalm-param callable(ReaderInterface): list<array-key, object> $resolver
      *
      * @param callable $resolver
@@ -65,25 +85,5 @@ class SelectiveReader extends Reader
     private function iterableToArray(iterable $result): array
     {
         return $result instanceof \Traversable ? \iterator_to_array($result, false) : $result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getMethodMetadata(\ReflectionMethod $method, string $name = null): iterable
-    {
-        return $this->resolve(static function (ReaderInterface $reader) use ($method, $name): iterable {
-            return $reader->getMethodMetadata($method, $name);
-        });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
-    {
-        return $this->resolve(static function (ReaderInterface $reader) use ($property, $name): iterable {
-            return $reader->getPropertyMetadata($property, $name);
-        });
     }
 }

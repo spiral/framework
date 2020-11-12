@@ -22,6 +22,48 @@ class NativeReader extends Reader
     private const DEFAULT_PROPERTY_NAME = 'value';
 
     /**
+     * {@inheritDoc}
+     * @throws \ReflectionException
+     */
+    public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
+    {
+        /** @psalm-suppress UndefinedClass */
+        $result = $class->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
+
+        foreach ($result as $attribute) {
+            yield $this->instance($attribute);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws \ReflectionException
+     */
+    public function getMethodMetadata(\ReflectionMethod $method, string $name = null): iterable
+    {
+        /** @psalm-suppress UndefinedClass */
+        $result = $method->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
+
+        foreach ($result as $attribute) {
+            yield $this->instance($attribute);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws \ReflectionException
+     */
+    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
+    {
+        /** @psalm-suppress UndefinedClass */
+        $result = $property->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
+
+        foreach ($result as $attribute) {
+            yield $this->instance($attribute);
+        }
+    }
+
+    /**
      * @psalm-suppress UndefinedClass
      *
      * @param \ReflectionAttribute $attribute
@@ -94,7 +136,7 @@ class NativeReader extends Reader
             try {
                 $property = $reflection->getProperty($name);
 
-                if (! $property->isPublic()) {
+                if (!$property->isPublic()) {
                     throw $this->noPropertyError($reflection, $name);
                 }
 
@@ -120,47 +162,5 @@ class NativeReader extends Reader
         $message = \sprintf($message, $context->getName(), $name, $available);
 
         return new LogicException($message);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws \ReflectionException
-     */
-    public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
-    {
-        /** @psalm-suppress UndefinedClass */
-        $result = $class->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
-
-        foreach ($result as $attribute) {
-            yield $this->instance($attribute);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws \ReflectionException
-     */
-    public function getMethodMetadata(\ReflectionMethod $method, string $name = null): iterable
-    {
-        /** @psalm-suppress UndefinedClass */
-        $result = $method->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
-
-        foreach ($result as $attribute) {
-            yield $this->instance($attribute);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws \ReflectionException
-     */
-    public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable
-    {
-        /** @psalm-suppress UndefinedClass */
-        $result = $property->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
-
-        foreach ($result as $attribute) {
-            yield $this->instance($attribute);
-        }
     }
 }

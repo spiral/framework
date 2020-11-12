@@ -45,21 +45,6 @@ class Factory implements FactoryInterface
     }
 
     /**
-     * @return ResolverInterface[]
-     */
-    private function getDefaultResolvers(): array
-    {
-        $result = [
-            static::PREFER_NATIVE   => new NativeResolver(),
-            static::PREFER_DOCTRINE => new DoctrineResolver(),
-        ];
-
-        $result[static::PREFER_SELECTIVE] = new SelectiveResolver($result);
-
-        return $result;
-    }
-
-    /**
      * @psalm-param FactoryInterface::PREFER_* $type
      *
      * @param int $type
@@ -80,6 +65,21 @@ class Factory implements FactoryInterface
         }
 
         return $this->createExcept($type);
+    }
+
+    /**
+     * @return ResolverInterface[]
+     */
+    private function getDefaultResolvers(): array
+    {
+        $result = [
+            static::PREFER_NATIVE   => new NativeResolver(),
+            static::PREFER_DOCTRINE => new DoctrineResolver(),
+        ];
+
+        $result[static::PREFER_SELECTIVE] = new SelectiveResolver($result);
+
+        return $result;
     }
 
     /**
