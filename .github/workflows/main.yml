@@ -171,7 +171,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update phpunit/phpunit --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
+          command: composer update phpunit/phpunit:9.* --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
 
       # Install GO Dependencies
       - name: Setup Protobuf
