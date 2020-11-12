@@ -106,7 +106,7 @@ jobs:
   # Execute unit tests on all valid PHP versions.
   #
   test:
-    name: Build ${{matrix.php}} (${{ matrix.os }}) - ${{ matrix.stability }}
+    name: Build (${{matrix.php}}, ${{ matrix.os }}, ${{ matrix.stability }})
     runs-on: ${{ matrix.os }}
 
     strategy:
