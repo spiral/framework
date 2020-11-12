@@ -148,10 +148,6 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
 
-      # Composer 2.0 feature (2.x reads lock file in case of "composer update")
-      - name: Remove Composer Lock File
-        run: rm composer.lock
-
       # Installation logic on PHP 7.x
       - name: Install Dependencies
         if: ${{ matrix.php != '8.0' }}
@@ -169,6 +165,14 @@ jobs:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --ignore-platform-req=php
+      - name: Upgrade Testing Framework (PHP 8.x compatibility)
+        if: ${{ matrix.php == '8.0' }}
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update phpunit/phpunit --with-dependencies --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
+
 
       # Install GO Dependencies
       - name: Setup Protobuf
