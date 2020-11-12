@@ -42,8 +42,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
+          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
       - name: Install Dependencies
         uses: nick-invision/retry@v1
         with:
@@ -89,8 +89,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
+          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
       - name: Install Dependencies
         uses: nick-invision/retry@v1
         with:
@@ -145,8 +145,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
+          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
       - name: Install Dependencies
         uses: nick-invision/retry@v1
         with:
