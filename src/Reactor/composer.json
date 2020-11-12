@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "doctrine/inflector": "^1.4|^2.0"
     },
     "require-dev": {

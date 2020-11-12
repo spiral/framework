@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "ext-json": "*",
         "spiral/logger": "^2.7",
         "spiral/mailer": "^2.7",

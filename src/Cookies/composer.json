@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "spiral/encrypter": "^2.7",
         "psr/http-server-middleware": "^1.0"
     },
