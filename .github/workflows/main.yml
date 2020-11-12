@@ -148,7 +148,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
 
-      # Update PHP 7.x
+      # Installation logic on PHP 7.x
       - name: Install Dependencies
         if: ${{ matrix.php != '8.0' }}
         uses: nick-invision/retry@v1
@@ -156,7 +156,8 @@ jobs:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
-      # Update PHP 8.x
+
+      # Installation logic on PHP 8.x
       - name: Install Dependencies
         if: ${{ matrix.php == '8.0' }}
         uses: nick-invision/retry@v1
@@ -164,6 +165,13 @@ jobs:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
+      - name: Upgrade Testing Framework (PHP 8.x compatibility)
+        if: ${{ matrix.php == '8.0' }}
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update phpunit/phpunit --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
 
       # Install GO Dependencies
       - name: Setup Protobuf
