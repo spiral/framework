@@ -120,8 +120,7 @@
         "spiral/migrations": "^2.1",
         "spiral/php-grpc": "^1.4",
         "spiral/roadrunner": "^1.8",
-        "spiral/stempler-bridge": "^1.4",
-        "symplify/monorepo-builder": "^7.3.18"
+        "spiral/stempler-bridge": "^1.4"
     },
     "autoload-dev": {
         "psr-4": {
@@ -218,12 +217,7 @@
     "scripts": {
         "test": "phpunit --testdox",
         "phpcs": "phpcs --standard=phpcs.xml",
-        "phpcbf": "phpcbf --standard=phpcs.xml",
-        "merge": [
-            "monorepo-builder merge",
-            "@php bin/sync"
-        ],
-        "split": "monorepo-builder split"
+        "phpcbf": "phpcbf --standard=phpcs.xml"
     },
     "extra": {
         "branch-alias": {
