@@ -24,25 +24,6 @@ trait ReaderAwareTrait
     private $reader;
 
     /**
-     * @return ReaderInterface
-     */
-    protected function createReader(): ReaderInterface
-    {
-        return (new ReaderFactory())->create();
-    }
-
-    /**
-     * @param ReaderInterface $reader
-     * @return $this|ReaderAwareInterface
-     */
-    protected function setReader(ReaderInterface $reader): ReaderAwareInterface
-    {
-        $this->reader = $reader;
-
-        return $this;
-    }
-
-    /**
      * @param ReaderInterface $reader
      * @return $this|ReaderAwareInterface
      */
@@ -61,5 +42,24 @@ trait ReaderAwareTrait
         }
 
         return $this->reader;
+    }
+
+    /**
+     * @return ReaderInterface
+     */
+    protected function createReader(): ReaderInterface
+    {
+        return (new ReaderFactory())->create();
+    }
+
+    /**
+     * @param ReaderInterface $reader
+     * @return $this|ReaderAwareInterface
+     */
+    protected function setReader(ReaderInterface $reader): ReaderAwareInterface
+    {
+        $this->reader = $reader;
+
+        return $this;
     }
 }
