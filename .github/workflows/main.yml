@@ -49,7 +49,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
+          command: composer update --prefer-dist --no-interaction --no-progress
 
       # Execution
       - name: Security Advisories
@@ -96,7 +96,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
+          command: composer update --prefer-dist --no-interaction --no-progress
 
       # Execution
       - name: Check Coding Standards
