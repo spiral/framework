@@ -112,7 +112,6 @@
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5|^9.0",
         "ramsey/uuid": "^3.9",
-        "roave/security-advisories": "dev-master",
         "spiral/broadcast": "^2.0",
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
