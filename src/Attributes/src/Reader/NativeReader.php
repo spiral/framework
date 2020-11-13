@@ -30,26 +30,6 @@ class NativeReader extends Reader
     }
 
     /**
-     * @return bool
-     */
-    protected function isAvailable(): bool
-    {
-        return \version_compare(\PHP_VERSION, '8.0') >= 0;
-    }
-
-    /**
-     * @return void
-     */
-    private function checkAvailability(): void
-    {
-        if ($this->isAvailable()) {
-            return;
-        }
-
-        throw new InitializationException('Requires the PHP >= 8.0');
-    }
-
-    /**
      * {@inheritDoc}
      * @throws \ReflectionException
      */
@@ -89,6 +69,26 @@ class NativeReader extends Reader
         foreach ($result as $attribute) {
             yield $this->instance($attribute);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isAvailable(): bool
+    {
+        return \version_compare(\PHP_VERSION, '8.0') >= 0;
+    }
+
+    /**
+     * @return void
+     */
+    private function checkAvailability(): void
+    {
+        if ($this->isAvailable()) {
+            return;
+        }
+
+        throw new InitializationException('Requires the PHP >= 8.0');
     }
 
     /**

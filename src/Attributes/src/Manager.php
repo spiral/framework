@@ -89,19 +89,21 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * @param iterable $errors
-     * @return InitializationException
+     * {@inheritDoc}
      */
-    private function bootError(iterable $errors): InitializationException
+    public function get(string $name = self::DEFAULT_READER): ReaderInterface
     {
-        $messages = [];
-
-        foreach ($errors as $reader => $message) {
-            $messages[] = \sprintf(' - %s: %s', $reader, $message);
+        if ($name === self::DEFAULT_READER) {
+            $name = $this->default;
         }
 
-        $message = self::ERROR_DRIVER_NOT_AVAILABLE . ":\n" . \implode($messages);
-        return new InitializationException($message);
+        $reader = $this->readers[$name] ?? null;
+
+        if ($reader === null) {
+            throw new NotFoundException(\sprintf(self::ERROR_DRIVER_NOT_FOUND, $name));
+        }
+
+        return $reader;
     }
 
     /**
@@ -120,6 +122,22 @@ class Manager implements ManagerInterface
     protected function getDefaultCompositeReaders(): array
     {
         return self::DEFAULT_COMPOSITE_READERS;
+    }
+
+    /**
+     * @param iterable $errors
+     * @return InitializationException
+     */
+    private function bootError(iterable $errors): InitializationException
+    {
+        $messages = [];
+
+        foreach ($errors as $reader => $message) {
+            $messages[] = \sprintf(' - %s: %s', $reader, $message);
+        }
+
+        $message = self::ERROR_DRIVER_NOT_AVAILABLE . ":\n" . \implode($messages);
+        return new InitializationException($message);
     }
 
     /**
@@ -169,23 +187,5 @@ class Manager implements ManagerInterface
                 yield $reader => $e->getMessage();
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function get(string $name = self::DEFAULT_READER): ReaderInterface
-    {
-        if ($name === self::DEFAULT_READER) {
-            $name = $this->default;
-        }
-
-        $reader = $this->readers[$name] ?? null;
-
-        if ($reader === null) {
-            throw new NotFoundException(\sprintf(self::ERROR_DRIVER_NOT_FOUND, $name));
-        }
-
-        return $reader;
     }
 }

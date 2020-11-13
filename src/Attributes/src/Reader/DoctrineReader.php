@@ -34,26 +34,6 @@ class DoctrineReader extends BaseReader
     }
 
     /**
-     * @return bool
-     */
-    protected function isAvailable(): bool
-    {
-        return \interface_exists(Reader::class);
-    }
-
-    /**
-     * @return void
-     */
-    private function checkAvailability(): void
-    {
-        if ($this->isAvailable()) {
-            return;
-        }
-
-        throw new InitializationException('Requires the "doctrine/annotations" package');
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
@@ -81,6 +61,26 @@ class DoctrineReader extends BaseReader
         $result = $this->reader->getPropertyAnnotations($property);
 
         return $this->filter($name, $result);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isAvailable(): bool
+    {
+        return \interface_exists(Reader::class);
+    }
+
+    /**
+     * @return void
+     */
+    private function checkAvailability(): void
+    {
+        if ($this->isAvailable()) {
+            return;
+        }
+
+        throw new InitializationException('Requires the "doctrine/annotations" package');
     }
 
     /**
