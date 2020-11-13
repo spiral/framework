@@ -35,9 +35,7 @@ class Manager implements ManagerInterface
     private const ERROR_DRIVER_NOT_AVAILABLE = 'There are no metadata readers available';
 
     /**
-     * @psalm-var array<positive-int, class-string<ReaderInterface>>
-     *
-     * @var string[]
+     * @var array<positive-int, class-string<ReaderInterface>>
      */
     private const DEFAULT_READERS = [
         NativeReader::class,
@@ -45,9 +43,7 @@ class Manager implements ManagerInterface
     ];
 
     /**
-     * @psalm-var array<positive-int, class-string<Composite>>
-     *
-     * @var string[]
+     * @var array<positive-int, class-string<Composite>>
      */
     private const DEFAULT_COMPOSITE_READERS = [
         SelectiveReader::class,
@@ -60,8 +56,7 @@ class Manager implements ManagerInterface
     private const DEFAULT_READER_ALIAS = SelectiveReader::class;
 
     /**
-     * @psalm-var array<positive-int, ReaderInterface>
-     * @var ReaderInterface[]
+     * @var array<positive-int, ReaderInterface>
      */
     private $readers;
 
@@ -109,8 +104,7 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * @psalm-return array<class-string<ReaderInterface>>
-     * @return string[]
+     * @return array<class-string<ReaderInterface>>
      */
     protected function getDefaultReaders(): array
     {
@@ -118,8 +112,7 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * @psalm-return array<class-string<ReaderInterface>>
-     * @return string[]
+     * @return array<class-string<ReaderInterface>>
      */
     protected function getDefaultCompositeReaders(): array
     {
@@ -158,8 +151,6 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * @psalm-return iterable<string, string>
-     *
      * @param string[] $readers
      * @param ReaderInterface[] $registered
      * @return void
@@ -172,11 +163,9 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * @psalm-return iterable<string, string>
-     *
      * @param string[] $readers
      * @param array $arguments
-     * @return string[]
+     * @return iterable<string, string>
      */
     private function registerReaders(iterable $readers, array $arguments = []): iterable
     {

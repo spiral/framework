@@ -14,10 +14,7 @@ namespace Spiral\Attributes\Reader;
 final class SelectiveReader extends Composite
 {
     /**
-     * @psalm-param callable(ReaderInterface): list<array-key, object> $resolver
-     *
-     * @param callable $resolver
-     * @return iterable
+     * {@inheritDoc}
      */
     protected function each(callable $resolver): iterable
     {

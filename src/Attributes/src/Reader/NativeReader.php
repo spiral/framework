@@ -99,7 +99,6 @@ final class NativeReader extends Reader
         }
     }
 
-
     /**
      * @return bool
      */

@@ -80,9 +80,7 @@ abstract class Composite extends Reader
 
 
     /**
-     * @psalm-param callable(ReaderInterface): list<array-key, object> $resolver
-     *
-     * @param callable $resolver
+     * @param callable(ReaderInterface): list<array-key, object> $resolver
      * @return iterable
      */
     abstract protected function each(callable $resolver): iterable;
