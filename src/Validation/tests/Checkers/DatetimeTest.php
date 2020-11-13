@@ -169,6 +169,7 @@ class DatetimeTest extends TestCase
 
     /**
      * @dataProvider validProvider
+     *
      * @param bool  $expected
      * @param mixed $value
      */
@@ -221,6 +222,7 @@ class DatetimeTest extends TestCase
 
     /**
      * @dataProvider beforeProvider
+     *
      * @param bool  $expected
      * @param mixed $value
      * @param mixed $threshold
@@ -265,9 +267,10 @@ class DatetimeTest extends TestCase
             //the "now" date can differ in ms
             [false, 'now', 'now', false, false],
             [true, 'now', 'now + 1 second', false, false],
-            [true, 'now', 'now', false, true], //the threshold date comes a little bit later (in ms)
-            [true, 'now', 'now', true, false],
-            [true, 'now', 'now', true, true], //the threshold date comes a little bit later (in ms)
+            // DO NOT COUNT ON RUNTIME IN TESTS!!!!
+            // [true, 'now', 'now', false, true], //the threshold date comes a little bit later (in ms)
+            // [true, 'now', 'now', true, false],
+            // [true, 'now', 'now', true, true], //the threshold date comes a little bit later (in ms)
 
             [false, time() + 10, 'now', false, false],
             [true, '', 'now', false, false],
