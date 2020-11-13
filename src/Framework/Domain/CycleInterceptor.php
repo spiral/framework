@@ -150,7 +150,7 @@ class CycleInterceptor implements CoreInterceptorInterface
     {
         $type = $parameter->getType();
 
-        if (! $type instanceof \ReflectionNamedType) {
+        if (!$type instanceof \ReflectionNamedType) {
             return null;
         }
 
