@@ -26,14 +26,14 @@ interface ReaderInterface
 
     /**
      * @template T of object
-     * @psalm-param class-string<T>|null $name
+     * @psalm-param class-string<T> $name
      * @psalm-return T
      *
      * @param \ReflectionClass $class
-     * @param string|null $name
+     * @param string $name
      * @return object|null
      */
-    public function firstClassMetadata(\ReflectionClass $class, string $name = null): ?object;
+    public function firstClassMetadata(\ReflectionClass $class, string $name): ?object;
 
     /**
      * @template T of object
@@ -48,14 +48,14 @@ interface ReaderInterface
 
     /**
      * @template T of object
-     * @psalm-param class-string<T>|null $name
+     * @psalm-param class-string<T> $name
      * @psalm-return T
      *
      * @param \ReflectionMethod $method
-     * @param string|null $name
+     * @param string $name
      * @return object|null
      */
-    public function firstMethodMetadata(\ReflectionMethod $method, string $name = null): ?object;
+    public function firstMethodMetadata(\ReflectionMethod $method, string $name): ?object;
 
     /**
      * @template T of object
@@ -70,12 +70,12 @@ interface ReaderInterface
 
     /**
      * @template T of object
-     * @psalm-param class-string<T>|null $name
+     * @psalm-param class-string<T> $name
      * @psalm-return T
      *
      * @param \ReflectionProperty $property
-     * @param string|null $name
+     * @param string $name
      * @return object|null
      */
-    public function firstPropertyMetadata(\ReflectionProperty $property, string $name = null): ?object;
+    public function firstPropertyMetadata(\ReflectionProperty $property, string $name): ?object;
 }

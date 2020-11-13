@@ -18,7 +18,7 @@ abstract class Reader implements ReaderInterface
     /**
      * {@inheritDoc}
      */
-    public function firstClassMetadata(\ReflectionClass $class, string $name = null): ?object
+    public function firstClassMetadata(\ReflectionClass $class, string $name): ?object
     {
         /** @noinspection LoopWhichDoesNotLoopInspection */
         foreach ($this->getClassMetadata($class, $name) as $attribute) {
@@ -31,7 +31,7 @@ abstract class Reader implements ReaderInterface
     /**
      * {@inheritDoc}
      */
-    public function firstMethodMetadata(\ReflectionMethod $method, string $name = null): ?object
+    public function firstMethodMetadata(\ReflectionMethod $method, string $name): ?object
     {
         /** @noinspection LoopWhichDoesNotLoopInspection */
         foreach ($this->getMethodMetadata($method, $name) as $attribute) {
@@ -44,7 +44,7 @@ abstract class Reader implements ReaderInterface
     /**
      * {@inheritDoc}
      */
-    public function firstPropertyMetadata(\ReflectionProperty $property, string $name = null): ?object
+    public function firstPropertyMetadata(\ReflectionProperty $property, string $name): ?object
     {
         /** @noinspection LoopWhichDoesNotLoopInspection */
         foreach ($this->getPropertyMetadata($property, $name) as $attribute) {
