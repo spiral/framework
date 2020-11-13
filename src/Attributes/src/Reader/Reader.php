@@ -73,7 +73,7 @@ abstract class Reader implements ReaderInterface
     public function firstParameterMetadata(\ReflectionParameter $parameter, string $name): ?object
     {
         /** @noinspection LoopWhichDoesNotLoopInspection */
-        foreach ($this->getConstantMetadata($parameter, $name) as $attribute) {
+        foreach ($this->getParameterMetadata($parameter, $name) as $attribute) {
             return $attribute;
         }
 

@@ -76,6 +76,8 @@ class Manager implements ManagerInterface
      */
     public function __construct(iterable $readers = [], string $default = self::DEFAULT_READER_ALIAS)
     {
+        assert(strlen($default) !== '', 'Precondition failed');
+
         $this->default = $default;
 
         $this->registerCustomReaders($readers);
@@ -148,6 +150,8 @@ class Manager implements ManagerInterface
     {
         foreach ($readers as $name => $reader) {
             $name = \is_string($name) ? $name : \get_class($reader);
+
+            assert(is_subclass_of($name, ReaderInterface::class), 'Precondition failed');
 
             $this->readers[$name] = $reader;
         }

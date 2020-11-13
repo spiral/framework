@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes;
 
-use Spiral\Attributes\Manager as ReaderFactory;
-
 /**
  * @mixin ReaderAwareInterface
  */
@@ -37,19 +35,9 @@ trait ReaderAwareTrait
      */
     public function getReader(): ReaderInterface
     {
-        if ($this->reader === null) {
-            $this->setReader($this->createReader());
-        }
+        assert($this->reader !== null, 'Invariant violation');
 
         return $this->reader;
-    }
-
-    /**
-     * @return ReaderInterface
-     */
-    protected function createReader(): ReaderInterface
-    {
-        return (new ReaderFactory())->create();
     }
 
     /**
