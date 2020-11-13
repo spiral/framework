@@ -128,15 +128,36 @@ class CycleInterceptor implements CoreInterceptorInterface
         }
 
         foreach ($method->getParameters() as $parameter) {
-            if ($parameter->getClass() === null) {
+            $class = $this->getParameterClass($parameter);
+
+            if ($class === null) {
                 continue;
             }
 
-            if ($this->orm->getSchema()->defines($parameter->getClass()->getName())) {
-                $this->cache[$key][$parameter->getName()] = $this->orm->resolveRole($parameter->getClass()->getName());
+            if ($this->orm->getSchema()->defines($class->getName())) {
+                $this->cache[$key][$parameter->getName()] = $this->orm->resolveRole($class->getName());
             }
         }
 
         return $this->cache[$key];
+    }
+
+    /**
+     * @param \ReflectionParameter $parameter
+     * @return \ReflectionClass|null
+     */
+    private function getParameterClass(\ReflectionParameter $parameter): ?\ReflectionClass
+    {
+        $type = $parameter->getType();
+
+        if (! $type instanceof \ReflectionNamedType) {
+            return null;
+        }
+
+        if ($type->isBuiltin()) {
+            return null;
+        }
+
+        return new \ReflectionClass($type->getName());
     }
 }
