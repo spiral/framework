@@ -9,11 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes\Doctrine;
+namespace Spiral\Attributes\Reader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
-use Spiral\Attributes\Reader as BaseReader;
+use Spiral\Attributes\Exception\InitializationException;
+use Spiral\Attributes\Reader\Reader as BaseReader;
 
 class DoctrineReader extends BaseReader
 {
@@ -27,7 +28,29 @@ class DoctrineReader extends BaseReader
      */
     public function __construct(Reader $reader = null)
     {
+        $this->checkAvailability();
+
         $this->reader = $reader ?? new AnnotationReader();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isAvailable(): bool
+    {
+        return \interface_exists(Reader::class);
+    }
+
+    /**
+     * @return void
+     */
+    private function checkAvailability(): void
+    {
+        if ($this->isAvailable()) {
+            return;
+        }
+
+        throw new InitializationException('Requires the "doctrine/annotations" package');
     }
 
     /**

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes;
 
-use Spiral\Attributes\Factory as ReaderFactory;
+use Spiral\Attributes\Manager as ReaderFactory;
 
 /**
  * @mixin ReaderAwareInterface

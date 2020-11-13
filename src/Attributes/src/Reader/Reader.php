@@ -9,7 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes;
+namespace Spiral\Attributes\Reader;
+
+use Spiral\Attributes\ReaderInterface;
 
 abstract class Reader implements ReaderInterface
 {

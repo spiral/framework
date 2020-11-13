@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes\Native;
+namespace Spiral\Attributes\Reader;
 
-use Spiral\Attributes\Reader;
-use Symfony\Component\Console\Exception\LogicException;
+use Spiral\Attributes\Exception\AttributeException;
+use Spiral\Attributes\Exception\InitializationException;
 
 class NativeReader extends Reader
 {
@@ -20,6 +20,34 @@ class NativeReader extends Reader
      * @var string
      */
     private const DEFAULT_PROPERTY_NAME = 'value';
+
+    /**
+     * NativeReader constructor.
+     */
+    public function __construct()
+    {
+        $this->checkAvailability();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isAvailable(): bool
+    {
+        return \version_compare(\PHP_VERSION, '8.0') >= 0;
+    }
+
+    /**
+     * @return void
+     */
+    private function checkAvailability(): void
+    {
+        if ($this->isAvailable()) {
+            return;
+        }
+
+        throw new InitializationException('Requires the PHP >= 8.0');
+    }
 
     /**
      * {@inheritDoc}
@@ -76,7 +104,7 @@ class NativeReader extends Reader
         foreach ($attribute->getArguments() as $name => $value) {
             if (\is_int($name)) {
                 if ($name !== 0) {
-                    throw new \LogicException(\sprintf('Expected Value, got %s', \get_debug_type($value)));
+                    throw new AttributeException(\sprintf('Expected Value, got %s', \get_debug_type($value)));
                 }
 
                 $name = self::DEFAULT_PROPERTY_NAME;
@@ -152,15 +180,15 @@ class NativeReader extends Reader
     /**
      * @param \ReflectionClass $context
      * @param string $name
-     * @return \LogicException
+     * @return AttributeException
      */
-    private function noPropertyError(\ReflectionClass $context, string $name): \LogicException
+    private function noPropertyError(\ReflectionClass $context, string $name): AttributeException
     {
         $available = \implode(', ', \get_class_vars($context->getName()));
 
         $message = 'The attribute #[%s] does not have a public property named "%s". Available properties: %s';
         $message = \sprintf($message, $context->getName(), $name, $available);
 
-        return new LogicException($message);
+        return new AttributeException($message);
     }
 }

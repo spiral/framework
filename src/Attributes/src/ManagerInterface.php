@@ -11,15 +11,20 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes;
 
-interface ResolverInterface
+use Spiral\Attributes\Exception\NotFoundException;
+
+interface ManagerInterface
 {
     /**
-     * @return bool
+     * @final
+     * @var string
      */
-    public function isSupported(): bool;
+    public const DEFAULT_READER = 'default';
 
     /**
+     * @param string $name
      * @return ReaderInterface
+     * @throws NotFoundException
      */
-    public function create(): ReaderInterface;
+    public function get(string $name = self::DEFAULT_READER): ReaderInterface;
 }
