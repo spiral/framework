@@ -14,7 +14,7 @@ namespace Spiral\Attributes\Reader;
 use Spiral\Attributes\Exception\AttributeException;
 use Spiral\Attributes\Exception\InitializationException;
 
-class NativeReader extends Reader
+final class NativeReader extends Reader
 {
     /**
      * @var string

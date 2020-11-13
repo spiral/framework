@@ -16,7 +16,7 @@ use Doctrine\Common\Annotations\Reader;
 use Spiral\Attributes\Exception\InitializationException;
 use Spiral\Attributes\Reader\Reader as BaseReader;
 
-class DoctrineReader extends BaseReader
+final class DoctrineReader extends BaseReader
 {
     /**
      * @var Reader|null
