@@ -72,6 +72,9 @@ abstract class ReaderImplementationTest extends ReaderTest
         $expected = [new $class(), new $class()];
         end($expected)->field = 'value';
 
-        $this->assertEquals($expected, [...$this->reader->getClassMetadata($reflection)]);
+        $actual = $this->reader->getClassMetadata($reflection);
+        $actual = $actual instanceof \Traversable ? \iterator_to_array($actual) : $actual;
+
+        $this->assertEquals($expected, $actual);
     }
 }
