@@ -14,112 +14,151 @@ namespace Spiral\Attributes;
 interface ReaderInterface
 {
     /**
-     * @template T of object
-     * @psalm-param class-string<T>|null $name
-     * @psalm-return iterable<T>
+     * Gets a list of attributes and/or annotations applied to a class.
      *
-     * @param \ReflectionClass $class
-     * @param string|null $name
-     * @return object[]
+     * @template T
+     *
+     * @param \ReflectionClass $class The reflection instance of the class from
+     *      which the class annotations should be read.
+     * @param class-string<T>|null $name The class name of the annotation
+     *      and/or attribute.
+     *
+     * @return iterable<T> A list of class annotations and/or attributes.
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T> $name
-     * @psalm-return T
+     * Gets the attribute or annotation applied to a class.
      *
-     * @param \ReflectionClass $class
-     * @param string $name
-     * @return object|null
+     * @template T
+     *
+     * @param \ReflectionClass $class The reflection instance of the class from
+     *      which the class annotations should be read.
+     * @param class-string<T> $name The class name of the annotation
+     *      and/or attribute.
+     *
+     * @return T|null The annotation/attribute or {@see null}, if the requested
+     *      annotation does not exist.
      */
     public function firstClassMetadata(\ReflectionClass $class, string $name): ?object;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T>|null $name
-     * @psalm-return iterable<T>
+     * Gets a list of attributes and/or annotations applied to a function
+     * or method.
      *
-     * @param \ReflectionFunctionAbstract $function
-     * @param string|null $name
-     * @return object[]
+     * @template T
+     *
+     * @param \ReflectionFunctionAbstract $function The reflection instance of
+     *      the function or method from which the function annotations should
+     *      be read.
+     * @param class-string<T>|null $name The class name of the annotation
+     *      and/or attribute.
+     *
+     * @return iterable<T> A list of function annotations and/or attributes.
      */
     public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T> $name
-     * @psalm-return T
+     * Gets the attribute or annotation applied to a function or method.
      *
-     * @param \ReflectionFunctionAbstract $function
-     * @param string $name
-     * @return object|null
+     * @template T
+     *
+     * @param \ReflectionFunctionAbstract $function The reflection instance of
+     *      the function or method from which the function annotations should
+     *      be read.
+     * @param class-string<T> $name The class name of the annotation and/or
+     *      attribute.
+     *
+     * @return T|null The annotation/attribute or {@see null}, if the requested
+     *      annotation does not exist.
      */
     public function firstFunctionMetadata(\ReflectionFunctionAbstract $function, string $name): ?object;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T>|null $name
-     * @psalm-return iterable<T>
+     * Gets a list of attributes and/or annotations applied to a class property.
      *
-     * @param \ReflectionProperty $property
-     * @param string|null $name
-     * @return object[]
+     * @template T
+     *
+     * @param \ReflectionProperty $property The reflection instance of the
+     *      property from which the property annotations should be read.
+     * @param class-string<T>|null $name The class name of the annotation
+     *      and/or attribute.
+     *
+     * @return iterable<T> A list of property annotations and/or attributes.
      */
     public function getPropertyMetadata(\ReflectionProperty $property, string $name = null): iterable;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T> $name
-     * @psalm-return T
+     * Gets the attribute or annotation applied to a property.
      *
-     * @param \ReflectionProperty $property
-     * @param string $name
-     * @return object|null
+     * @template T
+     *
+     * @param \ReflectionProperty $property The reflection instance of the
+     *      property from which the property annotations should be read.
+     * @param class-string<T> $name The class name of the annotation and/or
+     *      attribute.
+     *
+     * @return T|null The annotation/attribute or {@see null}, if the requested
+     *      annotation does not exist.
      */
     public function firstPropertyMetadata(\ReflectionProperty $property, string $name): ?object;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T>|null $name
-     * @psalm-return iterable<T>
+     * Gets a list of attributes and/or annotations applied to a class constant.
      *
-     * @param \ReflectionClassConstant $constant
-     * @param string|null $name
-     * @return object[]
+     * @template T
+     *
+     * @param \ReflectionClassConstant $constant The reflection instance of the
+     *      class constant from which the constant annotations should be read.
+     * @param class-string<T>|null $name The class name of the annotation
+     *      and/or attribute.
+     *
+     * @return iterable<T> A list of constant annotations and/or attributes.
      */
     public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T> $name
-     * @psalm-return T
+     * Gets the attribute or annotation applied to a class constant.
      *
-     * @param \ReflectionClassConstant $constant
-     * @param string $name
-     * @return object|null
+     * @template T
+     *
+     * @param \ReflectionClassConstant $constant The reflection instance of the
+     *      class constant from which the constant annotations should be read.
+     * @param class-string<T> $name The class name of the annotation and/or
+     *      attribute.
+     *
+     * @return T|null The annotation/attribute or {@see null}, if the requested
+     *      annotation does not exist.
      */
     public function firstConstantMetadata(\ReflectionClassConstant $constant, string $name): ?object;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T>|null $name
-     * @psalm-return iterable<T>
+     * Gets a list of attributes and/or annotations applied to a parameter of
+     * a function or method.
      *
-     * @param \ReflectionParameter $parameter
-     * @param string|null $name
-     * @return object[]
+     * @template T
+     *
+     * @param \ReflectionParameter $parameter The reflection instance of the
+     *      parameter from which the parameter annotations should be read.
+     * @param class-string<T>|null $name The class name of the annotation
+     *      and/or attribute.
+     *
+     * @return iterable<T> A list of parameter annotations and/or attributes.
      */
     public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable;
 
     /**
-     * @template T of object
-     * @psalm-param class-string<T> $name
-     * @psalm-return T
+     * Gets the attribute or annotation applied to a function's parameter.
      *
-     * @param \ReflectionParameter $parameter
-     * @param string $name
-     * @return object|null
+     * @template T
+     *
+     * @param \ReflectionParameter $parameter The reflection instance of the
+     *      parameter from which the parameter annotations should be read.
+     * @param class-string<T> $name The class name of the annotation and/or
+     *      attribute.
+     *
+     * @return T|null The annotation/attribute or {@see null}, if the requested
+     *      annotation does not exist.
      */
     public function firstParameterMetadata(\ReflectionParameter $parameter, string $name): ?object;
 }
