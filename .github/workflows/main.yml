@@ -164,14 +164,14 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --ignore-platform-req=php
+          command: composer update --prefer-dist --no-interaction --no-progress --ignore-platform-req=php
       - name: Upgrade Testing Framework (PHP 8.x compatibility)
         if: ${{ matrix.php == '8.0' }}
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update phpunit/phpunit:^9.4 --with-dependencies --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
+          command: composer update phpunit/phpunit:^9.4 --with-all-dependencies --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
 
 
       # Install GO Dependencies
