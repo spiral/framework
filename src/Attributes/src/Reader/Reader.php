@@ -53,4 +53,30 @@ abstract class Reader implements ReaderInterface
 
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function firstConstantMetadata(\ReflectionClassConstant $constant, string $name): ?object
+    {
+        /** @noinspection LoopWhichDoesNotLoopInspection */
+        foreach ($this->getConstantMetadata($constant, $name) as $attribute) {
+            return $attribute;
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function firstParameterMetadata(\ReflectionParameter $parameter, string $name): ?object
+    {
+        /** @noinspection LoopWhichDoesNotLoopInspection */
+        foreach ($this->getConstantMetadata($parameter, $name) as $attribute) {
+            return $attribute;
+        }
+
+        return null;
+    }
 }

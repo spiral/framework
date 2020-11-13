@@ -68,6 +68,22 @@ final class DoctrineReader extends BaseReader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
+    {
+        return [];
+    }
+
+    /**
      * @return bool
      */
     protected function isAvailable(): bool

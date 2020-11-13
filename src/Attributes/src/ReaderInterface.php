@@ -78,4 +78,48 @@ interface ReaderInterface
      * @return object|null
      */
     public function firstPropertyMetadata(\ReflectionProperty $property, string $name): ?object;
+
+    /**
+     * @template T of object
+     * @psalm-param class-string<T>|null $name
+     * @psalm-return iterable<T>
+     *
+     * @param \ReflectionClassConstant $constant
+     * @param string|null $name
+     * @return object[]
+     */
+    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable;
+
+    /**
+     * @template T of object
+     * @psalm-param class-string<T> $name
+     * @psalm-return T
+     *
+     * @param \ReflectionClassConstant $constant
+     * @param string $name
+     * @return object|null
+     */
+    public function firstConstantMetadata(\ReflectionClassConstant $constant, string $name): ?object;
+
+    /**
+     * @template T of object
+     * @psalm-param class-string<T>|null $name
+     * @psalm-return iterable<T>
+     *
+     * @param \ReflectionParameter $parameter
+     * @param string|null $name
+     * @return object[]
+     */
+    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable;
+
+    /**
+     * @template T of object
+     * @psalm-param class-string<T> $name
+     * @psalm-return T
+     *
+     * @param \ReflectionParameter $parameter
+     * @param string $name
+     * @return object|null
+     */
+    public function firstParameterMetadata(\ReflectionParameter $parameter, string $name): ?object;
 }

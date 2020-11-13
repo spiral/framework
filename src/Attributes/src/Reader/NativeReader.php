@@ -72,6 +72,35 @@ final class NativeReader extends Reader
     }
 
     /**
+     * {@inheritDoc}
+     * @throws \ReflectionException
+     */
+    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
+    {
+        /** @psalm-suppress UndefinedClass */
+        $result = $constant->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
+
+        foreach ($result as $attribute) {
+            yield $this->instance($attribute);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws \ReflectionException
+     */
+    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
+    {
+        /** @psalm-suppress UndefinedClass */
+        $result = $parameter->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
+
+        foreach ($result as $attribute) {
+            yield $this->instance($attribute);
+        }
+    }
+
+
+    /**
      * @return bool
      */
     protected function isAvailable(): bool

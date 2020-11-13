@@ -59,6 +59,27 @@ abstract class Composite extends Reader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getConstantMetadata(\ReflectionClassConstant $constant, string $name = null): iterable
+    {
+        return $this->each(static function (ReaderInterface $reader) use ($constant, $name): iterable {
+            return $reader->getConstantMetadata($constant, $name);
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
+    {
+        return $this->each(static function (ReaderInterface $reader) use ($parameter, $name): iterable {
+            return $reader->getParameterMetadata($parameter, $name);
+        });
+    }
+
+
+    /**
      * @psalm-param callable(ReaderInterface): list<array-key, object> $resolver
      *
      * @param callable $resolver
