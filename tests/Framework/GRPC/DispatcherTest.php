@@ -65,6 +65,11 @@ class DispatcherTest extends ConsoleTest
         $this->assertTrue($this->app->get(GRPCDispatcher::class)->canServe());
     }
 
+    /**
+     * WARNING: spiral/php-grpc not compatible with PHP 8.0
+     *
+     * @requires PHP <= 7.4
+     */
     public function testServe(): void
     {
         $w = m::mock(Worker::class);
