@@ -40,22 +40,22 @@ interface ReaderInterface
      * @psalm-param class-string<T>|null $name
      * @psalm-return iterable<T>
      *
-     * @param \ReflectionMethod $method
+     * @param \ReflectionFunctionAbstract $function
      * @param string|null $name
      * @return object[]
      */
-    public function getMethodMetadata(\ReflectionMethod $method, string $name = null): iterable;
+    public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable;
 
     /**
      * @template T of object
      * @psalm-param class-string<T> $name
      * @psalm-return T
      *
-     * @param \ReflectionMethod $method
+     * @param \ReflectionFunctionAbstract $function
      * @param string $name
      * @return object|null
      */
-    public function firstMethodMetadata(\ReflectionMethod $method, string $name): ?object;
+    public function firstFunctionMetadata(\ReflectionFunctionAbstract $function, string $name): ?object;
 
     /**
      * @template T of object

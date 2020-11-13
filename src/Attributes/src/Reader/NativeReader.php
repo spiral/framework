@@ -47,10 +47,10 @@ class NativeReader extends Reader
      * {@inheritDoc}
      * @throws \ReflectionException
      */
-    public function getMethodMetadata(\ReflectionMethod $method, string $name = null): iterable
+    public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
     {
         /** @psalm-suppress UndefinedClass */
-        $result = $method->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
+        $result = $function->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF);
 
         foreach ($result as $attribute) {
             yield $this->instance($attribute);

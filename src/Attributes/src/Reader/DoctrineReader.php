@@ -46,11 +46,15 @@ class DoctrineReader extends BaseReader
     /**
      * {@inheritDoc}
      */
-    public function getMethodMetadata(\ReflectionMethod $method, string $name = null): iterable
+    public function getFunctionMetadata(\ReflectionFunctionAbstract $function, string $name = null): iterable
     {
-        $result = $this->reader->getMethodAnnotations($method);
+        if ($function instanceof \ReflectionMethod) {
+            $result = $this->reader->getMethodAnnotations($function);
 
-        return $this->filter($name, $result);
+            return $this->filter($name, $result);
+        }
+
+        return [];
     }
 
     /**

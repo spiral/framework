@@ -31,10 +31,10 @@ abstract class Reader implements ReaderInterface
     /**
      * {@inheritDoc}
      */
-    public function firstMethodMetadata(\ReflectionMethod $method, string $name): ?object
+    public function firstFunctionMetadata(\ReflectionFunctionAbstract $function, string $name): ?object
     {
         /** @noinspection LoopWhichDoesNotLoopInspection */
-        foreach ($this->getMethodMetadata($method, $name) as $attribute) {
+        foreach ($this->getFunctionMetadata($function, $name) as $attribute) {
             return $attribute;
         }
 
