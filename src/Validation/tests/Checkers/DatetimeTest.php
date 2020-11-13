@@ -330,9 +330,11 @@ class DatetimeTest extends TestCase
             //the "now" date can differ in ms
             [false, 'now', 'now', false, false],
             [true, 'now', 'now - 1 second', false, false],
-            [false, 'now', 'now', false, true], //the threshold date comes a little bit later (in ms)
-            [true, 'now', 'now', true, false],
-            [false, 'now', 'now', true, true], //the threshold date comes a little bit later (in ms)
+
+            // DO NOT COUNT ON RUNTIME IN TESTS!!!!
+            // [false, 'now', 'now', false, true], //the threshold date comes a little bit later (in ms)
+            // [true, 'now', 'now', true, false],
+            // [false, 'now', 'now', true, true], //the threshold date comes a little bit later (in ms)
 
             [false, time() - 10, 'now', false, false],
             [false, '', 'now', false, false],
