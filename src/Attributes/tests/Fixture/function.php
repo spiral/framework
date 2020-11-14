@@ -12,12 +12,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Attributes\Fixture;
 
 use Spiral\Tests\Attributes\Fixture\Annotation\FunctionAnnotation;
-use Spiral\Tests\Attributes\Fixture\Annotation\ParameterAnnotation;
+use Spiral\Tests\Attributes\Fixture\Annotation\FunctionParameterAnnotation;
 
 /** @FunctionAnnotation(field="value") */
 #[FunctionAnnotation(field: 'value')]
 function annotated_function(
-    #[ParameterAnnotation(field: 'value')]
+    #[FunctionParameterAnnotation(field: 'value')]
     string $parameter
 )
 {

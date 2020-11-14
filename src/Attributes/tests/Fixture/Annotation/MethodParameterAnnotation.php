@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Attributes\Fixture\Annotation;
 
 /** @Annotation */
-#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
-class ConstantAnnotation extends Annotation
+#[\Attribute(\Attribute::TARGET_PARAMETER)]
+class MethodParameterAnnotation extends Annotation
 {
 }

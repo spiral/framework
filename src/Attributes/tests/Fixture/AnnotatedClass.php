@@ -14,7 +14,7 @@ namespace Spiral\Tests\Attributes\Fixture;
 use Spiral\Tests\Attributes\Fixture\Annotation\ClassAnnotation;
 use Spiral\Tests\Attributes\Fixture\Annotation\ConstantAnnotation;
 use Spiral\Tests\Attributes\Fixture\Annotation\MethodAnnotation;
-use Spiral\Tests\Attributes\Fixture\Annotation\ParameterAnnotation;
+use Spiral\Tests\Attributes\Fixture\Annotation\MethodParameterAnnotation;
 use Spiral\Tests\Attributes\Fixture\Annotation\PropertyAnnotation;
 
 /** @ClassAnnotation(field="value") */
@@ -32,7 +32,7 @@ class AnnotatedClass
     /** @MethodAnnotation(field="value") */
     #[MethodAnnotation(field: 'value')]
     public function method(
-        #[ParameterAnnotation(field: 'value')]
+        #[MethodParameterAnnotation(field: 'value')]
         string $parameter
     ): void
     {

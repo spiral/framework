@@ -16,8 +16,9 @@ use Spiral\Tests\Attributes\Fixture\AnnotatedClass;
 use Spiral\Tests\Attributes\Fixture\Annotation\ClassAnnotation;
 use Spiral\Tests\Attributes\Fixture\Annotation\ConstantAnnotation;
 use Spiral\Tests\Attributes\Fixture\Annotation\FunctionAnnotation;
+use Spiral\Tests\Attributes\Fixture\Annotation\FunctionParameterAnnotation;
 use Spiral\Tests\Attributes\Fixture\Annotation\MethodAnnotation;
-use Spiral\Tests\Attributes\Fixture\Annotation\ParameterAnnotation;
+use Spiral\Tests\Attributes\Fixture\Annotation\MethodParameterAnnotation;
 use Spiral\Tests\Attributes\Fixture\Annotation\PropertyAnnotation;
 use Spiral\Tests\Attributes\TestCase;
 
@@ -157,7 +158,7 @@ abstract class ReaderTestCase extends TestCase
 
     public function testMethodParameterMetadataObjects(): void
     {
-        $expected = $this->newAnnotation(ParameterAnnotation::class, [
+        $expected = $this->newAnnotation(MethodParameterAnnotation::class, [
             'field' => 'value'
         ]);
 
@@ -207,7 +208,7 @@ abstract class ReaderTestCase extends TestCase
 
     public function testFunctionParameterMetadataObjects(): void
     {
-        $expected = $this->newAnnotation(ParameterAnnotation::class, [
+        $expected = $this->newAnnotation(FunctionParameterAnnotation::class, [
             'field' => 'value'
         ]);
 

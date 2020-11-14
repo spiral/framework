@@ -11,11 +11,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Fixture\Annotation;
 
-/**
- * @Annotation
- * @Target({ "PARAMETER" })
- */
+/** @Annotation */
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
-class ParameterAnnotation extends Annotation
+class FunctionParameterAnnotation extends Annotation
 {
 }
