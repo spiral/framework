@@ -9,14 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Attributes\Fixture\Doctrine;
-
-use Spiral\Tests\Attributes\Fixture\ClassAnnotation;
+namespace Spiral\Tests\Attributes\Fixture\Annotation;
 
 /**
  * @Annotation
- * @Target({ "CLASS" })
+ * @Target({ "FUNCTION" })
  */
-class DoctrineClassAnnotation extends ClassAnnotation
+#[\Attribute(\Attribute::TARGET_FUNCTION)]
+class FunctionAnnotation extends Annotation
 {
 }

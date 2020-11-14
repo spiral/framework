@@ -9,11 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Attributes\Fixture\Native;
+namespace Spiral\Tests\Attributes\Fixture\Annotation;
 
-use Spiral\Tests\Attributes\Fixture\ClassAnnotation;
-
-#[\Attribute(\Attribute::TARGET_CLASS)]
-class NativeClassAnnotation extends ClassAnnotation
+/**
+ * @Annotation
+ * @Target({ "CONSTANT" })
+ */
+#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
+class ConstantAnnotation extends Annotation
 {
 }

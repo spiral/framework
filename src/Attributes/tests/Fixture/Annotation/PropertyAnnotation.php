@@ -9,10 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Attributes\Fixture\Native;
+namespace Spiral\Tests\Attributes\Fixture\Annotation;
 
-#[NativeClassAnnotation]
-#[NativeClassAnnotation(field: 'value')]
-class NativeClass
+/**
+ * @Annotation
+ * @Target({ "PROPERTY" })
+ */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
+class PropertyAnnotation extends Annotation
 {
 }

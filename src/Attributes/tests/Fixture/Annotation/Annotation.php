@@ -9,12 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Attributes\Fixture\Doctrine;
+namespace Spiral\Tests\Attributes\Fixture\Annotation;
 
-/**
- * @DoctrineClassAnnotation
- * @DoctrineClassAnnotation(field="value")
- */
-class DoctrineClass
+abstract class Annotation
 {
+    /** @var string */
+    public $field = '';
 }

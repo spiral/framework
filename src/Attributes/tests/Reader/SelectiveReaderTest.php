@@ -11,16 +11,21 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Reader;
 
+use Spiral\Attributes\Reader\DoctrineReader;
 use Spiral\Attributes\Reader\NativeReader;
+use Spiral\Attributes\Reader\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
  * @requires PHP >= 8.0
  */
-class NativeReaderTest extends ReaderTestCase
+class SelectiveReaderTest extends ReaderTestCase
 {
     protected function getReader(): ReaderInterface
     {
-        return new NativeReader();
+        return new SelectiveReader([
+            new NativeReader(),
+            new DoctrineReader()
+        ]);
     }
 }

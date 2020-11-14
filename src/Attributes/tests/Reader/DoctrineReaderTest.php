@@ -13,23 +13,23 @@ namespace Spiral\Tests\Attributes\Reader;
 
 use Spiral\Attributes\Reader\DoctrineReader;
 use Spiral\Attributes\ReaderInterface;
-use Spiral\Tests\Attributes\Fixture\Doctrine\DoctrineClass;
-use Spiral\Tests\Attributes\Fixture\Doctrine\DoctrineClassAnnotation;
 
-class DoctrineReaderTest extends ReaderImplementationTest
+/**
+ * Doctrine reader does not support:
+ *  - function annotations
+ *  - function parameter annotations
+ *  - constant annotations
+ *  - method parameter annotations
+ */
+class DoctrineReaderTest extends ReaderTestCase
 {
-    protected function create(): ReaderInterface
+    protected $functionMetadataCount = 0;
+    protected $functionParameterMetadataCount = 0;
+    protected $constantMetadataCount = 0;
+    protected $methodParameterMetadataCount = 0;
+
+    protected function getReader(): ReaderInterface
     {
         return new DoctrineReader();
-    }
-
-    protected function getClassMetadata(): string
-    {
-        return DoctrineClassAnnotation::class;
-    }
-
-    protected function getImplementationClass(): string
-    {
-        return DoctrineClass::class;
     }
 }
