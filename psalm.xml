@@ -14,10 +14,11 @@
     addParamDefaultToDocblockType="true"
 >
     <projectFiles>
-        <directory name="src" />
+        <directory name="src/*/src" />
+        <directory name="src/Framework" />
+
         <ignoreFiles>
             <directory name="vendor" />
-            <directory name="src/*/tests" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
