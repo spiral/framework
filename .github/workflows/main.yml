@@ -55,6 +55,54 @@ jobs:
       - name: Security Advisories
         run: composer require --dev roave/security-advisories:dev-latest
 
+  static-analysis:
+    name: Psalm
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [7.4] # Note: This workflow requires only the LATEST version of PHP
+        os: [ubuntu-latest]
+
+    steps:
+      # General Steps
+      - name: Set Git To Use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Install PHP Dependencies
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+      - name: Validate Composer
+        run: composer validate
+      - name: Get Composer Cache Directory
+        # Docs: <https://github.com/actions/cache/blob/master/examples.md#php---composer>
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Restore Composer Cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
+      - name: Install Dependencies
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --prefer-dist --no-interaction --no-progress
+
+      # Execution
+      - name: Static Analysis
+        run: vendor/bin/psalm --show-info=true
+
+
   coding-standards:
     name: Coding Standards
     runs-on: ${{ matrix.os }}

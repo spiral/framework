@@ -121,7 +121,8 @@
         "spiral/php-grpc": "^1.4",
         "spiral/roadrunner": "^1.8",
         "spiral/stempler-bridge": "^1.4",
-        "symplify/monorepo-builder": "^8.3"
+        "symplify/monorepo-builder": "^8.3",
+        "vimeo/psalm": "^4.0"
     },
     "autoload-dev": {
         "psr-4": {
