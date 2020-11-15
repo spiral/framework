@@ -62,7 +62,7 @@ final class ExceptionMapper
                 'class'    => StemplerEngine::class,
                 'type'     => '->',
                 'function' => 'render',
-                'args'     => [$data]
+                'args'     => [$data],
             ];
 
             if ($stack['file'] === $filename) {

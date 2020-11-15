@@ -36,11 +36,11 @@ use Spiral\Views\ProcessorInterface;
 final class StemplerBootloader extends Bootloader implements SingletonInterface
 {
     protected const DEPENDENCIES = [
-        ViewsBootloader::class
+        ViewsBootloader::class,
     ];
 
     protected const SINGLETONS = [
-        StemplerEngine::class => [self::class, 'stemplerEngine']
+        StemplerEngine::class => [self::class, 'stemplerEngine'],
     ];
 
     /** @var ConfiguratorInterface */
@@ -69,10 +69,10 @@ final class StemplerBootloader extends Bootloader implements SingletonInterface
                     Directive\LoopDirective::class,
                     Directive\JsonDirective::class,
                     Directive\ConditionalDirective::class,
-                    Directive\ContainerDirective::class
+                    Directive\ContainerDirective::class,
                 ],
                 'processors' => [
-                    Processor\ContextProcessor::class
+                    Processor\ContextProcessor::class,
                 ],
                 'visitors'   => [
                     Builder::STAGE_PREPARE   => [
@@ -88,8 +88,8 @@ final class StemplerBootloader extends Bootloader implements SingletonInterface
                         Finalizer\StackCollector::class,
                     ],
                     Builder::STAGE_COMPILE   => [
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 

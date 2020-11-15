@@ -34,7 +34,7 @@ final class GridBootloader extends Bootloader
         GridInterface::class         => Grid::class,
         GridFactory::class           => GridFactory::class,
         Compiler::class              => [self::class, 'compiler'],
-        GridResponseInterface::class => GridResponse::class
+        GridResponseInterface::class => GridResponse::class,
     ];
 
     /** @var ConfiguratorInterface */
@@ -54,7 +54,7 @@ final class GridBootloader extends Bootloader
     public function boot(): void
     {
         $this->config->setDefaults(GridConfig::CONFIG, [
-            'writers' => [QueryWriter::class, BetweenWriter::class]
+            'writers' => [QueryWriter::class, BetweenWriter::class],
         ]);
     }
 

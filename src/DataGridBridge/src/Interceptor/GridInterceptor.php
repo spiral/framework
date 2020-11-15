@@ -124,7 +124,7 @@ final class GridInterceptor implements CoreInterceptorInterface
             'grid'     => $this->container->get($dataGrid->grid),
             'view'     => $dataGrid->view,
             'options'  => $dataGrid->options,
-            'defaults' => $dataGrid->defaults
+            'defaults' => $dataGrid->defaults,
         ];
 
         if (is_string($schema['view'])) {

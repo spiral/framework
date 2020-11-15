@@ -48,13 +48,13 @@ final class GridResponse implements \JsonSerializable, GridResponseInterface
         if ($this->grid === null) {
             return [
                 'status' => 500,
-                'error'  => 'missing-grid-source'
+                'error'  => 'missing-grid-source',
             ];
         }
 
         $response = [
             'status'                          => $this->option('status', 200),
-            $this->option('property', 'data') => $this->data
+            $this->option('property', 'data') => $this->data,
         ];
 
         if ($this->grid->getOption(GridInterface::PAGINATOR) !== null) {
