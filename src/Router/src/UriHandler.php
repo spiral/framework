@@ -72,8 +72,8 @@ final class UriHandler
     private $options = [];
 
     /**
-     * @param UriFactoryInterface $uriFactory
-     * @param SlugifyInterface    $slugify
+     * @param UriFactoryInterface   $uriFactory
+     * @param SlugifyInterface|null $slugify
      */
     public function __construct(
         UriFactoryInterface $uriFactory,
@@ -200,7 +200,7 @@ final class UriHandler
             $this->fetchOptions($parameters, $query)
         );
 
-        foreach ($this->constrains as $key => $values) {
+        foreach ($this->constrains as $key => $_) {
             if (empty($parameters[$key])) {
                 throw new UriHandlerException("Unable to generate Uri, parameter `{$key}` is missing");
             }

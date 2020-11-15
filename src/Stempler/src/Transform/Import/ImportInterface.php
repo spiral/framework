@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Spiral\Stempler\Transform\Import;
 
 use Spiral\Stempler\Builder;
-use Spiral\Stempler\Exception\StemplerException;
 use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Parser\Context;
 
@@ -30,8 +29,6 @@ interface ImportInterface
      * @param Builder $builder
      * @param string  $name
      * @return Template|null
-     *
-     * @throws StemplerException
      */
     public function resolve(Builder $builder, string $name): ?Template;
 }

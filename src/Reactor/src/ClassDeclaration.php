@@ -355,7 +355,7 @@ class ClassDeclaration extends AbstractDeclaration implements ReplaceableInterfa
     private function renderTraits(int $indentLevel = 0): string
     {
         $lines = [];
-        foreach ($this->traits as $class => $options) {
+        foreach ($this->traits as $class => $_) {
             $lines[] = $this->addIndent("use {$class};", $indentLevel);
         }
 

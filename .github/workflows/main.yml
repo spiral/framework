@@ -100,7 +100,7 @@ jobs:
 
       # Execution
       - name: Static Analysis
-        run: vendor/bin/psalm --show-info=true
+        run: vendor/bin/psalm
 
 
   coding-standards:

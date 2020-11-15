@@ -103,10 +103,12 @@ final class Container implements
             $name = $parameter->getName();
             $class = null;
 
-            //
-            // Container do not currently support union types. In the future, we
-            // can provide the possibility of autowiring based on priorities (TBD).
-            //
+            /**
+             * Container do not currently support union types. In the future, we
+             * can provide the possibility of autowiring based on priorities (TBD).
+             *
+             * @psalm-suppress UndefinedClass
+             */
             if ($type instanceof \ReflectionUnionType) {
                 $error = 'Parameter $%s in %s contains a union type hint that cannot be inferred unambiguously';
                 $error = \sprintf($error, $reflection->getName(), $this->getLocationString($reflection));
@@ -129,10 +131,10 @@ final class Container implements
 
             if (isset($parameters[$name]) && is_object($parameters[$name])) {
                 if ($parameters[$name] instanceof Autowire) {
-                    //Supplied by user as late dependency
+                    // Supplied by user as late dependency
                     $arguments[] = $parameters[$name]->resolve($this);
                 } else {
-                    //Supplied by user as object
+                    // Supplied by user as object
                     $arguments[] = $parameters[$name];
                 }
                 continue;
@@ -140,9 +142,9 @@ final class Container implements
 
             // no declared type or scalar type or array
             if (!isset($class)) {
-                //Provided from outside
+                // Provided from outside
                 if (\array_key_exists($name, $parameters)) {
-                    //Make sure it's properly typed
+                    // Make sure it's properly typed
                     $this->assertType($parameter, $reflection, $parameters[$name]);
                     $arguments[] = $parameters[$name];
                     continue;
@@ -617,7 +619,7 @@ final class Container implements
             }
         }
 
-        //Your code can go here (for example LoggerAwareInterface, custom hydration and etc)
+        // Your code can go here (for example LoggerAwareInterface, custom hydration and etc)
         return $instance;
     }
 
@@ -628,17 +630,13 @@ final class Container implements
      * @param string|null $context
      * @return mixed|null|object
      *
-     * @throws ContainerExceptionInterface
+     * @throws ContainerException
      * @throws \Throwable
      */
-    private function evaluateBinding(
-        string $alias,
-        $target,
-        array $parameters,
-        string $context = null
-    ) {
+    private function evaluateBinding(string $alias, $target, array $parameters, string $context = null)
+    {
         if (\is_string($target)) {
-            //Reference
+            // Reference
             return $this->make($target, $parameters, $context);
         }
 
@@ -653,17 +651,17 @@ final class Container implements
                 throw new ContainerException($e->getMessage(), $e->getCode(), $e);
             }
 
-            //Invoking Closure with resolved arguments
+            // Invoking Closure with resolved arguments
             return $reflection->invokeArgs(
                 $this->resolveArguments($reflection, $parameters)
             );
         }
 
         if (is_array($target) && isset($target[1])) {
-            //In a form of resolver and method
+            // In a form of resolver and method
             [$resolver, $method] = $target;
 
-            //Resolver instance (i.e. [ClassName::class, 'method'])
+            // Resolver instance (i.e. [ClassName::class, 'method'])
             $resolver = $this->get($resolver);
 
             try {
@@ -674,7 +672,7 @@ final class Container implements
 
             $method->setAccessible(true);
 
-            //Invoking factory method with resolved arguments
+            // Invoking factory method with resolved arguments
             return $method->invokeArgs(
                 $resolver,
                 $this->resolveArguments($method, $parameters)

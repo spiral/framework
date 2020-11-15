@@ -81,6 +81,7 @@ final class StringChecker extends AbstractChecker implements SingletonInterface
     /**
      * Check if string length are fits in specified range.
      *
+     * @psalm-suppress UndefinedVariable
      * @param mixed $value
      * @param int   $min
      * @param int   $max

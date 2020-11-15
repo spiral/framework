@@ -13,6 +13,7 @@ namespace Spiral\Core\Container;
 
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Exception\Container\AutowireException;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
 
 /**
@@ -88,7 +89,7 @@ final class Autowire
      * @return mixed
      *
      * @throws AutowireException  No entry was found for this identifier.
-     * @throws ContainerExceptionInterface Error while retrieving the entry.
+     * @throws ContainerException Error while retrieving the entry.
      */
     public function resolve(FactoryInterface $factory, array $parameters = [])
     {

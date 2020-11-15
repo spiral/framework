@@ -52,7 +52,7 @@ final class IsolatePHPBlocks implements VisitorInterface
         }
 
         $exists = new PHPMixin($node->tokens, self::PHP_MARCO_EXISTS_FUNCTION);
-        foreach ($exists->getBlocks() as $name => $block) {
+        foreach ($exists->getBlocks() as $name => $_) {
             // do not leak to parent template
             $exists->set($name, 'false');
         }

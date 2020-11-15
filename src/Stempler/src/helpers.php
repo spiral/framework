@@ -13,6 +13,8 @@ if (!function_exists('inject')) {
     /**
      * Macro function to be replaced by the injected value.
      *
+     * @psalm-suppress UnusedVariable
+     * @psalm-suppress UnusedParam
      * @param  string  $name
      * @param  mixed  $default
      * @return mixed
@@ -27,6 +29,7 @@ if (!function_exists('injected')) {
     /**
      * Return true if block value has been defined.
      *
+     * @psalm-suppress UnusedParam
      * @param  string  $name
      * @return mixed
      */

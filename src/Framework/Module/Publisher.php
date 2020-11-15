@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Module;
 
-use Spiral\Boot\DirectoriesInterface;
 use Spiral\Files\FilesInterface;
 use Spiral\Module\Exception\PublishException;
 use Symfony\Component\Finder\Finder;
@@ -23,7 +22,7 @@ use Symfony\Component\Finder\SplFileInfo;
 final class Publisher implements PublisherInterface
 {
     /** @var FilesInterface */
-    private $files = null;
+    private $files;
 
     /**
      * @param FilesInterface       $files
@@ -47,12 +46,12 @@ final class Publisher implements PublisherInterface
         }
 
         if ($this->files->exists($destination)) {
-            if ($this->files->md5($destination) == $this->files->md5($filename)) {
+            if ($this->files->md5($destination) === $this->files->md5($filename)) {
                 //Nothing to do
                 return;
             }
 
-            if ($mergeMode == self::FOLLOW) {
+            if ($mergeMode === self::FOLLOW) {
                 return;
             }
         }
@@ -81,9 +80,6 @@ final class Publisher implements PublisherInterface
         $finder = new Finder();
         $finder->files()->in($directory);
 
-        /**
-         * @var SplFileInfo $file
-         */
         foreach ($finder->getIterator() as $file) {
             $this->publish(
                 (string)$file,
