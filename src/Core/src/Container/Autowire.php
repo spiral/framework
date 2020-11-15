@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Container;
 
-use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
