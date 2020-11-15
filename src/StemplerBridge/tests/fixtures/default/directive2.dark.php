@@ -1,1 +1,1 @@
-@inject($test['a'], Spiral\Stempler\Tests\TestInjection::class){{ $test['a']->name }}
+@inject($test['a'], Spiral\Tests\Stempler\TestInjection::class){{ $test['a']->name }}

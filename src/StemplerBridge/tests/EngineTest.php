@@ -63,7 +63,7 @@ class EngineTest extends BaseTest
             $t = $e->getUserTrace()[0];
 
             $this->assertSame(2, $t['line']);
-            $this->assertContains('echo.dark.php', $t['file']);
+            $this->assertStringContainsString('echo.dark.php', $t['file']);
         }
     }
 
@@ -78,10 +78,10 @@ class EngineTest extends BaseTest
             $this->assertCount(2, $t);
 
             $this->assertSame(2, $t[0]['line']);
-            $this->assertContains('echo.dark.php', $t[0]['file']);
+            $this->assertStringContainsString('echo.dark.php', $t[0]['file']);
 
             $this->assertSame(3, $t[1]['line']);
-            $this->assertContains('echo-in.dark.php', $t[1]['file']);
+            $this->assertStringContainsString('echo-in.dark.php', $t[1]['file']);
         }
     }
 
@@ -92,7 +92,7 @@ class EngineTest extends BaseTest
         try {
             $twig->get('other:bad', new ViewContext());
         } catch (CompileException $e) {
-            $this->assertContains('bad.dark.php', $e->getFile());
+            $this->assertStringContainsString('bad.dark.php', $e->getFile());
         }
     }
 }

@@ -35,11 +35,11 @@ class CacheTest extends BaseTest
 
     public function testCache(): void
     {
-        $this->assertCount(0, $this->files->getFiles(__DIR__ . '/../cache/', '*.php'));
+        $this->assertCount(0, $this->files->getFiles(__DIR__ . '/cache/', '*.php'));
 
         $s = $this->getStempler();
         $this->assertSame('test', $s->get('test', new ViewContext())->render([]));
-        $this->assertCount(2, $this->files->getFiles(__DIR__ . '/../cache/', '*.php'));
+        $this->assertCount(2, $this->files->getFiles(__DIR__ . '/cache/', '*.php'));
 
         $s->reset('test', new ViewContext());
         $this->assertCount(0, $this->files->getFiles(__DIR__ . '/../cache/', '*.php'));

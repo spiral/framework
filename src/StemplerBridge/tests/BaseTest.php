@@ -49,8 +49,8 @@ abstract class BaseTest extends TestCase
             DirectoriesInterface::class,
             new Directories(
                 [
-                    'app'   => __DIR__ . '/../fixtures',
-                    'cache' => __DIR__ . '/../cache'
+                    'app'   => __DIR__ . '/fixtures',
+                    'cache' => __DIR__ . '/cache'
                 ]
             )
         );
@@ -59,7 +59,7 @@ abstract class BaseTest extends TestCase
         $this->container->bind(
             ConfiguratorInterface::class,
             new ConfigManager(
-                new DirectoryLoader(__DIR__ . '/../config/', $this->container),
+                new DirectoryLoader(__DIR__ . '/config/', $this->container),
                 true
             )
         );
