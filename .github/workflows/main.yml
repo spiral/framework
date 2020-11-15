@@ -148,7 +148,7 @@ jobs:
 
       # Execution
       - name: Check Coding Standards
-        run: composer phpcs
+        run: vendor/bin/phpcs --standard=phpcs.xml
 
   #
   # Execute unit tests on all valid PHP versions.

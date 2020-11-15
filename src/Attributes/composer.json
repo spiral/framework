@@ -10,15 +10,15 @@
     },
     "authors": [
         {
-            "name": "Kirill Nesmeyanov",
-            "email": "nesk@xakep.ru"
+            "name": "Kirill Nesmeyanov (SerafimArts)",
+            "email": "kirill.nesmeyanov@spiralscout.com"
         }
     ],
     "require": {
         "php": ">=7.2"
     },
     "require-dev": {
-        "doctrine/annotations": "^1.7",
+        "doctrine/annotations": "^1.10",
         "phpunit/phpunit": "^8.5|^9.0"
     },
     "autoload": {
