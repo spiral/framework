@@ -58,7 +58,7 @@ class Manager implements ManagerInterface
     /**
      * @var array<positive-int, ReaderInterface>
      */
-    private $readers;
+    private $readers = [];
 
     /**
      * @var string
