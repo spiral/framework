@@ -32,7 +32,7 @@ class Manager implements ManagerInterface
     /**
      * @var string
      */
-    private const ERROR_DRIVER_NOT_AVAILABLE = 'There are no metadata readers available';
+    private const ERROR_DRIVER_NOT_AVAILABLE = 'No metadata readers available';
 
     /**
      * @var array<positive-int, class-string<ReaderInterface>>
@@ -158,7 +158,7 @@ class Manager implements ManagerInterface
     private function registerCompositeReaders(iterable $readers, array $registered): void
     {
         if (\count($registered) !== 0) {
-            $this->registerReaders($readers, $registered);
+            $this->registerReaders($readers, [$registered]);
         }
     }
 
@@ -169,6 +169,8 @@ class Manager implements ManagerInterface
      */
     private function registerReaders(iterable $readers, array $arguments = []): iterable
     {
+        $errors = [];
+
         foreach ($readers as $reader) {
             try {
                 if (isset($this->readers[$reader])) {
@@ -177,8 +179,10 @@ class Manager implements ManagerInterface
 
                 $this->readers[$reader] = new $reader(...\array_values($arguments));
             } catch (InitializationException $e) {
-                yield $reader => $e->getMessage();
+                $errors[$reader] = $e->getMessage();
             }
         }
+
+        return $errors;
     }
 }
