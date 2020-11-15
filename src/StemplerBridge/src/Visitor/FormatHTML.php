@@ -111,8 +111,6 @@ final class FormatHTML implements VisitorInterface
 
         $result = '';
         foreach ($lines as $i => $line) {
-            $type = null;
-
             if (trim($line) !== '') {
                 if ($i === 0) {
                     $line = rtrim($line);

@@ -13,7 +13,6 @@ if (!function_exists('inject')) {
     /**
      * Macro function to be replaced by the injected value.
      *
-     * @psalm-suppress UnusedVariable
      * @psalm-suppress UnusedParam
      * @param  string  $name
      * @param  mixed  $default

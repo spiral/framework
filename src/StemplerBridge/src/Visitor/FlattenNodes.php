@@ -65,7 +65,7 @@ final class FlattenNodes implements VisitorInterface
     private function mergeRaw(array $nodes): array
     {
         $result = [];
-        foreach ($nodes as $i => $node) {
+        foreach ($nodes as $node) {
             if (
                 $node instanceof Raw
                 && isset($result[count($result) - 1])
