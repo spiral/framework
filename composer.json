@@ -24,7 +24,7 @@
         "cocur/slugify": "^3.2",
         "codedungeon/php-cli-colors": "^1.11",
         "defuse/php-encryption": "^2.2",
-        "doctrine/annotations": "^1.7",
+        "doctrine/annotations": "^1.10",
         "doctrine/inflector": "^1.4|^2.0",
         "myclabs/deep-copy": "^1.9",
         "nikic/php-parser": "^4.1",
@@ -68,7 +68,10 @@
                 "src/Hmvc/src"
             ],
             "Spiral\\Csrf\\": "src/Csrf/src",
-            "Spiral\\DataGrid\\": "src/DataGrid/src",
+            "Spiral\\DataGrid\\": [
+                "src/DataGrid/src",
+                "src/DataGridBridge/src"
+            ],
             "Spiral\\Debug\\": [
                 "src/Debug/src",
                 "src/Dumper/src"
@@ -93,7 +96,10 @@
             "Spiral\\SendIt\\": "src/SendIt/src",
             "Spiral\\Session\\": "src/Session/src",
             "Spiral\\Snapshots\\": "src/Snapshots/src",
-            "Spiral\\Stempler\\": "src/Stempler/src",
+            "Spiral\\Stempler\\": [
+                "src/Stempler/src",
+                "src/StemplerBridge/src"
+            ],
             "Spiral\\Streams\\": "src/Streams/src",
             "Spiral\\Tokenizer\\": "src/Tokenizer/src",
             "Spiral\\Translator\\": "src/Translator/src",
@@ -116,6 +122,7 @@
         "spiral/broadcast-ws": "^1.0",
         "spiral/code-style": "^1.0",
         "spiral/database": "^2.7.3",
+        "spiral/framework": "^2.7",
         "spiral/jobs": "^2.2",
         "spiral/migrations": "^2.1",
         "spiral/php-grpc": "^1.4",
@@ -142,7 +149,10 @@
                 "src/Hmvc/tests"
             ],
             "Spiral\\Tests\\Csrf\\": "src/Csrf/tests",
-            "Spiral\\Tests\\DataGrid\\": "src/DataGrid/tests",
+            "Spiral\\Tests\\DataGrid\\": [
+                "src/DataGrid/tests",
+                "src/DataGridBridge/tests"
+            ],
             "Spiral\\Tests\\Debug\\": [
                 "src/Debug/tests",
                 "src/Dumper/tests"
@@ -168,7 +178,10 @@
             "Spiral\\Tests\\SendIt\\": "src/SendIt/tests",
             "Spiral\\Tests\\Session\\": "src/Session/tests",
             "Spiral\\Tests\\Snapshots\\": "src/Snapshots/tests",
-            "Spiral\\Tests\\Stempler\\": "src/Stempler/tests",
+            "Spiral\\Tests\\Stempler\\": [
+                "src/Stempler/tests",
+                "src/StemplerBridge/tests"
+            ],
             "Spiral\\Tests\\Streams\\": "src/Streams/tests",
             "Spiral\\Tests\\Tokenizer\\": "src/Tokenizer/tests",
             "Spiral\\Tests\\Translator\\": "src/Translator/tests",
@@ -189,6 +202,7 @@
         "spiral/core": "*",
         "spiral/csrf": "*",
         "spiral/data-grid": "*",
+        "spiral/data-grid-bridge": "self.version",
         "spiral/debug": "*",
         "spiral/dumper": "*",
         "spiral/encrypter": "*",
@@ -210,6 +224,7 @@
         "spiral/session": "*",
         "spiral/snapshots": "*",
         "spiral/stempler": "*",
+        "spiral/stempler-bridge": "*",
         "spiral/streams": "*",
         "spiral/tokenizer": "*",
         "spiral/translator": "*",
@@ -217,9 +232,15 @@
         "spiral/views": "*"
     },
     "scripts": {
-        "phpunit": "phpunit --testdox",
-        "phpcs": "phpcs --standard=phpcs.xml",
-        "phpcbf": "phpcbf --standard=phpcs.xml"
+        "tests": [
+            "phpunit --testdox",
+            "phpcs --standard=phpcs.xml",
+            "psalm"
+        ],
+        "fixers": [
+            "phpcbf --standard=phpcs.xml",
+            "psalm --alter --dry-run"
+        ]
     },
     "extra": {
         "branch-alias": {
