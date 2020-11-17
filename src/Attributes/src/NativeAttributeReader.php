@@ -14,6 +14,9 @@ namespace Spiral\Attributes;
 use Spiral\Attributes\Exception\InitializationException;
 use Spiral\Attributes\Internal\AttributeReader;
 
+/**
+ * @psalm-suppress UndefinedClass
+ */
 class NativeAttributeReader extends AttributeReader
 {
     /**
