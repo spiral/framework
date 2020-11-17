@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Attributes\Reader;
 
 use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\Composite\SelectiveReader;
-use Spiral\Attributes\NativeAttributeReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
@@ -24,7 +24,7 @@ class SelectiveReaderTest extends ReaderTestCase
     protected function getReader(): ReaderInterface
     {
         return new SelectiveReader([
-            new NativeAttributeReader(),
+            new AttributeReader(),
             new AnnotationReader()
         ]);
     }
