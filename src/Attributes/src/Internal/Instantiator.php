@@ -76,7 +76,7 @@ class Instantiator
             try {
                 $property = $attribute->getProperty($name);
 
-                if (! $property->isPublic()) {
+                if (!$property->isPublic()) {
                     throw $this->propertyNotFound($attribute, $name, $context);
                 }
 
@@ -87,6 +87,36 @@ class Instantiator
         }
 
         return $instance;
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     * @return bool
+     */
+    protected function hasConstructor(\ReflectionClass $class): bool
+    {
+        return $this->getConstructor($class) !== null;
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     * @return \ReflectionMethod|null
+     */
+    protected function getConstructor(\ReflectionClass $class): ?\ReflectionMethod
+    {
+        if ($class->hasMethod(self::CONSTRUCTOR_NAME)) {
+            return $class->getMethod(self::CONSTRUCTOR_NAME);
+        }
+
+        if ($constructor = $this->getTraitConstructors($class)) {
+            return $constructor;
+        }
+
+        if ($parent = $class->getParentClass()) {
+            return $this->getConstructor($parent);
+        }
+
+        return null;
     }
 
     /**
@@ -162,36 +192,6 @@ class Instantiator
         }
 
         return \implode(', ', $names);
-    }
-
-    /**
-     * @param \ReflectionClass $class
-     * @return bool
-     */
-    protected function hasConstructor(\ReflectionClass $class): bool
-    {
-        return $this->getConstructor($class) !== null;
-    }
-
-    /**
-     * @param \ReflectionClass $class
-     * @return \ReflectionMethod|null
-     */
-    protected function getConstructor(\ReflectionClass $class): ?\ReflectionMethod
-    {
-        if ($class->hasMethod(self::CONSTRUCTOR_NAME)) {
-            return $class->getMethod(self::CONSTRUCTOR_NAME);
-        }
-
-        if ($constructor = $this->getTraitConstructors($class)) {
-            return $constructor;
-        }
-
-        if ($parent = $class->getParentClass()) {
-            return $this->getConstructor($parent);
-        }
-
-        return null;
     }
 
     /**
