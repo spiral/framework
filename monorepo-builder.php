@@ -93,7 +93,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'cycle/proxy-factory'       => '^1.2',
             'cycle/schema-builder'      => '^1.1',
             'symplify/monorepo-builder' => '^8.3',
-            'vimeo/psalm'               => '^4.0',
+            'vimeo/psalm'               => '^4.1',
         ],
     ]);
 

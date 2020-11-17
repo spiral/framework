@@ -14,9 +14,6 @@ namespace Spiral\Attributes;
 use Spiral\Attributes\Exception\InitializationException;
 use Spiral\Attributes\Internal\AttributeReader;
 
-/**
- * @psalm-suppress UndefinedClass
- */
 class NativeAttributeReader extends AttributeReader
 {
     /**
@@ -98,7 +95,7 @@ class NativeAttributeReader extends AttributeReader
     }
 
     /**
-     * @param \ReflectionAttribute[] $attributes
+     * @param iterable<\ReflectionAttribute> $attributes
      * @return iterable<\ReflectionClass, array>
      */
     private function format(iterable $attributes): iterable
