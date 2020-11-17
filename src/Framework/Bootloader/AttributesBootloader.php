@@ -11,8 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Bootloader;
 
-use Spiral\Attributes\Manager;
-use Spiral\Attributes\ManagerInterface;
+use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\Container;
 use Spiral\Boot\Bootloader\Bootloader;
@@ -24,11 +23,8 @@ final class AttributesBootloader extends Bootloader
      */
     public function boot(Container $container): void
     {
-        $container->bindSingleton(ManagerInterface::class, Manager::class);
-        $container->bindSingleton(Manager::class, Manager::class);
-
-        $container->bindSingleton(ReaderInterface::class, static function (ManagerInterface $manager) {
-            return $manager->get();
+        $container->bindSingleton(ReaderInterface::class, static function () {
+            return new AttributeReader();
         });
     }
 }
