@@ -22,6 +22,10 @@ use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
+/**
+ * @internal AttributeParser is an internal library class, please do not use it in your code.
+ * @psalm-internal Spiral\Attributes
+ */
 class AttributeParser
 {
     /**

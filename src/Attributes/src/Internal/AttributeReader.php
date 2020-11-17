@@ -13,6 +13,10 @@ namespace Spiral\Attributes\Internal;
 
 use Spiral\Attributes\Reader;
 
+/**
+ * @internal AttributeReader is an internal library class, please do not use it in your code.
+ * @psalm-internal Spiral\Attributes
+ */
 abstract class AttributeReader extends Reader
 {
     /**
