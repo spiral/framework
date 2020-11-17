@@ -35,27 +35,6 @@ class NativeAttributeReader extends AttributeReader
     }
 
     /**
-     * @return void
-     */
-    private function checkAvailability(): void
-    {
-        if (! self::isAvailable()) {
-            throw new InitializationException('Requires the PHP >= 8.0');
-        }
-    }
-
-    /**
-     * @param \ReflectionAttribute[] $attributes
-     * @return iterable<\ReflectionClass, array>
-     */
-    private function format(iterable $attributes): iterable
-    {
-        foreach ($attributes as $attribute) {
-            yield new \ReflectionClass($attribute->getName()) => $attribute->getArguments();
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected function getClassAttributes(\ReflectionClass $class, ?string $name): iterable
@@ -103,5 +82,26 @@ class NativeAttributeReader extends AttributeReader
         return $this->format(
             $param->getAttributes($name, \ReflectionAttribute::IS_INSTANCEOF)
         );
+    }
+
+    /**
+     * @return void
+     */
+    private function checkAvailability(): void
+    {
+        if (!self::isAvailable()) {
+            throw new InitializationException('Requires the PHP >= 8.0');
+        }
+    }
+
+    /**
+     * @param \ReflectionAttribute[] $attributes
+     * @return iterable<\ReflectionClass, array>
+     */
+    private function format(iterable $attributes): iterable
+    {
+        foreach ($attributes as $attribute) {
+            yield new \ReflectionClass($attribute->getName()) => $attribute->getArguments();
+        }
     }
 }

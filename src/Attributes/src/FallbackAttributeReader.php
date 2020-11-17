@@ -96,6 +96,58 @@ final class FallbackAttributeReader extends AttributeReader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable
+    {
+        $class = $property->getDeclaringClass();
+
+        // Can not parse property of internal class
+        if ($class->isInternal()) {
+            return [];
+        }
+
+        $attributes = $this->parseAttributes($class->getFileName(), self::KEY_PROPERTIES);
+
+        return $this->format($attributes[$class->getName()][$property->getName()] ?? []);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable
+    {
+        $class = $const->getDeclaringClass();
+
+        // Can not parse internal classes
+        if ($class->isInternal()) {
+            return [];
+        }
+
+        $attributes = $this->parseAttributes($class->getFileName(), self::KEY_CONSTANTS);
+
+        return $this->format($attributes[$class->getName()][$const->getName()] ?? []);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable
+    {
+        $function = $param->getDeclaringFunction();
+
+        // Can not parse parameter of internal function
+        if ($function->isInternal()) {
+            return [];
+        }
+
+        $attributes = $this->parseAttributes($function->getFileName(), self::KEY_PARAMETERS);
+        $attributes = $this->extractFunctionAttributes($attributes, $function);
+
+        return $this->format($attributes[$param->getName()] ?? []);
+    }
+
+    /**
      * @param array $attributes
      * @param \ReflectionFunctionAbstract $function
      * @return array
@@ -160,58 +212,6 @@ final class FallbackAttributeReader extends AttributeReader
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function getPropertyAttributes(\ReflectionProperty $property, ?string $name): iterable
-    {
-        $class = $property->getDeclaringClass();
-
-        // Can not parse property of internal class
-        if ($class->isInternal()) {
-            return [];
-        }
-
-        $attributes = $this->parseAttributes($class->getFileName(), self::KEY_PROPERTIES);
-
-        return $this->format($attributes[$class->getName()][$property->getName()] ?? []);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getConstantAttributes(\ReflectionClassConstant $const, ?string $name): iterable
-    {
-        $class = $const->getDeclaringClass();
-
-        // Can not parse internal classes
-        if ($class->isInternal()) {
-            return [];
-        }
-
-        $attributes = $this->parseAttributes($class->getFileName(), self::KEY_CONSTANTS);
-
-        return $this->format($attributes[$class->getName()][$const->getName()] ?? []);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getParameterAttributes(\ReflectionParameter $param, ?string $name): iterable
-    {
-        $function = $param->getDeclaringFunction();
-
-        // Can not parse parameter of internal function
-        if ($function->isInternal()) {
-            return [];
-        }
-
-        $attributes = $this->parseAttributes($function->getFileName(), self::KEY_PARAMETERS);
-        $attributes = $this->extractFunctionAttributes($attributes, $function);
-
-        return $this->format($attributes[$param->getName()] ?? []);
-    }
-
-    /**
      * @param AttributePrototype[] $attributes
      * @return iterable<\ReflectionClass, array>
      */
@@ -231,7 +231,7 @@ final class FallbackAttributeReader extends AttributeReader
      */
     private function parseAttributes(string $file, int $context): array
     {
-        if (! isset($this->attributes[$file])) {
+        if (!isset($this->attributes[$file])) {
             $found = $this->parser->parse($file);
 
             $this->attributes[$file] = [

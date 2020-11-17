@@ -127,16 +127,6 @@ class AttributeFinderVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @param Node\AttributeGroup[] $groups
-     * @return \Traversable<AttributePrototype>
-     * @throws \Throwable
-     */
-    private function parse(array $groups): \Traversable
-    {
-        return $this->parser->parseAttributes($this->file, $groups, $this->context);
-    }
-
-    /**
      * @param Node $node
      * @return int|null
      * @throws \Throwable
@@ -199,6 +189,38 @@ class AttributeFinderVisitor extends NodeVisitorAbstract
     }
 
     /**
+     * @param Node $node
+     */
+    public function leaveNode(Node $node): void
+    {
+        if ($node instanceof Node\Stmt\Namespace_) {
+            $this->context[AttributeParser::CTX_NAMESPACE] = '';
+            return;
+        }
+
+        if ($node instanceof Node\Stmt\ClassLike) {
+            $this->context[AttributeParser::CTX_CLASS] = '';
+            $this->context[AttributeParser::CTX_TRAIT] = '';
+            return;
+        }
+
+        if ($node instanceof Node\FunctionLike) {
+            $this->context[AttributeParser::CTX_FUNCTION] = '';
+            return;
+        }
+    }
+
+    /**
+     * @param Node\AttributeGroup[] $groups
+     * @return \Traversable<AttributePrototype>
+     * @throws \Throwable
+     */
+    private function parse(array $groups): \Traversable
+    {
+        return $this->parser->parseAttributes($this->file, $groups, $this->context);
+    }
+
+    /**
      * @return string
      */
     private function fqn(): string
@@ -235,6 +257,7 @@ class AttributeFinderVisitor extends NodeVisitorAbstract
             case $node instanceof Node\Stmt\ClassLike:
                 $this->context[AttributeParser::CTX_CLASS] = $this->name($node->name);
 
+                // no break
             case $node instanceof Node\Stmt\Trait_:
                 $this->context[AttributeParser::CTX_TRAIT] = $this->name($node->name);
                 break;
@@ -243,28 +266,6 @@ class AttributeFinderVisitor extends NodeVisitorAbstract
             case $node instanceof Node\Stmt\ClassMethod:
                 $this->context[AttributeParser::CTX_FUNCTION] = $this->name($node->name);
                 break;
-        }
-    }
-
-    /**
-     * @param Node $node
-     */
-    public function leaveNode(Node $node): void
-    {
-        if ($node instanceof Node\Stmt\Namespace_) {
-            $this->context[AttributeParser::CTX_NAMESPACE] = '';
-            return;
-        }
-
-        if ($node instanceof Node\Stmt\ClassLike) {
-            $this->context[AttributeParser::CTX_CLASS] = '';
-            $this->context[AttributeParser::CTX_TRAIT] = '';
-            return;
-        }
-
-        if ($node instanceof Node\FunctionLike) {
-            $this->context[AttributeParser::CTX_FUNCTION] = '';
-            return;
         }
     }
 }

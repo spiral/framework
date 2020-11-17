@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Attributes\Exception;
 
-
 use Doctrine\Common\Annotations\AnnotationException;
 
 class AttributeException extends \RuntimeException
@@ -22,19 +21,9 @@ class AttributeException extends \RuntimeException
     public const ERROR_CODE_SYNTAX = 0x01;
 
     /**
-     * @var string
-     */
-    private const ERROR_PREFIX_SYNTAX = '[Syntax Error]';
-
-    /**
      * @var int
      */
     public const ERROR_CODE_SEMANTIC = 0x02;
-
-    /**
-     * @var string
-     */
-    private const ERROR_PREFIX_SEMANTIC = '[Semantical Error]';
 
     /**
      * @var int
@@ -42,14 +31,24 @@ class AttributeException extends \RuntimeException
     public const ERROR_CODE_CREATION = 0x03;
 
     /**
-     * @var string
-     */
-    private const ERROR_PREFIX_CREATION = '[Creation Error]';
-
-    /**
      * @var int
      */
     public const ERROR_CODE_TYPE = 0x04;
+
+    /**
+     * @var string
+     */
+    private const ERROR_PREFIX_SYNTAX = '[Syntax Error]';
+
+    /**
+     * @var string
+     */
+    private const ERROR_PREFIX_SEMANTIC = '[Semantical Error]';
+
+    /**
+     * @var string
+     */
+    private const ERROR_PREFIX_CREATION = '[Creation Error]';
 
     /**
      * @var string

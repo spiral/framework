@@ -40,26 +40,6 @@ final class AnnotationReader extends BaseReader
     }
 
     /**
-     * @return void
-     */
-    private function checkAvailability(): void
-    {
-        if ($this->isAvailable()) {
-            return;
-        }
-
-        throw new InitializationException('Requires the "doctrine/annotations" package');
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isAvailable(): bool
-    {
-        return \interface_exists(Reader::class);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getClassMetadata(\ReflectionClass $class, string $name = null): iterable
@@ -67,26 +47,6 @@ final class AnnotationReader extends BaseReader
         $result = $this->reader->getClassAnnotations($class);
 
         return $this->filter($name, $result);
-    }
-
-    /**
-     * @param string|null       $name
-     * @param iterable|object[] $annotations
-     * @return object[]
-     */
-    private function filter(?string $name, iterable $annotations): iterable
-    {
-        if ($name === null) {
-            yield from $annotations;
-
-            return;
-        }
-
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof $name) {
-                yield $annotation;
-            }
-        }
     }
 
     /**
@@ -127,5 +87,45 @@ final class AnnotationReader extends BaseReader
     public function getParameterMetadata(\ReflectionParameter $parameter, string $name = null): iterable
     {
         return [];
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isAvailable(): bool
+    {
+        return \interface_exists(Reader::class);
+    }
+
+    /**
+     * @return void
+     */
+    private function checkAvailability(): void
+    {
+        if ($this->isAvailable()) {
+            return;
+        }
+
+        throw new InitializationException('Requires the "doctrine/annotations" package');
+    }
+
+    /**
+     * @param string|null       $name
+     * @param iterable|object[] $annotations
+     * @return object[]
+     */
+    private function filter(?string $name, iterable $annotations): iterable
+    {
+        if ($name === null) {
+            yield from $annotations;
+
+            return;
+        }
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $name) {
+                yield $annotation;
+            }
+        }
     }
 }
