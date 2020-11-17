@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Reader;
 
-use Spiral\Attributes\Reader\NativeReader;
+use Spiral\Attributes\NativeAttributeReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
@@ -21,6 +21,6 @@ class NativeReaderTest extends ReaderTestCase
 {
     protected function getReader(): ReaderInterface
     {
-        return new NativeReader();
+        return new NativeAttributeReader();
     }
 }

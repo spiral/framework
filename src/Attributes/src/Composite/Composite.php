@@ -9,8 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes\Reader;
+namespace Spiral\Attributes\Composite;
 
+use Spiral\Attributes\Reader;
 use Spiral\Attributes\ReaderInterface;
 
 abstract class Composite extends Reader

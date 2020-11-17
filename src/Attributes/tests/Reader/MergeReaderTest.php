@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Reader;
 
-use Spiral\Attributes\Reader\DoctrineReader;
-use Spiral\Attributes\Reader\MergeReader;
-use Spiral\Attributes\Reader\NativeReader;
+use Spiral\Attributes\AnnotationReader;
+use Spiral\Attributes\Composite\MergeReader;
+use Spiral\Attributes\NativeAttributeReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
@@ -31,8 +31,8 @@ class MergeReaderTest extends ReaderTestCase
     protected function getReader(): ReaderInterface
     {
         return new MergeReader([
-            new NativeReader(),
-            new DoctrineReader(),
+            new NativeAttributeReader(),
+            new AnnotationReader(),
         ]);
     }
 }

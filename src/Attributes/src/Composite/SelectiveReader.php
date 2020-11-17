@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Attributes\Reader;
+namespace Spiral\Attributes\Composite;
 
-final class MergeReader extends Composite
+final class SelectiveReader extends Composite
 {
     /**
      * {@inheritDoc}
@@ -19,7 +19,13 @@ final class MergeReader extends Composite
     protected function each(callable $resolver): iterable
     {
         foreach ($this->readers as $reader) {
-            yield from $resolver($reader);
+            $result = $this->iterableToArray($resolver($reader));
+
+            if (\count($result) > 0) {
+                return $result;
+            }
         }
+
+        return [];
     }
 }

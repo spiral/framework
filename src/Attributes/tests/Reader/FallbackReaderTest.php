@@ -11,21 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Reader;
 
-use Spiral\Attributes\AnnotationReader;
-use Spiral\Attributes\Composite\SelectiveReader;
-use Spiral\Attributes\NativeAttributeReader;
+use Spiral\Attributes\FallbackAttributeReader;
 use Spiral\Attributes\ReaderInterface;
 
-/**
- * @requires PHP >= 8.0
- */
-class SelectiveReaderTest extends ReaderTestCase
+class FallbackReaderTest extends ReaderTestCase
 {
     protected function getReader(): ReaderInterface
     {
-        return new SelectiveReader([
-            new NativeAttributeReader(),
-            new AnnotationReader()
-        ]);
+        return new FallbackAttributeReader();
     }
 }

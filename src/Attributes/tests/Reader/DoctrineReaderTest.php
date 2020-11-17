@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Reader;
 
-use Spiral\Attributes\Reader\DoctrineReader;
+use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
@@ -30,6 +30,6 @@ class DoctrineReaderTest extends ReaderTestCase
 
     protected function getReader(): ReaderInterface
     {
-        return new DoctrineReader();
+        return new AnnotationReader();
     }
 }
