@@ -11,18 +11,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Attributes\Reader;
 
-use Spiral\Attributes\AnnotationReader;
 use Spiral\Attributes\AttributeReader;
-use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\ReaderInterface;
 
-class SelectiveReaderTest extends ReaderTestCase
+class AttributeReaderTest extends ReaderTestCase
 {
     protected function getReader(): ReaderInterface
     {
-        return new SelectiveReader([
-            new AttributeReader(),
-            new AnnotationReader()
-        ]);
+        return new AttributeReader();
     }
 }

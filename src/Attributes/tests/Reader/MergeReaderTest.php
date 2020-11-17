@@ -17,8 +17,6 @@ use Spiral\Attributes\Composite\MergeReader;
 use Spiral\Attributes\ReaderInterface;
 
 /**
- * @requires PHP >= 8.0
- *
  * Count of annotations should be x2 of original values, except non-supported
  * by Doctrine reader ({@see DoctrineReaderTest} for more information).
  */
