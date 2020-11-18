@@ -166,7 +166,7 @@ class AttributeParser
 
                     $definition = $class . '::' . $constant;
 
-                    if (! \defined($definition)) {
+                    if (!\defined($definition)) {
                         $exception = new \ParseError(\sprintf(self::ERROR_BAD_CONSTANT, $definition));
                         throw Exception::withLocation($exception, $file, $expr->getStartLine());
                     }
