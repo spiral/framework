@@ -22,12 +22,23 @@ use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
-/**
- * @internal AttributeParser is an internal library class, please do not use it in your code.
- * @psalm-internal Spiral\Attributes
- */
 class AttributeParser
 {
+    /**
+     * @var string
+     */
+    private const ERROR_NAMED_ARGUMENTS_ORDER = 'Cannot use positional argument after named argument';
+
+    /**
+     * @var string
+     */
+    private const ERROR_BAD_CONSTANT_EXPRESSION = 'Constant expression contains invalid operations';
+
+    /**
+     * @var string
+     */
+    private const ERROR_BAD_CONSTANT = 'Undefined constant %s';
+
     /**
      * @var string
      */
@@ -47,15 +58,6 @@ class AttributeParser
      * @var string
      */
     public const CTX_TRAIT = '__TRAIT__';
-    /**
-     * @var string
-     */
-    private const ERROR_NAMED_ARGUMENTS_ORDER = 'Cannot use positional argument after named argument';
-
-    /**
-     * @var string
-     */
-    private const ERROR_BAD_CONSTANT_EXPRESSION = 'Constant expression contains invalid operations';
 
     /**
      * @var Parser
@@ -68,6 +70,16 @@ class AttributeParser
     public function __construct(Parser $parser = null)
     {
         $this->parser = $parser ?? $this->createParser();
+    }
+
+    /**
+     * @return Parser
+     */
+    private function createParser(): Parser
+    {
+        $factory = new ParserFactory();
+
+        return $factory->create(ParserFactory::ONLY_PHP7);
     }
 
     /**
@@ -90,6 +102,19 @@ class AttributeParser
 
     /**
      * @param string $file
+     * @return string
+     */
+    private function read(string $file): string
+    {
+        if (! \is_readable($file)) {
+            throw new \InvalidArgumentException('Unable to read file "' . $file . '"');
+        }
+
+        return \file_get_contents($file);
+    }
+
+    /**
+     * @param string $file
      * @param AttributeGroup[] $groups
      * @param array $context
      * @return \Traversable<AttributePrototype>
@@ -106,29 +131,6 @@ class AttributeParser
                 yield new AttributePrototype($attr->name->toString(), $arguments);
             }
         }
-    }
-
-    /**
-     * @return Parser
-     */
-    private function createParser(): Parser
-    {
-        $factory = new ParserFactory();
-
-        return $factory->create(ParserFactory::ONLY_PHP7);
-    }
-
-    /**
-     * @param string $file
-     * @return string
-     */
-    private function read(string $file): string
-    {
-        if (!\is_readable($file)) {
-            throw new \InvalidArgumentException('Unable to read file "' . $file . '"');
-        }
-
-        return \file_get_contents($file);
     }
 
     /**
@@ -154,6 +156,16 @@ class AttributeParser
                     $function = $context[self::CTX_FUNCTION] ?? '';
 
                     return \ltrim($namespace . '\\' . $function, '\\');
+
+                case Expr\ClassConstFetch::class:
+                    $constant = $expr->class->toString() . '::' . $expr->name->toString();
+
+                    if (! \defined($constant)) {
+                        $exception = new \ParseError(\sprintf(self::ERROR_BAD_CONSTANT, $constant));
+                        throw Exception::withLocation($exception, $file, $expr->getStartLine());
+                    }
+
+                    return \constant($constant);
             }
 
             if ($expr instanceof Scalar\MagicConst) {
