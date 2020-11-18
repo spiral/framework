@@ -158,14 +158,21 @@ class AttributeParser
                     return \ltrim($namespace . '\\' . $function, '\\');
 
                 case Expr\ClassConstFetch::class:
-                    $constant = $expr->class->toString() . '::' . $expr->name->toString();
+                    $constant = $expr->name->toString();
+                    $class = $expr->class->toString();
 
-                    if (! \defined($constant)) {
-                        $exception = new \ParseError(\sprintf(self::ERROR_BAD_CONSTANT, $constant));
+                    if (\strtolower($constant) === 'class') {
+                        return $class;
+                    }
+
+                    $definition = $class . '::' . $constant;
+
+                    if (! \defined($definition)) {
+                        $exception = new \ParseError(\sprintf(self::ERROR_BAD_CONSTANT, $definition));
                         throw Exception::withLocation($exception, $file, $expr->getStartLine());
                     }
 
-                    return \constant($constant);
+                    return \constant($definition);
             }
 
             if ($expr instanceof Scalar\MagicConst) {
