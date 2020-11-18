@@ -27,21 +27,6 @@ class AttributeParser
     /**
      * @var string
      */
-    private const ERROR_NAMED_ARGUMENTS_ORDER = 'Cannot use positional argument after named argument';
-
-    /**
-     * @var string
-     */
-    private const ERROR_BAD_CONSTANT_EXPRESSION = 'Constant expression contains invalid operations';
-
-    /**
-     * @var string
-     */
-    private const ERROR_BAD_CONSTANT = 'Undefined constant %s';
-
-    /**
-     * @var string
-     */
     public const CTX_FUNCTION = '__FUNCTION__';
 
     /**
@@ -58,6 +43,20 @@ class AttributeParser
      * @var string
      */
     public const CTX_TRAIT = '__TRAIT__';
+    /**
+     * @var string
+     */
+    private const ERROR_NAMED_ARGUMENTS_ORDER = 'Cannot use positional argument after named argument';
+
+    /**
+     * @var string
+     */
+    private const ERROR_BAD_CONSTANT_EXPRESSION = 'Constant expression contains invalid operations';
+
+    /**
+     * @var string
+     */
+    private const ERROR_BAD_CONSTANT = 'Undefined constant %s';
 
     /**
      * @var Parser
@@ -70,16 +69,6 @@ class AttributeParser
     public function __construct(Parser $parser = null)
     {
         $this->parser = $parser ?? $this->createParser();
-    }
-
-    /**
-     * @return Parser
-     */
-    private function createParser(): Parser
-    {
-        $factory = new ParserFactory();
-
-        return $factory->create(ParserFactory::ONLY_PHP7);
     }
 
     /**
@@ -102,19 +91,6 @@ class AttributeParser
 
     /**
      * @param string $file
-     * @return string
-     */
-    private function read(string $file): string
-    {
-        if (! \is_readable($file)) {
-            throw new \InvalidArgumentException('Unable to read file "' . $file . '"');
-        }
-
-        return \file_get_contents($file);
-    }
-
-    /**
-     * @param string $file
      * @param AttributeGroup[] $groups
      * @param array $context
      * @return \Traversable<AttributePrototype>
@@ -131,6 +107,29 @@ class AttributeParser
                 yield new AttributePrototype($attr->name->toString(), $arguments);
             }
         }
+    }
+
+    /**
+     * @return Parser
+     */
+    private function createParser(): Parser
+    {
+        $factory = new ParserFactory();
+
+        return $factory->create(ParserFactory::ONLY_PHP7);
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    private function read(string $file): string
+    {
+        if (!\is_readable($file)) {
+            throw new \InvalidArgumentException('Unable to read file "' . $file . '"');
+        }
+
+        return \file_get_contents($file);
     }
 
     /**
