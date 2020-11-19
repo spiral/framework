@@ -120,13 +120,6 @@ class AttributeParser
         }
     }
 
-    private function resolveNames(array $ast): array
-    {
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor(new NameResolver());
-        return $traverser->traverse($ast);
-    }
-
     /**
      * @return Parser
      */
