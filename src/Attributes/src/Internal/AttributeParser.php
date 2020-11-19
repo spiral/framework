@@ -100,13 +100,6 @@ class AttributeParser
         return $finder;
     }
 
-    private function resolveNames(array $ast): array
-    {
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor(new NameResolver());
-        return $traverser->traverse($ast);
-    }
-
     /**
      * @param string $file
      * @param AttributeGroup[] $groups
@@ -125,6 +118,13 @@ class AttributeParser
                 yield new AttributePrototype($attr->name->toString(), $arguments);
             }
         }
+    }
+
+    private function resolveNames(array $ast): array
+    {
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor(new NameResolver());
+        return $traverser->traverse($ast);
     }
 
     /**
