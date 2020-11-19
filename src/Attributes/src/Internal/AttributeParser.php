@@ -21,6 +21,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use PhpParser\PrettyPrinter\Standard;
 
 class AttributeParser
 {
@@ -64,11 +65,19 @@ class AttributeParser
     private $parser;
 
     /**
+     * @var NodeTraverser
+     */
+    private $resolver;
+
+    /**
      * @param Parser|null $parser
      */
     public function __construct(Parser $parser = null)
     {
         $this->parser = $parser ?? $this->createParser();
+
+        $this->resolver = new NodeTraverser();
+        $this->resolver->addVisitor(new NameResolver());
     }
 
     /**
@@ -82,11 +91,20 @@ class AttributeParser
         $finder = new AttributeFinderVisitor($file, $this);
 
         $traverser = new NodeTraverser();
-        $traverser->addVisitor(new NameResolver());
         $traverser->addVisitor($finder);
-        $traverser->traverse($ast);
+
+        $traverser->traverse(
+            $this->resolver->traverse($ast)
+        );
 
         return $finder;
+    }
+
+    private function resolveNames(array $ast): array
+    {
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor(new NameResolver());
+        return $traverser->traverse($ast);
     }
 
     /**
