@@ -76,7 +76,7 @@ final class FallbackAttributeReader extends AttributeReader
 
         $attributes = $this->parseAttributes($class->getFileName(), self::KEY_CLASSES);
 
-        return $this->format($attributes[$class->getName()] ?? []);
+        return $this->format($attributes[$class->getName()] ?? [], $name);
     }
 
     /**
@@ -92,7 +92,7 @@ final class FallbackAttributeReader extends AttributeReader
         $attributes = $this->parseAttributes($function->getFileName(), self::KEY_FUNCTIONS);
         $attributes = $this->extractFunctionAttributes($attributes, $function);
 
-        return $this->format($attributes);
+        return $this->format($attributes, $name);
     }
 
     /**
@@ -109,7 +109,7 @@ final class FallbackAttributeReader extends AttributeReader
 
         $attributes = $this->parseAttributes($class->getFileName(), self::KEY_PROPERTIES);
 
-        return $this->format($attributes[$class->getName()][$property->getName()] ?? []);
+        return $this->format($attributes[$class->getName()][$property->getName()] ?? [], $name);
     }
 
     /**
@@ -126,7 +126,7 @@ final class FallbackAttributeReader extends AttributeReader
 
         $attributes = $this->parseAttributes($class->getFileName(), self::KEY_CONSTANTS);
 
-        return $this->format($attributes[$class->getName()][$const->getName()] ?? []);
+        return $this->format($attributes[$class->getName()][$const->getName()] ?? [], $name);
     }
 
     /**
@@ -144,7 +144,7 @@ final class FallbackAttributeReader extends AttributeReader
         $attributes = $this->parseAttributes($function->getFileName(), self::KEY_PARAMETERS);
         $attributes = $this->extractFunctionAttributes($attributes, $function);
 
-        return $this->format($attributes[$param->getName()] ?? []);
+        return $this->format($attributes[$param->getName()] ?? [], $name);
     }
 
     /**
@@ -172,7 +172,7 @@ final class FallbackAttributeReader extends AttributeReader
          *
          * However, nikic/php-parser returns:
          * <code>
-         *  $ast->getEndLine(); // 1 (the line starts from the first attribute)
+         *  $ast->getStartLine(); // 1 (the line starts from the first attribute)
          * </code>
          */
         $line = $function->getEndLine();
@@ -213,13 +213,27 @@ final class FallbackAttributeReader extends AttributeReader
 
     /**
      * @param AttributePrototype[] $attributes
+     * @param class-string|null $name
      * @return iterable<\ReflectionClass, array>
      */
-    private function format(iterable $attributes): iterable
+    private function format(iterable $attributes, ?string $name): iterable
     {
         foreach ($attributes as $prototype) {
+            if ($name !== null && ! \is_subclass_of($prototype->name, $name)) {
+                continue;
+            }
+
             yield new \ReflectionClass($prototype->name) => $prototype->params;
         }
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    private function normalize(string $name): string
+    {
+        return \strtolower(\trim($name, '\\'));
     }
 
     /**
