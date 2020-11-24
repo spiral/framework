@@ -370,8 +370,9 @@ final class Files implements FilesInterface
 
         if (!empty($extension)) {
             //I should find more original way of doing that
-            rename($filename, $filename = "{$filename}.{$extension}");
-            $this->destructFiles[] = $filename;
+            $renamed = "{$filename}.{$extension}";
+            rename($filename, $renamed);
+            $this->destructFiles[] = $renamed;
         }
 
         return $filename;
