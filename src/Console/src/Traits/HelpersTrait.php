@@ -24,9 +24,9 @@ trait HelpersTrait
      * OutputInterface is the interface implemented by all Output classes. Only exists when command
      * are being executed.
      *
-     * @var \Symfony\Component\Console\Output\OutputInterface
+     * @var OutputInterface
      */
-    protected $output = null;
+    protected $output;
 
     /**
      * InputInterface is the interface implemented by all input classes. Only exists when command
@@ -34,7 +34,7 @@ trait HelpersTrait
      *
      * @var InputInterface
      */
-    protected $input = null;
+    protected $input;
 
     /**
      * Check if verbosity level of output is higher or equal to VERBOSITY_VERBOSE.
@@ -71,12 +71,13 @@ trait HelpersTrait
     /**
      * Identical to write function but provides ability to format message. Does not add new line.
      *
-     * @param string $format
-     * @param array  ...$args
+     * @param string|int|float $format
+     * @param mixed ...$args
+     * @return void
      */
-    protected function sprintf(string $format, ...$args)
+    protected function sprintf(string $format, ...$args): void
     {
-        return $this->output->write(sprintf($format, ...$args), false);
+        $this->output->write(\sprintf($format, ...$args), false);
     }
 
     /**
@@ -84,24 +85,26 @@ trait HelpersTrait
      *
      * @param string|array $messages The message as an array of lines or a single string
      * @param bool         $newline  Whether to add a newline
+     * @return void
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
-    protected function write($messages, bool $newline = false)
+    protected function write($messages, bool $newline = false): void
     {
-        return $this->output->write($messages, $newline);
+        $this->output->write($messages, $newline);
     }
 
     /**
      * Writes a message to the output and adds a newline at the end.
      *
      * @param string|array $messages The message as an array of lines of a single string
+     * @return void
      *
      * @throws \InvalidArgumentException When unknown output type is given
      */
-    protected function writeln($messages)
+    protected function writeln($messages): void
     {
-        return $this->output->writeln($messages);
+        $this->output->writeln($messages);
     }
 
     /**

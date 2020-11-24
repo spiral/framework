@@ -139,18 +139,19 @@ final class WebsocketsMiddleware implements MiddlewareInterface
      */
     private function invoke(ServerRequestInterface $request, callable $callback, array $parameters = []): bool
     {
-        /** @var \ReflectionFunctionAbstract $reflection */
-        $reflection = null;
         switch (true) {
             case $callback instanceof \Closure || is_string($callback):
                 $reflection = new \ReflectionFunction($callback);
                 break;
+
             case is_array($callback) && is_object($callback[0]):
                 $reflection = (new \ReflectionObject($callback[0]))->getMethod($callback[1]);
                 break;
+
             case is_array($callback):
                 $reflection = (new \ReflectionClass($callback[0]))->getMethod($callback[1]);
                 break;
+
             default:
                 throw new LogicException('Unable to invoke callable function');
         }

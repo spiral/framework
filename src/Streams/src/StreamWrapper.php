@@ -165,6 +165,7 @@ final class StreamWrapper
 
     /**
      * Register stream wrapper.
+     * @psalm-suppress UnusedFunctionCall
      */
     public static function register()
     {
@@ -173,6 +174,7 @@ final class StreamWrapper
         }
 
         stream_wrapper_register('spiral', __CLASS__);
+
         self::$registered = true;
     }
 

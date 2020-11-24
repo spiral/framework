@@ -46,7 +46,7 @@ final class DirectoryLoader implements LoaderInterface
      */
     public function has(string $section): bool
     {
-        foreach (static::LOADERS as $extension => $class) {
+        foreach (self::LOADERS as $extension => $_) {
             $filename = sprintf('%s/%s.%s', $this->directory, $section, $extension);
             if (file_exists($filename)) {
                 return true;
@@ -61,7 +61,7 @@ final class DirectoryLoader implements LoaderInterface
      */
     public function load(string $section): array
     {
-        foreach (static::LOADERS as $extension => $class) {
+        foreach (self::LOADERS as $extension => $_) {
             $filename = sprintf('%s/%s.%s', $this->directory, $section, $extension);
             if (!file_exists($filename)) {
                 continue;
@@ -83,10 +83,8 @@ final class DirectoryLoader implements LoaderInterface
      */
     private function getLoader(string $extension): FileLoaderInterface
     {
-        if (isset($this->loaders[$extension])) {
-            return $this->loaders[$extension];
-        }
-
-        return $this->loaders[$extension] = $this->factory->make(static::LOADERS[$extension]);
+        return $this->loaders[$extension] ?? (
+            $this->loaders[$extension] = $this->factory->make(self::LOADERS[$extension])
+        );
     }
 }

@@ -10,11 +10,11 @@ class WithComplexConstructor
     public function __construct(
         string $str1,
         $var,
-        $untypedVarWithDefault = 3,
         &$refVar,
         ATest3 $testApp,
         ?string $str2,
         ?\StdClass $nullableClass1,
+        $untypedVarWithDefault = 3,
         ?Test $test1 = null,
         ?string $str3 = null,
         ?int $int = 123,

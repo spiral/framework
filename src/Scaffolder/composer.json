@@ -11,8 +11,8 @@
     },
     "authors": [
         {
-            "name": "Anton Titov / Wolfy-J",
-            "email": "wolfy.jd@gmail.com"
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
         },
         {
             "name": "Valentin Vintsukevich (vvval)",
@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "spiral/reactor": "^2.7",
         "cocur/slugify": "^3.2",
         "doctrine/inflector": "^1.4|^2.0"

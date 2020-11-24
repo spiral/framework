@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
@@ -35,17 +36,34 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var Test[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param Test $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var Test2[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var Test2[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param Test2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var ATest3[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var ATest3[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param ATest3 $test3', $r);
+    }
+
+    /**
+     * Override this method for the avoid known phpunit warning (phpunit 8.5 compatibility).
+     * This method MUST be removed in spiral/prototype:^3.0 (with phpunit/phpunit: 9.0+ dependency).
+     *
+     * @deprecated https://github.com/sebastianbergmann/phpunit/issues/4086
+     */
+    public static function assertRegExp(string $pattern, string $string, string $message = ''): void
+    {
+        if (\method_exists(Assert::class, 'assertMatchesRegularExpression')) {
+            Assert::assertMatchesRegularExpression($pattern, $string, $message);
+
+            return;
+        }
+
+        Assert::assertRegExp($pattern, $string, $message);
     }
 
     /**
@@ -70,17 +88,17 @@ class ConflictResolverTest extends TestCase
 
         $this->assertStringContainsString(Fixtures\Test::class . ' as FTest;', $r);
         $this->assertStringNotContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var FTest[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var FTest[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param FTest $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as TestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var TestAlias[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var TestAlias[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param TestAlias $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATest;', $r);
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var ATest[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var ATest[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param ATest $test3', $r);
     }
 
@@ -105,17 +123,17 @@ class ConflictResolverTest extends TestCase
         );
 
         $this->assertStringContainsString(Fixtures\Test::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var Test[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var Test[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param Test $test', $r);
 
         $this->assertStringContainsString(Fixtures\SubFolder\Test::class . ' as Test2;', $r);
         $this->assertStringNotContainsString(Fixtures\SubFolder\Test::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var Test2[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var Test2[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param Test2 $test2', $r);
 
         $this->assertStringContainsString(Fixtures\ATest3::class . ' as ATestAlias;', $r);
         $this->assertStringNotContainsString(Fixtures\ATest3::class . ';', $r);
-        $this->assertMatchesRegularExpression('/@var ATestAlias[\s|\r\n]/', $r);
+        $this->assertRegExp('/@var ATestAlias[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param ATestAlias $test3', $r);
     }
 
