@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Prototype\ClassNode;
@@ -44,6 +45,23 @@ class ConflictResolverTest extends TestCase
         $this->assertStringContainsString(Fixtures\ATest3::class . ';', $r);
         $this->assertRegExp('/@var ATest3[\s|\r\n]/', $r);
         $this->assertStringContainsString('@param ATest3 $test3', $r);
+    }
+
+    /**
+     * Override this method for the avoid known phpunit warning (phpunit 8.5 compatibility).
+     * This method MUST be removed in spiral/prototype:^3.0 (with phpunit/phpunit: 9.0+ dependency).
+     *
+     * @deprecated https://github.com/sebastianbergmann/phpunit/issues/4086
+     */
+    public static function assertRegExp(string $pattern, string $string, string $message = ''): void
+    {
+        if (\method_exists(Assert::class, 'assertMatchesRegularExpression')) {
+            Assert::assertMatchesRegularExpression($pattern, $string, $message);
+
+            return;
+        }
+
+        Assert::assertRegExp($pattern, $string, $message);
     }
 
     /**

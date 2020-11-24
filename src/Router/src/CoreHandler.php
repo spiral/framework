@@ -99,6 +99,7 @@ final class CoreHandler implements RequestHandlerInterface
     /**
      * @inheritdoc
      *
+     * @psalm-suppress UnusedVariable
      * @throws \Throwable
      */
     public function handle(Request $request): Response

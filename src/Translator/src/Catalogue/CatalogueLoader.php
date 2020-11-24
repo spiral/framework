@@ -57,10 +57,7 @@ final class CatalogueLoader implements LoaderInterface
 
         $locales = [];
 
-        /**
-         * @var \Symfony\Component\Finder\SplFileInfo $directory
-         */
-        foreach ($finder->directories()->getIterator() as $directory) {
+        foreach ($finder->directories() as $directory) {
             $locales[] = $directory->getFilename();
         }
 
@@ -82,9 +79,6 @@ final class CatalogueLoader implements LoaderInterface
         $finder = new Finder();
         $finder->in($this->config->getLocaleDirectory($locale));
 
-        /**
-         * @var SplFileInfo $file
-         */
         foreach ($finder->getIterator() as $file) {
             $this->getLogger()->info(
                 sprintf(

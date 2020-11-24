@@ -69,6 +69,7 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     /**
      * @inheritdoc
      *
+     * @psalm-suppress UnusedVariable
      * @throws \Throwable
      */
     public function process(Request $request, Handler $handler): Response

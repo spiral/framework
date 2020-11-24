@@ -80,7 +80,7 @@ final class WebsocketsConfig extends InjectableConfig
         $replaces = [];
         if (preg_match_all('/\{(\w+):?(.*?)?\}/', $topic, $matches)) {
             $variables = array_combine($matches[1], $matches[2]);
-            foreach ($variables as $key => $segment) {
+            foreach ($variables as $key => $_) {
                 $replaces['{' . $key . '}'] = '(?P<' . $key . '>[^\/\.]+)';
             }
         }

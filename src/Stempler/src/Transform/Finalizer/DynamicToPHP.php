@@ -35,10 +35,10 @@ final class DynamicToPHP implements VisitorInterface
     public const DEFAULT_FILTER = DynamicRenderer::DEFAULT_FILTER;
 
     /** @var string */
-    private $defaultFilter = '';
+    private $defaultFilter;
 
     /** @var DirectiveRendererInterface[] */
-    private $directives = [];
+    private $directives;
 
     /** @var Traverser */
     private $traverser;
@@ -83,7 +83,7 @@ final class DynamicToPHP implements VisitorInterface
         }
 
         if ($node instanceof Directive) {
-            return $this->directive($node, $ctx);
+            return $this->directive($node);
         }
 
         if ($node instanceof Template) {
@@ -98,10 +98,9 @@ final class DynamicToPHP implements VisitorInterface
 
     /**
      * @param Directive      $node
-     * @param VisitorContext $ctx
      * @return PHP
      */
-    private function directive(Directive $node, VisitorContext $ctx): PHP
+    private function directive(Directive $node): PHP
     {
         foreach ($this->directives as $renderer) {
             $result = $renderer->render($node);

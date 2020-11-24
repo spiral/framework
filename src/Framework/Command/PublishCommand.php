@@ -58,12 +58,12 @@ final class PublishCommand extends Command
                 if ($this->isDirectory()) {
                     $this->sprintf(
                         '<fg=cyan>•</fg=cyan> publish directory <comment>%s</comment> to <comment>%s</comment>',
-                        $this->getSource($files, $directories),
+                        $this->getSource($files),
                         $this->getTarget($files, $directories)
                     );
 
                     $publisher->publishDirectory(
-                        $this->getSource($files, $directories),
+                        $this->getSource($files),
                         $this->getTarget($files, $directories),
                         $this->getMergeMode(),
                         $this->getFileMode()
@@ -71,12 +71,12 @@ final class PublishCommand extends Command
                 } else {
                     $this->sprintf(
                         '<fg=cyan>•</fg=cyan> publish file <comment>%s</comment> to <comment>%s</comment>',
-                        $this->getSource($files, $directories),
+                        $this->getSource($files),
                         $this->getTarget($files, $directories)
                     );
 
                     $publisher->publish(
-                        $this->getSource($files, $directories),
+                        $this->getSource($files),
                         $this->getTarget($files, $directories),
                         $this->getMergeMode(),
                         $this->getFileMode()
@@ -103,10 +103,9 @@ final class PublishCommand extends Command
 
     /**
      * @param FilesInterface       $files
-     * @param DirectoriesInterface $directories
      * @return null|string
      */
-    private function getSource(FilesInterface $files, DirectoriesInterface $directories): ?string
+    private function getSource(FilesInterface $files): ?string
     {
         if (!$this->isDirectory()) {
             return $files->normalizePath($this->argument('source'));

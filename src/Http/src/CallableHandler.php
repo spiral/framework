@@ -42,6 +42,7 @@ final class CallableHandler implements RequestHandlerInterface
 
     /**
      * @inheritdoc
+     * @psalm-suppress UnusedVariable
      */
     public function handle(Request $request): Response
     {
