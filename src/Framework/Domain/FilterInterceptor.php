@@ -111,15 +111,37 @@ class FilterInterceptor implements CoreInterceptorInterface
         }
 
         foreach ($method->getParameters() as $parameter) {
-            if ($parameter->getClass() === null) {
+            $class = $this->getParameterClass($parameter);
+
+            if ($class === null) {
                 continue;
             }
 
-            if ($parameter->getClass()->implementsInterface(FilterInterface::class)) {
-                $this->cache[$key][$parameter->getName()] = $parameter->getClass()->getName();
+            if ($class->implementsInterface(FilterInterface::class)) {
+                $this->cache[$key][$parameter->getName()] = $class->getName();
             }
         }
 
         return $this->cache[$key];
+    }
+
+
+    /**
+     * @param \ReflectionParameter $parameter
+     * @return \ReflectionClass|null
+     */
+    private function getParameterClass(\ReflectionParameter $parameter): ?\ReflectionClass
+    {
+        $type = $parameter->getType();
+
+        if (!$type instanceof \ReflectionNamedType) {
+            return null;
+        }
+
+        if ($type->isBuiltin()) {
+            return null;
+        }
+
+        return new \ReflectionClass($type->getName());
     }
 }

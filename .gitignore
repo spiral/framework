@@ -3,9 +3,9 @@
 *.iml
 
 # Composer
+composer.phar
 vendor/
 composer.lock
-composer.phar
 
 # OS
 .DS_Store

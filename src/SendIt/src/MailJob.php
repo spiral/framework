@@ -96,11 +96,10 @@ final class MailJob implements HandlerInterface
     {
         $emails = [];
 
-        /** @var Address[] $addresses */
         $addresses = array_merge($message->getTo(), $message->getCc(), $message->getBcc());
 
-        foreach ($addresses as $addr) {
-            $emails[] = $addr->toString();
+        foreach ($addresses as $address) {
+            $emails[] = $address->toString();
         }
 
         return $emails;

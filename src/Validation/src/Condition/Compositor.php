@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Spiral\Validation\Condition;
 
 use Spiral\Validation\ConditionInterface;
-use Spiral\Validation\RuleInterface;
 use Spiral\Validation\RulesInterface;
 
 /**
@@ -38,17 +37,18 @@ final class Compositor
      */
     public function makeConditions(string $field, array $options): iterable
     {
-        /** @var RuleInterface[] $rules */
-        $rules = iterator_to_array(
-            $this->provider->getRules([
-                $field => [
-                    static function (): void {
-                    },
-                    'if' => $options,
-                ],
-            ])
-        );
+        $rules = $this->provider->getRules([
+            $field => [
+                static function (): void {
+                },
+                'if' => $options,
+            ],
+        ]);
 
-        return empty($rules) ? [] : $rules[0]->getConditions();
+        foreach ($rules as $rule) {
+            return $rule->getConditions();
+        }
+
+        return [];
     }
 }

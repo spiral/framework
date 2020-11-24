@@ -90,12 +90,12 @@ final class StackCollector implements VisitorInterface
     private function stackName(Tag $tag): ?string
     {
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value)) {
-                $options[$attr->name] = trim($attr->value, '\'"');
+            if (is_string($attr->value) && $attr->name === 'name') {
+                return trim($attr->value, '\'"');
             }
         }
 
-        return $options['name'] ?? null;
+        return null;
     }
 
     /**
@@ -105,11 +105,11 @@ final class StackCollector implements VisitorInterface
     private function uniqueID(Tag $tag): ?string
     {
         foreach ($tag->attrs as $attr) {
-            if (is_string($attr->value)) {
-                $options[$attr->name] = trim($attr->value, '\'"');
+            if (is_string($attr->value) && $attr->name === 'unique-id') {
+                return trim($attr->value, '\'"');
             }
         }
 
-        return $options['unique-id'] ?? null;
+        return null;
     }
 }

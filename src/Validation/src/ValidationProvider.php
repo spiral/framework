@@ -15,6 +15,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Container\SingletonInterface;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Validation\Config\ValidatorConfig;
 
@@ -119,7 +120,7 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
      * @param mixed $rule
      * @return RuleInterface
      *
-     * @throws ContainerExceptionInterface
+     * @throws ContainerException
      */
     protected function makeRule($check, $rule): RuleInterface
     {
@@ -147,7 +148,7 @@ final class ValidationProvider implements ValidationInterface, RulesInterface, S
      * @param array $conditions
      * @return \SplObjectStorage
      *
-     * @throws ContainerExceptionInterface
+     * @throws ContainerException
      */
     protected function makeConditions(array $conditions): ?\SplObjectStorage
     {

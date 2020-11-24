@@ -43,6 +43,7 @@ final class HTMLRenderer implements RendererInterface
     }
 
     /**
+     * @psalm-suppress UndefinedClass
      * @param Compiler        $compiler
      * @param Compiler\Result $result
      * @param Tag             $node

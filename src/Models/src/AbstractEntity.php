@@ -21,7 +21,7 @@ use Spiral\Models\Exception\EntityException;
 abstract class AbstractEntity implements EntityInterface, ValueInterface, \IteratorAggregate
 {
     /** @var array */
-    private $fields = [];
+    private $fields;
 
     /**
      * @param array $data
@@ -192,7 +192,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     public function getFields(bool $filter = true): array
     {
         $result = [];
-        foreach ($this->fields as $name => $field) {
+        foreach ($this->fields as $name => $_) {
             $result[$name] = $this->getField($name, null, $filter);
         }
 

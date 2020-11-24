@@ -13,7 +13,6 @@ namespace Spiral\Stempler\Transform\Context;
 
 use Spiral\Core\Exception\LogicException;
 use Spiral\Stempler\Builder;
-use Spiral\Stempler\Exception\StemplerException;
 use Spiral\Stempler\Node\AttributedInterface;
 use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Transform\Import\ImportInterface;
@@ -59,8 +58,6 @@ final class ImportContext
      * @param Builder $builder
      * @param string  $name
      * @return Template|null
-     *
-     * @throws StemplerException
      */
     public function resolve(Builder $builder, string $name): ?Template
     {

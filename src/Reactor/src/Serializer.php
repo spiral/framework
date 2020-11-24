@@ -61,7 +61,7 @@ class Serializer
         $result = [];
         $innerIndent = 0;
         if (!empty($associated)) {
-            foreach ($array as $key => $value) {
+            foreach ($array as $key => $_) {
                 //Based on biggest key length
                 $innerIndent = max(strlen(var_export($key, true)), $innerIndent);
             }
